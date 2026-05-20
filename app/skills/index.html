@@ -3,36 +3,32 @@ title: Kong Skills Hub
 skills_index: true
 layout: default
 edit_and_issue_links: false
-llm: false
 description: Browse and search Kong skills for AI-powered development workflows.
 ---
+{% if page.output_format == 'markdown' %}
+{% include skills/install.md %}
+{% else %}
 {%- assign all_skills = site.data.skills | sort -%}
-{%- assign power = site.data.skills_power -%}
 {%- assign skill_filters = site.data.skills_filters -%}
 
-<div class="flex flex-col gap-12 w-full">
-
-  <div class="flex flex-col gap-8 py-16 items-center text-center">
-      <div class="mx-auto flex max-w-3xl flex-col gap-4">
-        <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Skills Hub</h1>
+<main class="flex flex-col gap-12 w-full">
+  <div class="flex flex-col gap-8 pt-16 items-center">
+      <div class="flex flex-col gap-4 text-center">
+        <div class="flex items-center justify-center gap-3"><h1 class="font-extrabold text-[40px] leading-[60px]">Kong Skills Hub</h1>{% include components/llm_dropdown.html url=page.url %}</div>
         <p class="text-terciary text-lg">
-          Browse and search Kong skills for AI-powered development workflows.
+          {{page.description}}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full text-left">
-        {% include cards/skill_marketplace.html %}
-
-        {% if power %}
-          {% include cards/skill_power.html power=power %}
-        {% endif %}
+      <div class="flex flex-col w-full">
+        {% include skills/install.md %}
       </div>
   </div>
 
   <div class="flex flex-col gap-6" id="all-skills-section">
-    <div class="flex items-end justify-between gap-4 flex-wrap">
+    <div class="flex items-end justify-between gap-4 flex-wrap heading-section">
       <div class="flex flex-col gap-2">
-        <h2>All skills</h2>
+        <h2 id="all-skills">All Skills</h2>
         <p class="text-terciary">Search individual skill packages, then install the whole marketplace or a specific skill.</p>
       </div>
     </div>
@@ -81,5 +77,5 @@ description: Browse and search Kong skills for AI-powered development workflows.
       No skills match the current search or filters.
     </div>
   </div>
-
-</div>
+</main>
+{% endif %}

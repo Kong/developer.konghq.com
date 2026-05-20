@@ -2,7 +2,6 @@
 
 require 'json'
 require 'pathname'
-require_relative 'power'
 
 module Jekyll
   module SkillPages
@@ -23,7 +22,9 @@ module Jekyll
     end
 
     def self.repo_slug(site)
-      site.config['skills_repo_slug'] || site.config.dig('repos', 'skills').to_s.sub(%r{\Ahttps://github\.com/}, '').sub(%r{/\z}, '')
+      site.config['skills_repo_slug'] || site.config.dig('repos', 'skills').to_s.sub(%r{\Ahttps://github\.com/}, '').sub(
+        %r{/\z}, ''
+      )
     end
 
     def self.marketplace_name(site)
@@ -48,7 +49,9 @@ module Jekyll
     end
 
     def self.repo_raw_url(site, path)
-      raw_base = site.config.dig('repos', 'skills_raw') || site.config.dig('repos', 'skills').to_s.sub('github.com', 'raw.githubusercontent.com')
+      raw_base = site.config.dig('repos',
+                                 'skills_raw') || site.config.dig('repos', 'skills').to_s.sub('github.com',
+                                                                                              'raw.githubusercontent.com')
       "#{raw_base}/#{repo_branch(site)}/#{path}"
     end
 
@@ -63,7 +66,7 @@ module Jekyll
     def self.normalize_repo_path(current_relative_dir, candidate)
       return if candidate.nil? || candidate.empty?
 
-      cleaned = candidate.gsub(%r{\A<|>\z}, '')
+      cleaned = candidate.gsub(/\A<|>\z/, '')
       return if cleaned.empty?
 
       joined = if cleaned.start_with?('/')
@@ -119,7 +122,6 @@ module Jekyll
         @site = site
         @skills = []
         @plugins = []
-        @power = nil
         @repo_root = Jekyll::SkillPages.repo_root(site)
       end
 
@@ -129,9 +131,7 @@ module Jekyll
         load_install_tabs
         return unless Dir.exist?(@repo_root)
 
-        discover_power
         discover_plugins_and_skills
-        site.data['skills_power'] = @power&.to_data
         site.data['skills_filters'] = build_filters
         Jekyll::SkillPages::Discovery.generate(site, @skills)
       end
@@ -159,14 +159,6 @@ module Jekyll
             load_skill(skill_folder)
           end
         end
-
-      end
-
-      def discover_power
-        power_file = File.join(@repo_root, 'POWER.md')
-        return unless File.exist?(power_file)
-
-        @power = Jekyll::SkillPages::Power.new(site:, file: power_file)
       end
 
       def load_skill(folder, plugin: nil)
@@ -197,11 +189,17 @@ module Jekyll
           Jekyll::SkillPages.rewrite_relative_links(raw, site:, source_relative_path:)
         )
 
+        sentinel = '<!-- END HEADER SECTION -->'
+        header_end = processed.index(sentinel)
+        content = header_end ? processed[0, header_end] : processed
+        processed = processed.sub(sentinel, '') if header_end
+
         {
           'title' => title.strip,
           'slug' => slug,
           'icon' => "/assets/icons/ai-tools/#{slug}.svg",
-          'content' => processed
+          'content' => content,
+          'extended_content' => processed
         }
       end
 
@@ -227,7 +225,7 @@ module Jekyll
 
           filter_option(Jekyll::Utils.slugify(label), label)
         end.uniq { |option| option['value'] }
-              .sort_by { |option| option['label'].downcase }
+           .sort_by { |option| option['label'].downcase }
       end
 
       def filter_option(value, label)
