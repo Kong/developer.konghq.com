@@ -1,4 +1,4 @@
-This section applies to legacy {{site.ai_gateway}} 3.x plugin-based configurations. The following table describes the available algorithms and considerations for selecting one.
+This section applies to legacy {{site.base_gateway}} 3.x plugin-based configurations. The following table describes the available algorithms and considerations for selecting one.
 
 <!--vale off-->
 {% table %}
