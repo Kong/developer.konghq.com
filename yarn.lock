@@ -14692,7 +14692,6 @@ __metadata:
     shiki: "npm:^4.0.2"
     snowflake-sdk: "npm:2.4.1"
     tailwindcss: "npm:^3.4.3"
-    uuid: "npm:^14.0.0"
     vite: "npm:^6.4.2"
     vite-plugin-ruby: "npm:^5.0.0"
     vite-svg-loader: "npm:^5.1.0"
@@ -16597,7 +16596,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^11.1.0 || ^12 || ^13 || ^14.0.0, uuid@npm:^14.0.0":
+"uuid@npm:^11.1.0 || ^12 || ^13 || ^14.0.0":
   version: 14.0.0
   resolution: "uuid@npm:14.0.0"
   bin:
@@ -16606,16 +16605,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "uuid@npm:13.0.0"
-  bin:
-    uuid: dist-node/bin/uuid
-  checksum: 10c0/950e4c18d57fef6c69675344f5700a08af21e26b9eff2bf2180427564297368c538ea11ac9fb2e6528b17fc3966a9fd2c5049361b0b63c7d654f3c550c9b3d67
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^13.0.1":
+"uuid@npm:^13.0.0, uuid@npm:^13.0.1":
   version: 13.0.2
   resolution: "uuid@npm:13.0.2"
   bin:
