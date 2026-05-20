@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@f1a9215cfccf83b16e2fa38952edb22d5ba89dd4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f1a9215cfccf83b16e2fa38952edb22d5ba89dd4'
+  x-oas-source: kong/platform-api@8ad47f91436f0ad25b70cd2fb5d871a9dc0eb45b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8ad47f91436f0ad25b70cd2fb5d871a9dc0eb45b'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3685,11 +3685,13 @@ components:
           schema_validation: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicy'
           decrypt: '#/components/schemas/EventGatewayDecryptPolicy'
           skip_record: '#/components/schemas/EventGatewaySkipRecordPolicyCreate'
+          decrypt_fields: '#/components/schemas/EventGatewayParsedRecordDecryptFieldsPolicyCreate'
       oneOf:
         - $ref: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicy'
         - $ref: '#/components/schemas/EventGatewayModifyHeadersPolicyCreate'
         - $ref: '#/components/schemas/EventGatewaySkipRecordPolicyCreate'
         - $ref: '#/components/schemas/EventGatewayDecryptPolicy'
+        - $ref: '#/components/schemas/EventGatewayParsedRecordDecryptFieldsPolicyCreate'
     EventGatewayConsumePolicyUpdate:
       description: The typed schema of the consume policy to modify it.
       discriminator:
@@ -3699,11 +3701,13 @@ components:
           schema_validation: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicy'
           decrypt: '#/components/schemas/EventGatewayDecryptPolicy'
           skip_record: '#/components/schemas/EventGatewaySkipRecordPolicy'
+          decrypt_fields: '#/components/schemas/EventGatewayParsedRecordDecryptFieldsPolicy'
       oneOf:
         - $ref: '#/components/schemas/EventGatewayModifyHeadersPolicy'
         - $ref: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicy'
         - $ref: '#/components/schemas/EventGatewayDecryptPolicy'
         - $ref: '#/components/schemas/EventGatewaySkipRecordPolicy'
+        - $ref: '#/components/schemas/EventGatewayParsedRecordDecryptFieldsPolicy'
     EventGatewayProducePolicyCreate:
       description: The typed schema of the produce policy to modify it.
       discriminator:
@@ -3712,10 +3716,12 @@ components:
           modify_headers: '#/components/schemas/EventGatewayModifyHeadersPolicyCreate'
           schema_validation: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
           encrypt: '#/components/schemas/EventGatewayEncryptPolicy'
+          encrypt_fields: '#/components/schemas/EventGatewayParsedRecordEncryptFieldsPolicyCreate'
       oneOf:
         - $ref: '#/components/schemas/EventGatewayModifyHeadersPolicyCreate'
         - $ref: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
         - $ref: '#/components/schemas/EventGatewayEncryptPolicy'
+        - $ref: '#/components/schemas/EventGatewayParsedRecordEncryptFieldsPolicyCreate'
     EventGatewayProducePolicyUpdate:
       description: The typed schema of the produce policy to modify it.
       discriminator:
@@ -3724,10 +3730,12 @@ components:
           modify_headers: '#/components/schemas/EventGatewayModifyHeadersPolicy'
           schema_validation: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
           encrypt: '#/components/schemas/EventGatewayEncryptPolicy'
+          encrypt_fields: '#/components/schemas/EventGatewayParsedRecordEncryptFieldsPolicy'
       oneOf:
         - $ref: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
         - $ref: '#/components/schemas/EventGatewayModifyHeadersPolicy'
         - $ref: '#/components/schemas/EventGatewayEncryptPolicy'
+        - $ref: '#/components/schemas/EventGatewayParsedRecordEncryptFieldsPolicy'
     EventGatewayClusterPolicyModify:
       description: The typed schema of the cluster policy to modify it.
       discriminator:
@@ -3812,6 +3820,221 @@ components:
         - failure_mode
         - part_of_record
         - encryption_key
+    EventGatewayParsedRecordEncryptFieldsPolicy:
+      description: |
+        Encrypts fields of parsed Kafka records using AES_256_GCM. Keys are therefore 256 bits long.
+
+        Note this policy can only be used as a child of a `EventGatewayProduceSchemaValidationPolicy` policy.
+      type: object
+      properties:
+        type:
+          description: The type name of the policy.
+          type: string
+          enum:
+            - encrypt_fields
+          maxLength: 255
+          minLength: 1
+          x-terraform-transform-const: true
+        name:
+          description: A unique user-defined name of the policy.
+          type: string
+          maxLength: 255
+          x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
+        description:
+          description: A human-readable description of the policy.
+          type: string
+          default: ''
+          maxLength: 512
+        enabled:
+          description: Whether the policy is enabled.
+          type: boolean
+          default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        config:
+          description: The configuration of the policy.
+          type: object
+          $ref: '#/components/schemas/EventGatewayParsedRecordEncryptFieldsConfig'
+        condition:
+          description: |
+            A string containing the boolean expression that determines whether the policy is applied.
+
+            When the policy is applied as a child policy of schema_validation, the expression can also reference
+            `record.value` fields.
+          type: string
+          example: record.value.content.foo.bar == "a-value"
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
+              - name: record.value.validated
+                type: boolean
+                description: Indicates whether the record value was successfully validated.
+              - name: record.value.content
+                type: object
+                description: The content of the record value.
+      required:
+        - type
+        - config
+      title: Encrypt Parsed Record
+    EventGatewayParsedRecordEncryptFieldsPolicyCreate:
+      description: |
+        Encrypts fields of parsed Kafka records using AES_256_GCM. Keys are therefore 256 bits long.
+
+        Note this policy can only be used as a child of a `EventGatewayProduceSchemaValidationPolicy` policy.
+      type: object
+      properties:
+        type:
+          description: The type name of the policy.
+          type: string
+          enum:
+            - encrypt_fields
+          maxLength: 255
+          minLength: 1
+          x-terraform-transform-const: true
+        name:
+          description: A unique user-defined name of the policy.
+          type: string
+          maxLength: 255
+          x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
+        description:
+          description: A human-readable description of the policy.
+          type: string
+          default: ''
+          maxLength: 512
+        enabled:
+          description: Whether the policy is enabled.
+          type: boolean
+          default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        config:
+          description: The configuration of the policy.
+          type: object
+          $ref: '#/components/schemas/EventGatewayParsedRecordEncryptFieldsConfig'
+        condition:
+          description: |
+            A string containing the boolean expression that determines whether the policy is applied.
+
+            When the policy is applied as a child policy of schema_validation, the expression can also reference
+            `record.value` fields.
+          type: string
+          example: record.value.content.foo.bar == "a-value"
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
+              - name: record.value.validated
+                type: boolean
+                description: Indicates whether the record value was successfully validated.
+              - name: record.value.content
+                type: object
+                description: The content of the record value.
+        parent_policy_id:
+          description: The unique identifier of the parent schema validation policy.
+          type: string
+          format: uuid
+      required:
+        - type
+        - config
+        - parent_policy_id
+      title: Encrypt Parsed Record Fields
+    EventGatewayParsedRecordEncryptFieldsConfig:
+      description: The configuration of the encrypt parsed record policy.
+      type: object
+      properties:
+        failure_mode:
+          $ref: '#/components/schemas/ProduceFailureMode'
+        encrypt_fields:
+          description: Selects which fields to encrypt and with what keys.
+          type: array
+          items:
+            $ref: '#/components/schemas/EventGatewayParsedRecordEncryptionSelector'
+          minItems: 1
+      required:
+        - failure_mode
+        - encrypt_fields
+    EventGatewayParsedRecordEncryptionSelector:
+      description: Selects fields of a parsed record for encryption and defines what key to encrypt them with.
+      type: object
+      properties:
+        paths:
+          description: Selects which fields of the parsed record to encrypt. A maximum of 50 path entries are allowed.
+          oneOf:
+            - type: array
+              maxItems: 50
+              items:
+                type: object
+                required:
+                  - match
+                properties:
+                  match:
+                    description: |
+                      A field selector. It can select nested fields and array entries.
+
+                      Currently supported are exact matches.
+                    type: string
+                    example: 'someObject.someArray[1].fieldName'
+            - type: string
+              x-expression:
+                type: array
+                items:
+                  type: string
+                fields:
+                  - name: context.auth.principal.name
+                    type: string
+                    description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+                  - name: context.auth.type
+                    type: string
+                    description: |
+                      The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+                  - name: context.auth.token.claims
+                    type: object
+                    description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
+                  - name: record.headers
+                    type: object
+                    description: An associative array of header key value pairs.
+                  - name: record.value.content
+                    type: object
+                    description: The content of the record value.
+              description: |
+                This expression should evaluate to an array of exact field paths,
+                equivalent to the `match` values in the array variant.
+              example: |
+                ${context.auth.type == 'sasl_oauth_bearer' ? ['credentials.accessToken', 'credentials.refreshToken'] : ['credentials.password']}
+        encryption_key:
+          $ref: '#/components/schemas/EncryptionKey'
+      required:
+        - paths
+        - encryption_key
     EventGatewayDecryptPolicy:
       description: Decrypts Kafka records or keys using AES_256_GCM. Keys are therefore 256 bits long.
       type: object
@@ -3892,6 +4115,225 @@ components:
         - failure_mode
         - key_sources
         - part_of_record
+    EventGatewayParsedRecordDecryptFieldsPolicy:
+      description: |
+        Decrypts fields of parsed Kafka records using AES_256_GCM. Keys are therefore 256 bits long.
+
+        Note this policy can only be used as a child of a `EventGatewayConsumeSchemaValidationPolicy` policy.
+      type: object
+      properties:
+        type:
+          description: The type name of the policy.
+          type: string
+          enum:
+            - decrypt_fields
+          maxLength: 255
+          minLength: 1
+          x-terraform-transform-const: true
+        name:
+          description: A unique user-defined name of the policy.
+          type: string
+          maxLength: 255
+          x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
+        description:
+          description: A human-readable description of the policy.
+          type: string
+          default: ''
+          maxLength: 512
+        enabled:
+          description: Whether the policy is enabled.
+          type: boolean
+          default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        config:
+          description: The configuration of the policy.
+          type: object
+          $ref: '#/components/schemas/EventGatewayParsedRecordDecryptFieldsConfig'
+        condition:
+          description: |
+            A string containing the boolean expression that determines whether the policy is applied.
+
+            When the policy is applied as a child policy of schema_validation, the expression can also reference
+            `record.value` fields.
+          type: string
+          example: record.value.content.foo.bar == "a-value"
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
+              - name: record.value.validated
+                type: boolean
+                description: Indicates whether the record value was successfully validated.
+              - name: record.value.content
+                type: object
+                description: The content of the record value.
+      required:
+        - type
+        - config
+      title: Decrypt Parsed Record Fields
+    EventGatewayParsedRecordDecryptFieldsPolicyCreate:
+      description: |
+        Decrypts fields of parsed Kafka records using AES_256_GCM. Keys are therefore 256 bits long.
+
+        Note this policy can only be used as a child of a `EventGatewayConsumeSchemaValidationPolicy` policy.
+      type: object
+      properties:
+        type:
+          description: The type name of the policy.
+          type: string
+          enum:
+            - decrypt_fields
+          maxLength: 255
+          minLength: 1
+          x-terraform-transform-const: true
+        name:
+          description: A unique user-defined name of the policy.
+          type: string
+          maxLength: 255
+          x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
+        description:
+          description: A human-readable description of the policy.
+          type: string
+          default: ''
+          maxLength: 512
+        enabled:
+          description: Whether the policy is enabled.
+          type: boolean
+          default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        config:
+          description: The configuration of the policy.
+          type: object
+          $ref: '#/components/schemas/EventGatewayParsedRecordDecryptFieldsConfig'
+        condition:
+          description: |
+            A string containing the boolean expression that determines whether the policy is applied.
+
+            When the policy is applied as a child policy of schema_validation, the expression can also reference
+            `record.value` fields.
+          type: string
+          example: record.value.content.foo.bar == "a-value"
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
+              - name: record.value.validated
+                type: boolean
+                description: Indicates whether the record value was successfully validated.
+              - name: record.value.content
+                type: object
+                description: The content of the record value.
+        parent_policy_id:
+          description: The unique identifier of the parent schema validation policy.
+          type: string
+          format: uuid
+      required:
+        - type
+        - config
+        - parent_policy_id
+      title: Decrypt Parsed Record Fields
+    EventGatewayParsedRecordDecryptFieldsConfig:
+      description: The configuration of the decrypt parsed record fields policy.
+      type: object
+      properties:
+        failure_mode:
+          $ref: '#/components/schemas/ConsumeFailureMode'
+        key_sources:
+          description: Describes how to find a symmetric key for decryption.
+          type: array
+          items:
+            $ref: '#/components/schemas/EventGatewayKeySource'
+          minItems: 1
+        decrypt_fields:
+          description: Selects which fields to decrypt.
+          type: array
+          items:
+            $ref: '#/components/schemas/EventGatewayParsedRecordDecryptionSelector'
+          minItems: 1
+      required:
+        - failure_mode
+        - key_sources
+        - decrypt_fields
+    EventGatewayParsedRecordDecryptionSelector:
+      description: Selects fields of a parsed record for decryption.
+      type: object
+      properties:
+        paths:
+          description: Selects which fields of the parsed record to decrypt. A maximum of 50 path entries are allowed.
+          oneOf:
+            - type: array
+              maxItems: 50
+              items:
+                type: object
+                required:
+                  - match
+                properties:
+                  match:
+                    description: |
+                      A field selector. It can select nested fields and array entries.
+
+                      Currently supported are exact matches.
+                    type: string
+                    example: 'someObject.someArray[1].fieldName'
+            - type: string
+              x-expression:
+                type: array
+                items:
+                  type: string
+                fields:
+                  - name: context.auth.principal.name
+                    type: string
+                    description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+                  - name: context.auth.type
+                    type: string
+                    description: |
+                      The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+                  - name: context.auth.token.claims
+                    type: object
+                    description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
+                  - name: record.headers
+                    type: object
+                    description: An associative array of header key value pairs.
+                  - name: record.value.content
+                    type: object
+                    description: The content of the record value.
+              description: |
+                This expression should evaluate to an array of exact field paths,
+                equivalent to the `match` values in the array variant.
+              example: |
+                ${context.auth.type == 'sasl_oauth_bearer' ? ['credentials.accessToken', 'credentials.refreshToken'] : ['credentials.password']}
+      required:
+        - paths
     EventGatewayModifyHeadersPolicy:
       description: A policy that modifies headers for requests.
       type: object
@@ -4599,6 +5041,30 @@ components:
       enum:
         - error
         - passthrough
+    ProduceFailureMode:
+      description: |
+        Describes how to handle a failure in a policy applied to produced records.
+        * `reject` - rejects the record batch.
+        * `passthrough` - passes the record silently to the backend cluster even though policy execution failed.
+        * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).
+      type: string
+      enum:
+        - reject
+        - passthrough
+        - mark
+    ConsumeFailureMode:
+      description: |
+        Describes how to handle a failure in a policy applied to consumed records.
+        * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it.
+        * `skip` - the record is not delivered to the client.
+        * `passthrough` - passes the record to the client even though policy execution failed.
+        * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).
+      type: string
+      enum:
+        - error
+        - skip
+        - passthrough
+        - mark
     EncryptionRecordPart:
       description: |
         * key - encrypt the record key

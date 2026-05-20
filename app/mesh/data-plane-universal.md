@@ -14,11 +14,13 @@ tags:
 
 related_resources:
   - text: Deploy {{site.mesh_product_name}} on Universal
-    url: '/mesh/universal/'
+    url: '/mesh/get-started/universal/install/'
   - text: 'Data plane on Kubernetes'
     url: '/mesh/data-plane-kubernetes/'
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
+  - text: Deploy a multi-zone global control plane in Universal mode with Docker
+    url: /mesh/deploy-multi-zone-global-control-plane-universal-docker/
   - text: Zone ingress
     url: /mesh/zone-ingress/
   - text: "Data plane proxy"

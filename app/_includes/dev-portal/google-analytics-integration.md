@@ -1,6 +1,7 @@
-1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Portals**.
 1. Click your Dev Portal.
-1. In the Dev Portal sidebar, click **Settings**. 
+1. Click the **Settings** tab.
 1. Click the **Integrations** tab.
 1. Click **{{ site.google_analytics }} 4**.
 1. Click the **Enabled** toggle.

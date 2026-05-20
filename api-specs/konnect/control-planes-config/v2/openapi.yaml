@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.14.0
-  x-oas-source: kong/platform-api@72168f6e347897e4179787401f92e0a277234138
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/72168f6e347897e4179787401f92e0a277234138'
+  x-oas-source: kong/platform-api@8069b1b5620aec36a5ddcccc2c2cf09e6b9102d0
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8069b1b5620aec36a5ddcccc2c2cf09e6b9102d0'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -90,6 +90,25 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DataPlaneClientCertificateResponse'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
+      tags:
+        - DP Certificates
+    put:
+      operationId: update-dataplane-certificate
+      summary: Update DP Client Certificate
+      description: Update a DP Client Certificate for this control plane. A dataplane certificate allows dataplanes configured with the certificate and corresponding private key to establish connection with this control plane.
+      requestBody:
+        $ref: '#/components/requestBodies/DataPlaneClientCertificateRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataPlaneClientCertificateResponse'
+        '400':
+          $ref: '#/components/responses/KonnectCPLegacyBadRequest'
         '401':
           $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
         '403':
@@ -4874,6 +4893,9 @@ components:
         cert:
           description: JSON escaped string of the certificate.
           type: string
+        title:
+          description: Title of the certificate.
+          type: string
     ConfigStore:
       type: object
       properties:
@@ -9502,6 +9524,9 @@ components:
             properties:
               cert:
                 description: JSON escaped string of the certificate.
+                type: string
+              title:
+                description: Title for the certificate.
                 type: string
             required:
               - cert

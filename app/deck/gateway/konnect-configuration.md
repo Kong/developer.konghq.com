@@ -21,24 +21,27 @@ related_resources:
     url: /konnect/
   - text: deck gateway commands
     url: /deck/gateway/
+  - text: decK configuration
+    url: /deck/configuration/
 ---
 
 {:.warning}
 > **Note**: {{site.konnect_short_name}} requires decK v1.40.0 or above. Versions below this will see inconsistent `deck gateway diff` results.
 
-You can manage {{site.base_gateway}} core entity configuration in your {{site.konnect_short_name}} organization using decK.
+To use decK with {{site.konnect_short_name}}, you need:
+- A {{site.konnect_short_name}} authentication token
+- The name of a control plane to target
+- (Optional, if your organization isn't in the `us` region) The {{site.konnect_short_name}} API address
 
-decK can only target one Control Plane at a time.
+decK can only target one control plane at a time. Managing multiple control planes requires a separate state file per control plane.
 
-Managing multiple Control Planes requires a separate state file per Control Plane.
-
-decK _does not_ support publishing content to the Dev Portal or managing application registrations. Custom plugins can only be configured if the plugin schema has been uploaded to Konnect. Note that creating or managing schemas via decK is not supported.
+decK _does not_ support publishing content to the Dev Portal or managing application registrations. Custom plugins can only be configured if the plugin schema has been uploaded to {{ site.konnect_short_name }}. Note that creating or managing schemas via decK is not supported.
 
 ## Using decK with Konnect
 
-To use decK with {{ site.konnect_short_name }}, you must provide a {{ site.konnect_short_name }} authentication method and the name of a Control Plane to target.
+To use decK with {{ site.konnect_short_name }}, you must provide a {{ site.konnect_short_name }} authentication method and the name of a control plane to target.
 
-If you are using personal access tokens or system access tokens, you can provide them using the `--konnect-token` flag:
+If you are using [personal access tokens or system access tokens](/konnect-api/#konnect-api-authentication), you can provide them using the `--konnect-token` flag:
 
 ```bash
 deck gateway ping \
@@ -77,15 +80,15 @@ To target a specific geo, set `konnect-addr` to one of the following:
 - IN geo: `"https://in.api.konghq.com"`
 - ME geo: `"https://me.api.konghq.com"`
 
-### Control Planes
+### Control planes
 
-Each state file targets one Control Plane.
-If you don't provide a Control Plane, decK targets the `default` Control Plane.
+Each state file targets one control plane.
+If you don't provide a control plane, decK targets the `default` control plane.
 
-If you have a custom Control Plane, you can specify it in the state file,
+If you have a custom control plane, you can specify it in the state file,
 or use a flag when running any decK command.
 
-- Target a Control Plane in your state file with the `_konnect.control_plane_name` parameter:
+- Target a control plane in your state file with the `_konnect.control_plane_name` parameter:
 
   ```yaml
   _format_version: "3.0"
@@ -93,11 +96,23 @@ or use a flag when running any decK command.
     control_plane_name: staging
   ```
 
-- Set a Control Plane using the `--konnect-control-plane-name` flag:
+- Set a control plane using the `--konnect-control-plane-name` flag:
 
   ```sh
   deck gateway sync konnect.yaml --konnect-control-plane-name staging
   ```
+
+### Setting default connection values
+
+If you need to connect to one organization and control plane consistently, you can use environment variables prefixed with `DECK_*` instead of passing connection flags with every command. For example:
+
+```sh
+export DECK_KONNECT_TOKEN='YOUR-KONNECT-TOKEN'
+export DECK_KONNECT_ADDR='https://eu.api.konghq.com'
+export DECK_KONNECT_CONTROL_PLANE_NAME='YOUR-CONTROL-PLANE'
+```
+
+For more on how decK uses environment variables and configuration files, see [decK configuration](/deck/configuration/).
 
 ## Making decK work with AWS PrivateLink
 

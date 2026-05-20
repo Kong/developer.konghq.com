@@ -129,7 +129,7 @@ variables:
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
 1. Click your control plane.
-1. Navigate to **Vaults** in the sidebar.
+1. Click the **Vaults** tab.
 1. Click **New vault**.
 1. In the **Vault Configuration** dropdown, select "Konnect".
 1. Enter `mysecretvault` in the **Prefix** field.

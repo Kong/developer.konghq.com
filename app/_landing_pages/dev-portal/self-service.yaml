@@ -249,3 +249,15 @@ rows:
                 Learn about supported DCR identity providers and supported DCR authentication methods. 
               cta:
                 url: /dev-portal/dynamic-client-registration/
+  
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: |
+                {% include faqs/api-app-reg-override.md section='question' %}
+              a: |
+                {% include faqs/api-app-reg-override.md section='answer' %}
