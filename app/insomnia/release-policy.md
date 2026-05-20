@@ -44,9 +44,7 @@ Insomnia strongly recommends using the newest version, and that all users collab
 
 ## Long Term Support (LTS)
 
-Insomnia doesn't have an explicit Long Term Support (LTS) policy, nor does it publish LTS versions.  
-
-
+Insomnia doesn't have an explicit Long Term Support (LTS) policy, nor does it publish LTS versions.
 
 ## Backports
 
@@ -150,13 +148,34 @@ Examples include:
 - Generally Available (GA): Available to anyone.
 - Beta: Generally a 7\-day period before GA where clients can opt in (via Settings -> Release Channel in the app) and provide early [feedback](#user-feedback).
 
-## Feedback
+## Send feedback
 
 Users can provide feedback depending on the type of plan they are on:
 
-- **Essential:** file GitHub issues for defects or ideas.
-- **Pro** and **Enterprise:** reach out to support@insomnia.rest for support.
-- **Enterprise** only: send feedback to your CSM or through whatever normal cadences you have with Kong/Insomnia.
+{% feature_table %}
+item_title: Feedback
+columns:
+  - title: Essential
+    key: essential
+  - title: Pro
+    key: pro
+  - title: Enterprise
+    key: enterprise
 
+features:
+  - title: GitHub issues for defects or ideas.
+    essential: true
+    pro: true
+    enterprise: true
+  - title: Personalized support through support@insomnia.rest
+    essential: false
+    pro: true
+    enterprise: true
+  - title: Sending feedback to a dedicaded Customer Success Manager (CSM).
+    essential: false
+    pro: false
+    enterprise: true
+    
 
+{% endfeature_table %}
 
