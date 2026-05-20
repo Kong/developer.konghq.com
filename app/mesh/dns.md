@@ -33,11 +33,11 @@ The {{site.mesh_product_name}} DNS server responds to `A` and `AAAA` DNS request
 
 ### Virtual IPs
 
-The control plane allocates virtual IPs from the configured CIDR (`240.0.0.0/4` by default) by constantly scanning the services available in all {{site.mesh_product_name}} meshes. When a service is removed, the control plane frees its VIP, and {{site.mesh_product_name}} DNS stops responding for it with `A` and `AAAA` records. Virtual IPs are stable and replicated between instances of the control plane and data plane proxies.
+The control plane allocates virtual IPs (VIP) from the configured CIDR (`240.0.0.0/4` by default) by constantly scanning the services available in all {{site.mesh_product_name}} meshes. When a service is removed, the control plane frees its VIP, and {{site.mesh_product_name}} DNS stops responding for it with `A` and `AAAA` records. Virtual IPs are stable and replicated between instances of the control plane and data plane proxies.
 
 When the control plane allocates a new VIP or frees an old one, it pushes the change to the data plane proxy.
 
-{{site.mesh_product_name}} DNS is not a service discovery mechanism: it does not return the real IP addresses of service instances. Instead, it always returns a single VIP assigned to the relevant service in the mesh. This single-VIP approach provides a unified view of all services within a single zone or across multiple zones.
+{{site.mesh_product_name}} DNS is not a service discovery mechanism, it does not return the real IP addresses of service instances. Instead, it always returns a single VIP assigned to the relevant service in the mesh. This single-VIP approach provides a unified view of all services within a single zone or across multiple zones.
 
 ### Data plane resolution
 
@@ -102,7 +102,7 @@ See [`HostnameGenerator`](/mesh/hostnamegenerator/) to customize these templates
 
 ## Installation
 
-{{site.mesh_product_name}} DNS requires [transparent proxying](/mesh/transparent-proxying/) to be enabled.
+{{site.mesh_product_name}} DNS requires [transparent proxying](/mesh/transparent-proxying/) to be enabled:
 
 - **On Kubernetes**, transparent proxying and DNS are enabled automatically whenever the `kuma-dp` sidecar proxy is injected.
 - **On Universal**, follow the instructions in [transparent proxying](/mesh/transparent-proxying/) to set it up first.
