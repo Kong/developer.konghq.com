@@ -228,26 +228,26 @@ of them support child resources underneath them.
 
 **Parent Resource Examples**:
 
-- APIs
-- Portals
-- Application Auth Strategies
-- Control Planes
-- Analytics Dashboards
-- Organization Teams
-- Event Gateways
+- `apis`
+- `portals`
+- `application_auth_strategies`
+- `control_planes`
+- `analytics.dashboards`
+- `organization.teams`
+- `event_gateways`
 
 **Child Resource Examples**:
 
-- API Versions
-- API Publications
-- API Implementations
-- API Documents
-- Portal Pages
-- Portal Snippets
-- Portal Customizations
-- Portal Custom Domains
-- Portal Email Configs
-- Portal Email Templates
+- `api.versions`
+- `api.publications`
+- `api.implementations`
+- `api.documents`
+- `portal.pages`
+- `portal.snippets`
+- `portal.customization`
+- `portal.custom_domain`
+- `portal.email_config`
+- `portal.email_templates`
 
 See the [kongctl declarative resource reference](/kongctl/supported-resources/) for more details on supported resources.
 
