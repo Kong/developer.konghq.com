@@ -132,7 +132,7 @@ to see your developer portal with the published API.
 
 Resources can have multiple identifiers:
 
-- **ref**: `kongctl` declarative engine identifier. `ref` is used to identify the resource uniquely within a
+- **ref**: kongctl declarative engine identifier. `ref` is used to identify the resource uniquely within a
     given set of declarative configurations. `ref` is not written to the remote {{site.konnect_short_name}} system and
     must be unique across all resources in a given set of input configuration files. This value is used to
     create inter-configuration references between resources.
@@ -149,13 +149,13 @@ configuration contract names. Use the names documented in the
 
 ```yaml
 application_auth_strategies:
-  - ref: oauth-strategy              # ref identifies a resource within a configuration
-    name: "OAuth 2.0 Strategy"       # Identifies an auth strategy within {{site.konnect_short_name}}
+  - ref: oauth-strategy
+    name: "OAuth 2.0 Strategy"
 
 portals:
   - ref: developer-portal
     name: "Developer Portal"
-    default_application_auth_strategy: oauth-strategy  # References the auth strategy by its ref value
+    default_application_auth_strategy_id: !ref oauth-strategy#id
 ```
 
 ### Plan Artifacts
