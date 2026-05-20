@@ -10,6 +10,8 @@ related_resources:
     url: /event-gateway/
   - text: Set up observability for {{site.event_gateway_short}}
     url: /how-to/event-gateway/configure-observability-with-otel/
+  - text: "{{site.event_gateway}} headers"
+    url: /event-gateway/headers/
 ---
 
 <!--vale off-->
