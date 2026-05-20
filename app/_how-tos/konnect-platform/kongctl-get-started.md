@@ -113,7 +113,7 @@ echo 'portals:
   - ref: getting-started-portal
     name: "My First Portal"
     display_name: "The Getting Started Dev Portal"
-    description: "My first declaratively managed Dev Portal"' | kongctl diff -f -
+    description: "My first declaratively managed Dev Portal"' | kongctl diff --mode apply -f -
 ```
 
 The results of the diff should look like the following:
