@@ -2,7 +2,7 @@
 1. Click your Dev Portal.
 1. In the Dev Portal sidebar, click **Settings**. 
 1. Click the **Integrations** tab.
-1. Click **{{ site.google}} Analytics 4**.
+1. Click **{{ site.google_analytics }} 4**.
 1. Click the **Enabled** toggle.
 1. In the **Tracking ID** field, enter the [measurement ID for your {{ site.google}} Analytics data stream](https://support.google.com/analytics/answer/9539598?hl=en).
 1. Optional: Click **Advanced configuration** to configure the data layer name.

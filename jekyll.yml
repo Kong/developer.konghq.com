@@ -146,6 +146,7 @@ ollama: Ollama
 deepseek: DeepSeek
 # Product names
 google_cloud: Google Cloud
+google_analytics: Google Analytics
 claude: Claude
 claude_code: Claude Code
 gtm: Google Tag Manager
