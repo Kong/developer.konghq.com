@@ -7,9 +7,18 @@
 /kongctl/delete/konnect/*  /kongctl/delete/
 /kongctl/delete/portal/    /kongctl/delete/
 /kongctl/delete/portal/*   /kongctl/delete/
+/kongctl/get/gateway/consumer/   /kongctl/get/gateway/
+/kongctl/get/gateway/route/      /kongctl/get/gateway/
+/kongctl/get/gateway/service/    /kongctl/get/gateway/
+/kongctl/list/gateway/consumer/  /kongctl/list/gateway/
+/kongctl/list/gateway/route/     /kongctl/list/gateway/
+/kongctl/list/gateway/service/   /kongctl/list/gateway/
 
-# Plugin examples
+# Plugins
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
+/gateway/plugin-development/  /custom-plugins/
+/gateway/plugin-development/*  /custom-plugins/
+
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone/
 /mesh-manager/migrate-zone/  /mesh/migrate-zone/
@@ -24,7 +33,8 @@
 /gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
-/mesh/requirements/ /mesh/version-compatibility/
+/mesh/requirements/ /mesh/validated-versions/
+/mesh/version-compatibility/ /mesh/validated-versions/
 /mesh/cp-config/    /mesh/control-plane-configuration/
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
@@ -49,10 +59,13 @@
 /how-to/event-gateway/kong-identity-oauth/  /event-gateway/kong-identity-oauth/
 
 # Mesh redirects
+/mesh/meshidentity-spire/   /mesh/issue-identity-with-meshidentity-spire/
+/mesh/collect-metrics-with-opentelemetry/   /mesh/deploy-an-opentelemetry-collector/
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
-/mesh/quickstart/universal-demo    /mesh/universal/
+/mesh/quickstart/universal-demo    /mesh/get-started/universal/install/
+/mesh/universal/    /mesh/get-started/universal/install/
 /mesh/quickstart/kubernetes     /mesh/kubernetes/
 /mesh/introduction/concepts     /mesh/concepts/
 /mesh/guides/gateway-builtin    /how-to/set-up-a-built-in-mesh-gateway/
@@ -192,6 +205,7 @@
 /insomnia/install/ /insomnia/#install-insomnia
 /insomnia/end-to-end-encryption/ /insomnia/data-security/
 /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/ /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
+/insomnia/upgrade/insomnia-12.6/ /insomnia/upgrade/git-sync-12.6/
 
 ## Indices
 

@@ -74,7 +74,7 @@ The following sections contain CNI installation instructions for different envir
 
 ### AWS - EKS
 
-Use the following settings to install {{site.mesh_product_name}} CNI on Amazon EKS.
+Use the following settings to install {{site.mesh_product_name}} CNI on {{ site.amazon }} EKS.
 
 {% cpinstall aws-eks %}
 cni.enabled=true

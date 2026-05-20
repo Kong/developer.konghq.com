@@ -31,6 +31,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl install extension](/kongctl/install/extension/)
+    description: "Install a kongctl CLI extension."
+  - command: |
       [kongctl install skills](/kongctl/install/skills/)
     description: "Install kongctl agent skills."
 {% endtable %}

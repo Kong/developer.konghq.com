@@ -8,6 +8,10 @@ description: Use the native Git CLI at the root of an Insomnia project.
 products:
 - insomnia
 
+beta: true
+min_version:
+  insomnia: "beta-12.6"
+
 tags:
 - insomnia-documents
 - collections
@@ -29,7 +33,8 @@ tldr:
     a: Navigate to the local folder to use Git natively in your Insomnia Git Sync project.
 
 faqs:
-  - q: macOS: Why do I get the error "string not in `pwd`" when trying to access my project's local folder?
+  - q: >-
+      macOS: Why do I get the error "string not in `pwd`" when trying to access my project's local folder?
     a: |
       That error is because the path has a space in it (Application Support), and your shell is splitting it into two arguments. `cd` only sees the first part (`/Users/<your-user>/Library/Application`), can't find it, and complains.
       

@@ -65,6 +65,9 @@ faqs:
       When `result=false`, the plugin was skipped for that request.
 ---
 
+{:.warning}
+> This feature is currently in [beta](/stages-of-software-availability/#beta) and should not be used in a production environment.
+
 ## Add a plugin with a condition
 
 Add the Request Termination plugin to your Route with a `condition` expression. 

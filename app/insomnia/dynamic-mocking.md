@@ -50,32 +50,36 @@ Traditional mocks return static, predefined payloads, while dynamic mocks genera
 <!-- vale off -->
 {% table %}
 columns:
-  - title: Mock Body type
+  - title: Mock server type
     key: type
-  - title: Response
+  - title: Response behavior
     key: response
   - title: Example
     key: example
 rows:
   - type: Static
-    response: Static, predefined payloads.
+    response: Returns the response body exactly as written.
     example: |
-      The client sends `"name": "George"`, and the mock returns `George`.
-  - type: Dynamic
-    response: Context-aware, variable outputs.
+      The Mock Body is `"name": "George"`. Every request to the route returns `George`.
+  - type: Dynamic (random)
+    response: Each request evaluates faker expressions in the Mock Body.
     example: |
-      The client sends `faker.randomFullName`, and the mock returns a randomly generated name.
-  - type: Static and Dynamic combined
-    response: A mix of fixed fields and dynamic values.
+      The Mock Body contains `{"name": "{{faker.randomFullName}}"}`. Each request returns a different randomly generated name.
+  - type: Dynamic (context-aware)
+    response: Expressions in the Mock Body read data from the incoming Collection request.
     example: |
-      The client sends `faker.randomFullName` together with a fixed `"role": "admin"` field. The mock returns a randomly generated name with the role set to `admin`.
+      The Mock Body contains `{"echoed_id": "{{ req.queryParams.id }}"}`. A request from a Collection to `<server-url/mock?id=42` returns `{"echoed_id": "42"}`. 
+  - type: Mixed
+    response: Combines fixed fields with evaluated expressions.
+    example: |
+      The Mock Body contains `faker.randomFullName` and a fixed `"role": "admin"` field. Each request returns a different name with the role set to `admin`.
 {% endtable %}
 <!-- vale on -->
 
 For adding random values, Insomnia provides faker variables that you can insert anywhere in the response body.
 
 Use dynamic mocking to:
-- **Serve request-aware responses**: When the mock reads the request and returns different content from it. For example, echoing identifiers or switching fields based on a query parameter or request body.
+- **Serve request-aware responses**: Create a mock route that shapes the response body based on the incoming request. For example, echoing identifiers or switching fields based on a query parameter or request body. Only available when running the request from a Collection, where you can copy the mock route URL and input **query parameters** to be echoed.
 - **Insert random data with faker variables**: Use faker variables to generate values like names, emails, timestamps, and UUIDs.
 
 ## Dynamic capabilities

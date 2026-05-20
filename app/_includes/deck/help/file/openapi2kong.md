@@ -19,6 +19,8 @@ Flags:
   -o, --output-file string       Output file to write. Use - to write to stdout. (default "-")
       --select-tag strings       Select tags to apply to all entities. If omitted, uses the "x-kong-tags"
                                  directive from the file.
+      --skip-route-by-header     skip generation of separate route for each required header parameter enum value.
+                                 When set, generates a single route per operation.
   -s, --spec string              OpenAPI spec file to process. Use - to read from stdin. (default "-")
       --uuid-base string         The unique base-string for uuid-v5 generation of entity IDs. If omitted,
                                  uses the root-level "x-kong-name" directive, or falls back to 'info.title'.)

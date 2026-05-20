@@ -30,7 +30,7 @@ related_resources:
     url: /insomnia/dynamic-mocking/
 ---
 
-Use [Faker functions](https://github.com/Kong/insomnia/blob/develop/packages/insomnia/src/templating/faker-functions.ts) anywhere template tags are supported to generate realistic mock data like names, emails, or timestamps.
+Use [Faker functions](https://github.com/Kong/insomnia-mockbin/blob/c2a388563ea8259f9b235e4b3dfe87f64d568014/lib/routes/bins/run.js#L274) anywhere template tags are supported to generate realistic mock data like names, emails, or timestamps.
 
 Faker output varies per call. Example values in the tables are illustrative.
 

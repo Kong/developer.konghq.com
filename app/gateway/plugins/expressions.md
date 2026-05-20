@@ -53,6 +53,9 @@ related_resources:
 
 ---
 
+{:.warning}
+> This feature is currently in [beta](/stages-of-software-availability/#beta) and should not be used in a production environment.
+
 Plugin conditions allow you to attach an optional `condition` expression to any plugin.
 When a request comes in, {{site.base_gateway}} evaluates the expression immediately before the plugin's `access` phase.
 If the expression evaluates to `true`, the plugin runs normally. If it evaluates to `false`, the plugin is skipped for that request.

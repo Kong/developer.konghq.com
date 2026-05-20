@@ -310,6 +310,9 @@ features:
 {:.info}
 >When using Vault references in plugin configs to **add headers**, ensure that the secret value stored in your Vault follows the **`key:value` format**. The entire header definition, both name and value, needs to be provided by the resolved secret.
 
+{:.warning}
+> Serverless plugins, like Pre-Function and Post-Function, are not supported with {{site.konnect_short_name}} Config Store Vaults.
+
 ## Secret rotation in Vaults
 
 By default, {{site.base_gateway}} automatically refreshes secrets *once every minute* in the background. 
@@ -566,9 +569,9 @@ To use GCP Secret Manager with [Workload Identity](https://cloud.google.com/kube
 > * With Workload Identity, setting the `GCP_SERVICE_ACCOUNT` isn’t necessary.
 > * When using GCP Vault as a backend, make sure you have configured system as part of the [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate) configuration directive so that the SSL certificates used by the official GCP API can be trusted by Kong.
 
-For a complete tutorial on how to set up Google Cloud as a Vault entity, see the following:
-* [Set up Google Cloud with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
-* [Set up Google Cloud with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
+For a complete tutorial on how to set up {{ site.google_cloud }} as a Vault entity, see the following:
+* [Set up {{ site.google_cloud }} with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
+* [Set up {{ site.google_cloud }} with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
 
 The following table lists the available configuration parameters for a GCP Secret Manager Vault:
 

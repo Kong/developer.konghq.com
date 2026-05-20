@@ -109,7 +109,9 @@ The exact execution of these steps will vary depending on your environment.
 
 ### Prerequisites
 
-* Review the [general upgrade guide](/gateway/upgrade/) to prepare for the upgrade and review your options.
+* Review either the [general upgrade guide](/gateway/upgrade/) or one of the LTS upgrade guides 
+([2.8 -> 3.4](/gateway/upgrade/lts-upgrade-28-34/), [3.4 -> 3.10](/gateway/upgrade/lts-upgrade-34-310/), [3.10 -> 3.14](/gateway/upgrade/lts-upgrade-310-314/)) 
+to prepare for the upgrade and review your options.
 * You have a traditional deployment or you need to upgrade the control planes (CPs) in a hybrid mode deployment.
 * You have enough resources to temporarily run an additional {{site.base_gateway}} cluster alongside your existing cluster.
 
@@ -146,7 +148,11 @@ to the new database.
 
 1. Start cluster Y.
 
-1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/) your entity configuration and sync the converted file to your newly installed version.
+1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, use `deck file convert` 
+to convert your entity configuration and sync the converted file to your newly installed version:
+  * [Convert Gateway entity configuration from 3.10 to 3.14](/gateway/upgrade/convert-lts-310-314/)
+  * [Convert Gateway entity configuration from 3.4 to 3.10](/gateway/upgrade/convert-lts-34-310/)
+  * [Convert Gateway entity configuration from 2.8 to 3.4](/gateway/upgrade/convert-lts-28-34/)
 
 1. Perform staging tests against version Y to make sure it works for all use cases. 
 
