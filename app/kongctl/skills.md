@@ -45,20 +45,21 @@ of truth for schema discovery, planning, and execution.
 
 ## Install kongctl skills
 
-Install the bundled skills from the root of the repository where your agent
-will work:
+Install the bundled skills into the project folder where you wish to use kongctl with an agent.
 
-```bash
-kongctl install skills
-```
-
-Preview the files and symlinks before writing them:
+If desired, preview the files and symlinks before writing them:
 
 ```bash
 kongctl install skills --dry-run
 ```
 
-By default, the installer writes skill files to `.kongctl/skills/` and creates
+Install the skills:
+
+```bash
+kongctl install skills
+```
+
+The installer writes skill files to `.kongctl/skills/` and creates
 symlinks for supported agent tooling under `.agents/skills/` and
 `.claude/skills/`.
 
@@ -100,5 +101,7 @@ A typical workflow looks like this:
 1. Review the generated YAML in your repository.
 1. Preview changes with `kongctl diff --mode apply` or `kongctl plan`.
 1. Apply reviewed changes with `kongctl apply` or `kongctl sync`.
+
+*Warning: Use proper agent approvals and controls when deploying more advanced workflows with agents executing changes directly.*
 
 See the [`kongctl install skills`](/kongctl/install/skills/) command reference for the complete command syntax.
