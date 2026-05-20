@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+toc_depth: 2
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -153,63 +154,77 @@ Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against t
 
 ## Capabilities
 
-The [`capabilities`](#schema-aigateway-model-capabilities) field tells {{site.ai_gateway}} which AI workflows the Model exposes. Each capability becomes one Route on the generated Service. A Model must declare at least one capability.
+The [`capabilities`](#schema-aigateway-model-capabilities) field defines which APIs the Model exposes. Each capability becomes one generated Route on the Model Service. A Model must declare at least one capability.
 
-Model [`type`](#schema-aigateway-model-type) controls which capability set applies:
+Model [`type`](#schema-aigateway-model-type) limits which capabilities you can declare:
 
-* `model`: synchronous request/response workloads through generative APIs. Supported capabilities are `chat`, `embeddings`, `assistants`, `responses`, `audio-transcriptions`, `audio-translations`, `image-generation`, `image-edits`, `video-generations`, and `realtime`.
-* `api`: asynchronous workloads through the files and batches APIs. Supported capabilities are `batches` and `files`.
+* `model`: synchronous request/response workloads through generative APIs.
+* `api`: asynchronous workloads through files and batches APIs.
 
-Not every provider supports every capability. The set of capabilities you can declare on a Model depends on what the provider in `target_models` exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
+Provider support varies by capability. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific coverage.
 
-The following table maps each capability to an OpenAI API reference and the corresponding [AI Proxy plugin](/plugins/ai-proxy/) example.
+The following table maps each capability to its route type, OpenAI API reference, and generative AI category. See the [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) reference pages for provider-specific details.
 
 <!-- vale off -->
 {% table %}
 columns:
   - title: Capability
     key: capability
-  - title: Description
-    key: description
-  - title: Example route
-    key: example
+  - title: Route type
+    key: route
+  - title: OpenAI API reference
+    key: reference
+  - title: Gen AI category
+    key: category
 rows:
   - capability: "`chat`"
-    description: Conversational responses from a sequence of messages.
-    example: "[`llm/v1/chat`](/plugins/ai-proxy/examples/openai-chat-route/)"
+    route: "`llm/v1/chat`"
+    reference: "[Chat completions](https://platform.openai.com/docs/api-reference/chat/create)"
+    category: "`text/generation`"
   - capability: "`embeddings`"
-    description: Vector representations for semantic search and similarity matching.
-    example: "[`llm/v1/embeddings`](/plugins/ai-proxy/examples/embeddings-route-type/)"
+    route: "`llm/v1/embeddings`"
+    reference: "[Embeddings](https://platform.openai.com/docs/api-reference/embeddings)"
+    category: "`text/embeddings`"
   - capability: "`assistants`"
-    description: Persistent tool-using agents with metadata for debugging and evaluation.
-    example: "[`llm/v1/assistants`](/plugins/ai-proxy/examples/assistants-route-type/)"
+    route: "`llm/v1/assistants`"
+    reference: "[Assistants](https://platform.openai.com/docs/api-reference/assistants)"
+    category: "`text/generation`"
   - capability: "`responses`"
-    description: REST-based full-text responses.
-    example: "[`llm/v1/responses`](/plugins/ai-proxy/examples/responses-route-type/)"
+    route: "`llm/v1/responses`"
+    reference: "[Responses](https://platform.openai.com/docs/api-reference/responses)"
+    category: "`text/generation`"
   - capability: "`audio-transcriptions`"
-    description: Speech-to-text.
-    example: "[`audio/v1/audio/transcriptions`](/plugins/ai-proxy/examples/audio-transcription-openai/)"
+    route: "`audio/v1/audio/transcriptions`"
+    reference: "[Create transcription](https://platform.openai.com/docs/api-reference/audio/createTranscription)"
+    category: "`audio/transcription`"
   - capability: "`audio-translations`"
-    description: Audio translation between languages.
-    example: "[`audio/v1/audio/translations`](/plugins/ai-proxy/examples/audio-translation-openai/)"
+    route: "`audio/v1/audio/translations`"
+    reference: "[Create translation](https://platform.openai.com/docs/api-reference/audio/createTranslation)"
+    category: "`audio/transcription`"
   - capability: "`image-generation`"
-    description: Generate images from text prompts.
-    example: "[`image/v1/images/generations`](/plugins/ai-proxy/examples/image-generation-openai/)"
+    route: "`image/v1/images/generations`"
+    reference: "[Create image](https://platform.openai.com/docs/api-reference/images)"
+    category: "`image/generation`"
   - capability: "`image-edits`"
-    description: Modify images from text prompts.
-    example: "[`image/v1/images/edits`](/plugins/ai-proxy/examples/image-edits-openai/)"
+    route: "`image/v1/images/edits`"
+    reference: "[Create image edit](https://platform.openai.com/docs/api-reference/images/createEdit)"
+    category: "`image/generation`"
   - capability: "`video-generations`"
-    description: Generate videos from text prompts.
-    example: "[`video/v1/videos/generations`](/plugins/ai-proxy/examples/video-generation-openai/)"
+    route: "`video/v1/videos/generations`"
+    reference: "[Create video](https://platform.openai.com/docs/api-reference/videos/create)"
+    category: "`video/generation`"
   - capability: "`realtime`"
-    description: Bidirectional WebSocket streaming for low-latency, interactive voice and text.
-    example: "[`realtime/v1/realtime`](/plugins/ai-proxy-advanced/examples/realtime-route-openai/)"
+    route: "`realtime/v1/realtime`"
+    reference: "[Realtime](https://platform.openai.com/docs/api-reference/realtime)"
+    category: "`realtime/generation`"
   - capability: "`batches`"
-    description: Asynchronous bulk LLM requests for long workloads.
-    example: "[`llm/v1/batches`](/plugins/ai-proxy/examples/batches-route-type/)"
+    route: "`llm/v1/batches`"
+    reference: "[Batch](https://platform.openai.com/docs/api-reference/batch)"
+    category: "N/A"
   - capability: "`files`"
-    description: File uploads for long documents and structured input.
-    example: "[`llm/v1/files`](/plugins/ai-proxy/examples/files-route-type/)"
+    route: "`llm/v1/files`"
+    reference: "[Files](https://platform.openai.com/docs/api-reference/files)"
+    category: "N/A"
 {% endtable %}
 <!-- vale on -->
 
@@ -266,7 +281,7 @@ When a Model has more than one target, the [load balancer](#schema-aigateway-mod
 
 ### Algorithms
 
-The [`algorithm`](#schema-aigateway-model-config-balancer-algorithm) field selects one of seven load balancing strategies for distributing requests across target models.
+The [`algorithm`](#schema-aigateway-model-config-balancer-algorithm) field selects one of seven load balancing strategies for distributing requests across target models. For detailed guidance focused on Model entities, see [Load balancing algorithms for Model entities](/ai-gateway/load-balancing/#load-balancing-algorithms-for-model-entities).
 
 <!-- vale off -->
 {% table %}
@@ -293,6 +308,200 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+### Algorithm examples
+
+{% navtabs "model-entity-balancer-algorithm" %}
+{% navtab "Round-robin" %}
+{% entity_example %}
+type: model
+data:
+  name: gpt-router-round-robin
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+  formats:
+    - type: openai
+  target_models:
+    - name: gpt-4o
+      provider:
+        name: openai-prod
+      weight: 70
+    - name: gpt-4o-mini
+      provider:
+        name: openai-prod
+      weight: 30
+  config:
+    balancer:
+      algorithm: round-robin
+{% endentity_example %}
+{% endnavtab %}
+
+{% navtab "Consistent-hashing" %}
+{% entity_example %}
+type: model
+data:
+  name: gpt-router-consistent-hashing
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+  formats:
+    - type: openai
+  target_models:
+    - name: gpt-4o
+      provider:
+        name: openai-prod
+    - name: gpt-4o-mini
+      provider:
+        name: openai-prod
+  config:
+    balancer:
+      algorithm: consistent-hashing
+      hash_on_header: X-User-ID
+{% endentity_example %}
+{% endnavtab %}
+
+{% navtab "Least-connections" %}
+{% entity_example %}
+type: model
+data:
+  name: gpt-router-least-connections
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+  formats:
+    - type: openai
+  target_models:
+    - name: gpt-4o
+      provider:
+        name: openai-prod
+      weight: 70
+    - name: gpt-4o-mini
+      provider:
+        name: openai-prod
+      weight: 30
+  config:
+    balancer:
+      algorithm: least-connections
+{% endentity_example %}
+{% endnavtab %}
+
+{% navtab "Lowest-usage" %}
+{% entity_example %}
+type: model
+data:
+  name: gpt-router-lowest-usage
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+  formats:
+    - type: openai
+  target_models:
+    - name: gpt-4o
+      provider:
+        name: openai-prod
+    - name: gpt-4o-mini
+      provider:
+        name: openai-prod
+  config:
+    balancer:
+      algorithm: lowest-usage
+      tokens_count_strategy: cost
+{% endentity_example %}
+{% endnavtab %}
+
+{% navtab "Lowest-latency" %}
+{% entity_example %}
+type: model
+data:
+  name: gpt-router-lowest-latency
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+  formats:
+    - type: openai
+  target_models:
+    - name: gpt-4o
+      provider:
+        name: openai-prod
+    - name: gpt-4o-mini
+      provider:
+        name: openai-prod
+  config:
+    balancer:
+      algorithm: lowest-latency
+      latency_strategy: e2e
+{% endentity_example %}
+{% endnavtab %}
+
+{% navtab "Semantic" %}
+{% entity_example %}
+type: model
+data:
+  name: gpt-router-semantic
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+  formats:
+    - type: openai
+  target_models:
+    - name: gpt-4o
+      description: General-purpose assistant
+      provider:
+        name: openai-prod
+    - name: claude-3-5-sonnet
+      description: Long-form reasoning assistant
+      provider:
+        name: anthropic-prod
+  config:
+    balancer:
+      algorithm: semantic
+      vectordb:
+        strategy: redis
+        redis:
+          host: redis.internal
+          port: 6379
+      embeddings:
+        provider:
+          name: openai-prod
+        model: text-embedding-3-small
+{% endentity_example %}
+{% endnavtab %}
+
+{% navtab "Priority" %}
+{% entity_example %}
+type: model
+data:
+  name: gpt-router-priority
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+  formats:
+    - type: openai
+  target_models:
+    - name: gpt-4o-mini
+      provider:
+        name: openai-prod
+      priority: 1
+      weight: 100
+    - name: gpt-4o
+      provider:
+        name: openai-prod
+      priority: 2
+      weight: 100
+  config:
+    balancer:
+      algorithm: priority
+{% endentity_example %}
+{% endnavtab %}
+{% endnavtabs %}
+
 ### Retry and fallback
 
 The load balancer supports configurable retries, timeouts, and failover to different targets when one is unavailable. Fallback works across targets with any supported format, so you can mix providers freely (for example, OpenAI and Mistral). For configuration details, see [Retry and fallback configuration](/ai-gateway/load-balancing/#retry-and-fallback).
@@ -308,12 +517,10 @@ The load balancer includes a circuit breaker that improves reliability under sus
 
 ### Vector store
 
-A vector store holds numerical representations (embeddings) of requests and responses so the runtime can match new requests against stored vectors. It powers the [`semantic`](#schema-aigateway-model-config-balancer-algorithm) algorithm and any similarity-matching workflow on the Model. Configure storage through [`config.balancer.vectordb`](#schema-aigateway-model-config-balancer-vectordb) by selecting a `strategy`:
+A vector store powers the [`semantic`](#schema-aigateway-model-config-balancer-algorithm) balancer algorithm and other similarity-matching workflows on a Model. Configure it through [`config.balancer.vectordb`](#schema-aigateway-model-config-balancer-vectordb).
 
-* `redis`: connects to Redis with Vector Similarity Search (VSS), AWS MemoryDB for Redis, or Valkey. {{site.ai_gateway}} auto-detects Valkey from the server name field and uses the Valkey-specific driver.
-* `pgvector`: connects to PostgreSQL with the pgvector extension.
+{% include plugins/ai-vector-db.md name="Model entity" %}
 
-For deeper background on vector storage and similarity matching, see [Embedding-based similarity matching](/ai-gateway/semantic-similarity/).
 
 ### Embeddings
 
