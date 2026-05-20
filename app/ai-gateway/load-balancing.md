@@ -203,11 +203,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-#### Retry and fallback scenarios
+#### Retry and fallback scenarios for Model entities {% new_in 2.0.0 %}
 
 You can customize {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
-
-#### Retry and fallback scenarios for Model entities {% new_in 2.0.0 %}
 
 <!--vale off-->
 {% table %}
