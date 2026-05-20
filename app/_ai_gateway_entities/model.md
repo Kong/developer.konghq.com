@@ -552,11 +552,14 @@ A Model declares the Policies it uses through its `policies` field. Each entry i
 
 You can attach multiple Policies to a single Model. Each Policy has an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
 
-Not every plugin type is valid as a Model Policy.
+{:.warning}
+> Model Policy compatibility is based on Policy scope support, not on whether the Policy configuration includes a `model` field.
+> If you try to attach a Policy type that doesn't support Model Policy scope, Model create or update fails with a validation error.
 
 Policies created through the nested on-prem endpoint (`POST /ai/models/{modelId}/policies`) are deleted when the Model is deleted. Policies created independently (for example, at `/v1/ai-gateways/{aiGatewayId}/policies` or `/ai/policies`) are not deleted when the Model is deleted; only the Model's reference is removed.
 
-For further information, see the [Policy entity](/ai-gateway/entities/policy/) reference.
+{:.info}
+> For further information, see the [Policy entity](/ai-gateway/entities/policy/) reference.
 
 ### Plugin priority and Policy execution order
 
