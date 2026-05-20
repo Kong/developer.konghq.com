@@ -31,6 +31,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl get analytics](/kongctl/get/analytics/)
+    description: "Get {{site.konnect_short_name}} {{site.observability}} details."
+  - command: |
       [kongctl get api](/kongctl/get/api/)
     description: "Get API details."
   - command: |
