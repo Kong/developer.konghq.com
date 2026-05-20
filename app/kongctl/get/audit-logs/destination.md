@@ -4,7 +4,7 @@ description: "Get audit log destination."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect

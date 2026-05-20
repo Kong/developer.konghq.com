@@ -4,7 +4,7 @@ description: "Upgrade kongctl features."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 
