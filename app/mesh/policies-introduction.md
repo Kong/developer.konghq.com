@@ -99,7 +99,10 @@ rows:
 Producer policies allow service owners to define recommended client-side behavior for calls to their service by creating the policy in their service's own namespace.
 {{ site.mesh_product_name }} then applies it automatically to the outbounds of client workloads.
 This lets backend owners publish sensible defaults (timeouts, retries, limits) for consumers,
-while individual clients can still refine those settings with their own [consumer](#consumer-policies) policies.<sup><a href="#same-namespace-exception">note</a></sup>
+while individual clients can still refine those settings with their own [consumer](#consumer-policies) policies.
+
+{:.warning}
+> A default consumer policy can override a service-specific producer policy if they are in the same namespace. For more information, see [Same-namespace exception](#same-namespace-exception).
 
 The following policy tells {{ site.mesh_product_name }} to apply 3 retries with a backoff from `15s` to `1m`
 on 5xx errors to any client calling `backend`:
@@ -311,10 +314,72 @@ For `to` policies, the concatenated arrays are sorted again based on the `spec.t
 4. `MeshService`
 5. `Mesh` (lowest priority)
 
+Configuration is then built by merging each level using [JSON Merge Patch](https://www.rfc-editor.org/rfc/rfc7386).
+
+For example, a producer `MeshTimeout` in `backend-ns` sets broad timeout defaults for all callers:
+
+```yaml
+# Producer policy (lower priority)
+apiVersion: kuma.io/v1alpha1
+kind: MeshTimeout
+metadata:
+  name: backend-producer-timeouts
+  namespace: backend-ns
+spec:
+  targetRef:
+    kind: Mesh
+  to:
+    - targetRef:
+        kind: MeshService
+        name: backend
+        namespace: backend-ns
+      default:
+        connectionTimeout: 10s
+        idleTimeout: 2m
+        http:
+          requestTimeout: 30s
+          streamIdleTimeout: 5m
+```
+
+The `frontend` team creates a consumer policy to shorten the request timeout for their own calls and cap stream duration:
+
+```yaml
+# Consumer policy (higher priority)
+apiVersion: kuma.io/v1alpha1
+kind: MeshTimeout
+metadata:
+  name: frontend-consumer-timeouts
+  namespace: frontend-ns
+spec:
+  targetRef:
+    kind: Mesh
+  to:
+    - targetRef:
+        kind: MeshService
+        name: backend
+        namespace: backend-ns
+      default:
+        http:
+          requestTimeout: 5s
+          maxStreamDuration: 1m
+```
+
+The merged configuration applied to `frontend`'s outbound toward `backend` is:
+
+```yaml
+default:
+  connectionTimeout: 10s   # kept from producer: consumer didn't set it
+  idleTimeout: 2m          # kept from producer: consumer didn't set it
+  http:
+    requestTimeout: 5s     # overridden by consumer
+    streamIdleTimeout: 5m  # kept from producer: consumer didn't set it
+    maxStreamDuration: 1m  # added by consumer
+```
+
 ### Same-namespace exception
 
 On Kubernetes, a consumer default in the same namespace can still override a producer policy for a specific service.
-This happens because policy role is evaluated before `spec.to[].targetRef` specificity.
+This happens because the policy role is evaluated before `spec.to[].targetRef`.
 
 {% navtabs "same-namespace-exception" %}
 {% navtab "Producer" %}
@@ -384,70 +449,8 @@ spec:
 {% endnavtab %}
 {% endnavtabs %}
 
-In this case, `consumer-default` overrides `producer-policy`.
+In this example, `consumer-default` overrides `producer-policy`.
 To keep `producer-policy` effective, replace the mesh-wide consumer default with service-specific entries like `consumer-specific`, or split them into separate consumer policies and leave `redis` out.
-
-Configuration is then built by merging each level using [JSON Merge Patch](https://www.rfc-editor.org/rfc/rfc7386).
-
-For example, a producer `MeshTimeout` in `backend-ns` sets broad timeout defaults for all callers:
-
-```yaml
-# Producer policy (lower priority)
-apiVersion: kuma.io/v1alpha1
-kind: MeshTimeout
-metadata:
-  name: backend-producer-timeouts
-  namespace: backend-ns
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: MeshService
-        name: backend
-        namespace: backend-ns
-      default:
-        connectionTimeout: 10s
-        idleTimeout: 2m
-        http:
-          requestTimeout: 30s
-          streamIdleTimeout: 5m
-```
-
-The `frontend` team creates a consumer policy to shorten the request timeout for their own calls and cap stream duration:
-
-```yaml
-# Consumer policy (higher priority)
-apiVersion: kuma.io/v1alpha1
-kind: MeshTimeout
-metadata:
-  name: frontend-consumer-timeouts
-  namespace: frontend-ns
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: MeshService
-        name: backend
-        namespace: backend-ns
-      default:
-        http:
-          requestTimeout: 5s
-          maxStreamDuration: 1m
-```
-
-The merged configuration applied to `frontend`'s outbound toward `backend` is:
-
-```yaml
-default:
-  connectionTimeout: 10s   # kept from producer: consumer didn't set it
-  idleTimeout: 2m          # kept from producer: consumer didn't set it
-  http:
-    requestTimeout: 5s     # overridden by consumer
-    streamIdleTimeout: 5m  # kept from producer: consumer didn't set it
-    maxStreamDuration: 1m  # added by consumer
-```
 
 ## Metadata
 
