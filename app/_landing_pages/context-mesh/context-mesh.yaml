@@ -1,0 +1,249 @@
+metadata:
+  title: "{{site.context_mesh}}"
+  content_type: landing_page
+  description: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly."
+  products:
+    - konnect
+  breadcrumbs:
+    - /konnect/
+  tags:
+    - ai
+    - mcp
+  search_aliases:
+    - agent context
+    - code mode mcp
+
+rows:
+  - header:
+      type: h1
+      text: "Kong {{site.context_mesh}}"
+      sub_text: "Turn enterprise APIs into agent-ready MCP servers that AI agents can discover, call, and reason about."
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    AI agents are only as good as the context they can reach. {{site.context_mesh}} exposes REST APIs to AI agents as Code Mode MCP servers. It is the mediation layer between agents and your APIs. Agent traffic to those APIs passes through the same path as the rest of your API traffic, so the policies and observability you already apply continue to apply.
+
+                    Agents cannot call most APIs directly. Each one requires either a custom SDK or prior training on that specific API, and neither approach scales when an organization runs dozens of internal APIs that change over time. {{site.context_mesh}} closes that gap. Given an OpenAPI specification, it produces an MCP server that agents call without per-agent integration code.
+
+                    {{site.context_mesh}} complements [AI Gateway](/ai-gateway/) by covering the other half of an agent's traffic. AI Gateway is the control layer between agents and LLMs. {{site.context_mesh}} is the mediation layer between agents and APIs.
+
+                    {:.success}
+                    > {{site.context_mesh}} is in active development. The current release supports APIs as a source type. Additional source types are planned for future releases.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/context-mesh.svg
+              alt_text: "{{site.context_mesh}} architecture diagram. AI agents connect through AI Gateway as the control layer for LLMs, and through {{site.context_mesh}} as the mediation layer for enterprise sources including APIs, data, docs, and code."
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Why {{site.context_mesh}}?"
+            blocks:
+              - type: text
+                text: |
+                  {{site.context_mesh}} is designed to make enterprise APIs usable by AI agents without adding integration complexity to your teams.
+
+                  * **No per-agent integration code**: Generate the MCP server from an existing OpenAPI spec. The agent uses your API without anyone writing an SDK or per-agent glue.
+                  * **One place to manage agent context**: Every MCP server you create is registered in {{site.konnect_product_name}} alongside the rest of your API infrastructure, not scattered across developer laptops.
+                  * **Traffic stays on Kong**: Because each MCP server runs on a {{site.konnect_short_name}} control plane, agent calls to your APIs pass through Kong and can be governed with the policies you already use.
+                  * **One agent, many APIs**: Connect an agent to several {{site.context_mesh}} MCP servers at once and let it decide which to call to complete a task.
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Code Mode MCP servers"
+            blocks:
+              - type: text
+                text: |
+                  {{site.context_mesh}} generates MCP servers in [Code Mode](https://blog.cloudflare.com/code-mode/), a configuration that exposes an API as a single SDK-like interface rather than one tool per operation.
+
+                  A standard MCP server registers each API operation as a separate tool. For an API with dozens or hundreds of endpoints, the agent's tool list grows past what the model can reason about, and tool selection degrades.
+
+                  A Code Mode server exposes the API as a programmatic interface that the agent calls by writing short code snippets against it. The agent works at the SDK level instead of picking between many similar tools. This scales to large API surfaces without flooding the model's context, and lets an agent use your API without prior training on it.
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/konnect/context-mesh-terminal.svg
+            alt_text: "{{site.context_mesh}} terminal workflow example showing MCP server setup and usage."
+
+  - header:
+      text: "Get started"
+      type: h2
+      description: |
+        Walk through creating a Code Mode MCP server from an OpenAPI specification, deploying it, and calling it from an MCP client.
+    column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Create your first {{site.context_mesh}} MCP server
+            description: |
+              Step-by-step setup from OpenAPI spec to a working agent call.
+            cta:
+              text: "Get started"
+              url: "/konnect-platform/context-mesh/get-started/"
+
+  - header:
+      text: "Connect an MCP client"
+      type: h2
+      description: |
+        Once you've created a {{site.context_mesh}} MCP server, add its endpoint to your MCP client. Select your client below for setup instructions.
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/third-party/claude.svg
+            title: Claude Code CLI
+            description: |
+              Configure the MCP server using the `claude mcp add` command or by editing `~/.claude.json`.
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/context-mesh/installation/#claude-code-cli"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/vscode.svg
+            title: Visual Studio Code
+            description: |
+              Add MCP server configuration through VS Code's Command Palette and MCP settings.
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/context-mesh/installation/#visual-studio-code"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/cursor.svg
+            title: Cursor
+            description: |
+              Configure the MCP server in Cursor Settings under Tools & MCP.
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/context-mesh/installation/#cursor"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/github-copilot.svg
+            title: GitHub Copilot - VS Code
+            description: |
+              Set up the MCP server for the GitHub Copilot extension in Visual Studio Code.
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/context-mesh/installation/#github-copilot-for-vs-code"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/github-copilot.svg
+            title: GitHub Copilot - JetBrains
+            description: |
+              Configure the MCP server for IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs.
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/context-mesh/installation/#github-copilot-for-jetbrains"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/cog.svg
+            title: Other IDEs
+            description: |
+              Manual setup instructions for Windsurf, Eclipse, and other IDEs.
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/context-mesh/installation/#other-ides"
+
+  - header:
+      text: "Common usage patterns"
+      type: h2
+      sub_text: |
+        End-to-end flows that combine a {{site.context_mesh}} server with one or more MCP clients.
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Pattern 1: Expose a single internal API"
+            blocks:
+              - type: text
+                text: |
+                  Make one internal REST API callable by an AI agent.
+        - type: text
+          config: |
+            ```text
+            1. Add the API's OpenAPI specification to the Konnect API catalog
+               → Or have the specification file ready for upload
+
+            2. In Konnect, open {{site.context_mesh}} > MCP Servers > New MCP Server
+               → Choose the source (catalog entry or uploaded spec)
+               → Name the server
+               → Select the target control plane
+
+            3. Wait for the server status to reach Healthy
+               → Copy the server's endpoint URL
+
+            4. Add the endpoint to your MCP client configuration
+               → Restart the client if required
+
+            5. Prompt the agent with a task that requires the API
+               → The agent discovers operations through Code Mode
+               → The agent calls the API directly
+            ```
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Pattern 2: Compose multiple APIs in one workflow"
+            blocks:
+              - type: text
+                text: |
+                  Let an agent combine data from several backend APIs in a single prompt.
+        - type: text
+          config: |
+            ```text
+            1. For each API the agent will use:
+               a. Add or upload the OpenAPI specification
+               b. Create a Code Mode MCP server in {{site.context_mesh}}
+               c. Wait for Healthy status
+               d. Copy the endpoint URL
+
+            2. In your MCP client, add all server endpoints
+               → Each {{site.context_mesh}} server is a separate entry
+
+            3. Prompt the agent with a task that spans the APIs
+               → Example: "Find a destination with the best weather right
+                          now and book me a window seat flight"
+               → The agent selects which servers to call and in what
+                 order, based on the tools available
+
+            4. Review the agent's responses against the underlying
+               API responses to validate behavior
+            ```
+
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: How is {{site.context_mesh}} different from the Kong Konnect MCP Server?
+              a: |
+                The [{{site.konnect_product_name}} MCP Server](/konnect-platform/konnect-mcp/) exposes {{site.konnect_product_name}} itself, so you can manage Kong infrastructure from an AI assistant or IDE. {{site.context_mesh}} exposes your own backend APIs to AI agents as Code Mode MCP servers that run on Kong.
+            - q: Can I use {{site.context_mesh}} with non-API sources?
+              a: |
+                Not in the current release. The current release supports APIs through OpenAPI specifications. Additional source types are planned for future releases.
+            - q: Does {{site.context_mesh}} require AI Gateway?
+              a: |
+                No. {{site.context_mesh}} and AI Gateway are separate products. They cover complementary paths in an agent's connectivity, but neither depends on the other.
+            - q: Can I see traffic between my agents and the MCP servers?
+              a: |
+                [NEEDS INPUT: Confirm observability story. Likely uses standard {{site.konnect_short_name}} analytics on the host control plane, but specifics need verification before publishing.]

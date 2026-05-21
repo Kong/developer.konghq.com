@@ -10,6 +10,8 @@ swap:
   Kong Gateway: "{{site.base_gateway}}"
   AI Gateway: "{{site.ai_gateway}}"
   Kong AI Gateway: "{{site.ai_gateway_name}}"
+  Kong Context Mesh: "{{site.context_mesh_product_name}}"
+  Context Mesh: "{{site.context_mesh}}"
   Kong Konnect: "{{site.konnect_product_name}}"
   Kong Ingress Controller: "{{site.kic_product_name}}"
   Kong Mesh: "{{site.mesh_product_name}}"

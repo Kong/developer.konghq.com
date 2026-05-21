@@ -128,6 +128,8 @@ ee_product_name: Kong Gateway Enterprise
 ee_product_name_official: Kong API Gateway Enterprise
 konnect_short_name: Konnect
 konnect_product_name: Kong Konnect
+context_mesh: Context Mesh
+context_mesh_product_name: Kong Context Mesh
 mesh_product_name: Kong Mesh
 kic_product_name: Kong Ingress Controller
 kic_product_name_short: KIC
@@ -217,7 +219,7 @@ operator_kongroute_api_version: "v1alpha1"
 operator_kongcertificate_api_version: "v1alpha1"
 operator_kongreferencegrant_api_version: "v1alpha1"
 operator_kongpluginbinding_api_version: "v1alpha1"
-gwapi_version: "1.4.1" 
+gwapi_version: "1.4.1"
 render_banner: false
 
 # Copy
