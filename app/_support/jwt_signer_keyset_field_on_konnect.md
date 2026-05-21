@@ -7,35 +7,45 @@ products:
 works_on:
   - konnect
 tldr:
-  q: How do I fix the JWT Signer plugin keyset field warning on Konnect?
+  q: How do I fix the JWT Signer plugin keyset field warning on {{site.konnect_short_name}}?
   a: |
     Set the `access_token_keyset` or `channel_token_keyset` field to a URL that points to a valid JWKS endpoint. On {{site.konnect_short_name}}, JWKS must be managed externally.
 ---
 
 ## Understanding the warning
 
-When using the JWT Signer plugin on {{site.konnect_short_name}}, you may see the following warning in your data plane logs:
+The JWT Signer plugin on {{site.konnect_short_name}} writes one or both of the following warnings to the data plane logs when it detects a missing keyset URL:
 
 ```
-*_token_keyset should be a valid URL when kong is running in Konnect mode, *_token_signing is true and *_token_upstream_header is set.
+access_token_keyset should be a valid URL when kong is running in Konnect mode, access_token_signing is true and access_token_upstream_header is set.
 ```
+{:.no-copy-code}
 
-This warning appears when all of the following conditions are true:
-- `access_token_signing` or `channel_token_signing` is set to `true`
-- `access_token_upstream_header` or `channel_token_upstream_header` is set to a non-empty value
-- `access_token_keyset` or `channel_token_keyset` is left empty
+```
+channel_token_keyset should be a valid URL when kong is running in Konnect mode, channel_token_signing is true and channel_token_upstream_header is set.
+```
+{:.no-copy-code}
 
-On {{site.konnect_short_name}}, all JWKS for the JWT Signer plugin must be managed externally. You must provide a URL that points to a valid JWKS endpoint for re-signing requests.
+The warning appears when either of the following sets of conditions is true:
+
+- `access_token_signing` is `true`, `access_token_upstream_header` is non-empty, and `access_token_keyset` is empty
+- `channel_token_signing` is `true`, `channel_token_upstream_header` is non-empty, and `channel_token_keyset` is empty
+
+{{site.konnect_short_name}} requires all JWKS for the JWT Signer plugin to be managed externally. Provide a URL that points to a valid JWKS endpoint for re-signing requests.
+
+Without a configured `access_token_keyset` or `channel_token_keyset` value, `NULL` is sent to the data plane. Each data plane node then generates its own JWKS independently, making consistent downstream verification of re-signed tokens impossible.
 
 ## Fixing the warning
 
-Set the corresponding `*_token_keyset` field to the URL of the JWKS you want to use for re-signing:
+Set the corresponding `access_token_keyset` or `channel_token_keyset` field to the URL of the JWKS you want to use for re-signing.
+
+For the access token:
 
 ```yaml
 access_token_keyset: https://example.com/.well-known/jwks.json
 ```
 
-Or for the channel token:
+For the channel token:
 
 ```yaml
 channel_token_keyset: https://example.com/.well-known/jwks.json
@@ -43,5 +53,5 @@ channel_token_keyset: https://example.com/.well-known/jwks.json
 
 ## Validation
 
-After updating the configuration, check the data plane logs. The warning should no longer appear.
+Restart or wait for the data plane to reload the updated configuration, then review the data plane logs. The keyset warning no longer appears.
 
