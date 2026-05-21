@@ -52,4 +52,5 @@ sections:
       - path: /event-gateway/configuration/
       - path: /event-gateway/expressions/
       - path: /event-gateway/metrics/
+      - path: /event-gateway/headers/
       - path: /event-gateway/known-limitations/
