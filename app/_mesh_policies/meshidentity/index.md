@@ -16,8 +16,10 @@ min_version:
   mesh: '2.12'
 
 related_resources:
-  - text: Issuing Identity with MeshIdentity Spire provider
-    url: /mesh/meshidentity-spire/
+  - text: Issue identity with MeshIdentity bundled provider
+    url: /mesh/issue-identity-with-meshidentity/
+  - text: Issue identity with MeshIdentity Spire provider
+    url: /mesh/issue-identity-with-meshidentity-spire/
   - text: MeshService
     url: /mesh/meshservice/
   - text: MeshTLS

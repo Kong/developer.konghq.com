@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Catalog
-  version: 3.1.2
+  version: 3.2.0
   description: 'The management API for creating, managing APIs in the Konnect API Catalog, and publishing APIs in Dev Portals.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@0a73b4a5f51ebe63c6d45446f906c0222e59a803
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0a73b4a5f51ebe63c6d45446f906c0222e59a803'
+  x-oas-source: kong/platform-api@430c99c0a3d0bf5cd9985c217a725753789c084e
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/430c99c0a3d0bf5cd9985c217a725753789c084e'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1600,6 +1600,28 @@ paths:
           $ref: '#/components/responses/ApiPackageImageNotFound'
       tags:
         - API Package Image
+  '/apis/{apiId}/registrations':
+    parameters:
+      - $ref: '#/components/parameters/ApiId'
+    get:
+      operationId: list-api-registrations
+      summary: List API Registrations
+      description: Returns a paginated list of registrations for an API.
+      parameters:
+        - $ref: '#/components/parameters/ApiRegistrationsFilters'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiRegistrationsList'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API
 components:
   parameters:
     ApiAttributeFilters:
@@ -1749,6 +1771,29 @@ components:
       in: query
       schema:
         $ref: '#/components/schemas/SortQuery'
+    ApiRegistrationsFilters:
+      name: filter
+      description: Filters API registrations in the response.
+      required: false
+      in: query
+      schema:
+        type: object
+        properties:
+          status:
+            $ref: '#/components/schemas/StringFieldFilter'
+          portal_id:
+            $ref: '#/components/schemas/UuidFieldFilter'
+          portal_name:
+            $ref: '#/components/schemas/StringFieldFilter'
+          application_id:
+            $ref: '#/components/schemas/UuidFieldFilter'
+          application_name:
+            $ref: '#/components/schemas/StringFieldFilter'
+          application_owner_type:
+            $ref: '#/components/schemas/StringFieldFilter'
+          application_owner_id:
+            $ref: '#/components/schemas/UuidFieldFilter'
+      style: deepObject
     ApiSort:
       name: sort
       description: |
@@ -2198,57 +2243,6 @@ components:
           type: integer
           example: 1
       title: Move document
-    ApiVersion:
-      type: object
-      properties:
-        id:
-          description: The API version identifier.
-          type: string
-          format: uuid
-          example: 7710d5c4-d902-410b-992f-18b814155b53
-          readOnly: true
-        version:
-          description: The version of the api.
-          type: string
-          example: 1.0.0
-        spec:
-          type: object
-          additionalProperties: false
-          properties:
-            content:
-              description: |
-                The raw content of your API spec, in json or yaml format (OpenAPI or AsyncAPI).
-              example: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
-              type: string
-            type:
-              description: |
-                The type of specification being stored. This allows us to render the specification correctly.
-              type: string
-              example: oas3
-              enum:
-                - oas2
-                - oas3
-                - asyncapi
-              readOnly: true
-              title: API Spec Type
-            validation_messages:
-              description: The errors that occurred while parsing the API version spec.
-              type: array
-              items:
-                type: object
-                additionalProperties: false
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-              readOnly: true
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-      additionalProperties: false
-      title: API Version
     ApiVersionSummary:
       type: object
       properties:
@@ -2275,6 +2269,23 @@ components:
       nullable: true
       readOnly: true
       title: API Version Summary
+    APIVersionRequest:
+      type: object
+      properties:
+        version:
+          description: The version of the api.
+          type: string
+          example: 1.0.0
+        spec:
+          type: object
+          additionalProperties: false
+          properties:
+            content:
+              description: 'The raw content of API specification, in json or yaml format (OpenAPI or AsyncAPI).'
+              example: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
+              type: string
+      additionalProperties: false
+      title: API Version Request
     ApiSpec:
       type: object
       properties:
@@ -3159,6 +3170,68 @@ components:
         - created_at
         - updated_at
       title: Image Status
+    ApiRegistrationsListResponse:
+      description: The response for a list of API registrations.
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiRegistration'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ApiRegistrationsListResponse
+    ApiRegistration:
+      description: An API registration.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          enum:
+            - approved
+            - pending
+            - rejected
+            - revoked
+        portal:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+          required:
+            - id
+            - name
+        application:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+            description:
+              type: string
+            owner:
+              $ref: '#/components/schemas/ApplicationOwner'
+          required:
+            - id
+            - name
+            - owner
+      additionalProperties: false
+      required:
+        - id
+        - status
+        - portal
+        - application
+      title: ApiRegistration
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
@@ -3770,6 +3843,27 @@ components:
       format: uuid
       example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
       readOnly: true
+    ApplicationOwnerType:
+      description: The type of the owner of the application. Can be `developer` (individual developer) or `team`.
+      type: string
+      enum:
+        - developer
+        - team
+    ApplicationOwnerId:
+      description: 'The ID of the owner of the application. When type is `developer`, this is the developer ID. When type is `team`, this is the team ID.'
+      type: string
+      format: uuid
+    ApplicationOwner:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ApplicationOwnerType'
+        id:
+          $ref: '#/components/schemas/ApplicationOwnerId'
+      additionalProperties: false
+      required:
+        - type
+        - id
   examples:
     ApiExample:
       value:
@@ -4329,6 +4423,28 @@ components:
             number: 1
             size: 3
             total: 3
+    ApiRegistrationsListResponseExample:
+      summary: Example response for a list of API registrations
+      description: |
+        Example response for a list of API registrations.
+      value:
+        data:
+          - id: c200cc33-2d33-4754-b086-a98e0fcd36fb
+            status: approved
+            portal:
+              id: 56f637b7-cd95-478b-9b02-d770618f641c
+              name: Great Portal
+            application:
+              id: e15e2460-ba40-431d-9df0-4957fcff7cda
+              name: App 1
+              owner:
+                id: 6cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+                type: developer
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 2
     UnsupportedMediaTypeExample:
       value:
         status: 415
@@ -4554,12 +4670,6 @@ components:
           schema:
             type: object
             properties:
-              id:
-                description: The API version identifier.
-                type: string
-                format: uuid
-                example: 7710d5c4-d902-410b-992f-18b814155b53
-                readOnly: true
               version:
                 description: The version of the api.
                 type: string
@@ -4569,41 +4679,13 @@ components:
                 additionalProperties: false
                 properties:
                   content:
-                    description: |
-                      The raw content of your API spec, in json or yaml format (OpenAPI or AsyncAPI).
+                    description: 'The raw content of API specification, in json or yaml format (OpenAPI or AsyncAPI).'
                     example: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
                     type: string
-                  type:
-                    description: |
-                      The type of specification being stored. This allows us to render the specification correctly.
-                    type: string
-                    example: oas3
-                    enum:
-                      - oas2
-                      - oas3
-                      - asyncapi
-                    readOnly: true
-                    title: API Spec Type
-                  validation_messages:
-                    description: The errors that occurred while parsing the API version spec.
-                    type: array
-                    items:
-                      type: object
-                      additionalProperties: false
-                      required:
-                        - message
-                      properties:
-                        message:
-                          type: string
-                    readOnly: true
-              created_at:
-                $ref: '#/components/schemas/CreatedAt'
-              updated_at:
-                $ref: '#/components/schemas/UpdatedAt'
             additionalProperties: false
             required:
               - spec
-            title: API Version
+            title: API Version Request
           examples:
             CreateApiVersionRequestExampleJson:
               $ref: '#/components/examples/CreateApiVersionRequestExampleJson'
@@ -4825,7 +4907,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApiVersion'
+            $ref: '#/components/schemas/APIVersionRequest'
           examples:
             UpdateApiVersionContentRequest:
               $ref: '#/components/examples/UpdateApiVersionContentRequestExample'
@@ -5743,6 +5825,15 @@ components:
           examples:
             ApiPackageImageConflictExample:
               $ref: '#/components/examples/ApiPackageImageConflictExample'
+    ApiRegistrationsList:
+      description: Paginated list of registrations for an API.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiRegistrationsListResponse'
+          examples:
+            ApiRegistrationsListResponseExample:
+              $ref: '#/components/examples/ApiRegistrationsListResponseExample'
     UnsupportedMediaType:
       description: Unsupported Media Type
       content:

@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@5bc42eacb9a69b521cf583c06a9b9b8e7c252986
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5bc42eacb9a69b521cf583c06a9b9b8e7c252986'
+  x-oas-source: kong/platform-api@ddc4a22bd4de6fd3a30cdfaed072c16a7c19140d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ddc4a22bd4de6fd3a30cdfaed072c16a7c19140d'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -3423,6 +3423,8 @@ components:
         - count/data-planes-estimate
         - count/serverless-data-planes-estimate
         - count/data-plane-groups-estimate
+        - count/managed-cache-instances
+        - max/managed-cache-size
     ResourceQuotaName:
       description: The human-readable name of this resource quota.
       type: string
@@ -3562,6 +3564,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ManagedCacheAddOnDataPlaneGroup'
+          readOnly: true
         state_metadata:
           description: |
             Metadata describing the state of the managed cache add-on.
@@ -3615,6 +3618,7 @@ components:
                   description: Env vault path to azure tenant id.
                   type: string
                   example: '{vault://env/ADDON_MANAGED_CACHE_AZURE_TENANT_ID}'
+          readOnly: true
       additionalProperties: false
       required:
         - kind
@@ -3655,7 +3659,6 @@ components:
             - ready
             - error
             - terminating
-          readOnly: true
         state_metadata:
           description: |
             Metadata describing the state of the managed cache add-on in the data-plane group.
@@ -3669,6 +3672,7 @@ components:
               example: |
                 Failed to create managed cache add-on due to invalid configuration.
       additionalProperties: false
+      readOnly: true
       required:
         - id
         - cloud_gateway_network_id

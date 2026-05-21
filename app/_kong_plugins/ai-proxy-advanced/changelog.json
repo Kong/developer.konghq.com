@@ -264,6 +264,13 @@
       "type": "bugfix"
     }
   ],
+  "3.13.0.4": [
+    {
+      "message": "Fixed excessive DNS warning logs for template variable endpoints like `$(headers.x_gcp_endpoint)`. These warnings appeared on every configuration change because template variables cannot be resolved until request time.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added latency and cost observability to realtime API.",

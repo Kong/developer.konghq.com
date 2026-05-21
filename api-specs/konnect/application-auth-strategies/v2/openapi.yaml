@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@13b85f000e8c385052e0d65bdd3ee1a08eff8174
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/13b85f000e8c385052e0d65bdd3ee1a08eff8174'
+  x-oas-source: kong/platform-api@e252ef5bc5c7f0f50dc75c8d9288469c007b6082
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e252ef5bc5c7f0f50dc75c8d9288469c007b6082'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -816,6 +816,12 @@ components:
         - $ref: '#/components/schemas/DcrProviderBase'
         - discriminator:
             propertyName: provider_type
+            mapping:
+              auth0: '#/components/schemas/DcrProviderAuth0'
+              azureAd: '#/components/schemas/DcrProviderAzureAd'
+              curity: '#/components/schemas/DcrProviderCurity'
+              okta: '#/components/schemas/DcrProviderOkta'
+              http: '#/components/schemas/DcrProviderHttp'
           type: object
           oneOf:
             - $ref: '#/components/schemas/DcrProviderAuth0'
@@ -830,6 +836,12 @@ components:
         - $ref: '#/components/schemas/DcrProviderBase'
         - discriminator:
             propertyName: provider_type
+            mapping:
+              auth0: '#/components/schemas/DcrProviderAuth0'
+              azureAd: '#/components/schemas/DcrProviderAzureAd'
+              curity: '#/components/schemas/DcrProviderCurity'
+              okta: '#/components/schemas/DcrProviderOkta'
+              http: '#/components/schemas/DcrProviderHttp'
           type: object
           oneOf:
             - $ref: '#/components/schemas/DcrProviderAuth0'

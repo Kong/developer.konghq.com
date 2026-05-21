@@ -21,8 +21,6 @@ You can configure:
 
 The policy is applied per service instance. This means that if a service `backend` has 3 instances rate limited to 100 requests per second, the overall service rate limit is 300 requests per second.
 
-Rate limiting supports an [ExternalService](/docs/{{ page.release }}/policies/external-services) only when `ZoneEgress` is enabled.
-
 ## TargetRef support matrix
 
 {% if_version gte:2.6.x %}

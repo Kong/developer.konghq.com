@@ -72,7 +72,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy with Cerebras, we need to specify the model to use.
+To set up AI Proxy with {{ site.cerebras }}, we need to specify the model to use.
 
 In this example, we'll use the gpt-oss-120b model:
 

@@ -20,6 +20,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.11": [
+    {
+      "message": "Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.2.1.0": [
     {
       "message": "This plugin can now handle custom messages from the OPA server.",

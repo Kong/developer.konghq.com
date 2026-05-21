@@ -7,7 +7,7 @@ layout: reference
 
 works_on:
   - konnect
-beta: true
+
 tools:
   - kongctl
 
@@ -30,6 +30,9 @@ columns:
   - title: Description
     key: description
 rows:
+  - command: |
+      [kongctl adopt analytics](/kongctl/adopt/analytics/)
+    description: "Adopt {{site.konnect_short_name}} {{site.observability}} resources."
   - command: |
       [kongctl adopt api](/kongctl/adopt/api/)
     description: "Adopt API resources."
