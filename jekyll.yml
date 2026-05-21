@@ -141,6 +141,27 @@ konnect_catalog: Catalog
 metering_and_billing: Metering & Billing
 observability: Observability
 dev_portal: Dev Portal
+# Company names
+openai: OpenAI
+anthropic: Anthropic
+google: Google
+gemini: Gemini
+amazon: Amazon
+cohere: Cohere
+hugging_face: Hugging Face
+mistral: Mistral
+xai: xAI
+grok: Grok
+cerebras: Cerebras
+ollama: Ollama
+deepseek: DeepSeek
+# Product names
+google_cloud: Google Cloud
+google_analytics: Google Analytics
+claude: Claude
+claude_code: Claude Code
+gtm: Google Tag Manager
+
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com

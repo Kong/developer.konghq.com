@@ -126,9 +126,9 @@ cleanup:
 automated_tests: false
 ---
 
-## Add an invalid API key as a secret in Google Cloud Secret Manager
+## Add an invalid API key as a secret in {{ site.google_cloud }} Secret Manager
 
-In this tutorial, first we'll create a secret with an invalid API key in Google Cloud Secret Manager. Later, we'll add the correct API key as another secret version, but this allows us to test if {{site.base_gateway}} picks up the rotated secret correctly.
+In this tutorial, first we'll create a secret with an invalid API key in {{ site.google_cloud }} Secret Manager. Later, we'll add the correct API key as another secret version, but this allows us to test if {{site.base_gateway}} picks up the rotated secret correctly.
 
 Create a secret called `test-secret` and then create a new secret version with the secret value of `Bearer invalid`:
 
@@ -140,13 +140,13 @@ echo -n "Bearer invalid" | \
       gcloud secrets versions add test-secret --data-file=-
 ```
 
-The first command is supported on Linux, macOS, and Cloud Shell. For other distributions, see [Create a secret](https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#create-a-secret) in Google Cloud documentation.
+The first command is supported on Linux, macOS, and Cloud Shell. For other distributions, see [Create a secret](https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#create-a-secret) in {{ site.google_cloud }} documentation.
 
 ## Configure Secret Manager as a vault with the Vault entity
 
 To enable Secret Manager as your vault in {{site.base_gateway}}, you can use the [Vault entity](/gateway/entities/vault/).
 
-In this tutorial, we are configuring the time-to-live (`ttl`) as 60 seconds/1 minute. This tells {{site.base_gateway}} to check every minute with Google Cloud to get the rotated secret. We've configured a low value so that we can quickly validate that the secret rotation is functioning as expected.
+In this tutorial, we are configuring the time-to-live (`ttl`) as 60 seconds/1 minute. This tells {{site.base_gateway}} to check every minute with {{ site.google_cloud }} to get the rotated secret. We've configured a low value so that we can quickly validate that the secret rotation is functioning as expected.
 
 {% entity_examples %}
 entities:
@@ -161,7 +161,7 @@ entities:
 
 ## Enable the AI Proxy plugin
 
-In this tutorial, you'll use the Mistral API key you stored as a secret to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/).
+In this tutorial, you'll use the {{ site.mistral }} API key you stored as a secret to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/).
 
 {% entity_examples %}
 entities:
@@ -183,7 +183,7 @@ entities:
 
 ## Validate that {{site.base_gateway}} uses the invalid API key from the secret
 
-First, let's validate that the secret was stored correctly in Google Cloud by calling a secret from your vault using the `kong vault get` command within the Data Plane container.
+First, let's validate that the secret was stored correctly in {{ site.google_cloud }} by calling a secret from your vault using the `kong vault get` command within the Data Plane container.
 
 {% validation vault-secret %}
 secret: '{vault://gcp-sm-vault/test-secret}'
@@ -214,9 +214,9 @@ You should get a `401` error with the message `Unauthorized` because we're curre
 
 ## Rotate the secret in Secret Manager
 
-We can now rotate the secret with the correct API key from Mistral. You can rotate a secret by creating a new secret version with the new secret value. {{site.base_gateway}} will fetch the new secret value based on the `ttl` setting we configured in the Vault entity.
+We can now rotate the secret with the correct API key from {{ site.mistral }}. You can rotate a secret by creating a new secret version with the new secret value. {{site.base_gateway}} will fetch the new secret value based on the `ttl` setting we configured in the Vault entity.
 
-Rotate the secret with the valid Mistral API key:
+Rotate the secret with the valid {{ site.mistral }} API key:
 
 ```bash
 echo -n "$MISTRAL_API_KEY" | \
@@ -225,7 +225,7 @@ echo -n "$MISTRAL_API_KEY" | \
 
 ## Validate that {{site.base_gateway}} uses the valid API key from the rotated secret
 
-Now we can validate that {{site.base_gateway}} picks up the valid Mistral API key from the rotated secret. Since {{site.base_gateway}} is configured to pick up any rotated secrets every 60 seconds, the following command waits a minute before sending a request:
+Now we can validate that {{site.base_gateway}} picks up the valid {{ site.mistral }} API key from the rotated secret. Since {{site.base_gateway}} is configured to pick up any rotated secrets every 60 seconds, the following command waits a minute before sending a request:
 
 {% validation request-check %}
 url: /anything

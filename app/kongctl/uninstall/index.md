@@ -4,7 +4,7 @@ description: "Uninstall kongctl features."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

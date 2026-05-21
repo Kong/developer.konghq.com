@@ -3,7 +3,7 @@ title: kongctl get profile
 description: Get user profiles.
 content_type: reference
 layout: reference
-beta: true
+
 works_on:
   - on-prem
   - konnect

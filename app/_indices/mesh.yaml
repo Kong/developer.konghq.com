@@ -29,6 +29,7 @@ sections:
       - path: /mesh/deploy-mesh-on-konnect/
       - path: /mesh/deploy-mesh-self-managed/
       - path: /mesh/deploy-universal-self-managed/
+      - path: /mesh/deploy-multi-zone-global-control-plane-universal-docker/
       - path: /mesh/use-mesh-cli/
 
   - title: How Mesh Works
@@ -119,7 +120,7 @@ sections:
   - title: Observability
     items:
       - path: /mesh/observability/
-      - path: /mesh/collect-metrics-with-opentelemetry/
+      - path: /mesh/deploy-an-opentelemetry-collector/
       - path: /mesh/dataplane-health/
 
   - title: References

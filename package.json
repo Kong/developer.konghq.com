@@ -15,6 +15,9 @@
     "vite-svg-loader": "^5.1.0",
     "wait-on": "^9.0.0"
   },
+  "resolutions": {
+    "axios": "^1.16.1"
+  },
   "dependencies": {
     "@algolia/autocomplete-core": "^1.18.1",
     "@algolia/autocomplete-plugin-tags": "^1.18.1",
@@ -25,14 +28,14 @@
     "@kong/sdk-portal-js": "^2.15.2",
     "@kong/spec-renderer": "^1.95.8",
     "@tailwindcss/forms": "^0.5.10",
-    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue": "^6.0.0",
     "algoliasearch": "^5.20.0",
-    "axios": "^1.7.4",
+    "axios": "^1.16.1",
     "instantsearch.css": "^8.5.1",
     "mermaid": "^11.6.0",
     "node-fetch": "^3.3.2",
     "shiki": "^4.0.2",
-    "snowflake-sdk": "2.4.0",
+    "snowflake-sdk": "2.4.1",
     "uuid": "^14.0.0",
     "vue": "^3.4.38",
     "vue-instantsearch": "^4.20.4"

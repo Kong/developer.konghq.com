@@ -4,7 +4,7 @@ description: "Use the tls-trust-bundles command to list or retrieve TLS trust bu
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

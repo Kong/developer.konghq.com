@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8ad47f91436f0ad25b70cd2fb5d871a9dc0eb45b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8ad47f91436f0ad25b70cd2fb5d871a9dc0eb45b'
+  x-oas-source: kong/platform-api@e907ed432562e470bdd62b613fb4bf50f9b8f255
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e907ed432562e470bdd62b613fb4bf50f9b8f255'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3788,6 +3788,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -3821,10 +3835,12 @@ components:
         - part_of_record
         - encryption_key
     EventGatewayParsedRecordEncryptFieldsPolicy:
-      description: |
+      description: |-
         Encrypts fields of parsed Kafka records using AES_256_GCM. Keys are therefore 256 bits long.
 
         Note this policy can only be used as a child of a `EventGatewayProduceSchemaValidationPolicy` policy.
+
+        **Requires a minimum runtime version of `1.2`**.
       type: object
       properties:
         type:
@@ -3871,6 +3887,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -3891,11 +3921,14 @@ components:
         - type
         - config
       title: Encrypt Parsed Record
+      x-min-runtime-version: '1.2'
     EventGatewayParsedRecordEncryptFieldsPolicyCreate:
-      description: |
+      description: |-
         Encrypts fields of parsed Kafka records using AES_256_GCM. Keys are therefore 256 bits long.
 
         Note this policy can only be used as a child of a `EventGatewayProduceSchemaValidationPolicy` policy.
+
+        **Requires a minimum runtime version of `1.2`**.
       type: object
       properties:
         type:
@@ -3942,6 +3975,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -3967,6 +4014,7 @@ components:
         - config
         - parent_policy_id
       title: Encrypt Parsed Record Fields
+      x-min-runtime-version: '1.2'
     EventGatewayParsedRecordEncryptFieldsConfig:
       description: The configuration of the encrypt parsed record policy.
       type: object
@@ -4012,6 +4060,20 @@ components:
                   - name: context.auth.principal.name
                     type: string
                     description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+                  - name: context.auth.principal.id
+                    type: string
+                    description: |-
+                      Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                      **Requires a minimum runtime version of `1.2`**.
+                    x-min-runtime-version: '1.2'
+                  - name: context.auth.principal.metadata
+                    type: object
+                    description: |-
+                      Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                      **Requires a minimum runtime version of `1.2`**.
+                    x-min-runtime-version: '1.2'
                   - name: context.auth.type
                     type: string
                     description: |
@@ -4079,6 +4141,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4116,10 +4192,12 @@ components:
         - key_sources
         - part_of_record
     EventGatewayParsedRecordDecryptFieldsPolicy:
-      description: |
+      description: |-
         Decrypts fields of parsed Kafka records using AES_256_GCM. Keys are therefore 256 bits long.
 
         Note this policy can only be used as a child of a `EventGatewayConsumeSchemaValidationPolicy` policy.
+
+        **Requires a minimum runtime version of `1.2`**.
       type: object
       properties:
         type:
@@ -4166,6 +4244,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4186,11 +4278,14 @@ components:
         - type
         - config
       title: Decrypt Parsed Record Fields
+      x-min-runtime-version: '1.2'
     EventGatewayParsedRecordDecryptFieldsPolicyCreate:
-      description: |
+      description: |-
         Decrypts fields of parsed Kafka records using AES_256_GCM. Keys are therefore 256 bits long.
 
         Note this policy can only be used as a child of a `EventGatewayConsumeSchemaValidationPolicy` policy.
+
+        **Requires a minimum runtime version of `1.2`**.
       type: object
       properties:
         type:
@@ -4237,6 +4332,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4262,6 +4371,7 @@ components:
         - config
         - parent_policy_id
       title: Decrypt Parsed Record Fields
+      x-min-runtime-version: '1.2'
     EventGatewayParsedRecordDecryptFieldsConfig:
       description: The configuration of the decrypt parsed record fields policy.
       type: object
@@ -4314,6 +4424,20 @@ components:
                   - name: context.auth.principal.name
                     type: string
                     description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+                  - name: context.auth.principal.id
+                    type: string
+                    description: |-
+                      Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                      **Requires a minimum runtime version of `1.2`**.
+                    x-min-runtime-version: '1.2'
+                  - name: context.auth.principal.metadata
+                    type: object
+                    description: |-
+                      Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                      **Requires a minimum runtime version of `1.2`**.
+                    x-min-runtime-version: '1.2'
                   - name: context.auth.type
                     type: string
                     description: |
@@ -4388,6 +4512,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4462,6 +4600,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4530,6 +4682,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4592,6 +4758,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4713,6 +4893,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4771,6 +4965,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4873,6 +5081,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |
@@ -4982,6 +5204,20 @@ components:
           - name: context.auth.principal.name
             type: string
             description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+          - name: context.auth.principal.id
+            type: string
+            description: |-
+              Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+              **Requires a minimum runtime version of `1.2`**.
+            x-min-runtime-version: '1.2'
+          - name: context.auth.principal.metadata
+            type: object
+            description: |-
+              Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+              **Requires a minimum runtime version of `1.2`**.
+            x-min-runtime-version: '1.2'
           - name: context.auth.type
             type: string
             description: |
@@ -5378,6 +5614,20 @@ components:
               - name: context.auth.principal.name
                 type: string
                 description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.principal.id
+                type: string
+                description: |-
+                  Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
+              - name: context.auth.principal.metadata
+                type: object
+                description: |-
+                  Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                x-min-runtime-version: '1.2'
               - name: context.auth.type
                 type: string
                 description: |

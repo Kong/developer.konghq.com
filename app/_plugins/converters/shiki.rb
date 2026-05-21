@@ -54,6 +54,12 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
         },
         transformers: [
           {
+            preprocess(snippet) {
+              if (snippet.endsWith("\\n")) {
+                snippet = snippet.slice(0, -1);
+              }
+              return snippet;
+            },
             code(node) {
               node.properties.id = id;
             },
