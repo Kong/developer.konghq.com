@@ -11,6 +11,7 @@ rows:
       type: h1
       text: "Kong Identity"
       sub_text: "The unified machine-to-machine authentication platform"
+  
   - header:
       type: h2
       text: "Introducing Kong Identity"
@@ -31,6 +32,103 @@ rows:
             config:
               url: /assets/images/konnect/konnect-dashboard.png
               alt_text: Image of the {{site.konnect_short_name}} dashboard
+  - header:
+      type: h2
+      text: "Features"
+      description: |
+        Set up and manage API access with Kong Identity features:
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "Authorization servers"
+            description: |
+              Set up an authorization server that issues tokens to authenticate a client with Kong Gateway.
+            icon: /assets/icons/security.svg
+            ctas:
+              - text: Set up an authorization server
+                url: /kong-identity/reference/#configure-kong-identity
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Claims"
+            description: |
+              Include in each token optional pieces of metadata (user roles or environment tags) to forward them to upstream services
+            icon: /assets/icons/service-document.svg
+            ctas:
+              - text: Configure a claim
+                url: /kong-identity/reference/#claim-configuration
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Dynamic claim templates"
+            description: |
+              Define custom JWT claims whose value uses contextual data and specified functions. 
+            icon: /assets/icons/data-object.svg
+            ctas:
+              - text: Use dynamic claim templates
+                url: /kong-identity/reference/#dynamic-claim-templates
+                align: end  
+  - header:
+      type: h2
+      text: "Use cases for Kong Identity"
+    columns:
+      - blocks:
+        - type: use_case_table
+          config:
+            usecase_title: |
+              Authenticate traffic
+
+            columns:
+              - title: |
+                  Setup examples
+
+                key: setup
+              - title: |
+                  Feature
+                
+                  _(Use this)_
+
+                key: feature
+            rows:
+              - usecase: |
+                  **... to an event Gateway**
+                outcomes:
+                  - setup: |
+                      Use OAuth with Kong Identity as the Auth Server
+                    feature: 
+                  - setup: |
+                      Use OAuth with Kong Identity using a 3rd party Auth
+                    feature: 
+                  - setup: |
+                      Authenticate principals using SASL/PLAIN usernames and passwords
+                    feature:
+                  - setup: |
+                      Authenticate principals using client certificates
+                    feature:
+              - usecase: |
+                  **...to an API Gateway**
+                outcomes:
+                  - setup: |
+                      Authenticate requests using api keys
+                    feature:
+                  - setup: |
+                      Authenticate requests using basic auth
+                    feature:
+                  - setup: |
+                      Authenticate using OAuth with Kong Identity as the Auth Server
+                    feature:
+                  - setup: |
+                      Authenticate using OAuth with Kong Identity using a 3rd party Auth Server
+                    feature:
+                  - setup: |
+                      Configure conditional plugin execution based on principals
+                    feature:
+                  - setup: |
+                      Migrate from consumers to principals
+                    feature:
   - header:
       type: h2
       text: "Plugins"
@@ -70,45 +168,7 @@ rows:
               - text: Learn more
                 url: /plugins/upstream-oauth/
                 align: end
-  - header:
-      type: h2
-      text: "Features"
-      description: |
-        Set up and manage API access with Kong Identity features:
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: "Authorization servers"
-            description: |
-              Set up an authorization server that issues tokens to authenticate a client with Kong Gateway.
-            icon: /assets/icons/security.svg
-            ctas:
-              - text: Set up an authorization server
-                url: /kong-identity/reference/#configure-kong-identity
-                align: end
-      - blocks:
-        - type: card
-          config:
-            title: "Claims"
-            description: |
-              Include in each token optional pieces of metadata (user roles or environment tags) to forward them to upstream services
-            icon: /assets/icons/service-document.svg
-            ctas:
-              - text: Configure a claim
-                url: /kong-identity/reference/#claim-configuration
-                align: end
-      - blocks:
-        - type: card
-          config:
-            title: "Dynamic claim templates"
-            description: |
-              Define custom JWT claims whose value uses contextual data and specified functions. 
-            icon: /assets/icons/data-object.svg
-            ctas:
-              - text: Use dynamic claim templates
-                url: /kong-identity/reference/#dynamic-claim-templates
-                align: end
+  
   - header:
       type: h2
       text: How-to guides
