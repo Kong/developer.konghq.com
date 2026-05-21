@@ -114,7 +114,7 @@ When all zones can share the same collector service name, one backend on the glo
 
 `kuma-dp` reads `OTEL_EXPORTER_OTLP_*` environment variables locally at startup and merges them with the backend config. Secret-bearing values (headers, client keys, certificates) stay local to `kuma-dp`. During startup, `kuma-dp` reports only which environment variable keys are present to the control plane, never the values.
 
-Here are the variable used:
+Here are the variables used:
 * Shared: 
   * `OTEL_EXPORTER_OTLP_ENDPOINT`
   * `OTEL_EXPORTER_OTLP_PROTOCOL`
