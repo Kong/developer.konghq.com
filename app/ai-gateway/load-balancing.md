@@ -250,4 +250,23 @@ rows:
 
 ### Health check and circuit breaker
 
-{% include ai-gateway/circuit-breaker.md %}
+For Model entities, circuit breaker behavior is controlled through the balancer configuration on the Model. Use these settings to fail fast when a target model is unhealthy and to retry or fall back to another target instead of waiting for repeated slow responses.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Use
+    key: use
+rows:
+  - setting: "[`connect_timeout`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-connect-timeout), [`read_timeout`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-read-timeout), [`write_timeout`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-write-timeout)"
+    use: "Reduce how long {{site.base_gateway}} waits before treating a target model as unavailable."
+  - setting: "[`max_fails`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-max-fails)"
+    use: "Set the number of failed attempts allowed before {{site.base_gateway}} marks a target model unhealthy."
+  - setting: "[`fail_timeout`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-fail-timeout)"
+    use: "Set how long {{site.base_gateway}} keeps a target model in a failed state before trying it again."
+{% endtable %}
+<!--vale on-->
+
+When `max_fails` is reached within the `fail_timeout` window, {{site.base_gateway}} temporarily removes that target model from selection. Combined with retries and fallback targets, this setup helps keep traffic flowing to healthy models when a provider is slow or unavailable.
