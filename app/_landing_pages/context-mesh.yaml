@@ -4,6 +4,7 @@ metadata:
   description: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly."
   products:
     - konnect
+    - ai-gateway
   breadcrumbs:
     - /konnect/
   tags:
