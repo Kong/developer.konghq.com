@@ -11,9 +11,6 @@
   <div class="text-primary font-medium">Owning plugin</div>
   <div class="flex gap-3 items-center flex-wrap">
     <a href="{{ page.plugin_source_url }}">{{ page.plugin_name }}</a>
-    {% if page.plugin_page_url %}
-      <a class="text-sm" href="{{ page.plugin_page_url }}">Install details</a>
-    {% endif %}
   </div>
 </div>
 {% endif %}
@@ -47,6 +44,32 @@
     {% endif %}
   </div>
 </div>
+{% endif %}
+
+{% if page.skill_category %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Category</div>
+  <div class="flex gap-1.5">
+    {% assign url = "/skills/?category=" | append: page.skill_category %}
+    {% include badge.html text=page.skill_category url=url %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.products != empty %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Products</div>
+  <div class="flex gap-1.5 items-start flex-wrap">
+    {% for product in page.products %}
+    {% assign url = "/skills/?product=" | append: product %}
+    <a href="{{ url }}">{{ product }}</a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.tags %}
+{% include info_box/sections/tags.html tags=page.tags %}
 {% endif %}
 
 {% if page.allowed_tools %}

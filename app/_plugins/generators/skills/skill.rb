@@ -33,12 +33,7 @@ module Jekyll
       end
 
       def products
-        @products ||= begin
-          values = Array(metadata.dig('metadata', 'products'))
-          product = metadata.dig('metadata', 'product')
-          values << product if product
-          values.compact.uniq
-        end
+        @products ||= Array(metadata.dig('metadata', 'product'))
       end
 
       def category
@@ -127,10 +122,6 @@ module Jekyll
 
       def plugin_source_url
         plugin&.source_url
-      end
-
-      def plugin_page_url
-        "/skills/plugins/#plugin-#{plugin.slug}" if plugin
       end
 
       def license_url
