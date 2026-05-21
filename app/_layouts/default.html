@@ -112,7 +112,7 @@
     {% endif %}
 
     {% if site.ENABLE_KAPA_AI %}
-    {% if jekyll.environment == "production" or jekyll.environment == "preview" %}
+    {% if jekyll.environment == 'production' or jekyll.environment == 'preview' %}
     <script>
       (function () {
         let k = window.Kapa;
@@ -124,10 +124,10 @@
         }
       })();
       window.Kapa("onModalOpen", function () {
-        document.body.classList.add("kapa-open");
+        document.body.classList.add("ai-assistant-open");
       });
       window.Kapa("onModalClose", function () {
-        document.body.classList.remove("kapa-open");
+        document.body.classList.remove("ai-assistant-open");
       });
     </script>
     <script
@@ -153,7 +153,33 @@
       data-modal-inner-flex-direction="column"
       data-modal-inner-justify-content="end"
       data-modal-border-radius="0"
+      data-border-color="rgb(var(--color-border-primary), 0.05)"
       data-modal-inner-border-radius="0"
+      data-modal-y-offset="0"
+      data-modal-body-background-color="rgb(var(--color-bg-secondary))"
+      data-modal-header-height="68px"
+      data-text-color="rgb(var(--color-text-secondary))"
+      data-anchor-color="rgb(var(--color-text-primary))"
+      data-surface-hover-color="rgb(var(--color-bg-hover-component))"
+      data-surface-elevated-color="rgb(var(--color-brand-saturated), 0.4)"
+      data-example-question-button-hover-background-color="rgb(var(--color-bg-hover-component))"
+      data-example-question-button-color="rgb(var(--color-text-primary))"
+      data-example-question-button-hover-color="rgb(var(--color-text-primary))"
+      data-example-question-button-border-color="rgb(var(--color-border-primary), 0.05)"
+      data-submit-button-background-color="rgb(var(--color-brand))"
+      data-submit-button-hover-background-color="rgb(var(--color-brand))"
+      data-submit-button-border-color="rgb(var(--color-border-primary), 0.05)"
+      data-deep-thinking-button-background-color="rgb(var(--color-brand))"
+      data-deep-thinking-button-hover-background-color="rgb(var(--color-brand))"
+      data-deep-thinking-button-color="#fff"
+      data-deep-thinking-button-hover-color="#fff"
+      data-deep-thinking-button-border-color="rgb(var(--color-border-primary), 0.05)"
+      data-conversation-button-background-color="rgb(var(--color-brand-saturated), 0.4)"
+      data-conversation-button-color="rgb(var(--color-text-primary))"
+      data-conversation-button-hover-color="rgb(var(--color-text-primary))"
+      data-conversation-button-hover-background-color="rgb(var(--color-bg-hover-component))"
+      data-source-link-primary-heading-color="rgb(var(--color-text-primary))"
+      data-source-link-secondary-heading-color="rgb(var(--color-text-secondary))"
     ></script>
     {% endif %}
     {% endif %}
@@ -192,18 +218,18 @@
     {% endif %}
   </head>
 
-  <body class="bg-primary leading-6 h-full">
+  <body class="group/body-tag bg-primary leading-6 h-full">
     {% if jekyll.environment == "production" %}
       <!-- Google Tag Manager (noscript) -->
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2MGLVKJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- End Google Tag Manager (noscript) -->
     {% endif %}
 
-    <div class="min-h-full flex flex-col">
+    <div class="min-h-full flex flex-col" id="wrapper">
       {% include_cached header.html api_spec=layout.api_spec %}
       {% include_cached banner.html %}
 
-    <div class="flex flex-col gap-3 px-5 md:px-8 2xl:mx-auto flex-1 w-full {% if layout.api_spec == true %} 2xl:px-16 {% else %} max-w-screen-2xl  2xl:px-[156px] {% endif %}">
+    <div class="flex flex-col gap-3 px-5 md:px-8 2xl:mx-auto flex-1 w-full {% if layout.api_spec == true %} 2xl:px-16 {% else %} max-w-screen-2xl ai-assistant-aware-px {% endif %}">
       {% unless layout.api_spec == true %}
         {% include_cached breadcrumbs_and_links.html breadcrumbs=page.breadcrumbs edit_and_issue_links=page.edit_and_issue_links layout=page.layout edit_link=page.edit_link no_edit_link=page.no_edit_link %}
       {% endunless%}
