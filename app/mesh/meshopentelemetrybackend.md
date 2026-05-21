@@ -614,6 +614,4 @@ Inline `endpoint` configurations stay on the direct Envoy export path and keep w
 
 ## Schema
 
-The full schema for the `MeshOpenTelemetryBackend` resource:
-
 {% json_schema MeshOpenTelemetryBackends %}
