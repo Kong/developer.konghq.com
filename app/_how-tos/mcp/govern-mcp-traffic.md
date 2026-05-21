@@ -11,10 +11,9 @@ related_resources:
   - text: AI Rate Limiting Advanced plugin
     url: /plugins/ai-rate-limiting-advanced/
 breadcrumbs:
-    - /mcp/
+    - /ai-gateway/mcp/
 permalink: /ai-gateway/mcp/govern-mcp-traffic/
-breadcrumbs:
-  - /ai-gateway/mcp/
+
 series:
     id: mcp-traffic
     position: 2
