@@ -1,0 +1,80 @@
+description: Block or allow LLM responses based on semantic similarity to defined rules, using Valkey as a vector database.
+
+extended_description: |
+  The AI Semantic Response Guard plugin analyzes the full response from an LLM service and filters it
+  based on semantic similarity to configured allow or deny patterns.
+
+  Deny rules take precedence over allow rules. Responses matching a deny pattern are blocked,
+  even if they also match an allow pattern. Responses not matching any allow pattern are blocked
+  when allow rules are set.
+
+  Valkey is automatically detected when using the `redis` vectordb strategy. {{site.base_gateway}} queries the server and uses the Valkey-specific driver when it detects a Valkey backend.
+
+title: 'Allow and deny responses using Valkey as a vector database'
+
+weight: 899
+
+min_version:
+  gateway: '3.14'
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service."
+  - "A [Valkey](https://valkey.io/) 8.x instance."
+  - "Port `6379`, or your custom Valkey port, is open and reachable from {{site.base_gateway}}."
+
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+  valkey_host:
+    value: $VALKEY_HOST
+    description: The host where your Valkey instance runs
+
+config:
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${header_value}
+    model:
+      name: text-embedding-3-small
+      provider: openai
+  search:
+    threshold: 0.7
+  vectordb:
+    strategy: redis
+    distance_metric: cosine
+    threshold: 0.7
+    dimensions: 1024
+    redis:
+      host: ${valkey_host}
+      port: 6379
+  rules:
+    allow_responses:
+      - Network troubleshooting and diagnostics
+      - Cloud infrastructure management (AWS, Azure, GCP)
+      - Cybersecurity best practices and incident response
+      - DevOps workflows and automation
+      - Programming concepts and language usage
+      - IT policy and compliance guidance
+      - Software development lifecycle and CI/CD
+      - Documentation writing and technical explanation
+      - System administration and configuration
+      - Productivity and collaboration tools usage
+    deny_responses:
+      - Hacking techniques or penetration testing without authorization
+      - Bypassing software licensing or digital rights management
+      - Instructions on exploiting vulnerabilities or writing malware
+      - Circumventing security controls or access restrictions
+      - Gathering personal or confidential employee information
+      - Using AI to impersonate or phish others
+      - Social engineering tactics or manipulation techniques
+      - Guidance on violating company IT policies
+      - Content unrelated to work, such as entertainment or dating
+      - Political, religious, or sensitive non-work-related discussions
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

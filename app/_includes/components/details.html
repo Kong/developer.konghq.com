@@ -1,0 +1,11 @@
+{% if config.css_classes.wrapper %}<div class="{{ config.css_classes.wrapper }}">{% endif%}
+<details {% if config.css_classes %}class="{{ config.css_classes.details }}"{% endif %}>
+<summary {% if config.css_classes.summary %}class="{{ config.css_classes.summary }}"{% endif %}>
+{{config.summary | liquify | markdownify | markdown }}{% if config.css_classes.float_right %}<span class="inline-flex chevron-icon float-right">{% include_svg '/assets/icons/chevron-down.svg' %}</span>{% endif %}
+</summary>
+
+<div class="content p-2 {{ config.css_classes.content }}">
+    {{ config.content | liquify | markdownify | markdown }}
+</div>
+</details>
+{% if config.css_classes.wrapper %}</div>{% endif %}

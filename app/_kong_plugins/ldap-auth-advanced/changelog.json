@@ -1,4 +1,16 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "the `verify_ldap_host` option to validate the LDAP\nserver certificate is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a security issue.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled and LDAPS is used, the plugin's `verify_ldap_host` setting cannot be disabled.",

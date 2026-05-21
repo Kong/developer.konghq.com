@@ -160,17 +160,21 @@ body:
 
 Now, let's open a new terminal window and export the variables that the Codex CLI will use. We set a dummy API key here just to confirm the variable exists, and point `OPENAI_BASE_URL` to the local proxy endpoint where we will route LLM traffic from Codex CLI:
 
-```sh
-export OPENAI_API_KEY=sk-xxx
-export OPENAI_BASE_URL=http://localhost:8000/codex
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```sh
+  export OPENAI_API_KEY=sk-xxx
+  export OPENAI_BASE_URL=http://localhost:8000/codex
+  ```
+{% endon_prem %}
 
-```sh
-export OPENAI_API_KEY=sk-xxx
-export OPENAI_BASE_URL=$KONNECT_PROXY_URL/codex
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```sh
+  export OPENAI_API_KEY=sk-xxx
+  export OPENAI_BASE_URL=$KONNECT_PROXY_URL/codex
+  ```
+{% endkonnect %}
 
 ## Configure the File Log plugin
 

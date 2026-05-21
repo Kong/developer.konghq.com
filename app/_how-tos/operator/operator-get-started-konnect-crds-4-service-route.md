@@ -123,6 +123,16 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
+## Set the proxy IP
+
+Export the DataPlane's external IP for use in later steps:
+
+```bash
+export PROXY_IP=$(kubectl get service -n kong \
+  -o jsonpath='{.items[?(@.spec.type=="LoadBalancer")].status.loadBalancer.ingress[0].ip}')
+echo $PROXY_IP
+```
+
 ## Validation
 
 You can validate from the command line or [{{site.konnect_short_name}} UI](/gateway/) to confirm that both the `KongService` and `KongRoute` have been provisioned and are in a valid state:

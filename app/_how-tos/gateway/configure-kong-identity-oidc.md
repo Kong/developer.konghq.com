@@ -69,7 +69,7 @@ First, get the ID of the `quickstart` control plane you configured in the prereq
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart
-status_code: 201
+status_code: 200
 method: GET
 {% endkonnect_api_request %}
 <!--vale on-->

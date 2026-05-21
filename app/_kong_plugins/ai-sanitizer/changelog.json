@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "fixed an issue where the sanitizer plugin always sanitize the entire request body, which was fixed with latest message only.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added a `skip_logging_sanitized_items` option to control whether to log the sanitized items, which may contain sensitive data.\n",

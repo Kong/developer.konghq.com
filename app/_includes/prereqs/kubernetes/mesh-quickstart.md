@@ -218,4 +218,6 @@
        kind: Dataplane
        labels:
          app: kv" | kubectl apply -f -
+   kubectl wait -n kong-mesh-demo --for=condition=available --timeout=120s deployment --all
    ```
+   {:.collapsible}

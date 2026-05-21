@@ -1,5 +1,5 @@
 import fs from "fs";
-import fg from "fast-glob";
+import { globSync } from "tinyglobby";
 
 function mergeSections(obj1, obj2) {
   const normalizeTitle = (title) =>
@@ -21,7 +21,7 @@ function mergeSections(obj1, obj2) {
 function generateIndexFile() {
   let reference = {};
   let previousVersion;
-  let files = fg.sync("../../app/_data/kong-conf/*", {
+  let files = globSync("../../app/_data/kong-conf/*", {
     ignore: ["../../app/_data/kong-conf/index.json"],
   });
 

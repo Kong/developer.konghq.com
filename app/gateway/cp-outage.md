@@ -27,6 +27,8 @@ related_resources:
     url: /gateway/data-plane-reference/
   - text: "{{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
+  - text: "Cloud provider integration support for {{site.ee_product_name}}"
+    url: /gateway/cloud-provider-support-matrix/
 
 faqs:
   - q: Is it recommended to have the Control Plane exporting to the backup store (`KONG_CLUSTER_FALLBACK_CONFIG_EXPORT`)?
@@ -94,7 +96,7 @@ config:
 
 In addition, you'll also need to configure settings based on the S3-compatible storage type you're using.
 
-## Amazon S3 storage
+## {{ site.amazon }} S3 storage
 
 In this setup, you need to designate one backup node. 
 The backup node must have read and write access to the S3 bucket, and the Data Plane nodes that are provisioned must have read access to the same S3 bucket.
@@ -152,7 +154,7 @@ kong-dp-importer:
       KONG_CLUSTER_FALLBACK_CONFIG_IMPORT: "on"
 ```
 
-## Google Cloud storage
+## {{ site.google_cloud }} storage
 
 In this setup, you need to designate one backup node. 
 The backup node must have read and write access to the GCP cloud storage bucket and the provisioned Data Plane nodes must have read access to the same GCP cloud storage bucket. 

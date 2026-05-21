@@ -73,22 +73,26 @@ For more details about these options, see [{{ site.operator_product_name }} conf
 
 Run the following command to install {{ site.operator_product_name }} using the `values.yaml` file we created:
 
-```bash
-helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-  --create-namespace \
-  --set image.tag={{ site.data.operator_latest.release }} \
-  --set env.ENABLE_CONTROLLER_KONNECT=true \
-  -f values.yaml
-```
-{:data-deployment-topology='konnect'}
+{% konnect %}
+content: |
+  ```bash
+  helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+    --create-namespace \
+    --set image.tag={{ site.data.operator_latest.release }} \
+    --set env.ENABLE_CONTROLLER_KONNECT=true \
+    -f values.yaml
+  ```
+{% endkonnect %}
 
-```bash
-helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-  --create-namespace \
-  --set image.tag={{ site.data.operator_latest.release }} \
-  -f values.yaml
-```
-{:data-deployment-topology='on-prem'}
+{% on_prem %}
+content: |
+  ```bash
+  helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+    --create-namespace \
+    --set image.tag={{ site.data.operator_latest.release }} \
+    -f values.yaml
+  ```
+{% endon_prem %}
 
 ## Validate
 

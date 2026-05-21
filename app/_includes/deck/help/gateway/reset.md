@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   deck gateway reset [flags]
 

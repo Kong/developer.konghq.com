@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../monkey_patch'
+
 module Jekyll
   module RenderPlugins
     module TabbedTables # rubocop:disable Style/Documentation
@@ -9,16 +11,17 @@ module Jekyll
         site = context.registers[:site]
 
         context.stack do
+          context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
           context['type'] = table
           context['tables'] = tables(site)
-          Liquid::Template.parse(template).render(context)
+          Liquid::Template.parse(template, { line_numbers: true }).render(context)
         end
       end
 
       private
 
       def template
-        @template ||= File.read(File.expand_path('app/_includes/plugins/tabbed_tables.html'))
+        @template ||= File.read(File.expand_path('app/_includes/plugins/tabbed_tables.md'))
       end
 
       def tables(site)

@@ -73,8 +73,9 @@ body:
 extract_body:
     - name: 'id'
       variable: AZUREDEVOPS_INTEGRATION_ID
-capture: AZUREDEVOPS_INTEGRATION_ID
-jq: ".id"
+capture:
+  - variable: AZUREDEVOPS_INTEGRATION_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -111,8 +112,9 @@ body:
 extract_body:
     - name: 'id'
       variable: AZUREDEVOPS_SERVICE_ID
-capture: AZUREDEVOPS_SERVICE_ID
-jq: ".id"
+capture:
+  - variable: AZUREDEVOPS_SERVICE_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -128,8 +130,9 @@ method: GET
 extract_body:
     - name: 'id'
       variable: AZUREDEVOPS_RESOURCE_ID
-capture: AZUREDEVOPS_RESOURCE_ID
-jq: ".data[0].id"
+capture:
+  - variable: AZUREDEVOPS_RESOURCE_ID
+    jq: ".data[0].id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

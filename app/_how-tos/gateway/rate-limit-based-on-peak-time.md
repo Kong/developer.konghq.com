@@ -73,6 +73,9 @@ entities:
       headers:
         X-Peak:
           - 'active'
+      protocols:
+        - http
+        - https
     - name: off-peak
       service:
         name: example-service
@@ -81,6 +84,9 @@ entities:
       headers:
         X-Off-Peak:
           - 'active'
+      protocols:
+        - http
+        - https
 {% endentity_examples %}
 
 ## Apply Rate Limiting Advanced plugin

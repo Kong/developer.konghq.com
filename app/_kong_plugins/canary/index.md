@@ -44,7 +44,7 @@ related_resources:
 notes: |
   The Canary plugin is not designed for a Kubernetes-native framework,
   and shouldn't be used with the {{site.kic_product_name}}. Instead, use the 
-  <a href="/kubernetes-ingress-controller/gateway-api/">Gateway API</a> 
+  [Gateway API](/kubernetes-ingress-controller/gateway-api/) 
   to manage canary deploys.
 
 min_version:

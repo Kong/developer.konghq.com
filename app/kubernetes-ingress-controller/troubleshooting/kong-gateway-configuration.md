@@ -64,19 +64,19 @@ To use the diagnostic mode:
 
    ```yaml
    ingressController:
-    env:
-      dump_config: "true"
-      dump_sensitive_config: "true"
-    ```
+     env:
+       dump_config: "true"
+       dump_sensitive_config: "true"
+   ```
 
-    To enable configuration dumping temporarily for an existing deployment, run the following command:
+   To enable configuration dumping temporarily for an existing deployment, run the following command:
 
-    ```bash
-    kubectl set env -n kong deployment/kong-controller \
-      CONTROLLER_DUMP_CONFIG="true" \
-      CONTROLLER_DUMP_SENSITIVE_CONFIG="true" \
-      -c ingress-controller
-    ```
+   ```bash
+   kubectl set env -n kong deployment/kong-controller \
+     CONTROLLER_DUMP_CONFIG="true" \
+     CONTROLLER_DUMP_SENSITIVE_CONFIG="true" \
+     -c ingress-controller
+   ```
 
 1. (Optional) Make a change to a Kubernetes resource that you know will reproduce the issue. If you are unsure what change caused the issue originally, you can omit this step.
 
@@ -108,7 +108,7 @@ Once you have dumped configuration, take one of the following approaches to isol
   diff -u last_good.json last_bad.json
   ```
 
-- You can apply dumped configuration via the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-config) (DB-less mode) or using decK (DB-backed mode) to a test instance not managed by the ingress controller. This approach lets you review requests and responses (passing `--verbose 2` to decK will show all requests).
+- You can apply dumped configuration via the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/create-config) (DB-less mode) or using decK (DB-backed mode) to a test instance not managed by the ingress controller. This approach lets you review requests and responses (passing `--verbose 2` to decK will show all requests).
 
 - To run a DB-less {{ site.base_gateway }} instance with Docker for testing purposes, run `curl https://get.konghq.com/quickstart | bash -s -- -D`.
 

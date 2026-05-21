@@ -27,6 +27,12 @@ related_resources:
     url: https://cloud.google.com/dns/docs/zones
   - text: AWS private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   skip_product: true
   inline:
@@ -36,11 +42,11 @@ prereqs:
     - title: gcloud
       content: |
         To use this tutorial, you must [install gcloud](https://cloud.google.com/sdk/docs/install).
-         
-         Authenticate with gcloud:
-         ```sh
-         gcloud auth login
-         ```
+
+        Authenticate with gcloud:
+        ```sh
+        gcloud auth login
+        ```
     - title: "GCP permissions"
       content: |
         This tutorial requires a GCP account with the [DNS Peer](https://cloud.google.com/iam/docs/roles-permissions/dns#dns.peer) (`roles/dns.peer`) and [DNS Administrator](https://cloud.google.com/iam/docs/roles-permissions/dns#dns.admin) (`roles/dns.admin`) roles, and the following [custom permissions](https://cloud.google.com/iam/docs/custom-roles-permissions-support):

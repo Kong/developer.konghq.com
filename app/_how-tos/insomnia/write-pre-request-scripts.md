@@ -55,9 +55,9 @@ In this example, we'll configure a pre-request script that sets a variable in th
 1. Click the **Scripts** tab on the request.
 1. Insomnia provides example pre-request scripts. From the **Pre-request** tab, click **Variable Snippets** at the bottom of the pane and select **Set an environment variable**.
 1. In the example script, replace `variable_name` with `flightNumber` and `variable_value` with `KA0285`. The script should look like the following:
-```javascript
-insomnia.environment.set("flightNumber", "KA0285");
-```
+   ```javascript
+   insomnia.environment.set("flightNumber", "KA0285");
+   ```
 
 ## Validate the pre-request script
 

@@ -4,13 +4,13 @@
 {% capture details_content %}
 This how-to uses Keycloak as an OpenID Connect provider.
 
-### Install Keycloak
+#### Install Keycloak
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/keycloak/keycloak-quickstarts/refs/heads/main/kubernetes/keycloak.yaml -n kong
 ```
 
-### Create a Route
+#### Create a Route
 
 We'll use {{ site.base_gateway }} to expose Keycloak in our cluster on a custom domain:
 <!--vale off-->
@@ -23,7 +23,7 @@ matches:
 hostname: 'keycloak.$PROXY_IP.nip.io' 
 {% endhttproute %}
 <!--vale on-->
-### Register a client and user
+#### Register a client and user
 
 Set two variables containing your client ID and secret:
 
@@ -81,13 +81,11 @@ body:
 <!--vale on-->
 
 You are now ready to configure the OpenID Connect plugin
-
 {% endcapture %}
-
-{% unless include.render_inline %}
+{%- unless include.render_inline -%}
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url=icon_url %}
 {% else %}
-## {{ summary }}
+#### {{ summary }}
 
 {{ details_content }}
 {% endunless %}

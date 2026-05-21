@@ -7,6 +7,9 @@ extended_description: |
   
   This example uses password authentication, but you can use any supported [authentication type](/plugins/openid-connect/reference/#schema--config-auth-methods) with Consumers.
 
+  {:.info}
+  > If you're running a version of {{site.base_gateway}} older than 3.14, use `consumer_claim` instead of `consumer_claims`.
+
   For a full example that shows you how to set up the OpenID Connect plugin to map Consumers to IdP users, 
   see [Configure OpenID Connect with Consumer authorization](/how-to/configure-oidc-with-consumers/).
 
@@ -28,8 +31,8 @@ config:
     - client_secret_post
   auth_methods:
     - password
-  consumer_claim:
-    - preferred_username
+  consumer_claims:
+    - ["preferred_username"]
   consumer_by:
     - username
 

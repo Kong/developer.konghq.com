@@ -17,7 +17,7 @@ search_aliases:
 description: "The Dev Portal allows you to manage developers by creating teams and assigning specific roles for each API."
 
 related_resources:
-  - text: Developer self-service and app registration
+  - text: Developer self-service and application registration
     url: /dev-portal/self-service/
   - text: Dev Portal developer sign-up
     url: /dev-portal/developer-signup/
@@ -30,9 +30,10 @@ The Dev Portal allows you to manage [registered developers](/dev-portal/develope
 To use RBAC, you need to enable it from your Dev Portal settings:
 {% navtabs "enable-rbac" %}
 {% navtab "UI" %}
-1. In {{site.konnect_short_name}}, click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Portals**.
 1. Click your Dev Portal.
-1. Click **Settings** in the sidebar.
+1. Click the **Settings** tab.
 1. Click the **Security** tab.
 1. Enable **Role-based access control (RBAC)**.
 1. Click **Save changes**.
@@ -66,14 +67,15 @@ resource "konnect_portal_team" "my_portalteam" {
 
 ## Manage developer RBAC
 
-You can manage developers, app registrations, and teams from the **Access and approvals** tab in your Dev Portal.
+You can manage developers, application registrations, and teams from the **Access and approvals** tab in your Dev Portal.
 
 To assign roles to developers, you need to create a team and add them to it:
 {% navtabs "assign-roles" %}
 {% navtab "UI" %}
-1. In {{site.konnect_short_name}}, click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Portals**.
 1. Click your Dev Portal.
-1. Click **Access and approvals** in the sidebar.
+1. Click the **Access and approvals** tab.
 1. Click the **Teams** tab.
 1. Click **New Team**.
 1. Enter a team name in the **Team** field.
@@ -90,6 +92,20 @@ To assign roles to developers, you need to create a team and add them to it:
   
    * **API Consumer**: This role allows developers on the team to make calls to the selected APIs.
    * **API Viewer**: This role gives developers on the team read-only access to the selected APIs' documentation.
+1. To enable [application sharing](/dev-portal/self-service/#share-applications-with-a-team), do the following:
+   1. Click the **Settings** tab.
+   1. Enable **Allow team to own applications**.
+      
+      Developers will now see an option to assign new applications to one of their teams during the creation process. 
+      Only teams that are allowed to own applications will be listed. 
+      They can also transfer ownership of existing applications to their teams. 
+      For more information on the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/).
+1. To transfer application ownership to either a developer or team, do the following:
+   1. Click **Access and approvals** in the sidebar.
+   1. Click the **App registrations** tab.
+   1. Click the application you want to transfer ownership of.
+   1. From the **Actions** dropdown menu, select "Transfer ownership".
+
 {% endnavtab %}
 {% navtab "API" %}
 1. Assign a developer to a team by sending a `POST` request to the [`/portals/{portalId}/teams/{teamId}/developers` endpoint](/api/konnect/portal-management/v3/#/operations/add-developer-to-portal-team):

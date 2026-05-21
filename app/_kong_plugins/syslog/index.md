@@ -41,7 +41,7 @@ faqs:
        Transport receivers may receive messages larger than 2048 octets, but could truncate or discard it if not supported by the implementation.
 
 notes: | 
-   <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or 
+   **Dedicated and Serverless Cloud Gateways**: This plugin is not supported in Dedicated or 
    Serverless Cloud Gateways because it depends on a local agent, and there are no local nodes 
    in Dedicated or Serverless Cloud Gateways.
 
@@ -70,7 +70,12 @@ logging level severity equal to or lower than the one set in the [`config.log_le
 
 ## Custom fields by Lua
 
-{% include /plugins/logging/log-custom-fields-by-lua.md custom_fields_by_lua='config.custom_fields_by_lua' custom_fields_by_lua_slug='config-custom-fields-by-lua' name=page.name slug=page.slug %}
+{% include /plugins/logging/log-custom-fields-by-lua.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}
 
 ## Forwarding logs to a remote network host
 

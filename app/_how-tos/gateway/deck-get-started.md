@@ -60,7 +60,7 @@ You can use decK to configure a Service by providing a `name` and a `url`. Any r
 {% entity_examples %}
 entities:
   services:
-  - name: my-example-service
+  - name: example-service
     url: http://httpbin.konghq.com
 
 {% endentity_examples %}
@@ -124,6 +124,9 @@ entities:
         name: example-service
       paths:
         - "/"
+      protocols:
+        - http
+        - https
 {% endentity_examples %}
 
 You can now make an HTTP request to your running {{ site.base_gateway }} instance and see it proxied to httpbin:

@@ -1,0 +1,22 @@
+title: 'Enable observability for an A2A agent'
+description: 'Enable statistics and payload logging for Agent-to-Agent (A2A) protocol traffic proxied through Kong Gateway.'
+
+weight: 900
+
+requirements:
+- An upstream A2A-compatible agent exposed as a Kong service
+
+config:
+  logging:
+    log_statistics: true
+    log_payloads: true
+
+min_version:
+  gateway: '3.14'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

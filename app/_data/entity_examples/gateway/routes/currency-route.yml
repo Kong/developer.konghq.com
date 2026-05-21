@@ -3,3 +3,5 @@ paths:
   - /currency
 service: 
   name: freecurrency-service
+protocols:
+  - https

@@ -156,11 +156,6 @@ This can be [adjusted dynamically](#dynamic-plugin-ordering) using the plugin's 
 You can override the [priority](#plugin-priority) for any {{site.base_gateway}} plugin using each plugin’s `ordering` configuration parameter. 
 This determines plugin ordering during the [`access` phase](#plugin-contexts), and lets you create dynamic dependencies between plugins.
 
-{:.warning}
-> **Important**: Dynamic plugin ordering **does not** work with Consumers or Consumer Groups.
-> If you have any Consumers or Consumer Groups in your environment, do not use dynamic plugin ordering, as the plugins **will not trigger**.
-> See the [limitations](#known-limitations-of-dynamic-plugin-ordering) of this feature for more detail.
-
 You can choose to run a particular plugin `before` or `after` a specified plugin or list of plugins.
 
 The configuration looks like this:
@@ -215,12 +210,6 @@ If using dynamic ordering, manually test all configurations, and handle this fea
 
 There are a number of considerations that can affect your environment:
 
-* **Consumer and Consumer Group scoping**: If you have [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, you can't use dynamic plugin ordering.
-  If you attempt to apply dynamic ordering in this case, your plugins **will not work**.
-
-  Consumer mapping and dynamic plugin ordering both run in the `access` phase, but the order of the  plugins must be determined after Consumer mapping has happened.
-  {{site.base_gateway}} can't reliably change the order of the plugins in relation to mapped Consumers or Consumer Groups.
-
 * **Cascading deletes**: Detecting if a plugin has a dependency to a deleted plugin isn't supported, so handle your configuration with care.
 
 * **Performance**: Dynamic plugin ordering requires sorting plugins during a request, which adds latency to the request. 
@@ -231,6 +220,31 @@ In some cases, this might be compensated for when you run rate limiting before a
 
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
 {{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
+
+{:.info}
+> **Note**: In {{site.base_gateway}} 3.13 and earlier, Consumer and Consumer Group scoping was not compatible with dynamic plugin ordering. If you had [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, dynamic plugin ordering would cause those plugins **not to trigger**. This limitation was resolved in {{site.base_gateway}} 3.14.
+
+## Conditional plugin execution {% new_in 3.14 %}
+
+{:.warning}
+> This feature is currently in [beta](/stages-of-software-availability/#beta) and should not be used in a production environment.
+
+Plugins have a condition field that determines whether the plugin executes or not. 
+By writing conditions using expressions, you can access dynamic configuration from the execution context.
+
+When a request comes in, {{site.base_gateway}} evaluates the condition. 
+If the condition matches, the plugin runs normally; if it doesn't match, the plugin is skipped entirely for that request.
+By conditionally executing plugins only when there's a match, you can reduce performance costs.
+
+For example, you can create a condition that causes the plugin to trigger only when the request includes the header `x-block: true`:
+
+```json
+condition: 'http.headers.x_block == "true"'
+```
+
+For more information, see:
+* [Plugin expressions reference](/gateway/plugins/expressions/)
+* [How to: Configure conditional plugin execution in {{site.base_gateway}}](/gateway/configure-conditional-plugin-execution/)
 
 ## Protocols
 

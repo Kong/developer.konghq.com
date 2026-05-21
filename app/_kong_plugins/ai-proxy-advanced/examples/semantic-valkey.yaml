@@ -1,0 +1,94 @@
+title: 'Load balancing: Semantic with Valkey'
+description: Configure semantic load balancing with the AI Proxy Advanced plugin using Valkey as a vector database
+extended_description: |
+  Configure semantic load balancing with the AI Proxy Advanced plugin using Valkey as a vector database. To set up semantic routing, you must configure the following parameters:
+
+  * `config.embeddings` to define the model to use to match the model description and the prompts.
+  * `config.vectordb` to define the vector database parameters. Valkey is automatically detected when using the `redis` strategy.
+  * `config.targets[].description` to define the description to be matched with the prompts.
+
+  This configuration routes incoming requests to the most relevant OpenAI model based on the content of the request:
+
+  * If the request is related to code completions, it will be routed to the `gpt-35-turbo` model.
+  * If the request is about IT support, it will be routed to the `gpt-4o` model.
+  * All other requests, which don't match the above categories, will be handled by the `gpt-4o-mini` model, serving as a catch-all for general queries.
+
+  {:.info}
+  > If you use the `text-embedding-ada-002` as your embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
+weight: 106
+
+min_version:
+  gateway: '3.14'
+
+requirements:
+  - An OpenAI account
+  - "A [Valkey](https://valkey.io/) 8.x instance."
+  - "Port `6379`, or your custom Valkey port is open and reachable from {{site.base_gateway}}."
+
+config:
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    model:
+      name: text-embedding-3-small
+      provider: openai
+  vectordb:
+    dimensions: 1024
+    distance_metric: cosine
+    strategy: redis
+    threshold: 0.7
+    redis:
+      host: valkey-server
+      port: 6379
+  balancer:
+    algorithm: semantic
+  targets:
+  - model:
+      name: gpt-3.5-turbo
+      provider: openai
+      options:
+        max_tokens: 826
+        temperature: 0
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    description: "Specialist in code completions"
+  - model:
+      name: gpt-4o
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 0.3
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    description: "Requests related to IT support"
+  - model:
+      name: gpt-4o-mini
+      provider: openai
+      options:
+        max_tokens: 256
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    description: "CATCHALL"
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: load-balancing

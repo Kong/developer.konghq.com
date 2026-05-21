@@ -23,7 +23,7 @@ module Jekyll
         end
 
         def template
-          @template ||= File.expand_path('app/_includes/components/entity_example.html')
+          @template ||= File.expand_path('app/_includes/components/entity_example.md')
         end
 
         def id

@@ -46,12 +46,13 @@ prereqs:
       content: |
         To complete this tutorial, you'll need an audit log destination and webhook configured. If you don't already have one configured, follow these steps:
 
-        1. In the {{site.konnect_short_name}} sidebar, click [**Organization**](https://cloud.konghq.com/organization).
-        1. From the sidebar, click **Audit Logs Setup**.
+        1. Select your {{site.konnect_short_name}} org.
+        1. Click [**Manage Organization**](https://cloud.konghq.com/organization).
+        1. Click the **Audit Logs Setup** tab.
         1. On the Webhook Destination tab, click **New Webhook**.
         1. In the **Name** field, enter `SumoLogic`.
         1. In the **Endpoint** field, enter your external endpoint that will receive audit log messages. For example: `https://endpoint4.collection.sumologic.com/receiver/v1/http/1234abcd`.
-        1. In the **Authorization Header** field, enter the access token from you SIEM. 
+        1. In the **Authorization Header** field, enter the access token from your SIEM. 
            {{site.konnect_short_name}} will send this string in the `Authorization` header of requests to that endpoint.
         1. From the **Log Format** dropdown menu, select "cef".
         1. (Optional) Click **Disable SSL Verification** to disable SSL verification of the host endpoint when delivering payloads.
@@ -60,7 +61,7 @@ prereqs:
            > We only recommend disabling SSL verification when using self-signed SSL certificates in a non-production environment as this can subject you to man-in-the-middle and other attacks.
         1. Click the **Konnect** tab.
         1. Navigate to the region you want to configure the webhook for.
-        1. Click **Disabled**.
+        1. Click **Disabled** to enable log delivery for this region.
         1. From the **Endpoint** dropdown menu, select your SIEM endpoint.
         1. Click **Save**.
 
@@ -74,7 +75,7 @@ prereqs:
         {% endkonnect_api_request %}
         <!--vale on-->
 
-        This triggers a log in SumoLogic. Sometimes it can take a minute to populate the logs.
+        This triggers a log in SumoLogic. Logs may take up to one minute to appear.
 
 cleanup:
   inline:
@@ -91,8 +92,8 @@ faqs:
 
 In {{site.konnect_short_name}}, you can restore audit logs by configuring a replay job:
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Organization**](https://cloud.konghq.com/organization).
-1. From the sidebar, click **Audit Logs Setup**.
+1. Select your {{site.konnect_short_name}} org and click [**Manage Organization**](https://cloud.konghq.com/organization).
+1. Click the **Audit Logs Setup** tab.
 1. Click the **Konnect** tab.
 1. Navigate to the region you want to configure the replay job for.
 1. Click the **Replay** tab.

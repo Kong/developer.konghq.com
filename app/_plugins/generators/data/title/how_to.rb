@@ -11,6 +11,10 @@ module Jekyll
             "How to: #{page_title}"
           ]
         end
+
+        def llm_title
+          page_title
+        end
       end
     end
   end

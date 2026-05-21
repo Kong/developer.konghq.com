@@ -78,4 +78,9 @@ If the [custom Lua code](#custom-fields-by-lua) associated with the log fields f
 
 ## Custom fields by Lua
 
-{% include /plugins/logging/log-custom-fields-by-lua.md custom_fields_by_lua='config.message.custom_fields_by_lua' custom_fields_by_lua_slug='config-message-custom-fields-by-lua' name=page.name slug=page.slug %}
+{% include /plugins/logging/log-custom-fields-by-lua.md 
+custom_fields_by_lua='config.message.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-message-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}

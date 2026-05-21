@@ -1,4 +1,16 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "calls to the `/rotate` endpoint now enable certificate\nverification by default when connecting to the configured endpoint to rotate\nthe keys.\n",
+      "type": "Breaking Change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The options `access_token_endpoints_ssl_verify` and\n`channel_token_endpoints_ssl_verify`, which control SSL certificate\nverification for signature verification and introspection endpoints, are now\nenabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to the `tls_certificate_verify` global option.\nWhen this option is enabled the plugin's flags related to certificate\nverification cannot be disabled.\n",

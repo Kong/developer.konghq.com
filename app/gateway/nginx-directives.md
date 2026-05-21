@@ -17,6 +17,8 @@ tags:
 related_resources:
   - text: "{{site.base_gateway}} configuration reference"
     url: /gateway/configuration/
+  - text: "Tuning {{site.base_gateway}} for large payloads"
+    url: /gateway/performance/large-payloads/
 
 works_on:
    - on-prem

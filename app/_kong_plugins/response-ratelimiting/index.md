@@ -40,12 +40,12 @@ search_aliases:
   - response-ratelimiting
 
 notes: |
-  In Konnect, DB-less, and hybrid modes, the <code>cluster</code> config policy
+  In Konnect, DB-less, and hybrid modes, the `cluster` config policy
   is not supported.
   <br><br>
-  For DB-less mode, use one of <code>redis</code> or <code>local</code>;
-  for Konnect and hybrid mode, use <code>redis</code>, or <code>local</code> for data
-  planes only. In Serverless gateways only the <code>local</code> config policy is supported.
+  For DB-less mode, use one of `redis` or `local`;
+  for Konnect and hybrid mode, use `redis`, or `local` for data
+  planes only. In Serverless gateways only the `local` config policy is supported.
 
 min_version:
   gateway: '1.0'
@@ -65,6 +65,12 @@ Otherwise, the Consumer is used if an authentication plugin has been configured.
 ## Rate limiting strategies
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
+
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/oss.md name=page.name heading_level=3 %}
 
 ## Limit by IP address
 
@@ -118,5 +124,3 @@ The headers are in the form of `X-RateLimit-Remaining-LIMIT_NAME`, for example:
 X-RateLimit-Remaining-Videos: 3
 X-RateLimit-Remaining-Images: 0
 ```
-
-{% include plugins/redis-cloud-auth.md %}

@@ -25,6 +25,9 @@ prereqs:
     - title: OpenAI
       include_content: prereqs/openai
       icon_url: /assets/icons/ai.svg
+    - title: "{{site.konnect_short_name}} system account token"
+      include_content: prereqs/metering-and-billing-spat
+      icon_url: /assets/icons/kogo-white.svg
   entities:
     services:
       - example-service
@@ -49,10 +52,17 @@ related_resources:
     url: /metering-and-billing/metering/
   - text: Customers and usage attribution
     url: /metering-and-billing/customer/
-  - text: Billing, invoicing, and subscriptions
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Billing and invoicing
+    url: /metering-and-billing/billing-invoicing/
   - text: Meter and bill {{site.base_gateway}} API requests
     url: /metering-and-billing/get-started/
+  - text: Get started with {{site.metering_and_billing}} generic meters
+    url: /how-to/get-started-with-metering-and-billing-generic-meters/
+
+faqs:
+  - q: I previously enabled metering using the **Enable Related API Gateways** button in the {{site.konnect_short_name}} UI. Do I need to do anything?
+    a: |
+      {% include faqs/metering-and-billing-legacy-ingestion.md %}
 
 automated_tests: false
 ---
@@ -112,16 +122,49 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-## Enable Metering
+## Create a meter
 
-In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time.
+In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. 
+In this case, we want to track the number of AI tokens consumed:
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. For {{site.ai_gateway}} Tokens, click **Enable Related API Gateways**.
-1. Select the `quickstart` control plane.
-1. Click **Enable 1 Gateway**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+status_code: 201
+method: POST
+body:
+    key: tokens_total
+    name: AI Token Usage
+    event_type: prompt
+    aggregation: sum
+    value_property: $.tokens
+    dimensions: {"model": "$.model", "type": "$.type"}
+{% endkonnect_api_request %}
+<!--vale on-->
 
-You will see `quickstart` in the list of available meters.
+## Configure the Metering & Billing plugin
+
+Next, configure the Metering & Billing plugin to emit LLM token usage events from {{site.ai_gateway}} to {{site.metering_and_billing}}:
+
+<!--vale off-->
+{% entity_examples %}
+entities:
+  plugins:
+    - name: metering-and-billing
+      service: example-service
+      config:
+        ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
+        api_token: ${AUTH_TOKEN}
+        meter_api_requests: false
+        meter_ai_token_usage: true
+        subject:
+          look_up_value_in: consumer
+variables:
+  AUTH_TOKEN:
+    value: $AUTH_TOKEN
+    description: A {{site.konnect_short_name}} system account token (`spat_`) with the Metering Ingest role.
+{% endentity_examples %}
+<!--vale on-->
 
 ## Create a feature
 
@@ -215,6 +258,9 @@ body:
 <!--vale on-->
 
 This will generate AI LLM token usage that will be captured by {{site.metering_and_billing}}.
+
+{:.info}
+> **Entitlement enforcement:** The {{site.ai_gateway}} does not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.

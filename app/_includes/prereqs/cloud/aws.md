@@ -1,7 +1,5 @@
-{% assign summary='AWS configuration' %}
-
-{% capture details_content %}
-
+{%- assign summary='AWS configuration' -%}
+{%- capture details_content -%}
 {% if config.secret %}
 This tutorial requires at least one [secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/create_secret.html) in AWS Secrets Manager. In this example, the secret is named `my-aws-secret` and contains a key/value pair in which the key is `token`.
 {% endif %}
@@ -28,6 +26,5 @@ Note that these variables need to be passed when creating your Data Plane contai
 
 Alternative connection methods such as `assume role` and how to use an `aws_session_token` can be found on the [AWS Secrets Manager page](/gateway/entities/vault/?tab=aws#vault-provider-specific-configuration-parameters)
 {% endcapture %}
-
 
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/aws.svg' %}

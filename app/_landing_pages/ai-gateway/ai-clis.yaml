@@ -40,15 +40,8 @@ rows:
   - header:
       type: h3
       text: "Claude Code"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Claude Code is Anthropic's command-line tool that delegates coding tasks to Claude AI. Route Claude Code requests through {{site.ai_gateway}} to monitor usage, control costs, and enforce rate limits across your development team.
-  - column_count: 4
+      description: "Claude Code is Anthropic's command-line tool that delegates coding tasks to Claude AI. Route Claude Code requests through {{site.ai_gateway}} to monitor usage, control costs, and enforce rate limits across your development team."
+    column_count: 4
     columns:
       - blocks:
         - type: card
@@ -125,16 +118,8 @@ rows:
   - header:
       type: h3
       text: "Codex CLI"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through {{site.ai_gateway}} to gain visibility into API usage, implement rate limiting, and centralize credential management.
-
-  - column_count: 4
+      description: "Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through {{site.ai_gateway}} to gain visibility into API usage, implement rate limiting, and centralize credential management."
+    column_count: 4
     columns:
       - blocks:
           - type: card
@@ -146,18 +131,10 @@ rows:
                 url: /how-to/use-codex-with-ai-gateway/
                 align: end
   - header:
-        type: h3
-        text: "Qwen Code CLI"
-    columns:
-        - blocks:
-            - type: structured_text
-              config:
-                blocks:
-                  - type: text
-                    text: |
-                      Qwen Code CLI is an AI-powered coding assistant that uses OpenAI-compatible endpoints. Proxy Qwen Code CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management.
-
-  - column_count: 4
+      type: h3
+      text: "Qwen Code CLI"
+      description: "Qwen Code CLI is an AI-powered coding assistant that uses OpenAI-compatible endpoints. Proxy Qwen Code CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management."
+    column_count: 4
     columns:
         - blocks:
             - type: card
@@ -171,15 +148,8 @@ rows:
   - header:
       type: h3
       text: "Gemini CLI"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Gemini CLI is Google's command-line tool for interacting with Gemini models. Route Gemini CLI requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team.
-  - column_count: 4
+      description: "Gemini CLI is Google's command-line tool for interacting with Gemini models. Route Gemini CLI requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team."
+    column_count: 4
     columns:
       - blocks:
           - type: card

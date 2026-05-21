@@ -25,6 +25,12 @@ related_resources:
     url: /plugins/zipkin/
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
+  - text: Full OpenTelemetry metrics reference
+    url: /gateway/otel-metrics/
+  - text: "Gen AI OpenTelemetry metrics reference"
+    url: /ai-gateway/ai-otel-metrics/
+  - text: "Gen AI OpenTelemetry span attributes"
+    url: /ai-gateway/llm-open-telemetry/
 
 works_on:
   - on-prem

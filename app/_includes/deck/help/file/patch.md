@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   deck file patch [flags] [...patch-files]
 

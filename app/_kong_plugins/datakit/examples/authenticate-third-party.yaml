@@ -61,3 +61,5 @@ tools:
 
 min_version:
   gateway: '3.11'
+
+group: authentication

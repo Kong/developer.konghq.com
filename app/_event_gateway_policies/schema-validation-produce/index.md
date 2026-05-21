@@ -28,6 +28,9 @@ phases:
 
 policy_target: virtual_cluster
 
+categories:
+  - data-quality
+
 icon: graph.svg
 ---
 

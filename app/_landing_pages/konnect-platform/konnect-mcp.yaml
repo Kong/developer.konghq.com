@@ -33,6 +33,10 @@ rows:
 
                     {:.success}
                     > {{site.konnect_product_name}} MCP server is in active development. Expect continuous updates and new tools to be added regularly.
+          - type: button
+            config:
+              text: "Get started with {{site.konnect_product_name}} MCP &rarr;"
+              url: "/konnect-platform/konnect-mcp/installation/"
       - blocks:
           - type: image
             config:
@@ -166,16 +170,10 @@ rows:
   - header:
       text: "Installation"
       type: h2
+      description: |
+        Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your regional URL and PAT. Select your preferred client below for specific installation instructions.
+    column_count: 3
     columns:
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your regional URL and PAT. Select your preferred client below for specific installation instructions.
-
-  - columns:
       - blocks:
         - type: card
           config:
@@ -206,8 +204,6 @@ rows:
             ctas:
               - text: Installation guide
                 url: "/konnect-platform/konnect-mcp/installation/#cursor"
-
-  - columns:
       - blocks:
         - type: card
           config:

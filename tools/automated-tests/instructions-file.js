@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import fastGlob from "fast-glob";
+import { glob } from "tinyglobby";
 import matter from "gray-matter";
 import path from "path";
 import yaml from "js-yaml";
@@ -63,7 +63,7 @@ export async function testeableUrlsFromFiles(config, files) {
 }
 
 export async function instructionFileFromConfig(config) {
-  const files = await fastGlob("**/*", { cwd: config.instructionsDir });
+  const files = await glob("**/*", { cwd: config.instructionsDir });
   if (files.length === 0) {
     console.error(
       `The platform couldn't find any instructions files to run in ${config.instructionsDir}.`

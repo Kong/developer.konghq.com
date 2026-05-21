@@ -3,6 +3,7 @@
 module IndentFilter
   def indent(input, spaces=3)
     input
+      .to_s
       .gsub("\n</code>", '</code>')
       .split("\n")
       .map { |l| l.prepend(' ' * spaces.to_i) }

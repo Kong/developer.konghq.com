@@ -13,7 +13,6 @@ related_resources:
     url: /gateway/manage-kong-conf/
   - text: Nginx directive reference
     url: /gateway/nginx-directives/
-
 breadcrumbs:
   - /gateway/
    

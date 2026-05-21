@@ -1,8 +1,7 @@
-{% if include.type=="question" %}
+{%- if include.type=="question" -%}
 Can I configure Vault in a different way without using the Vault entity directly?
-{% endif %}
-
-{% if include.type=="answer" %}
+{%- endif -%}
+{%- if include.type=="answer" -%}
 Yes, you can also configure a Vault in one of the following ways:
 * Using environment variables, set at {{site.base_gateway}} startup
 * Using parameters in `kong.conf`, set at {{site.base_gateway}} startup

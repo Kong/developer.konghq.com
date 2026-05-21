@@ -92,10 +92,10 @@ cleanup:
 
 Configure the AI Proxy plugin for the [AWS Bedrock provider](/ai-gateway/ai-providers/#bedrock).
 
-* This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
+* This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
 * The configuration also raises the maximum token count to 8192 KB to support larger prompts.
 
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match Claude's native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the Bedrock endpoint.
+The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude }}'s native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when {{ site.claude_code }} communicates with the Bedrock endpoint.
 
 {% entity_examples %}
 entities:
@@ -104,6 +104,7 @@ entities:
       config:
         llm_format: anthropic
         route_type: llm/v1/chat
+        max_request_body_size: 1048576
         logging:
           log_statistics: true
           log_payloads: false
@@ -130,7 +131,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between Claude and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the {{site.ai_gateway}}.
+Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -142,7 +143,7 @@ entities:
 
 ## Verify traffic through Kong
 
-Start a Claude Code session that points to the local {{site.ai_gateway}} endpoint:
+Start a {{ site.claude_code }} session that points to the local {{site.ai_gateway}} endpoint:
 
 {:.warning}
 > Ensure that `ANTHROPIC_MODEL` matches the model you configured in the AI Proxy plugin (for example, `us.anthropic.claude-haiku-4-5-20251001-v1:0`).
@@ -153,7 +154,7 @@ ANTHROPIC_MODEL=us.anthropic.claude-haiku-4-5-20251001-v1:0 \
 claude
 ```
 
-Claude Code asks for permission before it runs tools or interacts with files:
+{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
 
 ```text
 I'll need permission to work with your files.
@@ -177,7 +178,7 @@ Select **Yes, continue**. The session starts. Ask a simple question to confirm t
 Tell me about Anna Komnene's Alexiad.
 ```
 
-Claude Code might prompt you to approve its web search for answering the question. When you select **Yes**, Claude will produce a full-length response to your request:
+{{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
 Anna Komnene (1083-1153?) was a Byzantine princess, scholar, physician,
@@ -194,7 +195,7 @@ Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxie
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
 ```
 
-You should find an entry that shows the upstream request made by Claude Code. A typical log record looks like this:
+You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
 
 ```json
 {
@@ -244,4 +245,72 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through {{site.ai_gateway}} using AWS Bedrock with the `us.anthropic.claude-haiku-4-5-20251001-v1:0` model.
+This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using AWS Bedrock with the `us.anthropic.claude-haiku-4-5-20251001-v1:0` model.
+
+## Troubleshooting
+
+When using {{ site.claude_code }} with AWS Bedrock models, you may encounter connection errors.
+See the following sections for common error workarounds.
+
+### API Error 400: `context_management`: Extra inputs are not permitted
+
+Some beta features aren't compatible with AWS Bedrock.
+This error displays because {{ site.claude }} beta features are enabled.
+
+To resolve this issue, do the following:
+
+1. Disable betas and experiments:
+```sh
+export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
+```
+2. Configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin to remove beta information and the `model` field:
+{% capture fix_claude_beta %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy
+      config:
+        llm_format: anthropic
+        route_type: llm/v1/chat
+        max_request_body_size: 1048576
+        logging:
+          log_statistics: true
+          log_payloads: false
+        auth:
+          allow_override: false
+          aws_access_key_id: ${aws_access_key_id}
+          aws_secret_access_key: ${aws_secret_access_key}
+        model:
+          provider: bedrock
+          name: us.anthropic.claude-haiku-4-5-20251001-v1:0
+          options:
+            anthropic_version: bedrock-2023-05-31
+            bedrock:
+              aws_region: ${aws_region}
+            max_tokens: 8192
+    - name: request-transformer-advanced
+      config:
+        remove:
+          headers:
+            - anthropic-beta
+          querystring:
+            - beta
+          body:
+            - model
+variables:
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+  aws_region:
+    value: $AWS_REGION
+{% endentity_examples %}
+{% endcapture %}
+{{ fix_claude_beta | indent: 3 }}
+
+### API Error 400: `max_tokens` must be greater than `thinking.budget_tokens`
+
+If your `max_tokens` limit is too small, you may encounter this error.
+You can resolve this by setting `max_tokens` to a value greater than `budget_tokens`. The maximum value is `200000`.
+
+For more information about the default `budget_tokens` value, see [Building with extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking#max-tokens-and-context-window-size) in {{ site.claude }}'s API docs.

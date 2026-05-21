@@ -21,6 +21,9 @@ sections:
       - title: Data Governance
         description: Explore how {{site.ai_gateway}} helps enforce data governance policies.
         url: /ai-gateway/#data-governance
+      - title: "{{site.ai_gateway}} Data Governance."
+        description: This page provides an overview of {{site.ai_gateway}} safety, security and compliance features.
+        url: /ai-gateway/ai-data-gov/
       - title: Prompt Engineering
         description: Best practices and tools for designing effective prompts.
         url: /ai-gateway/#prompt-engineering
@@ -91,6 +94,16 @@ sections:
       - title: MCP traffic metrics
         description: Learn about metrics available for MCP traffic via {{site.ai_gateway}}
         url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
+  - title: A2A traffic gateway
+    items:
+    - title: A2A traffic gateway
+      description: Learn how {{site.ai_gateway}} provides observability and control for agent-to-agent (A2A) traffic.
+      url: /ai-gateway/a2a/
+    - type: how-to
+      products:
+        - ai-gateway
+      tags:
+        - a2a
   - title: AI load balancing
     items:
       - title: Load balancing with AI Proxy Advanced

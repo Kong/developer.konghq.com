@@ -109,17 +109,17 @@ Verify with the following commands:
 If it isn't working, there are two possible reasons:
 
 1. The contents of the tokens are invalid.
-    Find the secret name:
+   Find the secret name:
 
-    ```bash
-    kubectl get secrets --field-selector=type=kubernetes.io/service-account-token
-    ```
+   ```bash
+   kubectl get secrets --field-selector=type=kubernetes.io/service-account-token
+   ```
 
-    Delete the secret:
+   Delete the secret:
 
-    ```bash
-    kubectl delete secret $SECRET_NAME
-    ```
+   ```bash
+   kubectl delete secret $SECRET_NAME
+   ```
 
     It will automatically be recreated.
 

@@ -10,7 +10,7 @@ When an action can be done in the UI, we need to provide some UI instructions. W
 ## UI steps standards
 
 Regardless of what page the UI is documented on or if it's the primary or secondary method of configuring a feature, all UI instructions must adhere to the following guidelines. These ensure consistency and predictability for UI automated tests. Our standards are constructed in a way to match these best practices:
-* Write each step to contain only one action. One action per step makes the workflow easier to follow and ensures UI automation tests can target a single control at a time.
+* Write each step to contain only one action. One action per step makes the workflow easier to follow and ensures UI automation tests can target a single control at a time. On exception to this rule is when you're summarizing the steps in a table, FAQ, or a few sentences inline. If it's more than two sentences, use an ordered list. 
 * Tell the user the location of a component before telling them the action to perform on the component.
 * All actions are documented. Do not skip steps like **Save** or **Next**. Do not provide a deep link to a UI location without providing the path to get to that location.
 * Provide real values to enter or select from fields. If you can’t provide a real value, provide an example value and make it clear the user needs to replace it with a real value.

@@ -1,4 +1,5 @@
 [settings]
 idiomatic_version_file_enable_tools = ["ruby", "node"] # Use idiomatic version file to ensure netlify uses the same version as dev
+
 [env]
 _.file = '.env'

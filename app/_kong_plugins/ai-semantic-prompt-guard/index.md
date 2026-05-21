@@ -11,6 +11,7 @@ description: 'Semantically and intelligently create allow and deny lists of topi
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -33,6 +34,11 @@ icon: ai-semantic-prompt-guard.png
 
 categories:
   - ai
+
+tags:
+  - ai
+  - safety
+  - dlp
 
 search_aliases:
   - ai
@@ -77,15 +83,15 @@ next_steps:
     url: /how-to/use-ai-gcp-model-armor-plugin/
 ---
 
-The AI Semantic Prompt Guard plugin extends the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin by allowing you to permit or block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
+The AI Semantic Prompt Guard plugin extends the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin by allowing you to permit or block prompts based on a list of similar prompts, helping to prevent misuse of text completion requests.
 
 You can use a combination of `allow` and `deny` rules to maintain integrity and compliance when serving an LLM service using {{site.ai_gateway}}.
 
 ## How it works
 
 The matching behavior is as follows:
-* If any `deny` prompts are set and the request matches a prompt in the `deny` list, the caller receives a 400 response.
-* If any `allow` prompts are set, but the request matches none of the allowed prompts, the caller also receives a 400 response.
+* If any `deny` prompts are set and the request matches a prompt in the `deny` list, the caller receives a 403 response.
+* If any `allow` prompts are set, but the request matches none of the allowed prompts, the caller also receives a 403 response.
 * If any `allow` prompts are set and the request matches one of the `allow` prompts, the request passes through to the LLM.
 * If there are both `deny` and `allow` prompts set, the `deny` condition takes precedence over `allow`. Any request that matches a prompt in the `deny` list will return a 400 response, even if it also matches a prompt in the `allow` list. If the request doesn't match a prompt in the `deny` list, then it must match a prompt in the `allow` list to be passed through to the LLM.
 
@@ -93,4 +99,10 @@ The matching behavior is as follows:
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
-{% include plugins/redis-cloud-auth.md %}
+{% include_cached /plugins/ai-partials-vectordb-embeddings.md %}
+
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}

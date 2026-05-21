@@ -91,6 +91,12 @@ prereqs:
   konnect:
     - name: KONG_STATUS_LISTEN
       value: '0.0.0.0:8100'
+
+faqs:
+  - q: "Why do I see the error code `INVALID_PARAMS -32602` on failed requests instead of `HTTP 403 Forbidden`?"
+    a: |
+      Prior to {{site.ai_gateway}} 3.14, requests that matched an MCP ACL deny rule or failed to match an allow list returned the JSON-RPC error code `INVALID_PARAMS -32602`.
+      This has now changed to match the [MCP 2025-11-25 authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#error-handling) and returns `HTTP 403 Forbidden`.
 ---
 ## Set up Consumer authentication
 
@@ -313,7 +319,8 @@ Now let's verify access for each user by connecting with their API key:
 1. Enter `apikey` in the Key field.
 1. Enter `carol-key` in the Value field.
 1. Click the **Connect** button.
-1. The connection should fail with a `INVALID_PARAMS -32602` response.<br/>
+   
+   The connection should fail with a `HTTP 403 Forbidden` response.<br/>
    Carol belongs to the **suspended** group, which is globally denied access to all tools.
 1. Click **Disconnect** to switch to another user.
 

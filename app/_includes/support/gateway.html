@@ -1,3 +1,39 @@
+{% if page.output_format == 'markdown' %}
+{% table %}
+columns:
+  - title: Deployment Target
+    key: target
+  - title: ARM Support
+    key: arm
+  - title: FIPS Compliant
+    key: fips
+  - title: AWS Graviton Support
+    key: graviton
+  - title: EOL
+    key: eol
+rows:
+{% for d in include.release.distributions -%}
+{%- assign key = d | first | first -%}
+{%- assign distro = d | first | last -%}
+{%- assign package = site.data.support.packages[key] -%}
+{%- assign distro_eol = distro.eol | default: include.release.eol -%}
+{%- if distro.package %}
+  - target: "{{ package.os }} {{ package.version }} (package)"
+    arm: "{% if distro.package_support.arm %}Yes{% else %}No{% endif %}"
+    fips: "{% if distro.package_support.fips %}Yes{% else %}No{% endif %}"
+    graviton: "{% if distro.package_support.graviton %}Yes{% else %}No{% endif %}"
+    eol: "{{ distro_eol }}"
+{%- endif -%}
+{%- if distro.docker %}
+  - target: "{{ package.os }} {{ package.version }} (docker)"
+    arm: "{% if distro.docker_support.arm %}Yes{% else %}No{% endif %}"
+    fips: "{% if distro.docker_support.fips %}Yes{% else %}No{% endif %}"
+    graviton: "{% if distro.docker_support.graviton %}Yes{% else %}No{% endif %}"
+    eol: "{{ distro_eol }}"
+{%- endif -%}
+{%- endfor %}
+{% endtable %}
+{% else -%}
 <div class="rounded-lg overflow-x-auto">
     <table>
         <thead>
@@ -57,3 +93,4 @@
         </tbody>
     </table>
 </div>
+{%- endif %}

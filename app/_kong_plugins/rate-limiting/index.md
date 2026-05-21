@@ -54,12 +54,12 @@ search_aliases:
   - rate-limiting
 
 notes: |
-  In Konnect, DB-less, and hybrid modes, the <code>cluster</code> config policy
+  In Konnect, DB-less, and hybrid modes, the `cluster` config policy
   is not supported.
   <br><br>
-  For DB-less mode, use one of <code>redis</code> or <code>local</code>;
-  for Konnect and hybrid mode, use <code>redis</code>, or <code>local</code> for data
-  planes only. In Serverless gateways only the <code>local</code> config policy is supported.
+  For DB-less mode, use one of `redis` or `local`;
+  for Konnect and hybrid mode, use `redis`, or `local` for data
+  planes only. In Serverless gateways only the `local` config policy is supported.
 
 min_version:
   gateway: '1.0'
@@ -79,6 +79,12 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/oss.md name=page.name heading_level=3 %}
+
 ## Limit by IP address
 
 {% include_cached /plugins/rate-limiting/limit-by-ip.md %}
@@ -87,4 +93,3 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/rate-limiting/headers.md name=page.name %}
 
-{% include plugins/redis-cloud-auth.md %}

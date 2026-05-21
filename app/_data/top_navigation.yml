@@ -118,6 +118,23 @@ how_tos:
       url: /how-to/?products=catalog
       product: catalog
 
+ai_tools:
+  - text: Konnect MCP
+    url: /konnect-platform/konnect-mcp/
+    icon: /assets/icons/mcp.svg
+  - text: AI Cookbooks
+    url: /cookbooks/
+    icon: /assets/icons/book.svg
+  - text: decK
+    url: /deck/
+    icon: /assets/icons/code.svg
+  - text: kongctl
+    url: /kongctl/
+    icon: /assets/icons/code.svg
+  - text: Inso CLI
+    url: /inso-cli/
+    icon: /assets/icons/code.svg
+
 support:
   - text: Community
     url: 'https://konghq.com/community'

@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Add support for HMAC-SHA224, and removes HMAC-SHA1 from the default set of algorithms\n               (still supports HMAC-SHA1 when configured).\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Enabled at-rest keyring encryption for sensitive fields in HMAC Auth plugin.",

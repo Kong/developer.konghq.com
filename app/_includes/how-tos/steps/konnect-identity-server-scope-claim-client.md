@@ -20,13 +20,12 @@ extract_body:
     variable: AUTH_SERVER_ID
   - name: 'issuer'
     variable: ISSUER_URL
+capture:
+  - variable: AUTH_SERVER_ID
+    jq: ".id"
+  - variable: ISSUER_URL
+    jq: ".issuer"
 {% endkonnect_api_request %}
-
-Export the auth server ID and issuer URL:
-```sh
-export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
-export ISSUER_URL='YOUR-ISSUER-URL'
-```
 
 ## Configure the auth server with scopes 
 
@@ -48,8 +47,9 @@ body:
 extract_body:
   - name: 'id'
     variable: SCOPE_ID
-capture: SCOPE_ID
-jq: ".id"
+capture:
+  - variable: SCOPE_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

@@ -104,22 +104,22 @@ containing the Gateway API configurations.
 
 1. Export your source and destination paths:
 
-    ```bash
-    export SOURCE_DIR='YOUR SOURCE DIRECTORY'
-    export DEST_DIR='YOUR DESTINATION DIRECTORY'
-    ```
+   ```bash
+   export SOURCE_DIR='YOUR SOURCE DIRECTORY'
+   export DEST_DIR='YOUR DESTINATION DIRECTORY'
+   ```
 
 1. Convert the manifests and create new files in the destination directory:
 
-    ```bash
-    for file in $SOURCE_DIR/*.yaml; do ingress2gateway print --input-file ${file} -A --providers=kong > $DEST_DIR/$(basename -- $file); done
-    ```
+   ```bash
+   for file in $SOURCE_DIR/*.yaml; do ingress2gateway print --input-file ${file} -A --providers=kong > $DEST_DIR/$(basename -- $file); done
+   ```
 
 1. Check that the new manifest files are correctly created in the destination directory:
 
-    ```bash
-    ls $DEST_DIR
-    ```
+   ```bash
+   ls $DEST_DIR
+   ```
 
 1. Copy your annotations from the ingress resources to the Routes. The routes' names use the ingress name as prefix to help you track the route that the ingress generated. All the `konghq.com/` annotations must be copied except for these, that have been natively implemented as Gateway API features:
    * `konghq.com/methods`
@@ -138,15 +138,15 @@ Check that the new manifests converted correctly. The manifests are converted as
 
 1. Apply the new manifest files into the cluster:
 
-    ```bash
-    kubectl apply -f $DEST_DIR
-    ```
+   ```bash
+   kubectl apply -f $DEST_DIR
+   ```
 
 1. Wait for all the gateways to be programmed:
 
-    ```bash
-    kubectl wait --for=condition=programmed gateway -A --all
-    ```
+   ```bash
+   kubectl wait --for=condition=programmed gateway -A --all
+   ```
 
 ## Verify the migration
 
@@ -156,9 +156,9 @@ Before deleting the original resources, verify that your Gateway API resources a
 
    Ensure all Gateways have the `Programmed` condition set to `True`:
 
-    ```bash
-    kubectl get gateway -A -o wide
-    ```
+   ```bash
+   kubectl get gateway -A -o wide
+   ```
 
 2. **Verify route status**
 

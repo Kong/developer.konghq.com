@@ -38,7 +38,7 @@
   "request-size-limiting": 951,
   "acl": 950,
   "opa": 920,
-  "service-protection": 915,
+  "service-protection": 901,
   "rate-limiting": 910,
   "rate-limiting-advanced": 910,
   "ai-rate-limiting-advanced": 905,

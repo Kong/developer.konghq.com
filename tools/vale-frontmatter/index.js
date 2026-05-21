@@ -1,7 +1,8 @@
-const fs = require("fs").promises;
-const fg = require("fast-glob");
-const matter = require("gray-matter");
-const path = require("path");
+import fs from "fs/promises";
+import { glob } from "tinyglobby";
+import matter from "gray-matter";
+import path from "path";
+import { fileURLToPath } from "url";
 
 async function pathExists(path) {
   try {
@@ -26,7 +27,7 @@ async function prepareMarkdownFilesForVale() {
       pattern = ["app/**/*.md"];
     }
   }
-  let files = await fg(pattern, { cwd: "../../" });
+  let files = await glob(pattern, { cwd: "../../" });
 
   const frontmatterKeys = await fs.readFile(
     `../../.github/styles/frontmatter/Keys.txt`,
@@ -76,7 +77,7 @@ async function prepareMarkdownFilesForVale() {
   }
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
     prepareMarkdownFilesForVale();
   } catch (e) {
@@ -84,4 +85,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = prepareMarkdownFilesForVale;
+export default prepareMarkdownFilesForVale;

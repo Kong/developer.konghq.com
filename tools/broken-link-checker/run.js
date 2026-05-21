@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/rest";
 import { context } from "@actions/github";
 import minimist from "minimist";
-import fg from "fast-glob";
+import { glob } from "tinyglobby";
 import { promises as fs } from "fs";
 import checkUrls from "./lib/check-url-list.js";
 import processResult from "./lib/process-result.js";
@@ -111,7 +111,7 @@ async function urlsFromPR(options) {
 }
 
 async function urlsFromFiles(options) {
-  let changedFiles = await fg(options.files, {
+  let changedFiles = await glob(options.files, {
     cwd: "../../",
   });
   const urls = await urlsToCheck(changedFiles, options);

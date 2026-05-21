@@ -1,0 +1,209 @@
+---
+title: Configure HashiCorp Vault as a vault backend with AWS EC2 authentication
+permalink: /how-to/configure-hashicorp-vault-with-aws-ec2-auth/
+content_type: how_to
+description: "Learn how to configure HashiCorp Vault with AWS EC2 authentication and reference HashiCorp Vault secrets from {{site.base_gateway}}."
+products:
+    - gateway
+
+related_resources:
+  - text: Secrets management
+    url: /gateway/secrets-management/
+  - text: Configure HashiCorp Vault as a vault backend
+    url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
+  - text: Configure HashiCorp Vault as a vault backend with AWS IAM authentication
+    url: /how-to/configure-hashicorp-vault-with-aws-iam-auth/
+  - text: Configure HashiCorp Vault as a vault backend with GCP service account authentication
+    url: /how-to/configure-hashicorp-vault-with-gcp-service-account-auth/
+  - text: Configure HashiCorp Vault as a vault backend with GCP workload identity
+    url: /how-to/configure-hashicorp-vault-with-gcp-workload-identity/
+  - text: Store Keyring data in a HashiCorp Vault
+    url: /how-to/store-keyring-in-hashicorp-vault/
+  - text: HashiCorp AWS auth method reference
+    url: https://developer.hashicorp.com/vault/api-docs/auth/aws
+
+works_on:
+    - on-prem
+
+min_version:
+  gateway: '3.14'
+
+entities:
+  - vault
+
+tags:
+    - secrets-management
+    - security
+    - hashicorp-vault
+    - aws
+
+search_aliases:
+  - Hashicorp Vault
+  - AWS
+  - aws_ec2
+  - EC2
+
+tldr:
+    q: How do I configure HashiCorp Vault to authenticate using AWS EC2?
+    a: |
+      Run {{site.base_gateway}} on an EC2 instance with an instance profile attached. Enable the AWS auth method in HashiCorp Vault and create an EC2 role bound to the instance's AMI ID.
+
+      Then in {{site.base_gateway}}, configure a Vault entity with the following:
+      * Set `config.auth_method` set to `aws_ec2`.
+      * Set `config.aws_auth_role` to the Vault role name.
+      * Set `config.aws_auth_nonce` to a unique nonce string. The EC2 instance identity document is provided automatically by the instance metadata service, no AWS credentials are required on {{site.base_gateway}}'s side.
+
+tools:
+    - admin-api
+
+prereqs:
+  skip_product: true
+  inline:
+    - title: EC2 instance with instance profile
+      content: |
+        {{site.base_gateway}} must be running on an EC2 instance with an instance profile attached. The EC2 instance identity document is automatically provided by the instance metadata service, no additional IAM permissions are required on {{site.base_gateway}}'s side.
+
+        Note the AMI ID of your EC2 instance and export it:
+        ```sh
+        export KONG_EC2_AMI_ID="ami-0abcdef1234567890"
+        ```
+
+        Generate a unique nonce string. This nonce is stored with the Vault token and validated on subsequent logins to prevent replay attacks:
+        ```sh
+        export AWS_AUTH_NONCE="$(openssl rand -hex 16)"
+        ```
+      icon_url: /assets/icons/aws.svg
+    - title: HashiCorp Vault
+      content: |
+        You need [HashiCorp Vault installed](https://developer.hashicorp.com/vault/install) on your VM. 
+
+        The steps in this how to assume that HashiCorp Vault and {{site.base_gateway}} are installed on the same VM. 
+        Production instances will often install HashiCorp Vault and {{site.base_gateway}} on separate VMS. 
+        If this is the case, see the [HashiCorp Vault AWS authentication documentation](https://developer.hashicorp.com/vault/docs/auth/aws) for the configuration changes you'll need to make.
+      icon_url: /assets/icons/hashicorp.svg
+
+cleanup:
+  inline:
+    - title: Clean up HashiCorp Vault
+      content: |
+        Stop the HashiCorp Vault process by running the following:
+        ```sh
+        pkill vault
+        ```
+
+        Unset environment variables:
+        ```sh
+        unset VAULT_ADDR
+        unset KONG_EC2_AMI_ID
+        unset AWS_AUTH_NONCE
+        ```
+      icon_url: /assets/icons/hashicorp.svg
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+
+faqs:
+  - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
+    a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
+
+next_steps:
+  - text: Review the Vaults entity
+    url: /gateway/entities/vault/
+  - text: What can be stored as a secret?
+    url: /gateway/entities/vault/#what-can-be-stored-as-a-secret
+
+automated_tests: false
+---
+
+## Configure HashiCorp Vault
+
+Before you can configure the Vault entity in {{site.base_gateway}}, you must configure HashiCorp Vault to authenticate clients using EC2 instance identity documents and store a secret.
+
+### Create configuration files
+
+{% include /gateway/hashicorp-vault-create-policies.md %}
+
+### Configure the Vault and store a secret
+
+{% include /gateway/hashicorp-vault-basic-setup.md %}
+
+1. Enable AWS authentication:
+   ```sh
+   vault auth enable aws
+   ```
+
+1. Create an EC2 role that binds to your {{site.base_gateway}} instance's AMI ID:
+   ```sh
+   vault write auth/aws/role/kong-role \
+     auth_type=ec2 \
+     bound_ami_id="$KONG_EC2_AMI_ID" \
+     token_policies="rw-secrets"
+   ```
+
+1. Enable the K/V secrets engine:
+   ```sh
+   vault secrets enable -path=kong kv
+   ```
+
+1. Create a secret:
+   ```sh
+   vault kv put kong/headers/request header="x-kong:test"
+   ```
+
+1. Confirm you can retrieve the secret through Vault:
+   ```sh
+   vault kv get kong/headers/request
+   ```
+
+## Set environment variables
+
+Find the internal IP for your VM:
+```sh
+hostname -I
+```
+
+Export the following environment variables before creating the Vault entity:
+
+```sh
+export HCV_HOST="YOUR VM INTERNAL IP"
+export AWS_AUTH_ROLE=kong-role
+```
+
+## Create a Vault entity for HashiCorp Vault
+
+Create a [Vault entity](/gateway/entities/vault/) with the required parameters for HashiCorp Vault AWS EC2 authentication:
+<!--vale off-->
+{% control_plane_request %}
+url: /vaults
+method: POST
+body:
+  name: hcv
+  prefix: hashicorp-vault
+  description: Storing secrets in HashiCorp Vault
+  config:
+    host: $HCV_HOST
+    kv: v1
+    mount: kong
+    port: 8200
+    protocol: http
+    auth_method: aws_ec2
+    aws_auth_role: $AWS_AUTH_ROLE
+    aws_auth_nonce: $AWS_AUTH_NONCE
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+## Validate
+
+To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command.
+
+```sh
+sudo -E kong vault get {vault://hashicorp-vault/headers/request/header}
+```
+
+If the vault was configured correctly, this command returns the value of the secret. You can use `{vault://hashicorp-vault/headers/request/header}` to reference the secret in any referenceable field.
+
+For more information about supported secret types, see [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret).

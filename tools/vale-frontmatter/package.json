@@ -2,6 +2,7 @@
     "name": "vale-frontmatter",
     "version": "1.0.0",
     "description": "",
+    "type": "module",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +11,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "fast-glob": "^3.3.2",
+        "tinyglobby": "^0.2.12",
         "gray-matter": "^4.0.3"
     }
 }

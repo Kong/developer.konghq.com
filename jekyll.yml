@@ -40,6 +40,10 @@ collections:
     output: true
   references:
     output: false
+  support:
+    output: true
+  cookbooks:
+    output: true
 
 defaults:
   - scope:
@@ -69,13 +73,37 @@ defaults:
       auto_generated: true
       content_type: "reference"
       permalink: "/:path/"
+  - scope:
+      path: "_support"
+      type: "support"
+    values:
+      layout: "support"
+      permalink: "/support/:path/"
+      breadcrumbs:
+        - "/support/"
+  - scope:
+      path: "_cookbooks"
+      type: "cookbooks"
+    values:
+      layout: "cookbook"
+      content_type: "cookbook"
+      permalink: "/cookbooks/:path/"
+      breadcrumbs:
+        - "/cookbooks/"
 
 reference_metadata:
+  event-gateway:
+    products:
+      - event-gateway
+    breadcrumbs:
+      - /event-gateway/
+
   inso-cli:
     products:
       - insomnia
     tools:
       - inso-cli
+
   gateway:
     pdk:
       products:
@@ -97,6 +125,7 @@ base_gateway: Kong Gateway
 ai_gateway: AI Gateway
 ai_gateway_name: Kong AI Gateway
 ee_product_name: Kong Gateway Enterprise
+ee_product_name_official: Kong API Gateway Enterprise
 konnect_short_name: Konnect
 konnect_product_name: Kong Konnect
 mesh_product_name: Kong Mesh
@@ -112,6 +141,27 @@ konnect_catalog: Catalog
 metering_and_billing: Metering & Billing
 observability: Observability
 dev_portal: Dev Portal
+# Company names
+openai: OpenAI
+anthropic: Anthropic
+google: Google
+gemini: Gemini
+amazon: Amazon
+cohere: Cohere
+hugging_face: Hugging Face
+mistral: Mistral
+xai: xAI
+grok: Grok
+cerebras: Cerebras
+ollama: Ollama
+deepseek: DeepSeek
+# Product names
+google_cloud: Google Cloud
+google_analytics: Google Analytics
+claude: Claude
+claude_code: Claude Code
+gtm: Google Tag Manager
+
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com
@@ -169,3 +219,8 @@ operator_kongreferencegrant_api_version: "v1alpha1"
 operator_kongpluginbinding_api_version: "v1alpha1"
 gwapi_version: "1.4.1" 
 render_banner: false
+
+# Copy
+llm_copy:
+  on_prem_snippet: 'On-prem deployments'
+  konnect_snippet: 'Konnect deployments'

@@ -34,6 +34,16 @@ faqs:
       What is this token and where can I find it?
     a: |
       {% include_cached /dev-portal/portal-access-token.md %}
+  - q: |
+      I created an application in Dev Portal, but I'd like to assign it to my team instead or I want to assign it to a different team. How do I do that?
+    a: |
+      To assign an app you created to a team in the Dev Portal UI:
+
+      1. Navigate to your app in Dev Portal.
+      2. Click the **Settings** tab.
+      3. Under **App sharing**, click **Transfer ownership** and select the team you want to transfer the app to.
+
+      In the Dev Portal UI, once an application is assigned to a team, ownership can only be transferred to another team you are a member of. Transferring ownership back to an individual developer is only supported by the Dev Portal API. For more details, see [Developer self-service and app registration](/dev-portal/self-service/).
 ---
 
 The Dev Portal enables you to quickly get access to your APIs of interest, in a self-serve way. 
@@ -75,12 +85,18 @@ You can register an application for one or multiple APIs.
 1. Click **Catalog**.
 1. Select the API and click **Register**.
 1. Choose **Create an application**.
+1. If your Dev Portal admin has enabled app sharing with teams and you want to assign the app to your team, do the following:
+   1. Select **This is a team owned application**.
+   1. From the **Select team** dropdown menu, select the team you want to assign the app to.
 
 {% endnavtab %}
 {% navtab "Multiple APIs" %}
 
 1. Click **My Apps**.
 1. Click **New App** and enter your app details.
+1. If your Dev Portal admin has enabled app sharing with teams and you want to assign the app to your team, do the following:
+   1. Select **This is a team owned application**.
+   1. From the **Select team** dropdown menu, select the team you want to assign the app to.
 1. Go to **Catalog**, select an API, and click **Register**.
 1. Choose the app you created and click **Request Access**.
 

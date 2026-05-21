@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../monkey_patch'
+
 module Jekyll
   class RenderFaq < Liquid::Tag
     def initialize(tag_name, param, _tokens)
@@ -21,14 +23,18 @@ module Jekyll
 
       context.stack do
         context['faqs'] = faqs
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/faqs.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/faqs.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/faqs.html'))
+      end
     end
   end
 end

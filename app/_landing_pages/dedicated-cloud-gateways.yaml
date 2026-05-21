@@ -83,6 +83,8 @@ rows:
                   url: /dedicated-cloud-gateways/transit-gateways/
                 - text: VPC peering
                   url: /dedicated-cloud-gateways/aws-vpc-peering/
+                - text: AWS resource endpoints (REP)
+                  url: /dedicated-cloud-gateways/aws-resource-endpoints/
       - blocks:
           - type: card
             config:
@@ -101,21 +103,18 @@ rows:
                 {{site.konnect_short_name}} can leverage Azure virtual network peering to create virtual networks, ingest data from your provider's services, and expose them to the internet via {{site.konnect_short_name}}.
               icon: /assets/icons/azure.svg
               ctas:
-                - text: VNet peering
+                - text: VNET peering
                   url: /dedicated-cloud-gateways/azure-peering/
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Name resolution"
-            blocks:
-              - type: text
-                text: |
-                  We recommend using private name resolution for services running in the same cloud as your Dedicated Cloud Gateway. 
-                  Use private hosted zones or private DNS if your services are in the same cloud. 
-                  Use an outbound DNS resolver if your services are in an external or on-premise DNS server. 
-  - column_count: 3
+                - text: Virtual WAN (VWAN)
+                  url: /dedicated-cloud-gateways/azure-virtual-wan/
+  - header:
+      type: h2
+      text: "Name resolution"
+      description: |
+        We recommend using private name resolution for services running in the same cloud as your Dedicated Cloud Gateway. 
+        Use private hosted zones or private DNS if your services are in the same cloud. 
+        Use an outbound DNS resolver if your services are in an external or on-premise DNS server. 
+    column_count: 3
     columns:
       - blocks:
           - type: card
@@ -147,30 +146,28 @@ rows:
                 Dedicated Cloud Gateways in Azure support private name resolution through Azure private DNS zones and an outbound DNS resolver.
               icon: /assets/icons/azure.svg
               ctas:
-                - text: Private DNS zones
+                - text: VNET peering and private DNS zones
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
-                - text: Outbound DNS resolver
+                - text: VNET peering and outbound DNS resolver
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
+                - text: VWAN and private DNS zones
+                  url: /dedicated-cloud-gateways/azure-virtual-wan-with-private-dns/
+                - text: VWAN and outbound DNS resolver
+                  url: /dedicated-cloud-gateways/azure-virtual-wan-with-outbound-dns-resolver/
   - header:
       type: h2
-      text: "Service-level private access"
-  - column_count: 3
+      text: "Managed cache for Redis"
     columns:
       - blocks:
-        - type: card
-          config:
-            title: AWS resource endpoints
-            icon: /assets/icons/aws.svg
-            description: |
-              AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 
-            cta:
-              text: Learn more
-              url: /dedicated-cloud-gateways/aws-resource-endpoints/  
-      
-  - header:
-      type: h2
-      text: "Managed Redis Cache"
-    columns:
+          - type: card
+            config:
+              title: Managed cache reference
+              description: |
+                Learn how to size, configure, and scale a Dedicated Cloud Gateway managed cache for Redis. 
+              icon: /assets/icons/redis.svg
+              ctas:
+                - text: Read recommendations
+                  url: /dedicated-cloud-gateways/managed-cache/
       - blocks:
           - type: card
             config:
@@ -199,6 +196,47 @@ rows:
                   url: /dedicated-cloud-gateways/azure-managed-cache-control-plane-group/
   - header:
       type: h2
+      text: "Dedicated Cloud Gateway network architecture"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Network architecture overview
+              description: |
+                Learn the architecture of Kong-managed Dedicated Cloud Gateways networks, how they communicate with your cloud infrastructure, and what you must decide before deploying a Dedicated Cloud Gateway.
+              icon: /assets/icons/gateway.svg
+              cta:
+                url: /dedicated-cloud-gateways/network-architecture/
+      - blocks:
+          - type: card
+            config:
+              title: Public network architecture
+              description: |
+                Learn about the public Dedicated Cloud Gateway network architecture and how to secure your public network.
+              icon: /assets/icons/world.svg
+              cta:
+                url: /dedicated-cloud-gateways/public-network/
+      - blocks:
+          - type: card
+            config:
+              title: Private network architecture
+              description: |
+                Learn about private Dedicated Cloud Gateway network architecture, connectivity options, and how to secure your private network.
+              icon: /assets/icons/lock.svg
+              cta:
+                url: /dedicated-cloud-gateways/private-network/
+      - blocks:
+          - type: card
+            config:
+              title: Multi-cloud architecture
+              description: |
+                Learn how to deploy Dedicated Cloud Gateways across multiple cloud providers, including supported hostname strategies and their tradeoffs.
+              icon: /assets/icons/cloud.svg
+              cta:
+                url: /dedicated-cloud-gateways/multi-cloud/
+  
+  - header:
+      type: h2
       text: "Cluster management"
     columns:
       - blocks:
@@ -224,7 +262,8 @@ rows:
   - header:
       type: h2
       text: "More information"
-  - columns:
+    column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
@@ -255,8 +294,6 @@ rows:
               cta:
                 text: See the API
                 url: /api/konnect/cloud-gateways/v2/
-  - column_count: 3
-    columns:
       - blocks:
           - type: card
             config:

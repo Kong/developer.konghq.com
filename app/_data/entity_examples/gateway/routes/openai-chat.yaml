@@ -3,3 +3,5 @@ paths:
   - /
 service:
   name: ai-proxy
+protocols:
+  - https

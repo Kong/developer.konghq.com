@@ -1,4 +1,11 @@
 {
+  "3.14.0.2": [
+    {
+      "message": "Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `https_verify` setting cannot be disabled.",

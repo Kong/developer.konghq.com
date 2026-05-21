@@ -1,4 +1,5 @@
-description: |
+description: Authenticate centrally-managed Consumers in {{site.konnect_short_name}} by configuring the `identity_realms` field in the Key Auth plugin.
+extended_description: |
   You can authenticate [consumers that are managed centrally](/gateway/entities/consumer/#centrally-managed-consumers) in {{site.konnect_short_name}} by configuring the `identity_realms` field in the Key Auth plugin. A Data Plane can only reach out to realms in the same region as they are deployed.
   
   `identity_realms` are scoped to the Control Plane by default (`scope: cp`). 

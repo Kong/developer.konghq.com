@@ -109,8 +109,9 @@ body:
 extract_body:
   - name: id
     variable: ANALYTICS_LISTENER_ID
-capture: ANALYTICS_LISTENER_ID
-jq: ".id"
+capture:
+  - variable: ANALYTICS_LISTENER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -150,8 +151,9 @@ body:
 extract_body:
   - name: id
     variable: PAYMENTS_LISTENER_ID
-capture: PAYMENTS_LISTENER_ID
-jq: ".id"
+capture:
+  - variable: PAYMENTS_LISTENER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

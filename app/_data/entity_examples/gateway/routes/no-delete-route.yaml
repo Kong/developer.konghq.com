@@ -7,3 +7,6 @@ methods:
   - PUT
 service: 
   name: example-service
+protocols:
+  - http
+  - https

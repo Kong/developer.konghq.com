@@ -89,12 +89,12 @@ spec:
         containers:
         - name: proxy
           image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-        env:
-        - name: KONG_LICENSE_DATA
-          valueFrom:
-            secretKeyRef:
-              key: license
-              name: kong-enterprise-license
+          env:
+          - name: KONG_LICENSE_DATA
+            valueFrom:
+              secretKeyRef:
+                key: license
+                name: kong-enterprise-license
 ```
 
 ### GatewayConfiguration
@@ -113,10 +113,10 @@ spec:
           containers:
           - name: proxy
             image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-          env:
-          - name: KONG_LICENSE_DATA
-            valueFrom:
-              secretKeyRef:
-                key: license
-                name: kong-enterprise-license
+            env:
+            - name: KONG_LICENSE_DATA
+              valueFrom:
+                secretKeyRef:
+                  key: license
+                  name: kong-enterprise-license
 ```

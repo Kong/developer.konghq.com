@@ -1,0 +1,145 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "request_if_media_type": {
+          "default": [
+            "application/json"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "request_jq_program": {
+          "type": "string"
+        },
+        "request_jq_program_options": {
+          "default": {},
+          "properties": {
+            "ascii_output": {
+              "default": false,
+              "type": "boolean"
+            },
+            "compact_output": {
+              "default": true,
+              "type": "boolean"
+            },
+            "join_output": {
+              "default": false,
+              "type": "boolean"
+            },
+            "raw_output": {
+              "default": false,
+              "type": "boolean"
+            },
+            "sort_keys": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "response_if_media_type": {
+          "default": [
+            "application/json"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "response_if_status_code": {
+          "default": [
+            200
+          ],
+          "items": {
+            "maximum": 599,
+            "minimum": 100,
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "response_jq_program": {
+          "type": "string"
+        },
+        "response_jq_program_options": {
+          "default": {},
+          "properties": {
+            "ascii_output": {
+              "default": false,
+              "type": "boolean"
+            },
+            "compact_output": {
+              "default": true,
+              "type": "boolean"
+            },
+            "join_output": {
+              "default": false,
+              "type": "boolean"
+            },
+            "raw_output": {
+              "default": false,
+              "type": "boolean"
+            },
+            "sort_keys": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

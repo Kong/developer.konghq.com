@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import fg from "fast-glob";
+import { glob } from "tinyglobby";
 import YAML from "yaml";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
@@ -118,7 +118,7 @@ async function validate() {
   const schemaDir = path.join(SCHEMAS_DIR, version);
   const schemaMap = buildSchemaMap(schemaDir);
 
-  const exampleFiles = await fg(EXAMPLES_GLOB, { cwd: ROOT });
+  const exampleFiles = await glob(EXAMPLES_GLOB, { cwd: ROOT });
   console.log(`Found ${exampleFiles.length} example files\n`);
 
   const ajv = new Ajv({ allErrors: true, strict: false });

@@ -1,6 +1,6 @@
 ---
 title: "Contributing to docs"
-content_type: policy
+content_type: reference
 layout: reference
 
 breadcrumbs:
@@ -17,6 +17,8 @@ products:
 works_on:
   - on-prem
   - konnect
+
+llm: false
 ---
 
 The Kong Developer site uses custom page types and Liquid template tags to render content on a page. This page explains how to write the different page types as well as the different template tags you can use on a page.
@@ -444,18 +446,21 @@ Prevents users from copying code in a code block.
 
 Displays the code block/text only if the specified deployment type is selected.
 
-Add this tag immediately after a code block.
+Wrap the text/code block with the following blocks:
 <!--vale off-->
-{% raw %}```
-code for konnect
-{: data-deployment-topology="konnect" }
-```{% endraw %}
+```{% raw %}
+{% konnect %}
+content: |
+  code for konnect
+{% endkonnect %}
+{% endraw %}```
 
-{% raw %}```
-code for on-prem
-{: data-deployment-topology="on-prem" }
-```{% endraw %}
-
+```{% raw %}
+{% on_prem %}
+content: |
+  code for on-prem
+{% endon_prem %}
+{% endraw %}```
 <!--vale on-->
 
 ### Notes and warnings
@@ -802,6 +807,44 @@ Displays a feature table that shows if features are supported or unsupported.
                 - title: Rate limit based on `consumer`, `consumer-group`, `credential`, `ip` and `service`
                   oss: true
                   ee: true
+```
+<!--vale on-->
+
+### Use case table
+
+If you want a landing page table that shows use cases mapped to multiple outcomes and examples, use the `use_case_table` block. 
+
+See the [Event Gateway landing page](/event-gateway/#use-cases-for-kong-event-gateway) for a rendered example.
+
+<!--vale off-->
+```yaml
+- blocks:
+    - type: use_case_table
+      config:
+        usecase_title: Use case # title of the use case column and the top-level list item in the LLM markdown
+        columns: # titles of the other columns, which are also nested list items under the related use case in LLM markdown
+          - title: Outcome 
+            key: outcome
+          - title: Feature
+            key: feature
+          - title: How-to guide or example
+            key: guide
+        rows:
+          - usecase: | # This will render as a table entry on the prod site, and as a heading in LLM markdown
+              **Govern Kafka** to enforce security and guidelines in an automated fashion 
+            outcomes: # These will render as table cells related to the use case, and as list items under the use case in LLM markdown
+              - outcome: |
+                  Centrally manage and instantly update access control policies without touching individual brokers
+                feature: |
+                  [ACL policy](/event-gateway/policies/acl/)
+                guide: |
+                  [Get started with {{site.event_gateway_short}} and ACLs](/event-gateway/get-started/)
+              - outcome: |
+                  Replace legacy auth methods with modern enterprise identity standards your team already uses
+                feature: |
+                  [OAuth](/kong-identity/)
+                guide: |
+                  [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
 ```
 <!--vale on-->
 

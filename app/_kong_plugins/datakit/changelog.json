@@ -1,4 +1,41 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Added more implicit node outputs:\n    * `request.path`\n    * `request.raw_path`\n    * `request.port`\n    * `request.method`\n    * `request.scheme`\n    * `request.version`\n    * `service_response.status`\n    * service_response.raw_body\n    * call.raw_body\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added JWT nodes: `jwt_decode` for decoding tokens without verification, `jwt_verify` for signature verification and claim validation using JWKS, and `jwt_sign` for creating and signing JWTs.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Consumer can now be set via property node.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "the call node's `ssl_verify` option to verify the TLS certificate\nwhen making HTTPS requests is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed type system bug to allow defining maps with string values for vault node.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where datakit cache node instantiate proxy-cache-advanced redis module at config time causing dependency issue on Koko.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed xml_to_json node to recognize `text/xml` content-type in addition to `application/xml` for XML request body processing, ensuring RFC 7303 compliance.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added json_to_xml node to support converting JSON or lua table to XML data.",

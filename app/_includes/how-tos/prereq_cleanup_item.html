@@ -1,4 +1,8 @@
-{% assign slug = include.summary | liquify | slugify %}
+{%- if page.output_format == 'markdown' -%}
+### {{ include.summary | liquify | lstrip }}
+{{ include.details_content | liquify }}
+{%- else -%}
+{%- assign slug = include.summary | liquify | slugify -%}
 <a class="px-5 py-4 flex gap-2 items-center hover:no-underline accordion-trigger" href="#{{ slug }}" id="{{slug}}">
     <div class="flex p-[3px] w-6 h-6 justify-center items-center rounded-[3px]  {% if include.icon_url %}bg-brand-saturated/40{% endif %}">
         {% if include.icon_url %}
@@ -18,3 +22,4 @@
 <div class="flex flex-col gap-3 px-[3.25rem] pb-4 accordion-panel">
 {{ include.details_content | markdownify | liquify }}
 </div>
+{%- endif -%}

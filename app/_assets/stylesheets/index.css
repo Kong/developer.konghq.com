@@ -212,7 +212,7 @@
     @apply font-bold text-base tracking-[-.01em];
   }
 
-  main h4:not(.card h4) {
+  main h4:not(.card h4, .cookbook h4) {
     @apply pt-3;
   }
 
@@ -667,6 +667,10 @@
 
   .filter-results-field__input {
     @apply flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3 md:pl-11 items-center w-full;
+
+    &::-webkit-search-cancel-button {
+      cursor: pointer;
+    }
   }
 
   .searchbox-results-container {
@@ -681,7 +685,8 @@
     @apply border-[0.28px] border-primary/[.08];
   }
 
-  .how-to {
+  .how-to,
+  .cookbook {
     counter-reset: steps-counter;
   }
 
@@ -844,8 +849,48 @@
     }
   }
 
+ .custom-code-block.collapsible {
+    [data-code-snippet] {
+      @apply overflow-hidden relative max-h-80;
+    }
+
+    &.expanded {
+      [data-code-snippet] {
+        @apply overflow-auto max-h-none;
+      }
+
+      [data-code-snippet]::after {
+        @apply hidden;
+      }
+    }
+
+    [data-code-snippet] {
+      @apply border-b-0 rounded-b-none;
+    }
+
+   [data-code-snippet]::after {
+      @apply absolute left-0 right-0 bottom-0 h-20 z-[1] pointer-events-none;
+      content: "";
+      background: linear-gradient(0deg, rgb(var(--color-bg-code-block)) 0, rgb(var(--color-bg-code-block)) 25%, transparent 100%);
+    }
+  }
+
+  .collapsible-toggle {
+    .chevron-icon {
+      @apply transition-transform;
+    }
+  }
+
+  .custom-code-block.expanded .collapsible-toggle .chevron-icon {
+    @apply rotate-180;
+  }
+
   .custom-code-block__header {
     clipboard-copy {
+      @apply hover:border-white text-white hover:text-white;
+    }
+
+    .collapsible-toggle {
       @apply hover:border-white text-white hover:text-white;
     }
   }

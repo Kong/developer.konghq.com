@@ -2,3 +2,5 @@ name: secured-endpoint
 path: /secured-endpoint
 service: echo
 port: 1027
+protocols:
+  - https

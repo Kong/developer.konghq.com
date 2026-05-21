@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import fastGlob from "fast-glob";
+import { globSync } from "tinyglobby";
 import minimist from "minimist";
 import yaml from "js-yaml";
 import { compareVersions } from "./compare-versions.js";
@@ -11,7 +11,7 @@ function generateChangelogsByVersion(folderPath, version) {
     "./config/ignored_folders.json",
     "utf-8"
   );
-  const folders = fastGlob.globSync(`${folderPath}/changelog/${version}/*`, {
+  const folders = globSync(`${folderPath}/changelog/${version}/*`, {
     onlyDirectories: true,
     ignore: JSON.parse(foldersToIgnore).map(
       (f) => `${folderPath}/changelog/${version}/${f}`
@@ -23,7 +23,7 @@ function generateChangelogsByVersion(folderPath, version) {
   folders.forEach((folder) => {
     const key = path.basename(folder);
     changelog[key] = [];
-    const entries = fastGlob.globSync(`${folder}/*`);
+    const entries = globSync(`${folder}/*`);
     entries.forEach((entry) => {
       const change = yaml.load(fs.readFileSync(entry, "utf-8"));
       if (!change.hasOwnProperty("scope")) {
@@ -61,7 +61,7 @@ function generateChangelogsByVersion(folderPath, version) {
 }
 
 function fetchVersions(path) {
-  const versions = fastGlob.globSync("[0-9]*", {
+  const versions = globSync("[0-9]*", {
     cwd: `${path}/changelog/`,
     onlyDirectories: true,
   });

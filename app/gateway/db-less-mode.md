@@ -125,7 +125,7 @@ kong config init
 
 There are two ways to load a declarative configuration file into {{site.base_gateway}}: 
 * At start-up, using `kong.conf`
-* At runtime, using the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-config)
+* At runtime, using the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/create-config)
 
 You can use the following `kong.conf` parameters to load the declarative config file:
 

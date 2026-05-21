@@ -48,11 +48,11 @@ Now we can test if a data type is returned in the top-level request body.
 1. Click **New test** and enter a name for the test, such as "Data type in body (top-level)". 
 1. From the **Select a request** drop down, select the **GET KongAir planned flights** request.
 1. Enter the following JavaScript to check if an array is present in the top-level body of the response:
-```javascript
-const response1 = await insomnia.send();
-const body = JSON.parse(response1.data);
-expect(body).to.be.an('array');
-```
+   ```javascript
+   const response1 = await insomnia.send();
+   const body = JSON.parse(response1.data);
+   expect(body).to.be.an('array');
+   ```
 {% include /how-tos/steps/insomnia-run-tests.md %}
 
 ## Create a top-level data type in body test
@@ -62,14 +62,14 @@ Now you can test if a data type is returned in the top-level request body.
 1. Click **New test** and enter a name for the test, such as "Data type in body (nested)". 
 1. From the **Select a request** drop down, select the **GET Fetch more details about a flight** request.
 1. Enter the following JavaScript to check if the first string in the `meal_options` array is present in the body of the response:
-```javascript
-const response1 = await insomnia.send();
-const body = JSON.parse(response1.data);
-expect(body).to.be.an('object');
-expect(body).to.have.property('meal_options'); 
-expect(body.meal_options).to.be.an('array');
-if (body.meal_options.length > 0) {
-    expect(body.meal_options[0]).to.be.a('string');
-}
-```
+   ```javascript
+   const response1 = await insomnia.send();
+   const body = JSON.parse(response1.data);
+   expect(body).to.be.an('object');
+   expect(body).to.have.property('meal_options'); 
+   expect(body.meal_options).to.be.an('array');
+   if (body.meal_options.length > 0) {
+       expect(body.meal_options[0]).to.be.a('string');
+   }
+   ```
 {% include /how-tos/steps/insomnia-run-tests.md %}

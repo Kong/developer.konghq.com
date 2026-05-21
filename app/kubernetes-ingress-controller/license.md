@@ -79,27 +79,27 @@ An alternative option is to use a static license Secret that will be used to pop
 
 1. Create a file named `license.json` containing your {{site.base_gateway}} license and store it in a Kubernetes secret:
 
-    ```bash
-    kubectl create namespace kong
-    kubectl create secret generic kong-enterprise-license --from-file=license=./license.json -n kong
-    ```
+   ```bash
+   kubectl create namespace kong
+   kubectl create secret generic kong-enterprise-license --from-file=license=./license.json -n kong
+   ```
 
 1. Create a `values.yaml` file:
 
-    ```yaml
-    gateway:
-      image:
-        repository: kong/kong-gateway
-      env:
-        LICENSE_DATA:
-          valueFrom:
-            secretKeyRef:
-              name: kong-enterprise-license
-              key: license
-    ```
+   ```yaml
+   gateway:
+     image:
+       repository: kong/kong-gateway
+     env:
+       LICENSE_DATA:
+         valueFrom:
+           secretKeyRef:
+             name: kong-enterprise-license
+             key: license
+   ```
 
 1. Install {{site.kic_product_name}} and {{ site.base_gateway }} with Helm:
 
-    ```bash
-    helm upgrade --install kong kong/ingress -n kong --create-namespace --values ./values.yaml
-    ```
+   ```bash
+   helm upgrade --install kong kong/ingress -n kong --create-namespace --values ./values.yaml
+   ```

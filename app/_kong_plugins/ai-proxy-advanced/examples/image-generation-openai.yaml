@@ -1,5 +1,5 @@
 title: 'Image generation route'
-description: 'Configure an image generation route using OpenAI’s DALL·E 3 model.'
+description: 'Configure an image generation route using OpenAI’s GPT Image 1.5 model.'
 
 weight: 900
 
@@ -18,7 +18,7 @@ config:
         header_value: Bearer ${key}
       model:
         provider: openai
-        name: dall-e-3
+        name: gpt-image-1.5
         options:
           max_tokens: 512
           temperature: 1.0

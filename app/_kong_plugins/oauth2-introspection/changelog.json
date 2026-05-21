@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "The authenticated token is now stored in the request context via `kong.client.set_token`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed a high memory usage issue caused by caching negative introspection responses.\n",

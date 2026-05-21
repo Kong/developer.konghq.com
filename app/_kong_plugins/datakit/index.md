@@ -38,6 +38,15 @@ min_version:
 
 tags:
   - transformations
+
+toc_depth: 4
+examples_groups:
+  - slug: authentication
+    text: Authentication
+  - slug: transformation
+    text: Transformation
+  - slug: headers
+    text: Manipulate headers
 ---
 
 The {{site.base_gateway}} Datakit plugin allows you to interact with third-party APIs.
@@ -81,6 +90,10 @@ rows:
     description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
   - usecase: "[Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)"
     description: Dynamically resolve an internal authentication endpoint and inject the necessary request headers prior to proxying the request.
+  - usecase: "[Authenticate Consumers using multiple JWT sources](/plugins/datakit/examples/authenticate-consumer-from-multiple-jwts/)"
+    description: Authenticate a Consumer by verifying a JWT from one of two possible sources, each backed by a different JWKS.
+  - usecase: "[Sign JWT with Consumer ID](/plugins/datakit/examples/sign-consumer-jwt/)"
+    description: Sign an outgoing JWT in a request header using the authenticated Consumer’s ID as the subject. 
 {% endtable %}
 <!--vale on-->
 
@@ -533,6 +546,7 @@ rows:
       * `body`: The response body
       * `headers`: The response headers
       * `status`: The HTTP status code of the response
+      * `raw_body`: The raw, non-normalized response body {% new_in 3.14 %}
   - nodetype: |
       [jq (`jq`)](#jq-node)
     description: "Transform data and cast variables with `jq` to be shared with other nodes."
@@ -569,8 +583,39 @@ rows:
     description: "Transforms JSON or a Lua table into XML strings."
     inputs: JSON formatted data or Lua tables
     outputs: XML formatted data
+  - nodetype: |
+      [JWT decode (`jwt_decode`)](#jwt-decode-node) {% new_in 3.14 %}
+    description: "Decode a JWT without verifying its signature."
+    inputs: |
+      * `$self`: JWT token string (with or without `Bearer` prefix)
+    outputs: |
+      * `header`: Decoded JWT header
+      * `payload`: Decoded JWT payload (claims)
+      * `signature`: Raw base64url-encoded signature
+  - nodetype: |
+      [JWT sign (`jwt_sign`)](#jwt-sign-node) {% new_in 3.14 %}
+    description: "Create and sign a JWT."
+    inputs: |
+      * `claims`: Dynamic claims to include in the token
+      * `key`: Signing key (PEM, JWK JSON string, or HMAC secret)
+    outputs: |
+      * `token`: The signed JWT
+      * `claims`: All claims used when signing
+      * `header`: The JWT header
+  - nodetype: |
+      [JWT verify (`jwt_verify`)](#jwt-verify-node) {% new_in 3.14 %}
+    description: "Verify a JWT's signature and validate its claims."
+    inputs: |
+      * `token`: JWT token string (with or without `Bearer` prefix)
+      * `key`: Verification key (JWKS, JWK, PEM, or HMAC secret)
+    outputs: |
+      * `claims`: JWT payload claims
+      * `header`: JWT header
 {% endtable %}
 <!--vale on-->
+
+{:.info}
+> **Note:** `$self` indicates that a node accepts a single value directly via `input:`, not named fields via `inputs:`. For example, you would use `input: request.headers` rather than `inputs: {token: ...}`.
 
 You can learn more about the supported configuration parameters for each node in the [configuration reference](/plugins/datakit/reference/#schema--config-nodes).
 
@@ -1183,7 +1228,7 @@ rows:
     desc: "`kong.client.get_credential()`"
     type: "`object`"
 
-  - property: "`kong.client.get_identity_realm_source`"
+  - property: "`kong.client.identity_realm_source`"
     desc: "`kong.client.get_identity_realm_source()`"
     type: "`object`"
 
@@ -1259,9 +1304,17 @@ rows:
     desc: Gets the Kong version
     type: "`string`"
 
+  - property: "`kong.nginx.subsystem`"
+    desc: "`kong.nginx.get_subsystem()`"
+    type: "`string`"
+
   - property: "`kong.node.id`"
     desc: "`kong.node.get_id()`"
     type: "`string`"
+
+  - property: "`kong.node.memory_stats`"
+    desc: "`kong.node.get_memory_stats()`"
+    type: "`object`"
 
   - property: "`kong.configuration.{key}`"
     desc: Reads `{key}` from the node configuration
@@ -1286,9 +1339,22 @@ rows:
     desc: "`kong.service.set_target({host}, {port})`"
     type: "`string` (`{host}:{port}`)"
 
-  - property: "`kong.service.request_scheme`"
-    desc: "`kong.service.set_service_request_scheme({scheme})`"
+  - property: "`kong.service.request.scheme`"
+    desc: "`kong.service.request.set_scheme({scheme})`"
     type: "`string` (`{scheme}`)"
+
+  - property: "`kong.response.status`"
+    desc: "`kong.response.set_status({status})`"
+    type: "`number`"
+
+  - property: "`kong.service.upstream`"
+    desc: "`kong.service.set_upstream({upstream})`"
+    type: "`string` (`{upstream}`)"
+
+  - property: |
+      `kong.client.consumer` {% new_in 3.14 %}
+    desc: "`kong.client.authenticate()`"
+    type: "`object` with at least one of `id`, `username`, or `custom_id`"
 {% endtable %}
 <!--vale on-->
 
@@ -1549,6 +1615,72 @@ For a more detailed example, see [Convert JSON into XML](/plugins/datakit/exampl
 
 For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
 
+### JWT decode node {% new_in 3.14 %}
+
+Decode a JWT without verifying its signature. 
+Accepts tokens with or without a `Bearer` prefix (case-insensitive).
+
+The node will fail the request if the token can't be parsed for any reason. No partial results are returned.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `jwt_decode` from the node object dropdown to see all node attributes.
+
+#### Example
+
+```yaml
+- name: decode-token
+  type: jwt_decode
+  input: request.headers.authorization
+```
+
+### JWT sign node {% new_in 3.14 %}
+
+Create and sign a JWT with the provided key.
+Automatically adds `iat`, `exp`, and `nbf` time claims.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `jwt_sign` from the node object dropdown to see all node attributes.
+
+#### Example
+
+```yaml
+- name: sign-jwt
+  type: jwt_sign
+  algorithm: HS256
+  expires_in: 300
+  static_claims:
+    iss: "kong"
+  inputs:
+    claims: build-claims
+    key: vault.jwt_hmac_key
+```
+
+For a more detailed example, see [Sign JWT with Consumer ID](/plugins/datakit/examples/sign-consumer-jwt/).
+
+### JWT verify node {% new_in 3.14 %}
+
+Verify a JWT's signature and validate its claims.
+Supports JWKS, JWK, PEM, and HMAC secret key formats.
+
+The node will fail the request if the token can't be parsed for any reason. No partial results are returned.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `jwt_verify` from the node object dropdown to see all node attributes.
+
+#### Example
+
+```yaml
+- name: verify-jwt
+  type: jwt_verify
+  issuers:
+    - "expected-issuer"
+  required_claims:
+    - "sub"
+    - "exp"
+  inputs:
+    token: extract-auth
+    key: vault.jwks
+```
+
+For a more detailed example, see [Authenticate Consumer from multiple JWT sources](/plugins/datakit/examples/authenticate-consumer-from-multiple-jwts/).
+
 ### Implicit nodes
 
 Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
@@ -1567,34 +1699,46 @@ columns:
     key: inputs
   - title: Outputs
     key: outputs
-  - title: declaration
-    key: declaration
 rows:
   - node: "`request`"
     description: Reads incoming client request properties
     inputs: none
-    outputs: "`body`, `headers`, `query`"
-    declaration: none
+    outputs: |
+      * `body`: The request body
+      * `headers`: The request headers
+      * `query`: The request query
+      * `path` {% new_in 3.14 %}: The normalized path component of the client HTTP request URL 
+      * `raw_path` {% new_in 3.14 %}: The raw, non-normalized path component of the client HTTP request URL
+      * `port` {% new_in 3.14 %}: The port component of the client HTTP request URL
+      * `method` {% new_in 3.14 %}: The client HTTP request method
+      * `scheme` {% new_in 3.14 %}: The client request scheme, one of `http` or `https
+      * `version` {% new_in 3.14 %}: The HTTP version of the client request
   - node: "`service_request`"
     description: Updates properties of the request sent to the service being proxied to
-    inputs: "`body`, `headers`, `query`"
+    inputs: |
+      * `body`: The request body
+      * `headers`: The request headers
+      * `query`: The request query
     outputs: none
-    declaration: none
   - node: "`service_response`"
     description: Reads response properties from the service being proxied to
     inputs: none
-    outputs: "`body`, `headers`"
-    declaration: none
+    outputs: |
+      * `body`: The response body
+      * `headers`: The response headers
+      * `status` {% new_in 3.14 %}: The HTTP status code of the response
+      * `raw_body` {% new_in 3.14 %}: The raw, non-normalized response body
   - node: "`response`"
     description: Updates properties of the outgoing client response
-    inputs: "`body`, `headers`"
+    inputs: |
+      * `body`: The response body
+      * `headers`: The response headers
     outputs: none
-    declaration: none
-  - node: "`vault`"
+  - node: "`resources.vault`"
     description: Vault reference to hold secret values
     inputs: none
-    outputs: "`$self`"
-    declaration: "resources.vault"
+    outputs: |
+      * `$self`: The secret value retrieved from the vault reference
 {% endtable %}
 <!--vale off-->
 
@@ -1654,6 +1798,12 @@ Datakit supports a global `resources` object that can be used to declare shared 
 The [`cache` node](#cache-node) requires a `resources.cache` resource definition containing cache configuration.
 
 {% include /plugins/caching/strategies.md slug=page.slug name=page.name %}
+
+#### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=4 %}
 
 ### Vault resource {% new_in 3.12 %}
 
@@ -1948,5 +2098,3 @@ a result of `NODE_SKIPPED`.
 consumption to aid development and testing. Backwards-incompatible changes to
 the report format _may_ be included with any new release of
 {{site.base_gateway}}.
-
-{% include plugins/redis-cloud-auth.md %}

@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import minimist from "minimist";
 import { generateInstructionFiles } from "./instructions/extractor.js";
 import { testeableUrlsFromFiles } from "./instructions-file.js";
-import fastGlob from "fast-glob";
+import { glob } from "tinyglobby";
 
 (async function main() {
   try {
@@ -21,7 +21,7 @@ import fastGlob from "fast-glob";
       if (args.files) {
         howToFiles = Array.isArray(args.files) ? args.files : [args.files];
       } else {
-        howToFiles = await fastGlob("../../app/_how-tos/**/*");
+        howToFiles = await glob("../../app/_how-tos/**/*");
       }
       urlsToTest = await testeableUrlsFromFiles(testsConfig, howToFiles);
     }

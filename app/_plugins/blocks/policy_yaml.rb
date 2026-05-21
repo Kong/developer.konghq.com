@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Extracted from: https://github.com/kumahq/kuma-website/blob/master/jekyll-kuma-plugins/lib/jekyll/kuma-plugins/liquid/tags/policyyaml.rb
+require_relative '../monkey_patch'
 
 module Jekyll
   class RenderPolicyYaml < Liquid::Block
@@ -264,11 +265,22 @@ module Jekyll
       content = super
       return '' if content == ''
 
+      @site = context.registers[:site]
+      @page = context.environments.first['page']
+
       @params.each do |k, v|
-        next unless %w[use_meshservice namespace].include?(k)
+        next unless %w[use_meshservice namespace tools].include?(k)
         next unless v.is_a?(String)
 
-        @params[k] = v.split('.').reduce(context) { |c, key| c[key] } || false
+        if v.include?('.')
+          resolved = v.split('.').reduce(context) { |c, key| c[key] }
+          @params[k] = k == 'tools' ? resolved : (resolved || false)
+        elsif k == 'tools'
+          @params[k] = v.split(',')
+        elsif k == 'use_meshservice'
+          @params[k] = v == 'true'
+        end
+        # namespace literals (no dot) are kept as set by parse_markup
       end
 
       has_raw = @body.nodelist.first { |x| x.has?('tag_name') and x.tag_name == 'raw' }
@@ -281,6 +293,11 @@ module Jekyll
       use_meshservice = @params['use_meshservice'] == true && Gem::Version.new(release.number.dup.sub('x',
                                                                                                       '0')) >= TARGET_VERSION
       show_tf = Gem::Version.new(release.number.dup.sub('x', '0')) >= TF_TARGET_VERSION
+
+      tools = Array(@params['tools'])
+      show_kubernetes = (tools.empty? || tools.include?('kubernetes'))
+      show_universal = (tools.empty? || tools.include?('universal'))
+      show_tf = show_tf && (tools.empty? || tools.include?('terraform'))
 
       namespace = @params['namespace'] || site_data['mesh_namespace']
       styles = [
@@ -312,50 +329,25 @@ module Jekyll
 
       additional_classes = 'codeblock' unless use_meshservice
 
-      # Conditionally render tabs based on use_meshservice
-      htmlContent = "
-{% navtabs \"policy-yaml\" #{additional_classes} %}"
-
-      if use_meshservice
-        htmlContent += "
-{% navtab \"Kubernetes\" %}
-<div class=\"meshservice text-sm\">
-<label class=\"flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center\"> <input class=\"checkbox\" type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
-</div>
-#{contents[:kube_legacy]}
-#{contents[:kube]}
-{% endnavtab %}
-{% navtab \"Universal\" %}
-<div class=\"meshservice text-sm\">
-<label class=\"flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center\"> <input class=\"checkbox\" type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
-</div>
-#{contents[:uni_legacy]}
-#{contents[:uni]}
-{% endnavtab %}"
-      else
-        htmlContent += "
-{% navtab \"Kubernetes\" %}
-#{contents[:kube_legacy]}
-{% endnavtab %}
-{% navtab \"Universal\" %}
-#{contents[:uni_legacy]}
-{% endnavtab %}"
-      end
-
-      if show_tf
-        htmlContent += "
-{% navtab \"Terraform\" %}
-<div class=\"text-sm\">
-Please adjust <b>konnect_mesh_control_plane.my_meshcontrolplane.id</b> and <b>konnect_mesh.my_mesh.name</b> according to your current configuration.
-</div>
-#{terraform_content}
-{% endnavtab %}"
-      end
-
-      htmlContent += '{% endnavtabs %}'
-
       # Return the final HTML content
-      ::Liquid::Template.parse(htmlContent).render(context)
+      context.stack do
+        context['additional_classes'] = additional_classes
+        context['use_meshservice'] = use_meshservice
+        context['show_kubernetes'] = show_kubernetes
+        context['show_universal'] = show_universal
+        context['show_tf'] = show_tf
+        context['terraform_content'] = terraform_content
+        context['kube_legacy'] = contents[:kube_legacy]
+        context['kube'] = contents[:kube]
+        context['uni_legacy'] = contents[:uni_legacy]
+        context['uni'] = contents[:uni]
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
+        ::Liquid::Template.parse(template, { line_numbers: true }).render(context)
+      end
+    end
+
+    def template
+      File.read(File.join(@site.source, '_includes/components/policy_yaml.md'))
     end
   end
 end

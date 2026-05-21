@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl listen konnect audit-logs [flags]
 
@@ -7,24 +7,24 @@ Aliases:
 
 Examples:
   # Build destination endpoint from public base URL and listener path
-  kongctl listen audit-logs --public-url https://example.ngrok.app
+  kongctl listen audit-logs --public-url https://example.ngrok.app --authorization "Bearer <token>"
 
   # Provide an explicit destination endpoint
-  kongctl listen audit-logs --endpoint https://example.ngrok.app/audit-logs
+  kongctl listen audit-logs --endpoint https://example.ngrok.app/audit-logs --authorization "Bearer <token>"
 
   # Explicit product form
-  kongctl listen konnect audit-logs --public-url https://example.ngrok.app
+  kongctl listen konnect audit-logs --public-url https://example.ngrok.app --authorization "Bearer <token>"
 
 
 Flags:
-      --authorization string    Value for the Authorization header Konnect includes when sending audit logs. The local listener validates this same value when provided.
+      --authorization string    Value for the Authorization header Konnect includes when sending audit logs. The local listener validates this value on every incoming request.
       --base-url string         Base URL for Konnect API requests.
                                 - Config path: [ konnect.base-url ]
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
+                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
+                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --configure-webhook       Automatically bind and enable the organization webhook with the created destination. (default true)
@@ -41,6 +41,10 @@ Flags:
                                 - Allowed    : [ trace|debug|info|warn|error ] (default "error")
       --max-body-bytes int      Maximum accepted request body size in bytes. (default 1048576)
       --name string             Destination name. Default: kongctl-<hostname>-<pid>.
+      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
+                                - Config path: [ telemetry.enabled ]
+                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")

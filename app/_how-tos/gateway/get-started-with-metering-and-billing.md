@@ -38,6 +38,9 @@ prereqs:
       content: |
         You need the [{{site.metering_and_billing}} Admin role](/konnect-platform/teams-and-roles/#metering-billing) in {{site.konnect_short_name}} to configure {{site.metering_and_billing}}.
       icon_url: /assets/icons/kogo-white.svg
+    - title: "{{site.konnect_short_name}} system account token"
+      include_content: prereqs/metering-and-billing-spat
+      icon_url: /assets/icons/kogo-white.svg
 
 cleanup:
   inline:
@@ -53,10 +56,12 @@ related_resources:
     url: /metering-and-billing/metering/
   - text: Customers and usage attribution
     url: /metering-and-billing/customer/
-  - text: Billing, invoicing, and subscriptions
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Billing and invoicing
+    url: /metering-and-billing/billing-invoicing/
   - text: Meter and bill {{site.ai_gateway}} LLM tokens
     url: /how-to/meter-llm-traffic/
+  - text: Get started with {{site.metering_and_billing}} generic meters
+    url: /how-to/get-started-with-metering-and-billing-generic-meters/
 min_version:
     gateway: '3.4'
 next_steps:
@@ -68,6 +73,11 @@ next_steps:
     url: /gateway/configuration/
   - text: See all {{site.base_gateway}} plugins
     url: /plugins/
+faqs:
+  - q: I previously enabled metering using the **Enable Gateways** button in the {{site.konnect_short_name}} UI. Do I need to do anything?
+    a: |
+      {% include faqs/metering-and-billing-legacy-ingestion.md %}
+
 automated_tests: false
 ---
 
@@ -150,13 +160,47 @@ entities:
 
 In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and data you can audit.
 
-In this guide, you'll enable API Gateway requests for metering. This will meter API request traffic in {{site.metering_and_billing}} so that you can charge customers for API traffic usage.
+Create a meter to count API requests:
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the API Gateway Requests settings, click **Enable Gateways**.
-1. Select the "quickstart" control plane.
-1. Click **Enable 1 Gateways**.
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+method: POST
+body:
+  name: Total API requests
+  key: api_requests_total
+  description: API Requests
+  event_type: request
+  aggregation: count
+  dimensions:
+    method: $.method
+    route: $.route
+{% endkonnect_api_request %}
+<!--vale on-->
 
+## Enable the {{site.metering_and_billing}} plugin
+
+Next, configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to emit API request events from {{site.base_gateway}} to {{site.metering_and_billing}} so that you can charge customers for API traffic usage:
+
+<!--vale off-->
+{% entity_examples %}
+entities:
+  plugins:
+    - name: metering-and-billing
+      service: example-service
+      config:
+        ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
+        api_token: ${AUTH_TOKEN}
+        meter_api_requests: true
+        meter_ai_token_usage: false
+        subject:
+          look_up_value_in: consumer
+variables:
+  AUTH_TOKEN:
+    value: $AUTH_TOKEN
+    description: A {{site.konnect_short_name}} system account token (`spat_`) with the Metering Ingest role.
+{% endentity_examples %}
+<!--vale on-->
 
 ## Create a feature
 
@@ -244,3 +288,6 @@ This will generate six requests. Now, check the invoice that was created in {{si
 1. Click **Preview Invoice**.
 
 You'll see in Lines that `example-service` is listed and was used six times. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**.
+
+{:.info}
+> **Entitlement enforcement:** {{site.base_gateway}} does not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.

@@ -1,0 +1,8 @@
+name: weather-api-route
+paths:
+  - /api/weather
+service:
+  name: weather-api-service
+protocols:
+  - http
+  - https

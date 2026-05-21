@@ -15,22 +15,16 @@ rows:
       type: h1
       text: "Custom plugins"
 
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Developing custom plugins"
-              blocks:
-                - type: text
-                  text: |
-                    Kong provides a development environment for developing plugins, 
-                    including Plugin Development Kits (or PDKs), database abstractions, migrations, and more.
+  - header:
+      type: h2
+      text: "Developing custom plugins"
+      description: |
+        Kong provides a development environment for developing plugins, 
+        including Plugin Development Kits (or PDKs), database abstractions, migrations, and more.
 
-                    Plugins consist of modules interacting with the request/response objects or
-                    streams via a PDK to implement arbitrary logic. With custom plugins, you can configure these modules to provide custom functionality to {{site.base_gateway}}.
-
-  - columns:
+        Plugins consist of modules interacting with the request/response objects or
+        streams via a PDK to implement arbitrary logic. With custom plugins, you can configure these modules to provide custom functionality to {{site.base_gateway}}.
+    columns:
       - blocks:
           - type: card
             config:
@@ -98,19 +92,13 @@ rows:
                 text: See reference
                 url: "/dedicated-cloud-gateways/reference/#custom-plugins"
           
-  - columns:
-     - blocks:
-         - type: structured_text
-           config:
-             header:
-               text: "Plugin Development Kits (PDKs)"
-             blocks:
-               - type: text
-                 text:
-                   "PDKs are sets of functions that a plugin can use to facilitate interactions between plugins
-                   and the core (or other components) of Kong. Kong provides PDKs in the following languages:"
-
-  - columns:
+  - header:
+      type: h2
+      text: "Plugin Development Kits (PDKs)"
+      description: |
+        PDKs are sets of functions that a plugin can use to facilitate interactions between plugins
+        and the core (or other components) of Kong. Kong provides PDKs in the following languages:
+    columns:
     - blocks:
       - type: card
         config:

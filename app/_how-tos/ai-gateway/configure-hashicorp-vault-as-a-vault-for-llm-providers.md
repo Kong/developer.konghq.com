@@ -97,7 +97,7 @@ expected:
 render_output: false
 {% endvalidation %}
 
-Next, replace the placeholder with your Mistral API key and run:
+Next, replace the placeholder with your {{ site.mistral }} API key and run:
 
 {% validation custom-command %}
 command: |
@@ -152,12 +152,14 @@ variables:
 
 ## Validate
 
-Since {{site.konnect_short_name}} Data Plane container names can vary, set your container name as an environment variable:
-{: data-deployment-topology="konnect" }
-```sh
-export KONNECT_DP_CONTAINER='your-dp-container-name'
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  Since {{site.konnect_short_name}} Data Plane container names can vary, set your container name as an environment variable:
+
+  ```sh
+  export KONNECT_DP_CONTAINER='your-dp-container-name'
+  ```
+{% endkonnect %}
 
 To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container.
 
@@ -173,4 +175,4 @@ value: $DECK_OPENAI_API_KEY
 {% endvalidation %}
 
 
-If the vault was configured correctly, this command should return the value of the secrets for OpenAI and Mistral. You can use `{vault://hashicorp-vault/openai/key}` and `{vault://hashicorp-vault/mistral/key}` to reference the secret in any referenceable field.
+If the vault was configured correctly, this command should return the value of the secrets for OpenAI and {{ site.mistral }}. You can use `{vault://hashicorp-vault/openai/key}` and `{vault://hashicorp-vault/mistral/key}` to reference the secret in any referenceable field.

@@ -59,6 +59,8 @@ If you need to run Lua code _after_ other plugins in each phase, see the [Post-F
 
 {% include_cached /plugins/serverless/untrusted-lua.md %}
 
+{% include_cached /gateway/expressions/limitation-note.md %}
+
 ## Phases
 
 {% include_cached /plugins/serverless/phases.md name=page.name %}

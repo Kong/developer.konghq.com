@@ -155,4 +155,8 @@ and incoming proxy request headers and query params are not.
 If callout headers and query params have a `forward` flag set, then incoming request headers and query params are forwarded in the callout requests, causing them to be part of the 
 cache key.
 
-{% include plugins/redis-cloud-auth.md %}
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}

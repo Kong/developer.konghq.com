@@ -12,7 +12,9 @@ module Jekyll
           'plugin' => 'Plugin',
           'plugin_example' => 'PluginExample',
           'reference' => 'Reference',
-          'policy' => 'Policy'
+          'policy' => 'Policy',
+          'support' => 'Support',
+          'cookbook' => 'Reference'
         }.freeze
 
         def self.make_for(site:, page:)

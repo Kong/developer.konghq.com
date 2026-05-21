@@ -53,7 +53,7 @@ Each storage conversion changes where the project data is stored and how the pro
 
 ### Convert Cloud Sync to Local Vault
 
-When you convert a Cloud Sync project to Local Vault, Insomnia permanently removes the project’s cloud-stored data and stores the project on your local device. Cloud collaboration stops.
+When you convert a Cloud Sync project to Local Vault, Insomnia immediately removes the project’s cloud-stored data and stores the project on your local device. Cloud collaboration stops. The data deletion is permanent and can't be recovered from the cloud after the change.
 
 **Limit:** Remote cloud changes that aren't present locally aren't included after conversion.
 

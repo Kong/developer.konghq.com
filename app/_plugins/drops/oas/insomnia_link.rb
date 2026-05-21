@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 require 'uri'
+require 'forwardable'
 
 module Jekyll
   module Drops
     module OAS
       class InsomniaLink < Liquid::Drop
+        extend Forwardable
+
         attr_reader :site, :label
+
+        def_delegators :api_spec_file, :raw_api_spec
 
         def initialize(label:, version:, page_relative_path:, site:)
           @label = label

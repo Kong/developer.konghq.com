@@ -44,7 +44,7 @@ prereqs:
   inline:
   - title: Cerebras
     content: |
-        This tutorial uses OpenAI:
+        This tutorial uses Cerebras:
         1. [Create a Cerebras account](https://chat.cerebras.ai).
         1. Get an API key. 
         1. Create a decK variable with the API key:
@@ -72,7 +72,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with Cerebras, we need to specify the model to use.
+To set up AI Proxy Advanced with {{ site.cerebras }}, we need to specify the model to use.
 
 In this example, we'll use the gpt-oss-120b model:
 

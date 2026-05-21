@@ -36,3 +36,26 @@ rows:
 {% endfor %}
 {% endtable %}
 
+## {{site.metering_and_billing}}
+
+Common terms used in [{{site.metering_and_billing}}](/metering-and-billing/).
+
+{% for category in site.data.glossary.metering_and_billing %}
+
+### {{ category.category }}
+
+{% table %}
+columns:
+  - title: Term
+    key: term
+  - title: Description
+    key: description
+rows:
+{% for item in category.definitions %}
+  - term: "{{ item.term }}"
+    description: "{{ item.description }}"
+{% endfor %}
+{% endtable %}
+
+{% endfor %}
+

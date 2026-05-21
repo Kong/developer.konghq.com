@@ -34,6 +34,7 @@ categories:
 
 tags:
   - ai
+  - safety
 
 search_aliases:
   - ai
@@ -81,3 +82,5 @@ instructions for the incoming client request body.
 1. The {{site.base_gateway}} sends the transformed request to the AI LLM service.
 1. The AI LLM service returns a response to {{site.base_gateway}}.
 1. The {{site.base_gateway}} sends the transformed response to the client.
+
+{% include_cached /plugins/ai-partials-model.md %}

@@ -9,6 +9,7 @@ addons
 admin_listen
 admin's
 admin's
+ai_rate_limiting_policy
 agentic
 Agno
 Agno's
@@ -60,8 +61,11 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+availability_zones
+Avalara
 Avro
 aws
+aws_iam
 Adyen
 AZs
 Backblaze
@@ -105,6 +109,7 @@ CAs
 callout
 callouts
 camelCase
+CDNs
 cef
 Cerebras
 certificate_admin
@@ -115,6 +120,7 @@ chatbot
 chatbots
 chatwise
 cidr
+cidr_block
 cidrs
 cleartext
 cli
@@ -129,10 +135,13 @@ CloudFormation
 CloudFormation
 Cloudformation
 Cloudformation
+cloud_gateway_provider_account_id
 Cloudsmith
 cmd
 cncf
 cncf's
+CNAMEs
+CNIs
 Cohere
 cohere
 Cognito
@@ -146,6 +155,7 @@ configMaps
 configs
 configurability
 Conjur
+Coroutine
 conntrack
 consumer_group
 consumer_id
@@ -154,6 +164,7 @@ cors
 cosmiconfig
 cosocket
 CPUs
+vCPUs
 crd
 crds
 created_at
@@ -175,6 +186,8 @@ daos
 dashboarding
 DashScope
 dashscope
+Databricks
+databricks
 Datadog
 Datadog
 datadog
@@ -194,8 +207,11 @@ dcr
 DECK_
 deck_files
 declaratively
+dedupe
 deduplicate
+deduplicates
 deduplication
+deepseek
 degraphql
 degraphql_routes
 denylist
@@ -215,6 +231,8 @@ dict
 dicts
 digitalocean
 discovery_support
+dlp
+DLP
 DN
 DN
 DNs
@@ -225,6 +243,9 @@ donut
 doppelganger
 downsample
 downsampled
+downscope
+downscoping
+downscoped
 downstreams
 downtime
 downtimes
@@ -265,6 +286,7 @@ failover
 fapi
 Fargate
 Fargate
+Fastly
 favicon
 filepath
 filetype
@@ -285,6 +307,8 @@ gatewayclass
 gateway_entity
 gcloud
 gcp
+gcp_gce
+gcp_iam
 generationConfig
 geo
 geos
@@ -477,6 +501,7 @@ KPI
 KPI
 KPIs
 KPIs
+kscheme
 ksearch
 kubeconfig
 kubectl
@@ -496,6 +521,7 @@ Kustomize
 Kustomize
 kustomize
 kustomize
+keystores
 kv
 Lakera
 langchain
@@ -541,6 +567,7 @@ mebibytes
 Memcached
 Memcached
 Memorystore
+Merbridge
 meshopa
 meshopas
 meshpassthrough
@@ -571,6 +598,7 @@ MongoDB
 multimodal
 multitenant
 multitenancy
+Multus
 mutex
 NACLs
 nameserver
@@ -601,6 +629,7 @@ ngrok
 ngx
 ngx_stream_proxy_module
 ngx_wasm_module
+NLBs
 no_version
 node_quantifier
 Node.js
@@ -647,16 +676,19 @@ pagerduty
 palo
 param
 params
+parsable
 passthrough
 PayPal
 PayPal
 pdk
 pdks
 pem
+Percona
 perf
 performant
 petstore
 PDFs
+pg_max_concurrent_queries
 pgdump
 pgvector
 pipeline
@@ -665,6 +697,7 @@ pipelines
 plaintext
 Pongo
 Pongo
+Pgmoon
 Postgres
 Postgres
 PostgreSQL
@@ -678,6 +711,7 @@ prepended
 prepending
 prepends
 prepopulated
+preprocessors
 preread
 printf
 prisma
@@ -774,6 +808,7 @@ saml
 sandboxed
 sandboxing
 sanitization
+sasl_oauth_bearer
 sbom
 SBOM
 sboms
@@ -797,12 +832,14 @@ shm
 show_in_api
 Sigstore
 slas
+Slowloris
 slsa
 slos
 SLT_Enc
 sni
 snis
 sonarqube
+Speedscope
 Splunk
 Splunk
 sse
@@ -866,6 +903,7 @@ targetRef
 tbl
 ingresses
 ingressclass
+tailscale
 tcp
 tcpdump
 TCPIngress
@@ -929,6 +967,7 @@ unchecking
 uncomment
 uncommented
 uncommenting
+unconfigured
 underuse
 unencrypted
 unescaped
@@ -961,6 +1000,7 @@ untrusted
 untyped
 unvetted
 unversioned
+versionless
 unwanted
 updated_at
 unprefixed
@@ -994,8 +1034,11 @@ vararg
 vc
 viewport
 viewports
+vLLM
+vllm
 vms
 vnet
+VNets
 vpc
 vpcs
 VS Code
@@ -1033,3 +1076,36 @@ Zipkin
 Zipkin
 zipkin
 zsh
+conflist
+kindnet
+Subrequest
+Tablepool
+XMLua
+prereq
+prereqs
+offboarded
+allow_override
+Pangea
+stackable
+underserve
+rephrasings
+anonymizer
+SSNs
+unsanitized
+vectorize
+vectordb
+substrings
+Figma
+Offboarding
+streamable
+tokeninfo
+Reauthenticating
+
+Langfuse
+Deepgram
+httpx
+dns
+semconv
+rollup
+rollups
+llm_format

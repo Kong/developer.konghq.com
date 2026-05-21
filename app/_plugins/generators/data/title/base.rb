@@ -17,7 +17,7 @@ module Jekyll
             HowTo.new(page:, site:)
           else
             # for plain html pages or pages that don't require anything specific
-            OpenStruct.new(title_sections: [page.data['title']])
+            OpenStruct.new(title_sections: [page.data['title']], llm_title: page.data['title'])
           end
         end
 

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.3.0
+  version: 3.3.3
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b14ed6a374c9334393d0dc1936514787a83e8c87
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b14ed6a374c9334393d0dc1936514787a83e8c87'
+  x-oas-source: kong/platform-api@0a73b4a5f51ebe63c6d45446f906c0222e59a803
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0a73b4a5f51ebe63c6d45446f906c0222e59a803'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -169,6 +169,33 @@ paths:
         - {}
       tags:
         - API Docs
+  '/api/v3/apis/{apiIdOrSlug}/images/{imageType}/raw':
+    get:
+      operationId: fetch-api-image
+      summary: Get API Image
+      description: Returns the specified image from the API.
+      parameters:
+        - $ref: '#/components/parameters/ApiIdOrSlug'
+        - $ref: '#/components/parameters/ImageType'
+      responses:
+        '302':
+          description: Redirect to the image URL.
+          headers:
+            Location:
+              description: The CDN URL of the image.
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+        - {}
+      tags:
+        - API Images
   '/api/v3/apis/{apiIdOrSlug}/specifications':
     get:
       operationId: list-api-specs
@@ -332,6 +359,10 @@ paths:
         - $ref: '#/components/parameters/FilterByNameContains'
         - $ref: '#/components/parameters/FilterByAuthStrategyEquality'
         - $ref: '#/components/parameters/FilterByAuthStrategyEqualityShort'
+        - $ref: '#/components/parameters/FilterByTeamIdEquality'
+        - $ref: '#/components/parameters/FilterByTeamIdEqualityShort'
+        - $ref: '#/components/parameters/FilterByTeamIdNotEquals'
+        - $ref: '#/components/parameters/FilterByTeamIdOneOf'
       responses:
         '200':
           $ref: '#/components/responses/ListApplications'
@@ -563,7 +594,9 @@ paths:
     post:
       operationId: regenerate-application-secret
       summary: Regenerate Client Secret
-      description: Regenerates the client secret for an application.
+      description: |-
+        Regenerates the client secret for a Client Credentials application. This operation succeeds only when the application has exactly one client secret credential.
+        If the application has multiple credentials, this endpoint returns a 409 Conflict. In that case, manage secrets by adding or removing credentials as needed.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
       responses:
@@ -575,6 +608,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
       security:
         - portalAccessToken: []
       tags:
@@ -850,6 +885,71 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
+  /api/v3/developer/teams:
+    get:
+      operationId: get-developer-teams
+      summary: Get Developer Teams
+      description: Retrieve all portal facing teams the developer is a member of.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDeveloperTeamsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
+  '/api/v3/developer/teams/{teamId}':
+    get:
+      operationId: get-developer-team
+      summary: Get Developer Team
+      description: Retrieve a portal facing team a developer is a member of.
+      parameters:
+        - name: teamId
+          in: path
+          description: The team ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetDeveloperTeamResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
+  '/api/v3/developer/teams/{teamId}/developers':
+    get:
+      operationId: get-developer-team-developers
+      summary: Get Developer Team Members
+      description: Retrieve developers on a portal facing team that the current developer is a member of.
+      parameters:
+        - name: teamId
+          in: path
+          description: The team ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDeveloperTeamDevelopersResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
   /api/v3/developer/verify-email:
     post:
       operationId: verify-email
@@ -884,7 +984,7 @@ paths:
     get:
       operationId: list-portal-pages
       summary: List Pages
-      description: 'Returns a tree view of pages for the portal. Each page has a slug, title, and content. Public pages will be returned for non-authenticated users, while both private and public pages will be returned for authenticated users.'
+      description: 'Returns a tree view of pages for the portal. Each page has a slug, title, and content. The full tree is returned in one response; this endpoint is not paginated. Public pages will be returned for non-authenticated users, while both private and public pages will be returned for authenticated users.'
       parameters:
         - $ref: '#/components/parameters/SortPortalPages'
         - $ref: '#/components/parameters/FilterByTitleEquality'
@@ -1267,6 +1367,48 @@ components:
           - pending
           - rejected
           - revoked
+    FilterByTeamIdEquality:
+      name: 'filter[team_id][eq]'
+      description: |
+        Filter by the team that owns the application. Use a team UUID or the literal string `null` for individually owned apps (e.g. `filter[team_id][eq]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: 5be86298-147b-45ab-bfaf-a1bff97dce39
+        nullable: true
+    FilterByTeamIdEqualityShort:
+      name: 'filter[team_id]'
+      description: |
+        Filter by the team that owns the application (short-hand). Use a team UUID or the literal string `null` for individually owned apps (e.g. `filter[team_id]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: 5be86298-147b-45ab-bfaf-a1bff97dce39
+        nullable: true
+    FilterByTeamIdNotEquals:
+      name: 'filter[team_id][neq]'
+      description: |
+        Filter by excluding a team. Use the literal string `null` to get only team-owned apps (excludes individually owned) (e.g. `filter[team_id][neq]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: null
+        nullable: true
+    FilterByTeamIdOneOf:
+      name: 'filter[team_id][oeq]'
+      description: |
+        Filter by apps owned by any of the given teams (comma-separated UUIDs).
+      in: query
+      required: false
+      schema:
+        type: string
+        example: '5be86298-147b-45ab-bfaf-a1bff97dce39,7ce96398-247b-45ab-bfaf-b2c008e8f6e4'
     FilterByTitleContains:
       name: 'filter[title][contains]'
       description: Filter by contains comparison of the title property with a supplied substring
@@ -1313,6 +1455,16 @@ components:
         enum:
           - public
           - private
+    ImageType:
+      schema:
+        type: string
+        example: icon
+        enum:
+          - icon
+      name: imageType
+      in: path
+      required: true
+      description: The Supported image type.
     PageAfter:
       name: 'page[after]'
       description: 'Request the next page of data, starting with the item after this parameter.'
@@ -2873,7 +3025,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2884,7 +3036,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2998,6 +3150,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3027,6 +3181,8 @@ components:
           $ref: '#/components/schemas/AuthStrategyId'
         scopes:
           $ref: '#/components/schemas/Scopes'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - name
@@ -3057,6 +3213,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3087,6 +3245,8 @@ components:
           maxLength: 255
         scopes:
           $ref: '#/components/schemas/Scopes'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       title: UpdateApplicationPayload
     ApplicationUpdateResponse:
@@ -3115,6 +3275,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3235,6 +3397,11 @@ components:
       type: array
       items:
         type: string
+    TeamId:
+      description: ID of the team to assign the application to.
+      type: string
+      format: uuid
+      nullable: true
     AuthStrategyId:
       description: 'ID of the auth strategy to use for the application. If null or not included, the default application auth strategy will be used.'
       type: string
@@ -3325,6 +3492,12 @@ components:
           readOnly: true
         created_at:
           description: 'Creation timestamp, if available'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
           type: string
           format: date-time
           nullable: true
@@ -3421,6 +3594,12 @@ components:
           description: Client secret value (only returned on creation)
           type: string
         created_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
           type: string
           format: date-time
           nullable: true
@@ -3640,6 +3819,109 @@ components:
       required:
         - email
       title: ResetPasswordPayload
+    DeveloperTeam:
+      description: A portal facing team that a developer is a member of
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          example: IDM - Developers
+          maxLength: 250
+        description:
+          type: string
+          example: The Identity Management (IDM) team.
+          maxLength: 250
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      title: DeveloperTeam
+    ListDeveloperTeamsResponse:
+      description: A paginated list of teams the developer is a member of
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeveloperTeam'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ListDeveloperTeamsResponse
+    DeveloperTeamDeveloper:
+      description: A developer who is a member of a team
+      allOf:
+        - $ref: '#/components/schemas/Developer'
+        - type: object
+          required:
+            - id
+            - created_at
+            - updated_at
+      title: DeveloperTeamDeveloper
+    ListDeveloperTeamDevelopersResponse:
+      description: A paginated list of developers who are members of a team
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeveloperTeamDeveloper'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ListDeveloperTeamDevelopersResponse
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
     PortalContext:
       description: Describes the portal execution context
       type: object
@@ -3837,7 +4119,7 @@ components:
       example: my-snippet
       title: SnippetName
     ListPortalPages:
-      description: A paginated list of pages for the portal
+      description: Tree of pages for the portal (nested `children`). Not paginated.
       type: object
       properties:
         data:
@@ -3845,6 +4127,8 @@ components:
           items:
             $ref: '#/components/schemas/PortalPageInfo'
       additionalProperties: false
+      required:
+        - data
       title: ListPortalPages
     ListPortalSnippets:
       description: A paginated list of snippets for the portal
@@ -4469,43 +4753,6 @@ components:
     PortalSearchQueryParameters:
       type: string
       title: SearchQueryParameters
-    CursorMetaPage:
-      type: object
-      properties:
-        first:
-          description: URI to the first page
-          type: string
-          format: path
-        last:
-          description: URI to the last page
-          type: string
-          format: path
-        next:
-          description: URI to the next page
-          type: string
-          format: path
-          nullable: true
-        previous:
-          description: URI to the previous page
-          type: string
-          format: path
-          nullable: true
-        size:
-          description: Requested page size
-          type: number
-          example: 10
-      required:
-        - size
-        - next
-        - previous
-    CursorMeta:
-      description: Pagination metadata.
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/CursorMetaPage'
-      required:
-        - page
   examples:
     ResponseExampleWithMetricAndDimension:
       value:
@@ -5396,8 +5643,26 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Developer'
+    ListDeveloperTeamsResponse:
+      description: Response from list developer teams endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListDeveloperTeamsResponse'
+    GetDeveloperTeamResponse:
+      description: Response from get developer team endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeveloperTeam'
+    ListDeveloperTeamDevelopersResponse:
+      description: Response from list developer team developers endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListDeveloperTeamDevelopersResponse'
     ListPortalPagesResponse:
-      description: Paginated list of portal pages
+      description: Tree of portal pages for the portal
       content:
         application/json:
           schema:
@@ -5568,6 +5833,8 @@ tags:
     description: The API for Konnect Portal developer credentials within a private portal (i.e. requires registration/authentication).
   - name: Developer
     description: API for managing a Konnect Portal Developer.
+  - name: Developer Teams
+    description: API for managing developer teams.
   - name: Portal
     description: The API for retrieving details about a single Konnect Portal.
   - name: Content

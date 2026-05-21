@@ -1,0 +1,1 @@
+{% include card.md icon=gateway_hosting.icon title=gateway_hosting.title description=gateway_hosting.description cta_url=gateway_hosting.url heading_level=heading_level %}

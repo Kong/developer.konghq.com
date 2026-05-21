@@ -1,0 +1,1 @@
+{% include how-tos/validations/kubernetes-wait-for/snippet.md config=config %}

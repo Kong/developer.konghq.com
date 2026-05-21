@@ -14,16 +14,9 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Manage Insomnia"            
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Manage your Insomnia account and security settings.
-  - columns:
+      text: "Manage Insomnia"
+      sub_text: Manage your Insomnia account and security settings.    
+    columns:
       - blocks:
         - type: card
           config:
@@ -54,6 +47,7 @@ rows:
   - header:
       type: h2
       text: "Security"
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -82,21 +76,11 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/scim/
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: E2EE
-            description: Learn about how End-to-End Encryption (E2EE) works in Insomnia.
-            icon: /assets/icons/lock.svg
-            cta:
-              text: Learn more
-              url: /insomnia/end-to-end-encryption/
       - blocks:
         - type: card
           config:
             title: Data security
-            description: Learn about the data models, keys, and salts used in Insomnia.
+            description: Learn about the data models, keys, salts, and end-to-end encryption used in Insomnia.
             icon: /assets/icons/security.svg
             cta:
               text: Learn more

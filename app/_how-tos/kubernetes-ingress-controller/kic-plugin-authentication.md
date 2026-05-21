@@ -57,38 +57,38 @@ Create two [Consumers](/gateway/entities/consumer/) that use different authentic
 
 1. Create a secret to add a `basic-auth` credential for `consumer-1`:
 
-    ```bash
-    echo '
-    apiVersion: v1
-    kind: Secret
-    metadata:
-      name: consumer-1-basic-auth
-      namespace: kong
-      labels:
-        konghq.com/credential: basic-auth
-    stringData:
-        username: consumer-1
-        password: consumer-1-password
-    ' | kubectl apply -f -
-    ```
+   ```bash
+   echo '
+   apiVersion: v1
+   kind: Secret
+   metadata:
+     name: consumer-1-basic-auth
+     namespace: kong
+     labels:
+       konghq.com/credential: basic-auth
+   stringData:
+       username: consumer-1
+       password: consumer-1-password
+   ' | kubectl apply -f -
+   ```
 
 1. Create a secret to add a `key-auth` credential for `consumer-2`:
 
-    ```bash
-    echo '
-    apiVersion: v1
-    kind: Secret
-    metadata:
-      name: consumer-2-key-auth
-      namespace: kong
-      labels:
-        konghq.com/credential: key-auth
-    stringData:
-      key: consumer-2-password
-    ' | kubectl apply -f -
-    ```
+   ```bash
+   echo '
+   apiVersion: v1
+   kind: Secret
+   metadata:
+     name: consumer-2-key-auth
+     namespace: kong
+     labels:
+       konghq.com/credential: key-auth
+   stringData:
+     key: consumer-2-password
+   ' | kubectl apply -f -
+   ```
 
-1.  Create a Consumer named `consumer-1`:
+1. Create a Consumer named `consumer-1`:
 
 {% entity_example %}
 type: consumer
@@ -97,10 +97,10 @@ data:
   credentials:
     - consumer-1-basic-auth
   
-indent: 4
+indent: 3
 {% endentity_example %}
 
-1.  Create a Consumer named `consumer-2`:
+1. Create a Consumer named `consumer-2`:
 
 {% entity_example %}
 type: consumer
@@ -109,7 +109,7 @@ data:
   credentials:
     - consumer-2-key-auth
   
-indent: 4
+indent: 3
 {% endentity_example %}
 
 ## Secure the service

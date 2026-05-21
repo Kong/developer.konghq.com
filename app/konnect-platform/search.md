@@ -21,7 +21,7 @@ related_resources:
     url: /api/konnect/ksearch/
 ---
 
-{{site.konnect_short_name}} Search allows to search across all {{site.konnect_short_name}} entities within an organization using simple keywords as well as precise query syntax.. 
+{{site.konnect_short_name}} Search allows to search across all {{site.konnect_short_name}} entities within an organization using keyword matching as well as advanced query syntax.
 You can access search using the search bar (_Command+K_ or _Control+K_) at the top of every page in {{site.konnect_short_name}} or using the [{{site.konnect_short_name}} Search API](/api/konnect/ksearch/).
 
 The {{site.konnect_short_name}} Search, by default, searches for both global and regional entities (with regional-awareness for the [currently selected region](/konnect-platform/geos/)). This ensures that returned entities are relevant to their geographical location. By default, every search performs:
@@ -65,7 +65,7 @@ In this example, the query syntax is made up of the following components:
 * Selectors: `type`, `label`, and `name`. They define what you are searching by. 
 * Entity type: `team`. These define what {{site.konnect_short_name}} entity you want to search for.
 * Logical operator: `AND NOT` and `AND`. These are used to combine multiple criteria in a query.
-* Wildcard: `*` to denote any a suffix match.
+* Wildcard: `*` to denote a suffix match.
 * Search values: `eng` and `_qa`. These are the values that the search service is matching for.
 
 ### Entity types

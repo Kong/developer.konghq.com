@@ -1,0 +1,46 @@
+description: |
+  Configure the AI GCP Model Armor plugin to log the raw content of blocked requests and responses.
+  When a request or response is blocked, the original prompt or response body is captured in the
+  Kong Gateway logs under `ai.proxy.gcp-model-armor.input_faulty_prompt` and
+  `ai.proxy.gcp-model-armor.output_faulty_response`.
+
+title: Log blocked request and response content
+
+min_version:
+  gateway: '3.14'
+
+weight: 800
+
+requirements:
+  - A GCP project with Model Armor enabled and a configured template.
+  - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+  - You have enabled a [logging plugin](/plugins/?category=logging) such as [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/).
+
+variables:
+  gcp_service_account_json:
+    description: GCP service account credentials in JSON format.
+    value: $GCP_SERVICE_ACCOUNT_JSON
+  project_id:
+    description: GCP project identifier.
+    value: $GCP_PROJECT_ID
+  location_id:
+    description: GCP location identifier.
+    value: $GCP_LOCATION_ID
+  template_id:
+    description: Guardrail template identifier.
+    value: $GCP_TEMPLATE_ID
+
+config:
+  project_id: ${project_id}
+  location_id: ${location_id}
+  template_id: ${template_id}
+  gcp_use_service_account: true
+  gcp_service_account_json: ${gcp_service_account_json}
+  log_blocked_content: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

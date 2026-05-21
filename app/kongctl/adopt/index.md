@@ -7,7 +7,7 @@ layout: reference
 
 works_on:
   - konnect
-beta: true
+
 tools:
   - kongctl
 
@@ -31,6 +31,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl adopt analytics](/kongctl/adopt/analytics/)
+    description: "Adopt {{site.konnect_short_name}} {{site.observability}} resources."
+  - command: |
       [kongctl adopt api](/kongctl/adopt/api/)
     description: "Adopt API resources."
   - command: |
@@ -39,6 +42,12 @@ rows:
   - command: |
       [kongctl adopt control-plane](/kongctl/adopt/control-plane/)
     description: "Adopt control plane configuration."
+  - command: |
+      [kongctl adopt dcr-provider](/kongctl/adopt/dcr-provider/)
+    description: "Adopt an existing Konnect DCR provider into namespace management."
+  - command: |
+      [kongctl adopt event-gateway](/kongctl/adopt/event-gateway/)
+    description: "Adopt an existing Konnect Event Gateway into namespace management."
   - command: |
       [kongctl adopt konnect](/kongctl/adopt/konnect/)
     description: "Adopt {{site.konnect_short_name}} resources."

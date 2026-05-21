@@ -93,6 +93,8 @@ module Jekyll
               input.each do |v|
                 s += if v.is_a?(Hash)
                        output_hash_in_list(v, depth)
+                     elsif v.is_a?(Array)
+                       "#{render_inline_list(v)}, "
                      else
                        "#{line(quote(v), (depth + 1), '').strip}, "
                      end
@@ -100,6 +102,17 @@ module Jekyll
 
               s = s.rstrip.chomp(',')
               s + end_list(input, depth)
+            end
+
+            def render_inline_list(input)
+              items = input.map do |v|
+                if v.is_a?(Array)
+                  render_inline_list(v)
+                else
+                  quote(v)
+                end
+              end
+              "[#{items.join(', ')}]"
             end
 
             def end_list(input, depth)

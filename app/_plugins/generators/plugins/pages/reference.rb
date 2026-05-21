@@ -18,6 +18,10 @@ module Jekyll
           ''
         end
 
+        def markdown_content
+          @markdown_content ||= File.read('app/_includes/plugins/reference.md')
+        end
+
         def data
           super
             .except('faqs')

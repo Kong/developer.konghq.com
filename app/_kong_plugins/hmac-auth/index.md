@@ -74,7 +74,7 @@ with the following:
 credentials := "hmac" params
 params := keyId "," algorithm ", " headers ", " signature
 keyId := "username" "=" plain-string
-algorithm := "algorithm" "=" DQUOTE (hmac-sha1|hmac-sha256|hmac-sha384|hmac-sha512) DQUOTE
+algorithm := "algorithm" "=" DQUOTE (hmac-sha224|hmac-sha256|hmac-sha384|hmac-sha512) DQUOTE
 headers := "headers" "=" plain-string
 signature := "signature" "=" plain-string
 plain-string   = DQUOTE *( %x20-21 / %x23-5B / %x5D-7E ) DQUOTE
@@ -112,6 +112,19 @@ the order they appear.
 3. If the header name is `@request-target`, append the lowercase request method, followed by a ASCII space and the request URI including any query strings. Otherwise append the header value.
 
 3. If value isn't the last value, then append an ASCII newline `\n`. The string **must not** include a trailing ASCII newline.
+
+### Supported algorithms
+
+The HMAC Auth plugin supports the following hash algorithms:
+
+* HMAC-SHA224 {% new_in 3.14 %}
+* HMAC-SHA256
+* HMAC-SHA384
+* HMAC-SHA512
+
+{:.info}
+> HMAC-SHA1 is also supported, but it is disabled by default, and is not available if running {{site.base_gateway}} in FIPS mode. 
+We recommend using a different algorithm if possible.
 
 ## Clock skew
 

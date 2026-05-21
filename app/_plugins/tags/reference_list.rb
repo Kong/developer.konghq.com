@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../monkey_patch'
+
 module Jekyll
   class RenderReferenceListt < Liquid::Tag # rubocop:disable Style/Documentation
     def initialize(tag_name, param, _tokens)
@@ -14,20 +16,22 @@ module Jekyll
     def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       @context = context
       @site = context.registers[:site]
+      @page = context.environments.first['page']
       keys = @param.split('.')
       config = keys.reduce(context) { |c, key| c[key] }
 
       references = fetch_references(config)
 
-      if references.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil?
+      if references.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil? && ENV['PAGE_PATHS'].nil?
         raise "No references found for #{@context['page']['path']} - #{config}"
       end
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['references'] = references
         context['view_more_url'] = view_more_url(config)
         context['config'] = config
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
@@ -52,7 +56,11 @@ module Jekyll
     end
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/reference_list.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/reference_list.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/reference_list.html'))
+      end
     end
 
     def view_more_url(config)

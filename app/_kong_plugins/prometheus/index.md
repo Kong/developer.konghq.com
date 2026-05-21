@@ -49,7 +49,7 @@ faqs:
     a: Metrics data is reported per-node (each Data Plane) per-subsystem (HTTP or TCP).
 
 notes: |
-   <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or
+   **Dedicated and Serverless Cloud Gateways**: This plugin is not supported in Dedicated or
    Serverless Cloud Gateways because it depends on the Admin API and the Status API, which aren't
    accessible in that setup.
 

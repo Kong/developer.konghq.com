@@ -2,13 +2,30 @@
 {%- unless gpg_key -%}
 {%- assign gpg_key = site.data.products.gateway.public_keys.legacy.gpg_key  -%}
 {%- endunless -%}
+{%- assign include_path =  "install/gateway/linux/packages/" | append: include.os | append: ".md" -%}
+{%- assign distro = page.release.distros_by_os[include.os] | find: "default", true -%}
+{%- assign include_os_path = "install/gateway/linux/binaries/" | append: include.os | append: ".html" -%}
+{% if page.output_format == 'markdown' %}
+### Package manager
 
+{% include {{include_path}} gpg_key=gpg_key release=page.release %}
+
+After installation, [configure the datastore](/how-to/configure-datastore/) to complete setup.
+
+### Binary Download
+
+{% include {{include_os_path}} distro=distro release=page.release os=include.os %}
+{% if include.os == "ubuntu" or include.os == "rhel" %}
+> **Warning:** For FIPS-compliant environments, you must also [enable `fips = on` in your Kong configuration file](/gateway/fips-support/#configure-fips).
+{% endif %}
+{% else %}
 <div class="flex flex-col gap-5">
     <div class="flex flex-col gap-4">
         <h3 class="font-semibold text-base leading-6">Package manager</h3>
 
-{%- assign include_path =  "install/gateway/linux/packages/" | append: include.os | append: ".html" -%}
-{% include {{include_path}} gpg_key=gpg_key release=page.release %}
+{% capture snippet %}{% include {{include_path}} gpg_key=gpg_key release=page.release %}{% endcapture %}
+{{snippet | markdownify}}
+
   <p class="text-secondary text-sm">
     After installation, <a href="/how-to/configure-datastore/" class="text-link hover:underline">configure the datastore</a> to complete setup.
   </p>
@@ -20,12 +37,9 @@
         <h3 class="font-semibold text-base leading-6">Binary Download</h3>
 
         <div class="grid md:grid-cols-2 gap-4">
-            {% assign distro = page.release.distros_by_os[include.os] | find: "default", true %}
-
-            {%- assign include_os_path = "install/gateway/linux/binaries/" | append: include.os | append: ".html" -%}
             {% include {{include_os_path}} distro=distro release=page.release os=include.os %}
         </div>
-        
+
         {% if include.os == "ubuntu" or include.os == "rhel" %}
         <blockquote class="warning">
           <span>
@@ -35,3 +49,4 @@
         {% endif %}
     </div>
 </div>
+{% endif %}

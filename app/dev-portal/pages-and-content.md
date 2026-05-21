@@ -76,6 +76,10 @@ faqs:
       ```
 
       The full path of the child page is the slug of the parent page with the slug of the child page. For example, if the parent slug is `/about` and the child slug is `/contact`, the full path to the child page is `/about/contact`.
+  - q: |
+      {% include faqs/portal-markdown.md section='question' %}
+    a: |
+      {% include faqs/portal-markdown.md section='answer' %}
 
 related_resources:
   - text: Dev Portal Markdown components reference

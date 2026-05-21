@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Added support for `allow_non_json_requests` configuration to allow non-JSON requests to bypass all checks.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added the schema field `allow_duplicate_object_entry_name` to allow or disallow duplicate object keys in JSON payloads. When set to `false`, the plugin will reject JSON payloads with duplicate object keys. The default value is `true`, which is same as the previous behavior.\n",

@@ -219,11 +219,11 @@ Upgrading from {{ site.kic_product_name }} 2.12 to 3.x+ is a major version chang
 
 1. **Update the {{ site.kic_product_name }} CRDs.**
 
-    Helm does not upgrade CRDs automatically. You must apply the 3.x CRDs before you upgrade your releases.
+   Helm does not upgrade CRDs automatically. You must apply the 3.x CRDs before you upgrade your releases.
 
-    ```bash
-    kubectl kustomize https://github.com/Kong/kubernetes-ingress-controller/config/crd/?ref=v3.0.0 | kubectl apply -f -
-    ```
+   ```bash
+   kubectl kustomize https://github.com/Kong/kubernetes-ingress-controller/config/crd/?ref=v3.0.0 | kubectl apply -f -
+   ```
 
 1. **Convert `KongIngress` `route` and `service` fields to annotations.**
 

@@ -38,7 +38,7 @@ search_aliases:
   - AWS Lambda
 
 notes: |
-  <b>Dedicated Cloud Gateways</b>: If you use the IAM assumeRole functionality with this plugin, 
+  **Dedicated Cloud Gateways**: If you use the IAM assumeRole functionality with this plugin, 
   it must be configured differently than for hybrid deployments in Konnect.
 
 min_version:

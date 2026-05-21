@@ -20,6 +20,7 @@ module Jekyll
           'title' => api_spec.title,
           'base_url' => base_url,
           'api_spec' => api_spec,
+          'raw_api_spec' => insomnia_link.raw_api_spec,
           'description' => api_spec.description,
           'layout' => 'api/spec',
           'content_type' => 'api',
@@ -32,7 +33,17 @@ module Jekyll
           'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url:, product:),
           'insomnia_link' => insomnia_link,
           'edit_and_issue_links' => false
-        }.merge(@frontmatter)
+        }.merge(@frontmatter, llm)
+      end
+
+      def markdown_content
+        @markdown_content ||= File.read('app/_includes/api_spec/spec.md')
+      end
+
+      def llm
+        return {} if canonical?
+
+        { 'llm' => false }
       end
 
       private

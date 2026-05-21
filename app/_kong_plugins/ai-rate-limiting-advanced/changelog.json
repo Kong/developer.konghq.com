@@ -1,4 +1,31 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Added a policy-based rate limiting mode with\nmulti-dimensional match conditions and request counting strategy.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added prompt token estimation for `prompt_tokens`, `total_tokens`, and `cost` strategies in policies mode, enabling early request rejection before the upstream responds.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin did not validate whether the configured `dictionary_name` exists before use, which could lead to runtime errors.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Extended deferred rate limiting callback to support model-partitioned policies and cost strategy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Removed the `parse-request` shared filter and deprecated the `llm_format` configuration field.\n",
+      "type": "deprecation",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to count cost for routes with dynamic AI models.\n",

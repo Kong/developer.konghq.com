@@ -26,6 +26,7 @@ module Jekyll
 
         def build_page
           PageWithoutAFile.new(site, site.source, '_api/plugins', "#{@plugin.slug}.json").tap do |page|
+            page.data['llm'] = false
             page.content = JSON.pretty_generate(content)
           end
         end

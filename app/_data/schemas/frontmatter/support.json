@@ -1,0 +1,28 @@
+{
+  "$id": "schema:support",
+  "allOf": [
+    {
+      "$ref": "schema:base"
+    }
+  ],
+  "properties": {
+    "tldr": {
+      "nullable": true,
+      "type": "object",
+      "properties": {
+        "q": {
+          "type": "string"
+        },
+        "a": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "q",
+        "a"
+      ]
+    },
+    "min_version": { "$ref": "schema:base#/definitions/min_version" }
+  },
+  "required": ["tldr", "content_type", "title", "products"]
+}

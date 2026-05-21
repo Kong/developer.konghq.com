@@ -26,7 +26,7 @@ related_resources:
 
 Changelog for KAi.
 
-## Week of 2026-01-xx
+## Week of 2026-01-01
 
 * Beta trial is available for Enterprise accounts in [{{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
 

@@ -1,4 +1,16 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Uses SHA256 by default even in non-FIPS mode instead of SHA1.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Brute Force Protection: when using redis strategy and the connection fails,\nthe plugin will now fall back to using the memory strategy.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added brute force protection with exponential backoff for failed login attempts.",

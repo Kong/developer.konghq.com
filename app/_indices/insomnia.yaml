@@ -71,7 +71,6 @@ sections:
 
   - title: Data security
     items:
-      - path: /insomnia/end-to-end-encryption/
       - path: /insomnia/data-security/
       - path: /insomnia/collected-data/
       - path: /insomnia/incident-response/

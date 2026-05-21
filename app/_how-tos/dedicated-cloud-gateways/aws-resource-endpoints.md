@@ -19,6 +19,12 @@ related_resources:
     url: /dedicated-cloud-gateways/
   - text: AWS VPC endpoint documentation
     url: https://docs.aws.amazon.com/vpc/latest/privatelink/use-resource-endpoint.html
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   skip_product: true
   inline:
@@ -33,9 +39,9 @@ prereqs:
         * A configured [VPC and subnet](https://docs.aws.amazon.com/vpc/latest/userguide/create-vpc.html#create-vpc-and-other-resources)
         * A [resource gateway](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-gateway.html)
         * A [resource configuration group](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-configuration.html)
-          
-          Copy and save the resource configuration ID and resource definition domain name for each resource configuration. {{site.konnect_short_name}} will use these to create a mapping of upstream domain names and resource configuration IDs.  
-        
+
+        Copy and save the resource configuration ID and resource definition domain name for each resource configuration. {{site.konnect_short_name}} will use these to create a mapping of upstream domain names and resource configuration IDs.
+
         Export your AWS resource configuration domain name:
         ```sh
         export RESOURCE_DOMAIN_NAME='http://YOUR-RESOURCE-DOMAIN-NAME/anything'
@@ -48,7 +54,7 @@ prereqs:
 
         1. In the {{site.konnect_short_name}} sidebar, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/).
         1. Click your Dedicated Cloud Gateway.
-        1. In the API Gateway sidebar, click **Gateway Services**.
+        1. Click the **Gateway Services** tab.
         1. Click **New gateway service**.
         1. In the **Full URL** field, enter your resource domain, appended with `/anything`. For example: `http://YOUR-RESOURCE-DOMAIN-NAME/anything`
         1. In the **Name** field, enter `example-service`.

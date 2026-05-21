@@ -1,0 +1,48 @@
+description: Protect your LLM services with rate limiting based on multiple conditions.
+extended_description: |
+  Protect your LLM services with rate limiting based on multiple conditions.
+  The AI Rate Limiting Advanced plugin will analyze query costs and token response 
+  to provide an enterprise-grade rate limiting strategy.
+
+  In this example, we're enabling rate limiting for a specific Consumer using the OpenAI provider. 
+  The limits specified only apply when both conditions are met.
+  Once the limit is reached, the same Consumer may be able to send requests to a different provider.
+
+title: 'Enable rate limiting with multiple conditions'
+
+requirements:
+  - "[AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - An existing [Consumer](/gateway/entities/consumer/)
+
+weight: 900
+
+config:
+  policies:
+  - match:
+    - type: provider
+      partition_by: true
+      values:
+      - openai
+    - type: consumer
+      key: username
+      values: 
+      - ${consumer_name}
+    limits:
+      - limit: 100
+        window_size: 60
+      - limit: 1000
+        window_size: 3600
+variables:
+  consumer_name:
+    value: $CONSUMER_USERNAME
+    description: The username of the Consumer to rate limit.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'

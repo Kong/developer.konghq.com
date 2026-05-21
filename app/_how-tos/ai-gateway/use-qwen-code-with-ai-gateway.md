@@ -138,21 +138,25 @@ entities:
 
 Open a new terminal window and export the variables that Qwen Code CLI will use. Point `OPENAI_BASE_URL` to the local proxy endpoint where LLM traffic from Qwen Code CLI will route:
 
-```sh
-export OPENAI_BASE_URL="http://localhost:8000/anything"
-export OPENAI_API_KEY="YOUR OPENAI API KEY"
-export OPENAI_MODEL="gpt-5"
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```sh
+  export OPENAI_BASE_URL="http://localhost:8000/anything"
+  export OPENAI_API_KEY="YOUR OPENAI API KEY"
+  export OPENAI_MODEL="gpt-5"
+  ```
+{% endon_prem %}
 
-```sh
-export OPENAI_BASE_URL="http://localhost:8000/anything"
-export OPENAI_API_KEY="YOUR OPENAI API KEY"
-export OPENAI_MODEL="gpt-5"
-```
-{: data-deployment-topology="konnect" }
-If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```sh
+  export OPENAI_BASE_URL="http://localhost:8000/anything"
+  export OPENAI_API_KEY="YOUR OPENAI API KEY"
+  export OPENAI_MODEL="gpt-5"
+  ```
+
+  If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
+{% endkonnect %}
 
 {:.info}
 > Make sure that `OPENAI_MODEL` variable points to the same model configured for the AI Proxy plugin.

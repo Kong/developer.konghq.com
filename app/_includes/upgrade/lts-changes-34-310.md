@@ -187,7 +187,12 @@ rows:
       While the `+` character represents the correct encoding of space in query strings, Kong uses `%20` in many other APIs, which is inherited from Nginx/OpenResty.
     action: |
       No
-          
+  - category: Dependencies
+    description: |
+      PCRE was upgraded from `libpcre` 8.45 to `libpcre2` 10.43.
+      This upgrade changes the expected regex syntax, and any incompatible regular expressions will prevent {{site.base_gateway}} from applying configuration.
+    action: |
+      Review all regexes in your entity configuration and adjust based on the [PCRE2 syntax reference](https://www.pcre.org/current/doc/html/pcre2syntax.html).
 {% endtable %}
 
 

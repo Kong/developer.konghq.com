@@ -14,6 +14,102 @@ breadcrumbs:
 
 Changelog for supported {{ site.operator_product_name }} versions.
 
+## 2.1.5
+
+**Release date**: 2026-04-24
+
+### Fixes
+
+- Fix Gateway reconcile storm on topologies with multiple listeners sharing the
+  same port and HTTPRoutes with multiple `sectionName`-scoped `parentRefs`.
+  The HTTPRoute watch on the Gateway controller now uses
+  `GenerationChangedPredicate` to ignore status-only updates.
+  [#4005](https://github.com/Kong/kong-operator/pull/4005) [#4017](https://github.com/Kong/kong-operator/pull/4017)
+- Fix counting of route attached to a listener by taking into account hostname intersection between the listener and the route.
+  [#3490](https://github.com/Kong/kong-operator/pull/3490) [4020](https://github.com/Kong/kong-operator/pull/4020)
+
+## 2.1.4
+
+**Release date**: 2026-04-23
+
+### Fixes
+
+- Fix a hot loop in the `KonnectExtension` reconciler when two
+  `KonnectExtension`s share the same client-certificate `Secret`: the
+  `KongDataPlaneClientCertificate` CR is now named after the `KonnectExtension`
+  instead of the `Secret`, so each extension gets its own CR in its own Konnect
+  ControlPlane and the reconciler no longer retries `Create` on every loop or
+  falls back to Konnect's `dp-client-certificates` List API.
+  [#3961](https://github.com/Kong/kong-operator/pull/3961) [#3973](https://github.com/Kong/kong-operator/pull/3973)
+- Fix the hybrid gateway translator to set `protocols` in translated KongRoutes
+  to `http,https` to avoid 426 errors from Konnect hybrid gateways.
+  [#3753](https://github.com/Kong/kong-operator/pull/3753) [3759](https://github.com/Kong/kong-operator/pull/3759)
+- Revert change in configuring SNIs in ingress-controller when running with local controlplane.
+  [#3761](https://github.com/Kong/kong-operator/pull/3761) [3764](https://github.com/Kong/kong-operator/pull/3764)
+- Fix `KongPlugin` admission validation when multiple Kong Gateway Admin API
+  clients are discovered: probe plugin schema on every gateway (order-independent),
+  validate only on gateways that expose the plugin, and fall back to the previous
+  single-client behavior when none match. Partial probe failures on one gateway do
+  not reject admission if another gateway exposes the plugin. Avoids false rejections
+  when plugin bundles differ across gateways.
+  [#3754](https://github.com/Kong/kong-operator/pull/3754) [#3835](https://github.com/Kong/kong-operator/pull/3835)
+- Fix `ResolvedRefs` status condition on `HTTPRoute` not being updated when a
+  referenced `KongPlugin` is deleted in self-managed ControlPlane mode.
+  [#3206](https://github.com/Kong/kong-operator/pull/3206) [#3836](https://github.com/Kong/kong-operator/pull/3836)
+- Fix incorrect Konnect API used for target lookup
+  [#3910](https://github.com/Kong/kong-operator/pull/3910) [#3938](https://github.com/Kong/kong-operator/pull/3938)
+
+## 2.1.3
+
+**Release date**: 2026-03-25
+
+### Fixes
+
+- Admission webhook now validates HTTPRoute regex patterns before sending
+  configuration to the Admin API.
+  [#3213](https://github.com/Kong/kong-operator/pull/3213) [#3666](https://github.com/Kong/kong-operator/pull/3666)
+- Do not try to list `Gateway`s for namespaces that are not being watched by controller
+  [#3625](https://github.com/Kong/kong-operator/pull/3625) [#3629](https://github.com/Kong/kong-operator/pull/3629)
+- Fix `ensureGatewayReferenceStatusRemoved` and `routeHasKongParentStatus` not
+  scoping to the specific Gateway when `GatewayNN` is set.
+  This could cause one ingress-controller instance to erroneously remove route
+  parent statuses set by another instance managing a different Gateway,
+  breaking cross-namespace HTTPRoute backend references via `ReferenceGrant`.
+  [#3524](https://github.com/Kong/kong-operator/pull/3524) [#3561](https://github.com/Kong/kong-operator/pull/3561)
+- Fix `KonnectGatewayControlPlane` not setting `Programmed=False` when its
+  `KonnectAPIAuthConfiguration` reference cannot be resolved (e.g. the auth
+  config does not exist, or a cross-namespace reference lacks a
+  `KongReferenceGrant`). Both `APIAuthResolvedRef` and `Programmed` conditions
+  are now set to `False` atomically.
+  [#3526](https://github.com/Kong/kong-operator/pull/3526) [#3640](https://github.com/Kong/kong-operator/pull/3640)
+- Fix configuring SNIs in ingress-controller when running with local controlplane.
+  [#3554](https://github.com/Kong/kong-operator/pull/3554) [#3667](https://github.com/Kong/kong-operator/pull/3667)
+- Fix reducing `Secret`s with in use finalizers.
+  [#3506](https://github.com/Kong/kong-operator/pull/3506)[#3670](https://github.com/Kong/kong-operator/pull/3670)
+- Fix KongUpstream and KongService names in hybrid mode not taking into account
+  backendless rules. When a rule has no BackendRefs, the generated KongUpsteam and KongService names
+  now include a hash of rule's other field to avoid naming collisions with other
+  rules that also have no BackendRefs.
+  [#3576](https://github.com/Kong/kong-operator/pull/3576) [#3675](https://github.com/Kong/kong-operator/pull/3675)
+- Fix the on-prem translator to set `protocols` in translated Kong routes to
+  `http,https`.
+  [#3587](https://github.com/Kong/kong-operator/pull/3587) [#3681](https://github.com/Kong/kong-operator/pull/3681)
+
+## 2.1.2
+
+**Release date**: 2026-03-05
+
+### Fixes
+
+- Fix handling removal of annotations for DataPlane's Services
+  [#3402](https://github.com/Kong/kong-operator/pull/3402) [#3420](https://github.com/Kong/kong-operator/pull/3420)
+- Fix Gateway controller deleting all DataPlanes when KonnectExtension's
+  `ControlPlaneRefValid` condition is temporarily False due to transient Konnect
+  API failures. DataPlanes now continue serving traffic during Konnect
+  connectivity issues. Added `NotProgrammed` condition reason to differentiate
+  transient failures from permanent reference errors.
+  [#3463](https://github.com/Kong/kong-operator/pull/3463) [#3495](https://github.com/Kong/kong-operator/pull/3495)
+
 ## 2.1.1
 
 **Release date**: 2026-02-19
@@ -21,21 +117,21 @@ Changelog for supported {{ site.operator_product_name }} versions.
 ### Fixes
 
 - Fix setting up indices for HTTPRoute and Gateway when Konnect controllers are disabled.
-  [#3234](https://github.com/Kong/kong-operator/pull/3234)
+  [#3229](https://github.com/Kong/kong-operator/pull/3229) [#3234](https://github.com/Kong/kong-operator/pull/3234)
 - Fix v2 module
-  [#3353](https://github.com/Kong/kong-operator/pull/3353)
+  [#3346](https://github.com/Kong/kong-operator/pull/3346) [#3353](https://github.com/Kong/kong-operator/pull/3353)
 - Bump Go to 1.25.7
-  [#3235](https://github.com/Kong/kong-operator/pull/3235)
+  [#3230](https://github.com/Kong/kong-operator/pull/3230) [#3235](https://github.com/Kong/kong-operator/pull/3235)
 - Name of Konnect Gateway Control Plane resource created in Konnect matches
   the name of the corresponding `KonnectGatewayControlPlane` resource in Kubernetes
   (the same random suffix is added). It prevents collisions in Konnect.
-  [#3357](https://github.com/Kong/kong-operator/pull/3357)
+  [#3357](https://github.com/Kong/kong-operator/pull/3357) [#3368](https://github.com/Kong/kong-operator/pull/3368)
 - Use the same defaults for `preserve_host` and `strip_path` in for Konnect Gateway Control Plane
   as in self-managed.
-  [#3366](https://github.com/Kong/kong-operator/pull/3366)
+  [#3366](https://github.com/Kong/kong-operator/pull/3366) [#3377](https://github.com/Kong/kong-operator/pull/3377)
 - Fix not resetting resource errors in ControlPlane's DB mode from previous `Update()`
   calls to prevent stale errors from leaking into subsequent calls.
-  [#3369](https://github.com/Kong/kong-operator/pull/3369)
+  [#3315](https://github.com/Kong/kong-operator/pull/3315) [#3369](https://github.com/Kong/kong-operator/pull/3369)
 
 ## 2.1.0
 
@@ -333,6 +429,18 @@ Changelog for supported {{ site.operator_product_name }} versions.
   `spec.listeners.tls.certificateRef`, ensuring Gateway status conditions
   are updated when referenced certificates change.
   [#2661](https://github.com/Kong/kong-operator/pull/2661)
+
+## 2.0.8
+
+**Release date**: 2026-03-24
+
+### Fixed
+
+- Do not try to list `Gateway`s for namespaces that are not being watched by the controller
+  [#3625](https://github.com/Kong/kong-operator/pull/3625)
+- Fix the on-prem translator to set `protocols` in translated Kong routes to
+  `http,https`.
+  [#3587](https://github.com/Kong/kong-operator/pull/3587)
 
 ## 2.0.7
 
@@ -742,7 +850,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
   the [Kong documentation](https://developer.konghq.com/operator/konnect/reference/migrate-1.4-1.5/).
   [#1183](https://github.com/kong/kong-operator/pull/1183)
 - Migrate KGO CRDs conditions to the kubernetes-configuration repo.
-  With this migration process, we have moved all conditions from the KGO repo to [kubernetes-configuration][kubernetes-configuration].
+  With this migration process, we have moved all conditions from the KGO repo to [kubernetes-configuration](kubernetes-configuration).
   This is a breaking change which requires manual action for projects that use operator's Go conditions types.
   In order to migrate please use the import paths from the [kong/kubernetes-configuration][kubernetes-configuration] repo instead.
   [#1281](https://github.com/kong/kong-operator/pull/1281)
@@ -1106,4 +1214,3 @@ Changelog for supported {{ site.operator_product_name }} versions.
 
 - Fix enforcing up to date `ControlPlane`'s `ValidatingWebhookConfiguration`
   [#225](https://github.com/kong/kong-operator/pull/225)
-

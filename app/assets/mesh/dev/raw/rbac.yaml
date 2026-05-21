@@ -123,8 +123,10 @@ rules:
       - meshexternalservices
       - meshidentities
       - meshmultizoneservices
+      - meshopentelemetrybackends
       - meshservices
       - meshtrusts
+      - meshzoneaddresses
       - workloads
     verbs:
       - get
@@ -372,6 +374,7 @@ rules:
     verbs:
       - create
       - get
+      - list
       - watch
       - update
       - delete

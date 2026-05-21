@@ -95,7 +95,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-{{site.konnect_short_name}} retains audit logs for 7 days. After the 7 days, they are permanently deleted and can't be recovered.
+{{site.konnect_short_name}} retains audit logs for 7 days. After 7 days, {{site.konnect_short_name}} permanently deletes them and you cannot recover them.
 
 {:.info}
 > Dev Portal audit logs don't collect authorization and access events by design. You can view Dev Portal entity creation, edits, and approved state changes from the {{site.konnect_short_name}} audit logs. 
@@ -430,8 +430,9 @@ You can use either the {{site.konnect_short_name}} UI or the {{site.konnect_shor
 
 {% navtabs "replay-job" %}
 {% navtab "UI" %}
-1. In the {{site.konnect_short_name}} UI, click [**Organization**](https://cloud.konghq.com/organization) in the sidebar.
-1. Click **Audit Logs Setup** in the sidebar.
+1. Select your {{site.konnect_short_name}} org.
+1. Click [**Manage Organization**](https://cloud.konghq.com/organization).
+1. Click the **Audit Logs Setup** tab.
 1. Do one of the following:
    {% navtabs "portal-konnect" %}
    {% navtab "Konnect" %}

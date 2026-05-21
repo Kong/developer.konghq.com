@@ -1,4 +1,21 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Added `ssl_verify` config field to control SSL certificate verification when connecting to AWS APIs.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Lambda responses with empty or null body caused 500 errors when `is_proxy_integration` is enabled.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where headers from Lambda proxy responses were not merged correctly, causing case-insensitive header deduplication to fail. User-supplied headers now properly overwrite existing headers regardless of casing.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
@@ -54,6 +71,18 @@
   "3.11.0.7": [
     {
       "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.11": [
+    {
+      "message": "Fixed an issue where a 500 error occurred when `is_proxy_integration` was enabled and the Lambda function returned `null` values in `headers` or `multiValueHeaders`. Null values are now converted to empty strings.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where empty JSON array bodies (`[]`) were incorrectly converted to objects (`{}`) when using `is_proxy_integration=true` and `empty_arrays_mode=correct` alongside the exit-transformer plugin.",
       "type": "bugfix",
       "scope": "Plugin"
     }

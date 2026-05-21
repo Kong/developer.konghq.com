@@ -63,7 +63,7 @@ rows:
 
 <!-- vale off-->
 
-{% include_cached catalog/service-catalog-discovery.html 
+{% include_cached catalog/service-catalog-discovery.md 
    discovery_support=page.discovery_support
    discovery_default=page.discovery_default
    bindable_entities=page.bindable_entities

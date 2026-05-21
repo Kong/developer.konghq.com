@@ -140,16 +140,6 @@ scrape_configs:
    static_configs:
      - targets: ['kong-quickstart-gateway:8001']
 ```
-{: data-deployment-topology="on-prem" }
-
-```yaml
-scrape_configs:
- - job_name: 'kong'
-   scrape_interval: 5s
-   static_configs:
-     - targets: ['kong-quickstart-gateway:8100']
-```
-{: data-deployment-topology="konnect" }
 
 Run a Prometheus server, and pass it the configuration file created in the previous step:
 

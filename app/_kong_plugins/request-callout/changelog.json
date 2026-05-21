@@ -1,4 +1,16 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "The option `callouts.http_opts.ssl_verify`, which controls the verification\nof the certificate presented by the server, is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed keepalive support in callout HTTP requests to improve connection reuse and performance.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `ssl_verify` setting for HTTPS callouts cannot be disabled.",

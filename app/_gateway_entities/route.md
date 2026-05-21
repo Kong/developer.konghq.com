@@ -5,7 +5,7 @@ entities:
   - route
 
 description: |
-  A Route uses specific URL patterns and HTTP verbs to match incoming requests and pass them to a Gateway Service. 
+  A Route uses specific URL patterns and HTTP verbs to match incoming requests and pass them to a Gateway Service.
   This determines which upstream services will process a given request.
 
 related_resources:
@@ -55,7 +55,7 @@ tags:
   - routing
 ---
 
-## What is a Route? 
+## What is a Route?
 
 Routes fulfill two responsibilities in {{ site.base_gateway }}:
 
@@ -66,16 +66,16 @@ A Route must be attached to a [Gateway Service](/gateway/entities/service/), and
 
 ## Route and Gateway Service interaction
 
-Routes, in conjunction with [Gateway Services](/gateway/entities/service/), let you expose upstream services to clients with {{site.base_gateway}}. 
+Routes, in conjunction with [Gateway Services](/gateway/entities/service/), let you expose upstream services to clients with {{site.base_gateway}}.
 Routes also allow the same client to access multiple applications and apply different policies based on the Route used.
 
 For example, say you have two client applications that need to access the `example_service` Gateway Service: an internal client and an external client.
-The *external* client should be limited in how often it can query the Gateway Service to avoid a denial of service. 
+The *external* client should be limited in how often it can query the Gateway Service to avoid a denial of service.
 If you apply a rate limit policy to the Gateway Service and the *internal* client calls it, the internal client is also limited. Routes can solve this problem.
 
-In this example, you can create two Routes with different hosts to handle the two clients, say `internal.example.com` and `external.example.com`, and point both of them to `example_service`. 
-You can configure a policy to limit how often the external Route is used. 
-When the external client tries to access the Gateway Service via {{site.base_gateway}} using `external.example.com`, it's rate limited. 
+In this example, you can create two Routes with different hosts to handle the two clients, say `internal.example.com` and `external.example.com`, and point both of them to `example_service`.
+You can configure a policy to limit how often the external Route is used.
+When the external client tries to access the Gateway Service via {{site.base_gateway}} using `external.example.com`, it's rate limited.
 But when the internal client accesses the Gateway Service using {{site.base_gateway}} using `internal.example.com`, the internal client isn't limited.
 
 The following diagram illustrates this example:
@@ -90,7 +90,7 @@ flowchart LR
   B2(Rate Limiting plugin)
   C("`Service (example-service)`")
   D(Upstream service)
-  E(Internal client 
+  E(Internal client
   application)
   F("`Route (internal.example.com)`")
 
@@ -125,7 +125,7 @@ columns:
 rows:
   - usecase: "Rate limiting"
     description: |
-      Use Routes to set different rate limits for clients accessing the upstream service via specific paths, for example `/internal` or `/external`. 
+      Use Routes to set different rate limits for clients accessing the upstream service via specific paths, for example `/internal` or `/external`.
       <br><br>
       [Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/)
   - usecase: "Perform a simple URL rewrite"
@@ -133,7 +133,7 @@ rows:
       Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`.
   - usecase: "Perform a complex URL rewrite"
     description: |
-      Use the Routes entity to rewrite a group of paths, such as replacing `/api/<function>/old` with `/new/api/<function>`. 
+      Use the Routes entity to rewrite a group of paths, such as replacing `/api/<function>/old` with `/new/api/<function>`.
       <br><br>
       [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/)
 {% endtable %}
@@ -141,7 +141,7 @@ rows:
 
 ## Configuration formats
 
-{{site.base_gateway}} provides two methods to define Routes: the traditional JSON format, and a more powerful DSL-based expressions format. 
+{{site.base_gateway}} provides two methods to define Routes: the traditional JSON format, and a more powerful DSL-based expressions format.
 The router used is configured via the [`router_flavor`](/gateway/configuration/#router-flavor) property in `kong.conf`.
 
 The router you should use depends on your use case and {{site.base_gateway}} version:
@@ -167,13 +167,17 @@ For detailed examples of each, see the dedicated [expressions](/gateway/routing/
 
 ## How routing works
 
-For each incoming request, {{site.base_gateway}} must determine which Gateway Service will handle it based on the Routes that are defined. 
+For each incoming request, {{site.base_gateway}} must determine which Gateway Service will handle it based on the Routes that are defined.
 
 The {{site.base_gateway}} router orders all defined Routes by their [priority](#priority-matching) and uses the highest priority matching Route to [proxy the request](/gateway/traffic-control/proxying/).
 
 ### Priority matching
 
 To maximise performance, the {{site.base_gateway}} router orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. How Routes are prioritized depends on the router mode you're using.
+
+For Routes configured in the traditional JSON format, priority is dynamically calculated based on the [routing criteria](#routing-criteria) (`regex_priority` included) when the [`router_flavor`](/gateway/configuration/#router-flavor) property in `kong.conf` is set to `traditional_compat` or `expressions`. For example, a Route that specifies both `hosts` and `headers` will have a higher priority than one that only specifies `hosts`.
+
+If you find that a Route with lower priority is matched over Routes with higher priority and common [routing criteria](#routing-criteria) (for example, same `hosts`), try setting the [`route_match_calculation`](/gateway/configuration/#route-match-calculation) property in `kong.conf` to `strict`.
 
 For more information, see the detailed [expressions](/gateway/routing/expressions/#priority-matching) or [traditional](/gateway/routing/traditional/#route-priority) sections.
 
@@ -334,172 +338,30 @@ The `path_handling` parameter accepts `v0` or `v1`.
 Both versions of the algorithm detect "double slashes" when combining paths, replacing them by single
 slashes.
 
-<details>
-<summary>
-<b>Expand this block to see a table showing detailed <code>v0</code> and <code>v1</code> examples</b>
-</summary>
+{% details %}
+summary: |
+  **Expand this block to see a table showing detailed `v0` and `v1` examples**
+content: |
 
-<table>
-  <thead>
-    <tr>
-      <th>service.path</th>
-      <th>route.path</th>
-      <th>request</th>
-      <th>route.strip_path</th>
-      <th>route.path_handling</th>
-      <th>request path</th>
-      <th>upstream path</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>/s</td>
-      <td>/fv0</td>
-      <td>req</td>
-      <td>false</td>
-      <td>v0</td>
-      <td>/fv0/req</td>
-      <td>/s/fv0/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv0</td>
-      <td>blank</td>
-      <td>false</td>
-      <td>v0</td>
-      <td>/fv0</td>
-      <td>/s/fv0</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv1</td>
-      <td>req</td>
-      <td>false</td>
-      <td>v1</td>
-      <td>/fv1/req</td>
-      <td>/sfv1/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv1</td>
-      <td>blank</td>
-      <td>false</td>
-      <td>v1</td>
-      <td>/fv1</td>
-      <td>/sfv1</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv0</td>
-      <td>req</td>
-      <td>true</td>
-      <td>v0</td>
-      <td>/tv0/req</td>
-      <td>/s/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv0</td>
-      <td>blank</td>
-      <td>true</td>
-      <td>v0</td>
-      <td>/tv0</td>
-      <td>/s</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv1</td>
-      <td>req</td>
-      <td>true</td>
-      <td>v1</td>
-      <td>/tv1/req</td>
-      <td>/s/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv1</td>
-      <td>blank</td>
-      <td>true</td>
-      <td>v1</td>
-      <td>/tv1</td>
-      <td>/s</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv0/</td>
-      <td>req</td>
-      <td>false</td>
-      <td>v0</td>
-      <td>/fv0/req</td>
-      <td>/s/fv0/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv0/</td>
-      <td>blank</td>
-      <td>false</td>
-      <td>v0</td>
-      <td>/fv0/</td>
-      <td>/s/fv01/</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv1/</td>
-      <td>req</td>
-      <td>false</td>
-      <td>v1</td>
-      <td>/fv1/req</td>
-      <td>/sfv1/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv1/</td>
-      <td>blank</td>
-      <td>false</td>
-      <td>v1</td>
-      <td>/fv1/</td>
-      <td>/sfv1/</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv0/</td>
-      <td>req</td>
-      <td>true</td>
-      <td>v0</td>
-      <td>/tv0/req</td>
-      <td>/s/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv0/</td>
-      <td>blank</td>
-      <td>true</td>
-      <td>v0</td>
-      <td>/tv0/</td>
-      <td>/s/</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv1/</td>
-      <td>req</td>
-      <td>true</td>
-      <td>v1</td>
-      <td>/tv1/req</td>
-      <td>/sreq</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv1/</td>
-      <td>blank</td>
-      <td>true</td>
-      <td>v1</td>
-      <td>/tv1/</td>
-      <td>/s</td>
-    </tr>
-  </tbody>
-</table>
-
-</details>
+  | service.path | route.path | request | route.strip_path | route.path_handling | request path | upstream path |
+  |--------------|-----------|---------|------------------|---------------------|--------------|---------------|
+  | /s | /fv0 | req   | false | v0 | /fv0/req | /s/fv0/req |
+  | /s | /fv0 | blank | false | v0 | /fv0     | /s/fv0     |
+  | /s | /fv1 | req   | false | v1 | /fv1/req | /sfv1/req  |
+  | /s | /fv1 | blank | false | v1 | /fv1     | /sfv1      |
+  | /s | /tv0 | req   | true  | v0 | /tv0/req | /s/req     |
+  | /s | /tv0 | blank | true  | v0 | /tv0     | /s         |
+  | /s | /tv1 | req   | true  | v1 | /tv1/req | /s/req     |
+  | /s | /tv1 | blank | true  | v1 | /tv1     | /s         |
+  | /s | /fv0/ | req   | false | v0 | /fv0/req | /s/fv0/req |
+  | /s | /fv0/ | blank | false | v0 | /fv0/    | /s/fv01/   |
+  | /s | /fv1/ | req   | false | v1 | /fv1/req | /sfv1/req  |
+  | /s | /fv1/ | blank | false | v1 | /fv1/    | /sfv1/     |
+  | /s | /tv0/ | req   | true  | v0 | /tv0/req | /s/req     |
+  | /s | /tv0/ | blank | true  | v0 | /tv0/    | /s/        |
+  | /s | /tv1/ | req   | true  | v1 | /tv1/req | /sreq      |
+  | /s | /tv1/ | blank | true  | v1 | /tv1/    | /s         |
+{% enddetails %}
 
 ### Routing performance recommendations
 
@@ -510,7 +372,7 @@ You can use the following recommendations to increase routing performance:
 
 ## TLS Route configuration
 
-The Routes entity can dynamically serve TLS certificates on a per-connection basis. TLS certificates are managed by two resources: 
+The Routes entity can dynamically serve TLS certificates on a per-connection basis. TLS certificates are managed by two resources:
 
 * [Certificates](/gateway/entities/certificate/)
 * [SNIs](/gateway/entities/sni/)
@@ -522,12 +384,12 @@ type: route
 data:
   name: example-route
   host: "*.tls-example.com"
-  protocols: 
+  protocols:
     - https
     - tls
   paths:
     - "/mock"
-  snis: 
+  snis:
     - "my-sni"
 {% endentity_example %}
 
@@ -536,9 +398,9 @@ In this case, the Certificate is already associated with the SNI, so by default 
 ### Proxying TLS passthrough traffic
 
 {{site.base_gateway}} supports TLS passthrough. {{site.base_gateway}} uses the connecting SNI extension to find the matching Route and Service when forwarding a TLS request upstream.
-The Route configuration to proxy TLS traffic is unique to every deployment, but the two main configuration variables are: 
+The Route configuration to proxy TLS traffic is unique to every deployment, but the two main configuration variables are:
 
-* Create a Route with the `tls_passthrough` protocol and assign an SNI. 
+* Create a Route with the `tls_passthrough` protocol and assign an SNI.
 * Create a Service, associated with the Route, with the protocol set to `tcp`.
 
 ## Set up a Route

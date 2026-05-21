@@ -1,3 +1,4 @@
+{% assign vertical_align = include.vertical_align | default: 'top' %}
 <div class="w-full overflow-x-auto">
 <table class="{% if include.sticky %}table__sticky{% endif %} w-full">
     <thead>
@@ -14,7 +15,7 @@
         <tr{% if row.id %} id="{{ row.id }}"{% endif %}>
             {% for column in include.columns %}
                 {% assign v = row[column.key] %}
-                <td{% if v == true or v == false %}{% endif %} style="vertical-align: top">
+                <td{% if v == true or v == false %}{% endif %} style="vertical-align: {{ vertical_align }}">
                 {% if v == true %}
                     {% include icon_true.html %}
                 {% elsif v == false %}

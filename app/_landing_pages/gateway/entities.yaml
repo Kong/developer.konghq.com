@@ -18,73 +18,71 @@ rows:
   - header:
       type: h2
       text: "Core entities"
-
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: service
-    - blocks:
-      - type: entity_card
-        config:
-          entity: route
-    - blocks:
-      - type: entity_card
-        config:
-          entity: consumer
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: consumer-group
-    - blocks:
-      - type: entity_card
-        config:
-          entity: upstream
-    - blocks:
-      - type: entity_card
-        config:
-          entity: target
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: plugin
-    - blocks:
-      - type: entity_card
-        config:
-          entity: workspace
-    - blocks:
-      - type: entity_card
-        config:
-          entity: partial
+    column_count: 3
+    columns:
+      - blocks:
+        - type: entity_card
+          config:
+            entity: service
+      - blocks:
+        - type: entity_card
+          config:
+            entity: route
+      - blocks:
+        - type: entity_card
+          config:
+            entity: consumer
+      - blocks:
+        - type: entity_card
+          config:
+            entity: consumer-group
+      - blocks:
+        - type: entity_card
+          config:
+            entity: upstream
+      - blocks:
+        - type: entity_card
+          config:
+            entity: target
+      - blocks:
+        - type: entity_card
+          config:
+            entity: plugin
+      - blocks:
+        - type: entity_card
+          config:
+            entity: workspace
+      - blocks:
+        - type: entity_card
+          config:
+            entity: partial
 
   - header:
       type: h2
       text: "Security"
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: sni
-    - blocks:
-      - type: entity_card
-        config:
-          entity: certificate
-    - blocks:
-      - type: entity_card
-        config:
-          entity: ca_certificate
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: vault
-    - blocks:
-      - type: entity_card
-        config:
-          entity: key
-    - blocks:
-      - type: entity_card
-        config:
-          entity: key-set
+    column_count: 3
+    columns:
+      - blocks:
+        - type: entity_card
+          config:
+            entity: sni
+      - blocks:
+        - type: entity_card
+          config:
+            entity: certificate
+      - blocks:
+        - type: entity_card
+          config:
+            entity: ca_certificate
+      - blocks:
+        - type: entity_card
+          config:
+            entity: vault
+      - blocks:
+        - type: entity_card
+          config:
+            entity: key
+      - blocks:
+        - type: entity_card
+          config:
+            entity: key-set

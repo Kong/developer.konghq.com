@@ -3,3 +3,6 @@ paths:
   - /marketplace
 service:
   name: mcp-service
+protocols:
+  - http
+  - https

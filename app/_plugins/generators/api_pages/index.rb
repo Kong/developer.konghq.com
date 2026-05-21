@@ -20,7 +20,7 @@ module Jekyll
       end
 
       def content
-        @content ||= ''
+        @content ||= File.read('app/_includes/api_specs.html')
       end
 
       def url
@@ -34,7 +34,7 @@ module Jekyll
           'layout' => 'api/index',
           'get_help' => false,
           'edit_and_issue_links' => false,
-          'search_aliases' => ["oas", "specs", "api specs"]
+          'search_aliases' => ['oas', 'specs', 'api specs']
         }
       end
     end

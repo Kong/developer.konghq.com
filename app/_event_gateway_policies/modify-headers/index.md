@@ -29,6 +29,9 @@ phases:
 
 policy_target: virtual_cluster
 
+categories:
+  - transformations
+
 icon: graph.svg
 ---
 

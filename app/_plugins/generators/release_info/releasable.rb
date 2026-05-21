@@ -9,6 +9,14 @@ module Jekyll
         end
       end
 
+      def deduplicated_releases
+        releases
+      end
+
+      def use_release_name?
+        false
+      end
+
       def latest_available_release
         @latest_available_release ||= available_releases.detect(&:latest?)
       end

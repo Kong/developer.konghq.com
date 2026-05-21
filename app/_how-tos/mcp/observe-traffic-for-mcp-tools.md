@@ -137,28 +137,31 @@ touch prometheus.yml
 
 Now, add the following to the `prometheus.yml` file to configure Prometheus to scrape MCP traffic metrics:
 
+{% on_prem %}
+content: |
+  ```yaml
+  cat <<EOF > prometheus.yml
+  scrape_configs:
+   - job_name: 'kong'
+     scrape_interval: 5s
+     static_configs:
+       - targets: ['kong-quickstart-gateway:8001']
+  EOF
+  ```
+{% endon_prem %}
 
-```yaml
-cat <<EOF > prometheus.yml
-scrape_configs:
- - job_name: 'kong'
-   scrape_interval: 5s
-   static_configs:
-     - targets: ['kong-quickstart-gateway:8001']
-EOF
-```
-{: data-deployment-topology="on-prem" }
-
-```yaml
-cat <<EOF > prometheus.yml
-scrape_configs:
- - job_name: 'kong'
-   scrape_interval: 5s
-   static_configs:
-     - targets: ['kong-quickstart-gateway:8100']
-EOF
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```yaml
+  cat <<EOF > prometheus.yml
+  scrape_configs:
+   - job_name: 'kong'
+     scrape_interval: 5s
+     static_configs:
+       - targets: ['kong-quickstart-gateway:8100']
+  EOF
+  ```
+{% endkonnect %}
 
 
 Run a Prometheus server, and pass it the configuration file created in the previous step:

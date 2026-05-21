@@ -51,9 +51,10 @@ module Jekyll
             h[key] = value.map do |v|
               if key != NO_LINK
                 message = v['message'].sub(/^#{Regexp.escape(key)}/, '')
-                v['message'] = message
+                v.merge('message' => message)
+              else
+                v
               end
-              v
             end
           end
         end

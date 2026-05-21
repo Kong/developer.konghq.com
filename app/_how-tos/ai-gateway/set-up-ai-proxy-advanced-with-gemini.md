@@ -62,9 +62,9 @@ prereqs:
         1. Copy the generated API key.
         1. Export the API key as an environment variable:
 
-        ```sh
-        export DECK_GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
-        ```
+           ```sh
+           export DECK_GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
+           ```
       icon_url: /assets/icons/gcp.svg
   entities:
     services:
@@ -84,7 +84,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with Gemini, configure API key authentication and specify the Gemini model to use. 
+To set up AI Proxy Advanced with {{ site.gemini }}, configure API key authentication and specify the {{ site.gemini }} model to use. 
 
 In this example, we use the `gemini-2.5-flash` model:
 
@@ -106,7 +106,7 @@ entities:
 variables:
   gemini_api_key:
     value: $GEMINI_API_KEY
-    description: The API key to use to connect to Gemini.
+    description: The API key to use to connect to {{ site.gemini }}.
 {% endentity_examples %}
 <!--vale on-->
 

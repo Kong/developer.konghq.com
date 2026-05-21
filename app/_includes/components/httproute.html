@@ -1,0 +1,15 @@
+{% capture tabs %}
+{% navtabs "http-route" %}
+{% if gateway_api %}
+{% navtab "Gateway API" %}
+{{gateway_api}}
+{% endnavtab %}
+{% endif %}
+{% if ingress %}
+{% navtab "Ingress" %}
+{{ingress}}
+{% endnavtab %}
+{% endif %}
+{% endnavtabs %}
+{% endcapture %}
+{{ tabs | indent: indentation }}

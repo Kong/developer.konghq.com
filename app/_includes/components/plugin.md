@@ -1,0 +1,1 @@
+{% include card.md icon=plugin.icon title=plugin.name description=plugin.description cta_url=plugin.url cta_text='See plugin' heading_level=heading_level %}

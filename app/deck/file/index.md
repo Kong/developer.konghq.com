@@ -43,6 +43,9 @@ rows:
       [openapi2kong](/deck/file/openapi2kong/)
     description: Convert an OpenAPI specification to {{ site.base_gateway }} Services and Routes.
   - command: |
+      [openapi2mcp](/deck/file/openapi2mcp/)
+    description: Convert an OpenAPI specification to a {{ site.base_gateway }} Services with an MCP Route and an AI MCP Proxy plugin with MCP tools.
+  - command: |
       [kong2kic](/deck/file/kong2kic/)
     description: Convert a {{site.base_gateway}} declarative configuration file to [{{site.kic_product_name}}](/kubernetes-ingress-controller/) compatible CRDs. Supports both Gateway API and Ingress resources.
   - command: |

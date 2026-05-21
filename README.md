@@ -1,11 +1,15 @@
 # developer.konghq.com
+
 🦍 Source code for developer.konghq.com website.
 
+## Prerequisites
+
+- [mise](https://mise.jdx.dev/getting-started.html).
+    - Optionally configure your shell to [activate mise](https://mise.jdx.dev/getting-started.html#activate-mise) automatically.
+    - You may need to run `mise trust` when first opening a new repository.
+- [libyaml](https://github.com/yaml/libyaml).
+
 ## Run Locally
-
-Make sure you have [mise](https://mise.jdx.dev/getting-started.html)
-
-If you want to make sure you will always use the right version of tools, [activate mise](https://mise.jdx.dev/getting-started.html#activate-mise).
 
 ```bash
 # Install dependencies
@@ -26,6 +30,16 @@ Once you see the `Server now ready on …` message, the docs site is available a
 ## Generating specific products locally
 
 Building the entire docs site can take a while. To speed up build times, you can generate a specific subset of products by setting the `KONG_PRODUCTS` environment variable. This variable accepts a comma-separated list of products (product slugs as defined in `app/_data/products`), e.g `KONG_PRODUCTS=ai-gateway make run`.
+
+## Generating specific pages locally
+
+You can generate specific pages by setting the PAGE_PATHS environment variable. This variable accepts a comma-separated list of paths. For example:
+
+```sh
+PAGE_PATHS="/plugins/acme/,/gateway/entities/" make run
+```
+
+The platform will generate all pages that match each specified path. For instance, `/gateway/entities/` will generate all pages whose paths start with `/gateway/entities/`.
 
 ## Contributing to the docs
 

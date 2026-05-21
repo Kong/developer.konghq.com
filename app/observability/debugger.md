@@ -62,7 +62,9 @@ To ensure consistency and interoperability, tracing adheres to OpenTelemetry nam
 For deeper insights, logs can be captured along with traces. When initiating a debug session, administrators can choose to capture logs. Detailed {{site.base_gateway}} logs are captured for the duration of the session. These logs are then correlated with traces using `trace_id` and `span_id` providing a comprehensive and drill-down view of logs generated during specific trace or span.
 
 ## Reading traces and logs 
-Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary**, **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spans and logs view help you to dive deeper.
+Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary**, **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spans and logs view help you to dive deeper. You can also download captured traces. 
+
+All {{site.konnect_short_name}} users can upload a trace `.json` or `.zip` file (for example, one downloaded from a debug session) to view by navigating to **{{site.observability}}** > **Debugger** and clicking **Upload trace**. This lets users view traces even if they don't have permission to create or start debug sessions.   
 
 ### Summary view
 Summary view helps you visualize the entire API request-response flow in a single glance. This view provides a concise overview of critical latency metrics and a transaction map. The lifecycle map includes the different phases of {{site.base_gateway}} and the plugins executed by {{site.base_gateway}} on both the request and the response along with the times spent in each phase. 
@@ -88,6 +90,16 @@ The logs view gives you a drill-down view of all the logs generated during speci
 Use the logs view to quickly troubleshoot and pinpoint issues:
 ![Debugger Logs view](/assets/images/konnect/debugger-trace-logs-view.png)
 
+### Analyze with KAi
+
+When viewing a trace, you can click **Analyze with KAi** to send the trace to [KAi](/konnect-platform/kai/). The trace summary, spans, and logs are automatically applied as context. KAi can help identify errors, determine their probable root cause, and answer questions about the request, such as:
+
+* Why is my API returning 5xx errors?
+* Why is the OIDC plugin execution failing?
+* Why is the `/flights` API slow?
+* What is the plugin execution order for this route?
+* Why does my hybrid gateway have connectivity issues with the upstream?
+
 ## Payload capture
 
 In critical scenarios, having access to payload details can help identify and pinpoint failures. With payload capture feature, a debug session can be configured to capture header and/or body for requests and response. However due to the nature of this telemetry, this feature requires customers to explicitly opt-in with a prior agreement called the Advanced Features Addendum. Once the agreement is in place, the feature is enabled in debugger.
@@ -110,10 +122,35 @@ In critical scenarios, having access to payload details can help identify and pi
 ```
 
 ### Payload collection and sanitization
-When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria. Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers will be redacted from the payload.
+When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching sampling criteria. Sampling filters and sanitization occur on the data plane before any data is transmitted to {{site.konnect_short_name}}. Transactions are scrubbed using the log sanitizer, and sensitive data such as credit card numbers are redacted from the payload. Authentication and identity headers (for example, `Authorization`, API key header values, and consumer ID header fields) are also masked by default.
+
+{% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`) are automatically decompressed before capture, so they appear as readable text in the debugger.
 
 {:.info}
 > Log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with `*`
+
+#### Custom masking rules {% new_in 3.14 %}
+
+You can define custom payload masking rules to target specific sensitive data in your requests and responses. Custom rules allow you to redact data in both headers and body content.
+
+{:.info}
+> Custom masking rules require {{site.base_gateway}} version 3.14 or later.
+
+#### Header rules
+
+Header masking rules let you redact the value of specific headers by name.
+
+#### Body rules
+
+Body masking rules support two strategies:
+
+* **JSONPath ([RFC 9535](https://www.rfc-editor.org/rfc/rfc9535)):** Target specific fields in JSON payloads using standard JSONPath expressions. This includes support for dot notation (`$.field`), bracket notation, wildcards (`[*]`), recursive descent (`$..`), array slicing, and filter expressions.
+* **Regex ([PCRE](https://www.pcre.org/current/doc/html/pcre2pattern.html)):** Match and redact patterns in the raw body content using PCRE-compatible regular expressions.
+
+The redaction is done by replacing the matched content with `*`.
+
+{:.info}
+> Custom masking rules are applied in addition to the built-in credit card redaction. The built-in Luhn algorithm-based redaction is always active and cannot be disabled.
 
 ### Payload ingestion, storage and retention
 By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services (KMS). 
@@ -129,7 +166,7 @@ To begin using the Debugger, ensure the following requirements are met:
 
 * Your data plane nodes are running {{site.base_gateway}} version 3.9.1 or later.
 * Logs require {{site.base_gateway}} version 3.11.0 or later.
-* You should be a Debug Session Creator to use Debugger. Control Plane Admins and Org Admins can also create debug sessions.
+* You need Debug Session Creator, Control Plane Admin, or Org Admin permissions to create debug sessions.
 * Your {{site.konnect_short_name}} data planes are hosted using self-managed hybrid, Dedicated Cloud Gateways, or serverless gateways. {{site.kic_product_name}} or {{site.event_gateway}} Gateways aren't currently supported.
 * For version 3.9.x only: set the following environment variables in `kong.conf`:
   * `KONG_CLUSTER_RPC=on`

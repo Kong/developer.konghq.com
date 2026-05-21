@@ -1,4 +1,61 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for AI/MCP access log",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the Konnect Cluster ID and the optional Cluster Member ID to access logs.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for customizing access logs via Lua code snippets. The previous `access_logs_endpoint` schema field has been deprecated in favor of a new `access_logs.endpoint` field, which can be used alongside the `access_logs.custom_attributes_by_lua` field to specify Lua code snippets for custom attributes.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for AI/MCP metrics",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Add Konnect Cluster ID and the optional Cluster Member ID attributes to OpenTelemetry metrics in Konnect mode.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    },
+    {
+      "message": "Added support for official MCP metrics",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Support WebSocket related metrics to OpenTelemetry plugin for enhanced observability.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    },
+    {
+      "message": "Fixed an issue where valid response codes from vendor endpoints were incorrectly rejected when exporting `traces`, `logs` or `metrics`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `http.response.status_code` attribute of the `http.server.request.count` metric was incorrectly set to `kong.response.status_code`. Now, the attribute name follows the OTel specification.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `kong.upstream.status_code` field of access logs was incorrectly populated with string value instead of integer value when there was one or more retries to the upstream.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for exporting OpenTelemetry metrics via OTLP/HTTP protocol to an observability backend (e.g. OpenTelemetry Collector). Please enable this feature by configuring the `metrics.endpoint` parameter in the OpenTelemetry plugin.",
@@ -29,6 +86,13 @@
     },
     {
       "message": "Fixed an issue where the `kong.upstream.status_code` field of access logs was incorrectly populated with string value instead of integer value when there was one or more retries to the upstream.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.3": [
+    {
+      "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
       "type": "bugfix",
       "scope": "Plugin"
     }

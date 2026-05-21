@@ -1,5 +1,5 @@
 {% assign summary='Create a KonnectGatewayControlPlane resource' %}
-
+{%- if page.output_format == 'markdown' and page.works_on.size > 1 %}{% capture summary %}{{ summary | prepend: ": " | prepend: site.llm_copy.konnect_snippet }}{% endcapture %}{% endif -%}
 {% capture details_content %}
 
 <!-- vale off -->

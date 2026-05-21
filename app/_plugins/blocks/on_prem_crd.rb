@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class OnPremCrd < Liquid::Block # rubocop:disable Style/Documentation
@@ -32,7 +33,7 @@ module Jekyll
       context.stack do
         context['config'] = config
         context['should_create_namespace'] = should_create_namespace
-        Liquid::Template.parse(File.read('app/_includes/on_prem_crd.html')).render(context)
+        Liquid::Template.parse(File.read('app/_includes/on_prem_crd.html'), { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -44,7 +45,6 @@ module Jekyll
     end
 
     def add_defaults(config)
-
       defaults = {
         'kind' => '@TODO', # Needed to make sure kind is the first item in the YAML output
         'apiVersion' => 'gateway-operator.konghq.com/v2beta1',
@@ -52,7 +52,7 @@ module Jekyll
           'name' => '@TODO',
           'namespace' => 'kong'
         },
-          'spec' => {}
+        'spec' => {}
       }
 
       defaults.deep_merge(config)

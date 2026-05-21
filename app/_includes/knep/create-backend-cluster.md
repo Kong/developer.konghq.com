@@ -25,7 +25,8 @@ body:
 extract_body:
   - name: id
     variable: BACKEND_CLUSTER_ID
-capture: BACKEND_CLUSTER_ID
-jq: ".id"
+capture:
+  - variable: BACKEND_CLUSTER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->

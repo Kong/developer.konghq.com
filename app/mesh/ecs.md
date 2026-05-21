@@ -22,7 +22,7 @@ related_resources:
   - text: Install {{site.mesh_product_name}}
     url: /mesh/#install-kong-mesh
   - text: Deploy {{site.mesh_product_name}} on Universal
-    url: /mesh/universal/
+    url: /mesh/get-started/universal/install/
   - text: "Access Audit"
     url: /mesh/access-audit/
   - text: "Vault Policy"
@@ -61,7 +61,7 @@ With {{site.mesh_product_name}} on ECS, each service enumerates
 other mesh services it contacts
 [in the `Dataplane` specification](/mesh/data-plane-universal/).
 
-## Deploy Amazon ECS on {{site.mesh_product_name}}
+## Deploy {{ site.amazon }} ECS on {{site.mesh_product_name}}
 
 This section covers ECS-specific parts of running {{site.mesh_product_name}}, using the
 [example Cloudformation](https://github.com/Kong/kong-mesh-ecs) as a guide.

@@ -52,6 +52,14 @@ module Jekyll
           @content ||= @page.content.deep_dup
         end
 
+        def markdown_content
+          @markdown_content ||= if @page.respond_to?(:markdown_content)
+                                  @page.markdown_content
+                                else
+                                  content
+                                end
+        end
+
         def url
           @url ||= dir
         end

@@ -3,3 +3,5 @@ paths:
   - /mcp/weather-internet
 service:
   name: weather-internet-service
+protocols:
+  - https

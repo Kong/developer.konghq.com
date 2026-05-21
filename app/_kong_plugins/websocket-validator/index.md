@@ -51,6 +51,8 @@ The message schema can be configured by type (text or binary) and sender (client
 
 This plugin supports validation against [JSON schema draft4](https://json-schema.org/specification-links#draft-4).
 
+{% include_cached /gateway/expressions/limitation-note.md %}
+
 ## How the WebSocket Validator plugin works 
 
 When an incoming message is invalid according to the schema, a close frame is sent to the sender 

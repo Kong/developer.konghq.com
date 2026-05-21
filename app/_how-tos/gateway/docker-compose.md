@@ -23,7 +23,7 @@ min_version:
 
 tldr:
   q: How do I install {{site.base_gateway}} using Docker Compose?
-  a: "Copy the Docker Compose file and run `docker compose up -d`."
+  a: "Create the example Docker Compose file and run `docker compose up -d`."
 prereqs:
   skip_product: true
   inline: 
@@ -48,7 +48,7 @@ automated_tests: false
 
 ## Set up the Docker Compose file
 
-Copy the Docker Compose file to `docker-compose.yml`:
+Run the following command to create `docker-compose.yml`:
 
 <!-- vale off -->
 ```bash

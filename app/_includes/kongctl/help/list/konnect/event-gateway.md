@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list konnect event-gateway [flags]
   kongctl list konnect event-gateway [command]
@@ -21,6 +21,9 @@ Available Commands:
   data-plane-certificates Manage data plane certificates for an Event Gateway
   listener-policies       Manage listener policies for an Event Gateway Listener
   listeners               Manage listeners for an Event Gateway
+  schema-registries       Manage schema registries for an Event Gateway
+  static-keys             Manage static keys for an Event Gateway
+  tls-trust-bundles       Manage TLS trust bundles for an Event Gateway
   virtual-clusters        Manage virtual clusters for an Event Gateway
 
 
@@ -30,8 +33,8 @@ Flags:
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
+                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
+                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for event-gateway
@@ -50,6 +53,10 @@ Flags:
       --log-level string        Configures the logging level. Execution logs are written to STDERR.
                                 - Config path: [ log-level ]
                                 - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
+                                - Config path: [ telemetry.enabled ]
+                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")

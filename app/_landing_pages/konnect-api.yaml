@@ -54,23 +54,23 @@ rows:
   - header:
       type: h3
       text: Dev Portal APIs
-  - columns:
-    - blocks:
-      - type: api
-        config:
-          title: Konnect Developer Portal
-    - blocks:
-      - type: api
-        config:
-          title: Konnect API Builder
-    - blocks:
-      - type: api
-        config:
-          title: Application Auth Strategies
-    - blocks:
-      - type: api
-        config:
-          title: Konnect Portal Management
+    columns:
+      - blocks:
+        - type: api
+          config:
+            title: Konnect Developer Portal
+      - blocks:
+        - type: api
+          config:
+            title: Konnect API Catalog
+      - blocks:
+        - type: api
+          config:
+            title: Application Auth Strategies
+      - blocks:
+        - type: api
+          config:
+            title: Konnect Portal Management
 
   - header:
       type: h2
@@ -88,7 +88,7 @@ rows:
             The access token must be passed in the `Authorization` header of all requests, for example: 
 
             ```
-            curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT'
+            curl -X GET 'https://global.api.konghq.com/v3/users/' --header 'Authorization: Bearer kpat_xgfT'
             ```
 
   - header:

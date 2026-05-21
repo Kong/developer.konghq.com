@@ -2,7 +2,7 @@
 metadata:
   title: "Insomnia vs Postman"
   content_type: landing_page
-  description: Compare Insomnia and Postman at a glance. See how Insomnia’s open-source foundation, plugin ecosystem, and Kong integrations make it faster, lighter, and more flexible for API design and testing.
+  description: Compare Insomnia and Postman at a glance. See how Insomnia's open-source foundation, plugin ecosystem, and Kong integrations make it faster, lighter, and more flexible for API design and testing.
   breadcrumbs:
     - /insomnia/
   products:
@@ -53,7 +53,7 @@ rows:
                   details: Insomnia is open source and extensible.
                 - title: Local Git-driven storage
                   insomnia: true
-                  details: Store and version your API definitions, collections, and tests in your own Git repositories. All data moves directly between your machine and Git, not through Insomnia’s servers.
+                  details: Store and version your API definitions, collections, and tests in your own Git repositories. All data moves directly between your machine and Git, not through Insomnia's servers.
                 - title: Self-hosted mock servers
                   insomnia: true
                   details: Run mocks locally or on your own infrastructure.
@@ -315,7 +315,7 @@ rows:
                     - Migrate collections with [Migrate collections and environments from Postman to Insomnia](/how-to/migrate-collections-and-environments-from-postman-to-insomnia/).
                     - Use Git automation with the [Inso CLI](/inso-cli/).
                     - Connect Insomnia to Kong Gateway and Konnect with [MCP Clients in Insomnia](/insomnia/mcp-clients-in-insomnia/).
-                    - Learn about Kong’s API workflows with [Kong Gateway](/gateway/).
+                    - Learn about Kong's API workflows with [Kong Gateway](/gateway/).
                     - View deployment and management options with [Konnect](/konnect/).
 
       - blocks:
@@ -326,7 +326,7 @@ rows:
                   text: |
                     **Next steps**
 
-                    Continue exploring Insomnia’s capabilities:
+                    Continue exploring Insomnia's capabilities:
 
                     - Learn about [Documents](/insomnia/documents/).
                     - Explore [Collections](/insomnia/collections/).

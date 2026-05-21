@@ -1,0 +1,3 @@
+## Configuration
+
+{% entity_schema %}

@@ -41,8 +41,6 @@ See the [{{site.base_gateway}} support policy](/gateway/version-support-policy/)
 
 {% include_cached k8s/supported-versions.md show_kic=true %}
 
-> _Table 1: Version support for dependencies of {{site.kic_product_name}}_
-
 ## {{site.kic_product_name}} versions
 
 The following {{site.kic_product_name}} versions are currently supported by Kong.

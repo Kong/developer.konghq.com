@@ -47,7 +47,7 @@ related_resources:
 
 notes: | 
   This plugin's API doesn't work in hybrid mode, as it targets data that only exists on data planes, 
-  and data planes can't use Kong's Admin API. In Serverless gateways only the <code>memory</code> config 
+  and data planes can't use Kong's Admin API. In Serverless gateways only the `memory` config 
   strategy is supported.
 
 min_version:
@@ -83,4 +83,8 @@ key = md5(UUID | headers | body)
 
 {% include_cached /plugins/caching/api.md name=page.name slug=page.slug %}
 
-{% include plugins/redis-cloud-auth.md %}
+## Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}

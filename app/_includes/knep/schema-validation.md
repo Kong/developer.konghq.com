@@ -23,6 +23,8 @@ rows:
       Ensure that all messages produced to a topic are validated against a schema, and reject messages that don't conform.
   - use_case: "[Tutorial: Filter Kafka records by classification headers](/event-gateway/filter-records-by-classification/)"
     description: Parses JSON records so that a nested [Modify Headers policy](/event-gateway/policies/modify-headers/) can add a header to specific records.
+  - use_case: "[Tutorial: Validate Avro messages with Confluent Schema Registry](/event-gateway/validate-avro-messages-with-schema-registry/)"
+    description: Enforce Avro schema validation on produced messages using the Confluent Schema Registry, rejecting messages that don't conform.
 {% endtable %}
 <!--vale on-->
 

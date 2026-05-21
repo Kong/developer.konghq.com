@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "the `ssl_verify` option to verify the certificate\npresented by the Azure Content Safety service when using HTTPS is now enabled\nby default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Enabled at-rest keyring encryption for sensitive fields in AI Azure Content Safety plugin.",

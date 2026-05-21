@@ -1,3 +1,5 @@
+require_relative '../monkey_patch'
+
 module Jekyll
   class IncludeExistsTag < Liquid::Tag
     def initialize(tag_name, file, tokens)

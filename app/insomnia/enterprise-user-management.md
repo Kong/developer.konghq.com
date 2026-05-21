@@ -38,7 +38,10 @@ faqs:
       ```
 
       Configure this variable through your organization’s device management system. When active, this setting prevents Insomnia from performing automatic updates and allows your IT department to control rollout and version management through its standard deployment process.
-  
+  - q: Can I export a list of unmanaged users?
+    a: |
+      Yes. You can export a CSV file of unmanaged users for a specific domain from the **Licenses** section in the Enterprise tools.  
+
 ---
 
 ## Insomnia teams
@@ -61,6 +64,10 @@ Manage teams in [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/
 
 You can also manage teams using SCIM provisioning. For more information, see [SCIM](/insomnia/scim/).
 
+You can rename or delete a team by clicking the team name. 
+When you delete a team, keep the following in mind:
+* If members were assigned to only that team, they will also be removed from the organization. 
+* If members were assigned to more than one team, they won't be removed from the organization since they're still a member of another team.
 {:.info}
 > Roles are defined on the team level, which means that if the same team is linked to multiple organizations, the team members will have the same role in all linked organizations.
 

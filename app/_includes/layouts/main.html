@@ -1,10 +1,19 @@
+{%- assign show_badges = false -%}
+{%- if layout.uses == false and page.beta == true -%}{%- assign show_badges = true -%}{%- endif -%}
+{%- if layout.uses == false and page.tech_preview == true -%}{%- assign show_badges = true -%}{%- endif -%}
+{%- if layout.tier_inline == true and page.tier -%}{%- assign show_badges = true -%}{%- endif -%}
+{%- if page.premium_partner or page.third_party -%}{%- assign show_badges = true -%}{%- endif %}
 <main {% if page.topology_switcher %}data-topology-switcher="{{ page.topology_switcher }}" {% endif %}id="main" class="flex flex-col pb-12 gap-12 w-full {{ page.content_type | slugify }} {{include.class}}">
     <div class="flex flex-col gap-3">
-        <div class="flex gap-3 items-center">
-            {% if page.icon %}<img src="{{ page.icon }}" class="w-8 h-8"/>{% endif %}
+        <div class="flex gap-3 md:items-center flex-col md:flex-row {% if show_badges %}flex-wrap{% endif %}">
+            <div class="flex gap-3 items-center">
+                {% if page.icon %}<img src="{{ page.icon }}" class="w-8 h-8"/>{% endif %}
 
-            <h1 id="{{page.title | slugify}}" class="link-anchor">{{ page.title | liquify }}</h1>
+                <h1 id="{{page.title | slugify}}" class="link-anchor">{{ page.title | liquify }}</h1>
+            </div>
 
+            {% if show_badges %}
+            <div class="flex gap-3 items-center">
             {% if layout.tier_inline == true and page.tier %}
                 {% include tier.html products=page.products tier=page.tier %}
             {% endif %}
@@ -21,6 +30,12 @@
             {%- if page.third_party -%}
             {%- include badges/third_party.html -%}
             {%- endif -%}
+            </div>
+            {% endif %}
+
+            {% unless page.llm == false %}
+            {% include components/llm_dropdown.html url=page.url css_classes="lg:ml-auto" %}
+            {% endunless %}
         </div>
 
         {% if page.subtitle %}

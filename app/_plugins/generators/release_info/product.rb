@@ -16,7 +16,19 @@ module Jekyll
 
       def available_releases
         @available_releases ||= (@site.data.dig('products', @product, 'releases') || [])
-                                .map { |r| Drops::Release.new(r) }
+                                  .map { |r| Drops::Release.new(r) }
+      end
+
+      def deduplicated_releases
+        return releases unless @product == 'event-gateway'
+
+        @deduplicated_releases ||= releases.group_by { |r| r['name'] }
+                                           .values
+                                           .map(&:max)
+      end
+
+      def use_release_name?
+        @product == 'event-gateway'
       end
 
       private

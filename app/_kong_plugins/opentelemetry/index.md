@@ -48,6 +48,12 @@ related_resources:
     url: /plugins/zipkin/
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
+  - text: "Gen AI OpenTelemetry metrics reference"
+    url: /ai-gateway/ai-otel-metrics/
+  - text: "Gen AI OpenTelemetry span attributes"
+    url: /ai-gateway/llm-open-telemetry/
+  - text: "OpenTelemetry tutorials"
+    url: /how-to/?products=gateway&products=ai-gateway&kong_plugins=opentelemetry
 
 faqs:
   - q: Why am I not getting traces for my request when it results in a cache hit?
@@ -115,7 +121,7 @@ The OpenTelemetry plugin attaches additional resource attributes to all telemetr
 
 The OpenTelemetry plugin automatically sets the following resource attributes:
 
-{% include plugins/otel/resource_attributes.html %}
+{% include plugins/otel/resource_attributes.md %}
 
 You can add or override resource attributes by configuring the [`config.resource_attributes`](./reference/#schema--config-resource-attributes) parameter. Custom resource attributes are merged with the default attributes and are included with all exported telemetry data. Some metric backends, such as Prometheus, apply resource attributes to every metric. Be mindful of the impact on cardinality.
 
@@ -123,11 +129,9 @@ You can add or override resource attributes by configuring the [`config.resource
 
 In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry plugin. You can send metrics using the parameters under [`config.metrics`](./reference/#schema--config-metrics).
 
-### Available metrics
-
-The following metrics are exposed:
-
-{% include plugins/otel/metric_tables.html %}
+* For all available metrics, see the [OpenTelemetry metrics reference](/gateway/otel-metrics/).
+* For AI metrics and required setup prerequisites, see the [Gen AI OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/).
+* For a step-by-step setup using an OpenTelemetry Collector, see [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/).
 
 ### Metrics with {{site.base_gateway}} 3.12 or earlier
 
@@ -328,6 +332,15 @@ for each different header format, as in the following example:
 },
 ```
 
+## Custom attributes by Lua {% new_in 3.14 %}
+
+{% include /plugins/logging/log-custom-fields-by-lua.md
+custom_fields_by_lua='config.access_logs.custom_attributes_by_lua'
+custom_fields_by_lua_slug='config-access-logs-custom-attributes-by-lua'
+custom_fields_by_lua_name='custom_attributes_by_lua'
+name=page.name
+slug=page.slug %}
+
 ## Troubleshooting
 
 The OpenTelemetry spans are printed to the console when the log level is set to `debug` in the {{site.base_gateway}} configuration file.
@@ -350,5 +363,3 @@ Span #6 name=balancer try #1 duration=0.99328ms attributes={"net.peer.ip":"104.2
 - May impact the performance of {{site.base_gateway}}.
   We recommend setting the sampling rate (`tracing_sampling_rate`)
   via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin for tracing.
-- Doesn't support `custom_fields_by_lua`.
-- Doesn't support {{site.ai_gateway}} and MCP metrics and access logs. You can use [Prometheus](/plugins/prometheus/) for metrics, and [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/) for access logs.

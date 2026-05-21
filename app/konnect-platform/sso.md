@@ -119,7 +119,7 @@ rows:
     ui: "Go to the [Authentication Scheme organization settings](https://cloud.konghq.com/global/organization/settings#authentication-scheme)<sup>1</sup>"
     api: "[`/identity-providers`](/api/konnect/identity/#/operations/create-identity-provider)<sup>1</sup>"
   - feature: "Dev Portal"
-    ui: "Go to the Identity settings for your [Dev Portal](https://cloud.konghq.com/portals/)"
+    ui: "Navigate to your [Dev Portal](https://cloud.konghq.com/portals/), click **Settings** in the sidebar, and then click the **Security** tab. Enable **User authentication**."
     api: "[`/portals/{portalId}/identity-providers`](/api/konnect/portal-management/#/operations/create-portal-identity-provider)"
 {% endtable %}
 <!--vale on-->

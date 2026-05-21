@@ -66,40 +66,40 @@ To see the available {{ site.base_gateway }} images, see [kong/kong-gateway](htt
 
 1. Edit or create a `values.yaml` file so that it contains a `gateway.image.tag` entry. Set this value to the version of {{ site.base_gateway }} to be installed.
 
-    ```yaml
-    gateway:
-      image:
-        tag: "{{site.data.gateway_latest.release}}"
-    ```
+   ```yaml
+   gateway:
+     image:
+       tag: "{{site.data.gateway_latest.release}}"
+   ```
 
 1. Run `helm upgrade` with the `--values` flag.
 
-    ```bash
-    helm upgrade -n kong kong kong/ingress --values values.yaml --wait
-    ```
+   ```bash
+   helm upgrade -n kong kong kong/ingress --values values.yaml --wait
+   ```
 
-    The result should look like this:
-    
-    ```bash
-    Release "kong" has been upgraded. Happy Helming!
-    NAME: kong
-    LAST DEPLOYED: Fri Nov  3 15:27:49 2023
-    NAMESPACE: kong
-    STATUS: deployed
-    REVISION: 5
-    TEST SUITE: None
-    ```
+   The result should look like this:
+   
+   ```bash
+   Release "kong" has been upgraded. Happy Helming!
+   NAME: kong
+   LAST DEPLOYED: Fri Nov  3 15:27:49 2023
+   NAMESPACE: kong
+   STATUS: deployed
+   REVISION: 5
+   TEST SUITE: None
+   ```
 
-    Pass `--wait` to `helm upgrade` to ensure that the command only returns when the rollout finishes successfully. 
+   Pass `--wait` to `helm upgrade` to ensure that the command only returns when the rollout finishes successfully. 
 
 1. Verify the upgrade by checking the version of {{ site.base_gateway }} Deployment running in your cluster.
 
-    ```bash
-    kubectl get deploy kong-gateway -n kong -ojsonpath='{.spec.template.spec.containers[0].image}'
-    ```
+   ```bash
+   kubectl get deploy kong-gateway -n kong -ojsonpath='{.spec.template.spec.containers[0].image}'
+   ```
 
-    You should see the new version of {{ site.base_gateway }}:
+   You should see the new version of {{ site.base_gateway }}:
 
-    ```bash
-    kong:{{site.data.gateway_latest.release}}
-    ```
+   ```bash
+   kong:{{site.data.gateway_latest.release}}
+   ```

@@ -75,7 +75,7 @@ module Jekyll
           TAB
         end.join("\n")
 
-        ::Liquid::Template.parse(<<~MARKDOWN).render(context)
+        ::Liquid::Template.parse(<<~MARKDOWN, { line_numbers: true }).render(context)
           {% tabs %}
           #{tab_output}
           {% endtabs %}

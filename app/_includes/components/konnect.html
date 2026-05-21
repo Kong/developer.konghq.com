@@ -1,0 +1,14 @@
+{%- if config.step -%}
+{: data-deployment-topology="konnect" }
+## {{config.title | liquify }}
+
+{{config.content | liquify}}
+{% else %}
+{%- assign indentation = 0 %}{% if config.indent %}{% assign indentation = config.indent %}{% endif -%}
+{%- capture wrapper %}
+<div data-deployment-topology="konnect" markdown="1" class="content">
+{{config.content | liquify }}
+</div>
+{% endcapture -%}
+{{wrapper | indent: indentation}}
+{% endif %}

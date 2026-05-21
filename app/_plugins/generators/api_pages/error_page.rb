@@ -29,6 +29,10 @@ module Jekyll
         }
       end
 
+      def content
+        @content ||= File.read('app/_includes/api_spec/errors.md')
+      end
+
       def url_generator
         @url_generator ||= URLGenerator::Error.new(file:, version:, latest_version:)
       end

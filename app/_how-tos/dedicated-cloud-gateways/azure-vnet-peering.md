@@ -26,6 +26,12 @@ related_resources:
     url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
   - text: Configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution
     url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   show_works_on: false
   inline:
@@ -33,16 +39,11 @@ prereqs:
       include_content: prereqs/products/konnect-account-only
       icon_url: /assets/icons/gateway.svg
     - title: Microsoft Entra
-      content: |
-        To approve the Dedicated Cloud Gateway app, you need a Microsoft Entra admin account with the [Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#application-administrator) role.
-
-        Copy your Entra tenant ID from your dashboard.
+      include_content: prereqs/entra-tenant
+      icon_url: /assets/icons/azure.svg
     - title: Microsoft Azure CLI
-      content: |
-        [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) and authenticate:
-        ```sh
-        az login
-        ```
+      include_content: prereqs/azure-cli
+      icon_url: /assets/icons/azure.svg
     - title: Azure virtual network
       content: |
         To configure VNET peering in {{site.konnect_short_name}}, you'll need a [virtual network configured in Azure](https://learn.microsoft.com/en-us/azure/virtual-network/quickstart-create-virtual-network?tabs=portal). 
@@ -78,7 +79,7 @@ next_steps:
 
 After your VNET peering configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
+1. Click the **Networks** tab.
 1. Scroll until you see `Ready` for VNET peering.

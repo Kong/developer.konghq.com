@@ -33,7 +33,7 @@ const __dirname = path.dirname(__filename);
       }
 
       const commandIndexPath = path.join(commandDir, 'index.md');
-      fs.writeFileSync(commandIndexPath, "```bash\n" + cmdHelp + "\n```", 'utf8');
+      fs.writeFileSync(commandIndexPath, "```ansi\n" + cmdHelp + "\n```", 'utf8');
       console.log(`Wrote help for 'kongctl ${command} --help' to ${command}/index.md`);
 
       // Extract second-level subcommands (e.g. `api` in `kongctl get api`)
@@ -55,7 +55,7 @@ const __dirname = path.dirname(__filename);
           }
 
           const subIndexPath = path.join(nestedDir, 'index.md');
-          fs.writeFileSync(subIndexPath, "```bash\n" + subCmdHelp + "\n```", 'utf8');
+          fs.writeFileSync(subIndexPath, "```ansi\n" + subCmdHelp + "\n```", 'utf8');
           console.log(`Wrote help for 'kongctl ${command} ${subCommand}' to ${command}/${subCommand}/index.md`);
 
           // Write sub-subcommand files
@@ -64,7 +64,7 @@ const __dirname = path.dirname(__filename);
               const { stdout: subSubStdout } = await execAsync(`kongctl ${command} ${subCommand} ${subSubCommand} --help`);
               const subSubHelp = extractCommandSpecificHelp(subSubStdout);
               const subSubFilePath = path.join(nestedDir, `${subSubCommand}.md`);
-              fs.writeFileSync(subSubFilePath, "```bash\n" + subSubHelp + "\n```", 'utf8');
+              fs.writeFileSync(subSubFilePath, "```ansi\n" + subSubHelp + "\n```", 'utf8');
               console.log(`Wrote help for 'kongctl ${command} ${subCommand} ${subSubCommand}'`);
             } catch (err) {
               console.error(`Failed to get help for 'kongctl ${command} ${subCommand} ${subSubCommand}': ${err.message}`);
@@ -73,7 +73,7 @@ const __dirname = path.dirname(__filename);
         } else {
           // No further children: write subcommand.md directly under commandDir
           const subCommandFilePath = path.join(commandDir, `${subCommand}.md`);
-          fs.writeFileSync(subCommandFilePath, "```bash\n" + subCmdHelp + "\n```", 'utf8');
+          fs.writeFileSync(subCommandFilePath, "```ansi\n" + subCmdHelp + "\n```", 'utf8');
           console.log(`Wrote help for 'kongctl ${command} ${subCommand}' to ${command}/${subCommand}.md`);
         }
       }
