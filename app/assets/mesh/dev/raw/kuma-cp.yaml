@@ -966,6 +966,24 @@ kmesh:
         auth:
           # The way how Global Control Plane authenticates the Zone Control Planes. Available values ("none", "cpToken")
           type: none # KMESH_MULTIZONE_GLOBAL_KDS_AUTH_TYPE
+          # CpToken configuration for the "cpToken" auth type. Only used when Type is "cpToken"
+          cpToken:
+            # If false, the Global CP refuses to issue cp-scoped zone tokens via the API.
+            # Set to false when tokens are signed offline with the private key.
+            enableIssuer: true # KMESH_MULTIZONE_GLOBAL_KDS_AUTH_CP_TOKEN_ENABLE_ISSUER
+            # Validator configuration used to verify KDS CP tokens presented by Zone CPs.
+            validator:
+              # If true, Kuma secrets with prefix "zone-token-signing-key" are accepted as signing keys.
+              useSecrets: true # KMESH_MULTIZONE_GLOBAL_KDS_AUTH_CP_TOKEN_VALIDATOR_USE_SECRETS
+              # List of public keys used to validate KDS CP tokens offline. Example:
+              # - kid: 1
+              #   key: |
+              #     -----BEGIN RSA PUBLIC KEY-----
+              #     MIIBCgKCAQEAq....
+              #     -----END RSA PUBLIC KEY-----
+              # - kid: 2
+              #   keyFile: /keys/public.pem
+              publicKeys: []
     zone:
       kds:
         auth:
