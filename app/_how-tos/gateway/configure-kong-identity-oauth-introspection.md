@@ -43,7 +43,7 @@ faqs:
 automated_tests: false
 related_resources:
   - text: "Kong Identity"
-    url: /kong-identity/
+    url: /kong-identity/reference/
   - text: Dynamic claim templating
     url: /kong-identity/#dynamic-claim-templates
   - text: Configure the OIDC plugin with Kong Identity

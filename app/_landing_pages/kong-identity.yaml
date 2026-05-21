@@ -25,7 +25,7 @@ rows:
           - type: button
             config:
               text: "Learn how it works &rarr;"
-              url: "/kong-identity/"
+              url: "/kong-identity/reference/"
       - blocks:
           - type: image
             config:
@@ -85,7 +85,7 @@ rows:
             icon: /assets/icons/security.svg
             ctas:
               - text: Set up an authorization server
-                url: /kong-identity/#configure-kong-identity
+                url: /kong-identity/reference/#configure-kong-identity
                 align: end
       - blocks:
         - type: card
@@ -96,7 +96,7 @@ rows:
             icon: /assets/icons/service-document.svg
             ctas:
               - text: Configure a claim
-                url: /kong-identity/#claim-configuration
+                url: /kong-identity/reference/#claim-configuration
                 align: end
       - blocks:
         - type: card
@@ -107,7 +107,7 @@ rows:
             icon: /assets/icons/data-object.svg
             ctas:
               - text: Use dynamic claim templates
-                url: /kong-identity/#dynamic-claim-templates
+                url: /kong-identity/reference/#dynamic-claim-templates
                 align: end
   - header:
       type: h2

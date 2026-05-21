@@ -50,7 +50,7 @@ related_resources:
   - text: Event Gateway
     url: /event-gateway/
   - text: "Kong Identity"
-    url: /kong-identity/
+    url: /kong-identity/reference/
   - text: Dynamic claim templating
     url: /kong-identity/#dynamic-claim-templates
   - text: Event Gateway ACL policy

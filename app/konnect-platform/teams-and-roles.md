@@ -288,7 +288,7 @@ rows:
 
 #### Auth servers
 
-The following table describes the predefined roles for [Kong Identity](/kong-identity/) authorization servers:
+The following table describes the predefined roles for [Kong Identity](/kong-identity/reference/) authorization servers:
 
 <!--vale off-->
 {% table %}

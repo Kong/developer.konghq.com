@@ -259,3 +259,6 @@
 /mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/
 /mcp/autogenerate-mcp-tools/    /mcp/map-api-to-mcp-tools/
 /mcp/autogenerate-mcp-tools-for-weather-api/    /mcp/map-weather-api-to-mcp-tools/
+
+# Kong Identity
+/kong-identity/  /kong-identity/reference/

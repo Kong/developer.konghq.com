@@ -6,7 +6,7 @@ layout: reference
 products:
     - konnect
 
-permalink: /kong-identity/
+permalink: /kong-identity/reference/
 works_on:
     - konnect
 search_aliases:

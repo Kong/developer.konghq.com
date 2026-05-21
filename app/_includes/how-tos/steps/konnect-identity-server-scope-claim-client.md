@@ -76,7 +76,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You can also configure dynamic custom claims with [dynamic claim templating](/kong-identity/#dynamic-claim-templates) to generate claims during runtime.
+You can also configure dynamic custom claims with [dynamic claim templating](/kong-identity/reference/#dynamic-claim-templates) to generate claims during runtime.
 
 ## Create a client in the auth server
 

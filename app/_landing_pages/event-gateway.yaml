@@ -256,7 +256,7 @@ rows:
                     - outcome: |
                         Replace legacy auth methods with modern enterprise identity standards your team already uses
                       feature: |
-                        [OAuth](/kong-identity/)
+                        [OAuth](/kong-identity/reference/)
                       guide: |
                         [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
                     - outcome: |
