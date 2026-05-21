@@ -38,7 +38,8 @@ module Jekyll
           'min_version' => @page.data['min_version'],
           'tier' => @page.data['tier'],
           'products' => resolve_names(@page.data['products'], 'products'),
-          'tools' => resolve_names(@page.data['tools'], 'tools')
+          'tools' => resolve_names(@page.data['tools'], 'tools'),
+          'beta' => @page.data['beta']
         }
         data['tags'] = @page.data['tags'] if @page.data.fetch('tags', []).any?
         data['canonical'] = @page.data['canonical?'] unless @page.data['canonical?'].nil?
