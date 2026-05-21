@@ -285,5 +285,5 @@ rows:
               a: Contact your account manager for {{site.base_gateway}} 3.4 documentation.
             - q: How many {{site.dev_portal}}s can I create?
               a: |
-                There is a soft limit of four {{site.dev_portal}} per {{site.konnect_short_name}} org.
+                There is a soft limit of four {{site.dev_portal}}s per {{site.konnect_short_name}} org.
                 Reach out to your Kong customer success team to increase this limit.

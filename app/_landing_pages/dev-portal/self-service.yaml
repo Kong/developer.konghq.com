@@ -234,7 +234,7 @@ rows:
                   * Each developer can create a maximum of 500 applications.
                   * Each application can have a maximum of 20 API keys.
                   * Each API that uses the [ACE plugin](/plugins/ace/) can have a maximum of 1,000 operations.
-                  * API Packages have a per request PATCH limit of 100.
+                  * API Packages have a per-request PATCH limit of 100.
                   
   - header:
       type: h2
