@@ -4,7 +4,7 @@ description: "Adopt {{site.konnect_short_name}} resources."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect
@@ -31,6 +31,9 @@ columns:
   - title: Description
     key: description
 rows:
+  - command: |
+      [kongctl adopt konnect analytics](/kongctl/adopt/konnect/analytics/)
+    description: "Adopt {{site.konnect_short_name}} {{site.observability}} resources into namespace management."
   - command: |
       [kongctl adopt konnect api](/kongctl/adopt/konnect/api/)
     description: "Adopt an existing Konnect API into namespace management."

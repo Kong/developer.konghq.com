@@ -4,7 +4,7 @@ description: "Use the virtual-clusters command to list or retrieve virtual clust
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

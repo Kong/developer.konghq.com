@@ -135,7 +135,7 @@ Because Workspaces allow users to control {{site.base_gateway}} entities in isol
 {{site.konnect_short_name}} users will need a [Control Plane Admin role](/konnect-platform/teams-and-roles/#control-planes) on the parent control plane. 
 Workspace-scoped roles will be introduced in a future phase.
 
-The following table details which {{site.base_gateway}} Workspace permissions each Admin role has:
+The following table details which {{site.base_gateway}} Workspace permissions each built-in role has:
 <!-- vale off -->
 {% feature_table %}
 columns:
@@ -161,6 +161,12 @@ features:
 
 {% endfeature_table %}
 <!-- vale on -->
+
+{:.info}
+> **Note:** Creating a Workspace is a global operation that isn't controlled by Workspace-specific permissions. 
+By default, custom roles are scoped to a single Workspace and **cannot** create new Workspaces. 
+To allow a user with a custom role to create Workspaces, use the [Admin API to grant the role permissions](/api/gateway/admin-ee/#/operations/create-rbac-roles-name_or_id-endpoints) with the Workspace set to `*` (all Workspaces).
+
 For more information, see [Roles and permissions](/gateway/entities/rbac/).
 
 

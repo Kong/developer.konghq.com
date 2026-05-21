@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6c6ca05ee13458aa410a1f7c7846a6576b53c575
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6c6ca05ee13458aa410a1f7c7846a6576b53c575'
+  x-oas-source: kong/platform-api@4cb57575eb927152ba8ca06fb771f81686f62d0e
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4cb57575eb927152ba8ca06fb771f81686f62d0e'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -269,6 +269,7 @@ components:
               - gateway_service
               - portal
               - response_source
+              - realm
               - route
               - status_code
               - status_code_grouped
@@ -861,6 +862,7 @@ components:
       items:
         type: string
         enum:
+          - error_rate
           - kong_latency_average
           - kong_latency_p50
           - kong_latency_p95
@@ -1788,6 +1790,7 @@ components:
           - completion_tokens
           - ai_request_count
           - cost
+          - error_rate
           - llm_cache_embeddings_latency_average
           - llm_cache_fetch_latency_average
           - llm_latency_average
@@ -2100,7 +2103,7 @@ components:
           - kong_latency_p50
           - kong_latency_p95
           - kong_latency_p99
-          - mcp_response_body_size_sum
+          - mcp_response_size_sum
           - request_count
           - request_per_minute
           - request_size_average
@@ -2607,6 +2610,10 @@ components:
       discriminator:
         propertyName: field
         mapping:
+          a2a_context_id: '#/components/schemas/MetricsA2aContextIdFilterByField'
+          a2a_error: '#/components/schemas/MetricsA2aErrorFilterByField'
+          a2a_method: '#/components/schemas/MetricsA2aMethodFilterByField'
+          a2a_task_id: '#/components/schemas/MetricsA2aTaskIdFilterByField'
           ai_plugin: '#/components/schemas/MetricsAiPluginFilterByField'
           ai_provider: '#/components/schemas/MetricsAiProviderFilterByField'
           ai_request_model: '#/components/schemas/MetricsAiRequestModelFilterByField'
@@ -2626,6 +2633,10 @@ components:
           llm_cache_status: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
           llm_embeddings_model: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
           llm_embeddings_provider: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+          mcp_error: '#/components/schemas/MetricsMcpErrorFilterByField'
+          mcp_method: '#/components/schemas/MetricsMcpMethodFilterByField'
+          mcp_session_id: '#/components/schemas/MetricsMcpSessionIdFilterByField'
+          mcp_tool_name: '#/components/schemas/MetricsMcpToolNameFilterByField'
           portal: '#/components/schemas/MetricsPortalFilterByField'
           realm: '#/components/schemas/MetricsRealmFilterByField'
           response_source: '#/components/schemas/MetricsResponseSourceFilterByField'
@@ -2635,6 +2646,10 @@ components:
           upstream_status_code: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
           upstream_status_code_grouped: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
       oneOf:
+        - $ref: '#/components/schemas/MetricsA2aContextIdFilterByField'
+        - $ref: '#/components/schemas/MetricsA2aErrorFilterByField'
+        - $ref: '#/components/schemas/MetricsA2aMethodFilterByField'
+        - $ref: '#/components/schemas/MetricsA2aTaskIdFilterByField'
         - $ref: '#/components/schemas/MetricsAiPluginFilterByField'
         - $ref: '#/components/schemas/MetricsAiProviderFilterByField'
         - $ref: '#/components/schemas/MetricsAiRequestModelFilterByField'
@@ -2654,6 +2669,10 @@ components:
         - $ref: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
         - $ref: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
         - $ref: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+        - $ref: '#/components/schemas/MetricsMcpErrorFilterByField'
+        - $ref: '#/components/schemas/MetricsMcpMethodFilterByField'
+        - $ref: '#/components/schemas/MetricsMcpSessionIdFilterByField'
+        - $ref: '#/components/schemas/MetricsMcpToolNameFilterByField'
         - $ref: '#/components/schemas/MetricsPortalFilterByField'
         - $ref: '#/components/schemas/MetricsRealmFilterByField'
         - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'

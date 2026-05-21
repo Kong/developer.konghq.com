@@ -33,6 +33,8 @@ related_resources:
     url: /gateway/upgrade/backup-and-restore/
   - text: "{{site.base_gateway}} CLI reference"
     url: /gateway/cli/reference/
+  - text: "3.10 to 3.14 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-310-314/
   - text: "3.4 to 3.10 LTS upgrade"
     url: /gateway/upgrade/lts-upgrade-34-310/
   - text: "2.8 to 3.4 LTS upgrade"
@@ -87,7 +89,9 @@ The exact execution of these steps will vary depending on your environment.
 
 ### Prerequisites
 
-* Review the [general upgrade guide](/gateway/upgrade/) to prepare for the upgrade and review your options.
+* Review either the [general upgrade guide](/gateway/upgrade/) or one of the LTS upgrade guides 
+([2.8 -> 3.4](/gateway/upgrade/lts-upgrade-28-34/), [3.4 -> 3.10](/gateway/upgrade/lts-upgrade-34-310/), [3.10 -> 3.14](/gateway/upgrade/lts-upgrade-310-314/)) 
+to prepare for the upgrade and review your options.
 * You have a traditional deployment or you need to upgrade the control planes (CPs) in a hybrid mode deployment.
 * You can't perform [dual-cluster upgrades](/gateway/upgrade/dual-cluster/) due to resource limitations.
 
@@ -124,7 +128,11 @@ This will create a period of downtime until the upgrade completes.
 
 1. Start the new cluster Y.
 
-1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/) your entity configuration and sync the converted file to your newly installed version.
+1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, use `deck file convert` 
+to convert your entity configuration and sync the converted file to your newly installed version:
+  * [Convert Gateway entity configuration from 3.10 to 3.14](/gateway/upgrade/convert-lts-310-314/)
+  * [Convert Gateway entity configuration from 3.4 to 3.10](/gateway/upgrade/convert-lts-34-310/)
+  * [Convert Gateway entity configuration from 2.8 to 3.4](/gateway/upgrade/convert-lts-28-34/)
 
 Once this is done, actively monitor all proxy metrics. If you run into any issues, [roll back the upgrade](/gateway/upgrade/backup-and-restore/#restore-gateway-entities). 
 Prioritize the database-level restoration method over the application-level method.

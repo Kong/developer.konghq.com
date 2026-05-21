@@ -19,8 +19,18 @@ tldr:
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
+  - text: Managed cache for Redis
+    url: /dedicated-cloud-gateways/managed-cache/
   - text: Partials
     url: /gateway/entities/partial/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Dedicated Cloud Gateways public network architecture and security
+    url: /dedicated-cloud-gateways/public-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 min_version:
   gateway: '3.13'
 prereqs:
@@ -29,7 +39,11 @@ prereqs:
     - title: "Dedicated Cloud Gateway"
       include_content: prereqs/dedicated-cloud-gateways
       icon_url: /assets/icons/kogo-white.svg
-    
+faqs:
+  - q: |
+      {% include faqs/resize-managed-cache.md section='question' %}
+    a: |
+      {% include faqs/resize-managed-cache.md section='answer' %}
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
@@ -38,6 +52,8 @@ next_steps:
 {% include /gateway/dcgw-cpg-note.md %}
 
 {% include_cached /sections/managed-cache-intro.md %}
+
+{% include /gateway/managed-cache-recommendation-note.md %}
 
 ## Set up an Azure managed cache on a control plane group
 

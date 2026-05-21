@@ -15,17 +15,8 @@ rows:
   - header:
       type: h1
       text: "Load balancing with {{site.base_gateway}}"
-
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Distribute traffic across your upstream services.
-
-
+      sub_text: "Distribute traffic across your upstream services."
+                    
   - columns:
       - blocks:
         - type: card
@@ -65,17 +56,11 @@ rows:
   - header:
       type: h2
       text: "Load balancing algorithms for {{site.base_gateway}}"
+      description: |
+        Advanced load-balancing algorithms are available through the [Upstream](/gateway/entities/upstream/) entity,
+        and they let you load balance traffic across your upstream services using [Targets](/gateway/entities/target/).
+    column_count: 3
     columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Advanced load-balancing algorithms are available through the [Upstream](/gateway/entities/upstream/) entity,
-                    and they let you load balance traffic across your upstream services using [Targets](/gateway/entities/target/).
-
-  - columns:
       - blocks:
         - type: card
           config:
@@ -96,7 +81,6 @@ rows:
             cta:
               text: Consistent-hashing load balancing
               url: /gateway/entities/upstream/#consistent-hashing
-
       - blocks:
         - type: card
           config:
@@ -127,8 +111,6 @@ rows:
             cta:
               text: Lowest-latency load balancing
               url: /gateway/entities/upstream/#latency
-
-
   - header:
       type: h2
       text: "Load balancing algorithms for {{site.ai_gateway}}"

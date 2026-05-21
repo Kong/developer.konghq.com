@@ -17,3 +17,4 @@ condition: >
 tools:
   - konnect-api
   - terraform
+  - kongctl

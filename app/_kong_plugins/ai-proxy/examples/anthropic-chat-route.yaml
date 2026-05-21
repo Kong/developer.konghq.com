@@ -1,6 +1,6 @@
 
 title: 'Chat route with Anthropic'
-description: 'Configure a chat route using Anthropic with the latest Claude 3.5 Sonnet model and version 2023-06-01 of the Anthropic API.'
+description: 'Configure a chat route using Anthropic with the latest Claude Sonnet model and version 2023-06-01 of the Anthropic API.'
 
 show_in_api: true
 weight: 900
@@ -15,7 +15,7 @@ config:
     header_value: ${key}
   model:
     provider: anthropic
-    name: claude-3-5-sonnet-latest
+    name: claude-sonnet-4-6
     options:
       anthropic_version: "2023-06-01"
       max_tokens: 512

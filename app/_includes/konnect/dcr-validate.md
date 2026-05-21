@@ -11,7 +11,7 @@ Now that DCR is configured, you can create an application with Dynamic Client Re
 
 1. After the application is created, it will appear your IdP. From your IdP organization, select **Applications** from the sidebar. You will see the application created in the Dev Portal, along with its corresponding Client ID.
 
-For developers to authorize requests, they must attach the client ID and secret pair obtained previously in the header. They can do this by using any API product, such as [Insomnia](https://insomnia.rest/), or directly using the command line:
+For developers to authorize requests, they must attach the client ID and secret pair obtained previously in the header. They can do this by using any API client, such as [Insomnia](https://insomnia.rest/), or directly using the command line:
 
 {% validation request-check %}
 url: '/$ROUTE_PATH'

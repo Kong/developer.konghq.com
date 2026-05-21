@@ -51,7 +51,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    The interactive API spec renderer lets you develop and refine your API spec in the same environment where you’ll test it.
+                    The interactive API spec renderer lets you develop and refine your API spec in the same environment where you'll test it.
                      
                 - type: text
                   text: |

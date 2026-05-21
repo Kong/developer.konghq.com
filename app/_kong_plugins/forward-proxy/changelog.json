@@ -20,6 +20,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.10": [
+    {
+      "message": "Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where the `upstream_status` field was empty in logs when using the `forward-proxy` plugin.\n",

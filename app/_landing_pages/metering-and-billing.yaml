@@ -316,7 +316,7 @@ rows:
             config:
               title: PayPal
               description: |
-                Accept customer payments using PayPal’s global payment platform.
+                Accept customer payments using PayPal's global payment platform.
               icon: /assets/icons/third-party/paypal.svg
               cta:
                 text: Contact Sales
@@ -327,7 +327,7 @@ rows:
             config:
               title: Adyen
               description: |
-                Process global payments with Adyen’s payment infrastructure.
+                Process global payments with Adyen's payment infrastructure.
               icon: /assets/icons/third-party/adyen.svg
               cta:
                 text: Contact Sales
