@@ -13,7 +13,8 @@ products:
   - gateway
   - ai-gateway
 permalink: /ai-gateway/mcp/map-weather-api-to-mcp-tools/
-
+breadcrumbs:
+  - /ai-gateway/mcp/
 series:
   id: mcp-weather-api
   position: 1

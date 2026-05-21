@@ -18,7 +18,8 @@ products:
   - ai-gateway
 
 permalink: /ai-gateway/mcp/observe-traffic-for-mcp-tools/
-
+breadcrumbs:
+  - /ai-gateway/mcp/
 series:
   id: mcp-conversion
   position: 2

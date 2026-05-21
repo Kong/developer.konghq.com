@@ -18,6 +18,8 @@ products:
   - ai-gateway
 
 permalink: /ai-gateway/mcp/enforce-acls-on-aggregated-mcp-servers/
+breadcrumbs:
+  - /ai-gateway/mcp/
 
 works_on:
   - on-prem

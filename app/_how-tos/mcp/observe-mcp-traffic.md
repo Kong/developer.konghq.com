@@ -12,7 +12,7 @@ related_resources:
     url: /ai-gateway/monitor-ai-llm-metrics/
 permalink: /ai-gateway/mcp/observe-mcp-traffic/
 breadcrumbs:
-  - /mcp/
+  - /ai-gateway/mcp/
 
 series:
     id: mcp-traffic

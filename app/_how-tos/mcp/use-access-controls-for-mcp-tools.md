@@ -15,6 +15,8 @@ products:
   - insomnia
 
 permalink: /ai-gateway/mcp/use-access-controls-for-mcp-tools/
+breadcrumbs:
+  - /ai-gateway/mcp/
 
 series:
   id: mcp-acls
@@ -319,7 +321,7 @@ Now let's verify access for each user by connecting with their API key:
 1. Enter `apikey` in the Key field.
 1. Enter `carol-key` in the Value field.
 1. Click the **Connect** button.
-   
+
    The connection should fail with a `HTTP 403 Forbidden` response.<br/>
    Carol belongs to the **suspended** group, which is globally denied access to all tools.
 1. Click **Disconnect** to switch to another user.

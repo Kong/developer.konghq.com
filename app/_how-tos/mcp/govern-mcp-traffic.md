@@ -13,7 +13,8 @@ related_resources:
 breadcrumbs:
     - /mcp/
 permalink: /ai-gateway/mcp/govern-mcp-traffic/
-
+breadcrumbs:
+  - /ai-gateway/mcp/
 series:
     id: mcp-traffic
     position: 2

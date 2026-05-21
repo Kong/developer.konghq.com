@@ -10,7 +10,7 @@ related_resources:
     url: /plugins/key-auth/
 permalink: /ai-gateway/mcp/secure-mcp-traffic/
 breadcrumbs:
-  - /mcp/
+  - /ai-gateway/mcp/
 
 description: Learn how to secure MCP traffic within GitHub remote MCP server with the Key Authentication plugin
 

@@ -16,7 +16,8 @@ products:
   - insomnia
 
 permalink: /ai-gateway/mcp/observe-mcp-traffic-with-acls/
-
+breadcrumbs:
+  - /ai-gateway/mcp/
 series:
   id: mcp-acls
   position: 2

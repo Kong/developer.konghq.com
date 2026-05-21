@@ -3,7 +3,7 @@ title: Secure MCP tools with OAuth2 and Okta
 content_type: how_to
 permalink: /ai-gateway/mcp/secure-mcp-tools-with-oauth2-and-okta/
 breadcrumbs:
-  - /mcp/
+  - /ai-gateway/mcp/
 
 description: Use the AI MCP OAuth2 plugin with Okta to protect MCP tools exposed through the AI MCP Proxy plugin
 

@@ -9,7 +9,7 @@ description: |
     Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools for AI clients, and observe MCP traffic in real time.
 breadcrumbs:
  - /ai-gateway/
- - /mcp/
+ - /ai-gateway/mcp/
 products:
     - gateway
     - ai-gateway
