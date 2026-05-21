@@ -212,7 +212,8 @@ resource "konnect_api_implementation" "my_api_implementation" {
   depends_on = [
     konnect_api.my_api,
     konnect_api_version.my_api_spec,
-    konnect_gateway_control_plane.my_cp
+    konnect_gateway_control_plane.my_cp,
+    konnect_gateway_plugin_ace.my_ace
   ]
 }
 ' >> main.tf
@@ -237,10 +238,6 @@ resource "konnect_gateway_plugin_ace" "my_ace" {
   }
   tags = []
   control_plane_id = konnect_gateway_control_plane.my_cp.id
-
-  depends_on = [
-    konnect_api_implementation.my_api_implementation
-  ]
 }
 ' >> main.tf
 ```
