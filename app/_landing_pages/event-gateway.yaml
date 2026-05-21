@@ -417,6 +417,22 @@ rows:
       - blocks:
         - type: card
           config:
+            title: "Metrics and headers"
+            description: |
+              Reference for the metrics and headers added or exposed by {{site.event_gateway}}
+            icon: /assets/icons/document-list.svg
+            ctas:
+              - text: Metrics reference
+                url: /event-gateway/metrics/
+                align: end
+              - text: Headers reference
+                url: /event-gateway/headers/
+                align: end
+
+
+      - blocks:
+        - type: card
+          config:
             title: "{{site.event_gateway}} changelog"
             description: |
               Changelog for supported {{site.event_gateway}} versions.
