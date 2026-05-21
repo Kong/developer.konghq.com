@@ -34,16 +34,16 @@ rows:
               alt_text: Image of the {{site.konnect_short_name}} dashboard
   - header:
       type: h2
-      text: "Features"
+      text: "Secure your APIs"
       description: |
-        Set up and manage API access with Kong Identity features:
+        Set up and manage API access with Kong Identity
     columns:
       - blocks:
         - type: card
           config:
-            title: "Authorization servers"
+            title: "Issue access tokens"
             description: |
-              Set up an authorization server that issues tokens to authenticate a client with Kong Gateway.
+              Use Kong Identity as the auth server. Issue and verify OAuth 2.0 / OIDC tokens without standing up a separate identity provider.
             icon: /assets/icons/security.svg
             ctas:
               - text: Set up an authorization server
@@ -52,83 +52,64 @@ rows:
       - blocks:
         - type: card
           config:
-            title: "Claims"
+            title: ""
             description: |
-              Include in each token optional pieces of metadata (user roles or environment tags) to forward them to upstream services
+              
             icon: /assets/icons/service-document.svg
             ctas:
-              - text: Configure a claim
-                url: /kong-identity/reference/#claim-configuration
+              - text: 
+                url: 
                 align: end
       - blocks:
         - type: card
           config:
-            title: "Dynamic claim templates"
+            title: ""
             description: |
-              Define custom JWT claims whose value uses contextual data and specified functions. 
+              
             icon: /assets/icons/data-object.svg
             ctas:
-              - text: Use dynamic claim templates
-                url: /kong-identity/reference/#dynamic-claim-templates
-                align: end  
+              - text: 
+                url: 
+                align: end
   - header:
       type: h2
-      text: "Use cases for Kong Identity"
+      text: "Secure your event streams"
+      description: |
+        Authenticate Kafka clients connecting to your Event Gateway
     columns:
       - blocks:
-        - type: use_case_table
+        - type: card
           config:
-            usecase_title: |
-              Authenticate traffic
-
-            columns:
-              - title: |
-                  Setup examples
-
-                key: setup
-              - title: |
-                  Feature
-                
-                  _(Use this)_
-
-                key: feature
-            rows:
-              - usecase: |
-                  **... to an event Gateway**
-                outcomes:
-                  - setup: |
-                      Use OAuth with Kong Identity as the Auth Server
-                    feature: 
-                  - setup: |
-                      Use OAuth with Kong Identity using a 3rd party Auth
-                    feature: 
-                  - setup: |
-                      Authenticate principals using SASL/PLAIN usernames and passwords
-                    feature:
-                  - setup: |
-                      Authenticate principals using client certificates
-                    feature:
-              - usecase: |
-                  **...to an API Gateway**
-                outcomes:
-                  - setup: |
-                      Authenticate requests using api keys
-                    feature:
-                  - setup: |
-                      Authenticate requests using basic auth
-                    feature:
-                  - setup: |
-                      Authenticate using OAuth with Kong Identity as the Auth Server
-                    feature:
-                  - setup: |
-                      Authenticate using OAuth with Kong Identity using a 3rd party Auth Server
-                    feature:
-                  - setup: |
-                      Configure conditional plugin execution based on principals
-                    feature:
-                  - setup: |
-                      Migrate from consumers to principals
-                    feature:
+            title: ""
+            description: |
+              
+            icon: /assets/icons/security.svg
+            ctas:
+              - text: 
+                url: 
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: ""
+            description: |
+              
+            icon: /assets/icons/service-document.svg
+            ctas:
+              - text: 
+                url: 
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: ""
+            description: |
+               
+            icon: 
+            ctas:
+              - text: 
+                url: 
+                align: end                  
   - header:
       type: h2
       text: "Plugins"
