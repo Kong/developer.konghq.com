@@ -5,16 +5,16 @@ export default async (request: Request, context: Context) => {
   const url = new URL(request.url);
   const { pathname } = url;
 
-  let response: URL | undefined;
-
+  let nextRequest: Request = request;
   if (acceptHeader.includes("text/markdown") && !pathname.endsWith(".md")) {
-    if (pathname === "/") {
-      url.pathname = "/index.md";
-    } else {
-      url.pathname = pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
-    }
-    response = url;
+    url.pathname =
+      pathname === "/"
+        ? "/index.md"
+        : pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
+    nextRequest = new Request(url, request);
   }
+
+  const response = await context.next(nextRequest);
 
   const apiKey = Netlify.env.get("PROFOUND_API_KEY");
   const loggingEnabled = Netlify.env.get("LOG_TO_PROFOUND") === "true";
@@ -37,7 +37,7 @@ export default async (request: Request, context: Context) => {
           method: request.method,
           host: request.headers.get("host"),
           path: pathname,
-          status_code: 200, // hardcoded, we don't want to add extra overhead
+          status_code: response.status,
           ip: context.ip,
           user_agent: request.headers.get("user-agent"),
           query_params: params,
