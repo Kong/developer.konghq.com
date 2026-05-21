@@ -176,16 +176,8 @@ helm upgrade \
 
 ## Validate the rollout
 
-1. Check that the sidecar stats endpoint is reachable:
+Inspect stats and confirm that cluster names include the `kri_msvc_` prefix and your mesh resource names:
 
-   ```sh
-   curl -i -X GET localhost:9901/stats
-   ```
-
-   The response returns a `200` status code.
-
-1. Confirm that cluster names include the `kri_msvc_` prefix and your mesh resource names:
-
-   ```sh
-   curl -s localhost:9901/stats | grep -i 'kri_msvc_'
-   ```
+```sh
+curl -s localhost:9901/stats | grep -i 'kri_msvc_'
+```
