@@ -574,7 +574,7 @@
   }
 
   .tab-button__horizontal {
-    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0;
+    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0 gap-1;
 
     &.tab-button__horizontal--active {
       @apply tab-button--active border-b-2 pb-[10px] !important;
@@ -806,7 +806,7 @@
   }
 
   .dropdown-menu {
-    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2;
+    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2 z-10;
 
     ul {
       @apply list-none ml-0;
@@ -848,6 +848,28 @@
       @apply border-semantic-green-primary;
     }
   }
+
+  #skills-grid {
+    .custom-code-block, .highlight {
+      pre {
+        @apply overflow-hidden text-ellipsis;
+      }
+    }
+  }
+
+  .skill #description ~ .content {
+    @apply bg-code-block rounded-md p-4;
+  }
+
+
+  .skill .heading-section h2 {
+    @apply border-b border-primary/5 pb-2;
+  }
+
+  .skill table {
+    @apply block overflow-x-auto;
+  }
+
 
  .custom-code-block.collapsible {
     [data-code-snippet] {
@@ -1011,7 +1033,6 @@
 .card:target {
   @apply border-brand-saturated border-2;
 }
-
 
 /* Spec Renderer */
 .call-button {
