@@ -114,6 +114,12 @@
     {% if site.ENABLE_KAPA_AI %}
     {% if jekyll.environment == 'production' or jekyll.environment == 'preview' %}
     <script>
+        // Force shadow roots open so we can inject theme overrides into kapa's widget
+        var _attachShadow = Element.prototype.attachShadow;
+        Element.prototype.attachShadow = function (init) {
+          return _attachShadow.call(this, Object.assign({}, init, { mode: 'open' }));
+        };
+
       (function () {
         let k = window.Kapa;
         if (!k) {
@@ -124,7 +130,26 @@
         }
       })();
       window.Kapa("onModalOpen", function () {
+        Element.prototype.attachShadow = _attachShadow;
         document.body.classList.add("ai-assistant-open");
+        var host = document.getElementById("kapa-widget-container");
+        if (host && host.shadowRoot && !host.shadowRoot.getElementById("kong-kapa-overrides")) {
+          var style = document.createElement("style");
+          style.id = "kong-kapa-overrides";
+          style.textContent = `
+            code.mantine-Code-root {
+              color: rgb(var(--color-text-primary));
+              border: 1px solid rgb(var(--color-brand-saturated), 0.4);
+            }
+            #kapa-widget-root[data-mantine-color-scheme="light"] {
+              --mantine-color-default-border: rgb(var(--color-border-primary), 0.05);
+              --mantine-color-body: rgb(var(--color-bg-secondary));
+              --mantine-color-gray-3: rgb(var(--color-border-primary), 0.05);
+              --mantine-color-default-hover: rgb(var(--color-bg-hover-component));
+            }
+          `;
+          host.shadowRoot.appendChild(style);
+        }
       });
       window.Kapa("onModalClose", function () {
         document.body.classList.remove("ai-assistant-open");
