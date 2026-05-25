@@ -113,6 +113,10 @@
     --color-api-products-background: var(--color-semantic-orange-secondary);
     --color-metering-and-billing-brand: var(--color-semantic-orange-primary);
     --color-metering-and-billing-background: var(--color-semantic-orange-secondary);
+
+    /* Kapa */
+    --code-bg: rgb(var(--color-bg-secondary));
+    --mantine-color-body: rgb(var(--color-bg-secondary));
   }
 
   .dark {
