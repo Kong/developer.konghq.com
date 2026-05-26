@@ -9,7 +9,7 @@ products:
 works_on:
   - konnect
 
-description: An MCP Registry is a centralized publishing and discovery endpoint for MCP servers within your organization. Learn how to register your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}} and publish them in [{{site.dev_portal}}](/dev-portal/).
+description: An MCP Registry is a centralized publishing and discovery endpoint for MCP servers within your organization. Learn how to register your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}} and publish them in {{site.dev_portal}}.
 
 breadcrumbs:
   - /catalog/
@@ -82,7 +82,7 @@ An MCP server represents an agent-facing service definition. It describes:
 * How agents can connect to it
 
 You can publish the MCP server to {{site.konnect_catalog}} for internal {{site.konnect_short_name}} users and agents to consume.
-Additionally, you can publish the MCP server to a {{site.dev_portal}} if you want partners, internal developers without access to {{site.konnect_catalog}}, or external agents and developers to consume it.
+Additionally, you can publish the MCP server to a [{{site.dev_portal}}](/dev-portal/) if you want partners, internal developers without access to {{site.konnect_catalog}}, or external agents and developers to consume it.
 
 To add an MCP server to {{site.konnect_catalog}}, send a POST request to the `/mcp-registries/{registryIdentifier}/v0.1/publish` endpoint:
 
@@ -139,6 +139,29 @@ curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/$REGISTRY_NAME/p
 > You can select `public` or `private` for `visibility`. Private is only available if you've [configured authentication](/dev-portal/security-settings/#user-authentication) for your {{site.dev_portal}}.
 {% endnavtab %}
 {% endnavtabs %}
+
+Published MCP registries and servers will only display on your {{site.dev_portal}} if you add the MDC component to an existing or new page in your Portal Editor. 
+
+To list MCP registries, add the following to your page:
+```
+::mcp-registries-list
+---
+
+---
+::
+```
+
+To list MCP servers, add the following to your page:
+```
+::mcp-servers-list
+---
+registry-name: "developer-tools"
+---
+::
+```
+
+`mcp-servers-list` can be useful if you only have one registry with multiple servers. 
+`registry-name` must exactly match the name of your MCP registry.
 
 ## Packages and remotes
 
