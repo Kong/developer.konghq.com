@@ -286,7 +286,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-#### Auth servers
+#### Auth servers and directories
 
 The following table describes the predefined roles for [Kong Identity](/kong-identity/) authorization servers:
 
@@ -303,11 +303,20 @@ rows:
   - role: "`Admin`"
     description: Access to all read and write permissions related to an Authorization Server.
     permissions: |
-      * Create, edit, delete, read, and list auth servers.
+      * Create, edit, delete, read, and list **auth servers**.
+      * Create, edit, read, delete, and assign **directories**.
   - role: "`Viewer`"
     description: Access to all read permissions related to an Authorization Server.
     permissions: |
-      * Read and list auth servers.
+      * Read and list **auth servers**.
+      * Read and list assigned **directories**.
+      * Read and list any **Principal** in assigned directories.
+  - role: "`Principal Maintainer`"
+    description: Access to all read and write permissions related to directories.
+    permissions: |
+      * Read and list assigned **directories**.
+      * Create, read, list edit, delete any **Principal** in assigned directories.
+      * Create the default directory.
 {% endtable %}
 
 #### APIs
