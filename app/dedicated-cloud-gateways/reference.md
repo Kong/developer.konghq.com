@@ -406,6 +406,7 @@ config:
   - name: tracing_instrumentations
   - name: router_flavor
   - name: tracing_sampling_rate
+  - name: untrusted_lua
   - name: untrusted_lua_sandbox_requires
   - name: allow_debug_header
   - name: header_upstream
