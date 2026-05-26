@@ -26,6 +26,10 @@ related_resources:
     url: /mesh/cli/
   - text: Data plane health
     url: /mesh/dataplane-health/
+  - text: Deploy an OpenTelemetry collector
+    url: /mesh/deploy-an-opentelemetry-collector/
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/meshopentelemetrybackend/
 ---
 
 This page describes how to configure different observability tools to work with {{site.mesh_product_name}}.
@@ -236,7 +240,7 @@ spec:
       targetPort: 8126
 ```
 
-Check that the label of the installed Datadog pod hasn't changed (`app.kubernetes.io/name: datadog-agent-deployment`).
+Check that the label of the installed Datadog Pod hasn't changed (`app.kubernetes.io/name: datadog-agent-deployment`).
 If it changed, adjust accordingly.
 
 Once the agent is configured to ingest traces, you must configure a [MeshTrace policy](/mesh/policies/meshtrace).
@@ -246,6 +250,37 @@ Once the agent is configured to ingest traces, you must configure a [MeshTrace p
 The best way to have {{site.mesh_product_name}} and Datadog work together is with [TCP ingest](https://docs.datadoghq.com/agent/logs/?tab=tcpudp#custom-log-collection).
 
 Once your agent is configured with TCP ingest, you can configure a [`MeshAccessLog` policy](/mesh/policies/meshaccesslog) for data plane proxies to send logs.
+
+## OpenTelemetry collector
+
+You can run an [OpenTelemetry collector](https://opentelemetry.io/docs/collector/) to receive metrics, traces, and access logs from {{site.mesh_product_name}} sidecars and forward them to one or more backends. For step-by-step setup, see [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/).
+
+### How {{site.mesh_product_name}} talks to the collector
+
+Sidecars push telemetry to the collector over OTLP gRPC on port 4317. The collector receives the telemetry, batches it, and exports it to whatever backends you configure.
+
+{{site.mesh_product_name}} uses a push model: each sidecar opens an outbound connection to one collector Pod and writes its own telemetry. In a pull model, by contrast, a collector scrapes Prometheus endpoints from every workload it can reach.
+
+The distinction matters when you pick a topology. A [CNCF post](https://www.cncf.io/blog/2025/12/16/how-to-build-a-cost-effective-observability-platform-with-opentelemetry/) warns about 20-40x metric explosion when DaemonSet collectors all scrape the same Prometheus targets which is a problem specific to the pull model. Because {{site.mesh_product_name}} pushes, each metric reaches one collector instance regardless of how many collector Pods exist.
+
+### Topologies
+
+Two patterns work for the OTLP receiver.
+
+#### Deployment + ClusterIP service
+
+Run two or three collector replicas behind a `ClusterIP` service. Sidecars resolve `otel-collector.observability:4317` to the Service IP, and kube-proxy load-balances each connection to a collector Pod.
+
+We recommend this topology because it's simple, the failure domain is the whole replica set, and a rolling update of the collector doesn't drop telemetry from any specific node. Use a Deployment for small and medium clusters, or any cluster where collector throughput isn't a bottleneck.
+
+#### Per-node DaemonSet
+
+Run one collector Pod per node and route traffic node-locally. With `internalTrafficPolicy: Local` on the service, kube-proxy on each node only forwards to the collector Pod on that same node. Sidecars still resolve the same DNS name (`otel-collector.observability:4317`), but the hop never leaves the node.
+
+Pick a DaemonSet for large clusters or workloads where the extra network hop matters. A DaemonSet improves locality, distributes load across nodes, and isolates collector failure to a single node's telemetry.
+
+{:.warning}
+> The trade-off is silent loss. If the collector Pod on a node crashes or is restarting, sidecars on that node have no fallback and drop their telemetry until the Pod is ready. The `Local` traffic policy does not fail over to other nodes.
 
 ## Observability in multi-zone
 

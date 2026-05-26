@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@15ead7ce7e5d258d6d6af501a5426d562f28e03c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/15ead7ce7e5d258d6d6af501a5426d562f28e03c'
+  x-oas-source: kong/platform-api@3c4f413f637524c5676b4019082ded212abe473d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3c4f413f637524c5676b4019082ded212abe473d'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -3632,12 +3632,12 @@ components:
                   - Control Planes
                   - Dashboards
                   - DCR Providers
-                  - Identity
                   - Mesh Control Planes
                   - Networks
                   - Portals
                   - Reports
                   - Service Hub
+                  - Auth Servers
               entity_region:
                 description: Region of the team.
                 type: string
