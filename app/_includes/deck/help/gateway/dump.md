@@ -19,7 +19,7 @@ Flags:
       --skip-consumers                        skip exporting consumers, consumer-groups and any plugins associated with them.
       --skip-consumers-with-consumer-groups   do not show the association between consumer and consumer-group.
                                               If set to true, deck skips listing consumers with consumer-groups,
-                                              thus gaining some performance with large configs. This flag is not valid with Konnect.
+                                              thus gaining some performance with large configs.
       --skip-defaults                         skip exporting default values.
       --with-id                               write ID of all entities in the output
   -w, --workspace string                      dump configuration of a specific Workspace(Kong Enterprise only).

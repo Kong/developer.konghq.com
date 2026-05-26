@@ -68,7 +68,7 @@ rows:
             config:
               title: Custom Dashboards
               description: |
-                Custom Dashboards provide a flexible way to build, organize, and manage analytical views that are tailored to your organization’s needs.
+                Custom Dashboards provide a flexible way to build, organize, and manage analytical views that are tailored to your organization's needs.
               icon: /assets/icons/bars.svg
               cta:
                 text: See Custom Dashboards

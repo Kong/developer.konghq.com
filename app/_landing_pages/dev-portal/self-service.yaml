@@ -220,12 +220,26 @@ rows:
                   
                   For more information about how to configure Dev Portal developer teams, see [Dev Portal RBAC](/dev-portal/developer-rbac/). 
                   For more information about the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/#2-create-an-application).
-
+  - header:
+      type: h3
+      text: "Limitations"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  Keep the following limitations in mind for developers and applications:
+                  * Each developer can create a maximum of 500 applications.
+                  * Each application can have a maximum of 20 API keys.
+                  * Each API that uses the [ACE plugin](/plugins/ace/) can have a maximum of 1,000 operations.
+                  * API Packages have a per-request PATCH limit of 100.
+                  
   - header:
       type: h2
       text: "Learn more"
-
-  - columns:
+    columns:
       - blocks:
           - type: card
             config:
@@ -250,3 +264,15 @@ rows:
                 Learn about supported DCR identity providers and supported DCR authentication methods. 
               cta:
                 url: /dev-portal/dynamic-client-registration/
+  
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: |
+                {% include faqs/api-app-reg-override.md section='question' %}
+              a: |
+                {% include faqs/api-app-reg-override.md section='answer' %}

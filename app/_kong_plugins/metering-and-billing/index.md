@@ -55,8 +55,7 @@ The plugin supports flexible customer identification, custom pricing dimensions,
 
 If you're using {{site.base_gateway}} on-prem and want to meter traffic, you must use the Metering & Billing plugin. 
 
-For {{site.konnect_short_name}}, you can either use the [built-in {{site.metering_and_billing}}](/metering-and-billing/) event ingestion that uses events from Advanced Analytics or use the Metering & Billing plugin.
-{% include /plugins/metering-and-billing/konnect-use-case-table.md %}
+{% include /plugins/metering-and-billing/legacy-ingestion-warning.md %}
 
 ## How it works
 
@@ -68,7 +67,9 @@ For each request, the plugin:
 1. Resolves the subject (the customer identity that gets billed) from the configured source (a Consumer, application, or request header).
 2. Captures standard {{site.base_gateway}} metadata on the event, including Route, Service, and response status.
 3. Attaches any configured custom attributes from request headers or query parameters, such as department, project, or priority tier.
-4. Buffers the event locally and delivers it in batches to the configured ingest endpoint ({{site.konnect_short_name}} {{site.metering_and_billing}} or OpenMeter self-hosted), with automatic retries on failure.
+4. Buffers the event locally and delivers it in batches to the configured ingest endpoint, with automatic retries on failure:
+   * [{{site.konnect_short_name}} {{site.metering_and_billing}} ingest endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events): `https://us.api.konghq.com/v3/openmeter/events`
+   * [OpenMeter self-hosted ingest endpoint](https://openmeter.io/docs/api/v3#tag/metering-events/POST/openmeter/events): `https://127.0.0.1/api/v3/openmeter/events`
 
 ### Events and subjects
 

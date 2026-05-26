@@ -34,7 +34,7 @@ async function validateFrontmatters() {
         "app/mesh/latest_version.md",
       ],
       cwd: "../../",
-    }
+    },
   );
 
   const errors = [];

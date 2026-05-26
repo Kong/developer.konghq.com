@@ -172,11 +172,7 @@ Otherwise the field will be regenerated automatically with every update.
 
 ### Fallback from Redis
 
-When the `redis` strategy is used and a {{site.base_gateway}} node is disconnected from Redis, the `rate-limiting-advanced` plugin will fall back to `local`.
-This can happen when the Redis server is down or the connection to Redis broken.
-{{site.base_gateway}} keeps the local counters for rate limiting and syncs with Redis once the connection is re-established.
-{{site.base_gateway}} will still rate limit, but the {{site.base_gateway}} nodes can't sync the counters. As a result, users will be able
-to perform more requests than the limit, but there will still be a limit per node.
+{% include /ai-gateway/redis-fallback.md %}
 
 ## Limit by IP address
 

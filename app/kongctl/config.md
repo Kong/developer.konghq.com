@@ -2,7 +2,7 @@
 title: Configuration of kongctl
 description: Learn how to configure kongctl using configuration files, environment variables, and command-line flags.
 
-beta: true
+
 
 content_type: reference
 layout: reference
@@ -20,13 +20,9 @@ breadcrumbs:
   - /kongctl/
 
 related_resources:
-  - text: kongctl authentication reference 
+  - text: kongctl authentication reference
     url: /kongctl/authentication/
-  - text: kongctl declarative configuration reference 
-    url: /kongctl/declarative/
-  - text: kongctl authorization options
-    url: /kongctl/authentication/
-  - text: Managing {{site.konnect_short_name}} resources declaratively
+  - text: kongctl declarative configuration reference
     url: /kongctl/declarative/
   - text: kongctl troubleshooting guide
     url: /kongctl/troubleshooting/
@@ -81,7 +77,7 @@ export KONGCTL_PROFILE=production
 # Uses the production profile 
 kongctl get apis
 # Also uses the production profile 
-kongcll apply -f config.yaml
+kongctl apply -f config.yaml
 ```
 
 ## Configuration values  
@@ -127,11 +123,11 @@ KONGCTL_DEFAULT_KONNECT_REGION=eu
 
 ## Configuration file
 
-By default kongctl reads configurations from a file located at 
+By default, kongctl reads configurations from a file located at
 `$XDG_CONFIG_HOME/kongctl/config.yaml` and falls back to 
 `~/.config/kongctl/config.yaml` if `XDG_CONFIG_HOME` is not set.
 
-You can specify a different configuration file via the `--config-file flag`:
+You can specify a different configuration file via the `--config-file` flag:
 
 ```bash
 --config-file string   Path to the configuration file to load.

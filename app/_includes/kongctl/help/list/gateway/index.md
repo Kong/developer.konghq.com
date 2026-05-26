@@ -1,5 +1,6 @@
 ```ansi
 Usage:
+  kongctl list gateway [flags]
   kongctl list gateway [command]
 
 Aliases:
@@ -9,17 +10,14 @@ Examples:
   # List all control planes
   kongctl list gateway control-planes
   # List services in a control plane
-  kongctl list gateway services --control-plane <id|name>
+  kongctl list gateway control-plane services --control-plane-name <name>
   # List routes in a control plane
-  kongctl list gateway routes --control-plane <id|name>
+  kongctl list gateway control-plane routes --control-plane-name <name>
   # List consumers in a control plane
-  kongctl list gateway consumers --control-plane <id|name>
+  kongctl list gateway control-plane consumers --control-plane-name <name>
 
 Available Commands:
-  consumer      List or get Konnect Kong Gateway Consumers
   control-plane List or get Konnect Kong Gateway control planes
-  route         List or get Konnect Kong Gateway Routes
-  service       List or get Konnect Kong Gateway Services
 
 
 Flags:
@@ -28,8 +26,8 @@ Flags:
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
+                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
+                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for gateway
@@ -48,6 +46,10 @@ Flags:
       --log-level string        Configures the logging level. Execution logs are written to STDERR.
                                 - Config path: [ log-level ]
                                 - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
+                                - Config path: [ telemetry.enabled ]
+                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")

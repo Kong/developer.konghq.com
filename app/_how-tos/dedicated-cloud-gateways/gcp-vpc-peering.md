@@ -22,6 +22,12 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Set up a GCP private DNS
     url: /dedicated-cloud-gateways/gcp-private-dns/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   skip_product: true
   inline:

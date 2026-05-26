@@ -48,7 +48,11 @@ prereqs:
 
 {% konnect %}
 content: |
-  First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gateway parameters. Set `spec.konnect.authRef.name` to the name of the `KonnectAPIAuthConfiguration` resource we created in the [prerequisites](#create-a-konnectapiauthconfiguration-resource) and specify your data plane configuration:
+  First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gateway parameters. Set `spec.konnect.authRef.name` to the name of the `KonnectAPIAuthConfiguration` resource we created in the [prerequisites](#create-a-konnectapiauthconfiguration-resource) and specify your data plane configuration.
+
+  ### New control plane
+
+  To create a new control plane managed with Kubernetes, use the following command:
 
   ```bash
   echo '
@@ -69,6 +73,40 @@ content: |
             - name: proxy
               image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
+
+  ### Existing {{site.konnect_short_name}} control plane
+
+  To use a control plane previously created in {{site.konnect_short_name}}, export the control plane ID:
+
+  ```bash
+  export KONNECT_CONTROL_PLANE_ID="YOUR KONNECT CONTROL PLANE ID"
+  ```
+
+  Run the following command:
+  ```bash
+  echo '
+  kind: GatewayConfiguration
+  apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
+  metadata:
+    name: kong-configuration
+    namespace: kong
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+      source: Mirror
+      mirror:
+        konnect:
+          id: "'$KONNECT_CONTROL_PLANE_ID'"
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+            - name: proxy
+              image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
+  ```
+
 {% endkonnect %}
 
 {% on_prem %}
@@ -152,4 +190,24 @@ kind: Gateway
 name: kong
 namespace: kong
 {% endvalidation %}
+
+
+### Troubleshooting `DependenciesNotReady`
+
+If your `Gateway` or `DataPlane` resources are partially initialized, you will get an error like the following:
+<!--vale off-->
+```json
+{
+  "lastTransitionTime": "2026-04-24T19:25:47Z",
+  "message": "There are other conditions that are not yet ready",
+  "observedGeneration": 1,
+  "reason": "DependenciesNotReady",
+  "status": "False",
+  "type": "Programmed"
+}
+```
+{:.no-copy-code} 
+<!--vale on-->
+
+Wait for a few minutes to allow the dependencies to be provisioned before trying again.
 

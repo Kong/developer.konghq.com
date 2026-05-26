@@ -1,18 +1,24 @@
 {% if include.cta_url and include.ctas %}
 {% raise "cta and ctas can not be provided at the same time" %}
 {% endif %}
+{% assign card_title_tag = include.title_tag | default: "h4" %}
 
 {% capture card_content %}
+{% if include.before_title %}{{ include.before_title }}{% endif %}
 {% if include.icon %}
 <img src="{{ include.icon }}" class="h-8 w-auto self-start"/>
 {% endif %}
-
-<h4>{{ include.title | liquify }}</h4>
-
+{% if include.title %}<{{ card_title_tag }}>{{ include.title | liquify }}</{{ card_title_tag }}>{% endif %}
+{% if include.description %}
 <div class="flex flex-col flex-grow text-sm gap-3">
     {{ include.description | liquify | markdownify }}
 </div>
-
+{% endif %}
+{% if include.body %}
+<div class="flex flex-col flex-grow text-sm gap-3">
+    {{ include.body }}
+</div>
+{% endif %}
 {% if include.cta_text %}
 <div class="flex text-sm text-brand">
 {{ include.cta_text | liquify }} &rarr;
@@ -44,7 +50,7 @@
             {{ card_content }}
         </a>
     {% else %}
-        <div class="flex flex-col gap-5 p-6">
+        <div class="flex flex-col gap-5 p-6 w-full h-full">
             {{ card_content }}
         </div>
     {% endif %}

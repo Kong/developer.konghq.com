@@ -51,15 +51,15 @@ related_resources:
 prereqs:
   entities:
     services:
-      - a2a-currency-agent
+      - a2a-kongair-agent
     routes:
-      - a2a-route
+      - a2a-kongair-route
   inline:
   - title: OpenAI API key
     include_content: prereqs/openai
     icon_url: /assets/icons/openai.svg
   - title: A2A agent
-    include_content: prereqs/a2a-agent
+    include_content: prereqs/a2a-kongair-agent
     icon_url: /assets/icons/ai.svg
 
 cleanup:
@@ -100,15 +100,6 @@ entities:
           log_payloads: true
 {% endentity_examples %}
 
-## Enable the Key Auth plugin
-
-The [Key Auth plugin](/plugins/key-auth/) identifies callers and associates them with a Kong consumer. Rate Limiting Advanced uses this consumer identity to apply per-consumer limits.
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: key-auth
-{% endentity_examples %}
 
 ## Enable the Rate Limiting Advanced plugin
 
@@ -124,7 +115,7 @@ entities:
         window_size:
           - 30
         sync_rate: -1
-        namespace: a2a-currency-agent
+        namespace: a2a-kongair-agent
         strategy: local
 {% endentity_examples %}
 
@@ -139,6 +130,7 @@ Send an authenticated request to the agent card endpoint and inspect the respons
 <!-- vale off -->
 {% validation request-check %}
 url: /a2a/.well-known/agent-card.json
+display_headers: true
 status_code: 200
 method: GET
 headers:

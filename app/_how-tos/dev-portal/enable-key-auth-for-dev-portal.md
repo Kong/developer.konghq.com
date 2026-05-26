@@ -77,8 +77,8 @@ faqs:
   - q: Can I configure an expiration policy for a key auth key?
     a: |
         Yes. To configure expiration for a key, do the following:
-        1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
-        1. In the Dev Portal sidebar, click **Application Auth**.
+        1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+        1. Click **Application Auth**.
         1. Click **New authentication strategy**.
         1. In the **Name** field, enter a name for internal use.
         1. In the **Display name** field, enter a name for external use that is visible to developers.

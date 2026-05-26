@@ -63,7 +63,7 @@ cleanup:
 
 ## Configure the plugin
 
-Set up the AI Proxy Advanced plugin to route chat requests to Ollama’s Qwen 3 model by configuring the model options, including the `upstream_url` pointing to your local Ollama instance:
+Set up the AI Proxy Advanced plugin to route chat requests to {{ site.ollama }}’s Qwen 3 model by configuring the model options, including the `upstream_url` pointing to your local {{ site.ollama }} instance:
 
 
 {% entity_examples %}

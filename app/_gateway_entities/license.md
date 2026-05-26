@@ -30,6 +30,8 @@ faqs:
     a: In hybrid mode, the license file must be deployed to each Control Plane and Data Plane node. As long as you deploy the License with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses), the Control Plane automatically applies the License to its Data Plane nodes. 
   - q: What happens to the license file in traditional mode when there are no separate Control Planes? 
     a: The license file must be manually deployed to each node running {{site.base_gateway}}.
+  - q: How do I package a license report to send to Kong Support?
+    a: "Run `curl http://localhost:8001/license/report -o response.json && tar -cf report-$(date +\"%Y_%m_%d_%I_%M_%p\").tar response.json`. This saves the report as `response.json` and creates a timestamped `.tar` archive ready to share with Kong Support."
 
 works_on:
   - on-prem
@@ -162,9 +164,58 @@ You can update your License with a `PUT` request to the [`/license/{license-id}`
 
 ## License reports
 
-A license report contains information about your {{site.base_gateway}} database-backed deployment, including License usage and deployment information. You can generate a license report by sending a request to the [`/license/report` endpoint](/api/gateway/admin-ee/#/operations/get-license-report). You can't automatically generate a license report and the report doesn't send data to Kong servers. License reports aren't supported in a DB-less deployment.
+A license report contains information about your {{site.base_gateway}} deployment, including license usage and deployment information. 
+Reports are generated manually on demand with the Admin API, you can't generate them automatically or on a schedule. 
+The report doesn't send data to Kong servers.
 
-You can share the report with Kong Support to perform a health-check analysis of product usage and overall deployment performance to ensure your organization is optimized with the best License and deployment plan for your needs.
+You can share the report with Kong Support to perform a health-check analysis of product usage and overall deployment performance to ensure your organization is optimized with the best license and deployment plan for your needs.
+
+To generate a license report, send a `GET` request to the [`/license/report` endpoint](/api/gateway/admin-ee/#/operations/get-license-report):
+
+```sh
+curl http://localhost:8001/license/report
+```
+
+The response contains the following fields:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`checksum`"
+    description: SHA-256 digest of the full report contents.
+  - field: "`timestamp`"
+    description: Unix timestamp of when the report was generated.
+  - field: "`kong_version`"
+    description: The version of {{site.base_gateway}} running on this node.
+  - field: "`db_version`"
+    description: The database engine and version in use.
+  - field: "`license`"
+    description: "Details about the active license: `license_key` and `license_expiration_date`."
+  - field: "`deployment_info`"
+    description: "The deployment topology type (`traditional`, `hybrid`, or `dbless`)."
+  - field: "`system_info`"
+    description: "Information about the node: `hostname`, `cores` (number of online processors), and `uname` (OS and architecture)."
+  - field: "`services_count`"
+    description: Total number of Services configured in this deployment.
+  - field: "`routes_count`"
+    description: Total number of Routes configured in this deployment.
+  - field: "`consumers_count`"
+    description: Total number of Consumers configured in this deployment.
+  - field: "`workspaces_count`"
+    description: Total number of Workspaces in this deployment.
+  - field: "`rbac_users`"
+    description: Total number of configured RBAC users.
+  - field: "`plugins_count`"
+    description: "Plugin usage broken down into `tiers` (`free`, `enterprise`, `custom`)"
+  - field: "`counters`"
+    description: "Request counts as `total_requests` and a `buckets` array."
+{% endtable %}
+<!--vale on-->
 
 ## Common errors
 

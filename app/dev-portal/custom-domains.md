@@ -84,7 +84,7 @@ rows:
     value: "`https://$YOUR_PORTAL_URL.$GEO.kongportals.com`"
 {% endtable %}
 
-If your domain has specific CAA DNS records that list authorized certificate authorities/issuers, you'll also need to create a new CAA DNS record to permit [Google Trust Services](https://pki.goog/faq/#caa) as an issuer.
+If your domain has specific CAA DNS records that list authorized certificate authorities/issuers, you'll also need to create a new CAA DNS record to permit [{{ site.google}} Trust Services](https://pki.goog/faq/#caa) as an issuer.
 If your domain doesn't currently have any CAA DNS records, it means all issuers are implicitly allowed, and there's no need for a new CAA DNS record in that case.
 
 ## Update Dev Portal URL settings {#update-portal}

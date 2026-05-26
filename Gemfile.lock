@@ -27,7 +27,7 @@ GEM
     connection_pool (2.5.5)
     csv (3.3.5)
     drb (2.2.3)
-    dry-cli (1.0.0)
+    dry-cli (1.4.1)
     em-websocket (0.5.3)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0)
@@ -71,7 +71,7 @@ GEM
       vite_ruby (~> 3.2)
     jekyll-watch (2.2.1)
       listen (~> 3.0)
-    json (2.19.3)
+    json (2.19.5)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -89,10 +89,11 @@ GEM
     method_source (1.1.0)
     mini_portile2 (2.8.9)
     minitest (5.26.2)
+    mutex_m (0.3.0)
     nio4r (2.7.5)
     nodo (1.8.2)
       logger
-    nokogiri (1.19.2)
+    nokogiri (1.19.3)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     parallel (1.28.0)
@@ -107,11 +108,11 @@ GEM
       method_source (~> 1.0)
       reline (>= 0.6.0)
     public_suffix (7.0.5)
-    puma (7.2.0)
+    puma (8.0.1)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.1.21)
-    rack-proxy (0.7.7)
+    rack (3.2.6)
+    rack-proxy (0.8.2)
       rack
     rackup (0.2.3)
       rack (>= 3.0.0.beta1)
@@ -126,7 +127,7 @@ GEM
       io-console (~> 0.5)
     rexml (3.4.2)
     rouge (4.7.0)
-    rubocop (1.86.1)
+    rubocop (1.86.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -153,12 +154,14 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
     uri (1.0.4)
-    vite_ruby (3.5.0)
+    vite_ruby (3.10.2)
       dry-cli (>= 0.7, < 2)
+      logger (~> 1.6)
+      mutex_m
       rack-proxy (~> 0.6, >= 0.6.1)
       zeitwerk (~> 2.2)
     webrick (1.8.2)
-    zeitwerk (2.6.13)
+    zeitwerk (2.8.2)
 
 PLATFORMS
   ruby
@@ -181,6 +184,7 @@ DEPENDENCIES
   puma
   rouge (~> 4.3)
   rubocop
+  vite_ruby (~> 3.10)
 
 BUNDLED WITH
    2.5.3

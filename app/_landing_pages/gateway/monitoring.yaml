@@ -48,20 +48,13 @@ rows:
   - header:
       type: h2
       text: "How do I monitor {{site.base_gateway}} metrics?"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    API gateways isolate your applications from the outside world and provide critical path
-                    protection for your upstream services. Understanding the state of your API gateway
-                    system is critical to providing reliable API-based systems.
+      description: |
+        API gateways isolate your applications from the outside world and provide critical path
+        protection for your upstream services. Understanding the state of your API gateway system is critical to providing reliable API-based systems.
 
-                    There are many monitoring and alerting systems available, and {{site.base_gateway}} integrates with 
-                    multiple solutions:
-  - column_count: 4
+        There are many monitoring and alerting systems available, and {{site.base_gateway}} integrates with 
+        multiple solutions:
+    column_count: 4
     columns:
       - blocks:
         - type: card
@@ -170,7 +163,7 @@ rows:
   - header:
       type: h2
       text: "Related resources"
-  - column_count: 3
+    column_count: 3
     columns:
       - blocks:
         - type: card

@@ -78,6 +78,10 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
 
+### Fallback from Redis
+
+{% include /ai-gateway/redis-fallback.md %}
+
 ## Policy-based rate limiting {% new_in 3.14 %}
 
 {:.info}

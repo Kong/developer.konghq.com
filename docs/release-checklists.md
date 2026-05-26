@@ -242,15 +242,7 @@ Update the Konnect supported versions YAML file at `app/_data/support/gateway.ym
 
 ### Algolia
 
-Update the search index:
-
-1. Log into Algolia using team-docs (credentials in 1pass).
-   
-    Make sure the **kongdeveloper** application is selected.
-
-2. Go to **Data sources** (database icon in bottom left corner) > **Crawler**.
-
-3. Open **kongdeveloper**, then click on **Resume crawling**.
+Update the search index by [recrawling the site](algolia.md#recrawl-the-site).
 
 ### Kapa
 

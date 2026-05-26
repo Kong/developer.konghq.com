@@ -14,6 +14,8 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: Subscriptions
+    url: /metering-and-billing/subscriptions/
   - text: Integrate Stripe with {{site.metering_and_billing}}
     url: /metering-and-billing/stripe-integration/
 faqs:
