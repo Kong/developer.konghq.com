@@ -140,7 +140,7 @@ curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/$REGISTRY_NAME/p
 {% endnavtab %}
 {% endnavtabs %}
 
-Published MCP registries and servers will only display on your {{site.dev_portal}} if you add the MDC component to an existing or new page in your Portal Editor. 
+Published MCP registries and servers will only display on your {{site.dev_portal}} if you add the [MDC component](https://portaldocs.konghq.com/) to an existing or new page in your [Portal Editor](/dev-portal/pages-and-content/) by navigating to your {{site.dev_portal}} and clicking the **Portal Editor** tab. 
 
 To list MCP registries, add the following to your page:
 ```
