@@ -793,7 +793,7 @@
   }
 
   .navbar-item__menu {
-    @apply hidden absolute top-9 list-none ml-0 grid-cols-2 max-w-max w-svw gap-4 border rounded-lg lg:p-6 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2;
+    @apply hidden absolute top-9 list-none ml-0 grid-cols-2 max-w-max w-svw gap-4 border rounded-lg lg:p-6 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto;
   }
 
   .navbar-item__icon {
