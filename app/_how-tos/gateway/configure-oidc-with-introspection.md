@@ -122,6 +122,7 @@ method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+debug: true
 extract_body:
   - name: 'headers.Authorization'
     variable: TOKEN
@@ -146,6 +147,7 @@ url: /anything
 method: GET
 status_code: 200
 display_headers: true
+debug: true
 headers:
   - "Authorization: $TOKEN"
 {% endvalidation %}
