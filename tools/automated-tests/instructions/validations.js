@@ -37,8 +37,8 @@ async function processHeaders(config, container) {
   let headers = {};
   if (config.headers) {
     config.headers.forEach((header) => {
-      const [key, value] = header.split(":");
-      headers[key] = replaceEnvVars(value, env);
+      const [key, ...rest] = header.split(":");
+      headers[key.trim()] = replaceEnvVars(rest.join(":").trim(), env);
     });
   }
   return headers;
