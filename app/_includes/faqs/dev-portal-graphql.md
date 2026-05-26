@@ -1,6 +1,6 @@
 {% if include.section == "question" %}
 
-Can I add GraphQL endpoints to an API or API package, or set GraphQL-specific rate limits, in {{site.dev_portal}}?
+Does {{site.dev_portal}} support adding GraphQL endpoints to an API or API package, or setting GraphQL-specific rate limits?
 
 {% elsif include.section == "answer" %}
 
