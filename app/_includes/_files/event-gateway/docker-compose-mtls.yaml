@@ -6,7 +6,7 @@ networks:
 
 services:
   kafka1:
-    image: apache/kafka:4.2.0
+    image: apache/kafka:4.3.0
     networks:
       - kafka
     container_name: kafka1
@@ -35,7 +35,7 @@ services:
       - ./certs/keystore-credentials:/etc/kafka/secrets/keystore-credentials
 
   kafka2:
-    image: apache/kafka:4.2.0
+    image: apache/kafka:4.3.0
     networks:
       - kafka
     container_name: kafka2
@@ -64,7 +64,7 @@ services:
       - ./certs/keystore-credentials:/etc/kafka/secrets/keystore-credentials
 
   kafka3:
-    image: apache/kafka:4.2.0
+    image: apache/kafka:4.3.0
     networks:
       - kafka
     container_name: kafka3

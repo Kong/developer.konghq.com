@@ -29,7 +29,8 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
           "html",
           "ruby",
           "ansi",
-          "ini"
+          "ini",
+          "markdown",
         ],
       });
     JS

@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@e907ed432562e470bdd62b613fb4bf50f9b8f255
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e907ed432562e470bdd62b613fb4bf50f9b8f255'
+  x-oas-source: kong/platform-api@62265036eaf401a7ae7e2f2f49f0b1d1351c76b4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/62265036eaf401a7ae7e2f2f49f0b1d1351c76b4'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3917,6 +3917,25 @@ components:
               - name: record.value.content
                 type: object
                 description: The content of the record value.
+              - name: record.value.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Registry-supplied schema metadata for the record value. Populated when the value
+                  was validated by a Confluent schema registry. Fields: `id` (uint), `version` (uint,
+                  when returned by the registry), `format` ("avro"|"json"), and either
+                  `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not
+                  applicable; use `has()` to test presence.
+
+                  **Requires a minimum runtime version of `1.2`**.
+              - name: record.key.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Same shape as `record.value.schema`, populated when the record key has
+                  schema_validation configured.
+
+                  **Requires a minimum runtime version of `1.2`**.
       required:
         - type
         - config
@@ -4005,6 +4024,25 @@ components:
               - name: record.value.content
                 type: object
                 description: The content of the record value.
+              - name: record.value.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Registry-supplied schema metadata for the record value. Populated when the value
+                  was validated by a Confluent schema registry. Fields: `id` (uint), `version` (uint,
+                  when returned by the registry), `format` ("avro"|"json"), and either
+                  `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not
+                  applicable; use `has()` to test presence.
+
+                  **Requires a minimum runtime version of `1.2`**.
+              - name: record.key.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Same shape as `record.value.schema`, populated when the record key has
+                  schema_validation configured.
+
+                  **Requires a minimum runtime version of `1.2`**.
         parent_policy_id:
           description: The unique identifier of the parent schema validation policy.
           type: string
@@ -4026,6 +4064,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EventGatewayParsedRecordEncryptionSelector'
+          maxItems: 256
           minItems: 1
       required:
         - failure_mode
@@ -4274,6 +4313,25 @@ components:
               - name: record.value.content
                 type: object
                 description: The content of the record value.
+              - name: record.value.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Registry-supplied schema metadata for the record value. Populated when the value
+                  was validated by a Confluent schema registry. Fields: `id` (uint), `version` (uint,
+                  when returned by the registry), `format` ("avro"|"json"), and either
+                  `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not
+                  applicable; use `has()` to test presence.
+
+                  **Requires a minimum runtime version of `1.2`**.
+              - name: record.key.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Same shape as `record.value.schema`, populated when the record key has
+                  schema_validation configured.
+
+                  **Requires a minimum runtime version of `1.2`**.
       required:
         - type
         - config
@@ -4362,6 +4420,25 @@ components:
               - name: record.value.content
                 type: object
                 description: The content of the record value.
+              - name: record.value.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Registry-supplied schema metadata for the record value. Populated when the value
+                  was validated by a Confluent schema registry. Fields: `id` (uint), `version` (uint,
+                  when returned by the registry), `format` ("avro"|"json"), and either
+                  `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not
+                  applicable; use `has()` to test presence.
+
+                  **Requires a minimum runtime version of `1.2`**.
+              - name: record.key.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Same shape as `record.value.schema`, populated when the record key has
+                  schema_validation configured.
+
+                  **Requires a minimum runtime version of `1.2`**.
         parent_policy_id:
           description: The unique identifier of the parent schema validation policy.
           type: string
@@ -4385,11 +4462,7 @@ components:
             $ref: '#/components/schemas/EventGatewayKeySource'
           minItems: 1
         decrypt_fields:
-          description: Selects which fields to decrypt.
-          type: array
-          items:
-            $ref: '#/components/schemas/EventGatewayParsedRecordDecryptionSelector'
-          minItems: 1
+          $ref: '#/components/schemas/EventGatewayParsedRecordDecryptionSelector'
       required:
         - failure_mode
         - key_sources
@@ -4542,6 +4615,25 @@ components:
               - name: record.value.content
                 type: object
                 description: The content of the record value.
+              - name: record.value.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Registry-supplied schema metadata for the record value. Populated when the value
+                  was validated by a Confluent schema registry. Fields: `id` (uint), `version` (uint,
+                  when returned by the registry), `format` ("avro"|"json"), and either
+                  `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not
+                  applicable; use `has()` to test presence.
+
+                  **Requires a minimum runtime version of `1.2`**.
+              - name: record.key.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Same shape as `record.value.schema`, populated when the record key has
+                  schema_validation configured.
+
+                  **Requires a minimum runtime version of `1.2`**.
       required:
         - type
         - config
@@ -4630,6 +4722,25 @@ components:
               - name: record.value.content
                 type: object
                 description: The content of the record value.
+              - name: record.value.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Registry-supplied schema metadata for the record value. Populated when the value
+                  was validated by a Confluent schema registry. Fields: `id` (uint), `version` (uint,
+                  when returned by the registry), `format` ("avro"|"json"), and either
+                  `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not
+                  applicable; use `has()` to test presence.
+
+                  **Requires a minimum runtime version of `1.2`**.
+              - name: record.key.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Same shape as `record.value.schema`, populated when the record key has
+                  schema_validation configured.
+
+                  **Requires a minimum runtime version of `1.2`**.
         parent_policy_id:
           description: 'The unique identifier of the parent schema validation policy, if any.'
           type: string
@@ -4712,6 +4823,25 @@ components:
               - name: record.value.content
                 type: object
                 description: The content of the record value.
+              - name: record.value.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Registry-supplied schema metadata for the record value. Populated when the value
+                  was validated by a Confluent schema registry. Fields: `id` (uint), `version` (uint,
+                  when returned by the registry), `format` ("avro"|"json"), and either
+                  `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not
+                  applicable; use `has()` to test presence.
+
+                  **Requires a minimum runtime version of `1.2`**.
+              - name: record.key.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Same shape as `record.value.schema`, populated when the record key has
+                  schema_validation configured.
+
+                  **Requires a minimum runtime version of `1.2`**.
       required:
         - type
     EventGatewaySkipRecordPolicyCreate:
@@ -4788,6 +4918,25 @@ components:
               - name: record.value.content
                 type: object
                 description: The content of the record value.
+              - name: record.value.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Registry-supplied schema metadata for the record value. Populated when the value
+                  was validated by a Confluent schema registry. Fields: `id` (uint), `version` (uint,
+                  when returned by the registry), `format` ("avro"|"json"), and either
+                  `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not
+                  applicable; use `has()` to test presence.
+
+                  **Requires a minimum runtime version of `1.2`**.
+              - name: record.key.schema
+                type: object
+                x-min-runtime-version: '1.2'
+                description: |-
+                  Same shape as `record.value.schema`, populated when the record key has
+                  schema_validation configured.
+
+                  **Requires a minimum runtime version of `1.2`**.
         parent_policy_id:
           description: 'The unique identifier of the parent schema validation policy, if any.'
           type: string
