@@ -171,7 +171,7 @@ features:
     essential: false
     pro: true
     enterprise: true
-  - title: Sending feedback to a dedicaded Customer Success Manager (CSM).
+  - title: Sending feedback to a dedicated Customer Success Manager (CSM).
     essential: false
     pro: false
     enterprise: true
