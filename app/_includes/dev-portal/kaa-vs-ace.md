@@ -23,7 +23,7 @@ rows:
     ace: "Manually"
   - title: "Managed by..."
     kaa: "{{site.konnect_short_name}}. You can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/)."
-    ace: "You"
+    ace: "You, by manually configuring the plugin."
   - title: "{{site.base_gateway}} version"
     kaa: "3.6 or later"
     ace: "3.13 or later"
