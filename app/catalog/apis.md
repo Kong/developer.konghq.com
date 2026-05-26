@@ -331,7 +331,6 @@ If you want the Gateway Service to restrict access to the API, [configure develo
 To link your API to a Gateway Service, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-<<<<<<< fix/ace-vs-kaa
 1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/catalog).
 1. From the Catalog sidebar, click **APIs**.
 1. Click your API. 
@@ -342,9 +341,6 @@ To link your API to a Gateway Service, do one of the following:
    1. To link to a single Service on the control plane and use the KAA plugin, click **Link to a single gateway service** and select the Service you want to link to from the **Gateway service** dropdown menu.
    1. To link to the control plane and use the ACE plugin, click **Link to a control plane** and add the ACE plugin by clicking **Add plugin**.
 1. Click **Link gateway**.
-=======
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis), and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
->>>>>>> main
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation):
@@ -381,14 +377,7 @@ If you want to link to a control plane instead of a Gateway Service, specify `co
 {% endnavtab %}
 {% endnavtabs %}
 
-<<<<<<< fix/ace-vs-kaa
-## Publish your API to Dev Portal
-=======
-{:.info}
-> Currently, you APIs can only have a 1:1 mapping with a Gateway Service.
-
 ## Publish your API to {{site.dev_portal}}
->>>>>>> main
 
 Publishing an API makes it available to one or more [{{site.dev_portal}}s](/dev-portal/). Publishing an API in the {{site.dev_portal}} involves several steps:
 
