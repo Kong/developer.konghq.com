@@ -315,7 +315,7 @@ rows:
     description: Access to all read and write permissions related to directories.
     permissions: |
       * Read and list assigned **directories**.
-      * Create, read, list edit, delete any **Principal** in assigned directories.
+      * Create, read, list, edit, delete any **Principal** in assigned directories.
       * Create the default directory.
 {% endtable %}
 
