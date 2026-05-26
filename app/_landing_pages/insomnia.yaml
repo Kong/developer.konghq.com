@@ -253,7 +253,7 @@ rows:
                   pro: true
                   ee: true
                 - title: |
-                    [Link Konnect Gateway Service routes](/insomnia/konnect-integration/)
+                    [Test {{site.konnect_short_name}} Gateway Service and Routes](/insomnia/konnect-integration/)
                   essentials: false
                   pro: false
                   ee: true

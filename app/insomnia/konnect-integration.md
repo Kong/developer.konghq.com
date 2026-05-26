@@ -9,7 +9,8 @@ layout: reference
 breadcrumbs:
   - /insomnia/
   - /insomnia/enterprise/
-
+min_version:
+  insomnia: '13'
 products:
     - insomnia
 tier: enterprise
