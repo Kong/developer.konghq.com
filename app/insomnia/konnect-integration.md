@@ -1,7 +1,7 @@
 ---
 title: "{{ site.konnect_short_name }} Gateway Service routes integration in {{ site.data.products.insomnia.name }}"
 
-description: Connect your Gateway Service routes and test them in {{ site.data.products.insomnia.name }}. 
+description: "Connect your Gateway Service routes and test them in {{ site.data.products.insomnia.name }}." 
 
 content_type: reference
 layout: reference
