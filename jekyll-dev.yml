@@ -5,7 +5,7 @@ links:
 # skip generators to speed up dev builds, the name matches the generator's name
 skip:
   plugins: true # skip plugins generation, except for overviews
-  indices: true # skip indices
+  # indices: true # skip indices
   mesh_policy: true # skip mesh policies generation, except for overviews
   event_gateway_policy: true # skip event gateway policies generation, except for overviews
   explorer: true # skip explorer

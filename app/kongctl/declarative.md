@@ -733,13 +733,13 @@ rows:
       [`plan`](/kongctl/plan/)
     description: |
       Compares your local configuration files against live {{site.konnect_short_name}} state and generates a JSON plan artifact describing the changes to be made.
-    when: 
+    when: |
       Use before applying changes, especially in CI/CD pipelines, to produce a reviewable and reusable plan artifact.
   - command: |
       [`diff`](/kongctl/diff/)
     description: |
       Displays a human-readable preview of the changes between the current live state and the desired state in your configuration files, or from a saved plan artifact.
-    when: 
+    when: |
       Use during development or code review to inspect what `plan` or `sync` would change before committing changes.
   - command: |
       [`apply`](/kongctl/apply/)
@@ -747,19 +747,19 @@ rows:
       Creates and updates resources to match the desired state. Doesn't delete any resources.
     when: |
       Use when you want to incrementally apply configuration without risk of deleting anything. 
-      Use `sync` instead when you want to appy deletes as well.
+      Use `sync` instead when you want to apply deletes as well.
   - command: |
       [`sync`](/kongctl/sync/)
     description: |
       Applies the full desired state from your configuration files. Creates, updates, and deletes resources.
-    when: 
+    when: |
       Use when you want full reconciliation between your configuration and live state, including deletions. 
       Use `apply` instead if you only want creates and updates.
   - command: |
       [`delete`](/kongctl/delete/)
     description: |
       Plans and executes deletion of all resources defined in the input configuration files.
-    when: 
+    when: |
       Use for tearing down a known set of resources, such as resetting a test environment. 
       Not a typical step in the day-to-day declarative workflow.
 {% endtable %}

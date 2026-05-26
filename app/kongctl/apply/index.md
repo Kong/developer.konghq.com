@@ -25,7 +25,7 @@ The `apply` command creates or updates resources to match the desired state. It 
 
 Because `apply` doesn't delete resources, you can use it to incrementally apply resource configurations. For example, you could apply a `portal` in one command and then apply `apis` in a separate command.
 
-If you want to delete resources when applying configuration, use [kongctl sync](/kongctl/sync/).
+If you want to delete resources when applying configuration, use [`kongctl sync`](/kongctl/sync/).
 
 ## Examples
 
