@@ -4,8 +4,7 @@ permalink: /how-to/add-custom-linting-rules/
 
 content_type: how_to
 description: Learn how to add custom linting rules to your APIs in Insomnia.
-no_wrap:
-   true
+no_wrap: true
 
 products:
 - insomnia
@@ -36,7 +35,7 @@ faqs:
 
 ---
 
-## Upload the file ruleset
+## Upload the ruleset file
 
 Upload a YAML file containing your ruleset to the project containing the design document with the OpenAPI specifications (OAS) to lint.
 
