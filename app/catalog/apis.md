@@ -265,7 +265,7 @@ You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entitie
 
 {% include /dev-portal/kaa-vs-ace.md %}
 
-The following diagram shows how the plugins manages authorization and authentication on the linked Service or control plane:
+The following diagram shows how the plugins manage authorization and authentication on the linked Service or control plane:
 {% navtabs "auth-plugin" %}
 {% navtab "ACE" %}
 <!--vale off-->
@@ -326,9 +326,9 @@ sequenceDiagram
 {% endnavtab %}
 {% endnavtabs %}
 
-If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your {{site.dev_portal}}](/dev-portal/self-service/).
+If you want the Gateway Service or control plane to restrict access to the API, [configure developer and application registration for your {{site.dev_portal}}](/dev-portal/self-service/).
 
-To link your API to a Gateway Service, do one of the following:
+To link your API to a Gateway Service or control plane, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/catalog).

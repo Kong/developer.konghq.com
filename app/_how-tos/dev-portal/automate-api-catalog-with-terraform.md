@@ -121,7 +121,7 @@ automated_tests: false
 
 ## Create an API
 
-In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/) along with a document and spec, associating it with a Gateway Service, and finally publishing it to a [Dev Portal](/dev-portal/). 
+In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/) along with a document and spec, associating it with a control plane, and finally publishing it to a [Dev Portal](/dev-portal/). 
 
 First, create an API:
 

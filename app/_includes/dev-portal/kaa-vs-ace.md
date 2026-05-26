@@ -37,4 +37,4 @@ rows:
 <!--vale on-->
 
 {:.danger}
-> **Do not** configure the KAA and ACE plugin on the same control plane because their overlapping interactions can be unpredictable. 
+> **Do not** configure the KAA and ACE plugins on the same control plane because their overlapping interactions can be unpredictable. 
