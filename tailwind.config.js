@@ -12,6 +12,7 @@ module.exports = {
     "app/_assets/entrypoints/**",
     "app/gateway/**",
     "app/cookbooks/**/*.html",
+    "app/skills/**/*.html",
   ],
   darkMode: "selector",
   safelist: [

@@ -36,7 +36,7 @@ related_resources:
 
 {{site.mesh_product_name}} supports the following additional backends for the mTLS policy:
 * [HashiCorp Vault CA](/mesh/vault/)
-* [Amazon Certificate Manager Private CA](/mesh/acm-private-ca-policy/)
+* [{{ site.amazon }} Certificate Manager Private CA](/mesh/acm-private-ca-policy/)
 * [Kubernetes cert-manager CA](/mesh/cert-manager/)
 
 ## Open Policy Agent (OPA) support

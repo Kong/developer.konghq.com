@@ -4,7 +4,7 @@ description: "Link locally developed features using kongctl."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

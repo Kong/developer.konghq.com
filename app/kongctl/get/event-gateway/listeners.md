@@ -4,7 +4,7 @@ description: "Use the listeners command to list or retrieve listeners for a spec
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

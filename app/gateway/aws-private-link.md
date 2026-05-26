@@ -49,7 +49,7 @@ If your AWS region is not listed, contact Kong Support by navigating to the **?*
 
 ## AWS configuration for PrivateLink
 
-Before creating a PrivateLink connection, ensure that you have a VPC, subnets, and a security group configured in your AWS account. For instructions, see the [Amazon VPC documentation](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
+Before creating a PrivateLink connection, ensure that you have a VPC, subnets, and a security group configured in your AWS account. For instructions, see the [{{ site.amazon }} VPC documentation](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
 
 
 1. Navigate to **VPC > Endpoints** in the AWS Console.

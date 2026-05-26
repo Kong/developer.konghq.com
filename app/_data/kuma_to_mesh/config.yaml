@@ -15,21 +15,4 @@ links:
   '/policies/?': '/mesh/policies/'
   '/features/?': '/mesh/enterprise/'
 
-pages:
-# Must for GA
-  -
-    path: app/_src/networking/dns.md
-    title: 'DNS'
-    description: 'Learn how {{site.mesh_product_name}} DNS works with virtual IPs and service naming to enable transparent proxying.'
-    url: '/mesh/dns/'
-    related_resources:
-      - text: Configure the Kong Mesh CNI
-        url: '/mesh/cni/'
-      - text: Transparent proxying
-        url: '/mesh/transparent-proxying/'
-      - text: Kubernetes annotations and labels
-        url: /mesh/annotations/
-      - text: Mesh concepts
-        url: /mesh/concepts/
-      - text: Service discovery
-        url: /mesh/service-discovery/
+# Must for GA    
