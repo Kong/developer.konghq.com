@@ -24,6 +24,10 @@ related_resources:
     url: /kongctl/skills/
   - text: Supported resources
     url: /kongctl/supported-resources/
+  - text: Troubleshooting kongctl
+    url: /kongctl/troubleshooting/
+  - text: Examples directory
+    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/
 next_steps:
   - text: Example declarative configurations
     url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
@@ -326,9 +330,9 @@ api_publications:
 
 ## kongctl metadata
 
-The `kongctl` section provides metadata for resource management.
+The kongctl section provides metadata for resource management.
 This metadata is stored in {{site.konnect_short_name}} labels and labels are only
-provided on parent resources. Thus, `kongctl` metadata is
+provided on parent resources. Thus, kongctl metadata is
 **only supported on parent resources**.
 
 ### Protected resources
@@ -423,7 +427,7 @@ These flags help prevent accidentally operating on unexpected namespaces, especi
 ## External resources and namespaces
 
 External resources (`_external` pseudo-resource) are references to {{site.konnect_short_name}} objects that are managed elsewhere
-but are "selected" by the `kongctl` declarative engine so they can be referenced by other resources under management.
+but are "selected" by the kongctl declarative engine so they can be referenced by other resources under management.
 
 ```yaml
 # External portal definition - this tells kongctl that this portal
@@ -437,7 +441,7 @@ portals:
 ```
 
 Because kongctl doesn't own those resources:
-- External resources **cannot** declare `kongctl` metadata. Supplying `kongctl.namespace` or `kongctl.protected`
+- External resources **cannot** declare kongctl metadata. Supplying `kongctl.namespace` or `kongctl.protected`
   on an external resource results in a parsing error. File-level defaults are ignored for externals.
 - External references do **not** add their namespaces to sync planning. Only namespaces from managed parent
   resources are considered when sync mode calculates deletes.
@@ -491,6 +495,8 @@ Important notes for decK integration:
   do not supply `--konnect-token`, `--konnect-control-plane-name`, `--konnect-addr`, or output flags yourself.
 - Plans represent decK resolution targets explicitly via `post_resolution_targets` on the `_deck` change entry,
   including control plane identifiers and the gateway service selector.
+
+For more information, see [kongctl and decK](/kongctl/kongctl-and-deck/).
 
 ## YAML tags
 
@@ -699,258 +705,66 @@ not provide a safe observable signal for that update.
 
 ## Commands reference
 
-The following are high-level descriptions of commands for declarative
-configuration management. See the command usage text for details on
-flags and options.
-
-### plan
-
-Create a plan: a JSON file containing the set of planned changes to a set of resources.
-Plans are generated with either `--mode apply` or `--mode sync`. Apply mode
-creates and updates configured resources only. Sync mode also deletes managed
-resources, but only for resource collections that are explicitly present in the
-input configuration.
-
-Generate an apply plan and output to STDOUT:
-
-```shell
-kongctl plan -f config.yaml --mode apply
-```
-
-Generate a sync plan and output to STDOUT:
-
-```shell
-kongctl plan -f config.yaml --mode sync
-```
-
-### apply
-
-Applying a configuration will create or update resources to match the desired state
-and **will not delete** resources. Because `apply` doesn't delete resources, it can
-be used for incremental application of resource configurations. For example, you could
-apply a `portal` in one command and then later apply `apis` in a separate command.
-
-Apply directly from config:
-
-```shell
-kongctl apply -f config.yaml
-```
-
-Apply from saved plan:
-
-```shell
-kongctl apply --plan plan.json
-```
-
-Preview changes without applying:
-
-```shell
-kongctl apply -f config.yaml --dry-run
-```
-
-### sync
-
-`sync` applies a set of configurations including deleting managed resources that
-are missing from explicitly scoped collections.
-
-Sync scope is based on YAML key presence:
-
-- Omitted resource collections are ignored.
-- Explicit empty root lists mean the desired count is zero. For example,
-  `apis: []` deletes managed APIs in the selected namespace.
-- Parent and child collections are scoped separately. A portal block without
-  `pages` doesn't delete portal pages. Use `pages: []` under that portal to
-  declare that the portal should have no pages.
-- Map-shaped child collections use an empty object as the empty collection. For
-  example, `email_templates: {}` means the portal should have no customized
-  email templates.
-- Singleton child sections use the same key-presence rule, but `{}` and `null`
-  are intentionally different. Omit a singleton key to ignore that child.
-  Provide an object with fields to manage or update it. For optional,
-  delete-capable portal singletons such as `custom_domain`, `email_config`, and
-  `audit_log_webhook`, an empty object scopes the child with desired count zero:
-  `custom_domain: {}` deletes any existing managed custom domain for that
-  portal during sync. `null` is rejected because sync doesn't infer reset or
-  delete semantics from null. Update-only singleton sections, such as
-  `customization`, cannot be deleted by declaring `{}`.
-- Empty child collections must be nested under a parent resource. Root-level
-  `api_documents: []` is rejected because it doesn't identify which API owns
-  the desired zero count.
-
-For federated ownership, include the parent resource entry in the team
-configuration and scope only the child collection that team owns. When the
-parent is managed elsewhere and the resource type supports `_external`, declare
-the parent as external and nest the child collection under that parent. This
-allows `sync` to plan the child collection without treating the managed parent
-collection in the team's namespace as desired state.
-
-```yaml
-apis:
-  - ref: orders-api
-    name: Orders API
-    documents: []
-```
-
-```yaml
-portals:
-  - ref: shared-docs-portal
-    _external:
-      selector:
-        matchFields:
-          name: "Shared Docs Portal"
-    pages: []
-```
-
-The external-parent pattern should not be combined with a namespace default
-unless the team also intends to scope managed parent resources in that
-namespace.
-
-Preview sync changes:
-
-```shell
-kongctl sync -f config.yaml --dry-run
-```
-
-Sync configuration with a prompt confirmation:
-
-```shell
-kongctl sync -f team-config.yaml
-```
-
-Skip confirmation prompt (caution!):
-
-```shell
-kongctl sync -f config.yaml --auto-approve
-```
-
-Sync from a plan artifact:
-
-```shell
-kongctl sync --plan plan.json
-```
-
-### delete
-
-`delete` plans to delete all resources defined in the input declarative
-configuration files from the target {{site.konnect_short_name}} organization.
-The `delete` command is useful for experimentation with a known set of resources or for resetting
-a test environment, but it isn't a common part of the typical declarative
-configuration workflow.
-
-`kongctl delete -f <files>` is equivalent to generating a delete-mode plan for
-the input files and executing that plan.
-
-Preview targeted deletions:
-
-```shell
-kongctl diff -f config.yaml --mode delete
-```
-
-Delete resources declared in a file:
-
-```shell
-kongctl delete -f config.yaml
-```
-
-{:.warning}
-> **Caution**: `delete` plans to delete all resources specified in the input
-> configuration. Always verify the changes before approving execution.
-
-### diff
-
-Display a preview of changes between current and desired state:
-
-Preview changes in apply mode (CREATE and UPDATE only):
-
-```shell
-kongctl diff -f config.yaml --mode apply
-```
-
-Preview changes in sync mode (CREATE, UPDATE, and DELETE):
-
-```shell
-kongctl diff -f config.yaml --mode sync
-```
-
-Preview targeted deletions in delete mode (DELETE only for matching resources):
-
-```shell
-kongctl diff -f config.yaml --mode delete
-```
-
-Preview changes from a plan artifact:
-
-```shell
-kongctl diff --plan plan.json
-```
-
-> Note: `--mode` cannot be used with `--plan` because mode is stored in the
-> plan artifact metadata.
-
-For `UPDATE` actions, text diff shows only the fields that would be
-changed. JSON and YAML outputs expose the same detail in each change's
-`changed_fields` object while keeping `fields` as the execution payload.
-
-### adopt
-
-The kongctl declarative configuration engine will only consider resources that
-are part of the list of `kongctl.namespace` values given to it during planning
-and execution of changes. There may be cases where you want to bring an
-existing {{site.konnect_short_name}} resource into configuration that was created outside of the
-configuration management process. The `adopt` command enables you to
-add the proper namespace label to existing {{site.konnect_short_name}} resources without
-modifying any other fields. Once you adopt a resource, add it
-to your configuration set to ensure it's managed declaratively going forward.
-
-Adopt a portal by name:
-
-```shell
-kongctl adopt portal my-portal --namespace team-alpha
-```
-
-Adopt a control plane by ID:
-
-```shell
-kongctl adopt control-plane 22cd8a0b-72e7-4212-9099-0764f8e9c5ac \
-  --namespace platform
-```
-
-Adopt a custom dashboard by ID:
-
-```shell
-kongctl adopt analytics dashboard 22cd8a0b-72e7-4212-9099-0764f8e9c5ac \
-  --namespace analytics
-```
-
-If the resource already has a `KONGCTL-namespace` label, the command fails
-without making changes.
-
-### dump
-
-Export current {{site.konnect_short_name}} resource state to various formats.
-
-```shell
-# Export all APIs with their child resources and include debug logging
-# to tf-import format
-kongctl dump tf-import --resources=api --include-child-resources
-```
-
-```shell
-# Export all portal and api resources to
-# kongctl declarative configuration with format and the team-alpha namespace
-kongctl dump declarative --resources=portal,api --default-namespace=team-alpha
-```
-
-For custom dashboards created in the {{site.konnect_short_name}} UI, adopt the dashboard first,
-then dump it with the same namespace:
-
-```shell
-kongctl adopt analytics dashboard 22cd8a0b-72e7-4212-9099-0764f8e9c5ac \
-  --namespace analytics
-kongctl dump declarative --resources=analytics.dashboards \
-  --default-namespace=analytics > dashboards.yaml
-kongctl plan -f dashboards.yaml --mode apply
-```
+kongctl includes many commands for declarative configuration management.
+Start with the following commands for most use cases:
+
+{% table %}
+columns:
+  - title: Command
+    key: command
+  - title: Description
+    key: description
+  - title: When to use
+    key: when
+rows:
+  - command: |
+      [`adopt`](/kongctl/adopt/)
+    description: |
+      Adds a namespace label to an existing {{site.konnect_short_name}} resource that was created outside of kongctl, bringing it under declarative management without modifying any other fields.
+    when: |
+      Use before your first `dump` or `plan`, when you need to bring manually-created or UI-created resources into your configuration set.
+  - command: |
+      [`dump`](/kongctl/dump/)
+    description: |
+      Exports the current state of {{site.konnect_short_name}} resources to a declarative YAML configuration file.
+    when: |
+      Use when bootstrapping a new declarative configuration from existing live resources, or when generating a starting point for a new configuration file.
+  - command: |
+      [`plan`](/kongctl/plan/)
+    description: |
+      Compares your local configuration files against live {{site.konnect_short_name}} state and generates a JSON plan artifact describing the changes to be made.
+    when: 
+      Use before applying changes, especially in CI/CD pipelines, to produce a reviewable and reusable plan artifact.
+  - command: |
+      [`diff`](/kongctl/diff/)
+    description: |
+      Displays a human-readable preview of the changes between the current live state and the desired state in your configuration files, or from a saved plan artifact.
+    when: 
+      Use during development or code review to inspect what `plan` or `sync` would change before committing changes.
+  - command: |
+      [`apply`](/kongctl/apply/)
+    description: |
+      Creates and updates resources to match the desired state. Doesn't delete any resources.
+    when: |
+      Use when you want to incrementally apply configuration without risk of deleting anything. 
+      Use `sync` instead when you want to appy deletes as well.
+  - command: |
+      [`sync`](/kongctl/sync/)
+    description: |
+      Applies the full desired state from your configuration files. Creates, updates, and deletes resources.
+    when: 
+      Use when you want full reconciliation between your configuration and live state, including deletions. 
+      Use `apply` instead if you only want creates and updates.
+  - command: |
+      [`delete`](/kongctl/delete/)
+    description: |
+      Plans and executes deletion of all resources defined in the input configuration files.
+    when: 
+      Use for tearing down a known set of resources, such as resetting a test environment. 
+      Not a typical step in the day-to-day declarative workflow.
+{% endtable %}
+
+See the CLI help at `kongctl --help` for all possible commands, or check out the [kongctl CLI reference](/index/kongctl/#cli-reference) documentation.
 
 ## CI/CD integration
 
@@ -1129,7 +943,7 @@ api_publications:
     api: users-api
 ```
 
-### Field Validation
+### Field validation
 
 kongctl uses strict YAML validation to catch configuration errors early:
 
@@ -1149,58 +963,8 @@ Common field name errors:
 - `displayname` → `display_name`
 - `strategytype` → `strategy_type`
 
-## Troubleshooting
+## Troubleshooting and debugging
 
-### Common issues
+kongctl provides a global `--log-level` flag that you can pass with any command.
 
-**Authentication failures**:
-
-- Verify PAT isn't expired
-- Check authentication: `kongctl get me`
-- Ensure proper credential storage
-
-**Plan generation failures**:
-
-- Validate YAML syntax
-- Check file paths are correct
-- Verify network connectivity
-
-**Apply failures**:
-
-- Review plan for conflicts
-- Check for protected resources
-- Verify dependencies exist
-
-**File loading errors**:
-
-```
-Error: failed to process file tag: file not found: ./specs/missing.yaml
-```
-
-- Verify the file path is correct
-- Check that the file exists
-- Ensure proper relative path from config file location
-
-### Debugging
-
-Enable verbose logging:
-
-```bash
-kongctl apply -f config.yaml --log-level debug
-```
-
-Enable trace logging for HTTP requests:
-
-```bash
-kongctl apply -f config.yaml --log-level trace
-```
-
-For more troubleshooting help, see the [Troubleshooting guide](/kongctl/troubleshooting/).
-
-## Examples
-
-Browse the [examples directory](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/)
-
-## Related documentation
-
-- [Troubleshooting guide](/kongctl/troubleshooting/) - Common issues and solutions
+See the [troubleshooting reference](/kongctl/troubleshooting/) for help resolving common issues, and see the [debugging reference](/kongctl/troubleshooting/#debugging) for more information on the debugging workflow.

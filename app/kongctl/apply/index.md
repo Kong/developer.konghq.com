@@ -21,6 +21,34 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
+The `apply` command creates or updates resources to match the desired state. It does not delete resources.
+
+Because `apply` doesn't delete resources, you can use it to incrementally apply resource configurations. For example, you could apply a `portal` in one command and then apply `apis` in a separate command.
+
+If you want to delete resources when applying configuration, use [kongctl sync](/kongctl/sync/).
+
+## Examples
+
+Apply directly from config:
+
+```shell
+kongctl apply -f config.yaml
+```
+
+Apply from a saved plan:
+
+```shell
+kongctl apply --plan plan.json
+```
+
+Preview changes without applying:
+
+```shell
+kongctl apply -f config.yaml --dry-run
+```
+
+## Subcommands
+
 kongctl provides the following tools for applying configuration in {{site.konnect_short_name}}:
 
 {% table %}
