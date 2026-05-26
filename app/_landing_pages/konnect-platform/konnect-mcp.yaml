@@ -270,7 +270,7 @@ rows:
                   tools: "[CreateDebugSession](/konnect-platform/konnect-mcp/tools/#createdebugsession), [ActiveTracingSession](/konnect-platform/konnect-mcp/tools/#activetracingsession)"
                   description: Create tracing sessions and analyze performance
                 - category: Analytics
-                  tools: "[DatasourceConfig](/konnect-platform/konnect-mcp/tools/#datasourceconfig), [QueryExploreTimeRange](/konnect-platform/konnect-mcp/tools/#queryexploretimerange), [QueryAnalytics](/konnect-platform/konnect-mcp/tools/#queryanalytics), [QueryLLMAnalytics](/konnect-platform/konnect-mcp/tools/#queryllmanalytics), [QueryMCPAnalytics](/konnect-platform/konnect-mcp/tools/#querymcpanalytics), [QueryAPIRequests](/konnect-platform/konnect-mcp/tools/#queryapirequests), [GetConsumerRequests](/konnect-platform/konnect-mcp/tools/#getconsumerrequests)"
+                  tools: "[DatasourceConfig](/konnect-platform/konnect-mcp/tools/#datasourceconfig), [QueryExploreTimeRange](/konnect-platform/konnect-mcp/tools/#queryexploretimerange), [QueryAnalytics](/konnect-platform/konnect-mcp/tools/#queryanalytics), [QueryLLMAnalytics](/konnect-platform/konnect-mcp/tools/#queryllmanalytics), [QueryAgenticAnalytics](/konnect-platform/konnect-mcp/tools/#queryagenticanalytics), [QueryAPIRequests](/konnect-platform/konnect-mcp/tools/#queryapirequests), [GetConsumerRequests](/konnect-platform/konnect-mcp/tools/#getconsumerrequests)"
                   description: Query API requests and traffic patterns
                 # - category: Alerting
                 #   tools: "[FetchAlertingEventDetails](/konnect-platform/konnect-mcp/tools/#fetchalertingeventdetails)"
