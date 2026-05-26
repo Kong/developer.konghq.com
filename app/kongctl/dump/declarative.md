@@ -3,7 +3,7 @@ title: kongctl dump declarative
 description: Export declarative configuration.
 content_type: reference
 layout: reference
-beta: true
+
 works_on:
   - on-prem
   - konnect

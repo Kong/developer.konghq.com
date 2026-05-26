@@ -4,7 +4,7 @@ description: "Use the backend-clusters command to list or retrieve backend clust
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

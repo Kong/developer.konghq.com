@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9d0bcbc2e86d1e5d6df518dbf3a5fa663727c5bf
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d0bcbc2e86d1e5d6df518dbf3a5fa663727c5bf'
+  x-oas-source: kong/platform-api@b73400e224a8f31d322b61fee28ce53a8b4e308b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b73400e224a8f31d322b61fee28ce53a8b4e308b'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -1769,6 +1769,16 @@ components:
             - `true` for Key Auth strategies and when supported for Client Credentials strategies
             - `false` when not supported for Client Credentials strategies
           type: boolean
+          readOnly: true
+        min_allowed_credentials:
+          description: Minimum allowed credentials for this auth strategy. Only present when supports_multiple_credentials is true and the DCR provider enforces a credential limit.
+          type: integer
+          minimum: 1
+          readOnly: true
+        max_allowed_credentials:
+          description: Maximum allowed credentials for this auth strategy. Only present when supports_multiple_credentials is true and the DCR provider enforces a credential limit.
+          type: integer
+          minimum: 1
           readOnly: true
       required:
         - id

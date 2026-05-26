@@ -28,6 +28,8 @@ related_resources:
     url: /mesh/dataplane-health/
   - text: Deploy an OpenTelemetry collector
     url: /mesh/deploy-an-opentelemetry-collector/
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/meshopentelemetrybackend/
 ---
 
 This page describes how to configure different observability tools to work with {{site.mesh_product_name}}.
