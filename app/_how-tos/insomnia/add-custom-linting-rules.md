@@ -43,7 +43,7 @@ This places the ruleset file in the local working directory. You don't see the f
 
 ## Define the rules
 
-The custom ruleset overrides the default one. To create a completely new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extend` property.
+The custom ruleset overrides the default one. To create a completely new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extends` property.
 
 {:.info}
 > Available Spectral properties in Insomnia are `rules` and `extends`.

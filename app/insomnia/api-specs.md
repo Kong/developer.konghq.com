@@ -123,7 +123,7 @@ rows:
       <br>For more information, see the [`inso lint spec` reference](/inso-cli/reference/lint_spec/).
   - usecase: Use custom linting to ensure your spec adheres to your team or company's standards
     instructions: |
-      To lint locally, create a YAML file in the project with the custom rules in the same directory as the `oas.yaml` file you want to lint. Then run `inso lint spec ./oas.yaml` from that directory. <br><br>
+      To lint locally, create a YAML file in the project with the custom rules in the same directory as the `oas.yaml` file you want to lint. The Inso CLI picks the rules regardless of the file name. Then run `inso lint spec ./oas.yaml` from that directory. <br><br>
       To [apply custom lint rules in the Insomnia UI](/how-to/add-custom-linting-rules/), upload a ruleset YAML file to the project that contains the design document you want to lint.
 {% endtable %}
 
