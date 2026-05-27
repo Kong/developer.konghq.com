@@ -129,7 +129,7 @@ rows:
                   text: |
                     You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}.
                     This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
-                    You can also optionally publish your MCP server in {{site.dev_portal}} for external developers and agents to consume.
+                    You can also optionally publish your MCP server to {{site.dev_portal}} for external developers and agents to consume.
           - type: button
             config:
               text: "Enable MCP Registry in {{site.konnect_short_name}} Labs"
