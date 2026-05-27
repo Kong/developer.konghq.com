@@ -120,6 +120,9 @@ how_tos:
     - text: "Catalog"
       url: /how-to/?products=catalog
       product: catalog
+    - text: Kong Identity
+      url: /how-to/?products=identity
+      product: identity
 
 ai_tools:
   - text: Konnect MCP
