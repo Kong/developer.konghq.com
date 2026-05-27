@@ -44,7 +44,7 @@ prereqs:
       - example-route
   inline:
     - title: Set up Keycloak
-      include_content: prereqs/auth/oidc/keycloak-password
+      include_content: prereqs/auth/oidc/keycloak-password-with-introspection
       icon_url: /assets/icons/keycloak.svg
 
 tags:
@@ -67,8 +67,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Enable the OpenID Connect plugin with introspection
