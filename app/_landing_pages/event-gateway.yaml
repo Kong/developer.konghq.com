@@ -268,10 +268,11 @@ rows:
                     - outcome: |
                         Demonstrate compliance with data privacy regulations through auditable, enforceable controls
                       feature: |
-                        [Encryption policy](/event-gateway/policies/encrypt/) and
-                        [Decryption policy](/event-gateway/policies/decrypt/)
+                        [Encryption policy](/event-gateway/policies/encrypt/), [Decryption policy](/event-gateway/policies/decrypt/),
+                        [Encrypt fields policy](/event-gateway/policies/encrypt-fields/), [Decrypt fields policy](/event-gateway/policies/decrypt-fields/),
                       guide: |
                         [Encrypt and decrypt Kafka messages](/event-gateway/encrypt-kafka-messages-with-event-gateway/)
+                        or [encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/)
                 - usecase: |
                     **Simplify your Kafka deployment** because it's too complicated and expensive
                   outcomes:
