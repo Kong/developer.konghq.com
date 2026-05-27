@@ -39,10 +39,10 @@ next_steps:
     url: /konnect-api/
 ---
 
-This page documents the {{site.konnect_short_name}} audit-log listener feature in `kongctl`,
+This page documents the {{site.konnect_short_name}} audit-log listener feature in kongctl,
 including detached process management with `kongctl ps`.
 
-`kongctl` can:
+kongctl can:
 
 - Create a {{site.konnect_short_name}} audit-log destination.
 - Configure the regional {{site.konnect_short_name}} audit-log webhook.
@@ -85,7 +85,7 @@ When you run `kongctl listen`:
 
 ### Startup guard
 
-Before attaching a new destination, `kongctl` validates that the regional
+Before attaching a new destination, kongctl validates that the regional
 webhook is in the unconfigured state:
 
 - `enabled=false`
@@ -114,7 +114,7 @@ Payload handling:
 - Decoded payload is split into line-delimited records.
 - Records are stored as-is in `events.jsonl`.
 
-No additional `kongctl` event envelope is added.
+No additional kongctl event envelope is added.
 
 ## Tailing and jq
 

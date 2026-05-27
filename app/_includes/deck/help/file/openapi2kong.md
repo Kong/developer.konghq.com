@@ -17,6 +17,8 @@ Flags:
       --no-id                    Setting this flag will skip UUID generation for entities (no 'id' fields
                                  will be added, implicit if '--inso-compatible' is set).
   -o, --output-file string       Output file to write. Use - to write to stdout. (default "-")
+      --reuse-services           reuse existing Kong services when multiple paths share the same backend URL.
+                                 When set, deduplicates services by checking host, protocol, port, and path.
       --select-tag strings       Select tags to apply to all entities. If omitted, uses the "x-kong-tags"
                                  directive from the file.
       --skip-route-by-header     skip generation of separate route for each required header parameter enum value.
