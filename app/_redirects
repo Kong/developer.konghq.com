@@ -259,3 +259,7 @@
 /mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/
 /mcp/autogenerate-mcp-tools/    /mcp/map-api-to-mcp-tools/
 /mcp/autogenerate-mcp-tools-for-weather-api/    /mcp/map-weather-api-to-mcp-tools/
+
+# Spec renames
+/api/konnect/api-builder/v3/ /api/konnect/api-catalog/v3/   301
+/api/konnect/api-builder/ /api/konnect/api-catalog/   301
