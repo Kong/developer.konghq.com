@@ -141,6 +141,7 @@ konnect_catalog: Catalog
 metering_and_billing: Metering & Billing
 observability: Observability
 dev_portal: Dev Portal
+identity: Kong Identity
 # Company names
 openai: OpenAI
 anthropic: Anthropic

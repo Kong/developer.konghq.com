@@ -844,7 +844,7 @@ See the [Event Gateway landing page](/event-gateway/#use-cases-for-kong-event-ga
                 feature: |
                   [OAuth](/kong-identity/)
                 guide: |
-                  [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                  [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
 ```
 <!--vale on-->
 

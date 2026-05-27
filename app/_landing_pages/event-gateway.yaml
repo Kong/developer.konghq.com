@@ -258,7 +258,7 @@ rows:
                       feature: |
                         [OAuth](/kong-identity/)
                       guide: |
-                        [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                        [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                     - outcome: |
                         Know exactly which teams and topics are driving cluster load, in real time, via in-platform dashboards or exported to your preferred tooling
                       feature: |
@@ -286,7 +286,7 @@ rows:
                       feature: |
                         [OAuth](/kong-identity/)
                       guide: |
-                        [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                        [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                 - usecase: |
                     **Improve the developer experience** to increase adoption and achieve faster time-to-value
                   outcomes:
@@ -302,7 +302,7 @@ rows:
                       feature: |
                         [OAuth](/kong-identity/)
                       guide: |
-                        [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                        [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                     - outcome: |
                         Let any developer produce and consume Kafka events using standard REST - no Kafka client needed
                       feature: |

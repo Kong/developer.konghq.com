@@ -1,5 +1,5 @@
 ---
-title: Set up {{site.event_gateway}} with Kong Identity OAuth
+title: Set up {{site.event_gateway}} with {{site.identity}} OAuth
 content_type: how_to
 permalink: /event-gateway/kong-identity-oauth/
 breadcrumbs:
@@ -7,6 +7,7 @@ breadcrumbs:
 
 products:
     - event-gateway
+    - identity
 
 works_on:
     - konnect
@@ -15,12 +16,12 @@ tags:
     - event-gateway
     - kafka
 
-description: "Learn how to secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity."
+description: "Learn how to secure Kafka traffic in {{site.event_gateway_short}} with {{site.identity}}."
 
 tldr:
-  q: "How do I secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity?"
+  q: "How do I secure Kafka traffic in {{site.event_gateway_short}} with {{site.identity}}?"
   a: |
-    1. Create a Kong Identity auth server, scope, claim, and client.
+    1. Create a {{site.identity}} auth server, scope, claim, and client.
     1. Create a {{site.event_gateway}} with a virtual cluster that can verify OAuth tokens from clients.
     1. Create an ACL policy to restrict access to a specific client.
 
@@ -49,7 +50,7 @@ automated_tests: false
 related_resources:
   - text: Event Gateway
     url: /event-gateway/
-  - text: "Kong Identity"
+  - text: "{{site.identity}}"
     url: /kong-identity/
   - text: Dynamic claim templating
     url: /kong-identity/#dynamic-claim-templates
@@ -60,9 +61,9 @@ min_version:
   event-gateway: '1.1.0'
 ---
 
-## Create an auth server in Kong Identity
+## Create an auth server in {{site.identity}}
 
-Before you can configure the authentication plugin, you must first create an auth server in Kong Identity. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+Before you can configure the authentication plugin, you must first create an auth server in {{site.identity}}. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
 
 Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 

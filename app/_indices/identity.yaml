@@ -1,0 +1,14 @@
+title: Kong Identity Documentation
+description: Index containing all documentation for Kong Identity in Konnect.
+sections:
+  - title: Overview
+    items:
+      - path: /kong-identity/
+      - path: /kong-identity/**/*
+  - title: How Tos
+    items:
+      - path: /event-gateway/kong-identity-oauth/
+      - path: /how-to/configure-kong-identity-oidc/
+      - path: /how-to/configure-kong-identity-oauth-introspection/
+      - path: /how-to/configure-kong-identity-upstream-oauth/
+      - path: /how-to/kong-identity-dcr/
