@@ -31,7 +31,7 @@ Changelog for {{site.konnect_product_name}} MCP Server.
 
 ## Week of 2026-05-18
 
-* Standalone MCP KodeMode released GA
+* Standalone MCP {{site.code_mode}} released GA
 
 ## Week of 2025-12-19
 

@@ -160,6 +160,7 @@ google_cloud: Google Cloud
 google_analytics: Google Analytics
 claude: Claude
 claude_code: Claude Code
+code_mode: Code Mode
 gtm: Google Tag Manager
 
 
