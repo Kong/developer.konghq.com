@@ -1,9 +1,12 @@
 name: deck
 
 releases:
+  - release: "1.62"
+    version: "1.62.0"
+    latest: true
+    released: 2026-05-26
   - release: "1.61"
     version: "1.61.0"
-    latest: true
     released: 2026-05-21
   - release: "1.60"
     version: "1.60.0"
@@ -29,6 +32,3 @@ releases:
   - release: "1.53"
     version: "1.53.2"
     released: 2025-11-17
-  - release: "1.52"
-    version: "1.52.1"
-    released: 2025-10-29
