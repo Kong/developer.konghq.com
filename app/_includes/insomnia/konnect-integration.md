@@ -1,4 +1,4 @@
-1. On {{ site.konnect_short_name }} , generate a PAT
+
 1. Open **Preferences** > **Konnect** tab
 1. In the **Personal Access Token**, paste the PAT
 1. Click **Validate&Save**
