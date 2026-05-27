@@ -430,8 +430,6 @@ config:
 {% endkong_config_table %}
 <!--vale on -->
 
-{:.info}
-> **Additional env var:** If you want to configure `KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE` and `KONG_NGINX_HTTP_LUA_SHARED_DICT_ENV_VAR_NAME`, reach out to Kong Support so they can enable these for you.
 
 ### How do I set environment variables?
 
