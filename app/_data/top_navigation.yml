@@ -73,9 +73,8 @@ platform:
           url: /metering-and-billing/
           product: metering-and-billing
         - text: Kong Identity
-          icon: /assets/icons/kong-identity.svg
           url: /kong-identity/
-          color: green
+          product: identity
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
           url: /catalog/scorecards/
