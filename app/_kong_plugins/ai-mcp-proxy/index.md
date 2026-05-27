@@ -53,7 +53,7 @@ related_resources:
   - text: Create MCP tools from a RESTful API
     url: /mcp/map-api-to-mcp-tools/
   - text: Create MCP tools for Weather API
-    url: /mcp/weather-mcp-api/
+    url: /mcp/map-weather-api-to-mcp-tools/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
     url: /mcp/use-access-controls-for-mcp-tools/
   - text: Enforce ACLs on aggregated MCP servers
