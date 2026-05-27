@@ -8,8 +8,10 @@ This how-to requires you to have a dev mode or self-managed HashiCorp Vault. The
    ```sh
    docker run -d \
       --name vault \
+      --cap-add=IPC_LOCK \
       -p 8200:8200 \
       -e SKIP_SETCAP=1 \
+      -e SKIP_CHOWN=1 \
       -e VAULT_DEV_ROOT_TOKEN_ID=root \
       hashicorp/vault
    ```

@@ -125,6 +125,9 @@ ai_tools:
   - text: AI Cookbooks
     url: /cookbooks/
     icon: /assets/icons/book.svg
+  - text: Skills Hub
+    url: /skills/
+    icon: /assets/icons/brain.svg
   - text: decK
     url: /deck/
     icon: /assets/icons/code.svg

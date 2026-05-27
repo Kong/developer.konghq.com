@@ -40,6 +40,10 @@ faqs:
       {% include faqs/api-app-reg-override.md section='question' %}
     a: |
       {% include faqs/api-app-reg-override.md section='answer' %}
+  - q: |
+      {% include faqs/dev-portal-graphql.md section='question' %}
+    a: |
+      {% include faqs/dev-portal-graphql.md section='answer' %}
 ---
 
 {:.success}
