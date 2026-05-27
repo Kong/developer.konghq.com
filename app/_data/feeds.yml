@@ -1,0 +1,50 @@
+# Registry of changelog RSS feeds.
+#
+# Consumed by app/_plugins/generators/changelog_feeds.rb. To add a new product
+# feed, append a row to `feeds:`. Per-plugin feeds and the combined plugins
+# feed are expanded by the generator from site.data['kong_plugins'].
+#
+# Date data for each feed comes from app/_data/changelogs/_dates.yml.
+# Entries without a resolved date are skipped (RSS pubDate is required).
+
+site_url: "https://developer.konghq.com"
+
+feeds:
+  - id: gateway
+    title: "Kong Gateway changelog"
+    description: "Release notes for Kong Gateway."
+    source_type: structured_gateway
+    dates_key: gateway
+    page_url: "/gateway/changelog/"
+    output_path: "/feeds/gateway-changelog.xml"
+
+  - id: mesh
+    title: "Kong Mesh changelog"
+    description: "Release notes for Kong Mesh."
+    source_type: markdown
+    file: "app/assets/mesh/raw/CHANGELOG.md"
+    dates_key: mesh
+    page_url: "/mesh/changelog/"
+    output_path: "/feeds/mesh-changelog.xml"
+
+  - id: operator
+    title: "Kong Operator changelog"
+    description: "Release notes for Kong Operator."
+    source_type: markdown
+    file: "app/operator/changelog.md"
+    dates_key: operator
+    page_url: "/operator/changelog/"
+    output_path: "/feeds/operator-changelog.xml"
+
+  - id: event-gateway
+    title: "Kong Event Gateway changelog"
+    description: "Release notes for Kong Event Gateway."
+    source_type: markdown
+    file: "app/event-gateway/changelog.md"
+    dates_key: event-gateway
+    page_url: "/event-gateway/changelog/"
+    output_path: "/feeds/event-gateway-changelog.xml"
+
+plugin_feeds:
+  enabled: true
+  output_dir: "/feeds/plugins"

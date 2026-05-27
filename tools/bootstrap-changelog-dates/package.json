@@ -1,0 +1,12 @@
+{
+    "name": "bootstrap-changelog-dates",
+    "version": "1.0.0",
+    "description": "One-shot script that populates app/_data/changelogs/_dates.yml from authored data and git history. Output is committed to the repo and consumed at build time; this script is never invoked at build time.",
+    "type": "module",
+    "scripts": {},
+    "license": "MIT",
+    "dependencies": {
+        "js-yaml": "^4.1.0",
+        "tinyglobby": "^0.2.12"
+    }
+}

@@ -1,0 +1,38 @@
+---
+layout: null
+---
+{%- assign feed_url = page.feed_url | prepend: site.url -%}
+{%- assign page_url = page.page_url | prepend: site.url -%}
+{%- assign entries = page.feed_entries | default: empty -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>{{ page.feed_title | xml_escape }}</title>
+    <description>{{ page.feed_description | xml_escape }}</description>
+    <link>{{ page_url | xml_escape }}</link>
+    <atom:link href="{{ feed_url | xml_escape }}" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <generator>developer.konghq.com</generator>
+    {%- assign latest = entries | sort: "date" | reverse | first -%}
+    {%- if latest -%}
+    <lastBuildDate>{{ latest.date | date_to_rfc822 }}</lastBuildDate>
+    {%- else -%}
+    <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+    {%- endif %}
+    {% for entry in entries %}
+    <item>
+      <title>{{ entry.title | xml_escape }}</title>
+      <link>{{ entry.link | prepend: site.url | xml_escape }}</link>
+      <guid isPermaLink="false">{{ entry.guid | xml_escape }}</guid>
+      <pubDate>{{ entry.date | date_to_rfc822 }}</pubDate>
+      {%- if entry.categories -%}
+      {% for category in entry.categories %}
+      <category>{{ category | xml_escape }}</category>
+      {%- endfor -%}
+      {%- endif %}
+      <description>{{ entry.content_html | xml_escape }}</description>
+      <content:encoded><![CDATA[{{ entry.content_html }}]]></content:encoded>
+    </item>
+    {%- endfor %}
+  </channel>
+</rss>
