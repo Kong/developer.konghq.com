@@ -1,0 +1,35 @@
+title: Encrypt fields with AWS Key Vault
+
+description: Use an AWS Key Vault to encrypt fields of message value.
+
+weight: 900
+
+requirements:
+ - "An [AWS KMS key ARN](https://docs.aws.amazon.com/sdk-for-rust/latest/dg/credproviders.html#credproviders-default-credentials-provider-chain)."
+ - "A corresponding [field decryption policy](/event-gateway/policies/decrypt-fields/examples/decrypt-with-static-key/)."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+  key_id:
+    description: |
+      The KMS key ARN in this format: `arn:aws:kms:REGION:ACCOUNT_ID:key/KEY_ID`
+    value: "$AWS_KEY_ARN"
+
+type: encrypt_fields
+name: encrypt-ssn-field
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: reject
+  encrypt_fields:
+    - paths:
+      - match: "personal.ssn"
+      encryption_key:
+        type: aws
+        arn: ${key_id}
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

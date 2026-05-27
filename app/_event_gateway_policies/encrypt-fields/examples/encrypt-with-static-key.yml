@@ -1,0 +1,38 @@
+title: Encrypt fields using a static key
+
+description: Encrypt fields of a message value using a static key.
+
+extended_description: |
+  Encrypt fields of a message value using a static key.
+
+  The [static key](/event-gateway/entities/static-key/) must be a secret reference to a 256-bit (32-byte) base64-encoded string, or the key itself as a string.
+  We recommend using secret references to avoid exposing sensitive data in your configuration.
+
+weight: 900
+
+requirements:
+ - "A [static key](/event-gateway/entities/static-key/) named `my-static-key`."
+ - "A corresponding [field decryption policy](/event-gateway/policies/decrypt-fields/examples/decrypt-with-static-key/)."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: encrypt_fields
+name: encrypt-ssn-field
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: reject
+  encrypt_fields:
+    - paths:
+      - match: "personal.ssn"
+      encryption_key:
+        type: static
+        key:
+          name: my-static-key
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
