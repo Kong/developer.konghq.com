@@ -63,7 +63,7 @@ A Vault is a first-class {{site.ai_gateway}} entity that registers a secret-mana
 
 A Vault entity stores the connection configuration and credentials needed to reach the backend. {{site.ai_gateway}} resolves vault references against the registered Vaults at request time.
 
-Vaults can be created and managed through {{site.konnect_short_name}}, the on-prem Admin API, decK, or the {{site.konnect_short_name}} UI:
+Vaults can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
 
 {% table %}
 columns:

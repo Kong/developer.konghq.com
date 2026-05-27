@@ -102,7 +102,7 @@ A Model is a first-class {{site.ai_gateway}} entity that represents an AI model 
 
 A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services, Routes, or plugin entries by hand.
 
-Models are managed through the {{site.ai_gateway}} entity surface in both deployment modes:
+Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
 
 {% table %}
 columns:
@@ -121,9 +121,21 @@ rows:
     endpoint: /ai/models
 {% endtable %}
 
+## Configure a Model
+
+When you create a Model in {{site.konnect_short_name}} or via the API, the configuration steps generally follow this order:
+
+1. Choose a type (`model` or `api`) and declare which capabilities the Model exposes.
+1. Add one or more target models, each pointing to a Provider with credentials.
+1. Select a request and response format (default is `openai`).
+1. If you have more than one target, configure load balancing in `config.balancer`.
+1. Optionally, attach Policies to add plugin configuration and set `acls` to control access.
+
+For a concrete example, see [Set up a Model](#set-up-a-model).
+
 ## How it works
 
-At request time, the Model mediates traffic between clients and upstream provider APIs:
+When you configure a Model, you define what capabilities it exposes, which upstream providers it routes to, and how requests are load-balanced and logged. At request time, the Model mediates traffic between clients and upstream provider APIs:
 
 1. Translates between the request and response format chosen for the Model and the upstream provider's native format.
 1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [Provider](/ai-gateway/entities/provider/), unless the target is a self-hosted model.
@@ -261,6 +273,8 @@ For each target, you provide the upstream model name (for example, `gpt-4o`) and
 There's no separate Target Model entity or endpoint. Target models are managed only as nested data inside a Model, through the same Model API surface used to create, update, and delete the parent. Adding, removing, or modifying a target is an update to the Model itself.
 
 ## Load balancing
+
+A Model routes to a single target by default. Add more than one target when you want redundancy, fallback between providers, or cost and latency optimization. When you have multiple targets, configure `config.balancer` to distribute requests according to a load balancing algorithm.
 
 When a Model has more than one target, the [load balancer](#schema-aigateway-model-config-balancer) sits between the virtual model and its targets, distributing requests according to `config.balancer`. For algorithm details, selection guidance, and tuning, see [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/).
 

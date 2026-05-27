@@ -77,7 +77,7 @@ A Consumer Group is the {{site.ai_gateway}} entity that represents a collection 
 
 Use Consumer Groups to scope group-wide behavior, such as rate limits, prompt guards, or content moderation, without configuring each Consumer individually. Consumer Groups can appear in the `acls` field of Model, Agent, and MCP Server entities, where they gate access to those parent entities.
 
-Consumer Groups are managed through the {{site.ai_gateway}} entity API surface in both deployment modes:
+Consumer Groups can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
 
 {% table %}
 columns:
@@ -95,6 +95,17 @@ rows:
     cp: Admin API
     endpoint: /ai/consumer-groups
 {% endtable %}
+
+## Configure a Consumer Group
+
+When you create a Consumer Group, the configuration steps generally follow this order:
+
+1. Create the group with a display name, name, and optional description.
+1. Optionally attach Policies for group-wide plugin execution (such as rate limits or content moderation).
+1. Assign Consumers to the group through each Consumer's `consumer_groups` array.
+1. Optionally use the Consumer Group in `acls` on Model, Agent, or MCP Server entities to control access.
+
+For a concrete example, see [Set up a Consumer Group](#set-up-a-consumer-group).
 
 ## Membership
 

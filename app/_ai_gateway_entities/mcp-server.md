@@ -80,7 +80,7 @@ An MCP Server is a first-class {{site.ai_gateway}} entity that exposes tools to 
 
 Because the runtime executes inside {{site.ai_gateway}}, MCP endpoints are provisioned dynamically on demand. You don't host or scale them separately, and the same authentication, traffic control, and observability features available to traditional API traffic apply to MCP traffic at the same scale.
 
-MCP Servers can be created and managed through {{site.konnect_short_name}}, the on-prem Admin API, decK, or the {{site.konnect_short_name}} UI:
+MCP Servers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
 
 {% table %}
 columns:
@@ -98,6 +98,19 @@ rows:
     cp: Admin API
     endpoint: /ai/mcp-servers
 {% endtable %}
+
+## Configure an MCP Server
+
+When you create an MCP Server, the configuration steps generally follow this order:
+
+1. Choose a server type: `passthrough-listener` to proxy an upstream MCP server, `conversion-listener` to convert a REST API into MCP tools, `conversion-only` to define a shared tool library, or `listener` to aggregate tools from `conversion-only` servers.
+1. Point the MCP Server at an upstream: supply the Service URL for conversion types, or the upstream MCP server address for `passthrough-listener`.
+1. For conversion types, define tools that map MCP tool names to upstream HTTP endpoints.
+1. Optionally, configure sessions for stateful interactions.
+1. Optionally, attach Policies for authentication, rate limiting, and observability.
+1. Optionally, configure ACLs to restrict which consumers can discover and invoke specific tools.
+
+For a concrete example, see [Set up an MCP Server](#set-up-an-mcp-server).
 
 ## Common Policies
 

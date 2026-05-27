@@ -73,7 +73,7 @@ A Consumer is the {{site.ai_gateway}} entity that represents a downstream client
 
 You can use Consumers and Consumer Groups to authenticate clients, attach Policies, and gate access to Models, Agents, and MCP Servers through those parent entities' `acls` field.
 
-Consumers are managed through the {{site.ai_gateway}} entity API surface in both deployment modes:
+Consumers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
 
 {% table %}
 columns:
@@ -91,6 +91,17 @@ rows:
     cp: Admin API
     endpoint: /ai/consumers
 {% endtable %}
+
+## Configure a Consumer
+
+When you create a Consumer, the configuration steps generally follow this order:
+
+1. Choose an authentication `type`: `api-key` for API key credentials, or `oauth` for OAuth 2.0 / OpenID Connect credentials.
+1. Optionally assign the Consumer to one or more Consumer Groups through the `consumer_groups` array.
+1. Optionally attach Policies to the Consumer for request-level plugin execution.
+1. Create credentials separately through the [Consumer Credential entity](/ai-gateway/entities/consumer-credential/).
+
+For a concrete example, see [Set up a Consumer](#set-up-a-consumer).
 
 ## Authentication type
 
