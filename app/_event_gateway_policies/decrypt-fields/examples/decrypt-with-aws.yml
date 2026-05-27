@@ -1,0 +1,27 @@
+title: Decrypt fields using an AWS key vault
+
+description: Decrypt a message field using a specific AWS key vault.
+
+extended_description: |
+  Decrypt a message field using a specific AWS key vault.
+
+weight: 900
+
+requirements:
+ - "A corresponding [Encrypt fields policy](/event-gateway/policies/encrypt-fields/examples/encrypt-with-aws/).
+   Event Gateway uses the AWS ARN from the Encrypt field policy to find the key for the Decrypt fields policy."
+
+name: decrypt-using-aws
+type: decrypt_fields
+config:
+  failure_mode: mark
+  key_sources:
+    - type: aws
+  decrypt_fields:
+    paths:
+      - match: personal.ssn
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
