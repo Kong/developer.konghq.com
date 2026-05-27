@@ -33,7 +33,7 @@ faqs:
       {{ site.data.products.insomnia.name }} skips routes that use a protocol Insomnia doesn't support, such as SNI matching, TCP, or UDP. {{ site.data.products.insomnia.name }} displays the skipped routes in a separate collection named "Skipped routes".
   - q: Can I use the {{ site.konnect_short_name }} integration with my on-prem Gateway?
     a: |
-      No, the {{ site.konnect_short_name }} integration only works with Gateway Services hosted in {{ site.konnect_short_name }}, not on-prem Kong Gateway.
+      No, the {{ site.konnect_short_name }} integration only works with Gateway Services hosted in {{ site.konnect_short_name }}, not on-prem {{site.base_gateway}}.
 
 ---
 
