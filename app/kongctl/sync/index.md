@@ -32,19 +32,19 @@ Sync scope is based on YAML key presence:
 - Omitted resource collections are ignored.
 - Explicit empty root lists mean the desired count is zero. For example,
   `apis: []` deletes managed APIs in the selected namespace.
-- Parent and child collections are scoped separately. A portal block without
-  `pages` doesn't delete portal pages. Use `pages: []` under that portal to
-  declare that the portal should have no pages.
+- Parent and child collections are scoped separately. A `portal` block without
+  `pages` doesn't delete {{site.dev_portal}} pages. Use `pages: []` under that `portal` block to
+  declare that the {{site.dev_portal}} should have no pages.
 - Map-shaped child collections use an empty object as the empty collection. For
-  example, `email_templates: {}` means the portal should have no customized
+  example, `email_templates: {}` means the {{site.dev_portal}} should have no customized
   email templates.
 - Singleton child sections use the same key-presence rule, but `{}` and `null`
   are intentionally different. Omit a singleton key to ignore that child.
   Provide an object with fields to manage or update it. For optional,
-  delete-capable portal singletons such as `custom_domain`, `email_config`, and
+  delete-capable {{site.dev_portal}} singletons such as `custom_domain`, `email_config`, and
   `audit_log_webhook`, an empty object scopes the child with desired count zero:
   `custom_domain: {}` deletes any existing managed custom domain for that
-  portal during sync. `null` is rejected because sync doesn't infer reset or
+  {{site.dev_portal}} during sync. `null` is rejected because sync doesn't infer reset or
   delete semantics from null. Update-only singleton sections, such as
   `customization`, cannot be deleted by declaring `{}`.
 - Empty child collections must be nested under a parent resource. Root-level

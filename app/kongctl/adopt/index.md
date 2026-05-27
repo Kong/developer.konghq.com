@@ -28,7 +28,7 @@ Once you adopt a resource, add it to your configuration set to manage it declara
 
 ## Examples
 
-Adopt a portal by name:
+Adopt a {{site.dev_portal}} by name:
 
 ```shell
 kongctl adopt portal my-portal --namespace team-alpha

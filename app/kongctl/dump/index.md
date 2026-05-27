@@ -30,7 +30,7 @@ Export all APIs with their child resources to `tf-import` format:
 kongctl dump tf-import --resources=api --include-child-resources
 ```
 
-Export all Portal and API resources to kongctl declarative configuration and the `team-alpha` namespace:
+Export all `portal` and `api` resources to kongctl declarative configuration and the `team-alpha` namespace:
 
 ```shell
 kongctl dump declarative --resources=portal,api --default-namespace=team-alpha
