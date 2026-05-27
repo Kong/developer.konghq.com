@@ -19,7 +19,7 @@ prereqs:
   inline:
     - title: Architecture
       content: |
-        A multi-zone {{site.mesh_product_name}} deployment (Global CP + multiple Zone CPs).
+        A multi-zone {{site.mesh_product_name}} deployment (Global CP + multiple Zone CPs) with `spec.meshServices.mode: Exclusive` set on the `kong-air-mesh` `Mesh` resource. This mode is recommended for 2.14+ and is required for `MeshMultiZoneService` and `HostnameGenerator` to resolve. The default mode is `Disabled`; switch it with `kubectl patch mesh kong-air-mesh --type merge -p '{"spec":{"meshServices":{"mode":"Exclusive"}}}'`.
     - title: Resources
       content: |
         The **chain-app** container image available in your environment.
@@ -132,7 +132,7 @@ spec:
 ```bash
 echo 'type: MeshMultiZoneService
 name: flight-control-all
-mesh: default
+mesh: kong-air-mesh
 labels:
   kuma.io/origin: global
 spec:
@@ -147,7 +147,7 @@ spec:
 ---
 type: MeshMultiZoneService
 name: check-in-api-all
-mesh: default
+mesh: kong-air-mesh
 labels:
   kuma.io/origin: global
 spec:
@@ -207,7 +207,7 @@ spec:
 ```bash
 echo 'type: MeshHTTPRoute
 name: color-pinning-blu
-mesh: default
+mesh: kong-air-mesh
 labels:
   kuma.io/origin: global
 spec:

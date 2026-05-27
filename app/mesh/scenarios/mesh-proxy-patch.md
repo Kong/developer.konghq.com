@@ -69,7 +69,7 @@ spec:
 ```bash
 echo 'type: MeshProxyPatch
 name: outbound-flight-id-injection
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
@@ -98,7 +98,7 @@ spec:
 If a high-level policy (like `MeshHTTPRoute`) and a `MeshProxyPatch` both try to modify the same field, the resulting behavior can be unpredictable. **Always prefer high-level policies.**
 
 ### Target Specifically
-Avoid applying patches to the entire `Mesh` unless absolutely necessary. Use `MeshService` or `MeshSubset` to limit the "Blast Radius" of a potential configuration error.
+Avoid applying patches to the entire `Mesh` unless absolutely necessary. Use a `Dataplane` selector with `labels:` to limit the "Blast Radius" of a potential configuration error. Top-level `MeshService` and `MeshSubset` are deprecated for new policies.
 
 {% navtabs "proxy-patch-targeted" %}
 {% navtab "Kubernetes" %}
@@ -108,10 +108,13 @@ kind: MeshProxyPatch
 metadata:
   name: legacy-app-patch
   namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: MeshService
-    name: risky-legacy-app # Only patch the proxies that need it
+    kind: Dataplane
+    labels:
+      app: risky-legacy-app # Only patch the proxies that need it
   default:
     appendModifications: []
 ```
@@ -120,11 +123,12 @@ spec:
 ```yaml
 type: MeshProxyPatch
 name: legacy-app-patch
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: MeshService
-    name: risky-legacy-app
+    kind: Dataplane
+    labels:
+      app: risky-legacy-app
   default:
     appendModifications: []
 ```

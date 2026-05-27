@@ -42,8 +42,12 @@ The `MeshFaultInjection` policy allows you to introduce three types of failure d
 Immediately return a specific HTTP status code for a percentage of requests.
 
 {% tip %}
-Use `kind: Dataplane` with `labels` in `targetRef` to select workloads. The older `kind: MeshService` approach is deprecated.
+Use `kind: Dataplane` with `labels` in `targetRef` to select workloads. The older `kind: MeshService` / `MeshSubset` approaches at the top level are deprecated.
 {% endtip %}
+
+{% danger %}
+The `spec.from` field shown below is deprecated in 2.14 and will be removed in 3.0. Current Kuma still accepts it but emits a deprecation warning on apply. For the modern equivalent, see the "Recommended for 2.14+" callout after the example.
+{% enddanger %}
 
 {% navtabs "fault-abort" %}
 {% navtab "Kubernetes" %}
@@ -73,7 +77,7 @@ spec:
 ```bash
 echo 'type: MeshFaultInjection
 name: test-flight-control-resilience
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Dataplane
@@ -91,6 +95,38 @@ spec:
 ```
 {% endnavtab %}
 {% endnavtabs %}
+
+{% tip %}
+**Recommended for 2.14+ — use `rules` with SPIFFE matchers.** The `rules` shape names the callers whose requests should be faulted using their SPIFFE identities. To fault every caller, use a `Prefix` match against the trust domain:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshFaultInjection
+metadata:
+  name: test-flight-control-resilience
+  namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: flight-control
+      color: blu
+  rules:
+    - matches:
+        - spiffeID:
+            type: Prefix
+            value: spiffe://kong-air-mesh/
+      default:
+        http:
+          - abort:
+              httpStatus: 503
+              percentage: 10
+```
+
+To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match against that caller's SPIFFE ID — for example `spiffe://kong-air-mesh/passenger-portal`. This ties chaos targeting to authenticated identity rather than topology.
+{% endtip %}
 
 ### 2.2 HTTP Delay (Latency Simulation)
 Introduce a fixed delay before the request is processed, simulating a slow dependency.
@@ -122,7 +158,7 @@ spec:
 ```bash
 echo 'type: MeshFaultInjection
 name: test-check-in-api-latency
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Dataplane
@@ -174,7 +210,7 @@ spec:
 ```yaml
 type: MeshFaultInjection
 name: test-file-storage-throttle
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Dataplane

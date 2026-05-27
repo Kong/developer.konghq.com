@@ -37,20 +37,82 @@ The **ZoneEgress proxy** provides a centralized way for all traffic to leave a z
 *   **Unified Egress Visibility**: Provides a single vantage point to monitor and audit all traffic leaving the zone, simplifying global traffic analysis.
 *   **Isolation**: Ensures that sidecars don't need direct routable access to every other zone; they only need to reach their local ZoneEgress.
 
+### Mesh-scoped zone proxies (2.14+)
+
+In 2.14, {{site.mesh_product_name}} introduces a **mesh-scoped zone proxy** model: instead of (or alongside) a single fleet-wide ZoneIngress / ZoneEgress, you can deploy a dedicated pair per mesh. This is configured via the Helm `meshes:` list and gives Kong Air-style multi-tenant deployments isolation between mesh boundaries (per-mesh HPA, PDB, ServiceAccount, and so on).
+
+{% tip %}
+**If you're on 2.13:** stay with the original fleet-wide `ingress` / `egress` deployment model. The rest of this section is specifically about the new 2.14 mesh-scoped deployment shape, which is additive rather than a flag day migration.
+{% endtip %}
+
+Two operational implications worth knowing:
+
+*   **Embedded ZoneEgress listeners are deny-by-default.** Each `MeshExternalService` is matched on SNI inside the listener and refused unless a `MeshTrafficPermission` `Allow` rule names the caller's SPIFFE identity. There is no implicit "everything is allowed through ZE" semantic any more — an explicit allow is mandatory.
+*   **Coexists with the global model.** You can still run the original fleet-wide `ingress`/`egress` chart values; the new `meshes:` list is additive. Migrate per mesh as it makes sense.
+
 ## 2. Service Federation
 
 Service Federation is the mechanism that allows services to discover and communicate with each other across zone boundaries.
 
 ### Automatic Cross-Zone Discovery
 {{site.mesh_product_name}} automatically synchronizes service information across zones via the Global Control Plane.
-*   **Global DNS**: Services can be reached using a unified DNS name (e.g., `service.namespace.svc.mesh.local`).
-*   **Locality-Aware Routing**: By default, {{site.mesh_product_name}} prefers to route traffic to the most "local" instance of a service (within the same zone) to reduce latency.
+*   **Per-zone service import**: In an `Exclusive` mesh, each zone receives synced copies of remote `MeshService` resources. The built-in `HostnameGenerator` gives those imported services zone-qualified hostnames such as `flight-control.kong-air-production.svc.zone2.mesh.local`.
+*   **Generated VIPs**: Imported cross-zone services are assigned Kuma VIPs from the multi-zone range (for example `241.0.0.0`). Clients talk to the VIP or generated hostname, and the local zone routes through ZoneIngress / ZoneEgress as needed.
+*   **Locality-aware by design**: A direct zonal hostname points at a specific remote zone. Use it when Kong Air knows exactly which remote zone should serve the request.
+
+{% warning %}
+**2.13 validation note.** On the test mesh, zone-qualified hostnames such as `flight-control.kong-air-production.svc.zone2.mesh.local` and `check-in-api.kong-air-production.svc.zone2.mesh.local` resolved correctly in `zone1`, but after enabling `MeshIdentity` the direct cross-zone request path was not reliable end to end. The destination dataplanes in `zone2` repeatedly timed out their initial SDS secret fetch and reset the connection before serving the request. Plain names such as `flight-control.mesh` or `flight-control.kong-air-production.svc.mesh.local` also did **not** resolve automatically.
+{% endwarning %}
+
+{% tip %}
+For 2.13 production guidance, treat the direct per-zone `MeshService` hostname as an advanced path that still needs final engineering validation in your environment. The validated cross-zone service abstraction in this scenario set is `MeshMultiZoneService`.
+{% endtip %}
 
 ### MeshMultiZoneService
-The **MeshMultiZoneService** (MMZS) resource allow Kong Air to explicitly define services that span multiple zones, such as the `flight-control` system.
+The **MeshMultiZoneService** (MMZS) resource allows Kong Air to explicitly define services that span multiple zones, such as the `flight-control` system.
 *   **Unified Identity**: It groups instances of `flight-control` across different clusters into a single logical entity.
 *   **Failover**: If the `flight-control` instances in the `us-east-1` data center fail, traffic is automatically rerouted to `eu-west-1`.
 *   **Load Balancing**: Kong Air can customize how traffic is weighted across zones to support global active-active flight registries.
+
+The important distinction is:
+
+*   Use the **synced per-zone `MeshService` hostname** when you want a specific remote zone and you have separately validated that direct cross-zone path in your environment, for example `flight-control.kong-air-production.svc.zone2.mesh.local`.
+*   Use **`MeshMultiZoneService`** when you want a single mesh-wide service name that can represent one or more zones, for example `flight-control-global.mzsvc.mesh.local`. This is the validated 2.13 pattern from the live mesh.
+
+{% navtabs "mmzs-example" %}
+{% navtab "Universal / Global CP" %}
+```bash
+echo 'type: MeshMultiZoneService
+name: flight-control-global
+mesh: kong-air-mesh
+labels:
+  kuma.io/display-name: flight-control-global
+spec:
+  selector:
+    meshService:
+      matchLabels:
+        k8s.kuma.io/service-name: flight-control
+        k8s.kuma.io/namespace: kong-air-production
+  ports:
+    - port: 8080
+      appProtocol: tcp' | kumactl apply -f -
+```
+{% endnavtab %}
+{% navtab "What this creates" %}
+```text
+Hostname: flight-control-global.mzsvc.mesh.local
+VIP:      243.0.0.0
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+{% tip %}
+**Validated 2.13 behavior.** After applying the `MeshMultiZoneService` above on the Konnect Global CP, both zones received a synced copy with `status.addresses[0].hostname: flight-control-global.mzsvc.mesh.local`. Requests from `zone1` to that hostname reached `flight-control` in `zone2`.
+{% endtip %}
+
+{% warning %}
+**Name length: 63 characters max.** MMZS names must be valid RFC 1035 DNS labels (≤63 chars, lowercase alphanumeric or `-`, start with a letter, end with an alphanumeric). 2.14 emits a deprecation warning on longer names; 3.0 will reject them outright. The same limit applies to `MeshService` and `MeshExternalService`.
+{% endwarning %}
 
 ## 3. Global Telemetry
 

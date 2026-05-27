@@ -45,13 +45,15 @@ The `Mesh` resource is **Global CP only**: it can only be created or modified on
 echo 'apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
-  name: default
+  name: kong-air-mesh
 spec:
   mtls:
     backends:
       - name: builtin
         type: builtin
-    enabledBackend: builtin' | kubectl apply -f -
+    enabledBackend: builtin
+  meshServices:
+    mode: Exclusive' | kubectl apply -f -
 ```
 {% endnavtab %}
 {% navtab "Universal (Global CP)" %}
@@ -62,19 +64,21 @@ In Universal mode, run this against your **Global CP** using `kumactl`. Use `kum
 
 ```bash
 echo 'type: Mesh
-name: default
+name: kong-air-mesh
 mtls:
   backends:
     - name: builtin
       type: builtin
-  enabledBackend: builtin' | kumactl apply -f -
+  enabledBackend: builtin
+meshServices:
+  mode: Exclusive' | kumactl apply -f -
 ```
 {% endnavtab %}
 {% endnavtabs %}
 
 Verify mTLS is now active:
 ```bash
-kumactl get meshes -o yaml | grep -A5 mtls
+kumactl get meshes kong-air-mesh -o yaml | grep -A5 mtls
 ```
 
 Expected output:
@@ -92,9 +96,20 @@ With mTLS enabled, all inter-service communication is automatically encrypted an
 When mTLS is enabled in a Mesh, you will need an explicit `MeshTrafficPermission` policy to allow traffic between services. Without it, all traffic will be blocked by default.
 {% endwarning %}
 
+{% tip %}
+**MeshService mode.** This guide assumes `spec.meshServices.mode: Exclusive`, because that is the best-practice path for production meshes. It moves policy matching and routing onto first-class resources instead of the legacy `kuma.io/service` tag model. Four modes are available:
+
+- `Disabled` — legacy tag-based behaviour (default).
+- `Everywhere` — `MeshService` is generated for every workload and used for configuration alongside tags.
+- `ReachableBackends` — `MeshService` is generated, but only used where you explicitly opt in via `reachableBackends`.
+- `Exclusive` — `MeshService` is the only model; `kuma.io/service` tags are not used. Recommended production path.
+
+Existing clusters can switch modes with `kubectl patch mesh kong-air-mesh --type merge -p '{"spec":{"meshServices":{"mode":"Exclusive"}}}'`. Test in a non-production zone first.
+{% endtip %}
+
 ## 2. Baseline: All Traffic Allowed
 
-The `allow-all` `MeshTrafficPermission` grants access from any service to any other service:
+The `allow-all` `MeshTrafficPermission` grants access from any workload in the mesh to any other workload in the mesh by matching the mesh SPIFFE trust domain directly.
 
 {% navtabs "allow-all" %}
 {% navtab "Kubernetes" %}
@@ -103,33 +118,39 @@ apiVersion: kuma.io/v1alpha1
 kind: MeshTrafficPermission
 metadata:
   name: allow-all
-  namespace: kong-mesh-system
+  namespace: {{site.mesh_system_namespace}}
 spec:
   targetRef:
     kind: Mesh
-  from:
-    - targetRef:
-        kind: Mesh
-      default:
-        action: Allow
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://kong-air-mesh.mesh.local
 ```
 {% endnavtab %}
 {% navtab "Universal" %}
 ```bash
 echo 'type: MeshTrafficPermission
 name: allow-all
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
-  from:
-    - targetRef:
-        kind: Mesh
-      default:
-        action: Allow' | kumactl apply -f -
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://kong-air-mesh.mesh.local' | kumactl apply -f -
 ```
 {% endnavtab %}
 {% endnavtabs %}
+
+{% tip %}
+Legacy `spec.from` examples still apply on current 2.13 control planes, but they emit a deprecation warning and are being removed in 3.0. This guide uses the `rules` shape directly so you do not have to unlearn it later.
+{% endtip %}
 
 
 ## 3. Enforce Zero-Trust (Default Deny)
@@ -137,8 +158,7 @@ spec:
 Kong Air's security team requires that only authorised services can access the check-in APIs. Start by removing the permissive `allow-all` policy and replacing it with a **Default Deny**:
 
 {% warning %}
-When an `Allow` and a `Deny` `MeshTrafficPermission` both match the same workload, **Allow wins**.  
-To enforce a default-deny posture, you must **remove** any existing `allow-all` policy first.
+`MeshTrafficPermission` is a special case in {{site.mesh_product_name}}. Unlike most inbound policies, it does **not** use a simple "most specific match wins" rule. The control plane evaluates every matching traffic-permission rule, and if any matched rule produces a `Deny`, that deny takes precedence. To enforce a default-deny posture cleanly, **remove the existing `allow-all` policy first**, then layer narrower allows on top of the default deny.
 {% endwarning %}
 
 {% navtabs "delete-allow-all" %}
@@ -149,7 +169,7 @@ kubectl delete meshtrafficpermission allow-all -n kong-mesh-system
 {% endnavtab %}
 {% navtab "Universal" %}
 ```bash
-kumactl delete meshtrafficpermission allow-all --mesh default
+kumactl delete meshtrafficpermission allow-all --mesh kong-air-mesh
 ```
 {% endnavtab %}
 {% endnavtabs %}
@@ -163,37 +183,45 @@ echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshTrafficPermission
 metadata:
   name: default-deny
-  namespace: kong-mesh-system
+  namespace: {{site.mesh_system_namespace}}
 spec:
   targetRef:
     kind: Mesh
-  from:
-    - targetRef:
-        kind: Mesh
-      default:
-        action: Deny' | kubectl apply -f -
+  rules:
+    - default:
+        deny:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://kong-air-mesh.mesh.local' | kubectl apply -f -
 ```
 {% endnavtab %}
 {% navtab "Universal" %}
 ```bash
 echo 'type: MeshTrafficPermission
 name: default-deny
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
-  from:
-    - targetRef:
-        kind: Mesh
-      default:
-        action: Deny' | kumactl apply -f -
+  rules:
+    - default:
+        deny:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://kong-air-mesh.mesh.local' | kumactl apply -f -
 ```
 {% endnavtab %}
 {% endnavtabs %}
 
+{% tip %}
+Policy changes are not always instantaneous. In the 2.13 validation environment, `MeshTrafficPermission` updates took a few seconds to propagate to the dataplanes. If a request still succeeds or fails immediately after you apply a policy, wait a moment and test again before assuming the policy shape is wrong.
+{% endtip %}
+
 ## 4. Explicitly Authorize Service-to-Service Traffic
 
-Now grant `flight-control` access to `check-in-api` using service identity tags:
+Now grant one caller access to `check-in-api`. The best-practice path is to target the receiving dataplane and allow the caller's authenticated identity explicitly.
+
+For Kubernetes, the cleanest way to make that identity workload-specific is to give `flight-control` its own ServiceAccount. In the example below, `flight-control` runs as ServiceAccount `flight-control`, so its SPIFFE ID becomes `spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control`.
 
 {% navtabs "targeted-allow" %}
 {% navtab "Kubernetes" %}
@@ -202,40 +230,46 @@ echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshTrafficPermission
 metadata:
   name: allow-flight-control-to-check-in
-  namespace: kong-mesh-system
+  namespace: {{site.mesh_system_namespace}}
 spec:
   targetRef:
-    kind: MeshService
-    name: check-in-api-blu
-  from:
-    - targetRef:
-        kind: MeshService
-        name: flight-control-blu
-      default:
-        action: Allow' | kubectl apply -f -
+    kind: Dataplane
+    labels:
+      app: check-in-api
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Exact
+              value: spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control' | kubectl apply -f -
 ```
 {% endnavtab %}
 {% navtab "Universal" %}
 ```bash
 echo 'type: MeshTrafficPermission
 name: allow-flight-control-to-check-in
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: MeshService
-    name: check-in-api-blu
-  from:
-    - targetRef:
-        kind: MeshService
-        name: flight-control-blu
-      default:
-        action: Allow' | kumactl apply -f -
+    kind: Dataplane
+    labels:
+      app: check-in-api
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Exact
+              value: spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control' | kumactl apply -f -
 ```
 {% endnavtab %}
 {% endnavtabs %}
 
 
 Traffic is restored, **but only for `flight-control`**. Any other service will still receive `403 Forbidden`.
+
+{% tip %}
+Legacy `MeshSubset`, `MeshService`, and `spec.from` examples are still accepted on current 2.13 control planes, but they are already on the deprecation path. If you see them in older internal runbooks, plan to replace them with `Dataplane` + `rules` before moving to 3.0.
+{% endtip %}
 
 {% tip %}
 `MeshTrafficPermission` is enforced on the **server side** (the receiver's inbound Envoy listener). This means:

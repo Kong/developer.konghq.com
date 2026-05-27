@@ -5,30 +5,33 @@ layout: how-to
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
-description: Implement progressive canary deployments controlled independently per zone while maintaining cross-region failover capabilities using {{site.mesh_product_name}}.
+description: Implement a zone-local canary rollout on 2.13 using MeshMultiZoneService and MeshHTTPRoute, while keeping the stable pool available across zones.
 products:
   - mesh
 tldr:
   q: How do I perform a canary release in one zone without affecting others?
   a: |
-    Use **scoped MeshHTTPRoute** policies to:
-    1. **Target specific zones** by routing to zone-specific `MeshMultiZoneService` resources (for example, `check-in-api-east` and `check-in-api-west`).
-    2. **Shift traffic locally** between zone-local `stable` and `canary` `MeshMultiZoneService` resources.
-    3. **Maintain failover** so that if a local canary fails, traffic automatically recovers to a stable version in another region.
+    Use **Global MeshMultiZoneService** resources plus a **zone-local MeshHTTPRoute** to:
+    1. **Aggregate the stable pool** across zones behind one MMZS hostname.
+    2. **Expose the canary pool** as a separate MMZS, usually present in only one zone.
+    3. **Apply the canary split only in the rollout zone**, so other zones are unaffected unless they add their own override.
 prereqs:
   inline:
     - title: Architecture
       content: |
-        A multi-zone {{site.mesh_product_name}} deployment.
-    - title: Resources
+        A multi-zone {{site.mesh_product_name}} deployment with `spec.meshServices.mode: Exclusive` set on the `kong-air-mesh` `Mesh` resource.
+    - title: Services
       content: |
-        Separate **MeshMultiZoneService** resources for your `stable` and `canary` workloads.
+        A **stable** `MeshService` in every zone you want to fail over between, plus a separate **canary** `MeshService` in the rollout zone.
+    - title: Identity
+      content: |
+        Keep the **same identity model** across the stable and canary backends before you test this pattern. During validation, mixing `MeshIdentity`-backed workloads with legacy service-tag identities caused TLS verification failures even when the route shape was correct. On 2.13, if you apply `MeshIdentity` to existing workloads, restart those workloads before you test the canary route so they actually serve the new certificate.
 next_steps:
   - text: "Global Color Routing"
     url: "/mesh/scenarios/global-color-routing/"
 ---
 
-The Kong Air engineering team wants to test a new **Baggage Tracking API** in the East region without impacting the West region's stable check-in flow. This guide demonstrates how to use `MeshHTTPRoute` and `MeshMultiZoneService` to achieve asymmetrical rollouts with global safety nets.
+The Kong Air engineering team wants to test a new **Baggage Tracking API** in one zone without changing the routing policy everywhere else. This guide shows the 2.13 best-practice shape: create global `MeshMultiZoneService` resources on the Global CP, then apply a **zone-local** `MeshHTTPRoute` only in the rollout zone.
 
 ## What this proves
 
@@ -40,40 +43,25 @@ columns:
     key: outcome
 rows:
   - goal: Zone-Isolated Testing
-    outcome: Kong Air can rollout a 10% canary in the **East** zone while keeping the **West** zone 100% stable.
+    outcome: Kong Air can rollout a 10% canary in one zone while other zones continue using the stable pool unless they define their own local override.
   - goal: Seamless Abstraction
-    outcome: Developers use a single MMZS hostname; the mesh handles the complex regional routing logic.
-  - goal: Cross-Region Safety Net
-    outcome: If the East canary (or stable) pool fails, traffic automatically failover to a stable pool in the West.
+    outcome: Clients use a single MMZS hostname for the stable service, while the mesh resolves the underlying zone-local MeshServices.
+  - goal: Stable-Pool Safety Net
+    outcome: The stable pool can span multiple zones through one MMZS, which is the foundation for locality-aware cross-zone failover.
 {% endtable %}
 
-### The Asymmetrical Rollout
-
-{% mermaid %}
-graph TD
-    User([User Request]) --> Gateway["{{site.base_gateway}}"]
-    
-    subgraph "Region: East (Canary Testing)"
-        Gateway -->|"90% Weight"| Stable_East["check-in-api (stable)"]
-        Gateway -->|"10% Weight"| Canary_East["check-in-api (canary)"]
-    end
-
-    subgraph "Region: West (Stable Flow)"
-        Gateway -->|"100% Weight"| Stable_West["check-in-api (stable)"]
-    end
-
-    Canary_East -.->|Failover| Stable_West
-    Stable_East -.->|Failover| Stable_West
-{% endmermaid %}
+{% tip %}
+**Validated 2.13 behavior.** On the live mesh, the `MeshMultiZoneService` resources synced correctly from Global to each zone, including generated hostnames such as `check-in-api-global.mzsvc.mesh.local`. A zone-local `MeshHTTPRoute` targeting those synced MMZS resources worked when the route referenced them by **`kuma.io/display-name` labels** and included an explicit backend `port`.
+{% endtip %}
 
 ## Configuration
 
-### 1. Define the Global Multi-Zone Service Resources
+### 1. Define the Global MeshMultiZoneService resources
 
-First, create the `MeshMultiZoneService` (MMZS) resources on the **Global Control Plane**. These resources aggregate standard `MeshService` backends across all zones into a single, global hostname.
+Create the `MeshMultiZoneService` (MMZS) resources on the **Global Control Plane**. On 2.13, the cleanest pattern is to select the generated `MeshService` objects by their service-name labels.
 
 {% warning %}
-The `kuma.io/origin: global` label is required on MMZS resources to ensure they are properly synchronized across the global fabric.
+`MeshMultiZoneService` is a **Global CP** resource. On Konnect or a Universal-backed Global CP, create it with `kumactl`. The synced zone copies receive a hash suffix in `metadata.name`, so **zone-local policies should reference them by labels, not by name**.
 {% endwarning %}
 
 {% navtabs "mmzs-resources" %}
@@ -82,16 +70,17 @@ The `kuma.io/origin: global` label is required on MMZS resources to ensure they 
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshMultiZoneService
 metadata:
-  name: check-in-api-stable
-  namespace: kong-air-production
+  name: check-in-api-global
+  namespace: {{site.mesh_system_namespace}}
   labels:
+    kuma.io/mesh: kong-air-mesh
     kuma.io/origin: global
 spec:
   selector:
     meshService:
       matchLabels:
+        k8s.kuma.io/namespace: kong-air-production
         k8s.kuma.io/service-name: check-in-api
-        version: stable # Targets only pods with the "stable" version label
   ports:
     - port: 8080
       appProtocol: http
@@ -99,49 +88,50 @@ spec:
 apiVersion: kuma.io/v1alpha1
 kind: MeshMultiZoneService
 metadata:
-  name: check-in-api-canary
-  namespace: kong-air-production
+  name: check-in-api-canary-global
+  namespace: {{site.mesh_system_namespace}}
   labels:
+    kuma.io/mesh: kong-air-mesh
     kuma.io/origin: global
 spec:
   selector:
     meshService:
       matchLabels:
-        k8s.kuma.io/service-name: check-in-api
-        version: canary # Targets only pods with the "canary" version label
+        k8s.kuma.io/namespace: kong-air-production
+        k8s.kuma.io/service-name: check-in-api-canary
   ports:
     - port: 8080
       appProtocol: http' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal (Global CP)" %}
+{% navtab "Universal / Konnect Global CP" %}
 ```bash
 echo 'type: MeshMultiZoneService
-name: check-in-api-stable
-mesh: default
+name: check-in-api-global
+mesh: kong-air-mesh
 labels:
   kuma.io/origin: global
 spec:
   selector:
     meshService:
       matchLabels:
-        kuma.io/service: check-in-api
-        version: stable # Targets only pods with the "stable" version label
+        k8s.kuma.io/namespace: kong-air-production
+        k8s.kuma.io/service-name: check-in-api
   ports:
     - port: 8080
       appProtocol: http
 ---
 type: MeshMultiZoneService
-name: check-in-api-canary
-mesh: default
+name: check-in-api-canary-global
+mesh: kong-air-mesh
 labels:
   kuma.io/origin: global
 spec:
   selector:
     meshService:
       matchLabels:
-        kuma.io/service: check-in-api
-        version: canary # Targets only pods with the "canary" version label
+        k8s.kuma.io/namespace: kong-air-production
+        k8s.kuma.io/service-name: check-in-api-canary
   ports:
     - port: 8080
       appProtocol: http' | kumactl apply -f -
@@ -149,204 +139,179 @@ spec:
 {% endnavtab %}
 {% endnavtabs %}
 
-### 2. East Zone Policy (Canary Active)
-This policy targets only sidecars in the `east` zone. It routes 10% of traffic to the canary service.
+After sync, the zone copies expose hostnames like:
 
-{% navtabs "east-canary" %}
-{% navtab "Kubernetes" %}
+- `check-in-api-global.mzsvc.mesh.local`
+- `check-in-api-canary-global.mzsvc.mesh.local`
+
+### 2. Apply the rollout-zone canary route
+
+Apply this route only in the zone where you want the canary split. The validated 2.13 shape is:
+
+- top-level `targetRef.kind: Dataplane`
+- select the local callers with labels
+- reference the synced MMZS resources by `labels.kuma.io/display-name`
+- include `port: 8080` on every `MeshMultiZoneService` backend
+
+{% navtabs "zone-canary" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshHTTPRoute
 metadata:
-  name: check-in-east-canary
+  name: check-in-global-canary
   namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: MeshService
-    name: passenger-portal-east # Limits this policy to sidecars in the East region
+    kind: Dataplane
+    labels:
+      app: passenger-portal
   to:
     - targetRef:
         kind: MeshMultiZoneService
-        name: check-in-api-stable
+        labels:
+          kuma.io/display-name: check-in-api-global
       rules:
         - matches:
-            - path: { value: "/", type: PathPrefix }
+            - path:
+                type: PathPrefix
+                value: /
           default:
             backendRefs:
               - kind: MeshMultiZoneService
-                name: check-in-api-stable
-                weight: 90 # 90% traffic stays on the stable release
+                labels:
+                  kuma.io/display-name: check-in-api-global
+                port: 8080
+                weight: 90
               - kind: MeshMultiZoneService
-                name: check-in-api-canary
-                weight: 10 # 10% traffic shifts to the new baggage tracking canary' | kubectl apply -f -
+                labels:
+                  kuma.io/display-name: check-in-api-canary-global
+                port: 8080
+                weight: 10' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal / Global CP" %}
 ```bash
 echo 'type: MeshHTTPRoute
-name: check-in-east-canary
-mesh: default
+name: check-in-global-canary
+mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: MeshService 
-    name: passenger-portal-east # Limits this policy to sidecars in the East region
+    kind: Dataplane
+    labels:
+      app: passenger-portal
   to:
     - targetRef:
         kind: MeshMultiZoneService
-        name: check-in-api-stable
+        labels:
+          kuma.io/display-name: check-in-api-global
       rules:
         - matches:
-            - path: { value: "/", type: PathPrefix }
+            - path:
+                type: PathPrefix
+                value: /
           default:
             backendRefs:
               - kind: MeshMultiZoneService
-                name: check-in-api-stable
-                weight: 90 # 90% traffic stays on the stable release
+                labels:
+                  kuma.io/display-name: check-in-api-global
+                port: 8080
+                weight: 90
               - kind: MeshMultiZoneService
-                name: check-in-api-canary
-                weight: 10 # 10% traffic shifts to the new baggage tracking canary' | kumactl apply -f -
+                labels:
+                  kuma.io/display-name: check-in-api-canary-global
+                port: 8080
+                weight: 10' | kumactl apply -f -
 ```
 {% endnavtab %}
 {% endnavtabs %}
 
-### 3. West Zone Policy (Stable Only)
-This policy targets only sidecars in the `west` zone. It routes 100% of traffic to the stable service.
+{% tip %}
+This route is **zone-local**. Other zones keep using their existing stable path unless they add their own override or you apply a broader global route.
+{% endtip %}
 
-{% navtabs "west-stable" %}
-{% navtab "Kubernetes" %}
+### 3. Verify the synced MMZS and route
+
+Check that the synced MMZS resources matched the expected backends:
+
 ```bash
-echo 'apiVersion: kuma.io/v1alpha1
-kind: MeshHTTPRoute
-metadata:
-  name: check-in-west-stable
-  namespace: kong-air-production
-spec:
-  targetRef:
-    kind: MeshService
-    name: passenger-portal-west # Limits this policy to sidecars in the West region
-  to:
-    - targetRef:
-        kind: MeshMultiZoneService
-        name: check-in-api-stable
-      rules:
-        - matches:
-            - path: { value: "/", type: PathPrefix }
-          default:
-            backendRefs:
-              - kind: MeshMultiZoneService
-                name: check-in-api-stable
-                weight: 100 # West remains 100% stable while East carries the canary risk' | kubectl apply -f -
+kubectl get meshmultizoneservices -n {{site.mesh_system_namespace}} -o yaml
 ```
-{% endnavtab %}
-{% navtab "Universal" %}
+
+On the validated mesh:
+
+- `check-in-api-global` matched **2 MeshServices** (zone1 stable + zone2 stable)
+- `check-in-api-canary-global` matched **1 MeshService** (zone1 canary)
+
+You can then test from a pod in the rollout zone:
+
 ```bash
-echo 'type: MeshHTTPRoute
-name: check-in-west-stable
-mesh: default
-spec:
-  targetRef:
-    kind: MeshService
-    name: passenger-portal-west # Limits this policy to sidecars in the West region
-  to:
-    - targetRef:
-        kind: MeshMultiZoneService
-        name: check-in-api-stable
-      rules:
-        - matches:
-            - path: { value: "/", type: PathPrefix }
-          default:
-            backendRefs:
-              - kind: MeshMultiZoneService
-                name: check-in-api-stable
-                weight: 100 # West remains 100% stable while East carries the canary risk' | kumactl apply -f -
+kubectl exec -n kong-air-production <caller-pod> -c tools -- \
+  curl -sS http://check-in-api-global.mzsvc.mesh.local:8080
 ```
-{% endnavtab %}
-{% endnavtabs %}
 
-### 4. Cross-Region Failover (Locality Aware Load Balancing)
-To ensure that traffic prefers the local zone but fails over to the remote zone if the local service is down, apply a `MeshLoadBalancingStrategy`.
+After the workloads were reconciled onto the same identity model, the live 2.13 mesh produced the expected split again. A `90/10` route returned `54` stable responses and `6` canary responses over `60` requests.
 
-{% navtabs "locality-failover" %}
-{% navtab "Kubernetes" %}
-```bash
-echo 'apiVersion: kuma.io/v1alpha1
+## Optional: locality-aware failover for the stable pool
+
+`MeshLoadBalancingStrategy` is the policy that controls locality-aware failover. The stable-pool part of the pattern is a good fit for it because `check-in-api-global` spans multiple zones.
+
+{% warning %}
+We did **not** fully validate the end-to-end failover step on the live 2.13 mesh in this scenario until the workloads were reconciled onto a consistent identity model. Once the stable and canary workloads mixed different identity models, otherwise-correct HTTP routing started failing TLS verification. Treat the load-balancing step below as the right policy family and shape to validate in your environment after you confirm a consistent identity/trust setup and restart the workloads selected by your `MeshIdentity` resources.
+{% endwarning %}
+
+```yaml
+apiVersion: kuma.io/v1alpha1
 kind: MeshLoadBalancingStrategy
 metadata:
   name: check-in-locality
   namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: MeshService
-    name: passenger-portal
+    kind: Dataplane
+    labels:
+      app: passenger-portal
   to:
     - targetRef:
         kind: MeshMultiZoneService
-        name: check-in-api-stable
+        labels:
+          kuma.io/display-name: check-in-api-global
       default:
         localityAwareness:
+          disabled: false
           crossZone:
             failover:
               - to:
-                  type: Any # If local stable pods fail, route to the remote region
-    - targetRef:
-        kind: MeshMultiZoneService
-        name: check-in-api-canary
-      default:
-        localityAwareness:
-          disabled: false # Ensure locality is active for the canary as well
-          crossZone:
-            failover:
-              - to:
-                  type: Any # If local canary fails, fallback to ANY available remote (likely stable)' | kubectl apply -f -
+                  type: Any
 ```
-{% endnavtab %}
-{% navtab "Universal" %}
-```bash
-echo 'type: MeshLoadBalancingStrategy
-name: check-in-locality
-mesh: default
-spec:
-  targetRef:
-    name: passenger-portal
-  to:
-    - targetRef:
-        kind: MeshMultiZoneService
-        name: check-in-api-stable
-      default:
-        localityAwareness:
-          crossZone:
-            failover:
-              - to:
-                  type: Any # If local stable pods fail, route to the remote region
-    - targetRef:
-        kind: MeshMultiZoneService
-        name: check-in-api-canary
-      default:
-        localityAwareness:
-          disabled: false # Ensure locality is active for the canary as well
-          crossZone:
-            failover:
-              - to:
-                  type: Any # If local canary fails, fallback to ANY available remote (likely stable)' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
-## How It Works
-1.  **Traffic Split**: `MeshHTTPRoute` in East splits traffic: 90% to `backend-service-stable`, 10% to `backend-service-canary`.
-2.  **Locality**: For the requests going to `backend-service-stable`, Envoy sees endpoints from both East and West (aggregated by `MeshMultiZoneService`).
-3.  **Preference**: `MeshLoadBalancingStrategy` instructs Envoy to prefer endpoints in the local zone (East).
-4.  **Failover**: If all East endpoints for `backend-service-stable` fail, Envoy automatically streams traffic to West endpoints because of the `MeshLoadBalancingStrategy`.
+## What changed from the earlier pattern
 
----
+This scenario used to assume:
 
-## Pattern: Zone-Local Override (Self-Service)
-A powerful feature of {{site.mesh_product_name}} is that **Zone-originated policies take precedence over Global-originated policies** of the same specificity.
+- per-zone services like `passenger-portal-east` and `passenger-portal-west`
+- direct MMZS references by `name`
+- `MeshHTTPRoute` backends without explicit `port`
+- automatic "canary fails over to remote stable" behavior
 
-If your teams prefer a `kubectl`-only workflow localized to their cluster, they can apply `MeshHTTPRoute` policies directly to their **Zone Cluster**.
+That was too optimistic for the validated 2.13 path. The safer guidance is:
 
-### How it works:
-1.  **Global Base**: You can have a "Global" policy that sets 100% traffic to `stable`.
-2.  **Zone Override**: When it's time to rollout in `east`, the team runs `kubectl apply` in the `east` cluster with a weight of 10% to `canary`.
-3.  **Local Effect**: Sidecars in `east` will see both policies, but the **local** one wins. Sidecars in `west` continue to see only the Global 100% stable policy.
-4.  **No Sync-Up**: Because these policies target a `MeshMultiZoneService`, they are **not** treated as "Producer Policies" and will **not** be synced up to other zones. This ensures the canary rollout is completely isolated to that region.
+1. Use **one stable MMZS** spanning the zones you want to fail over between.
+2. Use **one canary MMZS** for the rollout pool.
+3. Apply the route **only in the rollout zone**.
+4. Reference synced global resources by **`kuma.io/display-name` labels** from zone-local policies.
+5. Keep the **identity model consistent** across all backends before testing cross-zone failover.
+
+## Pattern: Zone-local override
+
+This remains the core operational pattern:
+
+1. Create the shared `MeshMultiZoneService` resources on the **Global CP**
+2. Apply the canary route only in the **rollout zone**
+3. Leave other zones untouched until they are ready to add their own override
+
+That gives teams a practical self-service workflow: global service discovery stays centralized, while the rollout decision stays local to the zone that owns the experiment.

@@ -39,6 +39,10 @@ Using `MeshPassthrough`, you explicitly define which outbound destinations are a
 *   **Benefit**: Cryptographic proof and policy-driven control over the mesh boundary.
 *   **Compliance**: Meets requirements for PCI, HIPAA, and SOC2 regarding outbound data flow.
 
+{% tip %}
+**Interaction with mesh-scoped ZoneEgress (2.14+).** If you've enabled the new mesh-scoped ZoneEgress (the `meshes:` Helm list — see [Multi-Zone Architecture](/mesh/scenarios/multi-zone-architecture/)), `MeshExternalService` traffic flowing through that listener is **deny-by-default** at the ZE itself, SNI-matched per external service. A `MeshTrafficPermission` `Allow` for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-MeshExternalService egress.
+{% endtip %}
+
 ## 2. Configuring MeshPassthrough
 
 The `MeshPassthrough` policy defines how the proxy handles traffic that doesn't match any known `MeshService` or `MeshExternalService`.
@@ -65,7 +69,7 @@ spec:
 ```bash
 echo 'type: MeshPassthrough
 name: allow-all-passthrough
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
@@ -97,7 +101,7 @@ spec:
 ```bash
 echo 'type: MeshPassthrough
 name: secure-perimeter
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
@@ -138,7 +142,7 @@ spec:
 ```bash
 echo 'type: MeshPassthrough
 name: selective-passthrough
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh

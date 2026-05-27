@@ -44,7 +44,7 @@ Uses a Vault PKI role to sign mesh certificates. For Konnect-managed meshes, the
 echo 'apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
-  name: default
+  name: kong-air-mesh
 spec:
   meshServices:
     mode: Exclusive
@@ -71,7 +71,7 @@ spec:
 {% navtab "Universal (Global CP)" %}
 ```bash
 echo 'type: Mesh
-name: default
+name: kong-air-mesh
 meshServices:
   mode: Exclusive
 mtls:
@@ -105,7 +105,7 @@ Bridges {{site.mesh_product_name}} with the cert-manager ecosystem.
 echo 'apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
-  name: default
+  name: kong-air-mesh
 spec:
   mtls:
     enabledBackend: cert-manager-ca
@@ -120,7 +120,7 @@ spec:
 {% navtab "Universal (Global CP)" %}
 ```bash
 echo 'type: Mesh
-name: default
+name: kong-air-mesh
 spec:
   mtls:
     enabledBackend: cert-manager-ca
@@ -143,7 +143,7 @@ Integrates with AWS Private Certificate Authority for industrial-strength securi
 echo 'apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
-  name: default
+  name: kong-air-mesh
 spec:
   mtls:
     enabledBackend: aws-acm-ca
@@ -161,7 +161,7 @@ spec:
 {% navtab "Universal (Global CP)" %}
 ```bash
 echo 'type: Mesh
-name: default
+name: kong-air-mesh
 mtls:
   enabledBackend: aws-acm-ca
   backends:
@@ -193,7 +193,7 @@ metadata:
   name: flight-operations-id
   namespace: kong-mesh-system
   labels:
-    kuma.io/mesh: default
+    kuma.io/mesh: kong-air-mesh
 spec:
   provider:
     type: Bundled
@@ -223,7 +223,7 @@ spec:
 ```bash
 echo 'type: MeshIdentity
 name: flight-operations-id
-mesh: default
+mesh: kong-air-mesh
 spec:
   provider:
     type: Bundled

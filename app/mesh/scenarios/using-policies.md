@@ -32,9 +32,13 @@ The `targetRef` pattern is a standard established by the **Kubernetes Gateway AP
 
 Policies follow a standard structure:
 
-1.  **Top-Level `targetRef`**: Defines which sidecars receive the configuration.
-2.  **`to` / `from` Rules**: Defines the traffic flows affected by the policy.
+1.  **Top-Level `targetRef`**: Defines which sidecars the policy attaches to.
+2.  **`to[]` (outbound) or `rules[]` (inbound)**: Defines the traffic flows affected.
 3.  **`default` Config**: Defines the actual configuration values.
+
+{% danger %}
+**`spec.from` is deprecated.** The older `from`-style inbound configuration on `MeshTrafficPermission`, `MeshFaultInjection`, `MeshTLS`, `MeshAccessLog`, `MeshRateLimit`, `MeshCircuitBreaker`, and `MeshTimeout` is on the deprecation list and will be removed in 3.0. New policies should use `spec.rules[]` instead — see the "Inbound: `rules`" section below.
+{% enddanger %}
 
 ## Hierarchy levels
 
@@ -49,18 +53,22 @@ columns:
 rows:
   - level: Global
     kind: "`Mesh`"
-    use_case: "Baseline mTLS and logging for all Kong Air sidecars."
+    use_case: "Baseline mTLS and logging for every sidecar in `kong-air-mesh`."
   - level: Grouped
-    kind: "`MeshSubset`"
-    use_case: "Override security policies for a `region: east` or `env: staging`."
-  - level: Specific
-    kind: "`MeshService`"
-    use_case: "Fine-grained Canary routing for the `booking-engine`."
+    kind: "`Dataplane` with `labels:`"
+    use_case: "Override timeouts for `kuma.io/zone: us-east-1` or `environment: staging`."
+  - level: Specific (gateway only)
+    kind: "`MeshGateway`"
+    use_case: "Policies that apply to a built-in gateway."
 {% endtable %}
+
+{% warning %}
+At the **top level** of a policy, only `Mesh`, `Dataplane` (with `labels:`), and `MeshGateway` are recommended. `MeshSubset`, `MeshServiceSubset`, and `MeshService` are deprecated at the top level and emit a warning on apply. `MeshService`, `MeshMultiZoneService`, and `MeshExternalService` are still correct **inside `to[].targetRef` and `backendRefs`** — that's where they belong.
+{% endwarning %}
 
 ## Policy types and traffic flow
 
-Depending on the policy, you use either `to`, `from`, or a direct `default` block.
+Depending on the policy, you use either `to[]` (outbound), `rules[]` (inbound), or a direct `default` block.
 
 {% table %}
 columns:
@@ -73,38 +81,68 @@ columns:
   - title: Kong Air Example
     key: example
 rows:
-  - direction: "Outbound (`to`)"
+  - direction: "Outbound (`to[]`)"
     logic: "Affects traffic leaving a proxy towards a destination."
     policy_kinds: "`MeshHTTPRoute`, `MeshRetry`, `MeshCircuitBreaker`"
-    example: "Route 10% of `passenger-portal` traffic to `booking-v2`."
-  - direction: "Inbound (`from`)"
-    logic: "Affects traffic entering a proxy from a source."
-    policy_kinds: "`MeshTrafficPermission`"
-    example: "Only allow `flight-control` to call the `check-in-api`."
-  - direction: Dual-Purpose
-    logic: "Can be applied to both incoming or outgoing flows."
-    policy_kinds: "`MeshTimeout`, `MeshRateLimit`, `MeshAccessLog`"
-    example: "Set a 5s outbound timeout on all requests leaving `flight-control`."
+    example: "Route 10% of `passenger-portal` traffic to `passenger-portal-v2`."
+  - direction: "Inbound (`rules[]`)"
+    logic: "Affects traffic entering a proxy from a source, matched by SPIFFE identity."
+    policy_kinds: "`MeshTrafficPermission`, `MeshFaultInjection`, `MeshTLS`, `MeshAccessLog`, `MeshRateLimit`, `MeshCircuitBreaker`, `MeshTimeout`"
+    example: "Only allow callers with SPIFFE ID `spiffe://kong-air-mesh/flight-control` to reach `check-in-api`."
   - direction: Direct (`default`)
     logic: "Configures proxy capabilities directly."
-    policy_kinds: "`MeshMetric`, `MeshTrace`, `MeshProxyPatch`"
-    example: "Enable Prometheus metrics for every sidecar in the mesh."
+    policy_kinds: "`MeshMetric`, `MeshTrace`, `MeshProxyPatch`, `MeshPassthrough`"
+    example: "Enable Prometheus metrics on every sidecar in the mesh."
 {% endtable %}
+
+## Inbound: `rules`
+
+`rules[]` replaces the older `from[]`. Each rule has an optional `matches` block (filtering on SPIFFE identity, headers, etc.) and a `default` block with the policy configuration. The match value comes from `MeshIdentity` — every workload is issued an identity like `spiffe://<trust-domain>/<workload>`, and that identity is what other proxies see at the inbound listener.
+
+Example — `MeshTrafficPermission` allowing only `flight-control` to reach `check-in-api`:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshTrafficPermission
+metadata:
+  name: only-flight-control-to-check-in
+  namespace: {{site.mesh_system_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: check-in-api
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Exact
+              value: spiffe://kong-air-mesh/flight-control
+```
+
+The `Match` type supports `Exact` and `Prefix` matching on SPIFFE IDs. See the [Workload Identity & Trust](/mesh/scenarios/workload-identity/) scenario for how identities are issued.
 
 ## Policy precedence
 
-{{site.mesh_product_name}} follows a "most specific wins" approach. A `MeshService` policy always overrides a `Mesh` policy for that specific service. 
+{{site.mesh_product_name}} follows a **most-specific-wins** approach. A policy that targets a `Dataplane` with labels overrides a policy that targets `Mesh` for the proxies it matches. Within `rules[]`, a more specific `Exact` SPIFFE match wins over a `Prefix` match.
 
-**Best practice**: Define broad `Mesh` policies for baseline behavior and use `MeshService` overrides only for critical services requiring custom tuning.
+{% warning %}
+`MeshTrafficPermission` is the important exception. Kuma evaluates **all** matching MTP rules for a request, and if any matched rule produces a `Deny`, that deny wins. So use the "most-specific-wins" mental model for the other inbound policies, but treat MTP as an RBAC-style allow/deny evaluation pass.
+{% endwarning %}
+
+**Best practice**: Define broad `Mesh`-level policies for baseline behaviour, then add narrower `Dataplane`-with-labels overrides only for the cases that need them.
 
 
 ## Key Vocabulary
 
 | Term | Meaning |
 | :--- | :--- |
-| **`kind: Mesh`** | Absolute broadest scope. Use for "baseline" security and reliability. |
-| **`kind: MeshSubset`** | Selective scope based on tags. Great for A/B testing or blue/green. |
-| **`kind: MeshService`** | Targeted scope. Best for service-specific fine-tuning. |
+| **`kind: Mesh`** | Broadest scope. Use for "baseline" security and reliability. |
+| **`kind: Dataplane` with `labels:`** | Selective scope based on workload labels. Replaces the deprecated `MeshSubset`. |
+| **`kind: MeshGateway`** | For built-in mesh gateways. |
+| **`spiffeID` match (in `rules[]`)** | Identity-based filtering inside inbound rules. |
 
 ## Best Practice: Start Broad, Then Narrow
-The most efficient way to manage a mesh is to define a `Mesh` level policy for everything (mTLS, basic timeouts, broad permissions) and then add specific `MeshService` policies only where they are needed. This keeps your configuration clean and easy to audit.
+The most efficient way to manage a mesh is to define a `Mesh`-level policy for everything (mTLS, basic timeouts, broad permissions) and then add `Dataplane`-with-labels overrides only where they are needed. This keeps your configuration clean and easy to audit.

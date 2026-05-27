@@ -14,7 +14,7 @@ tldr:
     Workload Identity decouples identity from the `Mesh` resource. It allows you to:
     1. **Define granular identity** per workload via `MeshIdentity`.
     2. **Manage Trust** explicitly using `MeshTrust` CA bundles.
-    3. **Customize SPIFFE IDs** to align with your organization's taxonomy.
+    3. **Customize SPIFFE IDs** while migrating safely from legacy mesh-wide identities.
 prereqs:
   inline:
     - title: Architecture
@@ -31,6 +31,13 @@ next_steps:
 
 In the previous model, the `Mesh` object was the source of all authority. In the new model, identity is a distinct lifecycle managed by two primary resources: `MeshIdentity` and `MeshTrust`.
 
+{% tip %}
+**Version guide.** `MeshIdentity` is available in 2.13 and works there today. The key difference is the **best-practice template**, not whether the feature exists:
+
+- **2.13 best practice:** enable `meshServices.mode: Exclusive`, use `MeshIdentity` with the Kubernetes ServiceAccount SPIFFE path, and let the bundled provider auto-generate the CA and `MeshTrust`.
+- **2.14+ / Kong Mesh 3 path:** move toward workload-label-based SPIFFE paths (`{% raw %}{{ label "kuma.io/workload" }}{% endraw %}`) and the newer policy model that matches directly on SPIFFE IDs more often.
+{% endtip %}
+
 | Feature | Mesh mTLS | Modern Workload Identity |
 | :--- | :--- | :--- |
 | **Scope** | Mesh-wide (single CA) | Granular (target specific workloads) |
@@ -43,8 +50,12 @@ In the previous model, the `Mesh` object was the source of all authority. In the
 Before enabling Workload Identity, you must ensure your mesh is using the modern **MeshService** resource model.
 
 {% warning %}
-`MeshIdentity` requires `meshServices.mode: Exclusive` to be set on your `Mesh` resource. This disables the legacy `kuma.io/service` tags and moves your mesh to a first-class resource-based identity system.
+`MeshIdentity` becomes active only when `meshServices.mode: Exclusive` is set on the `Mesh`. On the validated 2.13 path, the control plane accepts the `MeshIdentity` resource before that point, but does not initialize it until MeshServices are enabled on the mesh.
 {% endwarning %}
+
+{% tip %}
+**For 2.13 operators:** this is the point where the docs intentionally diverge. If you are not ready to enable `meshServices.mode: Exclusive`, stay on the legacy identity model for now and use this page as migration guidance. If you are ready to pilot workload identity on 2.13, enable `Exclusive` first and then continue with the `MeshIdentity` resources below.
+{% endtip %}
 
 {% navtabs "mesh-services-mode" %}
 {% navtab "Kubernetes (Global CP)" %}
@@ -57,7 +68,7 @@ Before enabling Workload Identity, you must ensure your mesh is using the modern
 echo 'apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
-  name: default
+  name: kong-air-mesh
 spec:
   meshServices:
     mode: Exclusive' | kubectl apply -f -
@@ -71,7 +82,7 @@ Run this against your **Global CP**. Use `kumactl config control-planes use <glo
 
 ```bash
 echo 'type: Mesh
-name: default
+name: kong-air-mesh
 meshServices:
   mode: Exclusive' | kumactl apply -f -
 ```
@@ -80,81 +91,139 @@ meshServices:
 
 ## 3. Defining Identity with `MeshIdentity`
 
-This is the closest to the classic model but with the added flexibility of targeting specific workloads.
+For the validated 2.13 path, the simplest and most reliable pattern is:
+
+1. Apply the `MeshIdentity` on the **Global CP**
+2. Use the **Bundled** provider with `autogenerate.enabled: true`
+3. Keep the SPIFFE path in the Kubernetes **ServiceAccount** form
+4. Let Kuma automatically create the matching `MeshTrust`
 
 {% warning %}
-On **Kubernetes**, `MeshIdentity` must be applied to the **system namespace** (e.g., `kong-mesh-system`). This is because `MeshIdentity` is an identity authority for all workloads in the mesh, rather than a per-application resource. Restricting it to the system namespace ensures only platform engineers can modify the CA configuration. See [Resource Scoping](/mesh/scenarios/resource-scoping/).
+On Kubernetes, the **synced copy** of `MeshIdentity` lives in the **system namespace** on each Zone CP. If your Global CP is also Kubernetes-backed, create the resource in the system namespace there as well. If your Global CP is Konnect or Universal-backed, apply it with `kumactl` and let Kuma sync the generated copy down to each zone.
 {% endwarning %}
 
+{% tip %}
+**2.13 vs 2.14+ SPIFFE templates.** The live 2.13 mesh validated the ServiceAccount template cleanly. A workload-label template also rendered, but with default Kubernetes runtime settings it resolved to `workload/default`, because the workload identifier falls back to the ServiceAccount when workload labels are not configured. That makes the ServiceAccount form the safer 2.13 default.
+{% endtip %}
+
 {% navtabs "mesh-identity" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes / 2.13 best practice" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshIdentity
 metadata:
-  name: flight-operations-id
-  namespace: kong-mesh-system
+  name: passenger-portal-identity
+  namespace: {{site.mesh_system_namespace}}
   labels:
-    kuma.io/mesh: default
+    kuma.io/mesh: kong-air-mesh
 spec:
   selector:
     dataplane:
       matchLabels:
-        app: flight-control
+        app: passenger-portal
   provider:
     type: Bundled
     bundled:
       insecureAllowSelfSigned: true
-      ca:
-        certificate:
-          type: Secret
-          secretRef:
-            kind: Secret
-            name: kong-air-ca-cert
-        privateKey:
-          type: Secret
-          secretRef:
-            kind: Secret
-            name: kong-air-ca-key
+      autogenerate:
+        enabled: true
+      meshTrustCreation: Enabled
   spiffeID:
-    path: /{% raw %}{{ .Namespace }}{% endraw %}/{% raw %}{{ .Workload }}{% endraw %}
-    trustDomain: internal.kongair.com' | kubectl apply -f -
+    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
+    trustDomain: kong-air-mesh.mesh.local' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal / 2.13 best practice" %}
 ```bash
 echo 'type: MeshIdentity
-name: flight-operations-id
-mesh: default
+name: passenger-portal-identity
+mesh: kong-air-mesh
 spec:
   selector:
     dataplane:
       matchLabels:
-        app: flight-control
+        app: passenger-portal
   provider:
     type: Bundled
     bundled:
       insecureAllowSelfSigned: true
-      ca:
-        certificate:
-          type: Secret
-          secretRef:
-            kind: Secret
-            name: kong-air-ca-cert
-        privateKey:
-          type: Secret
-          secretRef:
-            kind: Secret
-            name: kong-air-ca-key
+      autogenerate:
+        enabled: true
+      meshTrustCreation: Enabled
   spiffeID:
-    path: /{% raw %}{{ .Namespace }}{% endraw %}/{% raw %}{{ .Workload }}{% endraw %}
-    trustDomain: internal.kongair.com' | kumactl apply -f -
+    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
+    trustDomain: kong-air-mesh.mesh.local' | kumactl apply -f -
+```
+{% endnavtab %}
+{% navtab "2.14+ / Kong Mesh 3 pattern" %}
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshIdentity
+metadata:
+  name: passenger-portal-identity
+  namespace: {{site.mesh_system_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+spec:
+  selector:
+    dataplane:
+      matchLabels:
+        app: passenger-portal
+  provider:
+    type: Bundled
+    bundled:
+      insecureAllowSelfSigned: true
+      autogenerate:
+        enabled: true
+      meshTrustCreation: Enabled
+  spiffeID:
+    trustDomain: kong-air-mesh.mesh.local
+    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}
 ```
 {% endnavtab %}
 {% endnavtabs %}
 
+{% tip %}
+On the validated 2.13 Konnect-backed mesh, applying `MeshIdentity` with `kumactl` created a **hashed synced copy** in the system namespace on the zone, for example `passenger-portal-identity-bf84b64z54xbcf8f`. Kuma also auto-created a matching `MeshTrust` in the zone.
+{% endtip %}
+
+{% warning %}
+**Operational note for 2.13 migrations.** Applying `MeshIdentity` to an already-running workload is not always enough by itself. On the validated 2.13 mesh, older dataplanes continued serving their previous certificate until the workload was reconciled. After you apply or change a `MeshIdentity`, restart the selected workload so the dataplane comes up on the new identity before you validate cross-service traffic.
+{% endwarning %}
+
+For Kubernetes, the safest path is a normal rollout restart of the affected workload:
+
+```bash
+kubectl rollout restart deployment/<workload-name> -n kong-air-production
+```
+
+### Verify that the identity is active
+
+The clearest 2.13 verification step is to inspect `DataplaneInsight`, not raw Envoy config:
+
+```bash
+kubectl get dataplaneinsights -n kong-air-production -o yaml | grep -A4 issuedBackend
+```
+
+When the identity is active, the selected workload's `status.mTLS.issuedBackend` changes from `builtin` to the KRI for your `MeshIdentity`, for example:
+
+```yaml
+status:
+  mTLS:
+    issuedBackend: kri_mid_kong-air-mesh___passenger-portal-identity_
+```
+
+On the validated 2.13 migration path, we also checked that `status.mTLS.certificateExpirationTime` moved forward after the restart. If `issuedBackend` changed but traffic still fails TLS verification, inspect the sidecar certificate and confirm the workload has actually rotated onto the new cert.
+
+If you want to inspect the actual certificate SAN on a sidecar, you can still do that:
+
+```bash
+kubectl exec -n kong-air-production <pod> -c kuma-sidecar -- \
+  wget -qO- http://127.0.0.1:9901/certs | grep -n 'spiffe://'
+```
+
 ### Example: Using the SPIRE Provider
-For high-security environments, you can delegate identity to **SPIRE** (the SPIFFE Runtime Environment).
+For higher-assurance environments, you can delegate identity to **SPIRE** (the SPIFFE Runtime Environment).
 
 {% navtabs "spire-identity" %}
 {% navtab "Kubernetes" %}
@@ -163,17 +232,17 @@ apiVersion: kuma.io/v1alpha1
 kind: MeshIdentity
 metadata:
   name: spire-identity
-  namespace: kong-mesh-system
+  namespace: {{site.mesh_system_namespace}}
   labels:
-    kuma.io/mesh: default
+    kuma.io/mesh: kong-air-mesh
 spec:
   selector:
     dataplane:
       matchLabels:
         env: prod
   spiffeID:
-    trustDomain: internal.kongair.com
-    path: "/{% raw %}{{ .Namespace }}{% endraw %}/{% raw %}{{ .Workload }}{% endraw %}"
+    trustDomain: kong-air-mesh.mesh.local
+    path: "/ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}"
   provider:
     type: Spire
     spire:
@@ -185,15 +254,15 @@ spec:
 ```yaml
 type: MeshIdentity
 name: spire-identity
-mesh: default
+mesh: kong-air-mesh
 spec:
   selector:
     dataplane:
       matchLabels:
         env: prod
   spiffeID:
-    trustDomain: internal.kongair.com
-    path: "/{% raw %}{{ .Namespace }}{% endraw %}/{% raw %}{{ .Workload }}{% endraw %}"
+    trustDomain: kong-air-mesh.mesh.local
+    path: "/ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}"
   provider:
     type: Spire
     spire:
@@ -212,6 +281,10 @@ This separation allows you to:
 - Establish trust across different identity providers.
 - Manage cross-mesh or cross-cloud trust explicitly.
 
+{% tip %}
+For the bundled-provider path above, Kuma auto-generated the `MeshTrust` resource for us. In day-to-day 2.13 adoption, you usually create `MeshTrust` manually only when you are adding an extra trust domain, rotating trust deliberately, or integrating an external identity provider.
+{% endtip %}
+
 {% navtabs "mesh-trust" %}
 {% navtab "Kubernetes" %}
 ```yaml
@@ -219,11 +292,11 @@ apiVersion: kuma.io/v1alpha1
 kind: MeshTrust
 metadata:
   name: global-trust
-  namespace: kong-mesh-system
+  namespace: {{site.mesh_system_namespace}}
   labels:
-    kuma.io/mesh: default
+    kuma.io/mesh: kong-air-mesh
 spec:
-  trustDomain: internal.kongair.com
+  trustDomain: kong-air-mesh.mesh.local
   caBundles:
     - type: Pem
       pem:
@@ -243,9 +316,9 @@ spec:
 ```yaml
 type: MeshTrust
 name: global-trust
-mesh: default
+mesh: kong-air-mesh
 spec:
-  trustDomain: internal.kongair.com
+  trustDomain: kong-air-mesh.mesh.local
   caBundles:
     - type: Pem
       pem:
@@ -274,9 +347,10 @@ apiVersion: kuma.io/v1alpha1
 kind: MeshTLS
 metadata:
   name: strict-mtls
-  namespace: kong-mesh-system
+  namespace: {{site.mesh_system_namespace}}
   labels:
-    kuma.io/mesh: default
+    kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Mesh
@@ -288,7 +362,7 @@ spec:
 ```yaml
 type: MeshTLS
 name: strict-mtls
-mesh: default
+mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh

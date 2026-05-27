@@ -12,9 +12,9 @@ tldr:
   q: How do I manage specific external services as part of my mesh?
   a: |
     Use **MeshExternalService** to:
-    1. **Assign dedicated DNS**: Give external APIs friendly internal names (e.g., `aeropay.ext.svc`).
+    1. **Assign dedicated DNS**: Give external APIs stable internal names (for example `aeropay-api.extsvc.mesh.local`).
     2. **Enable Observability**: Get metrics and logs for outbound calls just like internal services.
-    3. **Apply Resiliency**: Use `MeshHTTPRoute` to configure retries and timeouts for external dependencies.
+    3. **Apply Resiliency**: Use `MeshRetry`, `MeshTimeout`, and related mesh policies to configure retries and timeouts for external dependencies.
 prereqs:
   inline:
     - title: Architecture
@@ -38,35 +38,34 @@ We want these dependencies to feel like internal services:
 
 ## 2. Setting the Naming Standard
 
-First, we define how external services will be named within Kong Air using a `HostnameGenerator`. This creates a dedicated internal domain space for our external dependencies.
+On Kubernetes, {{site.mesh_product_name}} already ships with a default `HostnameGenerator` for zone-local `MeshExternalService` resources. In the validated 2.13 environment, that generator produced hostnames in the form:
 
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: HostnameGenerator
-metadata:
-  name: external-services
-  namespace: {{site.mesh_system_namespace}}
-spec:
-  template: '{% raw %}{{ .DisplayName }}.ext.kongair.com{% endraw %}'
-  selector:
-    meshExternalService:
-      matchLabels:
-        kuma.io/origin: zone
+```text
+<display-name>.extsvc.mesh.local
 ```
 
-## 3. Defining the RDS Database (TCP)
+{% tip %}
+**Validated 2.13 behavior.** A zone-local `MeshExternalService` named `aeropay-api` was assigned the hostname `aeropay-api.extsvc.mesh.local` and a VIP from the external-service CIDR (`242.0.0.0/8`).
+{% endtip %}
 
-Kong Air uses a managed PostgreSQL instance for flight data. By defining it as a `MeshExternalService`, the `booking-svc` can reach it via `flight-db.ext.kongair.com` using its standard database driver.
+If Kong Air wants a custom naming scheme, that is an **operator-level customization** of `HostnameGenerator`, not something each application team should redefine in every scenario.
+
+## 3. Defining the RDS Database
+
+Kong Air uses a managed PostgreSQL instance for flight data. By defining it as a `MeshExternalService`, the application can reach it through a mesh-generated hostname instead of hardcoding the AWS endpoint directly.
 
 > [!NOTE]
-> The application uses the **friendly mesh hostname** (`flight-db.ext.kongair.com`) and **plain TCP**. The sidecar intercepts this and routes it to the actual AWS RDS endpoint.
+> On Kubernetes in multi-zone mode, `MeshExternalService` is a **system-namespace resource**. On a Zone CP, it must be created in `{{site.mesh_system_namespace}}` and carry the label `kuma.io/origin: zone`.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshExternalService
 metadata:
   name: flight-db
-  namespace: kong-air-production
+  namespace: {{site.mesh_system_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   match:
     type: HostnameGenerator
@@ -75,25 +74,35 @@ spec:
   endpoints:
     - address: rds-instance-01.c7x2.us-east-1.rds.amazonaws.com
       port: 5432
+  tls:
+    enabled: true
+    verification:
+      mode: Secured
+      serverName: rds-instance-01.c7x2.us-east-1.rds.amazonaws.com
 ```
+
+This keeps the application configuration simple while still aiming for encrypted traffic between the sidecar and the managed database.
 
 ## 4. Securing AeroPay (HTTPS with TLS Origination)
 
-For the AeroPay API, Sarah (the Security Architect) wants to ensure all traffic is encrypted, but she doesn't want developers managing Stripe-specific CA bundles. `MeshExternalService` handles the TLS origination at the sidecar.
+For the AeroPay API, Sarah (the Security Architect) wants to ensure all traffic is encrypted, but she doesn't want developers managing third-party CA bundles in application code. `MeshExternalService` is the resource intended to handle TLS origination at the sidecar.
 
 > [!IMPORTANT]
-> The application calls the AeroPay service using **standard HTTP** (not HTTPS) at the mesh-internal address `http://aeropay-api.ext.kongair.com`. The sidecar then upgrades this to **HTTPS** before it leaves the mesh.
+> If Kong Air wants developers to call the service with plain HTTP inside the mesh, the **internal match port** should be an HTTP port such as `80`, while the upstream endpoint can still be `443`. The mesh-generated hostname will still come from the `HostnameGenerator`.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshExternalService
 metadata:
   name: aeropay-api
-  namespace: kong-air-sec
+  namespace: {{site.mesh_system_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   match:
     type: HostnameGenerator
-    port: 443
+    port: 80
     protocol: http
   endpoints:
     - address: api.aeropay.com
@@ -105,17 +114,30 @@ spec:
       serverName: api.aeropay.com
 ```
 
+{% warning %}
+**Engineering validation still required for TLS origination on this 2.13 setup.** In the live validation environment, Kubernetes accepted the `MeshExternalService`, generated the hostname, and programmed the outbound listener, but requests to public HTTPS endpoints failed with:
 
-## 5. Adding Resiliency with MeshHTTPRoute
+```text
+503 Service Unavailable
+TLS error: Secret is not supplied by SDS
+```
 
-Because AeroPay is now a first-class citizen, Devin (the Developer) can apply standard mesh policies to it. If AeroPay is momentarily slow or returns a 5xx error, the mesh can automatically retry.
+So the naming and scoping model is validated, but the HTTPS-origination path still needs final engineering confirmation before we present it as fully proven.
+{% endwarning %}
+
+## 5. Adding Resiliency with MeshRetry
+
+Because AeroPay is now a first-class citizen, Devin can apply standard mesh policies to it. If AeroPay is momentarily slow or returns a 5xx error, the mesh can automatically retry. Retries are configured with the **`MeshRetry`** policy — `MeshHTTPRoute` filters cover header rewrites, redirects, and mirroring, but **not retries**.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
-kind: MeshHTTPRoute
+kind: MeshRetry
 metadata:
   name: aeropay-retry-policy
-  namespace: kong-air-production
+  namespace: {{site.mesh_system_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   targetRef:
     kind: MeshService
@@ -124,26 +146,22 @@ spec:
     - targetRef:
         kind: MeshExternalService
         name: aeropay-api
-      rules:
-        - matches:
-            - path:
-                type: PathPrefix
-                value: "/"
-          default:
-            filters:
-              - type: RequestRetry
-                requestRetry:
-                  http:
-                    numRetries: 3
-                    retryOn: ["5xx", "connect-failure"]
-
-> [!TIP]
-> While `MeshHTTPRoute` is the modern standard for HTTP-specific retries, you can also use **MeshRetry** for broader service-level retries or **MeshCircuitBreaker** to prevent the mesh from overwhelming an external service that is struggling.
+      default:
+        http:
+          numRetries: 3
+          retryOn:
+            - 5xx
+            - ConnectFailure
+            - GatewayError
 ```
+
+{% tip %}
+Pair this with **`MeshCircuitBreaker`** to stop the mesh from hammering an external service that is already struggling, and **`MeshTimeout`** to bound the total time spent retrying.
+{% endtip %}
 
 ## Summary
 
 By using `MeshExternalService`, Kong Air has achieved:
-1. **Zero-Trust**: No traffic leaves the mesh unless explicitly defined.
-2. **Simplified Dev**: Developers use `aeropay-api.ext.kongair.com` instead of complex external URLs.
-3. **Operational Excellence**: Centralized control over retries and TLS for all third-party dependencies.
+1. **Explicit outbound inventory**: External dependencies are represented as named resources instead of ad hoc passthrough destinations.
+2. **Stable internal naming**: Developers use mesh-generated names such as `aeropay-api.extsvc.mesh.local`.
+3. **Centralized policy control**: Retries, timeouts, and TLS settings live in mesh policy rather than scattered application config.

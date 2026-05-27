@@ -33,19 +33,36 @@ To satisfy strict aviation industry regulations, Ollie routes all outgoing traff
 *   **Auditability**: Ollie has a single point to audit every request leaving the zone.
 
 ```yaml
-# Ollie ensures ZoneEgress is enabled in the Mesh configuration
+# Ollie ensures ZoneEgress is enabled on the kong-air-mesh
 apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
-  name: default
+  name: kong-air-mesh
 spec:
   routing:
     zoneEgress: true
 ```
 
+### Mesh-scoped zone proxies (2.14+)
+
+For a mesh-per-tenant model, Ollie deploys dedicated zone proxies per mesh using the Helm `meshes:` list. Each entry provisions its own ingress/egress with independent HPA, PDB, and ServiceAccount, keeping `kong-air-mesh` isolated from any future siblings (e.g. a separate mesh for ground operations). Two operational details:
+
+{% tip %}
+**If Ollie is still on 2.13:** he keeps using the original fleet-wide `ingress` / `egress` Helm values. This 2.14+ model is an additive deployment option, not a forced migration. The main reason to move is stronger per-mesh isolation and a cleaner path into Kong Mesh 3.
+{% endtip %}
+
+*   The new embedded **ZoneEgress listeners are deny-by-default**. Every `MeshExternalService` is SNI-matched; Ollie needs to coordinate with Sarah on `MeshTrafficPermission` `Allow` rules tied to the caller's SPIFFE identity before any external call works.
+*   The new model is additive — the original fleet-wide `ingress`/`egress` Helm values still work, so Ollie can migrate per-mesh on his own schedule.
+
+### Envoy admin API on UDS (2.14+)
+
+In 2.14, sidecar Envoy admin moves to a **Unix domain socket by default**. A readiness reverse-proxy on TCP `9902` exposes the admin endpoints for kubectl exec, probes, and existing debug scripts. The `KUMA_EXPERIMENTAL_ADMIN_UNIX_SOCKET` environment variable is renamed to `KUMA_BOOTSTRAP_SERVER_PARAMS_ADMIN_UNIX_SOCKET`. Any tooling Ollie has wired to `localhost:9901` needs to switch to the UDS path or `localhost:9902`.
+
+If Ollie is on 2.13, his existing TCP-admin assumptions still hold. This is one of the changes to call out explicitly in upgrade runbooks and debug tooling.
+
 ## 3. High-Availability Gateway Infrastructure
 
-Ollie manages the **MeshGatewayInstance** resources that Devin's team uses. He ensures they are scaled for high load.
+Ollie manages the **MeshGatewayInstance** resources that surface Devin's services to the outside world. He ensures they are scaled for peak travel season. (In 2.14, prefer addressing the gateway as a `MeshService` rather than relying on `kuma.io/service` tags — the tag form still works, but the label-selected `MeshService` model is where the team is heading.)
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -53,6 +70,8 @@ kind: MeshGatewayInstance
 metadata:
   name: booking-gateway-ha
   namespace: kong-air-gateways
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   replicas: 5 # Ensuring plenty of capacity for peak travel season
   serviceType: LoadBalancer
@@ -65,14 +84,16 @@ spec:
 Ollie provides "Observability as a Service" so Devin doesn't have to worry about where his logs and traces go.
 
 ### Distributed Tracing (`MeshTrace`)
-Ollie sets up End-to-End tracing across all zones, exporting spans to a global Jaeger instance.
+Ollie sets up end-to-end tracing across all zones, exporting spans via OTLP/gRPC to a global collector. In 2.14, the recommended pattern is to define one `MeshOpenTelemetryBackend` and reference it from every observability policy — see [Observability in Practice](/mesh/scenarios/observability-in-practice/) for the full pattern. HTTP/HTTPS OTel transports were dropped on master; only gRPC OTel remains.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshTrace
 metadata:
   name: global-flight-trace
-  namespace: kong-air-ops
+  namespace: {{site.mesh_system_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
@@ -80,7 +101,9 @@ spec:
     backends:
       - type: OpenTelemetry
         openTelemetry:
-          endpoint: otel-collector.monitoring.svc:4317
+          backendRef:
+            kind: MeshOpenTelemetryBackend
+            name: kong-air-otel
     sampling:
       overall: 100 # High sampling for mission-critical logistics
 ```
@@ -108,7 +131,7 @@ spec:
 ```
 
 {% tip %}
-Ollie often uses **`MeshSubset`** at the top level of his policies to target entire zones or environments without needing to list every service individually. Learn more in the [Subsets & Targeting Guide](/mesh/scenarios/subsets-and-targeting/).
+To scope a policy to a slice of the fleet (a whole zone, an environment, a region), Ollie sets the top-level `targetRef` to **`Dataplane`** with a `labels:` selector — for example `kuma.io/zone: us-east-1` or `environment: production`. Top-level `MeshSubset`, `MeshServiceSubset`, and `MeshService` are deprecated; use `Dataplane` with labels going forward. See the [Subsets & Targeting Guide](/mesh/scenarios/subsets-and-targeting/) for examples.
 {% endtip %}
 
 ## 5. Operational Health & Lifecycle
