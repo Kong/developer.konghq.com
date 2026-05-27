@@ -794,6 +794,19 @@
             "claim.name": "client_id",
             "jsonType.label": "String"
           }
+        },
+        {
+          "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+          "name": "kong-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "kong",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
         }
       ],
       "defaultClientScopes": [
