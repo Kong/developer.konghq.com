@@ -15,6 +15,10 @@ products:
     - insomnia
 tier: enterprise
 
+next_steps:
+  - text: Link a {{ site.konnect_short_name }} Service Gateway to {{ site.data.products.insomnia.name }}
+    url: /how-to/link-konnect-to-insomnia/
+
 related_resources:
   - text: Security at Insomnia
     url: /insomnia/manage-insomnia/#security
@@ -26,6 +30,8 @@ related_resources:
     url: /insomnia/enterprise-user-management/
   - text: Migrate from scratch pad to Enterprise
     url: /insomnia/migrate-from-scratch-pad-to-enterprise/
+  - text: Link Konnect to Insomnia
+    url: /how-to/link-konnect-to-insomnia/
 
 faqs:
   - q: Why does {{ site.data.products.insomnia.name }} skip some routes?
