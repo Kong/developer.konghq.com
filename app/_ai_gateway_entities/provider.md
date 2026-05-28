@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayProvider
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -46,6 +45,12 @@ faqs:
       No. A Provider entity is a write-time template. Credentials and configuration only enter
       the runtime when a Model references the Provider; at that point, the Provider's values are
       materialized into the underlying primitives generated for the Model.
+
+  - q: How do I configure providers in on-prem deployments?
+    a: |
+      {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
+      For on-prem deployments, configure provider credentials and endpoints using {{site.base_gateway}} plugins directly (for example, the AI Proxy plugin).
+      See the [{{site.base_gateway}} plugin catalog](/gateway/plugins/) for available AI-related plugins.
 ---
 
 ## What is a Provider?
@@ -60,23 +65,17 @@ A Provider stores how to reach and authenticate to an upstream LLM service. A [M
 
 Providers don't expose model endpoints on their own. They become routable only through a Model that references them.
 
-Providers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
+Providers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/providers
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/providers
 {% endtable %}
 
 ## Supported providers

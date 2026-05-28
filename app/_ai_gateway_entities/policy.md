@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayPolicy
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -52,11 +51,6 @@ faqs:
       The plugin runs when the Consumer is identified during a request, or when a member of the
       Consumer Group is identified.
 
-      Unlike Model, Agent, and MCP Server, on-prem does not expose nested policy endpoints
-      (`/ai/consumers/{id}/policies` or `/ai/consumer-groups/{id}/policies`) for these two entity
-      types. The reference-array mechanism is the only way to attach a Policy to a Consumer or
-      Consumer Group in either deployment mode.
-
   - q: What plugin types can a Policy use?
     a: |
       Set the plugin name in the Policy's `type` field and provide the plugin's configuration
@@ -66,10 +60,6 @@ faqs:
 
   - q: What happens to a Policy when its parent entity is deleted?
     a: |
-      Policies created through an on-prem nested endpoint (`POST /ai/models/{modelId}/policies`,
-      `POST /ai/agents/{agentId}/policies`, or `POST /ai/mcp-servers/{mcpServerId}/policies`) are
-      lifecycle-coupled to the parent and removed when the parent is deleted, along with the rest
-      of that entity's derived primitives.
       Standalone Policies referenced from parent entities through a `policies` array are independent
       and aren't deleted when a referencing parent is deleted. The reference is simply removed.
 ---
@@ -84,23 +74,17 @@ For the set of plugin types you can use as a Policy `type`, see the [AI plugin r
 
 Policies are not shared. Each Policy is one plugin instance. To apply the same configuration to two parent entities, create two Policies.
 
-Policies are managed through the {{site.ai_gateway}} entity surface in both deployment modes:
+Policies are managed through the {{site.ai_gateway}} entity surface:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/policies
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/policies
 {% endtable %}
 
 ## Policy scopes
@@ -118,15 +102,7 @@ The available scopes are:
 
 ### Creating Policies
 
-In {{site.konnect_short_name}}, all Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is set entirely through the reference-array mechanism above: add the Policy's `name` or `id` to the parent entity's `policies` array, or omit the reference for global scope.
-
-In on-prem, the same flat creation endpoint is available at `/ai/policies`. On-prem additionally exposes convenience nested endpoints that create and scope a Policy in one call:
-
-* `POST /ai/models/{modelId}/policies`
-* `POST /ai/agents/{agentId}/policies`
-* `POST /ai/mcp-servers/{mcpServerId}/policies`
-
-Consumer and Consumer Group scoping uses the reference-array mechanism in both deployment modes.
+All Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is set entirely through the reference-array mechanism above: add the Policy's `name` or `id` to the parent entity's `policies` array, or omit the reference for global scope.
 
 ## Lifecycle
 

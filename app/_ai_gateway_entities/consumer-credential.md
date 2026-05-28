@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayConsumerCredential
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -67,23 +66,17 @@ A Consumer Credential is the {{site.ai_gateway}} entity that represents the secr
 
 Credentials are nested under their owning Consumer: each Credential belongs to exactly one Consumer, and removing the Consumer removes its Credentials.
 
-Consumer Credentials are managed through the {{site.ai_gateway}} entity API surface in both deployment modes:
+Consumer Credentials are managed through the {{site.ai_gateway}} entity API:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/consumers/{consumerId}/credentials
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/consumers/{consumerId}/credentials
 {% endtable %}
 
 ## Credential types

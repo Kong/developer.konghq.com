@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayVault
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -63,23 +62,17 @@ A Vault is a first-class {{site.ai_gateway}} entity that registers a secret-mana
 
 A Vault entity stores the connection configuration and credentials needed to reach the backend. {{site.ai_gateway}} resolves vault references against the registered Vaults at request time.
 
-Vaults can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
+Vaults can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/vaults
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/vaults
 {% endtable %}
 
 ## Backends

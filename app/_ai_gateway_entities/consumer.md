@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayConsumer
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -73,23 +72,17 @@ A Consumer is the {{site.ai_gateway}} entity that represents a downstream client
 
 You can use Consumers and Consumer Groups to authenticate clients, attach Policies, and gate access to Models, Agents, and MCP Servers through those parent entities' `acls` field.
 
-Consumers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
+Consumers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/consumers
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/consumers
 {% endtable %}
 
 ## Configure a Consumer

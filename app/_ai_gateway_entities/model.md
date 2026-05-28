@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayModel
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -47,6 +46,12 @@ faqs:
     a: |
       No. Generated primitives are protected from direct modification through the standard Admin API.
       Update the Model entity instead, and {{site.ai_gateway}} recreates the underlying primitives within a single transaction.
+
+  - q: How do I configure models in on-prem deployments?
+    a: |
+      {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
+      For on-prem deployments, configure AI proxy behavior using {{site.base_gateway}} plugins directly (for example, the AI Proxy plugin).
+      See the [{{site.base_gateway}} plugin catalog](/gateway/plugins/) for available AI-related plugins.
 
   - q: What happens when I update a Model?
     a: |
@@ -90,10 +95,6 @@ faqs:
     a: |
       Yes. EWMA ensures every target continues to receive a small share of traffic (typically 0.1% to 5%, depending on the latency gap). This ongoing probing lets the load balancer adapt if a previously slower target becomes faster.
 
-  - q: Are on-prem and {{site.konnect_short_name}} Model entities the same?
-    a: |
-      The schemas are intentionally aligned at the field level. The same Model definition works in both modes.
-      On-prem omits a few {{site.konnect_short_name}}-specific path segments and concepts that don't apply in a single-deployment context, such as the `ai-gateways/{id}` container and Data Plane certificate or node management. The Model entity itself is identical.
 ---
 
 ## What is a Model?
@@ -102,23 +103,17 @@ A Model is a first-class {{site.ai_gateway}} entity that represents an AI model 
 
 A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services, Routes, or plugin entries by hand.
 
-Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
+Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/models
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/models
 {% endtable %}
 
 ## Configure a Model

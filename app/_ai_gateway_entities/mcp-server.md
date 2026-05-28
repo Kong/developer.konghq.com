@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayMCPServer
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -80,23 +79,17 @@ An MCP Server is a first-class {{site.ai_gateway}} entity that exposes tools to 
 
 Because the runtime executes inside {{site.ai_gateway}}, MCP endpoints are provisioned dynamically on demand. You don't host or scale them separately, and the same authentication, traffic control, and observability features available to traditional API traffic apply to MCP traffic at the same scale.
 
-MCP Servers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
+MCP Servers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/mcp-servers
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/mcp-servers
 {% endtable %}
 
 ## Configure an MCP Server

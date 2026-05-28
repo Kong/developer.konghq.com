@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayConsumerGroup
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -60,10 +59,6 @@ faqs:
       The plugin runs when a member of the group is identified during a request.
       See the [Policy entity](/ai-gateway/entities/policy/) reference.
 
-      Unlike Model, Agent, and MCP Server, on-prem does not expose a nested
-      `/ai/consumer-groups/{id}/policies` endpoint. The reference-array mechanism is the only
-      way to attach a Policy to a Consumer Group in either deployment mode.
-
   - q: How do I gate access to a Model, Agent, or MCP Server with a Consumer Group?
     a: |
       Add the Consumer Group's name to the parent entity's `acls.allow` or `acls.deny` list.
@@ -77,23 +72,17 @@ A Consumer Group is the {{site.ai_gateway}} entity that represents a collection 
 
 Use Consumer Groups to scope group-wide behavior, such as rate limits, prompt guards, or content moderation, without configuring each Consumer individually. Consumer Groups can appear in the `acls` field of Model, Agent, and MCP Server entities, where they gate access to those parent entities.
 
-Consumer Groups can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
+Consumer Groups can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/consumer-groups
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/consumer-groups
 {% endtable %}
 
 ## Configure a Consumer Group

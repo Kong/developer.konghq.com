@@ -16,7 +16,6 @@ schema:
   path: /schemas/AIGatewayAgent
 works_on:
   - konnect
-  - on-prem
 tools:
   - deck
   - admin-api
@@ -70,6 +69,12 @@ faqs:
     a: |
       Plugin configuration that applies to the Agent goes through the [Policy entity](/ai-gateway/entities/policy/).
       Attach Policies to the Agent through its `policies` field.
+
+  - q: How do I configure agents in on-prem deployments?
+    a: |
+      {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
+      For on-prem deployments, configure agent proxying using {{site.base_gateway}} plugins directly (for example, the AI A2A Proxy plugin).
+      See the [{{site.base_gateway}} plugin catalog](/gateway/plugins/) for available AI-related plugins.
 ---
 
 ## What is an Agent?
@@ -78,23 +83,17 @@ An Agent is a first-class {{site.ai_gateway}} entity that represents an upstream
 
 For `http` type Agents, requests are proxied without A2A-specific processing. For `a2a` type Agents, {{site.ai_gateway}} adds protocol-aware behavior on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry.
 
-Agents can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
+Agents can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
-  - title: Deployment
-    key: deployment
   - title: Control Plane
     key: cp
   - title: Endpoint
     key: endpoint
 rows:
-  - deployment: "{{site.konnect_short_name}}"
-    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/agents
-  - deployment: On-prem
-    cp: Admin API
-    endpoint: /ai/agents
 {% endtable %}
 
 ## How A2A traffic flows
