@@ -243,7 +243,6 @@ Dynamic claims can use the context passed to the client during authentication in
 
 <!--vale off-->
 {% table %}
-item_title: JWT context variables
 columns:
   - title: Variable Name
     key: variable
