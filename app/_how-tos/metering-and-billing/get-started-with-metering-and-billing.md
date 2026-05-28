@@ -77,7 +77,7 @@ In {{site.metering_and_billing}}, [meters](/metering-and-billing/metering/) trac
 For billing per agent run, you'll use the built-in **Count agent runs** template, which pre-configures a `COUNT` meter that increments once per `agent_run` event and groups results by `agent_name`.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. Click **New meter**.
+1. Click **Create Meter**.
 1. Click the **Templates** dropdown menu.
 1. Select **Count agent runs**.
 1. Click **Save**.
