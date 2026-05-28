@@ -92,7 +92,7 @@ rows:
               Step-by-step setup from OpenAPI spec to a working agent call.
             cta:
               text: "Get started"
-              url: "/konnect-platform/context-mesh/get-started/"
+              url: "/context-mesh/get-started-with-context-mesh/"
 
   - header:
       text: "Connect an MCP client"
