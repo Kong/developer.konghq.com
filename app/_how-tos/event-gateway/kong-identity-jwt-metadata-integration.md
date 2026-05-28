@@ -68,6 +68,7 @@ In this guide, you'll authenticate a Kafka client to {{site.event_gateway_short}
 
 For `oauth_bearer` authentication, {{site.event_gateway_short}} always looks up the Kong Identity identity by matching the JWT's `iss` and `sub` claims against an `oidc` identity in the directory. No extra lookup-key configuration is needed.
 
+<!--vale off-->
 {% mermaid %}
 flowchart LR
     C[Kafka client]
@@ -84,6 +85,7 @@ flowchart LR
     VC -->|forward request| L
     VC -->|record with<br/>x-team header| C
 {% endmermaid %}
+<!--vale on-->
 
 ## Create an auth server in Kong Identity
 
