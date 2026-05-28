@@ -48,12 +48,33 @@ The how-to type determines which shared includes apply and how the validation st
 
 Work through these questions in order. Wait for the user's answers before moving on. If a question doesn't apply based on a previous answer, skip it.
 
-### 3a. Directory and principal prereq
+### 3a. Principal configuration
 
-Ask: Does the user have the steps for creating a Kong Identity directory and principal, or will a tech writer create the prereq include separately?
+The directory prereq is handled by a standard include (`prereqs/kong-identity-directory`), no need to ask about it.
 
-- If the user has the steps, ask for the exact API request bodies so you can verify correctness.
-- If a writer will create the include, note this clearly in your pre-draft summary and leave a comment in the draft: `{% include prereqs/kong-identity-directory-principal %}`. The writer will create this file.
+Ask: Does this how-to require a user to create a principal? Most how-tos that use principals (rather than auth server clients) will create one as part of the tutorial steps.
+
+If yes, ask for the exact values for each of the following. Principal config varies significantly between how-tos, never guess any of these:
+
+**Principal fields:**
+- `display_name` and `description`
+- `metadata`: the key-value pairs attached to this principal. This is what plugins and policies will read. Ask for the exact keys, value types, and example values.
+
+**Identity (how the principal is looked up after authentication):**
+
+Ask which identity type this how-to uses, the user must specify one:
+- `custom`: a lookup key defined by the how-to (for example, `key: sasl_username`, `value: john` for SASL passthrough). Ask for exact `key` and `value`.
+- `oidc`: a remote OAuth provider. Ask for exact `issuer` URL and `claim` (`name` and `value`).
+- `auth_server_client`: a Kong Identity OAuth client. Ask for exact `auth_server_id` and `client_id`.
+- `control_plane_consumer`: a Gateway Consumer. Ask for exact `control_plane_id` and `consumer_id`.
+
+A principal can have multiple identities. Ask if more than one is needed.
+
+**Credentials (only if the principal authenticates directly, not needed for token-based or passthrough flows):**
+
+Ask if the principal needs credentials. If yes, ask which type:
+- `basic-auth`: ask for exact `username`. The password is created in a separate step.
+- `api-key`: ask whether it's auto-generated (`type: v1`) or imported (ask for the secret value).
 
 ### 3b. Auth server, scope, claim, and client setup
 
@@ -97,9 +118,10 @@ Before drafting, summarize what you collected and flag anything still missing:
 
 ```
 Here's what I have:
-- ✅ Directory/principal prereq: [have steps / writer will create include]
-- ✅ Auth server, scope, claim, client: [using shared include / custom values listed]
-- ✅ Plugin config: [summary of key fields]
+- ✅ Directory prereq: using standard include
+- ✅ Principal config: [display_name, metadata keys, identity type + fields, credentials if any — or "not needed"]
+- ✅ Auth server, scope, claim, client: [using shared include / custom values listed / not needed]
+- ✅ Plugin or product config: [summary of key fields]
 - ✅ Additional steps: [list or "none"]
 - ⚠️ Still missing: [anything you don't have]
 ```
@@ -118,13 +140,17 @@ Follow this order (see `references/how-to-patterns.md` for full frontmatter sche
 [frontmatter]
 
 [prereqs block]
-  - Directory and principal (include or placeholder)
-  - example-service and example-route entities (most how-tos)
+  - Kong Identity directory: {% include prereqs/kong-identity-directory %}
+  - example-service and example-route entities (gateway how-tos)
   - any product-specific prereqs (Dev Portal setup, kafkactl, etc.)
 
 [body]
   - OIDC/Upstream OAuth/OAuth Introspection: use {% include /how-tos/steps/konnect-identity-server-scope-claim-client.md %}
   - DCR/Event Gateway: write auth server creation steps inline
+  - Create the principal (if this how-to uses one — use exact config from interview)
+    - Create principal: POST /v2/directories/$DIRECTORY_ID/principals
+    - Create identity: POST /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities
+    - Create credentials if needed: POST /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/basic-auths or /api-keys
   - Configure the plugin or product (exact configs from interview)
   - Generate token (use {% include /how-tos/steps/konnect-identity-generate-token.md %} or write inline)
   - Validate

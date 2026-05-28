@@ -50,8 +50,8 @@ prereqs:
     routes:
       - example-route
   inline:
-    - title: Kong Identity directory and principal
-      include_content: prereqs/kong-identity-directory-principal
+    - title: Kong Identity directory
+      include_content: prereqs/kong-identity-directory
       icon_url: /assets/icons/kong-identity.svg
 
 faqs:
@@ -87,6 +87,20 @@ Notes:
 
 {% include /how-tos/steps/konnect-identity-server-scope-claim-client.md %}
 
+## Create a principal  ← include only if this how-to uses a principal
+
+{% konnect_api_request %} POST /v2/directories/$DIRECTORY_ID/principals {% endkonnect_api_request %}
+
+## Create an identity for the principal  ← type depends on how-to (oidc, custom, etc.)
+
+{% konnect_api_request %} POST /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities {% endkonnect_api_request %}
+
+## Create credentials  ← only if the principal authenticates directly
+
+{% konnect_api_request %} POST /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/basic-auths {% endkonnect_api_request %}
+  or
+{% konnect_api_request %} POST /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/api-keys {% endkonnect_api_request %}
+
 ## Configure the [Plugin Name] plugin
 
 Get the control plane ID:
@@ -102,31 +116,31 @@ Enable the plugin globally:
 {% validation request-check %} ... {% endvalidation %}
 ```
 
-### Event Gateway OAuth
+### Event Gateway how-tos (OAuth, metadata integration, etc.)
 
 ```
 [frontmatter with products: [event-gateway]]
 
-## Create an auth server in Kong Identity
+## Create an auth server in Kong Identity  ← for OAuth flows; omit for principal-only flows
 {% konnect_api_request %} POST /v1/auth-servers {% endkonnect_api_request %}
-
-## Configure the auth server with scopes
 {% konnect_api_request %} POST /v1/auth-servers/$AUTH_SERVER_ID/scopes {% endkonnect_api_request %}
-
-## Configure the auth server with custom claims
 {% konnect_api_request %} POST /v1/auth-servers/$AUTH_SERVER_ID/claims {% endkonnect_api_request %}
-
-## Create a client in the auth server
 {% konnect_api_request %} POST /v1/auth-servers/$AUTH_SERVER_ID/clients {% endkonnect_api_request %}
 
-## [Event Gateway setup steps: backend cluster, virtual cluster, listener, listener policy, ACL policy]
+## Create a principal  ← if this how-to uses principals
+{% konnect_api_request %} POST /v2/directories/$DIRECTORY_ID/principals {% endkonnect_api_request %}
 
-## Set up kafkactl to use OAuth
+## Create an identity for the principal
+{% konnect_api_request %} POST /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities {% endkonnect_api_request %}
+
+## [Event Gateway setup: backend cluster, virtual cluster, listener, listener policy, ACL/other policies]
+
+## Configure kafkactl
 {% validation custom-command %} ... {% endvalidation %}
 
 ## Validate
-### Access topics with auth
-### Access topics without auth
+### [Authenticated access]
+### [Unauthenticated access, if applicable]
 ```
 
 ### Dev Portal DCR
@@ -249,11 +263,13 @@ After a step that uses `capture:` in the `konnect_api_request` block, the variab
 
 | Include path | What it contains | When to use |
 |---|---|---|
-| `/how-tos/steps/konnect-identity-server-scope-claim-client.md` | Creates auth server, scope, claim, and client; exports `AUTH_SERVER_ID`, `ISSUER_URL`, `CLIENT_ID`, `CLIENT_SECRET` | All gateway plugin how-tos (OIDC, Upstream OAuth, OAuth Introspection) |
-| `/how-tos/steps/konnect-identity-generate-token.md` | Generates a client credentials token; exports `ACCESS_TOKEN` | Gateway plugin how-tos after plugin is configured |
-| `prereqs/kong-identity-directory-principal` | Creates a Kong Identity directory and principal | All Kong Identity how-tos as a prereq |
+| `prereqs/kong-identity-directory` | Creates a directory; exports `DIRECTORY_ID` | All Kong Identity how-tos as a prereq |
+| `/how-tos/steps/konnect-identity-server-scope-claim-client.md` | Creates auth server, scope, claim, and client; exports `AUTH_SERVER_ID`, `ISSUER_URL`, `CLIENT_ID`, `CLIENT_SECRET` | Gateway plugin how-tos that use an OAuth flow (OIDC, Upstream OAuth, OAuth Introspection) |
+| `/how-tos/steps/konnect-identity-generate-token.md` | Generates a client credentials token; exports `ACCESS_TOKEN` | Gateway plugin how-tos, after plugin is configured |
 
-The Event Gateway and Dev Portal DCR how-tos write their auth server creation steps inline rather than using the shared include, because they need slightly different request bodies or additional capture fields.
+Principal creation always goes in the how-to body, not in a shared include, because the principal's identity type, metadata, and credentials vary between how-tos.
+
+Event Gateway and Dev Portal DCR how-tos write their auth server creation steps inline rather than using the shared include, because they need different request bodies or additional capture fields.
 
 ---
 
