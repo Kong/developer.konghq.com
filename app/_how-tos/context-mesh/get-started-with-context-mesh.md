@@ -1,8 +1,8 @@
 ---
-title: "Deploy an MCP server with Context Mesh and Kong Operator"
+title: "Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}"
 permalink: /context-mesh/get-started-with-context-mesh/
 content_type: how_to
-description: "Deploy a Context Mesh-backed MCP server from the Konnect UI onto an Operator-managed data plane"
+description: "Deploy a {{site.context_mesh}}-backed MCP server from the Konnect UI onto an Operator-managed data plane"
 breadcrumbs:
   - /mcp/
 
@@ -34,8 +34,7 @@ tldr:
   a: "Install the nightly {{site.kong_operator}} chart with the `mcp-server` feature gate, create a Konnect-managed `DataPlane`, then use the Konnect UI to create an MCP server against that control plane."
 
 tools:
-  - kubectl
-  - helm
+  - operator
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -51,7 +50,7 @@ cleanup:
 ---
 
 {:.warning}
-> Context Mesh and the `mcp-server` feature gate are currently available only in nightly builds of {{site.kong_operator}}. Do not use this setup in production.
+> {{site.context_mesh}} and the `mcp-server` feature gate are currently available only in nightly builds of {{site.kong_operator}}. Do not use this setup in production.
 
 ## Install {{site.kong_operator}}
 
@@ -147,7 +146,7 @@ Wait for the data plane to reach `Ready`:
 kubectl wait --timeout=3m dataplane dataplane --for=condition=Ready
 ```
 
-## Create the OpenWeather MCP server
+## Create the OpenWeather {{site.context_mesh}} server
 
 This example uses the public OpenWeather API. You need an OpenWeather API key and the OpenWeather OpenAPI spec.
 
@@ -185,9 +184,9 @@ The MCP runtime is exposed at `/mcp/openweather-service`.
    ```
    {:.no-copy-code}
 
-## Undeploy the MCP servers
+## Remove the MCP servers
 
-To remove an MCP server, open it in the {{site.konnect_short_name}} UI and undeploy it. This disassociates the MCP server from its control plane but keeps the {{site.konnect_short_name}} record.
+To remove an MCP server, open it in the {{site.konnect_short_name}} UI and delete it. This disassociates the MCP server from its control plane but keeps the {{site.konnect_short_name}} record.
 
 To tear down the cluster-side resources:
 
