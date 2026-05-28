@@ -1,5 +1,5 @@
 ---
-title: Proxy TCP traffic over TLS by SNI
+title: Proxy TLS traffic by SNI using TLSRoute
 description: "Use TLSRoute with {{ site.operator_product_name }} to route TCP traffic secured by TLS."
 content_type: how_to
 
@@ -41,7 +41,7 @@ next_steps:
 ---
 
 {:.info}
-> **Note**: {{ site.operator_product_name }} only reconciles `TLSRoute` resources using the `gateway.networking.k8s.io/v1` API, which is available in [Gateway API](https://gateway-api.sigs.k8s.io/) 1.5 or later (standard channel). If you installed the CRDs from an earlier release while following [step 1 of this series](/operator/get-started/gateway-api/install/), you should upgrade {{ site.operator_product_name }} to the version that supports `TLSRoute`. It will install or upgrade gateway API CRDs to appropriate version. If you did not install gateway API CRDs by the {{ site.operator_product_name }} helm release, please upgrade them manually:
+> **Note**: {{ site.operator_product_name }} only reconciles `TLSRoute` resources using the `gateway.networking.k8s.io/v1` API, which is available in [Gateway API](https://gateway-api.sigs.k8s.io/) 1.5 or later (standard channel). If you installed the CRDs from an earlier release while following [step 1 of this series](/operator/get-started/gateway-api/install/), you should upgrade {{ site.operator_product_name }} to the version that supports `TLSRoute`. It will install or upgrade gateway API CRDs with the appropriate version. If you did not install gateway API CRDs by the {{ site.operator_product_name }} helm release, please install or upgrade them manually:
 
 ```shell
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml --server-side
