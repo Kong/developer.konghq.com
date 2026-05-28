@@ -3,7 +3,7 @@ title: Proxy TCP traffic over TLS by SNI
 description: "Use TLSRoute with {{ site.operator_product_name }} to route TCP traffic secured by TLS."
 content_type: how_to
 
-permalink: /operator/get-started/gateway-api/tlsroute/
+permalink: /operator/get-started/gateway-api/create-tlsroute/
 series:
   id: operator-get-started-gateway-api
   position: 4
@@ -36,8 +36,6 @@ next_steps:
   - text: Learn about Custom resource definitions (CRDs)
     url: /operator/reference/custom-resources/
 ---
-
-{{ site.operator_product_name }} reconciles the managed `DataPlane` from the `Gateway` listeners: when you add a `TLS` listener to your `Gateway`, Operator automatically sets the corresponding stream listener on the `DataPlane` and exposes the port on the proxy Service. The only Operator-specific step you need to take is updating the `Gateway`.
 
 ## Generate a TLS certificate
 
