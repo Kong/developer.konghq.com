@@ -409,7 +409,7 @@ config:
   - name: untrusted_lua
   - name: untrusted_lua_sandbox_requires
   - name: allow_debug_header
-  - name: header_upstream
+  - name: headers_upstream
     description: |
       Comma-separated list of headers Kong should inject in requests to upstream.
 
