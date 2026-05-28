@@ -40,7 +40,7 @@ next_steps:
     url: /operator/reference/custom-resources/
 ---
 
-{:.note}
+{:.info}
 > **Note**: {{ site.operator_product_name }} only reconciles `TLSRoute` resources using the `gateway.networking.k8s.io/v1` API, which is available in [Gateway API](https://gateway-api.sigs.k8s.io/) 1.5 or later (standard channel). If you installed the CRDs from an earlier release while following [step 1 of this series](/operator/get-started/gateway-api/install/), you should upgrade {{ site.operator_product_name }} to the version that supports `TLSRoute`. It will install or upgrade gateway API CRDs to appropriate version. If you did not install gateway API CRDs by the {{ site.operator_product_name }} helm release, please upgrade them manually:
 
 ```shell
@@ -130,12 +130,7 @@ kubectl patch -n kong --type=json gateway kong -p='[
               }
             },
             "tls": {
-              "mode": "Passthrough",
-              "certificateRefs":[{
-                "group":"",
-                "kind":"Secret",
-                "name":"tls9443.kong.example"
-              }]
+              "mode": "Passthrough"
             }
         }
     }
@@ -215,7 +210,7 @@ For more information about how {{ site.operator_product_name }} handles secrets,
 
 ### Add a Terminate TLS listener to the Gateway
 
-Patch the existing `kong` Gateway to append a second TLS listener on port `9444` in `Terminate` mode, referencing the labelled Secret:
+Patch the existing `kong` Gateway to append a second TLS listener on port `9444` in `Terminate` mode, referencing the labeled Secret:
 
 ```bash
 kubectl patch -n kong --type=json gateway kong -p='[
@@ -278,4 +273,4 @@ echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong
 
 Press Ctrl+C to exit.
 
-Unlike the Passthrough case, the TLS handshake terminates at {{ site.base_gateway }}: the certificate presented to the client is the one stored in the labelled Secret, not a certificate served by the `echo` backend. You can confirm this by dropping the `-quiet` flag and inspecting the `subject=` line in the openssl output — it should match `CN=tls9444.kong.example`.
+Unlike the Passthrough case, the TLS handshake terminates at {{ site.base_gateway }}: the certificate presented to the client is the one stored in the labeled Secret, not a certificate served by the `echo` backend. You can confirm this by dropping the `-quiet` flag and inspecting the `subject=` line in the openssl output — it should match `CN=tls9444.kong.example`.
