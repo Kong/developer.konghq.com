@@ -309,14 +309,17 @@ rows:
     description: Access to all read permissions related to an Authorization Server.
     permissions: |
       * Read and list **auth servers**.
-      * Read and list assigned **directories**.
-      * Read and list any **Principal** in assigned directories.
-  - role: "`Principal Maintainer`"
+  - role: "`Principal Admin`"
     description: Access to all read and write permissions related to directories.
     permissions: |
       * Read and list assigned **directories**.
       * Create, read, list, edit, and delete any **Principal** in assigned directories.
       * Create the default directory.
+    - role: "`Principal Viewer`"
+    description: Access to all read permissions related to an Directories and Principals
+    permissions: |
+      * Read and list assigned **directories**.
+      * Read and list any **Principal** in assigned directories.
 {% endtable %}
 
 #### APIs
