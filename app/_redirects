@@ -250,7 +250,7 @@
 # Kong Identity
 
 /kong-identity/ /identity/  301
-/plugins/oauth2-introspection/examples/konnect-identity/    /plugins/oauth2-introspection/examples/kong-identity/301
+/plugins/oauth2-introspection/examples/konnect-identity/    /plugins/oauth2-introspection/examples/kong-identity/   301
 
 # Observability
 /advanced-analytics/*   /observability/:splat   301
