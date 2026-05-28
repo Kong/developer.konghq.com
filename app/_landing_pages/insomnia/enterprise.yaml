@@ -101,7 +101,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: {{ site.konnect_short_name }} Gateway Service integration
+            title: "{{ site.konnect_short_name }} Gateway Service integration"
             description: Link Konnect and send requests from Insomnia to Routes hosted in your Gateway Service.
             icon: /assets/icons/service-hub.svg
             cta:
