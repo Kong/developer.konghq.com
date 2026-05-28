@@ -1,4 +1,4 @@
-## PR Title
+<!-- ## PR Title
 
 Use the format `feat/fix/chore(Product): Title`, for example:
 - `feat(mesh): Add transparent proxy upgrade guide`
@@ -6,6 +6,7 @@ Use the format `feat/fix/chore(Product): Title`, for example:
 - `chore(ai-gateway): Bump plugin schema`
 - `chore(platform): Fix issue template`
 - `release: Kong Gateway 3.14`
+-->
 
 ## Description
 

@@ -6,7 +6,7 @@ groups:
         - path: /kongctl/
         - path: /kongctl/get-started/
 
-  - title: Setup & Usage Guides 
+  - title: Setup & Usage
     sections:
       - title: Install & Configure kongctl
         items:
@@ -29,7 +29,7 @@ groups:
           - path: /kongctl/declarative/
           - path: /kongctl/supported-resources/
           - path: /kongctl/kongctl-and-deck/
-      - title: Misc
+      - title: Other References
         items:
           - path: /kongctl/skills/
           - path: /kongctl/audit-logs/
@@ -41,17 +41,14 @@ groups:
         items:
             - path: /kongctl/adopt/
             - path: /kongctl/adopt/*/**
-            - path: /kongctl/adopt/*/**/**
       - title: API Requests
         items:
             - path: /kongctl/api/
             - path: /kongctl/api/*/**
-            - path: /kongctl/api/*/**/**
       - title: Apply Configuration
         items:
             - path: /kongctl/apply/
             - path: /kongctl/apply/*/**
-            - path: /kongctl/apply/*/**/**
       - title: Delete Resources
         items:
             - path: /kongctl/delete/
@@ -70,7 +67,6 @@ groups:
         items:
             - path: /kongctl/get/
             - path: /kongctl/get/*/**
-            - path: /kongctl/get/*/**/**
       - title: Install Assets
         items:
            - path: /kongctl/install/
@@ -86,12 +82,10 @@ groups:
         items:
             - path: /kongctl/list/
             - path: /kongctl/list/*/**
-            - path: /kongctl/list/*/**/**
       - title: Listen to Events
         items:
             - path: /kongctl/listen/
             - path: /kongctl/listen/*/**
-            - path: /kongctl/listen/*/**/**
       - title: Login and Logout
         items:
             - path: /kongctl/login/
@@ -121,7 +115,6 @@ groups:
         items:
             - path: /kongctl/tail/
             - path: /kongctl/tail/*/**
-            - path: /kongctl/tail/*/**/**
       - title: Uninstall Features
         items:
             - path: /kongctl/uninstall/
