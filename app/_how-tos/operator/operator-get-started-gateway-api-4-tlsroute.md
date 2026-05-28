@@ -23,6 +23,9 @@ works_on:
   - on-prem
   - konnect
 
+min_version:
+  operator: '2.2.0'
+
 entities: []
 
 tldr:
@@ -36,6 +39,13 @@ next_steps:
   - text: Learn about Custom resource definitions (CRDs)
     url: /operator/reference/custom-resources/
 ---
+
+{:.note}
+> **Note**: {{ site.operator_product_name }} only reconciles `TLSRoute` resources using the `gateway.networking.k8s.io/v1` API, which is available in [Gateway API](https://gateway-api.sigs.k8s.io/) 1.5 or later (standard channel). If you installed the CRDs from an earlier release while following [step 1 of this series](/operator/get-started/gateway-api/install/), you should upgrade {{ site.operator_product_name }} to the version that supports `TLSRoute`. It will install or upgrade gateway API CRDs to appropriate version. If you did not install gateway API CRDs by the {{ site.operator_product_name }} helm release, please upgrade them manually:
+
+```shell
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml --server-side
+```
 
 ## Generate a TLS certificate
 
@@ -135,7 +145,7 @@ kubectl patch -n kong --type=json gateway kong -p='[
 Next, create a `TLSRoute`:
 
 ```bash
-echo "apiVersion: gateway.networking.k8s.io/v1alpha2
+echo "apiVersion: gateway.networking.k8s.io/v1
 kind: TLSRoute
 metadata:
   name: echo-tls
@@ -240,7 +250,7 @@ kubectl patch -n kong --type=json gateway kong -p='[
 Because Kong is now terminating TLS, the backend can receive plain TCP. Point the `TLSRoute` at the unmodified `echo` Service on its default plain TCP port `1027`:
 
 ```bash
-echo "apiVersion: gateway.networking.k8s.io/v1alpha2
+echo "apiVersion: gateway.networking.k8s.io/v1
 kind: TLSRoute
 metadata:
   name: echo-tls-terminate
