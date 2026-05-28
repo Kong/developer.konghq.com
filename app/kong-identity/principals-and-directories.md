@@ -2,7 +2,7 @@
 title: "Principals and directories"
 content_type: reference
 layout: reference
-permalink: /kong-identity/principals/
+permalink: /identity/principals/
 products:
   - konnect
 
@@ -10,7 +10,7 @@ works_on:
   - konnect
 
 breadcrumbs:
-  - /kong-identity/
+  - /identity/
 
 description: "Learn how Kong Identity principals and directories represent authenticating entities and centralize identity, credentials, and metadata across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}}."
 
