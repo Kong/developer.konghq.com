@@ -1,0 +1,10 @@
+---
+layout: with_aside
+uses: false
+---
+
+{{ content }}
+
+{% contentfor info_box %}
+  {% include info_box/skill.html %}
+{% endcontentfor %}

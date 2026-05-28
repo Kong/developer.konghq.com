@@ -72,6 +72,9 @@ platform:
         - text: Metering & Billing
           url: /metering-and-billing/
           product: metering-and-billing
+        - text: Kong Identity
+          url: /kong-identity/
+          product: identity
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
           url: /catalog/scorecards/
@@ -125,6 +128,9 @@ ai_tools:
   - text: AI Cookbooks
     url: /cookbooks/
     icon: /assets/icons/book.svg
+  - text: Skills Hub
+    url: /skills/
+    icon: /assets/icons/brain.svg
   - text: decK
     url: /deck/
     icon: /assets/icons/code.svg

@@ -68,6 +68,7 @@ sections:
       - path: /mesh/workload/
       - path: /mesh/meshexternalservice/
       - path: /mesh/meshmultizoneservice/
+      - path: /mesh/meshopentelemetrybackend/
       - path: /mesh/meshservice/
 
   - title: Policies
