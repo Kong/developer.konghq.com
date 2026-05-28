@@ -18,6 +18,7 @@ import eventGateway from '@/icons/products/event-gateway.svg'
 import konnect from '@/icons/products/konnect.svg'
 import referencePlatform from '@/icons/products/konnect-reference-platform.svg'
 import meteringBilling from '@/icons/products/metering-and-billing.svg'
+import identity from '@/icons/products/identity.svg'
 
 const productIcons = {
   'observability': observability,
@@ -30,6 +31,7 @@ const productIcons = {
   'konnect': konnect,
   'konnect-reference-platform': referencePlatform,
   'metering-and-billing': meteringBilling,
+  'identity': identity,
   operator,
   kic,
   mesh

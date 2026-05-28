@@ -73,7 +73,7 @@ platform:
           url: /metering-and-billing/
           product: metering-and-billing
         - text: Kong Identity
-          url: /kong-identity/
+          url: /identity/
           product: identity
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
@@ -120,6 +120,9 @@ how_tos:
     - text: "Catalog"
       url: /how-to/?products=catalog
       product: catalog
+    - text: Kong Identity
+      url: /how-to/?products=identity
+      product: identity
 
 ai_tools:
   - text: Konnect MCP
