@@ -56,7 +56,8 @@ After connecting and syncing your Gateway Services, {{ site.data.products.insomn
 ## Prerequisites
 
 - An {{ site.data.products.insomnia.name }} [Enterprise account](/insomnia/enterprise/)
-- A {{ site.konnect_short_name }} [Gateway Service](/gateway/)
+- A {{ site.konnect_short_name }} [Gateway Service](/gateway/).
+- A [Personal Access Token (PAT)](/konnect-api/#personal-access-tokens) 
 
 ## Available features
 
@@ -98,23 +99,18 @@ Every time you click **Sync** from the {{ site.konnect_short_name }} tab, {{ sit
 - Doesn't push any changes from {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }}.
 - Pulls any changes or configurations from {{ site.konnect_short_name }} for the related routes.
 
+
+This preserves the local changes on routes while allowing pulling any updates from {{ site.konnect_short_name }}.
+
 Syncing preserves or resets the following data for each pulled route in {{ site.data.products.insomnia.name }}:
 
-{% table %}
-columns:
-  - title: Keep
-    key: keep
-  - title: Reset
-    key: reset
-rows:
-  - keep: |
-      - Parameters
-      - Auth
-      - Body
-      - Custom headers
-      - Scripts
-      - Environment variables
-    reset: |
-      - Overridden headers    
 
-{% endtable %}
+- Parameters
+- Auth
+- Body
+- Custom headers
+- Scripts
+- Environment variables
+
+{:.info}
+Note: Overridden headers aren't preserved — they revert to the values configured in {{ site.konnect_short_name }}.
