@@ -110,7 +110,7 @@ rows:
               Configure the MCP server using the `claude mcp add` command or by editing `~/.claude.json`.
             ctas:
               - text: Installation guide
-                url: "/konnect-platform/context-mesh/installation/#claude-code-cli"
+                url: "/context-mesh/client-installation/#claude-code-cli"
       - blocks:
         - type: card
           config:
@@ -120,7 +120,7 @@ rows:
               Add MCP server configuration through VS Code's Command Palette and MCP settings.
             ctas:
               - text: Installation guide
-                url: "/konnect-platform/context-mesh/installation/#visual-studio-code"
+                url: "/context-mesh/client-installation/#visual-studio-code"
       - blocks:
         - type: card
           config:
@@ -130,7 +130,7 @@ rows:
               Configure the MCP server in Cursor Settings under Tools & MCP.
             ctas:
               - text: Installation guide
-                url: "/konnect-platform/context-mesh/installation/#cursor"
+                url: "/context-mesh/client-installation/#cursor"
       - blocks:
         - type: card
           config:
@@ -140,7 +140,7 @@ rows:
               Set up the MCP server for the GitHub Copilot extension in Visual Studio Code.
             ctas:
               - text: Installation guide
-                url: "/konnect-platform/context-mesh/installation/#github-copilot-for-vs-code"
+                url: "/context-mesh/client-installation/#github-copilot-for-vs-code"
       - blocks:
         - type: card
           config:
@@ -150,7 +150,7 @@ rows:
               Configure the MCP server for IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs.
             ctas:
               - text: Installation guide
-                url: "/konnect-platform/context-mesh/installation/#github-copilot-for-jetbrains"
+                url: "/context-mesh/client-installation/#github-copilot-for-jetbrains"
       - blocks:
         - type: card
           config:
@@ -160,7 +160,7 @@ rows:
               Manual setup instructions for Windsurf, Eclipse, and other IDEs.
             ctas:
               - text: Installation guide
-                url: "/konnect-platform/context-mesh/installation/#other-ides"
+                url: "/context-mesh/client-installation/#other-ides"
 
   - header:
       text: "Common usage patterns"
