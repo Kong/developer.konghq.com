@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@62265036eaf401a7ae7e2f2f49f0b1d1351c76b4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/62265036eaf401a7ae7e2f2f49f0b1d1351c76b4'
+  x-oas-source: kong/platform-api@7afc9a5202301ac612ade06b625c3235b2ff54ec
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7afc9a5202301ac612ade06b625c3235b2ff54ec'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2059,12 +2059,16 @@ components:
       minItems: 1
     EventGatewayListenerPort:
       oneOf:
-        - type: string
-          pattern: '^(\d{1,5}|\d{1,5}-\d{1,5})$'
-          description: A port or a range of ports in the format 9092 or 9092-9094.
-        - type: integer
-          minimum: 1
-          maximum: 65535
+        - $ref: '#/components/schemas/EventGatewayListenerPortString'
+        - $ref: '#/components/schemas/EventGatewayListenerPortInteger'
+    EventGatewayListenerPortString:
+      description: A port or a range of ports in the format 9092 or 9092-9094.
+      type: string
+      pattern: '^(\d{1,5}|\d{1,5}-\d{1,5})$'
+    EventGatewayListenerPortInteger:
+      type: integer
+      maximum: 65535
+      minimum: 1
     VirtualCluster:
       description: A representation of a Kafka cluster that maps to a backend cluster.
       type: object
@@ -4076,66 +4080,70 @@ components:
         paths:
           description: Selects which fields of the parsed record to encrypt. A maximum of 50 path entries are allowed.
           oneOf:
-            - type: array
-              maxItems: 50
-              items:
-                type: object
-                required:
-                  - match
-                properties:
-                  match:
-                    description: |
-                      A field selector. It can select nested fields and array entries.
-
-                      Currently supported are exact matches.
-                    type: string
-                    example: 'someObject.someArray[1].fieldName'
-            - type: string
-              x-expression:
-                type: array
-                items:
-                  type: string
-                fields:
-                  - name: context.auth.principal.name
-                    type: string
-                    description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
-                  - name: context.auth.principal.id
-                    type: string
-                    description: |-
-                      Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
-
-                      **Requires a minimum runtime version of `1.2`**.
-                    x-min-runtime-version: '1.2'
-                  - name: context.auth.principal.metadata
-                    type: object
-                    description: |-
-                      Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
-
-                      **Requires a minimum runtime version of `1.2`**.
-                    x-min-runtime-version: '1.2'
-                  - name: context.auth.type
-                    type: string
-                    description: |
-                      The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
-                  - name: context.auth.token.claims
-                    type: object
-                    description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
-                  - name: record.headers
-                    type: object
-                    description: An associative array of header key value pairs.
-                  - name: record.value.content
-                    type: object
-                    description: The content of the record value.
-              description: |
-                This expression should evaluate to an array of exact field paths,
-                equivalent to the `match` values in the array variant.
-              example: |
-                ${context.auth.type == 'sasl_oauth_bearer' ? ['credentials.accessToken', 'credentials.refreshToken'] : ['credentials.password']}
+            - $ref: '#/components/schemas/EventGatewayParsedRecordFieldPathsArray'
+            - $ref: '#/components/schemas/EventGatewayParsedRecordFieldPathsExpression'
         encryption_key:
           $ref: '#/components/schemas/EncryptionKey'
       required:
         - paths
         - encryption_key
+    EventGatewayParsedRecordFieldPathsArray:
+      type: array
+      items:
+        type: object
+        required:
+          - match
+        properties:
+          match:
+            description: |
+              A field selector. It can select nested fields and array entries.
+
+              Currently supported are exact matches.
+            type: string
+            example: 'someObject.someArray[1].fieldName'
+      maxItems: 50
+    EventGatewayParsedRecordFieldPathsExpression:
+      description: |
+        This expression should evaluate to an array of exact field paths,
+        equivalent to the `match` values in the array variant.
+      type: string
+      example: |
+        ${context.auth.type == 'sasl_oauth_bearer' ? ['credentials.accessToken', 'credentials.refreshToken'] : ['credentials.password']}
+      x-expression:
+        type: array
+        items:
+          type: string
+        fields:
+          - name: context.auth.principal.name
+            type: string
+            description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+          - name: context.auth.principal.id
+            type: string
+            description: |-
+              Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
+
+              **Requires a minimum runtime version of `1.2`**.
+            x-min-runtime-version: '1.2'
+          - name: context.auth.principal.metadata
+            type: object
+            description: |-
+              Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
+
+              **Requires a minimum runtime version of `1.2`**.
+            x-min-runtime-version: '1.2'
+          - name: context.auth.type
+            type: string
+            description: |
+              The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+          - name: context.auth.token.claims
+            type: object
+            description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
+          - name: record.headers
+            type: object
+            description: An associative array of header key value pairs.
+          - name: record.value.content
+            type: object
+            description: The content of the record value.
     EventGatewayDecryptPolicy:
       description: Decrypts Kafka records or keys using AES_256_GCM. Keys are therefore 256 bits long.
       type: object
@@ -4474,61 +4482,8 @@ components:
         paths:
           description: Selects which fields of the parsed record to decrypt. A maximum of 50 path entries are allowed.
           oneOf:
-            - type: array
-              maxItems: 50
-              items:
-                type: object
-                required:
-                  - match
-                properties:
-                  match:
-                    description: |
-                      A field selector. It can select nested fields and array entries.
-
-                      Currently supported are exact matches.
-                    type: string
-                    example: 'someObject.someArray[1].fieldName'
-            - type: string
-              x-expression:
-                type: array
-                items:
-                  type: string
-                fields:
-                  - name: context.auth.principal.name
-                    type: string
-                    description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
-                  - name: context.auth.principal.id
-                    type: string
-                    description: |-
-                      Kong Identity principal ID. Only populated when Kong Identity principal fetching is configured and succeeds.
-
-                      **Requires a minimum runtime version of `1.2`**.
-                    x-min-runtime-version: '1.2'
-                  - name: context.auth.principal.metadata
-                    type: object
-                    description: |-
-                      Kong Identity principal metadata. Only populated when Kong Identity principal fetching is configured and succeeds. Values can be strings, numbers, booleans, arrays or nested JSON objects.
-
-                      **Requires a minimum runtime version of `1.2`**.
-                    x-min-runtime-version: '1.2'
-                  - name: context.auth.type
-                    type: string
-                    description: |
-                      The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
-                  - name: context.auth.token.claims
-                    type: object
-                    description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
-                  - name: record.headers
-                    type: object
-                    description: An associative array of header key value pairs.
-                  - name: record.value.content
-                    type: object
-                    description: The content of the record value.
-              description: |
-                This expression should evaluate to an array of exact field paths,
-                equivalent to the `match` values in the array variant.
-              example: |
-                ${context.auth.type == 'sasl_oauth_bearer' ? ['credentials.accessToken', 'credentials.refreshToken'] : ['credentials.password']}
+            - $ref: '#/components/schemas/EventGatewayParsedRecordFieldPathsArray'
+            - $ref: '#/components/schemas/EventGatewayParsedRecordFieldPathsExpression'
       required:
         - paths
     EventGatewayModifyHeadersPolicy:
