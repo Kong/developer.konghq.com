@@ -101,8 +101,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Konnect Gateway Service routes integration
-            description: Link and test your Konnect Gateway Service routes in Insomnia.
+            title: {{ site.konnect_short_name }} Gateway Service integration
+            description: Link Konnect and send requests from Insomnia to Routes hosted in your Gateway Service.
             icon: /assets/icons/service-hub.svg
             cta:
               text: Learn more

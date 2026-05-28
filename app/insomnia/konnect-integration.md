@@ -1,7 +1,7 @@
 ---
 title: "{{ site.konnect_short_name }} Gateway Service integration in {{ site.data.products.insomnia.name }}"
 
-description: "Connect your Gateway Services to test routes in {{ site.data.products.insomnia.name }}." 
+description: "Link {{ site.konnect_short_name }} to send requests from Insomnia against Routes in  your Gateway Services from {{ site.data.products.insomnia.name }}." 
 
 content_type: reference
 layout: reference
@@ -34,9 +34,9 @@ related_resources:
     url: /how-to/link-konnect-to-insomnia/
 
 faqs:
-  - q: Why does {{ site.data.products.insomnia.name }} skip some routes?
+  - q: Why does {{ site.data.products.insomnia.name }} skip some Routes?
     a: |
-      {{ site.data.products.insomnia.name }} skips routes that use a protocol Insomnia doesn't support, such as SNI matching, TCP, or UDP. {{ site.data.products.insomnia.name }} displays the skipped routes in a separate collection named "Skipped routes".
+      {{ site.data.products.insomnia.name }} skips Routes that use a protocol {{ site.data.products.insomnia.name }}  doesn't support, such as SNI matching, TCP, or UDP. {{ site.data.products.insomnia.name }} displays the skipped routes in a separate collection named "Skipped routes".
   - q: Can I use the {{ site.konnect_short_name }} integration with my on-prem Gateway?
     a: |
       No, the {{ site.konnect_short_name }} integration only works with Gateway Services hosted in {{ site.konnect_short_name }}, not on-prem {{site.base_gateway}}.
@@ -45,13 +45,13 @@ faqs:
 
 ## About the {{ site.konnect_short_name }} + {{ site.data.products.insomnia.name }} integration
 
-Starting from {{ site.data.products.insomnia.name }} `v13`, Enterprise users can link {{ site.data.products.insomnia.name }} to Gateway Services deployed in {{ site.konnect_short_name }}. The integration allows sending requests from Collections against routes pulled from {{ site.konnect_short_name }}, using the {{ site.data.products.insomnia.name }} app.
+Starting from {{ site.data.products.insomnia.name }} `v13`, Enterprise users can link {{ site.data.products.insomnia.name }} to Gateway Services deployed in {{ site.konnect_short_name }}. The integration allows sending requests from Collections against Routes pulled from {{ site.konnect_short_name }}, using the {{ site.data.products.insomnia.name }} app.
 
 After connecting and syncing your Gateway Services, {{ site.data.products.insomnia.name }}:
 
 - Displays a list of your Gateway Services from {{ site.konnect_short_name }}.
-- Pulls the routes from each Gateway Service.
-- Lists the routes in Collections for each Gateway Service.
+- Pulls the Routes from each Gateway Service.
+- Lists the Routes in Collections for each Gateway Service.
 
 ## Prerequisites
 
@@ -61,7 +61,7 @@ After connecting and syncing your Gateway Services, {{ site.data.products.insomn
 
 ## Available features
 
-Collections work the same as for local routes. The following table lists the features that allow you to link {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }}:
+Collections work the same as for local Routes. The following table lists the features that allow you to link {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }}:
 
 {% table %}
 columns:
@@ -97,10 +97,10 @@ rows:
 Every time you click **Sync** from the {{ site.konnect_short_name }} tab, {{ site.data.products.insomnia.name }} pulls changes from {{ site.konnect_short_name }}. Syncing:
 
 - Doesn't push any changes from {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }}.
-- Pulls any changes or configurations from {{ site.konnect_short_name }} for the related routes.
+- Pulls any changes or configurations from {{ site.konnect_short_name }} for the related Routes.
 
 
-This preserves the local changes on routes while allowing pulling any updates from {{ site.konnect_short_name }}.
+This preserves the local changes on Routes while allowing pulling any updates from {{ site.konnect_short_name }}.
 
 Syncing preserves or resets the following data for each pulled route in {{ site.data.products.insomnia.name }}:
 

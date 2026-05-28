@@ -14,7 +14,7 @@ tier: enterprise
 min_version:
   insomnia: '13'
 
-description: Link {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }} and send requests against a routes in your {{site.base_gateway}} Service.
+description: Link {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }} and send requests against a Route in your {{site.base_gateway}} Service.
 tags:
   - konnect
   - integrations
@@ -57,4 +57,4 @@ tldr:
 
 {% include insomnia/set-konnect-proxies.md %}
 
-You are now ready to send requests from {{ site.data.products.insomnia.name }} against routes hosted on {{ site.konnect_short_name }}.
+You are now ready to send requests from {{ site.data.products.insomnia.name }} against Routes hosted on {{ site.konnect_short_name }}.
