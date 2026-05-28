@@ -176,8 +176,6 @@ In real-world usage, you would create a DNS record for `tls9443.kong.example` po
 echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null
 ```
 
-Press Ctrl+C to exit.
-
 The results should look like this:
 
 ```text
@@ -271,6 +269,6 @@ Reuse the `$PROXY_IP` you exported earlier and connect to the new listener:
 echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null
 ```
 
-Press Ctrl+C to exit.
+You should see similar output as previously shown in the example using `Passthrough` TLS mode.
 
 Unlike the Passthrough case, the TLS handshake terminates at {{ site.base_gateway }}: the certificate presented to the client is the one stored in the labeled Secret, not a certificate served by the `echo` backend. You can confirm this by dropping the `-quiet` flag and inspecting the `subject=` line in the openssl output — it should match `CN=tls9444.kong.example`.
