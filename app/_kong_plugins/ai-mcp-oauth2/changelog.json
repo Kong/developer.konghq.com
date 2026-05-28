@@ -53,6 +53,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.3": [
+    {
+      "message": "Fixed an issue where downstream scope-based ACL evaluation used claims from the inbound token instead of the exchanged token when token exchange was enabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where MCP-like request was not authenticated.\n",

@@ -22309,5 +22309,97 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.14.0.3": {
+    "kong": [
+      {
+        "message": "**ai-prompt-decorator**: Fixed an issue where the plugin corrupted native-format\nrequests (gemini, anthropic, bedrock, cohere, huggingface) by forwarding an\nOpenAI-shaped body upstream instead of the original native body shape.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**ai-azure-content-safety**: Fixed a crash (HTTP 500) when `azure_use_managed_identity` is enabled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where dashscope replied 500 to inference request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where GenAI spans were not finished sometimes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where downstream scope-based ACL evaluation used claims from the inbound token instead of the exchanged token when token exchange was enabled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where raw non-200 upstream responses triggered misleading MCP body parse warnings.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where, since 3.14, call tools converted from API could fail when Kong used a self-signed certificate.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where tool id might be repeated.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't support Azure GA version of Realtime API.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI-format chat reasoning requests were not mapped consistently across Anthropic, Gemini, Bedrock and more providers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where system prompt of Claude Code was truncated when doing non-passthrough proxy.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't use the huggingface's token usage if available.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-advanced-proxy**: Fixed an issue where we never stored response model in streaming path. It always fallback to the request model",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where anonymous reports omitted model usage when one provider used multiple models.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where the AI sanitizer plugin could not parse the request body correctly.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the request context could inherit metatables from previous TLS connections, leading to cross-request context leakage and increased memory usage.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-guardrail**: Fixed an issue where latency metrics were missing in the Prometheus output.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
