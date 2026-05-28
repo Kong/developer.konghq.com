@@ -3,7 +3,7 @@ title: Configure the Upstream OAuth plugin with {{site.identity}}
 permalink: /how-to/configure-kong-identity-upstream-oauth/
 content_type: how_to
 breadcrumbs:
-  - /kong-identity/
+  - /identity/
 
 entities:
   - route
@@ -43,9 +43,9 @@ faqs:
 automated_tests: false
 related_resources:
   - text: "{{site.identity}}"
-    url: /kong-identity/
+    url: /identity/
   - text: Dynamic claim templating
-    url: /kong-identity/#dynamic-claim-templates
+    url: /identity/#dynamic-claim-templates
   - text: Configure the OIDC plugin with {{site.identity}}
     url: /how-to/configure-kong-identity-oidc/
   - text: Configure the OAuth 2.0 Introspection plugin with {{site.identity}}

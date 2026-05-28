@@ -250,7 +250,7 @@ rows:
             icon: /assets/icons/rbac.svg
             ctas:
             - text: Start using {{site.identity}}
-              url: /kong-identity/
+              url: /identity/
               align: end
 
   - header:

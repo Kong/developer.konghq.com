@@ -3,8 +3,8 @@ description: Index containing all documentation for Kong Identity in Konnect.
 sections:
   - title: Overview
     items:
-      - path: /kong-identity/
-      - path: /kong-identity/**/*
+      - path: /identity/
+      - path: /identity/**/*
   - title: How Tos
     items:
       - path: /event-gateway/kong-identity-oauth/

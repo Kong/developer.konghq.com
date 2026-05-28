@@ -51,9 +51,9 @@ related_resources:
   - text: Event Gateway
     url: /event-gateway/
   - text: "{{site.identity}}"
-    url: /kong-identity/
+    url: /identity/
   - text: Dynamic claim templating
-    url: /kong-identity/#dynamic-claim-templates
+    url: /identity/#dynamic-claim-templates
   - text: Event Gateway ACL policy
     url: /event-gateway/policies/acl/
 
@@ -139,7 +139,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You can also configure dynamic custom claims with [dynamic claim templating](/kong-identity/#dynamic-claim-templates) to generate claims during runtime.
+You can also configure dynamic custom claims with [dynamic claim templating](/identity/#dynamic-claim-templates) to generate claims during runtime.
 
 ## Create a client in the auth server
 

@@ -256,7 +256,7 @@ rows:
                     - outcome: |
                         Replace legacy auth methods with modern enterprise identity standards your team already uses
                       feature: |
-                        [OAuth](/kong-identity/)
+                        [OAuth](/identity/)
                       guide: |
                         [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                     - outcome: |
@@ -284,7 +284,7 @@ rows:
                     - outcome: |
                         Automatically enforce access rules based on identity metadata with no manual ACL management
                       feature: |
-                        [OAuth](/kong-identity/)
+                        [OAuth](/identity/)
                       guide: |
                         [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                 - usecase: |
@@ -300,7 +300,7 @@ rows:
                     - outcome: |
                         Onboard apps using OAuth flows developers already know, with no Kafka expertise required
                       feature: |
-                        [OAuth](/kong-identity/)
+                        [OAuth](/identity/)
                       guide: |
                         [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                     - outcome: |

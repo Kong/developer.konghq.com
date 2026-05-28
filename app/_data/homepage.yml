@@ -62,7 +62,7 @@ sections:
         description: "{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access."
         links:
           - text: "{{site.identity}} overview"
-            url: /kong-identity/
+            url: /identity/
           - text: All documentation
             url: /index/identity/
 

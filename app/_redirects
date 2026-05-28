@@ -247,6 +247,11 @@
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
 /dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/managed-cache/ 301
 
+# Kong Identity
+
+/kong-identity/ /identity/  301
+/plugins/oauth2-introspection/examples/konnect-identity/    /plugins/oauth2-introspection/examples/kong-identity/301
+
 # Observability
 /advanced-analytics/*   /observability/:splat   301
 /advanced-analytics     /observability          301

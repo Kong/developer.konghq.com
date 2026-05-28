@@ -4,10 +4,10 @@ content_type: reference
 layout: reference
 
 products:
-    - konnect
     - identity
+    - konnect
 
-permalink: /kong-identity/
+permalink: /identity/
 works_on:
     - konnect
 search_aliases:

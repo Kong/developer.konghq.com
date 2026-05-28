@@ -27,7 +27,7 @@ search_aliases:
 tldr:
     q: How do I automatically create and manage Dev Portal applications in {{site.identity}}?
     a: |
-      You can use Dynamic Client Registration to automatically create Dev Portal applications in [{{site.identity}}](/kong-identity/). First, create an auth server for {{site.identity}} and copy your Issuer URL. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR. Apply the auth strategy to published APIs.
+      You can use Dynamic Client Registration to automatically create Dev Portal applications in [{{site.identity}}](/identity/). First, create an auth server for {{site.identity}} and copy your Issuer URL. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR. Apply the auth strategy to published APIs.
 
 prereqs:
   entities:
@@ -103,7 +103,7 @@ min_version:
 
 ## Create an auth server in {{site.identity}}
 
-Before you can configure DCR, you must first create an auth server in [{{site.identity}}](/kong-identity/). We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+Before you can configure DCR, you must first create an auth server in [{{site.identity}}](/identity/). We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
 
 Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 

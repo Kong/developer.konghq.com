@@ -60,7 +60,7 @@ sections:
         url: /konnect-platform/audit-logs/#access-logs
   - title: "{{site.identity}}"
     items: 
-      - path: /konnect-platform/kong-identity/
+      - path: /identity/
       - path: /how-to/configure-kong-identity-oauth-introspection/
       - path: /how-to/configure-kong-identity-upstream-oauth/
       - path: /how-to/configure-kong-identity-oidc/

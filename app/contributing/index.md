@@ -842,7 +842,7 @@ See the [Event Gateway landing page](/event-gateway/#use-cases-for-kong-event-ga
               - outcome: |
                   Replace legacy auth methods with modern enterprise identity standards your team already uses
                 feature: |
-                  [OAuth](/kong-identity/)
+                  [OAuth](/identity/)
                 guide: |
                   [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
 ```

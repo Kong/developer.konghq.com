@@ -65,7 +65,7 @@ rows:
       If your Kafka topics follow a naming convention with prefixes, you can easily organize them into categories with {{site.event_gateway}} by using a combination of namespaces, forwarding policies, and ACL policies.
   - use_case: "[How-to: Secure Kafka traffic in {{site.event_gateway_short}} with {{site.identity}} and ACLs](/how-to/event-gateway/kong-identity-oauth/)"
     description: |
-      Using [{{site.identity}}](/kong-identity/) as an auth server, verify client OAuth tokens through a virtual cluster, and apply an ACL policy to restrict access to a specific client.
+      Using [{{site.identity}}](/identity/) as an auth server, verify client OAuth tokens through a virtual cluster, and apply an ACL policy to restrict access to a specific client.
 {% endtable %}
 <!--vale on-->
 
