@@ -4,7 +4,7 @@ RUBY_VERSION := "$(shell ruby -v)"
 RUBY_VERSION_REQUIRED := "$(shell cat .ruby-version)"
 RUBY_MATCH := $(shell [[ "$(shell ruby -v)" =~ "ruby $(shell cat .ruby-version)" ]] && echo matched)
 
-.PHONY: ruby-version-check scaffold-plugin
+.PHONY: ruby-version-check scaffold-plugin test
 ruby-version-check:
 ifndef RUBY_MATCH
 	$(error ruby $(RUBY_VERSION_REQUIRED) is required. Found $(RUBY_VERSION). $(newline)Run 'mise activate' or prefix you make command with 'mise x --' see README.md for more information)$(newline)
@@ -48,6 +48,9 @@ kill-ports:
 
 vale:
 	-git diff --name-only --diff-filter=d origin/main HEAD | grep '\.md$$' | xargs vale
+
+test: ruby-version-check
+	bundle exec rspec
 
 scaffold-plugin:
 	@if [ -z "$(PLUGIN)" ]; then \
