@@ -3,7 +3,6 @@
 <table class="{% if include.sticky %}table__sticky{% endif %} w-full">
     <thead>
         <tr>
-        {% if include.item_title %}<th>{{ include.item_title }}</th>{% endif %}
         {% for column in include.columns %}
             <th>
             <span class="font-semibold text-primary">{{ column.title | liquify | markdownify }}</span>
@@ -14,12 +13,6 @@
     <tbody>
         {% for row in include.rows %}
         <tr{% if row.id %} id="{{ row.id }}"{% endif %}>
-            {% if include.item_title %}
-            <td>
-              <span class="block text-primary">{{ row.title | liquify | markdownify | markdown }}</span>
-              {% if row.subtitle %}<span class="text-secondary">{{ row.subtitle | liquify | markdownify | markdown }}</span>{% endif %}
-            </td>
-            {% endif %}
             {% for column in include.columns %}
                 {% assign v = row[column.key] %}
                 <td{% if v == true or v == false %}{% endif %} style="vertical-align: {{ vertical_align }}">

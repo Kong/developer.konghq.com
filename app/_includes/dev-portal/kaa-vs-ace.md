@@ -8,29 +8,30 @@ The [authentication strategy](/dev-portal/auth-strategies/) that you select for 
 The following table can help you decide which option to pick:
 <!--vale off-->
 {% table %}
-item_title: Option
 columns:
+  - title: Option
+    key: option
   - title: KAA plugin
     key: kaa
   - title: ACE plugin
     key: ace
 rows:
-  - title: Scope
+  - option: Scope
     kaa: Linked to a single Gateway Service
     ace: Linked to an entire control plane
-  - title: Plugin applied...
+  - option: Plugin applied...
     kaa: "Automatically on the [Gateway Service linked to the API](/catalog/apis/#gateway-service-link)"
     ace: "Manually"
-  - title: "Managed by..."
+  - option: "Managed by..."
     kaa: "{{site.konnect_short_name}}. You can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/)."
     ace: "You, by manually configuring the plugin."
-  - title: "{{site.base_gateway}} version"
+  - option: "{{site.base_gateway}} version"
     kaa: "3.6 or later"
     ace: "3.13 or later"
-  - title: "Can be used with declarative configuration"
+  - option: "Can be used with declarative configuration"
     kaa: "No, because the plugin is applied automatically"
     ace: "Yes, because you must configure the plugin"
-  - title: "Can be used with API packages"
+  - option: "Can be used with API packages"
     kaa: "No"
     ace: "Yes"
 {% endtable %}
