@@ -111,7 +111,7 @@ configuration. See [Use kongctl with AI agent skills](/kongctl/skills/).
 ### Preview changes with diff
 
 Input configuration is typically stored in files and loaded into kongctl with the `--filename` flag. For the purposes of this guide, you can pass the configuration directly to the commands on `STDIN`. The following
-command calculates a [plan](/kongctl/declarative/#plan-based-approach) for your organization with a basic Dev Portal declaration and displays a human-friendly
+command calculates a [plan](/kongctl/declarative/#plan-artifacts) for your organization with a basic Dev Portal declaration and displays a human-friendly
 printout showing what changes _will be_ applied. 
 
 ```bash
