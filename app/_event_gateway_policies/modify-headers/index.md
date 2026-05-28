@@ -55,6 +55,8 @@ rows:
     description: If a record fits a specific condition, add a custom header of your choice.
   - use_case: "[Tutorial: Filter Kafka records by classification headers](/event-gateway/filter-records-by-classification/)"
     description: Use a [Schema Validation policy](/event-gateway/policies/schema-validation-produce/) to parse JSON records, and use a nested Modify Headers policy to add a header to specific records.
+  - use_case: "[Tutorial: Enrich Kafka OAuth connections with Kong Identity principal metadata](/event-gateway/kong-identity-jwt-metadata-integration/)"
+    description: Look up the JWT-authenticated principal in a Kong Identity directory by `iss` and `sub`, and add a header to records based on the principal's metadata.
 {% endtable %}
 <!--vale on-->
 
