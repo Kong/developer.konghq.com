@@ -1,10 +1,14 @@
 {% unless page.plugin? %}
-{% if include.products and include.products.size > 1 %}
-{% raise "tier.html include called with a tier and more than one product." %}
+{% if include.products and include.products.size > 1 and include.tier_product == nil %}
+{% raise "tier.html include called with a tier and more than one product. Set `tier_product` in the page frontmatter to pick one." %}
 {% endif %}
 {% endunless %}
 
+{% if include.tier_product %}
+{% assign product = include.tier_product %}
+{% else %}
 {% assign product = include.products.first %}
+{% endif %}
 {% assign tier = site.data.products[product].tiers[include.tier] %}
 {% unless tier %}
     {%- capture available_tiers -%}

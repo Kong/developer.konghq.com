@@ -11,7 +11,7 @@
     {% if include.config.type == 'h1' %}
         <div class="flex gap-2 items-center">
         {% if page.tier %}
-            {% include tier.html products=page.products tier=page.tier %}
+            {% include tier.html products=page.products tier=page.tier tier_product=page.tier_product %}
         {% endif %}
          {%- if page.beta == true or page.tech_preview == true -%}
             {%- include_cached badges/stage.html beta=page.beta tech_preview=page.tech_preview -%}

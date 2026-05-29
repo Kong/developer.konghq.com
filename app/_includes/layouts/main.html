@@ -15,7 +15,7 @@
             {% if show_badges %}
             <div class="flex gap-3 items-center">
             {% if layout.tier_inline == true and page.tier %}
-                {% include tier.html products=page.products tier=page.tier %}
+                {% include tier.html products=page.products tier=page.tier tier_product=page.tier_product %}
             {% endif %}
 
             {% if layout.uses == false %}
@@ -43,7 +43,7 @@
         {% endif %}
 
         {% if layout.uses != false %}
-        {% include_cached uses.html products=page.products tools=page.tools tier=page.tier beta=page.beta tech_preview=page.tech_preview %}
+        {% include_cached uses.html products=page.products tools=page.tools tier=page.tier tier_product=page.tier_product beta=page.beta tech_preview=page.tech_preview %}
         {% endif %}
 
         {% ifhascontent nav_header %}

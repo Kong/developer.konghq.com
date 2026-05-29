@@ -123,13 +123,22 @@
   </div>
   {% endif %}
 
-  {% if prereqs.entities? %}
+  {% comment %}
+  <!-- {% if prereqs.entities? %}
     {% if product == 'operator' %}{% assign product='kic' %}{% endif %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
       {% assign prereq_path = "prereqs/entities/" | append: product | append: ".md" %}
       {% include {{ prereq_path }} data=prereqs.data %}
     </div>
-  {% endif %}
+  {% endif %} -->
+    {% endcomment %}
+  <!-- Build from prereqs.entities_product -->
+  {% if prereqs.entities? %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    {% assign prereq_path = "prereqs/entities/" | append: prereqs.entities_product | append: ".md" %}
+    {% include {{ prereq_path }} data=prereqs.data %}
+  </div>
+{% endif %}
 
 
   {% for prereq in prereqs.inline_without_position %}

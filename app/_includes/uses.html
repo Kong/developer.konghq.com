@@ -5,7 +5,7 @@
     {%- endif -%}
 
     {% if include.tier %}
-        {% include tier.html products=include.products tier=include.tier %}
+        {% include tier.html products=include.products tier=include.tier tier_product=include.tier_product %}
     {% endif %}
 
     {% if include.tier or include.beta == true or include.tech_preview == true %}
