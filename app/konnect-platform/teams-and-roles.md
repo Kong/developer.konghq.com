@@ -315,7 +315,7 @@ rows:
       * Read and list assigned **directories**.
       * Create, read, list, edit, and delete any **Principal** in assigned directories.
       * Create the default directory.
-    - role: "`Principal Viewer`"
+  - role: "`Principal Viewer`"
     description: Access to all read permissions related to an Directories and Principals
     permissions: |
       * Read and list assigned **directories**.
