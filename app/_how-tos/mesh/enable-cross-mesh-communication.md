@@ -382,6 +382,9 @@ Deploy a `MeshGateway` in `mesh1` to expose its services to `mesh2`. Apply these
      serviceType: LoadBalancer" | kubectl apply -f - --context $C1_CONTEXT
    ```
 
+   {:.info}
+   > `serviceType: LoadBalancer` is used here because `NodePort` triggers a Kong Mesh bug where the controller tries to set `nodePort: 8080`, which Kubernetes rejects. A `LoadBalancer` service still gets a NodePort assigned in the valid range, which is what the next step exports.
+
 1. Wait for the service and pod to be ready:
 
    ```sh
@@ -469,6 +472,9 @@ Deploy a `MeshGateway` in `mesh2` to expose its services to `mesh1`.
      replicas: 1
      serviceType: LoadBalancer" | kubectl apply -f - --context $C1_CONTEXT
    ```
+
+   {:.info}
+   > See the note above about why `LoadBalancer` is used instead of `NodePort`.
 
 1. Wait for the service and pod to be ready:
 
@@ -602,18 +608,31 @@ Workloads in `mesh1` can now reach the `echo` service in `mesh2` at `http://echo
 1. From the client in `mesh1`, send a request to the `echo` service in `mesh2`:
 
    ```sh
-   kubectl exec -n c2m1 client --context $C2_CONTEXT -- curl -s http://echo-mesh-2-http.extsvc.mesh.local:8080/echo
+   kubectl exec -n c2m1 client --context $C2_CONTEXT -- curl -s http://echo-mesh-2-http.extsvc.mesh.local:8080/
    ```
 
-   You should receive a response from the `echo` service running in `mesh2` on Cluster 1.
+   You should see a response identifying the echo pod in `c1m2`:
+
+   ```sh
+   Welcome, you are connected to node mesh-c1.
+   Running on Pod echo-<hash>.
+   In namespace c1m2.
+   With IP address 10.244.x.x.
+   ```
+   {:.no-copy-code}
 
 1. From the client in `mesh2`, send a request to the `echo` service in `mesh1`:
 
    ```sh
-   kubectl exec -n c2m2 client --context $C2_CONTEXT -- curl -s http://echo-mesh-1-http.extsvc.mesh.local:8080/echo
+   kubectl exec -n c2m2 client --context $C2_CONTEXT -- curl -s http://echo-mesh-1-http.extsvc.mesh.local:8080/
    ```
 
-   You should receive a response from the `echo` service running in `mesh1` on Cluster 1.
+   You should see a response identifying the echo pod in `c1m1`:
 
-{:.info}
-> If you get a connection error, the `MeshExternalService` hostname may still be propagating. Wait a few seconds and try again.
+   ```sh
+   Welcome, you are connected to node mesh-c1.
+   Running on Pod echo-<hash>.
+   In namespace c1m1.
+   With IP address 10.244.x.x.
+   ```
+   {:.no-copy-code}
