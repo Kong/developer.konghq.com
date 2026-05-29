@@ -110,31 +110,31 @@ kubectl patch -n kong --type=json deployment echo -p='[
 ]'
 ```
 
-## Route TCP traffic
+## Route TCP traffic with TLS
 
-To reconcile the `TLSRoute`, add a TLS listener to your `Gateway` resource:
+Re-apply the `kong` Gateway with the additional `stream9443` TLS listener in `Passthrough` mode:
 
 ```bash
-kubectl patch -n kong --type=json gateway kong -p='[
-    {
-        "op":"add",
-        "path":"/spec/listeners/-",
-        "value":{
-            "name":"stream9443",
-            "port":9443,
-            "protocol":"TLS",
-            "hostname":"tls9443.kong.example",
-            "allowedRoutes": {
-              "namespaces": {
-                "from": "All"
-              }
-            },
-            "tls": {
-              "mode": "Passthrough"
-            }
-        }
-    }
-]'
+echo 'apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kong
+  namespace: kong
+spec:
+  gatewayClassName: kong
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+    - name: stream9443
+      port: 9443
+      protocol: TLS
+      hostname: tls9443.kong.example
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Passthrough' | kubectl apply -f -
 ```
 
 Next, create a `TLSRoute`:
@@ -208,34 +208,36 @@ For more information about how {{ site.operator_product_name }} handles secrets,
 
 ### Add a Terminate TLS listener to the Gateway
 
-Patch the existing `kong` Gateway to append a second TLS listener on port `9444` in `Terminate` mode, referencing the labeled Secret:
+Reapply the `kong` Gateway with a `stream9444` TLS listener in `Terminate` mode, referencing the labeled Secret:
+
+{:.warning}
+> **Warning**: Applying this Gateway replaces the listener list. If you completed the Passthrough walkthrough above, the `stream9443` listener will be removed and the `echo-tls` `TLSRoute` will no longer attach to a parent. Run `kubectl delete tlsroute echo-tls -n kong` to remove the leftover route if you only want the Terminate demo running.
 
 ```bash
-kubectl patch -n kong --type=json gateway kong -p='[
-    {
-        "op":"add",
-        "path":"/spec/listeners/-",
-        "value":{
-            "name":"stream9444",
-            "port":9444,
-            "protocol":"TLS",
-            "hostname":"tls9444.kong.example",
-            "allowedRoutes": {
-              "namespaces": {
-                "from": "All"
-              }
-            },
-            "tls": {
-              "mode": "Terminate",
-              "certificateRefs":[{
-                "group":"",
-                "kind":"Secret",
-                "name":"tls9444.kong.example"
-              }]
-            }
-        }
-    }
-]'
+echo 'apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kong
+  namespace: kong
+spec:
+  gatewayClassName: kong
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+    - name: stream9444
+      port: 9444
+      protocol: TLS
+      hostname: tls9444.kong.example
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: tls9444.kong.example' | kubectl apply -f -
 ```
 
 ### Create a TLSRoute for the Terminate listener
