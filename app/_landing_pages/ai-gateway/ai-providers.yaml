@@ -23,7 +23,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The core of [{{site.ai_gateway}}](/ai-gateway/) is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
+                    The core of [{{site.ai_gateway}}](/ai-gateway/) is the ability to serve AI [models](/ai-gateway/entities/model/) from various [providers](/ai-gateway/entities/provider/) via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
 
                 - type: unordered_list
                   items:
@@ -31,7 +31,7 @@ rows:
                     - Centralized AI provider credential management
                     - The {{site.ai_gateway}} gives developers and organizations a central point of governance and observability over AI data and usage
                     - Request routing can be dynamic, allowing AI usage to be optimized based on various metrics
-                    - AI services can be used by other {{site.base_gateway}} plugins to augment non-AI API traffic
+                    - AI services can be used by other Kong tools to augment non-AI API traffic
   - column_count: 3
     columns:
       - blocks:
@@ -175,7 +175,7 @@ rows:
                 - type: text
                   text: |
                     {:.info}
-                    > Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types.
+                    > Note that some providers may not be available or require different configuration steps depending on your {{site.base_gateway}} version, and some providers don't support all route types.
                     > See the specific provider documentation for more details.
 
   - header:
