@@ -39,6 +39,7 @@ module Jekyll
             'title' => lp.data['title'],
             'description' => lp.data['description'],
             'url' => lp.url,
+            'weight' => lp.data['weight'],
             'tags' => lp.data['tags'] || [],
             'products' => lp.data['products'] || [],
             'steps' => serialize_steps(lp.data['steps'])

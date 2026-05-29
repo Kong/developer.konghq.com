@@ -19,6 +19,7 @@ module Jekyll
         @data['steps'] = @source_data['steps'] || []
         @data['content_type'] = 'learning_path'
         @data['layout'] = 'learning-path'
+        @data['toc'] = false
         @data['breadcrumbs'] ||= ['/learning-paths/']
 
         # Needed so that regeneration works for single sourced pages.

@@ -41,6 +41,7 @@ module Jekyll
             'title' => lp.data['title'],
             'description' => lp.data['description'],
             'url' => lp.url,
+            'weight' => lp.data['weight'],
             'tags' => lp.data['tags'] || [],
             'min_version' => lp.data['min_version'],
             'steps' => serialize_steps(lp.data['steps'])

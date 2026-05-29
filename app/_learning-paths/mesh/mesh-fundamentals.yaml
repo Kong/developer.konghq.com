@@ -1,6 +1,7 @@
 metadata:
   title: "Kong Mesh Fundamentals"
   description: "Learn how {{site.mesh_product_name}} is put together, secure your first services with mTLS and zero-trust permissions, and master the `targetRef` policy system that powers every {{site.mesh_product_name}} deployment. The path follows **Kong Air**, a global airline modernizing its flight-critical services."
+  weight: 1000
   products:
     - mesh
   personas:

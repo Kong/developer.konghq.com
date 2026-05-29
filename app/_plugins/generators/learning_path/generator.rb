@@ -43,12 +43,12 @@ module Jekyll
 
         # Per-product index pages: group by each product the path is tagged with.
         group_pages(overview_pages, 'products').each do |product, pages|
-          site.pages << Jekyll::LearningPath::ProductIndexPage.new(site, product, pages)
+          site.pages << Jekyll::LearningPath::ProductIndexPage.new(site, product, sort_by_weight(pages))
         end
 
         # Per-persona index pages: group by each persona the path is tagged with.
         group_pages(overview_pages, 'personas').each do |persona, pages|
-          site.pages << Jekyll::LearningPath::PersonaIndexPage.new(site, persona, pages)
+          site.pages << Jekyll::LearningPath::PersonaIndexPage.new(site, persona, sort_by_weight(pages))
         end
       end
 
@@ -65,6 +65,15 @@ module Jekyll
         end
       end
       private_class_method :group_pages
+
+      # Sort learning path pages by their `weight` metadata field (descending).
+      # Higher weight = displayed first, matching the convention used elsewhere
+      # in this project (plugin examples, mesh policy examples).
+      # Paths without a weight are placed at the end (treated as weight 0).
+      def self.sort_by_weight(pages)
+        pages.sort_by { |page| -page.data.fetch('weight', 0) }
+      end
+      private_class_method :sort_by_weight
     end
   end
 end
