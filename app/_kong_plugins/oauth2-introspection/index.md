@@ -42,7 +42,7 @@ related_resources:
     url: /gateway/authentication/
   - text: OAuth 2.0 Authentication plugin
     url: /plugins/oauth2/reference/
-  - text: Configure the OAuth 2.0 Introspection plugin with Kong Identity
+  - text: Configure the OAuth 2.0 Introspection plugin with {{site.identity}}
     url: /how-to/configure-kong-identity-oauth-introspection/
 
 min_version:

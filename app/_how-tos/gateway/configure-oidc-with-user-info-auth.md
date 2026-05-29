@@ -123,6 +123,7 @@ method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+retry: true
 extract_body:
   - name: 'headers.Authorization'
     variable: TOKEN
