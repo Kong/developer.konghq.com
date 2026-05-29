@@ -102,7 +102,12 @@ Benefits of this approach:
 
 ### Built-in MeshGateway
 
-The built-in `MeshGateway` is the native {{site.mesh_product_name}} option. It requires no additional components beyond {{site.mesh_product_name}} itself and preserves mesh-level context across the boundary. Use this when:
+The built-in `MeshGateway` is the native {{site.mesh_product_name}} option. It requires no additional components beyond {{site.mesh_product_name}} itself and preserves mesh-level context across the boundary.
+
+{:.info}
+> Apply `MeshGateway` and `MeshHTTPRoute` directly to the zone cluster with `kuma.io/origin: zone`, not to the global control plane. When applied via the global CP, {{site.mesh_product_name}} renames them with a hash suffix on sync, and the `MeshGatewayInstance` controller can't find a matching gateway by name.
+
+Use this when:
 
 - You haven't deployed {{site.base_gateway}} ({{site.operator_product_name}}) and don't need Kong plugins on the cross-mesh path.
 - You want to keep the setup entirely within {{site.mesh_product_name}}.

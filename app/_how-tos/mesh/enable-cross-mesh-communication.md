@@ -33,37 +33,32 @@ related_resources:
 tldr:
   q: How do I connect services in two different meshes?
   a: |
-    Deploy a `MeshGateway` in each mesh to expose services, then create a `MeshExternalService` in the calling mesh that points to the other mesh's gateway's LoadBalancer IP. Services can then call the `MeshExternalService` DNS name to reach services in the remote mesh.
+    Deploy a `MeshGateway` in each mesh to expose services, then create a `MeshExternalService` in the calling mesh pointing to the other mesh's gateway using the Cluster 1 node IP and NodePort. Services can then call the `MeshExternalService` DNS name to reach services in the remote mesh.
 
 prereqs:
   skip_product: true
   inline:
     - title: Helm
       include_content: prereqs/helm
-    - title: Three Kubernetes clusters with LoadBalancer support
+    - title: Three Kubernetes clusters
       content: |
-        This guide requires three Kubernetes clusters: one for the global control plane and one for each zone. Use minikube with three named profiles:
+        This guide requires three Kubernetes clusters: one for the global control plane and one for each zone. Create a shared Docker network first, then start each minikube profile with a unique static IP on that network so nodes from different clusters can reach each other directly:
 
         ```sh
-        minikube start -p mesh-global
-        minikube start -p mesh-c1
-        minikube start -p mesh-c2
+        docker network create kong-mesh --subnet 192.168.200.0/24
+        minikube start -p mesh-global --network kong-mesh --static-ip 192.168.200.10
+        minikube start -p mesh-c1 --network kong-mesh --static-ip 192.168.200.11
+        minikube start -p mesh-c2 --network kong-mesh --static-ip 192.168.200.12
         ```
 
-        Use the minikube tunnel feature to provision local LoadBalancer addresses. Run each tunnel in a background terminal:
-
-        ```sh
-        nohup minikube tunnel -p mesh-global &
-        nohup minikube tunnel -p mesh-c1 &
-        nohup minikube tunnel -p mesh-c2 &
-        ```
-
-        Export the context names for use throughout this guide:
+        Export the context names and node IPs for use throughout this guide:
 
         ```sh
         export GLOBAL_CONTEXT=mesh-global
         export C1_CONTEXT=mesh-c1
         export C2_CONTEXT=mesh-c2
+        export GLOBAL_NODE_IP=192.168.200.10
+        export C1_NODE_IP=192.168.200.11
         ```
     - title: "Install {{site.mesh_product_name}} in multi-zone mode"
       content: |
@@ -91,7 +86,16 @@ prereqs:
           --context $GLOBAL_CONTEXT
         ```
 
-        Install the zone control plane on `mesh-c1` and connect it to the global control plane. `host.minikube.internal` resolves to the host machine from within the cluster, where the global control plane's KDS service (port 5685) is reachable via `minikube tunnel`:
+        Get the KDS NodePort from the global control plane:
+
+        ```sh
+        export KDS_PORT=$(kubectl get svc kong-mesh-global-zone-sync \
+          -n kong-mesh-system --context $GLOBAL_CONTEXT \
+          -o jsonpath='{.spec.ports[?(@.port==5685)].nodePort}')
+        echo "KDS: $GLOBAL_NODE_IP:$KDS_PORT"
+        ```
+
+        Install the zone control plane on `mesh-c1` and connect it to the global control plane:
 
         ```sh
         helm install \
@@ -101,7 +105,8 @@ prereqs:
           --set kuma.controlPlane.mode=zone \
           --set kuma.controlPlane.zone=zone-c1 \
           --set kuma.ingress.enabled=true \
-          --set kuma.controlPlane.kdsGlobalAddress=grpcs://host.minikube.internal:5685 \
+          --set kuma.egress.enabled=true \
+          --set kuma.controlPlane.kdsGlobalAddress=grpcs://$GLOBAL_NODE_IP:$KDS_PORT \
           --set kuma.controlPlane.tls.kdsZoneClient.skipVerify=true \
           kong-mesh kong-mesh/kong-mesh
         kubectl wait -n kong-mesh-system \
@@ -121,7 +126,8 @@ prereqs:
           --set kuma.controlPlane.mode=zone \
           --set kuma.controlPlane.zone=zone-c2 \
           --set kuma.ingress.enabled=true \
-          --set kuma.controlPlane.kdsGlobalAddress=grpcs://host.minikube.internal:5685 \
+          --set kuma.egress.enabled=true \
+          --set kuma.controlPlane.kdsGlobalAddress=grpcs://$GLOBAL_NODE_IP:$KDS_PORT \
           --set kuma.controlPlane.tls.kdsZoneClient.skipVerify=true \
           kong-mesh kong-mesh/kong-mesh
         kubectl wait -n kong-mesh-system \
@@ -131,14 +137,25 @@ prereqs:
           --context $C2_CONTEXT
         ```
 
+        Verify both zones have registered. The global control plane creates a Zone object automatically when a zone control plane connects via KDS, so their existence confirms the connection is working:
+
+        ```sh
+        until kubectl get zone zone-c1 zone-c2 \
+          --context $GLOBAL_CONTEXT 2>/dev/null; do
+          echo "Waiting for zones to register..."
+          sleep 5
+        done
+        ```
+
 cleanup:
   inline:
-    - title: Delete the minikube clusters
+    - title: Delete the minikube clusters and Docker network
       content: |
         ```sh
         minikube delete -p mesh-global
         minikube delete -p mesh-c1
         minikube delete -p mesh-c2
+        docker network rm kong-mesh
         ```
 
 ---
@@ -159,8 +176,6 @@ Apply `Mesh` resources to the global control plane using `kubectl`. Each mesh ge
    spec:
      meshServices:
        mode: Exclusive
-     skipCreatingInitialPolicies:
-     - '*'
      mtls:
        enabledBackend: ca-1
        backends:
@@ -188,8 +203,6 @@ Apply `Mesh` resources to the global control plane using `kubectl`. Each mesh ge
      networking:
        outbound:
          passthrough: false
-     skipCreatingInitialPolicies:
-     - '*'
      mtls:
        enabledBackend: ca-1
        backends:
@@ -204,7 +217,7 @@ Apply `Mesh` resources to the global control plane using `kubectl`. Each mesh ge
                expiration: 10y" | kubectl apply -f - --context $GLOBAL_CONTEXT
    ```
 
-1. Confirm both meshes are registered:
+1. Confirm both meshes are registered on the global control plane:
 
    ```sh
    kubectl get mesh --context $GLOBAL_CONTEXT
@@ -212,20 +225,25 @@ Apply `Mesh` resources to the global control plane using `kubectl`. Each mesh ge
 
    You should see `mesh1` and `mesh2` listed.
 
-## Allow traffic within each mesh
-
-When `meshServices` mode is `Exclusive`, traffic is denied by default. Apply a `MeshTrafficPermission` for each mesh to the global control plane — these sync to both zone clusters automatically.
-
-1. Allow all traffic within `mesh1`:
+1. Wait for both meshes to sync to the zone control planes before proceeding:
 
    ```sh
-   echo "apiVersion: kuma.io/v1alpha1
+   until kubectl get mesh mesh1 mesh2 --context $C1_CONTEXT 2>/dev/null; do sleep 3; done
+   until kubectl get mesh mesh1 mesh2 --context $C2_CONTEXT 2>/dev/null; do sleep 3; done
+   ```
+
+1. Apply a `MeshTrafficPermission` for each mesh on each zone cluster. The default policy is not always propagated automatically, so apply it explicitly:
+
+   ```sh
+   for ctx in $C1_CONTEXT $C2_CONTEXT; do
+     echo "apiVersion: kuma.io/v1alpha1
    kind: MeshTrafficPermission
    metadata:
-     name: allow-all
+     name: allow-all-mesh1
      namespace: kong-mesh-system
      labels:
        kuma.io/mesh: mesh1
+       kuma.io/origin: zone
    spec:
      targetRef:
        kind: Mesh
@@ -233,19 +251,15 @@ When `meshServices` mode is `Exclusive`, traffic is denied by default. Apply a `
      - targetRef:
          kind: Mesh
        default:
-         action: Allow" | kubectl apply -f - --context $GLOBAL_CONTEXT
-   ```
-
-1. Allow all traffic within `mesh2`:
-
-   ```sh
-   echo "apiVersion: kuma.io/v1alpha1
+         action: Allow" | kubectl apply -f - --context $ctx
+     echo "apiVersion: kuma.io/v1alpha1
    kind: MeshTrafficPermission
    metadata:
-     name: allow-all
+     name: allow-all-mesh2
      namespace: kong-mesh-system
      labels:
        kuma.io/mesh: mesh2
+       kuma.io/origin: zone
    spec:
      targetRef:
        kind: Mesh
@@ -253,12 +267,16 @@ When `meshServices` mode is `Exclusive`, traffic is denied by default. Apply a `
      - targetRef:
          kind: Mesh
        default:
-         action: Allow" | kubectl apply -f - --context $GLOBAL_CONTEXT
+         action: Allow" | kubectl apply -f - --context $ctx
+   done
    ```
 
 ## Configure Cluster 1
 
-The following steps set up namespaces, deploy services, and create both `MeshGateway` resources on Cluster 1. You'll need the LoadBalancer IPs from this section when configuring Cluster 2.
+The following steps set up namespaces, deploy services, and create both `MeshGateway` resources on Cluster 1. You'll need the gateway IPs from this section when configuring Cluster 2.
+
+{:.info}
+> Namespaces and services must be created **after** the `MeshTrafficPermission` steps above. Pods that start before the permission policy is applied will initialise with a deny-all RBAC rule and won't receive updated rules until they are restarted.
 
 ### Prepare namespaces
 
@@ -285,9 +303,69 @@ kubectl wait -n c1m1 --for=condition=ready pod --selector=app=echo --timeout=90s
 kubectl wait -n c1m2 --for=condition=ready pod --selector=app=echo --timeout=90s --context $C1_CONTEXT
 ```
 
+The echo service's port 1027 is named `http`, which causes {{site.mesh_product_name}} to generate HTTP-specific Envoy cluster config. Set `appProtocol: tcp` to override this so a plain TCP cluster is generated instead:
+
+```sh
+kubectl patch svc echo -n c1m1 --context $C1_CONTEXT \
+  --type json \
+  -p '[{"op":"add","path":"/spec/ports/2/appProtocol","value":"tcp"}]'
+kubectl patch svc echo -n c1m2 --context $C1_CONTEXT \
+  --type json \
+  -p '[{"op":"add","path":"/spec/ports/2/appProtocol","value":"tcp"}]'
+```
+
 ### Set up the mesh1 gateway
 
-Deploy a `MeshGateway` in `mesh1` to expose its services to `mesh2`.
+Deploy a `MeshGateway` in `mesh1` to expose its services to `mesh2`. Apply these directly to the zone cluster — when applied via the global CP, Kong Mesh renames them with a hash suffix and the `MeshGatewayInstance` controller can't find a matching `MeshGateway` by name.
+
+1. Create the `MeshGateway` on the zone cluster to configure the listener on port 8080:
+
+   ```sh
+   echo "apiVersion: kuma.io/v1alpha1
+   kind: MeshGateway
+   mesh: mesh1
+   metadata:
+     name: cross-mesh-gateway
+     namespace: kong-mesh-system
+     labels:
+       kuma.io/origin: zone
+   spec:
+     selectors:
+       - match:
+           kuma.io/service: cross-mesh-gateway_c1m1_svc
+     conf:
+       listeners:
+         - port: 8080
+           protocol: TCP" | kubectl apply -f - --context $C1_CONTEXT
+   ```
+
+1. Create a TCP route on the zone cluster that forwards all traffic to the `echo` service:
+
+   ```sh
+   echo "apiVersion: kuma.io/v1alpha1
+   kind: MeshTCPRoute
+   metadata:
+     name: gw-to-mesh1-echo
+     namespace: kong-mesh-system
+     labels:
+       kuma.io/mesh: mesh1
+       kuma.io/origin: zone
+   spec:
+     targetRef:
+       kind: MeshGateway
+       name: cross-mesh-gateway
+     to:
+     - targetRef:
+         kind: Mesh
+       rules:
+       - default:
+           backendRefs:
+           - kind: MeshService
+             name: echo
+             namespace: c1m1
+             port: 1027
+             weight: 1" | kubectl apply -f - --context $C1_CONTEXT
+   ```
 
 1. Create the `MeshGatewayInstance` to deploy the gateway pods in the `c1m1` namespace:
 
@@ -304,71 +382,78 @@ Deploy a `MeshGateway` in `mesh1` to expose its services to `mesh2`.
      serviceType: LoadBalancer" | kubectl apply -f - --context $C1_CONTEXT
    ```
 
-   {:.info}
-   > `MeshGatewayInstance` deploys pods, so it goes in the data namespace (`c1m1`) where sidecar injection is enabled. The `MeshGateway` and `MeshHTTPRoute` below are policy resources and go in `kong-mesh-system`.
-
-1. Create the `MeshGateway` to configure the listener on port 8080:
+1. Wait for the service and pod to be ready:
 
    ```sh
-   echo "apiVersion: kuma.io/v1alpha1
-   kind: MeshGateway
-   mesh: mesh1
-   metadata:
-     name: cross-mesh-gateway
-     namespace: kong-mesh-system
-   spec:
-     selectors:
-       - match:
-           kuma.io/service: cross-mesh-gateway_c1m1_svc
-     conf:
-       listeners:
-         - port: 8080
-           protocol: HTTP" | kubectl apply -f - --context $C1_CONTEXT
+   until kubectl get svc cross-mesh-gateway -n c1m1 --context $C1_CONTEXT 2>/dev/null; do
+     sleep 3
+   done
+   kubectl wait -n c1m1 --for=condition=ready pod \
+     --selector=app=cross-mesh-gateway \
+     --timeout=120s \
+     --context $C1_CONTEXT
    ```
 
-1. Create an HTTP route that forwards `/echo` to the `echo` service:
+1. Export the mesh1 gateway NodePort:
 
    ```sh
-   echo "apiVersion: kuma.io/v1alpha1
-   kind: MeshHTTPRoute
-   metadata:
-     name: gw-to-mesh1-echo
-     namespace: kong-mesh-system
-     labels:
-       kuma.io/mesh: mesh1
-       kuma.io/origin: zone
-   spec:
-     targetRef:
-       kind: MeshGateway
-       name: cross-mesh-gateway
-     to:
-     - targetRef:
-         kind: Mesh
-       rules:
-       - matches:
-         - path:
-             type: PathPrefix
-             value: /echo
-         default:
-           backendRefs:
-           - kind: MeshService
-             name: echo
-             namespace: c1m1
-             port: 1027
-             weight: 1" | kubectl apply -f - --context $C1_CONTEXT
-   ```
-
-1. Wait for the gateway pod to be ready and export its LoadBalancer IP:
-
-   ```sh
-   kubectl wait -n c1m1 --for=condition=ready pod --selector=app=cross-mesh-gateway --timeout=90s --context $C1_CONTEXT
-   export MESH1_GW_IP=$(kubectl get svc cross-mesh-gateway -n c1m1 --context $C1_CONTEXT -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-   echo $MESH1_GW_IP
+   export MESH1_GW_PORT=$(kubectl get svc cross-mesh-gateway -n c1m1 --context $C1_CONTEXT \
+     -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
+   echo "$C1_NODE_IP:$MESH1_GW_PORT"
    ```
 
 ### Set up the mesh2 gateway
 
 Deploy a `MeshGateway` in `mesh2` to expose its services to `mesh1`.
+
+1. Create the `MeshGateway` on the zone cluster:
+
+   ```sh
+   echo "apiVersion: kuma.io/v1alpha1
+   kind: MeshGateway
+   mesh: mesh2
+   metadata:
+     name: mesh2-gateway
+     namespace: kong-mesh-system
+     labels:
+       kuma.io/origin: zone
+   spec:
+     selectors:
+       - match:
+           kuma.io/service: mesh2-gateway_c1m2_svc
+     conf:
+       listeners:
+         - port: 8080
+           protocol: TCP" | kubectl apply -f - --context $C1_CONTEXT
+   ```
+
+1. Create a TCP route on the zone cluster that forwards all traffic to the `echo` service in `mesh2`:
+
+   ```sh
+   echo "apiVersion: kuma.io/v1alpha1
+   kind: MeshTCPRoute
+   metadata:
+     name: gw-to-mesh2-echo
+     namespace: kong-mesh-system
+     labels:
+       kuma.io/mesh: mesh2
+       kuma.io/origin: zone
+   spec:
+     targetRef:
+       kind: MeshGateway
+       name: mesh2-gateway
+     to:
+     - targetRef:
+         kind: Mesh
+       rules:
+       - default:
+           backendRefs:
+           - kind: MeshService
+             name: echo
+             namespace: c1m2
+             port: 1027
+             weight: 1" | kubectl apply -f - --context $C1_CONTEXT
+   ```
 
 1. Create the `MeshGatewayInstance` for `mesh2` in the `c1m2` namespace:
 
@@ -385,68 +470,29 @@ Deploy a `MeshGateway` in `mesh2` to expose its services to `mesh1`.
      serviceType: LoadBalancer" | kubectl apply -f - --context $C1_CONTEXT
    ```
 
-1. Create the `MeshGateway` listener for `mesh2`:
+1. Wait for the service and pod to be ready:
 
    ```sh
-   echo "apiVersion: kuma.io/v1alpha1
-   kind: MeshGateway
-   mesh: mesh2
-   metadata:
-     name: mesh2-gateway
-     namespace: kong-mesh-system
-   spec:
-     selectors:
-       - match:
-           kuma.io/service: mesh2-gateway_c1m2_svc
-     conf:
-       listeners:
-         - port: 8080
-           protocol: HTTP" | kubectl apply -f - --context $C1_CONTEXT
+   until kubectl get svc mesh2-gateway -n c1m2 --context $C1_CONTEXT 2>/dev/null; do
+     sleep 3
+   done
+   kubectl wait -n c1m2 --for=condition=ready pod \
+     --selector=app=mesh2-gateway \
+     --timeout=120s \
+     --context $C1_CONTEXT
    ```
 
-1. Create an HTTP route that forwards `/echo` to the `echo` service in `mesh2`:
+1. Export the mesh2 gateway NodePort:
 
    ```sh
-   echo "apiVersion: kuma.io/v1alpha1
-   kind: MeshHTTPRoute
-   metadata:
-     name: gw-to-mesh2-echo
-     namespace: kong-mesh-system
-     labels:
-       kuma.io/mesh: mesh2
-       kuma.io/origin: zone
-   spec:
-     targetRef:
-       kind: MeshGateway
-       name: mesh2-gateway
-     to:
-     - targetRef:
-         kind: Mesh
-       rules:
-       - matches:
-         - path:
-             type: PathPrefix
-             value: /echo
-         default:
-           backendRefs:
-           - kind: MeshService
-             name: echo
-             namespace: c1m2
-             port: 1027
-             weight: 1" | kubectl apply -f - --context $C1_CONTEXT
-   ```
-
-1. Wait for the gateway pod to be ready and export its LoadBalancer IP:
-
-   ```sh
-   kubectl wait -n c1m2 --for=condition=ready pod --selector=app=mesh2-gateway --timeout=90s --context $C1_CONTEXT
-   export MESH2_GW_IP=$(kubectl get svc mesh2-gateway -n c1m2 --context $C1_CONTEXT -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-   echo $MESH2_GW_IP
+   export MESH2_GW_PORT=$(kubectl get svc mesh2-gateway -n c1m2 --context $C1_CONTEXT \
+     -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
+   echo "$C1_NODE_IP:$MESH2_GW_PORT"
    ```
 
 ## Configure Cluster 2
 
-With both gateway IPs exported, switch to Cluster 2 to create namespaces, deploy client workloads, and map both gateways as external services.
+With the node IP and both gateway NodePorts exported, switch to Cluster 2 to create namespaces, deploy client workloads, and map both gateways as external services.
 
 ### Prepare namespaces
 
@@ -503,7 +549,7 @@ Deploy a client pod in each mesh namespace for use in the validation step.
 
 ### Map the mesh1 gateway in mesh2
 
-Create a `MeshExternalService` in `mesh2` that points to the `mesh1` gateway's LoadBalancer IP. The `HostnameGenerator` type assigns a stable internal DNS name so workloads don't need to track the IP directly.
+Create a `MeshExternalService` in `mesh2` pointing to the `mesh1` gateway. The `HostnameGenerator` type assigns a stable internal DNS name so workloads don't need to track the address directly.
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -518,17 +564,17 @@ spec:
   match:
     type: HostnameGenerator
     port: 8080
-    protocol: http
+    protocol: tcp
   endpoints:
-  - address: $MESH1_GW_IP
-    port: 8080" | kubectl apply -f - --context $C2_CONTEXT
+  - address: $C1_NODE_IP
+    port: $MESH1_GW_PORT" | kubectl apply -f - --context $C2_CONTEXT
 ```
 
 Workloads in `mesh2` can now reach the `echo` service in `mesh1` at `http://echo-mesh-1-http.extsvc.mesh.local:8080/echo`.
 
 ### Map the mesh2 gateway in mesh1
 
-Create a `MeshExternalService` in `mesh1` that points to the `mesh2` gateway's LoadBalancer IP:
+Create a `MeshExternalService` in `mesh1` pointing to the `mesh2` gateway:
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -543,10 +589,10 @@ spec:
   match:
     type: HostnameGenerator
     port: 8080
-    protocol: http
+    protocol: tcp
   endpoints:
-  - address: $MESH2_GW_IP
-    port: 8080" | kubectl apply -f - --context $C2_CONTEXT
+  - address: $C1_NODE_IP
+    port: $MESH2_GW_PORT" | kubectl apply -f - --context $C2_CONTEXT
 ```
 
 Workloads in `mesh1` can now reach the `echo` service in `mesh2` at `http://echo-mesh-2-http.extsvc.mesh.local:8080/echo`.
