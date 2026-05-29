@@ -37,7 +37,6 @@ formats:
       # core entities
       consumer:       '/consumers/'
       consumer_group: '/consumer_groups/'
-      model:          '/models/'
       route:          '/routes/'
       service:        '/services/'
       target:         '/upstreams/{upstream}/targets/'
@@ -56,24 +55,22 @@ formats:
       keyring:        '/keyring/'
       event_hook:     '/event-hooks/'
       partial:        '/partials/'
+    ai_endpoints:
       # AI entities (/ai/* on on-prem AI Gateway)
-      ai_provider:       '/providers/'
-      ai_model:          '/models/'
-      ai_agent:          '/agents/'
-      ai_mcp_server:     '/mcp-servers/'
-      ai_policy:         '/policies/'
-      ai_consumer:       '/consumers/'
-      ai_consumer_group: '/consumer-groups/'
+      provider:       '/providers/'
+      model:          '/models/'
+      agent:          '/agents/'
+      mcp_server:     '/mcp-servers/'
+      policy:         '/policies/'
+      consumer:       '/consumers/'
+      consumer_group: '/consumer-groups/'
+      vault:          '/vaults/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
       global:         '/plugins/'
-    ai_policy_endpoints:
-      ai_model:      '/models/{ai_model}/policies/'
-      ai_agent:      '/agents/{ai_agent}/policies/'
-      ai_mcp_server: '/mcp-servers/{ai_mcp_server}/policies/'
     variables:
       <<: *variables
       ai_gateway:
@@ -113,8 +110,15 @@ formats:
       listener:        '/listeners'
       schema_registry: '/schema-registries'
       static_key:      '/static-keys'
+    ai_endpoints:
       model:           '/models'
       policy:          '/policies'
+      agent:           '/agents'
+      mcp_server:      '/mcp-servers'
+      provider:        '/providers'
+      consumer:       '/consumers/'
+      consumer_group: '/consumer-groups/'
+      vault:          '/vaults/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
