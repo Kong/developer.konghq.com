@@ -298,46 +298,54 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
 
    ```sh
    *   Trying 127.0.0.0:8080...
-   * Connected to 127.0.0.0 (127.0.0.0) port 8080
    * ALPN: curl offers h2,http/1.1
-   * (304) (OUT), TLS handshake, Client hello (1):
-   * (304) (IN), TLS handshake, Server hello (2):
-   * (304) (IN), TLS handshake, Unknown (8):
-   * (304) (IN), TLS handshake, Certificate (11):
-   * (304) (IN), TLS handshake, CERT verify (15):
-   * (304) (IN), TLS handshake, Finished (20):
-   * (304) (OUT), TLS handshake, Finished (20):
-   * SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+   * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+   * SSL Trust: peer verification disabled
+   * TLSv1.3 (IN), TLS handshake, Server hello (2):
+   * TLSv1.3 (IN), TLS change cipher, Change cipher spec (1):
+   * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+   * TLSv1.3 (IN), TLS handshake, Certificate (11):
+   * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+   * TLSv1.3 (IN), TLS handshake, Finished (20):
+   * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+   * TLSv1.3 (OUT), TLS handshake, Finished (20):
+   * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / x25519 / RSASSA-PSS
    * ALPN: server accepted h2
    * Server certificate:
-   *  subject: CN=127.0.0.0
-   *  start date: Jan  6 14:38:19 2026 GMT
-   *  expire date: Jan  6 14:38:19 2027 GMT
-   *  issuer: CN=127.0.0.0
-   *  SSL certificate verify result: self signed certificate (18), continuing anyway.
+   *   subject: CN=127.0.0.0
+   *   start date: May 29 16:22:26 2026 GMT
+   *   expire date: May 29 16:22:26 2027 GMT
+   *   issuer: CN=127.0.0.0
+   *   Certificate level 0: Public key type RSA (2048/112 Bits/secBits), signed using sha256WithRSAEncryption
+   * SSL certificate OpenSSL verify result: self-signed certificate (18)
+   *  SSL certificate verification failed, continuing anyway!
+   * Established connection to 127.0.0.0 (127.0.0.0 port 8080) from 192.168.139.3 port 63650 
    * using HTTP/2
    * [HTTP/2] [1] OPENED stream for https://127.0.0.0:8080/api/counter
    * [HTTP/2] [1] [:method: POST]
    * [HTTP/2] [1] [:scheme: https]
    * [HTTP/2] [1] [:authority: 127.0.0.0:8080]
    * [HTTP/2] [1] [:path: /api/counter]
-   * [HTTP/2] [1] [user-agent: curl/8.7.1]
+   * [HTTP/2] [1] [user-agent: curl/8.17.0]
    * [HTTP/2] [1] [accept: */*]
    > POST /api/counter HTTP/2
    > Host: 127.0.0.0:8080
-   > User-Agent: curl/8.7.1
+   > User-Agent: curl/8.17.0
    > Accept: */*
    > 
    * Request completely sent off
+   * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+   * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
    < HTTP/2 200 
    < content-type: application/json; charset=utf-8
    < x-demo-app-version: v1
-   < date: Tue, 06 Jan 2026 15:01:35 GMT
+   < date: Fri, 29 May 2026 16:22:48 GMT
    < content-length: 24
-   < x-envoy-upstream-service-time: 25
+   < x-envoy-upstream-service-time: 15
    < server: Kuma Gateway
    < strict-transport-security: max-age=31536000; includeSubDomains
    < 
    {"counter":2,"zone":""}
+   * Connection #0 to host 127.0.0.0:8080 left intact
    ```
    {:.no-copy-code}
