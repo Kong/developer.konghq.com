@@ -462,8 +462,8 @@ metadata:
   namespace: default
 spec:
   type: token
-  token: ${KPAT}
-  serverURL: us.api.konghq.com
+  token: ${KONNECT_TOKEN}
+  serverURL: us.api.konghq.tech
 ---
 kind: KonnectGatewayControlPlane
 apiVersion: konnect.konghq.com/v1alpha2
