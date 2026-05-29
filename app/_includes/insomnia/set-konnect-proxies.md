@@ -1,4 +1,4 @@
-On first Sync, set the proxies for each Gateway Service:
+On first Sync, set the proxy URL for each Gateway Service:
 
 1. From your {{ site.data.products.insomnia.name }} workspace, go to the {{ site.konnect_short_name }} tab
 1. Select a Gateway Service to see the associated Collections
