@@ -3,6 +3,7 @@
 require 'uri'
 require_relative '../monkey_patch'
 require_relative '../lib/build_filter'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderHowToList < Liquid::Tag # rubocop:disable Style/Documentation
@@ -45,19 +46,11 @@ module Jekyll
         context['how_tos'] = how_tos
         context['view_more_url'] = view_more_url(config)
         context['config'] = config
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('how_to_list', @page['output_format']).render(context)
       end
     end
 
     private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/how_to_list.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/how_to_list.html'))
-      end
-    end
 
     def view_more_url(config)
       query_string = URI.encode_www_form(config.slice('products', 'tags', 'tools', 'works_on'))

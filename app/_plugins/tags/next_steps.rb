@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderNextSteps < Liquid::Tag
@@ -36,23 +37,13 @@ module Jekyll
 
       context.stack do
         context['next_steps'] = next_steps
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('next_steps', @page['output_format']).render(context)
       end
     end
 
     def set_icons(next_steps)
       next_steps.map do |step|
         LinkIconAssigner.new(step).process
-      end
-    end
-
-    private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/next_steps.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/next_steps.html'))
       end
     end
   end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../component_templates'
+
 module Jekyll
   class IndexGenerator < Jekyll::Generator
     priority :low
@@ -287,17 +289,13 @@ module Jekyll
       end
     end
 
-    def template
-      @template ||= File.read(File.expand_path('app/_includes/indices.html'))
-    end
-
     def render(index, groups, site)
       context = {
         'index' => index,
         'groups' => groups,
         'site' => site.config
       }
-      Liquid::Template.parse(template, { line_numbers: true }).render(context, registers: { site: site })
+      ComponentTemplates.fetch('indices', 'html', base: 'app/_includes').render(context, registers: { site: site })
     end
   end
 end

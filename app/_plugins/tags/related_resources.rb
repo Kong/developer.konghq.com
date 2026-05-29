@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderRelatedResources < Liquid::Tag
@@ -36,7 +37,7 @@ module Jekyll
 
       context.stack do
         context['related_resources'] = related_resources
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('related_resources', @page['output_format']).render(context)
       end
     end
 
@@ -45,14 +46,6 @@ module Jekyll
     def set_icons(related_resources)
       related_resources.map do |resource|
         LinkIconAssigner.new(resource).process
-      end
-    end
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/related_resources.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/related_resources.html'))
       end
     end
   end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderKongConf < Liquid::Tag # rubocop:disable Style/Documentation
@@ -10,17 +11,7 @@ module Jekyll
 
       context.stack do
         context['config'] = Drops::KongConf.new(product)
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
-      end
-    end
-
-    private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/kong_conf.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/kong_conf.html'))
+        ComponentTemplates.fetch('kong_conf', @page['output_format']).render(context)
       end
     end
   end
