@@ -1,14 +1,24 @@
 ```ansi
 Usage:
-  kongctl list organization system-account [flags]
-  kongctl list organization system-account [command]
+  kongctl create [flags]
+  kongctl create [command]
 
 Aliases:
-  system-account, systemaccount, systemaccounts, system-accounts, system_account, system_accounts, sa, sas, SA, SAS
+  create, c, C
+
+Examples:
+  # Create a Konnect personal access token and print only the token value
+  kongctl create pat --name ci --expires-in 30d -o token
+  # Create a Konnect personal access token and extract the token with jq
+  kongctl create pat --name ci --expires-in 7d --jq -r '.token'
+  # Create a Konnect system account access token as an environment export
+  kongctl create spat --system-account-name ci-bot --name ci --expires-in 30d -o env
 
 Available Commands:
-  roles       List organization system account role assignments
-  teams       List organization system account team memberships
+  konnect      Manage Konnect resources
+  organization Get current organization information
+  pat          Create a Konnect personal access token
+  spat         Create a Konnect system account access token
 
 
 Flags:
@@ -21,7 +31,7 @@ Flags:
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                    help for system-account
+  -h, --help                    help for create
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
       --jq-color string         Controls colorized output for jq filter results.
                                 - Config path: [ jq.color.enabled ]
@@ -44,18 +54,13 @@ Flags:
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")
-      --page-size int           Max number of results to include per response page for get and list operations.
-                                - Config path: [ konnect.page-size ] (default 10)
-      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI. 
+      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                 Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
 
-Additional help topics:
-  kongctl list organization system-account spat Manage Konnect system account access tokens
-
-Use "kongctl list organization system-account [command] --help" for more information about a command.
+Use "kongctl create [command] --help" for more information about a command.
 
 ```
