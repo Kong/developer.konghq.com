@@ -141,6 +141,8 @@ konnect_catalog: Catalog
 metering_and_billing: Metering & Billing
 observability: Observability
 dev_portal: Dev Portal
+# 3rd party product names
+vercel: Vercel
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com

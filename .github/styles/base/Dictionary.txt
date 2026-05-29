@@ -1031,6 +1031,8 @@ validators
 Valkey
 vararg
 vc
+vercel
+Vercel
 viewport
 viewports
 vLLM
