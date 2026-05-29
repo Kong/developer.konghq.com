@@ -134,27 +134,6 @@ data:
     stop_on_error: true
 {% endentity_example %}
 
-## Set up a Model-scoped Policy
-
-The following example attaches a rate-limiting Policy to a Model.
-
-{% entity_example %}
-type: policy
-data:
-  display_name: Rate Limit - Production GPT-4o
-  name: rate-limit-prod-gpt4o
-  type: ai-rate-limiting-advanced
-  enabled: true
-  config:
-    llm_providers:
-      - name: openai
-        limit:
-          - 30
-        window_size:
-          - 60
-    window_type: sliding
-{% endentity_example %}
-
 ## Schema
 
 {% entity_schema %}
