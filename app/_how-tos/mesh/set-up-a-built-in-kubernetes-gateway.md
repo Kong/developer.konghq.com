@@ -17,7 +17,7 @@ related_resources:
     url: /mesh/kubernetes-gateway-api/
 
 min_version:
-  mesh: '2.9'
+  mesh: '2.11'
 
 products:
   - mesh
@@ -227,20 +227,46 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=$PROXY_IP"
    ```
 
-1. Create a Kubernetes secret containing the certificate and key:   
+1. Create a Kubernetes secret containing the certificate and key in the `kong-mesh-system` namespace:
+
+   {:.info}
+   > The {{site.mesh_product_name}} control plane cache only watches Secrets in the `kong-mesh-system` namespace. The Secret must be created there for the gateway controller to read it.
+
    ```sh
    echo "apiVersion: v1
    kind: Secret
    metadata:
      name: my-gateway-certificate
-     namespace: kong-mesh-demo
+     namespace: kong-mesh-system
    type: kubernetes.io/tls
    data:
      tls.crt: "$(cat tls.crt | base64)"
      tls.key: "$(cat tls.key | base64)"" | kubectl apply -f - 
    ```
-   
-1. Update the gateway to use the certificate:
+
+1. Create a `ReferenceGrant` to allow the `Gateway` in `kong-mesh-demo` to reference the Secret in `kong-mesh-system`:
+
+   ```sh
+   echo "apiVersion: gateway.networking.k8s.io/v1beta1
+   kind: ReferenceGrant
+   metadata:
+     name: allow-gateway-cert
+     namespace: kong-mesh-system
+   spec:
+     from:
+       - group: gateway.networking.k8s.io
+         kind: Gateway
+         namespace: kong-mesh-demo
+     to:
+       - group: \"\"
+         kind: Secret
+         name: my-gateway-certificate" | kubectl apply -f -
+   ```
+
+1. Recreate the gateway with TLS enabled:
+
+   {:.warning}
+   > The {{site.mesh_product_name}} Gateway controller only processes a `Gateway` resource on initial creation. To apply the updated TLS configuration, you must delete and recreate the `Gateway`.
 
    ```sh
    echo "apiVersion: gateway.networking.k8s.io/v1
@@ -257,7 +283,7 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
          tls:
            certificateRefs:
              - name: my-gateway-certificate
-               namespace: kong-mesh-demo" | kubectl apply -f -
+               namespace: kong-mesh-system" | kubectl apply -f -
    ```
 
 1. Send a request to the gateway:   
