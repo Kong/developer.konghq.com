@@ -158,4 +158,4 @@ You now have the core mental model for {{site.mesh_product_name}}:
 - **How to route traffic** — explicit `MeshService` resources + weighted `MeshHTTPRoute`.
 - **Which target kind to use when** — `MeshSubset` for cross-cutting, `MeshService` for routing and named destinations.
 
-The next paths in the Kong Mesh curriculum build directly on this foundation: observability, workload identity, multi-zone operations, and the advanced patterns like `MeshExternalService` and chaos engineering.
+The next paths in the {{site.mesh_product_name}} curriculum build directly on this foundation: observability, workload identity, multi-zone operations, and the advanced patterns like `MeshExternalService` and chaos engineering.

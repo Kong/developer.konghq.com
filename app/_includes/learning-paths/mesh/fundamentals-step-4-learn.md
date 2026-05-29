@@ -1,6 +1,6 @@
 Kong Air is rolling out **booking-engine v2** — a rewrite of the legacy booking service. The team wants 90% of traffic on the stable `v1` and 10% on `v2` for a pilot group, with a clean kill-switch if anything goes wrong. This is a textbook case for **traffic splitting** with explicit `MeshService` resources and a weighted `MeshHTTPRoute`.
 
-### Explicit subsetting: one resource per version
+### Explicit versioning: one resource per version
 
 Modern {{site.mesh_product_name}} (2.6+) treats each deployable version of a service as a first-class `MeshService` resource. Instead of one logical `booking-engine` filtered by labels at routing time, you declare two distinct resources:
 
@@ -15,7 +15,7 @@ Earlier mesh patterns route to `booking-engine` and then use a `subset: v1 | v2`
 
 1. **Routing is non-deterministic** — endpoints are resolved by tag every request. If a pod's labels drift, traffic shifts without you touching the route.
 2. **Metrics are coarse** — Prometheus sees `booking-engine` as one service. To break down by version, every dashboard needs PromQL tag filters.
-3. **Tools fight you** — Argo CD, Flagger, and the Gateway API all assume a stable, named target. Implicit subsetting forces custom glue everywhere.
+3. **Tools fight you** — Argo CD, Flagger, and the Gateway API all assume a stable, named target. Implicit version grouping forces custom glue everywhere.
 
 Explicit `MeshService` resources fix all three: routing resolves to a known set of IPs, metrics are pre-segmented by version, and progressive-delivery tools work out of the box.
 
@@ -50,7 +50,7 @@ Use explicit `MeshService` + weighted `MeshHTTPRoute` whenever you need:
 - **Canary releases** — gradual percentage rollouts (this step).
 - **Blue/green deploys** — flip a 100/0 to 0/100 in one route change.
 - **A/B testing** — route by header or path with the same primitives.
-- **Migration cutovers** — move traffic from a legacy service to a rewrite over hours or days.
+- **Traffic migrations** — move traffic from a legacy service to a rewrite over hours or days.
 
 ### Further reading
 

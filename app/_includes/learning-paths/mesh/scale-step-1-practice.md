@@ -39,7 +39,7 @@ The address column on `kubectl get zoneingresses` shows the routable address oth
 kubectl get zoneegresses -A
 ```
 
-If the result is empty, your zones are routing outbound traffic directly from each sidecar — fine for many cases, but the Advanced Patterns path's `MeshPassthrough` step is more useful with a ZoneEgress in place. If your compliance posture requires a single egress chokepoint, [install one now](/mesh/zone-egress/) before continuing.
+If the result is empty, your zones are routing outbound traffic directly from each sidecar — fine for many cases, but the Advanced Patterns path's `MeshPassthrough` step is more useful with a ZoneEgress in place. If your compliance posture requires a single egress control point, [install one now](/mesh/zone-egress/) before continuing.
 
 ### Step 4: Apply a `MeshMultiZoneService` and watch it sync
 

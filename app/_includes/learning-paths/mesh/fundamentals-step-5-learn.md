@@ -36,7 +36,7 @@ In a typical mesh, most policies that go through this flowchart end up at `MeshS
 
 ### Legacy `MeshServiceSubset`
 
-You may still see `kind: MeshServiceSubset` in older docs or unmigrated clusters. It was a virtual kind used before explicit `MeshService` resources existed: a way to say "the subset of `booking-engine` where `version=v1`" without creating a separate resource for it. It's still honoured for backwards compatibility but is considered **legacy**. Anywhere you'd reach for `MeshServiceSubset` in a new project, use two explicit `MeshService` resources instead — exactly the pattern from Step 4.
+You may still see `kind: MeshServiceSubset` in older docs or clusters that haven't been updated yet. It was a virtual kind used before explicit `MeshService` resources existed: a way to say "the subset of `booking-engine` where `version=v1`" without creating a separate resource for it. It's still honoured for backwards compatibility but is considered **legacy**. Anywhere you'd reach for `MeshServiceSubset` in a new project, use two explicit `MeshService` resources instead — exactly the pattern from Step 4.
 
 ### Further reading
 

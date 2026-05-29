@@ -29,7 +29,7 @@ You don't apply policies to a ZoneIngress directly — it picks them up from the
 
 A **ZoneEgress** is the mirror image: a centralized proxy for all _outbound_ traffic leaving the zone. It's optional, but turning it on gives you three things compliance teams routinely ask for:
 
-- **Single chokepoint** — your network team can write firewall rules against one egress IP instead of every node.
+- **Single exit point** — your network team can write firewall rules against one egress IP instead of every node.
 - **Unified egress audit** — one place to capture access logs for every external call.
 - **`MeshExternalService` enforcement** — policies that govern outbound traffic (covered in the Advanced Patterns path) execute at the egress, not in every sidecar.
 
