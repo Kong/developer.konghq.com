@@ -32,8 +32,7 @@ tldr:
 tags:
   - install
   - helm
-  - konnect
-  - get-started
+  - dev-portal
 ---
 
 This guide walks through managing {{site.konnect_short_name}} Dev Portal resources with {{site.operator_product_name}}.
@@ -72,4 +71,4 @@ Verify that the operator is running:
 kubectl get pods -n kong-system
 ```
 
-Once the controller is ready, continue to [Create a Dev Portal](/operator/get-started/dev-portal/create-portal/).
+Once the controller is ready, continue to [Create API Authentication](/operator/get-started/dev-portal/authentication/).

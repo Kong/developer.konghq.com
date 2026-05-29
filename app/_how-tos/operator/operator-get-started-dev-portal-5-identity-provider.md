@@ -6,7 +6,7 @@ permalink: /operator/get-started/dev-portal/identity-provider/
 
 series:
   id: operator-get-started-dev-portal
-  position: 4
+  position: 5
 
 breadcrumbs:
   - /operator/

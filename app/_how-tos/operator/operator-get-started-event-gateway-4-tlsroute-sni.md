@@ -6,7 +6,7 @@ permalink: /operator/get-started/event-gateway/tlsroute-sni/
 
 series:
   id: operator-get-started-event-gateway
-  position: 3
+  position: 4
 
 breadcrumbs:
   - /operator/
@@ -31,11 +31,11 @@ prereqs:
 
 tldr:
   q: How do I deploy Kong Event Gateway in a production-oriented topology?
-  a: Front the Event Gateway with a `Gateway` and `TLSRoute`, terminate TLS in Kong Event Gateway, and route virtual clusters with SNI.
+  a: Front the `KegDataPlane` with a `Gateway` and `TLSRoute`, terminate TLS in Kong Event Gateway, and route virtual clusters with SNI.
 
 next_steps:
-  - text: Learn more about Kong Event Gateway
-    url: /event-gateway/
+  - text: Learn more about Kong Event Gateway resources
+    url: /operator/konnect/event-gateway/
 ---
 
 This deployment pattern uses a single TLS listener at the Kubernetes edge and routes Kafka traffic by SNI inside Kong Event Gateway.
@@ -56,7 +56,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 ## Create a `GatewayConfiguration` and `GatewayClass`
 
-Create a managed `Gateway` class for the TLSRoute example. This `Gateway` is provisioned through {{ site.konnect_short_name }}, so the `GatewayConfiguration` should reference the `KonnectAPIAuthConfiguration` created in the prerequisites:
+Create a managed `Gateway` class for the TLSRoute example:
 
 ```bash
 echo '
@@ -66,9 +66,6 @@ metadata:
   name: kong-configuration
   namespace: kong
 spec:
-  konnect:
-    authRef:
-      name: konnect-api-auth
   dataPlaneOptions:
     deployment:
       podTemplateSpec:
@@ -176,37 +173,73 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Create the TLS certificate, Secret, and listener policies
+## Create the TLS Secret and listener policies
 
-Generate a certificate that covers the wildcard broker hostnames and bootstrap hostname advertised by the SNI policy:
-
-```bash
-openssl req -x509 -nodes -newkey rsa:2048 \
-  -keyout ./keg-tls.key \
-  -out ./keg-tls.crt \
-  -days 365 \
-  -subj "/CN=keg.test.local" \
-  -addext "subjectAltName=DNS:*.vc-tls-1.keg.test.local,DNS:bootstrap.vc-tls-1.keg.test.local"
-```
-
-Create a TLS Secret from the generated certificate and key, then add the label used by Kong secrets:
-
-```bash
-kubectl create secret tls sni-listener-tls \
-  -n kong \
-  --cert=./keg-tls.crt \
-  --key=./keg-tls.key
-
-kubectl label secret sni-listener-tls \
-  -n kong \
-  konghq.com/secret=true \
-  --overwrite
-```
-
-Apply the two listener policies:
+Apply the TLS Secret and the two listener policies:
 
 ```bash
 cat <<'EOF' | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sni-listener-tls
+  namespace: kong
+  labels:
+    konghq.com/secret: "true"
+type: kubernetes.io/tls
+stringData:
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDXjCCAkagAwIBAgIUI8Ky7F+DB3Cd/IMnfy1RkU8WHacwDQYJKoZIhvcNAQEL
+    BQAwGTEXMBUGA1UEAwwOa2VnLnRlc3QubG9jYWwwHhcNMjYwNTEzMDgzODA0WhcN
+    MjcwNTEzMDgzODA0WjAZMRcwFQYDVQQDDA5rZWcudGVzdC5sb2NhbDCCASIwDQYJ
+    KoZIhvcNAQEBBQADggEPADCCAQoCggEBAOF9qFiLQvyGcf+NbTsHfeIf9qWt6LLH
+    lpWHBDsAh7ES8I8VmkIjs1jfP52qK00LbTgYNaL2mjxkOPtspd6rATN3BvAPCLl4
+    DY8Mn+x2QU8WzbyiPFyZF71qXfhuJyO3lQAbaiWHFwoVJN983USAAqRheutziiFa
+    sLU47XT53rdFsjCVbZa0Tdmi6Ebw6605i0oEnD4S59TFOmkUY7QG2HsGsUmLPvCH
+    +z1hA9kinR6l5x8zCjA8tcRp8lLkCT8cg/LTFzNF9MOBbzftwRKxxsvqN/KRWBaz
+    w0+FpAoUQDsGhq6k+0AIK/xGr4BV6pKLVG/P3k6WJWeIJQQeYHXHu0ECAwEAAaOB
+    nTCBmjAdBgNVHQ4EFgQUyLk8pd8F/DYmL6bi98H2yEfeCAcwHwYDVR0jBBgwFoAU
+    yLk8pd8F/DYmL6bi98H2yEfeCAcwDwYDVR0TAQH/BAUwAwEB/zBHBgNVHREEQDA+
+    ghkqLnZjLXRscy0xLmtlZy50ZXN0LmxvY2FsgiFib290c3RyYXAudmMtdGxzLTEu
+    a2VnLnRlc3QubG9jYWwwDQYJKoZIhvcNAQELBQADggEBAMrhSf/KCI9Ap13C7MSF
+    Kh/g0fQd/Vbt+K5duP4oCtc5BE0OTz2Xfo5OL1M0RcVCX8J7cQpMyJd/3q479M+v
+    o5D1N0bkqGQjJQcBvLNgueYYX7BlA7FT/QN8N7jk0RpvdsmZMy2R2ShnJHh8ziQT
+    gIb+w2ysnqaFnyVzFiGtssNEy2pY+ky+YwoZrD8ziYZK7+4JCWNZ2cMVOuoQVe2i
+    Z0M3QLrWt02Cm91INSGP0wHTdFlHxsl9t7N4pQMBJKThsNOyGR+od/ERntDJV+bv
+    XtlIoWBN69mqinxAj6tOAzdNvHcixQbHRzgjaw/eVStkcwx/JElLLwkte5azA6fs
+    JsA=
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN PRIVATE KEY-----
+    MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDhfahYi0L8hnH/
+    jW07B33iH/alreiyx5aVhwQ7AIexEvCPFZpCI7NY3z+dqitNC204GDWi9po8ZDj7
+    bKXeqwEzdwbwDwi5eA2PDJ/sdkFPFs28ojxcmRe9al34bicjt5UAG2olhxcKFSTf
+    fN1EgAKkYXrrc4ohWrC1OO10+d63RbIwlW2WtE3ZouhG8OutOYtKBJw+EufUxTpp
+    FGO0Bth7BrFJiz7wh/s9YQPZIp0epecfMwowPLXEafJS5Ak/HIPy0xczRfTDgW83
+    7cESscbL6jfykVgWs8NPhaQKFEA7BoaupPtACCv8Rq+AVeqSi1Rvz95OliVniCUE
+    HmB1x7tBAgMBAAECggEAH8BDZQW7BCGO9MvpHmo9egqZKZbVkN2qIQT2014NkqFW
+    7ow9Vo8osQdtMZoQEymxko1Uzs0dm7UFvGAonQmEQkcXhX8Acf6VyNefaeWe6EWO
+    6RRec9rPbR8IpgjQtGakcZ7qm+fWloIIA/t/kVEweLgMiGc9Ay7+JI55tUJ9RLNP
+    1xhY32G3NZvq8uCSiLr8zRLd0u3D6oT35/ZCE0AmDp1PSGPaG3MqZg9bkK86k2dk
+    VwEUZkMYiQVkqFFKzstWy7PLFX/18GCHxQiomJFsjzIGLTRMXbmmqrmG+Sb4rT4F
+    tlPiFyKE+zvctQG7TzzuVMDEQ99sj/X9f358yB3ixwKBgQDw2O1kYoy2FO3LN1Iz
+    Uhm2viFCX90P1Sf1t2mcOtf895mk+9lILdv+V5H43CusQ1JHookFRwmQHgqTOywB
+    OgGFX0sYrYJZBaEwVlU8/E83vEPQWDjjY99yBr6I6QOeNdnMlMWdxBQJFWx6vnSo
+    4AxP7lKFgnk50GRxLt3vg4h7zwKBgQDvrWYri6lkJHBMy5yqRgbOjqmEqOhomvC0
+    4GWrmj6JXCJiti7gtjMA7+BWCAsuF3c7M3GPMhu5rGdS1s5Tvdyxzl4ktGetBjnK
+    PeSAANIAMgv2yFTx1DmAcpxUB9FDUeH6zC919eyBGV018KJ7xjHovbaFWIKk7qbw
+    EZkvzqHL7wKBgCsl4dmzIhxYwYU/ovVYxwyLIXA/tl3oxSDrO/tmO12xihAZooKg
+    3KHDVH5uC1DwOqRkxQFyCY+NIj3gQvDxUGZxfQWtyAVk0czUGq8zUIneq5N+yqpK
+    MTS/apEilahZY2yYVpL+FszNzsJqroG2qd4EBzqt9kPaRrRUPiRzvxbXAoGAfs29
+    nVJBp1LD+01KMKfl2AiQVThL5XP736ZNBBIR/fg51QHQIWEj8N34UWvmBlex5Cde
+    cEUxd/VnoOM2vAVaKtQk6MRtiZQepQpDxxkoAaR4wfLRRjRiy7tXS/nq0/QRW/AF
+    OCKJIvA5aV1LibKdGyar1zaxv/LnbWHSKwHmhg8CgYAV58R7rxp966W54nP71NCE
+    NxISlWJ3W2HZ2pC3nP7LsUb92gMe8iAvM481dpOsdmz1flwHUEFFh2bXu/kYH3Nd
+    XN0nb4gr22SDuJ4VEHLOdWs5pyYpICnYfUW6Jc6SoAfdlFouO5UKbiF53QxFY4Si
+    BoGxByd8ti4RUrlSmSdROA==
+    -----END PRIVATE KEY-----
+---
 apiVersion: configuration.konghq.com/v1alpha1
 kind: EventGatewayListenerPolicy
 metadata:
@@ -380,6 +413,34 @@ spec:
 ```
 
 ## Validation
+
+Wait for the Event Gateway resources to become programmed:
+
+```bash
+kubectl wait -n kong \
+  konnecteventgateway/cp-event-tls \
+  eventgatewaybackendcluster/default-backend-cluster-tls \
+  eventgatewayvirtualcluster/example-virtual-cluster-tls \
+  eventgatewaylistener/sni-listener \
+  eventgatewaylistenerpolicy/sni-tls-server \
+  eventgatewaylistenerpolicy/sni-forward \
+  eventgatewayvirtualclusterconsumepolicy/example-virtual-cluster-tls-consume-policy \
+  eventgatewayvirtualclusterproducepolicy/example-virtual-cluster-tls-produce-policy \
+  --for=jsonpath='{.status.conditions[?(@.type=="Programmed")].status}'=True \
+  --timeout=10m
+```
+
+Wait for the data plane and `Gateway`:
+
+```bash
+kubectl wait kegdataplane/keg-tls-dp -n kong \
+  --for=condition=Ready=True \
+  --timeout=10m
+
+kubectl wait gateway/kong-keg -n kong \
+  --for=condition=Programmed=True \
+  --timeout=10m
+```
 
 Export the `Gateway` address:
 
