@@ -2,6 +2,8 @@ metadata:
   title: "Securing and Observing Kong Mesh"
   description: "Pick up where Fundamentals left off: turn on full-stack observability with `MeshMetric` + `MeshTrace` + `MeshAccessLog`, replace mesh-wide mTLS with workload-level SPIFFE identities via `MeshIdentity` and `MeshTrust`, and root those identities in your enterprise PKI."
   weight: 900
+  required_paths:
+    - /learning-paths/mesh/fundamentals/
   products:
     - mesh
   personas:

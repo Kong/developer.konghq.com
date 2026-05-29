@@ -5,6 +5,25 @@ layout: with_aside
 <p class="text-lg">{{ page.description | liquify }}</p>
 {% endif %}
 
+{% if page.required_paths %}
+<div class="flex flex-col gap-3">
+  <h2>Before you start</h2>
+  <p class="text-sm text-secondary m-0">Complete the following learning path first:</p>
+  <ul class="flex flex-col gap-2 list-none p-0 m-0">
+    {% for path_url in page.required_paths %}
+    {% assign req_page = site.pages | where: "url", path_url | first %}
+    <li>
+      <a href="{{ path_url }}"
+         class="flex items-center gap-3 p-4 rounded-lg border border-primary/10 bg-secondary hover:shadow-md hover:no-underline">
+        <span class="font-medium text-primary">{% if req_page %}{{ req_page.title }}{% else %}{{ path_url }}{% endif %}</span>
+        <span class="text-xs text-secondary ml-auto">Complete first &rarr;</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
 {% if page.steps != empty %}
 <div class="flex flex-col gap-4">
   <h2>Steps in this path</h2>

@@ -76,6 +76,23 @@ module Jekyll
       end
 
       def set_learning_path_prerequisites!(page)
+        # On the first step, surface any required learning paths declared in
+        # the path's metadata (required_paths: [/learning-paths/...]).
+        if page.data['series']['position'] == 1
+          Array(page.data['required_paths']).each do |path_url|
+            required_page = find_page_by_url(path_url)
+            title = required_page&.data&.fetch('title', nil) || path_url
+
+            page.data['prereqs'] ||= {}
+            page.data['prereqs']['inline'] ||= []
+            page.data['prereqs']['inline'] << {
+              'position' => 'before',
+              'title' => 'Required learning path',
+              'content' => "Complete the [**#{title}**](#{path_url}) learning path before starting this one."
+            }
+          end
+        end
+
         previous_page = page.data['series']['items'].find do |item|
           item.data['series']['position'] == page.data['series']['position'] - 1
         end

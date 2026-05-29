@@ -2,6 +2,8 @@ metadata:
   title: "Operating Kong Mesh at Scale"
   description: "Spread a single Kong Air mesh across regions and clouds without losing zero-trust. Learn the multi-zone fabric — ZoneIngress, ZoneEgress, MMZS, KDS sync — choose a tenancy model, then run real per-zone canary rollouts and color-affinity routing across the global network."
   weight: 800
+  required_paths:
+    - /learning-paths/mesh/fundamentals/
   products:
     - mesh
   personas:

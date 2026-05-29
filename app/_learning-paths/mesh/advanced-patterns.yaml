@@ -2,6 +2,8 @@ metadata:
   title: "Advanced Kong Mesh Patterns"
   description: "Five patterns Kong Air's platform team uses for the trickier edges of running a mesh: locking the outbound perimeter with `MeshPassthrough`, modeling external APIs as first-class services with `MeshExternalService`, bridging {{site.base_gateway}} into the mesh without losing mTLS, validating resilience with `MeshFaultInjection`, and reaching for `MeshProxyPatch` only when there's no high-level alternative."
   weight: 700
+  required_paths:
+    - /learning-paths/mesh/fundamentals/
   products:
     - mesh
   personas:
