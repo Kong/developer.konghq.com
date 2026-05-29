@@ -35,6 +35,9 @@ prereqs:
     - title: Install kafkactl
       position: before
       include_content: knep/kafkactl
+    - title: Kong Identity directory
+      include_content: prereqs/kong-identity-directory
+      icon_url: /assets/icons/kong-identity.svg
 
 cleanup:
   inline:
@@ -58,7 +61,7 @@ min_version:
 automated_tests: false
 ---
 
-In this guide, you'll authenticate a Kafka client to a SASL-secured broker through {{site.event_gateway_short}}, look up the connecting principal in a Kong Identity directory by its SASL username, and use the principal's metadata to drive a Modify Headers policy.
+In this guide, you'll authenticate a Kafka client to a SASL-secured broker through {{site.event_gateway_short}}, look up the connecting principal in a Kong Identity directory by its SASL username, and use the principal's metadata to drive a [Modify Headers policy](/event-gateway/policies/modify-headers/).
 
 {% mermaid %}
 flowchart LR
@@ -126,28 +129,6 @@ export EVENT_GATEWAY_ID=your-gateway-id
 ```
 
 {% include_cached /knep/quickstart-note.md %}
-
-## Create a Kong Identity directory
-
-A directory groups principals around an organizational boundary. Create one to hold the principals for this guide:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories
-status_code: 201
-method: POST
-body:
-  name: event-gateway-directory
-  description: Directory for Event Gateway principals
-  allow_all_control_planes: true
-extract_body:
-  - name: id
-    variable: DIRECTORY_ID
-capture:
-  - variable: DIRECTORY_ID
-    jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
 
 ## Create a principal with team metadata
 
@@ -237,7 +218,7 @@ body:
     - type: sasl_plain
       mediation: passthrough
       fetch_kong_identity_principal:
-        directory: event-gateway-directory
+        directory: kong-identity-directory
         fetch_by:
           key: sasl_username
         failure_mode: error
