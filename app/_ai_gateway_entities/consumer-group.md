@@ -121,7 +121,7 @@ ACLs are evaluated at the Service level of the parent entity's derived primitive
 The following example creates an AI Consumer Group with one attached Policy that applies a shared rate limit to its members.
 
 {% entity_example %}
-type: consumer-group
+type: consumer_group
 data:
   display_name: Internal Teams
   name: internal-teams

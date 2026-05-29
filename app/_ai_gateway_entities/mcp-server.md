@@ -497,7 +497,7 @@ features:
 The following example creates a `conversion-listener` MCP Server that converts a flight-booking REST API into a single `searchFlights` MCP tool, restricts access to the `internal-teams` Consumer Group, and stores managed sessions in client-side encrypted form.
 
 {% entity_example %}
-type: mcp-server
+type: mcp_server
 data:
   display_name: KongAir Flights
   name: kongair-flights
