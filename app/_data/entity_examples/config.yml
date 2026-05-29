@@ -32,7 +32,7 @@ formats:
   admin-api:
     label: 'Admin API'
     base_url: 'http://localhost:8001'
-    ai_gateway_base_url: 'http://localhost:8001/ai'
+    ai_gateway_base_url: 'http://localhost:8001'
     endpoints:
       # core entities
       consumer:       '/consumers/'
@@ -57,14 +57,9 @@ formats:
       partial:        '/partials/'
     ai_endpoints:
       # AI entities (/ai/* on on-prem AI Gateway)
-      provider:       '/providers/'
-      model:          '/models/'
-      agent:          '/agents/'
-      mcp_server:     '/mcp-servers/'
-      policy:         '/policies/'
-      consumer:       '/consumers/'
-      consumer_group: '/consumer-groups/'
-      vault:          '/vaults/'
+      consumer:       '/ai-consumers/'
+      consumer_group: '/ai-consumer-groups/'
+      vault:          '/ai-vaults/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'

@@ -18,7 +18,6 @@ works_on:
   - konnect
 tools:
   - deck
-  - admin-api
   - konnect-api
 related_resources:
   - text: "About {{site.ai_gateway}}"
