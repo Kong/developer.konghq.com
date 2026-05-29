@@ -139,10 +139,12 @@ operator_product_name: Kong Operator
 operator_product_name_short: KO
 event_gateway: Kong Event Gateway
 event_gateway_short: Event Gateway
+code_mode: Code Mode
 konnect_catalog: Catalog
 metering_and_billing: Metering & Billing
 observability: Observability
 dev_portal: Dev Portal
+identity: Kong Identity
 # Company names
 openai: OpenAI
 anthropic: Anthropic
@@ -169,6 +171,13 @@ repos:
   developer: https://github.com/Kong/developer.konghq.com
   developer_raw: https://raw.githubusercontent.com/Kong/developer.konghq.com
   docs: https://github.com/Kong/docs.konghq.com
+  skills: https://github.com/Kong/ai-marketplace
+  skills_raw: https://raw.githubusercontent.com/Kong/ai-marketplace
+
+skills_repo_branch: main
+skills_repo_slug: kong/ai-marketplace
+skills_repo_path: app/.repos/ai-marketplace
+
 
 plugin_schemas_path: app/_schemas/gateway/plugins
 
@@ -226,3 +235,7 @@ render_banner: false
 llm_copy:
   on_prem_snippet: 'On-prem deployments'
   konnect_snippet: 'Konnect deployments'
+
+
+well-known:
+  skills: .well-known/skills

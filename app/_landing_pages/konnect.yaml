@@ -243,14 +243,14 @@ rows:
       - blocks:
         - type: card
           config:
-            title: "Kong Identity"
+            title: "{{site.identity}}"
             description: |
-              Kong Identity enables you to generate, authenticate, and authorize API access using {{site.konnect_short_name}}.
+              {{site.identity}} enables you to generate, authenticate, and authorize API access using {{site.konnect_short_name}}.
               It implements OAuth 2.0 with OpenID Connect and supports plugins like OpenID Connect, OAuth 2.0 Introspection, and Upstream OAuth.
             icon: /assets/icons/rbac.svg
             ctas:
-            - text: Start using Kong Identity
-              url: /kong-identity/
+            - text: Start using {{site.identity}}
+              url: /identity/
               align: end
 
   - header:

@@ -15,9 +15,6 @@ breadcrumbs:
   - /konnect-platform/kai/
   - /konnect-platform/konnect-mcp/
 permalink: /konnect-platform/konnect-mcp/installation/
-
-beta: true
-
 related_resources:
   - text: "{{site.konnect_product_name}} MCP Server"
     url: /konnect-platform/konnect-mcp/
@@ -72,6 +69,9 @@ You should see the following output:
 ```sh
 kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 ```
+
+{:.info}
+> It's also possible to install the MCP server into {{ site.claude_code }} via a Plugin. Instructions can be found in the [Kong Skills Hub](/skills/).
 
 ## Visual Studio Code
 
@@ -143,6 +143,9 @@ For regional server URLs, see [Regional server endpoints](/konnect-platform/konn
 1. Return to **Cursor Settings > MCP**. You should now see the `kong-konnect` MCP server with available tools listed
 1. To open a new Cursor chat, press `Cmd+L` (Mac) or `Ctrl+L` (Windows/Linux)
 1. In the Cursor chat, click `@` to add context and select tools from the Kong {{site.konnect_product_name}} server
+
+{:.info}
+> It's also possible to install the MCP server into Cursor via a Plugin. Instructions can be found in the [Kong Skills Hub](/skills/).
 
 ## GitHub Copilot for VS Code
 

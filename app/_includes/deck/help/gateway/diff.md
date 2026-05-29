@@ -6,6 +6,7 @@ Flags:
       --consumer-group-policy-overrides       allow deck to diff consumer-group policy overrides.
                                               This allows policy overrides to work with Kong GW versions >= 3.4
                                               Warning: do not mix with consumer-group scoped plugins
+  -W, --errors-as-warnings string             Treat the given comma-separated diagnostic codes as warnings.
   -h, --help                                  help for diff
       --json-output                           generate command execution report in a JSON format
       --no-mask-deck-env-vars-value           do not mask DECK_ environment variable values at diff output.
@@ -23,7 +24,7 @@ Flags:
                                               If set to true, deck skips listing consumers with consumer-groups,
                                               thus gaining some performance with large configs.
                                               Usage of this flag without apt select-tags and default-lookup-tags can be problematic.
-                                              This flag is not valid with Konnect.
+  -E, --warnings-as-errors string             Treat the given comma-separated diagnostic codes as errors.
   -w, --workspace string                      Diff configuration with a specific workspace (Kong Enterprise only).
                                               This takes precedence over _workspace fields in state files.
       --yes yes                               assume yes to prompts and run non-interactively.

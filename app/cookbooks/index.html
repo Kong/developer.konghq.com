@@ -1,11 +1,14 @@
 ---
-title: Kong AI Gateway Cookbook
+title: Kong AI Gateway Cookbooks
 cookbooks_index: true
 layout: default
 edit_and_issue_links: false
-llm: false
 description: A collection of production-ready recipes to build with Kong AI Gateway. LLM routing, guardrails, semantic caching, cost optimization, governance, and MCP integration.
 ---
+{% if page.output_format == 'markdown' %}
+{% for cookbook in site.cookbooks %}
+* [{{cookbook.title | liquify}}]({{cookbook.url}}){% endfor %}
+{% else %}
 {%- assign categories = site.data.cookbook_categories -%}
 {%- assign all_cookbooks = site.cookbooks | sort: "title" -%}
 {%- assign featured_cookbooks = all_cookbooks | where: "featured", true -%}
@@ -130,3 +133,4 @@ description: A collection of production-ready recipes to build with Kong AI Gate
   </div>
 
 </div>
+{% endif %}
