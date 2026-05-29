@@ -260,7 +260,7 @@ spec:
 
 ### Step 5: Add a circuit breaker to stop hammering AeroPay on outages
 
-If AeroPay is straight-up down, retries don't help and just generate noise. `MeshCircuitBreaker` opens the circuit after a threshold of failures and stops sending requests for a cooldown period:
+If AeroPay is straight-up down, retries don't help and just generate noise. `MeshCircuitBreaker` opens the circuit after a threshold of failures and stops sending requests for a recovery period:
 
 {% navtabs "aeropay-cb" %}
 {% navtab "Kubernetes" %}

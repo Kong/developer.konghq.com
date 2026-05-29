@@ -61,7 +61,7 @@ The decision happens inside the **calling sidecar**. Every workload's Envoy has 
 
 The decision happens at the **ZoneEgress** — the centralized outbound proxy you may have deployed in the previous path's Step 1.
 
-- Pro: one chokepoint to monitor and audit; firewall rules can lock down outbound network access to "only the egress IP."
+- Pro: one central exit point to monitor and audit; firewall rules can lock down outbound network access to "only the egress IP."
 - Pro: easy to scope `MeshPassthrough` to "the egress" rather than every sidecar, simplifying policy lifecycle.
 - Con: extra hop; more capacity to manage at the egress tier.
 

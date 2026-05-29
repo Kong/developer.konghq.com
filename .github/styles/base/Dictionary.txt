@@ -19,6 +19,8 @@ allow_terminated
 allowlist
 allowlisting
 allowlisted
+allowlists
+Allowlists
 Amal
 Amberflo
 amberflo
@@ -298,6 +300,7 @@ firewalled
 firstTimestamp
 flamegraph
 Flatpak
+Fluentd
 foogineer
 FQDNs
 full_name
@@ -723,6 +726,7 @@ profiler
 Prometheus
 Prometheus
 prometheus
+Promtail
 proto
 Protobuf
 Protobuf

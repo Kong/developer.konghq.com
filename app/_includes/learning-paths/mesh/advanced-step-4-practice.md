@@ -226,7 +226,7 @@ The `--max-time 5` should kick in before the response completes. Many real clien
 Combine the three patterns into a single recurring exercise:
 
 1. Pick a target service for the week.
-2. Apply an abort fault (5%) — observe error rates, alert thresholds, and runbook validity.
+2. Apply an abort fault (5%) — observe error rates, alert thresholds, and incident response validity.
 3. Replace with a delay (50%, 2s) — observe p99 latency, queue depths, frontend behaviour.
 4. Replace with a response-rate fault — observe streaming clients.
 5. Remove all faults; capture findings in an after-action note.

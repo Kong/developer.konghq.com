@@ -125,7 +125,7 @@ The diff should show only the Lua filter insertion — nothing else. If you see 
 
 ### Step 7: Roll back
 
-A patch is just a resource. Deleting it removes the modification and reverts the sidecar to the unpatched config on the next xDS push (within seconds).
+A patch is just a resource. Deleting it removes the modification and reverts the sidecar to its original config on the next xDS push (within seconds).
 
 ```bash
 kubectl delete meshproxypatch crew-portal-audit-header -n kong-air-production
@@ -160,4 +160,4 @@ A `Mesh`-scoped patch goes out via xDS to every sidecar within seconds. If the p
 
 ### What's next
 
-You've now covered the full Kong Mesh curriculum: fundamentals, security and observability, multi-zone operations, and these five advanced patterns. The two comparison docs that didn't fit the path structure ([Kong Mesh vs. Istio Ambient](/mesh/scenarios/kong-mesh-vs-ambient/) and [Migrating from Istio to Kong Mesh](/mesh/scenarios/istio-to-kong-mesh/)) live under `/mesh/scenarios/` as reference material — useful when you're making platform decisions or planning a migration.
+You've now covered the full {{site.mesh_product_name}} curriculum: fundamentals, security and observability, multi-zone operations, and these five advanced patterns. The two comparison docs that didn't fit the path structure ([{{site.mesh_product_name}} vs. Istio Ambient](/mesh/scenarios/kong-mesh-vs-ambient/) and [Migrating from Istio to {{site.mesh_product_name}}](/mesh/scenarios/istio-to-kong-mesh/)) live under `/mesh/scenarios/` as reference material — useful when you're making platform decisions or planning a migration.

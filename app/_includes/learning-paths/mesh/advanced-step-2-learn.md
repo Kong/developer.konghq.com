@@ -10,7 +10,7 @@ That's `MeshExternalService`.
 | **Per-service metrics** | Aggregated under egress | Distinct, like an internal service |
 | **Tracing context** | Carried but the service is opaque | Full span with service identity |
 | **mTLS / TLS origination** | The application configures it | The sidecar handles it |
-| **Resilience policies** | Not targetable | Targetable by `MeshRetry`, `MeshTimeout`, `MeshCircuitBreaker`, … |
+| **Resilience policies** | Not available | Available: `MeshRetry`, `MeshTimeout`, `MeshCircuitBreaker`, … |
 | **DNS** | Resolved by the OS | Resolved by mesh DNS |
 
 The trade-off is more setup per dependency. So you reserve `MeshExternalService` for the dependencies that justify it — critical, frequently-called, or anywhere you want resilience policies attached.
