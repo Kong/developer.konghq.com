@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderEntitySchema < Liquid::Tag
@@ -17,17 +18,7 @@ module Jekyll
 
       context.stack do
         context['entity_schema'] = entity_schema_drop
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
-      end
-    end
-
-    private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/entity_schema.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/entity_schema.html'))
+        ComponentTemplates.fetch('entity_schema', @page['output_format']).render(context)
       end
     end
   end

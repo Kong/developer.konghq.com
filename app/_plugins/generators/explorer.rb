@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../component_templates'
+
 NO_MATCH = 'NO DATA'
 module Jekyll
   class TagExplorer < Jekyll::Generator
@@ -76,11 +78,6 @@ module Jekyll
       end
     end
 
-    # Output
-    def template
-      @template ||= File.read(File.expand_path('app/_includes/explorer.html'))
-    end
-
     def render(item, groups, job)
       context = {
         'index' => {
@@ -91,7 +88,7 @@ module Jekyll
         'group_by' => job['group_by'],
         'columns' => job['columns']
       }
-      Liquid::Template.parse(template, { line_numbers: true }).render(context)
+      ComponentTemplates.fetch('explorer', 'html', base: 'app/_includes').render(context)
     end
 
     def render_list(title, prefix, items)

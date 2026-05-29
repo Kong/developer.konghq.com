@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class KonnectRolesTable < Liquid::Block # rubocop:disable Style/Documentation
@@ -22,7 +23,7 @@ module Jekyll
       context.stack do
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['config'] = drop
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('konnect_roles_table', @page['output_format']).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -31,14 +32,6 @@ module Jekyll
         #{e.message}
       STRING
       raise ArgumentError, message
-    end
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/konnect_roles_table.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/konnect_roles_table.html'))
-      end
     end
   end
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../component_templates'
+
 module Jekyll
   class HtmlTag < Liquid::Block
     def initialize(tag_name, markup, tokens)
@@ -22,17 +24,7 @@ module Jekyll
           'css_classes' => @attributes['css_classes'],
           'content' => contents
         }
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
-      end
-    end
-
-    private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/html_tag.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/html_tag.html'))
+        ComponentTemplates.fetch('html_tag', @page['output_format']).render(context)
       end
     end
   end
