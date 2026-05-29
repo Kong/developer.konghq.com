@@ -14,9 +14,11 @@ module Jekyll
         @data = {
           'layout' => 'learning-path-index',
           'title' => "#{persona_display_name(site, persona_id)} Learning Paths",
+          'description' => persona_description(site, persona_id),
           'persona' => persona_id,
           'breadcrumbs' => ['/learning-paths/', '/learning-paths/personas/'],
-          'learning_paths' => serialize_paths(learning_paths)
+          'learning_paths' => serialize_paths(learning_paths),
+          'toc' => false
         }
 
         @relative_path = "_generated/learning-paths/personas/#{persona_id}/index.md"
@@ -31,6 +33,11 @@ module Jekyll
       def persona_display_name(site, persona_id)
         persona = Array(site.data['personas']).find { |p| p['id'] == persona_id }
         persona&.fetch('name', nil) || persona_id.split('-').map(&:capitalize).join(' ')
+      end
+
+      def persona_description(site, persona_id)
+        persona = Array(site.data['personas']).find { |p| p['id'] == persona_id }
+        persona&.fetch('description', nil)
       end
 
       def serialize_paths(learning_paths)

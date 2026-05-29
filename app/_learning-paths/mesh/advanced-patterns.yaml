@@ -7,7 +7,6 @@ metadata:
   personas:
     - platform-engineer
     - security-engineer
-    - devops-engineer
   min_version:
     mesh: "2.10"
   tags:

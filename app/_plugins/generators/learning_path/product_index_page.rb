@@ -17,7 +17,8 @@ module Jekyll
           'title' => "#{product_display_name(site, product)} Learning Paths",
           'product' => product,
           'breadcrumbs' => ['/learning-paths/'],
-          'learning_paths' => serialize_paths(learning_paths)
+          'learning_paths' => serialize_paths(learning_paths),
+          'toc' => false
         }
 
         # Synthetic relative_path since this page has no source file on disk.
