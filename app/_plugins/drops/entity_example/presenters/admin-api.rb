@@ -42,6 +42,10 @@ module Jekyll
                           config: { url:, headers:, body: data, method: 'POST', status_code: 201 } })
             end
 
+            def product
+              @product ||= @example_drop.product
+            end
+
             private
 
             def build_url
