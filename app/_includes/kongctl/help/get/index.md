@@ -37,9 +37,11 @@ Available Commands:
   konnect       Manage Konnect resources
   me            Get current user information
   organization  Get current organization information
+  pat           List or get Konnect personal access tokens
   portal        List or get Konnect portals
   profile       Manage kongctl profiles
   regions       List available Konnect regions
+  spat          List or get Konnect system account access tokens
 
 
 Flags:
