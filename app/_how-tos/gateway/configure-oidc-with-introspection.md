@@ -44,7 +44,7 @@ prereqs:
       - example-route
   inline:
     - title: Set up Keycloak
-      include_content: prereqs/auth/oidc/keycloak-password
+      include_content: prereqs/auth/oidc/keycloak-password-with-introspection
       icon_url: /assets/icons/keycloak.svg
 
 tags:
@@ -122,6 +122,7 @@ method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+retry: true
 extract_body:
   - name: 'headers.Authorization'
     variable: TOKEN
