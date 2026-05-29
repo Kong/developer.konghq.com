@@ -30,7 +30,7 @@ tags:
   - kubernetes
 
 tldr:
-  q: "How do I deploy a Context Mesh MCP server from the Konnect UI?"
+  q: "How do I deploy a {{site.context_mesh}}  MCP server from the Konnect UI?"
   a: "Install the nightly {{site.kong_operator}} chart with the `mcp-server` feature gate, create a Konnect-managed `DataPlane`, then use the Konnect UI to create an MCP server against that control plane."
 
 tools:
@@ -523,7 +523,7 @@ kubectl wait --timeout=3m dataplane dataplane --for=condition=Ready
 
 ## Create the OpenWeather {{site.context_mesh}} server
 
-1. In {{site.konnect_short_name}}, go to **Context Mesh** > **MCP Servers**
+1. In {{site.konnect_short_name}}, go to **{{site.context_mesh}}** > **MCP Servers**
 1. Select **New MCP server**.
 1. In the **Add a source** section, click the hyperlink to add a new source.
 1. Select the **Upload new** tab and upload the `openweathermap.json`.
