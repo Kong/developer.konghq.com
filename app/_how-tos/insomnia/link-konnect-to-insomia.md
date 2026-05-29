@@ -6,10 +6,14 @@ content_type: how_to
 
 products:
   - insomnia
+  - gateway
 works_on:
   - konnect
+tools:
+  - deck
 
 tier: enterprise
+tier_product: insomnia
 
 min_version:
   insomnia: '13'
@@ -19,19 +23,13 @@ tags:
   - konnect
   - integrations
 prereqs:
-  skip_product: true
-  show_works_on: false
-  inline:
-    - title: "{{ site.konnect_product_name }}"
-      content: |
-        This tutorial requires a {{ site.konnect_short_name }} account and a personal access token (PAT). If you don't have a {{ site.konnect_short_name }} account, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
+  entities_product: gateway
+  entities:
+    services:
+      - example-service
+    routes:
+      - example-route
 
-        Create a new PAT by opening the [{{ site.konnect_short_name }} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. Save the token value to use when linking {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }}.
-      icon_url: /assets/icons/gateway.svg
-    - title: A deployed Gateway Service
-      content: |
-        You need a control plane with at least one Gateway Service and Route already configured in {{ site.konnect_short_name }}. See [Data Plane hosting options](/gateway/topology-hosting-options/) to choose a control plane type, then create a [Gateway Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
-      icon_url: /assets/icons/widgets.svg
 next_steps:
   - text: Use the Collection Runner in Insomnia
     url: /how-to/use-the-collection-runner/

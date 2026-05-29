@@ -34,6 +34,12 @@ related_resources:
     url: /how-to/link-konnect-to-insomnia/
 
 faqs:
+  - q: Can I use the {{ site.konnect_short_name }} integration with my on-prem Gateway?
+    a: |
+      No, the {{ site.konnect_short_name }} integration only works with Gateway Services hosted in {{ site.konnect_short_name }}, not on-prem {{site.base_gateway}}.
+  - q: What is the "Skipped routes" Collection?
+    a: |
+      The "Skipped Routes" Collection contains Routes using an unsupported protocal. You can't use the Collection runner to send requests against them.    
   - q: Why does {{ site.data.products.insomnia.name }} skip some Routes?
     a: |
       {{ site.data.products.insomnia.name }} skips Routes that use an unsupported protocol, such as SNI matching, TCP, or UDP. {{ site.data.products.insomnia.name }} displays the skipped routes in a separate collection named "Skipped routes".
