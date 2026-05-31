@@ -6,8 +6,10 @@ The following creates a new Consumer called **{{ include.presenter.data['usernam
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Consumers**.
-1. Click **New Consumer**.
+1. Navigate to Consumers:
+  * In Konnect, click the **Consumers** tab inside your control plane.
+  * In Kong Manager, open **Consumers** from the sidebar.
+1. Click **New consumer**.
 1. Enter the **Username** `{{ include.presenter.data['username'] }}` and **Custom ID** `{{ include.presenter.data['custom_id'] }}`.
 1. Click **Save**.
 {% when 'consumer_group' %}
@@ -16,9 +18,11 @@ The following creates a new Consumer Group called **{{ include.presenter.data['n
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Consumers**.
-1. Click the **Consumer Groups** tab.
-1. Click **New Consumer Group**.
+1. Navigate to Consumers:
+  * In Konnect, click the **Consumers** tab inside your control plane.
+  * In Kong Manager, open **Consumers** from the sidebar.
+1. Click the **Consumer groups** tab.
+1. Click **New consumer group**.
 1. Enter the **Name** `{{ include.presenter.data['name'] }}`.
 1. Click **Save**.
 {% when 'route' %}
@@ -27,8 +31,10 @@ The following creates a new Route called **{{ include.presenter.data['name'] }}*
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Routes**.
-1. Click **New Route**.
+1. Navigate to Routes:
+  * In Konnect, click the **Routes** tab inside your control plane.
+  * In Kong Manager, open **Routes** from the sidebar.
+1. Click **New route**.
 1. Enter a unique name and select a Service to assign the Route to. In this example, the Route is named `{{ include.presenter.data['name'] }}`.
 1. Set a path or define routing rules. For example, the path can be `{{ include.presenter.data['paths']}}`.
 1. Click **Save**.
@@ -38,8 +44,10 @@ The following creates a new Gateway Service called **{{ include.presenter.data['
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Gateway Services**.
-1. Click **New Gateway Service**.
+1. Navigate to Gateway Services:
+  * In Konnect, click the **Gateway services** tab inside your control plane.
+  * In Kong Manager, open **Gateway services** from the sidebar.
+1. Click **New gateway service**.
 1. Enter a unique name for the Service. In this example, it's `{{ include.presenter.data['name'] }}`.
 1. Define the endpoint for this Service by specifying the full URL or by its separate elements. In this example, the full upstream URL is `{{ include.presenter.data['url'] }}`.
 1. Click **Save**.
@@ -48,8 +56,10 @@ The following creates a new Gateway Service called **{{ include.presenter.data['
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Select **Plugins**.
-1. Click **New Plugin** and choose a plugin.
+1. Navigate to Plugins:
+  * In Konnect, click the **Plugins** tab inside your control plane.
+  * In Kong Manager, open **Plugins** from the sidebar.
+1. Click **New plugin** and choose a plugin.
 1. Choose a scope for the plugin:
     * **Global**, which applies the plugin to all Gateway Services, Routes, Consumers, and Consumer Groups in the Workspace (Kong Manager) or control plane ({{site.konnect_short_name}}).
     * **Scoped**, which lets you choose a specific Gateway Service, Route, Consumer, or Consumer Group to apply the plugin to.
@@ -63,12 +73,14 @@ The following creates a new Upstream and a Target with basic configuration:
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Upstreams**.
-1. Click **New Upstream**.
+1. Navigate to Upstreams:
+  * In Konnect, click the **Upstreams** tab inside your control plane.
+  * In Kong Manager, open **Upstreams** from the sidebar.
+1. Click **New upstream**.
 1. Enter a unique name for the Upstream. For example: `example_upstream`.
 1. Click **Save**.
 1. From your Upstream, click the **Targets** tab.
-1. Click **New Target**.
+1. Click **New target**.
 1. Enter an IP address/hostname and port in the **Target Address** field. For example: `{{ include.presenter.data['target'] }}`
 1. Update the weight. For example: `{{ include.presenter.data['weight'] }}`.
 1. Click **Save**.
@@ -78,8 +90,10 @@ The following creates a new Upstream with basic configuration:
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Upstreams**.
-1. Click **New Upstream**.
+1. Navigate to Upstreams:
+  * In Konnect, click the **Upstreams** tab inside your control plane.
+  * In Kong Manager, open **Upstreams** from the sidebar.
+1. Click **New upstream**.
 1. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
 1. Click **Save**.
 {% when 'vault' %}
@@ -88,8 +102,10 @@ The following creates a new Vault with basic configuration:
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Vaults**.
-1. Click **New Vault**.
+1. Navigate to Vaults:
+  * In Konnect, click the **Vaults** tab inside your control plane.
+  * In Kong Manager, open **Vaults** from the sidebar.
+1. Click **New vault**.
 1. Select a type of Vault to configure. For example: `{{ include.presenter.data['name'] }}`
 1. Enter a prefix for the Vault. For example: `{{ include.presenter.data['prefix'] }}`
 1. Enter a description for the Vault. For example: `{{ include.presenter.data['description'] }}`
@@ -119,8 +135,10 @@ The following creates a new Certificate with basic configuration:
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Certificates**.
-1. Click **New Certificate**.
+1. Navigate to Certificates:
+  * In Konnect, click the **Certificates** tab inside your control plane.
+  * In Kong Manager, open **Certificates** from the sidebar.
+1. Click **New certificate**.
 1. In the **Cert** field, enter the PEM-encoded public certificate:
     ```
     {{ include.presenter.data['cert'] }}
@@ -136,9 +154,11 @@ The following creates a new CA Certificate with basic configuration:
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Certificates**.
-1. Click the **CA Certificates** tab.
-1. Click **New CA Certificate**.
+1. Navigate to Certificates:
+  * In Konnect, click the **Certificates** tab inside your control plane.
+  * In Kong Manager, open **Certificates** from the sidebar.
+1. Click the **CA certificates** tab.
+1. Click **New CA certificate**.
 1. In the **Cert** field, enter the PEM-encoded public certificate of the CA:
     ```
     {{ include.presenter.data['cert'] }}
@@ -179,9 +199,11 @@ The following creates a new JSON Web Key Set with basic configuration:
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Keys**.
-1. Click the **Key Sets** tab.
-1. Click **New Key Set**.
+1. Navigate to Keys:
+  * In Konnect, click the **Keys** tab inside your control plane.
+  * In Kong Manager, open **Keys** from the sidebar.
+1. Click the **Key sets** tab.
+1. Click **New key set**.
 1. Enter a name for the Key Set:
     ```
     {{ include.presenter.data['name'] }}
@@ -214,7 +236,9 @@ The following creates a new Partial called **{{ include.presenter.data['name'] }
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
-1. Navigate to **Redis Configurations**.
+1. Navigate to Redis configurations:
+  * In Konnect, click the **Redis** tab inside your control plane.
+  * In Kong Manager, open **Redis Configurations** from the sidebar.
 1. Click **New configuration**.
 1. Select the **Redis type** `Host/Port (Enterprise)`.
 1. Enter the **Name** `{{ include.presenter.data['name'] }}`.
@@ -226,7 +250,7 @@ The following creates a new backend cluster called **{{ include.presenter.data['
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
-1. Navigate to **Backend Clusters** in the sidebar.
+1. Click the **Backend Clusters** tab.
 1. Click **New backend cluster**.
 1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
 1. In the **Bootstrap servers** field, enter `{{ include.presenter.data['bootstrap_servers'] | first }}`.
@@ -239,7 +263,7 @@ The following creates a new virtual cluster called **{{ include.presenter.data['
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 2. Click an {{site.event_gateway_short}}.
-3. Navigate to **Virtual Clusters** in the sidebar.
+3. Click the **Virtual Clusters** tab.
 4. Click **New Virtual Cluster**.
 1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
 5. Configure your virtual cluster.
@@ -252,7 +276,7 @@ The following creates a new listener called **{{ include.presenter.data['name'] 
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
-1. Navigate to **Listeners** in the sidebar.
+1. Click the **Listeners** tab.
 1. Click **New listener**.
 1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
 2. In the **Addresses** field, enter `{{ include.presenter.data['addresses'] | first }}`.
@@ -262,9 +286,11 @@ The following creates a new listener called **{{ include.presenter.data['name'] 
 
 {% when 'schema_registry' %}
 
+The following creates a new schema registry called **{{ include.presenter.data['name'] }}** with basic configuration:
+
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
-3. Navigate to **Resources** in the sidebar.
+3. Click the **Resources** tab.
 1. Click **New Schema Registry**.
 1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
 1. Configure your schema registry.
@@ -272,15 +298,29 @@ The following creates a new listener called **{{ include.presenter.data['name'] 
 
 {% when 'static_key' %}
 
+The following creates a new static key called **{{ include.presenter.data['name'] }}** with basic configuration:
+
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
-1. Navigate to **Resources** in the sidebar.
+1. Click the **Resources** tab.
 1. Click **Static keys**
 1. Click **New Static key**.
 1. In the **Key name** field, enter `{{ include.presenter.data['name'] }}`.
 1. In the **Value** field, enter `{{ include.presenter.data['value'] }}`.
 1. Click **Save**.
 
+{% when 'tls_trust_bundle' %}
+
+The following creates a new TLS trust bundle called **{{ include.presenter.data['name'] }}**:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Click the **Resources** tab.
+1. Click **TLS trust bundles**
+1. Click **New TLS trust bundle**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. In the **Trusted CA Certificate** field, paste your CA certificate or a vault reference to a CA certificate.
+1. Click **Save**.
 
 {% when 'event_gateway_policy' %}
 
@@ -290,7 +330,7 @@ The following creates a new Modify Headers policy called **{{ include.presenter.
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
-1. Navigate to **Virtual Clusters** in the sidebar.
+1. Click the **Virtual Clusters** tab.
 1. Click on a virtual cluster.
 1. Click **Policies**.
 1. Click **New policy**.
@@ -309,7 +349,7 @@ The following creates a new Forward to Virtual Cluster policy called **{{ includ
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
-1. Navigate to **Listeners** in the sidebar.
+1. Click the **Listeners** tab.
 1. Click on a listener.
 1. Click **Policies**.
 1. Click **New policy**.
