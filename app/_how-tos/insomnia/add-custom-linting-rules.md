@@ -9,6 +9,8 @@ no_wrap: true
 products:
 - insomnia
 
+min_version:
+ - insomnia: "13.0"
 tags:
   - insomnia-documents
   - linting
@@ -78,14 +80,14 @@ This causes a new warning to appear:
 
 ## Override the rules
 
-verride the linting rules and use another ruleset, by using either Inso CLI or `.spectral.yaml`:
+Override the linting rules and use another ruleset, by using either Inso CLI or `.spectral.yaml`:
 
 {% navtabs "custom linting" %}
 {% navtab "Inso CLI" %}
 
 Run the [Inso CLI] with the `--ruleset` or `-r` flag and the path to your custom ruleset : `inso lint spec --ruleset <path-to-custom-ruleset>`](/inso-cli/reference/lint_spec/) command. This overrides the default OpenAPI specifications (OAS) ruleset in Insomnia, and any ruleset in the API Spec folder.
 
-If the `--ruleset` flag isn't specified, Insomnia eithe uses:
+If the `--ruleset` flag isn't specified, Insomnia either uses:
       
 - The ruleset defined in `.spectral.yaml` if it exists.
 - The default OAS ruleset.
