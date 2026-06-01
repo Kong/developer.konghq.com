@@ -4,7 +4,7 @@ description: "Use the static-keys command to list or retrieve static keys for a 
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

@@ -77,7 +77,7 @@ docker run --rm -p 8080:8080 docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
 
 ## Enable the AI Proxy plugin
 
-Use the AI Proxy plugin to connect to Mistral:
+Use the AI Proxy plugin to connect to {{ site.mistral }}:
 
 {% entity_examples %}
 entities:

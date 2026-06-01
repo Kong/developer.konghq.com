@@ -55,6 +55,16 @@ sections:
             url: /metering-and-billing/
           - text: All documentation
             url: /index/metering-and-billing/
+      
+      - title: "{{site.identity}}"
+        icon: /assets/icons/identity.svg
+        icon_alt: Kong Identity icon
+        description: "{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access."
+        links:
+          - text: "{{site.identity}} overview"
+            url: /identity/
+          - text: All documentation
+            url: /index/identity/
 
   - title: Connectivity
     items:

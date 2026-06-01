@@ -56,19 +56,23 @@ export default ({ command, mode }) => {
       svgLoader()
     ],
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         external: ['shiki/onig.wasm']
       }
     },
     server: {
       cors: { origin: 'http://localhost:8888' },
       proxy: {
-        '^/api': {
+        '/vite-dev/api': {
           changeOrigin: true,
           target: portalApiUrl,
           configure: (proxy, options) => {
             mutateCookieAttributes(proxy)
             setHostHeader(proxy)
+          },
+          rewrite: (path) => {
+            return path
+            .replace(/^\/vite-dev\/api/, '/api/');
           }
         }
       }

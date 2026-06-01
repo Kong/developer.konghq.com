@@ -6,8 +6,6 @@ description: Learn how to manage {{site.konnect_product_name}} infrastructure as
 content_type: reference
 layout: reference
 
-beta: true
-
 works_on:
   - konnect
 
@@ -18,15 +16,25 @@ breadcrumbs:
   - /kongctl/
 
 related_resources:
-  - text: CI/CD integration guide
-    url: /kongctl/ci-cd/
+  # - text: CI/CD integration guide
+  #   url: /kongctl/ci-cd/
   - text: Get started with kongctl
     url: /kongctl/get-started/
+  - text: Use kongctl with AI agent skills
+    url: /kongctl/skills/
   - text: Supported resources
     url: /kongctl/supported-resources/
+  - text: Troubleshooting kongctl
+    url: /kongctl/troubleshooting/
+  - text: Examples directory
+    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/
 next_steps:
   - text: Example declarative configurations
     url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
+  - text: Use kongctl with AI agent skills
+    url: /kongctl/skills/
+  - text: Learn about supported resources
+    url: /kongctl/supported-resources/
   - text: Learn about kongctl authorization options
     url: /kongctl/authentication/
   - text: kongctl configuration reference guide
@@ -39,231 +47,322 @@ next_steps:
     url: /konnect-api/
 ---
 
-{:.success}
-> **New to kongctl?** This document provides an extensive reference to declarative management with kongctl. For a shorter getting started experience, see 
-the [Get started with kongctl](/kongctl/get-started/) guide to quickly learn basic usage and resource management.
+This page covers what you need to know for managing {{site.konnect_short_name}}
+resources using the kongctl declarative configuration approach.
+For supported resource types and field-level resource definitions, see the [kongctl declarative resource reference](/kongctl/supported-resources/).
 
-kongctl's declarative management feature enables you to manage {{site.konnect_short_name}} resources using simple YAML configuration files and a stateless CLI tool. 
-This approach provides version control, automation, and predictable deployments through a plan-based workflow.
+## Overview
 
+kongctl's declarative management feature enables you to
+manage your [{{site.konnect_short_name}}](/konnect/) resources with
+YAML declaration files and a state-free CLI tool.
 
-Declarative configuration with kongctl means you describe the **desired state** of your {{site.konnect_short_name}} resources in 
-static YAML files, and kongctl calculates and executes the changes needed to reach the desired state. 
+### Key principles
 
-The following are key principles of declarative configuration with kongctl:
+1. **Configuration manifests**: Configuration is expressed as simple YAML files that describe the desired state of your {{site.konnect_short_name}} resources.
+   Configuration files can be split into multiple files and directories for modularity and reuse.
+1. **Plan-based**: Plans are objects that represent required changes to move a set of resources from one state to another, desired, state.
+   In kongctl, plan artifacts are first-class concepts that can be created, stored, reviewed, and applied. Plans are represented as JSON objects
+   and can be generated and stored as files for later application. When running declarative commands, if plans are not provided
+   they are generated implicitly and executed immediately.
+1. **State-free**: kongctl doesn't use a state file or database to store the current state. The system queries
+   {{site.konnect_short_name}} directly to calculate plans and apply changes.
+1. **Namespace resource isolation**: Namespaces provide a way to isolate resources however the user desires (teams, environments, etc.).
+   Each resource under management is assigned to one namespace, and resources in other namespaces are *not considered* when calculating plans or
+   applying changes. A `default` namespace is used if none is specified in input configurations.
 
-- **Configuration input**: Express your desired state in a YAML format that can be split and saved into multiple files and directories for modularity.
-- **Plan-based workflow**: Generate plan artifacts that represent the changes needed, review them, and apply them later.
-- **Stateless operation**: kongctl queries the live {{site.konnect_short_name}} state instead of maintaining a separate state file.
-- **Namespace ownership**: Use namespaces to group resources between teams and environments.
+## AI-assisted declarative setup
 
-## Core concepts
+kongctl includes a `kongctl-declarative` skill for AI coding agents. The
+skill helps an agent discover resource schemas with `kongctl explain`, generate
+starter YAML with `kongctl scaffold`, bootstrap declarative files, integrate
+decK through `_deck`, generate API configuration from OpenAPI documents, and
+work through plan, diff, apply, sync, delete, and adopt workflows.
 
-### Configuration input files
+Install the bundled skills from the root of the repository where your agent
+will work:
 
-kongctl declarative configuration uses YAML files to describe your desired state. These files define resources and their properties using a simple, structured format.
+```bash
+kongctl install skills
+```
 
-The following is an example of the basic structure:
+Preview the files and symlinks before writing them:
+
+```bash
+kongctl install skills --dry-run
+```
+
+Always review agent-generated configuration before applying changes to
+{{site.konnect_short_name}}. Use `kongctl diff --mode apply` or `kongctl plan`
+to preview proposed changes before running `kongctl apply` or `kongctl sync`.
+
+See [Use kongctl with AI agent skills](/kongctl/skills/) for the complete
+skills overview.
+
+## Quick start
+
+### Prerequisites
+
+1. **{{site.konnect_short_name}} account**: [Sign up for free](https://konghq.com/products/kong-konnect/register)
+2. **kongctl installed**: See [installation instructions](/kongctl/#installation)
+3. **Authenticated with {{site.konnect_short_name}}**: Run `kongctl login`
+
+### Create your first configuration
+
+Create a working directory:
+
+```shell
+mkdir kong-portal && cd kong-portal
+```
+
+Create a file named `portal.yaml`:
 
 ```yaml
-portals: 
-  - ref: developer-portal
-    name: "developer-portal"
-    display_name: "Developer Portal"
-  - ref: portal-num-two
-    name: "another portal"
-    display_name: "Amazing Dev Portal"
+portals:
+  - ref: my-portal
+    name: "my-developer-portal"
+    display_name: "My Developer Portal"
+    description: "API documentation for developers"
+    authentication_enabled: false
+    default_api_visibility: "public"
+    default_page_visibility: "public"
 
 apis:
   - ref: users-api
     name: "Users API"
+    description: "API for user management"
+
+    publications:
+      - ref: users-api-publication
+        portal_id: my-portal
 ```
 
-Different resources and resource types can be defined in a single file, or split across multiple files:
+Preview changes:
 
+```shell
+kongctl diff --mode apply -f portal.yaml
 ```
-project/
-├── portals.yaml
-├── apis.yaml
-└── auth-strategies.yaml
+
+Apply configuration:
+
+```shell
+kongctl apply -f portal.yaml
 ```
+
+Verify resources with `kongctl get` commands:
+
+```shell
+kongctl get portals
+```
+
+```shell
+kongctl get apis
+```
+
+Your developer portal and API are now live! Visit the [{{site.konnect_short_name}} Console](https://cloud.konghq.com/us/portals/)
+to see your developer portal with the published API.
+
+## Core concepts
 
 ### Resource identity
 
-Resources in {{site.konnect_short_name}} and kongctl have multiple identifiers:
+Resources can have multiple identifiers:
 
-* `ref`: kongctl specific identifier that's unique across all resources in a set of input configuration files. Used to identify and reference resources _within your configuration_.
-* `id`: {{site.konnect_short_name}} assigned UUID. Not all {{site.konnect_short_name}} resources support `id` fields and it isn't typically stored in declarative configuration files.
-* `name`: {{site.konnect_short_name}} resources _often_ have a name field, which is usually unique across an organization, but may not be depending on the resource type.
+- **ref**: kongctl declarative engine identifier. `ref` is used to identify the resource uniquely within a
+    given set of declarative configurations. `ref` isn't written to the remote {{site.konnect_short_name}} system and
+    must be unique across all resources in a given set of input configuration files. This value is used to
+    create inter-configuration references between resources.
+- **id**: *Most* {{site.konnect_short_name}} resources have an `id` field which is a {{site.konnect_short_name}}
+    assigned UUID. This field isn't stored in declarative configuration files but will be used internally
+    by the declarative engine.
+- **name**: *Many* {{site.konnect_short_name}} resources have a `name` field which *may or may not* be
+    subject to a unique constraint within an organization for that resource type.
+
+Top-level resource keys and field names in declarative YAML are stable
+configuration contract names. Use the names documented in the
+[kongctl declarative resource reference](/kongctl/supported-resources/), and use
+`ref` values when one resource needs to refer to another.
 
 ```yaml
 application_auth_strategies:
-  - ref: oauth-strategy              # Identifies resource in configuration only
-    name: "OAuth 2.0 Strategy"       # {{site.konnect_short_name}} 'name' field value
-                                     # 'id' fields are assigned by {{site.konnect_short_name}} but not stored in configuration
+  - ref: oauth-strategy
+    name: "OAuth 2.0 Strategy"
+
+portals:
+  - ref: developer-portal
+    name: "Developer Portal"
+    default_application_auth_strategy_id: !ref oauth-strategy#id
 ```
 
-### Plan-based approach
+### Plan artifacts
 
-A plan is a JSON object that defines the steps needed to move resources from their current state to the desired state and are central to the 
-kongctl approach to declarative configuration. Planning happens either implicitly or explicitly when using the 
-declarative configuration commands.
+Plans are central to how kongctl manages resource state. Plans are objects which
+define the required steps to move a set of resources from their current state to a
+desired state. Plans can be created, stored, reviewed, and applied at a later time
+and are stored as JSON files. Plans are not required to be used,
+but can enable advanced workflows.
 
-**Implicit planning** (generate plan and execute immediately):
+#### How planning works
 
-```bash
+The declarative configuration commands
+(`apply`, `sync`, `delete`, `diff`) use the planning engine internally:
+
+**Implicit Planning** (direct execution):
+
+```shell
+# Internally generates plan and executes it
 kongctl apply -f config.yaml
 ```
 
-**Explicit planning** (generate plan and pass to a later _execution_ operation):
+**Explicit Planning** (two-phase execution):
 
-```bash
-# Phase 1: Generate plan
-kongctl plan -f config.yaml --output-file plan.json
+```shell
+# Phase 1: Generate plan artifact
+kongctl plan --mode apply -f config.yaml --output-file plan.json
+```
 
-# Phase 2: Review and apply later
+```shell
+# Phase 2: Execute plan artifact (can be done later)
 kongctl apply --plan plan.json
 ```
 
-You can use plan artifacts for the following use cases:
-* **Audit trail**: Plans provide an audit record of proposed changes independent of the input or current state.
-* **Review process**: Share and review plans before execution.
-* **Deferred execution**: Generate plans in CI, attach to pull requests, and apply after approval.
-* **Compliance**: Document exactly what changes were planned along with the execution logs.
+#### Why use plan artifacts?
 
-### Declarative commands
+Plan artifacts enable more advanced workflows:
 
-The following are the commands you use to employ kongctl declarative configuration.
+- **Audit Trail**: Store plans in version control alongside configurations
+- **Review Process**: Share plans and review with team members before execution
+- **Deferred Execution**: Generate plans in CI, apply them after approval
+- **Rollback Safety**: Keep previously applied plans for rollback analysis
+- **Compliance**: Document exactly what changes were planned
 
-#### `plan`
+## Configuration structure
 
-Generate a plan artifact storing a set of proposed changes:
+### Basic structure
 
-```bash
-# Generate apply plan (no deletions)
-kongctl plan -f config.yaml --mode apply
+```yaml
+# Optional defaults section
+_defaults:
+  kongctl: # kongctl metadata defaults
+    namespace: production
+    protected: false
 
-# Generate sync plan (includes deletions)
-kongctl plan -f config.yaml --mode sync --output-file plan.json
+portals: # List of Parent portal resources
+  - ref: developer-portal # ref is required on all resources
+    name: "developer-portal"
+    display_name: "Developer Portal"
+    description: "API documentation hub"
+    kongctl: # kongctl metadata defined explicitly on resource, overrides _defaults
+      namespace: platform-team
+      protected: true
 ```
 
-#### `diff`
+### Parent vs child resources
 
-Display human-readable preview of planned changes
+Generally the main concepts in the {{site.konnect_short_name}} system are collections and many
+of them support child resources underneath them.
 
-```bash
-# Generate a plan and print summary of prposed changes
-kongctl diff -f config.yaml
+**Parent resource examples**:
 
-# Print a summary of proposed changes from plan artifact input
-kongctl diff --plan plan.json
-```
+- `apis`
+- `portals`
+- `application_auth_strategies`
+- `control_planes`
+- `analytics.dashboards`
+- `organization.teams`
+- `event_gateways`
 
-#### `apply`
+**Child resource examples**:
 
-Create or update resources based on a set of configuration inputs or a plan artifact:
+- `api.versions`
+- `api.publications`
+- `api.implementations`
+- `api.documents`
+- `portal.pages`
+- `portal.snippets`
+- `portal.customization`
+- `portal.custom_domain`
+- `portal.email_config`
+- `portal.email_templates`
 
-```bash
-# Apply from config
-kongctl apply -f config.yaml
+See the [kongctl declarative resource reference](/kongctl/supported-resources/) for more details on supported resources.
 
-# Apply from plan
-kongctl apply --plan plan.json
+### Hierarchical vs flattened configuration
 
-# Preview without applying
-kongctl apply -f config.yaml --dry-run
-```
+Parents are defined at the root of a configuration while
+children can be expressed both nested under their parent
+and at the root with a parent reference field.
 
-#### `sync`
-
-Create, update, or delete resources based on a set of configuration inputs or a plan artifact:
-
-```bash
-# Preview sync changes
-kongctl sync -f config.yaml --dry-run
-
-# Sync with confirmation prompt
-kongctl sync -f config.yaml
-
-# Sync without prompt (dangerous!)
-kongctl sync -f config.yaml --auto-approve
-```
-
-{:.warning}
-> **Caution**: `sync` deletes resources missing from your configuration, always ensure changes are desired before executing.
-
-#### `dump`
-
-The `dump` command will export existing {{site.konnect_short_name}} state to files.
-
-```bash
-# Export to declarative format
-kongctl dump declarative --resources=portal,api
-
-# Export to Terraform import format
-kongctl dump tf-import --resources=api --include-child-resources
-```
-
-#### `adopt`
-
-Bring existing {{site.konnect_short_name}} resources under declarative management by adding proper labels:
-
-```bash
-# Adopt a portal by name
-kongctl adopt portal my-portal --namespace team-alpha
-
-# Adopt a control plane by ID
-kongctl adopt control-plane <cp-id> --namespace platform
-
-# Adopt an API
-kongctl adopt api my-api --namespace production
-```
-
-{:.warning}
-> Before adopting a resource, add it to your declarative configuration files either manually or with the help of the `dump` command
-so that kongctl will manage the resource going forward.
-
-## kongctl metadata
-
-In the input configuration, you can provide some kongctl specific metadata values that affect the behavior of the 
-declarative system. You can provide this `kongctl` section on individual resources or at the configuration file level. 
-
-These values are stored on resources via the {{site.konnect_short_name}} [resource labels](/konnect-platform/konnect-labels/),
-so only resources that support labels are supported. In general, only parent resources support labels and child 
-resources inherit the values from their parents.
-
-### Namespace 
-
-The `namespace` field allows you to define ownership and isolation of resources. You may choose to assign any
-`namespace` you choose, but common patterns would be teams (finance, engineering) or environments (prod, dev).
-
-**Child resources** automatically inherit the namespace from their parent.
+**Hierarchical configuration**:
 
 ```yaml
 apis:
-  - ref: billing-api
-    name: "Billing API"
-    kongctl:
-      namespace: finance-team
+  - ref: users-api
+    name: "Users API"
+    versions:
+      - ref: v1
+        name: "v1.0.0"
+        spec: !file ./specs/users-v1.yaml
+    publications:
+      - ref: public
+        portal_id: !ref main-portal
+        visibility: public
 ```
+
+**Flattened configuration**:
+
+```yaml
+apis:
+  - ref: users-api
+    name: "Users API"
+
+api_versions:
+  - ref: v1
+    api: users-api
+    name: "v1.0.0"
+    spec: !file ./specs/users-v1.yaml
+
+api_publications:
+  - ref: public
+    api: users-api
+    portal_id: !ref main-portal
+```
+
+## kongctl metadata
+
+The kongctl section provides metadata for resource management.
+This metadata is stored in {{site.konnect_short_name}} labels and labels are only
+provided on parent resources. Thus, kongctl metadata is
+**only supported on parent resources**.
 
 ### Protected resources
 
-When a resource is marked `protected: true`, the kongctl declarative planner will not allow planning of
-updates or deletes to those resources. To update or delete these resources, change the
-resource from `protected: true` to `protected: false`. Once you update this, then you are allowed to make subsequent changes.
+The `protected` field prevents accidental deletion of critical resources:
 
 ```yaml
 portals:
   - ref: production-portal
     name: "Production Portal"
     kongctl:
-      protected: true  # Cannot be deleted
+      protected: true  # Cannot be deleted until protection is removed
+```
+
+### Namespace management
+
+The `namespace` field enables resource isolation:
+
+```yaml
+apis:
+  - ref: billing-api
+    name: "Billing API"
+    kongctl:
+      namespace: finance-team  # Owned by finance team
+      protected: false
 ```
 
 ### File-level defaults
 
-A the file level, you can use `_defaults` to set default metadata for all resources in a file:
+Use `_defaults` to set default values for all resources in a file:
 
 ```yaml
 _defaults:
@@ -274,233 +373,65 @@ _defaults:
 portals:
   - ref: api-portal
     name: "API Portal"
-    # Inherits: namespace=platform-team, protected=true
+    # Inherits namespace: platform-team and protected: true
 
   - ref: test-portal
     name: "Test Portal"
     kongctl:
-      # Overrides both defaults
       namespace: qa-team
       protected: false
+    # Overrides both defaults
 ```
 
-### kongctl metadata precedence
+### Namespace and protected field behavior
 
-The following table describes which namespace metadata takes precedence:
+kongctl provides some default behavior depending on how metadata fields
+are specified or omitted. The following tables summarize the behavior.
 
-<!--vale off-->
-{% table %}
-columns:
-  - title: File Default
-    key: file_default
-  - title: Resource Value
-    key: resource_value
-  - title: Result
-    key: result
-  - title: Notes
-    key: notes
-rows:
-  - file_default: Not set
-    resource_value: Not set
-    result: "`default`"
-    notes: Default
-  - file_default: Not set
-    resource_value: team-a
-    result: "`team-a`"
-    notes: Resource explicit
-  - file_default: team-b
-    resource_value: Not set
-    result: "`team-b`"
-    notes: Inherits default
-  - file_default: team-b
-    resource_value: team-a
-    result: "`team-a`"
-    notes: Resource overrides
-{% endtable %}
-<!--vale on-->
+#### `namespace` field behavior
 
+| File Default | Resource Value | Final Result | Notes                        |
+|--------------|----------------|--------------|------------------------------|
+| Not set      | Not set        | "default"    | System default               |
+| Not set      | "team-a"       | "team-a"     | Resource explicit            |
+| Not set      | "" (empty)     | ERROR        | Empty namespace not allowed  |
+| "team-b"     | Not set        | "team-b"     | Inherits default             |
+| "team-b"     | "team-a"       | "team-a"     | Resource overrides           |
+| "team-b"     | "" (empty)     | ERROR        | Empty namespace not allowed  |
+| "" (empty)   | Any value      | ERROR        | Empty default not allowed    |
 
-The following table describes which protected field metadata takes precedence:
+#### `protected` field behavior
 
-<!--vale off-->
-{% table %}
-columns:
-  - title: File Default
-    key: file_default
-  - title: Resource Value
-    key: resource_value
-  - title: Result
-    key: result
-  - title: Notes
-    key: notes
-rows:
-  - file_default: Not set
-    resource_value: Not set
-    result: "`false`"
-    notes: Default
-  - file_default: Not set
-    resource_value: true
-    result: "`true`"
-    notes: Resource explicit
-  - file_default: true
-    resource_value: Not set
-    result: "`true`"
-    notes: Inherits default
-  - file_default: true
-    resource_value: false
-    result: "`false`"
-    notes: Resource overrides
-{% endtable %}
-<!--vale on-->
+| File Default | Resource Value | Final Result | Notes              |
+|--------------|----------------|--------------|-------------------|
+| Not set      | Not set        | false        | System default     |
+| Not set      | true           | true         | Resource explicit  |
+| Not set      | false          | false        | Explicit false     |
+| true         | Not set        | true         | Inherits default   |
+| true         | false          | false        | Resource overrides |
+| false        | true           | true         | Resource overrides |
 
-### namespace enforcement flags
+Child resources automatically inherit the metadata of their parent resource:
 
-The following flags allow further control over namespaces when running the declarative commands:
+### Namespace enforcement flags
 
-```bash
-# Require all resources to declare a namespace
-kongctl plan -f config.yaml --require-any-namespace
+The `kongctl plan` command provides built-in namespace guardrails:
 
-# Restrict to specific namespaces
-kongctl plan -f config.yaml --require-namespace=team-a,team-b
-```
+- `--require-any-namespace` forces every managed resource to declare a namespace via `kongctl.namespace`
+  or `_defaults.kongctl.namespace`.
+- `--require-namespace=<ns>` restricts planning to the provided namespaces (repeat or comma-separate the flag
+  to allow multiple values).
 
-### Adopting existing resources
+These flags help prevent accidentally operating on unexpected namespaces, especially when running in sync mode.
 
-Use `kongctl adopt` to bring {{site.konnect_short_name}} resources created outside the declarative system into it.
+## External resources and namespaces
 
-```bash
-# Adopt a portal
-kongctl adopt portal my-portal --namespace team-alpha
-
-# Adopt a control plane
-kongctl adopt control-plane <cp-id> --namespace platform
-```
-
-This adds the namespace label without modifying other fields. After adoption, add the resource to your configuration files.
-
-### Stateless operation
-
-Unlike other declarative solutions, kongctl doesn't maintain any local state storage to complete it's planning and execution. Instead, it does the following:
-
-1. You provide the desired state (YAML files).
-2. kongctl queries the current state from {{site.konnect_short_name}}.
-3. kongctl calculates the difference.
-4. kongctl applies the changes.
-
-This means:
-* No state file to manage or lock
-* Always reflects the live {{site.konnect_short_name}} state
-* Can run from anywhere with the same configuration
-* Multiple people can use the same configuration files
-
-{:.warning}
-> **Caution**: Be careful with concurrent operations on the same resources. Use namespace isolation to avoid conflicts.
-
-## YAML tags
-
-YAML tags act as pre-processors, allowing you to load content from external files and cross-reference resources.
-
-### Loading file content
-
-Use `!file` to load entire file contents. This is useful for resources that have large content stored in files
-like OpenAPI specifications or Dev Portal pages and documentation.
+External resources (`_external` pseudo-resource) are references to {{site.konnect_short_name}} objects that are managed elsewhere
+but are "selected" by the kongctl declarative engine so they can be referenced by other resources under management.
 
 ```yaml
-apis:
-  - ref: users-api
-    name: "Users API"
-    description: !file ./docs/api-description.md
-    versions:
-      - ref: v1
-        spec: !file ./specs/users-v1.yaml
-```
-
-### Extracting values from structured files
-
-When the input file for `!file` is a structured file (JSON or YAML), you can
-extract specific values using the `!file <path>#field` notation:
-
-```yaml
-apis:
-  - ref: users-api
-    name: !file ./specs/openapi.yaml#info.title
-    description: !file ./specs/openapi.yaml#info.description
-    versions:
-      - ref: v1
-        spec: !file ./specs/openapi.yaml
-```
-
-### Referencing other resources
-
-Use the `!ref` YAML tag to reference values from other declared resources:
-
-```yaml
-control_planes:
-  - ref: prod-us-runtime
-    name: "prod-us"
-    cluster_type: "CLUSTER_TYPE_K8S_INGRESS_CONTROLLER"
-
-  - ref: shared-group
-    name: "shared-group"
-    cluster_type: "CLUSTER_TYPE_CONTROL_PLANE_GROUP"
-    members:
-      - id: !ref prod-us-runtime#id
-```
-
-### Path resolution and security
-
-Path resolution is when all file paths are relative to the directory containing the configuration file.
-
-Path resolution has the following security features:
-* Absolute paths are blocked
-* Relative paths with `..` must stay within the base directory boundary
-* Files limited to 10MB
-* Default base directory is the parent of each `-f` source file
-* Override with `--base-dir` flag
-
-```yaml
-# Allowed (within base directory)
-description: !file ./docs/description.txt
-spec: !file ../shared/openapi.yaml
-
-# Blocked (absolute path)
-config: !file /etc/passwd
-
-# Blocked (outside base directory)
-secret: !file ../../../sensitive.yaml
-```
-
-Files are cached during execution for performance:
-
-```yaml
-apis:
-  - ref: api-1
-    name: !file ./common.yaml#api.name        # Loaded and cached
-    description: !file ./common.yaml#api.desc # Uses cache
-  - ref: api-2
-    team: !file ./common.yaml#team.name       # Uses cache
-```
-
-## External resources
-
-The external resources feature allows you to reference {{site.konnect_short_name}} resources
-managed outside of kongctl. Some {{site.konnect_short_name}} resources reference others, so this
-can be useful for cross-team references, or references to resources created by different management techniques or 
-technologies.
-
-The following are key characteristics of external resources:
-* **Cannot declare kongctl metadata**: External resources don't support `kongctl.namespace` or `kongctl.protected`
-* **Not included in sync planning**: External namespaces don't affect deletion calculations
-* **Used for references**: Child resources can reference external parents
-
-### Basic syntax
-
-The resource requires a `ref` field, which is how it is further referenced by dependent resources. 
-The resource is denoted as external by marking it with an `_external` key. Below the `_external` key,
-you define a _selector_ which will query the organization for resources matching given fields.
-
-```yaml
+# External portal definition - this tells kongctl that this portal
+# is managed externally (by the platform team) but we need to reference it
 portals:
   - ref: shared-developer-portal
     _external:
@@ -509,119 +440,531 @@ portals:
           name: "Shared Developer Portal"
 ```
 
-### API Publication and shared portal example
+Because kongctl doesn't own those resources:
+- External resources **cannot** declare kongctl metadata. Supplying `kongctl.namespace` or `kongctl.protected`
+  on an external resource results in a parsing error. File-level defaults are ignored for externals.
+- External references do **not** add their namespaces to sync planning. Only namespaces from managed parent
+  resources are considered when sync mode calculates deletes.
+- Child resources (portal pages, customizations, etc.) are still planned by resolving the external parent's {{site.konnect_short_name}} ID.
+  Ensure the owning team labels the parent (for example via `kongctl adopt`) so the ID can be resolved, but you do not
+  need to (and cannot) assign a namespace to the external definition itself.
 
-The following example shows how you can use external resources to manage an API that is published to a Dev Portal that is owned by the platform team:
+## Resources managed by decK
+
+[decK](/deck/) integration is configured on control planes via the `_deck` pseudo-resource. kongctl runs decK once per
+control plane that declares `_deck`, then resolves external gateway services by selector name. `_external.requires.deck`
+isn't supported.
+
 ```yaml
-# External portal managed by platform team
-portals:
-  - ref: platform-portal
-    _external:
-      selector:
-        matchLabels:
-          team: platform
+control_planes:
+  - ref: prod-cp
+    name: "prod-cp"
+    _deck:
+      files:
+        - "kong.yaml"
+      flags:
+        - "--select-tag=kongctl"
 
-# Your API published to the external portal
-api_publications:
-  - ref: my-api-pub
-    api: my-api
-    portal_id: !ref platform-portal#id 
+    gateway_services:
+      - ref: billing-gw
+        _external:
+          selector:
+            matchFields:
+              name: "billing-service"
 ```
+
+Important notes for decK integration:
+- `_deck` is allowed only on control planes and only one `_deck` config is allowed per control plane.
+- `_deck.files` must include at least one state file.
+- `_deck.flags` can include additional decK flags (but not {{site.konnect_short_name}} auth or output flags).
+- `_external.selector.matchFields.name` is required for external gateway services and must be the only selector field.
+- kongctl runs exactly one `deck gateway apply` or `deck gateway sync` per control plane that declares `_deck`.
+- decK state files should include `_info.select_tags` and matching `tags` on entities so `sync` doesn't delete
+  resources owned by other decK files. kongctl doesn't inject select tags for you.
+- Relative decK file paths are resolved relative to the declarative config file and must remain within the
+  `--base-dir` boundary (default: the config file directory).
+- Plan files store decK base directories relative to the plan file location. When emitting a plan to stdout,
+  the base directory is made relative to the current working directory (use `--output-file` for portable plans).
+  Applying a plan resolves them from the plan file directory (or the current working directory when using `--plan -`).
+- `kongctl plan`/`diff` runs `deck gateway diff` to decide whether an external tool change is needed.
+  `kongctl apply` runs `deck gateway apply` and `kongctl sync` runs `deck gateway sync`.
+  For apply mode, deletes reported by decK diff are ignored.
+- If the control plane is being created in the same plan (or the ID isn't available), kongctl skips decK diff and
+  includes the external tool step.
+- For gateway steps, kongctl injects {{site.konnect_short_name}} auth flags and output flags (`--json-output --no-color`);
+  do not supply `--konnect-token`, `--konnect-control-plane-name`, `--konnect-addr`, or output flags yourself.
+- Plans represent decK resolution targets explicitly via `post_resolution_targets` on the `_deck` change entry,
+  including control plane identifiers and the gateway service selector.
+
+For more information, see [kongctl and decK](/kongctl/kongctl-and-deck/).
+
+## YAML tags
+
+YAML tags are like preprocessors for YAML file data. They allow you to
+load content from external files, reference across resources, load values
+from environment variables, and extract specific values from structured
+data. Over time more tags may be added to support various functions and
+use cases.
+
+### Loading file content to YAML fields
+
+Load the entire content of a file as a string:
+
+```yaml
+apis:
+  - ref: users-api
+    name: "Users API"
+    description: !file ./docs/api-description.md
+```
+All file paths are resolved relative to the directory containing the
+configuration file:
+
+```
+project/
+├── config.yaml          # Main config file
+├── specs/
+│   ├── users-api.yaml
+│   └── products-api.yaml
+└── docs/
+    └── descriptions.txt
+```
+
+In `config.yaml`:
+
+```yaml
+apis:
+  - ref: users-api
+    name: !file ./specs/users-api.yaml#info.title
+    description: !file ./docs/descriptions.txt
+```
+
+Supported file types: Any text file (`.txt`, `.md`, `.yaml`, `.json`, etc.)
+
+#### Security features
+
+**Path Traversal Prevention**: Absolute paths are blocked. Relative paths may include
+`..`, but the resolved path must stay within the base directory boundary. By default,
+the boundary is the root of each `-f` source (file: its parent dir, dir: the directory itself).
+For stdin, the boundary defaults to the current working directory. Set the base directory with
+`--base-dir` or `konnect.declarative.base-dir` (`KONGCTL_<PROFILE>_KONNECT_DECLARATIVE_BASE_DIR`,
+for example `KONGCTL_DEFAULT_KONNECT_DECLARATIVE_BASE_DIR`).
+
+```yaml
+# These will fail with security errors
+description: !file /etc/passwd
+
+# This will fail if it resolves outside the base directory
+config: !file ../../../sensitive/file.yaml
+
+# These are allowed (if they stay within the base directory)
+description: !file ../docs/description.txt
+config: !file ./config/settings.yaml
+```
+
+**File Size Limits**: Files are limited to 10MB.
+
+#### Performance features
+
+**File Caching**: Files are cached during a single execution to improve
+performance:
+
+```yaml
+apis:
+  - ref: api-1
+    name: !file ./common.yaml#api.name        # File loaded and cached
+    description: !file ./common.yaml#api.desc # Uses cached version
+  - ref: api-2
+    team: !file ./common.yaml#team.name       # Uses cached version
+```
+
+#### Value extraction
+
+You can extract specific values from structured data loaded from the `file` tag
+with this hash (`#`) notation:
+
+```yaml
+apis:
+  - ref: users-api
+    name: !file ./specs/openapi.yaml#info.title # loads info.title field from the openapi.yaml file
+    description: !file ./specs/openapi.yaml#info.description
+    version: !file ./specs/openapi.yaml#info.version
+
+    versions:
+      - ref: v1
+        spec: !file ./specs/openapi.yaml
+```
+
+Alternatively, values can be extracted using this map format:
+
+```yaml
+apis:
+  - ref: products-api
+    name: !file
+      path: ./specs/products.yaml
+      extract: info.title
+    labels:
+      contact: !file
+        path: ./specs/products.yaml
+        extract: info.contact.email
+```
+
+### Loading values from environment variables
+
+Use `!env` to load a value from an environment variable into a string
+field:
+
+```yaml
+portals:
+  - ref: env-portal
+    name: env-portal
+    description: !env PORTAL_DESCRIPTION
+```
+
+Scalar syntax supports extraction with `#`:
+
+```yaml
+api_documents:
+  - ref: env-doc
+    api_id: petstore-api
+    title: !env DOC_METADATA#title
+    content: !env DOC_METADATA#content
+    slug: getting-started
+```
+
+Map syntax is also supported:
+
+```yaml
+api_documents:
+  - ref: env-doc
+    api_id: petstore-api
+    title: !env
+      var: DOC_METADATA
+      extract: title
+    content: !env
+      var: DOC_METADATA
+      extract: content
+    slug: getting-started
+```
+
+`!env` extraction parses the environment variable as YAML or JSON before
+reading the requested field path.
+
+A runnable example is available in
+[docs/examples/declarative/env/](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/env/).
+
+#### !env behavior
+
+- `!env` is supported on string-typed fields in this release.
+- Unset environment variables are treated as errors.
+- Empty-but-set environment variables are allowed.
+- During planning, kongctl resolves the current environment value to
+  calculate changes.
+- Saved plan files preserve the deferred `!env` reference instead of the
+  resolved plaintext value.
+- During execution, kongctl performs a fresh environment lookup for each
+  deferred `!env` value instead of reusing the value observed during
+  planning.
+- When you run `apply`, `sync`, or `delete` directly from configuration
+  files, kongctl still plans first and then performs that second lookup
+  during execution in the same command invocation.
+- In direct `apply`, `sync`, and `delete` runs, both lookups happen within
+  the same kongctl process, so they will usually observe the same process
+  environment.
+- When execution uses a saved plan with `--plan`, planning and execution
+  happen in separate command invocations, so environment values may differ
+  between them and the executed value may differ from what was observed
+  while planning.
+- Human-readable plan and diff output redact `!env` values.
+
+## Write-only secret fields
+
+Some {{site.konnect_short_name}} APIs accept secret values on create or update but do not return
+them from `get` or `list` responses. Common examples include:
+
+- Portal identity provider `config.client_secret`
+- DCR provider secrets such as `dcr_token`, `api_key`, and
+  `initial_client_secret`
+- Event Gateway schema registry authentication `password`
+
+For these fields, kongctl prefers idempotent planning over perpetual
+updates. When the API doesn't expose the current value, the planner skips
+that field during diff calculation instead of assuming drift on every run.
+
+This means:
+
+- The initial create or update still sends the configured secret value.
+- Re-applying the same declarative configuration will usually be a no-op
+  instead of planning an update forever.
+- Changing only a write-only secret may not be detectable from live state, so
+  `plan` may show no changes even though the configured secret value differs
+  from what is currently stored in {{site.konnect_short_name}}.
+
+When you need to rotate a write-only secret declaratively, make the change
+alongside another observable field, or recreate the resource if the API does
+not provide a safe observable signal for that update.
+
+## Commands reference
+
+kongctl includes many commands for declarative configuration management.
+Start with the following commands for most use cases:
+
+{% table %}
+columns:
+  - title: Command
+    key: command
+  - title: Description
+    key: description
+  - title: When to use
+    key: when
+rows:
+  - command: |
+      [`adopt`](/kongctl/adopt/)
+    description: |
+      Adds a namespace label to an existing {{site.konnect_short_name}} resource that was created outside of kongctl, bringing it under declarative management without modifying any other fields.
+    when: |
+      Use before your first `dump` or `plan`, when you need to bring manually-created or UI-created resources into your configuration set.
+  - command: |
+      [`dump`](/kongctl/dump/)
+    description: |
+      Exports the current state of {{site.konnect_short_name}} resources to a declarative YAML configuration file.
+    when: |
+      Use when bootstrapping a new declarative configuration from existing live resources, or when generating a starting point for a new configuration file.
+  - command: |
+      [`plan`](/kongctl/plan/)
+    description: |
+      Compares your local configuration files against live {{site.konnect_short_name}} state and generates a JSON plan artifact describing the changes to be made.
+    when: |
+      Use before applying changes, especially in CI/CD pipelines, to produce a reviewable and reusable plan artifact.
+  - command: |
+      [`diff`](/kongctl/diff/)
+    description: |
+      Displays a human-readable preview of the changes between the current live state and the desired state in your configuration files, or from a saved plan artifact.
+    when: |
+      Use during development or code review to inspect what `plan` or `sync` would change before committing changes.
+  - command: |
+      [`apply`](/kongctl/apply/)
+    description: |
+      Creates and updates resources to match the desired state. Doesn't delete any resources.
+    when: |
+      Use when you want to incrementally apply configuration without risk of deleting anything. 
+      Use `sync` instead when you want to apply deletes as well.
+  - command: |
+      [`sync`](/kongctl/sync/)
+    description: |
+      Applies the full desired state from your configuration files. Creates, updates, and deletes resources.
+    when: |
+      Use when you want full reconciliation between your configuration and live state, including deletions. 
+      Use `apply` instead if you only want creates and updates.
+  - command: |
+      [`delete`](/kongctl/delete/)
+    description: |
+      Plans and executes deletion of all resources defined in the input configuration files.
+    when: |
+      Use for tearing down a known set of resources, such as resetting a test environment. 
+      Not a typical step in the day-to-day declarative workflow.
+{% endtable %}
+
+See the CLI help at `kongctl --help` for all possible commands, or check out the [kongctl CLI reference](/index/kongctl/#cli-reference) documentation.
+
+## CI/CD integration
+
+Key principles for CI/CD integration:
+
+1. **Plan on PR**: Generate and review plans in pull requests
+2. **Apply on Merge**: Apply reviewed plans when merged to target branch
+3. **Environment Separation**: Different configs for dev/staging/prod
+4. **Approval Gates**: Require human approval for production
 
 ## Best practices
 
-Use namespaces for isolation. Separate resources by team or environment:
+### Multi-team setup
+
+Each team manages their own namespace:
 
 ```yaml
+# team-alpha/config.yaml
 _defaults:
   kongctl:
     namespace: team-alpha
 
 apis:
-  - ref: team-api
-    name: "Team API"
+  - ref: frontend-api
+    name: "Frontend API"
     # Automatically in team-alpha namespace
 ```
 
-Protect critical resources:
+### Environment management
+
+Use configuration profiles for different environments:
+
+```shell
+# Development environment
+kongctl apply -f config.yaml --profile dev
+
+# Production environment
+kongctl apply -f config.yaml --profile prod
+```
+
+### Security best practices
+
+1. **Protect production resources**:
+   ```yaml
+   apis:
+     - ref: payment-api
+       kongctl:
+         namespace: production
+         protected: true
+   ```
+
+2. **Use namespaces for isolation**:
+   - One namespace per team
+   - Separate namespaces for environments
+   - Clear namespace ownership documentation
+
+3. **Version control everything**:
+   - Configuration files
+   - OpenAPI specifications
+   - Documentation
+
+4. **Review plans before applying**:
+   - Use `plan` in production
+   - Save plans for audit trail
+   - Implement approval workflows
+
+### Plan artifact workflows
+
+#### Basic plan review workflow
+
+Developer creates plan:
+
+```shell
+kongctl plan -f config.yaml --output-file proposed-changes.json
+```
+
+Review changes visually:
+
+```shell
+kongctl diff --plan proposed-changes.json
+```
+
+Share plan for review (commit to git, attach to PR, etc.):
+
+```shell
+git add proposed-changes.json
+git commit -m "Plan for adding new API endpoints"
+```
+
+After approval, apply the plan:
+
+```shell
+kongctl apply --plan proposed-changes.json
+```
+
+#### Production deployment with approval
+
+```shell
+# CI/CD Pipeline Stage 1: Plan Generation
+kongctl plan -f production-config.yaml \
+  --output-file plan-$(date +%Y%m%d-%H%M%S).json
+
+# Stage 2: Manual approval gate
+# - Plan artifact is stored as build artifact
+# - Team reviews plan details
+# - Approval triggers next stage
+
+# Stage 3: Plan Execution
+kongctl sync --plan plan-20240115-142530.json --auto-approve
+```
+
+#### Emergency rollback using previous plan
+
+List recent plans (assuming you store them):
+
+```shell
+ls -la plans/
+```
+
+Review what the previous state included:
+
+```shell
+kongctl diff --plan plans/last-known-good.json
+```
+
+Revert to previous state:
+
+```shell
+kongctl sync --plan plans/last-known-good.json --auto-approve
+```
+
+### Common mistakes to avoid
+
+**Setting kongctl on child resources**:
 
 ```yaml
+# WRONG
 apis:
-  - ref: production-api
-    name: "Production API"
+  - ref: my-api
     kongctl:
-      namespace: production
-      protected: true  # Prevents accidental deletion
+      namespace: team-a
+    versions:
+      - ref: v1
+        kongctl:  # ERROR - not supported on child resources
+          protected: true
 ```
 
-Review plans before applying. Use the two-phase workflow for production:
-
-```bash
-# Generate plan
-kongctl plan -f config.yaml --output-file plan.json
-
-# Review in pull request or approval process
-kongctl diff --plan plan.json
-
-# Apply after approval
-kongctl apply --plan plan.json
-```
-
-## Examples
-
-For complete working examples, see the [kongctl examples directory](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative).
-
-## Troubleshooting
-
-### Authentication failures
-
-If authentication fails, do the following:
-
-If authentication fails, do the following:
-
-1. Verify authentication:
-    ```sh
-    kongctl get me
-    ```
-1. Re-authenticate if needed:
-    ```sh
-    kongctl login
-    ```
-
-### Plan generation failures
-
-If plan generation fails, do the following:
-* Validate YAML syntax
-* Check that file paths are correct and in the base directory
-* Verify network connectivity to {{site.konnect_short_name}}
-
-### Apply failures
-
-If the configuration fails while you are applying it, do the following:
-* Review the plan for conflicts
-* Check for protected resources blocking deletion
-* Verify all referenced resources exist
-
-### File loading errors
-
-If you are loading a file and get the `Error: failed to process file tag: file not found`, do the following:
-* Verify that the file path is correct and relative to the config file.
-* Check that the file exists and is in the base directory.
-* Ensure the file size is under 10MB.
-
-### Field validation errors
-
-kongctl uses strict validation:
+**Correct approach**:
 
 ```yaml
+# RIGHT
+apis:
+  - ref: my-api
+    kongctl:
+      namespace: team-a
+      protected: true
+    versions:
+      - ref: v1
+```
+
+**Using name as identifier**:
+
+```yaml
+# WRONG - using display name
+api_publications:
+  - ref: pub1
+    api: "Users API"
+```
+
+**Use ref for references**:
+
+```yaml
+# RIGHT - using ref
+api_publications:
+  - ref: pub1
+    api: users-api
+```
+
+### Field validation
+
+kongctl uses strict YAML validation to catch configuration errors early:
+
+```yaml
+# This will cause an error
 portals:
   - ref: my-portal
-    labels:
+    name: "My Portal"
+    lables:  # ERROR: Unknown field 'lables'. Did you mean 'labels'?
       team: platform
 ```
 
-Enable debug logging:
+Common field name errors:
 
-```bash
-kongctl apply -f config.yaml --log-level debug
-```
+- `lables` → `labels`
+- `descriptin` → `description`
+- `displayname` → `display_name`
+- `strategytype` → `strategy_type`
+
+## Troubleshooting and debugging
+
+kongctl provides a global `--log-level` flag that you can pass with any command.
+
+See the [troubleshooting reference](/kongctl/troubleshooting/) for help resolving common issues, and see the [debugging reference](/kongctl/troubleshooting/#debugging) for more information on the debugging workflow.

@@ -7,7 +7,7 @@ layout: reference
 
 works_on:
   - konnect
-beta: true
+
 tools:
   - kongctl
 
@@ -54,6 +54,9 @@ rows:
   - command: |
       [kongctl list portal](/kongctl/list/portal/)
     description: "List Portal configurations."
+  - command: |
+      [kongctl list profile](/kongctl/list/profile/)
+    description: "List kongctl profiles."
   - command: |
       [kongctl list themes](/kongctl/list/themes/)
     description: "List Portal themes."

@@ -4,7 +4,7 @@ description: "Use the get verb with the dcr-provider command to query {{site.kon
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect

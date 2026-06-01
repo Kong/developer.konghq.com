@@ -1,0 +1,58 @@
+{% assign skill = include.skill %}
+{% capture quick_install %}{% include skills/quick_install.md slug=skill.slug %}{% endcapture %}
+<div
+  class="card card__bordered min-h-[220px]"
+  data-card="skill"
+  data-title="{{ skill.title | downcase }}"
+  data-description="{{ skill.description | downcase | truncate: 200 }}"
+  data-tags="{{ skill.tags | join: ' ' | downcase }}"
+  data-plugin-slug="{{ skill.plugin_slug }}"
+  data-plugin="{{ skill.plugin_name | downcase }}"
+  data-products="{{ skill.products | join: ' ' | downcase }}"
+  data-product-values="{% for product in skill.products %}{{ product | slugify }}{% unless forloop.last %}|{% endunless %}{% endfor %}"
+  data-category="{{ skill.skill_category | downcase }}"
+  data-category-value="{{ skill.skill_category | slugify }}"
+>
+  <a href="{{ skill.url }}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
+    <div class="flex items-center justify-between gap-4">
+      <h3 class="font-mono">/{{ skill.title }}</h3>
+      {% if skill.version %}<span class="badge w-fit text-xs">{{ skill.version }}</span>{% endif %}
+    </div>
+
+    <div class="flex flex-col gap-3 flex-grow">
+      {% if skill.plugin_name %}
+      <div class="flex flex-wrap gap-2">
+        {% include badge.html text=skill.plugin_name css_class="text-xs" %}
+      </div>
+      {% endif %}
+
+      <p class="text-sm line-clamp-3">{{ skill.description | markdownify | markdown}}</p>
+    </div>
+
+    {% if skill.scripts or skill.references or skill.assets %}
+    <div class="flex gap-3 flex-grow text-brand items-center">
+      {% if skill.scripts %}
+        <span class="inline-flex" data-tooltip="Contains scripts">
+          {% include_svg '/assets/icons/skills/scripts.svg' width="16" height="16" %}
+        </span>
+      {% endif %}
+
+      {% if skill.references %}
+        <span class="inline-flex" data-tooltip="Contains references">
+          {% include_svg '/assets/icons/skills/references.svg' width="16" height="16" %}
+        </span>
+      {% endif %}
+
+      {% if skill.assets %}
+        <span class="inline-flex" data-tooltip="Contains assets">
+          {% include_svg '/assets/icons/skills/assets.svg' width="16" height="16" %}
+        </span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="flex flex-col border-t border-primary/5 pt-4">
+    {{ quick_install | liquify | markdownify }}
+    </div>
+  </a>
+</div>

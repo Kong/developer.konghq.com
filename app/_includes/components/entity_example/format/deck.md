@@ -1,7 +1,7 @@
 {% if include.render_context %}
 {% case include.presenter.entity_type %}
-{% when 'consumer' %}
-The following creates a new Consumer called **{{ include.presenter.data['username'] }}**:
+{% when 'consumer' %}{% assign name = include.presenter.data['name'] | default: include.presenter.data['username'] %}
+The following creates a new Consumer called **{{ name }}**:
 {% when 'consumer_group' %}
 The following creates a new Consumer Group called **{{ include.presenter.data['name'] }}**:
 {% when 'route' %}

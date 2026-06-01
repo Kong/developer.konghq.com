@@ -148,7 +148,7 @@ AI Proxy Advanced supports several load balancing algorithms for distributing re
 
 The [AI load balancer](/ai-gateway/load-balancing/) supports configurable retries, timeouts, and failover to different models when a target is unavailable.
 
-{% new_in 3.10 %} Fallback works across targets with any supported format. You can mix providers freely, for example OpenAI and Mistral. Earlier versions require compatible formats between fallback targets. For configuration details, see [Retry and fallback configuration](/ai-gateway/load-balancing/#retry-and-fallback).
+{% new_in 3.10 %} Fallback works across targets with any supported format. You can mix providers freely, for example OpenAI and {{ site.mistral }}. Earlier versions require compatible formats between fallback targets. For configuration details, see [Retry and fallback configuration](/ai-gateway/load-balancing/#retry-and-fallback).
 
 {:.success}
 > Client errors don't trigger failover.

@@ -12,6 +12,7 @@ module.exports = {
     "app/_assets/entrypoints/**",
     "app/gateway/**",
     "app/cookbooks/**/*.html",
+    "app/skills/**/*.html",
   ],
   darkMode: "selector",
   safelist: [
@@ -44,6 +45,7 @@ module.exports = {
     extend: {
       screens: {
         xs: "480px",
+        "3xl": "1920px",
       },
       colors: {
         brand: "rgb(var(--color-brand), <alpha-value>)",

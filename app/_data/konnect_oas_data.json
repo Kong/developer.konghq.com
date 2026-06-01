@@ -1,4 +1,25 @@
 [
+    {
+    "id": "38df0a35-37de-48fa-ac9d-60595d26eddf",
+    "title": "New AI Gateway",
+    "latestVersion": {
+      "name": "v2",
+      "id": "987bb874-f9f9-471e-9ae3-51897cbd2ccd"
+    },
+    "description": "New AI Gateway API.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "987bb874-f9f9-471e-9ae3-51897cbd2ccd",
+        "created_at": "2024-02-21T17:28:17.757Z",
+        "updated_at": "2024-10-17T19:13:18.223Z",
+        "name": "v2",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
   {
     "id": "ccb264be-1963-49a4-b6e8-bc7c98a6e4c2",
     "title": "Application Auth Strategies",
