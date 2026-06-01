@@ -77,7 +77,10 @@ tags:
 ```
 
 This causes a new warning to appear:
-![Missing tag description warning](/assets/images/insomnia/custom-linting-warning.png)
+
+```
+tag-description Tags must have a description.
+```
 
 ## Override the rules
 
