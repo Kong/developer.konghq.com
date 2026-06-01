@@ -7,5 +7,5 @@ The Gateway (GW) team requests changelog reviews in the `#docs` Slack channel. T
 1. The GW team posts a `kong-ee` PR in `#docs` requesting a changelog review.
 1. Make suggestions on the changelog in the `kong-ee` PR. Check for grammar issues and duplicate information.
 1. Once the release is published and announced in `#team-gateway`, run the [GitHub Action](https://github.com/Kong/developer.konghq.com/actions/workflows/generate-gateway-plugins-changelogs.yml) to open a docs PR.
-1. Once the release is published an announced in `#team-gateway`, double check that the image is up and tagged on Docker: https://hub.docker.com/r/kong/kong-gateway/tags
+1. Double check that the image is up and tagged on Docker: https://hub.docker.com/r/kong/kong-gateway/tags
 1. Merge the docs PR with the changelog updates.
