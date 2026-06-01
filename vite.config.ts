@@ -56,7 +56,7 @@ export default ({ command, mode }) => {
       svgLoader()
     ],
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         external: ['shiki/onig.wasm']
       }
     },

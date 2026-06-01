@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.3": [
+    {
+      "message": "Fixed a crash (HTTP 500) when `azure_use_managed_identity` is enabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Enabled at-rest keyring encryption for sensitive fields in AI Azure Content Safety plugin.",

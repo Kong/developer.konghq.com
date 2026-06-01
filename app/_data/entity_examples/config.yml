@@ -23,6 +23,29 @@ konnect_variables: &konnect_variables
     placeholder: 'KONNECT_TOKEN'
     description: 'Your Personal Access Token (PAT) associated with your Konnect account.'
 
+event_gateway_variables: &event_gateway_variables
+  event_gateway:
+    placeholder: 'eventGatewayName'
+    description: "The `name` of your Event Gateway."
+  backend_cluster:
+    placeholder: 'backendClusterName'
+    description: "The `name` of the Backend Cluster."
+  virtual_cluster:
+    placeholder: 'virtualClusterName'
+    description: "The `name` of the Virtual Cluster."
+  listener:
+    placeholder: 'listenerName'
+    description: "The `name` of the Listener."
+  schema_registry:
+    placeholder: 'schemaRegistryName'
+    description: "The `name` of the Schema Registry."
+  static_key:
+    placeholder: 'staticKeyName'
+    description: "The `name` of the Static Key."
+  tls_trust_bundle:
+    placeholder: 'tlsTrustBundleName'
+    description: "The `name` of the TLS Trust Bundle."
+
 formats:
   deck:
     label: 'decK'
@@ -169,6 +192,10 @@ formats:
 
   terraform:
     label: 'Terraform'
+
+  kongctl:
+    label: 'kongctl'
+    event_gateway_variables: *event_gateway_variables
 
   ui:
     label: 'UI'

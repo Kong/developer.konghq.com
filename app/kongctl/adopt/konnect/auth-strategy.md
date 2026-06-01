@@ -4,7 +4,7 @@ description: "Adopt {{site.konnect_short_name}} authentication strategies."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect

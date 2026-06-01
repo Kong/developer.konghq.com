@@ -4,7 +4,7 @@ description: "Explain shows the declarative schema for a supported resource type
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

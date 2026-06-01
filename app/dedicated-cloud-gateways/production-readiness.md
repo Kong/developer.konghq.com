@@ -240,7 +240,7 @@ content: |
 {% navtab "VPC peering" %}
 
 **Action:**
-* Verify that your [peering connection status](https://docs.cloud.google.com/vpc/docs/about-peering-connections?hl=en#connection-status) and [route table configuration](https://docs.cloud.google.com/vpc/docs/routes) are configured correctly in Google Virtual Private Cloud. Ensure routes are exported and imported correctly.
+* Verify that your [peering connection status](https://docs.cloud.google.com/vpc/docs/about-peering-connections?hl=en#connection-status) and [route table configuration](https://docs.cloud.google.com/vpc/docs/routes) are configured correctly in {{ site.google}} Virtual Private Cloud. Ensure routes are exported and imported correctly.
 * Verify if the connectivity is working as expected by sending a request to an internal upstream endpoint. Perform an end-to-end HTTP test.
 * Verify that your firewall rules are configured to allow necessary traffic between the peered networks.
 

@@ -60,6 +60,7 @@
 
 # Mesh redirects
 /mesh/meshidentity-spire/   /mesh/issue-identity-with-meshidentity-spire/
+/mesh/collect-metrics-with-opentelemetry/   /mesh/deploy-an-opentelemetry-collector/
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
@@ -246,6 +247,11 @@
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
 /dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/managed-cache/ 301
 
+# Kong Identity
+
+/kong-identity/ /identity/  301
+/plugins/oauth2-introspection/examples/konnect-identity/    /plugins/oauth2-introspection/examples/kong-identity/   301
+
 # Observability
 /advanced-analytics/*   /observability/:splat   301
 /advanced-analytics     /observability          301
@@ -255,6 +261,11 @@
 
 # Kong Konnect MCP server
 /mcp/kong-mcp/get-started/  /konnect-platform/konnect-mcp/installation/
-/mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/
+/mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/
+/konnect-platform/konnect-mcp/tools/    /konnect-platform/konnect-mcp/
 /mcp/autogenerate-mcp-tools/    /mcp/map-api-to-mcp-tools/
 /mcp/autogenerate-mcp-tools-for-weather-api/    /mcp/map-weather-api-to-mcp-tools/
+
+# Spec renames
+/api/konnect/api-builder/v3/ /api/konnect/api-catalog/v3/   301
+/api/konnect/api-builder/ /api/konnect/api-catalog/   301

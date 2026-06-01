@@ -4,7 +4,7 @@ description: "Scaffold emits a commented YAML starter configuration for a suppor
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

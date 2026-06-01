@@ -4,7 +4,7 @@ description: "Use the listener-policies command to list or retrieve listener pol
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

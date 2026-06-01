@@ -22,6 +22,13 @@ related_resources:
     url: /dedicated-cloud-gateways/multi-cloud/
   - text: "{{site.base_gateway}} WAF capabilities"
     url: /waf/
+faqs:
+  - q: Can I update a Dedicated Cloud Gateway network's configuration, like adding an availability zone, without rebuilding the data plane?
+    a: |
+      No. Availability zones are immutable after a network is created. To change the availability zones, you need to create a new network and redeploy your data plane on it.
+  - q: If I delete a Dedicated Cloud Gateway network, can I keep the same IP addresses on the new network?
+    a: |
+      No. When you delete a network, all resources deployed on it are also deleted, and we can't guarantee which IP addresses will be assigned to data planes on the replacement network. If your downstream firewall or transit gateway setup depends on specific IPs, plan for the IPs to change whenever a network is recreated.
 tags:
   - dedicated-cloud-gateways
 ---

@@ -8,6 +8,7 @@
 @layer base {
   :root {
     --removed-body-scroll-bar-size: 4px;
+    --ai-assistant-sidebar-width: 480px;
 
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
@@ -112,6 +113,12 @@
     --color-api-products-background: var(--color-semantic-orange-secondary);
     --color-metering-and-billing-brand: var(--color-semantic-orange-primary);
     --color-metering-and-billing-background: var(--color-semantic-orange-secondary);
+    --color-identity-brand: var(--color-semantic-green-primary);
+    --color-identity-background: var(--color-semantic-green-secondary);
+
+    /* Kapa */
+    --code-bg: rgb(var(--color-bg-secondary));
+    --mantine-color-body: rgb(var(--color-bg-secondary));
   }
 
   .dark {
@@ -377,8 +384,10 @@
       linear-gradient(227.59deg, rgb(0, 37, 18) 6.43%, rgb(100, 230, 180) 30.81%, rgb(204, 255, 0) 50%, rgb(100, 230, 180) 65.64%, rgb(0, 37, 18) 100%) border-box !important;
   }
 
-  /* Konami theme; dark text on badges */
-  .konami a.badge.bg-brand {
+  /* Konami theme; dark text on badges.
+     Attribute selector avoids Tailwind @apply expansion that generates invalid
+     `.badge*::-webkit-scrollbar-thumb` selectors rejected by Lightning CSS. */
+  .konami a.badge[class~="bg-brand"] {
     color: rgb(0, 15, 6) !important;
   }
   .button.button--secondary {
@@ -574,7 +583,7 @@
   }
 
   .tab-button__horizontal {
-    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0;
+    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0 gap-1;
 
     &.tab-button__horizontal--active {
       @apply tab-button--active border-b-2 pb-[10px] !important;
@@ -806,7 +815,7 @@
   }
 
   .dropdown-menu {
-    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2;
+    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2 z-10;
 
     ul {
       @apply list-none ml-0;
@@ -848,6 +857,28 @@
       @apply border-semantic-green-primary;
     }
   }
+
+  #skills-grid {
+    .custom-code-block, .highlight {
+      pre {
+        @apply overflow-hidden text-ellipsis;
+      }
+    }
+  }
+
+  .skill #description ~ .content {
+    @apply bg-code-block rounded-md p-4;
+  }
+
+
+  .skill .heading-section h2 {
+    @apply border-b border-primary/5 pb-2;
+  }
+
+  .skill table {
+    @apply block overflow-x-auto;
+  }
+
 
  .custom-code-block.collapsible {
     [data-code-snippet] {
@@ -940,6 +971,18 @@
   @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 gap-1 bg-secondary;
 }
 
+body > #wrapper {
+  @apply transition-[padding] duration-200 ease-out;
+}
+
+body.ai-assistant-open > #wrapper {
+  @apply xl:pr-[var(--ai-assistant-sidebar-width)];
+}
+
+.ai-assistant-aware-px {
+  @apply 2xl:group-[:not(.ai-assistant-open)]/body-tag:px-[156px];
+}
+
 .ais-InstantSearch {
   @apply flex flex-col md:gap-8;
 }
@@ -1011,7 +1054,6 @@
 .card:target {
   @apply border-brand-saturated border-2;
 }
-
 
 /* Spec Renderer */
 .call-button {

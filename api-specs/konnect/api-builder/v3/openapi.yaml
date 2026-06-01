@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Catalog
-  version: 3.1.2
-  description: 'The management API for creating, managing APIs in the Konnect API Catalog, and publishing APIs in Dev Portals.'
+  version: 3.2.0
+  description: 'Konnect API Catalog is the API for creating and managing APIs in the Konnect Catalog and publishing APIs to Developer Portals. Use this API to create API entities, attach versioned specs, manage relationships with catalog services, and publish APIs to Developer Portals. This supersedes API Products v2 for new integrations.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@e3d5dfe7bdaea8d4805488b5519e30efbadcdaea
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3d5dfe7bdaea8d4805488b5519e30efbadcdaea'
+  x-oas-source: kong/platform-api@eb1c36538ed71b892eb93a7ca7f00a791fff84f8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/eb1c36538ed71b892eb93a7ca7f00a791fff84f8'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1600,6 +1600,28 @@ paths:
           $ref: '#/components/responses/ApiPackageImageNotFound'
       tags:
         - API Package Image
+  '/apis/{apiId}/registrations':
+    parameters:
+      - $ref: '#/components/parameters/ApiId'
+    get:
+      operationId: list-api-registrations
+      summary: List API Registrations
+      description: Returns a paginated list of registrations for an API.
+      parameters:
+        - $ref: '#/components/parameters/ApiRegistrationsFilters'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiRegistrationsList'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API
 components:
   parameters:
     ApiAttributeFilters:
@@ -1749,6 +1771,29 @@ components:
       in: query
       schema:
         $ref: '#/components/schemas/SortQuery'
+    ApiRegistrationsFilters:
+      name: filter
+      description: Filters API registrations in the response.
+      required: false
+      in: query
+      schema:
+        type: object
+        properties:
+          status:
+            $ref: '#/components/schemas/StringFieldFilter'
+          portal_id:
+            $ref: '#/components/schemas/UuidFieldFilter'
+          portal_name:
+            $ref: '#/components/schemas/StringFieldFilter'
+          application_id:
+            $ref: '#/components/schemas/UuidFieldFilter'
+          application_name:
+            $ref: '#/components/schemas/StringFieldFilter'
+          application_owner_type:
+            $ref: '#/components/schemas/StringFieldFilter'
+          application_owner_id:
+            $ref: '#/components/schemas/UuidFieldFilter'
+      style: deepObject
     ApiSort:
       name: sort
       description: |
@@ -3125,6 +3170,68 @@ components:
         - created_at
         - updated_at
       title: Image Status
+    ApiRegistrationsListResponse:
+      description: The response for a list of API registrations.
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiRegistration'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ApiRegistrationsListResponse
+    ApiRegistration:
+      description: An API registration.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        status:
+          type: string
+          enum:
+            - approved
+            - pending
+            - rejected
+            - revoked
+        portal:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+          required:
+            - id
+            - name
+        application:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+            description:
+              type: string
+            owner:
+              $ref: '#/components/schemas/ApplicationOwner'
+          required:
+            - id
+            - name
+            - owner
+      additionalProperties: false
+      required:
+        - id
+        - status
+        - portal
+        - application
+      title: ApiRegistration
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
@@ -3736,6 +3843,27 @@ components:
       format: uuid
       example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
       readOnly: true
+    ApplicationOwnerType:
+      description: The type of the owner of the application. Can be `developer` (individual developer) or `team`.
+      type: string
+      enum:
+        - developer
+        - team
+    ApplicationOwnerId:
+      description: 'The ID of the owner of the application. When type is `developer`, this is the developer ID. When type is `team`, this is the team ID.'
+      type: string
+      format: uuid
+    ApplicationOwner:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ApplicationOwnerType'
+        id:
+          $ref: '#/components/schemas/ApplicationOwnerId'
+      additionalProperties: false
+      required:
+        - type
+        - id
   examples:
     ApiExample:
       value:
@@ -4295,6 +4423,28 @@ components:
             number: 1
             size: 3
             total: 3
+    ApiRegistrationsListResponseExample:
+      summary: Example response for a list of API registrations
+      description: |
+        Example response for a list of API registrations.
+      value:
+        data:
+          - id: c200cc33-2d33-4754-b086-a98e0fcd36fb
+            status: approved
+            portal:
+              id: 56f637b7-cd95-478b-9b02-d770618f641c
+              name: Great Portal
+            application:
+              id: e15e2460-ba40-431d-9df0-4957fcff7cda
+              name: App 1
+              owner:
+                id: 6cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+                type: developer
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 2
     UnsupportedMediaTypeExample:
       value:
         status: 415
@@ -5675,6 +5825,15 @@ components:
           examples:
             ApiPackageImageConflictExample:
               $ref: '#/components/examples/ApiPackageImageConflictExample'
+    ApiRegistrationsList:
+      description: Paginated list of registrations for an API.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiRegistrationsListResponse'
+          examples:
+            ApiRegistrationsListResponseExample:
+              $ref: '#/components/examples/ApiRegistrationsListResponseExample'
     UnsupportedMediaType:
       description: Unsupported Media Type
       content:
