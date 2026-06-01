@@ -1,6 +1,6 @@
-## Create an auth server in Kong Identity
+## Create an auth server in {{site.identity}}
 
-Before you can configure the authentication plugin, you must first create an auth server in Kong Identity. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+Before you can configure the authentication plugin, you must first create an auth server in {{site.identity}}. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
 
 Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 
@@ -76,7 +76,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You can also configure dynamic custom claims with [dynamic claim templating](/kong-identity/#dynamic-claim-templates) to generate claims during runtime.
+You can also configure dynamic custom claims with [dynamic claim templating](/identity/#dynamic-claim-templates) to generate claims during runtime.
 
 ## Create a client in the auth server
 

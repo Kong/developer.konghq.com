@@ -20,8 +20,10 @@ Available Commands:
   gateway       Manage Konnect Kong Gateway resources
   me            Get current user information
   organization  Get current organization information
+  pat           List or get Konnect personal access tokens
   portal        List or get Konnect portals
   regions       List available Konnect regions
+  spat          List or get Konnect system account access tokens
 
 
 Flags:

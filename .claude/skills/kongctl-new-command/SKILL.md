@@ -220,7 +220,6 @@ For a new top-level command, add a section under "CLI References" in alphabetica
         items:
             - path: /kongctl/<verb>/
             - path: /kongctl/<verb>/*/**    # add if verb has subcommand groups
-            - path: /kongctl/<verb>/*/**/** # add if verb has 3+ level nesting
 ```
 
 For example, `explain` (no subcommands) becomes:
