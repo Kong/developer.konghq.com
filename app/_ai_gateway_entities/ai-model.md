@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-model/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -27,13 +28,13 @@ related_resources:
   - text: Load balancing with AI Proxy Advanced
     url: /ai-gateway/load-balancing/
   - text: Provider entity
-    url: /ai-gateway/entities/provider/
+    url: /ai-gateway/entities/ai-provider/
   - text: Policy entity
-    url: /ai-gateway/entities/policy/
+    url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
   - text: Consumer Group entity
-    url: /ai-gateway/entities/consumer-group/
+    url: /ai-gateway/entities/ai-consumer-group/
 faqs:
   - q: What's the difference between a Model entity and a `model` field inside a plugin configuration?
     a: |
@@ -65,7 +66,7 @@ faqs:
     a: |
       Yes, by attaching one Policy with that configuration to each Model.
       Policies are not shared between entities, each instance is independent.
-      See [Policy entity](/ai-gateway/entities/policy/).
+      See [Policy entity](/ai-gateway/entities/ai-policy/).
 
   - q: How do I limit which consumers can reach a Model?
     a: |
@@ -74,7 +75,7 @@ faqs:
 
   - q: Does the Model entity store provider credentials?
     a: |
-      No. Provider credentials live on the [Provider entity](/ai-gateway/entities/provider/) and are materialized into the underlying primitives at Model creation time.
+      No. Provider credentials live on the [Provider entity](/ai-gateway/entities/ai-provider/) and are materialized into the underlying primitives at Model creation time.
       Updating a Provider propagates the credential change to all Models that reference it.
 
   - q: Can a client override the model name from the request body?
@@ -132,7 +133,7 @@ For a concrete example, see [Set up a Model](#set-up-a-model).
 When you configure a Model, you define what capabilities it exposes, which upstream providers it routes to, and how requests are load-balanced and logged. At request time, the Model mediates traffic between clients and upstream provider APIs:
 
 1. Translates between the request and response format chosen for the Model and the upstream provider's native format.
-1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [Provider](/ai-gateway/entities/provider/), unless the target is a self-hosted model.
+1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [Provider](/ai-gateway/entities/ai-provider/), unless the target is a self-hosted model.
 1. Authenticates to the upstream provider using credentials stored on the Provider entity.
 1. Decorates the upstream request with per-target configuration (such as temperature or token-limit overrides) declared on `target_models[].config`.
 1. Records usage statistics (tokens, cost, latency) for attached log Policies, and optionally the full request and response when payload logging is enabled.
@@ -357,7 +358,7 @@ Not every plugin type is valid as a Model Policy.
 
 Policies created through the nested on-prem endpoint (`POST /ai/models/{modelId}/policies`) are deleted when the Model is deleted. Policies created independently (for example, at `/v1/ai-gateways/{aiGatewayId}/policies` or `/ai/policies`) are not deleted when the Model is deleted; only the Model's reference is removed.
 
-For further information, see the [Policy entity](/ai-gateway/entities/policy/) reference.
+For further information, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ### Plugin priority and Policy execution order
 

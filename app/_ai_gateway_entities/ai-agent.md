@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-agent/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -25,9 +26,9 @@ related_resources:
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
   - text: Policy entity
-    url: /ai-gateway/entities/policy/
+    url: /ai-gateway/entities/ai-policy/
   - text: Consumer Group entity
-    url: /ai-gateway/entities/consumer-group/
+    url: /ai-gateway/entities/ai-consumer-group/
   - text: A2A protocol specification
     url: https://a2aproject.github.io/A2A/
 faqs:
@@ -66,7 +67,7 @@ faqs:
 
   - q: Can the same plugin run on an Agent that I'd attach to a route or service?
     a: |
-      Plugin configuration that applies to the Agent goes through the [Policy entity](/ai-gateway/entities/policy/).
+      Plugin configuration that applies to the Agent goes through the [Policy entity](/ai-gateway/entities/ai-policy/).
       Attach Policies to the Agent through its `policies` field.
 
   - q: How do I configure agents in on-prem deployments?
@@ -278,7 +279,7 @@ For per-request authentication and identity, attach an authentication Policy to 
 
 Policies are how plugin configurations apply to an Agent. Attach them through the Agent's `policies` field. Each entry is a string that references a Policy by name or ID. Multiple Policies can attach to one Agent; each runs as an independent plugin instance.
 
-For details, see the [Policy entity](/ai-gateway/entities/policy/) reference.
+For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Set up an Agent
 

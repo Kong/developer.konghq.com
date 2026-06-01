@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-vault/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -24,9 +25,9 @@ related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Provider entity
-    url: /ai-gateway/entities/provider/
+    url: /ai-gateway/entities/ai-provider/
   - text: Model entity
-    url: /ai-gateway/entities/model/
+    url: /ai-gateway/entities/ai-model/
   - text: "{{site.base_gateway}} Vault entity"
     url: /gateway/entities/vault/
 faqs:

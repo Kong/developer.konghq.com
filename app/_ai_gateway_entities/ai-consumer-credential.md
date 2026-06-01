@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-consumer-credential/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -23,11 +24,11 @@ related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Consumer entity
-    url: /ai-gateway/entities/consumer/
+    url: /ai-gateway/entities/ai-consumer/
   - text: Consumer Group entity
-    url: /ai-gateway/entities/consumer-group/
+    url: /ai-gateway/entities/ai-consumer-group/
   - text: Policy entity
-    url: /ai-gateway/entities/policy/
+    url: /ai-gateway/entities/ai-policy/
 faqs:
   - q: Why are credentials a separate entity instead of a field on the Consumer?
     a: |
@@ -61,7 +62,7 @@ faqs:
 
 ## What is a Consumer Credential?
 
-A Consumer Credential is the {{site.ai_gateway}} entity that represents the secret material a [Consumer](/ai-gateway/entities/consumer/) presents to authenticate to {{site.ai_gateway}}.
+A Consumer Credential is the {{site.ai_gateway}} entity that represents the secret material a [Consumer](/ai-gateway/entities/ai-consumer/) presents to authenticate to {{site.ai_gateway}}.
 
 Credentials are nested under their owning Consumer: each Credential belongs to exactly one Consumer, and removing the Consumer removes its Credentials.
 

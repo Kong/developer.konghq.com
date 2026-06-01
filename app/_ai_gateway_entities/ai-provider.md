@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-provider/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -25,9 +26,9 @@ related_resources:
   - text: "{{site.ai_gateway}} providers"
     url: /ai-gateway/ai-providers/
   - text: Model entity
-    url: /ai-gateway/entities/model/
+    url: /ai-gateway/entities/ai-model/
   - text: Policy entity
-    url: /ai-gateway/entities/policy/
+    url: /ai-gateway/entities/ai-policy/
 faqs:
   - q: What happens when I update a Provider's credentials?
     a: |
@@ -60,7 +61,7 @@ Models reference a Provider through `target_models[].provider` to route their `t
 
 ### Relationship to Models
 
-A Provider stores how to reach and authenticate to an upstream LLM service. A [Model](/ai-gateway/entities/model/) decides which upstream provider model to call and how requests are load-balanced, formatted, and logged. The relationship is many-to-many at the target level: a single Provider can back many Models (for example, an `openai` Provider used by both a chat Model and an embeddings Model), and a single Model can route across multiple Providers through its `target_models` array (for example, a Model with one OpenAI target and one Anthropic target for fallback).
+A Provider stores how to reach and authenticate to an upstream LLM service. A [Model](/ai-gateway/entities/ai-model/) decides which upstream provider model to call and how requests are load-balanced, formatted, and logged. The relationship is many-to-many at the target level: a single Provider can back many Models (for example, an `openai` Provider used by both a chat Model and an embeddings Model), and a single Model can route across multiple Providers through its `target_models` array (for example, a Model with one OpenAI target and one Anthropic target for fallback).
 
 Providers don't expose model endpoints on their own. They become routable only through a Model that references them.
 

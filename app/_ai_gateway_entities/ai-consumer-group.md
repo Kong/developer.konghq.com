@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-consumer-group/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -24,11 +25,11 @@ related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Consumer entity
-    url: /ai-gateway/entities/consumer/
+    url: /ai-gateway/entities/ai-consumer/
   - text: Model entity
-    url: /ai-gateway/entities/model/
+    url: /ai-gateway/entities/ai-model/
   - text: Policy entity
-    url: /ai-gateway/entities/policy/
+    url: /ai-gateway/entities/ai-policy/
   - text: "{{site.base_gateway}} Consumer Group entity"
     url: /gateway/entities/consumer-group/
 faqs:
@@ -47,7 +48,7 @@ faqs:
     a: |
       Set the `consumer_groups` array on the Consumer entity to reference this group by
       `name` or `id`. Membership is managed from the Consumer side.
-      See the [Consumer entity](/ai-gateway/entities/consumer/) reference.
+      See the [Consumer entity](/ai-gateway/entities/ai-consumer/) reference.
 
   - q: Can a Consumer belong to multiple Consumer Groups?
     a: |
@@ -57,13 +58,13 @@ faqs:
     a: |
       Add the Policy's `name` or `id` to the Consumer Group's `policies` array.
       The plugin runs when a member of the group is identified during a request.
-      See the [Policy entity](/ai-gateway/entities/policy/) reference.
+      See the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
   - q: How do I gate access to a Model, Agent, or MCP Server with a Consumer Group?
     a: |
       Add the Consumer Group's name to the parent entity's `acls.allow` or `acls.deny` list.
       ACLs accept Consumer, Consumer Group, and Authenticated Group names.
-      See the [Model entity](/ai-gateway/entities/model/) reference.
+      See the [Model entity](/ai-gateway/entities/ai-model/) reference.
 ---
 
 ## What is a Consumer Group?
@@ -100,7 +101,7 @@ For a concrete example, see [Set up a Consumer Group](#set-up-a-consumer-group).
 
 A Consumer Group doesn't list its members directly. Membership is set on the Consumer entity through the Consumer's `consumer_groups` array. Each entry references a Consumer Group by `name` or `id`. A single Consumer can belong to multiple Consumer Groups.
 
-For the Consumer-side configuration, see the [Consumer entity](/ai-gateway/entities/consumer/) reference.
+For the Consumer-side configuration, see the [Consumer entity](/ai-gateway/entities/ai-consumer/) reference.
 
 ## Attach Policies
 
@@ -108,7 +109,7 @@ Policies attached to a Consumer Group run when a member of that group is identif
 
 You can attach multiple Policies to a single Consumer Group. Each Policy is an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
 
-For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/policy/) reference.
+For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Use in parent entity ACLs
 

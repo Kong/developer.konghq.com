@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-mcp-server/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -25,9 +26,9 @@ related_resources:
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
   - text: Policy entity
-    url: /ai-gateway/entities/policy/
+    url: /ai-gateway/entities/ai-policy/
   - text: Consumer Group entity
-    url: /ai-gateway/entities/consumer-group/
+    url: /ai-gateway/entities/ai-consumer-group/
   - text: Kong MCP traffic gateway
     url: /mcp/
   - text: Model Context Protocol specification
@@ -68,7 +69,7 @@ faqs:
   - q: Can I attach the same authentication or rate-limiting plugin that I'd attach to a Route?
     a: |
       Plugin configuration that applies to the MCP Server goes through the
-      [Policy entity](/ai-gateway/entities/policy/). Attach Policies to the MCP Server through its
+      [Policy entity](/ai-gateway/entities/ai-policy/). Attach Policies to the MCP Server through its
       `policies` field.
 ---
 
@@ -106,7 +107,7 @@ For a concrete example, see [Set up an MCP Server](#set-up-an-mcp-server).
 
 ## Common Policies
 
-Attach plugins as [Policies](/ai-gateway/entities/policy/) on the MCP Server to handle authentication, rate limiting, observability, and traffic control:
+Attach plugins as [Policies](/ai-gateway/entities/ai-policy/) on the MCP Server to handle authentication, rate limiting, observability, and traffic control:
 
 <!-- vale off -->
 {% table %}
@@ -242,7 +243,7 @@ Two session strategies:
 
 `session_ttl` controls how long sessions live (default 24 hours). Set `managed: false` to disable managed sessions when the upstream maintains state externally.
 
-Secrets used in session encryption can be referenced from a [Vault](/ai-gateway/entities/vault/).
+Secrets used in session encryption can be referenced from a [Vault](/ai-gateway/entities/ai-vault/).
 
 ## Server configuration
 
@@ -445,7 +446,7 @@ sequenceDiagram
 
 Policies are how plugin configurations apply to an MCP Server. Authentication, rate limiting, request and response transformation, and OAuth gating (through [AI MCP OAuth2](/plugins/ai-mcp-oauth2/)) attach to the MCP Server through the `policies` field. Each entry is a string that references a Policy by name or ID. Multiple Policies can attach to one MCP Server; each runs as an independent plugin instance.
 
-For details, see the [Policy entity](/ai-gateway/entities/policy/) reference.
+For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Scope of support
 

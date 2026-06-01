@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-data-plane-node/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -24,7 +25,7 @@ related_resources:
   - text: AI Gateway entity
     url: /ai-gateway/entities/ai-gateway/
   - text: Data Plane Certificate entity
-    url: /ai-gateway/entities/data-plane-certificate/
+    url: /ai-gateway/entities/ai-data-plane-certificate/
 faqs:
   - q: How do I register a new Data Plane node?
     a: |
@@ -55,7 +56,7 @@ faqs:
 
 A Data Plane Node is a runtime instance that executes AI Gateway traffic and maintains a connection to the {{site.konnect_short_name}} {{site.ai_gateway}} control plane. Each node runs the AI Gateway data plane binary, loads configuration from the control plane, and processes requests according to that configuration.
 
-Nodes are read-only entities in the {{site.ai_gateway}} API. You cannot create or delete nodes through the control plane; instead, nodes self-register when they start with a valid [Data Plane Certificate](/ai-gateway/entities/data-plane-certificate/). Operators monitor and troubleshoot nodes through the Konnect UI and API.
+Nodes are read-only entities in the {{site.ai_gateway}} API. You cannot create or delete nodes through the control plane; instead, nodes self-register when they start with a valid [Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/). Operators monitor and troubleshoot nodes through the Konnect UI and API.
 
 Data Plane Nodes can be viewed through the {{site.konnect_short_name}} {{site.ai_gateway}} API:
 

@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-policy/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -23,11 +24,11 @@ related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Model entity
-    url: /ai-gateway/entities/model/
+    url: /ai-gateway/entities/ai-model/
   - text: Agent entity
-    url: /ai-gateway/entities/agent/
+    url: /ai-gateway/entities/ai-agent/
   - text: MCP Server entity
-    url: /ai-gateway/entities/mcp-server/
+    url: /ai-gateway/entities/ai-mcp-server/
   - text: Plugin entity
     url: /gateway/entities/plugin/
 faqs:
@@ -93,11 +94,11 @@ A Policy is scoped by where it's referenced from. Each Policy is an independent 
 The available scopes are:
 
 * **Global**: a Policy that no parent entity references runs for every {{site.ai_gateway}} route on the data plane. Non-AI traffic on the same data plane isn't affected.
-* **Model**: referenced from the `policies` array on a [Model entity](/ai-gateway/entities/model/). The plugin runs at the Service of the Model's derived primitives.
-* **Agent**: referenced from the `policies` array on an [Agent entity](/ai-gateway/entities/agent/). The plugin runs at the Service of the Agent's derived primitives.
-* **MCP Server**: referenced from the `policies` array on an [MCP Server entity](/ai-gateway/entities/mcp-server/). The plugin runs at the Service of the MCP Server's derived primitives.
-* **Consumer**: referenced from the `policies` array on a [Consumer entity](/ai-gateway/entities/consumer/). The plugin runs when the Consumer is identified during a request.
-* **Consumer Group**: referenced from the `policies` array on a [Consumer Group entity](/ai-gateway/entities/consumer-group/). The plugin runs when a member of the Consumer Group is identified during a request.
+* **Model**: referenced from the `policies` array on a [Model entity](/ai-gateway/entities/ai-model/). The plugin runs at the Service of the Model's derived primitives.
+* **Agent**: referenced from the `policies` array on an [Agent entity](/ai-gateway/entities/ai-agent/). The plugin runs at the Service of the Agent's derived primitives.
+* **MCP Server**: referenced from the `policies` array on an [MCP Server entity](/ai-gateway/entities/ai-mcp-server/). The plugin runs at the Service of the MCP Server's derived primitives.
+* **Consumer**: referenced from the `policies` array on a [Consumer entity](/ai-gateway/entities/ai-consumer/). The plugin runs when the Consumer is identified during a request.
+* **Consumer Group**: referenced from the `policies` array on a [Consumer Group entity](/ai-gateway/entities/ai-consumer-group/). The plugin runs when a member of the Consumer Group is identified during a request.
 
 ### Creating Policies
 

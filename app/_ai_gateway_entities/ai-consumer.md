@@ -7,6 +7,7 @@ products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0.0'
+permalink: /ai-gateway/entities/ai-consumer/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
@@ -24,13 +25,13 @@ related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Consumer Credential entity
-    url: /ai-gateway/entities/consumer-credential/
+    url: /ai-gateway/entities/ai-consumer-credential/
   - text: Consumer Group entity
-    url: /ai-gateway/entities/consumer-group/
+    url: /ai-gateway/entities/ai-consumer-group/
   - text: Model entity
-    url: /ai-gateway/entities/model/
+    url: /ai-gateway/entities/ai-model/
   - text: Policy entity
-    url: /ai-gateway/entities/policy/
+    url: /ai-gateway/entities/ai-policy/
   - text: "{{site.base_gateway}} Consumer entity"
     url: /gateway/entities/consumer/
 faqs:
@@ -46,7 +47,7 @@ faqs:
     a: |
       Credentials are a separate sub-entity, not a field on the Consumer. Create them under the
       Consumer's nested credentials endpoint. See the
-      [Consumer Credential entity](/ai-gateway/entities/consumer-credential/) reference.
+      [Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/) reference.
 
   - q: "What's the difference between `type: api-key` and `type: oauth`?"
     a: |
@@ -63,7 +64,7 @@ faqs:
   - q: How do I attach Policies to a Consumer?
     a: |
       Add the Policy's `name` or `id` to the Consumer's `policies` array.
-      See the [Policy entity](/ai-gateway/entities/policy/) reference.
+      See the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 ---
 
 ## What is a Consumer?
@@ -92,7 +93,7 @@ When you create a Consumer, the configuration steps generally follow this order:
 1. Choose an authentication `type`: `api-key` for API key credentials, or `oauth` for OAuth 2.0 / OpenID Connect credentials.
 1. Optionally assign the Consumer to one or more Consumer Groups through the `consumer_groups` array.
 1. Optionally attach Policies to the Consumer for request-level plugin execution.
-1. Create credentials separately through the [Consumer Credential entity](/ai-gateway/entities/consumer-credential/).
+1. Create credentials separately through the [Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/).
 
 For a concrete example, see [Set up a Consumer](#set-up-a-consumer).
 
@@ -103,13 +104,13 @@ The `type` field declares which credential family the Consumer authenticates wit
 * `api-key`: the Consumer authenticates with one or more API key Credentials.
 * `oauth`: the Consumer authenticates through an OAuth identity issued by an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect plugin](/plugins/openid-connect/), or, for MCP traffic, through the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/). The Consumer Credential carries a `custom_id` that maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
 
-The `type` of every Credential issued to the Consumer must match the Consumer's `type`. See the [Consumer Credential entity](/ai-gateway/entities/consumer-credential/) reference for credential management.
+The `type` of every Credential issued to the Consumer must match the Consumer's `type`. See the [Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/) reference for credential management.
 
 ## Consumer Group membership
 
 You can assign a Consumer to one or more Consumer Groups through the `consumer_groups` array. Each entry references a Consumer Group by `name` or `id`.
 
-Consumer Groups are managed through their own entity surface. See the [Consumer Group entity](/ai-gateway/entities/consumer-group/) reference.
+Consumer Groups are managed through their own entity surface. See the [Consumer Group entity](/ai-gateway/entities/ai-consumer-group/) reference.
 
 ## Attach Policies
 
@@ -117,11 +118,11 @@ Policies are how plugin configurations apply to a Consumer. Attach a Policy by a
 
 You can attach multiple Policies to a single Consumer. Each Policy is an independent plugin instance.
 
-For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/policy/) reference.
+For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Set up a Consumer
 
-The following example creates an AI Consumer assigned to a single Consumer Group. Credentials are issued separately through the [Consumer Credential entity](/ai-gateway/entities/consumer-credential/).
+The following example creates an AI Consumer assigned to a single Consumer Group. Credentials are issued separately through the [Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/).
 
 {% entity_example %}
 type: consumer
