@@ -31,7 +31,7 @@ prereqs:
 faqs:
   - q: How can I use custom linting with Inso CLI?
     a: |
-      Create your YAML file in the same directory as the OAS file to lint, then run the [`inso lint spec`](/inso-cli/reference/lint_spec/) command.
+      Create your [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) and upload it in the same directory as the OAS file to lint, then run the [`inso lint spec`](/inso-cli/reference/lint_spec/) command.
 
 ---
 
