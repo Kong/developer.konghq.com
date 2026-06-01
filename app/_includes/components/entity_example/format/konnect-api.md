@@ -1,11 +1,11 @@
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
 {% if include.presenter.product == 'ai-gateway' -%}
-To create a Consumer, call the Konnect [AI Gateway API's `/consumers` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-consumer).{% else %}
+To create a Consumer, call the Konnect [{{site.ai_gateway}} API's `/consumers` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-consumer).{% else %}
 To create a Consumer, call the Konnect [control plane config API's `/consumers` endpoint](/api/konnect/control-planes-config/#/operations/create-consumer).{% endif %}
 {% when 'consumer_group' %}
 {% if include.presenter.product == 'ai-gateway' -%}
-To create a Consumer Group, call the Konnect [AI Gateway API's `/consumer-groups` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-consumer-group).{% else %}
+To create a Consumer Group, call the Konnect [{{site.ai_gateway}} API's `/consumer-groups` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-consumer-group).{% else %}
 To create a Consumer Group, call the Konnect [control plane config API's `/consumer_groups` endpoint](/api/konnect/control-planes-config/#/operations/create-consumer_group).{% endif %}
 {% when 'route' %}
 To create a Route, call the Konnect [control plane config API's `/routes` endpoint](/api/konnect/control-planes-config/#/operations/create-route).
@@ -23,7 +23,7 @@ To create a CA Certificate, call the Konnect [control plane config API's `/ca-ce
 To create a Certificate, call the Konnect [control plane config API's `/certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-certificate). 
 {% when 'vault' %}
 {% if include.presenter.product == 'ai-gateway' -%}
-To create a Vault entity, call the Konnect [AI Gateway API's `/vaults` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-vault). {% else %}
+To create a Vault entity, call the Konnect [{{site.ai_gateway}} API's `/vaults` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-vault). {% else %}
 To create a Vault entity, call the Konnect [control plane config API's `/vaults` endpoint](/api/konnect/control-planes-config/#/operations/create-vault). {% endif %}
 {% when 'key' %}
 To create a Key, call the Konnect [control plane config API's `/keys` endpoint](/api/konnect/control-planes-config/#/operations/create-key). 
