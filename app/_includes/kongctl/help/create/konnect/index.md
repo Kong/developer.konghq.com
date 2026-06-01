@@ -1,14 +1,19 @@
 ```ansi
 Usage:
-  kongctl list organization system-account [flags]
-  kongctl list organization system-account [command]
+  kongctl create konnect [flags]
+  kongctl create konnect [command]
 
 Aliases:
-  system-account, systemaccount, systemaccounts, system-accounts, system_account, system_accounts, sa, sas, SA, SAS
+  konnect, k, K
+
+Examples:
+  # Retrieve the Konnect Kong Gateway control planes from the current organization
+  kongctl get konnect gateway control-planes
 
 Available Commands:
-  roles       List organization system account role assignments
-  teams       List organization system account team memberships
+  organization Get current organization information
+  pat          Create a Konnect personal access token
+  spat         Create a Konnect system account access token
 
 
 Flags:
@@ -21,7 +26,7 @@ Flags:
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                    help for system-account
+  -h, --help                    help for konnect
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
       --jq-color string         Controls colorized output for jq filter results.
                                 - Config path: [ jq.color.enabled ]
@@ -44,8 +49,6 @@ Flags:
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")
-      --page-size int           Max number of results to include per response page for get and list operations.
-                                - Config path: [ konnect.page-size ] (default 10)
       --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI. 
                                 Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]
@@ -53,9 +56,6 @@ Flags:
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
 
-Additional help topics:
-  kongctl list organization system-account spat Manage Konnect system account access tokens
-
-Use "kongctl list organization system-account [command] --help" for more information about a command.
+Use "kongctl create konnect [command] --help" for more information about a command.
 
 ```

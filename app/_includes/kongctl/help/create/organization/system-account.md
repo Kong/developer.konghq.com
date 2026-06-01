@@ -1,14 +1,19 @@
 ```ansi
 Usage:
-  kongctl list organization system-account [flags]
-  kongctl list organization system-account [command]
+  kongctl create organization system-account [flags]
+  kongctl create organization system-account [command]
 
 Aliases:
   system-account, systemaccount, systemaccounts, system-accounts, system_account, system_accounts, sa, sas, SA, SAS
 
+Examples:
+  # List all system-accounts
+  kongctl get system-accounts
+  # Get a specific system account
+  kongctl get system-account <id|name>
+
 Available Commands:
-  roles       List organization system account role assignments
-  teams       List organization system account team memberships
+  spat        Create a Konnect system account access token
 
 
 Flags:
@@ -44,18 +49,13 @@ Flags:
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")
-      --page-size int           Max number of results to include per response page for get and list operations.
-                                - Config path: [ konnect.page-size ] (default 10)
-      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI. 
+      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                 Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
 
-Additional help topics:
-  kongctl list organization system-account spat Manage Konnect system account access tokens
-
-Use "kongctl list organization system-account [command] --help" for more information about a command.
+Use "kongctl create organization system-account [command] --help" for more information about a command.
 
 ```
