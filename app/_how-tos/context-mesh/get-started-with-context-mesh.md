@@ -25,6 +25,7 @@ entities:
   - route
   - plugin
 
+published: false
 tags:
   - ai
   - mcp
