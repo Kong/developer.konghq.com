@@ -402,7 +402,6 @@ config:
       
       The logs are available in {{site.konnect_short_name}}, in the **Logs** tab of the data plane node.
   - name: request_debug_token
-  - name: opentelemetry_tracing
   - name: tracing_instrumentations
   - name: router_flavor
   - name: tracing_sampling_rate
