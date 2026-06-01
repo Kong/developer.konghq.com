@@ -1,9 +1,13 @@
 {% if include.render_context %}
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
-To create a Consumer, call the [Admin API's `/consumers` endpoint](/api/gateway/admin-ee/#/operations/create-consumer).
+{% if include.presenter.product == 'ai-gateway' -%}
+To create a Consumer, call the [Admin API's `/ai-consumers` endpoint](/api/gateway/admin-ee/#/operations/create-ai-consumer). {% else %}
+To create a Consumer, call the [Admin API's `/consumers` endpoint](/api/gateway/admin-ee/#/operations/create-consumer). {% endif %}
 {% when 'consumer_group' %}
-To create a Consumer Group, call the [Admin API's `/consumer_groups` endpoint](/api/gateway/admin-ee/#/operations/create-consumer_group).
+{% if include.presenter.product == 'ai-gateway' -%}
+To create a Consumer Group, call the [Admin API's `/ai-consumer-groups` endpoint](/api/gateway/admin-ee/#/operations/create-ai-consumer-group).{% else %}
+To create a Consumer Group, call the [Admin API's `/consumer_groups` endpoint](/api/gateway/admin-ee/#/operations/create-consumer_group).{% endif %}
 {% when 'route' %}
 To create a Route, call the [Admin API’s `/routes` endpoint](/api/gateway/admin-ee/#/operations/create-route).
 
@@ -30,7 +34,9 @@ To create a CA Certificate, call the [Admin API's `/ca_certificates` endpoint](/
 {% when 'certificate' %}
 To create a Certificate, call the [Admin API's `/certificates` endpoint](/api/gateway/admin-ee/#/operations/create-certificate).
 {% when 'vault' %}
-To create a Vault entity, call the [Admin API's `/vaults` endpoint](/api/gateway/admin-ee/#/operations/create-vault).
+{% if include.presenter.product == 'ai-gateway' -%}
+To create a Vault entity, call the [Admin API's `/ai-vaults` endpoint](/api/gateway/admin-ee/#/operations/create-ai-vault). {% else %}
+To create a Vault entity, call the [Admin API's `/vaults` endpoint](/api/gateway/admin-ee/#/operations/create-vault). {% endif %}
 {% when 'partial' %}
 To create a Partial, call the [Admin API's `/partials` endpoint](/api/gateway/admin-ee/#/operations/create-partial).
 {% when 'key' %}
