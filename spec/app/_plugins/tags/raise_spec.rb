@@ -2,10 +2,9 @@
 
 RSpec.describe Jekyll::Raise do
   let(:page) { { 'path' => 'docs/guide.md' } }
-  let(:context) { build_liquid_context(page: page) }
 
   def render_raise(markup)
-    Liquid::Template.parse("{% raise #{markup} %}").render!(context)
+    render_liquid("{% raise #{markup} %}", page: page)
   end
 
   it 'raises a RuntimeError' do
