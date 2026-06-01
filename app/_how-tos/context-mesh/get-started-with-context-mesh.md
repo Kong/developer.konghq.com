@@ -534,29 +534,11 @@ kubectl wait --timeout=3m dataplane dataplane --for=condition=Ready
 1. Select the Operator-managed control plane (`context-mesh-demo`).
 1. Click **Create server** and wait for the server status to become **Healthy**.
 
-The MCP runtime is now exposed at `/mcp/openweather-service`.
+The MCP runtime is now exposed at `http://localhost:8080/mcp`.
 
-## Connect an agent to the OpenWeather MCP server
+## Set up port forwarding
 
-Add the MCP server to Claude Code using the CLI:
-
-```bash
-claude mcp add --transport http context-mesh-weather http://localhost:8080/mcp/openweather-service \
-  --header "X-Upstream-Api-Key: ${OPENWEATHERMAP_API_KEY}"
-```
-
-For other MCP clients (VS Code, Cursor, GitHub Copilot, etc.), see the [client installation guide](/context-mesh/client-installation/).
-
-Try a prompt in Claude Code:
-
-```
-Tell me the weather in Hawaii.
-```
-{:.no-copy-code}
-
-## Troubleshoot port forwarding
-
-If you cannot access the MCP server at `http://localhost/mcp/openweather-service`, follow these steps to set up port forwarding directly to the MCP server.
+To access the MCP server locally, you need to set up port forwarding from your machine to the Kubernetes cluster.
 
 ### Verify the data plane is running
 
@@ -619,7 +601,7 @@ Forwarding from [::1]:8080 -> 8080
 In another terminal, test that the MCP endpoint is now accessible:
 
 ```shell
-curl -i http://localhost:8080/
+curl -i http://localhost:8080/mcp
 ```
 
 Expected output when the server is ready:
@@ -637,12 +619,13 @@ Not Found
 {:.info}
 > The `404` response is expected. It confirms the MCP server is accessible and running.
 
-### Register the MCP server with your client (alternative URL)
+## Connect an agent to the OpenWeather MCP server
 
-Once port forwarding is active and the server is responding, register it with your {{site.context_mesh}} client using the direct port forwarding URL:
+Once port forwarding is active and the server is responding, register the MCP server with Claude Code:
 
-```shell
-claude mcp add --transport http context-mesh-weather http://localhost:8080 --header "X-Upstream-Api-Key: ${OPENWEATHERMAP_API_KEY}"
+```bash
+claude mcp add --transport http context-mesh-weather http://localhost:8080/mcp \
+  --header "X-Upstream-Api-Key: ${OPENWEATHERMAP_API_KEY}"
 ```
 
 Expected output:
@@ -651,14 +634,14 @@ Expected output:
 Added context-mesh-weather MCP server
 ```
 
-If the server already exists, remove it first and re-add it:
+Try a prompt in Claude Code:
 
-```shell
-claude mcp remove context-mesh-weather
-claude mcp add --transport http context-mesh-weather http://localhost:8080 --header "X-Upstream-Api-Key: ${OPENWEATHERMAP_API_KEY}"
 ```
+Tell me the weather in Hawaii.
+```
+{:.no-copy-code}
 
-### If port forwarding fails
+## Troubleshoot port forwarding
 
 If you cannot establish port forwarding:
 
@@ -681,4 +664,3 @@ If you cannot establish port forwarding:
    ```
 
 3. If the pod is in `CrashLoopBackOff` or `Pending`, wait a few minutes for it to initialize. Then retry the port forwarding.
-
