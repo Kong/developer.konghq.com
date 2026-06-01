@@ -3,9 +3,10 @@ metadata:
   content_type: landing_page
   description: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly."
   products:
-    - konnect
+    - context-mesh
     - ai-gateway
   breadcrumbs:
+    - /ai-gateway/
     - /konnect/
   tags:
     - ai
