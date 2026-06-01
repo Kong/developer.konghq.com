@@ -1,6 +1,6 @@
-description: Configure the plugin to use a Kong Identity auth server's introspection endpoint to validate an access token.
-extended_description: Configure the plugin to use a Kong Identity auth server's introspection endpoint to validate an access token. For a complete tutorial, see [Configure the OAuth 2.0 Introspection plugin with Kong Identity](/how-to/configure-kong-identity-oauth-introspection/).
-title: "Kong Identity"
+description: Configure the plugin to use a {{site.identity}} auth server's introspection endpoint to validate an access token.
+extended_description: Configure the plugin to use a {{site.identity}} auth server's introspection endpoint to validate an access token. For a complete tutorial, see [Configure the OAuth 2.0 Introspection plugin with {{site.identity}}](/how-to/configure-kong-identity-oauth-introspection/).
+title: "{{site.identity}}"
 
 weight: 900
 

@@ -288,7 +288,7 @@ rows:
 
 #### Auth servers and directories
 
-The following table describes the predefined roles for [Kong Identity](/kong-identity/) auth servers and directories:
+The following table describes the predefined roles for [{{site.identity}}](/identity/) authorization servers:
 
 <!--vale off-->
 {% table %}

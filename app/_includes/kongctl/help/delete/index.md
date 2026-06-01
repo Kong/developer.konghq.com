@@ -1,6 +1,7 @@
 ```ansi
 Usage:
   kongctl delete [flags]
+  kongctl delete [command]
 
 Aliases:
   delete, d, D, del, rm, DEL, RM
@@ -14,6 +15,12 @@ Examples:
   
   # Execute a reviewed delete plan without prompting
   kongctl delete --plan delete-plan.json --auto-approve
+
+Available Commands:
+  konnect      Delete Konnect tokens
+  organization Get current organization information
+  pat          Delete a Konnect personal access token
+  spat         Delete a Konnect system account access token
 
 
 Flags:
@@ -79,5 +86,7 @@ Flags:
                                             --require-namespace=foo,bar                      # Allow 'foo' or 'bar' (comma-separated)
                                             --require-namespace=foo --require-namespace=bar  # Allow 'foo' or 'bar' (repeated flags)
                                           - Config path: [ konnect.declarative.require-namespace ]
+
+Use "kongctl delete [command] --help" for more information about a command.
 
 ```
