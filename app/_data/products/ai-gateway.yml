@@ -1,2 +1,8 @@
 name: AI Gateway
 icon: /_assets/icons/products/ai-gateway.svg
+
+releases:
+  - release: "2.0"
+    version: "2.0.0"
+    name: "v2"
+    latest: true

@@ -13,6 +13,7 @@ ai_rate_limiting_policy
 agentic
 Agno
 Agno's
+AIGateway
 Alertmanager
 Alibaba
 allow_terminated
