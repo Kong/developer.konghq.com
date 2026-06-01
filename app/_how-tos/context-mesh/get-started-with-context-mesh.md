@@ -7,6 +7,7 @@ breadcrumbs:
   - /mcp/
 
 products:
+  - context-mesh
   - gateway
   - ai-gateway
 
