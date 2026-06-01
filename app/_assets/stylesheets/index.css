@@ -89,6 +89,8 @@
     --color-observability-background: var(--color-semantic-yellow-secondary);
     --color-ai-gateway-brand: var(--color-semantic-green-primary);
     --color-ai-gateway-background: var(--color-semantic-green-secondary);
+    --color-context-mesh-brand: var(--color-semantic-green-primary);
+    --color-context-mesh-background: var(--color-semantic-green-secondary);
     --color-event-gateway-brand: var(--color-semantic-green-primary);
     --color-event-gateway-background: var(--color-semantic-green-secondary);
     --color-gateway-brand: var(--color-semantic-green-primary);
