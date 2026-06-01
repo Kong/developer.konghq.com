@@ -20,7 +20,7 @@ related_resources:
 
 tldr: 
   q: How do I customize linting in Insomnia?
-  a: In your Insomnia project, add a YAML file containing your custom ruleset.
+  a: In your Insomnia project, add YAML file containing your custom ruleset.
 
 prereqs:
   inline:
@@ -31,19 +31,21 @@ prereqs:
 faqs:
   - q: How can I use custom linting with Inso CLI?
     a: |
-      Create your [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) and upload it in the same directory as the OAS file to lint, then run the [`inso lint spec`](/inso-cli/reference/lint_spec/) command.
+      Create a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format, and upload it in the same directory as the OAS file to lint.
 
 ---
 
-## Upload the ruleset file
+Insomnia provides a default linting ruleset. Override it to add your custom linting rules by following these steps:
 
-Upload a YAML file containing your ruleset to the project containing the design document with the OpenAPI specifications (OAS) to lint.
+## Upload the file ruleset
 
-This places the ruleset file in the local working directory. You don't see the file in the Insomnia UI, but the linting rules are applied to the associated OAS.
+From the Insomnia app, upload a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format containing your custom linting rules, to the project containing the design document with the OpenAPI specifications (OAS) to lint.
+
+This places the ruleset file in the local working directory. Insomnia renames this custom ruleset as `.spectral.yaml`. 
 
 ## Define the rules
 
-The custom ruleset overrides the default one. To create a completely new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extends` property.
+The custom ruleset overrides the default one. To create a new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extend` property.
 
 {:.info}
 > Available Spectral properties in Insomnia are `rules` and `extends`.
@@ -74,3 +76,30 @@ tags:
 This causes a new warning to appear:
 ![Missing tag description warning](/assets/images/insomnia/custom-linting-warning.png)
 
+## Override the rules
+
+verride the linting rules and use another ruleset, by using either Inso CLI or `.spectral.yaml`:
+
+{% navtabs "custom linting" %}
+{% navtab "Inso CLI" %}
+
+Run the [Inso CLI] with the `--ruleset` or `-r` flag and the path to your custom ruleset : `inso lint spec --ruleset <path-to-custom-ruleset>`](/inso-cli/reference/lint_spec/) command. This overrides the default OpenAPI specifications (OAS) ruleset in Insomnia, and any ruleset in the API Spec folder.
+
+If the `--ruleset` flag isn't specified, Insomnia eithe uses:
+      
+- The ruleset defined in `.spectral.yaml` if it exists.
+- The default OAS ruleset.
+
+{% endnavtab %}
+{% navtab "Use `extends` in `.spectral.yaml` " %}
+
+Make Insomnia point at another ruleset in `.spectral.yaml` by using the `extends` property . For example:
+
+```yaml
+extends:
+  - spectral:oas
+  - ./rules/my-rules.yaml
+```
+
+{% endnavtab %}
+{% endnavtabs %}
