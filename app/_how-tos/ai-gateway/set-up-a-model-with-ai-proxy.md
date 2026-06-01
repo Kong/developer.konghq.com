@@ -57,7 +57,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy specify a provider and a compatible model and set the appropriate authentication header and optionally an upstream URL. 
+To set up AI Proxy specify a [provider](/ai-gateway/ai-providers/) and a compatible model and set the appropriate authentication header and optionally an upstream URL. 
 
 Additionally, you will need an API key from the upstream API provider.
 
