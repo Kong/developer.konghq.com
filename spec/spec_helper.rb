@@ -8,8 +8,9 @@ Dir.chdir(PROJECT_ROOT)
 
 require 'jekyll'
 require 'liquid'
+require 'capybara'
 
-Dir[File.join(PROJECT_ROOT, 'app/_plugins/{tags,blocks}/**/*.rb')].sort.each do |f|
+Dir[File.join(PROJECT_ROOT, 'app/_plugins/{tags,blocks,lib}/**/*.rb')].sort.each do |f|
   require f
 end
 
@@ -30,4 +31,6 @@ RSpec.configure do |config|
   config.filter_run_when_matching :focus
   config.order = :random
   config.warnings = true
+
+  config.before(:suite) { JekyllSite.instance }
 end
