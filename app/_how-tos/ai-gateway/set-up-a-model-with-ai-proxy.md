@@ -18,9 +18,6 @@ works_on:
   - on-prem
   - konnect
 
-min_version:
-  gateway: '3.14'
-
 plugins:
   - ai-proxy
 
@@ -86,7 +83,7 @@ variables:
     value: $API_KEY
 {% endentity_examples %}
 
-Further information can be found in the [AI proxy configuration reference](/plugins/ai-proxy-advanced/reference/).
+Further information can be found in the [AI Proxy configuration reference](/plugins/ai-proxy/reference/) or [AI Proxy Advanced configuration reference](/plugins/ai-proxy-advanced/reference/).
 
 ## Validate
 
