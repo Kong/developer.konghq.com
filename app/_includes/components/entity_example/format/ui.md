@@ -4,7 +4,7 @@
 The following creates a new Consumer called **{{ include.presenter.data['username'] }}**:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Consumers:
   * In Konnect, click the **Consumers** tab inside your control plane.
@@ -16,7 +16,7 @@ The following creates a new Consumer called **{{ include.presenter.data['usernam
 The following creates a new Consumer Group called **{{ include.presenter.data['name'] }}**:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Consumers:
   * In Konnect, click the **Consumers** tab inside your control plane.
@@ -29,7 +29,7 @@ The following creates a new Consumer Group called **{{ include.presenter.data['n
 The following creates a new Route called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Routes:
   * In Konnect, click the **Routes** tab inside your control plane.
@@ -42,7 +42,7 @@ The following creates a new Route called **{{ include.presenter.data['name'] }}*
 The following creates a new Gateway Service called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Gateway Services:
   * In Konnect, click the **Gateway services** tab inside your control plane.
@@ -54,7 +54,7 @@ The following creates a new Gateway Service called **{{ include.presenter.data['
 {% when 'plugin' %}
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Plugins:
   * In Konnect, click the **Plugins** tab inside your control plane.
@@ -71,7 +71,7 @@ The following creates a new Gateway Service called **{{ include.presenter.data['
 The following creates a new Upstream and a Target with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Upstreams:
   * In Konnect, click the **Upstreams** tab inside your control plane.
@@ -88,7 +88,7 @@ The following creates a new Upstream and a Target with basic configuration:
 The following creates a new Upstream with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Upstreams:
   * In Konnect, click the **Upstreams** tab inside your control plane.
@@ -100,7 +100,7 @@ The following creates a new Upstream with basic configuration:
 The following creates a new Vault with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Vaults:
   * In Konnect, click the **Vaults** tab inside your control plane.
@@ -113,7 +113,7 @@ The following creates a new Vault with basic configuration:
 {% when 'sni' %}
 The following creates a new SNI with basic configuration:
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to **Certificates**.
 1. Select the SNIs tab, and click **New SNI**.
@@ -133,7 +133,7 @@ This will create a new Workspace, and from here you can start managing entities 
 The following creates a new Certificate with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Certificates:
   * In Konnect, click the **Certificates** tab inside your control plane.
@@ -152,7 +152,7 @@ The following creates a new Certificate with basic configuration:
 The following creates a new CA Certificate with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Certificates:
   * In Konnect, click the **Certificates** tab inside your control plane.
@@ -176,7 +176,7 @@ The following instructions create an RBAC user in Kong Manager. `kong.conf` must
 The following creates a new JSON Web Key with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to **Keys**.
 1. Click **New Key**.
@@ -197,7 +197,7 @@ The following creates a new JSON Web Key with basic configuration:
 The following creates a new JSON Web Key Set with basic configuration:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Keys:
   * In Konnect, click the **Keys** tab inside your control plane.
@@ -234,7 +234,7 @@ If you have not configured Kong Manager to send email, you can generate a regist
 The following creates a new Partial called **{{ include.presenter.data['name'] }}**:
 
 1. Navigate to your Gateway instance:
-  * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
+  * In the Konnect sidebar, click **API Gateway** > **Gateways**, and then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to Redis configurations:
   * In Konnect, click the **Redis** tab inside your control plane.
