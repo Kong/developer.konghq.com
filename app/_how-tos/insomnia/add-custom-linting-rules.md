@@ -19,10 +19,9 @@ related_resources:
   - text: Design APIs with Insomnia
     url: /insomnia/design/
 
-
-tldr: 
+tldr:
   q: How do I customize linting in Insomnia?
-  a: In your Insomnia project, add YAML file containing your custom ruleset.
+  a: In your Insomnia project, add a YAML file containing your custom ruleset.
 
 prereqs:
   inline:
@@ -39,15 +38,15 @@ faqs:
 
 Insomnia provides a default linting ruleset. Override it to add your custom linting rules by following these steps:
 
-## Upload the file ruleset
+## Upload the ruleset file
 
-From the Insomnia app, upload a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format containing your custom linting rules, to the project containing the design document with the OpenAPI specifications (OAS) to lint.
+From the Insomnia app, upload a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format. Upload it from the project containing the design document with the OpenAPI specifications (OAS) to lint.
 
-This places the ruleset file in the local working directory. Insomnia renames this custom ruleset as `.spectral.yaml`. 
+This places the ruleset file in the local working directory. Insomnia renames this custom ruleset as `.spectral.yaml`.
 
 ## Define the rules
 
-The custom ruleset overrides the default one. To create a new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extend` property.
+The custom ruleset overrides the default one. To create a new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extends` property.
 
 {:.info}
 > Available Spectral properties in Insomnia are `rules` and `extends`.
@@ -68,7 +67,7 @@ rules:
 
 ## Validate
 
-Close and reopen the document to apply the changes. In this example, you can validate by creating a new tag without a description:
+Close and reopen the document to apply the changes. In this example, you can confirm the rule fires by adding a tag without a description:
 
 ```yaml
 tags:
@@ -85,17 +84,17 @@ Override the linting rules and use another ruleset, by using either Inso CLI or 
 {% navtabs "custom linting" %}
 {% navtab "Inso CLI" %}
 
-Run the [Inso CLI] with the `--ruleset` or `-r` flag and the path to your custom ruleset : `inso lint spec --ruleset <path-to-custom-ruleset>`](/inso-cli/reference/lint_spec/) command. This overrides the default OpenAPI specifications (OAS) ruleset in Insomnia, and any ruleset in the API Spec folder.
+Use the [Inso CLI(/inso-cli/reference/lint_spec/) with the `--ruleset` or `-r` flag and the path to your custom ruleset. Run `inso lint spec --ruleset <path-to-custom-ruleset>`. This overrides the default OpenAPI specifications (OAS) ruleset in Insomnia, and any ruleset in the API Spec folder.
 
-If the `--ruleset` flag isn't specified, Insomnia either uses:
-      
-- The ruleset defined in `.spectral.yaml` if it exists.
+If the `--ruleset` flag isn't specified, Insomnia uses one of the following, in order:
+
+- The ruleset defined in `.spectral.yaml`, if it exists.
 - The default OAS ruleset.
 
 {% endnavtab %}
-{% navtab "Use `extends` in `.spectral.yaml` " %}
+{% navtab "Use `extends` in `.spectral.yaml`" %}
 
-Make Insomnia point at another ruleset in `.spectral.yaml` by using the `extends` property . For example:
+Make Insomnia point at another ruleset in `.spectral.yaml` by using the `extends` property. For example:
 
 ```yaml
 extends:
