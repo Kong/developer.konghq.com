@@ -63,12 +63,16 @@ export default ({ command, mode }) => {
     server: {
       cors: { origin: 'http://localhost:8888' },
       proxy: {
-        '^/api': {
+        '/vite-dev/api': {
           changeOrigin: true,
           target: portalApiUrl,
           configure: (proxy, options) => {
             mutateCookieAttributes(proxy)
             setHostHeader(proxy)
+          },
+          rewrite: (path) => {
+            return path
+            .replace(/^\/vite-dev\/api/, '/api/');
           }
         }
       }
