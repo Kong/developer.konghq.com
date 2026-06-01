@@ -1,6 +1,9 @@
 {%- assign provider = include.providers.providers | where: "name", include.provider_name | first -%}
 {% if provider %}
-You can proxy requests to {{ provider.name }} AI models through {{site.ai_gateway}} using the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins. This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
+You can proxy requests to {{ provider.name }} AI models through {{site.ai_gateway}} by creating [providers](/ai-gateway/entities/provider/) and [models](/ai-gateway/entities/model/). This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
+
+{:.info}
+> Model provider support uses the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins behind the scenes. In some deployment modes you may need to configure these explicitly.
 
 ## Upstream paths
 
@@ -109,7 +112,7 @@ rows:
 
 ## Supported capabilities
 
-The following tables show the AI capabilities supported by {{ provider.name }} provider when used with the [AI Proxy](/plugins/ai-proxy/) or the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+The following tables show the AI capabilities supported by the {{ provider.name }} provider.
 
 {:.info}
 > Set the plugin's [`route_type`](/plugins/ai-proxy/reference/#schema--config-route-type) based on the capability you want to use. See the tables below for supported route types.

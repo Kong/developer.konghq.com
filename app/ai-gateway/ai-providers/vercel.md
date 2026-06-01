@@ -55,9 +55,9 @@ how_to_list:
 
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Vercel" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure a {{ provider.name }} provider
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [provider](/ai-gateway/entities/provider/). You can then access supported [models](/ai-gateway/entities/model/) from  {{ provider.name }}.
 
 Note that, {{ site.vercel }} hosts [models](https://vercel.com/ai-gateway/models) from other providers so in this example we use `openai/gpt-5.5`.
 

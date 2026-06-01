@@ -186,8 +186,6 @@ rows:
         - type: reference_list
           config:
             pages:
-              - /plugins/ai-proxy/
-              - /plugins/ai-proxy-advanced/
               - /ai-gateway/load-balancing/
               - /ai-gateway/resource-sizing-guidelines-ai/
               - /how-to/?tags=ai
