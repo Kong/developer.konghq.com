@@ -63,7 +63,7 @@ how_to_list:
 
 ## Configure {{ provider.name }} with AI Proxy
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [provider](/ai-gateway/entities/ai-provider/). You can then access supported [models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
@@ -93,7 +93,8 @@ variables:
 
 {:.success}
 > For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+> - [Set up a provider](/ai-gateway/entities/ai-provider/#set-up-a-provider)
+> - [Set up a model](/ai-gateway/entities/ai-model/#set-up-a-model)
+> - [How to set up a model with AI proxy](/how-to/set-up-a-model-with-ai-proxy)
 
 {% include plugins/ai-proxy/providers/how-tos.md %}

@@ -73,5 +73,6 @@ variables:
 
 {:.success}
 > For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+> - [Set up a provider](/ai-gateway/entities/ai-provider/#set-up-a-provider)
+> - [Set up a model](/ai-gateway/entities/ai-model/#set-up-a-model)
+> - [How to set up a model with AI proxy](/how-to/set-up-a-model-with-ai-proxy)
