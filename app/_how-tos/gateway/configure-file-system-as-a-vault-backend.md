@@ -47,23 +47,17 @@ prereqs:
         Create a directory for your secrets on the {{site.base_gateway}} data plane and add at least one secret file.
 
         For example, if using the quickstart Docker container:
-        
-        1. Exec into the container:
-
-           ```
-           docker exec -it kong-quickstart-gateway /bin/bash  
-           ```
 
         1. Create the directory:
 
            ```sh
-           mkdir -p /tmp/kong/secrets
+           docker exec kong-quickstart-gateway mkdir -p /tmp/kong/secrets
            ```
         
         1. Create a test secret:
 
            ```
-           echo -n "my-secret-value" > /tmp/kong/secrets/my-secret.txt
+           docker exec kong-quickstart-gateway /bin/sh -c 'echo -n "my-secret-value" > /tmp/kong/secrets/my-secret.txt'
            ```
 
         1. Export the directory path as an environment variable for use with decK:
@@ -76,13 +70,6 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Remove secret files
-      content: |
-        Delete the secrets directory you created:
-        ```sh
-        rm -rf /tmp/kong/secrets
-        ```
-      icon_url: /assets/icons/file.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
