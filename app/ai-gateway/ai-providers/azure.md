@@ -55,6 +55,7 @@ how_to_list:
       - ai-gateway
     tags:
       - azure
+      - ai-proxy
     description: true
     view_more: false
 ---

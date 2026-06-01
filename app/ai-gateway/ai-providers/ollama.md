@@ -48,6 +48,7 @@ how_to_list:
       - ai-gateway
     tags:
       - ollama
+      - ai-proxy
     description: true
     view_more: false
 ---

@@ -50,6 +50,7 @@ how_to_list:
       - ai-gateway
     tags:
       - cerebras
+      - ai-proxy
     description: true
     view_more: false
 ---

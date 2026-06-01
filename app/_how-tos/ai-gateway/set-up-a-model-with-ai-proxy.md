@@ -28,9 +28,7 @@ entities:
 
 tags:
   - ai
-  - openai
-  - deepseek
-
+  - ai-proxy
 tldr:
   q: How do I use the AI Proxy plugin?
   a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with a provider, model, and API key.

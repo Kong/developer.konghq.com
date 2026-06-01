@@ -64,6 +64,7 @@ how_to_list:
       - ai-gateway
     tags:
       - gemini
+      - ai-proxy
     description: true
     view_more: false
 ---
