@@ -57,7 +57,7 @@ how_to_list:
 
 ## Configure a {{ provider.name }} provider
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [provider](/ai-gateway/entities/provider/). You can then access supported [models](/ai-gateway/entities/model/) from  {{ provider.name }}.
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [provider](/ai-gateway/entities/ai-provider/). You can then access supported [models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Note that, {{ site.vercel }} hosts [models](https://vercel.com/ai-gateway/models) from other providers so in this example we use `openai/gpt-5.5`.
 

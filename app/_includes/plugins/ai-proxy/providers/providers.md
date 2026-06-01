@@ -1,6 +1,6 @@
 {%- assign provider = include.providers.providers | where: "name", include.provider_name | first -%}
 {% if provider %}
-You can proxy requests to {{ provider.name }} AI models through {{site.ai_gateway}} by creating [providers](/ai-gateway/entities/provider/) and [models](/ai-gateway/entities/model/). This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
+You can proxy requests to {{ provider.name }} AI models through {{site.ai_gateway}} by creating [providers](/ai-gateway/entities/ai-provider/) and [models](/ai-gateway/entities/ai-model/). This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
 
 {:.info}
 > Model provider support uses the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins behind the scenes. In some deployment modes you may need to configure these explicitly.

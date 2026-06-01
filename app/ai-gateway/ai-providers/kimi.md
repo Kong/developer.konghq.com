@@ -57,7 +57,7 @@ how_to_list:
 
 ## Configure {{ provider.name }} with AI Proxy
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [provider](/ai-gateway/entities/provider/). You can then access supported [models](/ai-gateway/entities/model/) from  {{ provider.name }}.
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [provider](/ai-gateway/entities/ai-provider/). You can then access supported [models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
