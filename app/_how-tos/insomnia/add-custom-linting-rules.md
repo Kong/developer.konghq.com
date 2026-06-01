@@ -44,6 +44,8 @@ From the Insomnia app, upload a [Spectral ruleset](https://docs.stoplight.io/doc
 
 This places the ruleset file in the local working directory. Insomnia renames this custom ruleset as `.spectral.yaml`.
 
+You can view the content of the file by clicking `Custom Ruleset` in Insomnia, but not edit the file from the UI.
+
 ## Define the rules
 
 The custom ruleset overrides the default one. To create a new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extends` property.
