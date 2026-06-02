@@ -60,8 +60,6 @@ rows:
     description: Use a [Schema Validation policy](/event-gateway/policies/schema-validation-produce/) to parse JSON records, and use a nested Modify Headers policy to add a header to specific records.
   - use_case: "[Tutorial: Enrich Kafka SASL PLAIN connections with Kong Identity principal metadata](/event-gateway/kong-identity-metadata-integration/)"
     description: Look up the SASL-authenticated principal in a Kong Identity directory, and add a header to records based on the principal's metadata.
-  - use_case: "[Tutorial: Enrich Kafka OAuth connections with Kong Identity principal metadata](/event-gateway/kong-identity-jwt-metadata-integration/)"
-    description: Look up the JWT-authenticated principal in a Kong Identity directory by `iss` and `sub`, and add a header to records based on the principal's metadata.
 {% endtable %}
 <!--vale on-->
 
