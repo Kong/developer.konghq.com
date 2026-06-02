@@ -76,6 +76,8 @@ set up an instance of the [OpenID Connect plugin](/plugins/openid-connect/) with
 
 We're also enabling the password grant, as well as a refresh token header, so that we can test retrieving the token.
 
+{% include how-tos/steps/deck-salt-token.md %}
+
 Enable the OpenID Connect plugin on the `example-service` Service:
 
 {% entity_examples %}
@@ -98,6 +100,7 @@ entities:
         - header
         refresh_token_param_name: refresh_token
         upstream_refresh_token_header: refresh_token
+        cache_tokens_salt: ${salt-token}
 variables:
   issuer:
     value: $ISSUER
@@ -105,6 +108,8 @@ variables:
     value: $CLIENT_ID
   client-secret:
     value: $CLIENT_SECRET
+  salt-token:
+    value: $TOKEN_SALT
 {% endentity_examples %}
 
 In this example:

@@ -107,6 +107,8 @@ cleanup:
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin. In this example, we're using the simple password grant with the `scopes_claim` and `scopes_required` claims pair.
 
+{% include how-tos/steps/deck-salt-token.md %}
+
 Enable the OpenID Connect plugin on the `example-service` Service:
 
 {% entity_examples %}
@@ -129,6 +131,7 @@ entities:
         - scope
         scopes_required:
         - openid
+        cache_tokens_salt: ${salt-token}
 variables:
   issuer:
     value: $ISSUER
@@ -136,6 +139,8 @@ variables:
     value: $CLIENT_ID
   client-secret:
     value: $CLIENT_SECRET
+  salt-token:
+    value: $TOKEN_SALT
 {% endentity_examples %}
 
 In this example:
