@@ -760,8 +760,8 @@ Additionally, compression is disabled.
 
 #### OpenResty header enforcement
 
-OpenResty was bumped from 1.21.4.2 to 1.25.3.1, picking up header enforcement changes from Nginx. 
-Starting from 1.23.2, Nginx strictly enforces [RFC 9112](https://datatracker.ietf.org/doc/html/rfc9112), treating duplicate `Content-Length` and `Transfer-Encoding` headers as errors and throwing a `502 Bad Gateway` if both exist.
+OpenResty was bumped from 1.21.4.2 to 1.25.3.1, picking up stricter header validation from Nginx.
+Starting from 1.23.2, Nginx strictly enforces [RFC 9112](https://datatracker.ietf.org/doc/html/rfc9112) and treats upstream responses that contain duplicate `Content-Length` headers, duplicate `Transfer-Encoding` headers, or both headers as invalid, returning a `502 Bad Gateway`.
 
 #### Kong Manager Enterprise
 
