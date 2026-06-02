@@ -61,6 +61,7 @@ rows:
             cta:
               text: Deploy {{ site.event_gateway_short }} in Kubernetes using {{site.konnect_short_name}} CRDs
               url: /operator/get-started/event-gateway/install/
+            tech_preview: true
       - blocks:
         - type: card
           config:
@@ -71,6 +72,7 @@ rows:
             cta:
               text: Deploy Dev Portal in Kubernetes using {{site.konnect_short_name}} CRDs
               url: /operator/get-started/dev-portal/install/
+            tech_preview: true
 
   - header:
       type: h2
