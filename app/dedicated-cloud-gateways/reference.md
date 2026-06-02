@@ -431,6 +431,9 @@ config:
 {% endkong_config_table %}
 <!--vale on -->
 
+{:.warning}
+> **Important:** You can only set environment variables prefixed with `KONG_` or `OTEL_`.
+
 ### How do I set environment variables?
 
 In the {{site.konnect_short_name}} UI, you can add environment variables to a Dedicated Cloud Gateway when you create the data plane node. Navigate to your Dedicated Cloud Gateway control plane and from the **Actions** dropdown menu, select "Edit or Resize Cluster". Click **Advanced options** and enter the environment variable key and value pairs you want to use.
