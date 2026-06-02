@@ -11,30 +11,24 @@ permalink: /ai-gateway/ai-providers/kimi/
 
 min_version:
   ai-gateway: '2.0.0'
+
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayModel
 
 works_on:
- - konnect
+  - konnect
+
+tools:
+  - deck
+  - konnect-api
 
 products:
   - gateway
   - ai-gateway
 
-tools:
-  - admin-api
-  - konnect-api
-  - deck
-  - kic
-  - terraform
-
 tags:
   - ai
-
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
 
 related_resources:
   - text: "{{site.ai_gateway}}"
