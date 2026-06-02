@@ -49,6 +49,7 @@ sections:
       - path: /event-gateway/configure-topic-aliases/
       - path: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
       - path: /event-gateway/encrypt-kafka-message-fields-dynamic/
+      - path: /event-gateway/kong-identity-metadata-integration/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification
