@@ -97,7 +97,7 @@ callouts
 camelCase
 CDNs
 cef
-Cerebras
+cerebras
 certificate_admin
 charset
 chatbot
