@@ -555,7 +555,7 @@ openai
 openid
 openresty
 openshift
-OpenSSL
+openssl
 opentelemetry
 Openwhisk
 optum
