@@ -82,6 +82,8 @@ cleanup:
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the client credentials grant.
 
+{% include how-tos/steps/deck-salt-token.md %}
+
 Enable the OpenID Connect plugin on the `example-service` Service:
 
 {% entity_examples %}
@@ -101,6 +103,7 @@ entities:
         - client_credentials
         client_credentials_param_type:
         - header
+        cache_tokens_salt: ${salt-token}
 variables:
   issuer:
     value: $ISSUER
@@ -108,6 +111,8 @@ variables:
     value: $CLIENT_ID
   client-secret:
     value: $CLIENT_SECRET
+  salt-token:
+    value: $TOKEN_SALT
 {% endentity_examples %}
 
 In this example:

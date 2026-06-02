@@ -75,6 +75,8 @@ Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisit
 set up an instance of the OpenID Connect plugin with introspection authentication.
 We're also enabling the password grant so that you can test retrieving the auth token for introspection.
 
+{% include how-tos/steps/deck-salt-token.md %}
+
 Enable the OpenID Connect plugin on the `example-service` Service:
 
 {% entity_examples %}
@@ -95,6 +97,7 @@ entities:
         - password
         bearer_token_param_type:
         - header
+        cache_tokens_salt: ${salt-token}
 variables:
   issuer:
     value: $ISSUER
@@ -102,6 +105,8 @@ variables:
     value: $CLIENT_ID
   client-secret:
     value: $CLIENT_SECRET
+  salt-token:
+    value: $TOKEN_SALT
 {% endentity_examples %}
 
 In this example:

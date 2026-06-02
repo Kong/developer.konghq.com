@@ -80,6 +80,8 @@ set up an instance of the OpenID Connect plugin with the session auth flow.
 
 We're also enabling the password grant so that we can test retrieving the session cookie.
 
+{% include how-tos/steps/deck-salt-token.md %}
+
 Enable the OpenID Connect plugin on the `example-service` Service:
 
 {% entity_examples %}
@@ -98,6 +100,7 @@ entities:
         auth_methods:
         - session
         - password
+        cache_tokens_salt: ${salt-token}
 variables:
   issuer:
     value: $ISSUER
@@ -105,6 +108,8 @@ variables:
     value: $CLIENT_ID
   client-secret:
     value: $CLIENT_SECRET
+  salt-token:
+    value: $TOKEN_SALT
 {% endentity_examples %}
 
 In this example:

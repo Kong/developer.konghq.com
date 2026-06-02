@@ -78,6 +78,9 @@ set up an instance of the OpenID Connect plugin with bearer authentication. The 
 
 We're also enabling the password grant so that you can test retrieving the bearer auth token. 
 
+{% include how-tos/steps/deck-salt-token.md %}
+
+
 Enable the OpenID Connect plugin on the `example-service` Service:
 
 {% entity_examples %}
@@ -98,6 +101,7 @@ entities:
         - password
         bearer_token_param_type:
         - query
+        cache_tokens_salt: ${salt-token}
 variables:
   issuer:
     value: $ISSUER
@@ -105,6 +109,8 @@ variables:
     value: $CLIENT_ID
   client-secret:
     value: $CLIENT_SECRET
+  salt-token:
+    value: $TOKEN_SALT
 {% endentity_examples %}
 
 In this example:
