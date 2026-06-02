@@ -56,6 +56,8 @@ rows:
     description: "Webhook-based alerts with configurable rules and channels for usage thresholds and billing events."
   - feature: "**Cost analytics**"
     description: "First-class support for metering AI token usage and computing LLM model costs."
+  - feature: "**Prepaid credits**"
+    description: "Support paid or promotional credit grants with priority-based burn-down and expiration."
 {% endtable %}
 <!--vale on-->
 
