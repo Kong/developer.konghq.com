@@ -376,6 +376,6 @@ x-team:operators#test-message
 ```
 {:.no-copy-code}
 
-{{site.event_gateway_short}} authenticated the client with the broker by passing the SASL/PLAIN credentials straight through, looked up the `john` SASL username in the `event-gateway-directory` Kong Identity directory, attached the principal's metadata to the connection, and applied the Modify Headers policy because `context.auth.principal.metadata.team` was `operators`.
+{{site.event_gateway_short}} authenticated the client with the broker by passing the SASL/PLAIN credentials straight through, looked up the `john` SASL username in the Kong Identity directory, attached the principal's metadata to the connection, and applied the Modify Headers policy because `context.auth.principal.metadata.team` was `operators`.
 
 The same principal lookup strategy can be used with all other authentication methods (SASL/SCRAM, SASL/OAUTHBEARER, client certificates). 
