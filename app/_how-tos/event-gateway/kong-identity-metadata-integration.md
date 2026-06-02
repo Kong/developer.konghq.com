@@ -8,6 +8,7 @@ permalink: /event-gateway/kong-identity-metadata-integration/
 
 products:
     - event-gateway
+    - identity
 
 works_on:
     - konnect
