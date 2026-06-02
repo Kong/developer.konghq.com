@@ -487,12 +487,16 @@ will have the same SNI hostname while performing router matches, regardless of t
 
 ## Route priority
 
-In `traditional_compat` mode, the priority of a Route is determined as follows, by the order of descending significance:
+The method used for determining the priority of a Route depends on the router mode: `traditional` or `traditional_compatible`.
 
-1. **Priority points:** A priority point is added for every `methods`, `host`, `headers`, and `snis` value that a Route has. 
+### Determining priority for traditional mode
+
+In `traditional` mode, the priority of a Route is determined as follows, by the order of descending significance:
+
+1. **Priority points:** A priority point is added for every `methods`, `host`, `headers`, `snis`, and `paths` value that a Route has.
 Routes with higher priority point values are considered before those with lower values.
 2. **Wildcard hosts:** Among Routes with the same priority point value, Routes without a wildcard host specified (or no host at all) are prioritized before those that have any wildcard host specification.
-3. **Header count:** The resulting groups are sorted so the Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
+3. **Header count:** The resulting groups are sorted so that Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
 4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. 
 Routes that have no regular expression path are ordered by the length of their paths.
 5. **Creation date:** If all of the above are equal, the router chooses the Route that was created first using the Route's `created_at` value.
@@ -515,11 +519,11 @@ For example, if two Routes are configured like so:
 }
 ```
 
-The second route has a `hosts` field **and** a `methods` field, so it is
-evaluated first by {{site.base_gateway}}. By doing so, we avoid the first route "shadowing"
+The second Route has a `hosts` field **and** a `methods` field, so it is
+evaluated first by {{site.base_gateway}}. By doing so, we avoid the first Route "shadowing"
 calls intended for the second one.
 
-Thus, this request matches the first route:
+Thus, this request matches the first Route:
 
 ```http
 GET / HTTP/1.1
@@ -533,11 +537,11 @@ POST / HTTP/1.1
 Host: example.com
 ```
 
-Following this logic, if a third route was to be configured with a `hosts`
+Following this logic, if a third Route was to be configured with a `hosts`
 field, a `methods` field, and a `paths` field, it would be evaluated first by
 {{site.base_gateway}}.
 
-If the rule count for the given request is the same in two routes `A` and
+If the rule count for the given request is the same in two Routes `A` and
 `B`, then the following tiebreaker rules will be applied in the order they
 are listed. Route `A` will be selected over `B` if:
 
@@ -547,3 +551,56 @@ are listed. Route `A` will be selected over `B` if:
 - `A` has at least one regex path and `B` has only plain paths
 - `A`'s longest path is longer than `B`'s longest path
 - `A.created_at < B.created_at`
+
+### Determining priority for traditional compatible mode
+
+In `traditional_compat` mode, the priority of a Route is determined as follows, by the order of descending significance:
+
+1. **Match weight:** A priority increment is added for each of the following fields that a Route specifies: `sources`, `destinations`, `methods`, `hosts`, `headers`, `snis`, and `paths`. 
+Routes with higher match weight are considered before those with lower match weight.
+2. **Wildcard hosts:** Among Routes with the same match weight, Routes without a wildcard host specified are prioritized before those that include any wildcard host.
+3. **Header count:** The resulting groups are sorted so that Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
+4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value.
+Routes that have no regular expression path are ordered by the length of their paths.
+
+{:.warning}
+> **Caution**: If all of the above are equal, `traditional_compat` doesn't use the Route's `created_at` value as a tie-breaker.
+This value is only used in `traditional` mode.
+
+For example, if two Routes are configured like so:
+
+```json
+{
+    "hosts": ["example.com"],
+    "methods": ["POST"],
+    "service": {
+        "id": "..."
+    }
+},
+{
+    "hosts": ["example.com"],
+    "methods": ["POST"],
+    "sources": [{"ip": "10.0.0.0/8"}],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+The second Route has `hosts`, `methods`, **and** `sources`, giving it a higher match weight.
+It's evaluated first by {{site.base_gateway}}, so POST requests originating from the `10.0.0.0/8` range
+are routed there, while POST requests from any other source match the first Route.
+
+Following this logic, a Route that also specifies `destinations` would have an even higher match weight
+and would be evaluated before either of the above Routes.
+
+If the match weight for the given request is the same in two Routes `A` and
+`B`, then the following tiebreaker rules will be applied in the order they
+are listed. 
+Route `A` will be selected over `B` if:
+
+- `A` has only plain Host headers and `B` has one or more wildcard host headers
+- `A` has more non-Host headers than `B`
+- `A` has at least one regex path and `B` has only plain paths
+- `A`'s longest path is longer than `B`'s longest path
+
