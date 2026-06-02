@@ -1,0 +1,11 @@
+{%- capture body -%}
+<p class="text-sm text-terciary">Start with the full marketplace, then browse individual skills and plugin packages.</p>
+
+{%- capture _quick_install -%}{% include skills/quick_install.md %}{%- endcapture -%}
+<div class="flex flex-grow">{{ _quick_install | markdownify }}</div>
+<div class="text-sm">
+    <a href="/skills/install/" class="text-brand no-icon">Installation guide  &rarr;</a>
+</div>
+
+{%- endcapture -%}
+{% include card.html featured="Primary install" title_tag="h2" title="Install the marketplace" body=body css_class="border border-primary/5" %}
