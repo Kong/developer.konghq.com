@@ -69,13 +69,15 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
+## Generate salt token
+
+{% include how-tos/steps/deck-salt-token.md %}
+
 ## Enable the OpenID Connect plugin with introspection
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with introspection authentication.
 We're also enabling the password grant so that you can test retrieving the auth token for introspection.
-
-{% include how-tos/steps/deck-salt-token.md %}
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
