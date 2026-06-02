@@ -487,13 +487,13 @@ will have the same SNI hostname while performing router matches, regardless of t
 
 ## Route priority
 
-The method used for determining the priority of a Route depends on the router mode: `traditional` or `traditional_compatible`.
+The method used for determining the priority of a Route depends on the router mode: `traditional` or `traditional_compat`.
 
 ### Determining priority for traditional mode
 
 In `traditional` mode, the priority of a Route is determined as follows, by the order of descending significance:
 
-1. **Priority points:** A priority point is added for every `methods`, `host`, `headers`, `snis`, and `paths` value that a Route has.
+1. **Priority points:** A priority point is added for every `methods`, `hosts`, `headers`, `snis`, and `paths` value that a Route has.
 Routes with higher priority point values are considered before those with lower values.
 2. **Wildcard hosts:** Among Routes with the same priority point value, Routes without a wildcard host specified (or no host at all) are prioritized before those that have any wildcard host specification.
 3. **Header count:** The resulting groups are sorted so that Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
@@ -565,7 +565,7 @@ Routes that have no regular expression path are ordered by the length of their p
 
 {:.warning}
 > **Caution**: If all of the above are equal, `traditional_compat` doesn't use the Route's `created_at` value as a tie-breaker.
-This value is only used in `traditional` mode.
+> This value is only used in `traditional` mode.
 
 For example, if two Routes are configured like so:
 
