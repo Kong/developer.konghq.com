@@ -125,6 +125,7 @@ You should see the following output:
    runuser --user kong-mesh-data-plane-proxy -- \
      /usr/local/bin/kuma-dp run \
        --cp-address https://control-plane:5678 \
+       --skip-verify \
        --dataplane-token-file /demo/token-kv \
        --dataplane-file /demo/dataplane.yaml \
        --dataplane-var name=kv \
@@ -132,6 +133,9 @@ You should see the following output:
        --dataplane-var port=5050 \
        > /demo/logs-data-plane-proxy-kv.log 2>&1 &
    ```
+
+   {:.warning}
+   > The `--skip-verify` flag turns off TLS verification of the control plane certificate and is only appropriate for this guide, where the control plane uses a self-signed certificate. As of the latest patch releases, `kuma-dp` verifies the control plane certificate by default instead of silently skipping verification. In production, pass the control plane CA with `--ca-cert-file=/path/to/ca.pem` (or set the `KUMA_CONTROL_PLANE_CA_CERT_FILE` environment variable) instead of skipping verification.
 
 1. After a few seconds, check the logs to verify the proxy is running:
 
