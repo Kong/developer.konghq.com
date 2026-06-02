@@ -193,6 +193,12 @@ rows:
       This upgrade changes the expected regex syntax, and any incompatible regular expressions will prevent {{site.base_gateway}} from applying configuration.
     action: |
       Review all regexes in your entity configuration and adjust based on the [PCRE2 syntax reference](https://www.pcre.org/current/doc/html/pcre2syntax.html).
+  - category: Dependencies
+    description: |
+      OpenResty was bumped from 1.21.4.2 to 1.25.3.1, picking up header enforcement changes from Nginx. 
+      Starting from 1.23.2, Nginx strictly enforces [RFC 9112](https://datatracker.ietf.org/doc/html/rfc9112), treating duplicate `Content-Length` and `Transfer-Encoding` headers as errors and throwing a `502 Bad Gateway` if both exist.
+    action: |
+      Ensure that incoming requests don't send both headers, and remove the redundant `Transfer-Encoding` header from incoming requests if they do.
 {% endtable %}
 
 
