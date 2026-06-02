@@ -432,7 +432,7 @@ config:
 <!--vale on -->
 
 {:.warning}
-> **Important:** You can only set environment variables prefixed with `KONG_` and `OTEL_`.
+> **Important:** You can only set environment variables prefixed with `KONG_` or `OTEL_`.
 
 ### How do I set environment variables?
 
