@@ -6,7 +6,7 @@ permalink: /operator/get-started/event-gateway/tlsroute-sni/
 
 series:
   id: operator-get-started-event-gateway
-  position: 4
+  position: 3
 
 breadcrumbs:
   - /operator/
@@ -31,7 +31,7 @@ prereqs:
 
 tldr:
   q: How do I deploy Kong Event Gateway in a production-oriented topology?
-  a: Front the `KegDataPlane` with a `Gateway` and `TLSRoute`, terminate TLS in Kong Event Gateway, and route virtual clusters with SNI.
+  a: Front the Event Gateway with a `Gateway` and `TLSRoute`, terminate TLS in Kong Event Gateway, and route virtual clusters with SNI.
 
 next_steps:
   - text: Learn more about Kong Event Gateway resources
@@ -56,7 +56,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 ## Create a `GatewayConfiguration` and `GatewayClass`
 
-Create a managed `Gateway` class for the TLSRoute example:
+Create a managed `Gateway` class for the TLSRoute example. This `Gateway` is provisioned through {{ site.konnect_short_name }}, so the `GatewayConfiguration` should reference the `KonnectAPIAuthConfiguration` created in the prerequisites:
 
 ```bash
 echo '
@@ -66,6 +66,9 @@ metadata:
   name: kong-configuration
   namespace: kong
 spec:
+  konnect:
+    authRef:
+      name: konnect-api-auth
   dataPlaneOptions:
     deployment:
       podTemplateSpec:

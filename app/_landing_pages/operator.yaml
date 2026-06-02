@@ -20,7 +20,9 @@ rows:
           - type: text
             config: |
               {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven by Gateway API or Kong-specific Custom Resource Definitions (CRDs), {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
-              in a declarative way.
+              in a declarative way.  
+              
+              Whilst we will continue to support [Kong Ingress Controller](/kubernetes-ingress-controller/), please consider [migrating](/operator/migrate/migrate-kic-to-ko) to {{ site.operator_product_name }} as this is where new features will be released.
 
   - header:
       type: h2
@@ -30,9 +32,9 @@ rows:
         - type: card
           config:
             icon: /assets/icons/kubernetes.svg
-            title: "Manage {{ site.base_gateway }} in Kubernetes through the Gateway API"
+            title: "Provision {{ site.base_gateway }} with Gateway API"
             description: |
-              Deploy and configure {{ site.base_gateway }} in Kubernetes using Gateway API resources.
+              Use standard Kubernetes Gateway API resources to deploy {{ site.base_gateway }} and route traffic.
             cta:
               text: Deploy {{ site.base_gateway }} in Kubernetes using Gateway API
               url: /operator/get-started/gateway-api/install/ 
@@ -41,13 +43,34 @@ rows:
         - type: card
           config:
             icon: /assets/logos/konglogo-gradient-secondary.svg
-            title: "Manage {{ site.base_gateway }} in Kubernetes through the {{site.konnect_short_name}} CRDs"
+            title: "Configure {{ site.base_gateway }} with {{site.konnect_short_name}} CRDs"
             description: |
-              Deploy and configure {{ site.base_gateway }} in Kubernetes using Kong-specific Custom Resource Definitions (CRDs)
-              provided by {{ site.operator_product_name }}.
+              Use Kong CRDs to model control planes and gateway configuration directly from Kubernetes.
             cta:
               text: Deploy {{ site.base_gateway }} in Kubernetes using {{site.konnect_short_name}} CRDs
               url: /operator/get-started/konnect-crds/install/
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/event.svg
+            title: "Deploy {{ site.event_gateway_short }} on Kubernetes"
+            description: |
+              Set up listeners, virtual clusters, policies, and data planes for Kafka traffic with operator-managed CRDs.
+            cta:
+              text: Deploy {{ site.event_gateway_short }} in Kubernetes using {{site.konnect_short_name}} CRDs
+              url: /operator/get-started/event-gateway/install/
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/dev-portal.svg
+            title: "Create a Dev Portal from Kubernetes"
+            description: |
+              Provision portals, pages, teams, domains, and sign-in settings declaratively with Portal CRDs.
+            cta:
+              text: Deploy Dev Portal in Kubernetes using {{site.konnect_short_name}} CRDs
+              url: /operator/get-started/dev-portal/install/
 
   - header:
       type: h2
@@ -113,12 +136,14 @@ rows:
                 supported: true
               - product: Gateway Configuration
                 supported: true
+              - product: Event Gateway
+                supported: true
               - product: Dedicated Cloud Gateways
                 supported: Partially
               - product: Kong Mesh
                 supported: Planned
               - product: Developer Portal
-                supported: Planned
+                supported: true
               - product: Catalog
                 supported: Planned
               - product: Analytics

@@ -6,7 +6,7 @@ permalink: /operator/get-started/dev-portal/portal-settings/
 
 series:
   id: operator-get-started-dev-portal
-  position: 4
+  position: 3
 
 breadcrumbs:
   - /operator/

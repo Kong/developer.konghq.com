@@ -39,37 +39,29 @@ This guide walks through a complete Kong Event Gateway setup using {{site.operat
 
 By the end of the series, you will have:
 
-- a `KonnectEventGateway`
+- a Konnect Event Gateway Control Plane
 - an Event Gateway data plane in Kubernetes
 - a backend Kafka cluster
 - a virtual cluster, listener, and listener policies
-- consume and produce policies
-- two exposure patterns:
+- consumer and producer policies
+- two ways to expose services:
   - `LoadBalancer` plus `portMapping`
-  - `Gateway` plus `TLSRoute` plus SNI
+  - `Gateway`, `TLSRoute` and SNI
 
 ## Create the Kubernetes namespaces
 
-Create the namespaces used throughout this guide:
+Create the namespaces used throughout this example:
 
 ```bash
 kubectl create namespace kong
 kubectl create namespace kafka
 ```
 
-If the namespaces already exist, Kubernetes will return an `AlreadyExists` message, which is safe to ignore.
-
 ## Install {{site.operator_product_name}}
 
 Install {{site.operator_product_name}} with Helm:
 
-{% include prereqs/products/operator.md raw=true v_maj=2 %}
-
-## Wait for the operator to be ready
-
-Wait for the controller deployment to become available:
-
-{% include prereqs/products/operator-validate-deployment.md %}
+{% include prereqs/products/operator.md raw=true v_maj=2 keg_install=true %}
 
 ## Install a Kafka cluster
 
@@ -106,23 +98,3 @@ helm install kafka-cluster bitnami/kafka \
   --version 32.4.3 \
   -f /tmp/kafka-values.yaml
 ```
-
-Wait for Kafka to be ready:
-
-```bash
-kubectl wait --for=condition=Ready pod \
-  -l app.kubernetes.io/name=kafka \
-  -n kafka \
-  --timeout=10m
-```
-
-## Validation
-
-Verify that the operator and Kafka are ready:
-
-```bash
-kubectl get pods -n kong
-kubectl get pods -n kafka
-```
-
-Once both the operator and Kafka are ready, continue to [Create API Authentication](/operator/get-started/event-gateway/authentication/).

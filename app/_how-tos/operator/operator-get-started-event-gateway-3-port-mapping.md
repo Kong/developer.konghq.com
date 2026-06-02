@@ -6,7 +6,7 @@ permalink: /operator/get-started/event-gateway/port-mapping/
 
 series:
   id: operator-get-started-event-gateway
-  position: 3
+  position: 2
 
 breadcrumbs:
   - /operator/
@@ -34,9 +34,9 @@ tldr:
   a: Create a `KonnectEventGateway`, backend cluster, virtual cluster, listener, `KegDataPlane`, listener policy, and consume and produce policies.
 ---
 
-This deployment pattern is the simplest way to validate Kong Event Gateway locally.
+This deployment pattern is the simplest way to validate Kong Event Gateway.
 
-It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker.
+It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker.  For production environments, we would recomment using Kong Gateway with the Kong Operator to setup a TLSRoute and an SNI wildcard.
 
 ## Create the `KonnectEventGateway`
 
@@ -255,37 +255,6 @@ spec:
               key: x-kong-produce-policy
               value: example
 ' | kubectl apply -f -
-```
-
-## Validation
-
-Wait for the Konnect-backed resources to become programmed:
-
-```bash
-kubectl wait -n kong \
-  konnecteventgateway/cp-event-1 \
-  eventgatewaybackendcluster/default-backend-cluster \
-  eventgatewayvirtualcluster/example-virtual-cluster \
-  eventgatewaylistener/example-listener \
-  eventgatewaylistenerpolicy/example-listener-policy \
-  eventgatewayvirtualclusterconsumepolicy/example-virtual-cluster-consume-policy \
-  eventgatewayvirtualclusterproducepolicy/example-virtual-cluster-produce-policy \
-  --for=jsonpath='{.status.conditions[?(@.type=="Programmed")].status}'=True \
-  --timeout=10m
-```
-
-Check the resource status:
-
-```bash
-kubectl get -n kong \
-  konnecteventgateway \
-  eventgatewaybackendcluster \
-  eventgatewayvirtualcluster \
-  eventgatewaylistener \
-  eventgatewaylistenerpolicy \
-  eventgatewayvirtualclusterconsumepolicy \
-  eventgatewayvirtualclusterproducepolicy \
-  kegdataplane
 ```
 
 ## Smoke test with Kafka metadata
