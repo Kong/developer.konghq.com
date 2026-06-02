@@ -28,7 +28,7 @@ prereqs:
       icon_url: /assets/icons/kogo-white.svg
     - title: "Configured meter"
       content: |
-        You need a [configured meter](/metering-and-billing/metering/#create-a-meter), such as API Gateway requests or AI Gateway tokens.
+        You need a [configured meter](/metering-and-billing/metering/#create-a-meter), such as API Gateway requests or {{site.ai_gateway}} tokens.
       icon_url: /assets/icons/money.svg
 
 tldr:
