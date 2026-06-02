@@ -69,14 +69,16 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
+## Generate salt token
+
+{% include how-tos/steps/deck-salt-token.md %}
+
 ## Enable the OpenID Connect plugin with refresh tokens
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the [OpenID Connect plugin](/plugins/openid-connect/) with the refresh token grant.
 
 We're also enabling the password grant, as well as a refresh token header, so that we can test retrieving the token.
-
-{% include how-tos/steps/deck-salt-token.md %}
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 

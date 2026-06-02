@@ -71,15 +71,16 @@ search_aliases:
   - oidc
 ---
 
+## Generate salt token
+
+{% include how-tos/steps/deck-salt-token.md %}
+
 ## Enable the OpenID Connect plugin with JWT authentication
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with bearer authentication. The stateless JWT Access Token authentication is named `bearer` in the OpenID Connect plugin.
 
 We're also enabling the password grant so that you can test retrieving the bearer auth token. 
-
-{% include how-tos/steps/deck-salt-token.md %}
-
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 

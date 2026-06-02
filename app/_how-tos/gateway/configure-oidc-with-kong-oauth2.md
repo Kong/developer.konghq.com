@@ -114,12 +114,14 @@ variables:
     value: $PROVISION_KEY
 {% endentity_examples %}
 
+## Generate salt token
+
+{% include how-tos/steps/deck-salt-token.md %}
+
 ## Enable the OpenID Connect plugin with Kong OAuth token authentication
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with Kong OAuth token authentication.
-
-{% include how-tos/steps/deck-salt-token.md %}
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 

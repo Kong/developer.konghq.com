@@ -69,12 +69,14 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
+## Generate salt token
+
+{% include how-tos/steps/deck-salt-token.md %}
+
 ## Enable the OpenID Connect plugin with the password grant
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the password grant.
-
-{% include how-tos/steps/deck-salt-token.md %}
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 

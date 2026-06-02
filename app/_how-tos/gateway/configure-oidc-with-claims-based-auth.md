@@ -102,12 +102,14 @@ cleanup:
 
 ---
 
+## Generate salt token
+
+{% include how-tos/steps/deck-salt-token.md %}
+
 ## Enable the OpenID Connect plugin with claims-based authorization
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin. In this example, we're using the simple password grant with the `scopes_claim` and `scopes_required` claims pair.
-
-{% include how-tos/steps/deck-salt-token.md %}
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
