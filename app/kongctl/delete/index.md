@@ -21,7 +21,51 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
-Deletes all resources defined in the declarative configuration files from {{site.konnect_short_name}}.
+`delete` removes all resources defined in the input declarative configuration files from the target {{site.konnect_short_name}} organization.
+Use `delete` for experimenting with a known set of resources or resetting a test environment. It isn't a common part of the declarative configuration workflow.
+
+`kongctl delete -f <files>` is equivalent to generating a delete-mode [plan](/kongctl/plan/) for the input files and running it.
+
+## Examples
+
+Preview targeted deletions:
+
+```shell
+kongctl diff -f config.yaml --mode delete
+```
+
+Delete resources declared in a file:
+
+```shell
+kongctl delete -f config.yaml
+```
+
+{:.warning}
+> **Caution**: `delete` plans to delete all resources specified in the input
+> configuration. Always verify the changes before approving execution.
+
+kongctl also provides the following tools for directly deleting individual resources:
+
+{% table %}
+columns:
+  - title: Command
+    key: command
+  - title: Description
+    key: description
+rows:
+  - command: |
+      [kongctl delete konnect](/kongctl/delete/konnect/)
+    description: "Delete {{site.konnect_short_name}} tokens."
+  - command: |
+      [kongctl delete organization](/kongctl/delete/organization/)
+    description: "Manage {{site.konnect_short_name}} system account resources."
+  - command: |
+      [kongctl delete pat](/kongctl/delete/pat/)
+    description: "Delete a {{site.konnect_short_name}} personal access token."
+  - command: |
+      [kongctl delete spat](/kongctl/delete/spat/)
+    description: "Delete a {{site.konnect_short_name}} system account access token."
+{% endtable %}
 
 ## Command usage
 

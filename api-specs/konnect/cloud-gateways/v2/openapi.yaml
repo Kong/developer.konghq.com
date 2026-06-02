@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@ddc4a22bd4de6fd3a30cdfaed072c16a7c19140d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ddc4a22bd4de6fd3a30cdfaed072c16a7c19140d'
+  x-oas-source: kong/platform-api@e9387742c9fbf6e555c330af3e8be7271ea7855f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e9387742c9fbf6e555c330af3e8be7271ea7855f'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -1489,9 +1489,9 @@ components:
       properties:
         name:
           description: |
-            Name of the environment variable field to set for the data-plane group. Must be prefixed by KONG_.
+            Name of the environment variable field to set for the data-plane group. Must be prefixed by KONG_ or OTEL_.
           type: string
-          format: '^KONG_[a-zA-Z_]+[a-zA-Z0-9_]*'
+          format: '^(KONG|OTEL)_[a-zA-Z_]+[a-zA-Z0-9_]*'
           example: KONG_LOG_LEVEL
           maxLength: 120
           minLength: 6
@@ -1499,7 +1499,7 @@ components:
           description: Value assigned to the environment variable field for the data-plane group.
           type: string
           example: info
-          maxLength: 120
+          maxLength: 2048
           minLength: 1
       required:
         - name

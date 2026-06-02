@@ -29,7 +29,7 @@ export const config: Config = {
     "/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg",
     "/**/*.gif", "/**/*.svg", "/**/*.ico", "/**/*.webp",
     "/**/*.woff", "/**/*.woff2", "/**/*.ttf", "/**/*.eot",
-    "/**/*.json", "/**/*.xml", "/**/*.map",
+    "/**/*.json", "/**/*.xml", "/**/*.map", "/**/*.txt"
   ],
   onError: "bypass",
 };

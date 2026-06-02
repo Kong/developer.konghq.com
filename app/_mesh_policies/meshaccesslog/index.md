@@ -11,6 +11,8 @@ icon: meshaccesslog.png
 related_resources:
   - text: Deploy an OpenTelemetry collector
     url: /mesh/deploy-an-opentelemetry-collector/
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/meshopentelemetrybackend/
 ---
 
 

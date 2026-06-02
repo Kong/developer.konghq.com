@@ -18,7 +18,6 @@ breadcrumbs:
   - /konnect-platform/kai/
   - /konnect-platform/konnect-mcp/
 permalink: /konnect-platform/konnect-mcp/changelog/
-beta: true
 related_resources:
   - text: "{{site.konnect_product_name}} MCP Server"
     url: /konnect-platform/konnect-mcp/
@@ -29,6 +28,10 @@ related_resources:
 ---
 
 Changelog for {{site.konnect_product_name}} MCP Server.
+
+## Week of 2026-05-18
+
+* Standalone MCP {{site.code_mode}} released GA
 
 ## Week of 2025-12-19
 

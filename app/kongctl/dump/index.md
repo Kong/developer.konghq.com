@@ -21,6 +21,34 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
+Export current {{site.konnect_short_name}} resource state to various formats.
+
+## Examples
+
+Export all APIs with their child resources to `tf-import` format:
+```shell
+kongctl dump tf-import --resources=api --include-child-resources
+```
+
+Export all `portal` and `api` resources to kongctl declarative configuration and the `team-alpha` namespace:
+
+```shell
+kongctl dump declarative --resources=portal,api --default-namespace=team-alpha
+```
+
+For custom dashboards created in the {{site.konnect_short_name}} UI, [adopt](/kongctl/adopt/) the dashboard first,
+then dump it with the same namespace:
+
+```shell
+kongctl adopt analytics dashboard 22cd8a0b-72e7-4212-9099-0764f8e9c5ac \
+  --namespace analytics
+kongctl dump declarative --resources=analytics.dashboards \
+  --default-namespace=analytics > dashboards.yaml
+kongctl plan -f dashboards.yaml --mode apply
+```
+
+## Subcommands
+
 kongctl provides the following tools for exporting configurations:
 
 {% table %}
