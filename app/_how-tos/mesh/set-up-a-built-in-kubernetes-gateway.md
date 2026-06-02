@@ -105,7 +105,7 @@ In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-ap
    {:.no-copy-code}
 
    {:.info}
-   > It can take a few minutes for the `built-in-gateway` pod to appear. If you only see the `demo-app` and `kv` pods, wait and try again.
+   > It can take a few minutes for the `built-in-gateway` Pod to appear. If you only see the `demo-app` and `kv` Pods, wait and try again.
    
 1. Export the gateway's public IP: 
 
@@ -229,9 +229,6 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
 
 1. Create a Kubernetes secret containing the certificate and key in the `kong-mesh-system` namespace:
 
-   {:.info}
-   > The {{site.mesh_product_name}} control plane cache only watches Secrets in the `kong-mesh-system` namespace. The Secret must be created there for the gateway controller to read it.
-
    ```sh
    echo "apiVersion: v1
    kind: Secret
@@ -263,10 +260,7 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
          name: my-gateway-certificate" | kubectl apply -f -
    ```
 
-1. Recreate the gateway with TLS enabled:
-
-   {:.warning}
-   > The {{site.mesh_product_name}} Gateway controller only processes a `Gateway` resource on initial creation. To apply the updated TLS configuration, you must delete and recreate the `Gateway`.
+1. Enable TLS and add the certificate to the `Gateway`:
 
    ```sh
    echo "apiVersion: gateway.networking.k8s.io/v1
