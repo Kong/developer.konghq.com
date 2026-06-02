@@ -62,6 +62,70 @@ how_to_list:
 
 ## Configure {{ provider.name }} with AI Proxy
 
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [provider](/ai-gateway/entities/ai-provider/) as follows:
+
+{% entity_example %}
+type: provider
+data:
+  display_name: Anthropic
+  name: my-anthropic-account
+  type: anthropic
+  config:
+    auth:
+      type: basic
+      headers:
+        - name: Authorization
+          value: Bearer <your-api-key>
+{% endentity_example %}
+
+You can then access supported [models](/ai-gateway/entities/ai-model/) from  {{ provider.name }} as follows:
+
+{% entity_example %}
+type: model
+data:
+  display_name: Claude Sonnet
+  name: claude-sonnet-production
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+    - responses
+  formats:
+    - type: anthropic
+  acls:
+    allow:
+      - internal-teams
+    deny: []
+  policies: []
+  target_models:
+    - name: claude-sonnet-4-6
+      provider:
+        name: my-anthropic-account
+      config:
+        temperature: 0.7
+        max_tokens: 4096
+        input_cost: 0.0000025
+        output_cost: 0.000010
+  config:
+    logging:
+      statistics: true
+      payloads: false
+    response_streaming: allow
+    max_request_body_size: 1048576
+    model:
+      name_header: true
+    balancer:
+      algorithm: round-robin
+      retries: 3
+      connect_timeout: 60000
+      read_timeout: 60000
+      write_timeout: 60000
+{% endentity_example %}
+
+
+---
+
+
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [provider](/ai-gateway/entities/ai-provider/). You can then access supported [models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
