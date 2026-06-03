@@ -18,23 +18,20 @@ description: "Learn how {{site.identity}} principals and directories represent a
 related_resources:
   - text: "{{site.identity}}"
     url: /kong-identity/
-  - text: "Centrally-managed Consumers"
-    url: /gateway/entities/consumer/#centrally-managed-consumers
   - text: "{{site.konnect_short_name}} control plane resource limits"
     url: /gateway/control-plane-resource-limits/
 ---
 
 {{site.identity}} uses principals and directories to unify how Kong products represent the entities they authenticate. 
 
-* **Principal:** Represents an entity that authenticates to a Kong product. 
-  The entity can be a human, a workload acting on behalf of a human, or a workload acting on behalf of itself (machine authentication).
+* **Principal:** Represents an external client or workload (not a human {{site.konnect_short_name}} user or {{site.dev_portal}} developer) that authenticates to a {{site.base_gateway}}.
 * **Directory:** Regional collection of principals. 
-  Each {{site.konnect_short_name}} organization gets one directory per region.
+  Each {{site.konnect_short_name}} organization can provision up to one directory per region by default.
 
 Principals can be used for:
-* {{site.base_gateway}} in {{site.konnect_short_name}}: Can both authenticate clients against a principal and look up principal metadata after authentication
-* {{site.event_gateway_short}}: Can only look up principal metadata after authentication has happened at the broker
-* {{site.dev_portal}}: Applications can be mapped to a principal to apply Consumer-scoped plugins to application traffic
+* {{site.base_gateway}} in {{site.konnect_short_name}}: Can be used to authenticate an entity for API traffic (using API keys or basic auth usernames and passwords) or can be used to provide metadata about an entity for OAuth-authenticated traffic.
+* {{site.event_gateway_short}}: Can use metadata about an authenticated entity
+* {{site.dev_portal}}: Can be used to adjust API gateway behavior based on the authenticating {{site.dev_portal}} application
 
 The following table describes when you'd want to use principals:
 
@@ -46,7 +43,7 @@ columns:
   - title: Description
     key: description
 rows:
-  - usecase: "Authenticate clients at {{site.base_gateway}}"
+  - usecase: "Authenticate API traffic for {{site.base_gateway}}"
     description: "Terminate authentication at {{site.base_gateway}} using credentials stored on a principal, such as a username and password or an API key."
   - usecase: "Hydrate metadata after external authentication"
     description: "After a third-party IdP verifies an OAuth token, look up the matching principal in a directory to retrieve metadata for policy decisions."
@@ -63,7 +60,7 @@ Every principal carries some combination of credentials, identities, and metadat
 
 ### Credentials
 
-Credentials are secrets a principal presents at authentication time. The gateway checks them directly against the directory.
+Credentials are secrets a principal presents at authentication time. The gateway checks them directly against the directory and authenticates the principal.
 
 {{site.identity}} supports the following credential types:
 
@@ -128,15 +125,12 @@ If you have existing Consumers you want to migrate to principals, see [HOW TO PL
 
 ### Metadata
 
-Metadata is a set of key/value pairs attached to a principal. Values can be strings, integers, floats, booleans, datetimes, or lists of any of those types.
+Metadata is a set of key/value pairs attached to a principal that are made available in the request context of a {{site.base_gateway}} or {{site.event_gateway_short}} after that principal has been authenticated, or looked up, in the request context.
 
-You can use metadata for policy decisions. 
-For example:
-* A rate limiting plugin can filter by `principal.metadata.tier`.
-* An ACL plugin can allow access only when `principal.metadata.business_unit == "payments"`.
-* A logging plugin can include `principal.metadata.region` in every log line.
+You can use metadata to configure how a gateway behaves when that principal is authenticated to it.
+For example, an ACL plugin can allow access only when `principal.metadata.business_unit == "payments"`.
 
-## Apply plugins to principals
+## Controlling {{site.base_gateway}} plugin execution based on principals
 
 Plugins can read principal attributes from the request context after authentication. 
 The only way to scope plugins to a principal is by using conditional plugin execution on the principal metadata.
@@ -153,19 +147,27 @@ The following request context fields are available to plugins:
 * `principal.metadata.*`: Any metadata key on the principal
 * `principal.identities.*`: Any identity on the principal
 
-## Principal limitations
+## Controlling {{site.event_gateway_short}} policy execution based on principals
 
-The following are default limits for principals and directories:
+{{site.event_gateway_short}} doesn't authenticate clients with Kong Identity directly. 
+Authentication happens at the broker (for example, SASL/PLAIN, SASL/SCRAM, SASL/OAUTHBEARER, or mTLS). 
+After authentication, {{site.event_gateway_short}} can look up the matching principal in a {{site.identity}} directory and attach its metadata to the connection context so that policies can use it.
 
-* 1 directory per region
-* Soft limit of 100,000 principals per directory. Contact Kong to raise this limit.
-* 10 identities per principal
-* 5 of each credential type per principal
-* 50 metadata keys per principal
-* 2 passwords per username (for rotation)
-* Usernames and API keys must be unique within a directory
-* Custom identity name and value combinations must be unique within a directory
-* OIDC identity issuer and claim combinations must be unique within a directory
+This pattern is useful when you want consistent metadata-driven policy decisions for clients that are authenticated by an external mechanism, like Kafka clients connecting with SASL credentials. 
+The metadata lives on the principal, not on the credential, so you can change it without editing the broker.
+
+To fetch principal metadata on a [virtual cluster](/event-gateway/entities/virtual-cluster/), add a `fetch_kong_identity_principal` block to the cluster's authentication configuration. 
+The block references the directory to look up and the identity key to match the authenticated value against. 
+For example, a `custom` identity on `sasl_username` matches the SASL username sent by the Kafka client. 
+When a match is found, the principal's metadata is attached to `context.auth.principal.metadata.*` for the lifetime of the connection.
+
+A [Modify Headers](/event-gateway/policies/modify-headers/) policy that only runs for principals on the operators team would use a condition like this:
+
+```yaml
+condition: context.auth.principal.metadata.team == "operators"
+```
+
+For a complete walkthrough, see [Enrich Kafka SASL PLAIN connections with Kong Identity principal metadata](/event-gateway/kong-identity-metadata-integration/).
 
 ## Create a directory
 
@@ -272,3 +274,152 @@ Terraform steps will be added once the feature is available for testing.
 
 {% endnavtab %}
 {% endnavtabs %}
+
+## Principal limitations
+
+The following are default limits for principals and directories:
+
+* 1 directory per region
+* Soft limit of 100,000 principals per directory. Contact Kong to raise this limit.
+* 10 identities per principal
+* 5 of each credential type per principal
+* 50 metadata keys per principal
+* 2 passwords per username (for rotation)
+* Usernames and API keys must be unique within a directory
+* Custom identity name and value combinations must be unique within a directory
+* OIDC identity issuer and claim combinations must be unique within a directory
+
+## Example principal configurations
+
+The following examples show how to configure identities, credentials, and metadata on a principal. 
+Before using them, you need an [existing principal](#configure-a-principal) in a directory. 
+
+### Basic auth
+
+Add a username and password credential to a principal so clients can authenticate at {{site.base_gateway}} with basic auth. 
+This uses two API requests: first, create the basic auth entry with a username, then set a password on it. 
+The password secret is only returned when it's created and can't be retrieved again later.
+
+Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/basic-auths` endpoint](/api/konnect/kong-identity/v2/#/operations/createBasicAuth) to create the basic auth entry:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/basic-auths
+status_code: 201
+method: POST
+body:
+  username: example-user
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then, send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/basic-auths/{basicAuthId}/passwords` endpoint](/api/konnect/kong-identity/v2/#/operations/createPassword) to set a password for basic auth:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/basic-auths/$BASIC_AUTH_ID/passwords
+status_code: 201
+method: POST
+body:
+  secret: example-password
+{% endkonnect_api_request %}
+<!--vale on-->
+
+### Key auth
+
+Add an API key credential to a principal so clients can authenticate at {{site.base_gateway}} with key auth. 
+The key can be system-generated (`v1`) or imported with a custom secret (`imported`). The key secret is only returned when it's created.
+
+Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/api-keys` endpoint](/api/konnect/kong-identity/v2/#/operations/createKey):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/api-keys
+status_code: 201
+method: POST
+body:
+  type: v1
+{% endkonnect_api_request %}
+<!--vale on-->
+
+### OpenID Connect
+
+Reference a principal authenticated by an external IdP such as Okta or Cognito. 
+{{site.identity}} matches an incoming OAuth token by the token's issuer URL and a configurable claim. Most commonly the claim is `sub`, but any claim in the token can be used for lookup.
+
+Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities
+status_code: 201
+method: POST
+body:
+  type: oidc
+  issuer: https://idp.example.com
+  claim:
+    name: sub
+    value: example-subject
+{% endkonnect_api_request %}
+<!--vale on-->
+
+### Auth server client
+
+Reference a client on a {{site.identity}} auth server in the same region. 
+Use this when {{site.identity}} is issuing the OAuth tokens and you want to map the issuing client to a principal.
+
+Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities
+status_code: 201
+method: POST
+body:
+  type: auth_server_client
+  auth_server_id: $AUTH_SERVER_ID
+  client_id: $CLIENT_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+### Link a principal to a Consumer
+
+Map a principal to a Consumer in a specific {{site.base_gateway}} control plane. 
+Use this when you want existing Consumer-scoped plugins to run for traffic authenticated as the principal.
+
+Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities
+status_code: 201
+method: POST
+body:
+  type: control_plane_consumer
+  control_plane_id: $CONTROL_PLANE_ID
+  consumer_id: $CONSUMER_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+### Link a principal to a Consumer Group
+
+placeholder, need array config
+
+### Custom
+
+Look up a principal by an identifier from an external system. 
+Common uses include matching a SASL username from a Kafka client connecting through {{site.event_gateway_short}}, or matching a non-standard claim in a token issued by an external IdP. 
+The `key` is the name you assign to the identifier, and `value` is the specific value to match against.
+
+Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities
+status_code: 201
+method: POST
+body:
+  type: custom
+  key: sasl_username
+  value: john
+{% endkonnect_api_request %}
+<!--vale on-->
