@@ -39,13 +39,14 @@ faqs:
       The MCP runtime behind an MCP Server entity speaks MCP protocol version `2025-06-18`. Upstream
       MCP servers may run `2025-06-18` or `2025-11-25`. Versions from 2024 are not supported.
 
-  - q: What's the difference between the four server types?
+  - q: What's the difference between the server types?
     a: |
       `passthrough-listener` proxies MCP traffic to an upstream MCP server without converting tools.
       `conversion-listener` converts a RESTful API into MCP tools and accepts MCP requests on the
       same Route. `conversion-only` defines a tool library that other MCP Servers reference by tag
       but doesn't accept incoming MCP traffic itself. `listener` aggregates tools from one or more
-      `conversion-only` MCP Servers into a single MCP endpoint.
+      `conversion-only` MCP Servers into a single MCP endpoint. `upstream-server` registers a real
+      MCP server into an aggregation pool, dynamically fetching its tools for a `listener` to aggregate.
 
   - q: Can the same Consumer's identity gate access to specific tools?
     a: |
@@ -134,7 +135,7 @@ rows:
 
 ## Server modes
 
-The `type` field selects one of four modes. Each mode determines how the runtime handles MCP requests and whether it converts RESTful APIs into MCP tools.
+The `type` field selects one of five modes. Each mode determines how the runtime handles MCP requests and whether it converts RESTful APIs into MCP tools.
 
 <!-- vale off -->
 {% table %}
@@ -174,12 +175,47 @@ rows:
   - mode: "`listener`"
     description: |
       Similar to `conversion-listener`, but instead of defining its own tools, it binds tools
-      from one or more `conversion-only` MCP Servers through `config.server.tag`.
+      from one or more `conversion-only` or `upstream-server` MCP Servers through `config.server.tag`.
     usecase: |
-      A single MCP endpoint that aggregates tools from multiple `conversion-only` MCP Servers.
+      A single MCP endpoint that aggregates tools from multiple `conversion-only` or `upstream-server` MCP Servers.
       Typical in multi-service or multi-team environments that expose a unified MCP interface.
+  - mode: "`upstream-server`"
+    description: |
+      Registers a real MCP server into an aggregation pool. Dynamically fetches the upstream's
+      tool list and caches it. Works together with a `listener` MCP Server that uses shared tags
+      to aggregate tools. Supports optional OAuth2 authentication to fetch tool lists from the upstream.
+    usecase: |
+      Expose an existing upstream MCP server's tools alongside others through a single `listener`
+      endpoint. The listener aggregates all tagged upstreams, so adding a new upstream is just
+      deploying a new `upstream-server` with matching tags.
 {% endtable %}
 <!-- vale on -->
+
+## Tool aggregation with upstream-server
+
+When using `listener` with `upstream-server` MCP Servers, the runtime aggregates tools from all upstreams that share the listener's tag. This pattern centralizes tool discovery and management for agents while keeping upstream services decoupled.
+
+### How aggregation works
+
+1. **Tags connect upstreams to listeners**: Set `config.server.tag` on the listener (e.g., `my-tools`). Set the same tag on every `upstream-server` MCP Server you want included. Any upstream with matching tags gets pulled into the aggregation.
+
+2. **Tool discovery**: When an MCP client calls `tools/list`, the listener fetches tool lists from every tagged upstream. If an upstream requires authentication, configure `config.server.tools_list_auth` with OAuth2 credentials so the listener can fetch its tools.
+
+3. **Tool caching**: Each `upstream-server` caches its tool list for the duration specified by `config.tools_cache_ttl_seconds`. Set to `0` to fetch fresh on every client request.
+
+4. **Tool name disambiguation**: If two upstreams expose tools with the same name, the listener prepends the service name to avoid collisions (e.g., `weather-service/get-forecast`). Disable this with `config.server.preserve_upstream_tool_names: true` if you're sure names won't collide.
+
+5. **Tool invocation**: When a client calls a tool, the listener routes the request to whichever upstream registered it. From the client's perspective, it's one call to one URL.
+
+### Upstream authentication
+
+By default, the listener connects to upstreams without credentials. If an upstream MCP server requires authentication:
+
+- Set `config.server.tools_list_auth` on the `upstream-server` plugin with OAuth2 client-credentials configuration
+- Kong fetches a token from your identity provider when first needed, caches it, and refreshes it when it expires
+- The token is used only when fetching the upstream's tool list; it's separate from agent authentication
+
+This allows different upstreams to use different credentials, managed centrally by Kong.
 
 ## How MCP traffic flows
 
