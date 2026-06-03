@@ -27,7 +27,6 @@ tags:
     - security
 
 search_aliases:
-  - fs vault
   - filesystem vault
   - file vault
 
