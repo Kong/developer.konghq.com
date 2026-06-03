@@ -214,8 +214,11 @@ By default, the listener connects to upstreams without credentials. If an upstre
 - Set `config.server.tools_list_auth` on the `upstream-server` plugin with OAuth2 client-credentials configuration
 - Kong fetches a token from your identity provider when first needed, caches it, and refreshes it when it expires
 - The token is used only when fetching the upstream's tool list; it's separate from agent authentication
+- Different upstreams can use different credentials, managed centrally by Kong
 
-This allows different upstreams to use different credentials, managed centrally by Kong.
+### Header forwarding
+
+When the listener routes tool calls to an upstream, it can forward request headers from the original MCP client. Set `config.server.forward_client_headers: true` on the `listener` or `upstream-server` to pass through headers like authentication or context information. This allows upstreams to see the client's original request context.
 
 ## How MCP traffic flows
 
