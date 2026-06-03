@@ -63,7 +63,7 @@ related_resources:
   - text: Expressions router
     url: /gateway/routing/expressions/
   - text: Configure conditional plugin execution
-    url: /how-to/configure-conditional-plugin-execution/
+    url: /gateway/configure-conditional-plugin-execution/
   - text: Plugin entity
     url: /gateway/entities/plugin/
   - text: Plugin contexts
@@ -296,7 +296,7 @@ rows:
     example: |
       `net.src.ip == "10.0.0.1"`
   - field: "`net.src.port`"
-    type: "`Int`"
+    type: "`int`"
     description: "The port used by the client to connect."
     example: |
       `net.src.port > 1024`
@@ -306,7 +306,7 @@ rows:
     example: |
       `net.dst.ip == "192.168.1.1"`
   - field: "`net.dst.port`"
-    type: "`Int`"
+    type: "`int`"
     description: "The listening port where {{site.base_gateway}} accepted the connection."
     example: |
       `net.dst.port == 443`
@@ -340,7 +340,7 @@ rows:
     example: |
       `route.name == "payments-route"`
   - field: "`route.tags`"
-    type: "`list<String>`"
+    type: "`list<string>`"
     description: "Tags assigned to the matched Route. `null` if no Route is matched or the Route has no tags."
     example: |
       `route.tags != null && "internal" in route.tags`
@@ -525,7 +525,7 @@ rows:
     description: "Returns `true` if the string ends with the given suffix."
   - type: "`matches()`"
     description: |
-      Tests the string against a [RE2 regular expression](https://docs.rs/regex/latest/regex/#syntax).
+      Tests the string against a [RE2 regular expression](https://github.com/google/re2/wiki/Syntax).
       Matches any substring unless anchored with `^` and `$`.
   - type: "`size()`"
     description: "Returns the number of elements in a list, or the number of characters in a string."

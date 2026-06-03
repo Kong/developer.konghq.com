@@ -43,8 +43,8 @@ works_on:
 related_resources:
   - text: Expressions router
     url: /gateway/routing/expressions/
-  - text: Get started with conditional plugin execution
-    url: /how-to/get-started-with-conditional-plugin-execution/
+  - text: Configure conditional plugin execution
+    url: /gateway/configure-conditional-plugin-execution/
   - text: Plugin entity
     url: /gateway/entities/plugin/
   - text: Plugin contexts
