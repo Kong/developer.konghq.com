@@ -52,7 +52,7 @@ In these modes, the plugin is defined in the entity configuration directly, and 
 Keep the following custom plugin limitations in mind for streaming plugins:
 
 * Only `schema.lua` and `handler.lua` are supported. Plugin logic must be self-contained in these two modules.
-You can't use DAOs, custom APIs, migrations, or multiple Lua modules.
+  You can't use DAOs, custom APIs, migrations, or multiple Lua modules.
 * Custom modules cannot be required when plugin sandboxing is enabled. External Lua files or shared libraries can't be loaded.
 * Custom validation must be implemented in `handler.lua`, not `schema.lua`. In `handler.lua`, it can be logged and handled as part of plugin business logic.
 * Plugins can't read/write to the {{site.base_gateway}} filesystem.

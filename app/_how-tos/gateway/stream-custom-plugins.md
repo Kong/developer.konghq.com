@@ -20,9 +20,9 @@ tools:
 
 prereqs:
   gateway:
-    - name: "KONG_CUSTOM_PLUGINS_ENABLED=true"
+    - name: "KONG_CUSTOM_PLUGINS_ENABLED=on"
   konnect:
-    - name: "KONG_CUSTOM_PLUGINS_ENABLED=true"
+    - name: "KONG_CUSTOM_PLUGINS_ENABLED=on"
   entities:
     services:
         - example-service

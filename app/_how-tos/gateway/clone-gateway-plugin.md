@@ -25,9 +25,9 @@ prereqs:
     routes:
         - example-route
   gateway:
-    - name: "KONG_CUSTOM_PLUGINS_ENABLED=true"
+    - name: "KONG_CUSTOM_PLUGINS_ENABLED=on"
   konnect:
-    - name: "KONG_CUSTOM_PLUGINS_ENABLED=true"
+    - name: "KONG_CUSTOM_PLUGINS_ENABLED=on"
 
 min_version:
   gateway: '3.15'
