@@ -259,7 +259,8 @@ For example, a platform team may want to add a global IP deny list to a Gateway 
 * In conjunction with [conditional plugins](/gateway/plugins/expressions/), running different configurations of the plugin based on different environmental conditions.
 
 {:.info}
-> If running {{site.base_gateway}} in hybrid mode or in {{site.konnect_short_name}}, set `KONG_CUSTOM_PLUGINS_ENABLED=on` in {{site.base_gateway}} configuration for both the DP and the CP to use cloned plugins.
+> To use cloned plugins, you must set [`custom_plugin_streaming_enabled`](/gateway/configuration/#custom-plugin-streaming-enabled) to `on` in {{site.base_gateway}} configuration. 
+> If running in hybrid mode, both the data plane and the control plane require this setting.
 
 ### Supported plugins
 

@@ -1,5 +1,5 @@
 ---
-title: Clone a {{site.base_gateway}} plugin
+title: Run multiple instances of a {{site.base_gateway}} plugin
 permalink: /how-to/clone-gateway-plugin/
 content_type: how_to
 related_resources:
@@ -25,9 +25,9 @@ prereqs:
     routes:
         - example-route
   gateway:
-    - name: "KONG_CUSTOM_PLUGINS_ENABLED=on"
+    - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on"
   konnect:
-    - name: "KONG_CUSTOM_PLUGINS_ENABLED=on"
+    - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on"
 
 min_version:
   gateway: '3.15'
