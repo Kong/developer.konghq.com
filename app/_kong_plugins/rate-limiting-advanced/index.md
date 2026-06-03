@@ -205,4 +205,18 @@ Throttled rate limits work like the following:
 
 For an example plugin configuration, see [Throttle requests](/plugins/rate-limiting-advanced/examples/throttle-requests/).
 
+## Consumer counter key {% new_in 3.15 %}
+
+When [`identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-identifier) is set to `consumer`, you can use the [`counter_key`](/plugins/rate-limiting-advanced/reference/#schema--config-counter-key) field to control which consumer attribute keys the rate limit counter.
+By default, the counter is keyed by `consumer.id`.
+You can also key by `consumer.username` or `consumer.custom_id`.
+
+When you use `consumer.username` or `consumer.custom_id`, consumers with identical attribute values contribute to the same rate limit counter, even if they were authenticated by different control planes.
+This enables consistent rate limiting across distributed deployments that share a Redis backend.
+
+`counter_key` also applies when using [`compound_identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-compound-identifier) with a Consumer segment, for example `["ip", "consumer"]`.
+
+For an example plugin configuration, see [Rate limit by consumer username](/plugins/rate-limiting-advanced/examples/rate-limit-counter-key/).
+
+
 
