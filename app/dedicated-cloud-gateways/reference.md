@@ -68,6 +68,11 @@ faqs:
       {:.info}
       > **Note:** This is a basic health check and only confirms that the gateway process is up and running. 
       It doesn't verify routing, plugins, upstreams, or networking configurations.
+  - q: Does Dedicated Cloud Gateway use PKI certificates for control plane and data plane communication?
+    a: |
+      Yes, Dedicated Cloud Gateway uses PKI certificates for control plane and data plane communication like [hybrid mode](/gateway/hybrid-mode/) Gateways. 
+  - q: Can I use credential-less authentication (AWS workload identity or Azure managed identity) for Dedicated Cloud Gateways?
+    a: You can use AWS workload identity with Dedicated Cloud Gateways. Azure managed identity isn't currently supported for Dedicated Cloud Gateways. 
 
 related_resources:
   - text: Dedicated Cloud Gateways 
@@ -429,6 +434,8 @@ config:
 {% endkong_config_table %}
 <!--vale on -->
 
+{:.warning}
+> **Important:** You can only set environment variables prefixed with `KONG_` or `OTEL_`.
 
 ### How do I set environment variables?
 

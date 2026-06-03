@@ -17,7 +17,7 @@ min_version:
 works_on:
     - konnect
 api_specs:
-  - konnect/api-builder
+  - konnect/api-catalog
 search_aliases:
   - publish API specs
   - API catalog
@@ -35,6 +35,15 @@ related_resources:
     url: /how-to/automate-api-catalog-with-terraform/
   - text: Application authentication strategies
     url: /dev-portal/auth-strategies/
+faqs:
+  - q: |
+      {% include faqs/api-app-reg-override.md section='question' %}
+    a: |
+      {% include faqs/api-app-reg-override.md section='answer' %}
+  - q: |
+      {% include faqs/dev-portal-graphql.md section='question' %}
+    a: |
+      {% include faqs/dev-portal-graphql.md section='answer' %}
 ---
 
 {:.success}

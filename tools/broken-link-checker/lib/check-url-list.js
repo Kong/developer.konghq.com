@@ -19,7 +19,7 @@ export default function (urls, opts) {
       {
         honorRobotExclusions: false,
         excludedKeywords: ignoredTargets,
-        maxSocketsPerHost: 64,
+        maxSocketsPerHost: 32,
         requestMethod: "get",
         cacheResponses: true,
       },
@@ -55,6 +55,7 @@ export default function (urls, opts) {
               text: result.html.text,
               target: result.url.resolved,
               reason: result.brokenReason,
+              message: result.http?.response?.message,
             };
 
             // Keep a separate list for links that failed with a status code other than 404

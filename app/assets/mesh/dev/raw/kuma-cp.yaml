@@ -100,6 +100,12 @@ bootstrapServer:
     xdsPort: 0 # ENV: KUMA_BOOTSTRAP_SERVER_PARAMS_XDS_PORT
     # Connection timeout to the XDS Server
     xdsConnectTimeout: 1s # ENV: KUMA_BOOTSTRAP_SERVER_PARAMS_XDS_CONNECT_TIMEOUT
+    # Cap on the gRPC C-Core receive flow-control window for the kuma-dp xDS
+    # client. Set as the GoogleGrpc channel arg `grpc.max_receive_message_length`.
+    # Default 16 MiB is large enough for gateway DPs with 450+ listeners; the
+    # gRPC C-Core default of 4 MiB sizes the per-stream HTTP/2 receive window
+    # too small for the initial xDS push on those DPs and stalls the stream.
+    xdsGrpcMaxReceiveMessageBytes: 16777216 # ENV: KUMA_BOOTSTRAP_SERVER_PARAMS_XDS_GRPC_MAX_RECEIVE_MESSAGE_BYTES
 #  Monitoring Assignment Discovery Service (MADS) server configuration
 monitoringAssignmentServer:
   # Whether the MADS server is enabled
@@ -676,6 +682,10 @@ dpServer:
   # Tokens e2e tests, which started flaking a lot after introducing explicit
   # 1s timeout)
   readHeaderTimeout: 5s # ENV: KUMA_DP_SERVER_READ_HEADER_TIMEOUT
+  # GracefulShutdownTimeout should be smaller than controller-runtime's
+  # shutdown budget (30s upstream default) and the pod's
+  # terminationGracePeriodSeconds.
+  gracefulShutdownTimeout: 10s # ENV: KUMA_DP_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT
   # Authn defines an authentication configuration for the DP Server
   authn:
     # Configuration for data plane proxy authentication.
@@ -962,6 +972,24 @@ kmesh:
         auth:
           # The way how Global Control Plane authenticates the Zone Control Planes. Available values ("none", "cpToken")
           type: none # KMESH_MULTIZONE_GLOBAL_KDS_AUTH_TYPE
+          # CpToken configuration for the "cpToken" auth type. Only used when Type is "cpToken"
+          cpToken:
+            # If false, the Global CP refuses to issue cp-scoped zone tokens via the API.
+            # Set to false when tokens are signed offline with the private key.
+            enableIssuer: true # KMESH_MULTIZONE_GLOBAL_KDS_AUTH_CP_TOKEN_ENABLE_ISSUER
+            # Validator configuration used to verify KDS CP tokens presented by Zone CPs.
+            validator:
+              # If true, Kuma secrets with prefix "zone-token-signing-key" are accepted as signing keys.
+              useSecrets: true # KMESH_MULTIZONE_GLOBAL_KDS_AUTH_CP_TOKEN_VALIDATOR_USE_SECRETS
+              # List of public keys used to validate KDS CP tokens offline. Example:
+              # - kid: 1
+              #   key: |
+              #     -----BEGIN RSA PUBLIC KEY-----
+              #     MIIBCgKCAQEAq....
+              #     -----END RSA PUBLIC KEY-----
+              # - kid: 2
+              #   keyFile: /keys/public.pem
+              publicKeys: []
     zone:
       kds:
         auth:

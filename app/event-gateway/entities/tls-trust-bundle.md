@@ -16,6 +16,7 @@ related_resources:
 
 tools:
     - konnect-api
+    - kongctl
 
 works_on:
   - konnect

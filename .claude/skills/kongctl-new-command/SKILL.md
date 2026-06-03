@@ -113,7 +113,6 @@ description: "<Short description of what the command does>"
 content_type: reference
 layout: reference
 
-beta: true # kongctl is in beta, so all new pages need this flag; remove this flag when it reaches stable release.
 works_on:
   # kongctl is a Konnect-native CLI. Set both on-prem and konnect only for pages
   # under /gateway/, since those commands interact with on-prem Gateway resources.
@@ -160,7 +159,6 @@ description: "<Short description of what this group of commands does>"
 content_type: reference
 layout: reference
 
-beta: true
 works_on:
   - konnect  # same rules as Step 3
 
@@ -222,7 +220,6 @@ For a new top-level command, add a section under "CLI References" in alphabetica
         items:
             - path: /kongctl/<verb>/
             - path: /kongctl/<verb>/*/**    # add if verb has subcommand groups
-            - path: /kongctl/<verb>/*/**/** # add if verb has 3+ level nesting
 ```
 
 For example, `explain` (no subcommands) becomes:

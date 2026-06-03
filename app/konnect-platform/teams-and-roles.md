@@ -36,6 +36,8 @@ faqs:
       {% include faqs/report-dashboard-sharing.md section='question' feature="report" %}
     a: |
       {% include faqs/report-dashboard-sharing.md section='answer' feature="report" %}
+  - q: "Can the Organization Owner role be assigned to an SSO-controlled account?"
+    a: "Yes, an SSO-controlled account is just a {{site.konnect_short_name}} user. As long as the account is an Organization Admin, they can be assigned to the Organization Owner role."
 ---
 
 To help secure and govern your environment, {{site.konnect_short_name}} provides
@@ -286,7 +288,7 @@ rows:
 
 #### Auth servers
 
-The following table describes the predefined roles for [Kong Identity](/kong-identity/) authorization servers:
+The following table describes the predefined roles for [{{site.identity}}](/identity/) authorization servers:
 
 <!--vale off-->
 {% table %}

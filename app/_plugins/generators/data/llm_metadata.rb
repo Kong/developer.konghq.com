@@ -38,13 +38,15 @@ module Jekyll
           'min_version' => @page.data['min_version'],
           'tier' => @page.data['tier'],
           'products' => resolve_names(@page.data['products'], 'products'),
-          'tools' => resolve_names(@page.data['tools'], 'tools')
+          'tools' => resolve_names(@page.data['tools'], 'tools'),
+          'beta' => @page.data['beta']
         }
         data['tags'] = @page.data['tags'] if @page.data.fetch('tags', []).any?
         data['canonical'] = @page.data['canonical?'] unless @page.data['canonical?'].nil?
         data['works_on']  = @page.data['works_on'] if @page.data.fetch('works_on', []).any?
 
         data.merge!(plugin_metadata) if plugin_metadata.any?
+        data.merge!(skill_metadata) if skill_metadata.any?
         YAML.dump(data.compact)
       end
 
@@ -65,6 +67,12 @@ module Jekyll
         else
           {}
         end
+      end
+
+      def skill_metadata
+        return {} unless @page.data['content_type'] == 'skill'
+
+        { 'source' => @page.data['source_url'], 'owning_plugin' => @page.data['plugin_source_url'] }
       end
     end
   end

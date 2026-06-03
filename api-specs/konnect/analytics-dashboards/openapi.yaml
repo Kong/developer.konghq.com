@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c221953e0292764dbf216b48fb66ef31d7df8989
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c221953e0292764dbf216b48fb66ef31d7df8989'
+  x-oas-source: kong/platform-api@d5142295a8daa96e3321e6a14f25d95c299f245d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d5142295a8daa96e3321e6a14f25d95c299f245d'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -80,6 +80,8 @@ paths:
                 $ref: '#/components/examples/SingleValueDashboardExample'
               Multiple tiles and preset filters:
                 $ref: '#/components/examples/MultipleTilePresetFiltersExample'
+              'Single Tile, Platform Usage':
+                $ref: '#/components/examples/PlatformDashboardExample'
       responses:
         '201':
           description: 'The created dashboard, including generated fields.'
@@ -156,6 +158,8 @@ paths:
                 $ref: '#/components/examples/SingleValueDashboardExample'
               Multiple tiles and preset filters:
                 $ref: '#/components/examples/MultipleTilePresetFiltersExample'
+              'Single Tile, Platform Usage':
+                $ref: '#/components/examples/PlatformDashboardExample'
       responses:
         '200':
           description: 'The created dashboard, including generated fields.'
@@ -268,8 +272,8 @@ components:
               - data_plane_node_version
               - gateway_service
               - portal
-              - response_source
               - realm
+              - response_source
               - route
               - status_code
               - status_code_grouped
@@ -438,6 +442,60 @@ components:
       additionalProperties: false
       required:
         - datasource
+    PlatformQuery:
+      description: A query targeting the platform usage analytics datasource.
+      type: object
+      properties:
+        datasource:
+          type: string
+          enum:
+            - platform_usage
+        metrics:
+          $ref: '#/components/schemas/PlatformMetrics'
+        dimensions:
+          description: List of attributes or entity types to group by.
+          type: array
+          items:
+            type: string
+            enum:
+              - time
+              - control_plane
+              - gateway_service
+              - realm
+              - route
+              - consumer
+              - plugin
+              - plugin_name
+              - plugin_scope
+              - data_plane_node_version
+          maxItems: 2
+        filters:
+          $ref: '#/components/schemas/PlatformFilters'
+        granularity:
+          $ref: '#/components/schemas/PlatformGranularity'
+        time_range:
+          $ref: '#/components/schemas/PlatformTimeRange'
+        limit:
+          description: 'Maximum number of group_by buckets to return. Defaults to 50, capped at 1000. Only applies when a group_by dimension is requested.'
+          type: number
+          example: 25
+          default: 50
+          maximum: 1000
+      example:
+        datasource: platform_usage
+        time_range:
+          type: relative
+          time_range: 30d
+        dimensions:
+          - time
+          - control_plane
+        granularity: daily
+        metrics:
+          - service_count
+          - route_count
+      additionalProperties: false
+      required:
+        - datasource
     Tile:
       discriminator:
         propertyName: type
@@ -520,10 +578,12 @@ components:
                   api_usage: '#/components/schemas/AdvancedQuery'
                   llm_usage: '#/components/schemas/LLMQuery'
                   agentic_usage: '#/components/schemas/AgenticQuery'
+                  platform_usage: '#/components/schemas/PlatformQuery'
               oneOf:
                 - $ref: '#/components/schemas/AdvancedQuery'
                 - $ref: '#/components/schemas/LLMQuery'
                 - $ref: '#/components/schemas/AgenticQuery'
+                - $ref: '#/components/schemas/PlatformQuery'
             chart:
               $ref: '#/components/schemas/Chart'
           required:
@@ -629,111 +689,68 @@ components:
         updated_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
       title: Dashboard Filter Parameters
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+    UuidFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
       properties:
-        oeq:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
       additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
       x-examples:
         example-1:
           oeq: 'some-value,some-other-value'
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
           neq: not-this-value
-    UuidFieldFilter:
-      description: Filters on the given UUID field value by exact match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: UuidFieldFilter
-      x-examples:
-        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-2:
-          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-3:
-          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-4:
-          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
-      type: object
-      properties:
-        contains:
-          type: string
-      additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
-      x-examples:
-        example-1:
-          contains: some-value
-    StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        ocontains:
-          type: string
-      additionalProperties: false
-      required:
-        - ocontains
-      title: StringFieldOContainsFilter
-      x-examples:
-        example-1:
-          ocontains: 'this-value,or-that-value'
-    StringFieldFilter:
-      description: Filters on the given string field value by either exact or fuzzy match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: StringFieldFilter
-      x-examples:
-        example-1: equals-some-value
         example-2:
           eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
+    StringFieldFilter:
+      oneOf:
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
+          type: string
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
     LabelsFieldFilter:
       allOf:
         - title: LabelsFieldFilter
@@ -862,6 +879,7 @@ components:
       items:
         type: string
         enum:
+          - error_rate
           - kong_latency_average
           - kong_latency_p50
           - kong_latency_p95
@@ -1789,6 +1807,7 @@ components:
           - completion_tokens
           - ai_request_count
           - cost
+          - error_rate
           - llm_cache_embeddings_latency_average
           - llm_cache_fetch_latency_average
           - llm_latency_average
@@ -2476,6 +2495,124 @@ components:
           - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
+    PlatformMetrics:
+      description: List of aggregated metrics to collect across the requested time span.
+      type: array
+      items:
+        type: string
+        enum:
+          - control_plane_count
+          - service_count
+          - route_count
+          - consumer_count
+          - plugin_count
+          - node_count
+      default:
+        - control_plane_count
+    PlatformFilter:
+      description: A filter to apply to a platform usage query.
+      type: object
+      properties:
+        field:
+          description: The field to filter.
+          type: string
+          enum:
+            - control_plane
+            - data_plane_node_version
+            - gateway_service
+            - plugin
+            - plugin_name
+            - plugin_scope
+            - realm
+            - route
+        operator:
+          type: string
+          enum:
+            - in
+            - not_in
+        value:
+          description: The values to filter by.
+          type: array
+          items:
+            type: string
+          minItems: 1
+      required:
+        - field
+        - operator
+        - value
+    PlatformFilters:
+      description: A list of filters to apply to the query.
+      type: array
+      items:
+        $ref: '#/components/schemas/PlatformFilter'
+    PlatformGranularity:
+      description: |
+        Force time grouping into buckets of the specified duration. Only has an effect if "time" is in the "dimensions" list.
+
+        If granularity is not specified and "time" is in the dimensions list, a default will be chosen based on the time range requested.
+
+        Different relative times support different granularities:
+          - 24h                                          => daily
+          - 7d, current_week, previous_week              => daily, weekly
+          - 30d, current_month, previous_month           => daily, weekly, monthly
+          - 90d, 180d, 365d, current_quarter,
+            previous_quarter                             => daily, weekly, monthly
+
+        For absolute time ranges, daily will be used.
+
+        Granularity values:
+          - `daily`: Groups data into 24-hour buckets.
+          - `weekly`: Groups data into 7-day buckets.
+          - `monthly`: Groups data into calendar month buckets.
+      type: string
+      enum:
+        - daily
+        - weekly
+        - monthly
+    PlatformRelativeTimeRange:
+      description: A duration representing a relative-to-now span of time for platform queries.
+      type: object
+      properties:
+        tz:
+          type: string
+          default: Etc/UTC
+        type:
+          type: string
+          enum:
+            - relative
+        time_range:
+          type: string
+          default: 30d
+          enum:
+            - 24h
+            - 7d
+            - 30d
+            - 90d
+            - 180d
+            - 365d
+            - current_week
+            - current_month
+            - current_quarter
+            - previous_week
+            - previous_month
+            - previous_quarter
+      required:
+        - type
+        - time_range
+      title: Relative time range
+    PlatformTimeRange:
+      description: The time range to query for platform data.
+      default:
+        type: relative
+        time_range: 30d
+      discriminator:
+        propertyName: type
+        mapping:
+          relative: '#/components/schemas/PlatformRelativeTimeRange'
+          absolute: '#/components/schemas/MetricsAbsoluteTimeRangeDtoV2'
+      oneOf:
+        - $ref: '#/components/schemas/PlatformRelativeTimeRange'
+        - $ref: '#/components/schemas/MetricsAbsoluteTimeRangeDtoV2'
     DonutChart:
       description: |
         A chart that can display one-dimensional data in a hollow, segmented circle.  To use this chart, ensure that
@@ -3031,6 +3168,36 @@ components:
               field: ai_request_model
               value:
                 - request_model1
+    PlatformDashboardExample:
+      value:
+        name: 'Single Tile, Platform Usage'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 6
+                  rows: 2
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: timeseries_line
+                  stacked: false
+                  chart_title: Service and route count over time
+                query:
+                  datasource: platform_usage
+                  time_range:
+                    type: relative
+                    time_range: 30d
+                  dimensions:
+                    - time
+                    - control_plane
+                  granularity: daily
+                  metrics:
+                    - service_count
+                    - route_count
     BadRequestExample:
       value:
         status: 400

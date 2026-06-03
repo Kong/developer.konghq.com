@@ -64,7 +64,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy with DeepSeek, use the `openai` provider, specify the [model](https://api-docs.deepseek.com/quick_start/pricing) and set the appropriate authentication header and upstream URL.
+To set up AI Proxy with {{ site.deepseek }}, use the `openai` provider, specify the [model](https://api-docs.deepseek.com/quick_start/pricing) and set the appropriate authentication header and upstream URL.
 
 In this example, we'll use the `deepseek-chat` model:
 

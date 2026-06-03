@@ -26,6 +26,8 @@ content: |
 {% case include.presenter.entity_type %}
 {% when 'plugin' %}
 Add the following to your Terraform configuration to create a Konnect Gateway Plugin:
+{% else %}
+Add the following to your Terraform configuration:
 {% endcase %}
 {% endif %}
 {% include components/entity_example/format/snippets/terraform.md presenter=include.presenter %}
