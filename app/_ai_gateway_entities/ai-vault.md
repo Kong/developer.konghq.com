@@ -35,7 +35,7 @@ faqs:
     a: |
       The runtime entity is the same secret-management abstraction. The {{site.ai_gateway}} surface
       manages Vaults through the AI entity convention (`display_name`, `name`, `description`,
-      `labels`) and exposes them at the `/ai/vaults` API alongside the other AI entities.
+      `labels`) and exposes them through the {{site.konnect_short_name}} API alongside the other AI entities.
 
   - q: Which secret backends are supported?
     a: |
