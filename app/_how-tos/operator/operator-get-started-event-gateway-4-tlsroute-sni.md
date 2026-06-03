@@ -347,7 +347,9 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Deploy the `KegDataPlane`, `Gateway`, and `TLSRoute`
+## Deploy the `KegDataPlane`
+
+For the TLSRoute pattern, the `KegDataPlane` stays internal to the cluster. The Kafka listener is exposed as a `ClusterIP` Service because the Kubernetes `Gateway` will be the public entrypoint:
 
 ```bash
 echo '
@@ -369,7 +371,19 @@ spec:
           - name: kafka
             port: 9092
             targetPort: 9092
----
+' | kubectl apply -f -
+```
+
+```bash
+kubectl wait kegdataplane/keg-tls-dp -n kong --for=condition=Ready=True --timeout=5m
+```
+
+## Create the Kubernetes `Gateway`
+
+Create a `Gateway` that listens for TLS traffic on port `9092`. It uses TLS passthrough so that Kong Event Gateway still terminates TLS with the certificate you configured earlier:
+
+```bash
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -391,7 +405,19 @@ spec:
         kinds:
           - group: gateway.networking.k8s.io
             kind: TLSRoute
----
+' | kubectl apply -f -
+```
+
+```bash
+kubectl wait gateway/kong-keg -n kong --for=condition=Programmed=True --timeout=5m
+```
+
+## Attach a `TLSRoute` to the `Gateway`
+
+The `TLSRoute` binds the wildcard Kafka hostnames to the internal Kafka Service exposed by the `KegDataPlane`:
+
+```bash
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: TLSRoute
 metadata:

@@ -32,6 +32,10 @@ prereqs:
 tldr:
   q: How do I deploy Kong Event Gateway with {{site.operator_product_name}}?
   a: Create a `KonnectEventGateway`, backend cluster, virtual cluster, listener, `KegDataPlane`, listener policy, and consume and produce policies.
+
+next_steps:
+  - text: Learn more about Kong Event Gateway
+    url: /event-gateway/
 ---
 
 This deployment pattern is the simplest way to validate Kong Event Gateway.
@@ -39,6 +43,8 @@ This deployment pattern is the simplest way to validate Kong Event Gateway.
 It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker.  For production environments, we would recomment using Kong Gateway with the Kong Operator to setup a TLSRoute and an SNI wildcard.
 
 ## Create the `KonnectEventGateway`
+
+The `KonnectEventGateway` creates the Event Gateway control plane in {{site.konnect_short_name}} and gives the rest of the resources in this guide a parent to attach to.
 
 ```bash
 echo '
@@ -58,6 +64,8 @@ spec:
 ```
 
 ## Create the backend cluster
+
+The `EventGatewayBackendCluster` tells Kong Event Gateway which upstream Kafka cluster to connect to. In this example, it points at the Bitnami Kafka bootstrap Service in the `kafka` namespace. For more background, see the [backend cluster docs](/event-gateway/entities/backend-cluster/).
 
 ```bash
 echo '
@@ -85,6 +93,8 @@ spec:
 ```
 
 ## Create the virtual cluster and listener
+
+The `EventGatewayVirtualCluster` is the Kafka-facing cluster your clients connect to, while the `EventGatewayListener` opens the network ports that accept those client connections. For more detail, see the [virtual cluster docs](/event-gateway/entities/virtual-cluster/) and [listener docs](/event-gateway/entities/listener/).
 
 ```bash
 echo '
@@ -128,6 +138,8 @@ spec:
 ```
 
 ## Deploy the `KegDataPlane`
+
+The `KegDataPlane` runs Kong Event Gateway inside Kubernetes. In the port-mapping pattern, it exposes a `LoadBalancer` Service with one bootstrap port and one port per broker.
 
 ```bash
 echo '
@@ -181,6 +193,8 @@ echo $KAFKA_LB_HOST
 
 ## Create the listener policy
 
+The `EventGatewayListenerPolicy` connects the listener to the virtual cluster. In this mode, `portMapping` maps one external bootstrap port plus one external port per broker. For more detail on routing policies, see the [Event Gateway policy docs](/event-gateway/entities/policy/).
+
 ```bash
 echo '
 apiVersion: configuration.konghq.com/v1alpha1
@@ -208,6 +222,8 @@ spec:
 ```
 
 ## Create consume and produce policies
+
+These optional virtual-cluster policies let you shape consume and produce traffic independently. This example adds a header on each path so you can verify the policies are attached. For more policy background, see the [Event Gateway policy docs](/event-gateway/policies/).
 
 ```bash
 echo '

@@ -78,6 +78,11 @@ Install Kafka:
 
 ```bash
 cat <<'EOF' >/tmp/kafka-values.yaml
+image:
+  registry: docker.io
+  repository: bitnamilegacy/kafka
+  tag: 4.0.0-debian-12-r6
+
 listeners:
   client:
     protocol: PLAINTEXT
