@@ -465,16 +465,14 @@ rows:
 
 {{site.base_gateway}} uses a key to automatically authenticate
 with the [Azure Key Vaults API](https://learn.microsoft.com/en-us/rest/api/keyvault/) and grant you access.
-You must set the following environment variable on your data plane to connect with an Azure Key Vault:
+If you're using a client secret for authentication, set the following environment variable on your data plane to connect with an Azure Key Vault:
 
 ```bash
 export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
+If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
 
 At minimum, you'll also need to set the following values on your data plane. 
-
-{:.info}
-> **Note**: If you're using an Instance Managed Identity Token, setting these environment variables isn't necessary.
 
 ```sh
 export KONG_VAULT_AZURE_VAULT_URI=https://your-vault.vault.azure.com
@@ -560,27 +558,33 @@ rows:
       * **Environment variable:** `KONG_VAULT_AZURE_DECODE_BASE64`
     description: |
       Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
+  - field: |
+      Credentials prefix
+    parameter: |
+      * **Vault entity:** `vaults.config.credentials_prefix`
+    description: |
+      The prefix for environment variables used for authentication. The vault reads `{prefix}_CLIENT_SECRET` from the environment. Defaults to `AZURE`.
+      This can only be set using the Vault entity.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
 
-{% navtab "Azure (Certificates)" %}
+{% navtab "Azure (Certs)" %}
 
 {% new_in 3.15 %} {{site.base_gateway}} can retrieve certificates stored in Azure Key Vault for {{site.base_gateway}} TLS termination.
 
 {{site.base_gateway}} uses a key to automatically authenticate
 with the [Azure Key Vaults API](https://learn.microsoft.com/en-us/rest/api/keyvault/) and grant you access.
-You must set the following environment variable on your data plane to connect with an Azure Key Vault:
+If you're using a client secret for authentication, set the following environment variable on your data plane to connect with an Azure Key Vault:
 
 ```bash
 export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
 By default, the vault looks for `AZURE_CLIENT_SECRET`, but you can customize this with the `credentials_prefix` field.
 
-At minimum, you'll also need to set Vault URI: 
+If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
 
-{:.info}
-> **Note**: If you're using an Instance Managed Identity Token, you don't need to set this environment variable.
+At minimum, you'll also need to set Vault URI: 
 
 ```sh
 export KONG_VAULT_AZURE_CERTS_VAULT_URI=https://your-vault.vault.azure.com
@@ -612,10 +616,9 @@ rows:
       Credentials prefix <br>{% new_in 3.15 %}
     parameter: |
       * **Vault entity:** `vaults.config.credentials_prefix`
-      * **kong.conf parameter:** `vault_azure_certs_credentials_prefix`
-      * **Environment variable:** `KONG_VAULT_AZURE_CERTS_CREDENTIALS_PREFIX`
     description: |
       The prefix for environment variables used for authentication. The vault reads `{prefix}_CLIENT_SECRET` from the environment. Defaults to `AZURE`.
+      This can only be set using the Vault entity.
   - field: |
       Client ID <br>{% new_in 3.15 %}
     parameter: |
