@@ -60,9 +60,9 @@ faqs:
 
   - q: Is the {{site.ai_gateway}} entity available on-prem?
     a: |
-      No. The {{site.ai_gateway}} entity is a {{site.konnect_short_name}} concept. On-prem deployments
-      manage the same child entities (Models, Providers, Policies, and so on) directly through
-      the Admin API, without a parent `ai-gateways/{id}` container.
+      No. {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
+      For on-prem deployments, configure AI proxy behavior using {{site.base_gateway}} plugins directly (for example, the AI Proxy plugin).
+      See the [{{site.base_gateway}} plugin catalog](/gateway/plugins/) for available AI-related plugins.
 ---
 
 ## What is an {{site.ai_gateway}}?
