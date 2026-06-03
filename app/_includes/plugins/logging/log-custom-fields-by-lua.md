@@ -20,7 +20,9 @@ curl -i -X POST http://localhost:8001/plugins \
   --data {{custom_fields_by_lua}}.header="return kong.request.get_header('h1')"
 ```
 
-Array indices should be enclosed within square brackets:
+### Array indices {% new_in 3.15 %}
+
+Array indices should be enclosed within square brackets. For example:
 
 ```sh
 curl -i -X POST http://localhost:8001/plugins \
@@ -35,6 +37,8 @@ curl -i -X POST http://localhost:8001/plugins \
   }
 }'
 ```
+
+Array indices only support positive integers.
 
 ### Special characters {% unless page.name =="Solace Log"%}{% new_in 3.10 %}{% endunless %}
 
