@@ -38,7 +38,7 @@ related_resources:
 faqs:
   - q: What's the difference between a Model entity and a `model` field inside a plugin configuration?
     a: |
-      A Model entity is the first-class {{site.ai_gateway}} entity you declare through the `/ai/models` API or {{site.konnect_short_name}}.
+      A Model entity is the first-class {{site.ai_gateway}} entity you declare through the {{site.konnect_short_name}} API, UI, or decK.
       {{site.ai_gateway}} derives the underlying plugin and its `model` configuration from the entity.
       You don't configure the underlying plugin directly.
 
@@ -350,13 +350,13 @@ For per-request authentication and identity, configure the appropriate authentic
 
 Policies are how plugin configurations apply to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
 
-A Model declares the Policies it uses through its `policies` field. Each entry is a string that references a Policy by name or ID. {{site.konnect_short_name}} resolves these references against Policies created at `/v1/ai-gateways/{aiGatewayId}/policies`. On-prem also supports the nested endpoint `/ai/models/{modelId}/policies`, which creates and attaches a Policy in one call.
+A Model declares the Policies it uses through its `policies` field. Each entry is a string that references a Policy by name or ID. {{site.konnect_short_name}} resolves these references against Policies created at `/v1/ai-gateways/{aiGatewayId}/policies`.
 
 You can attach multiple Policies to a single Model. Each Policy has an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
 
 Not every plugin type is valid as a Model Policy.
 
-Policies created through the nested on-prem endpoint (`POST /ai/models/{modelId}/policies`) are deleted when the Model is deleted. Policies created independently (for example, at `/v1/ai-gateways/{aiGatewayId}/policies` or `/ai/policies`) are not deleted when the Model is deleted; only the Model's reference is removed.
+Policies attached to a Model are not deleted when the Model is deleted; only the Model's reference is removed.
 
 For further information, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
