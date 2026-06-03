@@ -49,7 +49,11 @@ module.exports = {
       },
       colors: {
         brand: "rgb(var(--color-brand), <alpha-value>)",
-        "brand-saturated": "rgb(var(--color-brand-saturated), <alpha-value>)",
+        links: "rgb(var(--color-text-links), <alpha-value>)",
+        "brand-saturated": ({ opacityValue, opacityVariable }) =>
+          opacityVariable === undefined && opacityValue !== undefined
+            ? `rgb(var(--color-brand-saturated), ${opacityValue})`
+            : `rgb(var(--color-brand-saturated), var(--opacity-brand-saturated, 1))`,
         "semantic-red-primary":
           "rgb(var(--color-semantic-red-primary), <alpha-value>)",
         "semantic-red-secondary":
@@ -87,7 +91,6 @@ module.exports = {
         primary: "rgb(var(--color-text-primary), <alpha-value>)",
         secondary: "rgb(var(--color-text-secondary), <alpha-value>)",
         terciary: "rgb(var(--color-text-terciary), <alpha-value>)",
-        links: "rgb(var(--color-text-links), <alpha-value>)",
         button: "rgb(var(--color-text-button), <alpha-value>)",
         "secondary-constant":
           "rgb(var(--color-text-secondary-constant), <alpha-value>)",
