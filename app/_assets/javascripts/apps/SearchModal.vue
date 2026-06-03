@@ -125,7 +125,7 @@
               </span>
               <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to exit</span>
            </div>
-            <a href="/search" class="text-brand flex justify-self-end">Advanced search</a>
+            <a href="/search" class="flex justify-self-end">Advanced search</a>
           </div>
         </div>
       </div>
