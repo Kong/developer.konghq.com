@@ -32,9 +32,15 @@ prereqs:
 tldr:
   q: How do I create a Dev Portal with {{site.operator_product_name}}?
   a: Create a `Portal`, attach a published `PortalPage`, and apply a `PortalCustomization`.
+
+next_steps:
+  - text: Learn more about Dev Portal
+    url: /dev-portal/
 ---
 
 ## Create the `Portal`
+
+The `Portal` is the top-level Dev Portal resource. It represents the portal itself in {{site.konnect_short_name}} and provides the parent object for pages, customizations, teams, and sign-in settings. For more product background, see the [Dev Portal overview](/dev-portal/).
 
 ```bash
 echo '
@@ -57,7 +63,9 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Create a `PortalPage` and `PortalCustomization`
+## Create a `PortalPage`
+
+The `PortalPage` adds published content to the portal. For more detail, see [Dev Portal pages and content](/dev-portal/pages-and-content/).
 
 ```bash
 echo '
@@ -81,7 +89,15 @@ spec:
       Welcome to the developer portal managed by Kong Operator.
     status: published
     visibility: public
----
+' | kubectl apply -f -
+```
+
+## Create a `PortalCustomization`
+
+The `PortalCustomization` lets you change the portal's presentation. For more detail, see [Dev Portal customizations](/dev-portal/customizations/dev-portal-customizations/).
+
+```bash
+echo '
 apiVersion: konnect.konghq.com/v1alpha1
 kind: PortalCustomization
 metadata:
@@ -115,11 +131,3 @@ kubectl wait portalcustomization/operator-dev-portal-customization -n kong \
   --for=condition=Programmed=True \
   --timeout=10m
 ```
-
-Inspect the resources:
-
-```bash
-kubectl get portal,portalpage,portalcustomization -n kong
-```
-
-Continue to [Configure portal settings](/operator/get-started/dev-portal/portal-settings/).

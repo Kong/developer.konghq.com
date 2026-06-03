@@ -34,15 +34,9 @@ tldr:
   a: Create a `PortalEmailConfig`, `PortalTeam`, and `PortalCustomDomain` that reference your `Portal`.
 ---
 
-Set a hostname for your custom domain before continuing:
+## Create a `PortalEmailConfig`
 
-```bash
-export PORTAL_DOMAIN='portal.example.dev'
-```
-
-Use a hostname that you control. The resource can be created before DNS cutover, but the domain name must be valid.
-
-## Create the supporting Portal resources
+`PortalEmailConfig` configures the sender information used by the portal.
 
 ```bash
 echo '
@@ -61,7 +55,15 @@ spec:
     fromEmail: noreply@example.com
     fromName: Operator Dev Portal
     replyToEmail: support@example.com
----
+' | kubectl apply -f -
+```
+
+## Create a `PortalTeam`
+
+`PortalTeam` creates a developer team and controls whether that team can own applications. For more background, see [Dev Portal RBAC](/dev-portal/developer-rbac/).
+
+```bash
+echo '
 apiVersion: konnect.konghq.com/v1alpha1
 kind: PortalTeam
 metadata:
@@ -76,7 +78,15 @@ spec:
     name: platform-team
     description: Team managed by Kong Operator
     canOwnApplications: Enabled
----
+' | kubectl apply -f -
+```
+
+## Create a `PortalCustomDomain`
+
+`PortalCustomDomain` attaches a public hostname to the portal. For more background, see [Dev Portal custom domains](/dev-portal/custom-domains/) and the broader [Dev Portal docs](/dev-portal/).
+
+```bash
+echo '
 apiVersion: konnect.konghq.com/v1alpha1
 kind: PortalCustomDomain
 metadata:
@@ -89,13 +99,15 @@ spec:
       name: operator-dev-portal
   apiSpec:
     enabled: Enabled
-    hostname: '"$PORTAL_DOMAIN"'
+    hostname: portal.example.dev
     ssl:
       type: standard
       standard:
         domainVerificationMethod: http
 ' | kubectl apply -f -
 ```
+
+Use a hostname that you control. The resource can be created before DNS cutover, but the domain name must be valid.
 
 ## Validation
 
@@ -114,13 +126,3 @@ kubectl wait portalcustomdomain/operator-dev-portal-domain -n kong \
   --for=condition=Programmed=True \
   --timeout=10m
 ```
-
-Inspect the resources:
-
-```bash
-kubectl get portalemailconfig,portalteam,portalcustomdomain -n kong
-```
-
-`PortalIPAllowList` is also available as a CRD, but it is not included in this getting started flow because the live Konnect reconciliation path currently returns a `400 unable to parse body` error on update.
-
-Continue to [Configure portal sign-in](/operator/get-started/dev-portal/identity-provider/).
