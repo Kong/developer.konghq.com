@@ -78,11 +78,3 @@ kubectl wait portalidentityproviderrequest/operator-dev-portal-oidc -n kong \
   --for=condition=Programmed=True \
   --timeout=10m
 ```
-
-Inspect the resource:
-
-```bash
-kubectl get portalidentityproviderrequest operator-dev-portal-oidc -n kong -o yaml
-```
-
-At this point, the operator has reconciled the full Portal CRD surface for a single Dev Portal. For more advanced setups, you can also use `KongReferenceGrant` to split `Portal` and child resources across namespaces.

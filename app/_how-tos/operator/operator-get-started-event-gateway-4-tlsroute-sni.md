@@ -46,14 +46,6 @@ Use this pattern when you want:
 - TLS passthrough at the Kubernetes `Gateway`
 - broker metadata advertised as DNS names on a single port
 
-## Install the Gateway API CRDs
-
-If your cluster doesn't already have the Kubernetes Gateway API CRDs installed, install them now:
-
-```bash
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ site.gwapi_version }}/standard-install.yaml --server-side
-```
-
 ## Create a `GatewayConfiguration` and `GatewayClass`
 
 Create a managed `Gateway` class for the TLSRoute example. This `Gateway` is provisioned through {{ site.konnect_short_name }}, so the `GatewayConfiguration` should reference the `KonnectAPIAuthConfiguration` created in the prerequisites:
