@@ -1,0 +1,28 @@
+title: Rate limit by consumer username
+description: |
+  Rate limits consumers based on their username.
+  By default, when `identifier` is set to `consumer`, counters are keyed by `consumer.id`.
+  Setting `counter_key` to `consumer.username` keys the counter by username instead, so consumers with the same username share a single rate limit counter regardless of which Control Plane processed the request.
+  This is useful in distributed deployments where consumers with the same username exist across multiple Control Planes but should be subject to a unified rate limit.
+
+min_version:
+  gateway: '3.15'
+
+weight: 800
+
+config:
+  strategy: cluster
+  window_size:
+    - 60
+  limit:
+    - 10
+  identifier: consumer
+  counter_key: consumer.username
+  sync_rate: 10
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
