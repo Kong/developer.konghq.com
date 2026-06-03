@@ -258,6 +258,17 @@ Based on your specific use case, you have to take one of the following paths:
 {% endnavtab %}
 {% endnavtabs %}
 
+## Streaming plugins {% new_in 3.15 %}
+
+Instead of uploading plugin files to each data plane manually, you can define the plugin schema and handler directly in {{site.base_gateway}} entity configuration.
+The control plane streams the plugin to all connected data planes automatically, with no file management or node restarts needed.
+
+Streaming plugins have some additional constraints compared to file-based plugins:
+they must be written in Lua, can only use a single `handler` and `schema`, and cannot run in the `init_worker` phase or create timers.
+
+For the full list of requirements and limitations, see [Streaming custom plugins](/custom-plugins/streaming-plugins/).
+For a step-by-step example, see [Stream {{site.base_gateway}} plugins](/how-to/stream-custom-plugins/).
+
 ## Troubleshooting custom plugins in {{site.konnect_short_name}}
 
 Common issues that you might encounter when working with custom plugins in {{site.konnect_short_name}}.

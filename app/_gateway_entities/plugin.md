@@ -243,6 +243,71 @@ For more information, see:
 * [Plugin expressions reference](/gateway/plugins/expressions/)
 * [How to: Configure conditional plugin execution in {{site.base_gateway}}](/gateway/configure-conditional-plugin-execution/)
 
+## Cloning plugins {% new_in 3.15 %}
+
+You can run multiple instances of a plugin by cloning it. 
+Cloning a plugin creates a custom instance of an existing plugin, letting you apply different configurations to different scopes. 
+A cloned plugin has a distinct name and is subject to its own precedence rules. 
+The priority of the cloned plugin can also be changed.
+
+Cloned plugins are useful in many situations:
+
+* Running the same plugin on different attributes of a request. For example, you may want to validate two different JWTs in two separate headers.
+* Allowing different teams who want to use the same plugin logic to apply different business rules. 
+For example, a platform team may want to add a global IP blacklist to a Gateway to enforce a global security polic, while an engineering team may also want to block IPs from a particular problematic customer on a single Route.
+* Running multiple instances of the Datakit plugin where different teams want to implement independently manage their own distinct flows on the same Gateway.
+* In conjunction with [conditional plugins](/gateway/plugins/expressions/), running different configurations of the plugin based on different environmental conditions.
+
+{:.info}
+> If running {{site.base_gateway}} in hybrid mode or in {{site.konnect_short_name}}, set `KONG_CUSTOM_PLUGINS_ENABLED=on` in {{site.base_gateway}} configuration for both the DP and the CP to use cloned plugins.
+
+### Supported plugins
+
+The following plugins support cloning:
+
+* [OpenID Connect](/plugins/openid-connect/)
+* [ACL](/plugins/acl/)
+* [Pre-function](/plugins/pre-function/)
+* [Post-function](/plugins/post-function/)
+* [Request Transformer Advanced](/plugins/request-transformer-advanced/)
+* [Request Transformer](/plugins/request-transformer/)
+* [Response Transformer Advanced](/plugins/response-transformer-advanced/)
+* [Response Transformer](/plugins/response-transformer/)
+* [Key Authentication](/plugins/key-auth/)
+* [File Log](/plugins/file-log/)
+* [HTTP Log](/plugins/http-log/)
+* [TCP Log](/plugins/tcp-log/)
+* [IP Restriction](/plugins/ip-restriction/)
+* [Route by Header](/plugins/route-by-header/)
+* [OPA](/plugins/opa/)
+
+### Example of cloned plugin
+
+To create a plugin clone, use the `cloned_plugins` key to define a new plugin, then configure the clone the same as any other plugin through `plugins`:
+
+```yaml
+cloned_plugins:
+# Create a clone of request transformer to use for global configuration
+ - name: request-transformer-global
+   ref: request-transformer-advanced
+   priority: 999
+
+# Define an entry for the new plugin under the global plugins key
+plugins:
+  - name: request-transformer-global
+    config:
+      add:
+        headers:
+          - "X-Global-Header:isSetGlobally"
+```
+
+Where:
+* `cloned_plugins.name`: The name of your new plugin. This can be any unique name that doesn't conflict with an existing plugin.
+* `cloned_plugins.ref`: The source plugin that this clone will be based on.
+* `cloned_plugins.priority`: The order in which the plugin will run relative to other plugins (see [plugins priorities](#plugin-priority)). This is an optional setting; if not set, the plugin will fall back to [plugin precedence rules](#plugin-precedence). 
+
+For more information, see the tutorial on [Cloning a {{site.base_gateway}} plugin](/how-to/clone-gateway-plugin/).
+
 ## Protocols
 
 Plugins support different protocols.
