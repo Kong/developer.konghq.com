@@ -48,7 +48,7 @@ faqs:
       No, only a subset of plugins can be cloned. See the list of [supported plugins](/gateway/entities/plugin/#supported-plugins).
   - q: I'm running {{site.base_gateway}} in hybrid mode and I can't set up a cloned plugin.
     a: |
-      If you're running {{site.base_gateway}} in hybrid mode, both the control plane and data plane need to be launched with the [`custom_plugins_enabled=on`](/gateway/configuration/#custom-plugins-enabled) setting.
+      If you're running {{site.base_gateway}} in hybrid mode, both the control plane and data plane need to be launched with the [`custom_plugin_streaming_enabled=on`](/gateway/configuration/#custom-plugin-streaming-enabled) setting.
 
 cleanup:
   inline:
