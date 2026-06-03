@@ -40,6 +40,7 @@ sections:
       - path: /mesh/single-zone/
       - path: /mesh/mesh-multizone-service-deployment/
       - path: /mesh/zone-proxies/
+      - path: /mesh/zone-proxy-policies/
       - path: /mesh/interact-with-control-plane/
       - path: /mesh/annotations/
       - path: /mesh/data-plane-proxy/

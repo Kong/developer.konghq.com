@@ -78,6 +78,43 @@ If you don't understand this table you should read [matching docs](/docs/{{ page
 
 ## Configuration
 
+{% if_version gte:2.14.x %}
+### Zone proxy listeners
+
+When `targetRef.kind: Dataplane` selects a mesh-scoped zone proxy, `MeshTrafficPermission` can use `spec.rules` instead of `spec.from`.
+The two forms are mutually exclusive.
+
+Use `targetRef.labels` to select the proxy role and zone.
+Use `targetRef.sectionName` to select the exact listener name from the generated `Dataplane`.
+With the current Helm chart output, zone ingress uses `10001` and zone egress uses `10002`.
+
+On zone egress, destination matching happens through `rules[].default.allow[]` or `deny[]` entries.
+The most precise selector is the destination SNI.
+
+{% policy_yaml namespace=kong-mesh-system %}
+```yaml
+type: MeshTrafficPermission
+name: deny-external-service-kube
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      kuma.io/listener-zoneegress: enabled
+      kuma.io/zone: zone-1
+    sectionName: "10002"
+  rules:
+    - default:
+        deny:
+          - sni:
+              type: Exact
+              value: sni.extsvc.default.zone-1.kong-mesh-system.external-service-kube.80
+```
+{% endpolicy_yaml %}
+
+For a complete walkthrough, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
+{% endif_version %}
+
 ### Action
 
 {{ site.mesh_product_name }} allows configuring one of 3 actions for a group of service's clients:
