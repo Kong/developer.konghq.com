@@ -13,15 +13,13 @@ works_on:
 plugins:
   - request-termination
 
-beta: true
-
 tldr:
   q: How do I conditionally execute a plugin based on request attributes?
   a: |
-    The `condition` field on a plugin lets you write an ATC expression that controls whether the plugin runs for a given request. 
+    The `condition` field on a plugin lets you write a CEL expression that controls whether the plugin runs for a given request.
     Attach a condition to the Request Termination plugin so that it only triggers when a specific request header is present.
 
-    While this guide uses a particular plugin, you can use conditions like this with any plugin that contains a `condition` field.
+    While this guide uses a particular plugin, you can use conditions like this with any plugin that supports the `condition` field.
 
 tools:
   - deck
@@ -43,7 +41,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 min_version:
-    gateway: '3.14'
+    gateway: '3.15'
 
 related_resources:
   - text: Plugin expressions reference
@@ -52,17 +50,21 @@ related_resources:
 faqs:
   - q: Can I see the results of a condition check in the {{site.base_gateway}} logs?
     a: |
-      If {{site.base_gateway}} is running with [debug logging enabled](/gateway/configuration/#log-level), you can confirm the condition evaluation
-      result in `error.log`:
+      If {{site.base_gateway}} is running with [debug logging enabled](/gateway/configuration/#log-level), you can confirm condition evaluation results in `error.log`.
+
+      When the condition is not matched and the plugin is skipped:
 
       ```
-      [kong] plugin_condition.lua:234 plugin condition evaluated for plugin
-      'request-termination' (ID: 66a1adbb-0179-49af-a065-4d0bc6c28cd6), result=false
+      plugin condition not matched for plugin 'request-termination' (ID: 66a1adbb-0179-49af-a065-4d0bc6c28cd6): skipped
       ```
       {:.no-copy-code}
 
-      The log line shows the plugin name, its ID, and the result.
-      When `result=false`, the plugin was skipped for that request.
+      When the condition is matched and the plugin executes:
+
+      ```
+      plugin condition matched for plugin 'request-termination' (ID: 66a1adbb-0179-49af-a065-4d0bc6c28cd6)
+      ```
+      {:.no-copy-code}
 ---
 
 ## Add a plugin with a condition
@@ -101,7 +103,7 @@ body:
 <!--vale on-->
 
 {:.info}
-> **Note:** In ATC expressions, hyphens (`-`) in header names must be replaced with underscores (`_`).
+> Header names are always normalized to lowercase with hyphens replaced by underscores.
 > For example, `x-block` becomes `http.headers.x_block`.
 
 ## Validate
