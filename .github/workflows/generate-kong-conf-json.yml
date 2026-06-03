@@ -62,13 +62,36 @@ jobs:
           cd tools/kong-conf-to-json
           npm ci
 
+      - name: Resolve kong-ee repository ref
+        id: checkout-kong-ee
+        env:
+          KONG_EE_BRANCH: ${{ inputs.kong_ee_branch }}
+          GIT_AUTH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          KONG_EE_REPO="https://x-access-token:${GIT_AUTH_TOKEN}@github.com/Kong/kong-ee.git"
+          KONG_EE_REF="${KONG_EE_BRANCH}"
+
+          if [[ "${KONG_EE_REF}" =~ [\*\?\[] ]]; then
+            mapfile -t matching_refs < <(git ls-remote --heads --tags "${KONG_EE_REPO}" "refs/heads/${KONG_EE_REF}" "refs/tags/${KONG_EE_REF}" | awk '{print $2}' | sed -E 's#^refs/(heads|tags)/##' | sort -Vr)
+
+            if [[ ${#matching_refs[@]} -eq 0 ]]; then
+              echo "::error::No kong-ee branch or tag matched '${KONG_EE_REF}'."
+              exit 1
+            fi
+
+            KONG_EE_REF="${matching_refs[0]}"
+            echo "Resolved kong-ee ref '${KONG_EE_BRANCH}' to '${KONG_EE_REF}'."
+          fi
+
+          echo "ref=${KONG_EE_REF}" >> "$GITHUB_OUTPUT"
+
       - name: Checkout kong-ee repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           repository: 'Kong/kong-ee'
           token: ${{ steps.app-token.outputs.token }}
           path: 'kong-ee'
-          ref: ${{ inputs.kong_ee_branch }}
+          ref: ${{ steps.checkout-kong-ee.outputs.ref }}
 
       - name: Create kong-conf data directory
         run: |
