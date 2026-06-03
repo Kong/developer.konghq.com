@@ -254,7 +254,7 @@ Cloned plugins are useful in many situations:
 
 * Running the same plugin on different attributes of a request. For example, you may want to validate two different JWTs in two separate headers.
 * Allowing different teams who want to use the same plugin logic to apply different business rules. 
-For example, a platform team may want to add a global IP blacklist to a Gateway to enforce a global security polic, while an engineering team may also want to block IPs from a particular problematic customer on a single Route.
+For example, a platform team may want to add a global IP deny list to a Gateway to enforce a global security policy, while an engineering team may also want to block IPs from a particular problematic customer on a single Route.
 * Running multiple instances of the Datakit plugin where different teams want to implement independently manage their own distinct flows on the same Gateway.
 * In conjunction with [conditional plugins](/gateway/plugins/expressions/), running different configurations of the plugin based on different environmental conditions.
 
