@@ -1,6 +1,6 @@
 ---
 title: Install {{site.operator_product_name}} for Dev Portal
-description: Install {{site.operator_product_name}} and prepare a Kubernetes cluster for Konnect Dev Portal CRDs.
+description: Install {{site.operator_product_name}} and prepare a Kubernetes cluster for {{site.konnect_short_name}} {{site.dev_portal}} CRDs.
 content_type: how_to
 permalink: /operator/get-started/dev-portal/install/
 
@@ -72,4 +72,4 @@ Verify that the operator is running:
 kubectl get pods -n kong-system
 ```
 
-Once the controller is ready, continue to [Create a Dev Portal](/operator/get-started/dev-portal/create-portal/).
+Once the controller is ready, continue to [Create a {{ site.dev_portal }}](/operator/get-started/dev-portal/create-portal/).

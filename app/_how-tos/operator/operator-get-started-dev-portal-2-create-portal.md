@@ -1,5 +1,5 @@
 ---
-title: Create a Dev Portal and publish content
+title: Create a {{ site.dev_portal }} and publish content
 description: Create a `Portal`, a `PortalPage`, and a `PortalCustomization` with {{site.operator_product_name}}.
 content_type: how_to
 permalink: /operator/get-started/dev-portal/create-portal/
@@ -34,13 +34,13 @@ tldr:
   a: Create a `Portal`, attach a published `PortalPage`, and apply a `PortalCustomization`.
 
 next_steps:
-  - text: Learn more about Dev Portal
+  - text: Learn more about {{ site.dev_portal }}
     url: /dev-portal/
 ---
 
 ## Create the `Portal`
 
-The `Portal` is the top-level Dev Portal resource. It represents the portal itself in {{site.konnect_short_name}} and provides the parent object for pages, customizations, teams, and sign-in settings. For more product background, see the [Dev Portal overview](/dev-portal/).
+The `Portal` represents the {{ site.dev_portal }} itself in {{site.konnect_short_name}} and provides the parent object for pages, customizations, teams, and sign-in settings. For more background, see the [{{ site.dev_portal }} overview](/dev-portal/).
 
 ```bash
 echo '
@@ -65,7 +65,7 @@ spec:
 
 ## Create a `PortalPage`
 
-The `PortalPage` adds published content to the portal. For more detail, see [Dev Portal pages and content](/dev-portal/pages-and-content/).
+The `PortalPage` adds published content to the portal. For more detail, see [{{ site.dev_portal }} pages and content](/dev-portal/pages-and-content/).
 
 ```bash
 echo '
@@ -94,7 +94,7 @@ spec:
 
 ## Create a `PortalCustomization`
 
-The `PortalCustomization` lets you change the portal's presentation. For more detail, see [Dev Portal customizations](/dev-portal/customizations/dev-portal-customizations/).
+The `PortalCustomization` lets you change the portal's presentation. For more detail, see [{{ site.dev_portal }} customizations](/dev-portal/customizations/dev-portal-customizations/).
 
 ```bash
 echo '

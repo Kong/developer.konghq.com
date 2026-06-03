@@ -1,6 +1,6 @@
 ---
-title: Deploy Kong Event Gateway with port mapping
-description: Deploy Kong Event Gateway with a `LoadBalancer` Service and port-based broker mapping.
+title: Deploy {{ site.event_gateway }} with port mapping
+description: Deploy {{ site.event_gateway }} with a `LoadBalancer` Service and port-based broker mapping.
 content_type: how_to
 permalink: /operator/get-started/event-gateway/port-mapping/
 
@@ -34,13 +34,13 @@ tldr:
   a: Create a `KonnectEventGateway`, backend cluster, virtual cluster, listener, `KegDataPlane`, listener policy, and consume and produce policies.
 
 next_steps:
-  - text: Learn more about Kong Event Gateway
+  - text: Learn more about {{ site.event_gateway }}
     url: /event-gateway/
 ---
 
-This deployment pattern is the simplest way to validate Kong Event Gateway.
+This deployment pattern is the simplest way to validate {{ site.event_gateway }}.
 
-It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker.  For production environments, we would recomment using Kong Gateway with the Kong Operator to setup a TLSRoute and an SNI wildcard.
+It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker. For production environments, we recommend using {{ site.base_gateway }} with {{ site.operator_product_name }} to set up a TLSRoute and an SNI wildcard.
 
 ## Create the `KonnectEventGateway`
 
@@ -65,7 +65,7 @@ spec:
 
 ## Create the backend cluster
 
-The `EventGatewayBackendCluster` tells Kong Event Gateway which upstream Kafka cluster to connect to. In this example, it points at the Bitnami Kafka bootstrap Service in the `kafka` namespace. For more background, see the [backend cluster docs](/event-gateway/entities/backend-cluster/).
+The `EventGatewayBackendCluster` tells {{ site.event_gateway }} which upstream Kafka cluster to connect to. In this example, it points at the Bitnami Kafka bootstrap Service in the `kafka` namespace. For more background, see the [backend cluster docs](/event-gateway/entities/backend-cluster/).
 
 ```bash
 echo '
@@ -139,7 +139,7 @@ spec:
 
 ## Deploy the `KegDataPlane`
 
-The `KegDataPlane` runs Kong Event Gateway inside Kubernetes. In the port-mapping pattern, it exposes a `LoadBalancer` Service with one bootstrap port and one port per broker.
+The `KegDataPlane` runs {{ site.event_gateway }} inside Kubernetes. In the port-mapping pattern, it exposes a `LoadBalancer` Service with one bootstrap port and one port per broker.
 
 ```bash
 echo '
@@ -193,7 +193,7 @@ echo $KAFKA_LB_HOST
 
 ## Create the listener policy
 
-The `EventGatewayListenerPolicy` connects the listener to the virtual cluster. In this mode, `portMapping` maps one external bootstrap port plus one external port per broker. For more detail on routing policies, see the [Event Gateway policy docs](/event-gateway/entities/policy/).
+The `EventGatewayListenerPolicy` connects the listener to the virtual cluster. In this mode, `portMapping` maps one external bootstrap port plus one external port per broker. For more detail on routing policies, see the [{{ site.event_gateway_short }} policy docs](/event-gateway/entities/policy/).
 
 ```bash
 echo '
@@ -223,7 +223,7 @@ spec:
 
 ## Create consume and produce policies
 
-These optional virtual-cluster policies let you shape consume and produce traffic independently. This example adds a header on each path so you can verify the policies are attached. For more policy background, see the [Event Gateway policy docs](/event-gateway/policies/).
+These optional virtual-cluster policies let you shape consume and produce traffic independently. This example adds a header on each path so you can verify the policies are attached. For more policy background, see the [{{ site.event_gateway_short }} policy docs](/event-gateway/policies/).
 
 ```bash
 echo '
@@ -284,4 +284,4 @@ kubectl run kcat-portmap --rm -i --restart=Never --image=edenhill/kcat:1.7.1 -n 
 
 You should see one bootstrap endpoint on port `9092` and one port per broker on `9093`, `9094`, and `9095`.
 
-Continue to [Deploy Kong Event Gateway with TLSRoute and SNI](/operator/get-started/event-gateway/tlsroute-sni/) for the production-oriented pattern.
+Continue to [Deploy {{ site.event_gateway }} with TLSRoute and SNI](/operator/get-started/event-gateway/tlsroute-sni/) for the production-oriented pattern.

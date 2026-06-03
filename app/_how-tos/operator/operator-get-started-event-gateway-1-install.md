@@ -35,12 +35,12 @@ tags:
   - kafka
 ---
 
-This guide walks through a complete Kong Event Gateway setup using {{site.operator_product_name}} and {{site.konnect_short_name}}.
+This guide walks through a complete {{ site.event_gateway }} setup using {{site.operator_product_name}} and {{site.konnect_short_name}}.
 
 By the end of the series, you will have:
 
 - a Konnect Event Gateway Control Plane
-- an Event Gateway data plane in Kubernetes
+- a {{ site.event_gateway_short }} data plane in Kubernetes
 - a backend Kafka cluster
 - a virtual cluster, listener, and listener policies
 - consumer and producer policies
@@ -65,7 +65,7 @@ Install {{site.operator_product_name}} with Helm:
 
 ## Install a Kafka cluster
 
-The Event Gateway examples in this guide use a three-broker Kafka cluster deployed with the Bitnami chart.
+The {{ site.event_gateway_short }} examples in this guide use a three-broker Kafka cluster deployed with the Bitnami chart.
 
 Add the Bitnami Helm repository:
 

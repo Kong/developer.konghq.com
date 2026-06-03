@@ -22,7 +22,7 @@ rows:
               {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven by Gateway API or Kong-specific Custom Resource Definitions (CRDs), {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
               in a declarative way.  
               
-              Whilst we will continue to support [Kong Ingress Controller](/kubernetes-ingress-controller/), please consider [migrating](/operator/migrate/migrate-kic-to-ko) to {{ site.operator_product_name }} as this is where new features will be released.
+              While we will continue to support [{{site.kic_product_name}}](/kubernetes-ingress-controller/), consider [migrating](/operator/migrate/migrate-kic-to-ko) to {{ site.operator_product_name }} as this is where new features will be released.
 
   - header:
       type: h2
@@ -66,11 +66,11 @@ rows:
         - type: card
           config:
             icon: /assets/icons/dev-portal.svg
-            title: "Create a Dev Portal from Kubernetes"
+            title: "Create a {{ site.dev_portal }} from Kubernetes"
             description: |
               Provision portals, pages, teams, domains, and sign-in settings declaratively with Portal CRDs.
             cta:
-              text: Deploy Dev Portal in Kubernetes using {{site.konnect_short_name}} CRDs
+              text: Deploy {{ site.dev_portal }} in Kubernetes using {{site.konnect_short_name}} CRDs
               url: /operator/get-started/dev-portal/install/
             tech_preview: true
 
@@ -138,15 +138,15 @@ rows:
                 supported: true
               - product: Gateway Configuration
                 supported: true
-              - product: Event Gateway
+              - product: "{{ site.event_gateway_short }}"
                 supported: true
               - product: Dedicated Cloud Gateways
                 supported: Partially
-              - product: Kong Mesh
+              - product: "{{ site.mesh_product_name }}"
                 supported: Planned
-              - product: Developer Portal
+              - product: "{{ site.dev_portal }}"
                 supported: true
-              - product: Catalog
+              - product: "{{ site.konnect_catalog }}"
                 supported: Planned
               - product: Analytics
                 supported: Planned

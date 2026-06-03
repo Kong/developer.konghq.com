@@ -25,24 +25,19 @@ works_on:
 prereqs:
   show_works_on: true
   skip_product: true
-  operator:
-    konnect:
-      auth: true
+  inline:
+    - title: OIDC provider
+      include_content: prereqs/auth/oidc/okta-dev-portal
+      icon_url: /assets/icons/okta.svg
 
 tldr:
   q: How do I configure Dev Portal sign-in with {{site.operator_product_name}}?
   a: Create a `PortalIdentityProviderRequest` that references your `Portal` and supplies your OIDC issuer, client ID, and client secret.
 ---
 
-Export your OIDC settings:
-
-```bash
-export OIDC_ISSUER_URL='https://accounts.google.com'
-export OIDC_CLIENT_ID='your-client-id'
-export OIDC_CLIENT_SECRET='your-client-secret'
-```
-
 ## Create the `PortalIdentityProviderRequest`
+
+The `PortalIdentityProviderRequest` configures the OIDC sign-in provider for the portal. Once applied, developers who visit the portal can sign in using your identity provider instead of a local account.
 
 ```bash
 echo '

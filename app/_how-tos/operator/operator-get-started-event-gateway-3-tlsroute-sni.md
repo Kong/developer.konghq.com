@@ -1,6 +1,6 @@
 ---
-title: Deploy Kong Event Gateway with TLSRoute and SNI
-description: Deploy Kong Event Gateway behind a Kubernetes Gateway using TLS passthrough and SNI routing.
+title: Deploy {{ site.event_gateway }} with TLSRoute and SNI
+description: Deploy {{ site.event_gateway }} behind a Kubernetes Gateway using TLS passthrough and SNI routing.
 content_type: how_to
 permalink: /operator/get-started/event-gateway/tlsroute-sni/
 
@@ -25,20 +25,17 @@ works_on:
 prereqs:
   show_works_on: true
   skip_product: true
-  operator:
-    konnect:
-      auth: true
 
 tldr:
-  q: How do I deploy Kong Event Gateway in a production-oriented topology?
-  a: Front the Event Gateway with a `Gateway` and `TLSRoute`, terminate TLS in Kong Event Gateway, and route virtual clusters with SNI.
+  q: How do I deploy {{ site.event_gateway }} in a production-oriented topology?
+  a: Front {{ site.event_gateway_short }} with a `Gateway` and `TLSRoute`, terminate TLS in {{ site.event_gateway_short }}, and route virtual clusters with SNI.
 
 next_steps:
-  - text: Learn more about Kong Event Gateway resources
+  - text: Learn more about {{ site.event_gateway }} resources
     url: /operator/konnect/event-gateway/
 ---
 
-This deployment pattern uses a single TLS listener at the Kubernetes edge and routes Kafka traffic by SNI inside Kong Event Gateway.
+This deployment pattern uses a single TLS listener at the Kubernetes edge and routes Kafka traffic by SNI inside {{ site.event_gateway }}.
 
 Use this pattern when you want:
 
@@ -367,12 +364,12 @@ spec:
 ```
 
 ```bash
-kubectl wait kegdataplane/keg-tls-dp -n kong --for=condition=Ready=True --timeout=5m
+kubectl wait kegdataplane/keg-tls-dp -n kong --for=condition=Ready=True --timeout=10m
 ```
 
 ## Create the Kubernetes `Gateway`
 
-Create a `Gateway` that listens for TLS traffic on port `9092`. It uses TLS passthrough so that Kong Event Gateway still terminates TLS with the certificate you configured earlier:
+Create a `Gateway` that listens for TLS traffic on port `9092`. It uses TLS passthrough so that {{ site.event_gateway }} still terminates TLS with the certificate you configured earlier:
 
 ```bash
 echo '
@@ -435,7 +432,7 @@ spec:
 
 ## Validation
 
-Wait for the Event Gateway resources to become programmed:
+Wait for the {{ site.event_gateway_short }} resources to become programmed:
 
 ```bash
 kubectl wait -n kong \

@@ -1,6 +1,6 @@
 ---
 title: Configure portal settings
-description: Configure email, team access, IP allow lists, and a custom domain for a Dev Portal with {{site.operator_product_name}}.
+description: Configure email settings, team access, and a custom domain for a {{ site.dev_portal }} with {{site.operator_product_name}}.
 content_type: how_to
 permalink: /operator/get-started/dev-portal/portal-settings/
 
@@ -25,9 +25,10 @@ works_on:
 prereqs:
   show_works_on: true
   skip_product: true
-  operator:
-    konnect:
-      auth: true
+  inline:
+    - title: Custom domain
+      include_content: prereqs/dev-portal-custom-domain
+      icon_url: /assets/icons/konnect.svg
 
 tldr:
   q: How do I configure supporting Dev Portal settings with {{site.operator_product_name}}?
@@ -36,7 +37,7 @@ tldr:
 
 ## Create a `PortalEmailConfig`
 
-`PortalEmailConfig` configures the sender information used by the portal.
+`PortalEmailConfig` configures the sender information used by the portal:
 
 ```bash
 echo '
@@ -51,16 +52,16 @@ spec:
     namespacedRef:
       name: operator-dev-portal
   apiSpec:
-    domainName: example.com
-    fromEmail: noreply@example.com
+    domainName: '"$PORTAL_EMAIL_DOMAIN"'
+    fromEmail: '"$PORTAL_FROM_EMAIL"'
     fromName: Operator Dev Portal
-    replyToEmail: support@example.com
+    replyToEmail: '"$PORTAL_REPLY_TO_EMAIL"'
 ' | kubectl apply -f -
 ```
 
 ## Create a `PortalTeam`
 
-`PortalTeam` creates a developer team and controls whether that team can own applications. For more background, see [Dev Portal RBAC](/dev-portal/developer-rbac/).
+`PortalTeam` creates a developer team and controls whether that team can own applications. For more background, see [{{ site.dev_portal }} RBAC](/dev-portal/developer-rbac/).
 
 ```bash
 echo '
@@ -83,7 +84,7 @@ spec:
 
 ## Create a `PortalCustomDomain`
 
-`PortalCustomDomain` attaches a public hostname to the portal. For more background, see [Dev Portal custom domains](/dev-portal/custom-domains/) and the broader [Dev Portal docs](/dev-portal/).
+`PortalCustomDomain` attaches a public hostname to the portal:
 
 ```bash
 echo '
@@ -99,7 +100,7 @@ spec:
       name: operator-dev-portal
   apiSpec:
     enabled: Enabled
-    hostname: portal.example.dev
+    hostname: '"$PORTAL_HOSTNAME"'
     ssl:
       type: standard
       standard:
@@ -107,22 +108,20 @@ spec:
 ' | kubectl apply -f -
 ```
 
-Use a hostname that you control. The resource can be created before DNS cutover, but the domain name must be valid.
-
 ## Validation
 
-Wait for the resources to be programmed:
+`PortalTeam` has no external verification dependency and becomes `Programmed` immediately:
 
 ```bash
-kubectl wait portalemailconfig/operator-dev-portal-email -n kong \
-  --for=condition=Programmed=True \
-  --timeout=10m
-
 kubectl wait portalteam/operator-dev-portal-team -n kong \
   --for=condition=Programmed=True \
   --timeout=10m
+```
 
-kubectl wait portalcustomdomain/operator-dev-portal-domain -n kong \
-  --for=condition=Programmed=True \
-  --timeout=10m
+`PortalEmailConfig` and `PortalCustomDomain` become `Programmed` only after their domain verification completes. Once the DNS records are in place and the hostname is reachable, check their status with:
+
+```bash
+kubectl get portalemailconfig/operator-dev-portal-email \
+  portalcustomdomain/operator-dev-portal-domain \
+  -n kong
 ```

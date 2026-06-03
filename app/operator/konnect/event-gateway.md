@@ -1,6 +1,6 @@
 ---
-title: "Kong Event Gateway"
-description: "Deploy and validate Kong Event Gateway resources with {{ site.operator_product_name }}"
+title: "{{ site.event_gateway }} with {{ site.operator_product_name }}"
+description: "Deploy and validate {{ site.event_gateway }} resources with {{ site.operator_product_name }}"
 content_type: reference
 layout: reference
 products:
@@ -14,41 +14,70 @@ breadcrumbs:
     section: Key Concepts
 
 min_version:
-  operator: '2.1'
+  operator: '2.2'
+
+related_resources:
+  - text: Deploy {{ site.event_gateway }} with port mapping
+    url: /operator/get-started/event-gateway/port-mapping/
+  - text: Deploy {{ site.event_gateway }} with TLSRoute and SNI
+    url: /operator/get-started/event-gateway/tlsroute-sni/
+  - text: Gateway API
+    url: /operator/dataplanes/gateway-api/
+  - text: Managed Gateways
+    url: /operator/dataplanes/managed-gateways/
+  - text: Cross namespace references
+    url: /operator/konnect/cross-namespace-references/
 
 ---
 
-{{ site.operator_product_name }} can reconcile Kong Event Gateway resources to {{ site.konnect_short_name }} and deploy a matching `KegDataPlane` in your Kubernetes cluster.
+{{ site.operator_product_name }} reconciles {{ site.event_gateway }} resources and deploys a matching `KegDataPlane` workload in your Kubernetes cluster.
 
-If you want a step-by-step setup that you can apply directly to a cluster, start with the [Kong Event Gateway getting started guide](/operator/get-started/event-gateway/install/).
+For a step-by-step walkthrough you can apply directly to a cluster, see the [{{ site.event_gateway }} getting started guide](/operator/get-started/event-gateway/install/).
 
-At a high level, the operator manages three layers:
+The operator manages three layers:
 
 - A `KonnectEventGateway` control plane in `konnect.konghq.com/v1alpha1`
-- Event Gateway configuration resources in `configuration.konghq.com/v1alpha1`
+- {{ site.event_gateway_short }} configuration resources in `configuration.konghq.com/v1alpha1`
 - A `KegDataPlane` workload in `eventgateway.konghq.com/v1alpha1`
-
-This page describes the resource model and two deployment patterns:
-
-- `LoadBalancer` plus `portMapping` for local validation and simple environments
-- `Gateway` plus `TLSRoute` plus SNI routing for production-oriented deployments
 
 ## Resource model
 
-These resources form a typical Event Gateway deployment:
+{% table %}
+columns:
+  - title: Resource
+    key: resource
+  - title: API group
+    key: api_group
+  - title: Purpose
+    key: purpose
+rows:
+  - resource: "`KonnectEventGateway`"
+    api_group: "`konnect.konghq.com/v1alpha1`"
+    purpose: Creates the {{ site.event_gateway_short }} control plane in {{ site.konnect_short_name }}
+  - resource: "`EventGatewayBackendCluster`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Describes the upstream Kafka cluster
+  - resource: "`EventGatewayVirtualCluster`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Defines the virtual cluster presented to clients
+  - resource: "`EventGatewayListener`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Declares listener addresses and ports
+  - resource: "`EventGatewayListenerPolicy`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Configures routing and TLS behavior on the listener
+  - resource: "`EventGatewayVirtualClusterConsumePolicy`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Applies consume-side policy to a virtual cluster
+  - resource: "`EventGatewayVirtualClusterProducePolicy`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Applies produce-side policy to a virtual cluster
+  - resource: "`KegDataPlane`"
+    api_group: "`eventgateway.konghq.com/v1alpha1`"
+    purpose: Deploys the {{ site.event_gateway_short }} data plane in Kubernetes
+{% endtable %}
 
-| Resource | API group | Purpose |
-|---|---|---|
-| `KonnectEventGateway` | `konnect.konghq.com/v1alpha1` | Creates the Event Gateway control plane in {{ site.konnect_short_name }} |
-| `EventGatewayBackendCluster` | `configuration.konghq.com/v1alpha1` | Describes the upstream Kafka cluster |
-| `EventGatewayVirtualCluster` | `configuration.konghq.com/v1alpha1` | Defines the virtual cluster presented to clients |
-| `EventGatewayListener` | `configuration.konghq.com/v1alpha1` | Declares listener addresses and ports |
-| `EventGatewayListenerPolicy` | `configuration.konghq.com/v1alpha1` | Configures routing and TLS behavior on the listener |
-| `EventGatewayVirtualClusterConsumePolicy` | `configuration.konghq.com/v1alpha1` | Applies consume-side policy to a virtual cluster |
-| `EventGatewayVirtualClusterProducePolicy` | `configuration.konghq.com/v1alpha1` | Applies produce-side policy to a virtual cluster |
-| `KegDataPlane` | `eventgateway.konghq.com/v1alpha1` | Deploys the Event Gateway data plane in Kubernetes |
-
-The references flow in this order:
+Resources reference each other in this order:
 
 1. `EventGatewayBackendCluster.spec.gatewayRef` points to a `KonnectEventGateway`
 2. `EventGatewayVirtualCluster.spec.eventGatewayBackendClusterRef` points to an `EventGatewayBackendCluster`
@@ -59,15 +88,13 @@ The references flow in this order:
 
 ## Deployment patterns
 
-There are two practical ways to expose Kong Event Gateway with the operator.
+There are two ways to expose {{ site.event_gateway }} with the operator.
 
-### Pattern 1: `LoadBalancer` plus `portMapping`
+### `LoadBalancer` plus `portMapping`
 
-This pattern is a good fit for local validation, lab environments, and simple deployments where exposing one port per broker is acceptable.
+This pattern suits local validation and simple deployments where exposing one port per broker is acceptable. The `KegDataPlane` exposes a `LoadBalancer` Service with one port for bootstrap traffic and one port per broker.
 
-The listener policy uses `forwardToVirtualCluster.config.type: portMapping` and the `KegDataPlane` exposes a `LoadBalancer` Service with one port for bootstrap traffic and one port for each broker.
-
-For example:
+The listener policy uses `forwardToVirtualCluster.config.type: portMapping`:
 
 ```yaml
 apiVersion: configuration.konghq.com/v1alpha1
@@ -94,31 +121,29 @@ spec:
 ```
 
 {:.info}
-> Set `advertisedHost` explicitly. The current CRD requires it, and Kafka clients use it when resolving broker metadata after bootstrap.
+> Set `advertisedHost` explicitly. Kafka clients use it when resolving broker metadata after bootstrap.
 
-In a three-broker Kafka cluster, the data plane Service typically exposes:
+In a three-broker cluster, the data plane Service exposes:
 
 - `9092` for bootstrap
 - `9093` for broker 0
 - `9094` for broker 1
 - `9095` for broker 2
 
-This pattern was validated with `kcat -L` against a `LoadBalancer` Service, and the returned metadata advertised the bootstrap endpoint on port `9092` and the brokers on ports `9093` through `9095`.
+For a full deployment walkthrough, see [Deploy {{ site.event_gateway }} with port mapping](/operator/get-started/event-gateway/port-mapping/).
 
-### Pattern 2: `Gateway` plus `TLSRoute` plus SNI
+### `Gateway` plus `TLSRoute` plus SNI
 
-This is the production-oriented pattern.
-
-In this model:
+This is the production-oriented pattern. A single TLS listener at the Kubernetes edge routes Kafka traffic to the correct virtual cluster by SNI:
 
 - A Kubernetes `Gateway` exposes a single TLS listener
 - A `TLSRoute` forwards encrypted traffic to the `KegDataPlane` Service
-- An `EventGatewayListenerPolicy` with `type: tlsServer` terminates TLS in Kong Event Gateway
-- A second `EventGatewayListenerPolicy` with `forwardToVirtualCluster.config.type: sni` routes clients to the correct virtual cluster based on SNI
+- An `EventGatewayListenerPolicy` with `type: tlsServer` terminates TLS in {{ site.event_gateway }}
+- A second `EventGatewayListenerPolicy` with `forwardToVirtualCluster.config.type: sni` routes clients by SNI
 
 This keeps the public edge to a single port and returns broker metadata as stable DNS names instead of distinct ports.
 
-For example:
+The SNI forwarding policy looks like this:
 
 ```yaml
 apiVersion: configuration.konghq.com/v1alpha1
@@ -144,195 +169,17 @@ spec:
       name: sni-listener
 ```
 
-With a virtual cluster `dnsLabel` of `vc-tls-1`, clients receive metadata similar to:
+With a virtual cluster `dnsLabel` of `vc-tls-1`, clients receive metadata like:
 
 - `bootstrap.vc-tls-1.keg.example.com:9092`
 - `broker-0.vc-tls-1.keg.example.com:9092`
 - `broker-1.vc-tls-1.keg.example.com:9092`
 - `broker-2.vc-tls-1.keg.example.com:9092`
 
-This pattern was validated with `kcat -L` through a `Gateway` and `TLSRoute`, with all brokers advertised on the same TLS port and differentiated only by DNS name.
-
 {:.info}
 > In production, configure wildcard DNS so that the advertised bootstrap and broker hostnames resolve to the `Gateway` address.
 
-## Minimal resource flow
-
-The following manifests show the minimal shape of a single virtual cluster deployment.
-
-Create the Event Gateway control plane:
-
-```yaml
-apiVersion: konnect.konghq.com/v1alpha1
-kind: KonnectEventGateway
-metadata:
-  name: cp-event-1
-  namespace: kong
-spec:
-  apiSpec:
-    name: cp-event-1
-  konnect:
-    authRef:
-      name: konnect-api-auth
-```
-
-Create the backend cluster:
-
-```yaml
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayBackendCluster
-metadata:
-  name: default-backend-cluster
-  namespace: kong
-spec:
-  gatewayRef:
-    type: namespacedRef
-    namespacedRef:
-      name: cp-event-1
-  apiSpec:
-    name: default_backend_cluster
-    bootstrapServers:
-      - kafka-cluster.kafka.svc.cluster.local:9092
-    authentication:
-      type: anonymous
-      anonymous: {}
-    insecureAllowAnonymousVirtualClusterAuth: Enabled
-    tls:
-      enabled: Disabled
-```
-
-Create the virtual cluster:
-
-```yaml
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayVirtualCluster
-metadata:
-  name: example-virtual-cluster
-  namespace: kong
-spec:
-  eventGatewayBackendClusterRef:
-    type: namespacedRef
-    namespacedRef:
-      name: default-backend-cluster
-  apiSpec:
-    name: example_virtual_cluster
-    dnsLabel: vcluster-1
-    aclMode: passthrough
-    authentication:
-      - type: anonymous
-    namespace:
-      prefix: "vc1_"
-      mode: hide_prefix
-```
-
-Attach consume and produce policies:
-
-```yaml
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayVirtualClusterConsumePolicy
-metadata:
-  name: example-virtual-cluster-consume-policy
-  namespace: kong
-spec:
-  eventGatewayVirtualClusterRef:
-    type: namespacedRef
-    namespacedRef:
-      name: example-virtual-cluster
-  apiSpec:
-    type: modifyHeaders
-    modifyHeaders:
-      name: example_consume_policy
-      config:
-        actions:
-          - op: set
-            set:
-              key: x-kong-consume-policy
-              value: example
----
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayVirtualClusterProducePolicy
-metadata:
-  name: example-virtual-cluster-produce-policy
-  namespace: kong
-spec:
-  eventGatewayVirtualClusterRef:
-    type: namespacedRef
-    namespacedRef:
-      name: example-virtual-cluster
-  apiSpec:
-    type: modifyHeaders
-    modifyHeaders:
-      name: example_produce_policy
-      config:
-        actions:
-          - op: set
-            set:
-              key: x-kong-produce-policy
-              value: example
-```
-
-Deploy the data plane:
-
-```yaml
-apiVersion: eventgateway.konghq.com/v1alpha1
-kind: KegDataPlane
-metadata:
-  name: my-event-gateway-dp
-  namespace: kong
-spec:
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: cp-event-1
-```
-
-## Validation
-
-Once the manifests are applied, verify that the operator has programmed every resource:
-
-```bash
-kubectl get -n kong \
-  konnecteventgateway \
-  eventgatewaybackendcluster \
-  eventgatewayvirtualcluster \
-  eventgatewaylistener \
-  eventgatewaylistenerpolicy \
-  eventgatewayvirtualclusterconsumepolicy \
-  eventgatewayvirtualclusterproducepolicy \
-  kegdataplane
-```
-
-All Konnect-backed resources should report `PROGRAMMED=True`, and `KegDataPlane` should report `READY=True`.
-
-For the `TLSRoute` pattern, also verify the Gateway API resources:
-
-```bash
-kubectl get gateway,tlsroute -n kong
-```
-
-## Smoke testing with kcat
-
-For the `LoadBalancer` plus `portMapping` pattern:
-
-```bash
-kubectl run kcat-portmap --rm -i --restart=Never --image=edenhill/kcat:1.7.1 -n kong \
-  --command -- kcat -b ${LB_IP}:9092 -L
-```
-
-Expect the bootstrap listener on `:9092` and each broker on its own port.
-
-For the `Gateway` plus `TLSRoute` plus SNI pattern:
-
-```bash
-kubectl run kcat-tlsroute --rm -i --restart=Never --image=edenhill/kcat:1.7.1 -n kong \
-  --overrides='{"spec":{"hostAliases":[{"ip":"'"${GATEWAY_IP}"'","hostnames":["bootstrap.vc-tls-1.keg.example.com","broker-0.vc-tls-1.keg.example.com","broker-1.vc-tls-1.keg.example.com","broker-2.vc-tls-1.keg.example.com"]}]}}' \
-  --command -- kcat -b bootstrap.vc-tls-1.keg.example.com:9092 \
-  -X security.protocol=SSL \
-  -X enable.ssl.certificate.verification=false \
-  -L
-```
-
-Expect all brokers to be advertised on port `9092`, each with a unique DNS hostname.
+For a full deployment walkthrough, see [Deploy {{ site.event_gateway }} with TLSRoute and SNI](/operator/get-started/event-gateway/tlsroute-sni/).
 
 ## Choosing a pattern
 
@@ -349,8 +196,3 @@ Use `Gateway` plus `TLSRoute` plus SNI when:
 - you want broker metadata returned as DNS names on one port
 - you plan to front multiple virtual clusters behind one entrypoint
 
-## Related resources
-
-- [Gateway API](/operator/dataplanes/gateway-api/)
-- [Managed Gateways](/operator/dataplanes/managed-gateways/)
-- [Cross namespace references](/operator/konnect/cross-namespace-references/)
