@@ -10,16 +10,20 @@
     --removed-body-scroll-bar-size: 4px;
     --ai-assistant-sidebar-width: 480px;
 
-    --color-bg-primary: 247, 251, 255;
-    --color-bg-secondary: 255, 255, 255;
-    --color-bg-terciary: 7, 53, 103;
-    --color-bg-code-block: 229, 247, 255;
-    --color-bg-code-block-header: 28, 85, 146;
-    --color-bg-hover-component: 235, 244, 254;
+    --color-bg-header: 193, 202, 190;
+    --color-bg-primary: 205, 212, 203;
+    --color-bg-secondary: 215, 222, 212;
+    --color-bg-terciary: 231, 237, 229;
+    --color-bg-code-block: 231, 237, 229;
+    --color-bg-code-block-header: 215, 222, 212;
+    --color-bg-hover-component: 235, 244, 254; /* TODO: pending*/
 
-    --color-text-primary: 5, 47, 92;
-    --color-text-secondary: 74, 96, 120;
-    --color-text-terciary: 99, 119, 140;
+    --color-text-primary: 0, 20, 8;
+    --color-text-secondary: 74, 77, 73;
+    --color-text-terciary: 103, 107, 102;
+    --color-text-links: 96, 128, 0;
+    --color-text-button: 0, 0, 0;
+    --color-text-secondary-constant: 74, 77, 73;
 
     --color-border-primary: 5, 47, 92;
     --color-shadow-primary: 5, 47, 92, 0.04;
@@ -122,16 +126,20 @@
   }
 
   .dark {
-    --color-bg-primary: 2, 20, 40;
-    --color-bg-secondary: 4, 40, 79;
-    --color-bg-terciary: 28, 85, 146;
-    --color-bg-code-block: 7, 53, 103;
-    --color-bg-code-block-header: 4, 40, 79;
-    --color-bg-hover-component: 7, 53, 103;
+    --color-bg-header: 0, 20, 8;
+    --color-bg-primary: 0, 20, 8;
+    --color-bg-secondary: 0, 0, 0;
+    --color-bg-terciary: 34, 39, 34;
+    --color-bg-code-block: 34, 39, 34;
+    --color-bg-code-block-header: 0, 0, 0;
+    --color-bg-hover-component: 7, 53, 103;  /* TODO: pending*/
 
     --color-text-primary: 255, 255, 255;
-    --color-text-secondary: 191, 202, 213;
-    --color-text-terciary: 170, 185, 200;
+    --color-text-secondary: 205, 212, 203;
+    --color-text-terciary: 161, 166, 159;
+    --color-text-links: 204, 255, 0;
+    --color-text-button: 0, 0, 0;
+    --color-text-secondary-constant: 205, 212, 203;
 
     --color-border-primary: 255, 255, 255;
     --color-shadow-primary: 2, 20, 40, 0.08;
@@ -294,15 +302,15 @@
   }
 
   a {
-    @apply hover:underline;
+    @apply hover:underline text-links;
   }
 
   main a {
-    @apply text-brand;
+    @apply text-links;
   }
 
   a code {
-    @apply text-brand;
+    @apply text-links;
   }
 
   a[href^='http']:not([href^='#']):not([href^='https://insomnia.rest/run']):not(.no-icon)::after {
@@ -324,7 +332,7 @@
   }
 
   .button.button--primary {
-    @apply !bg-brand !text-white !border-transparent;
+    @apply !bg-brand !text-button !border-transparent;
   }
 
   .button.button--secondary {

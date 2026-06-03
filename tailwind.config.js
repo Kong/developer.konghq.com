@@ -87,6 +87,10 @@ module.exports = {
         primary: "rgb(var(--color-text-primary), <alpha-value>)",
         secondary: "rgb(var(--color-text-secondary), <alpha-value>)",
         terciary: "rgb(var(--color-text-terciary), <alpha-value>)",
+        links: "rgb(var(--color-text-links), <alpha-value>)",
+        button: "rgb(var(--color-text-button), <alpha-value>)",
+        "secondary-constant":
+          "rgb(var(--color-text-secondary-constant), <alpha-value>)",
       },
       borderColor: {
         primary: "rgb(var(--color-border-primary), <alpha-value>)",
@@ -95,6 +99,7 @@ module.exports = {
         primary: "rgb(var(--color-border-primary), <alpha-value>)",
       },
       backgroundColor: {
+        header: "rgb(var(--color-bg-header), <alpha-value>)",
         primary: "rgb(var(--color-bg-primary), <alpha-value>)",
         secondary: "rgb(var(--color-bg-secondary), <alpha-value>)",
         terciary: "rgb(var(--color-bg-terciary), <alpha-value>)",
