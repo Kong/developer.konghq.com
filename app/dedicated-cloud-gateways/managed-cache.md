@@ -172,6 +172,9 @@ Managed caches are either created at the control plane or control plane group-le
 
 {% include /gateway/dcgw-cpg-note.md %}
 
+{:.warning}
+> **Data plane required to use a managed cache**: Before you create a managed cache, make sure you've created a [Dedicated Cloud Gateway network](/dedicated-cloud-gateways/network-architecture/#configure-a-dedicated-cloud-gateway-network), control plane, and at least one data plane. If you create a managed cache before you've set up a data plane, the managed cache will display as `Ready` but you won't be able to use it until a data plane is created.
+
 To create a managed cache at the control plane level, do the following:
 
 {% navtabs "managed-cache" %}
