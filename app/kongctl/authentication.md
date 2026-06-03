@@ -2,7 +2,7 @@
 title: Authentication with kongctl
 description: Learn how to authenticate kongctl to {{site.konnect_product_name}} using the device flow or personal access tokens.
 
-beta: true
+
 
 content_type: reference
 layout: reference
@@ -20,19 +20,17 @@ breadcrumbs:
   - /kongctl/
 
 related_resources:
-  - text: kongctl configuration reference 
+  - text: kongctl configuration reference
     url: /kongctl/config/
   - text: Manage {{site.konnect_short_name}} resources declaratively
     url: /kongctl/declarative/
-  - text: kongctl configuration reference guide
-    url: /kongctl/config/
   - text: kongctl troubleshooting guide
     url: /kongctl/troubleshooting/
-  - text: Use kongctl and deck for full API platform management
+  - text: Use kongctl and decK for full API platform management
     url: /kongctl/kongctl-and-deck/
 ---
 
-kongctl communications with {{site.konnect_short_name}} via the public [APIs](/api/), which
+kongctl communicates with {{site.konnect_short_name}} via the public [APIs](/api/), which
 support token-based authentication. kongctl supports two authentication methods:
 * **Device Flow (recommended)**: Authenticate via your browser. Tokens are stored locally and refreshed automatically.
 * **Personal Access Token**: Use the `--pat` flag or `KONGCTL_DEFAULT_KONNECT_PAT` environment variable for automation scenarios like CI/CD pipelines.
@@ -48,8 +46,7 @@ Run the `kongctl login` command to initiate the _device code authorization flow_
 kongctl login
 ```
 
-The command will output information similar to the following, 
-prompting you to open a URL in your browser with the one-time code to authenticate.
+The command will prompt you to open a URL in your browser with a one-time code to authenticate:
 
 ```text
 Logging your CLI into Kong Konnect with the browser...
@@ -82,15 +79,14 @@ kongctl get me
 
 You should see your {{site.konnect_short_name}} user information.
 
-Now you can execute kongctl commands and you will be granted access based on the permissions
+Now you can run kongctl commands. You'll have access based on the permissions
 of the user account you logged in with.
 
 {:.info}
-> **Info:** The tokens obtained using the browser-based method will expire. When they do you can
-> simply re-exeucte the `kongctl login` procedure to obtain new tokens.
+> **Note:** The tokens obtained using the browser-based method will expire. When they do, you can run `kongctl login` again to obtain new tokens.
 
-If you want to invalidate the token received from the browser-based method, 
-execute the `logout` command to clear stored credentials:
+If you want to invalidate the token received from the browser-based method,
+run the `logout` command to clear stored credentials:
 
 ```bash
 kongctl logout
@@ -100,13 +96,13 @@ kongctl logout
 
 [{{site.konnect_short_name}} access tokens](/konnect-api/#personal-access-tokens) come in two forms: Personal Access Tokens (PAT) or 
 System Access Tokens (sPAT). PATs grant access to APIs as your personal user account, while
-sPATs grant access based on the permissions of system account, which may be more 
+sPATs grant access based on the permissions of a system account, which may be more
 limited than a user account. 
 
 Use the {{site.konnect_short_name}} UI to create the token type of your choice, and 
 copy the secret value:
 - Create a PAT in the [personal access token page](https://cloud.konghq.com/global/account/tokens)
-- Create a sPAT in the [system accounts page](https://cloud.konghq.com/global/account/system-tokens)
+- Create an sPAT in the [system accounts page](https://cloud.konghq.com/global/account/system-tokens)
   or with the [System Accounts API](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens)
 
 ### Configure authentication via flag

@@ -714,6 +714,7 @@ prepended
 prepending
 prepends
 prepopulated
+preprocessors
 preread
 printf
 prisma
@@ -905,6 +906,7 @@ targetRef
 tbl
 ingresses
 ingressclass
+tailscale
 tcp
 tcpdump
 TCPIngress
@@ -968,6 +970,7 @@ unchecking
 uncomment
 uncommented
 uncommenting
+unconfigured
 underuse
 unencrypted
 unescaped

@@ -28,4 +28,6 @@ Sitemap: {{ site.links.web }}/sitemap.xml
 # search: indexing and displaying in search results
 # ai-input: providing as context to AI features (e.g., RAG, summarization)
 # ai-train: training AI/ML models
+{% if jekyll.environment == "production" %}
 Content-Signal: ai-train=yes, search=yes, ai-input=yes
+{% endif %}

@@ -59,7 +59,7 @@ module Jekyll
             def build_url
               [
                 base_url,
-                formats['konnect-api']['endpoints'][entity_type]
+                endpoint
               ].join
             end
 
@@ -71,6 +71,17 @@ module Jekyll
                               formats['konnect-api']['event_gateway_base_url']
                             when 'ai-gateway'
                               formats['konnect-api']['ai_gateway_base_url']
+                            else
+                              raise ArgumentError, "Unsupported product: #{@example_drop.product}"
+                            end
+            end
+
+            def endpoint
+              @endpoint ||= case @example_drop.product
+                            when 'gateway', 'event-gateway'
+                              formats['konnect-api']['endpoints'][entity_type]
+                            when 'ai-gateway'
+                              formats['konnect-api']['ai_endpoints'][entity_type]
                             else
                               raise ArgumentError, "Unsupported product: #{@example_drop.product}"
                             end

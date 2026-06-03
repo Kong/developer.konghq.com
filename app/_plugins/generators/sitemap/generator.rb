@@ -14,11 +14,15 @@ module Jekyll
 
       def run
         @site.pages.map do |page|
+          next if skip?(page)
+
           @entries << entry(page) if page['canonical?']
         end
 
         @site.documents.map do |page|
-          @entries << entry(page) if page['canonical?']
+          next if skip?(page)
+
+          @entries << entry(page) if page['canonical?'] && !page.data['skip_sitemap']
         end
 
         @entries.sort_by { |e| e['url'] }
@@ -30,6 +34,10 @@ module Jekyll
           'changefreq' => 'weekly',
           'priority' => '1.0'
         }
+      end
+
+      def skip?(page)
+        page.url.end_with?('.md') || page.url.start_with?('/.well-known/')
       end
     end
   end

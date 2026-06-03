@@ -4,7 +4,7 @@ description: "Use the get verb with the event-gateway command to query {{site.ko
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect

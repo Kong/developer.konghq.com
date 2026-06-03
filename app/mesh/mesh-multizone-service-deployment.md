@@ -16,6 +16,8 @@ tags:
   - zones
 
 related_resources:
+  - text: Deploy a multi-zone global control plane in Universal mode with Docker
+    url: /mesh/deploy-multi-zone-global-control-plane-universal-docker/
   - text: Mesh DNS
     url: '/mesh/dns/'
   - text: '{{site.mesh_product_name}} resource sizing guidelines'

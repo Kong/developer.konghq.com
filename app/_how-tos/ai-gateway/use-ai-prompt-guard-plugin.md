@@ -66,7 +66,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-Start by configuring the AI Proxy plugin to route prompts to Mistral AI.
+Start by configuring the AI Proxy plugin to route prompts to {{ site.mistral }} AI.
 
 {% entity_examples %}
 entities:

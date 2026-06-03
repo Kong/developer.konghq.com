@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.3.3
+  version: 3.3.4
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@0a73b4a5f51ebe63c6d45446f906c0222e59a803
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0a73b4a5f51ebe63c6d45446f906c0222e59a803'
+  x-oas-source: kong/platform-api@b8494be2aa734a2e79a9a0edd283ece163565d7a
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b8494be2aa734a2e79a9a0edd283ece163565d7a'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -3379,6 +3379,16 @@ components:
             - `true` for Key Auth strategies and when supported for Client Credentials strategies
             - `false` when not supported for Client Credentials strategies
           type: boolean
+          readOnly: true
+        min_allowed_credentials:
+          description: Minimum allowed credentials for this auth strategy. Only present when supports_multiple_credentials is true and the DCR provider enforces a credential limit.
+          type: integer
+          minimum: 1
+          readOnly: true
+        max_allowed_credentials:
+          description: Maximum allowed credentials for this auth strategy. Only present when supports_multiple_credentials is true and the DCR provider enforces a credential limit.
+          type: integer
+          minimum: 1
           readOnly: true
       required:
         - id

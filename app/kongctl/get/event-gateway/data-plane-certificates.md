@@ -4,7 +4,7 @@ description: "Use the data-plane-certificates command to list or retrieve data p
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 
