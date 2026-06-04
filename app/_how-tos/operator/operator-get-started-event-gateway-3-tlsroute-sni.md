@@ -419,7 +419,7 @@ spec:
 
 ## Create the Kubernetes `Gateway`
 
-Create a `Gateway` that listens for TLS traffic on port `9092`. It uses TLS passthrough so that {{ site.event_gateway }} still terminates TLS with the certificate you configured earlier.
+Create a `Gateway` that listens for TLS traffic on port `19092`. It uses TLS passthrough so that {{ site.event_gateway }} still terminates TLS with the certificate you configured earlier.
 
 1. Create the `Gateway`:
 
@@ -435,7 +435,7 @@ Create a `Gateway` that listens for TLS traffic on port `9092`. It uses TLS pass
      listeners:
        - name: kafka-tls
          protocol: TLS
-         port: 9092
+         port: 19092
          hostname: "*.keg.test.local"
          tls:
            mode: Passthrough
@@ -509,10 +509,10 @@ For local testing, create host aliases for the advertised broker hostnames and r
 ```bash
 kubectl run kcat-tlsroute --rm -i --restart=Never --image=edenhill/kcat:1.7.1 -n kong \
   --overrides='{"spec":{"hostAliases":[{"ip":"'"${GATEWAY_IP}"'","hostnames":["bootstrap.vc-tls-1.keg.test.local","broker-0.vc-tls-1.keg.test.local","broker-1.vc-tls-1.keg.test.local","broker-2.vc-tls-1.keg.test.local"]}]}}' \
-  --command -- kcat -b bootstrap.vc-tls-1.keg.test.local:9092 \
+  --command -- kcat -b bootstrap.vc-tls-1.keg.test.local:19092 \
   -X security.protocol=SSL \
   -X enable.ssl.certificate.verification=false \
   -L
 ```
 
-You should see all brokers advertised on port `9092` with DNS names based on the virtual cluster `dnsLabel`.
+You should see all brokers advertised on port `19092` with DNS names based on the virtual cluster `dnsLabel`.
