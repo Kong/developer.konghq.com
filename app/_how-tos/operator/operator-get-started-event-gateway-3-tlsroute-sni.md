@@ -59,127 +59,163 @@ Use this pattern when you want:
 
 ## Create a `GatewayConfiguration` and `GatewayClass`
 
-Create a managed `Gateway` class for the TLSRoute example. This `Gateway` is provisioned through {{ site.konnect_short_name }}, so the `GatewayConfiguration` should reference the `KonnectAPIAuthConfiguration` created in the [prerequisites](/operator/get-started/event-gateway/port-mapping/#create-a-konnectapiauthconfiguration-resource):
+Create a managed `Gateway` class for the TLSRoute example. This `Gateway` is provisioned through {{ site.konnect_short_name }}, so the `GatewayConfiguration` should reference the `KonnectAPIAuthConfiguration` created in the [prerequisites](/operator/get-started/event-gateway/port-mapping/#create-a-konnectapiauthconfiguration-resource).
 
-```bash
-echo '
-apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
-kind: GatewayConfiguration
-metadata:
-  name: kong-configuration
-  namespace: kong
-spec:
-  konnect:
-    authRef:
-      name: konnect-api-auth
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - name: proxy
-              image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: kong
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
-    name: kong-configuration
-    namespace: kong
-' | kubectl apply -f -
-```
+1. Create the `GatewayConfiguration` and `GatewayClass` resources:
+
+   ```bash
+   echo '
+   apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
+   kind: GatewayConfiguration
+   metadata:
+     name: kong-configuration
+     namespace: kong
+   spec:
+     konnect:
+       authRef:
+         name: konnect-api-auth
+     dataPlaneOptions:
+       deployment:
+         podTemplateSpec:
+           spec:
+             containers:
+               - name: proxy
+                 image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+   ---
+   apiVersion: gateway.networking.k8s.io/v1
+   kind: GatewayClass
+   metadata:
+     name: kong
+   spec:
+     controllerName: konghq.com/gateway-operator
+     parametersRef:
+       group: gateway-operator.konghq.com
+       kind: GatewayConfiguration
+       name: kong-configuration
+       namespace: kong
+   ' | kubectl apply -f -
+   ```
+
+1. Wait for the `GatewayClass` to be accepted:
+
+   ```bash
+   kubectl wait gatewayclass/kong \
+     --for=condition=Accepted=True \
+     --timeout=5m
+   ```
 
 ## Create a second `KonnectEventGateway`
 
-This guide uses a separate control plane so that it can run alongside the `portMapping` example:
+This guide uses a separate control plane so that it can run alongside the `portMapping` example.
 
-```bash
-echo '
-apiVersion: konnect.konghq.com/v1alpha1
-kind: KonnectEventGateway
-metadata:
-  name: cp-event-tls
-  namespace: kong
-spec:
-  apiSpec:
-    name: cp-event-tls
-    description: Event Gateway control plane for TLSRoute and SNI
-  konnect:
-    authRef:
-      name: konnect-api-auth
-' | kubectl apply -f -
-```
+1. Create the `KonnectEventGateway` resource:
+
+   ```bash
+   echo '
+   apiVersion: konnect.konghq.com/v1alpha1
+   kind: KonnectEventGateway
+   metadata:
+     name: cp-event-tls
+     namespace: kong
+   spec:
+     apiSpec:
+       name: cp-event-tls
+       description: Event Gateway control plane for TLSRoute and SNI
+     konnect:
+       authRef:
+         name: konnect-api-auth
+   ' | kubectl apply -f -
+   ```
+
+1. Wait for the resource to be ready:
+
+   ```bash
+   kubectl wait konnecteventgateway/cp-event-tls -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+   ```
 
 ## Create the backend cluster, virtual cluster, and listener
 
-Create the `EventGatewayBackendCluster`, `EventGatewayVirtualCluster`, and `EventGatewayListener` that define how Kafka traffic connects through the `cp-event-tls` control plane:
+1. Create the `EventGatewayBackendCluster`, `EventGatewayVirtualCluster`, and `EventGatewayListener` that define how Kafka traffic connects through the `cp-event-tls` control plane:
 
-```bash
-echo '
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayBackendCluster
-metadata:
-  name: default-backend-cluster-tls
-  namespace: kong
-spec:
-  gatewayRef:
-    type: namespacedRef
-    namespacedRef:
-      name: cp-event-tls
-  apiSpec:
-    name: default_backend_cluster_tls
-    bootstrapServers:
-      - kafka-cluster.kafka.svc.cluster.local:9092
-    authentication:
-      type: anonymous
-      anonymous: {}
-    insecureAllowAnonymousVirtualClusterAuth: Enabled
-    tls:
-      enabled: Disabled
----
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayVirtualCluster
-metadata:
-  name: example-virtual-cluster-tls
-  namespace: kong
-spec:
-  eventGatewayBackendClusterRef:
-    type: namespacedRef
-    namespacedRef:
-      name: default-backend-cluster-tls
-  apiSpec:
-    name: example_virtual_cluster_tls
-    dnsLabel: vc-tls-1
-    aclMode: passthrough
-    authentication:
-      - type: anonymous
-    namespace:
-      prefix: "vctls_"
-      mode: hide_prefix
----
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayListener
-metadata:
-  name: sni-listener
-  namespace: kong
-spec:
-  apiSpec:
-    name: sni_listener
-    addresses:
-      - 0.0.0.0
-    ports:
-      - "9092"
-  gatewayRef:
-    type: namespacedRef
-    namespacedRef:
-      name: cp-event-tls
-' | kubectl apply -f -
-```
+   ```bash
+   echo '
+   apiVersion: configuration.konghq.com/v1alpha1
+   kind: EventGatewayBackendCluster
+   metadata:
+     name: default-backend-cluster-tls
+     namespace: kong
+   spec:
+     gatewayRef:
+       type: namespacedRef
+       namespacedRef:
+         name: cp-event-tls
+     apiSpec:
+       name: default_backend_cluster_tls
+       bootstrapServers:
+         - kafka-cluster.kafka.svc.cluster.local:9092
+       authentication:
+         type: anonymous
+         anonymous: {}
+       insecureAllowAnonymousVirtualClusterAuth: Enabled
+       tls:
+         enabled: Disabled
+   ---
+   apiVersion: configuration.konghq.com/v1alpha1
+   kind: EventGatewayVirtualCluster
+   metadata:
+     name: example-virtual-cluster-tls
+     namespace: kong
+   spec:
+     eventGatewayBackendClusterRef:
+       type: namespacedRef
+       namespacedRef:
+         name: default-backend-cluster-tls
+     apiSpec:
+       name: example_virtual_cluster_tls
+       dnsLabel: vc-tls-1
+       aclMode: passthrough
+       authentication:
+         - type: anonymous
+       namespace:
+         prefix: "vctls_"
+         mode: hide_prefix
+   ---
+   apiVersion: configuration.konghq.com/v1alpha1
+   kind: EventGatewayListener
+   metadata:
+     name: sni-listener
+     namespace: kong
+   spec:
+     apiSpec:
+       name: sni_listener
+       addresses:
+         - 0.0.0.0
+       ports:
+         - "9092"
+     gatewayRef:
+       type: namespacedRef
+       namespacedRef:
+         name: cp-event-tls
+   ' | kubectl apply -f -
+   ```
+
+1. Wait for the resources to be ready:
+
+   ```bash
+   kubectl wait eventgatewaybackendcluster/default-backend-cluster-tls -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+
+   kubectl wait eventgatewayvirtualcluster/example-virtual-cluster-tls -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+
+   kubectl wait eventgatewaylistener/sni-listener -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+   ```
 
 ## Create the TLS Secret and listener policies
 
@@ -275,92 +311,112 @@ spec:
    ' | kubectl apply -f -
    ```
 
+1. Wait for the listener policies to be ready:
+
+   ```bash
+   kubectl wait eventgatewaylistenerpolicy/sni-tls-server -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+
+   kubectl wait eventgatewaylistenerpolicy/sni-forward -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+   ```
+
 ## Create consume and produce policies
 
-These policies add a marker header to consumed and produced records so you can verify they are attached:
+These policies add a marker header to consumed and produced records so you can verify they are attached.
 
-```bash
-echo '
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayVirtualClusterConsumePolicy
-metadata:
-  name: example-virtual-cluster-tls-consume-policy
-  namespace: kong
-spec:
-  eventGatewayVirtualClusterRef:
-    type: namespacedRef
-    namespacedRef:
-      name: example-virtual-cluster-tls
-  apiSpec:
-    type: modifyHeaders
-    modifyHeaders:
-      name: example_tls_consume_policy
-      description: Add a marker header to consumed records for the TLSRoute example
-      config:
-        actions:
-          - op: set
-            set:
-              key: x-kong-consume-policy
-              value: tlsroute
----
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayVirtualClusterProducePolicy
-metadata:
-  name: example-virtual-cluster-tls-produce-policy
-  namespace: kong
-spec:
-  eventGatewayVirtualClusterRef:
-    type: namespacedRef
-    namespacedRef:
-      name: example-virtual-cluster-tls
-  apiSpec:
-    type: modifyHeaders
-    modifyHeaders:
-      name: example_tls_produce_policy
-      description: Add a marker header to produced records for the TLSRoute example
-      config:
-        actions:
-          - op: set
-            set:
-              key: x-kong-produce-policy
-              value: tlsroute
-' | kubectl apply -f -
-```
+1. Create the consume and produce policies:
+
+   ```bash
+   echo '
+   apiVersion: configuration.konghq.com/v1alpha1
+   kind: EventGatewayVirtualClusterConsumePolicy
+   metadata:
+     name: example-virtual-cluster-tls-consume-policy
+     namespace: kong
+   spec:
+     eventGatewayVirtualClusterRef:
+       type: namespacedRef
+       namespacedRef:
+         name: example-virtual-cluster-tls
+     apiSpec:
+       type: modifyHeaders
+       modifyHeaders:
+         name: example_tls_consume_policy
+         description: Add a marker header to consumed records for the TLSRoute example
+         config:
+           actions:
+             - op: set
+               set:
+                 key: x-kong-consume-policy
+                 value: tlsroute
+   ---
+   apiVersion: configuration.konghq.com/v1alpha1
+   kind: EventGatewayVirtualClusterProducePolicy
+   metadata:
+     name: example-virtual-cluster-tls-produce-policy
+     namespace: kong
+   spec:
+     eventGatewayVirtualClusterRef:
+       type: namespacedRef
+       namespacedRef:
+         name: example-virtual-cluster-tls
+     apiSpec:
+       type: modifyHeaders
+       modifyHeaders:
+         name: example_tls_produce_policy
+         description: Add a marker header to produced records for the TLSRoute example
+         config:
+           actions:
+             - op: set
+               set:
+                 key: x-kong-produce-policy
+                 value: tlsroute
+   ' | kubectl apply -f -
+   ```
+
+1. Wait for the resources to be ready:
+
+   ```bash
+   kubectl wait eventgatewayvirtualclusterconsumepolicy/example-virtual-cluster-tls-consume-policy -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+
+   kubectl wait eventgatewayvirtualclusterproducepolicy/example-virtual-cluster-tls-produce-policy -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+   ```
 
 ## Deploy the `KegDataPlane`
 
 For the TLSRoute pattern, the `KegDataPlane` stays internal to the cluster. The Kafka listener is exposed as a `ClusterIP` Service because the Kubernetes `Gateway` will be the public entrypoint.
 
-1. Deploy the `KegDataPlane`:
+Deploy the `KegDataPlane`:
 
-   ```bash
-   echo '
-   apiVersion: eventgateway.konghq.com/v1alpha1
-   kind: KegDataPlane
-   metadata:
-     name: keg-tls-dp
-     namespace: kong
-   spec:
-     controlPlaneRef:
-       type: konnectNamespacedRef
-       konnectNamespacedRef:
-         name: cp-event-tls
-     network:
-       services:
-         kafka:
-           type: ClusterIP
-           ports:
-             - name: kafka
-               port: 9092
-               targetPort: 9092
-   ' | kubectl apply -f -
-   ```
-
-1. Wait for the data plane to be ready:
-
-   ```bash
-   kubectl wait kegdataplane/keg-tls-dp -n kong --for=condition=Ready=True --timeout=10m
-   ```
+```bash
+echo '
+apiVersion: eventgateway.konghq.com/v1alpha1
+kind: KegDataPlane
+metadata:
+  name: keg-tls-dp
+  namespace: kong
+spec:
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: cp-event-tls
+  network:
+    services:
+      kafka:
+        type: ClusterIP
+        ports:
+          - name: kafka
+            port: 9092
+            targetPort: 9092
+' | kubectl apply -f -
+```
 
 ## Create the Kubernetes `Gateway`
 
@@ -394,15 +450,17 @@ Create a `Gateway` that listens for TLS traffic on port `9092`. It uses TLS pass
    ' | kubectl apply -f -
    ```
 
-1. Wait for the `Gateway` to be ready:
+1. Wait for the `Gateway` to be accepted:
 
    ```bash
-   kubectl wait gateway/kong-keg -n kong --for=condition=Programmed=True --timeout=5m
+   kubectl wait gateway/kong-keg -n kong --for=condition=Accepted=True --timeout=5m
    ```
 
 ## Attach a `TLSRoute` to the `Gateway`
 
-The `TLSRoute` binds the wildcard Kafka hostnames to the internal Kafka Service exposed by the `KegDataPlane`:
+The `TLSRoute` binds the wildcard Kafka hostnames to the internal Kafka Service exposed by the `KegDataPlane`.
+
+Create the `TLSRoute`:
 
 ```bash
 echo '
@@ -430,34 +488,6 @@ spec:
 ```
 
 ## Validation
-
-1. Wait for the {{ site.event_gateway_short }} resources to become programmed:
-
-   ```bash
-   kubectl wait -n kong \
-     konnecteventgateway/cp-event-tls \
-     eventgatewaybackendcluster/default-backend-cluster-tls \
-     eventgatewayvirtualcluster/example-virtual-cluster-tls \
-     eventgatewaylistener/sni-listener \
-     eventgatewaylistenerpolicy/sni-tls-server \
-     eventgatewaylistenerpolicy/sni-forward \
-     eventgatewayvirtualclusterconsumepolicy/example-virtual-cluster-tls-consume-policy \
-     eventgatewayvirtualclusterproducepolicy/example-virtual-cluster-tls-produce-policy \
-     --for=jsonpath='{.status.conditions[?(@.type=="Programmed")].status}'=True \
-     --timeout=10m
-   ```
-
-1. Wait for the data plane and `Gateway`:
-
-   ```bash
-   kubectl wait kegdataplane/keg-tls-dp -n kong \
-     --for=condition=Ready=True \
-     --timeout=10m
-
-   kubectl wait gateway/kong-keg -n kong \
-     --for=condition=Programmed=True \
-     --timeout=10m
-   ```
 
 1. Export the `Gateway` address:
 
