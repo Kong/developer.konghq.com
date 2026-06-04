@@ -23,6 +23,7 @@ works_on:
   - konnect
 
 prereqs:
+  show_works_on: true
   skip_product: true
   operator:
     konnect:
@@ -347,7 +348,7 @@ kubectl run kcat-portmap --rm -i --restart=Never --image=edenhill/kcat:1.7.1 -n 
   --command -- kcat -b ${KAFKA_LB_HOST}:9092 -L
 ```
 
-You should see one bootstrap endpoint on port `9092` and one port per broker on `9093`, `9094`, and `9095`.
+You should see one bootstrap endpoint on port `9092` and one port per broker on `9093`, `9094`, and `9095`, for example:
 
 ```text
 Metadata for all topics (from broker -1: 127.0.0.0:9092/bootstrap):
