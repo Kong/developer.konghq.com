@@ -166,15 +166,16 @@ A [Modify Headers](/event-gateway/policies/modify-headers/) policy that only run
 ```yaml
 condition: context.auth.principal.metadata.team == "operators"
 ```
-
+{% comment %}
 For a complete walkthrough, see [Enrich Kafka SASL PLAIN connections with Kong Identity principal metadata](/event-gateway/kong-identity-metadata-integration/).
+{% endcomment %}
 
 ## Create a directory
 
 {% navtabs "create-directory" %}
 {% navtab "API" %}
 
-Send a `POST` request to the [`/v2/directories` endpoint](/api/konnect/kong-identity/v2/#/operations/createDirectory):
+Send a `POST` request to the `/v2/directories` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -203,7 +204,7 @@ Configuring a principal is a multi-step process. You always create the principal
 {% navtabs "configure-principal" %}
 {% navtab "API" %}
 
-1. Create the principal by sending a `POST` request to the [`/v2/directories/{directoryId}/principals` endpoint](/api/konnect/kong-identity/v2/#/operations/createPrincipal):
+1. Create the principal by sending a `POST` request to the `/v2/directories/{directoryId}/principals` endpoint:
 {% capture create_principal %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -218,7 +219,7 @@ body:
 {% endcapture %}
 {{ create_principal | indent: 3}}
 
-1. Link an identity to a principal by sending a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity). In this example, you'll be attaching a `control_plane_consumer` identity to map the principal to a Consumer in a {{site.base_gateway}} control plane:
+1. Link an identity to a principal by sending a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint. In this example, you'll be attaching a `control_plane_consumer` identity to map the principal to a Consumer in a {{site.base_gateway}} control plane:
 {% capture link_identity %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -238,10 +239,10 @@ body:
 
    {:.info}
    > If you want to authenticate clients against this principal using basic auth or an API key, you also need to add the credentials in separate API calls:
-   > * **Basic auth:** `POST` to [`/v2/directories/{directoryId}/principals/{principalId}/basic-auths`](/api/konnect/kong-identity/v2/#/operations/createBasicAuth) to create the basic auth entry, then `POST` to [`/v2/directories/{directoryId}/principals/{principalId}/basic-auths/{basicAuthId}/passwords`](/api/konnect/kong-identity/v2/#/operations/createPassword) to set a password.
-   > * **API key:** `POST` to [`/v2/directories/{directoryId}/principals/{principalId}/api-keys`](/api/konnect/kong-identity/v2/#/operations/createKey).
+   > * **Basic auth:** `POST` to `/v2/directories/{directoryId}/principals/{principalId}/basic-auths` to create the basic auth entry, then `POST` to `/v2/directories/{directoryId}/principals/{principalId}/basic-auths/{basicAuthId}/passwords` to set a password.
+   > * **API key:** `POST` to `/v2/directories/{directoryId}/principals/{principalId}/api-keys`.
 
-1. (Optional) Add or update metadata on the principal by sending a `PATCH` request to the [`/v2/directories/{directoryId}/principals/{principalId}` endpoint](/api/konnect/kong-identity/v2/#/operations/updatePrincipal):
+1. (Optional) Add or update metadata on the principal by sending a `PATCH` request to the `/v2/directories/{directoryId}/principals/{principalId}` endpoint:
 {% capture update_metadata %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -351,7 +352,7 @@ Add a username and password credential to a principal so clients can authenticat
 This uses two API requests: first, create the basic auth entry with a username, then set a password on it. 
 The password secret is only returned when it's created and can't be retrieved again later.
 
-Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/basic-auths` endpoint](/api/konnect/kong-identity/v2/#/operations/createBasicAuth) to create the basic auth entry:
+Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/basic-auths` endpoint to create the basic auth entry:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -363,7 +364,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Then, send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/basic-auths/{basicAuthId}/passwords` endpoint](/api/konnect/kong-identity/v2/#/operations/createPassword) to set a password for basic auth:
+Then, send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/basic-auths/{basicAuthId}/passwords` endpoint to set a password for basic auth:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -380,7 +381,7 @@ body:
 Add an API key credential to a principal so clients can authenticate at {{site.base_gateway}} with key auth. 
 The key can be system-generated (`v1`) or imported with a custom secret (`imported`). The key secret is only returned when it's created.
 
-Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/api-keys` endpoint](/api/konnect/kong-identity/v2/#/operations/createKey):
+Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/api-keys` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -397,7 +398,7 @@ body:
 Reference a principal authenticated by an external IdP such as Okta or Cognito. 
 {{site.identity}} matches an incoming OAuth token by the token's issuer URL and a configurable claim. Most commonly the claim is `sub`, but any claim in the token can be used for lookup.
 
-Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity):
+Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -418,7 +419,7 @@ body:
 Reference a client on a {{site.identity}} auth server in the same region. 
 Use this when {{site.identity}} is issuing the OAuth tokens and you want to map the issuing client to a principal.
 
-Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity):
+Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -437,7 +438,7 @@ body:
 Map a principal to a Consumer in a specific {{site.base_gateway}} control plane. 
 Use this when you want existing Consumer-scoped plugins to run for traffic authenticated as the principal.
 
-Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity):
+Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -461,7 +462,7 @@ Look up a principal by an identifier from an external system.
 Common uses include matching a SASL username from a Kafka client connecting through {{site.event_gateway_short}}, or matching a non-standard claim in a token issued by an external IdP. 
 The `key` is the name you assign to the identifier, and `value` is the specific value to match against.
 
-Send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint](/api/konnect/kong-identity/v2/#/operations/createIdentity):
+Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
