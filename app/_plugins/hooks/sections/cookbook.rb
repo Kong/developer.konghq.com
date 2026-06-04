@@ -67,7 +67,7 @@ module SectionWrapper
         <a aria-label="Anchor" href="##{slug}" title="#{escaped_title}" class="link-anchor flex items-center justify-between hover:no-underline accordion-trigger">
           <div class="flex items-center gap-2 group w-full">
             #{h4.to_html}
-            <span class="text-brand hidden link-anchor-icon group-hover:flex">
+            <span class="hidden link-anchor-icon group-hover:flex">
               #{File.read('app/assets/icons/link.svg')}
             </span>
           </div>

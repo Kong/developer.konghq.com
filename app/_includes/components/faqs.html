@@ -5,7 +5,7 @@
     <a href="#{{ slug }}" id="{{ slug }}" class="py-4 px-5 flex justify-between items-center cursor-pointer text-primary list-none accordion-trigger hover:no-underline faq-question">
       <div class="flex items-center gap-2 w-full link-anchor group">
         {{ faq.q | liquify | markdownify }}
-        <span class="text-brand hidden link-anchor-icon group-hover:flex">
+        <span class="hidden link-anchor-icon group-hover:flex">
           {% include_svg 'assets/icons/link.svg' %}
         </span>
       </div>

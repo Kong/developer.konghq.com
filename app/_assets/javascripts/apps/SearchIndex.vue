@@ -7,7 +7,7 @@
                 <ais-panel>
                         <template v-slot:default="{ hasRefinements }">
                             <div class="flex flex-col gap-3">
-                                <div class="text-sm text-brand font-semibold">Tags</div>
+                                <div class="text-sm text-links font-semibold">Tags</div>
                                 <div class="flex flex-col gap-3">
                                     <ais-static-tags-filter />
                                 </div>
@@ -18,7 +18,7 @@
                     <ais-panel>
                         <template v-slot:default="{ hasRefinements }">
                             <div class="flex flex-col gap-3" v-if="hasRefinements">
-                                <div class="text-sm text-brand font-semibold">Products</div>
+                                <div class="text-sm text-links font-semibold">Products</div>
                                 <div class="flex flex-col gap-3">
                                     <ais-products-filter attribute="products" :values="this.filters.products" />
                                 </div>
@@ -29,7 +29,7 @@
                     <ais-panel>
                         <template v-slot:default="{ hasRefinements }">
                             <div class="flex flex-col gap-3" v-if="hasRefinements">
-                                <div class="text-sm text-brand font-semibold">Plugins</div>
+                                <div class="text-sm text-links font-semibold">Plugins</div>
                                 <div class="flex flex-col gap-3">
                                     <ais-plugins-filter attribute="kong_plugins" :sort-by="['name']" :values="this.filters.kong_plugins" />
                                 </div>
@@ -40,7 +40,7 @@
                     <ais-panel>
                         <template v-slot:default="{ hasRefinements }">
                             <div class="flex flex-col gap-3" v-if="hasRefinements">
-                                <div class="text-sm text-brand font-semibold">Tools</div>
+                                <div class="text-sm text-links font-semibold">Tools</div>
                                 <div class="flex flex-col gap-3">
                                     <ais-static-filter attribute="tools" :sort-by="['name']" :values="this.filters.tools" />
                                 </div>
@@ -51,7 +51,7 @@
                     <ais-panel>
                         <template v-slot:default="{ hasRefinements }">
                             <div class="flex flex-col gap-3" v-if="hasRefinements">
-                                <div class="text-sm text-brand font-semibold">Works on</div>
+                                <div class="text-sm text-links font-semibold">Works on</div>
                                 <div class="flex flex-col gap-3">
                                     <ais-static-filter attribute="works_on" :sort-by="['name']" :values="this.filters.works_on" />
                                 </div>
