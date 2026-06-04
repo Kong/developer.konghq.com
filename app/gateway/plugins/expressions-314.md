@@ -8,12 +8,7 @@ layout: reference
 products:
   - gateway
 
-beta: true
-
 min_version:
-  gateway: '3.14'
-
-max_version:
   gateway: '3.14'
 
 breadcrumbs:
@@ -58,7 +53,7 @@ related_resources:
 
 {:.warning}
 > **This page documents the beta version of plugin conditions available in {{site.base_gateway}} 3.14, which used ATC expression syntax.**
-> The expression language changed significantly in 3.15.
+> In 3.15, plugin expressions are generally available, but the expression language changed significantly from 3.14 to 3.15.
 > If you are using {{site.base_gateway}} 3.15 or later, see the [plugin conditions reference](/gateway/plugins/expressions/) for the current CEL-based syntax.
 
 Plugin conditions allow you to attach an optional `condition` expression to any plugin.
