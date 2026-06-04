@@ -24,7 +24,7 @@ works_on:
   - konnect
 
 min_version:
-  operator: '2.2.0'
+  operator: '2.2'
 
 entities: []
 
@@ -41,11 +41,9 @@ next_steps:
 ---
 
 {:.info}
-> **Note**: {{ site.operator_product_name }} only reconciles `TLSRoute` resources using the `gateway.networking.k8s.io/v1` API, which is available in [Gateway API](https://gateway-api.sigs.k8s.io/) 1.5 or later (standard channel). If you installed the CRDs from an earlier release while following [step 1 of this series](/operator/get-started/gateway-api/install/), you should upgrade {{ site.operator_product_name }} to the version that supports `TLSRoute`. It will install or upgrade gateway API CRDs with the appropriate version. If you did not install gateway API CRDs by the {{ site.operator_product_name }} helm release, please install or upgrade them manually:
-
-```shell
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml --server-side
-```
+> {{ site.operator_product_name }} only reconciles `TLSRoute` resources using the `gateway.networking.k8s.io/v1` API, which is available in [Gateway API](https://gateway-api.sigs.k8s.io/) 1.5 or later (standard channel). If you installed the CRDs from an earlier release while following [step 1 of this series](/operator/get-started/gateway-api/install/), upgrade {{ site.operator_product_name }} to the version that supports `TLSRoute`. It will install or upgrade gateway API CRDs with the appropriate version. If you did not install gateway API CRDs by the {{ site.operator_product_name }} helm release, install or upgrade them manually:
+> 
+> 
 
 ## Generate a TLS certificate
 
@@ -53,13 +51,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 ## Attach the TLS certificate to the echo Service
 
-If you haven't already deployed the `echo` Service, install it:
-
-```bash
-kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
-```
-
-The `echo` Service does not listen on the TLS port by default as it requires a certificate stored in a Kubernetes Secret. Patch the `echo` Deployment to mount the Secret in the pod and set the `TLS_CERT_FILE` and `TLS_KEY_FILE` environment variables to allow the `echo` Service to terminate TLS:
+The `echo` Service we deployed in a [previous step](/operator/get-started/gateway-api/create-route/#create-a-backend-service) doesn't listen on the TLS port by default as it requires a certificate stored in a Kubernetes Secret. Patch the `echo` Deployment to mount the Secret in the pod and set the `TLS_CERT_FILE` and `TLS_KEY_FILE` environment variables to allow the `echo` Service to terminate TLS:
 
 ```bash
 kubectl patch -n kong --type=json deployment echo -p='[
@@ -185,6 +177,7 @@ In namespace default.
 With IP address 10.244.0.26.
 hello
 ```
+{:.no-copy-code}
 
 ## Terminate TLS at the listener
 
