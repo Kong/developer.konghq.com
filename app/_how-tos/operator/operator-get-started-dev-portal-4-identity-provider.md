@@ -32,6 +32,14 @@ prereqs:
 tldr:
   q: How do I configure Dev Portal sign-in with {{site.operator_product_name}}?
   a: Create a `PortalIdentityProviderRequest` that references your `Portal` and supplies your OIDC issuer, client ID, and client secret.
+
+related_resources:
+  - text: "{{ site.dev_portal }} SSO"
+    url: /dev-portal/sso/
+  - text: Application authentication strategies
+    url: /dev-portal/auth-strategies/
+  - text: Enable self-managed OIDC auth with Okta in {{ site.dev_portal }}
+    url: /how-to/enable-oidc-auth-for-dev-portal/
 ---
 
 ## Create the `PortalIdentityProviderRequest`

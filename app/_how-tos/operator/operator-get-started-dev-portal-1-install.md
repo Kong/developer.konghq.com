@@ -34,6 +34,12 @@ tags:
   - helm
   - konnect
   - get-started
+
+related_resources:
+  - text: Custom resource definitions
+    url: /operator/reference/custom-resources/
+  - text: "{{ site.dev_portal }} overview"
+    url: /dev-portal/
 ---
 
 This guide walks through managing {{site.konnect_short_name}} {{site.dev_portal}} resources with {{site.operator_product_name}}.

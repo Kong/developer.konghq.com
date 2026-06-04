@@ -32,6 +32,14 @@ prereqs:
 tldr:
   q: How do I create a {{site.dev_portal}} with {{site.operator_product_name}}?
   a: Create a `Portal`, attach a published `PortalPage`, and apply a `PortalCustomization`.
+
+related_resources:
+  - text: "{{ site.dev_portal }} pages and content"
+    url: /dev-portal/pages-and-content/
+  - text: "{{ site.dev_portal }} customizations"
+    url: /dev-portal/customizations/dev-portal-customizations/
+  - text: Global {{ site.dev_portal }} configuration
+    url: /dev-portal/portal-settings/
 ---
 
 ## Create the `Portal`

@@ -32,6 +32,14 @@ prereqs:
 tldr:
   q: How do I configure supporting Dev Portal settings with {{site.operator_product_name}}?
   a: Create a `PortalEmailConfig`, `PortalTeam`, and `PortalCustomDomain` that reference your `Portal`.
+
+related_resources:
+  - text: Custom domains
+    url: /dev-portal/custom-domains/
+  - text: "{{ site.dev_portal }} developer RBAC"
+    url: /dev-portal/developer-rbac/
+  - text: Global {{ site.dev_portal }} configuration
+    url: /dev-portal/portal-settings/
 ---
 
 ## Create a `PortalTeam`
