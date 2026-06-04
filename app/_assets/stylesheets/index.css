@@ -25,7 +25,9 @@
     --color-text-button: 0, 0, 0;
     --color-text-secondary-constant: 74, 77, 73;
 
-    --color-border-primary: 5, 47, 92;
+    --color-border-primary: 186, 193, 184;
+    --opacity-border-primary: 0.72;
+
     --color-shadow-primary: 5, 47, 92, 0.04;
 
     --color-brand: 204, 255, 0;
@@ -144,7 +146,8 @@
 
     --opacity-brand-saturated: 0.15;
 
-    --color-border-primary: 255, 255, 255;
+    --color-border-primary: 49, 57, 25;
+    --opacity-border-primary: 0.48;
     --color-shadow-primary: 2, 20, 40, 0.08;
 
     --color-semantic-red-primary: 214, 67, 67;

@@ -97,7 +97,10 @@ module.exports = {
           "rgb(var(--color-text-secondary-constant), <alpha-value>)",
       },
       borderColor: {
-        primary: "rgb(var(--color-border-primary), <alpha-value>)",
+        primary: ({ opacityValue, opacityVariable }) =>
+          opacityVariable === undefined && opacityValue !== undefined
+            ? `rgb(var(--color-border-primary), ${opacityValue})`
+            : `rgb(var(--color-border-primary), var(--opacity-border-primary, 1))`,
       },
       divideColor: {
         primary: "rgb(var(--color-border-primary), <alpha-value>)",
