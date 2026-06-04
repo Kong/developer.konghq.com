@@ -45,25 +45,45 @@ prereqs:
       content: |
         Create a directory for your secrets on the {{site.base_gateway}} data plane and add at least one secret file.
 
-        For example, if using the quickstart Docker container:
+        {% on_prem %}
+        content: |
+          For example, if using the quickstart Docker container:
 
-        1. Create the directory:
+          1. Create the directory:
 
-           ```sh
-           docker exec kong-quickstart-gateway mkdir -p /tmp/kong/secrets
-           ```
+             ```sh
+             docker exec kong-quickstart-gateway mkdir -p /tmp/kong/secrets
+             ```
+          1. Create a test secret:
+
+             ```
+             docker exec kong-quickstart-gateway /bin/sh -c 'echo -n "my-secret-value" > /tmp/kong/secrets/my-secret.txt'
+             ```
+          1. Export the directory path as an environment variable for use with decK:
+        {% endon_prem%}
+        {% konnect %}
+        content: |
+          1. Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
+
+             ```sh
+             export KONNECT_DP_CONTAINER='your-dp-container-name'
+             ```
+          1. Create the directory:
+
+             ```sh
+             docker exec $KONNECT_DP_CONTAINER mkdir -p /tmp/kong/secrets
+             ```
+          1. Create a test secret:
+
+             ```
+             docker exec $KONNECT_DP_CONTAINER /bin/sh -c 'echo -n "my-secret-value" > /tmp/kong/secrets/my-secret.txt'
+             ```
+          1. Export the directory path as an environment variable for use with decK:
+        {% endkonnect %}
         
-        1. Create a test secret:
-
-           ```
-           docker exec kong-quickstart-gateway /bin/sh -c 'echo -n "my-secret-value" > /tmp/kong/secrets/my-secret.txt'
-           ```
-
-        1. Export the directory path as an environment variable for use with decK:
-
-           {% env_variables %}
-           DECK_FS_PREFIX: '/tmp/kong/secrets'
-           {% endenv_variables %}
+          {% env_variables %}
+          DECK_FS_PREFIX: '/tmp/kong/secrets'
+          {% endenv_variables %}
 
       icon_url: /assets/icons/gateway.svg
 
@@ -71,6 +91,9 @@ cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 
 faqs:
