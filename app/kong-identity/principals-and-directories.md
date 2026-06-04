@@ -172,11 +172,6 @@ For a complete walkthrough, see [Enrich Kafka SASL PLAIN connections with Kong I
 ## Create a directory
 
 {% navtabs "create-directory" %}
-{% navtab "UI" %}
-
-UI steps will be added once the feature is available for testing.
-
-{% endnavtab %}
 {% navtab "API" %}
 
 Send a `POST` request to the [`/v2/directories` endpoint](/api/konnect/kong-identity/v2/#/operations/createDirectory):
@@ -206,11 +201,6 @@ Terraform steps will be added once the feature is available for testing.
 Configuring a principal is a multi-step process. You always create the principal first, then attach identities. Metadata is optional.
 
 {% navtabs "configure-principal" %}
-{% navtab "UI" %}
-
-UI steps will be added once the feature is available for testing.
-
-{% endnavtab %}
 {% navtab "API" %}
 
 1. Create the principal by sending a `POST` request to the [`/v2/directories/{directoryId}/principals` endpoint](/api/konnect/kong-identity/v2/#/operations/createPrincipal):
@@ -271,6 +261,67 @@ body:
 {% navtab "Terraform" %}
 
 Terraform steps will be added once the feature is available for testing.
+
+{% endnavtab %}
+{% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click [**Identity**](https://cloud.konghq.com/identity).
+1. In the Identity sidebar, click **Principals**.
+1. Click **Create principal**.
+1. In the **Name** field, enter `example-principal`.
+   A default name is generated, but you can change it.
+1. In the **Description** field, enter `Example principal`.
+1. Click **Next**.
+1. Click **Add authentication**.
+1. Configure an authentication type for the principal:
+{% navtabs "auth-type" %}
+{% navtab "Key auth" %}
+  1. From the **Authentication type** dropdown menu, select "Key".
+  1. Select a key option:
+      * To generate a key automatically, select **Generate automatically**.
+      * To use an existing key from your system, select **Enter manually**, then enter your key.
+  1. Set when the credential expires:
+      * To keep the key from expiring, select **Never**.
+      * To set an expiration, select **Set date and time**, then select a time range.
+{% endnavtab %}
+{% navtab "Basic auth" %}
+  1. From the **Authentication type** dropdown menu, select "Basic auth".
+  1. In the **Username** field, enter `example-user`.
+  1. Select a password option:
+      * To have {{site.identity}} create a password, select **Generate password automatically**.
+      * To set your own password, select **Enter a password manually**, then enter `example-password` in the password field.
+  1. Set when the credential expires:
+      * To keep the credential from expiring, select **Never**.
+      * To set an expiration, select **Set date and time**, then select a time range.
+{% endnavtab %}
+{% navtab "OAuth client" %}
+  1. From the **Authentication type** dropdown menu, select "OAuth client".
+  1. Select an auth server option:
+      * To let Kong manage the OAuth provider and handle token issuance and validation, select **Use Kong Identity auth server** and do the following:
+        1. From the **Authorization server** dropdown menu, select your authorization server.
+        1. From the **Client** dropdown menu, select your client.
+      * To connect to your existing OAuth provider, select **Use external auth server** and do the following:
+        1. In the **Issuer** field, enter the issuer URL of the external identity provider.
+        1. In the **Claim name** field, enter the OIDC claim used to identify the principal. Use sub for the subject identifier.
+        1. In the **Claim value** field, enter the expected value of the selected OIDC claim. For sub, this is the subject identifier.
+{% endnavtab %}
+{% navtab "Consumer" %}
+  1. From the **Authentication type** dropdown menu, select "Consumer linking".
+  1. From the **Control plane** dropdown menu, select the control plane where the Consumer exists.
+  1. From the **Consumer** dropdown menu, select the Consumer that represents this principal.
+{% endnavtab %}
+{% navtab "External identifier" %}
+  1. From the **Authentication type** dropdown menu, select "External identifier".
+  1. In the **Name** field, enter unique key that defines the identifier type.
+  1. In the **Value** field, enter the exact name of the value in your external system.
+{% endnavtab %}
+{% endnavtabs %}
+1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
+1. Click **Add**.
+1. Click **Next**.
+1. Add metadata to the principal by entering a key/value pair.
+1. Click **Create**.
+
 
 {% endnavtab %}
 {% endnavtabs %}
