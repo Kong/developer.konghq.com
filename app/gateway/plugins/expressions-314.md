@@ -38,6 +38,8 @@ works_on:
 related_resources:
   - text: Expressions router
     url: /gateway/routing/expressions/
+  - text: Conditional expressions for plugins in 3.15 and later
+    url: /gateway/plugins/expressions/
   - text: Configure conditional plugin execution
     url: /gateway/configure-conditional-plugin-execution/
   - text: Plugin entity

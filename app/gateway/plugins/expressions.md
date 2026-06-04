@@ -21,19 +21,18 @@ faqs:
     a: Yes, conditions can be used on global plugins that are not scoped to a Route, Service, Consumer, or Consumer Group.
   - q: When should I use plugin conditions instead of Routes?
     a: |
-      Routes with expression router conditions should be used instead of per-plugin conditions wherever practical,
-      since Route expressions are more performant than plugin conditions.
+      Routes with expression router conditions should be used instead of per-plugin conditions, since Route expressions are more performant than plugin conditions.
       This is because:
        * The `init` phase of plugins on excluded Routes won't execute.
        * The plugin condition won't need to be evaluated.
   - q: Can I match a plugin condition based on request content type (for example, JSON or XML)?
     a: |
-      The condition expression language doesn't support this explicitly.
-      You could use a plugin such as Datakit or Pre-Function to parse the body, extract the required value, and store it in `kong.ctx.shared`.
+      No, the condition expression language doesn't support this explicitly.
+     As an alternative, you can use a plugin such as [Datakit](/plugins/datakit/) or [Pre-Function](/plugins/pre-function/) to parse the body, extract the required value, and store it in [`kong.ctx.shared`](/gateway/plugins/expressions/#kong-ctx-shared-fields).
       The plugin condition can then reference that `kong.ctx.shared` key.
   - q: What happens if my condition expression has a runtime error?
     a: |
-      If a condition expression fails at runtime, {{site.base_gateway}} logs the error at ERROR level and returns a 500 status code to the client.
+      If a condition expression fails at runtime, {{site.base_gateway}} logs the error at the ERROR level and returns a 500 status code to the client.
       To prevent this, wrap your expression in a `default()` call: `default(<expression>, false)`.
       This returns `false` (and skips the plugin) instead of a 500 if the expression errors.
   - q: |
@@ -44,7 +43,7 @@ faqs:
       For the 3.14 reference, see [Conditional expressions for plugins in 3.14](/gateway/plugins/expressions-314/).
       {{site.base_gateway}} 3.15 uses CEL (Common Expression Language), which isn't backwards-compatible.
 
-      Any condition expression that worked in 3.14 will need to be rewritten for 3.15.
+      Any conditional expression that worked in 3.14 will need to be rewritten for 3.15.
       The main syntax changes are:
 
       * Prefix matching: `^=` → `starts_with()`. For example, `http.path ^= "/api"` becomes `http.path.starts_with("/api")`.
@@ -466,7 +465,7 @@ rows:
 
 How null values behave depends on the field type.
 
-The following fields return `null` when the value isn't set:
+The following fields return `null` when a value isn't set:
 * `http.headers.*`
 * `http.queries.*`
 * `http.headers_list.*`
@@ -474,7 +473,7 @@ The following fields return `null` when the value isn't set:
 * `net.tls.sni`
 * All context fields (`consumer.*`, `route.*`, `service.*`, `principal.*`, `consumer_group.*`, `plugins.*`)
 
-You can compare these directly with `null`:
+You can compare these directly using `null`:
 
 ```sh
 consumer.id != null
@@ -538,13 +537,17 @@ rows:
   - type: "`default()`"
     description: |
       Wraps an expression to return a fallback boolean value if the expression produces a runtime error.
-      Must wrap the **entire** expression — cannot be used inline within a larger expression.
+      Wraps an expression to return a fallback boolean value if the expression produces a runtime error.
+      Must wrap the **entire** expression, and cannot be used inline within a larger expression.
+      <br><br>
+      The second argument for this function accepts only boolean values (`true` or `false`).
 {% endtable %}
 <!--vale on-->
 
 {:.info}
-> The `matches()` function uses [RE2 regex syntax](https://github.com/google/re2) and matches any substring by default.
-> Use `^` to anchor the start and `$` to anchor the end of a pattern.
+> Regular expressions follow the rules of [Rust Crate regex](https://docs.rs/regex/latest/regex/#syntax). 
+> Regular expression matches succeed if they match a substring of the argument. 
+> Use explicit anchors (`^` and `$`) in the pattern to force full-string matching, if desired. 
 > For example, `http.path.matches("^/api/v[0-9]+$")` matches `/api/v1` but not `/other/api/v1`.
 
 ### Types
@@ -584,7 +587,7 @@ rows:
 
 ### Handling default values
 
-Use `default()` to make a condition expression safe at runtime.
+`default()` makes condition expressions safe at runtime.
 If the expression raises an evaluation error (for example, accessing a missing key in a map), `default()` returns the fallback value instead of causing a 500 error.
 
 `default()` must wrap the **entire** expression. It can't appear inline within a larger expression:
