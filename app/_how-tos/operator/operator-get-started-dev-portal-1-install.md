@@ -18,6 +18,9 @@ breadcrumbs:
 
 products:
   - operator
+  
+min_version:
+  operator: '2.2'
 
 works_on:
   - konnect
