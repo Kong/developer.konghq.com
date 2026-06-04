@@ -41,7 +41,7 @@ Review the [changelog](/gateway/changelog/#3-15-0-0) for all the changes in this
 
 Breaking changes in the 3.15.0.0 release.
 
-### License expiration changes
+#### License expiration changes
 
 When a license expires, you can no longer change any {{site.base_gateway}} configuration.
 The Admin API and all interfaces become read-only until a valid license is applied.

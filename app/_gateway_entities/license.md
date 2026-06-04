@@ -39,7 +39,7 @@ works_on:
 
 ## What is a license?
 
-A License entity allows you configure a license in your self-managed {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/).
+A License entity allows you to configure a license in your self-managed {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/).
 
 You receive a license file when you sign up for a {{site.ee_product_name}} subscription. If you purchased a subscription but haven’t received a license file, contact your sales representative.
 
@@ -131,7 +131,7 @@ You can deploy a license as an environment variable.
 You **must** add the license to each data plane node, and each node **must** start with the license. 
 The license can't be added after starting the node.
 
-Unlike other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` can't be defined inline as part of any `kong` CLI commands. license file environmental variables must be exported to the shell where the Nginx process runs, ahead of the `kong` CLI tool.
+Unlike other `KONG_*` environment variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` can't be defined inline as part of any `kong` CLI commands. These license environment variables must be exported to the shell where the Nginx process runs before using the `kong` CLI tool.
 
 1. Export your license to an environment variable: 
   ```sh
@@ -158,7 +158,7 @@ After a license expires, {{site.base_gateway}} behaves as follows:
 * You can still restart and scale nodes in traditional mode.
 * New nodes can't come up and restarts will break in DB-less mode and KIC.
 
-You can update your license with a `PUT` request to the [`/license/{license-id}` Admin API endpoint](/api/gateway/admin-ee/#/operations/put-licenses-license-id).
+You can update your license with a `PUT` request to the [`/licenses/{license-id}` Admin API endpoint](/api/gateway/admin-ee/#/operations/put-licenses-license-id).
 
 ## License reports
 
