@@ -85,7 +85,7 @@
                 <div :class="{ 'hidden': areFiltersOpen }">
                     <ais-hits v-show="hits.length > 0">
                         <template v-slot:item="{ item }">
-                            <div class="flex hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md  border-b border-primary/5">
+                            <div class="flex hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md  border-b border-primary">
                                 <a :href="getPath(item.url)" class="py-4 px-5 w-full text-primary flex justify-between hover:no-underline items-center gap-2">
                                     <div class="flex flex-col gap-1 w-full">
                                         <div class="flex items-center justify-between">

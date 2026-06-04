@@ -21,13 +21,13 @@ module SectionWrapper
       topology_attr = topology && !topology.empty? ? %( data-deployment-topology="#{topology}") : ''
       if title_html.to_s.strip.empty?
         <<~HTML
-          <div#{topology_attr} class="flex flex-col gap-4 border-b border-primary/5 pb-8">
+          <div#{topology_attr} class="flex flex-col gap-4 border-b border-primary pb-8">
             <div class="content">#{body_html}</div>
           </div>
         HTML
       else
         <<~HTML
-          <div#{topology_attr} class="flex flex-col gap-4 border-b border-primary/5 pb-8 accordion-item">
+          <div#{topology_attr} class="flex flex-col gap-4 border-b border-primary pb-8 accordion-item">
             #{title_html}
             <div class="content accordion-panel">#{body_html}</div>
           </div>

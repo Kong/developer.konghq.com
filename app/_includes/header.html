@@ -1,4 +1,4 @@
-<header class='flex bg-header h-[64px] border-b border-primary/5 sticky top-0 z-20 text-sm' id="header-nav">
+<header class='flex bg-header h-[64px] border-b border-primary sticky top-0 z-20 text-sm' id="header-nav">
   <div class="flex justify-between w-full 2xl:mx-auto px-5 lg:px-8 {% if include.api_spec == true %} 2xl:px-16 {% else %} ai-assistant-aware-px max-w-screen-2xl {% endif %} ">
     <div class="flex flex-row items-center gap-2.5">
         <a href="/">
@@ -95,7 +95,7 @@
                           {% endfor %}
                         </div>
                       </div>
-                      <div class="flex border-t border-primary/5 w-full lg:hidden"></div>
+                      <div class="flex border-t border-primary w-full lg:hidden"></div>
                     {% endfor %}
                   </div>
                 </div>
@@ -121,7 +121,7 @@
                           </li>
                         </ul>
                       </div>
-                      <div class="flex border-t border-primary/5 w-full"></div>
+                      <div class="flex border-t border-primary w-full"></div>
                       <div>
                         <a href="https://konghq.com/company/why-kong" class="flex w-full text-primary text-base items-center lg:text-sm">
                           <span class="h-5 w-5">{% include_svg '/assets/icons/document.svg' height="100%" width="100%" %}</span>
@@ -208,7 +208,7 @@
                       </div>
                       <a class="text-base lg:text-sm w-full" href="/plugins/">View all &rarr;</a>
                     </div>
-                    <div class="flex border-t border-primary/5 w-full"></div>
+                    <div class="flex border-t border-primary w-full"></div>
 
                     <div class="flex flex-col gap-5 text-sm">
                       <span class="font-semibold">Event Gateway Policies</span>
@@ -222,7 +222,7 @@
                       </div>
                       <a class="text-base lg:text-sm w-full" href="/event-gateway/policies/">View all &rarr;</a>
                     </div>
-                    <div class="flex border-t border-primary/5 w-full"></div>
+                    <div class="flex border-t border-primary w-full"></div>
 
                     <div class="flex flex-col gap-5 text-sm">
                       <span class="font-semibold">Service Mesh Policies</span>
@@ -274,7 +274,7 @@
             </div>
           </div>
 
-          <div id="header-cta-buttons" class="flex flex-col lg:flex-row p-6 lg:p-0 gap-3 items-center w-full lg:w-fit border-t border-primary/5 lg:border-0 xl:max-2xl:group-[.ai-assistant-open]/body-tag:hidden">
+          <div id="header-cta-buttons" class="flex flex-col lg:flex-row p-6 lg:p-0 gap-3 items-center w-full lg:w-fit border-t border-primary lg:border-0 xl:max-2xl:group-[.ai-assistant-open]/body-tag:hidden">
             <a class="button button--primary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs" href="https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav">Get a Demo</a>
             <a class="button button--secondary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs" href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav">Start Free Trial</a>
           </div>
