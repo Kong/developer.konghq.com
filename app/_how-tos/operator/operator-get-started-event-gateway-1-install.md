@@ -1,6 +1,6 @@
 ---
-title: Install {{site.operator_product_name}} for Kong Event Gateway
-description: Install {{site.operator_product_name}} and prepare a Kubernetes cluster for Kong Event Gateway.
+title: Install {{site.operator_product_name}} for {{ site.event_gateway }}
+description: Install {{site.operator_product_name}} and prepare a Kubernetes cluster for {{ site.event_gateway }}.
 content_type: how_to
 permalink: /operator/get-started/event-gateway/install/
 
@@ -26,27 +26,35 @@ prereqs:
   skip_product: true
 
 tldr:
-  q: How do I prepare a cluster for Kong Event Gateway with {{site.operator_product_name}}?
-  a: Create the `kong` and `kafka` namespaces, install {{site.operator_product_name}}, then deploy a Kafka cluster for the Event Gateway examples.
+  q: How do I prepare a cluster for {{ site.event_gateway }} with {{site.operator_product_name}}?
+  a: Create the `kong` and `kafka` namespaces, install {{site.operator_product_name}}, then deploy a Kafka cluster for the {{ site.event_gateway_short }} examples.
 
 tags:
   - install
   - helm
   - kafka
+
+related_resources:
+  - text: "{{ site.event_gateway }} architecture"
+    url: /event-gateway/architecture/
+  - text: "{{ site.event_gateway }} with {{ site.operator_product_name }}"
+    url: /operator/konnect/event-gateway/
+  - text: Known limitations
+    url: /event-gateway/known-limitations/
 ---
 
 This guide walks through a complete {{ site.event_gateway }} setup using {{site.operator_product_name}} and {{site.konnect_short_name}}.
 
 By the end of the series, you will have:
 
-- a Konnect Event Gateway Control Plane
-- a {{ site.event_gateway_short }} data plane in Kubernetes
+- a {{site.konnect_short_name}} {{ site.event_gateway_short }} control plane
+- an {{ site.event_gateway_short }} data plane in Kubernetes
 - a backend Kafka cluster
 - a virtual cluster, listener, and listener policies
 - consumer and producer policies
 - two ways to expose services:
-  - `LoadBalancer` plus `portMapping`
-  - `Gateway`, `TLSRoute` and SNI
+  - `LoadBalancer` and `portMapping`
+  - `Gateway`, `TLSRoute`, and SNI
 
 ## Create the Kubernetes namespaces
 
@@ -67,39 +75,50 @@ Install {{site.operator_product_name}} with Helm:
 
 The {{ site.event_gateway_short }} examples in this guide use a three-broker Kafka cluster deployed with the Bitnami chart.
 
-Add the Bitnami Helm repository:
+1. Add the Bitnami Helm repository:
 
-```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-```
+   ```bash
+   helm repo add bitnami https://charts.bitnami.com/bitnami
+   helm repo update
+   ```
 
-Install Kafka:
+1. Write the Kafka configuration file:
 
-```bash
-cat <<'EOF' >/tmp/kafka-values.yaml
-image:
-  registry: docker.io
-  repository: bitnamilegacy/kafka
-  tag: 4.0.0-debian-12-r6
+   ```bash
+   cat <<'EOF' >/tmp/kafka-values.yaml
+   image:
+     registry: docker.io
+     repository: bitnamilegacy/kafka
+     tag: 4.0.0-debian-12-r6
 
-listeners:
-  client:
-    protocol: PLAINTEXT
-externalAccess:
-  enabled: false
-kraft:
-  enabled: true
-controller:
-  replicaCount: 3
-broker:
-  replicaCount: 0
-EOF
-```
+   listeners:
+     client:
+       protocol: PLAINTEXT
+   externalAccess:
+     enabled: false
+   kraft:
+     enabled: true
+   controller:
+     replicaCount: 3
+   broker:
+     replicaCount: 0
+   EOF
+   ```
 
-```bash
-helm install kafka-cluster bitnami/kafka \
-  -n kafka \
-  --version 32.4.3 \
-  -f /tmp/kafka-values.yaml
-```
+1. Install Kafka:
+
+   ```bash
+   helm install kafka-cluster bitnami/kafka \
+     -n kafka \
+     --version 32.4.3 \
+     -f /tmp/kafka-values.yaml
+   ```
+
+1. Wait for all Kafka brokers to be ready before continuing:
+
+   ```bash
+   kubectl wait pod -n kafka \
+     --for=condition=Ready \
+     --selector app.kubernetes.io/name=kafka \
+     --timeout=5m
+   ```

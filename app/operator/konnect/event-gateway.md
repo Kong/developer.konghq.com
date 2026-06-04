@@ -21,10 +21,18 @@ related_resources:
     url: /operator/get-started/event-gateway/port-mapping/
   - text: Deploy {{ site.event_gateway }} with TLSRoute and SNI
     url: /operator/get-started/event-gateway/tlsroute-sni/
+  - text: "{{ site.event_gateway }} architecture"
+    url: /event-gateway/architecture/
+  - text: Backend clusters
+    url: /event-gateway/entities/backend-cluster/
+  - text: Virtual clusters
+    url: /event-gateway/entities/virtual-cluster/
+  - text: Listeners
+    url: /event-gateway/entities/listener/
+  - text: Policies
+    url: /event-gateway/entities/policy/
   - text: Gateway API
     url: /operator/dataplanes/gateway-api/
-  - text: Managed Gateways
-    url: /operator/dataplanes/managed-gateways/
   - text: Cross namespace references
     url: /operator/konnect/cross-namespace-references/
 
@@ -88,9 +96,19 @@ Resources reference each other in this order:
 
 ## Deployment patterns
 
-There are two ways to expose {{ site.event_gateway }} with the operator.
+There are two ways to expose {{ site.event_gateway }} with the operator:
+* [`LoadBalancer` with `portMapping`](#loadbalancer-with-portmapping). Use this pattern if:
+  * you need a fast local validation loop
+  * you can expose one port per broker
+  * a stable external IP is acceptable for clients
+* [`Gateway` with `TLSRoute` and SNI](#gateway-with-tlsroute-and-sni). Use this pattern if:
+  * you want a production-oriented edge pattern
+  * you need a single public Kafka listener
+  * you want broker metadata returned as DNS names on one port
+  * you plan to front multiple virtual clusters behind one entrypoint
 
-### `LoadBalancer` plus `portMapping`
+
+### `LoadBalancer` with `portMapping`
 
 This pattern suits local validation and simple deployments where exposing one port per broker is acceptable. The `KegDataPlane` exposes a `LoadBalancer` Service with one port for bootstrap traffic and one port per broker.
 
@@ -132,7 +150,7 @@ In a three-broker cluster, the data plane Service exposes:
 
 For a full deployment walkthrough, see [Deploy {{ site.event_gateway }} with port mapping](/operator/get-started/event-gateway/port-mapping/).
 
-### `Gateway` plus `TLSRoute` plus SNI
+### `Gateway` with `TLSRoute` and SNI
 
 This is the production-oriented pattern. A single TLS listener at the Kubernetes edge routes Kafka traffic to the correct virtual cluster by SNI:
 
@@ -181,18 +199,4 @@ With a virtual cluster `dnsLabel` of `vc-tls-1`, clients receive metadata like:
 
 For a full deployment walkthrough, see [Deploy {{ site.event_gateway }} with TLSRoute and SNI](/operator/get-started/event-gateway/tlsroute-sni/).
 
-## Choosing a pattern
-
-Use `LoadBalancer` plus `portMapping` when:
-
-- you need a fast local validation loop
-- you can expose one port per broker
-- a stable external IP is acceptable for clients
-
-Use `Gateway` plus `TLSRoute` plus SNI when:
-
-- you want a production-oriented edge pattern
-- you need a single public Kafka listener
-- you want broker metadata returned as DNS names on one port
-- you plan to front multiple virtual clusters behind one entrypoint
 

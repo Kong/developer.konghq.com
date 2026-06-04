@@ -36,6 +36,20 @@ tldr:
 next_steps:
   - text: Learn more about {{ site.event_gateway }}
     url: /event-gateway/
+
+related_resources:
+  - text: "{{ site.event_gateway }} with {{ site.operator_product_name }}"
+    url: /operator/konnect/event-gateway/
+  - text: Backend clusters
+    url: /event-gateway/entities/backend-cluster/
+  - text: Virtual clusters
+    url: /event-gateway/entities/virtual-cluster/
+  - text: Listeners
+    url: /event-gateway/entities/listener/
+  - text: Policies
+    url: /event-gateway/entities/policy/
+  - text: Configure SNI routing with {{ site.event_gateway }}
+    url: /event-gateway/configure-sni-routing/
 ---
 
 This deployment pattern is the simplest way to validate {{ site.event_gateway }}.
@@ -44,7 +58,7 @@ It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients
 
 ## Create the `KonnectEventGateway`
 
-The `KonnectEventGateway` creates the Event Gateway control plane in {{site.konnect_short_name}} and gives the rest of the resources in this guide a parent to attach to.
+The `KonnectEventGateway` resource creates the Event Gateway control plane in {{site.konnect_short_name}} and gives the rest of the resources in this guide a parent to attach to:
 
 ```bash
 echo '
@@ -65,7 +79,9 @@ spec:
 
 ## Create the backend cluster
 
-The `EventGatewayBackendCluster` tells {{ site.event_gateway }} which upstream Kafka cluster to connect to. In this example, it points at the Bitnami Kafka bootstrap Service in the `kafka` namespace. For more background, see the [backend cluster docs](/event-gateway/entities/backend-cluster/).
+The `EventGatewayBackendCluster` resource tells {{ site.event_gateway }} which upstream Kafka cluster to connect to. In this example, it points at the Bitnami Kafka bootstrap Service in the `kafka` namespace. For more information, see the [backend cluster docs](/event-gateway/entities/backend-cluster/).
+
+Create the `EventGatewayBackendCluster` resource:
 
 ```bash
 echo '
@@ -94,7 +110,9 @@ spec:
 
 ## Create the virtual cluster and listener
 
-The `EventGatewayVirtualCluster` is the Kafka-facing cluster your clients connect to, while the `EventGatewayListener` opens the network ports that accept those client connections. For more detail, see the [virtual cluster docs](/event-gateway/entities/virtual-cluster/) and [listener docs](/event-gateway/entities/listener/).
+The `EventGatewayVirtualCluster` resource is the Kafka-facing cluster your clients connect to, while the `EventGatewayListener` resource opens the network ports that accept those client connections. For more information, see the [virtual cluster docs](/event-gateway/entities/virtual-cluster/) and [listener docs](/event-gateway/entities/listener/).
+
+Create the `EventGatewayVirtualCluster` and `EventGatewayListener` resources:
 
 ```bash
 echo '
@@ -139,47 +157,49 @@ spec:
 
 ## Deploy the `KegDataPlane`
 
-The `KegDataPlane` runs {{ site.event_gateway }} inside Kubernetes. In the port-mapping pattern, it exposes a `LoadBalancer` Service with one bootstrap port and one port per broker.
+The `KegDataPlane` resource runs {{ site.event_gateway }} inside Kubernetes. In the port-mapping pattern, it exposes a `LoadBalancer` Service with one bootstrap port and one port per broker.
 
-```bash
-echo '
-apiVersion: eventgateway.konghq.com/v1alpha1
-kind: KegDataPlane
-metadata:
-  name: my-event-gateway-dp
-  namespace: kong
-spec:
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: cp-event-1
-  network:
-    services:
-      kafka:
-        type: LoadBalancer
-        ports:
-          - name: kafka
-            port: 9092
-            targetPort: 9092
-          - name: broker-1
-            port: 9093
-            targetPort: 9093
-          - name: broker-2
-            port: 9094
-            targetPort: 9094
-          - name: broker-3
-            port: 9095
-            targetPort: 9095
-' | kubectl apply -f -
-```
+1. Deploy the `KegDataPlane`:
 
-Wait for the data plane to be ready:
+   ```bash
+   echo '
+   apiVersion: eventgateway.konghq.com/v1alpha1
+   kind: KegDataPlane
+   metadata:
+     name: my-event-gateway-dp
+     namespace: kong
+   spec:
+     controlPlaneRef:
+       type: konnectNamespacedRef
+       konnectNamespacedRef:
+         name: cp-event-1
+     network:
+       services:
+         kafka:
+           type: LoadBalancer
+           ports:
+             - name: kafka
+               port: 9092
+               targetPort: 9092
+             - name: broker-1
+               port: 9093
+               targetPort: 9093
+             - name: broker-2
+               port: 9094
+               targetPort: 9094
+             - name: broker-3
+               port: 9095
+               targetPort: 9095
+   ' | kubectl apply -f -
+   ```
 
-```bash
-kubectl wait kegdataplane/my-event-gateway-dp -n kong \
-  --for=condition=Ready=True \
-  --timeout=10m
-```
+1. Wait for the data plane to be ready:
+
+   ```bash
+   kubectl wait kegdataplane/my-event-gateway-dp -n kong \
+     --for=condition=Ready=True \
+     --timeout=10m
+   ```
 
 ## Export the `LoadBalancer` address
 
@@ -193,7 +213,7 @@ echo $KAFKA_LB_HOST
 
 ## Create the listener policy
 
-The `EventGatewayListenerPolicy` connects the listener to the virtual cluster. In this mode, `portMapping` maps one external bootstrap port plus one external port per broker. For more detail on routing policies, see the [{{ site.event_gateway_short }} policy docs](/event-gateway/entities/policy/).
+The `EventGatewayListenerPolicy` connects the listener to the virtual cluster. In this mode, `portMapping` maps one external bootstrap port and one external port per broker. For more information, see the [{{ site.event_gateway_short }} policy docs](/event-gateway/entities/policy/).
 
 ```bash
 echo '
@@ -223,7 +243,9 @@ spec:
 
 ## Create consume and produce policies
 
-These optional virtual-cluster policies let you shape consume and produce traffic independently. This example adds a header on each path so you can verify the policies are attached. For more policy background, see the [{{ site.event_gateway_short }} policy docs](/event-gateway/policies/).
+These optional virtual-cluster policies let you shape consume and produce traffic independently. This example adds a header on each path so you can verify the policies are attached. For more information, see the [{{ site.event_gateway_short }} policy docs](/event-gateway/policies/).
+
+Create the `EventGatewayVirtualClusterConsumePolicy` and `EventGatewayVirtualClusterProducePolicy` resources:
 
 ```bash
 echo '
@@ -283,5 +305,3 @@ kubectl run kcat-portmap --rm -i --restart=Never --image=edenhill/kcat:1.7.1 -n 
 ```
 
 You should see one bootstrap endpoint on port `9092` and one port per broker on `9093`, `9094`, and `9095`.
-
-Continue to [Deploy {{ site.event_gateway }} with TLSRoute and SNI](/operator/get-started/event-gateway/tlsroute-sni/) for the production-oriented pattern.
