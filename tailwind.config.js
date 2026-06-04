@@ -86,6 +86,7 @@ module.exports = {
           "rgb(var(--color-semantic-teal-primary), <alpha-value>)",
         "semantic-teal-secondary":
           "rgb(var(--color-semantic-teal-secondary), <alpha-value>)",
+        "scroll-bar-thumb": "rgb(var(--color-scroll-bar-thumb), <alpha-value>)",
       },
       textColor: {
         primary: "rgb(var(--color-text-primary), <alpha-value>)",

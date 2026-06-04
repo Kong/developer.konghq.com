@@ -60,6 +60,8 @@
 
     --color-shadow-hover-card: 24, 128, 240, 0.16;
 
+    --color-scroll-bar-thumb: var(--color-text-links);
+
     --kui-border-width-20: 1px;
 
     --kui-color-text-neutral-stronger: rgb(var(--color-text-secondary));
@@ -182,7 +184,7 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    @apply bg-brand rounded-lg;
+    @apply bg-scroll-bar-thumb rounded-lg;
   }
 
   *::-webkit-scrollbar-track {
