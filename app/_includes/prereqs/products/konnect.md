@@ -16,7 +16,7 @@ This is a Konnect tutorial and requires a Konnect personal access token.
 
    ```bash
    curl -Ls https://get.konghq.com/quickstart | bash -s -- -k $KONNECT_TOKEN \{% for variable in include.env_variables %}
-        -e {{ variable.name }}{% if variable.value %}={{ variable.value }}{% endif %}{% endfor %}{% if include.ports %}{% for port in include.ports %} -p {{ port }}{% endfor %}{% endif %} \
+        -e {{ variable.name }}{% if variable.value %}={{ variable.value }}{% endif %}{% endfor %}{% if include.ports %}{% for port in include.ports %} -p {{ port }}{% endfor %} \{% endif %}
         --deck-output
    ```
 

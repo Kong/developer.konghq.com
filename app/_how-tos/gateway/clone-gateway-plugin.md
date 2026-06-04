@@ -19,15 +19,16 @@ tools:
     - deck
 
 prereqs:
+  inline:
+    - title: Set up Konnect permissions
+      include_content: prereqs/custom-plugin-permissions
+      icon_url: /assets/icons/kogo-white.svg
+
   entities:
     services:
         - example-service
     routes:
         - example-route
-  gateway:
-    - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on"
-  konnect:
-    - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on"
 
 min_version:
   gateway: '3.15'
@@ -46,9 +47,6 @@ faqs:
   - q: Do all {{site.base_gateway}} plugins support cloning?
     a: |
       No, only a subset of plugins can be cloned. See the list of [supported plugins](/gateway/entities/plugin/#supported-plugins).
-  - q: I'm running {{site.base_gateway}} in hybrid mode and I can't set up a cloned plugin.
-    a: |
-      If you're running {{site.base_gateway}} in hybrid mode, both the control plane and data plane need to be launched with the [`custom_plugin_streaming_enabled=on`](/gateway/configuration/#custom-plugin-streaming-enabled) setting.
 
 cleanup:
   inline:
@@ -69,18 +67,19 @@ This lets two separate teams use the same plugin logic with independent configur
 
 ## Create a clone of the Request Transformer plugin
 
-Use the `cloned_plugins` key to define a new plugin named `request-transformer-global` that is based on `request-transformer`:
+Use the `cloned_plugins` key to define a new plugin named `ACME-request-transformer-global` that is based on `request-transformer`:
 
 {% entity_examples %}
 entities:
   cloned_plugins:
-    - name: request-transformer-global
+    - name: ACME-request-transformer-global
       ref: request-transformer
       priority: 802
 {% endentity_examples %}
 
 Where:
 * `cloned_plugins.name`: A unique name for the clone. This can be any name that doesn't conflict with an existing plugin.
+  We recommend making this name distinct so that it doesn't conflict with future plugins (for example, `ACME-request-transformer-global`).
 * `cloned_plugins.ref`: The source plugin that this clone is based on.
 * `cloned_plugins.priority`: The order in which the cloned plugin runs relative to other plugins. The base Request Transformer plugin has a priority of 801, so setting 802 makes the clone run first. This isn't required for this example since the clone runs globally, but it shows how you can control plugin ordering independently from the source plugin.
 
@@ -91,7 +90,7 @@ Configure the cloned plugin globally so it adds a header to every request:
 {% entity_examples %}
 entities:
   plugins:
-    - name: request-transformer-global
+    - name: ACME-request-transformer-global
       config:
         add:
           headers:

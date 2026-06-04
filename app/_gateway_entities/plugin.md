@@ -245,9 +245,10 @@ For more information, see:
 
 ## Cloning plugins {% new_in 3.15 %}
 
-You can run multiple instances of a plugin by cloning it. 
-Cloning a plugin creates a custom instance of an existing plugin, letting you apply different configurations to different scopes. 
-A cloned plugin has a distinct name and is subject to its own precedence rules. 
+You can run multiple instances of a plugin by cloning it.
+Cloning a plugin creates a custom instance of an existing plugin, letting you apply different configurations to your prefered scopes.
+A cloned plugin shares its code and logic with the source plugin, but is treated as a separate plugin instance.
+
 The priority of the cloned plugin can also be changed.
 
 Cloned plugins are useful in many situations. For example:
@@ -258,29 +259,32 @@ For example, a platform team may want to add a global IP deny list to a Gateway 
 * Running multiple instances of the Datakit plugin where different teams want to independently manage their own distinct flows on the same Gateway.
 * In conjunction with [conditional plugins](/gateway/plugins/expressions/), running different configurations of the plugin based on different environmental conditions.
 
-{:.info}
-> To use cloned plugins, you must set [`custom_plugin_streaming_enabled`](/gateway/configuration/#custom-plugin-streaming-enabled) to `on` in {{site.base_gateway}} configuration. 
-> If running in hybrid mode, both the data plane and the control plane require this setting.
+### Permissions required
+
+To create cloned plugins, you must have the following permissions:
+* {{site.konnect_short_name}}: One of the following [control plane roles](/konnect-platform/teams-and-roles/#control-planes): `ServiceAdmin`, `RouteAdmin`, `PluginAdmin`, `CPAdmin`, or `Deployer`.
+* Self-managed {{site.base_gateway}}: `super-admin` or `admin` role.
 
 ### Supported plugins
 
 The following plugins support cloning:
 
-* [OpenID Connect](/plugins/openid-connect/)
 * [ACL](/plugins/acl/)
+* [Datakit](/plugins/datakit/)
+* [File Log](/plugins/file-log/)
+* [HTTP Log](/plugins/http-log/)
+* [IP Restriction](/plugins/ip-restriction/)
+* [Key Authentication](/plugins/key-auth/)
+* [OPA](/plugins/opa/)
+* [OpenID Connect](/plugins/openid-connect/)
 * [Pre-function](/plugins/pre-function/)
 * [Post-function](/plugins/post-function/)
 * [Request Transformer Advanced](/plugins/request-transformer-advanced/)
 * [Request Transformer](/plugins/request-transformer/)
 * [Response Transformer Advanced](/plugins/response-transformer-advanced/)
 * [Response Transformer](/plugins/response-transformer/)
-* [Key Authentication](/plugins/key-auth/)
-* [File Log](/plugins/file-log/)
-* [HTTP Log](/plugins/http-log/)
-* [TCP Log](/plugins/tcp-log/)
-* [IP Restriction](/plugins/ip-restriction/)
 * [Route by Header](/plugins/route-by-header/)
-* [OPA](/plugins/opa/)
+* [TCP Log](/plugins/tcp-log/)
 
 ### Example of cloned plugin
 
@@ -304,10 +308,28 @@ plugins:
 
 Where:
 * `cloned_plugins.name`: The name of your new plugin. This can be any unique name that doesn't conflict with an existing plugin.
-* `cloned_plugins.ref`: The source plugin that this clone will be based on.
-* `cloned_plugins.priority`: The order in which the plugin will run relative to other plugins (see [plugins priorities](#plugin-priority)). This is an optional setting; if not set, the plugin will fall back to [plugin precedence rules](#plugin-precedence). 
+  We recommend making this name distinct so that it doesn't conflict with future plugins (for example, `ACME-request-transformer-global`).
+* `cloned_plugins.ref`: The source plugin that this clone is based on.
+* `cloned_plugins.priority`: The order in which the plugin runs relative to other plugins (see [plugins priorities](#plugin-priority)). This is an optional setting; 
+  If not set, the plugin inherits the priority of the source plugin. 
+  For plugins with the same priority, the order depends on their names in reverse alphabetical order: plugins with alphabetically greater names run earlier (for example, `my-plugin-b` runs before `my-plugin-a`).
+
+{:.info}
+> **Note:** Each plugin ref (for example, `ref: request-transformer`) can have a maximum of five clones.
 
 For more information, see the tutorial on [Cloning a {{site.base_gateway}} plugin](/how-to/clone-gateway-plugin/).
+
+### Deleting or updating cloned plugins
+
+To delete a cloned plugin, remove all configurations that reference it first, then delete its entry under `cloned_plugins`. 
+
+If you need to make any changes to the configuration of the cloned plugin (for example, with a new name or priority, or to point to a different ref), we recommend the following approach for safe migration:
+
+1. Start a migration/maintenance window.
+1. Create a new cloned plugin.
+1. Update the configuration for all the plugin instances of the old cloned plugin to comply with the new cloned plugin.
+1. Remove the cloned plugin.
+1. Stop the migration/maintenance window.
 
 ## Protocols
 

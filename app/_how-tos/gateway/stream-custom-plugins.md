@@ -19,6 +19,10 @@ tools:
     - deck
 
 prereqs:
+  inline:
+    - title: Set up permissions
+      include_content: prereqs/custom-plugin-permissions
+      icon_url: /assets/icons/kogo-white.svg
   gateway:
     - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on"
   konnect:

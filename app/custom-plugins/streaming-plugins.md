@@ -57,6 +57,12 @@ Keep the following custom plugin limitations in mind for streaming plugins:
 * Custom validation must be implemented in `handler.lua`, not `schema.lua`. In `handler.lua`, it can be logged and handled as part of plugin business logic.
 * Plugins can't read/write to the {{site.base_gateway}} filesystem.
 
+## Permissions required
+
+To create streaming plugins, you must have the following permissions:
+* {{site.konnect_short_name}}: One of the following [control plane roles](/konnect-platform/teams-and-roles/#control-planes): `ServiceAdmin`, `RouteAdmin`, `PluginAdmin`, `CPAdmin`, or `Deployer`.
+* Self-managed {{site.base_gateway}}: `super-admin` or `admin` role.
+
 ## How do I add a streamed plugin?
 
 {% navtabs 'streaming' %}
@@ -153,3 +159,13 @@ plugins:
 ```
 
 For a complete end-to-end tutorial, see [Stream {{site.base_gateway}} plugins](/how-to/stream-custom-plugins/).
+
+## Streaming plugin update path
+
+If you need to make any changes to the handler or schema of the streaming plugin, we recommend the following approach for safe migration:
+
+1. Start a migration/maintenance window.
+1. Create a new version of the custom plugin.
+1. Update all the instances of the custom plugin to comply with the new version's schema.
+1. Remove the old version of the custom plugin.
+1. Stop the migration/maintenance window.
