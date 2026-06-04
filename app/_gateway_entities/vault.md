@@ -244,6 +244,10 @@ features:
     oss: false
     enterprise: true
     supports_konnect: true
+  - title: Azure Key Vaults (Certificates)
+    oss: false
+    enterprise: true
+    supports_konnect: true
   - title: Google Cloud Secret
     url: /how-to/configure-google-cloud-secret-as-a-vault-backend/
     oss: false
@@ -338,6 +342,8 @@ The Vault entity can only be used once the database is initialized. Secrets for 
 {% navtabs "provider config" %}
 {% navtab "Environment variable" %}
 
+If you're configuring via a Vault entity, set `vaults.name` to `env`.
+
 <!--vale off-->
 {% table %}
 columns:
@@ -357,8 +363,8 @@ rows:
   - field: Base64 Decode <br>{% new_in 3.11 %}
     parameter: |
       * **Vault entity:** `vaults.config.base64_decode`
-      * **kong.conf parameter:** `vault_env_base64_decode`
-      * **Environment variable:** `KONG_VAULT_ENV_BASE64_DECODE`
+      * **kong.conf parameter:** `vault_env_decode_base64`
+      * **Environment variable:** `KONG_VAULT_ENV_DECODE_BASE64`
     description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
@@ -377,6 +383,8 @@ export AWS_SESSION_TOKEN=your-session-token
 For a complete tutorial on how to set up AWS as a Vault entity, see the following:
 * [Set up AWS with {{ site.base_gateway }}](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/)
 * [Set up AWS with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/aws/)
+
+If you're configuring via a Vault entity, set `vaults.name` to `aws`.
 
 The following table lists all of the available configuration parameters for an AWS Secrets Manager Vault:
 
@@ -445,8 +453,8 @@ rows:
       Base64 Decode <br>{% new_in 3.11 %}
     parameter: |
       * **Vault entity:** `vaults.config.base64_decode`
-      * **kong.conf parameter:** `vault_aws_base64_decode`
-      * **Environment variable:** `KONG_VAULT_AWS_BASE64_DECODE`
+      * **kong.conf parameter:** `vault_aws_decode_base64`
+      * **Environment variable:** `KONG_VAULT_AWS_DECODE_BASE64`
     description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
@@ -457,22 +465,22 @@ rows:
 
 {{site.base_gateway}} uses a key to automatically authenticate
 with the [Azure Key Vaults API](https://learn.microsoft.com/en-us/rest/api/keyvault/) and grant you access.
-You must set the following environment variable on your data plane to connect with an Azure Key Vault:
+If you're using a client secret for authentication, set the following environment variable on your data plane to connect with an Azure Key Vault:
 
 ```bash
 export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
+If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
 
 At minimum, you'll also need to set the following values on your data plane. 
-
-{:.info}
-> **Note**: If you're using an Instance Managed Identity Token, setting these environment variables isn't necessary.
 
 ```sh
 export KONG_VAULT_AZURE_VAULT_URI=https://your-vault.vault.azure.com
 export KONG_VAULT_AZURE_TENANT_ID=YOUR_TENANT_ID
 export KONG_VAULT_AZURE_CLIENT_ID=YOUR_CLIENT_ID
 ```
+
+If you're configuring via a Vault entity, set `vaults.name` to `azure`.
 
 The following table lists all of the available configuration parameters for an Azure Key Vault:
 
@@ -546,12 +554,121 @@ rows:
       Base64 Decode <br>{% new_in 3.11 %}
     parameter: |
       * **Vault entity:** `vaults.config.base64_decode`
-      * **kong.conf parameter:** `vault_azure_base64_decode`
-      * **Environment variable:** `KONG_VAULT_AZURE_BASE64_DECODE`
-    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
+      * **kong.conf parameter:** `vault_azure_decode_base64`
+      * **Environment variable:** `KONG_VAULT_AZURE_DECODE_BASE64`
+    description: |
+      Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
+  - field: |
+      Credentials prefix
+    parameter: |
+      * **Vault entity:** `vaults.config.credentials_prefix`
+    description: |
+      The prefix for environment variables used for authentication. The vault reads `{prefix}_CLIENT_SECRET` from the environment. Defaults to `AZURE`.
+      This can only be set using the Vault entity.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
+
+{% navtab "Azure (Certs)" %}
+
+{% new_in 3.15 %} {{site.base_gateway}} can retrieve certificates stored in Azure Key Vault for {{site.base_gateway}} TLS termination.
+
+{{site.base_gateway}} uses a key to automatically authenticate
+with the [Azure Key Vaults API](https://learn.microsoft.com/en-us/rest/api/keyvault/) and grant you access.
+If you're using a client secret for authentication, set the following environment variable on your data plane to connect with an Azure Key Vault:
+
+```bash
+export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
+```
+By default, the vault looks for `AZURE_CLIENT_SECRET`, but you can customize this with the `credentials_prefix` field.
+
+If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
+
+At minimum, you'll also need to set Vault URI: 
+
+```sh
+export KONG_VAULT_AZURE_CERTS_VAULT_URI=https://your-vault.vault.azure.com
+```
+
+If you're configuring via a Vault entity, set `vaults.name` to `azure-certs`.
+
+The following table lists all of the available configuration parameters for an Azure Key Vault (Certificates) vault:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Field name
+    key: field
+  - title: Parameter format
+    key: parameter
+  - title: Description
+    key: description
+rows:
+  - field: |
+      Vault URI <br>{% new_in 3.15 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.vault_uri`
+      * **kong.conf parameter:** `vault_azure_certs_vault_uri`
+      * **Environment variable:** `KONG_VAULT_AZURE_CERTS_VAULT_URI`
+    description: |
+      The URI the vault is reachable from.
+  - field: |
+      Credentials prefix <br>{% new_in 3.15 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.credentials_prefix`
+    description: |
+      The prefix for environment variables used for authentication. The vault reads `{prefix}_CLIENT_SECRET` from the environment. Defaults to `AZURE`.
+      This can only be set using the Vault entity.
+  - field: |
+      Client ID <br>{% new_in 3.15 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.client_id`
+      * **kong.conf parameter:** `vault_azure_certs_client_id`
+      * **Environment variable:** `KONG_VAULT_AZURE_CERTS_CLIENT_ID`
+    description: |
+      The client ID from your registered Application. Visit your Azure Dashboard and select **App Registrations** to check your client ID.
+  - field: |
+      Tenant ID <br>{% new_in 3.15 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.tenant_id`
+      * **kong.conf parameter:** `vault_azure_certs_tenant_id`
+      * **Environment variable:** `KONG_VAULT_AZURE_CERTS_TENANT_ID`
+    description: |
+      The `DirectoryId` and `TenantId` both equate to the GUID representing the `ActiveDirectory` Tenant.
+      Depending on context, either term may be used by Microsoft documentation and products, which can be confusing.
+      In other words, the "Tenant ID" IS the "Directory ID".
+  - field: |
+      TTL <br>{% new_in 3.15 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.ttl`
+      * **kong.conf parameter:** `vault_azure_certs_ttl`
+      * **Environment variable:** `KONG_VAULT_AZURE_CERTS_TTL`
+    description: |
+      Time-to-live (in seconds) of a certificate from the Azure Key Vault when cached by this node.
+
+      Defaults to 3600 (1 hour).
+  - field: |
+      Negative TTL <br>{% new_in 3.15 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.neg_ttl`
+      * **kong.conf parameter:** `vault_azure_certs_neg_ttl`
+      * **Environment variable:** `KONG_VAULT_AZURE_CERTS_NEG_TTL`
+    description: |
+      Time-to-live (in seconds) of an Azure Key Vault miss (no certificate).
+  - field: |
+      Resurrect TTL <br>{% new_in 3.15 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.resurrect_ttl`
+      * **kong.conf parameter:** `vault_azure_certs_resurrect_ttl`
+      * **Environment variable:** `KONG_VAULT_AZURE_CERTS_RESURRECT_TTL`
+    description: |
+      Time (in seconds) for which stale certificates from the Azure Key Vault should be resurrected
+      for when they cannot be refreshed (e.g., the vault is unreachable).
+      When this TTL expires, a new attempt to refresh the stale certificates will be made.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+
 {% navtab "Google" %}
 
 To configure GCP Secret Manager, the `GCP_SERVICE_ACCOUNT` environment variable must be set to the JSON document referring to the [credentials for your service account](https://cloud.google.com/iam/docs/creating-managing-service-account-keys):
@@ -572,6 +689,8 @@ To use GCP Secret Manager with [Workload Identity](https://cloud.google.com/kube
 For a complete tutorial on how to set up {{ site.google_cloud }} as a Vault entity, see the following:
 * [Set up {{ site.google_cloud }} with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
 * [Set up {{ site.google_cloud }} with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
+
+If you're configuring via a Vault entity, set `vaults.name` to `gcp`.
 
 The following table lists the available configuration parameters for a GCP Secret Manager Vault:
 
@@ -617,8 +736,8 @@ rows:
       Base64 Decode <br>{% new_in 3.11 %}
     parameter: |
       * **Vault entity:** `vaults.config.base64_decode`
-      * **kong.conf parameter:** `vault_gcp_base64_decode`
-      * **Environment variable:** `KONG_VAULT_GCP_BASE64_DECODE`
+      * **kong.conf parameter:** `vault_gcp_decode_base64`
+      * **Environment variable:** `KONG_VAULT_GCP_DECODE_BASE64`
     description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
@@ -634,6 +753,8 @@ For a complete tutorial on how to set up HashiCorp Vault as a Kong Vault backend
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/)
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and AWS EC2 authentication](/how-to/configure-hashicorp-vault-with-aws-ec2-auth/)
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and Azure authentication](/how-to/configure-hashicorp-vault-with-azure-auth/)
+
+If you're configuring via a Vault entity, set `vaults.name` to `hcv`.
 
 The following table lists the available configuration parameters for a HashiCorp Vault:
 
@@ -974,6 +1095,8 @@ rows:
 {% navtab "CyberArk Secrets Manager" %}
 
 See a tutorial about how to [set up CyberArk Secrets Manager (Conjur) as a Kong Vault backend in {{site.base_gateway}}](/how-to/configure-cyberark-as-a-vault-backend/).
+
+If configuring via a Vault entity, set `vaults.name` to `conjur`.
 
 The following table lists the available configuration parameters for a CyberArk Secrets Manager Vault:
 
