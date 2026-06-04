@@ -642,7 +642,7 @@
   }
 
   .product-icon--bordered {
-    @apply border-[0.28px] border-primary/[.08];
+    @apply border-[0.28px] border-primary;
   }
 
   .how-to,
@@ -983,7 +983,7 @@ body.ai-assistant-open > #wrapper {
 }
 
 .checkbox, .ais-RefinementList-checkbox {
-  @apply form-checkbox bg-secondary rounded border border-primary/[.08] dark:border-primary;
+  @apply form-checkbox bg-secondary rounded border border-primary dark:border-primary;
 }
 
 .checkbox--checked, .ais-RefinementList-checkbox:checked {
