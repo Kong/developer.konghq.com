@@ -252,7 +252,9 @@ features:
     enterprise: true
     supports_konnect: true
     how_to: "--"
-  - title: Azure Key Vaults (Certificates)
+  - title: |
+      Azure Key Vaults (Certificates) {% new_in 3.15 %}
+    url: '?tab=azure-certs#vault-provider-specific-configuration-parameters'
     oss: false
     enterprise: true
     supports_konnect: true
@@ -1201,9 +1203,11 @@ rows:
 {% endnavtab %}
 {% navtab "File system" %}
 
-The file system vault reads secrets from files on the {{site.base_gateway}} data plane's local filesystem. 
+{% new_in 3.15 %} The file system vault reads secrets from files on the {{site.base_gateway}} data plane's local filesystem. 
 Secrets can be plain text files or JSON files. 
 The file system vault doesn't require any external services or credentials.
+
+If configuring via a Vault entity, set `vaults.name` to `fs`.
 
 For a complete tutorial, see [Configure the file system vault backend](/how-to/configure-file-system-as-a-vault-backend/).
 
@@ -1253,8 +1257,8 @@ rows:
       Base64 Decode<br>{% new_in 3.15 %}
     parameter: |
       * **Vault entity:** `vaults.config.base64_decode`
-      * **kong.conf parameter:** `vault_fs_base64_decode`
-      * **Environment variable:** `KONG_VAULT_FS_BASE64_DECODE`
+      * **kong.conf parameter:** `vault_fs_decode_base64`
+      * **Environment variable:** `KONG_VAULT_FS_DECODE_BASE64`
     description: |
       Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
