@@ -25,7 +25,7 @@ rows:
     konnect: "`lastname`"
   - azure: "`user.groups`"
     konnect: "`groups`"
-  - azure: "`user.principalname`"
+  - azure: "`user.userprincipalname`"
     konnect: Unique user identifier
 {% endtable %}
 <!-- vale on -->
