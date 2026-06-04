@@ -28,31 +28,13 @@ faqs:
   - q: Can I match a plugin condition based on request content type (for example, JSON or XML)?
     a: |
       No, the condition expression language doesn't support this explicitly.
-     As an alternative, you can use a plugin such as [Datakit](/plugins/datakit/) or [Pre-Function](/plugins/pre-function/) to parse the body, extract the required value, and store it in [`kong.ctx.shared`](/gateway/plugins/expressions/#kong-ctx-shared-fields).
+      As an alternative, you can use a plugin such as [Datakit](/plugins/datakit/) or [Pre-Function](/plugins/pre-function/) to parse the body, extract the required value, and store it in [`kong.ctx.shared`](/gateway/plugins/expressions/#kong-ctx-shared-fields).
       The plugin condition can then reference that `kong.ctx.shared` key.
   - q: What happens if my condition expression has a runtime error?
     a: |
       If a condition expression fails at runtime, {{site.base_gateway}} logs the error at the ERROR level and returns a 500 status code to the client.
       To prevent this, wrap your expression in a `default()` call: `default(<expression>, false)`.
       This returns `false` (and skips the plugin) instead of a 500 if the expression errors.
-  - q: |
-      I was using ATC for plugin conditions in {{site.base_gateway}} 3.14. What do I need to change for 3.15?
-    a: |
-      The expression language changed between 3.14 and 3.15.
-      In {{site.base_gateway}} 3.14, the feature was in beta and used ATC (Abstract Tree Classifier) syntax for plugin conditions. 
-      For the 3.14 reference, see [Conditional expressions for plugins in 3.14](/gateway/plugins/expressions-314/).
-      {{site.base_gateway}} 3.15 uses CEL (Common Expression Language), which isn't backwards-compatible.
-
-      Any conditional expression that worked in 3.14 will need to be rewritten for 3.15.
-      The main syntax changes are:
-
-      * Prefix matching: `^=` → `starts_with()`. For example, `http.path ^= "/api"` becomes `http.path.starts_with("/api")`.
-      * Suffix matching: `=^` → `ends_with()`. For example, `http.path =^ ".json"` becomes `http.path.ends_with(".json")`.
-      * Regex matching: `~` → `matches()`. For example, `http.path ~ r#"^/api/v[0-9]+"#` becomes `http.path.matches("^/api/v[0-9]+")`.
-      * The `http.path.segments.<index>` fields are replaced by `http.path_segments` (a list).
-      * Header and query fields now return `null` when absent (instead of an empty string), so null checks may be needed.
-
-      See this reference for the full field and operator list.
 
 works_on:
   - on-prem
@@ -637,3 +619,19 @@ To prevent runtime errors, wrap your expression in `default()`:
 ```json
 "condition": "default(kong.ctx.shared.my_flag == \"enabled\", false)"
 ```
+
+## Migration from 3.14 to 3.15
+
+The expression language changed between 3.14 and 3.15.
+In {{site.base_gateway}} 3.14, the feature was in beta and used ATC (Abstract Tree Classifier) syntax for plugin conditions. 
+For the 3.14 reference, see [Conditional expressions for plugins in 3.14](/gateway/plugins/expressions-314/).
+{{site.base_gateway}} 3.15 uses CEL (Common Expression Language), which isn't backwards-compatible.
+
+Any conditional expression that worked in 3.14 will need to be rewritten for 3.15.
+The main syntax changes are:
+
+* Prefix matching: `^=` → `starts_with()`. For example, `http.path ^= "/api"` becomes `http.path.starts_with("/api")`.
+* Suffix matching: `=^` → `ends_with()`. For example, `http.path =^ ".json"` becomes `http.path.ends_with(".json")`.
+* Regex matching: `~` → `matches()`. For example, `http.path ~ r#"^/api/v[0-9]+"#` becomes `http.path.matches("^/api/v[0-9]+")`.
+* The `http.path.segments.<index>` fields are replaced by `http.path_segments` (a list).
+* Header and query fields now return `null` when absent (instead of an empty string), so null checks may be needed.
