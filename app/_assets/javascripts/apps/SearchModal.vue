@@ -1,5 +1,5 @@
 <template>
-  <button aria-label="Search" class="cursor-pointer flex gap-4 items-center justify-between w-fit border rounded-md border-brand py-[7px] px-3 text-secondary bg-secondary border-b border-primary/5 leading-4" @click="openModal">
+  <button aria-label="Search" class="cursor-pointer flex gap-4 items-center justify-between w-fit border rounded-md py-[7px] px-3 text-secondary bg-secondary border-b border-brand-saturated leading-4" @click="openModal">
     <span class="flex items-center gap-2 flex-shrink-0">
       <span class="flex">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,14 +28,14 @@
     <div class="modal-content-wrapper">
       <div class="modal-content" aria-modal="true" role="dialog" @click.stop>
         <div class="modal-content-inner" v-bind="autocomplete.getRootProps({})">
-          <div class="flex flex-col p-4 border-b border-brand-saturated/40">
+          <div class="flex flex-col p-4 border-b border-brand-saturated">
             <form class="w-full gap-2 flex items-center" v-bind="formProps" @submit="() => {this.inputElement.focus()}">
               <div class="flex items-center">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M19.6 21L13.3 14.7C12.8 15.1 12.225 15.4167 11.575 15.65C10.925 15.8833 10.2333 16 9.5 16C7.68333 16 6.14583 15.3708 4.8875 14.1125C3.62917 12.8542 3 11.3167 3 9.5C3 7.68333 3.62917 6.14583 4.8875 4.8875C6.14583 3.62917 7.68333 3 9.5 3C11.3167 3 12.8542 3.62917 14.1125 4.8875C15.3708 6.14583 16 7.68333 16 9.5C16 10.2333 15.8833 10.925 15.65 11.575C15.4167 12.225 15.1 12.8 14.7 13.3L21 19.6L19.6 21ZM9.5 14C10.75 14 11.8125 13.5625 12.6875 12.6875C13.5625 11.8125 14 10.75 14 9.5C14 8.25 13.5625 7.1875 12.6875 6.3125C11.8125 5.4375 10.75 5 9.5 5C8.25 5 7.1875 5.4375 6.3125 6.3125C5.4375 7.1875 5 8.25 5 9.5C5 10.75 5.4375 11.8125 6.3125 12.6875C7.1875 13.5625 8.25 14 9.5 14Z" fill="currentColor"/>
                 </svg>
               </div>
-              <div class="flex items-center border border-brand-saturated/40 rounded-3xl h-full gap-1 pl-2 w-fit" v-for="tag in state.context.tagsPlugin.tags">
+              <div class="flex items-center border border-brand-saturated rounded-3xl h-full gap-1 pl-2 w-fit" v-for="tag in state.context.tagsPlugin.tags">
                 <span class="flex w-fit whitespace-nowrap text-secondary">{{ tag.label }}</span>
                 <button
                   class="flex items-center w-fit text-secondary pr-1 self-stretch rounded-r-3xl hover:bg-brand-saturated/40"
@@ -107,7 +107,7 @@
             </div>
           </div>
 
-          <div class="md:flex w-full p-4 items-center flex-grow-0 flex-shrink-0 border-t border-brand-saturated/40 justify-between">
+          <div class="md:flex w-full p-4 items-center flex-grow-0 flex-shrink-0 border-t border-brand-saturated justify-between">
             <div class="hidden md:flex gap-2 items-center">
               <span class="sr-only">Tab key</span>
               <span aria-hidden="true" class="badge h-5 flex items-center text-primary">

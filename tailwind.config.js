@@ -91,6 +91,7 @@ module.exports = {
         primary: "rgb(var(--color-text-primary), <alpha-value>)",
         secondary: "rgb(var(--color-text-secondary), <alpha-value>)",
         terciary: "rgb(var(--color-text-terciary), <alpha-value>)",
+        links: "rgb(var(--color-text-links), <alpha-value>)",
         button: "rgb(var(--color-text-button), <alpha-value>)",
         "secondary-constant":
           "rgb(var(--color-text-secondary-constant), <alpha-value>)",
