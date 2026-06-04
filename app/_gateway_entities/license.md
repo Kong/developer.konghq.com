@@ -153,8 +153,7 @@ After a license expires, {{site.base_gateway}} behaves as follows:
 
 * All entity configurations become read-only.
 * You can continue to access API Gateway admin interfaces through Kong Manager and {{site.konnect_short_name}}.
-* All proxy traffic continues to be processed as if the license wasn't expired. 
-* Existing configuration is loaded and continues to be used.
+* All proxy traffic continues to be processed with existing, unchanged configuration.
 * You can still restart and scale nodes in traditional mode.
 * New nodes can't come up and restarts will break in DB-less mode and KIC.
 
