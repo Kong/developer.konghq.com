@@ -556,6 +556,7 @@ openid
 openresty
 openshift
 openssl
+OpenSSL
 opentelemetry
 Openwhisk
 optum
