@@ -342,7 +342,7 @@ The Vault entity can only be used once the database is initialized. Secrets for 
 {% navtabs "provider config" %}
 {% navtab "Environment variable" %}
 
-If configuring via a Vault entity, set `vaults.name` to `env`.
+If you're configuring via a Vault entity, set `vaults.name` to `env`.
 
 <!--vale off-->
 {% table %}
@@ -384,7 +384,7 @@ For a complete tutorial on how to set up AWS as a Vault entity, see the followin
 * [Set up AWS with {{ site.base_gateway }}](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/)
 * [Set up AWS with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/aws/)
 
-If configuring via a Vault entity, set `vaults.name` to `aws`.
+If you're configuring via a Vault entity, set `vaults.name` to `aws`.
 
 The following table lists all of the available configuration parameters for an AWS Secrets Manager Vault:
 
@@ -480,7 +480,7 @@ export KONG_VAULT_AZURE_TENANT_ID=YOUR_TENANT_ID
 export KONG_VAULT_AZURE_CLIENT_ID=YOUR_CLIENT_ID
 ```
 
-If configuring via a Vault entity, set `vaults.name` to `azure`.
+If you're configuring via a Vault entity, set `vaults.name` to `azure`.
 
 The following table lists all of the available configuration parameters for an Azure Key Vault:
 
@@ -590,7 +590,7 @@ At minimum, you'll also need to set Vault URI:
 export KONG_VAULT_AZURE_CERTS_VAULT_URI=https://your-vault.vault.azure.com
 ```
 
-If configuring via a Vault entity, set `vaults.name` to `azure-certs`.
+If you're configuring via a Vault entity, set `vaults.name` to `azure-certs`.
 
 The following table lists all of the available configuration parameters for an Azure Key Vault (Certificates) vault:
 
@@ -634,7 +634,7 @@ rows:
       * **kong.conf parameter:** `vault_azure_certs_tenant_id`
       * **Environment variable:** `KONG_VAULT_AZURE_CERTS_TENANT_ID`
     description: |
-      The DirectoryId and TenantId both equate to the GUID representing the ActiveDirectory Tenant.
+      The `DirectoryId` and `TenantId` both equate to the GUID representing the `ActiveDirectory` Tenant.
       Depending on context, either term may be used by Microsoft documentation and products, which can be confusing.
       In other words, the "Tenant ID" IS the "Directory ID".
   - field: |
@@ -690,7 +690,7 @@ For a complete tutorial on how to set up {{ site.google_cloud }} as a Vault enti
 * [Set up {{ site.google_cloud }} with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
 * [Set up {{ site.google_cloud }} with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
 
-If configuring via a Vault entity, set `vaults.name` to `gcp`.
+If you're configuring via a Vault entity, set `vaults.name` to `gcp`.
 
 The following table lists the available configuration parameters for a GCP Secret Manager Vault:
 
@@ -754,7 +754,7 @@ For a complete tutorial on how to set up HashiCorp Vault as a Kong Vault backend
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and AWS EC2 authentication](/how-to/configure-hashicorp-vault-with-aws-ec2-auth/)
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and Azure authentication](/how-to/configure-hashicorp-vault-with-azure-auth/)
 
-If configuring via a Vault entity, set `vaults.name` to `hcv`.
+If you're configuring via a Vault entity, set `vaults.name` to `hcv`.
 
 The following table lists the available configuration parameters for a HashiCorp Vault:
 
