@@ -246,7 +246,7 @@ For more information, see:
 ## Cloning plugins {% new_in 3.15 %}
 
 You can run multiple instances of a plugin by cloning it.
-Cloning a plugin creates a custom instance of an existing plugin, letting you apply different configurations to your prefered scopes.
+Cloning a plugin creates a custom instance of an existing plugin, letting you apply different configurations to your preferred scopes.
 A cloned plugin shares its code and logic with the source plugin, but is treated as a separate plugin instance.
 
 The priority of the cloned plugin can also be changed.
