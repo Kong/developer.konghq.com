@@ -291,7 +291,8 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 [Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
 
 {:.info}
-> You can’t use the Redis partial configuration in [custom plugins](#use-a-dedicated-cloud-gateway-managed-cache-in-a-custom-plugin). Instead, use [env referenceable fields](/gateway/entities/vault/#store-secrets-as-environment-variables) directly.
+> You can’t use the Redis partial configuration in [custom plugins](#use-a-dedicated-cloud-gateway-managed-cache-in-a-custom-plugin). Instead, use [env referenceable fields](/gateway/entities/vault/#store-secrets-as-environment-variables) directly.
+
 
 ## Resize a managed cache
 
@@ -328,8 +329,10 @@ body:
 Managed cache relies on the native IAM authentication flow for different cloud service providers to connect and authenticate with provider-specific managed Redis (ElastiCache for AWS and Azure Managed Redis for Azure).
 If you want to use the Redis managed cache in a [custom plugin](/custom-plugins/), you'll need to implement the logic there as well.
 
-Custom plugins in {{site.konnect_short_name}} **do not** support Redis partials.
-Because of this, all the required fields like host and port need to be added in the [`schema.lua`](/custom-plugins/schema.lua/) itself:
+Custom plugins in {{site.konnect_short_name}} **do not** support Redis partials.
+
+Because of this, all the required fields like host and port need to be added in the [`schema.lua`](/custom-plugins/schema.lua/) itself:
+
 
 ```lua
 local typedefs = require "kong.db.schema.typedefs"
@@ -361,7 +364,7 @@ return {
       },
     },
   },
-}
+`referenceable = true` is important since Kong dereferences these fields from [environment vaults](/gateway/entities/vault/).
 ```
 
 `referenceable = true` is important since Kong dereferences these fields from environment vaults.
