@@ -187,7 +187,7 @@ const openSlideoutToc = async () => {
 }
 
 :deep(.overview-server-list button.secondary) {
-  @apply !bg-brand !text-white;
+  @apply !bg-brand !text-button;
 }
 
 :deep(.overview-server-list button.tertiary) {
