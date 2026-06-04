@@ -481,3 +481,4 @@ function testplugin:access(conf)
 end
 ```
 
+This configuration is an example and isn't directly executable. Adjust it as needed for your custom plugin.
