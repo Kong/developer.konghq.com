@@ -132,6 +132,11 @@ Follow the repo's established pattern (see `app/_how-tos/gateway/terraform-gatew
 - Provider auth uses the `KONNECT_TOKEN` env var automatically; note that `server_url` changes by region.
 - `terraform init`, then `terraform apply -auto-approve`. Show the expected `Apply complete!` output in a ```text block with `{:.no-copy-code}` under it.
 
+**Passing inputs (this matters, get it right):** never interpolate shell env vars into the echoed HCL (e.g. `name = "'$FOO'"`). Once the text lands in `main.tf`, Terraform has no concept of your shell vars, so this is fragile and usually wrong. Instead:
+- **External, reader-supplied values** (cloud account IDs, region names, VNet/VPC names): declare `variable` blocks and reference `var.<name>`. Have the reader `export TF_VAR_<name>=...`; Terraform reads `TF_VAR_*` automatically. This is the production-idiomatic way and it's the behavior readers expect from "export and it works".
+- **Values Terraform manages** (a network created earlier in the same config): reference the resource attribute, like `network_id = konnect_cloud_gateway_network.my_network.id`. This also creates an implicit dependency so the network provisions before the dependent resource.
+- **Validation inputs**: extract IDs from `terraform show -json` (see below), don't ask the reader to paste them.
+
 ### Validation section
 
 Default Terraform validation: extract the resource ID from state and confirm it via the Konnect API.

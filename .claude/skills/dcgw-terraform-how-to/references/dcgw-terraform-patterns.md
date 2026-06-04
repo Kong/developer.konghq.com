@@ -139,8 +139,6 @@ Network creation, from `app/dedicated-cloud-gateways/network-architecture.md`:
 
 ```hcl
 data "konnect_cloud_gateway_provider_account_list" "my_cloudgatewayprovideraccountlist" {
-  page_number = 1
-  page_size   = 1
 }
 
 resource "konnect_cloud_gateway_network" "my_cloudgatewaynetwork" {
@@ -184,7 +182,60 @@ resource "konnect_cloud_gateway_addon" "managed_cache" {
 }
 ```
 
-For a transit gateway, the resource takes `network_id`, a `name`, `cidr_blocks`, an optional `dns_config`, and a provider-specific attachment config block (see below). Confirm the exact argument names against the registry page (`.../resources/cloud_gateway_transit_gateway`) and the OpenAPI spec before drafting, the nested block name can change between provider versions.
+The `konnect_cloud_gateway_transit_gateway` resource has a top-level `network_id` plus **one per-provider attribute block** that wraps `name`, `transit_gateway_attachment_config`, and an optional `dns_config`. The block keys are: `azure_transit_gateway` (VNet peering), `azure_vhub_peering_gateway`, `aws_vpc_peering_gateway`, `aws_transit_gateway`, `aws_resource_endpoint_gateway`, `gcp_vpc_peering_transit_gateway`. Azure VNet peering looks like:
+
+```hcl
+resource "konnect_cloud_gateway_transit_gateway" "my_vnet_peering" {
+  network_id = konnect_cloud_gateway_network.my_cloudgatewaynetwork.id
+
+  azure_transit_gateway = {
+    name = "azure vnet peering"
+
+    transit_gateway_attachment_config = {
+      kind                = "azure-vnet-peering-attachment"
+      tenant_id           = var.tenant_id
+      subscription_id     = var.subscription_id
+      resource_group_name = var.resource_group_name
+      vnet_name           = var.vnet_name
+    }
+  }
+}
+```
+
+The Azure blocks take no `cidr_blocks` (the AWS VPC peering / transit gateway variants do). The resource exposes a top-level computed `id`, so validation can extract `.values.id` from state.
+
+> **Important:** the OpenAPI spec (`api-specs/konnect/cloud-gateways/v2/openapi.yaml`) is authoritative for **field names and values**, but it models transit gateways as a flat `oneOf`. The Terraform provider does **not** match that shape, it nests each provider's config under its own attribute block (`azure_transit_gateway`, etc.). Always confirm the HCL **structure** against the provider docs (`github.com/Kong/terraform-provider-konnect/tree/main/docs/resources`), not the OpenAPI alone. The same applies to data sources: e.g. `konnect_cloud_gateway_provider_account_list` takes no arguments (no `page_number`/`page_size`), even though the API endpoint paginates.
+
+### Network + control plane prereq
+
+The network and a cloud-enabled control plane are usually prereqs. When the guide provisions them with Terraform (for readers who don't have them yet), the pattern is a `konnect_cloud_gateway_network` plus a `konnect_gateway_control_plane` with `cloud_gateway = true`. The shared include `prereqs/dcgw-azure-network-cp` (`app/_includes/prereqs/dcgw-azure-network-cp.md`) does exactly this for Azure and is the include to reuse in Azure peering guides:
+
+```hcl
+resource "konnect_cloud_gateway_network" "my_cloudgatewaynetwork" {
+  name               = "Terraform Network"
+  region             = "eastus2"
+  availability_zones = ["eastus2-az2", "eastus2-az3"]
+  cidr_block         = "10.4.0.0/16"
+  cloud_gateway_provider_account_id = data.konnect_cloud_gateway_provider_account_list.my_cloudgatewayprovideraccountlist.data[0].id
+}
+
+resource "konnect_gateway_control_plane" "my_cp" {
+  name          = "Azure CGW Control Plane"
+  cloud_gateway = true
+}
+```
+
+The network takes 30-40 minutes to reach `Ready`. Downstream resources that reference `konnect_cloud_gateway_network.my_cloudgatewaynetwork.id` get an implicit dependency, so a single `terraform apply` provisions the network before the dependent resource.
+
+The `region`, `availability_zones`, and `cidr_block` are **provider- and account-specific, don't hardcode or guess them**. A wrong combination returns `400 Invalid Parameters` ("cloud provider account, region, and availability zone targets are not supported"). The supported values come from the availability endpoint, so tell the reader to look them up and substitute:
+
+```sh
+curl -s -H "Authorization: Bearer $KONNECT_TOKEN" \
+  https://global.api.konghq.com/v2/cloud-gateways/availability.json | \
+  jq '.providers[] | select(.provider == "azure") | .regions[] | {region, availability_zones, cidr_blocks}'
+```
+
+`availability_zones` is a list and doesn't map cleanly to a `TF_VAR_` env var, so leave region/AZs/CIDR as literal values the reader substitutes (or use a `terraform.tfvars` file), rather than env-var variables.
 
 ---
 
@@ -227,6 +278,34 @@ Mirror the structure of `app/_how-tos/gateway/terraform-gateway-authentication.m
    ````
 4. **Cloud provider side steps**: the part Terraform can't do (Azure role + service principal assignment, AWS accept peering + route table, GCP peering resource). Reuse a shared include if one exists, otherwise write exact CLI/UI steps.
 5. **Validate** (see below).
+
+### Passing inputs
+
+Don't interpolate shell env vars into the echoed HCL (`name = "'$FOO'"`), it's fragile and Terraform doesn't read shell vars anyway. Use the production-idiomatic approach:
+
+- **External, reader-supplied values** (cloud account IDs, region, VNet/VPC names): `variable` blocks + `var.<name>`, supplied via `export TF_VAR_<name>=...`. Terraform reads `TF_VAR_*` automatically.
+
+  ```hcl
+  variable "tenant_id" {}
+  variable "subscription_id" {}
+  # ...
+  azure_transit_gateway = {
+    name = "azure vnet peering"
+    transit_gateway_attachment_config = {
+      kind            = "azure-vnet-peering-attachment"
+      tenant_id       = var.tenant_id
+      subscription_id = var.subscription_id
+      # ...
+    }
+  }
+  ```
+
+  ```sh
+  export TF_VAR_tenant_id='...'
+  export TF_VAR_subscription_id='...'
+  ```
+- **Terraform-managed values**: reference the resource attribute (`network_id = konnect_cloud_gateway_network.my_cloudgatewaynetwork.id`), which also orders the apply correctly.
+- Add a note for readers whose network was created outside the Terraform project: replace the resource reference with their own ID (or a variable).
 
 ### Validation
 
@@ -279,7 +358,8 @@ Useful shared includes:
 - `app/_includes/sections/azure-peering.md` — architecture diagram (mermaid)
 - `app/_includes/sections/azure-dcgw-network-setup.md`, `azure-dcgw-vnet-peering-setup.md` — Azure UI setup steps (UI, not Terraform; reuse only the cloud-provider-side parts)
 - `app/_includes/faqs/azure-vnet-same-tenant-multi-subscription.md` — the duplicate-role FAQ
-- `app/_includes/prereqs/dcgw-azure-vnet.md`, `dcgw-azure-vwan.md` — Azure DCGW prereqs
+- `app/_includes/prereqs/dcgw-azure-vnet.md`, `dcgw-azure-vwan.md` — Azure DCGW prereqs (UI-based)
+- `app/_includes/prereqs/dcgw-azure-network-cp.md` — Terraform prereq that provisions the Azure network + cloud-enabled control plane (use this in Azure Terraform guides)
 
 Before writing any Azure role-assignment or AWS accept-peering steps inline, check whether one of these includes already covers it.
 

@@ -51,15 +51,8 @@ prereqs:
 
         {:.danger}
         > **Important:** Your Azure virtual network **must** use a different IP than your network in {{site.konnect_short_name}}, which is `10.0.0.0/16` by default but can be edited.
-    - title: Azure Dedicated Cloud Gateway network
-      content: |
-        This how-to configures VNET peering on an existing network. Before you start, [create an Azure Dedicated Cloud Gateway](/dedicated-cloud-gateways/azure-peering/) and wait until the network displays as `Ready`.
-
-        Copy the network ID and export it:
-
-        ```sh
-        export KONNECT_NETWORK_ID='YOUR_NETWORK_ID'
-        ```
+    - title: Azure Dedicated Cloud Gateway network and control plane
+      include_content: prereqs/dcgw-azure-network-cp
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
@@ -69,13 +62,13 @@ next_steps:
 
 ## Set your Azure virtual network details
 
-Export your Azure virtual network details so you can reuse them in your Terraform configuration:
+Pass your Azure virtual network details to Terraform as input variables. Terraform automatically reads any environment variable prefixed with `TF_VAR_`, so export your values:
 
 ```sh
-export AZURE_TENANT_ID='YOUR_TENANT_ID'
-export AZURE_SUBSCRIPTION_ID='YOUR_SUBSCRIPTION_ID'
-export AZURE_RESOURCE_GROUP_NAME='YOUR_RESOURCE_GROUP_NAME'
-export AZURE_VNET_NAME='YOUR_VNET_NAME'
+export TF_VAR_tenant_id='YOUR_TENANT_ID'
+export TF_VAR_subscription_id='YOUR_SUBSCRIPTION_ID'
+export TF_VAR_resource_group_name='YOUR_RESOURCE_GROUP_NAME'
+export TF_VAR_vnet_name='YOUR_VNET_NAME'
 ```
 
 ## Grant Kong access in your Azure tenant
@@ -94,26 +87,36 @@ export AZURE_VNET_NAME='YOUR_VNET_NAME'
 
 ## Define the VNET peering resource
 
-Add a `konnect_cloud_gateway_transit_gateway` resource to your Terraform configuration. The `azure-vnet-peering-attachment` attaches your Azure virtual network to your Dedicated Cloud Gateway network:
+Add a `konnect_cloud_gateway_transit_gateway` resource to your Terraform configuration. Declare the input variables you exported, then reference your Dedicated Cloud Gateway network so Terraform provisions it before the peering. The `azure-vnet-peering-attachment` attaches your Azure virtual network to your network:
 
 <!--vale off-->
 ```hcl
 echo '
-resource "konnect_cloud_gateway_transit_gateway" "my_vnet_peering" {
-  network_id = "'$KONNECT_NETWORK_ID'"
-  name       = "azure vnet peering"
+variable "tenant_id" {}
+variable "subscription_id" {}
+variable "resource_group_name" {}
+variable "vnet_name" {}
 
-  transit_gateway_attachment_config = {
-    kind                = "azure-vnet-peering-attachment"
-    tenant_id           = "'$AZURE_TENANT_ID'"
-    subscription_id     = "'$AZURE_SUBSCRIPTION_ID'"
-    resource_group_name = "'$AZURE_RESOURCE_GROUP_NAME'"
-    vnet_name           = "'$AZURE_VNET_NAME'"
+resource "konnect_cloud_gateway_transit_gateway" "my_vnet_peering" {
+  network_id = konnect_cloud_gateway_network.my_cloudgatewaynetwork.id
+
+  azure_transit_gateway = {
+    name = "azure vnet peering"
+
+    transit_gateway_attachment_config = {
+      kind                = "azure-vnet-peering-attachment"
+      tenant_id           = var.tenant_id
+      subscription_id     = var.subscription_id
+      resource_group_name = var.resource_group_name
+      vnet_name           = var.vnet_name
+    }
   }
 }
 ' >> main.tf
 ```
 <!--vale on-->
+
+If you created your Dedicated Cloud Gateway network outside this Terraform project, replace the `network_id` reference with your network ID.
 
 ## Apply the configuration
 
@@ -132,9 +135,10 @@ Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 
 ## Validate
 
-VNET peering can take 30-40 minutes to become active. To confirm that it's ready, fetch the peering ID from the Terraform state:
+VNET peering can take 30-40 minutes to become active. To confirm that it's ready, fetch the network and peering IDs from the Terraform state:
 
 ```bash
+KONNECT_NETWORK_ID=$(terraform show -json | jq -r '.values.root_module.resources[] | select(.address == "konnect_cloud_gateway_network.my_cloudgatewaynetwork") | .values.id')
 VNET_PEERING_ID=$(terraform show -json | jq -r '.values.root_module.resources[] | select(.address == "konnect_cloud_gateway_transit_gateway.my_vnet_peering") | .values.id')
 ```
 
