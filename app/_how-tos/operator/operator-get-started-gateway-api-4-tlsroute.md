@@ -242,7 +242,7 @@ spec:
 
 ### Create a TLSRoute for the Terminate listener
 
-Because Kong is now terminating TLS, the backend can receive plain TCP. Point the `TLSRoute` at the unmodified `echo` Service on its default plain TCP port `1027`:
+Because Kong is now terminating TLS, the backend can receive plain TCP. Point the `TLSRoute` at the unmodified `echo` Service on its default plain TCP port `1025`:
 
 ```bash
 echo "apiVersion: gateway.networking.k8s.io/v1
@@ -259,7 +259,7 @@ spec:
   rules:
     - backendRefs:
       - name: echo
-        port: 1027
+        port: 1025
 " | kubectl apply -f -
 ```
 
