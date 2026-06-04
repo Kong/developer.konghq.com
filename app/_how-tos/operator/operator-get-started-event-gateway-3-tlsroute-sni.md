@@ -23,7 +23,6 @@ works_on:
   - konnect
 
 prereqs:
-  show_works_on: true
   skip_product: true
 
 tldr:

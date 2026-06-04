@@ -348,3 +348,15 @@ kubectl run kcat-portmap --rm -i --restart=Never --image=edenhill/kcat:1.7.1 -n 
 ```
 
 You should see one bootstrap endpoint on port `9092` and one port per broker on `9093`, `9094`, and `9095`.
+
+```text
+Metadata for all topics (from broker -1: 127.0.0.0:9092/bootstrap):
+ 3 brokers:
+  broker 0 at 127.0.0.0:9093
+  broker 1 at 127.0.0.0:9094
+  broker 2 at 127.0.0.0:9095 (controller)
+ 0 topics:
+pod "kcat-portmap" deleted from kong namespace
+```
+{:.no-copy-code}
+
