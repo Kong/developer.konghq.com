@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.14.0
-  x-oas-source: kong/platform-api@1e3b9e0b6472b4e1d0c90eb581507f7a78973908
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1e3b9e0b6472b4e1d0c90eb581507f7a78973908'
+  x-oas-source: kong/platform-api@f1461f48443cf00ac3ef6861e25393491686c91f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f1461f48443cf00ac3ef6861e25393491686c91f'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -8288,6 +8288,7 @@ components:
         url:
           description: 'Helper field to set `protocol`, `host`, `port` and `path` using a URL. This field is write-only and is not returned in responses.'
           type: string
+          nullable: true
           writeOnly: true
         write_timeout:
           description: The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.
