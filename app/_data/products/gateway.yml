@@ -1719,6 +1719,7 @@ cloud_deployment_platforms:
   - Google Cloud GKE Autopilot
   - Google Cloud Run
   - Red Hat OpenShift
+  - VMware VKS
 
 marketplaces:
   - Azure Marketplace
