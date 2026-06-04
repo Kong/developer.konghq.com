@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.14.0
-  x-oas-source: kong/platform-api@8069b1b5620aec36a5ddcccc2c2cf09e6b9102d0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8069b1b5620aec36a5ddcccc2c2cf09e6b9102d0'
+  x-oas-source: kong/platform-api@1e3b9e0b6472b4e1d0c90eb581507f7a78973908
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1e3b9e0b6472b4e1d0c90eb581507f7a78973908'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -38,6 +38,18 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GetExpectedConfigHashResponse'
+      tags:
+        - DP Nodes
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/expected-config-version':
+    get:
+      operationId: get-expected-config-version
+      summary: Get an Expected Config Version
+      description: 'Retrieve the expected config version for this control plane. For data planes that track the config version (e.g. those that run with Incremental Config Sync enabled), the expected config version can be used to verify if the config version of a data plane node is up to date with the control plane. The config version will be the same if they are in sync.'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetExpectedConfigVersionResponse'
       tags:
         - DP Nodes
     parameters:
@@ -9617,6 +9629,21 @@ components:
               - expected_hash
               - created_at
               - updated_at
+    GetExpectedConfigVersionResponse:
+      description: Response body for retrieving the expected config version of the control plane.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              expected_config_version:
+                description: The expected configuration version.
+                type: string
+              created_at:
+                description: Date the control plane configuration version was created.
+                type: integer
+            required:
+              - expected_config_version
     ListDataPlaneCertificatesResponse:
       description: Example response
       content:
