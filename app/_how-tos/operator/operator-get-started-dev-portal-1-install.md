@@ -1,5 +1,5 @@
 ---
-title: Install {{site.operator_product_name}} for Dev Portal
+title: Install {{site.operator_product_name}} for {{site.dev_portal}}
 description: Install {{site.operator_product_name}} and prepare a Kubernetes cluster for {{site.konnect_short_name}} {{site.dev_portal}} CRDs.
 content_type: how_to
 permalink: /operator/get-started/dev-portal/install/
@@ -26,7 +26,7 @@ prereqs:
   skip_product: true
 
 tldr:
-  q: How do I prepare a cluster for Dev Portal CRDs with {{site.operator_product_name}}?
+  q: How do I prepare a cluster for {{site.dev_portal}} CRDs with {{site.operator_product_name}}?
   a: Create a `kong` namespace, install {{site.operator_product_name}}, and wait for the controller to be ready.
 
 tags:
@@ -36,7 +36,7 @@ tags:
   - get-started
 ---
 
-This guide walks through managing {{site.konnect_short_name}} Dev Portal resources with {{site.operator_product_name}}.
+This guide walks through managing {{site.konnect_short_name}} {{site.dev_portal}} resources with {{site.operator_product_name}}.
 
 By the end of the series, you will have:
 
@@ -60,16 +60,8 @@ If the namespace already exists, Kubernetes returns an `AlreadyExists` message, 
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
 
-## Wait for the operator to be ready
+## Validate
+
+Wait for {{site.operator_product_name}} to be ready before moving on to the next step:
 
 {% include prereqs/products/operator-validate-deployment.md %}
-
-## Validation
-
-Verify that the operator is running:
-
-```bash
-kubectl get pods -n kong-system
-```
-
-Once the controller is ready, continue to [Create a {{ site.dev_portal }}](/operator/get-started/dev-portal/create-portal/).

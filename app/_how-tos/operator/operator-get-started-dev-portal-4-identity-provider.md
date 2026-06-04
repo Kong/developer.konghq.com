@@ -23,7 +23,6 @@ works_on:
   - konnect
 
 prereqs:
-  show_works_on: true
   skip_product: true
   inline:
     - title: OIDC provider
@@ -38,6 +37,8 @@ tldr:
 ## Create the `PortalIdentityProviderRequest`
 
 The `PortalIdentityProviderRequest` configures the OIDC sign-in provider for the portal. Once applied, developers who visit the portal can sign in using your identity provider instead of a local account.
+
+Create the `PortalIdentityProviderRequest` resource:
 
 ```bash
 echo '
@@ -67,6 +68,8 @@ spec:
 ```
 
 ## Validation
+
+Check that the resource is ready:
 
 ```bash
 kubectl wait portalidentityproviderrequest/operator-dev-portal-oidc -n kong \
