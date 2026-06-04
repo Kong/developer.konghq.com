@@ -238,6 +238,37 @@ A span capturing the execution of a plugin configured to run in the `access` pha
 This span has the following attributes:
 {{instance_id}}
 
+### kong.datakit.node.node_name {% new_in 3.15 %}
+
+A span that captures the execution of a single node in the Datakit plugin execution plan.
+One span is created per node, and each span appears as a child of `kong.access.plugin.datakit`.
+
+This span has the following attributes:
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Description
+    key: description
+rows:
+  - name: "`proxy.kong.datakit.node.type`"
+    description: |
+        The type of the node, such as `branch` or `call`. 
+        See the [Datakit nodes reference](/plugins/datakit/#node-types) for all possible node types.
+  - name: "`proxy.kong.datakit.node.status`"
+    description: |
+        Final execution status of the node.
+        <br><br>
+        One of: 
+        * `complete`: node finished successfully
+        * `fail`: node encountered a fatal error
+        * `skip`: node was not executed
+        * `cancel`: execution was halted before completion
+        <br><br>
+        
+        When the status is `fail`, the span also records the error message.
+{% endtable %}
+
 ### kong.dns
 A span capturing the time spent in looking up DNS.
 
@@ -353,34 +384,3 @@ This span has the following attributes:
 
 ### kong.wait_for_client_read
 A span that measures the time Kong spends finishing the response write to the client. This duration may be extended for slow-reading clients, resulting in a longer span.
-
-### kong.datakit.node.node_name {% new_in 3.15 %}
-
-A span that captures the execution of a single node in the Datakit plugin execution plan.
-One span is created per node, and each span appears as a child of `kong.access.plugin.datakit`.
-
-This span has the following attributes:
-{% table %}
-columns:
-  - title: Name
-    key: name
-  - title: Description
-    key: description
-rows:
-  - name: "`proxy.kong.datakit.node.type`"
-    description: |
-        The type of the node, such as `branch` or `call`. 
-        See the [Datakit nodes reference](/plugins/datakit/#node-types) for all possible node types.
-  - name: "`proxy.kong.datakit.node.status`"
-    description: |
-        Final execution status of the node.
-        <br><br>
-        One of: 
-        * `complete`: node finished successfully
-        * `fail`: node encountered a fatal error
-        * `skip`: node was not executed
-        * `cancel`: execution was halted before completion
-        <br><br>
-        
-        When the status is `fail`, the span also records the error message.
-{% endtable %}
