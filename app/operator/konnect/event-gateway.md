@@ -50,6 +50,9 @@ The operator manages three layers:
 
 ## Resource model
 
+Here are the Kubernetes resources that form a typical {{ site.event_gateway }} deployment:
+
+<!--vale off-->
 {% table %}
 columns:
   - title: Resource
@@ -84,6 +87,7 @@ rows:
     api_group: "`eventgateway.konghq.com/v1alpha1`"
     purpose: Deploys the {{ site.event_gateway_short }} data plane in Kubernetes
 {% endtable %}
+<!--vale on-->
 
 Resources reference each other in this order:
 
