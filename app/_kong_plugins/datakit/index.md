@@ -1223,7 +1223,7 @@ If the retrieved value is `nil` or `null`, the plugin errors instead of continui
   type: property
   property: kong.ctx.shared.api_key
   non_nil: true
-  input: get_src
+  input: GET_SRC
 ```
 
 #### Supported properties
