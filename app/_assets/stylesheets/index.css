@@ -28,7 +28,7 @@
     --color-border-primary: 186, 193, 184;
     --opacity-border-primary: 0.72;
 
-    --color-shadow-primary: 5, 47, 92, 0.04;
+    --color-shadow-primary: 204, 255, 0, 0.04;
 
     --color-brand: 204, 255, 0;
     --color-brand-saturated: 204, 255, 0;
@@ -58,7 +58,7 @@
     --color-semantic-teal-primary: 64, 199, 226;
     --color-semantic-teal-secondary: 224, 250, 255;
 
-    --color-shadow-hover-card: 24, 128, 240, 0.16;
+    --color-shadow-hover-card: 204, 255, 0, 0.08;
 
     --color-scroll-bar-thumb: var(--color-text-links);
 
@@ -150,7 +150,7 @@
 
     --color-border-primary: 49, 57, 25;
     --opacity-border-primary: 0.48;
-    --color-shadow-primary: 2, 20, 40, 0.08;
+    --color-shadow-primary: 204, 255, 0, 0.04;
 
     --color-semantic-red-primary: 214, 67, 67;
     --color-semantic-red-secondary: 44, 17, 17;
@@ -176,7 +176,7 @@
     --color-semantic-teal-primary: 64, 199, 226;
     --color-semantic-teal-secondary: 16, 61, 70;
 
-    --color-shadow-hover-card: 24, 128, 240, 0.4;
+    --color-shadow-hover-card: 204, 255, 0, 0.08;
   }
 
   *::-webkit-scrollbar {
