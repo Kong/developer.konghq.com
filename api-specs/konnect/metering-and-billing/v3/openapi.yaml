@@ -6,8 +6,8 @@ info:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@21424ad45f0cf4d332ad45937099ef4d41affea6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/21424ad45f0cf4d332ad45937099ef4d41affea6'
+  x-oas-source: kong/platform-api@3d1f59233252eb8ffbfbdbf3a6f25536b62948a4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3d1f59233252eb8ffbfbdbf3a6f25536b62948a4'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -24,7 +24,7 @@ servers:
 paths:
   /openmeter/addons:
     get:
-      operationId: list-addons
+      operationId: list-openmeter-addons
       summary: List add-ons
       description: |-
         **Pre-release Endpoint**
@@ -74,7 +74,7 @@ paths:
       tags:
         - OpenMeter Product Catalog
     post:
-      operationId: create-addon
+      operationId: create-openmeter-addon
       summary: Create add-on
       description: |-
         **Pre-release Endpoint**
@@ -104,7 +104,7 @@ paths:
         - OpenMeter Product Catalog
   '/openmeter/addons/{addonId}':
     put:
-      operationId: update-addon
+      operationId: update-openmeter-addon
       summary: Update add-on
       description: |-
         **Pre-release Endpoint**
@@ -143,7 +143,7 @@ paths:
       tags:
         - OpenMeter Product Catalog
     get:
-      operationId: get-addon
+      operationId: get-openmeter-addon
       summary: Get add-on
       description: |-
         **Pre-release Endpoint**
@@ -176,7 +176,7 @@ paths:
       tags:
         - OpenMeter Product Catalog
     delete:
-      operationId: delete-addon
+      operationId: delete-openmeter-addon
       summary: Soft delete add-on
       description: |-
         **Pre-release Endpoint**
@@ -204,7 +204,7 @@ paths:
         - OpenMeter Product Catalog
   '/openmeter/addons/{addonId}/archive':
     post:
-      operationId: archive-addon
+      operationId: archive-openmeter-addon
       summary: Archive add-on version
       description: |-
         **Pre-release Endpoint**
