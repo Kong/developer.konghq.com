@@ -31,7 +31,7 @@ rows:
 
                     But infrastructure often falls behind, with challenges around authentication, rate limiting, data security, observability, and constant provider changes.
 
-                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. In this model, a **Policy** {% new_in 2.0.0 %} is a first-class entity that applies governance behavior at a chosen scope (such as a Model, Agent, MCP Server, Consumer, or Consumer Group). Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
+                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. In this model, a [**Policy**](/ai-gateway/entities/ai-policy/) {% new_in 2.0.0 %} is a first-class entity that applies governance behavior at a chosen scope (such as a [Model](/ai-gateway/entities/ai-model/), [Agent](/ai-gateway/entities/ai-agent/), [MCP Server](/ai-gateway/entities/ai-mcp-server/), [Consumer](/ai-gateway/entities/ai-consumer/), or [Consumer Group](/ai-gateway/entities/ai-consumer-group/)). Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
 
 
       - blocks:
@@ -82,7 +82,7 @@ rows:
             description: Attach policy-managed governance behavior to Models, Agents, MCP Servers, and identities.
             icon: /assets/icons/plug.svg
             cta:
-              url: /ai-gateway/entities/policy/
+              url: /ai-gateway/entities/ai-policy/
               align: end
       - blocks:
         - type: card
@@ -106,16 +106,16 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Model entities
+            title: LLM Traffic
             description: Route LLM requests through a provider-agnostic Universal API. Load-balance across providers, transform requests and responses, enforce policies, and collect usage analytics.
             icon: /assets/icons/plugins/universal-api.svg
             cta:
-              url: /ai-gateway/entities/model/
+              url: /ai-gateway/entities/ai-model/
               align: end
       - blocks:
         - type: card
           config:
-            title: MCP Server entities
+            title: MCP Traffic
             description: Expose and govern tool traffic over Model Context Protocol. Control which agents access which tools, enforce rate limits, authenticate callers, and observe all tool invocations.
             icon: /assets/icons/mcp.svg
             cta:
@@ -124,7 +124,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Agent entities
+            title: A2A Traffic
             description: Route Agent-to-Agent traffic with protocol-aware security and observability. Rewrite agent cards, extract task state, stream events, and emit structured telemetry.
             icon: /assets/icons/plugins/ai-a2a-proxy.png
             cta:
@@ -134,8 +134,8 @@ rows:
       type: h2
       text: "{{site.ai_gateway}} providers"
       description: |
-        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining Provider and Model entities.
-        Provider entities store upstream connectivity and credentials, while Model entities reference Providers to expose stable client-facing endpoints and routing behavior.
+        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining [Provider](/ai-gateway/entities/ai-provider/) and [Model](/ai-gateway/entities/ai-model/) entities.
+        [Provider](/ai-gateway/entities/ai-provider/) entities store upstream connectivity and credentials, while [Model](/ai-gateway/entities/ai-model/) entities reference Providers to expose stable client-facing endpoints and routing behavior.
     column_count: 4
     columns:
       - blocks:
@@ -179,9 +179,9 @@ rows:
                     using the {{site.konnect_short_name}} platform.
 
                     Key features include:
-                    * **Routing and [load balancing](/ai-gateway/load-balancing/)**: Configure Model entities and `target_models` routing across Provider entities.
-                    * **Streaming and authentication**: Enable streaming responses on Models, Agents, and MCP Servers; enforce auth through Policy entities.
-                    * **Access control**: Use Consumer and Consumer Group entities, plus ACL fields on Models, Agents, and MCP Servers.
+                    * **Routing and [load balancing](/ai-gateway/load-balancing/)**: Configure [Model](/ai-gateway/entities/ai-model/) entities and `target_models` routing across [Provider](/ai-gateway/entities/ai-provider/) entities.
+                    * **Streaming and authentication**: Enable streaming responses on [Models](/ai-gateway/entities/ai-model/), [Agents](/ai-gateway/entities/ai-agent/), and [MCP Servers](/ai-gateway/entities/ai-mcp-server/); enforce auth through [Policy](/ai-gateway/entities/ai-policy/) entities.
+                    * **Access control**: Use [Consumer](/ai-gateway/entities/ai-consumer/) and [Consumer Group](/ai-gateway/entities/ai-consumer-group/) entities, plus ACL fields on [Models](/ai-gateway/entities/ai-model/), [Agents](/ai-gateway/entities/ai-agent/), and [MCP Servers](/ai-gateway/entities/ai-mcp-server/).
                     * **Usage analytics**: Monitor request and token volumes, track error rates, and measure average latency with historical comparisons.
                     * **Visual traffic maps**: Explore interactive maps that show how requests flow between clients, entities, and upstreams in real time.
 
@@ -225,8 +225,8 @@ rows:
       text: "{{site.ai_gateway}} capabilities"
       description: |
         You can enable {{site.ai_gateway}} capabilities through policy-managed features and AI-specific runtime components.
-        Policies let you apply reusable behavior across Model, Agent, MCP Server, Consumer, and Consumer Group entities without custom code.
-        For Policy scopes and attachment details, see the [Policy entity reference](/ai-gateway/entities/policy/).
+        Policies let you apply reusable behavior across [Model](/ai-gateway/entities/ai-model/), [Agent](/ai-gateway/entities/ai-agent/), [MCP Server](/ai-gateway/entities/ai-mcp-server/), [Consumer](/ai-gateway/entities/ai-consumer/), and [Consumer Group](/ai-gateway/entities/ai-consumer-group/) entities without custom code.
+        For Policy scopes and attachment details, see the [Policy entity reference](/ai-gateway/entities/ai-policy/).
     column_count: 3
     columns:
       - blocks:
@@ -236,7 +236,7 @@ rows:
             description: Define client-facing AI endpoints, capabilities, and routing behavior.
             icon: /assets/icons/plugins/universal-api.svg
             cta:
-              url: /ai-gateway/entities/model/
+              url: /ai-gateway/entities/ai-model/
               align: end
       - blocks:
         - type: card
@@ -245,7 +245,7 @@ rows:
             description: Use Provider entity to configure LLM provider connectivity, credentials, and provider types.
             icon: /assets/icons/plugins/ai-proxy-advanced.png
             cta:
-              url: /ai-gateway/entities/provider/
+              url: /ai-gateway/entities/ai-provider/
               align: end
       - blocks:
         - type: card
@@ -441,15 +441,15 @@ rows:
             blocks:
               - type: text
                 text: |
-                    Kong's {{site.ai_gateway}} Universal API is configured through entity resources, primarily [Model](/ai-gateway/entities/model/) and [Provider](/ai-gateway/entities/provider/), to provide a single, standardized interface for interacting with models across multiple providers.
+                    Kong's {{site.ai_gateway}} Universal API is configured through entity resources, primarily [Model](/ai-gateway/entities/ai-model/) and [Provider](/ai-gateway/entities/ai-provider/), to provide a single, standardized interface for interacting with models across multiple providers.
 
-                    - [**Easy to use**](/ai-gateway/entities/model/): Define one Model entity and expose a stable client-facing endpoint.
+                    - [**Easy to use**](/ai-gateway/entities/ai-model/): Define one [Model](/ai-gateway/entities/ai-model/) entity and expose a stable client-facing endpoint.
 
                     - [**Load balancing**](/ai-gateway/load-balancing/): Distribute requests across target models for performance and cost efficiency.
 
                     - [**Retry and fallback**](/ai-gateway/load-balancing/#retry-and-fallback): Route requests based on performance, cost, or availability.
 
-                    - [**Policy integration**](/ai-gateway/entities/policy/): Attach Policy entities for auth, guardrails, and transformations.
+                    - [**Policy integration**](/ai-gateway/entities/ai-policy/): Attach [Policy](/ai-gateway/entities/ai-policy/) entities for auth, guardrails, and transformations.
 
     - blocks:
         - type: image
@@ -464,7 +464,7 @@ rows:
             description: Use a Model entity to define a client-facing AI endpoint with capabilities, formats, and routing behavior.
             icon: /assets/icons/model.svg
             cta:
-              url: /ai-gateway/entities/model/
+              url: /ai-gateway/entities/ai-model/
               align: end
       - blocks:
         - type: card
@@ -473,7 +473,7 @@ rows:
             description: Use a Provider entity to configure upstream LLM connectivity and authentication, then reuse it across Models.
             icon: /assets/icons/provider.svg
             cta:
-              url: /ai-gateway/entities/provider/
+              url: /ai-gateway/entities/ai-provider/
               align: end
 
   - header:
@@ -495,7 +495,7 @@ rows:
             blocks:
             - type: text
               text: |
-                {{site.ai_gateway}} helps mitigate these challenges by offering policy-managed capabilities attached to Models, Agents, MCP Servers, and identity entities.
+                {{site.ai_gateway}} helps mitigate these challenges by offering policy-managed capabilities attached to [Models](/ai-gateway/entities/ai-model/), [Agents](/ai-gateway/entities/ai-agent/), [MCP Servers](/ai-gateway/entities/ai-mcp-server/), and identity entities.
 
                 - [**Data governance**](./#data-governance): Control how sensitive information is handled and shared with AI models.
                 - [**Prompt engineering**](./#prompt-engineering): Customize and optimize prompts to deliver consistent, high-quality AI outputs.
@@ -530,7 +530,7 @@ rows:
       description: |
         AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies.
         Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system.
-        {{site.ai_gateway}} supports policy-managed prompt capabilities that allow you to set defaults and manipulate prompts as they pass through Model or Agent entity traffic.
+        {{site.ai_gateway}} supports policy-managed prompt capabilities that allow you to set defaults and manipulate prompts as they pass through [Model](/ai-gateway/entities/ai-model/) or [Agent](/ai-gateway/entities/ai-agent/) entity traffic.
     columns:
       - blocks:
         - type: plugin
@@ -687,7 +687,7 @@ rows:
       description: |
         {{site.ai_gateway}} provides multiple approaches to monitor LLM traffic and operations.
         Track token usage, latency, and costs through audit logs and metrics exporters.
-        Instrument request flows with OpenTelemetry to trace Model, MCP Server, and Agent traffic across your infrastructure.
+        Instrument request flows with OpenTelemetry to trace [Model](/ai-gateway/entities/ai-model/), [MCP Server](/ai-gateway/entities/ai-mcp-server/), and [Agent](/ai-gateway/entities/ai-agent/) traffic across your infrastructure.
         Use {{site.konnect_short_name}} Advanced Analytics for pre-built dashboards, or integrate with your existing observability stack.
     column_count: 3
     columns:
@@ -757,11 +757,11 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: Is {{site.ai_gateway}} available for all deployment modes?
+            - q: Is {{site.ai_gateway}} {% new_in 2.0.0 %} available for all deployment modes?
               a: |
                 {{site.ai_gateway}} capabilities (AI, MCP, and A2A traffic management) are available across [deployment modes](/gateway/deployment-topologies/), including {{site.konnect_short_name}}, self-hosted traditional, hybrid, and DB-less, and on Kubernetes via the [{{site.kic_product_name}}](/kubernetes-ingress-controller/).
 
-            - q: Why should I use {{site.ai_gateway}} instead of adding the LLM's API behind {{site.base_gateway}}?
+            - q: Why should I use {{site.ai_gateway}} {% new_in 2.0.0 %} instead of adding the LLM's API behind {{site.base_gateway}}?
               a: |
                 If you just add an LLM's API behind {{site.base_gateway}}, you can only interact at the API level with internal traffic.
                 With {{site.ai_gateway}} policies and runtime components, {{site.base_gateway}} can understand the prompts that are being sent through the gateway.
