@@ -29,7 +29,7 @@ faqs:
     a: |
       Yes. SCIM tokens can expire depending on the refresh method you chose when configuring SCIM:
       
-      - Manual refresh: the token expires at the expiry date you pick.
+      - Manual refresh: the token expires at the expiration date you pick.
       - Automatic refresh (requires OAuth 2.0): the token expires and {{ site.data.products.insomnia.name }} automatically refreshes it.
       
       If the automatic refresh fails, {{ site.data.products.insomnia.name }} warns the account owner and co-owners by email and on the SCIM view starting 20 days before the token expires. To resolve it, manually refresh the token on the [SCIM](https://app.insomnia.rest/app/enterprise/scim) view.
