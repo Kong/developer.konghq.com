@@ -22557,5 +22557,153 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.14.0.5": {
+    "kong": [
+      {
+        "message": "**aws-lambda**: Fixed an issue where a 500 error occurred when `is_proxy_integration` was enabled and the Lambda function returned `null` values in `headers` or `multiValueHeaders`. Null values are now converted to empty strings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped kong-lua-resty-ljsonschema from 1.3.1 to 1.3.3.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a safeguard to prevent the CP or DP from sending payloads larger than the configured `cluster_max_payload` size to each other, which could avoid the frequent disconnections and reconnection attempts and improve performance. Emitted a log entry telling the config payload size and the configured `cluster_max_payload` size when this happens.",
+        "type": "feature",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where Kong Manager users authenticated through IDPs such as OIDC or LDAP could retain stale RBAC groups or IDP-sourced roles after claim changes, or end up with inconsistent mappings during concurrent authentication requests.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `stream_options` was forwarded to Databricks upstreams, causing a 400 error since Databricks does not support this field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai**: Fixed an issue where non-200 responses from Bedrock embeddings API were not properly handled, leading to incorrect feedback to the client.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed stale tools cache after full-sync reconfigure (e.g. `deck sync`), causing `tools/list` to return empty results.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where converted HTTPS MCP tool calls lost the original forwarded port on the internal TLS Unix socket.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where full-sync reconfigure reset balancer state even when plugin configs were unchanged.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where driver transformers returned errors or stream metadata in the wrong return position.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI-compatible Anthropic chat requests only preserved the last system message.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where configured model name may never be used for Azure provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't collect the model name in OpenAI streaming response from Azure.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-request-transformer**: Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-response-transformer**: Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-prompt-guard**, **ai-semantic-response-guard**: Fixed an issue where full-sync reconfigure rebuilt semantic vectorDB indexes even when the plugin configuration was unchanged.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**aws-lambda**: Fixed an issue where empty JSON array bodies (`[]`) were incorrectly converted to objects (`{}`) when using `is_proxy_integration=true` and `empty_arrays_mode=correct` alongside the exit-transformer plugin.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a config backup exported by a data plane could not be re-imported if it contained non-workspaceable entities such as `ca_certificates` or `oic_issuers`. The export incorrectly included a `ws_id` field for those entities, which the declarative config schema rejects as an unknown field.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**ai-guardrails**: Fixed an issue where multiple guardrail plugins can not function together.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where incremental DP (sync v2) would not export config to fallback storage when the control plane uses periodic polling instead of notify_new_version.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**jwt-signer**: Fixed an issue where the plugin failed to load configuration and errored when `null` or `nil` values were passed to `access_token_keyset` or `channel_token_keyset`.",
+        "type": "bugfix",
+        "Scope": "Plugin",
+        "scope": "Core"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where path parameters were extracted from the wrong URI segment when `custom_base_path` was used with bare `/{param}` paths.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where the OAS specification cache failed to distinguish between different values of `api_spec_encoded` for the same specification content.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where template 'resource_attributes' in configuration of the plugin could not work as expected for metrics.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-validator**: Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**forward-proxy**: Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved performance of analytics data collection by introducing a shared payload pool and reducing the default local buffer size.\n",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
