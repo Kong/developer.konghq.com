@@ -493,7 +493,7 @@
   }
 
   .badge {
-    @apply rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated/40;
+    @apply rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated;
   }
 
   .badge.deprecated {
@@ -990,11 +990,19 @@ body.ai-assistant-open > #wrapper {
 }
 
 .checkbox, .ais-RefinementList-checkbox {
-  @apply form-checkbox bg-secondary rounded border border-primary dark:border-primary;
+  @apply form-checkbox bg-secondary rounded border border-primary;
 }
 
-.checkbox--checked, .ais-RefinementList-checkbox:checked {
+.checkbox:checked, .ais-RefinementList-checkbox:checked {
+  @apply bg-brand-saturated border-primary;
+}
+
+.checkbox:checked:focus, .ais-RefinementList-checkbox:checked:focus {
   @apply bg-brand-saturated;
+}
+
+.checkbox:checked:hover, .ais-RefinementList-checkbox:checked:hover {
+  @apply bg-links;
 }
 
 .ais-Panel--noRefinement {
