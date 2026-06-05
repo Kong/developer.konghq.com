@@ -595,11 +595,6 @@
     content: counter(toc-counter) ".";
   }
 
-  .background-gradient {
-    background: linear-gradient(transparent, transparent) padding-box,
-    linear-gradient(227.59deg, #E9EEF7 6.43%, #3CB087 30.81%, #11A06B 36.89%, #286FEB 65.64%, #E9EEF7 100%) border-box;
-  }
-
   .filters {
     @apply w-full h-full md:sticky flex flex-col md:flex left-0 self-start md:top-24 md:self-start md:h-auto;
   }
