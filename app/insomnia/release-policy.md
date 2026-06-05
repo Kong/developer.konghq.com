@@ -39,9 +39,9 @@ Public documentation updates support the latest versions of Insomnia.
 - **Preview** or **Tech Preview**: Features that are ready to use but still in active development. Preview features are clearly marked in the product.
 
 Learn more about stages of software availability [on the dedicated page](/stages-of-software-availability/).
-### Recommendations
+{:.info}
 
-Insomnia strongly recommends using the newest version, and that all users collaborating on the same project remain on the same major version.
+> Insomnia strongly recommends using the newest version, and that all users collaborating on the same project remain on the same major version.
 
 ## Long Term Support (LTS)
 
@@ -49,8 +49,7 @@ Insomnia doesn't have an explicit Long Term Support (LTS) policy, nor does it pu
 
 ## Backports
 
-Fixes and changes don't backport to earlier versions. Best practice is to upgrade to the latest version.
-Insomnia doesn't roll new or modified features into prior versions except in extraordinary circumstances, at our sole discretion.
+Fixes and changes don't backport to earlier versions. The best practice is to upgrade to the latest version.
 
 ## Types of Versions
 
@@ -95,7 +94,7 @@ rows:
 
 ## Major version changes
 
-Insomnia ships a major version when the release contains breaking changes. Breaking changes count as anything that, for the majority of users, could cause an existing workflow, configuration, or integration to stop working after the upgrade.
+Insomnia ships a major version when the release contains breaking changes. Breaking changes count as anything that could cause an existing workflow, configuration, or integration to stop working after the upgrade.
 
 
 For example:
@@ -107,7 +106,7 @@ For example:
 - Changing the plugin API in a way that breaks existing plugins.
 - Removing or renaming a public API endpoint.
 - Changing the default behavior of a feature in a way that affects existing users.
-- Migrating the underlying data store to a format that can't be rolled back to a prior version.
+- Migrating the underlying data store to a format that can't be incompatible with prior versions.
 - Removing a UI panel, tab, or workflow that users actively rely on.
 
 ## Minor version changes
@@ -160,7 +159,7 @@ columns:
     key: enterprise
 
 features:
-  - title: GitHub issues for defects or ideas.
+  - title: GitHub issues for bug reports and feature requests
     essential: true
     pro: true
     enterprise: true
