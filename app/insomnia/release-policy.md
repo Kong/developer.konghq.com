@@ -38,6 +38,7 @@ Public documentation updates support the latest versions of Insomnia.
 - **Beta**: A 7-day period before GA when users can opt in to test the release and provide early feedback. Opt in via **Settings > Release Channel** in the Insomnia app.
 - **Preview** or **Tech Preview**: Features that are ready to use but still in active development. Preview features are clearly marked in the product.
 
+Learn more about stages of software availability [on the dedicated page](/stages-of-software-availability/).
 ### Recommendations
 
 Insomnia strongly recommends using the newest version, and that all users collaborating on the same project remain on the same major version.
@@ -143,10 +144,6 @@ Examples include:
 - Fixing incorrect HTTP header handling or encoding.
 - Correcting documentation links or in-app help text.
 
-## Types of Releases
-
-- Generally Available (GA): Available to anyone.
-- Beta: Generally a 7\-day period before GA where clients can opt in (via Settings -> Release Channel in the app) and provide early [feedback](#user-feedback).
 
 ## Send feedback
 
