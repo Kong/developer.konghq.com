@@ -914,6 +914,14 @@
       outline-color: -webkit-focus-ring-color;
     }
   }
+
+  .info-box {
+    @apply  flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full;
+
+    a {
+      @apply text-terciary;
+    }
+  }
 }
 
 #ask-ai-button {
