@@ -134,7 +134,7 @@ rows:
       type: h2
       text: "{{site.ai_gateway}} providers"
       description: |
-        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining [Provider](/ai-gateway/entities/ai-provider/) and [Model](/ai-gateway/entities/ai-model/) entities.
+        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining [Provider](/ai-gateway/entities/ai-provider/) and [Model](/ai-gateway/entities/ai-model/) entities {% new_in 2.0.0 %}.
         [Provider](/ai-gateway/entities/ai-provider/) entities store upstream connectivity and credentials, while [Model](/ai-gateway/entities/ai-model/) entities reference Providers to expose stable client-facing endpoints and routing behavior.
     column_count: 4
     columns:
@@ -207,7 +207,7 @@ rows:
                     - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
       - header:
           type: h2
-          text: "Tools to manage {{site.ai_gateway}}"
+          text: "Tools to manage {{site.ai_gateway}} {% new_in 2.0.0 %}"
         blocks:
           - type: structured_text
             config:
@@ -217,9 +217,8 @@ rows:
                     - "[{{site.ai_gateway}} editor](https://cloud.konghq.com/ai-manager): GUI for managing all your {{site.ai_gateway}} resources in one place."
                     - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
                     - "[{{site.ai_gateway}} API](/api/konnect/ai-gateway/): Manage {{site.ai_gateway}} resources programmatically."
-                    - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services."
-                    - "[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/): Manage on-prem {{site.base_gateway}} entities via an API."
-                    - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} Control Planes via an API."
+                    - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.ai_gateway}} entities within {{site.konnect_short_name}} Control Planes via an API."
+                    - "[kongctl](/kongctl/): Use Kong's swiss-army knife command line tool for managing and interacting {{site.ai_gateway}} resources and configurations within within {{site.konnect_short_name}}."
   - header:
       type: h2
       text: "{{site.ai_gateway}} capabilities"
