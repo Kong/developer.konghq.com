@@ -104,7 +104,7 @@
     --color-gateway-background: var(--color-semantic-green-secondary);
     --color-insomnia-brand: var(--color-semantic-purple-primary);
     --color-insomnia-background: var(--color-semantic-purple-secondary);
-    --color-kic-brand: var(--color-brand);
+    --color-kic-brand: var(--color-text-links);
     --color-kic-background: var(--color-semantic-blue-secondary);
     --color-mesh-brand: var(--color-semantic-orange-primary);
     --color-mesh-background: var(--color-semantic-orange-secondary);
