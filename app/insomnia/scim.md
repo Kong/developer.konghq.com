@@ -146,7 +146,7 @@ When generating the token, you can choose an expiration window. Available option
 
 When you enable SCIM, choose between these two options:
 
-- Automatic refresh (requires OAuth 2.0): SCIM tokens expire and {{ site.data.products.insomnia.name }} automatically refreshes them.
+- Automatic refresh (requires OAuth 2.0): {{ site.data.products.insomnia.name }} automatically refreshes the SCIM tokens before they expire.
 - Manual refresh: SCIM tokens expire based on the expiration window selected when the token is generated in {{ site.data.products.insomnia.name }}.
 
 If the token expires and is not renewed:
