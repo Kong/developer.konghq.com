@@ -1,12 +1,12 @@
 ---
-title: Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration
+title: Automatically create Dev Portal applications in {{site.identity}} with Dynamic Client Registration
 permalink: /how-to/kong-identity-dcr/
-description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in Kong Identity.
+description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in {{site.identity}}.
 content_type: how_to
 products:
     - gateway
     - dev-portal
-
+    - identity
 works_on:
     - konnect
 entities: []
@@ -25,9 +25,9 @@ search_aliases:
     - OpenID Connect
 
 tldr:
-    q: How do I automatically create and manage Dev Portal applications in Kong Identity?
+    q: How do I automatically create and manage Dev Portal applications in {{site.identity}}?
     a: |
-      You can use Dynamic Client Registration to automatically create Dev Portal applications in [Kong Identity](/kong-identity/). First, create an auth server for Kong Identity and copy your Issuer URL. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR. Apply the auth strategy to published APIs.
+      You can use Dynamic Client Registration to automatically create Dev Portal applications in [{{site.identity}}](/identity/). First, create an auth server for {{site.identity}} and copy your Issuer URL. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR. Apply the auth strategy to published APIs.
 
 prereqs:
   entities:
@@ -40,10 +40,11 @@ prereqs:
       content: |
         For this tutorial, you’ll need a Dev Portal and some Dev Portal settings, like a published API, pre-configured. These settings are essential for Dev Portal to function but configuring them isn’t the focus of this guide. If you don't have these settings already configured, follow these steps to pre-configure them:
 
-        1. In the {{site.konnect_short_name}} sidebar, navigate to [**Dev Portal**](https://cloud.konghq.com/portals/).
+        1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+        1. Click **Portals**.
         1. Click [**New portal**](https://cloud.konghq.com/portals/create).
         1. Click **Private portal**.
-        1. In the **Portal name** field, enter `Test Kong Identity DCR`.
+        1. In the **Portal name** field, enter `Test {{site.identity}} DCR`.
         1. Click **Create and continue**.
         1. Click **Save**.
         1. Copy and export your Dev Portal URL in your terminal:
@@ -51,13 +52,12 @@ prereqs:
            export PORTAL_URL='
            https://your-domain.us.kongportals.com'
            ```
-        1. In your Dev Portal sidebar, click **Settings**.
+        1. Click the **Settings** tab.
         1. Click the **Security** tab.
         1. Enable **Auto approve applications**. 
            This auto approves developer applications in your Dev Portal and makes it easier to test. 
         1. Click **Save changes**.
-        1. Click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
-        1. In the Dev Portal sidebar, click [**APIs**](https://cloud.konghq.com/portals/apis/).
+        1. Click the **Published APIs** tab.
         1. Click **New API**.
         1. In the **API name** field, enter `test-kong-identity-dcr`.
         1. Click **Create**.
@@ -74,9 +74,9 @@ prereqs:
            We'll create a test developer account that we can use to create a DCR app.
         1. Enter your name and email.
         1. Click **Create account**.
-        1. If you haven't set developers to auto approval in Dev Portal, in the {{site.konnect_short_name}} sidebar, navigate to [**Dev Portal**](https://cloud.konghq.com/portals/).
-        1. Click **Test Kong Identity DCR**.
-        1. In the Dev Portal sidebar, click **Access and approvals**.
+        1. If you haven't set developers to auto approval in Dev Portal, in the {{site.konnect_short_name}} sidebar, expand **Dev Portal** and click **Portals**.
+        1. Click **Test {{site.identity}} DCR**.
+        1. Select the **Access and approvals** tab.
         1. Click your test developer.
         1. From the **Actions** dropdown menu, select "Approve". 
       icon_url: /assets/icons/dev-portal.svg
@@ -101,9 +101,9 @@ min_version:
     gateway: '3.4'
 ---
 
-## Create an auth server in Kong Identity
+## Create an auth server in {{site.identity}}
 
-Before you can configure DCR, you must first create an auth server in [Kong Identity](/kong-identity/). We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+Before you can configure DCR, you must first create an auth server in [{{site.identity}}](/identity/). We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
 
 Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 
@@ -125,41 +125,42 @@ Export the issuer URL:
 export ISSUER_URL='YOUR-ISSUER-URL'
 ```
 
-## Configure the Kong Identity Dynamic Client Registration in Dev Portal
+## Configure the {{site.identity}} Dynamic Client Registration in Dev Portal
 
-After configuring Kong Identity, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two main steps: first, creating the DCR provider, and second, establishing the authentication strategy. DCR providers are designed to be reusable configurations. This means once you've configured the Kong Identity DCR provider, it can be used across multiple authentication strategies without needing to be set up again.
+After configuring {{site.identity}}, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two main steps: first, creating the DCR provider, and second, establishing the authentication strategy. DCR providers are designed to be reusable configurations. This means once you've configured the {{site.identity}} DCR provider, it can be used across multiple authentication strategies without needing to be set up again.
 
 This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you can also use the [Application Registration API](/api/konnect/application-auth-strategies/v2/#/operations/).
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
-1. In the Dev Portal sidebar, click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
 1. Click the **DCR provider** tab.
 1. Click **New provider**.
-1. In the **Name** field, enter `Kong Identity`.
-1. In the **Provider Type** dropdown menu, select "Kong Identity".
+1. In the **Name** field, enter `{{site.identity}}`.
+1. In the **Provider Type** dropdown menu, select "{{site.identity}}".
 1. In the **Auth Server** field, select "Appointments Dev".
 1. Click **Save**.
 1. Click the **Authentication strategy** tab.
 1. Click **New authentication strategy**.
-1. In the **Name** field, enter `Kong Identity`.
-1. In the **Display name** field, enter `Kong Identity`.
+1. In the **Name** field, enter `{{site.identity}}`.
+1. In the **Display name** field, enter `{{site.identity}}`.
 1. In the **Authentication Type** dropdown menu, select "DCR".
-1. In the **DCR Provider** dropdown menu, select "Kong Identity".
+1. In the **DCR Provider** dropdown menu, select "{{site.identity}}".
 1. In the **Scopes** field, enter `openid`.
 1. In the **Credential Claims** field, enter `sub`.
 1. In the **Auth Methods** dropdown menu, select "client_credentials" and "bearer".
 1. Click **Create**.
 
-## Apply the Kong Identity DCR auth strategy to an API
+## Apply the {{site.identity}} DCR auth strategy to an API
 
 Now that the application auth strategy is configured, you can apply it to an API.
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Portals**.
 1. Click your Dev Portal.
-1. In the Dev Portal sidebar, click **Published APIs**.
+1. Click the **Published APIs** tab.
 1. Click **Publish API**.
 1. From the **API** dropdown menu, select "test-kong-identity-dcr". This is the API you [created in the prerequisites](#dev-portal)
-1. In the **Authentication strategy** dropdown menu, select "Kong Identity". 
+1. In the **Authentication strategy** dropdown menu, select "{{site.identity}}". 
 1. Click **Private**.
 1. Click **Publish API**.
 

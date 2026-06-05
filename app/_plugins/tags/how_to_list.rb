@@ -34,7 +34,7 @@ module Jekyll
         break result if result.size == quantity
       end
 
-      if how_tos.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil?
+      if how_tos.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil? && ENV['PAGE_PATHS'].nil?
         raise "No how-tos found for #{@context['page']['path']} - #{config}"
       end
 

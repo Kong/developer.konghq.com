@@ -4,7 +4,7 @@ description: "Get {{site.konnect_short_name}} API information."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect

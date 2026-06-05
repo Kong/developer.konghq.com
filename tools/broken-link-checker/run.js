@@ -1,3 +1,4 @@
+import "./lib/patch-http-timeout.js";
 import { Octokit } from "@octokit/rest";
 import { context } from "@actions/github";
 import minimist from "minimist";
@@ -33,7 +34,8 @@ async function getPRFiles(options) {
 async function getSourceUrlsMappings(options) {
   if (options.type === "pr") {
     const response = await fetch(
-      `${options.baseUrl}/sources_urls_mapping.json`
+      `${options.baseUrl}/sources_urls_mapping.json`,
+      { signal: AbortSignal.timeout(30_000) }
     );
 
     let body = await response.json();

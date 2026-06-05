@@ -38,7 +38,7 @@ tags:
 
 tldr:
   q: How do I use Gemini's googleSearch tool with the AI Proxy Advanced plugin?
-  a: Configure the AI Proxy Advanced plugin with the Gemini provider and gemini-3-pro-preview model, then declare the googleSearch tool in your requests using the OpenAI tools array.
+  a: Configure the AI Proxy Advanced plugin with the Gemini provider and gemini-3.1-pro-preview model, then declare the googleSearch tool in your requests using the OpenAI tools array.
 
 tools:
   - deck
@@ -86,7 +86,7 @@ faqs:
 
 ## Configure the plugin
 
-First, configure AI Proxy Advanced to use the gemini-3-pro-preview model via Vertex AI:
+First, configure AI Proxy Advanced to use the gemini-3.1-pro-preview model via Vertex AI:
 
 {% entity_examples %}
 entities:
@@ -101,7 +101,7 @@ entities:
               log_statistics: true
             model:
               provider: gemini
-              name: gemini-3-pro-preview
+              name: gemini-3.1-pro-preview
               options:
                 gemini:
                   api_endpoint: aiplatform.googleapis.com
@@ -121,9 +121,9 @@ variables:
 
 ## Use the OpenAI SDK with `googleSearch`
 
-Gemini 3 models support built-in tools including `googleSearch`, which allows the LLM to retrieve current information from the web. Unlike OpenAI function calling, Gemini's built-in tools work automatically. The model decides when to use search based on the query, and integrates results directly into the response. For more information, see [Gemini Built-in Tools](https://ai.google.dev/gemini-api/docs/function-calling).
+{{ site.gemini }} 3 models support built-in tools including `googleSearch`, which allows the LLM to retrieve current information from the web. Unlike OpenAI function calling, {{ site.gemini }}'s built-in tools work automatically. The model decides when to use search based on the query, and integrates results directly into the response. For more information, see [{{ site.gemini }} Built-in Tools](https://ai.google.dev/gemini-api/docs/function-calling).
 
-To enable the `googleSearch` tool, add it to the `tools` array in your request. The tool declaration tells Gemini it has access to web search. Gemini uses this capability when the query requires current information.
+To enable the `googleSearch` tool, add it to the `tools` array in your request. The tool declaration tells {{ site.gemini }} it has access to web search. {{ site.gemini }} uses this capability when the query requires current information.
 
 Create a Python script to test the `googleSearch` tool:
 
@@ -141,7 +141,7 @@ print("Testing Gemini 3 googleSearch tool")
 print("=" * 50)
 print("\n=== Step 1: Current weather data ===")
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[
         {"role": "user", "content": "What's the current weather in San Francisco?"}
     ],
@@ -154,7 +154,7 @@ print(f"Response includes current data: {'✓' if '2025' in content else '✗'}"
 print(f"\n{content}\n")
 print("\n=== Step 2: Search with JSON output ===")
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[
         {"role": "user", "content": "Find the top 3 AI conferences in 2025. Return as JSON with name, date, location fields."}
     ],
@@ -180,7 +180,7 @@ except Exception as e:
 print(f"\n{content}\n")
 print("\n=== Step 3: Query without search need ===")
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[
         {"role": "user", "content": "What is 2+2?"}
     ],
@@ -197,11 +197,11 @@ EOF
 
 This script goes through three scenarios:
 
-1. **Current data query**: Asks for real-time weather information. Gemini uses search to retrieve current data.
+1. **Current data query**: Asks for real-time weather information. {{ site.gemini }} uses search to retrieve current data.
 2. **Structured output with search**: Requests conference information formatted as JSON. Combines search with structured output.
-3. **Query without search need**: Asks a simple math question. Gemini answers directly without using search.
+3. **Query without search need**: Asks a simple math question. {{ site.gemini }} answers directly without using search.
 
-The OpenAI SDK sends requests to {{site.ai_gateway}} using the OpenAI chat completions format. The `tools` array declares available capabilities. {{site.ai_gateway}} transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format. Search results appear directly in the response content, not as separate `tool_calls` objects.
+The OpenAI SDK sends requests to {{site.ai_gateway}} using the OpenAI chat completions format. The `tools` array declares available capabilities. {{site.ai_gateway}} transforms the OpenAI-format request into {{ site.gemini }}'s native format, forwards it to Vertex AI, and converts the response back to OpenAI format. Search results appear directly in the response content, not as separate `tool_calls` objects.
 
 Run the script:
 
@@ -259,4 +259,4 @@ Simple answer: 2 + 2 is 4.
 Complete
 ````
 
-The first test shows current weather data with a specific timestamp, confirming that Gemini used search. The second test returns structured JSON with conference information. The third test demonstrates that Gemini answers simple questions directly without using search, even when the tool is available.
+The first test shows current weather data with a specific timestamp, confirming that {{ site.gemini }} used search. The second test returns structured JSON with conference information. The third test demonstrates that {{ site.gemini }} answers simple questions directly without using search, even when the tool is available.

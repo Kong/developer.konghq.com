@@ -12,6 +12,7 @@ skip:
   auto_generated: true # skip auto_generated references, i.e. app/_referneces
   mesh: true # skip kuma to mesh generation
   llm_pages: true # skip markdown pages generation
+  skills: true # skip skills generation
 
 # exclude app/_references
 # even though we set skip.auto_generated: true and the collection has output:false
@@ -19,3 +20,4 @@ skip:
 # to disc though, but the first part is very time consuming.
 exclude:
   - _references
+  - assets/mesh

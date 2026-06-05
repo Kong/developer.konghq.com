@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6c6ca05ee13458aa410a1f7c7846a6576b53c575
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6c6ca05ee13458aa410a1f7c7846a6576b53c575'
+  x-oas-source: kong/platform-api@f2a3c32e62e5ef96b2a27f8eb6c3ecce75538c2c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f2a3c32e62e5ef96b2a27f8eb6c3ecce75538c2c'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -97,6 +97,7 @@ components:
               - $ref: '#/components/schemas/HeaderUserAgentFilterByField'
               - $ref: '#/components/schemas/HttpMethodFilterByField'
               - $ref: '#/components/schemas/LatenciesKongGatewayMsFilterByField'
+              - $ref: '#/components/schemas/LatenciesKongInternalMsFilterByField'
               - $ref: '#/components/schemas/LatenciesResponseMsFilterByField'
               - $ref: '#/components/schemas/LatenciesUpstreamMsFilterByField'
               - $ref: '#/components/schemas/McpErrorFilterByField'
@@ -418,6 +419,10 @@ components:
             description: Kong Gateway latency of the request in milliseconds.
             type: integer
             nullable: true
+          latencies_kong_internal_ms:
+            description: Kong internal latency of the request in milliseconds.
+            type: integer
+            nullable: true
           latencies_response_ms:
             description: Response latency of the request in milliseconds.
             type: integer
@@ -467,82 +472,6 @@ components:
           portal:
             description: Portal ID associated with the request.
             type: string
-            nullable: true
-          ratelimit_enabled:
-            description: 'True if rate limiting is enabled for at least one of the intervals second, minute, hour, day, year.'
-            type: integer
-          ratelimit_enabled_day:
-            description: True if rate limiting is enabled for the day interval.
-            type: integer
-          ratelimit_enabled_hour:
-            description: True if rate limiting is enabled for the hour interval.
-            type: integer
-          ratelimit_enabled_minute:
-            description: True if rate limiting is enabled for the minute interval.
-            type: integer
-          ratelimit_enabled_month:
-            description: True if rate limiting is enabled for the month interval.
-            type: integer
-          ratelimit_enabled_second:
-            description: True if rate limiting is enabled for the second interval.
-            type: integer
-          ratelimit_enabled_year:
-            description: True if rate limiting is enabled for the year interval.
-            type: integer
-          ratelimit_limit:
-            description: Rate limit value.
-            type: integer
-          ratelimit_limit_day:
-            description: Rate limit value for requests per day.
-            type: integer
-          ratelimit_limit_hour:
-            description: Rate limit value for requests per hour.
-            type: integer
-          ratelimit_limit_minute:
-            description: Rate limit value for requests per minute.
-            type: integer
-          ratelimit_limit_month:
-            description: Rate limit value for requests per month.
-            type: integer
-          ratelimit_limit_second:
-            description: Rate limit value for requests per second.
-            type: integer
-            nullable: true
-          ratelimit_limit_year:
-            description: Rate limit value for requests per year.
-            type: integer
-            nullable: true
-          ratelimit_remaining:
-            description: Number of requests remaining until the limit is hit.
-            type: integer
-            nullable: true
-          ratelimit_remaining_day:
-            description: Number of requests remaining until the limit is hit for requests per day.
-            type: integer
-            nullable: true
-          ratelimit_remaining_hour:
-            description: Number of requests remaining until the limit is hit for requests per hour.
-            type: integer
-            nullable: true
-          ratelimit_remaining_minute:
-            description: Number of requests remaining until the limit is hit for requests per minute.
-            type: integer
-            nullable: true
-          ratelimit_remaining_month:
-            description: Number of requests remaining until the limit is hit for requests per month.
-            type: integer
-            nullable: true
-          ratelimit_remaining_second:
-            description: Number of requests remaining until the limit is hit for requests per second.
-            type: integer
-            nullable: true
-          ratelimit_remaining_year:
-            description: Number of requests remaining until the limit is hit for requests per year.
-            type: integer
-            nullable: true
-          ratelimit_reset:
-            description: 'The time, in seconds, until the quota is reset.'
-            type: integer
             nullable: true
           request_body_size:
             description: Request body size of the request in bytes.
@@ -1133,6 +1062,22 @@ components:
             - $ref: '#/components/schemas/FilterSingleValueNumericMilliseconds'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by latencies_kong_gateway_ms
+    LatenciesKongInternalMsFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - latencies_kong_internal_ms
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueNumericMilliseconds'
+            - $ref: '#/components/schemas/FilterSingleValueNumericMilliseconds'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by latencies_kong_internal_ms
     LatenciesResponseMsFilterByField:
       allOf:
         - type: object
@@ -2068,6 +2013,7 @@ components:
             header_user_agent: Mozilla/4.0 (compatible; Flight Explorer)
             http_method: OPTIONS
             latencies_kong_gateway_ms: 2
+            latencies_kong_internal_ms: 2
             latencies_response_ms: 117
             latencies_upstream_ms: 115
             mcp_info:
@@ -2080,28 +2026,6 @@ components:
                   response_body_size: 1024
                   error: null
             portal: 20076d8c-2d1b-4249-b323-4baa63796f8a
-            ratelimit_enabled: 1
-            ratelimit_enabled_day: 0
-            ratelimit_enabled_hour: 0
-            ratelimit_enabled_minute: 1
-            ratelimit_enabled_month: 0
-            ratelimit_enabled_second: 0
-            ratelimit_enabled_year: 0
-            ratelimit_limit: 0
-            ratelimit_limit_day: 0
-            ratelimit_limit_hour: 0
-            ratelimit_limit_minute: 2000
-            ratelimit_limit_month: 0
-            ratelimit_limit_second: 0
-            ratelimit_limit_year: 0
-            ratelimit_remaining: 498
-            ratelimit_remaining_day: 0
-            ratelimit_remaining_hour: 0
-            ratelimit_remaining_minute: 1997
-            ratelimit_remaining_month: 0
-            ratelimit_remaining_second: 0
-            ratelimit_remaining_year: 0
-            ratelimit_reset: 0
             request_body_size: 182
             request_id: f3043125bdec40385195f20db7e0491b
             request_uri: /notifications/graphql
@@ -2135,32 +2059,11 @@ components:
             header_user_agent: python-works
             http_method: GET
             latencies_kong_gateway_ms: 2
+            latencies_kong_internal_ms: 2
             latencies_response_ms: 12
             latencies_upstream_ms: 10
             mcp_info: null
             portal: null
-            ratelimit_enabled: 1
-            ratelimit_enabled_day: 0
-            ratelimit_enabled_hour: 1
-            ratelimit_enabled_minute: 0
-            ratelimit_enabled_month: 0
-            ratelimit_enabled_second: 1
-            ratelimit_enabled_year: 0
-            ratelimit_limit: 100
-            ratelimit_limit_day: 0
-            ratelimit_limit_hour: 30000
-            ratelimit_limit_minute: 0
-            ratelimit_limit_month: 0
-            ratelimit_limit_second: 100
-            ratelimit_limit_year: 0
-            ratelimit_remaining: 99
-            ratelimit_remaining_day: 0
-            ratelimit_remaining_hour: 29981
-            ratelimit_remaining_minute: 0
-            ratelimit_remaining_month: 0
-            ratelimit_remaining_second: 99
-            ratelimit_remaining_year: 0
-            ratelimit_reset: 0
             request_body_size: 258
             request_id: a193bb0fefadcd3948cebc2c2c63a500
             request_uri: /users

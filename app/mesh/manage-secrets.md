@@ -101,7 +101,7 @@ echo "value" | base64
 ### Mesh-scoped secrets
 
 Mesh-scoped secrets are bound to a given mesh.
-This is the only type of secret that can be used in mesh policies like the [Provided CA](/mesh/policies/mutual-tls/#usage-of-provided-ca) or TLS setting in [External Service](/mesh/policies/external-services/).
+This is the only type of secret that can be used in mesh policies like the [Provided CA](/mesh/policies/mutual-tls/#using-a-provided-ca) or TLS setting in [External Service](/mesh/policies/external-services/).
 
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}
@@ -175,7 +175,7 @@ Secrets are synced from the global control plane to the zones CPs, but not the o
 
 ## Using secrets
 
-Here is an example of how to use a {{site.mesh_product_name}} `Secret` with a `provided` [Mutual TLS](/mesh/policies/mutual-tls/#usage-of-provided-ca) backend.
+Here is an example of how to use a {{site.mesh_product_name}} `Secret` with a `provided` [Mutual TLS](/mesh/policies/mutual-tls/#using-a-provided-ca) backend.
 
 The examples below assume that the `Secret` object has already been created:
 

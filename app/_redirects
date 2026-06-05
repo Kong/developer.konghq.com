@@ -7,9 +7,18 @@
 /kongctl/delete/konnect/*  /kongctl/delete/
 /kongctl/delete/portal/    /kongctl/delete/
 /kongctl/delete/portal/*   /kongctl/delete/
+/kongctl/get/gateway/consumer/   /kongctl/get/gateway/
+/kongctl/get/gateway/route/      /kongctl/get/gateway/
+/kongctl/get/gateway/service/    /kongctl/get/gateway/
+/kongctl/list/gateway/consumer/  /kongctl/list/gateway/
+/kongctl/list/gateway/route/     /kongctl/list/gateway/
+/kongctl/list/gateway/service/   /kongctl/list/gateway/
 
-# Plugin examples
+# Plugins
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
+/gateway/plugin-development/  /custom-plugins/
+/gateway/plugin-development/*  /custom-plugins/
+
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone/
 /mesh-manager/migrate-zone/  /mesh/migrate-zone/
@@ -24,7 +33,8 @@
 /gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
-/mesh/requirements/ /mesh/version-compatibility/
+/mesh/requirements/ /mesh/validated-versions/
+/mesh/version-compatibility/ /mesh/validated-versions/
 /mesh/cp-config/    /mesh/control-plane-configuration/
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
@@ -49,23 +59,29 @@
 /how-to/event-gateway/kong-identity-oauth/  /event-gateway/kong-identity-oauth/
 
 # Mesh redirects
+/mesh/meshidentity-spire/   /mesh/issue-identity-with-meshidentity-spire/
+/mesh/collect-metrics-with-opentelemetry/   /mesh/deploy-an-opentelemetry-collector/
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
-/mesh/quickstart/universal-demo    /mesh/universal/
+/mesh/quickstart/universal-demo    /mesh/get-started/universal/install/
+/mesh/universal/    /mesh/get-started/universal/install/
 /mesh/quickstart/kubernetes     /mesh/kubernetes/
 /mesh/introduction/concepts     /mesh/concepts/
 /mesh/guides/gateway-builtin    /how-to/set-up-a-built-in-mesh-gateway/
-/mesh/guides/gateway-delegated  /mesh/gateway-delegated/
+/mesh/guides/gateway-delegated  /mesh/use-kong-as-delegated-gateway/
+/mesh/gateway-delegated/    /mesh/use-kong-as-delegated-gateway/
 /mesh/guides/federate   /mesh/federate/
 /mesh/guides/gateway-api    /how-to/set-up-a-built-in-kubernetes-gateway/
 /mesh/reference/kubernetes-annotations  /mesh/annotations/
 /mesh/documentation/configuration    /mesh/control-plane-configuration/
 /mesh/:version/features/signed-images  /mesh/signed-images/
 /mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/built-in-gateway/
-/mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/gateway-listeners/
-/mesh/using-mesh/managing-ingress-traffic/delegated     /mesh/ingress-gateway-delegated/
-/mesh/using-mesh/managing-ingress-traffic/builtin-k8s   /mesh/gateway-pods-k8s/
+/mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/meshgateway/
+/mesh/gateway-listeners/    /mesh/meshgateway/
+/mesh/using-mesh/managing-ingress-traffic/delegated     /mesh/delegated-gateways/
+/mesh/ingress-gateway-delegated/    /mesh/delegated-gateways/
+/mesh/using-mesh/managing-ingress-traffic/builtin-k8s   /mesh/meshgatewayinstance/
 /mesh/using-mesh/managing-ingress-traffic/overview  /mesh/ingress/
 /mesh/using-mesh/managing-ingress-traffic/gateway-api   /mesh/kubernetes-gateway-api/
 /mesh/explore/observability     /mesh/observability/
@@ -85,7 +101,8 @@
 /mesh/production/dp-config/transparent-proxying     /mesh/transparent-proxying/
 /mesh/production/dp-config/ipv6     /mesh/ipv6-support/
 /mesh/production/secure-deployment/api-access-control   /mesh/enterprise/
-/mesh/production/secure-deployment/dp-auth  /mesh/dp-auth/
+/mesh/production/secure-deployment/dp-auth  /mesh/data-plane-proxy-authentication/
+/mesh/dp-auth/  /mesh/data-plane-proxy-authentication/
 /mesh/production/deployment/multi-zone  /mesh/mesh-multizone-service-deployment/
 /mesh/production/secure-deployment/dp-membership    /mesh/configure-data-plane-proxy-membership/
 /mesh/production/deployment/multi-zone      /mesh/mesh-multizone-service-deployment/
@@ -140,6 +157,7 @@
 /mesh/policies/traffic-permissions  /mesh/policies/meshtrafficpermission/
 /mesh/policies/meshgatewayroute /mesh/policies/meshhttproute/
 /mesh/policies/proxy-template  /mesh/policies/
+/mesh/gateway-pods-k8s/        /mesh/meshgatewayinstance/
 
 
 ## Kubernetes
@@ -164,6 +182,8 @@
 /dev-portal/publishing/ /catalog/apis/
 /dev-portal/portal-customization/   /dev-portal/customizations/dev-portal-customizations/
 /dev-portal/api-catalog-and-packaging/  /catalog/api-packaging/
+/dev-portal/api-products/  /catalog/apis/
+/api-products/  /catalog/apis/
 
 
 # Gateway LTS
@@ -185,6 +205,7 @@
 /insomnia/install/ /insomnia/#install-insomnia
 /insomnia/end-to-end-encryption/ /insomnia/data-security/
 /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/ /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
+/insomnia/upgrade/insomnia-12.6/ /insomnia/upgrade/git-sync-12.6/
 
 ## Indices
 
@@ -224,7 +245,12 @@
 # Cloud Gateways
 
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
-/dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/reference/#managed-cache-for-redis 301
+/dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/managed-cache/ 301
+
+# Kong Identity
+
+/kong-identity/ /identity/  301
+/plugins/oauth2-introspection/examples/konnect-identity/    /plugins/oauth2-introspection/examples/kong-identity/   301
 
 # Observability
 /advanced-analytics/*   /observability/:splat   301
@@ -235,6 +261,11 @@
 
 # Kong Konnect MCP server
 /mcp/kong-mcp/get-started/  /konnect-platform/konnect-mcp/installation/
-/mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/
+/mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/
+/konnect-platform/konnect-mcp/tools/    /konnect-platform/konnect-mcp/
 /mcp/autogenerate-mcp-tools/    /mcp/map-api-to-mcp-tools/
 /mcp/autogenerate-mcp-tools-for-weather-api/    /mcp/map-weather-api-to-mcp-tools/
+
+# Spec renames
+/api/konnect/api-builder/v3/ /api/konnect/api-catalog/v3/   301
+/api/konnect/api-builder/ /api/konnect/api-catalog/   301

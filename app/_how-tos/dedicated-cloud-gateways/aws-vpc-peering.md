@@ -20,6 +20,12 @@ related_resources:
     url: https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html
   - text: Private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   skip_product: true
   inline:

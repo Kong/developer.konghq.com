@@ -751,5 +751,19 @@
   },
   "required": [
     "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "embeddings",
+      "paths": [
+        "config.embeddings"
+      ]
+    },
+    {
+      "name": "vectordb",
+      "paths": [
+        "config.vectordb"
+      ]
+    }
   ]
 }

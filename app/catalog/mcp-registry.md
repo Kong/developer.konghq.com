@@ -44,7 +44,7 @@ As organizations experiment with AI agents, MCP servers are often embedded direc
 
 MCP Registries extend {{site.konnect_short_name}} {{site.konnect_catalog}} to provide a structured, standards-based way to register and manage MCP servers, helping Platform Teams maintain visibility and control as AI adoption scales.
 
-This feature is built on top of the MCP Registry API specification defined by Anthropic’s [open source project](https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/api/openapi.yaml). The specification allows flexibility in how registries are structured, so you can model them according to your organization’s governance needs.
+This feature is built on top of the MCP Registry API specification defined by {{ site.anthropic }}’s [open source project](https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/api/openapi.yaml). The specification allows flexibility in how registries are structured, so you can model them according to your organization’s governance needs.
 
 
 ## Enable MCP Registries in {{site.konnect_catalog}}

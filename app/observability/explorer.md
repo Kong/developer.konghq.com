@@ -21,8 +21,8 @@ faqs:
   - q: What data can I collect Analytics from?
     a: |
         * **API**
-        * **API Product**
-        * **API Product Version**
+        * **API Product** (Classic)
+        * **API Product Version** (Classic)
         * **Application**
         * **Consumer**
         * **Control Plane**
@@ -61,6 +61,10 @@ faqs:
        - Download the chart view by selecting **Export CSV**. The file includes the current filters and time window.
   - q: Why don't I see any data in the Map chart view?
     a: If you're sending requests from an internal IP address (local), those won't display in the Map chart in {{site.observability}}, even if `konnect_mode` is off.
+  - q: |
+      {% include faqs/metrics-endpoint.md section='question' %}
+    a: |
+      {% include faqs/metrics-endpoint.md section='answer' %}
 
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.observability}}"

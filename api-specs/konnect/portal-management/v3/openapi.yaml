@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.4.1
+  version: 3.5.0
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@e3d22e8e12a7c93ee828f034ce174f349ad83f6d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3d22e8e12a7c93ee828f034ce174f349ad83f6d'
+  x-oas-source: kong/platform-api@944dc99e5451ff1f02a4c85d90573bc01682e3f2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/944dc99e5451ff1f02a4c85d90573bc01682e3f2'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1746,7 +1746,7 @@ paths:
           style: deepObject
       responses:
         '200':
-          $ref: '#/components/responses/IdentityProviders'
+          $ref: '#/components/responses/PortalIdentityProviders'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1760,10 +1760,10 @@ paths:
         Creates a new identity provider. This operation allows the creation of a new identity provider for
         authentication purposes.
       requestBody:
-        $ref: '#/components/requestBodies/CreateIdentityProviderRequest'
+        $ref: '#/components/requestBodies/PortalCreateIdentityProviderRequest'
       responses:
         '201':
-          $ref: '#/components/responses/IdentityProvider'
+          $ref: '#/components/responses/PortalIdentityProvider'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1786,7 +1786,7 @@ paths:
         specific identity provider's settings and authentication integration details.
       responses:
         '200':
-          $ref: '#/components/responses/IdentityProvider'
+          $ref: '#/components/responses/PortalIdentityProvider'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1804,10 +1804,10 @@ paths:
         Updates the configuration of an existing identity provider. This operation allows modifications to be made
         to an existing identity provider's configuration.
       requestBody:
-        $ref: '#/components/requestBodies/UpdateIdentityProviderRequest'
+        $ref: '#/components/requestBodies/PortalUpdateIdentityProviderRequest'
       responses:
         '200':
-          $ref: '#/components/responses/IdentityProvider'
+          $ref: '#/components/responses/PortalIdentityProvider'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2509,6 +2509,22 @@ paths:
         schema:
           type: string
           format: uuid
+    get:
+      operationId: get-portal-ip-allow-list
+      summary: Get an IP allow list for a portal
+      description: |
+        Get an IP allow list for a portal.
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalSourceIPRestriction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portals IP Allow List
     put:
       operationId: put-portal-ip-allow-list
       summary: Replace an IP allow list for a portal
@@ -2517,7 +2533,7 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/CreatePortalSourceIPRestriction'
       responses:
-        '201':
+        '200':
           $ref: '#/components/responses/PortalSourceIPRestriction'
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -2537,7 +2553,7 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/UpdatePortalSourceIPRestriction'
       responses:
-        '201':
+        '200':
           $ref: '#/components/responses/PortalSourceIPRestriction'
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -4054,6 +4070,22 @@ components:
       required:
         - domain_verification_method
       title: http
+    UpdatePortalCustomDomainSSL:
+      type: object
+      properties:
+        custom_certificate:
+          description: Custom certificate to be used for the SSL termination.
+          type: string
+        custom_private_key:
+          description: Custom certificate private key to be used for the SSL termination.
+          type: string
+        skip_ca_check:
+          description: |
+            Advanced option. If true, the custom certificate is served exactly as provided, without attempting to bundle against a public trust store. Required for certificates issued by an internal/private CA.
+          type: boolean
+          default: false
+      additionalProperties: false
+      title: UpdatePortalCustomDomainSSL
     PortalCustomDomainVerificationMethod:
       type: string
       enum:
@@ -4101,6 +4133,8 @@ components:
       properties:
         enabled:
           type: boolean
+        ssl:
+          $ref: '#/components/schemas/UpdatePortalCustomDomainSSL'
       additionalProperties: false
       title: UpdatePortalCustomDomainRequest
     PortalClaimMappings:
@@ -6403,7 +6437,7 @@ components:
           <!-- SAML metadata content here -->
         </EntityDescriptor>
       title: SAML Identity Provider Metadata
-    SAMLIdentityProviderConfig:
+    PortalSAMLIdentityProviderConfig:
       description: The identity provider that contains configuration data for the SAML authentication integration.
       type: object
       properties:
@@ -6428,8 +6462,8 @@ components:
           example: /api/v2/developer/authenticate/saml/acs
           readOnly: true
       additionalProperties: false
-      title: SAML Identity Provider Config
-    IdentityProvider:
+      title: Portal SAML Identity Provider Config
+    PortalIdentityProvider:
       description: The identity provider that contains configuration data for authentication integration.
       type: object
       properties:
@@ -6443,13 +6477,13 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
+            - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
-      title: Identity Provider
-    CreateIdentityProvider:
+      title: Portal Identity Provider
+    PortalCreateIdentityProvider:
       description: The identity provider that contains configuration data for creating an authentication integration.
       type: object
       properties:
@@ -6461,9 +6495,9 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
-    UpdateIdentityProvider:
+            - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
+      title: Portal Identity Provider
+    PortalUpdateIdentityProvider:
       description: The identity provider that contains configuration data for updating an authentication integration.
       type: object
       properties:
@@ -6473,8 +6507,8 @@ components:
           type: object
           oneOf:
             - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
+            - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
+      title: Portal Identity Provider
     CursorMetaPage:
       type: object
       properties:
@@ -8857,14 +8891,14 @@ components:
                 allowed_ips:
                   - 192.168.1.1
                   - 192.168.1.0/22
-    CreateIdentityProviderRequest:
+    PortalCreateIdentityProviderRequest:
       description: |
         An object representing the configuration for creating a new identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateIdentityProvider'
+            $ref: '#/components/schemas/PortalCreateIdentityProvider'
           examples:
             OIDC Identity Provider Request:
               $ref: '#/components/examples/CreateOIDCIdentityProvider'
@@ -8872,14 +8906,14 @@ components:
               $ref: '#/components/examples/CreateSAMLIdentityProviderWithMetadataURL'
             SAML Identity Provider Request With Metadata:
               $ref: '#/components/examples/CreateSAMLIdentityProviderWithMetadata'
-    UpdateIdentityProviderRequest:
+    PortalUpdateIdentityProviderRequest:
       description: |
         An object representing the configuration for updating an identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UpdateIdentityProvider'
+            $ref: '#/components/schemas/PortalUpdateIdentityProvider'
           examples:
             Update OIDC Identity Provider:
               $ref: '#/components/examples/UpdateOIDCIdentityProvider'
@@ -9641,7 +9675,7 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/BadRequestError'
-    IdentityProviders:
+    PortalIdentityProviders:
       description: |
         A collection of identity providers. This response contains a collection of identity providers, which may  include both OIDC and SAML identity providers.
       content:
@@ -9649,18 +9683,18 @@ components:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/IdentityProvider'
-            title: Identity Provider Collection Response
+              $ref: '#/components/schemas/PortalIdentityProvider'
+            title: Portal Identity Provider Collection Response
           examples:
             Identity Provider Collection:
               $ref: '#/components/examples/IdentityProviders'
-    IdentityProvider:
+    PortalIdentityProvider:
       description: |
         An identity provider configuration. This response represents the configuration of a specific identity provider, which can be either OIDC or SAML.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/IdentityProvider'
+            $ref: '#/components/schemas/PortalIdentityProvider'
           examples:
             OIDC Identity Provider:
               $ref: '#/components/examples/OIDCIdentityProvider'

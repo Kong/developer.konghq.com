@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.5": [
+    {
+      "message": "Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `https_verify` setting cannot be disabled.",
@@ -16,6 +23,13 @@
   "3.11.0.0": [
     {
       "message": "Marked the `auth_password` in the `forward_proxy` plugin as an `encrypted` field.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.10": [
+    {
+      "message": "Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
