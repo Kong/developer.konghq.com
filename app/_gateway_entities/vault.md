@@ -1207,7 +1207,7 @@ rows:
 Secrets can be plain text files or JSON files. 
 The file system vault doesn't require any external services or credentials.
 
-If configuring via a Vault entity, set `vaults.name` to `fs`.
+If you're configuring via a Vault entity, set `vaults.name` to `fs`.
 
 For a complete tutorial, see [Configure the file system vault backend](/how-to/configure-file-system-as-a-vault-backend/).
 

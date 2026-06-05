@@ -60,7 +60,7 @@ prereqs:
              docker exec kong-quickstart-gateway /bin/sh -c 'echo -n "my-secret-value" > /tmp/kong/secrets/my-secret.txt'
              ```
           1. Export the directory path as an environment variable for use with decK:
-        {% endon_prem%}
+        {% endon_prem %}
         {% konnect %}
         content: |
           1. Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
