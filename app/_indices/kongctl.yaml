@@ -37,6 +37,10 @@ groups:
 
   - title: CLI References
     sections:
+      - title: Create Resources
+        items:
+            - path: /kongctl/create/
+            - path: /kongctl/create/*/**
       - title: Adopt Resources
         items:
             - path: /kongctl/adopt/
@@ -52,6 +56,7 @@ groups:
       - title: Delete Resources
         items:
             - path: /kongctl/delete/
+            - path: /kongctl/delete/*/**
       - title: View Diffs
         items:
             - path: /kongctl/diff/
