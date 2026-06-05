@@ -310,7 +310,7 @@
   }
 
   a {
-    @apply hover:underline text-links;
+    @apply hover:underline text-links font-medium;
   }
 
   main a {
