@@ -61,7 +61,7 @@ rows:
         - type: card
           config:
             title: Get started
-            description: Create AI Gateway, Model, Provider, and Policy entities for AI, MCP, and A2A traffic.
+            description: Proxy your first LLM through {{site.ai_gateway}} with our guided setup.
             icon: /assets/icons/rocket.svg
             cta:
               url: /ai-gateway/get-started/
@@ -70,7 +70,7 @@ rows:
         - type: card
           config:
             title: AI Gateway entities {% new_in 2.0.0 %}
-            description: Learn the AI, MCP, and A2A entity model and how resources map to each gateway type.
+            description: Learn the AI, MCP, and A2A entities and how resources map to each gateway type.
             icon: /assets/icons/linked-services.svg
             cta:
               url: /ai-gateway/entities/
@@ -106,7 +106,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: LLM Traffic
+            title: LLM traffic
             description: Route LLM requests through a provider-agnostic Universal API. Load-balance across providers, transform requests and responses, enforce policies, and collect usage analytics.
             icon: /assets/icons/plugins/universal-api.svg
             cta:
@@ -115,7 +115,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: MCP Traffic
+            title: MCP traffic
             description: Expose and govern tool traffic over Model Context Protocol. Control which agents access which tools, enforce rate limits, authenticate callers, and observe all tool invocations.
             icon: /assets/icons/mcp.svg
             cta:
@@ -124,7 +124,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: A2A Traffic
+            title: A2A traffic
             description: Route Agent-to-Agent traffic with protocol-aware security and observability. Rewrite agent cards, extract task state, stream events, and emit structured telemetry.
             icon: /assets/icons/plugins/ai-a2a-proxy.png
             cta:
