@@ -1,42 +1,19 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feDropShadow dx="0" dy="0" stdDeviation="0.5" flood-opacity="0.15"/>
-    </filter>
-  </defs>
-
-  <!-- Central hub node (larger) -->
-  <circle cx="12" cy="12" r="3" fill="#428CDC" filter="url(#shadow)"/>
-  <circle cx="12" cy="12" r="3" fill="none" stroke="#428CDC" stroke-width="0.8" opacity="0.3"/>
-
-  <!-- Outer ring nodes (6 distributed evenly) -->
-  <g filter="url(#shadow)">
-    <!-- Top -->
-    <circle cx="12" cy="3.5" r="2" fill="#428CDC"/>
-    <!-- Top-right -->
-    <circle cx="18.2" cy="5.8" r="2" fill="#428CDC"/>
-    <!-- Bottom-right -->
-    <circle cx="18.2" cy="18.2" r="2" fill="#428CDC"/>
-    <!-- Bottom -->
-    <circle cx="12" cy="20.5" r="2" fill="#428CDC"/>
-    <!-- Bottom-left -->
-    <circle cx="5.8" cy="18.2" r="2" fill="#428CDC"/>
-    <!-- Top-left -->
-    <circle cx="5.8" cy="5.8" r="2" fill="#428CDC"/>
+  <g stroke="#428CDC" stroke-width="1.6" stroke-linecap="round">
+    <line x1="12" y1="12" x2="12" y2="3.7"></line>
+    <line x1="12" y1="12" x2="4.8" y2="7.85"></line>
+    <line x1="12" y1="12" x2="4.8" y2="16.15"></line>
+    <line x1="12" y1="12" x2="12" y2="20.3"></line>
+    <line x1="12" y1="12" x2="19.2" y2="16.15"></line>
+    <line x1="12" y1="12" x2="19.2" y2="7.85"></line>
   </g>
-
-  <!-- Connecting lines from center to outer nodes -->
-  <g stroke="#428CDC" stroke-width="1.6" stroke-linecap="round" opacity="0.8">
-    <line x1="12" y1="15" x2="12" y2="18.5"/>
-    <line x1="14.5" y1="14.5" x2="16.2" y2="16.2"/>
-    <line x1="15" y1="12" x2="16.2" y2="12"/>
-    <line x1="14.5" y1="9.5" x2="16.2" y2="7.8"/>
-    <line x1="12" y1="9" x2="12" y2="5.5"/>
-    <line x1="9.5" y1="9.5" x2="7.8" y2="7.8"/>
-    <line x1="9" y1="12" x2="7.8" y2="12"/>
-    <line x1="9.5" y1="14.5" x2="7.8" y2="16.2"/>
+  <g fill="#428CDC">
+    <circle cx="12" cy="12" r="2.8"></circle>
+    <circle cx="12" cy="3.7" r="2"></circle>
+    <circle cx="4.8" cy="7.85" r="2"></circle>
+    <circle cx="4.8" cy="16.15" r="2"></circle>
+    <circle cx="12" cy="20.3" r="2"></circle>
+    <circle cx="19.2" cy="16.15" r="2"></circle>
+    <circle cx="19.2" cy="7.85" r="2"></circle>
   </g>
-
-  <!-- Subtle outer ring for depth -->
-  <circle cx="12" cy="12" r="10" fill="none" stroke="#428CDC" stroke-width="0.5" opacity="0.15"/>
 </svg>
