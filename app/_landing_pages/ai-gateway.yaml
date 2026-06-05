@@ -214,9 +214,8 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[{{site.ai_gateway}} editor](https://cloud.konghq.com/ai-manager): GUI for managing all your {{site.ai_gateway}} resources in one place."
+                    - "[{{site.ai_gateway}} editor](https://cloud.konghq.com/ai-gateway): GUI for managing all your {{site.ai_gateway}} resources in one place."
                     - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
-                    - "[{{site.ai_gateway}} API](/api/konnect/ai-gateway/): Manage {{site.ai_gateway}} resources programmatically."
                     - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.ai_gateway}} entities within {{site.konnect_short_name}} Control Planes via an API."
                     - "[kongctl](/kongctl/): Use Kong's swiss-army knife command line tool for managing and interacting {{site.ai_gateway}} resources and configurations within within {{site.konnect_short_name}}."
   - header:
@@ -628,7 +627,7 @@ rows:
       text: "Load balancing"
       description: |
         {{site.ai_gateway}}'s load balancer routes requests across AI models to optimize for speed, cost, and reliability.
-        It supports algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching, with built-in retries and fallback for resilience {% new_in 3.10 %}.
+        It supports algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching, with built-in retries and fallback for resilience.
 
         The balancer dynamically selects models based on real-time performance and prompt relevance, and works across mixed environments including OpenAI, Mistral, and Llama models.
     columns:

@@ -1,8 +1,49 @@
-<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M10 4C13.5899 4 16.5 5.34315 16.5 7C16.5 8.65685 13.5899 10 10 10C6.41015 10 3.5 8.65685 3.5 7C3.5 5.34315 6.41015 4 10 4Z" fill="#428CDC"/>
-  <path d="M3.5 7V14C3.5 15.6569 6.41015 17 10 17C10.5013 17 10.9893 16.9738 11.4575 16.9243" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
-  <path d="M3.5 10.5C3.5 12.1569 6.41015 13.5 10 13.5" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
-  <path d="M17.5 11C19.433 11 21 12.567 21 14.5C21 16.433 19.433 18 17.5 18C15.567 18 14 16.433 14 14.5C14 12.567 15.567 11 17.5 11Z" fill="#428CDC"/>
-  <path d="M17.5 18V20.5" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
-  <path d="M17.5 19.25H20.5" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadowProv" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="0.5" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Main server container with refined shape -->
+  <rect x="8" y="8" width="8" height="8" rx="1.5" fill="#428CDC" filter="url(#shadowProv)"/>
+
+  <!-- Server detail lines (horizontal stack) -->
+  <g stroke="white" stroke-width="1.2" stroke-linecap="round">
+    <line x1="10" y1="10" x2="14" y2="10"/>
+    <line x1="10" y1="12" x2="14" y2="12"/>
+    <line x1="10" y1="14" x2="14" y2="14"/>
+  </g>
+
+  <!-- Status indicators (right side circles) -->
+  <circle cx="15.5" cy="10" r="0.8" fill="white" opacity="0.6"/>
+  <circle cx="15.5" cy="12" r="0.8" fill="white" opacity="0.6"/>
+  <circle cx="15.5" cy="14" r="0.8" fill="white" opacity="0.6"/>
+
+  <!-- Connection endpoints (4 directions) with nodes -->
+  <g filter="url(#shadowProv)">
+    <!-- Top -->
+    <circle cx="12" cy="2" r="1.8" fill="#428CDC"/>
+    <!-- Left -->
+    <circle cx="2" cy="12" r="1.8" fill="#428CDC"/>
+    <!-- Right -->
+    <circle cx="22" cy="12" r="1.8" fill="#428CDC"/>
+    <!-- Bottom -->
+    <circle cx="12" cy="22" r="1.8" fill="#428CDC"/>
+  </g>
+
+  <!-- Connection lines with proper endpoints -->
+  <g stroke="#428CDC" stroke-width="1.6" stroke-linecap="round">
+    <!-- Top -->
+    <path d="M12 3.8L12 8" stroke-width="1.6"/>
+    <!-- Left -->
+    <path d="M3.8 12L8 12" stroke-width="1.6"/>
+    <!-- Right -->
+    <path d="M16 12L20.2 12" stroke-width="1.6"/>
+    <!-- Bottom -->
+    <path d="M12 16L12 20.2" stroke-width="1.6"/>
+  </g>
+
+  <!-- Subtle glow effect around main box -->
+  <rect x="8" y="8" width="8" height="8" rx="1.5" fill="none" stroke="#428CDC" stroke-width="0.6" opacity="0.2"/>
 </svg>
