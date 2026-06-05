@@ -78,7 +78,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI policies
+            title: AI policies {% new_in 2.0.0 %}
             description: Attach policy-managed governance behavior to Models, Agents, MCP Servers, and identities.
             icon: /assets/icons/plug.svg
             cta:
@@ -87,7 +87,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Cookbooks
+            title: AI Cookbooks
             description: End-to-end recipes for building real-world AI scenarios.
             icon: /assets/icons/cookbooks/ai.svg
             cta:
@@ -96,17 +96,18 @@ rows:
 
   - header:
       type: h2
-      text: Traffic types
+      text: Three traffic types, unified control
       description: |
-        {{site.ai_gateway}} supports three AI traffic types:
-        AI traffic through a universal model API, MCP tool traffic, and A2A agent traffic.
+        Govern, secure, and observe all AI traffic through dedicated AI Gateway entities {% new_in 2.0.0 %}.
+        Model entities manage LLM traffic, MCP Server entities expose and control tools, and Agent entities route A2A traffic.
+        Each includes built-in authentication, policy enforcement, and observability.
     column_count: 3
     columns:
       - blocks:
         - type: card
           config:
-            title: LLM traffic gateway
-            description: Route LLM requests through a provider-agnostic Universal API with centralized auth, policy, and observability.
+            title: Model entities
+            description: Route LLM requests through a provider-agnostic Universal API. Load-balance across providers, transform requests and responses, enforce policies, and collect usage analytics.
             icon: /assets/icons/plugins/universal-api.svg
             cta:
               url: /ai-gateway/entities/model/
@@ -114,8 +115,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: MCP traffic gateway
-            description: Expose and govern tool traffic over Model Context Protocol (MCP) with authentication and fine-grained controls.
+            title: MCP Server entities
+            description: Expose and govern tool traffic over Model Context Protocol. Control which agents access which tools, enforce rate limits, authenticate callers, and observe all tool invocations.
             icon: /assets/icons/mcp.svg
             cta:
               url: /ai-gateway/mcp/
@@ -123,8 +124,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: A2A traffic gateway
-            description: Secure, govern, and observe Agent-to-Agent (A2A) traffic with protocol-aware routing and telemetry.
+            title: Agent entities
+            description: Route Agent-to-Agent traffic with protocol-aware security and observability. Rewrite agent cards, extract task state, stream events, and emit structured telemetry.
             icon: /assets/icons/plugins/ai-a2a-proxy.png
             cta:
               url: /ai-gateway/a2a/
