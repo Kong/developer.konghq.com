@@ -51,7 +51,7 @@ You can view the content of the file by clicking `Custom Ruleset` in {{ site.dat
 The custom ruleset overrides the default one. To create a new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extends` property.
 
 {:.info}
-> Available Spectral top level properties properties in {{ site.data.products.insomnia.name }}  are `rules` and `extends`. Custom functions are not permitted. However, {{ site.data.products.insomnia.name }}  provides support for [Spectral built-in core functions](https://docs.stoplight.io/docs/spectral/cb95cf0d26b83-core-functions).
+> Available Spectral top level properties in {{ site.data.products.insomnia.name }}  are `rules` and `extends`. Custom functions are not permitted. However, {{ site.data.products.insomnia.name }}  provides support for [Spectral built-in core functions](https://docs.stoplight.io/docs/spectral/cb95cf0d26b83-core-functions).
 
 For example, to extend the default [Spectral OpenAPI](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules) ruleset to add a warning when tags don't have a description, add the following content to your ruleset file:
 
