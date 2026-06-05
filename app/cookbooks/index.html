@@ -48,7 +48,7 @@ description: A collection of production-ready recipes to build with Kong AI Gate
         {% for cat in categories %}
         {% unless visible_category_slugs contains cat.slug %}{% continue %}{% endunless %}
         <button
-          class="badge text-sm px-3 py-1.5 cursor-pointer border border-primary hover:border-brand-saturated/40 hover:bg-brand-saturated/10 transition-colors"
+          class="badge text-sm px-3 py-1.5 cursor-pointer border border-primary hover:border-brand-saturated hover:bg-brand-saturated/10 transition-colors"
           data-category="{{ cat.slug }}"
         >
           {{ cat.text }}
