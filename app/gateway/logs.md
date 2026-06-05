@@ -81,7 +81,7 @@ columns:
     key: config
 rows:
   - usecase: "View current log level<sup>1</sup>"
-    config: "[`/debug/node/log-level/`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level)"
+    config: "[`/debug/node/log-level`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level)"
   - usecase: "Modify the log level for an individual {{site.base_gateway}} node"
     config: "[`/debug/node/log-level/{logLevel}`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level-log_level)"
   - usecase: "Change the log level of the {{site.base_gateway}} cluster"
