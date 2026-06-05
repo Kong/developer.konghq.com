@@ -5,6 +5,8 @@ module SectionWrapper
     def self.make_for(page)
       if page.is_a?(Jekyll::Document) && page.collection.label == 'how-tos'
         HowTo.new(page)
+      elsif page.data['content_type'] == 'cookbook'
+        Cookbook.new(page)
       else
         new(page)
       end

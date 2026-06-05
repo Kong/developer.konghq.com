@@ -106,6 +106,97 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.2": [
+    {
+      "message": "Fixed an issue where Claude Code (or CLI) statistics were missing when using an Anthropic model via the Bedrock provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where observability errors occurred when `gpt-image-1.5` returned image token usage details.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where Azure OpenAI authentication failed during load balancer failover due to token refresh attempts in `balancer_by_lua`. Tokens are now pre-fetched in the `access` phase.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where we treated plaintext Anthropic response as gzipped.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where we didn't correctly ungzip streaming response.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.14.0.3": [
+    {
+      "message": "Fixed an issue where dashscope replied 500 to inference request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where GenAI spans were not finished sometimes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where we didn't support Azure GA version of Realtime API.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OpenAI-format chat reasoning requests were not mapped consistently across Anthropic, Gemini, Bedrock and more providers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where system prompt of Claude Code was truncated when doing non-passthrough proxy.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where we didn't use the huggingface's token usage if available.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.5": [
+    {
+      "message": "Fixed an issue where `stream_options` was forwarded to Databricks upstreams, causing a 400 error since Databricks does not support this field.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where full-sync reconfigure reset balancer state even when plugin configs were unchanged.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where driver transformers returned errors or stream metadata in the wrong return position.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OpenAI-compatible Anthropic chat requests only preserved the last system message.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where configured model name may never be used for Azure provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where we didn't collect the model name in OpenAI streaming response from Azure.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Supported health checks and circuit breaker for the load balancer. Added two new fields `max_fails` and `fail_timeout`.",
@@ -235,6 +326,13 @@
       "message": "Fixed an issue where content-type header, from non-200 response of streaming request, was overridden.",
       "scope": "Plugin",
       "type": "bugfix"
+    }
+  ],
+  "3.13.0.4": [
+    {
+      "message": "Fixed excessive DNS warning logs for template variable endpoints like `$(headers.x_gcp_endpoint)`. These warnings appeared on every configuration change because template variables cannot be resolved until request time.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
     }
   ],
   "3.12.0.0": [

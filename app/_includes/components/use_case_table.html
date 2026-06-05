@@ -1,0 +1,34 @@
+<div class="w-full overflow-x-auto">
+<table class="w-full">
+  <thead>
+    <tr>
+      <th>
+        <span class="font-semibold text-primary">{{ include.config.usecase_title | liquify | markdown }}</span>
+      </th>
+      {% for column in include.config.columns %}
+      <th>
+        <span class="font-semibold text-primary">{{ column.title | liquify | markdown }}</span>
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in include.config.rows %}
+      {% assign outcome_count = row.outcomes | size %}
+      {% for outcome in row.outcomes %}
+        <tr>
+          {% if forloop.first %}
+          <td rowspan="{{ outcome_count }}" style="vertical-align: top">
+            {{ row.usecase | liquify | markdown }}
+          </td>
+          {% endif %}
+          {% for column in include.config.columns %}
+          {% assign v = outcome[column.key] %}
+          <td style="vertical-align: top">{{ v | liquify | markdown }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
+</div>

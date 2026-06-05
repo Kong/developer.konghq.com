@@ -1,18 +1,24 @@
 {% if include.cta_url and include.ctas %}
 {% raise "cta and ctas can not be provided at the same time" %}
 {% endif %}
+{% assign card_title_tag = include.title_tag | default: "h4" %}
 
 {% capture card_content %}
+{% if include.before_title %}{{ include.before_title }}{% endif %}
 {% if include.icon %}
 <img src="{{ include.icon }}" class="h-8 w-auto self-start"/>
 {% endif %}
-
-<h4>{{ include.title | liquify }}</h4>
-
+{% if include.title %}<{{ card_title_tag }}>{{ include.title | liquify }}</{{ card_title_tag }}>{% endif %}
+{% if include.description %}
 <div class="flex flex-col flex-grow text-sm gap-3">
     {{ include.description | liquify | markdownify }}
 </div>
-
+{% endif %}
+{% if include.body %}
+<div class="flex flex-col flex-grow text-sm gap-3">
+    {{ include.body }}
+</div>
+{% endif %}
 {% if include.cta_text %}
 <div class="flex text-sm text-brand">
 {{ include.cta_text | liquify }} &rarr;
@@ -28,15 +34,13 @@
 {% endif %}
 {% endcapture %}
 
-<div {% if include.id %}id="{{ include.id }}"{% endif %} class="card {% if include.featured %}card__featured{% else %}card__bordered{% endif %} {{ include.css_class}} ">
+<div {% if include.id %}id="{{ include.id }}"{% endif %} class="card {% if include.featured %}card__featured{% else %}card__bordered{% endif %} {% if include.tech_preview %}relative overflow-hidden{% endif %} {{ include.css_class}} ">
     {% if include.featured %}
     <div class="text-xs absolute transform rotate-45 bg-brand-saturated dark:bg-terciary text-center text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">
-    {% if include.featured != true %}
-    {{ include.featured }}
-    {% else %}
-    Recommended
-    {% endif %}
+    {% if include.featured != true %}{{ include.featured }}{% else %}Recommended{% endif %}
     </div>
+    {% elsif include.tech_preview %}
+    <div class="text-xs absolute transform rotate-45 bg-semantic-yellow-secondary text-center text-semantic-yellow-primary font-semibold py-1 right-[-35px] top-[32px] w-[170px]">Tech Preview</div>
     {% endif %}
 
     {% if include.cta_url %}
@@ -44,7 +48,7 @@
             {{ card_content }}
         </a>
     {% else %}
-        <div class="flex flex-col gap-5 p-6">
+        <div class="flex flex-col gap-5 p-6 w-full h-full">
             {{ card_content }}
         </div>
     {% endif %}

@@ -103,9 +103,9 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
 
 1. Log in to {{site.konnect_short_name}} and select [Dev Portal](https://cloud.konghq.com/portals/) from the menu.
 
-2. Navigate to [**Application Auth**](https://cloud.konghq.com/portals/application-auth) to see the authentication strategies for your API Products.
+2. Navigate to [**Application Auth**](https://cloud.konghq.com/portals/application-auth) to see the authentication strategies for your APIs.
 
-3. Click the **DCR Providers** tab to see all existing DCR providers.
+3. Click the **DCR Provider** tab to see all existing DCR providers.
 
 4. Click [**New DCR Provider**](https://cloud.konghq.com/portals/application-auth/dcr-provider/create) to create a new Azure configuration:
    1. Enter a name for internal reference within {{site.konnect_short_name}}. This name and the provider type won't be visible to developers on the Dev Portal.
@@ -129,9 +129,9 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
 
 Now that the application auth strategy is configured, you can apply it to an API.
 
-1. Navigate to your Dev Portal in {{site.konnect_short_name}} and click **Published APIs** in the sidebar.
+1. Navigate to your Dev Portal in {{site.konnect_short_name}}, select the Dev Portal, and click the **Published APIs** tab.
 
-1. Click **Publish API**, select the API you want to publish, and select your Azure auth strategy for the **Authentication strategy**.
+1. Select the API you want to publish, and select the Auth0 auth strategy for the **Authentication strategy**.
 
 1. Click **Publish API**.
 

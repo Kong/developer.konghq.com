@@ -20791,8 +20791,8 @@
         "scope": "Core"
       },
       {
-        "message": "**sandbox**: Added `strict` and `lax` modes for `untrusted_lua`; deprecated `sandbox` mode. Default changed to `strict`.\n",
-        "type": "feature",
+        "message": "**sandbox**: Added `strict` and `lax` modes for `untrusted_lua`. The default mode changed from `sandbox` to `strict`.\n",
+        "type": "Breaking Change",
         "scope": "Core"
       },
       {
@@ -21862,5 +21862,848 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.11.0.10": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**forward-proxy**: Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.14.0.2": {
+    "kong": [
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where `token_exchange.cache.enabled = false` was ignored and exchanged tokens were still cached because the cache toggle incorrectly read `token_exchange.cache.ttl` instead of `token_exchange.cache.enabled`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped kong-pgmoon from 2.3.3.0 to 2.3.4.0, which adds SHA-384 support\nfor SCRAM channel binding during PostgreSQL SSL authentication.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Claude Code (or CLI) statistics were missing when using an Anthropic model via the Bedrock provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**acl**: Fixed an issue where anonymous consumers with valid legacy ACL group credentials were rejected with 403 when `include_consumer_groups` was enabled and no enterprise consumer groups were assigned.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token exchange actor tokens were not sourced correctly from `token_exchange.request`, ensuring correct forwarding of actor tokens configured in headers or plugin config.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where WWW-Authenticate: Bearer error=\"insufficient_scope\" header was not emitted.\n",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where observability errors occurred when `gpt-image-1.5` returned image token usage details.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Azure OpenAI authentication failed during load balancer failover due to token refresh attempts in `balancer_by_lua`. Tokens are now pre-fetched in the `access` phase.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we treated plaintext Anthropic response as gzipped.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't correctly ungzip streaming response.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-transformers**: Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.\n",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where DP may spawn multiple sync timers when downgrading sync protocol to v1, which may cause excessive load on CP and lead to performance degradation.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-gql from 0.2.3 to 0.2.4 to fix the null value issue in the GraphQL query syntax that causes a parsed AST error in degraphql plugin.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**JWT**: Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-log**: Fixed an issue where cached producers could cause memory leaks.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**opa**: Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `$remote_addr` was not replaced with the proxy protocol source address for early nginx error responses (501, 505) when `proxy_protocol` is enabled on the proxy listener. Also added proper error body messages for 501 and 505 status codes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed a bug where tables in `strict` and `lax` `untrusted_lua` modes were not properly protected against modification.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where the `tls_sans` field was missing in the service entity form.",
+        "type": "bugfix",
+        "githubs": [
+          4332
+        ],
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.11.0.11": {
+    "kong": [
+      {
+        "message": "**aws-lambda**: Fixed an issue where a 500 error occurred when `is_proxy_integration` was enabled and the Lambda function returned `null` values in `headers` or `multiValueHeaders`. Null values are now converted to empty strings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**aws-lambda**: Fixed an issue where empty JSON array bodies (`[]`) were incorrectly converted to objects (`{}`) when using `is_proxy_integration=true` and `empty_arrays_mode=correct` alongside the exit-transformer plugin.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.12.0.6": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.13.0.4": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where ACL denial caused parsing body failure.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where we didn't keep the port after MCP conversion.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed excessive DNS warning logs for template variable endpoints like `$(headers.x_gcp_endpoint)`. These warnings appeared on every configuration change because template variables cannot be resolved until request time.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**JWT**: Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**request-transformer**: Fixed an issue where the `add.headers` operation lowercased the header name, causing the configured letter case to be lost when adding new headers to the request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**ai-prompt-decorator**: Fixed an issue where the plugin corrupted native-format\nrequests (gemini, anthropic, bedrock, cohere, huggingface) by forwarding an\nOpenAI-shaped body upstream instead of the original native body shape.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.4.3.26": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped kong-lua-resty-ljsonschema from 1.2.0 to 1.3.3.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**request-validator**: Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed workspace list and routing not working correctly when workspace count exceeds 1000.",
+        "type": "bugfix",
+        "githubs": [
+          4299
+        ],
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.10.0.11": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped kong-lua-resty-ljsonschema from 1.2.0 to 1.3.3.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a safeguard to prevent the CP or DP from sending payloads larger than the configured `cluster_max_payload` size to each other, which could avoid the frequent disconnections and reconnection attempts and improve performance. Emitted a log entry telling the config payload size and the configured `cluster_max_payload` size when this happens.",
+        "type": "feature",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where Kong Manager users authenticated through IDPs such as OIDC or LDAP could retain stale RBAC groups or IDP-sourced roles after claim changes, or end up with inconsistent mappings during concurrent authentication requests.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**opa**: Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**key-auth**: Fixed an issue where region was not permitted to be null for remote identity realms.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-validator**: Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Added a `--lts_314_compatibility` option to the `check` command to perform configuration compatibility checks for upgrading to version 3.14.x.x.",
+        "type": "feature",
+        "scope": "CLI Command"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.14.0.3": {
+    "kong": [
+      {
+        "message": "**ai-prompt-decorator**: Fixed an issue where the plugin corrupted native-format\nrequests (gemini, anthropic, bedrock, cohere, huggingface) by forwarding an\nOpenAI-shaped body upstream instead of the original native body shape.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**ai-azure-content-safety**: Fixed a crash (HTTP 500) when `azure_use_managed_identity` is enabled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where dashscope replied 500 to inference request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where GenAI spans were not finished sometimes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where downstream scope-based ACL evaluation used claims from the inbound token instead of the exchanged token when token exchange was enabled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where raw non-200 upstream responses triggered misleading MCP body parse warnings.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where, since 3.14, call tools converted from API could fail when Kong used a self-signed certificate.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where tool id might be repeated.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't support Azure GA version of Realtime API.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI-format chat reasoning requests were not mapped consistently across Anthropic, Gemini, Bedrock and more providers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where system prompt of Claude Code was truncated when doing non-passthrough proxy.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't use the huggingface's token usage if available.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-advanced-proxy**: Fixed an issue where we never stored response model in streaming path. It always fallback to the request model",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where anonymous reports omitted model usage when one provider used multiple models.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where the AI sanitizer plugin could not parse the request body correctly.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the request context could inherit metatables from previous TLS connections, leading to cross-request context leakage and increased memory usage.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-guardrail**: Fixed an issue where latency metrics were missing in the Prometheus output.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.4.3.27": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.3 to 2.8.1 to address the issues: CVE-2026-25210, CVE-2026-24515, CVE-2026-32778, CVE-2026-32777, CVE-2026-32776, CVE-2026-41080, and CVE-2026-45186.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.5 to 3.5.6 to address the issues: CVE-2026-31790, CVE-2026-2673, CVE-2026-28387, CVE-2026-28388, CVE-2026-28389, CVE-2026-28390, and CVE-2026-31789.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-6338 in core proxy request header handling by preserving inbound `Content-Length` headers during hop-by-hop Connection header cleanup, preventing CL.0 request smuggling with crafted `Connection: Content-Length` headers on requests with a body.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.10.0.12": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.3 to 2.8.1 to address the issues: CVE-2026-25210, CVE-2026-24515, CVE-2026-32778, CVE-2026-32777, CVE-2026-32776, CVE-2026-41080, and CVE-2026-45186.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.5 to 3.5.6 to address the issues: CVE-2026-31790, CVE-2026-2673, CVE-2026-28387, CVE-2026-28388, CVE-2026-28389, CVE-2026-28390, and CVE-2026-31789.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-6338 in core proxy request header handling by preserving inbound `Content-Length` headers during hop-by-hop Connection header cleanup, preventing CL.0 request smuggling with crafted `Connection: Content-Length` headers on requests with a body.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.11.0.12": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.3 to 2.8.1 to address the issues: CVE-2026-25210, CVE-2026-24515, CVE-2026-32778, CVE-2026-32777, CVE-2026-32776, CVE-2026-41080, and CVE-2026-45186.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.5 to 3.5.6 to address the issues: CVE-2026-31790, CVE-2026-2673, CVE-2026-28387, CVE-2026-28388, CVE-2026-28389, CVE-2026-28390, and CVE-2026-31789.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-6338 in core proxy request header handling by preserving inbound `Content-Length` headers during hop-by-hop Connection header cleanup, preventing CL.0 request smuggling with crafted `Connection: Content-Length` headers on requests with a body.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.12.0.7": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.3 to 2.8.1 to address the issues: CVE-2026-25210, CVE-2026-24515, CVE-2026-32778, CVE-2026-32777, CVE-2026-32776, CVE-2026-41080, and CVE-2026-45186.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.5 to 3.5.6 to address the issues: CVE-2026-31790, CVE-2026-2673, CVE-2026-28387, CVE-2026-28388, CVE-2026-28389, CVE-2026-28390, and CVE-2026-31789.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-6338 in core proxy request header handling by preserving inbound `Content-Length` headers during hop-by-hop Connection header cleanup, preventing CL.0 request smuggling with crafted `Connection: Content-Length` headers on requests with a body.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.13.0.5": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.3 to 2.8.1 to address the issues: CVE-2026-25210, CVE-2026-24515, CVE-2026-32778, CVE-2026-32777, CVE-2026-32776, CVE-2026-41080, and CVE-2026-45186.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.5 to 3.5.6 to address the issues: CVE-2026-31790, CVE-2026-2673, CVE-2026-28387, CVE-2026-28388, CVE-2026-28389, CVE-2026-28390, and CVE-2026-31789.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-6338 in core proxy request header handling by preserving inbound `Content-Length` headers during hop-by-hop Connection header cleanup, preventing CL.0 request smuggling with crafted `Connection: Content-Length` headers on requests with a body.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.14.0.4": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.3 to 2.8.1 to address the issues: CVE-2026-25210, CVE-2026-24515, CVE-2026-32778, CVE-2026-32777, CVE-2026-32776, CVE-2026-41080, and CVE-2026-45186.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.5 to 3.5.6 to address the issues: CVE-2026-31790, CVE-2026-2673, CVE-2026-28387, CVE-2026-28388, CVE-2026-28389, CVE-2026-28390, and CVE-2026-31789.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-6338 in core proxy request header handling by preserving inbound `Content-Length` headers during hop-by-hop Connection header cleanup, preventing CL.0 request smuggling with crafted `Connection: Content-Length` headers on requests with a body.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.14.0.5": {
+    "kong": [
+      {
+        "message": "**aws-lambda**: Fixed an issue where a 500 error occurred when `is_proxy_integration` was enabled and the Lambda function returned `null` values in `headers` or `multiValueHeaders`. Null values are now converted to empty strings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped kong-lua-resty-ljsonschema from 1.3.1 to 1.3.3.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a safeguard to prevent the CP or DP from sending payloads larger than the configured `cluster_max_payload` size to each other, which could avoid the frequent disconnections and reconnection attempts and improve performance. Emitted a log entry telling the config payload size and the configured `cluster_max_payload` size when this happens.",
+        "type": "feature",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where Kong Manager users authenticated through IDPs such as OIDC or LDAP could retain stale RBAC groups or IDP-sourced roles after claim changes, or end up with inconsistent mappings during concurrent authentication requests.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `stream_options` was forwarded to Databricks upstreams, causing a 400 error since Databricks does not support this field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai**: Fixed an issue where non-200 responses from Bedrock embeddings API were not properly handled, leading to incorrect feedback to the client.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed stale tools cache after full-sync reconfigure (e.g. `deck sync`), causing `tools/list` to return empty results.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where converted HTTPS MCP tool calls lost the original forwarded port on the internal TLS Unix socket.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where full-sync reconfigure reset balancer state even when plugin configs were unchanged.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where driver transformers returned errors or stream metadata in the wrong return position.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI-compatible Anthropic chat requests only preserved the last system message.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where configured model name may never be used for Azure provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't collect the model name in OpenAI streaming response from Azure.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-request-transformer**: Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-response-transformer**: Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-prompt-guard**, **ai-semantic-response-guard**: Fixed an issue where full-sync reconfigure rebuilt semantic vectorDB indexes even when the plugin configuration was unchanged.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**aws-lambda**: Fixed an issue where empty JSON array bodies (`[]`) were incorrectly converted to objects (`{}`) when using `is_proxy_integration=true` and `empty_arrays_mode=correct` alongside the exit-transformer plugin.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a config backup exported by a data plane could not be re-imported if it contained non-workspaceable entities such as `ca_certificates` or `oic_issuers`. The export incorrectly included a `ws_id` field for those entities, which the declarative config schema rejects as an unknown field.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**ai-guardrails**: Fixed an issue where multiple guardrail plugins can not function together.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where incremental DP (sync v2) would not export config to fallback storage when the control plane uses periodic polling instead of notify_new_version.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**jwt-signer**: Fixed an issue where the plugin failed to load configuration and errored when `null` or `nil` values were passed to `access_token_keyset` or `channel_token_keyset`.",
+        "type": "bugfix",
+        "Scope": "Plugin",
+        "scope": "Core"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where path parameters were extracted from the wrong URI segment when `custom_base_path` was used with bare `/{param}` paths.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where the OAS specification cache failed to distinguish between different values of `api_spec_encoded` for the same specification content.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where template 'resource_attributes' in configuration of the plugin could not work as expected for metrics.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-validator**: Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**forward-proxy**: Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved performance of analytics data collection by introducing a shared payload pool and reducing the default local buffer size.\n",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }

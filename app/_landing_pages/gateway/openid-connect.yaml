@@ -205,7 +205,8 @@ rows:
   - header:
       type: h2
       text: Examples with other supported IdPs
-  - columns:
+    column_count: 3
+    columns:
       - blocks:
         - type: card
           config:
@@ -230,7 +231,6 @@ rows:
             cta:
               text: Set up OIDC with Azure AD
               url: "/plugins/openid-connect/examples/azure-ad/"
-  - columns:
       - blocks:
         - type: card
           config:

@@ -160,7 +160,7 @@ rows:
                 Swiss army knife for the {{site.konnect_short_name}} Reference Platform
               icon: /assets/icons/code.svg
               cta:
-                text: See more... 
+                text: See more 
                 url: /konnect-reference-platform/orchestrator/
       - col_span: 2
         blocks:
@@ -190,7 +190,7 @@ rows:
                 An example implementation modeled after a fictional airline
               icon: /assets/icons/organization.svg
               cta:
-                text: See more... 
+                text: See more 
                 url: /konnect-reference-platform/kong-air/
       - col_span: 2
         blocks:
@@ -221,7 +221,7 @@ rows:
                 A set of CI/CD workflows that drive an API delivery pipeline
               icon: /assets/icons/load-balance.svg
               cta:
-                text: See more... 
+                text: See more 
                 url: /konnect-reference-platform/apiops/
       - col_span: 2
         blocks:
@@ -250,7 +250,7 @@ rows:
                 Step by step guide for building your own API delivery platform
               icon: /assets/icons/graduation.svg
               cta:
-                text: See more... 
+                text: See more 
                 url: /konnect-reference-platform/how-to/
       - col_span: 2
         blocks:

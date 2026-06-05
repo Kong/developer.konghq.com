@@ -7,7 +7,7 @@ layout: reference
 
 works_on:
   - konnect
-beta: true
+
 tools:
   - kongctl
 
@@ -31,6 +31,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl get analytics](/kongctl/get/analytics/)
+    description: "Get {{site.konnect_short_name}} {{site.observability}} details."
+  - command: |
       [kongctl get api](/kongctl/get/api/)
     description: "Get API details."
   - command: |
@@ -42,6 +45,15 @@ rows:
   - command: |
       [kongctl get catalog](/kongctl/get/catalog/)
     description: "Get {{site.catalog}} details."
+  - command: |
+      [kongctl get dcr-provider](/kongctl/get/dcr-provider/)
+    description: "List or get DCR providers."
+  - command: |
+      [kongctl get event-gateway](/kongctl/get/event-gateway/)
+    description: "Get Event Gateway details."
+  - command: |
+      [kongctl get extension](/kongctl/get/extension/)
+    description: "Get a kongctl CLI extension."
   - command: |
       [kongctl get gateway](/kongctl/get/gateway/)
     description: "Get gateway information."
@@ -55,6 +67,9 @@ rows:
       [kongctl get organization](/kongctl/get/organization/)
     description: "Get organization details."
   - command: |
+      [kongctl get pat](/kongctl/get/pat/)
+    description: "Get {{site.konnect_short_name}} personal access tokens."
+  - command: |
       [kongctl get portal](/kongctl/get/portal/)
     description: "Get Portal configuration."
   - command: |
@@ -63,6 +78,9 @@ rows:
   - command: |
       [kongctl get regions](/kongctl/get/regions/)
     description: "Get available regions."
+  - command: |
+      [kongctl get spat](/kongctl/get/spat/)
+    description: "Get {{site.konnect_short_name}} system account access tokens."
 {% endtable %}
 
 ## Command usage

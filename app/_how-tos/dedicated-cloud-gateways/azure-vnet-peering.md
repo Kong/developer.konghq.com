@@ -26,6 +26,12 @@ related_resources:
     url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
   - text: Configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution
     url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   show_works_on: false
   inline:
@@ -73,7 +79,7 @@ next_steps:
 
 After your VNET peering configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
+1. Click the **Networks** tab.
 1. Scroll until you see `Ready` for VNET peering.

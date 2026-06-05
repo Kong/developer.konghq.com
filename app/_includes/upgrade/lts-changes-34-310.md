@@ -187,7 +187,19 @@ rows:
       While the `+` character represents the correct encoding of space in query strings, Kong uses `%20` in many other APIs, which is inherited from Nginx/OpenResty.
     action: |
       No
-          
+  - category: Dependencies
+    description: |
+      PCRE was upgraded from `libpcre` 8.45 to `libpcre2` 10.43.
+      This upgrade changes the expected regex syntax, and any incompatible regular expressions will prevent {{site.base_gateway}} from applying configuration.
+    action: |
+      Review all regexes in your entity configuration and adjust based on the [PCRE2 syntax reference](https://www.pcre.org/current/doc/html/pcre2syntax.html).
+  - category: Dependencies
+    description: |
+      OpenResty was bumped from 1.21.4.2 to 1.25.3.1, picking up stricter header validation from Nginx.
+       Starting from 1.23.2, Nginx strictly enforces [RFC 9112](https://datatracker.ietf.org/doc/html/rfc9112) and treats upstream responses that contain duplicate `Content-Length` headers, duplicate `Transfer-Encoding` headers, or both headers as invalid, returning a `502 Bad Gateway`.
+    action: |
+      Ensure that your upstream services don't emit duplicate `Content-Length`/`Transfer-Encoding` headers or both headers in the same response. 
+      If both headers exist in the response, remove the redundant `Transfer-Encoding` header.
 {% endtable %}
 
 

@@ -24,7 +24,8 @@ rows:
 
                     To compare plans, see the [pricing page](https://insomnia.rest/pricing).
                     To learn how to set up your Insomnia Enterprise instance, see [Get started with Insomnia Enterprise](/insomnia/enterprise-onboarding/).
-  - columns:
+  - column_count: 4
+    columns:
       - blocks:
         - type: card
           config:
@@ -60,8 +61,7 @@ rows:
             icon: /assets/icons/lock.svg
             cta:
               text: Learn more
-              url: /insomnia/external-vault/                  
-  - columns:
+              url: /insomnia/external-vault/
       - blocks:
         - type: card
           config:

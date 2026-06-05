@@ -67,9 +67,11 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
+
+## Generate salt token
+
+{% include how-tos/steps/deck-salt-token.md %}
 
 ## Enable the OpenID Connect plugin with the password grant
 
@@ -95,6 +97,7 @@ entities:
         - password
         password_param_type:
         - header
+        cache_tokens_salt: ${salt-token}
 variables:
   issuer:
     value: $ISSUER
@@ -102,6 +105,8 @@ variables:
     value: $CLIENT_ID
   client-secret:
     value: $CLIENT_SECRET
+  salt-token:
+    value: $TOKEN_SALT
 {% endentity_examples %}
 
 In this example:

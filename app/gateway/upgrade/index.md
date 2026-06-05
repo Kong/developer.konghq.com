@@ -26,6 +26,8 @@ related_resources:
     url: /gateway/upgrade/rolling/
   - text: "Blue-green upgrade"
     url: /gateway/upgrade/blue-green/
+  - text: "3.10 to 3.14 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-310-314/
   - text: "3.4 to 3.10 LTS upgrade"
     url: /gateway/upgrade/lts-upgrade-34-310/
   - text: "2.8 to 3.4 LTS upgrade"
@@ -47,6 +49,7 @@ For example, the process of moving data from an old PostgreSQL instance to a new
 {:.info}
 > **Note**: If you are interested in upgrading between the {{site.ee_product_name}} long-term 
 support (LTS) versions, see:
+> * [{{site.base_gateway}} 3.10 to 3.14 LTS upgrade guide](/gateway/upgrade/lts-upgrade-310-314/)
 > * [{{site.base_gateway}} 3.4 to 3.10 LTS upgrade guide](/gateway/upgrade/lts-upgrade-34-310/)
 > * [{{site.base_gateway}} 2.8 to 3.4 LTS upgrade guide](/gateway/upgrade/lts-upgrade-28-34/)
 
@@ -117,6 +120,7 @@ By default, {{site.base_gateway}} has migration tests between adjacent versions,
     {{site.base_gateway}} maintains LTS versions and guarantees upgrades between adjacent LTS versions.
     The current LTS in the 2.x series is 2.8, and the current LTS in the 3.x series is 3.10.
     If you want to upgrade between LTS versions, see the upgrade guides:
+    * [{{site.base_gateway}} 3.10 to 3.14 LTS upgrade guide](/gateway/upgrade/lts-upgrade-310-314/)
     * [{{site.base_gateway}} 3.4 to 3.10 LTS upgrade guide](/gateway/upgrade/lts-upgrade-34-310/)
     * [{{site.base_gateway}} 2.8 to 3.4 LTS upgrade guide](/gateway/upgrade/lts-upgrade-28-34/)
 

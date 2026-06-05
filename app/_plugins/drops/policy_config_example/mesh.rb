@@ -19,6 +19,10 @@ module Jekyll
         def use_meshservice
           @use_meshservice ||= example['use_meshservice']
         end
+
+        def tools
+          @tools ||= example.fetch('tools', nil)
+        end
       end
     end
   end

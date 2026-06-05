@@ -1,0 +1,9 @@
+name: a2a-kongair-route
+paths:
+  - /a2a
+strip_path: true
+service:
+  name: a2a-kongair-agent
+protocols:
+  - http
+  - https

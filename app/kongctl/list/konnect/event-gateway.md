@@ -4,7 +4,7 @@ description: "List {{site.konnect_short_name}} event gateways."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect

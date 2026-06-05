@@ -14,6 +14,7 @@ related_resources:
     url: /event-gateway/encrypt-kafka-messages-with-event-gateway/
 tools:
     - konnect-api
+    - kongctl
 
 works_on:
   - konnect

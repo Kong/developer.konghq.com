@@ -11,6 +11,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.2": [
+    {
+      "message": "Fixed an issue where anonymous consumers with valid legacy ACL group credentials were rejected with 403 when `include_consumer_groups` was enabled and no enterprise consumer groups were assigned.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where the cache was not being invalidated for incremental sync in certain scenarios, leading to stale data being served.",

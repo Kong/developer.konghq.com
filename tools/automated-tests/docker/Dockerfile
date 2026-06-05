@@ -6,7 +6,7 @@ RUN python3 -m venv /opt/myenv
 ENV PATH="/opt/myenv/bin:$PATH"
 
 RUN ARCH=$(dpkg --print-architecture) && \
-    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.49.1/deck_v1.49.1_${ARCH}.deb && \
+    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.62.1/deck_v1.62.1_${ARCH}.deb && \
     dpkg -i deck_v1.deb
 RUN apt-get update
 RUN apt-get install ca-certificates curl

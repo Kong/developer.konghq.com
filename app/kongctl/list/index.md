@@ -7,7 +7,7 @@ layout: reference
 
 works_on:
   - konnect
-beta: true
+
 tools:
   - kongctl
 
@@ -37,6 +37,12 @@ rows:
       [kongctl list auth-strategy](/kongctl/list/auth-strategy/)
     description: "List authentication strategies."
   - command: |
+      [kongctl list dcr-provider](/kongctl/list/dcr-provider/)
+    description: "List DCR providers."
+  - command: |
+      [kongctl list extensions](/kongctl/list/extensions/)
+    description: "List installed kongctl CLI extensions."
+  - command: |
       [kongctl list gateway](/kongctl/list/gateway/)
     description: "List gateways."
   - command: |
@@ -48,6 +54,9 @@ rows:
   - command: |
       [kongctl list portal](/kongctl/list/portal/)
     description: "List Portal configurations."
+  - command: |
+      [kongctl list profile](/kongctl/list/profile/)
+    description: "List kongctl profiles."
   - command: |
       [kongctl list themes](/kongctl/list/themes/)
     description: "List Portal themes."

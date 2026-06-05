@@ -1,6 +1,7 @@
 ```ansi
 Usage:
   kongctl get gateway control-plane [flags]
+  kongctl get gateway control-plane [command]
 
 Aliases:
   control-plane, control-planes, controlplane, controlplanes, cp, cps, CP, CPS
@@ -12,8 +13,16 @@ Examples:
   kongctl get konnect gateway control-plane 22cd8a0b-72e7-4212-9099-0764f8e9c5ac
   # Get details for a control plane with a specific name
   kongctl get konnect gateway control-plane my-control-plane
+  # List data plane certificates for a specific control plane
+  kongctl get konnect gateway control-plane data-plane-certificates --control-plane-name my-control-plane
   # Get all the control planes for the authorized user using command aliases
   kongctl get k gw cps
+
+Available Commands:
+  consumer                List or get Konnect Kong Gateway Consumers
+  data-plane-certificates List or get Konnect Kong Gateway data plane certificates
+  route                   List or get Konnect Kong Gateway Routes
+  service                 List or get Konnect Kong Gateway Services
 
 
 Flags:
@@ -22,8 +31,8 @@ Flags:
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
+                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
+                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for control-plane
@@ -42,9 +51,13 @@ Flags:
       --log-level string        Configures the logging level. Execution logs are written to STDERR.
                                 - Config path: [ log-level ]
                                 - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
+                                - Config path: [ telemetry.enabled ]
+                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
-                                - Allowed    : [ json|yaml|text ] (default "text")
+                                - Allowed    : [ json|yaml|text|helm ] (default "text")
       --page-size int           Max number of results to include per response page for get and list operations.
                                 - Config path: [ konnect.page-size ] (default 10)
       --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI. 
@@ -53,5 +66,7 @@ Flags:
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
+
+Use "kongctl get gateway control-plane [command] --help" for more information about a command.
 
 ```

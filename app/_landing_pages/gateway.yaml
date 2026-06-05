@@ -206,6 +206,7 @@ rows:
   - header:
       type: h2
       text: Key functionality
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -243,8 +244,6 @@ rows:
             cta:
               text: Add Rate Limiting with {{ site.base_gateway }}
               url: "/gateway/rate-limiting/"
-
-  - columns:
       - blocks:
         - type: card
           config:
@@ -289,7 +288,7 @@ rows:
   - header:
       type: h2
       text: Key references
-  - column_count: 3
+    column_count: 3
     columns:
       - blocks:
           - type: card

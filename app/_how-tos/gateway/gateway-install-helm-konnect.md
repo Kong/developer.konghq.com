@@ -126,7 +126,7 @@ ingressController:
   
 image:
  repository: kong/kong-gateway
- tag: "{{ site.data.gateway_latest.version }}"
+ tag: "{{ site.data.gateway_latest.release }}"
   
 # Mount the secret created earlier
 secretVolumes:

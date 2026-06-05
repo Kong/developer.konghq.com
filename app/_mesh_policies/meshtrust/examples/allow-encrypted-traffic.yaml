@@ -1,0 +1,24 @@
+title: 'Allow encrypted traffic from a different trust domain'
+description: 'Allow encrypted mTLS traffic from a different trust domain to the mesh using a PEM certificate bundle.'
+tools:
+  - kubernetes
+requirements:
+  - "A [MeshService](/mesh/meshservice/) resource must be configured in your mesh."
+weight: 900
+namespace: kuma-system
+config:
+  type: MeshTrust
+  name: zone-2-trust
+  mesh: default
+  labels:
+    kuma.io/origin: zone
+    kuma.io/zone: zone-1
+  spec:
+    caBundles:
+      - type: Pem
+        pem:
+          value: |-
+            -----BEGIN CERTIFICATE-----
+            <CERTIFICATE CONTENT>
+            -----END CERTIFICATE-----
+    trustDomain: test.zone-2.mesh.local

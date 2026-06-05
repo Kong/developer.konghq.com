@@ -1,0 +1,40 @@
+description: 'Enable the CrowdStrike Falcon AIDR Response plugin to inspect LLM responses against AIDR Output Rules before returning to the client.'
+
+title: 'Enable CrowdStrike Falcon AIDR Response'
+
+weight: 900
+
+requirements:
+  - "The CrowdStrike Falcon AIDR Response plugin is [installed](/plugins/crowdstrike-aidr-response/#install-the-crowdstrike-aidr-response-plugin)."
+  - "You have [registered a Kong Collector](/plugins/crowdstrike-aidr-response/#register-a-kong-collector-in-aidr) in the AIDR console and have your API key and base URL."
+
+variables:
+  api-key:
+    value: $CROWDSTRIKE_AIDR_API_KEY
+    description: "Your CrowdStrike Falcon AIDR API key, obtained from the collector's Config tab in the AIDR console."
+  api-base-url:
+    value: https://api.crowdstrike.com/aidr/aiguard
+    description: "The AIDR base URL, obtained from the collector's Config tab in the AIDR console."
+  provider:
+    value: openai
+    description: "The upstream LLM provider, for example `openai`. One of: `anthropic`, `azureai`, `bedrock`, `cohere`, `gemini`, `kong`, `openai`."
+  api-uri:
+    value: /v1/chat/completions
+    description: "The API URI for the route this plugin is applied to. If routing through {{site.ai_gateway}}, use the AI Proxy route path."
+
+config:
+  ai_guard_api_key: ${api-key}
+  ai_guard_api_base_url: ${api-base-url}
+  upstream_llm:
+    provider: ${provider}
+    api_uri: ${api-uri}
+
+min_version:
+  gateway: '3.8'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

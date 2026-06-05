@@ -1,5 +1,5 @@
 ---
-title: "{{site.konnect_short_name}} Analytics"
+title: "{{site.observability}}"
 content_type: reference
 layout: reference
 
@@ -16,11 +16,12 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: Connect reports from {{site.konnect_short_name}} Analytics
+description: Connect reports from {{site.observability}}
 search_aliases:
   - service catalog
+  - konnect analytics
 related_resources:
-  - text: "Map {{site.konnect_short_name}} Analytics reports in {{site.konnect_catalog}}"
+  - text: "Map {{site.observability}} reports in {{site.konnect_catalog}}"
     url: /how-to/map-analytics-resources/
   - text: "{{site.konnect_catalog}}"
     url: /catalog/
@@ -29,16 +30,16 @@ discovery_default: true
 bindable_entities: "Report"
 ---
 
-The {{site.konnect_short_name}} Analytics integration will allow users to connect Reports from the {{site.konnect_short_name}} Analytics product directly to their services. Users browsing the catalog will be able to see what reports are important to that service, and be brought directly to the report by clicking through.
+The {{site.observability}} integration will allow users to connect Reports from the {{site.observability}} product directly to their services. Users browsing the catalog will be able to see what reports are important to that service, and be brought directly to the report by clicking through.
 
-## Authorize the {{site.konnect_short_name}} Analytics integration
+## Authorize the {{site.observability}} integration
 
-The {{site.konnect_short_name}} Analytics integration is built directly into {{site.konnect_catalog}}. No additional authorization is required.
+The {{site.observability}} integration is built directly into {{site.konnect_catalog}}. No additional authorization is required.
 
 
 ## Resources
 
-Available {{site.konnect_short_name}} Analytics entities:
+Available {{site.observability}} entities:
 
 {% table %}
 columns:
@@ -48,11 +49,8 @@ columns:
     key: description
 rows:
   - entity: "Report"
-    description: "A Report in the Konnect Analytics product"
+    description: "A Report in the {{site.observability}} product"
 {% endtable %}
-
-
-
 
 ## Discovery information
 

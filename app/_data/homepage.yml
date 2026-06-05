@@ -55,6 +55,16 @@ sections:
             url: /metering-and-billing/
           - text: All documentation
             url: /index/metering-and-billing/
+      
+      - title: "{{site.identity}}"
+        icon: /assets/icons/identity.svg
+        icon_alt: Kong Identity icon
+        description: "{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access."
+        links:
+          - text: "{{site.identity}} overview"
+            url: /identity/
+          - text: All documentation
+            url: /index/identity/
 
   - title: Connectivity
     items:
@@ -99,20 +109,6 @@ sections:
             url: /how-to/?products=mesh
           - text: All documentation
             url: /index/mesh/
-
-      - title: KIC
-        icon: /assets/icons/kubernetes.svg
-        icon_alt: Kong Ingress Controller icon
-        description: "Kong's Kubernetes-native controller to manage API traffic for containerized apps"
-        links:
-          - text: Overview
-            url: /kubernetes-ingress-controller/
-          - text: Install
-            url: /kubernetes-ingress-controller/install/
-          - text: How-to guides
-            url: /how-to/?products=kic
-          - text: All documentation
-            url: /index/kubernetes-ingress-controller/
 
       - title: Operator
         icon: /assets/icons/kubernetes.svg

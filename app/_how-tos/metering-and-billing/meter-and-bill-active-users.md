@@ -77,7 +77,7 @@ For per-seat billing, you'll create a generic meter using the `UNIQUE_COUNT` agg
 This counts the number of distinct `user_id` values seen within the billing period, so if the same user is active multiple times, they're only counted once.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. Click **New meter**.
+1. Click **Create Meter**.
 1. In the **Name** field, enter `Active users total`.
 1. In the **Description** field, enter `Active Users`.
 1. In the **Event Type Filter** field, enter `user_activity`.
