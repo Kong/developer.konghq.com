@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@d5142295a8daa96e3321e6a14f25d95c299f245d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d5142295a8daa96e3321e6a14f25d95c299f245d'
+  x-oas-source: kong/platform-api@f2a3c32e62e5ef96b2a27f8eb6c3ecce75538c2c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f2a3c32e62e5ef96b2a27f8eb6c3ecce75538c2c'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -880,6 +880,10 @@ components:
         type: string
         enum:
           - error_rate
+          - kong_internal_latency_average
+          - kong_internal_latency_p50
+          - kong_internal_latency_p95
+          - kong_internal_latency_p99
           - kong_latency_average
           - kong_latency_p50
           - kong_latency_p95
@@ -2116,6 +2120,10 @@ components:
           - a2a_latency_average
           - a2a_response_size_sum
           - error_rate
+          - kong_internal_latency_average
+          - kong_internal_latency_p50
+          - kong_internal_latency_p95
+          - kong_internal_latency_p99
           - kong_latency_average
           - kong_latency_p50
           - kong_latency_p95

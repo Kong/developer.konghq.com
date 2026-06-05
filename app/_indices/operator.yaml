@@ -43,12 +43,17 @@ groups:
           - title: "Manage {{ site.base_gateway }} in Kubernetes through {{ site.operator_product_name }} and the {{site.konnect_short_name}} CRDs"
             description: Deploy and configure {{ site.base_gateway }} in Kubernetes using Kong-specific Custom Resource Definitions (CRDs) provided by {{ site.operator_product_name }}.
             url: /operator/get-started/konnect-crds/install/
+          - title: "Deploy {{ site.event_gateway }} on Kubernetes"
+            description: Deploy {{ site.event_gateway }} on Kubernetes with {{ site.operator_product_name }}, {{site.konnect_short_name}}, and Event Gateway CRDs.
+            url: /operator/get-started/event-gateway/install/
+          - path: /operator/get-started/event-gateway/**/*
       - title: Key Concepts
         items:
           - path: /operator/dataplanes/gateway-api/
           - path: /operator/dataplanes/gateway-configuration/
           - path: /operator/dataplanes/managed-gateways/
           - path: /operator/dataplanes/faq/license/
+          - path: /operator/konnect/event-gateway/
       - title: How-To
         items:
           - path: /operator/dataplanes/how-to/set-dataplane-image/
@@ -92,6 +97,7 @@ groups:
       - title: Get Started
         items:
           - path: /operator/get-started/konnect-crds/**/*
+          - path: /operator/get-started/dev-portal/**/*
       - title: Key Concepts
         items:
           - path: /operator/konnect/reconciliation-loop/

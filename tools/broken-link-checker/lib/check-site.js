@@ -16,7 +16,7 @@ export default function (options) {
       {
         honorRobotExclusions: false,
         excludedKeywords: options.excluded,
-        maxSocketsPerHost: 128,
+        maxSocketsPerHost: 16,
         cacheResponses: true,
       },
       {

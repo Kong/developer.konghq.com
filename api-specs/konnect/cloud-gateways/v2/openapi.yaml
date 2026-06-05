@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@607200db66bef872df448c5f5e89bff9ef0cb415
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/607200db66bef872df448c5f5e89bff9ef0cb415'
+  x-oas-source: kong/platform-api@e9387742c9fbf6e555c330af3e8be7271ea7855f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e9387742c9fbf6e555c330af3e8be7271ea7855f'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -1499,7 +1499,7 @@ components:
           description: Value assigned to the environment variable field for the data-plane group.
           type: string
           example: info
-          maxLength: 120
+          maxLength: 2048
           minLength: 1
       required:
         - name
