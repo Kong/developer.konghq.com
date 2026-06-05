@@ -428,6 +428,7 @@ config:
   - name: real_ip_header
   - name: headers
   - name: trusted_ips
+  - name: otel_resource_attributes
 {% endkong_config_table %}
 <!--vale on -->
 
