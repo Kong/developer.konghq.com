@@ -429,6 +429,7 @@ config:
   - name: headers
   - name: trusted_ips
   - name: otel_resource_attributes
+    prefix: false
 {% endkong_config_table %}
 <!--vale on -->
 

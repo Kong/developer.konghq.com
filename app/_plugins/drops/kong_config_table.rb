@@ -34,7 +34,12 @@ module Jekyll
 
         def format_name(name, mode)
           return name if mode == 'conf'
-          return "KONG_#{name.upcase}" if mode == 'env'
+
+          if mode == 'env'
+            return name.upcase if @config['prefix'] == false
+
+            return "KONG_#{name.upcase}"
+          end
 
           raise "Unknown kong_config_table mode: #{mode}"
         end
