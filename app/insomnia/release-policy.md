@@ -39,8 +39,8 @@ Public documentation updates support the latest versions of Insomnia.
 - **Preview** or **Tech Preview**: Features that are ready to use but still in active development. Preview features are clearly marked in the product.
 
 Learn more about stages of software availability [on the dedicated page](/stages-of-software-availability/).
-{:.info}
 
+{:.info}
 > Insomnia strongly recommends using the newest version, and that all users collaborating on the same project remain on the same major version.
 
 ## Long Term Support (LTS)
