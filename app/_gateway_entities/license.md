@@ -128,7 +128,7 @@ You can deploy a license as an environment variable.
 
 {:.info}
 > If you deploy a license using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the license to data plane nodes. 
-You **must** add the license to each data plane node, and each node **must** start with the license. 
+Add the license to each data plane node. Each node must start with the license. 
 The license can't be added after starting the node.
 
 Unlike other `KONG_*` environment variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` can't be defined inline as part of any `kong` CLI commands. These license environment variables must be exported to the shell where the Nginx process runs before using the `kong` CLI tool.

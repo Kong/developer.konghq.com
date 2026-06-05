@@ -46,7 +46,7 @@ Breaking changes in the 3.15.0.0 release.
 When a license expires, you can no longer change any {{site.base_gateway}} configuration.
 The Admin API and all interfaces become read-only until a valid license is applied.
 
-Existing configuration continues to be used, and all proxy traffic is processed normally.
+Existing configuration continues to be used, and all proxy traffic is processed as before the expiration.
 
 ## 3.14.x breaking changes
 
