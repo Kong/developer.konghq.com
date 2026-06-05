@@ -107,5 +107,13 @@ extends:
   - ./rules/my-rules.yaml
 ```
 
+If you reference a remote file (one hosted outside of your project in {{ site.data.products.insomnia.name }}), {{ site.data.products.insomnia.name }} fetches its content only when you upload the custom ruleset. If the remote file later changes, {{ site.data.products.insomnia.name }}:
+
+- Doesn't track those changes in commits, because the file lives outside the project.
+- Doesn't fetch them automatically for security reasons. Instead, you can refresh manually using the button next to the ruleset option.
+
 {% endnavtab %}
 {% endnavtabs %}
+
+{:.warning}
+> Make sure users in your team are running at least {{ site.data.products.insomnia.name }} `13.0` to avoid compatibility issues with this feature.
