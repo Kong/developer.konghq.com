@@ -1202,6 +1202,31 @@ Field-level output connections are not supported, even if the output data has kn
     id: response.body
 ```
 
+#### Requiring non-nil property values {% new_in 3.15 %}
+
+You can require the result of any operation in a property node to contain a real value by setting `non_nil: true`.
+When set to `true`:
+
+* `get` operations trigger an error instead of sending `nil`/`null` as output
+* `set` operations trigger an error instead of accepting `nil`/`null` as input
+
+This enables you to create configurations with explicit intent and behavior.
+
+For example, you could use a property node to retrieve an API key from `kong.ctx.shared.src`.
+If the retrieved value is `nil` or `null`, the plugin errors instead of continuing:
+
+```yaml
+- name: GET_SRC
+  type: property
+  property: kong.ctx.shared.src
+  non_nil: true
+- name: SET_API_KEY
+  type: property
+  property: kong.ctx.shared.api_key
+  non_nil: true
+  input: GET_SRC
+```
+
 #### Supported properties
 
 The following properties support **get** operations:
