@@ -69,17 +69,14 @@ module Jekyll
       end
 
       def entities_product
-        override = prereqs['entities_product']
-        product = override || @page.data.fetch('products', [])[0]
-        product = 'kic' if product == 'operator'
-        product
+        @entities_product ||= begin
+          product = prereqs['entities_product'] || @page.data.fetch('products', [])[0]
+          product = 'kic' if product == 'operator'
+          product
+        end
       end
 
       def data
-        #product = @page.data.fetch('products', [])[0]
-
-        # Use KIC rendering for Operator for now
-        #product = 'kic' if product == 'operator'
         product = entities_product
 
         yaml = {}
