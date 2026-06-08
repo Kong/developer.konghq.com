@@ -86,6 +86,7 @@ This script will load the existing `app/_data/changelogs/gateway.json` and:
 ### Updating the changelog when there's a new release
 
 1. Make sure that your local copy of `kong-ee` is up to date and in the right branch (if it's a patch release).
-1. Run `node run.js --path='../../../kong-ee' --version='<version>'` to generate the temp file.
+1. Run `node md-to-yml.js --path='../../../kong-ee' --version='<version>'` to generate the entries.
+1. Run `node run.js --path='./tmp' --version='<version>'` to generate the temp file.
 1. Update `app/_data/products/gateway.yml` with the new release version and release date.
 1. Run `node changelog.js` to update the changelog.

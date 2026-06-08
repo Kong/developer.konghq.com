@@ -3,9 +3,9 @@
  * one YAML entry per bullet under <path>/<version>/<component>/<slug>.yml.
  *
  * Usage:
- *   node md-to-yml.mjs --path <changelog-dir> --version <ver> [-o outputDir] [--dry-run]
+ *   node md-to-yml.mjs --path <kong-ee-dir> --version <ver> [-o outputDir] [--dry-run]
  *
- *   <changelog-dir>  Path to the top-level "changelog" folder. Resolved
+ *   <kong-ee-dir>    Path to the kong-ee repo folder. Resolved
  *                    RELATIVE TO THE SCRIPT'S LOCATION (not the caller's
  *                    cwd), so the script can live anywhere and still find
  *                    a co-located changelog folder via a stable relative
@@ -70,30 +70,31 @@ const FILENAME_PREFIX_BY_TYPE = {
 };
 
 function parseArgs(argv) {
-  const args = { changelogDir: null, version: null, outDir: null, dryRun: false };
+  const args = { kongeeDir: null, version: null, outDir: null, dryRun: false };
   for (let i = 2; i < argv.length; i++) {
-    const a = argv[i];
-    if (a === '--path' || a === '-p') args.changelogDir = argv[++i];
-    else if (a === '--version' || a === '-v') args.version = argv[++i];
-    else if (a === '-o' || a === '--out') args.outDir = argv[++i];
-    else if (a === '--dry-run') args.dryRun = true;
-    else if (a === '-h' || a === '--help') {
+    const [flag, eqVal] = argv[i].split(/=(.+)/);
+    const nextVal = () => eqVal !== undefined ? eqVal : argv[++i];
+    if (flag === '--path' || flag === '-p') args.kongeeDir = nextVal();
+    else if (flag === '--version' || flag === '-v') args.version = nextVal();
+    else if (flag === '-o' || flag === '--out') args.outDir = nextVal();
+    else if (flag === '--dry-run') args.dryRun = true;
+    else if (flag === '-h' || flag === '--help') {
       process.stdout.write(
-        'Usage: node md-to-yml.mjs --path <changelog-dir> --version <ver> [-o outDir] [--dry-run]\n' +
-        '  <changelog-dir> and <outDir> are resolved relative to the script.\n' +
-        '  Reads <changelog-dir>/<ver>/<ver>.md, writes to <changelog-dir>/<ver>/<component>/.\n'
+        'Usage: node md-to-yml.js --path <kong-ee-dir> --version <ver> [-o outDir] [--dry-run]\n' +
+        '  <kong-ee-dir> and <outDir> are resolved relative to the script.\n' +
+        '  Reads <kong-ee-dir>/changelog/<ver>/<ver>.md, writes to <outDir>/<component>/.\n'
       );
       process.exit(0);
-    } else throw new Error(`Unexpected argument: ${a}`);
+    } else throw new Error(`Unexpected argument: ${argv[i]}`);
   }
-  if (!args.changelogDir) throw new Error('Missing --path <changelog-dir>');
+  if (!args.kongeeDir) throw new Error('Missing --path <kong-ee-dir>');
   if (!args.version) throw new Error('Missing --version <ver>');
 
   // Resolve relative to the script's location so the script can live
   // anywhere and find the changelog via a stable relative path.
   const resolveRel = (p) => path.resolve(__dirname, p);
-  const changelogDir = resolveRel(args.changelogDir);
-  const releaseDir = path.join(changelogDir, args.version);
+  const kongeeDir = resolveRel(args.kongeeDir);
+  const releaseDir = path.join(kongeeDir, 'changelog', args.version);
   const inputMd = path.join(releaseDir, `${args.version}.md`);
 
   if (!fs.existsSync(inputMd)) {
