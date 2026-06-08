@@ -13,6 +13,9 @@
         {% if page.tier %}
             {% include tier.html products=page.products tier=page.tier %}
         {% endif %}
+        {% if page.tiers %}
+            {% include tier.html products=page.products tiers=page.tiers %}
+        {% endif %}
          {%- if page.beta == true or page.tech_preview == true -%}
             {%- include_cached badges/stage.html beta=page.beta tech_preview=page.tech_preview -%}
          {% endif %}
