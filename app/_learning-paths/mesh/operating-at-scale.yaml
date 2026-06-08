@@ -1,0 +1,61 @@
+metadata:
+  title: "Operating Kong Mesh at Scale"
+  description: "Spread a single Kong Air mesh across regions and clouds without losing zero-trust. Learn the multi-zone fabric — ZoneIngress, ZoneEgress, MMZS, KDS sync — choose a tenancy model, then run real per-zone canary rollouts and color-affinity routing across the global network."
+  weight: 800
+  required_paths:
+    - /learning-paths/mesh/fundamentals/
+  products:
+    - mesh
+  personas:
+    - platform-engineer
+  min_version:
+    mesh: "2.10"
+  tags:
+    - multi-zone
+    - federation
+    - canary
+    - multi-tenancy
+
+steps:
+  - title: "Step 1: Multi-zone architecture"
+    description: "The pieces that make a mesh span more than one cluster: Global CP and Zone CPs, the KDS sync channel, ZoneIngress for inbound cross-zone traffic, ZoneEgress for centralized outbound, and `MeshMultiZoneService` for cross-zone service identity."
+    permalink: /learning-paths/mesh/operating-at-scale/step-1/
+    learn:
+      title: "Learn: Zones, ingresses, egresses, and `MeshMultiZoneService`"
+      include: learning-paths/mesh/scale-step-1-learn
+    practice:
+      title: "Practice: Inspect your multi-zone fabric"
+      include: learning-paths/mesh/scale-step-1-practice
+
+  - title: "Step 2: Multi-tenancy strategies"
+    description: "Two teams, one mesh — or two teams, two meshes? Compare soft multi-tenancy (shared mesh, shared CA, namespace-scoped policies) with hard multi-tenancy (one mesh per team, isolated CAs, cross-mesh gateways) and pick the right model for Kong Air's regulated subsidiaries."
+    permalink: /learning-paths/mesh/operating-at-scale/step-2/
+    learn:
+      title: "Learn: Soft vs. hard multi-tenancy"
+      include: learning-paths/mesh/scale-step-2-learn
+    practice:
+      title: "Practice: Two tenants on one mesh, isolated by policy"
+      include: learning-paths/mesh/scale-step-2-practice
+
+  - title: "Step 3: Per-zone canary releases"
+    description: "Roll out booking-engine v2 only in `east` without touching `west`. Use `MeshMultiZoneService` resources for stable and canary pools, scope `MeshHTTPRoute` to one zone, and add a `MeshLoadBalancingStrategy` so cross-region failover kicks in if the canary collapses."
+    permalink: /learning-paths/mesh/operating-at-scale/step-3/
+    learn:
+      title: "Learn: Why zone-scoped rollouts beat global canary"
+      include: learning-paths/mesh/scale-step-3-learn
+    practice:
+      title: "Practice: 90/10 east, 100/0 west, with failover"
+      include: learning-paths/mesh/scale-step-3-practice
+
+  - title: "Step 4: Global color routing"
+    description: "Pin a request's color (`blu`/`green`) across every hop of a multi-service chain — for ring-based deploys, isolated tenants, or shadow environments — using color-pinning `MeshHTTPRoute` policies against agnostic `MeshMultiZoneService` hostnames."
+    permalink: /learning-paths/mesh/operating-at-scale/step-4/
+    learn:
+      title: "Learn: Color affinity and agnostic hostnames"
+      include: learning-paths/mesh/scale-step-4-learn
+    practice:
+      title: "Practice: Pin `blu` across the check-in → flight-control chain"
+      include: learning-paths/mesh/scale-step-4-practice
+    next_steps:
+      - text: "Advanced Patterns — lock the perimeter, integrate external services, run chaos"
+        url: /learning-paths/mesh/advanced-patterns/step-1/

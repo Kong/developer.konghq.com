@@ -1,0 +1,41 @@
+metadata:
+  title: Learning Paths by Persona
+  content_type: landing_page
+  description: Find learning paths matched to your role and goals, regardless of which Kong product you're working with.
+  breadcrumbs:
+    - /learning-paths/
+
+rows:
+  - header:
+      type: h1
+      text: Learning Paths by Persona
+      sub_text: Not sure where to start? Pick the role that best describes you and explore paths tailored to your goals.
+
+  - column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: API Developer
+              description: Build and operate your services in the mesh. Configure traffic routing and canary releases, implement resilience patterns like circuit breakers and retries, and set up service-level observability.
+              cta:
+                url: /learning-paths/personas/api-developer/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: Platform Engineer
+              description: Provide mesh infrastructure as a service. Manage multi-zone networking with ZoneIngress and ZoneEgress, deploy high-availability gateways, and define mesh-wide observability policies across regions.
+              cta:
+                url: /learning-paths/personas/platform-engineer/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: Security Engineer
+              description: Enforce Zero-Trust security across your mesh. Issue workload identities via SPIFFE, enforce mutual TLS, implement fine-grained traffic permissions, and maintain audit trails for compliance.
+              cta:
+                url: /learning-paths/personas/security-engineer/
+                text: View paths

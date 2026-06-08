@@ -54,10 +54,16 @@ module Jekyll
           next true if k == 'skip_product' && v == true
         end
 
-        products = @page.data.fetch('products', [])
-        products = [] if prereqs['skip_product']
+        # gateway/ai-gateway are rendered inline in the template rather than via
+        # product include files, so check for them separately. Other products are
+        # checked via `products` which filters to only those with include files.
+        gateway_products = unless prereqs['skip_product']
+                             @page.data.fetch('products', []).intersection(%w[gateway ai-gateway])
+                           else
+                             []
+                           end
 
-        [tools, filtered_prereqs, products].any?(&:any?)
+        [tools, filtered_prereqs, products, gateway_products].any?(&:any?)
       end
 
       def entities?

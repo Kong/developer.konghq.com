@@ -1,0 +1,70 @@
+metadata:
+  title: "Advanced Kong Mesh Patterns"
+  description: "Five patterns Kong Air's platform team uses for the trickier edges of running a mesh: locking the outbound perimeter with `MeshPassthrough`, modeling external APIs as first-class services with `MeshExternalService`, bridging {{site.base_gateway}} into the mesh without losing mTLS, validating resilience with `MeshFaultInjection`, and reaching for `MeshProxyPatch` only when there's no high-level alternative."
+  weight: 700
+  required_paths:
+    - /learning-paths/mesh/fundamentals/
+  products:
+    - mesh
+  personas:
+    - platform-engineer
+    - security-engineer
+  min_version:
+    mesh: "2.10"
+  tags:
+    - perimeter
+    - external-services
+    - ingress
+    - chaos
+    - envoy
+
+steps:
+  - title: "Step 1: Securing the perimeter with `MeshPassthrough`"
+    description: "Out of the box, a {{site.mesh_product_name}} sidecar lets workloads call _any_ external destination. Move from that permissive default to a zero-trust outbound posture: `passthroughMode: None`, then explicitly allow the exceptions by IP, port, or domain."
+    permalink: /learning-paths/mesh/advanced-patterns/step-1/
+    learn:
+      title: "Learn: Open vs. secure mesh and the three passthrough modes"
+      include: learning-paths/mesh/advanced-step-1-learn
+    practice:
+      title: "Practice: Default-deny outbound with selective allow-list"
+      include: learning-paths/mesh/advanced-step-1-practice
+
+  - title: "Step 2: External services as first-class citizens"
+    description: "`MeshPassthrough` is allow-listing. `MeshExternalService` goes a step further — give external APIs and databases a friendly internal hostname, mesh observability, TLS origination at the sidecar, and policy targets (retries, circuit breakers) just like internal services."
+    permalink: /learning-paths/mesh/advanced-patterns/step-2/
+    learn:
+      title: "Learn: `MeshExternalService`, `HostnameGenerator`, and TLS origination"
+      include: learning-paths/mesh/advanced-step-2-learn
+    practice:
+      title: "Practice: AeroPay and the flight-database as mesh citizens"
+      include: learning-paths/mesh/advanced-step-2-practice
+
+  - title: "Step 3: Ingress mTLS bridge"
+    description: "Kong Air's public traffic enters through {{site.base_gateway}}. By default {{site.base_gateway}} bypasses the mesh's VIP layer and gets `502`'d by strict-mTLS backends. Fix it with a `kuma.io/gateway` annotation plus an `ExternalName` bridge that forces traffic back through mesh DNS."
+    permalink: /learning-paths/mesh/advanced-patterns/step-3/
+    learn:
+      title: "Learn: Why pod IPs break mTLS and how `ExternalName` fixes it"
+      include: learning-paths/mesh/advanced-step-3-learn
+    practice:
+      title: "Practice: Bridge {{site.base_gateway}} into a strict-mTLS mesh"
+      include: learning-paths/mesh/advanced-step-3-practice
+
+  - title: "Step 4: Chaos engineering with `MeshFaultInjection`"
+    description: "Validate that `MeshRetry`, `MeshTimeout`, and `MeshCircuitBreaker` actually do what you think when something goes wrong upstream. Inject HTTP aborts, latency, and response-rate throttling — scoped tight with header-matching so chaos stays inside the blast radius you set."
+    permalink: /learning-paths/mesh/advanced-patterns/step-4/
+    learn:
+      title: "Learn: Fault injection patterns and blast-radius scoping"
+      include: learning-paths/mesh/advanced-step-4-learn
+    practice:
+      title: "Practice: Abort, delay, and throttle Kong Air services safely"
+      include: learning-paths/mesh/advanced-step-4-practice
+
+  - title: "Step 5: The escape hatch — `MeshProxyPatch`"
+    description: "When a high-level policy doesn't exist for what you need, `MeshProxyPatch` lets you modify Envoy config directly with JSON-Patch operations against LDS, CDS, and RDS. Powerful, sharp, and exactly the kind of policy you _shouldn't_ apply mesh-wide."
+    permalink: /learning-paths/mesh/advanced-patterns/step-5/
+    learn:
+      title: "Learn: When to reach for `MeshProxyPatch` (and when not to)"
+      include: learning-paths/mesh/advanced-step-5-learn
+    practice:
+      title: "Practice: Inject a Lua filter, scoped to one service"
+      include: learning-paths/mesh/advanced-step-5-practice

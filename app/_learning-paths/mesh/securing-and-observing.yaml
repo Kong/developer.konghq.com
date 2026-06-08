@@ -1,0 +1,54 @@
+metadata:
+  title: "Securing and Observing Kong Mesh"
+  description: "Pick up where Fundamentals left off: turn on full-stack observability with `MeshMetric` + `MeshTrace` + `MeshAccessLog`, replace mesh-wide mTLS with workload-level SPIFFE identities via `MeshIdentity` and `MeshTrust`, and root those identities in your enterprise PKI."
+  weight: 900
+  required_paths:
+    - /learning-paths/mesh/fundamentals/
+  products:
+    - mesh
+  personas:
+    - platform-engineer
+    - security-engineer
+  min_version:
+    mesh: "2.10"
+  tags:
+    - observability
+    - mtls
+    - identity
+    - pki
+
+steps:
+  - title: "Step 1: Observability — metrics, traces, and logs"
+    description: "Install the bundled observability stack and turn on the three signals at the mesh level. Every sidecar starts emitting Prometheus metrics, OTLP traces, and structured access logs without a single line of application change."
+    permalink: /learning-paths/mesh/securing-and-observing/step-1/
+    learn:
+      title: "Learn: The three signals and how {{site.mesh_product_name}} emits them"
+      include: learning-paths/mesh/securing-step-1-learn
+    practice:
+      title: "Practice: Install the stack and turn on `MeshMetric` + `MeshTrace` + `MeshAccessLog`"
+      include: learning-paths/mesh/securing-step-1-practice
+
+  - title: "Step 2: Workload identity and trust"
+    description: "Move beyond the mesh-wide CA from Fundamentals to per-workload SPIFFE identities. `MeshIdentity` decides _what_ identity a workload gets; `MeshTrust` decides _which_ CAs it trusts; `MeshTLS` decides how those identities are enforced on the wire."
+    permalink: /learning-paths/mesh/securing-and-observing/step-2/
+    learn:
+      title: "Learn: `MeshIdentity`, `MeshTrust`, and `MeshTLS`"
+      include: learning-paths/mesh/securing-step-2-learn
+    practice:
+      title: "Practice: Switch to Exclusive mode and assign a SPIFFE identity"
+      include: learning-paths/mesh/securing-step-2-practice
+
+  - title: "Step 3: External CA integration"
+    description: "Root Kong Air's mesh identities in the enterprise PKI — HashiCorp Vault, cert-manager, AWS ACM Private CA, or a bundled external CA. Understand why Vault needs `fromCp` and `dpCert` while cert-manager doesn't, then plan a safe migration from the built-in CA."
+    permalink: /learning-paths/mesh/securing-and-observing/step-3/
+    learn:
+      title: "Learn: External CA backends and the `fromCp` model"
+      include: learning-paths/mesh/securing-step-3-learn
+    practice:
+      title: "Practice: Wire up Vault, cert-manager, and a Bundled external CA"
+      include: learning-paths/mesh/securing-step-3-practice
+    next_steps:
+      - text: "Multi-Zone Architecture — connect zones with ZoneIngress/Egress and MMZS"
+        url: /learning-paths/mesh/operating-at-scale/step-1/
+      - text: "MeshPassthrough — lock down the outbound perimeter"
+        url: /learning-paths/mesh/advanced-patterns/step-1/

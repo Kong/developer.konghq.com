@@ -17,6 +17,8 @@ allow_terminated
 allowlist
 allowlisting
 allowlisted
+allowlists
+Allowlists
 Amal
 amberflo
 andAll
@@ -253,6 +255,7 @@ firewalled
 firstTimestamp
 flamegraph
 Flatpak
+Fluentd
 foogineer
 FQDNs
 full_name
@@ -606,6 +609,7 @@ productized
 productizing
 profiler
 prometheus
+Promtail
 proto
 protobuf
 proviance

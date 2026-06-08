@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-2  w-full">
-    <div class="text-primary font-medium">In This Series</div>
+    <div class="text-primary font-medium">{% if page.content_type == 'learning_path_step' %}In This Learning Path{% else %}In This Series{% endif %}</div>
     <ol class="flex flex-col gap-1.5">
         {% for item in page.series.items %}
             {% assign title = item.title %}
