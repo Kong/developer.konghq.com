@@ -134,8 +134,10 @@ You should see the following output:
        > /demo/logs-data-plane-proxy-kv.log 2>&1 &
    ```
 
-   {:.warning}
-   > The `--skip-verify` flag turns off TLS verification of the control plane certificate and is only appropriate for this guide, where the control plane uses a self-signed certificate. `kuma-dp` verifies the control plane certificate by default. In production, pass the control plane CA with `--ca-cert-file=/path/to/ca.pem` (or set the `KUMA_CONTROL_PLANE_CA_CERT_FILE` environment variable) instead of skipping verification.
+   {% capture warning %}
+   {% include /mesh/skip-verify.md %}
+   {% endcapture %}
+   {{warning | indent}}
 
 1. After a few seconds, check the logs to verify the proxy is running:
 

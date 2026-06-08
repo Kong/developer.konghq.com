@@ -63,8 +63,7 @@ kuma-dp run \
   --dataplane-token-file=/tmp/kuma-dp-redis-1-token
 ```
 
-{:.warning}
-> The `--skip-verify` flag turns off TLS verification of the control plane certificate and is only appropriate for this guide, where the control plane uses a self-signed certificate. `kuma-dp` verifies the control plane certificate by default. In production, pass the control plane CA with `--ca-cert-file=/path/to/ca.pem` (or set the `KUMA_CONTROL_PLANE_CA_CERT_FILE` environment variable) instead of skipping verification.
+{% include /mesh/skip-verify.md %}
 
 In the example above, any external client who wants to consume Redis through the sidecar will have to use `23.234.0.1:9000`, which will redirect to the Redis service listening on address `127.0.0.1:6379`. If your service doesn't listen on `127.0.0.1` and you can't change the address it listens on, you can set the `serviceAddress`:
 

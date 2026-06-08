@@ -77,8 +77,7 @@ kumactl generate dataplane-token --tag kuma.io/service=app --valid-for=720h > ku
 
 ## Create a data plane proxy for each service
 
-{:.warning}
-> The `--skip-verify` flag turns off TLS verification of the control plane certificate and is only appropriate for this guide, where the control plane uses a self-signed certificate. `kuma-dp` verifies the control plane certificate by default. In production, pass the control plane CA with `--ca-cert-file=/path/to/ca.pem` (or set the `KUMA_CONTROL_PLANE_CA_CERT_FILE` environment variable) instead of skipping verification.
+{% include /mesh/skip-verify.md %}
 
 For Redis:
 
