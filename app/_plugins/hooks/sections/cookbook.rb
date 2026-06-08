@@ -10,37 +10,12 @@ module SectionWrapper
 
     # Hook into the section-body step so h4 wrapping happens in the same pass
     # as h2 wrapping, with no re-parse and no cross-fragment node moves.
-    #
-    # h4 starts a new accordion-wrapped section; h1/h2/h3 boundaries flush the
-    # current h4 section and pass through as-is (matching the old behavior in
-    # which `move_sibling_content_into_wrapper` stopped at any h1-h4).
     def wrap_section_body(nodes)
-      out, pre, h4, body = +'', [], nil, nil
-      nodes.each do |node|
-        next if whitespace_only_text?(node)
-        if heading?(node, 'h4')
-          out << flush_h4_pending(pre, h4, body); pre = []; h4 = node; body = []
-        elsif h4_boundary?(node)
-          out << flush_h4_pending(pre, h4, body); out << node.to_html
-          pre = []; h4 = nil; body = nil
-        elsif h4
-          body << node
-        else
-          pre << node
-        end
-      end
-      out << flush_h4_pending(pre, h4, body)
+      pre, sections = split_by_heading(nodes, 'h4')
+      out = +''
+      out << nodes_to_html(pre)
+      sections.each { |h4, body| out << build_h4_section_string(h4, body) }
       out
-    end
-
-    def flush_h4_pending(pre, h4, body)
-      return build_h4_section_string(h4, body) if h4
-      return nodes_to_html(pre) if pre.any?
-      ''
-    end
-
-    def h4_boundary?(node)
-      node.element? && %w[h1 h2 h3].include?(node.name)
     end
 
     def build_h4_section_string(h4, body_nodes)
