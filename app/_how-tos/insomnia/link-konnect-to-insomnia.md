@@ -12,8 +12,8 @@ works_on:
 tools:
   - deck
 
-tier: enterprise
-tier_product: insomnia
+tiers:
+  insomnia: enterprise
 
 min_version:
   insomnia: '13'
