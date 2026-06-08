@@ -1990,8 +1990,8 @@ __metadata:
   linkType: hard
 
 "@kong/kongponents@npm:^9.14.24":
-  version: 9.56.1
-  resolution: "@kong/kongponents@npm:9.56.1"
+  version: 9.57.0
+  resolution: "@kong/kongponents@npm:9.57.0"
   dependencies:
     "@floating-ui/vue": "npm:^1.1.11"
     "@kong/icons": "npm:^1.45.0"
@@ -2010,7 +2010,7 @@ __metadata:
   peerDependencies:
     vue: ">= 3.5.0 < 4"
     vue-router: 4 || 5
-  checksum: 10c0/fa97f55e4551d900fc02506ce8dadeb6e01fbce2df1c3730c70068176296e0eb8ab41d2a8448dacec16c74c24fcfc98b05db9f8eb12795cbb9897c2f8a36e4c1
+  checksum: 10c0/ef6c3767610202bc980c99d22b41f6dbaa33b16a6157b775463745b344a41fde971e19d8be25a9842f519ec1a3461370ca6201f749f9dded980e786858d75d19
   languageName: node
   linkType: hard
 
@@ -3758,16 +3758,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/core@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@shikijs/core@npm:4.1.0"
+"@shikijs/core@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@shikijs/core@npm:4.2.0"
   dependencies:
-    "@shikijs/primitive": "npm:4.1.0"
-    "@shikijs/types": "npm:4.1.0"
+    "@shikijs/primitive": "npm:4.2.0"
+    "@shikijs/types": "npm:4.2.0"
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     "@types/hast": "npm:^3.0.4"
     hast-util-to-html: "npm:^9.0.5"
-  checksum: 10c0/5df53c2a61839f4b2f2da26f0b0ae91a16569ea81ab88a3ff53af9201876594436d71ad1f4893f647df61c46e9ad2f883d1d3b33a997a947d2c9c3dabfb706db
+  checksum: 10c0/86828109468e6de10a9976d951ab09c124b06ded3f46cf8043a3e45d7f78f1d6fe24abbdf0044e7fe4fd734e837ecd9b63b7fa964eccadb7e1b0c95519c44f5a
   languageName: node
   linkType: hard
 
@@ -3782,14 +3782,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/engine-javascript@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@shikijs/engine-javascript@npm:4.1.0"
+"@shikijs/engine-javascript@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@shikijs/engine-javascript@npm:4.2.0"
   dependencies:
-    "@shikijs/types": "npm:4.1.0"
+    "@shikijs/types": "npm:4.2.0"
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     oniguruma-to-es: "npm:^4.3.6"
-  checksum: 10c0/1d0ae467607e01c1d1e924022a25411769011f52fac49db02f94ca5a36f7d3f9af22741ddefb785f565409f02e4eacb7957d2cfec0cbb0460444c9e00756b136
+  checksum: 10c0/681045e8acfe19feaf5bb2b282ffdd006a5a06c666a726f844f8bd489c9c12eb5290cd29b97655d43a366370f2edac4eea868d8221637a5fcdc886e562bef0c6
   languageName: node
   linkType: hard
 
@@ -3803,13 +3803,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/engine-oniguruma@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@shikijs/engine-oniguruma@npm:4.1.0"
+"@shikijs/engine-oniguruma@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@shikijs/engine-oniguruma@npm:4.2.0"
   dependencies:
-    "@shikijs/types": "npm:4.1.0"
+    "@shikijs/types": "npm:4.2.0"
     "@shikijs/vscode-textmate": "npm:^10.0.2"
-  checksum: 10c0/4a0cb8ef3e25ca2e77f414f053fbd1b5cc931f0e26e624575ff7408053fd292ac35b74b54d0e6513833e28e81e4096de4994c61788d22b2ec83204a3d9acf076
+  checksum: 10c0/ffba487224c9d96735a251b2aacd33a1769d27f4ad6b80b83bb025abd7ae2195c7e07dfc96c5978a6cc4b32d55b232dc9fe6e67c0752a78962c649891700bf7f
   languageName: node
   linkType: hard
 
@@ -3822,23 +3822,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/langs@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@shikijs/langs@npm:4.1.0"
+"@shikijs/langs@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@shikijs/langs@npm:4.2.0"
   dependencies:
-    "@shikijs/types": "npm:4.1.0"
-  checksum: 10c0/5fdc19ed6442ab26edefdf2d708ac5ead6f47845a98e6b97c07a22804092cc9ed59f72d6a5967906fe0e6d85e79fb6d0abb4d47a45a68caec45dcb5233f2efed
+    "@shikijs/types": "npm:4.2.0"
+  checksum: 10c0/a069467bf1dc458a1deef91388e3b48dffeef20502d51fa0c548c0dc3adfc4222c789fa47975ff28b0f9fe76de139899830ad320cfddc99ce2c193b05de69937
   languageName: node
   linkType: hard
 
-"@shikijs/primitive@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@shikijs/primitive@npm:4.1.0"
+"@shikijs/primitive@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@shikijs/primitive@npm:4.2.0"
   dependencies:
-    "@shikijs/types": "npm:4.1.0"
+    "@shikijs/types": "npm:4.2.0"
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     "@types/hast": "npm:^3.0.4"
-  checksum: 10c0/8e5187e954217dda922fe9b4c12f02b921fed9c9b864fbef330fc87abb799afe5e9fff36f416730dcd81c980bea1392ea01d4931b70f14be8471ec70c059316e
+  checksum: 10c0/8acd8af89d427bc8e1c0c9a98be8ca3ac0b7cb193039c59389fc80a4747daaf4ee0ee273d33e99e94e969be1ca3eb33da700caabd17218c848b11526cb6eaf52
   languageName: node
   linkType: hard
 
@@ -3851,12 +3851,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/themes@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@shikijs/themes@npm:4.1.0"
+"@shikijs/themes@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@shikijs/themes@npm:4.2.0"
   dependencies:
-    "@shikijs/types": "npm:4.1.0"
-  checksum: 10c0/0973fced8ce00f5c845adac29f8f49a393b9dfb554e7efd2bfb7943495efe6ded308e601a81d07dbaa328cee5bcd2e964271f9431473e6954adf98d12d01292f
+    "@shikijs/types": "npm:4.2.0"
+  checksum: 10c0/95c3611fab74802efe6025154a7f145fe5c71fb7ad8a998b061b0a628788bce667f942ade9bd8f0c16b47d2afde10a4bbeccbd455c96f35e21ccecf126740c7d
   languageName: node
   linkType: hard
 
@@ -3870,13 +3870,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/types@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@shikijs/types@npm:4.1.0"
+"@shikijs/types@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@shikijs/types@npm:4.2.0"
   dependencies:
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     "@types/hast": "npm:^3.0.4"
-  checksum: 10c0/e8e318603bbdeca761de3d874984fe0f896978dda51c3df36c5878189f9c1f64fa25a4f5c6e07215606affefcd35efaa9eafbe502fb0ab61d4d0d65a9afb3c1d
+  checksum: 10c0/d78095c1df9ec8ee0a3cd3e203b9431943f88d1f5efce5cfabad87935f6bcd9628d3f450b42c8e65e7119fd94549e84ae4c5ac564cb55424bab12f67f26a0f0b
   languageName: node
   linkType: hard
 
@@ -5912,14 +5912,14 @@ __metadata:
   linkType: hard
 
 "axios@npm:^1.16.1":
-  version: 1.16.1
-  resolution: "axios@npm:1.16.1"
+  version: 1.17.0
+  resolution: "axios@npm:1.17.0"
   dependencies:
     follow-redirects: "npm:^1.16.0"
     form-data: "npm:^4.0.5"
     https-proxy-agent: "npm:^5.0.1"
     proxy-from-env: "npm:^2.1.0"
-  checksum: 10c0/2f77e37e6552bbff8a772d058fb09500198e9188c6b20dc799d82dbe12a8cb506f6eed4e4e62a9ba612a35cbab496faa26d68f9bff14a53af6d15c3e136391a7
+  checksum: 10c0/c4fa19ff3a3a63bde48beec03ad816b133b9a6385cccffffe172577ab18c6a70e299280d57f12c80c867fe25df41f92cb91d3a8258708a6d2be3e9e085f92650
   languageName: node
   linkType: hard
 
@@ -9919,28 +9919,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"instantsearch-ui-components@npm:0.28.0":
-  version: 0.28.0
-  resolution: "instantsearch-ui-components@npm:0.28.0"
+"instantsearch-ui-components@npm:0.30.0":
+  version: 0.30.0
+  resolution: "instantsearch-ui-components@npm:0.30.0"
   dependencies:
     "@swc/helpers": "npm:0.5.18"
     markdown-to-jsx: "npm:^7.7.15"
-  checksum: 10c0/238d118f69416e85986a41667d79561c32fe05001ccf3d59b4299021d66ce574926f5e0ab2c15c4256431e8727db9b5f2bdac8405dea36bb380632b1db9e7821
+  checksum: 10c0/ee776e4ba746dbbe18c3f1b779d829dc6934abd02d6467d6ed00c2e63e8ab7b212ac3f10176d8ed6096987df3d47e0fa2a7914ebdeb4916a9f8811ec9249802e
   languageName: node
   linkType: hard
 
 "instantsearch.css@npm:^8.5.1":
-  version: 8.16.2
-  resolution: "instantsearch.css@npm:8.16.2"
+  version: 8.17.0
+  resolution: "instantsearch.css@npm:8.17.0"
   dependencies:
     tweakpane: "npm:4.0.5"
-  checksum: 10c0/2d0a748e1556379e0ee5ab09e605b200bd85487a7fd450df9e967fb42991a0f1e66e08678e8795d0958d87d93b17e5aa7b007f2aef357b779144cf51d003a346
+  checksum: 10c0/b8ae4cfb3f050dc18b4cb1800dffbc923da8ae688f1ec3f5a02966283c69ff33168faecd84e3c251f9e30f213b8f926803d509d0a13c38aa5e83964049db95a3
   languageName: node
   linkType: hard
 
-"instantsearch.js@npm:4.99.0":
-  version: 4.99.0
-  resolution: "instantsearch.js@npm:4.99.0"
+"instantsearch.js@npm:4.101.0":
+  version: 4.101.0
+  resolution: "instantsearch.js@npm:4.101.0"
   dependencies:
     "@algolia/events": "npm:^4.0.1"
     "@swc/helpers": "npm:0.5.18"
@@ -9951,14 +9951,14 @@ __metadata:
     algoliasearch-helper: "npm:3.29.1"
     hogan.js: "npm:^3.0.2"
     htm: "npm:^3.0.0"
-    instantsearch-ui-components: "npm:0.28.0"
+    instantsearch-ui-components: "npm:0.30.0"
     preact: "npm:^10.10.0"
     qs: "npm:^6.5.1"
     react: "npm:>= 0.14.0"
     search-insights: "npm:^2.17.2"
   peerDependencies:
     algoliasearch: ">= 3.1 < 6"
-  checksum: 10c0/84ac465ac6575b37a3245a224d19af5cb9eed2d7750ba4e80858b30598ce9e13d421c16b10640a504429881ff3ad77ee00e1f0e21d9c8f71da5abef46befa75e
+  checksum: 10c0/ad60028a6ae012e020a92ba84f10b977685e3deac61489a1ff5f17a4e8b284c72d8e7b36c3a2409de94cf52ccbb0d5666a2575c8b69d23d8d6918b9c85bc58b5
   languageName: node
   linkType: hard
 
@@ -14467,18 +14467,18 @@ __metadata:
   linkType: hard
 
 "shiki@npm:^4.0.2":
-  version: 4.1.0
-  resolution: "shiki@npm:4.1.0"
+  version: 4.2.0
+  resolution: "shiki@npm:4.2.0"
   dependencies:
-    "@shikijs/core": "npm:4.1.0"
-    "@shikijs/engine-javascript": "npm:4.1.0"
-    "@shikijs/engine-oniguruma": "npm:4.1.0"
-    "@shikijs/langs": "npm:4.1.0"
-    "@shikijs/themes": "npm:4.1.0"
-    "@shikijs/types": "npm:4.1.0"
+    "@shikijs/core": "npm:4.2.0"
+    "@shikijs/engine-javascript": "npm:4.2.0"
+    "@shikijs/engine-oniguruma": "npm:4.2.0"
+    "@shikijs/langs": "npm:4.2.0"
+    "@shikijs/themes": "npm:4.2.0"
+    "@shikijs/types": "npm:4.2.0"
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     "@types/hast": "npm:^3.0.4"
-  checksum: 10c0/d5418dd8fa8d5eb46ebc36f8fced8513835702915b5cd1e2ccf46790cd002dcf84a385d184b96dd1f19ce4626d4fac139f624dbaa12deddb0aac0b973939edfa
+  checksum: 10c0/a729d91e10e22787c56a553663c487454bbdfc3f5604e2833bea1f47bcbc20b824b2e7629f7b03889706314a3fe5963a8c4808a002282dc1c19f726231096b1c
   languageName: node
   linkType: hard
 
@@ -16077,8 +16077,8 @@ __metadata:
   linkType: hard
 
 "vite@npm:^8.0.0":
-  version: 8.0.15
-  resolution: "vite@npm:8.0.15"
+  version: 8.0.16
+  resolution: "vite@npm:8.0.16"
   dependencies:
     fsevents: "npm:~2.3.3"
     lightningcss: "npm:^1.32.0"
@@ -16129,7 +16129,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/e6092f761e1ce77ae5508cf2f9be15b801e5626236d6cc213ca4c6f977205bd6719b8b9f784b594d317ee8a68e059a105146f7af86a23416059ba103b18b3c90
+  checksum: 10c0/d75be3fbe2f63e6a8145325970338afaf0dd4d96ba9175c13f9a286fd5f95afc489401b693e4fa6c0899a4dd0e137be91cdf9401a40a635563911ad5036e3467
   languageName: node
   linkType: hard
 
@@ -16160,12 +16160,12 @@ __metadata:
   linkType: hard
 
 "vue-instantsearch@npm:^4.20.4":
-  version: 4.26.5
-  resolution: "vue-instantsearch@npm:4.26.5"
+  version: 4.26.7
+  resolution: "vue-instantsearch@npm:4.26.7"
   dependencies:
     "@swc/helpers": "npm:0.5.18"
-    instantsearch-ui-components: "npm:0.28.0"
-    instantsearch.js: "npm:4.99.0"
+    instantsearch-ui-components: "npm:0.30.0"
+    instantsearch.js: "npm:4.101.0"
     mitt: "npm:^2.1.0"
   peerDependencies:
     "@vue/server-renderer": ^3.1.2
@@ -16177,7 +16177,7 @@ __metadata:
       optional: true
     vue-server-renderer:
       optional: true
-  checksum: 10c0/c9dbbc95bcebd3f15df94de89b94e3dfe8ce324720720dd24a02942e5c2c337255dd3171f6407c29c56b3f734a7bef5c22d03ad697a49cad903db738a56c087e
+  checksum: 10c0/eddaac7c1970d6da08403bcf3698cfbbb9900a32e053a63349065f9232c46907ce835e27ae860c40aaf3022880075f268a143da0042f94bec11849fac540b1b8
   languageName: node
   linkType: hard
 
