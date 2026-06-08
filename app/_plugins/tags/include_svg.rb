@@ -23,15 +23,15 @@ module Jekyll
       doc = Nokogiri::XML(svg_content)
       svg = doc.at_css('svg')
 
-      svg['width'] = @params['width'] if @params['width']
-      svg['height'] = @params['height'] if @params['height']
+      svg['width']  = context[@params['width']]  if @params['width']
+      svg['height'] = context[@params['height']] if @params['height']
 
       reserved = %w[file_path width height]
       @params.each do |key, value|
         next if reserved.include?(key)
         next unless key.match?(/\Aaria-[\w-]+\z/) || %w[role class focusable id].include?(key)
 
-        svg[key] = value
+        svg[key] = context[value]
       end
 
       doc.to_s
@@ -45,11 +45,9 @@ module Jekyll
       params['file_path'] = parts.shift
 
       parts.each do |part|
-        if part =~ /([\w-]+)=(.+)/
-          key = Regexp.last_match(1)
-          value = Regexp.last_match(2).gsub(/^["']|["']$/, '') # strip surrounding quotes
-          params[key] = value
-        end
+        next unless part =~ /([\w-]+)=(.+)/
+
+        params[Regexp.last_match(1)] = Regexp.last_match(2)
       end
 
       params
@@ -58,4 +56,3 @@ module Jekyll
 end
 
 Liquid::Template.register_tag('include_svg', Jekyll::IncludeSVGTag)
-
