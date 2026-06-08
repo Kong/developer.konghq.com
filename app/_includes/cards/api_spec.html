@@ -1,6 +1,6 @@
 <div class="card flex-col gap-5 p-6 pb-4">
     <div class="flex justify-between items-center">
-        <img src="{{ include.icon }}" class="card__icon"/>
+        {% include_svg include.icon class="card__icon" %}
         <div class="flex gap-2">
             {% if include.deprecated == true %}
             {% include badge.html text='Deprecated' css_class='deprecated' %}
