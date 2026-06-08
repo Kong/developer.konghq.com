@@ -1,6 +1,6 @@
 ---
 title: "Cross-mesh communication"
-description: "How {{site.mesh_product_name}} enables secure communication between services in different meshes using MeshGateway or {{site.base_gateway}}."
+description: "Learn how {{site.mesh_product_name}} enables secure communication between services in different meshes using MeshGateway or {{site.base_gateway}}."
 content_type: reference
 layout: reference
 breadcrumbs: 
@@ -17,37 +17,45 @@ related_resources:
     url: /how-to/enable-cross-mesh-communication/
   - text: "Built-in gateways"
     url: /mesh/built-in-gateway/
-  - text: "Observability"
-    url: /mesh/observability/
+  - text: "MeshGateway"
+    url: /mesh/meshgateway/
+  - text: "MeshGatewayInstance"
+    url: /mesh/meshgatewayinstance/
+  - text: "MeshExternalService"
+    url: /mesh/meshexternalservice/
+  - text: "MeshTrafficPermission"
+    url: /mesh/policies/meshtrafficpermission/
+  - text: "ZoneIngress"
+    url: /mesh/zone-ingress/
 ---
 
-In {{site.mesh_product_name}}, each `Mesh` resource is an isolated security domain with its own mTLS root of trust. Services in `mesh1` can't verify or communicate with services in `mesh2` without explicit configuration. Cross-mesh communication bridges these isolated security domains.
+In {{site.mesh_product_name}}, each [`Mesh`](/mesh/mesh/) resource is an isolated security domain with its own mTLS root of trust. Services in a mesh can't verify or communicate with services in another mesh without explicit configuration. Cross-mesh communication bridges these isolated security domains.
 
 ## How cross-mesh communication works
 
 The core pattern is the same regardless of which gateway you use:
 
 1. A gateway in the target mesh exposes a service as a listener.
-2. The calling mesh maps that gateway to a local `MeshExternalService`, making it reachable by a generated DNS name.
-3. Workloads in the calling mesh send requests to the local DNS name; the sidecar proxy forwards them to the gateway.
+1. The calling mesh maps that gateway to a local [`MeshExternalService`](/mesh/meshexternalservice/), making it reachable by a generated DNS name.
+1. Workloads in the calling mesh send requests to the local DNS name; the sidecar proxy forwards them to the gateway.
 
 ## Architecture example
 
-The following diagram shows two meshes (`mesh1` and `mesh2`) each spanning two clusters. Each mesh exposes a `MeshGateway` that the other mesh treats as an external service.
+The following diagram shows two meshes (`mesh1` and `mesh2`) each spanning two clusters. Each mesh exposes a [`MeshGateway`](/mesh/meshgateway/) that the other mesh treats as an external service.
 
-- **Cluster 1**: hosts `mesh1` and `mesh2`, and contains the `echo` service.
-- **Cluster 2**: hosts `mesh1` and `mesh2`, and contains a client calling the `echo` service.
+* Cluster 1: hosts `mesh1` and `mesh2`, and contains the `echo` service.
+* Cluster 2: hosts `mesh1` and `mesh2`, and contains a client calling the `echo` service.
 
 {% mermaid %}
 flowchart LR
     subgraph C1["Cluster 1 (Zone 1)"]
         direction TB
         subgraph C1M1["Mesh 1"]
-            MGW1{{"MeshGateway:<br/>cross-mesh-gateway"}}
+            MGW1([MeshGateway: cross-mesh-gateway])
             Echo1[Echo Service]
         end
         subgraph C1M2["Mesh 2"]
-            MGW2{{"MeshGateway:<br/>mesh2-gateway"}}
+            MGW2([MeshGateway: mesh2-gateway])
             Echo2[Echo Service]
         end
     end
@@ -80,7 +88,7 @@ flowchart LR
     style C1M2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
     style C2M2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
     
-    classDef default font-family:Inter,Arial,sans-serif;
+    classDef meshgw font-family:Inter,Arial,sans-serif;
 
 {% endmermaid %}
 
@@ -90,34 +98,34 @@ You can use one of two approaches to expose services for cross-mesh traffic.
 
 ### {{site.base_gateway}} (recommended)
 
-We recommend using **{{site.base_gateway}} ({{site.operator_product_name}})** for production cross-mesh communication because it provides a unified gateway for both North-South (internet) and East-West (cross-mesh) traffic. With this pattern:
+We recommend using [{{site.base_gateway}}](/gateway/) ([{{site.operator_product_name}}](/operator/)) for production cross-mesh communication because it provides a unified gateway for both North-South (internet) and East-West (cross-mesh) traffic. With this pattern:
 
-- **Cluster 1 (mesh1)**: exposes the `echo` service via a standard Kubernetes Gateway API managed by {{site.operator_product_name}}.
-- **Cluster 2 (mesh2)**: calls the endpoint (for example, `https://echo.example.com`) as it would any external service.
+* Cluster 1 (mesh1): exposes the `echo` service via a standard Kubernetes Gateway API managed by {{site.operator_product_name}}.
+* Cluster 2 (mesh2): calls the endpoint as it would any external service.
 
 Benefits of this approach:
-- Treats the other mesh as an anonymous external client, providing a clean API contract.
-- Uses the same Ingress infrastructure as external traffic.
-- Gives access to Kong's full plugin library (OIDC, Rate Limiting, AI Proxy, and others).
+* Treats the other mesh as an anonymous external client, providing a clean API contract.
+* Uses the same Ingress infrastructure as external traffic.
+* Gives access to {{site.base_gateway}}'s full [plugin library](/plugins/) (OIDC, Rate Limiting, AI Proxy, and others).
 
 ### Built-in MeshGateway
 
 The built-in `MeshGateway` is the native {{site.mesh_product_name}} option. It requires no additional components beyond {{site.mesh_product_name}} itself and preserves mesh-level context across the boundary.
 
 {:.info}
-> Apply `MeshGateway` and `MeshHTTPRoute` directly to the zone cluster with `kuma.io/origin: zone`, not to the global control plane. When applied via the global CP, {{site.mesh_product_name}} renames them with a hash suffix on sync, and the `MeshGatewayInstance` controller can't find a matching gateway by name.
+> Apply `MeshGateway` and [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) directly to the zone cluster with `kuma.io/origin: zone`, not to the global control plane. When applied via the global CP, {{site.mesh_product_name}} renames them with a hash suffix on sync, and the [`MeshGatewayInstance`](/mesh/meshgatewayinstance/) controller can't find a matching gateway by name.
 
 Use this when:
 
-- You haven't deployed {{site.base_gateway}} ({{site.operator_product_name}}) and don't need Kong plugins on the cross-mesh path.
-- You want to keep the setup entirely within {{site.mesh_product_name}}.
-- You need mesh-level metadata (for example, service identity tags) to be visible at the gateway.
+* You haven't deployed {{site.base_gateway}} and don't need plugins on the cross-mesh path.
+* You want to keep the setup entirely within {{site.mesh_product_name}}.
+* You need mesh-level metadata (for example, service identity tags) to be visible at the gateway.
 
 See [Enable cross-mesh communication](/how-to/enable-cross-mesh-communication/) for step-by-step instructions.
 
 ## MeshGateway vs ZoneIngress
 
-These two resources are often confused because both involve gateways, but they serve different purposes:
+These two resources are often confused because they both involve gateways, but they serve different purposes. [`MeshGateway`](/mesh/meshgateway/) bridges isolated meshes; [`ZoneIngress`](/mesh/zone-ingress/) connects zones within the same mesh:
 
 {% table %}
 columns:
@@ -131,12 +139,12 @@ rows:
   - feature: Primary scope
     meshgateway: Inter-mesh (cross-mesh)
     zoneingress: Intra-mesh (multi-zone)
-  - feature: When to use
+  - feature: Purpose
     meshgateway: Bridges two separate security domains with different mTLS roots.
-    zoneingress: Connects different physical locations of the *same* mesh.
+    zoneingress: Connects different physical locations of the same mesh.
   - feature: Configuration
     meshgateway: Requires manual routing and external service mapping.
-    zoneingress: Automatic — {{site.mesh_product_name}} handles the tunnel.
+    zoneingress: Automatic, {{site.mesh_product_name}} handles the tunnel.
   - feature: North-South traffic
     meshgateway: "Yes"
     zoneingress: "No (mesh-internal only)"
@@ -148,4 +156,4 @@ If you have a single mesh (`mesh1`) spanning `zone1` and `zone2`, you don't need
 
 Each mesh has its own mTLS root of trust. When you enable `mtls` with a `builtin` backend, the mesh generates its own Certificate Authority and issues short-lived certificates to every sidecar. This ensures all inter-service traffic is encrypted and authenticated, with automatic certificate rotation.
 
-When `meshServices` mode is set to `Exclusive`, the mesh uses a zero-trust model: all traffic is denied by default. You must apply explicit `MeshTrafficPermission` policies to allow communication within or across meshes.
+When the `meshServices` mode is set to `Exclusive`, the mesh uses a zero-trust model: all traffic is denied by default. You must apply explicit [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policies to allow communication within or across meshes.
