@@ -24,10 +24,10 @@ related_resources:
 
 
 
-When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that are part of the request-response flow.
-The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
+When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that are part of the request-response flow. 
+The following sections describe the spans available in {{site.konnect_short_name}} Debugger.
 
-In this page, `3p` or `3rd party` means any network interaction that falls outside the main client -> Kong -> upstream request flow, such as DNS lookups or calls from Kong to external services like auth providers, Redis, or metadata APIs.
+On this page, the term "3p" or "3rd party" refers to any network interaction outside the main `client → Kong → upstream` request flow, such as DNS lookups or calls from Kong to external services like auth providers, Redis, or metadata APIs.
 <!--vale off-->
 ### kong
 
@@ -45,32 +45,41 @@ rows:
     description: Full url, without query parameters
   - name: "`client.address`"
     description: |
-        Remote address of the actual client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring [trusted\_ips](https://developer.konghq.com/gateway/configuration/#trusted-ips) and may require configuring [real\_ip\_header](https://docs.konghq.com/gateway/latest/reference/configuration/#real_ip_header).
+        Remote address of the actual client making the request. We try to handle proxy situations too where the client may be coming through a proxy. 
+        <br><br>
+        {:.info}
+        > Note: This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
   - name: "`client.port`"
     description: |
-        Remote port of the client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring [trusted\_ips](https://developer.konghq.com/gateway/configuration/#trusted-ips) and may require configuring [real\_ip\_header](https://docs.konghq.com/gateway/latest/reference/configuration/#real_ip_header).
+        Remote port of the client making the request. We try to handle proxy situations too where the client may be coming through a proxy. 
+        <br><br>
+        {:.info}
+        > Note: This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
   - name: "`network.peer.address`"
     description: IP of the network peer that is connecting to Kong
   - name: "`network.peer.port`"
     description: Port of the network peer that is connecting to Kong
   - name: "`server.address`"
-    description: Kong can listen on multiple IP addresses. This is the IP address at which Kong received the request
+    description: |
+      {{site.base_gateway}} can listen on multiple IP addresses. This is the IP address at which Kong received the request.
   - name: "`server.port`"
-    description: The port at which Kong received the request
+    description: The port at which Kong received the request.
   - name: "`network.protocol.name`"
-    description: Name of the network protocol. Currently Debugger only supports `http`.
+    description: |
+      Name of the network protocol. Debugger only supports `http`.
   - name: "`http.request.method`"
     description: HTTP request method
   - name: "`proxy.kong.request.id`"
-    description: Unique id created by Kong for each request. [Useful for debugging](https://developer.konghq.com/gateway/debug-requests/#x-kong-request-id-header).
+    description: |
+      Unique ID created by {{site.base_gateway}} for each request. [Useful for debugging](/gateway/debug-requests/#x-kong-request-id-header).
   - name: "`proxy.kong.request.time`"
     description: Time taken to process this request as measured from reading the first byte from the client, to writing the last byte to the client. Logging handler time is not part of this calculation.
   - name: "`proxy.kong.http.request.body.size`"
-    description: Request body length in bytes. Request Header size is not included
+    description: Request body length in bytes. Request header size is not included.
   - name: "`http.request.size`"
     description: Request body size and request headers size in bytes
   - name: "`proxy.kong.http.response.body.size`"
-    description: Response body length in bytes. Response Header size is not included
+    description: Response body length in bytes. Response header size is not included.
   - name: "`http.response.size`"
     description: Response body size and response headers size in bytes
   - name: "`url.scheme`"
@@ -78,19 +87,27 @@ rows:
   - name: "`network.protocol.version`"
     description: Version of the HTTP protocol used in establishing connection [1.2, 2.0]
   - name: "`proxy.kong.request.host`"
-    description: The value of "Host" as determined by Kong in this order of precedence: host name from the request line, or host name from the “Host” request header field, or the server name matching a request 
+    description: |
+      The value of `Host` as determined by {{site.base_gateway}} in the following order of precedence: 
+       1. Hostname from the request line.
+       1. Hostname from the `Host` request header field.
+       1. Server name matching a request.
   - name: "`proxy.kong.consumer.id`"
     description: Authenticated Consumer ID if present
   - name: "`proxy.kong.upstream.id`"
     description: Resolved Upstream ID
   - name: "`proxy.kong.upstream.status_code`"
-    description: status code returned by Upstream to Kong
+    description: |
+      Status code returned by the upstream to {{site.base_gateway}}.
   - name: "`http.response.status_code`"
-    description: Status code sent back by Kong to client
+    description: |
+      Status code sent back by {{site.base_gateway}} to client.
   - name: "`proxy.kong.latency.3p.dns.total_io`"
-    description: Time spent performing synchronous DNS I/O operations
+    description: |
+      Time spent performing synchronous DNS I/O operations.
   - name: "`proxy.kong.latency.3p.http_client.total_io`"
-    description: Time spent on third party HTTP calls (like talking to an auth server, fetching metadata from a external http api and so forth)
+    description: |
+      Time spent on third party HTTP calls (for example, talking to an auth server or fetching metadata from a external HTTP API).
   - name: "`proxy.kong.latency.3p.redis.total_io`"
     description: Time spent on executing Redis operations and performing network I/O to redis
   - name: "`proxy.kong.latency.3p.tcpsock.total_io`"
