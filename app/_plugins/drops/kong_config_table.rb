@@ -36,12 +36,14 @@ module Jekyll
           return name if mode == 'conf'
 
           if mode == 'env'
-            return name.upcase if @config['prefix'] == false
-
-            return "KONG_#{name.upcase}"
+            if @config['prefix'] == false
+              name.upcase
+            else
+              "KONG_#{name.upcase}"
+            end
+          else
+            raise "Unknown kong_config_table mode: #{mode}"
           end
-
-          raise "Unknown kong_config_table mode: #{mode}"
         end
       end
 
