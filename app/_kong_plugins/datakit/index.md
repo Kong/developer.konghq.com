@@ -1219,6 +1219,7 @@ If the retrieved value is `nil` or `null`, the plugin errors instead of continui
 - name: GET_SRC
   type: property
   property: kong.ctx.shared.src
+  non_nil: true
 - name: SET_API_KEY
   type: property
   property: kong.ctx.shared.api_key
