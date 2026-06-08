@@ -235,7 +235,75 @@ rows:
                   * Each application can have a maximum of 20 API keys.
                   * Each API that uses the [ACE plugin](/plugins/ace/) can have a maximum of 1,000 operations.
                   * API Packages have a per-request PATCH limit of 100.
+
+  - header:
+      type: h2
+      text: "Apply plugins to applications {% new_in 3.15 %}"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  You can apply {{site.base_gateway}} plugins to your Dev Portal applications.
+                  This lets you enforce business logic, such as rate limiting or IP restriction, on the credentials that an application uses to access your APIs.
+
+                  The following table shows common use cases for applying plugins to applications:
+
+                  {% table %}
+                  columns:
+                    - title: Use case
+                      key: use_case
+                    - title: Plugin
+                      key: plugin
+                  rows:
+                    - use_case: "Enforce request quotas on the credentials an application uses."
+                      plugin: "[Rate Limiting](/plugins/rate-limiting/) or [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)"
+                    - use_case: "Ensure only requests from a partner's known IP ranges can use their application credentials."
+                      plugin: "[IP Restriction](/plugins/ip-restriction/)"
+                    - use_case: "Automatically inject a header identifying the partner into every request their application makes, so your upstream can route or log by customer without trusting client-supplied headers."
+                      plugin: "[Request Transformer](/plugins/request-transformer/)"
+                  {% endtable %}
+
+                  When a developer creates an application, Dev Portal automatically creates Kong Identity principals for the application.
+
+                  You can apply plugins to an application in two different ways:
+                  * **Conditional plugin execution (recommended):** Use [conditional plugin execution](/gateway/configure-conditional-plugin-execution/) with an expression that references the application's `principal.id`. This applies the plugin based on the application's principal, without mapping the application to a Consumer.
+                  * **Consumer-scoped plugins:** [Map the application to an existing Gateway Consumer](#map-an-application-to-a-consumer), then configure Consumer-scoped plugins on that Consumer. This is a common starting point if you already have Consumers configured. 
                   
+  - header:
+      type: h3
+      text: "Map an application to a Consumer"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  Mapping an application to a Consumer requires the [Consumer Viewer](/konnect-platform/teams-and-roles/#control-planes) role, granted for each API instance registered by the application.
+
+                  To map an application to an existing Consumer, send a `PUT` request to the registration's `consumer` endpoint with the ID of the Gateway Consumer:
+
+                  <!--vale off-->
+                  ```sh
+                  curl -X PUT "https://us.api.konghq.com/v3/portals/$PORTAL_ID/applications/$APPLICATION_ID/registrations/$REGISTRATION_ID/consumer" \
+                    -H "Authorization: Bearer $KONNECT_TOKEN" \
+                    -H "Content-Type: application/json" \
+                    -d '{"id": "$CONSUMER_ID"}'
+                  ```
+                  <!--vale on-->
+
+                  <!-- TODO: add Konnect UI and Terraform steps once confirmed with PM -->
+
+                  Keep the following in mind when you map applications to Consumers:
+                  * Both the [KAA and ACE plugins](/catalog/apis/#allow-developers-to-consume-your-api) look up principals to resolve the Consumer mapped to an application.
+                  * An application maps to a single Consumer (a 1:1 mapping through one principal).
+                  * The mapping is a loose, string-based mapping. The Dev Portal does not validate that the Consumer exists on the Gateway.
+                  * Application registrations for APIs that are linked to the same Gateway Service will share the same effective Consumer mapping. 
+                    Updating the mapping for one registration updates it for all registrations that resolve to the same Gateway context.
+
   - header:
       type: h2
       text: "Learn more"

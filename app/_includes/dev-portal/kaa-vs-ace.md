@@ -5,6 +5,8 @@ When you link an API to a Gateway, you have two options:
 These plugins are responsible for applying authentication and authorization on the Gateway Service or control plane.
 The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate.
 
+Both plugins also look up principals to resolve any [plugins applied to a Dev Portal application](/dev-portal/self-service/#map-an-application-to-a-consumer), so that Consumer or principal-scoped plugins apply to the application's traffic.
+
 The following table can help you decide which option to pick:
 <!--vale off-->
 {% table %}
