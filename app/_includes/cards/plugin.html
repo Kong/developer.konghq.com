@@ -7,7 +7,7 @@
 {% assign name = plugin.name %}
 {% if plugin.act_as_plugin %}{% assign name = plugin.act_as_plugin_name %}{% endif %}
 <div
-  class="card card__bordered min-h-[260px]"
+  class="card card__highlighted min-h-[260px]"
   data-card="plugin"
   data-category="{{plugin.categories | join: ','}}"
   data-deployment-topology="{{plugin.works_on | join: ','}}"

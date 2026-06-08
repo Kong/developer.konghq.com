@@ -553,10 +553,10 @@
   }
 
   .card {
-    @apply flex rounded-md bg-secondary shadow-primary h-full;
+    @apply flex rounded-md bg-secondary shadow-primary h-full border border-primary;
   }
 
-  .card__bordered {
+  .card__highlighted {
     @apply border border-primary hover:border hover:border-brand-saturated hover:shadow-hover-card;
   }
 

@@ -1,6 +1,6 @@
 {% assign cb = include.cookbook %}
 {% assign cat = include.category %}
-<div class="card card__bordered min-h-[260px]">
+<div class="card card__highlighted min-h-[260px]">
   <a href="{{ cb.url }}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
     {% if cat.icon %}
     <span class="text-links">{% include_svg cat.icon width="32" height="32" %}</span>
