@@ -22,18 +22,32 @@ npm ci
 
 Make sure that the `./tmp` folder is empty before you run any of the commands.
 
-### Generate temp files for specific versions
+### Generate yml entries from the changelog file
 
-To generate a temp file for a specific version run:
+To generate temp entries from a Changelog.md for a specific version run:
 
 ```bash
 cd tools/changelog-generator
-node run.js --path='../../../kong-ee' --version='3.10.0.2'
+node md-to-yml.js --path='../../../kong-ee' --version='3.10.0.2'
 ```
 
 where:
 
 * `path`: is the relative path to the `kong-ee` repo.
+* `version`: the version for which to generate the temp changelog file.
+
+### Generate temp files for specific versions
+
+To generate a temp file for a specific version run from the entries:
+
+```bash
+cd tools/changelog-generator
+node run.js --path='./tmp' --version='3.10.0.2'
+```
+
+where:
+
+* `path`: is the relative path to the `tmp` folder with the entries created in the previous step.
 * `version`: the version for which to generate the temp changelog file.
 
 This creates a `./tmp/3.10.0.2.json` file containing all the changelog entries for that version.
