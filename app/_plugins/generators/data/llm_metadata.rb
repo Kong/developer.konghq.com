@@ -37,6 +37,7 @@ module Jekyll
           'ai_gateway_enterprise' => @page.data['ai_gateway_enterprise'],
           'min_version' => @page.data['min_version'],
           'tier' => @page.data['tier'],
+          'tiers' => resolve_tiers(@page.data['tiers']),
           'products' => resolve_names(@page.data['products'], 'products'),
           'tools' => resolve_names(@page.data['tools'], 'tools'),
           'beta' => @page.data['beta']
@@ -54,6 +55,15 @@ module Jekyll
         return if Array(slugs).empty?
 
         Array(slugs).map { |slug| @site.data.dig(data_key, slug, 'name') || slug }
+      end
+
+      def resolve_tiers(tiers)
+        return if tiers.nil? || tiers.empty?
+
+        tiers.each_with_object({}) do |(product, tier_name), out|
+          name = @site.data.dig('products', product, 'name') || product
+          out[name] = @site.data.dig('products', product, 'tiers', tier_name, 'text') || tier_name
+        end
       end
 
       def plugin_metadata
