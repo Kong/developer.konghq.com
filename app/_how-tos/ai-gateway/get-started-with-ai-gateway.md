@@ -65,8 +65,6 @@ data:
       header_value: Bearer $OPENAI_API_KEY
 {% endentity_example %}
 
-Save the `id` from the response—you’ll need it to create Model entities.
-
 ## Create a Model entity
 
 Create a [Model](/ai-gateway/entities/ai-model/) entity to specify which LLM models are available and declare their capabilities. Each capability generates a route on the service:
@@ -86,14 +84,15 @@ data:
         name: openai-provider
 {% endentity_example %}
 
-The `chat` capability creates a `/chat` route for chat completions. You can add other capabilities like `embeddings`, `assistants`, or `audio-transcriptions` as needed.
+{:.success}
+The `chat` capability creates a `/v1/chat/cmpletions` route for chat completions.
 
 ## Validate
 
 Send a chat request to verify your setup:
 
 {% validation request-check %}
-url: /chat
+url: /v1/chat/cmpletions
 status_code: 200
 method: POST
 headers:
