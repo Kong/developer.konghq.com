@@ -21,6 +21,8 @@ related_resources:
     url: '/mesh/observability/'
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
+  - text: Cross-mesh communication
+    url: /mesh/mesh-to-mesh/
   - text: Install {{site.mesh_product_name}}
     url: /mesh/#install-kong-mesh
 ---
@@ -47,7 +49,7 @@ In addition to creating virtual service meshes, the `Mesh` resource is also used
 * [Zone egress](/mesh/zone-egress/), to define whether `ZoneEgress` should be used for cross-zone and external service communication.
 * [Non-mesh traffic](/mesh/policies/meshpassthrough/), to define whether `passthrough` mode should be used for the non-mesh traffic.
 
-If you need cross-mesh communication, you must use an intermediary API Gateway. For more information, see [Built-in gateways in {{site.mesh_product_name}}](/mesh/built-in-gateway/).
+If you need cross-mesh communication, you must use an intermediary gateway. For more information, see [Cross-mesh communication](/mesh/mesh-to-mesh/).
 
 ## Creating a mesh
 

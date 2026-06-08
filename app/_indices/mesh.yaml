@@ -39,6 +39,7 @@ sections:
       - path: /mesh/ingress/
       - path: /mesh/service-discovery/
       - path: /mesh/mesh-multi-tenancy/
+      - path: /mesh/mesh-to-mesh/
       - path: /mesh/single-zone/
       - path: /mesh/mesh-multizone-service-deployment/
       - path: /mesh/interact-with-control-plane/
