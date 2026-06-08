@@ -295,7 +295,7 @@ rows:
 
 ### kong.find_upstream
 A span capturing the attempt to verify a specific upstream. 
-{{site.base_gateway}} attempts to open a TCP connection (if not `KeepAlive` cache is found), do a TLS handshake and send down the HTTP headers. 
+{{site.base_gateway}} attempts to open a TCP connection (if not `KeepAlive` cache is found), and performs a TLS handshake if the upstream is configured to use TLS. 
 If all of this succeeds, the upstream is healthy and Kong will finish sending the full request and wait for a response. 
 If any of the step fails, {{site.base_gateway}} will switch to the next target and try again.
 
