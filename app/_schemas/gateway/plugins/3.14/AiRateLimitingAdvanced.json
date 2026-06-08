@@ -566,5 +566,13 @@
       },
       "type": "object"
     }
-  }
+  },
+  "x-supported-partials": [
+    {
+      "name": "redis-ee",
+      "paths": [
+        "config.redis"
+      ]
+    }
+  ]
 }
