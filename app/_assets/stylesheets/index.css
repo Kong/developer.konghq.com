@@ -927,6 +927,10 @@
     a {
       @apply text-terciary;
     }
+
+    .bg-links[style*="mask:url"] {
+      @apply bg-icon;
+    }
   }
 }
 
