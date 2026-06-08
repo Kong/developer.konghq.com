@@ -76,7 +76,7 @@ You'll apply `replaceme` globally with a condition so it only runs when the requ
 The `replaceme` plugin reads the raw request body, performs a global text substitution, and writes the modified body back before the request is proxied upstream.
 
 ```bash
-cat <<'EOF' | deck gateway apply -
+cat <<'EOF' | deck gateway apply --include-plugin-definitions -
 _format_version: "3.0"
 _transform: true
 
@@ -134,7 +134,7 @@ The `reflector` plugin has an empty schema because it takes no configuration.
 Its `PRIORITY` is set to `-10` so it runs after `replaceme` (priority `800`), ensuring `replaceme` modifies the body first.
 
 ```bash
-cat <<'EOF' | deck gateway apply -
+cat <<'EOF' | deck gateway apply --include-plugin-definitions -
 _format_version: "3.0"
 _transform: true
 
@@ -172,6 +172,8 @@ entities:
         target_word: sea
         replacement_word: pelican
     - name: reflector
+deck_flags:
+  - "--include-plugin-definitions"
 {% endentity_examples %}
 
 ## Validate

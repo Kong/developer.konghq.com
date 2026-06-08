@@ -67,19 +67,21 @@ This lets two separate teams use the same plugin logic with independent configur
 
 ## Create a clone of the Request Transformer plugin
 
-Use the `cloned_plugins` key to define a new plugin named `ACME-request-transformer-global` that is based on `request-transformer`:
+Use the `cloned_plugins` key to define a new plugin named `acme-request-transformer-global` that is based on `request-transformer`:
 
 {% entity_examples %}
 entities:
   cloned_plugins:
-    - name: ACME-request-transformer-global
+    - name: acme-request-transformer-global
       ref: request-transformer
       priority: 802
+deck_flags:
+  - "--include-plugin-definitions"
 {% endentity_examples %}
 
 Where:
 * `cloned_plugins.name`: A unique name for the clone. This can be any name that doesn't conflict with an existing plugin.
-  We recommend making this name distinct so that it doesn't conflict with future plugins (for example, `ACME-request-transformer-global`).
+  We recommend making this name distinct so that it doesn't conflict with future plugins (for example, `acme-request-transformer-global`).
 * `cloned_plugins.ref`: The source plugin that this clone is based on.
 * `cloned_plugins.priority`: The order in which the cloned plugin runs relative to other plugins. The base Request Transformer plugin has a priority of 801, so setting 802 makes the clone run first. This isn't required for this example since the clone runs globally, but it shows how you can control plugin ordering independently from the source plugin.
 
@@ -90,11 +92,13 @@ Configure the cloned plugin globally so it adds a header to every request:
 {% entity_examples %}
 entities:
   plugins:
-    - name: ACME-request-transformer-global
+    - name: acme-request-transformer-global
       config:
         add:
           headers:
             - "X-Global-Header:isSetGlobally"
+deck_flags:
+  - "--include-plugin-definitions"
 {% endentity_examples %}
 
 ## Apply the source plugin to a Route
