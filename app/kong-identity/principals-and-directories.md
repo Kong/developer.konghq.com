@@ -195,6 +195,11 @@ body:
 Terraform steps will be added once the feature is available for testing.
 
 {% endnavtab %}
+{% navtab "UI" %}
+
+A default directory is automatically created when you [create your first principal](#configure-a-principal) in the UI.
+
+{% endnavtab %}
 {% endnavtabs %}
 
 ## Configure a principal
