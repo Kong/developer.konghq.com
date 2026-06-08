@@ -60,7 +60,8 @@ module SectionWrapper
       return if nodes.empty?
 
       wrapper = build_wrapper
-      nodes.each { |node| wrapper.at_css('.content').add_child(node) }
+      content = wrapper.at_css('.content')
+      nodes.each { |node| content.add_child(node) }
       wrapper
     end
 
