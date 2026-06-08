@@ -107,6 +107,10 @@ When an Agent has type `a2a`, proxied traffic is processed in four phases:
 
 Non-A2A traffic, and traffic to `http` Agents, is proxied without these steps.
 
+## Routing configuration
+
+Beyond the `url` field, Agents can define HTTP routing rules through `config.route`. This allows you to match requests by method, path, host, and other HTTP patterns. Use `route` when you need fine-grained control over which traffic reaches the Agent. If only a URL is needed, the `url` field is simpler.
+
 <!-- vale off -->
 {% mermaid %}
 sequenceDiagram
@@ -301,7 +305,7 @@ data:
     logging:
       statistics: true
       payloads: false
-    max_payload_size: 524288
+      max_payload_size: 1048576
 {% endentity_example %}
 
 ## Schema
