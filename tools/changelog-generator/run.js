@@ -34,7 +34,7 @@ function generateChangelogsByVersion(folderPath, version) {
       }
       change.type = setup.type_mappings[change.type] || change.type;
 
-      change.message = change.message.replace(/^"([^"]*)"?\n?$/, "$1");
+      change.message = change.message.replace(/^"([^"]*)"?\n?$/, "$1").replace(/[\r\n]+$/, '');
       if (change.scope === "Plugin") {
         const match = change.message.match(/(\*\*\s?(.*?):?\s?\*\*?)/);
         if (match && match[2]) {
