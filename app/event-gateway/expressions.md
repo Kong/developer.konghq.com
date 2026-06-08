@@ -156,6 +156,26 @@ rows:
       * `condition` field in Produce and Consume policies used as children of Schema Validation
     example: |
       `record.value.validated == true`
+  - variable: |
+      `record.value.schema` {% new_in 1.2 %}
+    type: "`object`"
+    description: |
+      Registry-supplied schema metadata. Populated when the value was validated by a Confluent schema registry. Fields:
+      `id` (uint), `version` (uint, when returned by the registry), `format` (`"avro"` or `"json"`), and either
+      `avro.{name, namespace}` or `json.{title, id}`. Sub-fields are absent when not applicable; use `has()` to test presence.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.format == 'avro' && record.value.schema.avro.name == 'User'`
+  - variable: |
+      `record.key.schema` {% new_in 1.2 %}
+    type: "`object`"
+    description: |
+      Same shape as `record.value.schema`, populated when the record key has `schema_validation` configured.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.key.schema.format == 'json' && record.key.schema.json.title == 'UserKey'`
 {% endtable %}
 
 ### Example expressions
