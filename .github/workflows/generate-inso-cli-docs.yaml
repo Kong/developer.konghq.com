@@ -61,6 +61,9 @@ jobs:
         working-directory: insomnia
         run: npm ci --ignore-scripts
 
+      - name: Install node version of node-libcurl for inso
+        run: npm run install-libcurl-node
+
       - name: Generate Inso CLI reference docs
         working-directory: insomnia
         run: npm run build -w insomnia-inso && $PWD/packages/insomnia-inso/bin/inso generate-docs || true
