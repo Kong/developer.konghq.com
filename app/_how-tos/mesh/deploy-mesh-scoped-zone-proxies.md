@@ -1,6 +1,6 @@
 ---
 title: 'Deploy mesh-scoped zone proxies'
-description: 'Deploy {{site.mesh_product_name}} zone ingress and zone egress using the new per-mesh Helm configuration. Each entry in `kuma.meshes[]` renders its own Deployment, Service, and Dataplane listeners, replacing the cluster-scoped `kuma.ingress` and `kuma.egress` keys.'
+description: 'Deploy {{site.mesh_product_name}} zone ingress and zone egress with per-mesh Helm values. Each entry in `kuma.meshes[]` creates the Deployment, Service, and Dataplane listeners for one mesh.'
 content_type: how_to
 permalink: /mesh/zone-proxies/
 bread-crumbs:
@@ -18,7 +18,7 @@ products:
   - mesh
 
 tldr:
-  q: How do I deploy mesh-scoped zone ingress and zone egress with the new Helm configuration?
+  q: How do I deploy mesh-scoped zone ingress and zone egress with per-mesh Helm values?
   a: |
     1. Create a `Mesh` with `spec.meshServices.mode: Exclusive` and a `MeshIdentity` on the global control plane.
     1. Install each zone control plane with a `kuma.meshes[]` entry.
@@ -47,12 +47,11 @@ cleanup:
 ---
 
 Starting in {{site.mesh_product_name}} 2.14, zone ingress and zone egress are **mesh-scoped**.
-Instead of the cluster-scoped `kuma.ingress.enabled` / `kuma.egress.enabled` Helm keys, you declare a `kuma.meshes[]` list in your zone control plane's values.
-Each entry renders its own Deployment, Service, and Dataplane for that mesh, and zone proxies now carry per-mesh workload identity so policies can target them directly.
+Declare them in your zone control plane values under `kuma.meshes[]`.
+Each entry creates a Deployment, Service, and Dataplane for that mesh, and the zone proxies carry per-mesh workload identity so policies can target them directly.
 
-This guide walks through a fresh three-cluster setup: a global control plane and two zone control planes, each deploying a zone ingress and zone egress through the new `kuma.meshes[]` configuration.
+This guide walks through a fresh three-cluster setup: a global control plane and two zone control planes, each deploying a zone ingress and zone egress through `kuma.meshes[]`.
 It uses the minikube Docker driver and one shared Docker bridge so the three clusters can reach each other directly through `NodePort` Services.
-That removes the need for `minikube tunnel`, `host.minikube.internal`, and `externalIPs` workarounds.
 
 ## Start the global control plane cluster
 
@@ -69,7 +68,7 @@ That removes the need for `minikube tunnel`, `host.minikube.internal`, and `exte
    export KDS_NODEPORT=30685
    ```
 
-1. Create the shared Docker bridge if it does not already exist:
+1. Create the shared Docker bridge:
 
    ```sh
    docker network inspect $MZ_NETWORK >/dev/null 2>&1 || \
@@ -77,13 +76,14 @@ That removes the need for `minikube tunnel`, `host.minikube.internal`, and `exte
    ```
 
 {:.info}
-> On Docker Desktop, a third Docker-driver minikube profile can leave `kube-proxy` crashlooping with `failed complete: too many open files`.
-> If that happens, raise the shared Linux VM's inotify limits once, then restart the affected profile:
+> If Docker Desktop fails with `failed complete: too many open files` while starting a profile, run:
 >
 > ```sh
 > docker run --rm --privileged alpine \
 >   sysctl -w fs.inotify.max_user_instances=8192 fs.inotify.max_user_watches=524288
 > ```
+>
+> Then restart the affected profile.
 
 1. Create a new minikube cluster for the global control plane:
 
@@ -107,7 +107,6 @@ That removes the need for `minikube tunnel`, `host.minikube.internal`, and `exte
    ```
 
    We skip default mesh creation because we will apply a custom `Mesh` in the next step.
-   `NodePort` makes the zone sync endpoint reachable on the shared Docker bridge without a tunnel.
 
 1. Wait for the control plane to become ready:
 
@@ -197,8 +196,8 @@ spec:
 
 ## Deploy zone-1 with mesh-scoped zone proxies
 
-A `kuma.meshes[]` entry tells the chart which mesh the zone proxies belong to.
-Each entry renders its own Deployment, Service, and ServiceAccount for the ingress and egress roles.
+A `kuma.meshes[]` entry defines which mesh the zone proxies belong to.
+Each entry creates its own Deployment, Service, and ServiceAccount for the ingress and egress roles.
 
 1. Start the zone-1 cluster on the shared Docker bridge:
 
@@ -227,10 +226,8 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
            enabled: true
    ```
 
-   `service.spec` is still available for additional `Service` fields such as `externalIPs` or `loadBalancerSourceRanges`,
-   but the chart does not expose a dedicated per-mesh `nodePort` override.
-   When the Service type is `NodePort`, Kubernetes assigns the port automatically and the `meshzoneaddress` controller advertises the resulting `${ZONE1_IP}:<nodePort>` address for you.
-   You no longer need `externalIPs` or a host-level tunnel.
+   Set the ingress Service type to `NodePort` so the other minikube clusters can reach it on the shared Docker network.
+   Kubernetes assigns the port automatically, and `MeshZoneAddress` advertises the resulting `${ZONE1_IP}:<nodePort>` address for you.
 
    To deploy zone proxies for additional meshes, append more entries to `kuma.meshes`.
 
@@ -316,7 +313,7 @@ Resources synced back from the global control plane carry `kuma.io/origin: globa
 
 The global control plane syncs these trust bundles to all zones, enabling cross-zone certificate validation.
 
-## Inspect what the chart produced
+## Inspect the zone proxy resources
 
 1. List the per-mesh Deployments and Services in zone-1:
 
@@ -327,8 +324,7 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
    You'll see a `kong-mesh-default-ingress` and `kong-mesh-default-egress` Deployment, each with a matching Service.
    A second mesh would produce another pair named after its mesh.
 
-1. Confirm the Services carry the new `k8s.kuma.io/zone-proxy-type` label.
-   The Pod controller watches this label and generates the Dataplane listeners from it:
+1. Confirm the Services carry the `k8s.kuma.io/zone-proxy-type` label:
 
    ```sh
   kubectl --context $ZONE1_PROFILE -n kong-mesh-system get svc \
@@ -358,22 +354,13 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
       ] | @tsv'
   ```
 
-  These addresses should match the shared Docker bridge you created earlier, not `127.0.0.1`.
+  These addresses should use the shared Docker bridge IPs and the published ingress `NodePort` values.
 
-1. From the global control plane, look at the Dataplanes.
-  Zone proxies are now ordinary `Dataplane` resources with `networking.listeners[]` entries instead of separate `ZoneIngress` or `ZoneEgress` resources:
+1. From the global control plane, look at the zone proxy Dataplanes:
 
   ```sh
   kubectl --context $GLOBAL_PROFILE get dataplane -A
   ```
-
-1. Confirm that no legacy zone proxy resources exist.
-  Both lists should be empty:
-
-  ```sh
-  kubectl --context $GLOBAL_PROFILE get zoneingresses,zoneegresses -A
-  ```
-  {:.no-copy-code}
 
 ## Verify cross-zone traffic
 
@@ -390,7 +377,7 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
   ```
 
 1. From a `demo-app` pod in zone-1, request the `demo-app` Service in zone-2 using its cross-zone hostname.
-   The `demo-app` image ships with `wget` but not `curl`:
+   The `demo-app` image includes `wget`, so use:
 
    ```sh
   kubectl --context $ZONE1_PROFILE -n kuma-demo exec deploy/demo-app -c demo-app -- \

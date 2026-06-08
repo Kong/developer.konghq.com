@@ -85,11 +85,11 @@ When `targetRef.kind: Dataplane` selects a mesh-scoped zone proxy, `MeshTrafficP
 The two forms are mutually exclusive.
 
 Use `targetRef.labels` to select the proxy role and zone.
-Use `targetRef.sectionName` to select the exact listener name from the generated `Dataplane`.
-With the current Helm chart output, zone ingress uses `10001` and zone egress uses `10002`.
+Use `targetRef.sectionName` to select the exact listener name from the zone proxy `Dataplane`.
+For example, zone ingress can use `10001` and zone egress can use `10002`.
 
 On zone egress, destination matching happens through `rules[].default.allow[]` or `deny[]` entries.
-The most precise selector is the destination SNI.
+Match the destination by SNI.
 
 {% policy_yaml namespace=kong-mesh-system %}
 ```yaml
