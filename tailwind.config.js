@@ -50,6 +50,7 @@ module.exports = {
       colors: {
         brand: "rgb(var(--color-brand), <alpha-value>)",
         links: "rgb(var(--color-text-links), <alpha-value>)",
+        icon: "rgb(var(--color-icon-primary), <alpha-value>)",
         "brand-saturated": ({ opacityValue, opacityVariable }) =>
           opacityVariable === undefined && opacityValue !== undefined
             ? `rgb(var(--color-brand-saturated), ${opacityValue})`
