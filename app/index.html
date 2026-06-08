@@ -93,7 +93,7 @@ edit_and_issue_links: false
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {%- for item in section.items %}
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="{{ item.icon }}" class="w-8 h-8" alt="{{ item.icon_alt }}"/>
+                <img src="{{ item.icon }}" class="card__icon" alt="{{ item.icon_alt }}"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>{{ item.title | liquify }}</h3>
                     <p class="text-sm text-secondary">{{ item.description | liquify }}</p>

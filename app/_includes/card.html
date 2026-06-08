@@ -6,7 +6,7 @@
 {% capture card_content %}
 {% if include.before_title %}{{ include.before_title }}{% endif %}
 {% if include.icon %}
-<img src="{{ include.icon }}" class="h-8 w-auto self-start"/>
+<img src="{{ include.icon }}" class="card__icon self-start"/>
 {% endif %}
 {% if include.title %}<{{ card_title_tag }}>{{ include.title | liquify }}</{{ card_title_tag }}>{% endif %}
 {% if include.description %}
