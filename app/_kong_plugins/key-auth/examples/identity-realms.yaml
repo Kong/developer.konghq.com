@@ -1,8 +1,8 @@
 description: Authenticate centrally-managed Consumers in {{site.konnect_short_name}} by configuring the `identity_realms` field in the Key Auth plugin.
 extended_description: |
   You can authenticate [consumers that are managed centrally](/gateway/entities/consumer/#centrally-managed-consumers) in {{site.konnect_short_name}} by configuring the `identity_realms` field in the Key Auth plugin. A Data Plane can only reach out to realms in the same region as they are deployed.
-  
-  `identity_realms` are scoped to the Control Plane by default (`scope: cp`). 
+
+  `identity_realms` are scoped to the Control Plane by default (`scope: cp`).
   The order in which you configure the `identity_realms` dictates the priority in which the Data Plane attempts to authenticate the provided API keys.
   See the [realm priority reference](/plugins/key-auth/#identity-realms) for details.
 
@@ -12,8 +12,11 @@ title: 'Realms for external Consumers in Konnect'
 
 requirements:
   - |
-    You have a realm configured with an associated Control Plane in {{site.konnect_short_name}}. 
+    You have a realm configured with an associated Control Plane in {{site.konnect_short_name}}.
     You can do this with the [`/realms`](/api/konnect/consumers/#/operations/list-realms) endpoint.
+  - |
+    The Data Plane has network connectivity to {{site.konnect_short_name}} to reach the identity endpoint `https://%s.identity.konghq.com`, where `%s` is the region.
+    A Data Plane can only reach out to realms in the same region as they are deployed.
 weight: 899
 
 min_version:
@@ -25,10 +28,10 @@ variables:
     description: Region for your {{site.konnect_short_name}} instance.
   realm-id:
     value: $REALM_ID
-    description: The ID of the realm you created in the prerequisites. 
+    description: The ID of the realm you created in the prerequisites.
 
-config: 
-  key_names: 
+config:
+  key_names:
     - apikey
   identity_realms:
     - scope: realm

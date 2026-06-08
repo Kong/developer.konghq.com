@@ -77,7 +77,10 @@ The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key
 You can authenticate [centrally-managed Consumers](/gateway/entities/consumer/#centrally-managed-consumers) in {{site.konnect_short_name}} by configuring the [`config.identity_realms`](./reference/#schema--config-identity-realms) field.
 See [Realms for external Consumers in {{site.konnect_short_name}}](/plugins/key-auth/examples/identity-realms/) for an example configuration.
 
-Identity realms are scoped to the Control Plane by default (`scope: cp`). 
+{:.info}
+> **Note:** Identity realms require the Data Plane to have network connectivity to {{site.konnect_short_name}} to look up centrally-managed Consumers. The Data Plane reaches the realm at the identity endpoint `https://%s.identity.konghq.com`, where `%s` is the region. If the Data Plane can't reach {{site.konnect_short_name}}, realm-scoped authentication won't work.
+
+Identity realms are scoped to the Control Plane by default (`scope: cp`).
 The order in which you configure the identity realm dictates the priority in which the Data Plane attempts to authenticate the provided API keys:
 
 {% table %}
@@ -89,18 +92,18 @@ columns:
 rows:
   - condition: Realm is listed first
     description: |
-      The Data Plane will first reach out to the realm. If the API key is not found in the realm, the Data Plane will look for the API key in the Control Plane config. 
+      The Data Plane will first reach out to the realm. If the API key is not found in the realm, the Data Plane will look for the API key in the Control Plane config.
   - condition: Control plane scope listed first
     description: |
       The Data Plane will initially check the Control Plane configuration (LMDB) for the API key before looking up the API key in the realm.
   - condition: Realm only
     description: |
-      You can configure a single identity realm by removing `cp` from `config.identity_realms.scope`. In this case, the Data Plane will only attempt to authenticate API keys against the realm. 
-      
+      You can configure a single identity realm by removing `cp` from `config.identity_realms.scope`. In this case, the Data Plane will only attempt to authenticate API keys against the realm.
+
       If the API key isn't found, the request will be blocked.
   - condition: Control plane only
     description: |
-      You can configure a lookup only in the Control Plane config by specifying `cp` in `config.identity_realms.scope` and no other identity realm parameters. In this scenario, the Data Plane will only check the Control Plane configuration (LMDB) for API key authentication. 
-      
+      You can configure a lookup only in the Control Plane config by specifying `cp` in `config.identity_realms.scope` and no other identity realm parameters. In this scenario, the Data Plane will only check the Control Plane configuration (LMDB) for API key authentication.
+
       If the API key isn't found, the request will be blocked.
 {% endtable %}
