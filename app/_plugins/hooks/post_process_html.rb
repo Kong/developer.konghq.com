@@ -108,7 +108,7 @@ class KongPluginsMetaInjector
   def process
     return unless should_inject?
 
-    inject_meta_tag(build_meta_tag)
+    @page_or_doc.output = @page_or_doc.output.sub('</head>', "  #{build_meta_tag}\n</head>")
   end
 
   private
@@ -123,21 +123,6 @@ class KongPluginsMetaInjector
 
   def build_meta_tag
     %(<meta name="algolia:kong_plugins" content="#{kong_plugins.join(', ')}">)
-  end
-
-  def inject_meta_tag(meta_tag)
-    doc = Nokogiri::HTML(@page_or_doc.output)
-    head = doc.at_css('head')
-
-    last_meta = head.css('meta').last
-
-    if last_meta
-      last_meta.add_next_sibling("\n  #{meta_tag}")
-    else
-      head.prepend_child("#{meta_tag}\n  ")
-    end
-
-    @page_or_doc.output = doc.to_html
   end
 end
 
