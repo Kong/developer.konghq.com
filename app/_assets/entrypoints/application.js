@@ -59,7 +59,7 @@ mermaid.initialize({
   theme: "base",
   themeVariables: {
     primaryColor: "#fff",
-    primaryBorderColor: "#4a86e8",
+    primaryBorderColor: "rgb(var(--color-icon-primary))",
     primaryTextColor: "#495c64",
     secondaryColor: "#fff",
     secondaryTextColor: "#5096f2",

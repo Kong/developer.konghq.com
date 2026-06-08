@@ -441,7 +441,7 @@
     }
 
     rect, circle, ellipse, polygon {
-      @apply fill-transparent stroke-[rgb(var(--color-brand))] !important;
+      @apply fill-transparent stroke-[rgb(var(--color-icon-primary))] !important;
     }
 
     .label-container {
@@ -457,7 +457,7 @@
     }
 
     path {
-      @apply fill-[context-stroke] stroke-[rgb(var(--color-brand))] stroke-1 !important
+      @apply fill-[context-stroke] stroke-[rgb(var(--color-icon-primary))] stroke-1 !important
     }
   }
 
@@ -486,7 +486,7 @@
     }
 
     .messageLine0 {
-      @apply stroke-[rgb(var(--color-brand))] !important;
+      @apply stroke-[rgb(var(--color-icon-primary))] !important;
     }
 
     circle {
