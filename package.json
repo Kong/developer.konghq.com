@@ -3,7 +3,7 @@
     "dev": "bundle exec foreman start"
   },
   "type": "module",
-  "packageManager": "yarn@4.15.0",
+  "packageManager": "yarn@4.16.0",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.19",
