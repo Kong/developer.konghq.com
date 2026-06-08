@@ -3,8 +3,8 @@ icon: /_assets/icons/products/operator.svg
 
 releases:
   - release: "2.2"
-    releaseDate: "2026-06-01"
-    endOfLifeDate: "2027-06-01"
+    releaseDate: "2026-06-05"
+    endOfLifeDate: "2027-06-05"
     latest: true
   - release: "2.1"
     releaseDate: "2026-02-05"
