@@ -14,7 +14,7 @@ works_on:
   - konnect
 related_resources:
   - text: "Enable cross-mesh communication"
-    url: /how-to/enable-cross-mesh-communication/
+    url: /how-to/enable-cross-mesh-communication/configure-meshes/
   - text: "Built-in gateways"
     url: /mesh/built-in-gateway/
   - text: "MeshGateway"
@@ -121,7 +121,7 @@ Use this when:
 * You want to keep the setup entirely within {{site.mesh_product_name}}.
 * You need mesh-level metadata (for example, service identity tags) to be visible at the gateway.
 
-See [Enable cross-mesh communication](/how-to/enable-cross-mesh-communication/) for step-by-step instructions.
+See [Enable cross-mesh communication](/how-to/enable-cross-mesh-communication/configure-meshes/) for step-by-step instructions.
 
 ## MeshGateway vs ZoneIngress
 
