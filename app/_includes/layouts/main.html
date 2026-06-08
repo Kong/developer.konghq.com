@@ -2,6 +2,7 @@
 {%- if layout.uses == false and page.beta == true -%}{%- assign show_badges = true -%}{%- endif -%}
 {%- if layout.uses == false and page.tech_preview == true -%}{%- assign show_badges = true -%}{%- endif -%}
 {%- if layout.tier_inline == true and page.tier -%}{%- assign show_badges = true -%}{%- endif -%}
+{%- if layout.tier_inline == true and page.tiers -%}{%- assign show_badges = true -%}{%- endif -%}
 {%- if page.premium_partner or page.third_party -%}{%- assign show_badges = true -%}{%- endif %}
 <main {% if page.topology_switcher %}data-topology-switcher="{{ page.topology_switcher }}" {% endif %}id="main" class="flex flex-col pb-12 gap-12 w-full {{ page.content_type | slugify }} {{include.class}}">
     <div class="flex flex-col gap-3">
@@ -15,7 +16,10 @@
             {% if show_badges %}
             <div class="flex gap-3 items-center">
             {% if layout.tier_inline == true and page.tier %}
-                {% include tier.html products=page.products tier=page.tier tier_product=page.tier_product %}
+                {% include tier.html products=page.products tier=page.tier %}
+            {% endif %}
+            {% if layout.tier_inline == true and page.tiers %}
+                {% include tier.html products=page.products tiers=page.tiers %}
             {% endif %}
 
             {% if layout.uses == false %}
@@ -43,7 +47,7 @@
         {% endif %}
 
         {% if layout.uses != false %}
-        {% include_cached uses.html products=page.products tools=page.tools tier=page.tier tier_product=page.tier_product beta=page.beta tech_preview=page.tech_preview %}
+        {% include_cached uses.html products=page.products tools=page.tools tier=page.tier tiers=page.tiers beta=page.beta tech_preview=page.tech_preview %}
         {% endif %}
 
         {% ifhascontent nav_header %}

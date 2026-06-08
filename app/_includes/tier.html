@@ -1,24 +1,48 @@
 {% unless page.plugin? %}
-{% if include.products and include.products.size > 1 and include.tier_product == nil %}
-{% raise "tier.html include called with a tier and more than one product. Set `tier_product` in the page frontmatter to pick one." %}
+{% if include.tier and include.tiers %}
+{% raise "tier.html: page `{{page.url}}` sets both `tier` and `tiers`. Use one or the other." %}
+{% endif %}
+{% if include.tier and include.products and include.products.size > 1 %}
+{% raise "tier.html: page `{{page.url}}` sets `tier` with more than one product. Use `tiers:` to map each product to its tier." %}
 {% endif %}
 {% endunless %}
 
-{% if include.tier_product %}
-{% assign product = include.tier_product %}
-{% else %}
-{% assign product = include.products.first %}
-{% endif %}
-{% assign tier = site.data.products[product].tiers[include.tier] %}
-{% unless tier %}
-    {%- capture available_tiers -%}
-        {%- for tier in site.data.products[product].tiers -%}{{tier[0]}}{% unless forloop.last %}, {% endunless %}{%- endfor -%}
-    {%- endcapture -%}
-    {% raise "tier.html: invalid tier `{{include.tier}}` for product: `{{product}}`. Available tiers: {{available_tiers}}" %}
-{% endunless %}
+{% if include.tier %}
+    {% assign product = include.products.first %}
+    {% assign tier_data = site.data.products[product].tiers[include.tier] %}
+    {% unless tier_data %}
+        {%- capture available_tiers -%}
+            {%- for t in site.data.products[product].tiers -%}{{t[0]}}{% unless forloop.last %}, {% endunless %}{%- endfor -%}
+        {%- endcapture -%}
+        {% raise "tier.html: invalid tier `{{include.tier}}` for product: `{{product}}`. Available tiers: {{available_tiers}}" %}
+    {% endunless %}
 
-{% if include.url %}
-{% include badge.html url=tier.url text=tier.text css_class=include.tier %}
-{% else %}
-{% include badge.html text=tier.text css_class=include.tier %}
+    {% if include.url %}
+    {% include badge.html url=tier_data.url text=tier_data.text css_class=include.tier %}
+    {% else %}
+    {% include badge.html text=tier_data.text css_class=include.tier %}
+    {% endif %}
+{% elsif include.tiers %}
+    {% for pair in include.tiers %}
+        {% assign tier_product = pair[0] %}
+        {% assign tier_name = pair[1] %}
+
+        {% unless include.products contains tier_product %}
+            {% raise "tier.html: product `{{tier_product}}` listed in `tiers` is not present in `products` for page `{{page.url}}`." %}
+        {% endunless %}
+
+        {% assign tier_data = site.data.products[tier_product].tiers[tier_name] %}
+        {% unless tier_data %}
+            {%- capture available_tiers -%}
+                {%- for t in site.data.products[tier_product].tiers -%}{{t[0]}}{% unless forloop.last %}, {% endunless %}{%- endfor -%}
+            {%- endcapture -%}
+            {% raise "tier.html: invalid tier `{{tier_name}}` for product: `{{tier_product}}`. Available tiers: {{available_tiers}}" %}
+        {% endunless %}
+
+        {% if include.url %}
+        {% include badge.html url=tier_data.url text=tier_data.text css_class=tier_name %}
+        {% else %}
+        {% include badge.html text=tier_data.text css_class=tier_name %}
+        {% endif %}
+    {% endfor %}
 {% endif %}
