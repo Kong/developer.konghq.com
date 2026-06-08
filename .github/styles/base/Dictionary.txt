@@ -810,6 +810,7 @@ udpingress
 udpingresses
 UDPRoute
 UDPRoutes
+uint
 uid
 UIs
 ulimit
