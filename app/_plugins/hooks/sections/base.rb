@@ -1,4 +1,4 @@
-require 'nokogiri'
+require 'nokolexbor'
 
 module SectionWrapper
   class Base
@@ -22,70 +22,58 @@ module SectionWrapper
 
     private
 
+    # Build the output as a string instead of mutating the parsed doc.
+    # Cross-fragment node moves trigger a use-after-free in Nokolexbor; this
+    # avoids the issue entirely by only reading from the parsed tree.
     def wrap_sections(content)
-      doc = Nokogiri::HTML::DocumentFragment.parse(content)
+      doc = Nokolexbor::DocumentFragment.parse(content)
+      return build_wrapper_string('', '', doc.inner_html) unless doc.at_css('h2')
 
-      first_h2 = doc.at_css('h2')
-
-      if first_h2
-        # Wrap content before the first h2
-        content = wrap_content(doc, doc.children.take_while { |node| node != first_h2 })
-
-        doc.children.first.add_previous_sibling(content) if content && content.children.any?
-
-        doc.css('h2').each do |h2|
-          next if h2.ancestors('.heading-section').any?
-
-          title = h2.content
-          slug = h2['id']
-
-          wrapper = build_wrapper(section_title(h2, slug, title), h2['data-deployment-topology'])
-
-          # Move content between this h2 and the next one into the wrapper
-          move_sibling_content_into_wrapper(h2, wrapper)
-
-          # Replace the original h2 with the wrapper
-          h2.replace(wrapper)
-        end
-      else
-        wrapper = wrap_content(doc, doc.children)
-        doc.children = wrapper.children
-      end
-
-      # Return the modified HTML as a string
-      doc.to_html
+      pre, sections = split_by_heading(doc.children, 'h2')
+      out = +''
+      out << build_wrapper_string('', '', nodes_to_html(pre)) unless pre.empty?
+      sections.each { |h2, body| out << build_section_string(h2, body) }
+      out
     end
 
-    def wrap_content(doc, nodes)
-      return if nodes.empty?
-
-      wrapper = build_wrapper
-      content = wrapper.at_css('.content')
-      nodes.each { |node| content.add_child(node) }
-      wrapper
+    def split_by_heading(nodes, tag)
+      groups = nodes.to_a.slice_when { |_, b| heading?(b, tag) }.to_a
+      pre = heading?(groups.first&.first, tag) ? [] : (groups.shift || [])
+      sections = groups.map { |g| [g.first, g.drop(1)] }
+      [pre, sections]
     end
 
-    def build_wrapper(section_title = '', _ = '')
-      Nokogiri::HTML::DocumentFragment.parse <<-HTML
+    def heading?(node, tag)
+      node&.element? && node.name == tag
+    end
+
+    def build_section_string(h2, body_nodes)
+      build_wrapper_string(
+        section_title(h2, h2['id'], h2.content),
+        h2['data-deployment-topology'],
+        wrap_section_body(body_nodes)
+      )
+    end
+
+    def wrap_section_body(nodes)
+      nodes_to_html(nodes)
+    end
+
+    def nodes_to_html(nodes)
+      nodes.map(&:to_html).join
+    end
+
+    def section_title(h2, _slug, _title)
+      h2.to_html
+    end
+
+    def build_wrapper_string(title_html, _topology, body_html)
+      <<~HTML
         <div class="flex flex-col gap-4 heading-section">
-            #{section_title}
-            <div class="content"></div>
+          #{title_html}
+          <div class="content">#{body_html}</div>
         </div>
       HTML
-    end
-
-    def move_sibling_content_into_wrapper(h2, wrapper)
-      current_node = h2.next_element
-
-      while current_node && current_node.name != 'h2' && !current_node.matches?('.heading-section')
-        next_node = current_node.next_element
-        wrapper.at_css('.content').add_child(current_node)
-        current_node = next_node
-      end
-    end
-
-    def section_title(h2, slug, title)
-      h2.to_html
     end
   end
 end
