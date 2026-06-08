@@ -1,6 +1,6 @@
 ---
 title: Map cross-mesh gateways as external services on cluster 2
-description: "Deploy client workloads on Cluster 2 and map the Cluster 1 gateways as external services to enable cross-mesh communication."
+description: "Deploy client workloads on cluster 2 and map the cluster 1 gateways as external services to enable cross-mesh communication."
 content_type: how_to
 permalink: /how-to/enable-cross-mesh-communication/configure-cluster-2/
 breadcrumbs:
@@ -33,7 +33,7 @@ related_resources:
     url: /how-to/set-up-a-built-in-mesh-gateway/
 
 tldr:
-  q: How do I connect Cluster 2 workloads to services in Cluster 1's meshes?
+  q: How do I connect Cluster 2 workloads to services in cluster 1's meshes?
   a: |
     Create mesh-labeled namespaces, deploy client workloads, then apply `MeshExternalService` resources pointing to each gateway's node IP and NodePort. Workloads can then reach remote services via the generated `extsvc.mesh.local` DNS name.
 
@@ -49,23 +49,22 @@ cleanup:
         ```
 ---
 
-With the node IP and both gateway NodePorts exported from the previous guide, switch to Cluster 2 to create namespaces, deploy client workloads, and map both gateways as external services.
+With the node IP and both gateway NodePorts exported from the previous guide, switch to cluster 2 to create namespaces, deploy client workloads, and map both gateways as external services.
 
 ## Prepare namespaces
+
+Create and label cluster 2 namespaces to enable sidecar injection and assign each to the correct mesh:
 
 ```sh
 kubectl create ns c2m1 --context $C2_CONTEXT
 kubectl label ns c2m1 kuma.io/sidecar-injection=enabled kuma.io/mesh=mesh1 --context $C2_CONTEXT
-```
-
-```sh
 kubectl create ns c2m2 --context $C2_CONTEXT
 kubectl label ns c2m2 kuma.io/sidecar-injection=enabled kuma.io/mesh=mesh2 --context $C2_CONTEXT
 ```
 
 ## Deploy client workloads
 
-Deploy a client pod in each mesh namespace for use in the validation step.
+Deploy a client Pod in each mesh namespace for use in the validation step.
 
 1. Deploy a client in `mesh1`:
 
@@ -106,7 +105,7 @@ Deploy a client pod in each mesh namespace for use in the validation step.
 
 ## Map the mesh1 gateway in mesh2
 
-Create a `MeshExternalService` in `mesh2` pointing to the `mesh1` gateway. The `HostnameGenerator` type assigns a stable internal DNS name so workloads don't need to track the address directly.
+Create a `MeshExternalService` in `mesh2` pointing to the `mesh1` gateway. The `HostnameGenerator` type assigns a stable internal DNS name so workloads don't need to track the address directly:
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1

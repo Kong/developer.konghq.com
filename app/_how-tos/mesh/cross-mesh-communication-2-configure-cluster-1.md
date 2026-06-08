@@ -1,6 +1,6 @@
 ---
 title: Set up cross-mesh gateways on cluster 1
-description: "Deploy services and set up MeshGateway resources on Cluster 1 to expose mesh1 and mesh2 services for cross-mesh communication."
+description: "Deploy services and set up MeshGateway resources on cluster 1 to expose mesh1 and mesh2 services for cross-mesh communication."
 content_type: how_to
 permalink: /how-to/enable-cross-mesh-communication/configure-cluster-1/
 breadcrumbs:
@@ -23,55 +23,52 @@ series:
   position: 2
 
 tldr:
-  q: How do I configure Cluster 1 as a cross-mesh gateway host?
+  q: How do I configure cluster 1 as a cross-mesh gateway host?
   a: |
     Create mesh-labeled namespaces, deploy the echo service, then apply `MeshGateway`, `MeshTCPRoute`, and `MeshGatewayInstance` resources directly to the zone cluster for each mesh.
 ---
 
-The following steps set up namespaces, deploy services, and create `MeshGateway` resources on Cluster 1. You'll need the gateway NodePorts exported at the end of this page when configuring Cluster 2.
+The following steps set up namespaces, deploy services, and create `MeshGateway` resources on cluster 1. You'll need the gateway NodePorts exported at the end of this page when configuring cluster 2.
 
 {:.info}
-> Namespaces and services must be created **after** the `MeshTrafficPermission` steps in the previous guide. Pods that start before the permission policy is applied will initialise with a deny-all RBAC rule and won't receive updated rules until they are restarted.
+> Namespaces and services must be created after the [`MeshTrafficPermission` steps](/how-to/enable-cross-mesh-communication/configure-meshes/#configure-meshes-with-mtls) in the previous guide. Pods that start before the permission policy is applied will initialize with a deny-all RBAC rule and won't receive updated rules until they are restarted.
 
 ## Prepare namespaces
 
-Create and label namespaces to enable sidecar injection and assign each to the correct mesh:
+Create and label cluster 1 namespaces to enable sidecar injection and assign each to the correct mesh:
 
 ```sh
 kubectl create ns c1m1 --context $C1_CONTEXT
 kubectl label ns c1m1 kuma.io/sidecar-injection=enabled kuma.io/mesh=mesh1 --context $C1_CONTEXT
-```
-
-```sh
 kubectl create ns c1m2 --context $C1_CONTEXT
 kubectl label ns c1m2 kuma.io/sidecar-injection=enabled kuma.io/mesh=mesh2 --context $C1_CONTEXT
 ```
 
 ## Deploy services
 
-Deploy the `echo` service in both mesh namespaces so each gateway has a backend to route to:
+1. Deploy the `echo` service in both mesh namespaces so each gateway has a backend to route to:
 
-```sh
-kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n c1m1 --context $C1_CONTEXT
-kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n c1m2 --context $C1_CONTEXT
-kubectl wait -n c1m1 --for=condition=ready pod --selector=app=echo --timeout=90s --context $C1_CONTEXT
-kubectl wait -n c1m2 --for=condition=ready pod --selector=app=echo --timeout=90s --context $C1_CONTEXT
-```
+   ```sh
+   kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n c1m1 --context $C1_CONTEXT
+   kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n c1m2 --context $C1_CONTEXT
+   kubectl wait -n c1m1 --for=condition=ready pod --selector=app=echo --timeout=90s --context $C1_CONTEXT
+   kubectl wait -n c1m2 --for=condition=ready pod --selector=app=echo --timeout=90s --context $C1_CONTEXT
+   ```
 
-The echo service's port 1027 is named `http`, which causes {{site.mesh_product_name}} to generate HTTP-specific Envoy cluster config. Set `appProtocol: tcp` to override this so a plain TCP cluster is generated instead:
+1. The echo service's port 1027 is named `http`, which causes {{site.mesh_product_name}} to generate HTTP-specific Envoy cluster config. Set `appProtocol: tcp` to override this so a plain TCP cluster is generated instead:
 
-```sh
-kubectl patch svc echo -n c1m1 --context $C1_CONTEXT \
-  --type json \
-  -p '[{"op":"add","path":"/spec/ports/2/appProtocol","value":"tcp"}]'
-kubectl patch svc echo -n c1m2 --context $C1_CONTEXT \
-  --type json \
-  -p '[{"op":"add","path":"/spec/ports/2/appProtocol","value":"tcp"}]'
-```
+   ```sh
+   kubectl patch svc echo -n c1m1 --context $C1_CONTEXT \
+     --type json \
+     -p '[{"op":"add","path":"/spec/ports/2/appProtocol","value":"tcp"}]'
+   kubectl patch svc echo -n c1m2 --context $C1_CONTEXT \
+     --type json \
+     -p '[{"op":"add","path":"/spec/ports/2/appProtocol","value":"tcp"}]'
+   ```
 
 ## Set up the mesh1 gateway
 
-Deploy a `MeshGateway` in `mesh1` to expose its services to `mesh2`. Apply these directly to the zone cluster — when applied via the global CP, {{site.mesh_product_name}} renames them with a hash suffix and the `MeshGatewayInstance` controller can't find a matching `MeshGateway` by name.
+Deploy a `MeshGateway` in `mesh1` to expose its services to `mesh2`. Apply these directly to the zone cluster. When applied via the global CP, {{site.mesh_product_name}} renames them with a hash suffix and the `MeshGatewayInstance` controller can't find a matching `MeshGateway` by name.
 
 1. Create the `MeshGateway` on the zone cluster to configure the listener on port 8080:
 
@@ -138,7 +135,7 @@ Deploy a `MeshGateway` in `mesh1` to expose its services to `mesh2`. Apply these
    ```
 
    {:.info}
-   > `serviceType: LoadBalancer` is used here because `NodePort` triggers a Kong Mesh bug where the controller tries to set `nodePort: 8080`, which Kubernetes rejects. A `LoadBalancer` service still gets a NodePort assigned in the valid range, which is what the next step exports.
+   > `serviceType: LoadBalancer` is used here because `NodePort` triggers a {{site.mesh_product_name}} bug where the controller tries to set `nodePort: 8080`, which Kubernetes rejects. A `LoadBalancer` service still gets a NodePort assigned in the valid range, which is what the next step exports.
 
 1. Wait for the service and pod to be ready:
 
@@ -227,9 +224,6 @@ Deploy a `MeshGateway` in `mesh2` to expose its services to `mesh1`.
      replicas: 1
      serviceType: LoadBalancer" | kubectl apply -f - --context $C1_CONTEXT
    ```
-
-   {:.info}
-   > See the note above about why `LoadBalancer` is used instead of `NodePort`.
 
 1. Wait for the service and pod to be ready:
 

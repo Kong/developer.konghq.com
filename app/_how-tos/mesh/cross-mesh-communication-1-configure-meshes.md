@@ -46,7 +46,7 @@ This series uses the built-in `MeshGateway` to connect `mesh1` and `mesh2` acros
 
 This series requires three Kubernetes clusters: one for the global control plane and one for each zone. 
 
-1. Create a shared Docker network first: 
+1. Create a shared Docker network: 
 
    ```sh
    docker network create kong-mesh --subnet 192.168.200.0/24
@@ -60,7 +60,7 @@ This series requires three Kubernetes clusters: one for the global control plane
    minikube start -p mesh-c2 --network kong-mesh --static-ip 192.168.200.12
    ```
 
-1. Export the context names and node IPs for use throughout this guide:
+1. Export the context names and node IPs for use throughout this series:
 
    ```sh
    export GLOBAL_CONTEXT=mesh-global
@@ -79,7 +79,7 @@ This series requires three Kubernetes clusters: one for the global control plane
    helm repo update
    ```
 
-1. Install the global control plane on `mesh-global`. Skip default mesh creation because `mesh1` and `mesh2` are created explicitly in this guide:
+1. Install the global control plane on `mesh-global`. Skip default mesh creation since we'll create `mesh1` and `mesh2` in this series:
 
    ```sh
    helm install \
@@ -147,7 +147,7 @@ This series requires three Kubernetes clusters: one for the global control plane
      --context $C2_CONTEXT
    ```
 
-1. Verify both zones have registered. The global control plane creates a Zone object automatically when a zone control plane connects via KDS, so their existence confirms the connection is working:
+1. Verify both zones have registered. The global control plane creates a zone object automatically when a zone control plane connects via KDS, so their existence confirms the connection is working:
 
    ```sh
    until kubectl get zone zone-c1 zone-c2 \
@@ -159,7 +159,7 @@ This series requires three Kubernetes clusters: one for the global control plane
 
 ## Configure meshes with mTLS
 
-Apply `Mesh` resources to the global control plane using `kubectl`. Each mesh gets its own Certificate Authority, which isolates its trust domain and is required for the gateway to bridge security boundaries.
+Apply `Mesh` resources to the global control plane using `kubectl`. Each mesh gets its own Certificate Authority, which isolates its trust domain. It's required for the gateway to bridge security boundaries.
 
 1. Apply the `mesh1` configuration:
 
