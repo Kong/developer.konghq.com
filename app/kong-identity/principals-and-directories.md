@@ -104,6 +104,12 @@ rows:
 
 A single principal can have multiple identities, including multiple of the same type.
 
+{:.info}
+> **Lookup caching and time-to-live (TTL):** Principal lookups are cached, so additional lookups don't require a connection to {{site.identity}} until the cache is evicted. For {{site.base_gateway}}, the eviction rate is determined by the smallest of the following:
+> * The TTL set on the directory (10 minutes by default)
+> * The TTL set on a credential
+> * The caching configuration on {{site.base_gateway}}. Cached principals are in the general cache pool which can be configured by setting `db_cache_ttl`.
+
 ### Principal entity mapping
 
 Principals centralize the concept of an authenticating entity across Kong products. 
