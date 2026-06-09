@@ -38,7 +38,7 @@ rows:
     description: "List organization teams."
   - command: |
       [kongctl list organization user](/kongctl/list/organization/#kongctl-list-organization-user)
-    description: "Use the `get` verb with the `user` command to query {{site.konnect_short_name}} organization users."
+    description: "Use the `list` verb with the `user` command to query {{site.konnect_short_name}} organization users."
 {% endtable %}
 
 ## Command usage
@@ -59,6 +59,6 @@ List organization teams.
 
 ### kongctl list organization user
 
-Use the `get` verb with the `user` command to query {{site.konnect_short_name}} organization users.
+Use the `list` verb with the `user` command to query {{site.konnect_short_name}} organization users.
 
 {% include_cached /kongctl/help/list/organization/user.md %}
