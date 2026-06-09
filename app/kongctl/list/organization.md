@@ -23,24 +23,6 @@ related_resources:
 
 List organizations.
 
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl list organization system-account](/kongctl/list/organization/#kongctl-list-organization-system-account)
-    description: "List organization system accounts."
-  - command: |
-      [kongctl list organization team](/kongctl/list/organization/#kongctl-list-organization-team)
-    description: "List organization teams."
-  - command: |
-      [kongctl list organization user](/kongctl/list/organization/#kongctl-list-organization-user)
-    description: "Use the `list` verb with the `user` command to query {{site.konnect_short_name}} organization users."
-{% endtable %}
-
 ## Command usage
 
 {% include_cached /kongctl/help/list/organization/index.md %}

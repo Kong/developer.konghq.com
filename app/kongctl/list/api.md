@@ -23,30 +23,6 @@ related_resources:
 
 List APIs.
 
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl list api attributes](/kongctl/list/api/#kongctl-list-api-attributes)
-    description: "List API attributes."
-  - command: |
-      [kongctl list api documents](/kongctl/list/api/#kongctl-list-api-documents)
-    description: "List API documents."
-  - command: |
-      [kongctl list api implementations](/kongctl/list/api/#kongctl-list-api-implementations)
-    description: "List API implementations."
-  - command: |
-      [kongctl list api publications](/kongctl/list/api/#kongctl-list-api-publications)
-    description: "List API publications."
-  - command: |
-      [kongctl list api versions](/kongctl/list/api/#kongctl-list-api-versions)
-    description: "List API versions."
-{% endtable %}
-
 ## Command usage
 
 {% include_cached /kongctl/help/list/api/index.md %}

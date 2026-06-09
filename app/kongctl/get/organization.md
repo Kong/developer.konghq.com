@@ -23,24 +23,6 @@ related_resources:
 
 Get organization details.
 
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl get organization system-account](/kongctl/get/organization/#kongctl-get-organization-system-account)
-    description: "Get organization system account."
-  - command: |
-      [kongctl get organization team](/kongctl/get/organization/#kongctl-get-organization-team)
-    description: "Get organization team."
-  - command: |
-      [kongctl get organization user](/kongctl/get/organization/#kongctl-get-organization-user)
-    description: "Use the `get` verb with the `user` command to query {{site.konnect_short_name}} organization users."
-{% endtable %}
-
 ## Command usage
 
 {% include_cached /kongctl/help/get/organization/index.md %}

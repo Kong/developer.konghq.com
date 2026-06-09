@@ -23,18 +23,6 @@ related_resources:
 
 List gateways.
 
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl list gateway control-plane](/kongctl/list/gateway/#kongctl-list-gateway-control-plane)
-    description: "List gateway control planes."
-{% endtable %}
-
 ## Command usage
 
 {% include_cached /kongctl/help/list/gateway/index.md %}

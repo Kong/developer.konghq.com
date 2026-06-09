@@ -72,7 +72,7 @@ For each removed command, do all four of the following.
 
 Determine where the command lives:
 
-- **3-level command** (e.g. `get/event-gateway/backend-clusters`): it's a `###` section in the flat file `app/kongctl/get/event-gateway.md`. Remove its table row and the entire `###` section (heading, description paragraph, and `{% include_cached %}` line). Do not reformat the rest of the file.
+- **3-level command** (e.g. `get/event-gateway/backend-clusters`): it's a `###` section in the flat file `app/kongctl/get/event-gateway.md`. Remove the entire `###` section (heading, description paragraph, and `{% include_cached %}` line). Do not reformat the rest of the file.
 - **2-level command** (e.g. `get/dcr-provider`): it's its own `.md` file (`app/kongctl/get/dcr-provider.md`). Remove its table row from `app/kongctl/get/index.md` and delete the file.
 
 If the file or section doesn't exist locally, skip this sub-step.
@@ -184,21 +184,6 @@ related_resources:
 
 <Short description of what this group of commands does>
 
-kongctl provides the following tools for <what this group does>:
-
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl <verb> <resource> <subcommand>](/kongctl/<verb>/<resource>/#kongctl-<verb>-<resource>-<subcommand>)
-    description: "Short formatted description of the subcommand."
-  # ... one row per subcommand, using anchor links (not separate page URLs)
-{% endtable %}
-
 ## Command usage
 
 {% include_cached /kongctl/help/<verb>/<resource>/index.md %}
@@ -210,8 +195,6 @@ rows:
 {% include_cached /kongctl/help/<verb>/<resource>/<subcommand>.md %}
 ```
 
-The anchor slug in the table link = `#kongctl-` + verb + `-` + resource + `-` + subcommand (all hyphen-separated, no trailing slash). This must exactly match the `###` heading it links to.
-
 Run `kongctl <command group> --help` to get the opening description and subcommand list. Apply the same rules as Step 3.
 
 ### Step 5: Update parent index pages
@@ -220,7 +203,7 @@ Add rows in alphabetical order by command name.
 
 - **New 2-level command** (e.g. `get/dcr-provider`): add a row to `app/kongctl/get/index.md` with a page link: `[kongctl get dcr-provider](/kongctl/get/dcr-provider/)`
 - **New resource group** (e.g. `get/event-gateway`): add a row to `app/kongctl/get/index.md` with a page link: `[kongctl get event-gateway](/kongctl/get/event-gateway/)`
-- **New 3-level subcommand** (e.g. `get/event-gateway/backend-clusters`): add a row to the table in `app/kongctl/get/event-gateway.md` with an anchor link: `[kongctl get event-gateway backend-clusters](/kongctl/get/event-gateway/#kongctl-get-event-gateway-backend-clusters)` — and add the corresponding `###` section in alphabetical order among the existing sections in that file.
+- **New 3-level subcommand** (e.g. `get/event-gateway/backend-clusters`): add a `###` section to `app/kongctl/get/event-gateway.md` in alphabetical order among the existing sections in that file.
 
 ### Step 6: Update the navigation index
 

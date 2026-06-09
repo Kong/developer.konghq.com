@@ -19,25 +19,7 @@ related_resources:
     url: /kongctl/create/
 ---
 
-kongctl provides the following tools for creating {{site.konnect_short_name}} access tokens:
-
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl create konnect organization](/kongctl/create/konnect/#kongctl-create-konnect-organization)
-    description: "Manage {{site.konnect_short_name}} organization resources."
-  - command: |
-      [kongctl create konnect pat](/kongctl/create/konnect/#kongctl-create-konnect-pat)
-    description: "Create a {{site.konnect_short_name}} personal access token."
-  - command: |
-      [kongctl create konnect spat](/kongctl/create/konnect/#kongctl-create-konnect-spat)
-    description: "Create a {{site.konnect_short_name}} system account access token."
-{% endtable %}
+kongctl provides for creating {{site.konnect_short_name}} access tokens.
 
 ## Command usage
 

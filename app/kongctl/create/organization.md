@@ -19,19 +19,7 @@ related_resources:
     url: /kongctl/create/
 ---
 
-kongctl provides the following tools for managing {{site.konnect_short_name}} organization resources:
-
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl create organization system-account](/kongctl/create/organization/#kongctl-create-organization-system-account)
-    description: "Create {{site.konnect_short_name}} system accounts."
-{% endtable %}
+kongctl provides tools for managing {{site.konnect_short_name}} organization resources.
 
 ## Command usage
 

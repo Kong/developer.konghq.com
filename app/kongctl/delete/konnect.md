@@ -21,26 +21,6 @@ related_resources:
 
 Delete {{site.konnect_short_name}} tokens.
 
-kongctl provides the following tools for deleting {{site.konnect_short_name}} resources:
-
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl delete konnect organization](/kongctl/delete/konnect/#kongctl-delete-konnect-organization)
-    description: "Manage {{site.konnect_short_name}} system account resources."
-  - command: |
-      [kongctl delete konnect pat](/kongctl/delete/konnect/#kongctl-delete-konnect-pat)
-    description: "Delete a {{site.konnect_short_name}} personal access token."
-  - command: |
-      [kongctl delete konnect spat](/kongctl/delete/konnect/#kongctl-delete-konnect-spat)
-    description: "Delete a {{site.konnect_short_name}} system account access token."
-{% endtable %}
-
 ## Command usage
 
 {% include_cached /kongctl/help/delete/konnect/index.md %}
