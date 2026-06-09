@@ -62,17 +62,20 @@ removed: app/_includes/kongctl/help/get/gateway/consumer.md
 ```
 
 - `added:` lines are new include files. Strip the `app/_includes/kongctl/help/` prefix to get the `<COMMAND-PATH>` for each.
-- `removed:` lines are dropped commands (e.g. `app/_includes/kongctl/help/get/gateway/consumer.md` → `app/kongctl/get/gateway/consumer.md`). Process these with Step 2 before continuing.
+- `removed:` lines are dropped commands. Strip the `app/_includes/kongctl/help/` prefix to get the command path (e.g. `get/gateway/consumer`), then process with Step 2 before continuing.
 
 ### Step 2: Handle removed commands
 
 For each removed command, do all four of the following.
 
-#### Remove from parent index page
+#### Remove from parent file
 
-Find the parent index (e.g. `app/kongctl/get/gateway/consumer.md` → `app/kongctl/get/gateway/index.md`) and remove its table row. Do not reformat or reorder the table.
+Determine where the command lives:
 
-If the reference page doesn't exist locally, skip this sub-step.
+- **3-level command** (e.g. `get/event-gateway/backend-clusters`): it's a `###` section in the flat file `app/kongctl/get/event-gateway.md`. Remove its table row and the entire `###` section (heading, description paragraph, and `{% include_cached %}` line). Do not reformat the rest of the file.
+- **2-level command** (e.g. `get/dcr-provider`): it's its own `.md` file (`app/kongctl/get/dcr-provider.md`). Remove its table row from `app/kongctl/get/index.md` and delete the file.
+
+If the file or section doesn't exist locally, skip this sub-step.
 
 #### Check the navigation index
 
@@ -88,27 +91,31 @@ grep -r "/kongctl/<verb>/<path/to/removed-command>/" app/
 
 #### Add a redirect
 
-Add a redirect in the `# kongctl` section of `app/_redirects`, pointing to the nearest parent that still exists:
+Add a redirect in the `# kongctl` section of `app/_redirects`:
 
-```
-/kongctl/<verb>/<path/to/removed-command>/   /kongctl/<verb>/
-```
+- **3-level command**: redirect to the anchor on the parent page:
+  ```
+  /kongctl/<verb>/<resource>/<subcommand>/   /kongctl/<verb>/<resource>/#kongctl-<verb>-<resource>-<subcommand>
+  ```
+- **2-level command**: redirect to the verb index:
+  ```
+  /kongctl/<verb>/<removed-command>/   /kongctl/<verb>/
+  ```
 
-If the removed command had sub-pages, add a wildcard redirect too:
-
+For a removed 2-level command that previously had a resource group (e.g. `get/event-gateway` being dropped entirely), also add a wildcard redirect:
 ```
-/kongctl/<verb>/<path/to/removed-command>/*  /kongctl/<verb>/
+/kongctl/<verb>/<removed-command>/*  /kongctl/<verb>/
 ```
 
 ### Step 3: Create reference pages
 
-For each new include file, create a matching `.md` page under `app/kongctl/`. For example, `get/event-gateway/backend-clusters.md` becomes `app/kongctl/get/event-gateway/backend-clusters.md`. Create any missing directories as needed.
+The structure depends on command depth:
 
-Before creating pages, look at a few existing pages in the same directory to understand the established pattern — particularly the `works_on` values and `breadcrumbs` used there.
+**2-level commands** (e.g. `get/dcr-provider`) become standalone `.md` files at `app/kongctl/get/dcr-provider.md`. Before creating, look at neighboring files in the same directory for the established pattern — particularly `works_on` and `breadcrumbs`.
 
 ```yaml
 ---
-title: <command name derived from directory path, e.g. "kongctl get event-gateway backend-clusters">
+title: <command name, e.g. "kongctl get dcr-provider">
 description: "<Short description of what the command does>"
 content_type: reference
 layout: reference
@@ -123,24 +130,23 @@ tools:
   - kongctl
 
 breadcrumbs:
-  # List each ancestor directory as a breadcrumb, derived from the page's path.
-  # For example, app/kongctl/get/event-gateway/backend-clusters.md:
+  # List each ancestor as a breadcrumb. For app/kongctl/get/dcr-provider.md:
   - /kongctl/
   - /kongctl/get/
-  - /kongctl/get/event-gateway/
 
 related_resources:
-  # Link to the nearest parent index page (the top-level verb index).
   - text: kongctl <verb> commands
     url: /kongctl/<verb>/
 ---
 
-<Short description of what the command does, matching the description field above>
+<Short description of what the command does>
 
 ## Command usage
 
 {% include_cached /kongctl/help/<path/to/include/file.md> %}
 ```
+
+**3-level commands** (e.g. `get/event-gateway/backend-clusters`) are NOT standalone files. They are added as `###` sections within the flat parent file `app/kongctl/get/event-gateway.md`. See Step 5 for how to add them.
 
 Run `kongctl <command> --help` and use the opening paragraph (the text before "Usage:") as the description. Apply these rules:
 
@@ -148,9 +154,9 @@ Run `kongctl <command> --help` and use the opening paragraph (the text before "U
 - In body text only (not `description` frontmatter): wrap verb names and subcommand names in backticks
 - Use the first sentence for `description`; use the full paragraph for body text
 
-### Step 4: Create index pages for new directories
+### Step 4: Create resource group pages for new command groups
 
-For any new directory, create an `index.md` inside it (e.g. `app/kongctl/get/event-gateway/index.md`).
+When a new resource group appears (e.g. `get/event-gateway/` in the includes), create a flat `.md` file at `app/kongctl/get/event-gateway.md` — not an `index.md` in a directory.
 
 ```yaml
 ---
@@ -166,10 +172,10 @@ tools:
   - kongctl
 
 breadcrumbs:
-  # Same as the subcommand pages in this directory, derived from the directory path.
+  # List ancestor paths only (not the page's own URL).
+  # For app/kongctl/get/event-gateway.md:
   - /kongctl/
-  - /kongctl/<verb>/
-  - /kongctl/<verb>/<command>/
+  - /kongctl/get/
 
 related_resources:
   - text: kongctl <verb> commands
@@ -178,7 +184,7 @@ related_resources:
 
 <Short description of what this group of commands does>
 
-kongctl provides the following tools for <what this group does, e.g. "retrieving resources and resource details for {{site.event_gateway_short}}">:
+kongctl provides the following tools for <what this group does>:
 
 {% table %}
 columns:
@@ -188,26 +194,33 @@ columns:
     key: description
 rows:
   - command: |
-      [kongctl <verb> <command> <subcommand>](/kongctl/<verb>/<command>/<subcommand>/)
+      [kongctl <verb> <resource> <subcommand>](/kongctl/<verb>/<resource>/#kongctl-<verb>-<resource>-<subcommand>)
     description: "Short formatted description of the subcommand."
-  # ... one row per subcommand in this directory
+  # ... one row per subcommand, using anchor links (not separate page URLs)
 {% endtable %}
 
 ## Command usage
 
-{% include_cached /kongctl/help/<path/to/index/include.md> %}
+{% include_cached /kongctl/help/<verb>/<resource>/index.md %}
+
+### kongctl <verb> <resource> <subcommand>
+
+<Short description of what this subcommand does>
+
+{% include_cached /kongctl/help/<verb>/<resource>/<subcommand>.md %}
 ```
+
+The anchor slug in the table link = `#kongctl-` + verb + `-` + resource + `-` + subcommand (all hyphen-separated, no trailing slash). This must exactly match the `###` heading it links to.
 
 Run `kongctl <command group> --help` to get the opening description and subcommand list. Apply the same rules as Step 3.
 
 ### Step 5: Update parent index pages
 
-For each new page (and each new index page), add a row to the parent index. Insert rows in alphabetical order by command name.
+Add rows in alphabetical order by command name.
 
-For example:
-- `app/kongctl/get/dcr-provider.md` → add a row to `app/kongctl/get/index.md`
-- `app/kongctl/get/event-gateway/` directory → add a row to `app/kongctl/get/index.md`
-- `app/kongctl/get/event-gateway/backend-clusters.md` → add a row to `app/kongctl/get/event-gateway/index.md`
+- **New 2-level command** (e.g. `get/dcr-provider`): add a row to `app/kongctl/get/index.md` with a page link: `[kongctl get dcr-provider](/kongctl/get/dcr-provider/)`
+- **New resource group** (e.g. `get/event-gateway`): add a row to `app/kongctl/get/index.md` with a page link: `[kongctl get event-gateway](/kongctl/get/event-gateway/)`
+- **New 3-level subcommand** (e.g. `get/event-gateway/backend-clusters`): add a row to the table in `app/kongctl/get/event-gateway.md` with an anchor link: `[kongctl get event-gateway backend-clusters](/kongctl/get/event-gateway/#kongctl-get-event-gateway-backend-clusters)` — and add the corresponding `###` section in alphabetical order among the existing sections in that file.
 
 ### Step 6: Update the navigation index
 
