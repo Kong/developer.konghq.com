@@ -356,7 +356,7 @@
 
   /* single backticks */
   code:not(:is(pre code)) {
-    @apply text-primary bg-secondary rounded border border-links/40 text-sm px-1;
+    @apply text-primary bg-secondary rounded border border-primary text-sm px-1;
   }
 
   .content {

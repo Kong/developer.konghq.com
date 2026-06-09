@@ -24,8 +24,8 @@ const schema = window.schema;
 :deep(.property-field-default-value),
 :deep(.property-field-pattern-value),
 :deep(.property-field-enum-value),
-:deep( .property-field-example-value) {
-  @apply border border-links/40 !important;
+:deep(.property-field-example-value) {
+  @apply border border-primary !important;
 }
 
 :deep(.default-markdown a[href^="http://"]),
