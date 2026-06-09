@@ -79,7 +79,7 @@ RBAC configuration directly.
 
 The following are the general steps for setting up IAM in {{site.konnect_short_name}} for your migration:
 
-1. [Sign up](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs) for
+1. [Sign up](https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs) for
   {{site.konnect_short_name}} (if necessary), and use the [Org Switcher](https://cloud.konghq.com/org-switcher?ref=account)
   to create or select the organization you are going to migrate your self-managed deployment to.
 2. [Set up single sign-on (SSO) access to {{site.konnect_short_name}} using an existing IdP provider](/konnect-platform/sso/).

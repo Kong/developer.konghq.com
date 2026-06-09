@@ -1,5 +1,5 @@
 This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_short_name}} Plus account. 
-If you don't have a {{site.konnect_short_name}} account, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
+If you don't have a {{site.konnect_short_name}} account, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs).
 
 1. After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} Control plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy your data plane.
 
