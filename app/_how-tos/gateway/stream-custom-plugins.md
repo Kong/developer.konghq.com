@@ -48,7 +48,7 @@ tldr:
 faqs:
   - q: Can I define any custom plugin as a streaming plugin?
     a: |
-      No, there are some limitations. The plugin must have only one `handler` and one `schema`, cannot run in the `init_worker` phase or create timers, and must be written in Lua. See the [custom plugin streaming reference](/custom-plugins/streaming-plugins/) for more detail.
+      No, there are some limitations. The plugin must have only one `handler` and one `schema`, can't run in the `init_worker` phase or create timers, and must be written in Lua. See the [custom plugin streaming reference](/custom-plugins/streaming-plugins/) for more detail.
 
 cleanup:
   inline:
@@ -167,7 +167,7 @@ Apply `replaceme` with a [condition](/gateway/plugins/expressions/) so it only r
 entities:
   plugins:
     - name: replaceme
-      condition: '!http.path.contains("skip")'
+      condition: "!http.path.contains(\"skip\")"
       config:
         target_word: sea
         replacement_word: pelican

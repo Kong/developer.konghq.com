@@ -158,7 +158,7 @@ plugins:
       another_example_field: bar
 ```
 
-For a complete end-to-end tutorial, see [Stream {{site.base_gateway}} plugins](/how-to/stream-custom-plugins/).
+For a complete end-to-end example, see [Stream {{site.base_gateway}} plugins](/how-to/stream-custom-plugins/).
 
 ## Streaming plugin update path
 

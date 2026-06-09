@@ -256,7 +256,7 @@ Cloned plugins are useful in many situations. For example:
 * Running the same plugin on different attributes of a request. For example, you may want to validate two different JWTs in two separate headers.
 * Allowing different teams who want to use the same plugin logic to apply different business rules. 
 For example, a platform team may want to add a global IP deny list to a Gateway to enforce a global security policy, while an engineering team may also want to block IPs from a particular problematic customer on a single Route.
-* Running multiple instances of the Datakit plugin where different teams want to independently manage their own distinct flows on the same Gateway.
+* Running multiple instances of the [Datakit](/plugins/datakit/) plugin where different teams want to independently manage their own distinct flows on the same Gateway.
 * In conjunction with [conditional plugins](/gateway/plugins/expressions/), running different configurations of the plugin based on different environmental conditions.
 
 ### Permissions required
@@ -306,18 +306,17 @@ plugins:
           - "X-Global-Header:isSetGlobally"
 ```
 
-Where:
-* `cloned_plugins.name`: The name of your new plugin. This can be any unique name that doesn't conflict with an existing plugin.
-  We recommend making this name distinct so that it doesn't conflict with future plugins (for example, `ACME-request-transformer-global`).
+* `cloned_plugins.name`: The name of your new plugin. This must be a unique name that doesn't conflict with an existing plugin.
+  We recommend making this name distinct so that it doesn't conflict with future plugins. For example, `acme-request-transformer-global`.
 * `cloned_plugins.ref`: The source plugin that this clone is based on.
-* `cloned_plugins.priority`: The order in which the plugin runs relative to other plugins (see [plugins priorities](#plugin-priority)). This is an optional setting; 
+* `cloned_plugins.priority`: The order in which the plugin runs relative to other plugins (see [plugins priorities](#plugin-priority)). This is an optional setting.
   If not set, the plugin inherits the priority of the source plugin. 
   For plugins with the same priority, the order depends on their names in reverse alphabetical order: plugins with alphabetically greater names run earlier (for example, `my-plugin-b` runs before `my-plugin-a`).
 
 {:.info}
 > **Note:** Each plugin ref (for example, `ref: request-transformer`) can have a maximum of five clones.
 
-For more information, see the tutorial on [Cloning a {{site.base_gateway}} plugin](/how-to/clone-gateway-plugin/).
+For more information, see the guide on [Cloning a {{site.base_gateway}} plugin](/how-to/clone-gateway-plugin/).
 
 ### Deleting or updating cloned plugins
 
