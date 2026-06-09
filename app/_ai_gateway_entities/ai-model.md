@@ -47,11 +47,11 @@ faqs:
       No. Generated primitives are protected from direct modification through the standard Admin API.
       Update the Model entity instead, and {{site.ai_gateway}} recreates the underlying primitives within a single transaction.
 
-  - q: How do I configure models in on-prem deployments?
-    a: |
-      {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
-      For on-prem deployments, configure AI proxy behavior using {{site.base_gateway}} directly through its plugin interface.
-      See the [{{site.base_gateway}} documentation](/gateway/) for available AI-related capabilities.
+  # - q: How do I configure models in on-prem deployments?
+  #   a: |
+  #     {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
+  #     For on-prem deployments, configure AI proxy behavior using {{site.base_gateway}} directly through its plugin interface.
+  #     See the [{{site.base_gateway}} documentation](/gateway/) for available AI-related capabilities.
 
   - q: What happens when I update a Model?
     a: |
