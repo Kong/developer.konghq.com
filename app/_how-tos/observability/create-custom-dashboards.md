@@ -57,10 +57,9 @@ Filters help you narrow down the data shown in charts without modifying individu
 For this example, let's add a filter so that the data shown in the dashboard is scoped to only one control plane: 
 
 1. From the dashboard, click **Add filter**. This brings up the configuration options.
-1. Select "Control plane" from the **Filter by** dropdown menu.
-1. Select "In" from the **Operator** dropdown menu.
-1. Select "default" from the **Filter value** dropdown menu.
-1. Select the **Make this a preset for all viewers** checkbox.
+1. From the **Filters** dropdown menu, select "Control plane".
+1. From the **Operator** dropdown menu, select "In".
+1. From the **Value** dropdown menu, select "default".
 1. Click **Apply**. 
 
 This applies the filter to the dashboard. Anyone that views this dashboard will be viewing it scoped to the filter you created.
