@@ -36,13 +36,13 @@ related_resources:
   - text: Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
 faqs:
-  - q: What's the difference between a Model entity and a `model` field inside a plugin configuration?
+  - q: What's the difference between a Model entity and the `model` field in a Policy configuration?
     a: |
       A Model entity is the first-class {{site.ai_gateway}} entity you declare through the {{site.konnect_short_name}} API, UI, or decK.
-      {{site.ai_gateway}} derives the underlying plugin and its `model` configuration from the entity.
-      You don't configure the underlying plugin directly.
+      It defines routing, capabilities, and load balancing. A Policy is a reusable configuration that adds behavior (like caching or guardrails) to a Model.
+      You declare both separately and attach Policies to Models.
 
-  - q: Can I edit the Service, Routes, or plugins that {{site.ai_gateway}} generates from a Model?
+  - q: Can I edit the Service or Routes that {{site.ai_gateway}} generates from a Model?
     a: |
       No. Generated primitives are protected from direct modification through the standard Admin API.
       Update the Model entity instead, and {{site.ai_gateway}} recreates the underlying primitives within a single transaction.
@@ -50,8 +50,8 @@ faqs:
   - q: How do I configure models in on-prem deployments?
     a: |
       {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
-      For on-prem deployments, configure AI proxy behavior using {{site.base_gateway}} plugins directly (for example, the AI Proxy plugin).
-      See the [{{site.base_gateway}} plugin catalog](/gateway/plugins/) for available AI-related plugins.
+      For on-prem deployments, configure AI proxy behavior using {{site.base_gateway}} directly through its plugin interface.
+      See the [{{site.base_gateway}} documentation](/gateway/) for available AI-related capabilities.
 
   - q: What happens when I update a Model?
     a: |
@@ -60,7 +60,7 @@ faqs:
 
   - q: What happens when I delete a Model?
     a: |
-      The Model and all its derived primitives (Service, Routes, plugin instances) are deleted within a single transaction.
+      The Model and all its derived primitives (Service, Routes) are deleted within a single transaction.
 
   - q: Can I apply the same configuration to multiple Models?
     a: |
@@ -101,7 +101,7 @@ faqs:
 
 A Model is a first-class {{site.ai_gateway}} entity that represents an AI model endpoint exposed through {{site.ai_gateway}}.
 
-A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services, Routes, or plugin entries by hand.
+A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services or Routes by hand.
 
 Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
@@ -124,7 +124,7 @@ When you create a Model in {{site.konnect_short_name}} or via the API, the confi
 1. Add one or more target models, each pointing to a Provider with credentials.
 1. Select a request and response format (default is `openai`).
 1. If you have more than one target, configure load balancing in `config.balancer`.
-1. Optionally, attach Policies to add plugin configuration and set `acls` to control access.
+1. Optionally, attach Policies to add additional capabilities and set `acls` to control access.
 
 For a concrete example, see [Set up a Model](#set-up-a-model).
 
@@ -147,16 +147,15 @@ When you create or update a Model, {{site.ai_gateway}} generates a fixed set of 
 
 * One [Gateway Service](/gateway/entities/service/).
 * One [Route](/gateway/entities/route/) per declared capability in the `capabilities` array.
-* One [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin per generated Route.
 
-Provider credentials are added into the AI Proxy Advanced plugin configuration at generation time, sourced from the Provider entity that the Model's `target_models` reference. Updating the Provider propagates credential changes to every Model that uses it.
+Provider credentials are added into the generated runtime configuration at generation time, sourced from the Provider entity that the Model's `target_models` reference. Updating the Provider propagates credential changes to every Model that uses it.
 
-Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against the underlying Service, Routes, or plugin entries through the standard Admin API are rejected. To change anything about a Model's runtime footprint, update the Model entity. {{site.ai_gateway}} deletes and recreates the derived primitives within a single transaction.
+Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against the underlying Service or Routes through the standard Admin API are rejected. To change anything about a Model's runtime footprint, update the Model entity. {{site.ai_gateway}} deletes and recreates the derived primitives within a single transaction.
 
 {:.info}
 > **Why a transaction instead of an in-place update?**
 >
-> A Model's structure (which capabilities exist, which providers it routes to) determines how many Routes and plugin entries are needed. A delete-and-recreate cycle is the simplest way to keep the entity and its derived primitives consistent, especially when capabilities are added or removed.
+> A Model's structure (which capabilities exist, which providers it routes to) determines how many Routes are needed. A delete-and-recreate cycle is the simplest way to keep the entity and its derived primitives consistent, especially when capabilities are added or removed.
 
 ## Capabilities
 
@@ -169,7 +168,7 @@ Model [`type`](#schema-aigateway-model-type) controls which capability set appli
 
 Not every provider supports every capability. The set of capabilities you can declare on a Model depends on what the provider in `target_models` exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
 
-The following table maps each capability to an OpenAI API reference and the corresponding [AI Proxy plugin](/plugins/ai-proxy/) example.
+The following table maps each capability to an OpenAI API reference. For load balancing configuration details, see [Load balancing](/ai-gateway/load-balancing/).
 
 <!-- vale off -->
 {% table %}
@@ -178,45 +177,31 @@ columns:
     key: capability
   - title: Description
     key: description
-  - title: Example route
-    key: example
 rows:
   - capability: "`chat`"
     description: Conversational responses from a sequence of messages.
-    example: "[`llm/v1/chat`](/plugins/ai-proxy/examples/openai-chat-route/)"
   - capability: "`embeddings`"
     description: Vector representations for semantic search and similarity matching.
-    example: "[`llm/v1/embeddings`](/plugins/ai-proxy/examples/embeddings-route-type/)"
   - capability: "`assistants`"
     description: Persistent tool-using agents with metadata for debugging and evaluation.
-    example: "[`llm/v1/assistants`](/plugins/ai-proxy/examples/assistants-route-type/)"
   - capability: "`responses`"
     description: REST-based full-text responses.
-    example: "[`llm/v1/responses`](/plugins/ai-proxy/examples/responses-route-type/)"
   - capability: "`audio-transcriptions`"
     description: Speech-to-text.
-    example: "[`audio/v1/audio/transcriptions`](/plugins/ai-proxy/examples/audio-transcription-openai/)"
   - capability: "`audio-translations`"
     description: Audio translation between languages.
-    example: "[`audio/v1/audio/translations`](/plugins/ai-proxy/examples/audio-translation-openai/)"
   - capability: "`image-generation`"
     description: Generate images from text prompts.
-    example: "[`image/v1/images/generations`](/plugins/ai-proxy/examples/image-generation-openai/)"
   - capability: "`image-edits`"
     description: Modify images from text prompts.
-    example: "[`image/v1/images/edits`](/plugins/ai-proxy/examples/image-edits-openai/)"
   - capability: "`video-generations`"
     description: Generate videos from text prompts.
-    example: "[`video/v1/videos/generations`](/plugins/ai-proxy/examples/video-generation-openai/)"
   - capability: "`realtime`"
     description: Bidirectional WebSocket streaming for low-latency, interactive voice and text.
-    example: "[`realtime/v1/realtime`](/plugins/ai-proxy-advanced/examples/realtime-route-openai/)"
   - capability: "`batches`"
     description: Asynchronous bulk LLM requests for long workloads.
-    example: "[`llm/v1/batches`](/plugins/ai-proxy/examples/batches-route-type/)"
   - capability: "`files`"
     description: File uploads for long documents and structured input.
-    example: "[`llm/v1/files`](/plugins/ai-proxy/examples/files-route-type/)"
 {% endtable %}
 <!-- vale on -->
 
@@ -257,7 +242,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-When a native format is set, only the corresponding provider is supported with its specific APIs. For format-specific behavior and limitations, see the [AI Proxy plugin reference](/plugins/ai-proxy/#supported-native-llm-formats).
+When a native format is set, only the corresponding provider is supported with its specific APIs.
 
 ## Target models
 
@@ -285,19 +270,19 @@ columns:
   - title: Behavior
     key: behavior
 rows:
-  - algorithm: "[`round-robin`](/plugins/ai-proxy-advanced/examples/round-robin/)"
+  - algorithm: "`round-robin`"
     behavior: Weighted traffic distribution across targets.
-  - algorithm: "[`consistent-hashing`](/plugins/ai-proxy-advanced/examples/consistent-hashing/)"
+  - algorithm: "`consistent-hashing`"
     behavior: Sticky sessions based on header values.
-  - algorithm: "[`least-connections`](/plugins/ai-proxy-advanced/examples/least-connections/)"
+  - algorithm: "`least-connections`"
     behavior: Route to backends with spare capacity.
-  - algorithm: "[`lowest-latency`](/plugins/ai-proxy-advanced/examples/lowest-latency/)"
+  - algorithm: "`lowest-latency`"
     behavior: Route to the fastest-responding model.
-  - algorithm: "[`lowest-usage`](/plugins/ai-proxy-advanced/examples/lowest-usage/)"
+  - algorithm: "`lowest-usage`"
     behavior: Route based on token counts or cost.
-  - algorithm: "[`semantic`](/plugins/ai-proxy-advanced/examples/semantic/)"
+  - algorithm: "`semantic`"
     behavior: Route based on prompt-to-model similarity.
-  - algorithm: "[`priority`](/plugins/ai-proxy-advanced/examples/priority/)"
+  - algorithm: "`priority`"
     behavior: Tiered failover across model groups.
 {% endtable %}
 <!-- vale on -->
@@ -338,23 +323,23 @@ Substitution applies to the [`name`](#schema-aigateway-model-target-models-name)
 * `$(uri_captures.path_parameter_name)`: the value of a captured URI path parameter.
 * `$(query_params.query_parameter_name)`: the value of a query string parameter.
 
-For end-to-end examples, see [dynamic model selection](/plugins/ai-proxy/examples/sdk-dynamic-model-selection/), [Azure deployment routing](/plugins/ai-proxy/examples/sdk-azure-deployment/), and [proxying multiple models in one Azure instance](/plugins/ai-proxy/examples/sdk-multiple-providers/) on the AI Proxy plugin page.
+For examples on using templating, consult the {{site.ai_gateway}} documentation and API reference.
 
 ## Access control
 
 A Model's `acls` field controls which identities are allowed to reach the Model. The field accepts `allow` and `deny` lists. Each entry is a string that references a Consumer, Consumer Group, or Authenticated Group by name. Access is enforced at the Service level of the generated primitives.
 
-For per-request authentication and identity, configure the appropriate authentication plugin globally or as a Policy on the Model.
+For per-request authentication and identity, configure the appropriate authentication Policy globally or attach it to the Model.
 
 ## Attach Policies
 
-Policies are how plugin configurations apply to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
+Policies apply configuration and behavior to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
 
 A Model declares the Policies it uses through its `policies` field. Each entry is a string that references a Policy by name or ID. {{site.konnect_short_name}} resolves these references against Policies created at `/v1/ai-gateways/{aiGatewayId}/policies`.
 
-You can attach multiple Policies to a single Model. Each Policy has an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
+You can attach multiple Policies to a single Model. Each Policy is applied independently, so attaching the same Policy type twice with different configurations creates two separate instances.
 
-Not every plugin type is valid as a Model Policy.
+Not every Policy type is valid as a Model attachment.
 
 Policies attached to a Model are not deleted when the Model is deleted; only the Model's reference is removed.
 
@@ -362,11 +347,11 @@ For further information, see the [Policy entity](/ai-gateway/entities/ai-policy/
 
 ### Plugin priority and Policy execution order
 
-A Policy attached to a Model creates one plugin entry on the Service of the Model's derived primitives. That plugin runs at the [priority](/gateway/entities/plugin/#plugin-priority) of its underlying plugin type, which determines when it executes relative to other plugins on the request.
+A Policy attached to a Model runs on the Service of the Model's derived primitives. That Policy runs at the [priority](/gateway/entities/plugin/#plugin-priority) determined by its type, which affects when it executes relative to other Policies on the request.
 
-The AI Proxy Advanced plugin runs at priority `770` and parses the request body to resolve the model name. Any Policy whose underlying plugin type has a priority higher than `770` runs before that resolution. Authentication plugin types (such as OpenID Connect) fall into this category. They still gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available yet.
+Model routing itself executes at a specific point in the request pipeline. Policies whose types run before that point (higher priority) execute before the Model is resolved. Authentication Policies (such as OpenID Connect) fall into this category. They gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available until after Model resolution.
 
-For Policies whose runtime behavior depends on the resolved Model identity, attach plugin types that run at priority `770` or lower, or use [dynamic plugin ordering](/gateway/entities/plugin/) to push their execution later.
+For Policies whose behavior depends on the resolved Model identity, use Policy types that run at or after Model resolution, or use [dynamic policy ordering](/gateway/entities/policy/) to adjust execution order as needed.
 
 ## Set up a Model
 
