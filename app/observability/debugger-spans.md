@@ -28,12 +28,15 @@ When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/o
 The following sections describe the spans available in {{site.konnect_short_name}} Debugger.
 
 On this page, the term "3p" or "3rd party" refers to any network interaction outside the main `client → Kong → upstream` request flow, such as DNS lookups or calls from Kong to external services like auth providers, Redis, or metadata APIs.
+
 <!--vale off-->
+
 ### kong
 
 The root span.
 
 This span has the following attributes:
+
 {% table %}
 columns:
   - title: Name
@@ -47,14 +50,14 @@ rows:
     description: |
         Remote address of the actual client making the request, including any client that is communicating through a proxy, if possible.
         <br><br>
-        {:.info}
-        > Note: This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
+
+        > **Note:** This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
   - name: "`client.port`"
     description: |
         Remote port of the client making the request, including any client that is communicating through a proxy, if possible.
         <br><br>
-        {:.info}
-        > Note: This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
+
+        > **Note:** This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
   - name: "`network.peer.address`"
     description: IP of the network peer that is connecting to Kong
   - name: "`network.peer.port`"
