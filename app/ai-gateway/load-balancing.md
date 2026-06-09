@@ -2,7 +2,7 @@
 title: "Load balancing with {{site.ai_gateway_name}}"
 layout: reference
 content_type: reference
-description: This guide provides an overview of load balancing and retry and fallback strategies in {{site.ai_gateway}}.
+description: "This guide provides an overview of load balancing and retry and fallback strategies in {{site.ai_gateway}}."
 breadcrumbs:
   - /ai-gateway/
 
@@ -22,39 +22,33 @@ tools:
 tags:
   - ai
   - load-balancing
-  - ai-proxy
-
-plugins:
-  - ai-proxy-advanced
 
 min_version:
-  gateway: '3.10'
+  ai_gateway: '2.0.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advanced/
+  - text: Model entity
+    url: /ai-gateway/entities/model/
 ---
 
 {{site.ai_gateway}} provides load balancing capabilities to distribute requests across multiple LLM models. You can use these features to improve fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-{% new_in 2.0.0 %} In {{site.ai_gateway}}, load balancing is configured on the [Model entity](/ai-gateway/entities/model/) through `config.balancer` and `target_models`. The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin remains the underlying runtime layer for model routing.
+In {{site.ai_gateway}} 2.0.0 and later, load balancing is configured on the [Model entity](/ai-gateway/entities/model/) through `config.balancer` and `target_models`.
 
-### Compatibility with existing configurations
-
+<!-- Commented out for future reference - Compatibility with existing configurations
 {:.info}
 > With {{site.ai_gateway}} 2.0.0, both configuration approaches can appear in existing deployments:
 > - Legacy plugin-based approach: configure load balancing directly on [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin instances.
-> - {{site.ai_gateway}} 2.0.0 approach {% new_in 2.0.0 %}: configure load balancing on the [Model entity](/ai-gateway/entities/model/) with `config.balancer` and `target_models`.
+> - {{site.ai_gateway}} 2.0.0 approach: configure load balancing on the [Model entity](/ai-gateway/entities/model/) with `config.balancer` and `target_models`.
 >
 > For new {{site.ai_gateway}} deployments, use the Model entity workflow.
+-->
 
 ### Load balancing algorithms
 
 {{site.ai_gateway}} supports multiple load balancing strategies for distributing traffic across AI models. Each algorithm addresses different goals: balancing load, improving cache-hit ratios, reducing latency, or providing [failover reliability](#retry-and-fallback).
-
-#### Load balancing algorithms for Model entities {% new_in 2.0.0 %}
 
 The following table describes the available algorithms for [Model entities](/ai-gateway/entities/model/) and considerations for selecting one.
 
@@ -123,14 +117,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-For Model entity examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/model/#algorithm-examples) in the [Model entity](/ai-gateway/entities/model/) reference {% new_in 2.0.0 %}.
-
-<details>
-<summary>Legacy plugin configuration for load balancing algorithms</summary>
-
-{% include ai-gateway/load-balancing/legacy-algorithms.md %}
-
-</details>
+For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/model/#algorithm-examples) in the [Model entity](/ai-gateway/entities/model/) reference.
 
 ### Retry and fallback
 
@@ -166,9 +153,9 @@ flowchart LR
 <!-- vale on -->
 > _Figure 1:_ A simplified diagram of fallback and retry processing in {{site.ai_gateway}}'s load balancer.
 
-#### Retry and fallback configuration for Model entities {% new_in 2.0.0 %}
+#### Retry and fallback configuration
 
-{{site.ai_gateway}} load balancer supports fine-grained control over failover behavior on the [Model entity](/ai-gateway/entities/model/). Use [`failover_criteria`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-failover-criteria) to define when a request should retry on the next target model. By default, retries occur on `error` and `timeout`. An `error` means a failure occurred while connecting to the server, forwarding the request, or reading the response header. A `timeout` indicates that any of those stages exceeded the allowed time.
+The {{site.ai_gateway}} load balancer supports fine-grained control over failover behavior on the [Model entity](/ai-gateway/entities/model/). Use [`failover_criteria`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-failover-criteria) to define when a request should retry on the next target model. By default, retries occur on `error` and `timeout`. An `error` means a failure occurred while connecting to the server, forwarding the request, or reading the response header. A `timeout` indicates that any of those stages exceeded the allowed time.
 
 You can add more criteria to adjust retry behavior as needed:
 
@@ -203,9 +190,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-#### Retry and fallback scenarios for Model entities {% new_in 2.0.0 %}
+#### Retry and fallback scenarios
 
-You can customize {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
+You can customize the {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
 
 <!--vale off-->
 {% table %}
