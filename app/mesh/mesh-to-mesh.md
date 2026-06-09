@@ -127,6 +127,7 @@ See [Enable cross-mesh communication](/how-to/enable-cross-mesh-communication/co
 
 These two resources are often confused because they both involve gateways, but they serve different purposes. [`MeshGateway`](/mesh/meshgateway/) bridges isolated meshes; [`ZoneIngress`](/mesh/zone-ingress/) connects zones within the same mesh:
 
+<!-- vale off-->
 {% table %}
 columns:
   - title: Feature
@@ -149,6 +150,7 @@ rows:
     meshgateway: "Yes"
     zoneingress: "No (mesh-internal only)"
 {% endtable %}
+<!-- vale on-->
 
 If you have a single mesh (`mesh1`) spanning `zone1` and `zone2`, you don't need `MeshGateway`. {{site.mesh_product_name}}'s `ZoneIngress` handles multi-zone routing automatically. The `MeshGateway` pattern is only needed when you have isolated meshes that must communicate across a security boundary.
 

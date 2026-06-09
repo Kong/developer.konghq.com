@@ -1,5 +1,5 @@
 ---
-title: Install Kong Mesh in multi-zone mode and configure meshes with mTLS
+title: Install {{site.mesh_product_name}} in multi-zone mode and configure meshes with mTLS
 description: "Install {{site.mesh_product_name}} in multi-zone mode and configure two isolated meshes with mTLS and traffic permissions."
 content_type: how_to
 permalink: /how-to/enable-cross-mesh-communication/configure-meshes/
