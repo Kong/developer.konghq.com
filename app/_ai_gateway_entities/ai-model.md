@@ -25,7 +25,7 @@ related_resources:
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} providers"
     url: /ai-gateway/ai-providers/
-  - text: Load balancing with AI Proxy Advanced
+  - text: Load balancing
     url: /ai-gateway/load-balancing/
   - text: Provider entity
     url: /ai-gateway/entities/ai-provider/
@@ -256,7 +256,7 @@ There's no separate Target Model entity or endpoint. Target models are managed o
 
 A Model routes to a single target by default. Add more than one target when you want redundancy, fallback between providers, or cost and latency optimization. When you have multiple targets, configure `config.balancer` to distribute requests according to a load balancing algorithm.
 
-When a Model has more than one target, the [load balancer](#schema-aigateway-model-config-balancer) sits between the virtual model and its targets, distributing requests according to `config.balancer`. For algorithm details, selection guidance, and tuning, see [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/).
+When a Model has more than one target, the [load balancer](#schema-aigateway-model-config-balancer) sits between the virtual model and its targets, distributing requests according to `config.balancer`. For algorithm details, selection guidance, and tuning, see [Load balancing](/ai-gateway/load-balancing/).
 
 ### Algorithms
 
