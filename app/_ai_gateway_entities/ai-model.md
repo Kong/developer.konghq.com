@@ -351,7 +351,7 @@ A Policy attached to a Model runs on the Service of the Model's derived primitiv
 
 Model routing itself executes at a specific point in the request pipeline. Policies whose types run before that point (higher priority) execute before the Model is resolved. Authentication Policies (such as OpenID Connect) fall into this category. They gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available until after Model resolution.
 
-For Policies whose behavior depends on the resolved Model identity, use Policy types that run at or after Model resolution, or use [dynamic policy ordering](/gateway/entities/policy/) to adjust execution order as needed.
+For Policies whose behavior depends on the resolved Model identity, use Policy types that run at or after Model resolution, or use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to adjust execution order as needed.
 
 ## Set up a Model
 

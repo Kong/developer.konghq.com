@@ -29,12 +29,12 @@ related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Model entity
-    url: /ai-gateway/entities/model/
+    url: /ai-gateway/entities/ai-model/
 ---
 
 {{site.ai_gateway}} provides load balancing capabilities to distribute requests across multiple LLM models. You can use these features to improve fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-In {{site.ai_gateway}} 2.0.0 and later, load balancing is configured on the [Model entity](/ai-gateway/entities/model/) through `config.balancer` and `target_models`.
+In {{site.ai_gateway}} 2.0.0 and later, load balancing is configured on the [Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `target_models`.
 
 <!-- Commented out for future reference - Compatibility with existing configurations
 {:.info}
@@ -49,7 +49,7 @@ In {{site.ai_gateway}} 2.0.0 and later, load balancing is configured on the [Mod
 
 Model aliases allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
 
-Each target in a Model entity can have an optional [`model.alias`](/ai-gateway/entities/model/#schema-aigateway-model-target-models-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
+Each target in a Model entity can have an optional [`model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
 
 ### Load balancing algorithms
 
