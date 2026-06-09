@@ -906,11 +906,11 @@
   }
 
   .switch__slider {
-    @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-brand rounded-full;
+    @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-brand-saturated rounded-full border-primary border;
   }
 
   .switch__slider:before {
-    @apply absolute content-[''] h-3 w-3 left-0.5 top-0.5 bg-white rounded-full transition-transform duration-300;
+    @apply absolute content-[''] h-3 w-3 left-0 top-px bg-links rounded-full transition-transform duration-300;
   }
 
   input:checked + .switch__slider:before {
