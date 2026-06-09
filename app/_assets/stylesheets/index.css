@@ -18,7 +18,7 @@
     --color-bg-terciary: 243, 246, 242;
     --color-bg-code-block: 243, 246, 242;
     --color-bg-code-block-header: 205, 212, 203;
-    --color-bg-hover-component: 231, 237, 229;
+    --color-bg-hover-component: 243, 246, 242;
 
     --color-text-primary: 0, 20, 8;
     --color-text-secondary: 74, 77, 73;
@@ -139,7 +139,7 @@
     --color-bg-terciary: 48, 53, 47;
     --color-bg-code-block: 48, 53, 47;
     --color-bg-code-block-header: 24, 32,25;
-    --color-bg-hover-component: 34, 39, 34;
+    --color-bg-hover-component: 48, 53, 47;
 
     --color-text-primary: 255, 255, 255;
     --color-text-secondary: 174, 181, 167;
