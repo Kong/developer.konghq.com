@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'cgi'
-require 'nokogiri'
 require_relative 'base'
 require_relative 'how-to'
 
@@ -9,42 +8,51 @@ module SectionWrapper
   class Cookbook < HowTo
     private
 
-    def wrap_sections(content)
-      html = super(content)
-      wrap_h4_sections(html)
-    end
-
-    def wrap_h4_sections(html)
-      doc = Nokogiri::HTML::DocumentFragment.parse(html)
-
-      doc.css('.accordion-panel').each do |panel|
-        h4s = panel.children.select { |n| n.element? && n.name == 'h4' }
-        next if h4s.empty?
-
-        h4s.each do |h4|
-          slug = h4['id']
-          title = h4.content
-
-          wrapper = build_h4_wrapper(h4_section_title(h4, slug, title))
-          content_div = wrapper.at_css('.content')
-
-          current_node = h4.next_element
-          while current_node && !%w[h1 h2 h3 h4].include?(current_node.name)
-            next_node = current_node.next_element
-            content_div.add_child(current_node)
-            current_node = next_node
-          end
-
-          h4.replace(wrapper)
+    # Hook into the section-body step so h4 wrapping happens in the same pass
+    # as h2 wrapping, with no re-parse and no cross-fragment node moves.
+    #
+    # h4 starts a new accordion-wrapped section; h1/h2/h3 boundaries flush the
+    # current h4 section and pass through as-is (matching the old behavior in
+    # which `move_sibling_content_into_wrapper` stopped at any h1-h4).
+    def wrap_section_body(nodes)
+      out, pre, h4, body = +'', [], nil, nil
+      nodes.each do |node|
+        next if whitespace_only_text?(node)
+        if heading?(node, 'h4')
+          out << flush_h4_pending(pre, h4, body); pre = []; h4 = node; body = []
+        elsif h4_boundary?(node)
+          out << flush_h4_pending(pre, h4, body); out << node.to_html
+          pre = []; h4 = nil; body = nil
+        elsif h4
+          body << node
+        else
+          pre << node
         end
       end
+      out << flush_h4_pending(pre, h4, body)
+      out
+    end
 
-      doc.to_html
+    def flush_h4_pending(pre, h4, body)
+      return build_h4_section_string(h4, body) if h4
+      return nodes_to_html(pre) if pre.any?
+      ''
+    end
+
+    def h4_boundary?(node)
+      node.element? && %w[h1 h2 h3].include?(node.name)
+    end
+
+    def build_h4_section_string(h4, body_nodes)
+      build_h4_wrapper_string(
+        h4_section_title(h4, h4['id'], h4.content),
+        nodes_to_html(body_nodes)
+      )
     end
 
     def h4_section_title(h4, slug, title)
       escaped_title = CGI.escapeHTML(title)
-      Nokogiri::HTML::DocumentFragment.parse <<-HTML
+      <<~HTML
         <a aria-label="Anchor" href="##{slug}" title="#{escaped_title}" class="link-anchor flex items-center justify-between hover:no-underline accordion-trigger">
           <div class="flex items-center gap-2 group w-full">
             #{h4.to_html}
@@ -59,12 +67,12 @@ module SectionWrapper
       HTML
     end
 
-    def build_h4_wrapper(section_title)
-      Nokogiri::HTML::DocumentFragment.parse <<-HTML
+    def build_h4_wrapper_string(title_html, body_html)
+      <<~HTML
         <div class="accordion">
           <div class="flex flex-col gap-4 border-b border-primary/5 accordion-item">
-            #{section_title}
-            <div class="content accordion-panel"></div>
+            #{title_html}
+            <div class="content accordion-panel">#{body_html}</div>
           </div>
         </div>
       HTML
