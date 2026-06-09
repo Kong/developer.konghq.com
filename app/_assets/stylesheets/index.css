@@ -575,11 +575,15 @@
   }
 
   .kong-conf-param h3 > a {
-    @apply text-brand-saturated;
+    @apply text-links font-normal;
   }
 
   .kong-conf-param code {
     @apply text-sm;
+  }
+
+  .kong-conf-param-name {
+    @apply text-links py-3 text-sm font-normal;
   }
 
   #toc {
