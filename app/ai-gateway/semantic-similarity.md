@@ -1,44 +1,31 @@
 ---
-title: "Embedding-based similarity matching in Kong AI gateway plugins"
+title: "Embedding-based similarity matching in {{site.ai_gateway}} policies"
 layout: reference
 content_type: reference
-description: This reference explains how {{site.ai_gateway}} plugins use embedding-based similarity to compare prompts with various inputs—such as cached entries, upstream targets, document chunks, or allow/deny lists.
+description: This reference explains how {{site.ai_gateway}} policies use embedding-based similarity to compare prompts with various inputs—such as cached entries, routing targets, document chunks, or allow/deny lists.
 breadcrumbs:
   - /ai-gateway/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tags:
   - ai
   - load-balancing
 
-plugins:
-  - ai-proxy-advanced
-  - ai-semantic-cache
-  - ai-rag-injector
-  - ai-semantic-prompt-guard
-  - ai-semantic-response-guard
-
 min_version:
-  gateway: '3.10'
+  ai-gateway: '2.0.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "{{site.ai_gateway}} plugins"
+  - text: Policy entity
+    url: /ai-gateway/entities/ai-policy/
+  - text: "{{site.ai_gateway}} policies"
     url: /plugins/?category=ai
-  - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
-    url: /how-to/use-ai-semantic-prompt-guard-plugin/
-  - text: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
-    url: /how-to/use-ai-rag-injector-plugin/
-  - text: Control prompt size with the AI Compressor plugin
-    url: /how-to/compress-llm-prompts/
   - text: Semantic processing and vector similarity search with Kong and Redis
     url: https://konghq.com/blog/engineering/semantic-processing-and-vector-similarity-search-with-kong-and-redis
   - text: Vector embeddings
@@ -62,59 +49,58 @@ Vector embeddings power a range of LLM workflows, including semantic search, doc
 
 ## Semantic similarity in {{site.ai_gateway}}
 
-In {{site.ai_gateway}}, several plugins leverage embedding-based similarity:
+In {{site.ai_gateway}} 2.0+, several policies leverage embedding-based similarity. These are implemented as [Policy entities](/ai-gateway/entities/ai-policy/) with a `type` field that specifies the policy implementation. Each policy can be attached to Models, Agents, MCPs, Consumers, or deployed globally.
 
 {% table %}
 columns:
-  - title: Plugin
-    key: plugin
+  - title: Policy Type
+    key: policy
   - title: Description
     key: description
 rows:
-  - plugin: "[AI Proxy Advanced](/plugins/ai-semantic-prompt-guard/)"
-    description: Performs semantic routing by embedding each upstream’s description at config time and storing the results in a selected vector database. At runtime, it embeds the prompt and queries vector database to route requests to the most semantically appropriate upstream.
-  - plugin: "[AI Semantic Cache](/plugins/ai-semantic-cache/)"
+  - policy: "[ai-proxy-advanced](/plugins/ai-proxy-advanced/)"
+    description: Performs semantic routing by embedding each target’s description at config time and storing the results in a selected vector database. At runtime, it embeds the prompt and queries the vector database to route requests to the most semantically appropriate target.
+  - policy: "[ai-semantic-cache](/plugins/ai-semantic-cache/)"
     description: Indexes previous prompts and responses as embeddings. On each request, it searches for semantically similar inputs and serves cached responses when possible to reduce redundant LLM calls.
-  - plugin: "[AI RAG Injector](/plugins/ai-rag-injector/)"
+  - policy: "[ai-rag-injector](/plugins/ai-rag-injector/)"
     description: Retrieves semantically relevant chunks from a vector database. It embeds the prompt, performs a similarity search, and injects the results into the prompt to enable retrieval-augmented generation.
-  - plugin: "[AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/)"
+  - policy: "[ai-semantic-prompt-guard](/plugins/ai-semantic-prompt-guard/)"
     description: Compares incoming prompts against allow/deny lists using embedding similarity to detect and block misuse patterns.
-  - plugin: |
-      [AI Semantic Response Guard](/plugins/ai-semantic-response-guard/) {% new_in 3.12 %}
+  - policy: "[ai-semantic-response-guard](/plugins/ai-semantic-response-guard/)"
     description: Filters LLM responses by comparing their semantic content against predefined allow and deny lists. It analyzes the full response body, generates embeddings, and enforces rules to block unsafe or unwanted outputs before returning them to the client.
 {% endtable %}
 
 ### Vector databases
 
-To compare embeddings efficiently, {{site.ai_gateway}} semantic plugins rely on vector databases. These specialized data stores index high-dimensional embeddings and enable **fast similarity search** based on distance metrics like cosine similarity or Euclidean distance.
+To compare embeddings efficiently, {{site.ai_gateway}} semantic policies rely on vector databases. These specialized data stores index high-dimensional embeddings and enable **fast similarity search** based on distance metrics like cosine similarity or Euclidean distance.
 
-When a plugin needs to find semantically similar content—whether it’s a past prompt, an upstream description, or a document chunk—it sends a query to a vector database. The database returns the closest matches, allowing the plugin to make decisions like caching, routing, injecting, or blocking.
+When a policy needs to find semantically similar content—whether it’s a past prompt, a routing target description, or a document chunk—it sends a query to a vector database. The database returns the closest matches, allowing the policy to make decisions like caching, routing, injecting, or blocking.
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
-The selected database stores the embeddings generated by the plugin (either at config time or runtime), and determines the accuracy and performance of semantic operations.
+The selected database stores the embeddings generated by the policy (either at config time or runtime), and determines the accuracy and performance of semantic operations.
 
 ### What is compared for similarity?
 
-Each plugin applies similarity search slightly differently depending on its goal. These comparisons determine whether the plugin routes, blocks, reuses, or enriches a prompt based on meaning rather than syntax.
+Each policy applies similarity search slightly differently depending on its goal. These comparisons determine whether the policy routes, blocks, reuses, or enriches a prompt based on meaning rather than syntax.
 
-The following table describes how each AI plugin compares embeddings:
+The following table describes how each semantic policy compares embeddings:
 
 <!-- vale off -->
 {% table %}
 columns:
-  - title: Plugin
-    key: plugin
+  - title: Policy Type
+    key: policy
   - title: Compared embeddings
     key: comparison
 rows:
-  - plugin: "AI Proxy Advanced"
-    comparison: "Prompt vs. `description` field of each upstream target"
-  - plugin: "AI Semantic Prompt Guard"
+  - policy: "[ai-proxy-advanced](/plugins/ai-proxy-advanced/)"
+    comparison: "Prompt vs. `description` field of each target"
+  - policy: "[ai-semantic-prompt-guard](/plugins/ai-semantic-prompt-guard/)"
     comparison: "Prompt vs. allowlist and denylist prompts"
-  - plugin: "AI Semantic Cache"
+  - policy: "[ai-semantic-cache](/plugins/ai-semantic-cache/)"
     comparison: "Prompt vs. cached prompt keys"
-  - plugin: "AI RAG Injector"
+  - policy: "[ai-rag-injector](/plugins/ai-rag-injector/)"
     comparison: "Prompt vs. vectorized document chunks"
 {% endtable %}
 <!-- vale on -->
@@ -219,7 +205,7 @@ rows:
 
 ### Cosine and Euclidean similarity
 
-{{site.ai_gateway}} supports both cosine similarity and Euclidean distance for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using `config.vectordb.distance_metric` setting in the respective plugin.
+{{site.ai_gateway}} supports both cosine similarity and Euclidean distance for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using `config.vectordb.distance_metric` setting in the respective policy.
 
 * Use `cosine` for nuanced semantic similarity (for example, document comparison, text clustering), especially when content length varies or dataset diversity is high.
 * Use `euclidean` when magnitude matters (for example, images, sensor data) or you're working with dense, well-aligned feature sets.
@@ -274,7 +260,7 @@ rows:
 
 ## Similarity threshold
 
-The `vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine—such as Redis or PGVector—and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
+The `config.vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine—such as Redis or PGVector—and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
 
 
 The threshold defines how permissive the matching is. **Higher threshold values allow looser matches, while lower values enforce stricter matching.** The threshold range is 0 to 1.
@@ -288,11 +274,11 @@ In both cases, if the [{{site.base_gateway}} logs](/gateway/logs/) indicate "no 
 The optimal threshold depends on the selected distance metric, the embedding model's dimensionality, and the variation in your data. Tuning may be required for best results.
 
 {:.info}
-> In Kong's AI semantic plugins, this threshold is **not** post-processed or filtered by the plugin itself. The plugin sends it directly to the vector database, which uses it to determine matching documents based on the configured **distance metric**.
+> In {{site.ai_gateway}} semantic policies, this threshold is **not** post-processed or filtered by the policy itself. The policy sends it directly to the vector database, which uses it to determine matching documents based on the configured **distance metric**.
 
 ### Threshold sensitivity and cache hit effectiveness
 
-The closer your similarity threshold is to `1`, the more likely you are to get **cache misses** when using plugins like **AI Semantic Cache**. This is because a higher threshold makes the similarity filter more strict, so only embeddings that are nearly identical to the query will qualify as a match. In practice, this means even small variations in phrasing, structure, or context can cause the system to miss otherwise semantically similar entries and fall back to calling the LLM again.
+The closer your similarity threshold is to `1`, the more likely you are to get **cache misses** when using the **ai-semantic-cache** policy. This is because a higher threshold makes the similarity filter more strict, so only embeddings that are nearly identical to the query will qualify as a match. In practice, this means even small variations in phrasing, structure, or context can cause the system to miss otherwise semantically similar entries and fall back to calling the LLM again.
 
 This happens because vector embeddings are not perfectly robust to minor semantic shifts, especially for short or ambiguous prompts. Raising the threshold narrows the match window, so you're effectively demanding a near-exact match in a complex vector space, which is rare unless the input is repeated verbatim.
 
