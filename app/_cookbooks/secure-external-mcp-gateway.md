@@ -16,7 +16,7 @@ min_version:
 categories:
   - mcp
   - access-control
-featured: true
+featured: false
 popular: false
 
 # Machine-readable fields for AI agent setup
@@ -43,7 +43,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: "{{site.konnect_product_name}}"
+    - title: Kong Konnect
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -61,7 +61,7 @@ prereqs:
            ```
 
            {:.warning}
-           > This reuses your PAT as the upstream credential so the demo only needs one Konnect token. In production, generate a **System Account Token** with least-privilege permissions in **Organization > System Accounts** and store it in a [Kong Vault](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references. PATs inherit the creator's full role and are tied to an individual user, which is unsuitable for a shared, audited service-account credential.
+           > This reuses your PAT as the upstream credential so the demo only needs one Konnect token. In production, generate a **System Account Token** with least-privilege permissions in **Organization > System Accounts** and store it in a [Kong Vault](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references. PATs inherit the creator's full role and are tied to an individual user, which is unsuitable for a shared, audited service-account credential.
 
         1. Set the recipe-scoped Control Plane name and run the quickstart script:
 
@@ -75,7 +75,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -205,7 +205,7 @@ prereqs:
         {% endnavtabs %}
     - title: Konnect MCP region
       content: |
-        The [Konnect MCP server](/konnect-platform/konnect-mcp/#regional-server-endpoints) has region-scoped endpoints; resources don't cross regions. Set this to the host matching the Konnect region your organization runs in:
+        The [Konnect MCP server](https://developer.konghq.com/konnect-platform/konnect-mcp/#regional-server-endpoints) has region-scoped endpoints; resources don't cross regions. Set this to the host matching the Konnect region your organization runs in:
 
         ```bash
         # Pick one: us.mcp.konghq.com, eu.mcp.konghq.com, or au.mcp.konghq.com
@@ -264,7 +264,7 @@ This recipe places {{site.base_gateway}} in front of external MCP servers with t
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as {{site.base_gateway}}
+    participant K as Kong Gateway
     participant GH as GitHub
 
     C->>K: MCP initialize (no token)
@@ -301,7 +301,7 @@ sequenceDiagram
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as {{site.base_gateway}}
+    participant K as Kong Gateway
     participant IdP as Identity Provider
     participant KM as Konnect MCP Server
 
@@ -632,7 +632,7 @@ least-privilege Service Account Token stored in a Kong Vault backend.
 The recipe authenticates users on this route but doesn't enforce tool-level ACL. The [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin already maps an IdP `groups` claim to Kong Consumer Groups (`consumer_groups_claim: [groups]`), so layering on per-tool ACL is a matter of pre-creating the Consumer Groups and adding ACL rules to the [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin, the same way the GitHub MCP route does. The [Secure Internal MCP Gateway](/cookbooks/secure-internal-mcp-gateway/) recipe shows the full IdP-claim-to-ACL pattern end-to-end.
 
 {:.info}
-> In production, store credentials in [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
+> In production, store credentials in [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
 
 ## Apply the Kong configuration
 
