@@ -97,6 +97,10 @@ module Jekyll
         @changelog_exists = File.exist?(File.join(folder, 'changelog.json'))
       end
 
+      def priority
+        @priority ||= site.data.dig('plugins', 'priorities', latest_release_in_range.major_minor_version, slug)
+      end
+
       def third_party?
         metadata['third_party']
       end

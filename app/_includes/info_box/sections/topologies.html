@@ -1,5 +1,9 @@
 <div class="flex flex-col gap-2  w-full">
-  <div class="text-primary font-medium">Supported Gateway Topologies</div>
+  <div class="text-primary font-medium">Supported Gateway Topologies
+    <a href="/gateway/deployment-topologies/">
+      <span class="inline-block w-3 h-3 bg-[rgb(var(--color-text-primary))]" style="mask: url(/assets/icons/admonitions/info.svg); mask-size: cover;" aria-hidden="true"></span>
+    </a>
+  </div>
   <div class="flex gap-1.5 flex-wrap">
     {% for topology in include.topologies.on_prem %}
     <span {% unless forloop.last %}class="after:content-[',']"{% endunless %}>{{ topology }}</span>
@@ -9,7 +13,11 @@
 
 {% if include.topologies.konnect_deployments %}
 <div class="flex flex-col gap-2  w-full">
-  <div class="text-primary font-medium">Supported Konnect Deployments</div>
+  <div class="text-primary font-medium">Supported Konnect Deployments
+    <a href="/gateway/topology-hosting-options/">
+      <span class="inline-block w-3 h-3 bg-[rgb(var(--color-text-primary))]" style="mask: url(/assets/icons/admonitions/info.svg); mask-size: cover;" aria-hidden="true"></span>
+    </a>
+  </div>
   <div class="flex gap-1.5 flex-wrap">
     {% for deployment in include.topologies.konnect_deployments %}
     <span {% unless forloop.last %}class="after:content-[',']"{% endunless %}>{{ deployment }}</span>

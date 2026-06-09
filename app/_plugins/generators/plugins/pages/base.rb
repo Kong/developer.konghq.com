@@ -33,6 +33,7 @@ module Jekyll
                    'tools' => @plugin.formats,
                    'breadcrumbs' => ['/plugins/'],
                    'compatible_protocols' => compatible_protocols,
+                   'priority' => @plugin.priority,
                    'schema' => schema,
                    'plugin' => @plugin,
                    'overview_url' => Overview.url(@plugin),

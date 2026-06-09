@@ -1,12 +1,10 @@
 <div class="flex flex-col gap-2  w-full">
-  <div class="text-primary font-medium">Compatible Protocols 
-    <a href="/gateway/entities/plugin/#protocols">
+  <div class="text-primary font-medium">Priority 
+    <a href="/gateway/entities/plugin/#plugin-priority">
       <span class="inline-block w-3 h-3 bg-[rgb(var(--color-text-primary))]" style="mask: url(/assets/icons/admonitions/info.svg); mask-size: cover;" aria-hidden="true"></span>
     </a>
   </div>
   <div class="flex gap-1.5 flex-wrap">
-    {% for protocol in include.protocols %}
-    <span {% unless forloop.last %}class="after:content-[',']"{% endunless %}>{{ protocol }}</span>
-    {% endfor %}
+    <span>{{ include.priority }}</span>
   </div>
 </div>

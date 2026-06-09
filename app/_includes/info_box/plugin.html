@@ -18,6 +18,10 @@
 {% include_cached info_box/sections/compatible_protocols.html protocols=page.compatible_protocols %}
 {% endif %}
 
+{% if page.priority %}
+{% include_cached info_box/sections/priority.html priority=page.priority %}
+{% endif %}
+
 {% if page.min_version %}
 {% include_cached info_box/sections/min_version.html min_version=page.min_version %}
 {% endif %}
