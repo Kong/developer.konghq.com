@@ -198,6 +198,10 @@
     @apply text-secondary font-normal;
   }
 
+  html:not(.dark) a {
+    @apply font-medium;
+  }
+
   body {
     /* Can't use @apply here due to syntax highlighting, the light-dark function
      and CSS variables don't play nicely sometimes. */
@@ -312,7 +316,7 @@
   }
 
   a {
-    @apply hover:underline text-links font-medium;
+    @apply hover:underline text-links;
   }
 
   main a {
