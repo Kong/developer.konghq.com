@@ -45,13 +45,13 @@ rows:
     description: Full url, without query parameters
   - name: "`client.address`"
     description: |
-        Remote address of the actual client making the request. We try to handle proxy situations too where the client may be coming through a proxy. 
+        Remote address of the actual client making the request, including any client that is communicating through a proxy, if possible.
         <br><br>
         {:.info}
         > Note: This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
   - name: "`client.port`"
     description: |
-        Remote port of the client making the request. We try to handle proxy situations too where the client may be coming through a proxy. 
+        Remote port of the client making the request, including any client that is communicating through a proxy, if possible.
         <br><br>
         {:.info}
         > Note: This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
