@@ -4,7 +4,7 @@ description: "Install a kongctl CLI extension."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

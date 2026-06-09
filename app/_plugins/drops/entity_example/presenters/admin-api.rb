@@ -42,12 +42,16 @@ module Jekyll
                           config: { url:, headers:, body: data, method: 'POST', status_code: 201 } })
             end
 
+            def product
+              @product ||= @example_drop.product
+            end
+
             private
 
             def build_url
               [
                 base_url,
-                formats['admin-api']['endpoints'][entity_type]
+                endpoint
               ].join
             end
 
@@ -56,7 +60,18 @@ module Jekyll
                             when 'gateway'
                               formats['admin-api']['base_url']
                             when 'ai-gateway'
-                              formats['admin-api']['ai_gateway_base_url'] || formats['admin-api']['base_url']
+                              formats['admin-api']['ai_gateway_base_url']
+                            else
+                              raise ArgumentError, "Unsupported product: #{@example_drop.product}"
+                            end
+            end
+
+            def endpoint
+              @endpoint ||= case @example_drop.product
+                            when 'gateway'
+                              formats['admin-api']['endpoints'][entity_type]
+                            when 'ai-gateway'
+                              formats['admin-api']['ai_endpoints'][entity_type]
                             else
                               raise ArgumentError, "Unsupported product: #{@example_drop.product}"
                             end

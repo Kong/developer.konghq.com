@@ -33,7 +33,7 @@ The following creates a new AI Consumer. Suggested values are shown in backticks
 1. Select an authentication **Type** (for example: `{{ include.presenter.data['type'] }}`).
 1. Configure credentials and optional Consumer Group or Policy references.
 1. Click **Create**.
-{% when 'consumer-group' %}
+{% when 'consumer_group' %}
 The following creates a new AI Consumer Group. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
@@ -67,7 +67,7 @@ The following creates a new AI Agent. Suggested values are shown in backticks:
 1. Enter the upstream Agent **URL** (for example: `{{ include.presenter.data['config']['url'] }}`).
 1. Optionally configure logging, max payload size, ACLs, and Policy references.
 1. Click **Create**.
-{% when 'mcp-server' %}
+{% when 'mcp_server' %}
 The following creates a new AI MCP Server. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.

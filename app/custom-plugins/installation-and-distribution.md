@@ -275,7 +275,7 @@ For more information about the format, see the LuaRocks [documentation on rocksp
 
 ### OCI Artifacts
 
-{{site.base_gateway}} plugins can be packaged as generic OCI artifacts and uploaded to an OCI-compliant registry like Docker Hub or Amazon ECR for versioning, storage, and distribution. 
+{{site.base_gateway}} plugins can be packaged as generic OCI artifacts and uploaded to an OCI-compliant registry like Docker Hub or {{ site.amazon }} ECR for versioning, storage, and distribution. 
 
 The advantage of distributing plugins as OCI artifacts is that users can make use of a number of ecosystem benefits including tooling around building, pushing and pulling, and signing (for secure provenance attestation) of these artifacts. 
 The steps below illustrate a sample flow for packaging, distributing, and verifying a {{site.base_gateway}} custom plugin as an OCI artifact.

@@ -32,20 +32,20 @@ works_on:
   - on-prem
 ---
 
-You can use AWS Identity and Access Management (IAM) authentication to connect to the Amazon RDS database that you use for {{site.base_gateway}}. This page explains how to configure IAM authentication to secure your database settings and connections.
+You can use AWS Identity and Access Management (IAM) authentication to connect to the {{ site.amazon }} RDS database that you use for {{site.base_gateway}}. This page explains how to configure IAM authentication to secure your database settings and connections.
 
-With IAM authentication enabled, you don't need a password to connect to a database instance. Instead, you use a temporary authentication token. Because AWS IAM manages the authentication externally, the database doesn't store user credentials. If you're using Amazon RDS for {{site.base_gateway}}'s database, you can enable IAM authentication on your running cluster. This eliminates the need to store user credentials on both the {{site.base_gateway}} (`pg_password`) and RDS sides.
+With IAM authentication enabled, you don't need a password to connect to a database instance. Instead, you use a temporary authentication token. Because AWS IAM manages the authentication externally, the database doesn't store user credentials. If you're using {{ site.amazon }} RDS for {{site.base_gateway}}'s database, you can enable IAM authentication on your running cluster. This eliminates the need to store user credentials on both the {{site.base_gateway}} (`pg_password`) and RDS sides.
 
 ## AWS IAM authentication limitations
 
 AWS IAM authentication has some limitations. Go through each one before you use this feature in your production environment:
 
-* For a traditional {{site.base_gateway}} cluster or single traditional nodes, only use IAM database authentication if {{site.base_gateway}} requires less than 200 new IAM database authentications per second. Establishing more connections per second can result in throttling. Authentication only happens on each connection's initialization part after the connection is successfully established; the following queries and communication don't authenticate. Check the TPS of the connection establishment on your database to ensure you aren't encountering this limitation. Traditional clusters are more likely to encounter this limitation because each node needs to establish connections to the database. For more information, see [Recommendations for IAM database authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html#UsingWithRDS.IAMDBAuth.ConnectionsPerSecond) in the Amazon RDS user guide. 
-* Enabling AWS IAM authentication requires SSL connection to the database. To do this, you must configure your RDS cluster correctly and provide the correct SSL-related configuration on the {{site.base_gateway}} side. Enabling SSL may cause some performance overhead if you weren't using it before. Currently, TLSv1.3 isn't supported by Amazon RDS.
+* For a traditional {{site.base_gateway}} cluster or single traditional nodes, only use IAM database authentication if {{site.base_gateway}} requires less than 200 new IAM database authentications per second. Establishing more connections per second can result in throttling. Authentication only happens on each connection's initialization part after the connection is successfully established; the following queries and communication don't authenticate. Check the TPS of the connection establishment on your database to ensure you aren't encountering this limitation. Traditional clusters are more likely to encounter this limitation because each node needs to establish connections to the database. For more information, see [Recommendations for IAM database authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html#UsingWithRDS.IAMDBAuth.ConnectionsPerSecond) in the {{ site.amazon }} RDS user guide. 
+* Enabling AWS IAM authentication requires SSL connection to the database. To do this, you must configure your RDS cluster correctly and provide the correct SSL-related configuration on the {{site.base_gateway}} side. Enabling SSL may cause some performance overhead if you weren't using it before. Currently, TLSv1.3 isn't supported by {{ site.amazon }} RDS.
 - Since the Postgres RDS does not support mTLS, you can't enable mTLS between the {{site.base_gateway}} and the Postgres RDS database when AWS IAM authentication is enabled.
 - You **can't** change the value of the environment variables that you use for the AWS credential after booting {{site.base_gateway}}.
 
-For additional recommendations and limitations, see [IAM database authentication for MariaDB, MySQL, and PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html) in the Amazon RDS user guide. 
+For additional recommendations and limitations, see [IAM database authentication for MariaDB, MySQL, and PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html) in the {{ site.amazon }} RDS user guide. 
 
 
 ## Enabling AWS IAM authentication
@@ -61,9 +61,9 @@ Before you enable AWS IAM authentication, you must do the following in the `kong
 
 ### Configuring your AWS resources
 
-Before you enable the AWS IAM authentication, you must configure your Amazon RDS database and the AWS IAM role that {{site.base_gateway}} uses.
+Before you enable the AWS IAM authentication, you must configure your {{ site.amazon }} RDS database and the AWS IAM role that {{site.base_gateway}} uses.
 
-- **Enable the IAM database authentication on your database instance.** For more information, see [Enabling and disabling IAM database authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.Enabling.html) in the Amazon RDS user guide.
+- **Enable the IAM database authentication on your database instance.** For more information, see [Enabling and disabling IAM database authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.Enabling.html) in the {{ site.amazon }} RDS user guide.
 - **Assign an IAM role to your {{site.base_gateway}} instance.** {{site.base_gateway}} can automatically discover and fetch the AWS credentials to use for the IAM role.
    - If you use an EC2 environment, use the [EC2 IAM role](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html).
    - If you use an ECS cluster, use a [ECS task IAM role](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).
@@ -83,9 +83,9 @@ Before you enable the AWS IAM authentication, you must configure your Amazon RDS
    - {% new_in 3.8 %} If you want Kong to assume a different IAM role, ensure that the original IAM role it uses has permission to assume the target role, and that the target role has permission to connect to the database using IAM authentication.
    - {% new_in 3.8 %} If you have users with non-public VPC networks and private VPC endpoints (without private DNS names enabled), you can configure an AWS Service Token Service (STS) endpoint globally with `vault_aws_sts_endpoint_url` or on a custom AWS Vault entity with `sts_endpoint_url`.
 
-- **Assign an IAM policy to the {{site.base_gateway}} IAM role**. For more information, see [Creating and using an IAM policy for IAM database access](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.IAMPolicy.html) in the Amazon RDS documentation.
+- **Assign an IAM policy to the {{site.base_gateway}} IAM role**. For more information, see [Creating and using an IAM policy for IAM database access](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.IAMPolicy.html) in the {{ site.amazon }} RDS documentation.
 
-- **Ensure you create the database account in the RDS**. For more information, see [Using IAM authentication with PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.DBAccounts.html#UsingWithRDS.IAMDBAuth.DBAccounts.PostgreSQL) in the Amazon RDS documentation. 
+- **Ensure you create the database account in the RDS**. For more information, see [Using IAM authentication with PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.DBAccounts.html#UsingWithRDS.IAMDBAuth.DBAccounts.PostgreSQL) in the {{ site.amazon }} RDS documentation. 
 
    {:.info}
    > **Notes:** 

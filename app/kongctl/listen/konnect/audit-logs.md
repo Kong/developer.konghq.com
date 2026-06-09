@@ -4,7 +4,7 @@ description: "Listen to {{site.konnect_short_name}} audit log stream."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect

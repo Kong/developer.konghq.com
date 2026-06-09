@@ -34,7 +34,7 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
    If this command fails, check your credentials, permissions, and configured region.
 
 4. Create a `guardrail.json` configuration file:
-   This configuration defines an Amazon Bedrock guardrail named `example-guardrail` that blocks harmful or restricted content—including specific words, topics like quantum computing, and categories such as violence, hate, and prompt attacks—in both input and output messages.
+   This configuration defines an {{ site.amazon }} Bedrock guardrail named `example-guardrail` that blocks harmful or restricted content—including specific words, topics like quantum computing, and categories such as violence, hate, and prompt attacks—in both input and output messages.
 
    ```
    cat <<'EOF' > guardrail.json

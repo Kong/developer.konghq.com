@@ -176,8 +176,8 @@ rows:
               ctas:
                 - text: Introduction 
                   url: /mesh/observability/
-                - text: OpenTelemetry configuration 
-                  url: /mesh/collect-metrics-with-opentelemetry/
+                - text: Deploy an OpenTelemetry collector
+                  url: /mesh/deploy-an-opentelemetry-collector/
       - blocks:
           - type: card
             config:

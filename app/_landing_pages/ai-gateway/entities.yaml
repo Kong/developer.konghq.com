@@ -36,7 +36,7 @@ rows:
               description: Stores upstream provider credentials and connection configuration. Providers are reusable and are not model endpoints.
               cta:
                 text: AI Provider entity
-                url: /ai-gateway/entities/provider/
+                url: /ai-gateway/entities/ai-provider/
       - blocks:
           - type: card
             config:
@@ -44,7 +44,7 @@ rows:
               description: Defines a model endpoint and capability configuration used for model selection and policy targeting.
               cta:
                 text: Model entity
-                url: /ai-gateway/entities/model/
+                url: /ai-gateway/entities/ai-model/
       - blocks:
           - type: card
             config:
@@ -52,7 +52,7 @@ rows:
               description: An A2A or HTTP agent exposed through the A2A proxy flow. Independent of Model.
               cta:
                 text: AI Agent entity
-                url: /ai-gateway/entities/agent/
+                url: /ai-gateway/entities/ai-agent/
       - blocks:
           - type: card
             config:
@@ -60,7 +60,7 @@ rows:
               description: An MCP server in passthrough, listener, or conversion-listener mode. Mode is immutable after creation.
               cta:
                 text: AI MCP Server entity
-                url: /ai-gateway/entities/mcp-server/
+                url: /ai-gateway/entities/ai-mcp-server/
       - blocks:
           - type: card
             config:
@@ -68,7 +68,7 @@ rows:
               description: An AI Gateway plugin instance scoped globally or to a specific AI entity. Policy instances are independent.
               cta:
                 text: AI Policy entity
-                url: /ai-gateway/entities/policy/
+                url: /ai-gateway/entities/ai-policy/
       - blocks:
           - type: card
             config:
@@ -76,7 +76,7 @@ rows:
               description: A thin wrapper around the existing Consumer entity.
               cta:
                 text: AI Consumer entity
-                url: /ai-gateway/entities/consumer/
+                url: /ai-gateway/entities/ai-consumer/
       - blocks:
           - type: card
             config:
@@ -84,7 +84,7 @@ rows:
               description: A thin wrapper around the existing Consumer Group entity.
               cta:
                 text: AI Consumer Group entity
-                url: /ai-gateway/entities/consumer-group/
+                url: /ai-gateway/entities/ai-consumer-group/
 
   - header:
       type: h2
@@ -98,7 +98,7 @@ rows:
               description: Store and reference secrets used by AI Gateway entities and plugins.
               cta:
                 text: AI Vault entity
-                url: /ai-gateway/entities/vault/
+                url: /ai-gateway/entities/ai-vault/
       - blocks:
           - type: card
             config:
@@ -106,4 +106,4 @@ rows:
               description: Public client certificates that authorize data planes to establish mTLS connections to an AI Gateway.
               cta:
                 text: AI Data Plane Certificate entity
-                url: /ai-gateway/entities/data-plane-certificate/
+                url: /ai-gateway/entities/ai-data-plane-certificate/

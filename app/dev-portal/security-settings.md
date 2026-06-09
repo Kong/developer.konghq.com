@@ -100,11 +100,10 @@ When RBAC is enabled for a {{site.dev_portal}}, the option to configure API acce
 ### Authentication strategy and creating API keys
 
 {:.info}
-> {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
+> An API must be linked to a {{site.konnect_short_name}} Gateway Service {% new_in 3.6 %} or control plane {% new_in 3.13 %} to restrict access to your API with authentication strategies.
 
 Authentication strategies determine how [published APIs](/catalog/apis/#publish-your-api-to-dev-portal) are authenticated, and how developers create API Keys. 
-
-Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway Service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway Service linked to the API](/catalog/apis/#gateway-service-link). The KAA plugin can only be configured from the associated {{site.dev_portal}} and not from API Gateway.
+{% include /dev-portal/kaa-vs-ace.md %}
 
 #### Default application authentication strategy 
 

@@ -51,6 +51,10 @@
             {% contentblock nav_header %}
             </section>
         {% endifhascontent %}
+
+        {%- if page.beta == true or page.tech_preview == true -%}
+        {%- include_cached banners/stage.html beta=page.beta tech_preview=page.tech_preview -%}
+        {%- endif -%}
     </div>
 
     {% if page.layout == 'with_aside' or layout.layout == 'with_aside' %}
@@ -58,6 +62,5 @@
         {% include layouts/aside.html mobile=true %}
     </div>
     {% endif %}
-
     {{ content }}
 </main>
