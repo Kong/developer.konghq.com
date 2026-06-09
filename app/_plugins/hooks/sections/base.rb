@@ -72,13 +72,6 @@ module SectionWrapper
       node.to_html.strip.empty?
     end
 
-    def split_by_heading(nodes, tag)
-      groups = nodes.to_a.slice_when { |_, b| heading?(b, tag) }.to_a
-      pre = heading?(groups.first&.first, tag) ? [] : (groups.shift || [])
-      sections = groups.map { |g| [g.first, g.drop(1)] }
-      [pre, sections]
-    end
-
     def heading?(node, tag)
       node&.element? && node.name == tag
     end
