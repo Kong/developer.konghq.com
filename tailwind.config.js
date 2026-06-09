@@ -117,6 +117,7 @@ module.exports = {
           "rgb(var(--color-bg-code-block-header), <alpha-value>)",
         "hover-component":
           "rgb(var(--color-bg-hover-component), <alpha-value>)",
+        "icon-primary": "rgb(var(--color-icon-primary), <alpha-value>)",
       },
       boxShadow: {
         primary: "0 4px 12px 0 rgb(var(--color-shadow-primary))",
