@@ -24,11 +24,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} Dev Portal provides flexible options for controlling access to content and APIs. 
-                    When combined with a [Gateway Service](/gateway/entities/service/), developers visiting a Dev Portal can sign up, create an application, register it with an API, and retrieve API keys without intervention from Dev Portal administrators. 
+                    {{site.konnect_short_name}} {{site.dev_portal}} provides flexible options for controlling access to content and APIs. 
+                    When combined with a [Gateway Service](/gateway/entities/service/), developers visiting a {{site.dev_portal}} can sign up, create an application, register it with an API, and retrieve API keys without intervention from {{site.dev_portal}} administrators. 
 
                     Developer self-service consists of two main components:
-                    * **User authentication:** Allows users to access your Dev Portal by logging in. You can further customize what logged in users can see using RBAC.
+                    * **User authentication:** Allows users to access your {{site.dev_portal}} by logging in. You can further customize what logged in users can see using RBAC.
                     * **Application registration:** Allows developers to use your APIs using credentials and create applications for them.
 
   - header:
@@ -42,18 +42,18 @@ rows:
               - type: text
                 text: |
                     To enable developer self-service, do the following:
-                    1. Enable user authentication by navigating to **Settings > Security** in your Dev Portal.
+                    1. Enable user authentication by navigating to **Settings > Security** in your {{site.dev_portal}}.
                        
-                       Developer sign ups and application creation require admin approval by default, which can also be configured in the Dev Portal security settings.
+                       Developer sign ups and application creation require admin approval by default, which can also be configured in the {{site.dev_portal}} security settings.
                        
-                       For private Dev Portals, user authentication is enabled by default, and the default application auth strategy is key authentication.
+                       For private {{site.dev_portal}}s, user authentication is enabled by default, and the default application auth strategy is key authentication.
                     1. Configure an [application authentication strategy](/dev-portal/auth-strategies/) by navigating to **Settings > Security**.
-                    1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your Dev Portal in {{site.konnect_short_name}} and going to **Access and approvals > Teams**. Click the team, go to **Settings** and enable **Allow team to own applications**.
+                    1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your {{site.dev_portal}} in {{site.konnect_short_name}} and going to **Access and approvals > Teams**. Click the team, go to **Settings** and enable **Allow team to own applications**.
                     1. Link an [API to a Gateway Service](/catalog/apis/#gateway-service-link).
                        
                        This is required to enforce auth strategies.
-                    1. Publish an [API to a Dev Portal](/catalog/apis/#publish-your-api-to-dev-portal).
-                    1. Select an authentication strategy when publishing the API to a Dev Portal.
+                    1. Publish an [API to a {{site.dev_portal}}](/catalog/apis/#publish-your-api-to-dev-portal).
+                    1. Select an authentication strategy when publishing the API to a {{site.dev_portal}}.
                     1. For public content with restricted access, use [visibility settings](/dev-portal/pages-and-content/#page-visibility-and-publishing) to show public pages or APIs to anonymous users while restricting actions to logged-in users.
   - header:
       type: h2
@@ -65,16 +65,16 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Enabling user authentication requires users to register with the Dev Portal. 
+                  Enabling user authentication requires users to register with the {{site.dev_portal}}. 
                   You can decide which pages remain public and which ones require authentication.
 
-                  Dev Portal supports the following user authentication types:
+                  {{site.dev_portal}} supports the following user authentication types:
                   * Basic authentication
                   * OIDC
                   * SAML
 
-                  Additionally, you can enable [RBAC](/dev-portal/developer-rbac/) from your Dev Portal's security settings to control who can view or view and consume APIs in your Dev Portal.
-                  When RBAC is enabled, any Dev Portal teams and roles you apply to a developer will control their access.
+                  Additionally, you can enable [RBAC](/dev-portal/developer-rbac/) from your {{site.dev_portal}}'s security settings to control who can view or view and consume APIs in your {{site.dev_portal}}.
+                  When RBAC is enabled, any {{site.dev_portal}} teams and roles you apply to a developer will control their access.
   - header:
       type: h3
       text: "Get started with user authentication"
@@ -82,27 +82,27 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Configure Dev Portal SSO
+              title: Configure {{site.dev_portal}} SSO
               description: |
-                Set up SSO for the {{site.konnect_short_name}} Dev Portal using OpenID Connect (OIDC) or SAML.
+                Set up SSO for the {{site.konnect_short_name}} {{site.dev_portal}} using OpenID Connect (OIDC) or SAML.
               icon: /assets/icons/lock.svg
               cta:
                 url: /dev-portal/sso/
       - blocks: 
           - type: card
             config:
-              title: Dev Portal IdP team mappings
+              title: "{{site.dev_portal}} IdP team mappings"
               description: |
-                Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal.
+                Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} {{site.dev_portal}}.
               icon: /assets/icons/team.svg
               cta:
                 url: /dev-portal/team-mapping/
       - blocks:
           - type: card
             config:
-              title: Dev Portal RBAC
+              title: "{{site.dev_portal}} RBAC"
               description: |
-                Learn about Dev Portal pre-defined teams and roles for RBAC.
+                Learn about {{site.dev_portal}} pre-defined teams and roles for RBAC.
               icon: /assets/icons/rbac.svg
               cta:
                 url: /dev-portal/developer-rbac/
@@ -118,12 +118,12 @@ rows:
               - type: text
                 text: |
                   Application authentication allows developers to authenticate with your API using credentials. 
-                  Developers use the credentials from the authentication strategy when they use an API from your Dev Portal.
-                  You can define and reuse multiple authentication strategies for different APIs and Dev Portals.
+                  Developers use the credentials from the authentication strategy when they use an API from your {{site.dev_portal}}.
+                  You can define and reuse multiple authentication strategies for different APIs and {{site.dev_portal}}s.
                   
-                  When you select an [authentication strategy](/dev-portal/auth-strategies/) during [API publication](/catalog/apis/) to a Dev Portal, {{site.konnect_short_name}} automatically applies the strategy to the linked Gateway Service.
+                  When you select an [authentication strategy](/dev-portal/auth-strategies/) during [API publication](/catalog/apis/) to a {{site.dev_portal}}, {{site.konnect_short_name}} automatically applies the strategy to the linked Gateway Service.
 
-                  Dev Portal supports the following authentication strategies:
+                  {{site.dev_portal}} supports the following authentication strategies:
                   * [Key authentication (`key-auth`)](/dev-portal/auth-strategies/#configure-the-key-auth-strategy)
                   * [OpenID Connect (`oidc`)](/dev-portal/auth-strategies/#dev-portal-oidc-authentication)
                   * [Dynamic Client Registration (DCR)](/dev-portal/dynamic-client-registration/)
@@ -139,7 +139,7 @@ rows:
             config:
               title: Okta
               description: |
-                Automatically create Dev Portal applications in Okta with Dynamic Client Registration
+                Automatically create {{site.dev_portal}} applications in Okta with Dynamic Client Registration
               icon: /assets/icons/okta.svg
               cta:
                 url: /how-to/okta-dcr/
@@ -148,7 +148,7 @@ rows:
             config:
               title: Azure AD
               description: |
-                Automatically create and manage Dev Portal applications in Azure AD with Dynamic Client Registration
+                Automatically create and manage {{site.dev_portal}} applications in Azure AD with Dynamic Client Registration
               icon: /assets/icons/azure.svg
               cta:
                 url: /how-to/azure-ad-dcr/
@@ -157,7 +157,7 @@ rows:
             config:
               title: Auth0
               description: |
-                Automatically create and manage Dev Portal applications in Auth0 with Dynamic Client Registration
+                Automatically create and manage {{site.dev_portal}} applications in Auth0 with Dynamic Client Registration
               icon: /assets/icons/third-party/auth0.svg
               cta:
                 url: /how-to/auth0-dcr/
@@ -166,7 +166,7 @@ rows:
             config:
               title: Curity
               description: |
-                Automatically create and manage Dev Portal applications in Curity with Dynamic Client Registration
+                Automatically create and manage {{site.dev_portal}} applications in Curity with Dynamic Client Registration
               icon: /assets/icons/third-party/curity.svg
               cta:
                 url: /how-to/curity-dcr/
@@ -182,7 +182,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  You can choose to auto approve developers and applications or require admin approval for developers and applications by navigating to **Settings** and the **Security** tab in your Dev Portal settings.
+                  You can choose to auto approve developers and applications or require admin approval for developers and applications by navigating to **Settings** and the **Security** tab in your {{site.dev_portal}} settings.
 
                   If your settings require developer or application approval, you can manage approvals by navigating to **Access and approvals** in the sidebar. You need the [API Registration Approver and Portal Viewer role](/konnect-platform/teams-and-roles/#dev-portal) assigned to the Teams that control the APIs to approve these.
                   Additionally, you can add developers to teams by clicking on the settings menu next to the name of the developer.
@@ -203,8 +203,8 @@ rows:
                 text: |
                   You can assign an application to a team so that all members of that team share ownership of the application.
                   Any team member can edit, manage, and use the application.
-                  Apps shared by a team appear in each member's apps in the Dev Portal.
-                  Team membership and roles are managed via [Dev Portal teams and roles](/dev-portal/developer-rbac/).
+                  Apps shared by a team appear in each member's apps in the {{site.dev_portal}}.
+                  Team membership and roles are managed via [{{site.dev_portal}} teams and roles](/dev-portal/developer-rbac/).
 
                   This is useful in cases such as when a developer leaves your organization. 
                   With team application sharing, the team retains uninterrupted access to the application.
@@ -215,11 +215,11 @@ rows:
                     Similarly, you can only register APIs to team-owned applications if everyone in the team has access to the API. 
                     This is true even if an individual team member has broader access through other teams.
 
-                  To enable team application sharing, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Access and approvals > Teams**. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
+                  To enable team application sharing, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click **Access and approvals > Teams**. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
                   To transfer ownership of an application to either a developer or team, navigate to the app and from the **Actions** dropdown menu, select "Transfer ownership".
                   
-                  For more information about how to configure Dev Portal developer teams, see [Dev Portal RBAC](/dev-portal/developer-rbac/). 
-                  For more information about the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/#2-create-an-application).
+                  For more information about how to configure {{site.dev_portal}} developer teams, see [{{site.dev_portal}} RBAC](/dev-portal/developer-rbac/). 
+                  For more information about the developer experience, see [{{site.dev_portal}} developer sign-up](/dev-portal/developer-signup/#2-create-an-application).
   - header:
       type: h3
       text: "Limitations"
@@ -246,7 +246,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  You can apply {{site.base_gateway}} plugins to your Dev Portal applications.
+                  You can apply {{site.base_gateway}} plugins to your {{site.dev_portal}} applications.
                   This lets you enforce business logic, such as rate limiting or IP restriction, on the credentials that an application uses to access your APIs.
 
                   The following table shows common use cases for applying plugins to applications:
@@ -266,7 +266,7 @@ rows:
                       plugin: "[Request Transformer](/plugins/request-transformer/)"
                   {% endtable %}
 
-                  When a developer creates an application, Dev Portal automatically creates Kong Identity principals for the application.
+                  When a developer creates an application, {{site.dev_portal}} automatically creates Kong Identity principals for the application.
 
                   You can apply plugins to an application in two different ways:
                   * **Conditional plugin execution (recommended):** Use [conditional plugin execution](/gateway/configure-conditional-plugin-execution/) with an expression that references the application's `principal.id`. This applies the plugin based on the application's principal, without mapping the application to a Consumer.
@@ -300,9 +300,10 @@ rows:
                   Keep the following in mind when you map applications to Consumers:
                   * Both the [KAA and ACE plugins](/catalog/apis/#allow-developers-to-consume-your-api) look up principals to resolve the Consumer mapped to an application.
                   * An application maps to a single Consumer (a 1:1 mapping through one principal).
-                  * The mapping is a loose, string-based mapping. The Dev Portal does not validate that the Consumer exists on the Gateway.
+                  * The mapping is a loose, string-based mapping. The {{site.dev_portal}} does not validate that the Consumer exists on the Gateway.
                   * Application registrations for APIs that are linked to the same Gateway Service will share the same effective Consumer mapping. 
                     Updating the mapping for one registration updates it for all registrations that resolve to the same Gateway context.
+                  * Applying plugins to applications is only available on v3 {{site.dev_portal}}s.
 
   - header:
       type: h2
@@ -311,9 +312,9 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Dev Portal developer sign-up
+              title: "{{site.dev_portal}} developer sign-up"
               description: |
-                Learn how developers can get started with the Dev Portal by registering and creating an application.
+                Learn how developers can get started with the {{site.dev_portal}} by registering and creating an application.
               cta:
                 url: /dev-portal/developer-signup/
       - blocks:
@@ -321,13 +322,13 @@ rows:
             config:
               title: Application authentication strategies
               description: |
-                Learn how to set up authentication strategies for application registration in Dev Portal.
+                Learn how to set up authentication strategies for application registration in {{site.dev_portal}}.
               cta:
                 url: /dev-portal/auth-strategies/
       - blocks:
           - type: card
             config:
-              title: Dev Portal Dynamic Client Registration
+              title: "{{site.dev_portal}} Dynamic Client Registration"
               description: |
                 Learn about supported DCR identity providers and supported DCR authentication methods. 
               cta:
