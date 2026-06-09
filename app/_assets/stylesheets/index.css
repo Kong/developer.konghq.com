@@ -324,7 +324,7 @@
   }
 
   a[href^='http']:not([href^='#']):not([href^='https://insomnia.rest/run']):not(.no-icon)::after {
-    @apply w-3 h-3 inline-block align-middle ml-1.5 content-[''] bg-current;
+    @apply w-3 h-3 inline-block align-middle ml-1.5 content-[''] bg-links;
     mask: url('/assets/icons/external-link.svg') no-repeat center / contain;
   }
 
