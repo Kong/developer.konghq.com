@@ -77,7 +77,7 @@ faqs:
   - q: Can a client override the model name from the request body?
     a: |
       By default, no. The request `model` field must match the upstream model on one of the Model's targets, otherwise the runtime returns a `400` error.
-      To accept a client-side alias, set `config.model.alias` on the Model and clients can send the alias value in the request `model` field instead of the upstream provider model name.
+      To accept a client-side alias, set [`config.target_models[].model.alias`](/ai-gateway/entities/model/#schema-aigateway-model-target-models-model-alias) on each target. Clients can then send the alias value in the request `model` field instead of the upstream provider model name. See [Request routing by model alias](/ai-gateway/load-balancing/#request-routing-by-model-alias) for details and examples.
 
   - q: Can a client override `temperature`, `top_p`, or `top_k` from the request?
     a: |

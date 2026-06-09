@@ -17,14 +17,13 @@ products:
 tools:
   - admin-api
   - konnect-api
-  - deck
 
 tags:
   - ai
   - load-balancing
 
 min_version:
-  ai_gateway: '2.0.0'
+  ai-gateway: '2.0.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -45,6 +44,12 @@ In {{site.ai_gateway}} 2.0.0 and later, load balancing is configured on the [Mod
 >
 > For new {{site.ai_gateway}} deployments, use the Model entity workflow.
 -->
+
+### Request routing by model alias
+
+Model aliases allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
+
+Each target in a Model entity can have an optional [`model.alias`](/ai-gateway/entities/model/#schema-aigateway-model-target-models-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
 
 ### Load balancing algorithms
 
@@ -256,4 +261,12 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-When `max_fails` is reached within the `fail_timeout` window, {{site.base_gateway}} temporarily removes that target model from selection. Combined with retries and fallback targets, this setup helps keep traffic flowing to healthy models when a provider is slow or unavailable.
+The load balancer supports health checks and circuit breakers to improve reliability. If the number of unsuccessful attempts to a target reaches [`config.balancer.max_fails`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-max-fails), the load balancer stops sending requests to that target until it reconsiders the target after the period defined by [`config.balancer.fail_timeout`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-fail-timeout). The diagram below illustrates this behavior:
+
+![Circuit breaker](/assets/images/ai-gateway/circuit-breaker.jpg){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
+
+Consider an example where [`config.balancer.max_fails`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-max-fails) is 3 and [`config.balancer.fail_timeout`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-fail-timeout) is 10 seconds. When failed requests for a target reach 3, the target is marked unhealthy and the load balancer stops sending requests to it. After 10 seconds, the target is reconsidered. If the request to this target still fails, the target remains unhealthy and the load balancer continues to exclude it. If the request succeeds, the target is marked healthy again and recovers from the circuit breaker.
+
+The failure counter tracks total failures, not consecutive failures. If a target receives 2 failed requests, then 1 successful request within the timeout window, the counter remains at 2. The counter resets only when a successful request occurs after [`config.balancer.fail_timeout`](/ai-gateway/entities/model/#schema-aigateway-model-config-balancer-fail-timeout) has elapsed since the last failed request.
+
+If all targets become unhealthy simultaneously, requests fail with `HTTP 500`.
