@@ -928,7 +928,7 @@
   .info-box {
     @apply  flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full;
 
-    a {
+    a:not(.badge) {
       @apply text-terciary;
     }
 
