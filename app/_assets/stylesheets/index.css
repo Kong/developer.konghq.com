@@ -995,7 +995,7 @@ body.ai-assistant-open > #wrapper {
 }
 
 .ais-Pagination-item--selected {
-  @apply bg-secondary border-brand-saturated font-bold;
+  @apply bg-secondary border-brand font-bold;
 }
 
 .ais-Pagination-link {
