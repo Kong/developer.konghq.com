@@ -10,25 +10,25 @@
     --removed-body-scroll-bar-size: 4px;
     --ai-assistant-sidebar-width: 480px;
 
-    --color-icon-primary: 133, 137, 131;
+    --color-icon-primary: 103, 107, 102;
 
-    --color-bg-header: 193, 202, 190;
-    --color-bg-primary: 205, 212, 203;
-    --color-bg-secondary: 215, 222, 212;
-    --color-bg-terciary: 231, 237, 229;
-    --color-bg-code-block: 231, 237, 229;
-    --color-bg-code-block-header: 215, 222, 212;
+    --color-bg-header: 205, 212, 203;
+    --color-bg-primary: 215, 222, 212;
+    --color-bg-secondary: 231, 237, 229;
+    --color-bg-terciary: 243, 246, 242;
+    --color-bg-code-block: 243, 246, 242;
+    --color-bg-code-block-header: 205, 212, 203;
     --color-bg-hover-component: 231, 237, 229;
 
     --color-text-primary: 0, 20, 8;
     --color-text-secondary: 74, 77, 73;
     --color-text-terciary: 103, 107, 102;
-    --color-text-links: 96, 128, 0;
+    --color-text-links: 78, 120, 13;
     --color-text-button: 0, 0, 0;
     --color-text-secondary-constant: 74, 77, 73;
 
     --color-border-primary: 186, 193, 184;
-    --opacity-border-primary: 0.72;
+    --opacity-border-primary: 0.60;
 
     --color-shadow-primary: 204, 255, 0, 0.04;
 
@@ -36,29 +36,29 @@
     --color-brand-saturated: 204, 255, 0;
     --opacity-brand-saturated: 0.2;
 
-    --color-semantic-red-primary: 214, 67, 67;
-    --color-semantic-red-secondary: 255, 229, 229;
+    --color-semantic-red-primary: 180, 91, 91;
+    --color-semantic-red-secondary: 235, 223, 223;
 
-    --color-semantic-yellow-primary: 220, 158, 66;
-    --color-semantic-yellow-secondary: 255, 252, 224;
+    --color-semantic-yellow-primary: 167, 134, 38;
+    --color-semantic-yellow-secondary: 237, 232, 217;
 
-    --color-semantic-blue-primary: 33, 112, 197;
-    --color-semantic-blue-secondary: 229, 247, 255;
+    --color-semantic-blue-primary: 79, 130, 179;
+    --color-semantic-blue-secondary: 220, 227, 232;
 
-    --color-semantic-green-primary: 66, 174, 148;
-    --color-semantic-green-secondary: 224, 255, 249;
+    --color-semantic-green-primary: 63, 147, 103;
+    --color-semantic-green-secondary: 218, 236, 220;
 
-    --color-semantic-grey-primary: 84, 86, 88;
-    --color-semantic-grey-secondary: 242, 242, 242;
+    --color-semantic-grey-primary: 103, 107, 102;
+    --color-semantic-grey-secondary: 223, 227, 222;
 
-    --color-semantic-purple-primary: 151, 71, 255;
-    --color-semantic-purple-secondary: 240, 229, 255;
+    --color-semantic-purple-primary: 140, 104, 196;
+    --color-semantic-purple-secondary: 232, 227, 239;
 
-    --color-semantic-orange-primary: 226, 113, 64;
-    --color-semantic-orange-secondary: 255, 238, 229;
+    --color-semantic-orange-primary: 184, 119, 67;
+    --color-semantic-orange-secondary: 232, 227, 239;
 
-    --color-semantic-teal-primary: 64, 199, 226;
-    --color-semantic-teal-secondary: 224, 250, 255;
+    --color-semantic-teal-primary: 78, 153, 147;
+    --color-semantic-teal-secondary: 215, 230, 228;
 
     --color-shadow-hover-card: 204, 255, 0, 0.08;
 
@@ -135,14 +135,14 @@
   .dark {
     --color-bg-header: 0, 20, 8;
     --color-bg-primary: 0, 20, 8;
-    --color-bg-secondary: 0, 0, 0;
-    --color-bg-terciary: 34, 39, 34;
-    --color-bg-code-block: 34, 39, 34;
-    --color-bg-code-block-header: 0, 0, 0;
+    --color-bg-secondary: 24, 32, 25;
+    --color-bg-terciary: 48, 53, 47;
+    --color-bg-code-block: 48, 53, 47;
+    --color-bg-code-block-header: 24, 32,25;
     --color-bg-hover-component: 34, 39, 34;
 
     --color-text-primary: 255, 255, 255;
-    --color-text-secondary: 205, 212, 203;
+    --color-text-secondary: 174, 181, 167;
     --color-text-terciary: 161, 166, 159;
     --color-text-links: 204, 255, 0;
     --color-text-button: 0, 0, 0;
@@ -151,32 +151,32 @@
     --opacity-brand-saturated: 0.15;
 
     --color-border-primary: 49, 57, 25;
-    --opacity-border-primary: 0.48;
+    --opacity-border-primary: 0.72;
     --color-shadow-primary: 204, 255, 0, 0.04;
 
-    --color-semantic-red-primary: 214, 67, 67;
-    --color-semantic-red-secondary: 44, 17, 17;
+    --color-semantic-red-primary: 201, 110, 115;
+    --color-semantic-red-secondary: 48, 25, 27;
 
-    --color-semantic-yellow-primary: 255, 198, 115;
-    --color-semantic-yellow-secondary: 64, 42, 10;
+    --color-semantic-yellow-primary: 211, 176, 74;
+    --color-semantic-yellow-secondary: 52, 45, 18;
 
-    --color-semantic-blue-primary: 66, 140, 220;
-    --color-semantic-blue-secondary: 4, 40, 79;
+    --color-semantic-blue-primary: 109, 156, 210;
+    --color-semantic-blue-secondary: 21, 38, 51;
 
-    --color-semantic-green-primary: 134, 226, 204;
-    --color-semantic-green-secondary: 18, 51, 43;
+    --color-semantic-green-primary: 98, 185, 133;
+    --color-semantic-green-secondary: 19, 39, 28;
 
-    --color-semantic-grey-primary: 192, 193, 195;
-    --color-semantic-grey-secondary: 35, 36, 36;
+    --color-semantic-grey-primary: 174, 181, 167;
+    --color-semantic-grey-secondary: 28, 34, 30;
 
-    --color-semantic-purple-primary: 220, 193, 255;
-    --color-semantic-purple-secondary: 65, 37, 102;
+    --color-semantic-purple-primary: 165, 133, 216;
+    --color-semantic-purple-secondary: 42, 34, 53;
 
-    --color-semantic-orange-primary: 226, 113, 64;
-    --color-semantic-orange-secondary: 54, 36, 28;
+    --color-semantic-orange-primary: 208, 138, 82;
+    --color-semantic-orange-secondary: 51, 34, 24;
 
-    --color-semantic-teal-primary: 64, 199, 226;
-    --color-semantic-teal-secondary: 16, 61, 70;
+    --color-semantic-teal-primary: 98, 176, 171;
+    --color-semantic-teal-secondary: 21, 48, 49;
 
     --color-shadow-hover-card: 204, 255, 0, 0.08;
   }
