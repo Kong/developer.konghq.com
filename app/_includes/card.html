@@ -5,8 +5,12 @@
 
 {% capture card_content %}
 {% if include.before_title %}{{ include.before_title }}{% endif %}
-{% if include.icon %}
+{% if include.icon %}{% assign extension = include.icon | slice: -4, 4 %}
+{% if extension == ".svg" %}
+{% include_svg include.icon class="card__icon self-start w-fit" %}
+{% else %}
 <img src="{{ include.icon }}" class="card__icon self-start"/>
+{% endif %}
 {% endif %}
 {% if include.title %}<{{ card_title_tag }}>{{ include.title | liquify }}</{{ card_title_tag }}>{% endif %}
 {% if include.description %}
