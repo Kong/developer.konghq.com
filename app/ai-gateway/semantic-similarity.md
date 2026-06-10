@@ -58,7 +58,7 @@ In {{site.ai_gateway}} {% new_in 2.0.0 %}, semantic similarity enables intellige
 
 To compare embeddings efficiently, {{site.ai_gateway}} semantic features rely on vector databases. These specialized data stores index high-dimensional embeddings and enable **fast similarity search** based on distance metrics like cosine similarity or Euclidean distance.
 
-When a Model’s semantic load balancer or an attached semantic policy needs to find semantically similar content—whether it’s a prompt, a routing target description, or a document chunk—it sends a query to a vector database. The database returns the closest matches, allowing the Model or policy to make decisions like routing, caching, injecting, or blocking.
+When a Model’s semantic load balancer or an attached semantic policy needs to find semantically similar content—whether it’s a prompt, a target model description, or a document chunk—it sends a query to a vector database. The database returns the closest matches, allowing the Model or policy to make decisions like routing, caching, injecting, or blocking.
 
 A Model’s [semantic load balancer](/ai-gateway/entities/ai-model/#algorithms) stores vector representations of each target model’s semantic description at configuration time, and uses the vector database to compare incoming prompts against those stored vectors. Semantic policies use the same vector database to perform similarity searches at request time.
 
@@ -179,7 +179,7 @@ rows:
 
 ### Cosine and Euclidean similarity
 
-{{site.ai_gateway}} supports both cosine similarity and Euclidean distance for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using `config.vectordb.distance_metric` setting in the respective policy.
+{{site.ai_gateway}} supports both cosine similarity and Euclidean distance for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using the `config.vectordb.distance_metric` setting in the respective policy.
 
 * Use `cosine` for nuanced semantic similarity (for example, document comparison, text clustering), especially when content length varies or dataset diversity is high.
 * Use `euclidean` when magnitude matters (for example, images, sensor data) or you're working with dense, well-aligned feature sets.
@@ -234,7 +234,7 @@ rows:
 
 ## Similarity threshold
 
-The `config.vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine—such as Redis or PGVector—and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
+The `config.vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine—such as Redis or PostgreSQL (pgvector)—and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
 
 
 The threshold defines how permissive the matching is. **Higher threshold values allow looser matches, while lower values enforce stricter matching.** The threshold range is 0 to 1.
