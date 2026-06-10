@@ -24,8 +24,8 @@ related_resources:
     url: /ai-gateway/
   - text: Policy entity
     url: /ai-gateway/entities/ai-policy/
-  - text: "{{site.ai_gateway}} policies"
-    url: /plugins/?category=ai
+  - text: "{{site.ai_gateway}} Model entity"
+    url: /ai-gateway/entities/ai-model/
   - text: Semantic processing and vector similarity search with Kong and Redis
     url: https://konghq.com/blog/engineering/semantic-processing-and-vector-similarity-search-with-kong-and-redis
   - text: Vector embeddings
@@ -52,7 +52,7 @@ Vector embeddings power a range of LLM workflows, including semantic search, doc
 In {{site.ai_gateway}} {% new_in 2.0.0 %}, semantic similarity enables intelligent request routing, caching, and content filtering based on meaning rather than exact matches. A [Model](/ai-gateway/entities/ai-model/) can leverage semantic similarity in two ways:
 
 1. **Semantic load balancing**: Route requests to upstream providers based on how semantically similar the prompt is to each provider's capabilities, using the `semantic` load balancing algorithm.
-2. **Semantic policies**: Attach policies like AI Semantic Cache or AI Semantic Prompt Guard to add similarity-based caching, retrieval-augmented generation (RAG), and guardrailing.
+2. **Semantic policies**: Attach policies like AI Semantic Cache or AI Semantic Prompt Guard to add similarity-based caching, retrieval-augmented generation (RAG), and guardrails.
 
 ### Vector databases
 
@@ -77,7 +77,7 @@ Semantic similarity is applied differently depending on the feature:
 - Each semantic policy applies similarity search slightly differently based on its goal.
 - AI Semantic Cache compares prompts against cached prompt keys to find reusable responses.
 - AI RAG Injector compares prompts against vectorized document chunks to retrieve relevant context.
-- AI Semantic Prompt Guard and AI Semantic Response Guard compare content against allowlists and denylists to detect misuse patterns.
+- AI Semantic Prompt Guard and AI Semantic Response Guard compare content against allow and deny lists to detect misuse patterns.
 
 
 
@@ -87,7 +87,7 @@ Embedding models work by converting text into high-dimensional floating-point ar
 
 Dimensionality determines how many numerical features represent each piece of content—similar to how a detailed profile might have dimensions for age, interests, location, and preferences. Higher dimensions create more detailed "fingerprints" that capture nuanced relationships, with smaller distances between vectors indicating stronger conceptual similarity and larger distances showing weaker associations.
 
-For example, this request to the OpenAI [/embeddings API](/plugins/ai-proxy/examples/embeddings-route-type/) via {{site.ai_gateway}}:
+For example, this request to the OpenAI `/embeddings` API via {{site.ai_gateway}}:
 
 ```json
 {
@@ -252,7 +252,7 @@ The optimal threshold depends on the selected distance metric, the embedding mod
 
 ### Threshold sensitivity and cache hit effectiveness
 
-The closer your similarity threshold is to `1`, the more likely you are to get **cache misses** when using the **ai-semantic-cache** policy. This is because a higher threshold makes the similarity filter more strict, so only embeddings that are nearly identical to the query will qualify as a match. In practice, this means even small variations in phrasing, structure, or context can cause the system to miss otherwise semantically similar entries and fall back to calling the LLM again.
+The closer your similarity threshold is to `1`, the more likely you are to get **cache misses** when using the **AI Semantic Cache** policy. This is because a higher threshold makes the similarity filter more strict, so only embeddings that are nearly identical to the query will qualify as a match. In practice, this means even small variations in phrasing, structure, or context can cause the system to miss otherwise semantically similar entries and fall back to calling the LLM again.
 
 This happens because vector embeddings are not perfectly robust to minor semantic shifts, especially for short or ambiguous prompts. Raising the threshold narrows the match window, so you're effectively demanding a near-exact match in a complex vector space, which is rare unless the input is repeated verbatim.
 
