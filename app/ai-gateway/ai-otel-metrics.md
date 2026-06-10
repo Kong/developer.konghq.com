@@ -22,7 +22,7 @@ plugins:
   - ai-proxy-advanced
 
 min_version:
-  gateway: '3.14'
+  ai-gateway: '2.0.0'
 
 tech_preview: true
 toc_depth: 2
@@ -52,11 +52,9 @@ works_on:
   - konnect
 ---
 
-{% new_in 3.14 %} {{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic through the [OpenTelemetry plugin](/plugins/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
+{{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic by configuring a [policy](/ai-gateway/entities/ai-policy/) using the [OpenTelemetry plugin](/plugins/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
 
-For a step-by-step setup using an OpenTelemetry Collector, see [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/). To visualize Gen AI traces in Jaeger, see [Set up Jaeger with Gen AI OpenTelemetry](/how-to/set-up-jaeger-with-gen-ai-otel/).
-
-Use these metrics to:
+You can use these metrics to:
 
 * Track LLM request latency and upstream provider processing time
 * Monitor token consumption across providers, models, and consumers
@@ -67,7 +65,7 @@ Use these metrics to:
 
 ## Prerequisites
 
-To collect AI OTel metrics, enable the following settings:
+To collect AI OTLP metrics, enable the following settings:
 
 <!-- vale off -->
 {% table %}
@@ -102,7 +100,7 @@ Some metrics have additional requirements:
 * `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry plugin](/plugins/opentelemetry/reference/).
 * The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry plugin](/plugins/opentelemetry/reference/).
 
-## Gen AI metrics (OTel semantic conventions)
+## Gen AI metrics (OTLP semantic conventions)
 
 These metrics follow the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/). They capture request duration, upstream latency, token usage, and streaming performance.
 
