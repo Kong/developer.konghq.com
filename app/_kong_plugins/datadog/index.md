@@ -30,7 +30,6 @@ categories:
 min_version:
   gateway: '1.0'
 ---
-
 This plugin lets you log metrics for a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) to a local [Datadog agent](https://docs.datadoghq.com/agent/basic_agent_usage/).
 
 ## Metrics
@@ -46,22 +45,25 @@ columns:
     key: namespace
 rows:
   - metric: "`request_count`"
-    description: Tracks the request
+    description: Tracks the request.
     namespace: "`kong.request.count`"
   - metric: "`request_size`"
-    description: Tracks the request body size in bytes
+    description: Tracks the request body size in bytes.
     namespace: "`kong.request.size`"
   - metric: "`response_size`"
-    description: Tracks the response body size in bytes
+    description: Tracks the response body size in bytes.
     namespace: "`kong.response.size`"
   - metric: "`latency`"
-    description: Tracks the interval between the time the request started and the time the response was received from the upstream server
+    description: Tracks the interval between the time the request started and the time the response was received from the upstream server.
     namespace: "`kong.latency`"
   - metric: "`upstream_latency`"
-    description: Tracks the time it took for the final service to process the request
+    description: |
+      Tracks the time the upstream service took to process the request.
+      <br><br>
+      A value of `-1` means the request wasn't forwarded to the upstream. If you use `upstream_latency` in latency calculations, filter out `upstream_latency=-1`.
     namespace: "`kong.upstream_latency`"
   - metric: "`kong_latency`"
-    description: Tracks the internal {{site.base_gateway}} latency that it took to run all the plugins
+    description: Tracks the internal {{site.base_gateway}} latency that it took to run all the plugins.
     namespace: "`kong.kong_latency`"
 {% endtable %}
 
