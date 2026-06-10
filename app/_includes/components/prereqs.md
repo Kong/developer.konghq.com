@@ -71,8 +71,7 @@
 {% include prereqs/operator/konnect_network.md config=prereqs.operator.konnect %}
 {%- endif -%}
 {%- if prereqs.entities? -%}
-{%- if product == 'operator' %}{% assign product='kic' %}{% endif %}
-{%- assign prereq_path = "prereqs/entities/" | append: product | append: ".md" -%}
+{%- assign prereq_path = "prereqs/entities/" | append: prereqs.entities_product | append: ".md" -%}
 {% include {{ prereq_path }} data=prereqs.data %}
 {%- endif -%}
 {%- for prereq in prereqs.inline_without_position %}

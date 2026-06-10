@@ -68,11 +68,16 @@ module Jekyll
         @inline ||= prereqs.fetch('inline', [])
       end
 
-      def data
-        product = @page.data.fetch('products', [])[0]
+      def entities_product
+        @entities_product ||= begin
+          product = prereqs['entities_product'] || @page.data.fetch('products', [])[0]
+          product = 'kic' if product == 'operator'
+          product
+        end
+      end
 
-        # Use KIC rendering for Operator for now
-        product = 'kic' if product == 'operator'
+      def data
+        product = entities_product
 
         yaml = {}
         yaml = { '_format_version' => '3.0' } if product == 'gateway'
