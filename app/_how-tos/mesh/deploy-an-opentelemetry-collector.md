@@ -218,6 +218,30 @@ prereqs:
           - job_name: otel-collector
             static_configs:
               - targets: ['otel-collector.observability:8889']
+          - job_name: kuma-zone-proxies
+            metrics_path: /stats/prometheus
+            kubernetes_sd_configs:
+              - role: pod
+                namespaces:
+                  names: [kong-mesh-system]
+            relabel_configs:
+              - source_labels: [__meta_kubernetes_pod_label_app]
+                regex: 'kong-mesh-.*-(ingress|egress)'
+                action: keep
+              - source_labels: [__meta_kubernetes_pod_label_app]
+                regex: 'kong-mesh-.*-(ingress|egress)'
+                target_label: proxy
+                replacement: '$1'
+              - source_labels: [__address__]
+                regex: '(.+?)(:[0-9]+)?'
+                target_label: __address__
+                replacement: '${1}:9902'
+              - source_labels: [__meta_kubernetes_pod_name]
+                target_label: pod
+              - target_label: namespace
+                replacement: kong-mesh-system
+              - target_label: zone
+                replacement: zone-1
         " > values-prometheus.yaml
 
         helm install prometheus prometheus-community/prometheus \
@@ -237,7 +261,7 @@ For background on the push model and topology trade-offs, see [OpenTelemetry col
 1. Create a dedicated namespace for the collector:
 
    ```sh
-   kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -
+   kubectl create namespace observability
    ```
 
    The collector Pod must run without a sidecar, otherwise the sidecar would push telemetry back through the collector it runs alongside, creating a circular dependency.
