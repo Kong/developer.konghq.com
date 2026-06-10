@@ -35,7 +35,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -269,7 +269,7 @@ The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin on the model-selecti
 - **`max_request_body_size: 5242880`:** Allows prompts up to 5 MB. Model selection prompts are typically small (the decorator message plus the user's prompt), so this limit is generous.
 - **`response_streaming: deny`:** The DataKit plugin needs the full response body to extract the tier decision, so streaming is disabled.
 - **`logging.log_statistics: true`:** Logs token counts and latency for cost tracking. Set `log_payloads: true` in development to see request/response bodies, but never in production (exposes user prompts and tier decisions in logs).
-- **`model.name`:** References `${{ env "DECK_OPENAI_SELECTOR_SLM" }}`, which defaults to `o3-mini`.
+- **`model.name`:** References `{% raw %}${{ env "DECK_OPENAI_SELECTOR_SLM" }}{% endraw %}`, which defaults to `o3-mini`.
 
 The model responds with a single word ("fast" or "smart").
 
@@ -388,8 +388,8 @@ The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin on the default-llm R
 - **`max_request_body_size: 10485760`:** Allows request bodies up to 10 MB, which accommodates large conversation histories or RAG-injected context.
 - **`response_streaming: allow`:** Enables streaming responses for interactive chat applications. The client can receive tokens as they're generated.
 - **`model.model_alias`:** Maps the tier name to this target. When the DataKit plugin sets `.model = "fast"`, the plugin routes to OpenAI. When `.model = "smart"`, it routes to AWS Bedrock.
-- **Fast target (OpenAI):** Uses `${{ env "DECK_OPENAI_FAST_MODEL" }}` (defaults to `gpt-4o-mini`) with Bearer token authentication.
-- **Smart target (AWS Bedrock):** Uses `${{ env "DECK_BEDROCK_SMART_MODEL" }}` (defaults to `anthropic.claude-3-5-sonnet-20241022-v2:0`) with AWS IAM credentials and region configuration.
+- **Fast target (OpenAI):** Uses `{% raw %}${{ env "DECK_OPENAI_FAST_MODEL" }}{% endraw %}` (defaults to `gpt-4o-mini`) with Bearer token authentication.
+- **Smart target (AWS Bedrock):** Uses `{% raw %}${{ env "DECK_BEDROCK_SMART_MODEL" }}{% endraw %}` (defaults to `anthropic.claude-3-5-sonnet-20241022-v2:0`) with AWS IAM credentials and region configuration.
 
 The plugin adds an `X-Kong-LLM-Model` response header showing which model served the request. The demo script reads this header to confirm the provider routing decision.
 
