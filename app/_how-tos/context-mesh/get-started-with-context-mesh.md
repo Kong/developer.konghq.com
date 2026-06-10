@@ -25,7 +25,7 @@ entities:
   - route
   - plugin
 
-published: false
+published: true
 tags:
   - ai
   - mcp
@@ -431,14 +431,11 @@ cleanup:
 
 ## Install {{site.kong_operator}}
 
-Look up a current nightly tag from the [`kong/nightly-kong-operator`](https://hub.docker.com/r/kong/nightly-kong-operator/tags) Docker Hub page. The version string below is an example and changes daily.
-
 ```shell
+helm repo update
 helm upgrade --install kong-operator \
-  oci://registry-1.docker.io/kong/nightly-kong-operator-chart \
-  --version 0.0.0-nightly.20260505.sha.26d3afa \
-  --set image.repository=kong/nightly-kong-operator \
-  --set image.tag=sha-26d3afa \
+  kong/kong-operator \
+  --set image.tag=2.2 \
   --set env.FEATURE_GATES=mcp-server \
   --set env.ENABLE_CONTROLLER_KONNECT=true \
   --create-namespace \
