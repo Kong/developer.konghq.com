@@ -40,6 +40,22 @@ related_resources:
 
 {{site.konnect_product_name}}'s Debugger provides exclusive, in-depth insights not available through third-party telemetry tools. The detailed traces captured during a live session are unique to Kong and offer unparalleled visibility into system behavior.
 
+## Best practices
+
+Debugger works best for investigating specific issues, and is not recommended for continuous monitoring. Use it for investigating problems like:
+
+* API errors
+* Authentication failures
+* Plugin execution problems
+* Unexpected routing behavior
+* Performance degradation
+* Upstream connectivity issues
+
+To get the most out of a session, we recommend keeping the following practices in mind:
+
+* **Start with a clear objective.** A session without a specific question to answer generates unnecessary telemetry and makes root-cause analysis harder.
+* **Use the smallest scope possible.** Before you start, narrow the session to a specific Route, Service, Consumer, or request attribute. Scope to an entire control plane only when you need to, and use [advanced sampling rules](#sampling-rules).
+
 ## Capture traces and logs
 
 {{site.konnect_short_name}} Debugger allows you to capture traces and logs. 
@@ -189,7 +205,7 @@ Once the session starts, traces will be captured for requests that match the rul
 
 Each session can be configured to run for a time between 10 seconds and 30 minutes. Sessions are retained for up to 15 days.
 
-For details on defining sampling rules, see [Debugger sessions](#debugger-sessions).
+For details on defining sampling rules, see [Sampling rules](#sampling-rules).
 
 ## Sampling rules
 
@@ -208,3 +224,36 @@ The list of all possible sampling expressions are captured here [Sampling Rules]
 A sample trace is shown below. By inspecting the spans, you can see that the bulk of the latency occurs in the pre-function plugin during the access phase.
 
 ![Debugger Spans](/assets/images/konnect/debugger-spans.png)
+
+## Common debugging scenarios
+
+The following scenarios show how to scope a session for a specific problem and what the captured trace data can tell you.
+
+{% table %}
+columns:
+  - title: Symptom
+    key: symptom
+  - title: Sampling filter
+    key: filter
+  - title: Diagnosis
+    key: diagnosis
+rows:
+  - symptom: Intermittent `5xx` errors
+    filter: "`http.response.status_code >= 500`"
+    diagnosis: |
+      Diagnose whether {{site.base_gateway}} routed the request, whether it reached the upstream, whether the upstream returned an error, or whether a plugin terminated the request before it reached the upstream.
+  - symptom: Authentication failures
+    filter: "`http.response.status_code == 401`"
+    diagnosis: Diagnose whether the authentication plugin executed.
+  - symptom: Missing or unexpected request transformation
+    filter: "`http.route.name == \"your_route\"`"
+    diagnosis: Diagnose whether plugins executed in the expected order.
+  - symptom: Custom plugin failure
+    filter: "`http.route.name == \"your_route\"`"
+    diagnosis: |
+      Diagnose plugin errors. Capture logs along with traces so you can correlate plugin errors with the spans where they occurred.
+  - symptom: High API latency
+    filter: "`http.route.name == \"your_route\"`"
+    diagnosis: |
+      Diagnose which spans took the longest. Use this to rule out custom plugin performance issues, isolate whether the delay was at the upstream or in {{site.base_gateway}}, and spot network bottlenecks such as slow DNS lookups or TLS handshakes.
+{% endtable %}
