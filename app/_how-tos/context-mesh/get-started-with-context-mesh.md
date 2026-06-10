@@ -407,7 +407,7 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Undeploy the MCP server
+    - title: Delete the MCP server
       content: |
         In the {{site.konnect_short_name}} UI, open the MCP server and delete it. This disassociates the MCP server from the control plane.
       icon_url: /assets/icons/gateway.svg
