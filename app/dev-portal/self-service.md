@@ -181,18 +181,19 @@ The plugin runs whenever a request authenticates as that application, using a [c
 
 In this example, we'll use the [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin, but you can apply any plugin to an application's principal with `principal.id`.
 
-1. List the applications in your portal and capture the application's principal ID as the `PRINCIPAL_ID` variable:
+1. List the applications in your portal, filtering by the application's name, and capture its ID as the `PRINCIPAL_ID` variable. Replace `$APPLICATION_NAME` with the name of your application:
 <!--vale off-->
 {% konnect_api_request %}
-url: /v3/portals/$PORTAL_ID/applications
+url: /v3/portals/$PORTAL_ID/applications?filter%5Bname%5D%5Beq%5D=$APPLICATION_NAME
 status_code: 200
 region: us
 method: GET
 capture:
   - variable: PRINCIPAL_ID
-    jq: '.data[0].principal_id'
+    jq: '.data[0].id'
 {% endkonnect_api_request %}
 <!--vale on-->
+   The principal ID is the same as the application's ID. 
 1. Configure the Rate Limiting Advanced plugin and use a conditional plugin execution expression to apply it to the application's principal. Replace `$CONTROL_PLANE_ID` with the ID of the control plane that your API is linked to:
 <!--vale off-->
 {% konnect_api_request %}
@@ -212,7 +213,6 @@ body:
   condition: 'principal.id == "$PRINCIPAL_ID"'
 {% endkonnect_api_request %}
 <!--vale on-->
-<!-- TODO: confirm the field that returns the application's principal ID (assumed `.data[0].principal_id`) -->
 
 Any request that authenticates as this application is now rate limited to 200 requests every 30 minutes.
 
