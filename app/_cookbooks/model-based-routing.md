@@ -409,7 +409,7 @@ export DECK_AWS_SECRET_ACCESS_KEY='your-secret-access-key'
 export DECK_AWS_REGION='us-east-1'
 ```
 
-Sync the configuration to your Control Plane using decK:
+Create a file named `multi-provider.yaml` with the configuration below, then sync it to your Control Plane using decK:
 
 ```bash
 deck gateway sync recipes/model-based-routing/kong-config/deck/multi-provider.yaml \
