@@ -39,7 +39,7 @@ next_steps:
   - text: Issue identity with the Spire provider
     url: /mesh/issue-identity-with-meshidentity-spire/
   - text: MeshTrafficPermission with SPIFFE ID matchers
-    url: /mesh/policies/meshtrafficpermission/
+    url: /mesh/policies/meshtrafficpermission_experimental/
 ---
 
 {:.warning}

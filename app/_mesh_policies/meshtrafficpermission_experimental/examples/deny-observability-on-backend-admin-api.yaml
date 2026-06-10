@@ -1,0 +1,22 @@
+title: 'Override a mesh-wide allow rule on a service port'
+description: 'Use MeshTrafficPermission to deny traffic from a namespace on a specific service port, even when a mesh-wide allow rule exists.'
+
+weight: 700
+
+namespace: kuma-demo
+config:
+  type: MeshTrafficPermission
+  name: deny-observability-ns
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+      sectionName: backend-admin-api
+    rules:
+      - default:
+          deny:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/ns/observability

@@ -1,0 +1,17 @@
+title: 'Deny traffic from a namespace'
+description: 'Use MeshTrafficPermission to deny requests from every workload in a namespace by matching a SPIFFE ID prefix.'
+
+weight: 900
+
+namespace: kuma-demo
+config:
+  type: MeshTrafficPermission
+  name: deny-malicious-ns
+  mesh: default
+  spec:
+    rules:
+      - default:
+          deny:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/ns/malicious

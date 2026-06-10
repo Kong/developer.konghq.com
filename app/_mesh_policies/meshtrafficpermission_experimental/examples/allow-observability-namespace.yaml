@@ -1,0 +1,17 @@
+title: 'Allow traffic from a namespace'
+description: 'Use MeshTrafficPermission to allow requests from every workload in a namespace by matching a SPIFFE ID prefix.'
+
+weight: 800
+
+namespace: kuma-demo
+config:
+  type: MeshTrafficPermission
+  name: allow-observability-ns
+  mesh: default
+  spec:
+    rules:
+      - default:
+          allow:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/ns/observability
