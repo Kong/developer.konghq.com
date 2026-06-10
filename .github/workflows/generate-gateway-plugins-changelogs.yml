@@ -79,11 +79,17 @@ jobs:
           rm -rf tmp
           mkdir -p tmp
 
+      - name: Generate changelog entries for specific version
+        if: ${{ inputs.version != '' }}
+        run: |
+          cd tools/changelog-generator
+          node md-to-yml.js --path='../../kong-ee' --version='${{ inputs.version }}'
+
       - name: Generate changelog for specific version
         if: ${{ inputs.version != '' }}
         run: |
           cd tools/changelog-generator
-          node run.js --path='../../kong-ee' --version='${{ inputs.version }}'
+          node run.js --path='./tmp' --version='${{ inputs.version }}'
 
       - name: Update release date in gateway.yml
         run: |

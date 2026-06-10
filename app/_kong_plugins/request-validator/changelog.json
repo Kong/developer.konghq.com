@@ -1,4 +1,11 @@
 {
+  "3.14.0.5": [
+    {
+      "message": "Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Provided detailed error messages for `oneOf` / `anyOf` subschemas.\n",
