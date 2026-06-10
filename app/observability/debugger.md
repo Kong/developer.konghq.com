@@ -42,7 +42,7 @@ related_resources:
 
 ## Best practices
 
-The Debugger works best for investigating specific issues, and is not recommended for continuous monitoring. Use it for investigating problems like:
+Debugger works best for investigating specific issues, and is not recommended for continuous monitoring. Use it for investigating problems like:
 
 * API errors
 * Authentication failures
@@ -241,19 +241,19 @@ rows:
   - symptom: Intermittent `5xx` errors
     filter: "`http.response.status_code >= 500`"
     diagnosis: |
-      Whether {{site.base_gateway}} routed the request, whether it reached the upstream, whether the upstream returned the error, or whether a plugin terminated the request before it reached the upstream.
+      Diagnose whether {{site.base_gateway}} routed the request, whether it reached the upstream, whether the upstream returned an error, or whether a plugin terminated the request before it reached the upstream.
   - symptom: Authentication failures
     filter: "`http.response.status_code == 401`"
-    diagnosis: Whether the authentication plugin executed.
+    diagnosis: Diagnose whether the authentication plugin executed.
   - symptom: Missing or unexpected request transformation
     filter: "`http.route.name == \"your_route\"`"
-    diagnosis: Whether plugins executed in the expected order.
+    diagnosis: Diagnose whether plugins executed in the expected order.
   - symptom: Custom plugin failure
     filter: "`http.route.name == \"your_route\"`"
     diagnosis: |
-      Plugin errors. Capture logs along with traces so you can correlate plugin errors with the spans where they occurred.
+      Diagnose plugin errors. Capture logs along with traces so you can correlate plugin errors with the spans where they occurred.
   - symptom: High API latency
     filter: "`http.route.name == \"your_route\"`"
     diagnosis: |
-      Which spans took the longest. Use this to rule out custom plugin performance issues, isolate whether the delay was at the upstream or in {{site.base_gateway}}, and spot network bottlenecks such as slow DNS lookups or TLS handshakes.
+      Diagnose which spans took the longest. Use this to rule out custom plugin performance issues, isolate whether the delay was at the upstream or in {{site.base_gateway}}, and spot network bottlenecks such as slow DNS lookups or TLS handshakes.
 {% endtable %}
