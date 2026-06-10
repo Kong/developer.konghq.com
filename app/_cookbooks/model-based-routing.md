@@ -119,17 +119,17 @@ This architecture provides:
 sequenceDiagram
     participant Client
     participant Kong as Kong AI Gateway
-    participant Model Selector as Model Selection Route<br/>(OpenAI o3-mini)
+    participant Selector as Model Selection Route<br/>(OpenAI o3-mini)
     participant OpenAI
     participant Bedrock as AWS Bedrock<br/>(Claude)
 
     Client->>Kong: POST /chat (with prompt)
     Note over Kong: DataKit plugin intercepts
 
-    Kong->>Model Selector: Call /model-selection (with prompt)
-    Model Selector->>OpenAI: Analyze prompt complexity (o3-mini)
-    OpenAI-->>Model Selector: Return tier recommendation
-    Model Selector-->>Kong: Return tier ("fast" or "smart")
+    Kong->>Selector: Call /model-selection (with prompt)
+    Selector->>OpenAI: Analyze prompt complexity (o3-mini)
+    OpenAI-->>Selector: Return tier recommendation
+    Selector-->>Kong: Return tier ("fast" or "smart")
     Note over Kong: DataKit updates request body model field
 
     alt Fast Tier
@@ -146,21 +146,19 @@ sequenceDiagram
 
 {% table %}
 columns:
-  - title: "Component"
-  - title: "Responsibility"
+  - title: Component
+    key: component
+  - title: Responsibility
+    key: responsibility
 rows:
-  - columns:
-      - "Client application"
-      - "Sends standard chat completion requests to `/chat`. No routing logic required."
-  - columns:
-      - "DataKit plugin (default-llm)"
-      - "Extracts prompt, calls `/model-selection`, modifies request body with tier recommendation."
-  - columns:
-      - "Model selection Route"
-      - "Analyzes prompt complexity using OpenAI o3-mini, returns `\"fast\"` or `\"smart\"`."
-  - columns:
-      - "AI Proxy Advanced (default-llm)"
-      - "Routes to OpenAI (fast) or AWS Bedrock (smart) based on `model` field in request body. Handles provider auth and format translation."
+  - component: Client application
+    responsibility: "Sends standard chat completion requests to `/chat`. No routing logic required."
+  - component: DataKit plugin (default-llm)
+    responsibility: "Extracts prompt, calls `/model-selection`, modifies request body with tier recommendation."
+  - component: Model selection Route
+    responsibility: "Analyzes prompt complexity using OpenAI o3-mini, returns `fast` or `smart`."
+  - component: AI Proxy Advanced (default-llm)
+    responsibility: "Routes to OpenAI (fast) or AWS Bedrock (smart) based on the `model` field in the request body. Handles provider auth and format translation."
 {% endtable %}
 
 ## How it works
