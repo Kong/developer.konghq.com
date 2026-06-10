@@ -10,13 +10,13 @@
     </span>
     <span class="hidden xl:group-[:not(.ai-assistant-open)]/body-tag:flex 3xl:flex items-center gap-1 flex-shrink-0">
       <span class="sr-only">Command or control key</span>
-      <span aria-hidden="true" class="badge h-5 flex items-center">
+      <span aria-hidden="true" class="badge h-5 flex items-center border border-primary">
         <div class="text-primary">
           <svg xmlns="http://www.w3.org/2000/svg" width="41" height="11" fill="none" viewBox="0 0 41 11"><path fill="currentColor" fill-rule="evenodd" d="M4.125 2.063V3h2.25v-.937a2.062 2.062 0 1 1 2.063 2.062H7.5v2.25h.938a2.062 2.062 0 1 1-2.063 2.063V7.5h-2.25v.938a2.062 2.062 0 1 1-2.062-2.063H3v-2.25h-.937a2.062 2.062 0 1 1 2.062-2.062m-2.062-.938a.937.937 0 1 0 0 1.875H3v-.937a.937.937 0 0 0-.937-.938M7.5 7.5v.938a.937.937 0 1 0 .938-.938zM6.375 6.375v-2.25h-2.25v2.25zM2.063 7.5H3v.938a.937.937 0 1 1-.937-.938M7.5 3h.938a.937.937 0 1 0-.938-.937z" clip-rule="evenodd"></path><path fill="currentColor" d="M15.09 10.5 18.085 0h-1.097L14 10.5zM26.387 5.308c-.183-1.445-1.263-2.534-3.05-2.534C21.264 2.774 20 4.247 20 6.61c0 2.41 1.27 3.89 3.344 3.89 1.76 0 2.86-1.034 3.043-2.5H25.02c-.184.808-.792 1.247-1.682 1.247-1.172 0-1.898-.994-1.898-2.637 0-1.61.72-2.583 1.898-2.583.942 0 1.518.555 1.681 1.281zM28.6 1.041v1.897h-1.133v1.178H28.6v4.281c0 1.432.622 2.007 2.186 2.007.275 0 .537-.034.766-.075V9.158c-.196.02-.32.034-.537.034-.7 0-1.008-.35-1.008-1.15V4.115h1.545V2.938h-1.545V1.041zM33.207 10.356h1.407V5.911c0-1.048.752-1.767 1.819-1.767.249 0 .667.048.785.082V2.842a3.372 3.372 0 0 0-.628-.054c-.93 0-1.721.527-1.924 1.26h-.105v-1.13h-1.354zM38.638 10.356h1.407V0h-1.407z"></path></svg>
         </div>
       </span>
       <span class="sr-only">K key</span>
-      <span aria-hidden="true" class="badge h-5 flex items-center">
+      <span aria-hidden="true" class="badge h-5 flex items-center border border-primary">
         <div class="text-primary">
           <svg xmlns="http://www.w3.org/2000/svg" width="8" height="10" fill="none" viewBox="0 0 8 10"><path fill="currentColor" d="M1.512 9.84v-3l.986-1.147L5.445 9.84h1.704L3.46 4.745 6.857.84H5.244L1.61 5.094h-.098V.84H.15v9z"></path></svg>
         </div>
