@@ -168,13 +168,37 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-When a developer creates an application, {{site.dev_portal}} automatically adds a Kong Identity principal to the application.
+Plugins can be applied to an application by either linking the application to an existing Consumer in {{site.base_gateway}} or applying the plugin via conditional execution logic to the associated principal.
+When a developer creates an application, {{site.dev_portal}} automatically creates a {{site.identity}} principal for this application. 
+This principal entity then helps link the application to an existing Consumer entity in {{site.base_gateway}}.
+{{site.identity}} doesn't store any credentials for applications, it is just used for mapping an application to a consumer.
 
 You can apply plugins to an application in two different ways:
-* **Conditional plugin execution (recommended):** Use [conditional plugin execution](/gateway/configure-conditional-plugin-execution/) with an expression that references the application's `principal.id`. This applies the plugin based on the application's principal, without mapping the application to a Consumer.
-* **Consumer-scoped plugins:** [Map the application to an existing Gateway Consumer](#map-an-application-to-a-consumer), then configure Consumer-scoped plugins on that Consumer. This is a common starting point if you already have Consumers configured.
 
-### Apply a plugin to an application using a principal
+<!--vale off-->
+{% table %}
+columns:
+  - title: Method
+    key: method
+  - title: Existing Consumers for {{site.dev_portal}} applications
+    key: existing_consumers
+  - title: Plugin mapped to
+    key: mapped_to
+  - title: Description
+    key: description
+rows:
+  - method: "Conditional plugin execution"
+    existing_consumers: "No"
+    mapped_to: "Principal"
+    description: "Use [conditional plugin execution](/gateway/configure-conditional-plugin-execution/) with an expression that references the application's `principal.id`. You can manage the principal configuration in {{site.identity}} and the plugin configuration in Gateway Manager."
+  - method: "Consumer-scoped plugins"
+    existing_consumers: "Yes"
+    mapped_to: "Consumer"
+    description: "[Map the application to an existing Gateway Consumer](#map-an-application-to-a-consumer), then configure Consumer-scoped plugins on that Consumer. This is a common starting point if you already have Consumers configured."
+{% endtable %}
+<!--vale on-->
+
+### Apply a plugin to an application using a {{site.identity}} principal
 
 We recommend this method because it applies the plugin based on the application's principal, without requiring you to map the application to a Gateway Consumer.
 The plugin runs whenever a request authenticates as that application, using a [conditional plugin execution](/gateway/configure-conditional-plugin-execution/) expression that references the application's `principal.id`.
@@ -252,10 +276,12 @@ body:
 
 Any plugins that were applied to the Consumer are now applied to the {{site.dev_portal}} application.
 
-Keep the following in mind when you map applications to Consumers:
+### Limitations
+
+Keep the following in mind when you map applications to Consumers or principals:
 * Both the [KAA and ACE plugins](/catalog/apis/#allow-developers-to-consume-your-api) look up principals to resolve the Consumer mapped to an application.
 * An application maps to a single Consumer (a 1:1 mapping through one principal).
-* The mapping is a loose, string-based mapping. The {{site.dev_portal}} does not validate that the Consumer exists on the Gateway.
+* If you're mapping applications to Consumers, the Consumer must already exist. The {{site.dev_portal}} validates that the Consumer exists on the Gateway before it will be mapped.
 * Application registrations for APIs that are linked to the same Gateway Service will share the same effective Consumer mapping.
   Updating the mapping for one registration updates it for all registrations that resolve to the same Gateway context.
 * Applying plugins to applications is only available on v3 {{site.dev_portal}}s.
