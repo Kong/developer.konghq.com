@@ -59,6 +59,7 @@ flowchart LR
         GWConfig -.->|parametersRef| GWClass
         GWClass -.->|gatewayClassName| GW
         K <-->|Watch CRD events| KO
+        Routes -->|Watched & translated| KO
         KO -->|Deploys| DP
         KO -->|mTLS config sync| DP
         DP -->|Proxy traffic| S
