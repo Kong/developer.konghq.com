@@ -26,9 +26,9 @@ schema:
   path: /schemas/License
 
 faqs: 
-  - q: How do I make sure the License is deployed to Data Plane nodes correctly in hybrid mode?
-    a: In hybrid mode, the license file must be deployed to each Control Plane and Data Plane node. As long as you deploy the License with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses), the Control Plane automatically applies the License to its Data Plane nodes. 
-  - q: What happens to the license file in traditional mode when there are no separate Control Planes? 
+  - q: How do I make sure the license is deployed to data plane nodes correctly in hybrid mode?
+    a: In hybrid mode, the license file must be deployed to each control plane and data plane node. As long as you deploy the License with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses), the control plane automatically applies the license to its data plane nodes. 
+  - q: What happens to the license file in traditional mode when there are no separate control planes? 
     a: The license file must be manually deployed to each node running {{site.base_gateway}}.
   - q: How do I package a license report to send to Kong Support?
     a: "Run `curl http://localhost:8001/license/report -o response.json && tar -cf report-$(date +\"%Y_%m_%d_%I_%M_%p\").tar response.json`. This saves the report as `response.json` and creates a timestamped `.tar` archive ready to share with Kong Support."
@@ -37,9 +37,9 @@ works_on:
   - on-prem
 ---
 
-## What is a License?
+## What is a license?
 
-A License entity allows you configure a License in your self-managed {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. 
+A License entity allows you to configure a license in your self-managed {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/).
 
 You receive a license file when you sign up for a {{site.ee_product_name}} subscription. If you purchased a subscription but haven’t received a license file, contact your sales representative.
 
@@ -48,7 +48,7 @@ You receive a license file when you sign up for a {{site.ee_product_name}} subsc
 1. The contents of the environmental variable `KONG_LICENSE_DATA`.
 2. The default location `/etc/kong/license.json`.
 3. The contents of the file defined by the `KONG_LICENSE_PATH` environment variable.
-4. A License directly deployed with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/create-licenses).
+4. A license directly deployed with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/create-licenses).
 
 Each node independently checks for the license file when the {{site.base_gateway}} process starts. Network connectivity isn't required for license validation.
 
@@ -88,14 +88,14 @@ features:
 <!--vale on-->
 
 
-## Deploy a License
+## Deploy a license
 
 {% navtabs "deploy-a-license" %}
 {% navtab "Admin API" %}
 
-You can deploy a License using the Admin API.
+You can deploy a license using the Admin API.
 
-The Control Plane sends Licenses configured through the [`/licenses` endpoint](/api/gateway/admin-ee/#/operations/post-licenses) to all Data Planes in the cluster. The Data Planes use the most recent `updated_at` License. This is the only method that automatically applies the License to Data Planes.
+The control plane sends licenses configured through the [`/licenses` endpoint](/api/gateway/admin-ee/#/operations/post-licenses) to all data planes in the cluster. The data planes use the most recent `updated_at` license. This is the only method that automatically applies the license to data planes.
 
 {:.info}
 > The following license payload is only an example. Substitute your own license before running the command.
@@ -109,58 +109,55 @@ data:
 {% endnavtab %}
 {% navtab "license.json" %}
 
-You can deploy a License with a `license.json` file.
+You can deploy a license with a `license.json` file.
 
-The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). {{site.base_gateway}} searches for the License by default in `/etc/kong/license.json`.
+The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). {{site.base_gateway}} searches for the license by default in `/etc/kong/license.json`.
 
 {:.info}
-> In a self-managed {{site.base_gateway}} deployment, the Control Plane **does not** propagate the License to Data Plane nodes. 
-You **must** add the License to each Data Plane node, and each node **must** start with the License. 
-The License can't be added after starting the node.
+> In a self-managed {{site.base_gateway}} deployment, the control plane **does not** propagate the license to data plane nodes. 
+You **must** add the license to each data plane node, and each node **must** start with the license. 
+The license can't be added after starting the node.
 
-1. Save your License to a file named `license.json`.  
+1. Save your license to a file named `license.json`.  
 1. Copy the license file to the `/etc/kong`.
 1. [Restart](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong restart` from within the container.
 {% endnavtab %}
 {% navtab "Environment variable" %}
 
-You can deploy a License as an environment variable.
+You can deploy a license as an environment variable.
 
 {:.info}
-> If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the Control Plane **does not** propagate the License to Data Plane nodes. 
-You **must** add the License to each Data Plane node, and each node **must** start with the License. 
-The License can't be added after starting the node.
+> If you deploy a license using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the license to data plane nodes. 
+Add the license to each data plane node. Each node must start with the license. 
+The license can't be added after starting the node.
 
-Unlike other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` can't be defined inline as part of any `kong` CLI commands. License file environmental variables must be exported to the shell where the Nginx process runs, ahead of the `kong` CLI tool.
+Unlike other `KONG_*` environment variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` can't be defined inline as part of any `kong` CLI commands. These license environment variables must be exported to the shell where the Nginx process runs before using the `kong` CLI tool.
 
-1. Export your License to an environment variable: 
+1. Export your license to an environment variable: 
   ```sh
   export KONG_LICENSE_DATA='$YOUR_LICENSE_DATA'
   ```
 1. Reference the variable as part of your {{site.base_gateway}} deployment.
 
-By default, {{site.base_gateway}} looks for a License file at `/etc/kong/license.json`. If your default {{site.base_gateway}} directory is different, or the location of `license.json` is different than the default, you can use the `KONG_LICENSE_PATH` variable instead to force {{site.base_gateway}} to check a different directory.
+By default, {{site.base_gateway}} looks for a license file at `/etc/kong/license.json`. If your default {{site.base_gateway}} directory is different, or the location of `license.json` is different than the default, you can use the `KONG_LICENSE_PATH` variable instead to force {{site.base_gateway}} to check a different directory.
 {% endnavtab %}
 {% endnavtabs %}
 
 ## Expiration
 
-Licenses expire at midnight on the expiration date. The expiration time is the same as that of the time zone of your Control Plane.
+Licenses expire at midnight on the expiration date. The expiration time is the same as that of the time zone of your control plane.
 
 [Kong Manager](/gateway/kong-manager/) warns you of your license expiring 15 days before it expires. {{site.base_gateway}} logs also show a license expiration alert 90 and 30 days before the license expires as well as on and after the expiration date.
 
-After a License expires, {{site.base_gateway}} behaves as follows:
+After a license expires, {{site.base_gateway}} behaves as follows:
 
-* All configured Enterprise-specific features become read-only
-* You can't configure additional Enterprise features
-* You can continue to access Kong Manager and change its configuration
-* You can continue to use OSS features via the Admin API
-* All proxy traffic, including Enterprise plugin traffic, continues to be processed as if the License wasn't expired
-* You can still restart and scale nodes in traditional mode
-* Data Planes can still accept config from a Control Plane with an expired license in hybrid mode
-* New nodes can't come up and restarts will break in DB-less mode and KIC
+* All entity configurations become read-only.
+* You can continue to access API Gateway admin interfaces through Kong Manager and {{site.konnect_short_name}}.
+* All proxy traffic continues to be processed with existing, unchanged configuration.
+* You can still restart and scale nodes in traditional mode.
+* New nodes can't come up and restarts will break in DB-less mode and KIC.
 
-You can update your License with a `PUT` request to the [`/license/{license-id}` Admin API endpoint](/api/gateway/admin-ee/#/operations/put-licenses-license-id).
+You can update your license with a `PUT` request to the [`/licenses/{license-id}` Admin API endpoint](/api/gateway/admin-ee/#/operations/put-licenses-license-id).
 
 ## License reports
 
