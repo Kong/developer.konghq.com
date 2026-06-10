@@ -106,8 +106,8 @@
     --color-gateway-background: var(--color-semantic-green-secondary);
     --color-insomnia-brand: var(--color-semantic-purple-primary);
     --color-insomnia-background: var(--color-semantic-purple-secondary);
-    --color-kic-brand: var(--color-text-links);
-    --color-kic-background: var(--color-semantic-blue-secondary);
+    --color-kic-brand: var(--color-semantic-grey-primary);
+    --color-kic-background: var(--color-semantic-grey-secondary);
     --color-mesh-brand: var(--color-semantic-orange-primary);
     --color-mesh-background: var(--color-semantic-orange-secondary);
     --color-catalog-brand: var(--color-semantic-red-primary);
@@ -118,8 +118,8 @@
     --color-konnect-background: var(--color-semantic-grey-secondary);
     --color-konnect-reference-platform-brand: var(--color-semantic-teal-primary);
     --color-konnect-reference-platform-background: var(--color-semantic-teal-secondary);
-    --color-operator-brand: var(--color-semantic-blue-primary);
-    --color-operator-background: var(--color-semantic-blue-secondary);
+    --color-operator-brand: var(--color-semantic-grey-primary);
+    --color-operator-background: var(--color-semantic-grey-secondary);
     --color-api-products-brand: var(--color-semantic-orange-primary);
     --color-api-products-background: var(--color-semantic-orange-secondary);
     --color-metering-and-billing-brand: var(--color-semantic-orange-primary);
