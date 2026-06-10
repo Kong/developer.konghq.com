@@ -63,7 +63,9 @@ end
 
 A table that has the same lifetime as the current request.  Unlike
  `kong.ctx.shared`, this table is **not** shared between plugins.
- Instead, it is only visible for the current plugin instance.
+ Instead, it is only visible for the current plugin (including its clones).
+ If you want to store per-instance data, considering keying this table by
+ plugin name (`conf.__plugin_name`) or id (`conf.__plugin_id`).
  For example, if several instances of the Rate Limiting plugin
  are configured on different Services, each instance has its
  own table for every request.
