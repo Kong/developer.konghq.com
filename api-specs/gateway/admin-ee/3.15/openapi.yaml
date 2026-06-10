@@ -48,6 +48,14 @@ components:
             required: true
             schema:
                 type: string
+        ClonedPluginIdOrName:
+            description: ID or name of the Cloned Plugin to lookup
+            example: ""
+            in: path
+            name: ClonedPluginIdOrName
+            required: true
+            schema:
+                type: string
         ConsumerGroupId:
             description: ID of the Consumer Group to lookup
             example: ""
@@ -128,13 +136,15 @@ components:
             required: true
             schema:
                 type: string
-        GroupIdOrName:
-            description: The group's name or ID.
+        GroupRoleId:
+            description: ID of the Group to lookup
+            example: ""
             in: path
-            name: GroupIdOrName
+            name: GroupId
             required: true
             schema:
                 type: string
+            x-speakeasy-name-override: group_id
         HMACAuthId:
             description: ID of the HMAC-auth credential to lookup
             example: 70e7b00b-72f2-471b-a5ce-9c4171775360
@@ -183,6 +193,13 @@ components:
             required: true
             schema:
                 type: string
+        ListConsumers:
+            description: Expand the consumer group to include a list of its consumers.
+            example: false
+            in: query
+            name: list_consumers
+            schema:
+                type: boolean
         MTLSAuthId:
             description: ID of the MTLS-auth credential to lookup
             example: ""
@@ -239,13 +256,77 @@ components:
             required: true
             schema:
                 type: string
-        RbacNameOrId:
-            description: The RBAC role name or UUID.
+        RBACGroupRoleId:
+            description: ID of the RBAC Group Role to lookup
+            example: ""
             in: path
-            name: rbacNameOrId
+            name: RBACGroupRoleId
             required: true
             schema:
-                example: cf4c7e60-11db-49dd-b300-7c7e5f0f7e6b
+                type: string
+        RBACRoleEndpointId:
+            description: ID of the RBAC Role Endpoint to lookup
+            example: ""
+            in: path
+            name: RBACRoleEndpointId
+            required: true
+            schema:
+                type: string
+        RBACRoleEntityId:
+            description: ID of the RBAC Role Entity to lookup
+            example: ""
+            in: path
+            name: RBACRoleEntityId
+            required: true
+            schema:
+                type: string
+        RBACRoleId:
+            description: ID of the RBAC Role to lookup
+            example: ""
+            in: path
+            name: RBACRoleId
+            required: true
+            schema:
+                type: string
+        RBACRoleIdForNestedEntities:
+            description: ID of the RBAC Role to lookup
+            example: ""
+            in: path
+            name: RBACRoleIdForNestedEntities
+            required: true
+            schema:
+                type: string
+        RBACUserGroupId:
+            description: ID of the RBAC User Group to lookup
+            example: ""
+            in: path
+            name: RBACUserGroupId
+            required: true
+            schema:
+                type: string
+        RBACUserId:
+            description: ID of the RBAC User to lookup
+            example: ""
+            in: path
+            name: RBACUserId
+            required: true
+            schema:
+                type: string
+        RBACUserIdForNestedEntities:
+            description: ID of the RBAC User to lookup
+            example: ""
+            in: path
+            name: RBACUserIdForNestedEntities
+            required: true
+            schema:
+                type: string
+        RBACUserRoleId:
+            description: ID of the RBAC User Role to lookup
+            example: ""
+            in: path
+            name: RBACUserRoleId
+            required: true
+            schema:
                 type: string
         RouteIdOrName:
             description: ID or name of the Route to lookup
@@ -563,75 +644,11 @@ components:
                                 type: string
                         type: object
             description: Recover lost encryption keys using a previously stored recovery key.
-        CreateRoleEndpointPermissionRequest:
-            content:
-                application/json:
-                    schema:
-                        properties:
-                            actions:
-                                description: Actions permitted for this endpoint.
-                                items:
-                                    type: string
-                                type: array
-                            comment:
-                                description: A comment describing the RBAC permission object.
-                                type: string
-                            endpoint:
-                                description: The endpoint associated with this permission.
-                                type: string
-                            negative:
-                                description: If true, explicitly disallows actions tied to this endpoint.
-                                type: boolean
-                            workspace:
-                                description: The workspace associated with this permission.
-                                type: string
-                        type: object
-            description: Add a role endpoint permission for the specified endpoint.
-        CreateRoleEntityPermissionRequest:
-            content:
-                application/json:
-                    schema:
-                        description: If true, explicitly disallow the actions associated with the permissions tied to this resource. By default this value is false.
-                        properties:
-                            actions:
-                                description: One or more actions associated with this permission.
-                                type: string
-                            comment:
-                                description: A string describing the RBAC permission object
-                                type: string
-                            entity_id:
-                                description: Type of the entity of a given `entity_id`.
-                                type: string
-                            entity_type:
-                                description: One or more actions associated with this permission.
-                                type: string
-                            negative:
-                                description: ID of the entity associated with this permission.
-                                type: string
-                        type: object
-            description: The `entity_id` must be the ID of an entity in Kong. Use `*` to represent all entities in the system.
-        CreateUserRoleAssignmentRequest:
-            content:
-                application/json:
-                    schema:
-                        properties:
-                            roles:
-                                description: Comma-separated list of role names to assign to the user.
-                                type: string
-                        type: object
-            description: Assign one or more roles to a user.
         GroupRoleRequest:
             content:
                 application/json:
                     schema:
-                        properties:
-                            rbac_role_id:
-                                description: The ID of the RBAC role to assign.
-                                example: 12773c9a-7f7c-45f2-bcea-5285eb18fd2f
-                                type: string
-                        required:
-                            - rbac_role_id
-                        type: object
+                        $ref: '#/components/schemas/GroupRole'
             description: Request body schema for assigning or updating roles for a group.
         KeyringRequest:
             content:
@@ -668,27 +685,6 @@ components:
                     schema:
                         $ref: '#/components/schemas/PluginSchema'
             description: Request body schema for creating or updating a Plugin.
-        RBACRequest:
-            content:
-                application/json:
-                    schema:
-                        properties:
-                            comment:
-                                description: |
-                                    A string describing the RBAC user object.
-                                type: string
-                            enabled:
-                                description: |
-                                    A flag to enable or disable the user. By default, users are enabled.
-                                type: string
-                            name:
-                                description: |
-                                    The RBAC user name.
-                                type: string
-                            user_token:
-                                description: The authentication token to be presented to the Admin API. The value will be hashed and cannot be fetched in plaintext.
-                                type: string
-                        type: object
         UpdateAdminRequest:
             content:
                 application/json:
@@ -752,20 +748,6 @@ components:
                                 type: string
                         type: object
             description: Sync the keyring with Vault storage.
-        UpdateRoleEntityPermissionRequest:
-            content:
-                application/json:
-                    schema:
-                        properties:
-                            actions:
-                                description: One or more actions associated with this permission.
-                                type: string
-                            negative:
-                                description: |
-                                    If true, explicitly disallow the actions associated with the permissions tied to this resource. By default this value is false.
-                                type: boolean
-                        type: object
-            description: Update the actions and flags for an existing entity permission.
         ValidateEntitySchemaRequest:
             content:
                 application/json:
@@ -888,44 +870,19 @@ components:
         CreateGroupRolesResponse:
             content:
                 application/json:
+                    example:
+                        group:
+                            comment: Read access to all endpoints, across all workspaces
+                            id: 7574eb1d-c9fa-46a9-bd3a-3f1b4b196287
+                            name: read-only
+                            updated_at: "2024-04-23T18:25:43Z"
+                        rbac_role:
+                            id: 7fdea5c8-2bfa-4aa9-9c21-7bb9e607186d
+                            name: admin
+                        workspace:
+                            id: 99bd8d18-f5b6-410e-aefe-d75f4252f13c
                     schema:
-                        example:
-                            group:
-                                comment: Read access to all endpoints, across all workspaces
-                                id: 7574eb1d-c9fa-46a9-bd3a-3f1b4b196287
-                                name: read-only
-                                updated_at: "2024-04-23T18:25:43Z"
-                            rbac_role:
-                                id: 7fdea5c8-2bfa-4aa9-9c21-7bb9e607186d
-                                name: admin
-                            workspace:
-                                id: 99bd8d18-f5b6-410e-aefe-d75f4252f13c
-                        properties:
-                            group:
-                                properties:
-                                    comment:
-                                        type: string
-                                    id:
-                                        type: string
-                                    name:
-                                        type: string
-                                    updated_at:
-                                        format: date-time
-                                        type: string
-                                type: object
-                            rbac_role:
-                                properties:
-                                    id:
-                                        type: string
-                                    name:
-                                        type: string
-                                type: object
-                            workspace:
-                                properties:
-                                    id:
-                                        type: string
-                                type: object
-                        type: object
+                        $ref: '#/components/schemas/GroupRole'
             description: Successfully created or updated roles.
         CreateGroupsResponse:
             content:
@@ -971,67 +928,6 @@ components:
                                 type: string
                         type: object
             description: OK
-        CreateRoleEndpointPermissionResponse:
-            content:
-                application/json:
-                    schema:
-                        properties:
-                            actions:
-                                items:
-                                    type: string
-                                type: array
-                            created_at:
-                                type: integer
-                            endpoint:
-                                type: string
-                            negative:
-                                type: boolean
-                            role:
-                                properties:
-                                    id:
-                                        type: string
-                                type: object
-                            workspace:
-                                type: string
-                        type: object
-            description: Created
-        CreateRoleEntityPermissionResponse:
-            content:
-                application/json:
-                    examples:
-                        example-response:
-                            value:
-                                actions:
-                                    - delete
-                                    - create
-                                    - read
-                                created_at: 1.557771505e+09
-                                entity_id: '*'
-                                entity_type: wildcard
-                                negative: false
-                                role:
-                                    id: bba049fa-bf7e-40ef-8e89-553dda292e99
-                    schema:
-                        properties:
-                            actions:
-                                items:
-                                    type: string
-                                type: array
-                            created_at:
-                                type: integer
-                            entity_id:
-                                type: string
-                            entity_type:
-                                type: string
-                            negative:
-                                type: boolean
-                            role:
-                                properties:
-                                    id:
-                                        type: string
-                                type: object
-                        type: object
-            description: Created
         DatabaseAuditLogResponse:
             content:
                 application/json:
@@ -1058,7 +954,7 @@ components:
                         message: Duplicate API key found
                         status: 401
                     schema:
-                        $ref: '#/components/schemas/UnauthorizedError'
+                        $ref: '#/components/schemas/BaseError'
             description: Duplicate API key found
         EventHooksResponse:
             content:
@@ -1979,76 +1875,26 @@ components:
                                 type: array
                         type: object
             description: Example response
-        GetGroupResponse:
-            content:
-                application/json:
-                    examples:
-                        Example 1:
-                            value:
-                                comment: comment1
-                                created_at: 1.556638385e+09
-                                id: 665b4070-541f-48bf-82c1-53030babaa81
-                                name: test-group
-                                updated_at: 1.556638385e+09
-                    schema:
-                        properties:
-                            comment:
-                                type: string
-                            created_at:
-                                type: integer
-                            id:
-                                type: string
-                            name:
-                                type: string
-                            updated_at:
-                                type: integer
-                        type: object
-            description: OK
         GetGroupRolesListResponse:
             content:
                 application/json:
+                    example:
+                        data:
+                            - group:
+                                comment: comment1
+                                id: 7574eb1d-c9fa-46a9-bd3a-3f1b4b196287
+                                name: demo-group
+                                updated_at: "2024-04-23T18:25:43Z"
+                              rbac_role:
+                                id: 7fdea5c8-2bfa-4aa9-9c21-7bb9e607186d
+                                name: admin
+                              workspace:
+                                id: 99bd8d18-f5b6-410e-aefe-d75f4252f13c
                     schema:
-                        example:
-                            data:
-                                - group:
-                                    comment: comment1
-                                    id: 7574eb1d-c9fa-46a9-bd3a-3f1b4b196287
-                                    name: demo-group
-                                    updated_at: "2024-04-23T18:25:43Z"
-                                  rbac_role:
-                                    id: 7fdea5c8-2bfa-4aa9-9c21-7bb9e607186d
-                                    name: admin
-                                  workspace:
-                                    id: 99bd8d18-f5b6-410e-aefe-d75f4252f13c
                         properties:
                             data:
                                 items:
-                                    properties:
-                                        group:
-                                            properties:
-                                                comment:
-                                                    type: string
-                                                id:
-                                                    type: string
-                                                name:
-                                                    type: string
-                                                updated_at:
-                                                    format: date-time
-                                                    type: string
-                                            type: object
-                                        rbac_role:
-                                            properties:
-                                                id:
-                                                    type: string
-                                                name:
-                                                    type: string
-                                            type: object
-                                        workspace:
-                                            properties:
-                                                id:
-                                                    type: string
-                                            type: object
-                                    type: object
+                                    $ref: '#/components/schemas/GroupRole'
                                 type: array
                         type: object
             description: Successfully retrieved roles.
@@ -2241,349 +2087,6 @@ components:
                                 type: array
                         type: object
             description: The schema for the plugin
-        GetRBACUserResponse:
-            content:
-                application/json:
-                    examples:
-                        Returned user:
-                            value:
-                                data:
-                                    - comment: null
-                                      created_at: 1.557512629e+09
-                                      enabled: true
-                                      id: f035f120-a95e-4327-b2ae-8fa264601d75
-                                      name: doc_lord
-                                      user_token: $2b$09$TIMneYcTosdG9WbzRsqcweAS2zote8g6I8HqXAtbFHR1pds2ymsh6
-                                      user_token_ident: 88ea3
-                                    - comment: null
-                                      created_at: 1.55752265e+09
-                                      enabled: true
-                                      id: fa6881b2-f49f-4007-9475-577cd21d34f4
-                                      name: doc_knight
-                                      user_token: $2b$09$Za30VKGetRbacResponsemyoB9zF2PNEF.9hgKcN2BdKkptPMCubPK/Ps08lzZjYG
-                                      user_token_ident: 4d870
-                                next: null
-                    schema:
-                        properties:
-                            data:
-                                items:
-                                    properties:
-                                        comment:
-                                            type: string
-                                        created_at:
-                                            type: integer
-                                        enabled:
-                                            type: boolean
-                                        id:
-                                            type: string
-                                        name:
-                                            type: string
-                                        user_token:
-                                            type: string
-                                        user_token_ident:
-                                            type: string
-                                    type: object
-                                type: array
-                            next:
-                                type: string
-                        type: object
-            description: RBAC User Response
-        GetRbacResponse:
-            content:
-                application/json:
-                    examples:
-                        New role response body:
-                            value:
-                                comment: null
-                                created_at: 1.557532241e+09
-                                id: b5c5cfd4-3330-4796-9b7b-6026e91e3ad6
-                                is_default: false
-                                name: service_reader
-                    schema:
-                        properties:
-                            comment:
-                                type: string
-                            created_at:
-                                type: integer
-                            id:
-                                type: string
-                            is_default:
-                                type: boolean
-                            name:
-                                type: string
-                        type: object
-            description: Add a role.
-        GetRoleEndpointPermissionResponse:
-            content:
-                application/json:
-                    examples:
-                        GetRoleEndpointPermissionResponse:
-                            value:
-                                actions:
-                                    - delete
-                                    - create
-                                    - update
-                                    - read
-                                created_at: 1.557764505e+09
-                                endpoint: /consumers
-                                negative: false
-                                role:
-                                    id: 23df9f20-e7cc-4da4-bc89-d3a08f976e50
-                                workspace: default
-                    schema:
-                        properties:
-                            actions:
-                                items:
-                                    type: string
-                                type: array
-                            created_at:
-                                type: integer
-                            endpoint:
-                                type: string
-                            negative:
-                                type: boolean
-                            role:
-                                properties:
-                                    id:
-                                        type: string
-                                type: object
-                            role_source:
-                                default: local
-                                description: The origin of the RBAC user role. Specifies where the user role is defined, either locally or through an identity provider (IdP).
-                                enum:
-                                    - local
-                                    - idp
-                                type: string
-                            workspace:
-                                type: string
-                        type: object
-            description: OK
-        GetRoleEndpointPermissionsResponse:
-            content:
-                application/json:
-                    schema:
-                        properties:
-                            data:
-                                items:
-                                    properties:
-                                        actions:
-                                            items:
-                                                type: string
-                                            type: array
-                                        created_at:
-                                            type: integer
-                                        endpoint:
-                                            type: string
-                                        negative:
-                                            type: boolean
-                                        role:
-                                            properties:
-                                                id:
-                                                    type: string
-                                            type: object
-                                        role_source:
-                                            default: local
-                                            description: The origin of the RBAC user role.
-                                            enum:
-                                                - local
-                                                - idp
-                                            type: string
-                                        workspace:
-                                            type: string
-                                    type: object
-                                type: array
-                        type: object
-            description: OK
-        GetRoleEntityPermissionResponse:
-            content:
-                application/json:
-                    examples:
-                        example-response:
-                            value:
-                                actions:
-                                    - delete
-                                    - create
-                                    - read
-                                created_at: 1.557771505e+09
-                                entity_id: '*'
-                                entity_type: wildcard
-                                negative: false
-                                role:
-                                    id: bba049fa-bf7e-40ef-8e89-553dda292e99
-                    schema:
-                        properties:
-                            actions:
-                                items:
-                                    type: string
-                                type: array
-                            created_at:
-                                type: integer
-                            entity_id:
-                                type: string
-                            entity_type:
-                                type: string
-                            negative:
-                                type: boolean
-                            role:
-                                properties:
-                                    id:
-                                        type: string
-                                type: object
-                            role_source:
-                                default: local
-                                description: The origin of the RBAC user role. Specifies where the user role is defined, either locally or through an identity provider (IdP).
-                                enum:
-                                    - local
-                                    - idp
-                                type: string
-                        type: object
-            description: OK
-        GetRoleEntityPermissionsResponse:
-            content:
-                application/json:
-                    examples:
-                        Example 1:
-                            value:
-                                data:
-                                    - actions:
-                                        - delete
-                                        - create
-                                        - read
-                                      created_at: 1.557771505e+09
-                                      entity_id: '*'
-                                      entity_type: wildcard
-                                      negative: false
-                                      role:
-                                        id: bba049fa-bf7e-40ef-8e89-553dda292e99
-                    schema:
-                        properties:
-                            data:
-                                items:
-                                    properties:
-                                        actions:
-                                            items:
-                                                type: string
-                                            type: array
-                                        created_at:
-                                            type: integer
-                                        entity_id:
-                                            type: string
-                                        entity_type:
-                                            type: string
-                                        negative:
-                                            type: boolean
-                                        role:
-                                            properties:
-                                                id:
-                                                    type: string
-                                            type: object
-                                        role_source:
-                                            default: local
-                                            description: The origin of the RBAC user role. Specifies where the user role is defined, either locally or through an identity provider (IdP).
-                                            enum:
-                                                - local
-                                                - idp
-                                            type: string
-                                    type: object
-                                type: array
-                        type: object
-            description: OK
-        GetRolePermissionsResponse:
-            content:
-                application/json:
-                    examples:
-                        role-permission-example:
-                            value:
-                                endpoints:
-                                    '*':
-                                        '*':
-                                            actions:
-                                                - delete
-                                                - create
-                                                - update
-                                                - read
-                                            negative: false
-                                        /*/rbac/*:
-                                            actions:
-                                                - delete
-                                                - create
-                                                - update
-                                                - read
-                                            negative: true
-                                entities: {}
-                    schema:
-                        properties:
-                            endpoints:
-                                properties:
-                                    '*':
-                                        properties:
-                                            '*':
-                                                properties:
-                                                    actions:
-                                                        items:
-                                                            type: string
-                                                        type: array
-                                                    negative:
-                                                        type: boolean
-                                                type: object
-                                            /*/rbac/*:
-                                                properties:
-                                                    actions:
-                                                        items:
-                                                            type: string
-                                                        type: array
-                                                    negative:
-                                                        type: boolean
-                                                type: object
-                                        type: object
-                                type: object
-                            entities:
-                                type: object
-                        type: object
-            description: OK
-        GetRoleSpecificEndpointResponse:
-            content:
-                application/json:
-                    example:
-                        actions:
-                            - delete
-                            - create
-                            - update
-                            - read
-                        created_at: 1.557764505e+09
-                        endpoint: /consumers
-                        negative: false
-                        role:
-                            id: 23df9f20-e7cc-4da4-bc89-d3a08f976e50
-                        workspace: default
-                    schema:
-                        properties:
-                            actions:
-                                items:
-                                    type: string
-                                type: array
-                            created_at:
-                                type: integer
-                            endpoint:
-                                type: string
-                            negative:
-                                type: boolean
-                            role:
-                                properties:
-                                    id:
-                                        type: string
-                                type: object
-                            role_source:
-                                default: local
-                                description: The origin of the RBAC user role. Specifies where the user role is defined, either locally or through an identity provider (IdP).
-                                enum:
-                                    - local
-                                    - idp
-                                type: string
-                            workspace:
-                                type: string
-                        type: object
-            description: OK
         GetRolesResponse:
             content:
                 application/json:
@@ -2726,96 +2229,6 @@ components:
                                 type: object
                         type: object
             description: OK
-        GetUserPermissionsResponse:
-            content:
-                application/json:
-                    examples:
-                        Example 1:
-                            value:
-                                endpoints:
-                                    '*':
-                                        '*':
-                                            actions:
-                                                - read
-                                            negative: false
-                                entities: {}
-                    schema:
-                        properties:
-                            endpoints:
-                                properties:
-                                    '*':
-                                        properties:
-                                            '*':
-                                                properties:
-                                                    actions:
-                                                        items:
-                                                            type: string
-                                                        type: array
-                                                    negative:
-                                                        type: boolean
-                                                type: object
-                                        type: object
-                                type: object
-                            entities:
-                                type: object
-                        type: object
-            description: OK
-        GetUserRolesResponse:
-            content:
-                application/json:
-                    examples:
-                        Example 1:
-                            value:
-                                roles:
-                                    - comment: Read access to all endpoints, across all workspaces
-                                      created_at: 1.5577655e+09
-                                      id: a1c810ee-8366-4654-ba0c-963ffb9ccf2e
-                                      name: read-only
-                                    - created_at: 1.557772263e+09
-                                      id: aae80073-095f-4553-ba9a-bee5ed3b8b91
-                                      name: doc-knight
-                                user:
-                                    comment: null
-                                    created_at: 1.557772232e+09
-                                    enabled: true
-                                    id: b65ca712-7ceb-4114-87f4-5c310492582c
-                                    name: gruce-wayne
-                                    user_token: $2b$09$gZnMKK/mm/d2rAXN7gL63uL43mjdX/62iwMqdyCQwLyC0af3ce/1K
-                                    user_token_ident: 88ea3
-                    schema:
-                        properties:
-                            roles:
-                                items:
-                                    properties:
-                                        comment:
-                                            type: string
-                                        created_at:
-                                            type: integer
-                                        id:
-                                            type: string
-                                        name:
-                                            type: string
-                                    type: object
-                                type: array
-                            user:
-                                properties:
-                                    comment:
-                                        type: string
-                                    created_at:
-                                        type: integer
-                                    enabled:
-                                        type: boolean
-                                    id:
-                                        type: string
-                                    name:
-                                        type: string
-                                    user_token:
-                                        type: string
-                                    user_token_ident:
-                                        type: string
-                                type: object
-                        type: object
-            description: OK
         GroupRoleAssociationCreated:
             content:
                 application/json:
@@ -2873,7 +2286,7 @@ components:
                         message: Unauthorized
                         status: 401
                     schema:
-                        $ref: '#/components/schemas/UnauthorizedError'
+                        $ref: '#/components/schemas/BaseError'
             description: Invalid authentication credentials
         KeyRingResponse:
             content:
@@ -3136,7 +2549,7 @@ components:
                         message: No API key found in request
                         status: 401
                     schema:
-                        $ref: '#/components/schemas/UnauthorizedError'
+                        $ref: '#/components/schemas/BaseError'
             description: No API key found
         PluginResponse:
             content:
@@ -3147,15 +2560,51 @@ components:
         ReportResponse:
             content:
                 application/json:
+                    examples:
+                        License report:
+                            value:
+                                checksum: 38b06b3c3c69299740e1f2d48a1a197d17864b99
+                                consumers_count: 0
+                                counters:
+                                    buckets:
+                                        - bucket: 2026-04
+                                          request_count: 0
+                                    total_requests: 0
+                                db_version: postgres 13.23
+                                deployment_info:
+                                    type: traditional
+                                kong_version: 3.14.0.1
+                                license:
+                                    license_expiration_date: "2026-01-01"
+                                    license_key: 00141000017ODj3AAG_a1V41000004wT0OEAU
+                                plugins_count:
+                                    tiers:
+                                        custom: {}
+                                        enterprise: {}
+                                        free: {}
+                                    unique_route_kafkas: 0
+                                    unique_route_lambdas: 0
+                                rbac_users: 0
+                                routes_count: 0
+                                services_count: 0
+                                system_info:
+                                    cores: 10
+                                    hostname: kong-node-1
+                                    uname: Linux aarch64
+                                timestamp: 1.5005088e+09
+                                workspaces_count: 1
                     schema:
                         properties:
                             checksum:
-                                description: The checksum of the current report.
-                                example: 38b06b3c3c69299740e1f2d48a1a197d17864b99
+                                description: A checksum of the report contents.
+                                example: 6c53a59ed49b5b28a90c4a5ee74871a1ccca14387736987e740aacb6562c3007
                                 type: string
+                            consumers_count:
+                                description: Total number of consumers configured in this deployment.
+                                example: 0
+                                type: integer
                             counters:
-                                description: |
-                                    Counts the number of requests made in a given month.
+                                description: Request counts across all time periods.
                                 properties:
                                     buckets:
                                         description: A list of year-month buckets and the number of requests made in each one.
@@ -3175,6 +2624,106 @@ components:
                                         example: 10
                                         type: number
                                 type: object
+                            db_version:
+                                description: The database engine and version in use.
+                                example: postgres 13.23
+                                type: string
+                            deployment_info:
+                                description: Information about the deployment topology.
+                                properties:
+                                    connected_dp_count:
+                                        description: Number of data planes currently connected to the control plane. Only present when type is hybrid.
+                                        example: 3
+                                        type: integer
+                                    type:
+                                        description: The deployment topology type.
+                                        enum:
+                                            - traditional
+                                            - hybrid
+                                            - dbless
+                                        example: traditional
+                                        type: string
+                                type: object
+                            kong_version:
+                                description: The version of Kong Gateway running on this node.
+                                example: 3.14.0.1
+                                type: string
+                            license:
+                                description: Details about the active license.
+                                properties:
+                                    license_expiration_date:
+                                        description: The date on which the license expires.
+                                        example: "2026-04-20"
+                                        type: string
+                                    license_key:
+                                        description: The unique key identifying this license.
+                                        example: 00141000017ODj3AAG_a1V41000004wT0OEAU
+                                        type: string
+                                type: object
+                            plugins_count:
+                                description: Breakdown of active plugins by tier.
+                                properties:
+                                    tiers:
+                                        description: Active plugins grouped by tier (free, enterprise, custom).
+                                        properties:
+                                            custom:
+                                                additionalProperties:
+                                                    type: integer
+                                                type: object
+                                            enterprise:
+                                                additionalProperties:
+                                                    type: integer
+                                                type: object
+                                            free:
+                                                additionalProperties:
+                                                    type: integer
+                                                type: object
+                                        type: object
+                                    unique_route_kafkas:
+                                        description: Number of unique Kafka broker addresses (host:port) across Kafka plugins configured on service-less routes.
+                                        example: 0
+                                        type: integer
+                                    unique_route_lambdas:
+                                        description: Number of unique AWS Lambda function names across aws-lambda plugins configured on service-less routes.
+                                        example: 0
+                                        type: integer
+                                type: object
+                            rbac_users:
+                                description: Total number of RBAC users configured.
+                                example: 0
+                                type: integer
+                            routes_count:
+                                description: Total number of routes configured in this deployment.
+                                example: 0
+                                type: integer
+                            services_count:
+                                description: Total number of services configured in this deployment.
+                                example: 0
+                                type: integer
+                            system_info:
+                                description: Information about the node generating the report.
+                                properties:
+                                    cores:
+                                        description: The number of CPU cores available to the node.
+                                        example: 10
+                                        type: integer
+                                    hostname:
+                                        description: The hostname of the node.
+                                        example: kong-node-1
+                                        type: string
+                                    uname:
+                                        description: The operating system and architecture of the node.
+                                        example: Linux aarch64
+                                        type: string
+                                type: object
+                            timestamp:
+                                description: Unix timestamp of when the report was generated.
+                                example: 1.776716058e+09
+                                type: integer
+                            workspaces_count:
+                                description: Total number of workspaces in this deployment.
+                                example: 1
+                                type: integer
                         type: object
             description: Fields available in the report
         TagsResponse:
@@ -3211,12 +2760,6 @@ components:
                                 type: string
                         type: object
             description: Successfully retrieved tags.
-        UnauthorizedRequest:
-            content:
-                application/json:
-                    schema:
-                        $ref: '#/components/schemas/UnauthorizedError'
-            description: Unauthorized request
         UpdateNodeLogLevelResponse:
             content:
                 application/json:
@@ -3389,6 +2932,16 @@ components:
             required:
                 - username
             type: object
+        BaseError:
+            properties:
+                message:
+                    type: string
+                status:
+                    type: integer
+            required:
+                - status
+                - message
+            type: object
         BasicAuth:
             additionalProperties: false
             example:
@@ -3485,6 +3038,7 @@ components:
                 cert:
                     description: PEM-encoded public certificate of the CA.
                     type: string
+                    x-referenceable: true
                 cert_digest:
                     description: SHA256 hex digest of the public certificate. This field is read-only and it cannot be set by the caller, the value is automatically computed.
                     nullable: true
@@ -3573,6 +3127,46 @@ components:
             required:
                 - cert
                 - key
+            type: object
+        ClonedPlugin:
+            additionalProperties: false
+            properties:
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                id:
+                    description: A string representing a UUID (universally unique identifier).
+                    nullable: true
+                    type: string
+                name:
+                    description: The name to associate with the cloned plugin. Consider using a distinct prefix for cloned plugins to avoid naming conflicts with new bundled plugins in future Kong releases.
+                    maxLength: 4096
+                    minLength: 1
+                    type: string
+                priority:
+                    description: The plugin execution priority. If not set, it will inherit the priority of the referenced plugin.
+                    maximum: 2.147483647e+09
+                    minimum: -2.147483648e+09
+                    nullable: true
+                    type: integer
+                ref:
+                    description: The name of the base plugin that this cloned plugin references. This plugin must be cloneable.
+                    type: string
+                tags:
+                    description: A set of strings representing tags.
+                    items:
+                        description: A string representing a tag.
+                        type: string
+                    nullable: true
+                    type: array
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+            required:
+                - name
+                - ref
             type: object
         Consumer:
             additionalProperties: false
@@ -3665,7 +3259,7 @@ components:
                     nullable: true
                     type: string
                 name:
-                    description: The name to associate with the given custom plugin.
+                    description: The name to associate with the given custom plugin. Consider using a distinct prefix for custom plugins to avoid naming conflicts with new bundled plugins in future Kong releases.
                     type: string
                 schema:
                     description: The schema for the given custom plugin.
@@ -4015,6 +3609,75 @@ components:
             required:
                 - name
             type: object
+        GroupRole:
+            additionalProperties: false
+            properties:
+                group:
+                    nullable: true
+                    properties:
+                        comment:
+                            type: string
+                        id:
+                            type: string
+                        name:
+                            type: string
+                        updated_at:
+                            format: date-time
+                            type: string
+                    type: object
+                    x-foreign: true
+                    x-speakeasy-terraform-ignore: true
+                group_id:
+                    description: ID of the group.
+                    nullable: true
+                    type: string
+                rbac_role:
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                        name:
+                            type: string
+                    type: object
+                    x-speakeasy-terraform-ignore: true
+                role_id:
+                    description: ID of the RBAC role assigned to the group.
+                    nullable: true
+                    type: string
+                workspace:
+                    description: Workspace ID.
+                    nullable: true
+                    type: string
+            type: object
+            x-speakeasy-entity: GroupRole
+            x-speakeasy-transform-from-api:
+                jq: |
+                    .
+                    | if .group != null and .group.id != null
+                      then . + { group_id: .group.id }
+                      else .
+                      end
+                    | if .rbac_role != null and .rbac_role.id != null
+                      then . + { role_id: .rbac_role.id }
+                      else .
+                      end
+                    | if .workspace != null and (.workspace | type) == "object" and .workspace.id != null
+                      then .workspace = .workspace.id
+                      else .
+                      end
+                    | del(.group, .rbac_role)
+            x-speakeasy-transform-to-api:
+                jq: |
+                    .
+                    | if .workspace != null
+                      then . + { workspace_id: .workspace }
+                      else .
+                      end
+                    | if .role_id != null
+                      then . + { rbac_role_id: .role_id }
+                      else .
+                      end
+                    | del(.group_id, .role_id, .workspace, .group, .rbac_role)
         HMACAuth:
             additionalProperties: false
             example:
@@ -6398,71 +6061,252 @@ components:
             required:
                 - name
             type: object
-        RbacUser:
+        RBACGroupRole:
+            additionalProperties: false
+            properties:
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                group:
+                    description: The group associated with the RBAC role
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                rbac_role:
+                    description: The RBAC role
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+                workspace:
+                    description: The workspace associated with the RBAC role.
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+            type: object
+        RBACRole:
+            additionalProperties: false
             properties:
                 comment:
-                    description: Any comments associated with the user.
+                    description: Additional comment or description for the RBAC role.
+                    nullable: true
                     type: string
                 created_at:
                     description: Unix epoch when the resource was created.
+                    nullable: true
                     type: integer
-                enabled:
-                    description: Whether or not the user has RBAC enabled.
-                    type: boolean
                 id:
-                    format: uuid
+                    description: A string representing a UUID (universally unique identifier).
+                    nullable: true
                     type: string
+                is_default:
+                    default: false
+                    description: Indicates whether the RBAC role is the default role.
+                    nullable: true
+                    type: boolean
                 name:
-                    description: The name of the user.
+                    description: The name of the RBAC role.
+                    nullable: true
                     type: string
                 updated_at:
                     description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+            required:
+                - name
+            type: object
+        RBACRoleEndpoint:
+            additionalProperties: false
+            properties:
+                actions:
+                    format: set
+                    items:
+                        type: string
+                    type: array
+                comment:
+                    description: Additional comment or description for the RBAC role endpoint.
+                    nullable: true
+                    type: string
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                endpoint:
+                    description: The endpoint associated with the RBAC role.
+                    nullable: true
+                    type: string
+                negative:
+                    default: false
+                    description: Indicates whether the RBAC role has negative permissions for the endpoint.
+                    nullable: true
+                    type: boolean
+                role:
+                    description: The RBAC role associated with the endpoint.
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+                workspace:
+                    default: default
+                    description: The workspace associated with the endpoint.
+                    nullable: true
+                    type: string
+            required:
+                - actions
+                - endpoint
+            type: object
+        RBACRoleEntity:
+            additionalProperties: false
+            properties:
+                actions:
+                    format: set
+                    items:
+                        type: string
+                    type: array
+                comment:
+                    description: Additional comment or description for the RBAC role entity.
+                    nullable: true
+                    type: string
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                entity_id:
+                    description: The ID of the entity associated with the RBAC role.
+                    nullable: true
+                    type: string
+                entity_type:
+                    description: The type of the entity associated with the RBAC role.
+                    nullable: true
+                    type: string
+                negative:
+                    default: false
+                    description: Indicates whether the RBAC role has negative permissions for the entity.
+                    nullable: true
+                    type: boolean
+                role:
+                    description: The RBAC role associated with the entity.
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+            required:
+                - actions
+                - entity_id
+                - entity_type
+            type: object
+        RBACUser:
+            additionalProperties: false
+            properties:
+                comment:
+                    description: Any comments associated with the user.
+                    nullable: true
+                    type: string
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                enabled:
+                    default: true
+                    description: Wether or not the user has RBAC enabled.
+                    nullable: true
+                    type: boolean
+                id:
+                    description: A string representing a UUID (universally unique identifier).
+                    nullable: true
+                    type: string
+                name:
+                    description: The name of the user.
+                    nullable: true
+                    type: string
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
                     type: integer
                 user_token:
-                    description: The RBAC user token.
-                    format: password
+                    nullable: true
                     type: string
+                    writeOnly: true
                 user_token_ident:
-                    description: The user token identifier.
+                    description: The user token.
+                    nullable: true
                     type: string
             required:
                 - name
-                - enabled
+                - user_token
             type: object
-        RbacUserGroup:
+        RBACUserGroup:
+            additionalProperties: false
             properties:
                 group:
                     description: The group assigned to the user.
-                    format: uuid
-                    type: string
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
                 user:
                     description: The RBAC user associated with the group.
-                    format: uuid
-                    type: string
-            required:
-                - user
-                - group
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
             type: object
-        RbacUserRole:
+        RBACUserRole:
+            additionalProperties: false
             properties:
                 role:
                     description: The RBAC role assigned to the user.
-                    format: uuid
-                    type: string
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
                 role_source:
                     default: local
                     description: The origin of the RBAC user role.
                     enum:
-                        - local
                         - idp
+                        - local
+                    nullable: true
                     type: string
                 user:
                     description: The RBAC user associated with the role.
-                    format: uuid
-                    type: string
-            required:
-                - user
-                - role
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
             type: object
         Route:
             oneOf:
@@ -6971,6 +6815,7 @@ components:
                     type: integer
                 url:
                     description: Helper field to set `protocol`, `host`, `port` and `path` using a URL. This field is write-only and is not returned in responses.
+                    nullable: true
                     type: string
                     writeOnly: true
                 write_timeout:
@@ -7092,16 +6937,6 @@ components:
                     type: integer
             required:
                 - target
-            type: object
-        UnauthorizedError:
-            properties:
-                message:
-                    type: string
-                status:
-                    type: integer
-            required:
-                - status
-                - message
             type: object
         Upstream:
             additionalProperties: false
@@ -7852,8 +7687,8 @@ info:
         name: Apache 2.0
         url: https://www.apache.org/licenses/LICENSE-2.0.html
     title: Kong Enterprise Admin API
-    version: 3.14.0
-openapi: 3.0.0
+    version: 3.15.0
+openapi: 3.1.0
 paths:
     /:
         get:
@@ -7869,7 +7704,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/UnauthorizedError'
+                                $ref: '#/components/schemas/BaseError'
                     description: Method Not Allowed
             summary: Get Kong's instance information
             tags:
@@ -8188,7 +8023,7 @@ paths:
     /{workspace}/ca_certificates:
         get:
             description: List all CA Certificates in a workspace
-            operationId: list-ca_certificate-in-workspace
+            operationId: list-ca_certificate-in-workspace-in-workspace
             parameters:
                 - $ref: '#/components/parameters/PaginationSize'
                 - $ref: '#/components/parameters/PaginationOffset'
@@ -8217,7 +8052,7 @@ paths:
                 - CA Certificates
         post:
             description: Create a new CA Certificate in a workspace
-            operationId: create-ca_certificate-in-workspace
+            operationId: create-ca_certificate-in-workspace-in-workspace
             parameters:
                 - $ref: '#/components/parameters/Workspace'
             requestBody:
@@ -8674,6 +8509,7 @@ paths:
             operationId: get-consumer_group-in-workspace
             parameters:
                 - $ref: '#/components/parameters/Workspace'
+                - $ref: '#/components/parameters/ListConsumers'
             responses:
                 "200":
                     content:
@@ -8851,14 +8687,14 @@ paths:
                     description: |
                         HTTP/1.1 204 No Content
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Delete the configurations for a consumer group in a workspace
             tags:
                 - Consumer Groups
         parameters:
             - $ref: '#/components/parameters/ConsumerGroupId'
         put:
-            description: "Define custom rate limiting settings for a consumer group. This endpoint overrides the settings of the Rate Limiting Advanced plugin. As of Kong Gateway 3.4, you can scope plugins to consumer groups using only the `/consumer_groups` endpoint. Using `overrides` is deprecated, and no longer recommended.\n'401': \n  $ref: '#/components/responses/UnauthorizedRequest'\n in a workspace"
+            description: "Define custom rate limiting settings for a consumer group. This endpoint overrides the settings of the Rate Limiting Advanced plugin. As of Kong Gateway 3.4, you can scope plugins to consumer groups using only the `/consumer_groups` endpoint. Using `overrides` is deprecated, and no longer recommended.\n'401': \n  $ref: '#/components/responses/HTTP401Error'\n in a workspace"
             operationId: update-consumer_groups-group_name_or_id-overrides-plugins-rate-limiting-advanced-in-workspace
             parameters:
                 - $ref: '#/components/parameters/Workspace'
@@ -10663,6 +10499,146 @@ paths:
             summary: Upsert a GraphQL Cost Decoration in a workspace
             tags:
                 - GraphQL Cost Decorations
+    /{workspace}/group_rbac_roles:
+        get:
+            description: List all RBACGroupRoles in a workspace
+            operationId: list-group_rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACGroupRole'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACGroupRoles
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACGroupRoles in a workspace
+            tags:
+                - RBACGroupRoles
+        post:
+            description: Create a new RBAC Group Role in a workspace
+            operationId: create-group_rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACGroupRole'
+                description: Description of the new RBAC Group Role for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACGroupRole'
+                    description: Successfully created RBAC Group Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC Group Role in a workspace
+            tags:
+                - RBACGroupRoles
+    /{workspace}/group_rbac_roles/{RBACGroupRoleId}:
+        delete:
+            description: Delete a RBAC Group Role in a workspace
+            operationId: delete-group_rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/RBACGroupRoleId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC Group Role or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC Group Role in a workspace
+            tags:
+                - RBACGroupRoles
+        get:
+            description: Get a RBAC Group Role using ID in a workspace.
+            operationId: get-group_rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACGroupRole'
+                    description: Successfully fetched RBAC Group Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC Group Role in a workspace
+            tags:
+                - RBACGroupRoles
+        parameters:
+            - $ref: '#/components/parameters/RBACGroupRoleId'
+        patch:
+            description: Update a RBAC Group Role in a workspace
+            operationId: update-group_rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACGroupRole'
+                description: Fields of the RBAC Group Role that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACGroupRole'
+                    description: Successfully updated RBAC Group Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC Group Role in a workspace
+            tags:
+                - RBACGroupRoles
+        put:
+            description: Create or Update RBAC Group Role using ID in a workspace.
+            operationId: upsert-group_rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACGroupRole'
+                description: Description of the RBAC Group Role
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACGroupRole'
+                    description: Successfully upserted RBAC Group Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC Group Role in a workspace
+            tags:
+                - RBACGroupRoles
     /{workspace}/hmac-auths:
         get:
             description: List all HMAC-auth credentials in a workspace
@@ -11912,6 +11888,39 @@ paths:
             summary: Upsert a Partial in a workspace
             tags:
                 - Partials
+    /{workspace}/partials/{PartialId}/links:
+        get:
+            description: List all plugins linked to the partial in a workspace
+            operationId: list-partial-link-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PartialId'
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    count:
+                                        description: The total number of plugins linked to the partial
+                                        example: 10
+                                        type: integer
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/PartialLink'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: The plugins linked to the partial
+            summary: List partial links in a workspace
+            tags:
+                - Partial Links
     /{workspace}/plugins:
         get:
             description: List all Plugins in a workspace
@@ -12058,6 +12067,863 @@ paths:
             tags:
                 - Plugins
             x-keep-sdk: true
+    /{workspace}/rbac/roles:
+        get:
+            description: List all RBACRoles in a workspace
+            operationId: list-rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACRole'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACRoles
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACRoles in a workspace
+            tags:
+                - RBACRoles
+        parameters: []
+        post:
+            description: Create a new RBAC Role in a workspace
+            operationId: create-rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRole'
+                description: Description of the new RBAC Role for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRole'
+                    description: Successfully created RBAC Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC Role in a workspace
+            tags:
+                - RBACRoles
+    /{workspace}/rbac/roles/{RBACRoleId}:
+        delete:
+            description: Delete a RBAC Role in a workspace
+            operationId: delete-rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/RBACRoleId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC Role or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC Role in a workspace
+            tags:
+                - RBACRoles
+        get:
+            description: Get a RBAC Role using ID in a workspace.
+            operationId: get-rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRole'
+                    description: Successfully fetched RBAC Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC Role in a workspace
+            tags:
+                - RBACRoles
+        parameters:
+            - $ref: '#/components/parameters/RBACRoleId'
+        patch:
+            description: Update a RBAC Role in a workspace
+            operationId: update-rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRole'
+                description: Fields of the RBAC Role that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRole'
+                    description: Successfully updated RBAC Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC Role in a workspace
+            tags:
+                - RBACRoles
+        put:
+            description: Create or Update RBAC Role using ID in a workspace.
+            operationId: upsert-rbac_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRole'
+                description: Description of the RBAC Role
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRole'
+                    description: Successfully upserted RBAC Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC Role in a workspace
+            tags:
+                - RBACRoles
+    /{workspace}/rbac/roles/{RBACRoleIdForNestedEntities}/endpoints:
+        get:
+            description: List all RBACRoleEndpoints in a workspace
+            operationId: list-rbac_role_endpoint-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACRoleEndpoint'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACRoleEndpoints
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACRoleEndpoints in a workspace
+            tags:
+                - RBACRoleEndpoints
+        parameters:
+            - $ref: '#/components/parameters/RBACRoleIdForNestedEntities'
+        post:
+            description: Create a new RBAC Role Endpoint in a workspace
+            operationId: create-rbac_role_endpoint-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEndpoint'
+                description: Description of the new RBAC Role Endpoint for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEndpoint'
+                    description: Successfully created RBAC Role Endpoint
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC Role Endpoint in a workspace
+            tags:
+                - RBACRoleEndpoints
+    /{workspace}/rbac/roles/{RBACRoleIdForNestedEntities}/endpoints/{workspace}{RBACRoleEndpointId}:
+        delete:
+            description: Delete a RBAC Role Endpoint in a workspace
+            operationId: delete-rbac_role_endpoint-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/RBACRoleEndpointId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC Role Endpoint or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC Role Endpoint in a workspace
+            tags:
+                - RBACRoleEndpoints
+        get:
+            description: Get a RBAC Role Endpoint using ID in a workspace.
+            operationId: get-rbac_role_endpoint-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEndpoint'
+                    description: Successfully fetched RBAC Role Endpoint
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC Role Endpoint in a workspace
+            tags:
+                - RBACRoleEndpoints
+        parameters:
+            - $ref: '#/components/parameters/RBACRoleEndpointId'
+            - $ref: '#/components/parameters/RBACRoleIdForNestedEntities'
+        patch:
+            description: Update a RBAC Role Endpoint in a workspace
+            operationId: update-rbac_role_endpoint-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEndpoint'
+                description: Fields of the RBAC Role Endpoint that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEndpoint'
+                    description: Successfully updated RBAC Role Endpoint
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC Role Endpoint in a workspace
+            tags:
+                - RBACRoleEndpoints
+        put:
+            description: Create or Update RBAC Role Endpoint using ID in a workspace.
+            operationId: upsert-rbac_role_endpoint-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEndpoint'
+                description: Description of the RBAC Role Endpoint
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEndpoint'
+                    description: Successfully upserted RBAC Role Endpoint
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC Role Endpoint in a workspace
+            tags:
+                - RBACRoleEndpoints
+    /{workspace}/rbac/roles/{RBACRoleIdForNestedEntities}/entities:
+        get:
+            description: List all RBACRoleEntities in a workspace
+            operationId: list-rbac_role_entitie-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACRoleEntity'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACRoleEntities
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACRoleEntities in a workspace
+            tags:
+                - RBACRoleEntities
+        parameters:
+            - $ref: '#/components/parameters/RBACRoleIdForNestedEntities'
+        post:
+            description: Create a new RBAC Role Entity in a workspace
+            operationId: create-rbac_role_entitie-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEntity'
+                description: Description of the new RBAC Role Entity for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEntity'
+                    description: Successfully created RBAC Role Entity
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC Role Entity in a workspace
+            tags:
+                - RBACRoleEntities
+    /{workspace}/rbac/roles/{RBACRoleIdForNestedEntities}/entities/{RBACRoleEntityId}:
+        delete:
+            description: Delete a RBAC Role Entity in a workspace
+            operationId: delete-rbac_role_entitie-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/RBACRoleEntityId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC Role Entity or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC Role Entity in a workspace
+            tags:
+                - RBACRoleEntities
+        get:
+            description: Get a RBAC Role Entity using ID in a workspace.
+            operationId: get-rbac_role_entitie-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEntity'
+                    description: Successfully fetched RBAC Role Entity
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC Role Entity in a workspace
+            tags:
+                - RBACRoleEntities
+        parameters:
+            - $ref: '#/components/parameters/RBACRoleEntityId'
+            - $ref: '#/components/parameters/RBACRoleIdForNestedEntities'
+        patch:
+            description: Update a RBAC Role Entity in a workspace
+            operationId: update-rbac_role_entitie-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEntity'
+                description: Fields of the RBAC Role Entity that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEntity'
+                    description: Successfully updated RBAC Role Entity
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC Role Entity in a workspace
+            tags:
+                - RBACRoleEntities
+        put:
+            description: Create or Update RBAC Role Entity using ID in a workspace.
+            operationId: upsert-rbac_role_entitie-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEntity'
+                description: Description of the RBAC Role Entity
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEntity'
+                    description: Successfully upserted RBAC Role Entity
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC Role Entity in a workspace
+            tags:
+                - RBACRoleEntities
+    /{workspace}/rbac/users:
+        get:
+            description: List all RBACUsers in a workspace
+            operationId: list-rbac_user-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACUser'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACUsers
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACUsers in a workspace
+            tags:
+                - RBACUsers
+        parameters: []
+        post:
+            description: Create a new RBAC User in a workspace
+            operationId: create-rbac_user-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUser'
+                description: Description of the new RBAC User for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUser'
+                    description: Successfully created RBAC User
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC User in a workspace
+            tags:
+                - RBACUsers
+    /{workspace}/rbac/users/{RBACUserId}:
+        delete:
+            description: Delete a RBAC User in a workspace
+            operationId: delete-rbac_user-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/RBACUserId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC User or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC User in a workspace
+            tags:
+                - RBACUsers
+        get:
+            description: Get a RBAC User using ID in a workspace.
+            operationId: get-rbac_user-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUser'
+                    description: Successfully fetched RBAC User
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC User in a workspace
+            tags:
+                - RBACUsers
+        parameters:
+            - $ref: '#/components/parameters/RBACUserId'
+        patch:
+            description: Update a RBAC User in a workspace
+            operationId: update-rbac_user-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUser'
+                description: Fields of the RBAC User that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUser'
+                    description: Successfully updated RBAC User
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC User in a workspace
+            tags:
+                - RBACUsers
+        put:
+            description: Create or Update RBAC User using ID in a workspace.
+            operationId: upsert-rbac_user-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUser'
+                description: Description of the RBAC User
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUser'
+                    description: Successfully upserted RBAC User
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC User in a workspace
+            tags:
+                - RBACUsers
+    /{workspace}/rbac/users/{RBACUserIdForNestedEntities}/groups:
+        get:
+            description: List all RBACUserGroups in a workspace
+            operationId: list-rbac_user_group-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACUserGroup'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACUserGroups
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACUserGroups in a workspace
+            tags:
+                - RBACUserGroups
+        parameters:
+            - $ref: '#/components/parameters/RBACUserIdForNestedEntities'
+        post:
+            description: Create a new RBAC User Group in a workspace
+            operationId: create-rbac_user_group-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserGroup'
+                description: Description of the new RBAC User Group for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserGroup'
+                    description: Successfully created RBAC User Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC User Group in a workspace
+            tags:
+                - RBACUserGroups
+    /{workspace}/rbac/users/{RBACUserIdForNestedEntities}/groups/{RBACUserGroupId}:
+        delete:
+            description: Delete a RBAC User Group in a workspace
+            operationId: delete-rbac_user_group-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/RBACUserGroupId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC User Group or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC User Group in a workspace
+            tags:
+                - RBACUserGroups
+        get:
+            description: Get a RBAC User Group using ID in a workspace.
+            operationId: get-rbac_user_group-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserGroup'
+                    description: Successfully fetched RBAC User Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC User Group in a workspace
+            tags:
+                - RBACUserGroups
+        parameters:
+            - $ref: '#/components/parameters/RBACUserGroupId'
+            - $ref: '#/components/parameters/RBACUserIdForNestedEntities'
+        patch:
+            description: Update a RBAC User Group in a workspace
+            operationId: update-rbac_user_group-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserGroup'
+                description: Fields of the RBAC User Group that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserGroup'
+                    description: Successfully updated RBAC User Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC User Group in a workspace
+            tags:
+                - RBACUserGroups
+        put:
+            description: Create or Update RBAC User Group using ID in a workspace.
+            operationId: upsert-rbac_user_group-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserGroup'
+                description: Description of the RBAC User Group
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserGroup'
+                    description: Successfully upserted RBAC User Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC User Group in a workspace
+            tags:
+                - RBACUserGroups
+    /{workspace}/rbac/users/{RBACUserIdForNestedEntities}/roles:
+        delete:
+            description: Delete a RBAC User Role in a workspace
+            operationId: delete-rbac_user_role-in-workspace
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserRole'
+                description: Request body for deleting an RBAC role. Must include the role name in the 'role' field.
+            responses:
+                "204":
+                    description: Successfully deleted RBAC User Role or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC User Role in a workspace
+            tags:
+                - RBACUserRoles
+        get:
+            description: List all RBACUserRoles in a workspace
+            operationId: list-rbac_user_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACUserRole'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACUserRoles
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACUserRoles in a workspace
+            tags:
+                - RBACUserRoles
+        parameters:
+            - $ref: '#/components/parameters/Workspace'
+            - $ref: '#/components/parameters/RBACUserIdForNestedEntities'
+        post:
+            description: Create a new RBAC User Role in a workspace
+            operationId: create-rbac_user_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserRole'
+                description: Description of the new RBAC User Role for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserRole'
+                    description: Successfully created RBAC User Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC User Role in a workspace
+            tags:
+                - RBACUserRoles
+    /{workspace}/rbac_user_roles/{RBACUserRoleId}:
+        get:
+            description: Get a RBAC User Role using ID in a workspace.
+            operationId: get-rbac_user_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserRole'
+                    description: Successfully fetched RBAC User Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC User Role in a workspace
+            tags:
+                - RBACUserRoles
+        parameters:
+            - $ref: '#/components/parameters/RBACUserRoleId'
+        patch:
+            description: Update a RBAC User Role in a workspace
+            operationId: update-rbac_user_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserRole'
+                description: Fields of the RBAC User Role that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserRole'
+                    description: Successfully updated RBAC User Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC User Role in a workspace
+            tags:
+                - RBACUserRoles
+        put:
+            description: Create or Update RBAC User Role using ID in a workspace.
+            operationId: upsert-rbac_user_role-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserRole'
+                description: Description of the RBAC User Role
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserRole'
+                    description: Successfully upserted RBAC User Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC User Role in a workspace
+            tags:
+                - RBACUserRoles
     /{workspace}/routes:
         get:
             description: List all Routes in a workspace
@@ -14533,6 +15399,146 @@ paths:
             summary: Upsert an SNI associated with a Certificate
             tags:
                 - SNIs
+    /cloned-plugins:
+        get:
+            description: List all Cloned Plugins
+            operationId: list-cloned-plugin
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/ClonedPlugin'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing Cloned Plugins
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all Cloned Plugins
+            tags:
+                - Cloned Plugins
+            x-internal: true
+            x-unstable: true
+        post:
+            description: Create a new Cloned Plugin
+            operationId: create-cloned-plugin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ClonedPlugin'
+                description: Description of the new Cloned Plugin for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClonedPlugin'
+                    description: Successfully created Cloned Plugin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new Cloned Plugin
+            tags:
+                - Cloned Plugins
+            x-internal: true
+            x-unstable: true
+    /cloned-plugins/{ClonedPluginIdOrName}:
+        delete:
+            description: Delete a Cloned Plugin
+            operationId: delete-cloned-plugin
+            parameters:
+                - $ref: '#/components/parameters/ClonedPluginIdOrName'
+            responses:
+                "204":
+                    description: Successfully deleted Cloned Plugin or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a Cloned Plugin
+            tags:
+                - Cloned Plugins
+            x-internal: true
+            x-unstable: true
+        get:
+            description: Get a Cloned Plugin using ID or name.
+            operationId: get-cloned-plugin
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClonedPlugin'
+                    description: Successfully fetched Cloned Plugin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a Cloned Plugin
+            tags:
+                - Cloned Plugins
+            x-internal: true
+            x-unstable: true
+        parameters:
+            - $ref: '#/components/parameters/ClonedPluginIdOrName'
+        patch:
+            description: Update a Cloned Plugin
+            operationId: update-cloned-plugin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ClonedPlugin'
+                description: Fields of the Cloned Plugin that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClonedPlugin'
+                    description: Successfully updated Cloned Plugin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a Cloned Plugin
+            tags:
+                - Cloned Plugins
+        put:
+            description: Create or Update Cloned Plugin using ID or name.
+            operationId: upsert-cloned-plugin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ClonedPlugin'
+                description: Description of the Cloned Plugin
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClonedPlugin'
+                    description: Successfully upserted Cloned Plugin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a Cloned Plugin
+            tags:
+                - Cloned Plugins
+            x-internal: true
+            x-unstable: true
     /clustering/data-planes:
         get:
             description: |
@@ -14670,6 +15676,8 @@ paths:
         get:
             description: Get a Consumer Group using ID.
             operationId: get-consumer_group
+            parameters:
+                - $ref: '#/components/parameters/ListConsumers'
             responses:
                 "200":
                     content:
@@ -14833,14 +15841,14 @@ paths:
                     description: |
                         HTTP/1.1 204 No Content
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Delete the configurations for a consumer group
             tags:
                 - Consumer Groups
         parameters:
             - $ref: '#/components/parameters/ConsumerGroupId'
         put:
-            description: "Define custom rate limiting settings for a consumer group. This endpoint overrides the settings of the Rate Limiting Advanced plugin. As of Kong Gateway 3.4, you can scope plugins to consumer groups using only the `/consumer_groups` endpoint. Using `overrides` is deprecated, and no longer recommended.\n'401': \n  $ref: '#/components/responses/UnauthorizedRequest'\n"
+            description: "Define custom rate limiting settings for a consumer group. This endpoint overrides the settings of the Rate Limiting Advanced plugin. As of Kong Gateway 3.4, you can scope plugins to consumer groups using only the `/consumer_groups` endpoint. Using `overrides` is deprecated, and no longer recommended.\n'401': \n  $ref: '#/components/responses/HTTP401Error'\n"
             operationId: update-consumer_groups-group_name_or_id-overrides-plugins-rate-limiting-advanced
             requestBody:
                 $ref: '#/components/requestBodies/consumerGroupsConfigResponse'
@@ -16790,40 +17798,185 @@ paths:
             summary: Upsert a GraphQL Cost Decoration
             tags:
                 - GraphQL Cost Decorations
-    /groups:
+    /group_rbac_roles:
         get:
-            description: Returns a list of groups.
-            operationId: get-groups
+            description: List all RBACGroupRoles
+            operationId: list-group_rbac_role
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
             responses:
                 "200":
-                    $ref: '#/components/responses/GetGroupResponse'
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACGroupRole'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACGroupRoles
                 "401":
                     $ref: '#/components/responses/HTTP401Error'
-            summary: List Groups
+            summary: List all RBACGroupRoles
             tags:
-                - Groups
+                - RBACGroupRoles
         post:
-            description: Create a group to your organization.
-            operationId: post-groups
+            description: Create a new RBAC Group Role
+            operationId: create-group_rbac_role
             requestBody:
                 content:
                     application/json:
-                        examples:
-                            Create a group:
-                                value:
-                                    comment: comment
-                                    name: demo-group
                         schema:
-                            properties:
-                                name:
-                                    description: The group's name
-                                    example: my_group
-                                    type: string
-                            type: object
+                            $ref: '#/components/schemas/RBACGroupRole'
+                description: Description of the new RBAC Group Role for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACGroupRole'
+                    description: Successfully created RBAC Group Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC Group Role
+            tags:
+                - RBACGroupRoles
+    /group_rbac_roles/{RBACGroupRoleId}:
+        delete:
+            description: Delete a RBAC Group Role
+            operationId: delete-group_rbac_role
+            parameters:
+                - $ref: '#/components/parameters/RBACGroupRoleId'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC Group Role or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC Group Role
+            tags:
+                - RBACGroupRoles
+        get:
+            description: Get a RBAC Group Role using ID.
+            operationId: get-group_rbac_role
             responses:
                 "200":
-                    $ref: '#/components/responses/GetGroupResponse'
-            summary: Create a new group
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACGroupRole'
+                    description: Successfully fetched RBAC Group Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC Group Role
+            tags:
+                - RBACGroupRoles
+        parameters:
+            - $ref: '#/components/parameters/RBACGroupRoleId'
+        patch:
+            description: Update a RBAC Group Role
+            operationId: update-group_rbac_role
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACGroupRole'
+                description: Fields of the RBAC Group Role that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACGroupRole'
+                    description: Successfully updated RBAC Group Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC Group Role
+            tags:
+                - RBACGroupRoles
+        put:
+            description: Create or Update RBAC Group Role using ID.
+            operationId: upsert-group_rbac_role
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACGroupRole'
+                description: Description of the RBAC Group Role
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACGroupRole'
+                    description: Successfully upserted RBAC Group Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC Group Role
+            tags:
+                - RBACGroupRoles
+    /groups:
+        get:
+            description: List all Groups
+            operationId: list-group
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/Group'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing Groups
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all Groups
+            tags:
+                - Groups
+        post:
+            description: Create a new Group
+            operationId: create-group
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Group'
+                description: Description of the new Group for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Group'
+                    description: Successfully created Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new Group
             tags:
                 - Groups
     /groups/{GroupId}:
@@ -16905,7 +18058,7 @@ paths:
             summary: Upsert a Group
             tags:
                 - Groups
-    /groups/{GroupIdOrName}/roles:
+    /groups/{GroupId}/roles:
         delete:
             description: Delete a group's roles.
             operationId: delete-groups-group_id_or_name-roles
@@ -16917,21 +18070,22 @@ paths:
                   required: true
                   schema:
                     type: string
-                - description: ID of the workspace where the role is assigned.
-                  example: d107bce7-dd86-4124-93c8-667ecc34b32e
-                  in: query
+                  x-speakeasy-match: role_id
+                - in: query
                   name: workspace_id
                   required: true
                   schema:
                     type: string
+                  x-speakeasy-match: workspace
             responses:
                 "204":
                     description: Successfully deleted role.
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Delete a Group’s Role
             tags:
                 - Groups
+            x-speakeasy-entity-operation: GroupRole#delete
         get:
             description: List all roles related to a group.
             operationId: get-groups-group_id_or_name-roles
@@ -16939,12 +18093,12 @@ paths:
                 "200":
                     $ref: '#/components/responses/GetGroupRolesListResponse'
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: List a Group’s Roles
             tags:
                 - Groups
         parameters:
-            - $ref: '#/components/parameters/GroupIdOrName'
+            - $ref: '#/components/parameters/GroupRoleId'
         post:
             description: Create roles for a specified group
             operationId: create-groups-group_id_or_name-roles
@@ -16954,10 +18108,13 @@ paths:
                 "201":
                     $ref: '#/components/responses/CreateGroupRolesResponse'
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Create Group's Roles
             tags:
                 - Groups
+            x-speakeasy-entity-operation:
+                terraform-datasource: null
+                terraform-resource: GroupRole#create
     /hmac-auths:
         get:
             description: List all HMAC-auth credentials
@@ -17609,7 +18766,7 @@ paths:
                 "200":
                     $ref: '#/components/responses/KeyRingResponse'
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Get cluster Keyring
             tags:
                 - Keyring
@@ -17623,7 +18780,7 @@ paths:
                 "204":
                     description: Key successfully activated.
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Activate Key
             tags:
                 - Keyring
@@ -17639,7 +18796,7 @@ paths:
                                 $ref: '#/components/schemas/Keyring'
                     description: Successfully exported keyring.
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Export Keyring
             tags:
                 - Keyring
@@ -17657,7 +18814,7 @@ paths:
                                 $ref: '#/components/schemas/Keyring'
                     description: Successfully generated key.
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Generate Key
             tags:
                 - Keyring
@@ -17687,7 +18844,7 @@ paths:
                                 $ref: '#/components/schemas/Keyring'
                     description: Successfully recovered keys.
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Recover Keyring
             tags:
                 - Keyring
@@ -17701,7 +18858,7 @@ paths:
                 "204":
                     description: Key successfully removed.
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: Remove Key
             tags:
                 - Keyring
@@ -18504,396 +19661,786 @@ paths:
             summary: Upsert a Plugin
             tags:
                 - Plugins
-    /rbac/roles:
+    /rbac_role_endpoints:
         get:
-            description: List all roles.
-            operationId: get-rbac-roles
+            description: List all RBACRoleEndpoints
+            operationId: list-rbac_role_endpoint
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
             responses:
                 "200":
-                    $ref: '#/components/responses/GetRbacResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: List Roles
-            tags:
-                - RBAC
-            x-workspaceable: true
-        post:
-            description: Add a role.
-            operationId: create-rbac-roles
-            requestBody:
-                $ref: '#/components/requestBodies/RBACRequest'
-            responses:
-                "201":
-                    $ref: '#/components/responses/GetRbacResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Add a Role
-            tags:
-                - RBAC
-            x-workspaceable: true
-    /rbac/roles/{rbacNameOrId}:
-        delete:
-            description: Delete a role.
-            operationId: delete-rbac-roles-name_or_id
-            responses:
-                "204":
-                    description: No Content
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Delete a Role
-            tags:
-                - RBAC
-        get:
-            description: Retrieve a role by passing the name or UUID as a path parameter.
-            operationId: get-rbac-roles-name_or_id
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRbacResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Get a Role
-            tags:
-                - RBAC
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-        patch:
-            description: Updates a role.
-            operationId: update-rbac-roles-name_or_id
-            requestBody:
-                $ref: '#/components/requestBodies/RBACRequest'
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRbacResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Update a Role
-            tags:
-                - RBAC
-        put:
-            description: |
-                If the entity exists, it updates the role with the new payload.
-                If not, it creates a new role with the provided data.
-            operationId: create-rbac-roles-name_or_id
-            requestBody:
-                $ref: '#/components/requestBodies/RBACRequest'
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRbacResponse'
-                "201":
-                    description: Created
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Update or Create a Role
-            tags:
-                - RBAC
-    /rbac/roles/{rbacNameOrId}/endpoints:
-        get:
-            description: Lists all of a role's associated endpoint permissions.
-            operationId: get-rbac-roles-name_or_id-endpoints
-            responses:
-                "200":
-                    $ref: '#/components/responses/CreateRoleEndpointPermissionResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: List Role Endpoint Permissions
-            tags:
-                - RBAC
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-        post:
-            description: |
-                Add a role endpoint permission for the specified endpoint. Permissions can use exact matches or wildcards (`*`), which can represent one segment of a path.
-            operationId: create-rbac-roles-name_or_id-endpoints
-            requestBody:
-                $ref: '#/components/requestBodies/CreateRoleEndpointPermissionRequest'
-            responses:
-                "201":
-                    $ref: '#/components/responses/CreateRoleEndpointPermissionResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Add a Role Endpoint Permission
-            tags:
-                - RBAC
-    /rbac/roles/{rbacNameOrId}/endpoints/{workspaceNameOrId}/{endpoint}':
-        delete:
-            description: |
-                Delete a Role Endpoint Permission
-            operationId: delete-rbac-roles-name_or_id-endpoints-workspace_name_or_id-endpoint
-            responses:
-                "204":
-                    description: No Content
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACRoleEndpoint'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACRoleEndpoints
                 "401":
                     $ref: '#/components/responses/HTTP401Error'
-            summary: Delete a Role Endpoint Permission
+            summary: List all RBACRoleEndpoints
             tags:
-                - RBAC
-        get:
-            description: |
-                Retrieve a Role Endpoint Permission
-            operationId: get-rbac-roles-name_or_id-endpoints-workspace_name_or_id-endpoint
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRoleEndpointPermissionResponse'
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: Get a Role Endpoint Permission
-            tags:
-                - RBAC
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-            - $ref: '#/components/parameters/WorkspaceNameOrId'
-            - $ref: '#/components/parameters/Endpoint'
-        patch:
-            description: |
-                Update a Role Endpoint Permission
-            operationId: patch-rbac-roles-name_or_id-endpoints-workspace_name_or_id-endpoint
+                - RBACRoleEndpoints
+        post:
+            description: Create a new RBAC Role Endpoint
+            operationId: create-rbac_role_endpoint
             requestBody:
                 content:
                     application/json:
                         schema:
-                            properties:
-                                actions:
-                                    description: |
-                                        One or more actions associated with this permission.
-                                    type: string
-                                negative:
-                                    description: |
-                                        If true, explicitly disallow the actions associated with the permissions tied to this resource. By default this value is false.
-                                    type: string
-                            type: object
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRoleEndpointPermissionResponse'
-            summary: Update a Role Endpoint Permission
-            tags:
-                - RBAC
-    /rbac/roles/{rbacNameOrId}/entities:
-        get:
-            description: |
-                Add a Role Entity Permission
-            operationId: get-rbac-roles-name_or_id-entities
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRoleEntityPermissionsResponse'
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: List Entity Permissions
-            tags:
-                - RBAC
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-        post:
-            description: The `entity_id` must be the ID of an entity in Kong. If you provide the ID of a workspace, the permission applies to all entities in that workspace. Future entities belonging to that workspace will get the same permissions. A wildcard (`*`) will be interpreted as all entities in the system.
-            operationId: post-rbac-roles-name_or_id-entities
-            requestBody:
-                $ref: '#/components/requestBodies/CreateRoleEntityPermissionRequest'
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRoleEntityPermissionsResponse'
-            summary: Add a Role Entity Permission
-            tags:
-                - RBAC
-    /rbac/roles/{rbacNameOrId}/entities/{entityId}:
-        delete:
-            description: |
-                Delete an Entity Permission
-            operationId: delete-rbac-roles-name_or_id-entities-entity_id
-            responses:
-                "204":
-                    description: No Content
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: Delete an Entity Permission
-            tags:
-                - RBAC
-        get:
-            description: |
-                Retrieve a Role Entity Permission
-            operationId: get-rbac-roles-name_or_id-entities-entity_id
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRoleEntityPermissionResponse'
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: List a Role Entity Permission
-            tags:
-                - RBAC
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-            - description: ID of the entity associated with this permission.
-              example: cf4c7e60-11db-49dd-b300-7c7e5f0f7e6b
-              in: path
-              name: entityId
-              required: true
-              schema:
-                type: string
-        patch:
-            description: Update an Entity Permission
-            operationId: patch-rbac-roles-name_or_id-entities-entity_id
-            requestBody:
-                $ref: '#/components/requestBodies/UpdateRoleEntityPermissionRequest'
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRoleEntityPermissionResponse'
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: Update an Entity Permission
-            tags:
-                - RBAC
-    /rbac/roles/{rbacNameOrId}/permissions:
-        get:
-            description: List Role Permissions
-            operationId: get-rbac-roles-name_or_id-permissions
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRolePermissionsResponse'
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: List Role Permissions
-            tags:
-                - RBAC
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-    /rbac/roles/{role}/endpoints/{endpoint}/':
-        get:
-            operationId: getRoleSpecificEndpointPermissions
-            parameters:
-                - description: The RBAC role ID.
-                  example: service_reader
-                  in: path
-                  name: role
-                  required: true
-                  schema:
-                    type: string
-                - $ref: '#/components/parameters/Endpoint'
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRoleSpecificEndpointResponse'
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: Get role-specific permissions for an endpoint within a workspace
-            tags:
-                - RBAC
-            x-workspaceable: true
-    /rbac/users:
-        get:
-            description: |-
-                List all users.
-
-                Note: RBAC users associated with admins aren't listed with `GET /rbac/users`. Instead, use `GET /admins` to list all admins.
-            operationId: get-rbac-users
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRBACUserResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: List Users
-            tags:
-                - RBAC
-        post:
-            description: Add a User
-            operationId: create-rbac-users
-            requestBody:
-                $ref: '#/components/requestBodies/RBACRequest'
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRBACUserResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Add a User
-            tags:
-                - RBAC
-    /rbac/users/{rbacNameOrId}:
-        delete:
-            description: Delete a user.
-            operationId: delete-rbac-users-name_or_id
-            responses:
-                "204":
-                    description: No Content
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Delete a User
-            tags:
-                - RBAC
-        get:
-            description: Retrieve a user by passing a name or ID in the path.
-            operationId: get-rbac-users-name_or_id
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRBACUserResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Get a User
-            tags:
-                - RBAC
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-        patch:
-            description: Update a user. Users are unable to update their own roles.
-            operationId: update-rbac-users-name_or_id
-            requestBody:
-                $ref: '#/components/requestBodies/RBACRequest'
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetRBACUserResponse'
-                "401":
-                    $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Update a User
-            tags:
-                - RBAC
-    /rbac/users/{rbacNameOrId}/permissions:
-        get:
-            description: |
-                List a User’s Permissions
-            operationId: get-rbac-users-name_or_id-permissions
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetUserPermissionsResponse'
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: List a User’s Permissions
-            tags:
-                - RBAC
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-    /rbac/users/{rbacNameOrId}/roles:
-        delete:
-            description: Delete a Role from a User
-            operationId: delete-rbac-users-name_or_id-roles
-            responses:
-                "204":
-                    description: No Content
-            summary: Delete a Role from a User
-            tags:
-                - RBAC
-        get:
-            description: |
-                Add a User to a Role
-            operationId: get-rbac-users-name_or_id-roles
-            responses:
-                "200":
-                    $ref: '#/components/responses/GetUserRolesResponse'
-            summary: List a User’s Roles
-            tags:
-                - RBAC
-            x-workspaceable: true
-        parameters:
-            - $ref: '#/components/parameters/RbacNameOrId'
-        post:
-            description: |
-                Add a User to a Role
-            operationId: post-rbac-users-name_or_id-roles
-            requestBody:
-                $ref: '#/components/requestBodies/CreateUserRoleAssignmentRequest'
+                            $ref: '#/components/schemas/RBACRoleEndpoint'
+                description: Description of the new RBAC Role Endpoint for creation
+                required: true
             responses:
                 "201":
-                    $ref: '#/components/responses/GetRBACUserResponse'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEndpoint'
+                    description: Successfully created RBAC Role Endpoint
                 "401":
                     $ref: '#/components/responses/HTTP401Error'
-            summary: Add a User to a Role
+            summary: Create a new RBAC Role Endpoint
             tags:
-                - RBAC
-            x-workspaceable: true
+                - RBACRoleEndpoints
+    /rbac_role_endpoints/{RBACRoleEndpointId}:
+        delete:
+            description: Delete a RBAC Role Endpoint
+            operationId: delete-rbac_role_endpoint
+            parameters:
+                - $ref: '#/components/parameters/RBACRoleEndpointId'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC Role Endpoint or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC Role Endpoint
+            tags:
+                - RBACRoleEndpoints
+        get:
+            description: Get a RBAC Role Endpoint using ID.
+            operationId: get-rbac_role_endpoint
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEndpoint'
+                    description: Successfully fetched RBAC Role Endpoint
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC Role Endpoint
+            tags:
+                - RBACRoleEndpoints
+        parameters:
+            - $ref: '#/components/parameters/RBACRoleEndpointId'
+        patch:
+            description: Update a RBAC Role Endpoint
+            operationId: update-rbac_role_endpoint
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEndpoint'
+                description: Fields of the RBAC Role Endpoint that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEndpoint'
+                    description: Successfully updated RBAC Role Endpoint
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC Role Endpoint
+            tags:
+                - RBACRoleEndpoints
+        put:
+            description: Create or Update RBAC Role Endpoint using ID.
+            operationId: upsert-rbac_role_endpoint
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEndpoint'
+                description: Description of the RBAC Role Endpoint
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEndpoint'
+                    description: Successfully upserted RBAC Role Endpoint
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC Role Endpoint
+            tags:
+                - RBACRoleEndpoints
+    /rbac_role_entities:
+        get:
+            description: List all RBACRoleEntities
+            operationId: list-rbac_role_entitie
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACRoleEntity'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACRoleEntities
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACRoleEntities
+            tags:
+                - RBACRoleEntities
+        post:
+            description: Create a new RBAC Role Entity
+            operationId: create-rbac_role_entitie
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEntity'
+                description: Description of the new RBAC Role Entity for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEntity'
+                    description: Successfully created RBAC Role Entity
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC Role Entity
+            tags:
+                - RBACRoleEntities
+    /rbac_role_entities/{RBACRoleEntityId}:
+        delete:
+            description: Delete a RBAC Role Entity
+            operationId: delete-rbac_role_entitie
+            parameters:
+                - $ref: '#/components/parameters/RBACRoleEntityId'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC Role Entity or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC Role Entity
+            tags:
+                - RBACRoleEntities
+        get:
+            description: Get a RBAC Role Entity using ID.
+            operationId: get-rbac_role_entitie
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEntity'
+                    description: Successfully fetched RBAC Role Entity
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC Role Entity
+            tags:
+                - RBACRoleEntities
+        parameters:
+            - $ref: '#/components/parameters/RBACRoleEntityId'
+        patch:
+            description: Update a RBAC Role Entity
+            operationId: update-rbac_role_entitie
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEntity'
+                description: Fields of the RBAC Role Entity that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEntity'
+                    description: Successfully updated RBAC Role Entity
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC Role Entity
+            tags:
+                - RBACRoleEntities
+        put:
+            description: Create or Update RBAC Role Entity using ID.
+            operationId: upsert-rbac_role_entitie
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRoleEntity'
+                description: Description of the RBAC Role Entity
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRoleEntity'
+                    description: Successfully upserted RBAC Role Entity
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC Role Entity
+            tags:
+                - RBACRoleEntities
+    /rbac_roles:
+        get:
+            description: List all RBACRoles
+            operationId: list-rbac_role
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACRole'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACRoles
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACRoles
+            tags:
+                - RBACRoles
+        post:
+            description: Create a new RBAC Role
+            operationId: create-rbac_role
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRole'
+                description: Description of the new RBAC Role for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRole'
+                    description: Successfully created RBAC Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC Role
+            tags:
+                - RBACRoles
+    /rbac_roles/{RBACRoleId}:
+        delete:
+            description: Delete a RBAC Role
+            operationId: delete-rbac_role
+            parameters:
+                - $ref: '#/components/parameters/RBACRoleId'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC Role or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC Role
+            tags:
+                - RBACRoles
+        get:
+            description: Get a RBAC Role using ID.
+            operationId: get-rbac_role
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRole'
+                    description: Successfully fetched RBAC Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC Role
+            tags:
+                - RBACRoles
+        parameters:
+            - $ref: '#/components/parameters/RBACRoleId'
+        patch:
+            description: Update a RBAC Role
+            operationId: update-rbac_role
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRole'
+                description: Fields of the RBAC Role that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRole'
+                    description: Successfully updated RBAC Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC Role
+            tags:
+                - RBACRoles
+        put:
+            description: Create or Update RBAC Role using ID.
+            operationId: upsert-rbac_role
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACRole'
+                description: Description of the RBAC Role
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACRole'
+                    description: Successfully upserted RBAC Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC Role
+            tags:
+                - RBACRoles
+    /rbac_user_groups:
+        get:
+            description: List all RBACUserGroups
+            operationId: list-rbac_user_group
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACUserGroup'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACUserGroups
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACUserGroups
+            tags:
+                - RBACUserGroups
+        post:
+            description: Create a new RBAC User Group
+            operationId: create-rbac_user_group
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserGroup'
+                description: Description of the new RBAC User Group for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserGroup'
+                    description: Successfully created RBAC User Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC User Group
+            tags:
+                - RBACUserGroups
+    /rbac_user_groups/{RBACUserGroupId}:
+        delete:
+            description: Delete a RBAC User Group
+            operationId: delete-rbac_user_group
+            parameters:
+                - $ref: '#/components/parameters/RBACUserGroupId'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC User Group or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC User Group
+            tags:
+                - RBACUserGroups
+        get:
+            description: Get a RBAC User Group using ID.
+            operationId: get-rbac_user_group
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserGroup'
+                    description: Successfully fetched RBAC User Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC User Group
+            tags:
+                - RBACUserGroups
+        parameters:
+            - $ref: '#/components/parameters/RBACUserGroupId'
+        patch:
+            description: Update a RBAC User Group
+            operationId: update-rbac_user_group
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserGroup'
+                description: Fields of the RBAC User Group that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserGroup'
+                    description: Successfully updated RBAC User Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC User Group
+            tags:
+                - RBACUserGroups
+        put:
+            description: Create or Update RBAC User Group using ID.
+            operationId: upsert-rbac_user_group
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserGroup'
+                description: Description of the RBAC User Group
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserGroup'
+                    description: Successfully upserted RBAC User Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC User Group
+            tags:
+                - RBACUserGroups
+    /rbac_user_roles:
+        get:
+            description: List all RBACUserRoles
+            operationId: list-rbac_user_role
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACUserRole'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACUserRoles
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACUserRoles
+            tags:
+                - RBACUserRoles
+        post:
+            description: Create a new RBAC User Role
+            operationId: create-rbac_user_role
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserRole'
+                description: Description of the new RBAC User Role for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserRole'
+                    description: Successfully created RBAC User Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC User Role
+            tags:
+                - RBACUserRoles
+    /rbac_user_roles/{RBACUserRoleId}:
+        delete:
+            description: Delete a RBAC User Role
+            operationId: delete-rbac_user_role
+            parameters:
+                - $ref: '#/components/parameters/RBACUserRoleId'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC User Role or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC User Role
+            tags:
+                - RBACUserRoles
+        get:
+            description: Get a RBAC User Role using ID.
+            operationId: get-rbac_user_role
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserRole'
+                    description: Successfully fetched RBAC User Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC User Role
+            tags:
+                - RBACUserRoles
+        parameters:
+            - $ref: '#/components/parameters/RBACUserRoleId'
+        patch:
+            description: Update a RBAC User Role
+            operationId: update-rbac_user_role
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserRole'
+                description: Fields of the RBAC User Role that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserRole'
+                    description: Successfully updated RBAC User Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC User Role
+            tags:
+                - RBACUserRoles
+        put:
+            description: Create or Update RBAC User Role using ID.
+            operationId: upsert-rbac_user_role
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUserRole'
+                description: Description of the RBAC User Role
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUserRole'
+                    description: Successfully upserted RBAC User Role
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC User Role
+            tags:
+                - RBACUserRoles
+    /rbac_users:
+        get:
+            description: List all RBACUsers
+            operationId: list-rbac_user
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/RBACUser'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing RBACUsers
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all RBACUsers
+            tags:
+                - RBACUsers
+        post:
+            description: Create a new RBAC User
+            operationId: create-rbac_user
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUser'
+                description: Description of the new RBAC User for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUser'
+                    description: Successfully created RBAC User
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new RBAC User
+            tags:
+                - RBACUsers
+    /rbac_users/{RBACUserId}:
+        delete:
+            description: Delete a RBAC User
+            operationId: delete-rbac_user
+            parameters:
+                - $ref: '#/components/parameters/RBACUserId'
+            responses:
+                "204":
+                    description: Successfully deleted RBAC User or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a RBAC User
+            tags:
+                - RBACUsers
+        get:
+            description: Get a RBAC User using ID.
+            operationId: get-rbac_user
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUser'
+                    description: Successfully fetched RBAC User
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a RBAC User
+            tags:
+                - RBACUsers
+        parameters:
+            - $ref: '#/components/parameters/RBACUserId'
+        patch:
+            description: Update a RBAC User
+            operationId: update-rbac_user
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUser'
+                description: Fields of the RBAC User that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUser'
+                    description: Successfully updated RBAC User
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a RBAC User
+            tags:
+                - RBACUsers
+        put:
+            description: Create or Update RBAC User using ID.
+            operationId: upsert-rbac_user
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RBACUser'
+                description: Description of the RBAC User
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RBACUser'
+                    description: Successfully upserted RBAC User
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a RBAC User
+            tags:
+                - RBACUsers
     /routes:
         get:
             description: List all Routes
@@ -20040,7 +21587,7 @@ paths:
                 "200":
                     $ref: '#/components/responses/TagsResponse'
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: List all tags
             tags:
                 - Tags
@@ -20055,7 +21602,7 @@ paths:
                 "200":
                     $ref: '#/components/responses/TagsResponse'
                 "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
+                    $ref: '#/components/responses/HTTP401Error'
             summary: List entities by tag
             tags:
                 - Tags
@@ -20717,6 +22264,7 @@ tags:
         <br><br>
         If intermediate certificates are required in addition to the main certificate, they should be concatenated together into one string.
       name: Certificates
+    - name: Cloned Plugins
     - description: |
         Retrieve information about the status of data planes when Kong Gateway is running in hybrid mode.
       name: Clustering
@@ -20777,8 +22325,13 @@ tags:
         <br><br>
         When adding a plugin configuration to a service, the plugin will run on every request made by a client to that service. If a plugin needs to be tuned to different values for some specific consumers, you can do so by creating a separate plugin instance that specifies both the service and the consumer, through the service and consumer fields.
       name: Plugins
-    - description: "Kong Gateway's RBAC feature is configurable through Kong's Admin API or using Kong Manager.\n<br><br>\nThere are four basic entities involving RBAC:\n<br><br>\n- User: The entity interacting with the system. Can be associated with zero, one, or more roles. For example: The user `bob` has the token `1234`.\n- Role: Set of permissions (`role_endpoint` and `role_entity`). Has a name and can be associated with zero, one, or more permissions. For example: The user `bob` is associated with the role `developer`.\n- `role_source`: The origin of the RBAC user role. Specifies where the user role is defined, either locally or through an identity provider (IdP).\n- `role_endpoint`: A set of enabled or disabled actions. For example: The role `developer` has one `role_endpoint` and reads and writes to `/routes`.\n- `role_entity`: A set of enabled or disabled actions. For example: The role `developer` has one `role_entity` attached to a UUID.\nFor the admin role in the default workspace, CRUD actions on /groups and /groups/* endpoints are disallowed. \nFor the workspace-admin role in non-default workspaces, CRUD actions on /groups and /groups/* endpoints are disallowed.\n"
-      name: RBAC
+    - name: RBACGroupRoles
+    - name: RBACRoleEndpoints
+    - name: RBACRoleEntities
+    - name: RBACRoles
+    - name: RBACUserGroups
+    - name: RBACUserRoles
+    - name: RBACUsers
     - description: |
         Route entities define rules to match client requests. Each route is associated with a service, and a service may have multiple routes associated to it. Every request matching a given route will be proxied to the associated service. You need at least one matching rule that applies to the protocol being matched by the route.
         <br><br>
