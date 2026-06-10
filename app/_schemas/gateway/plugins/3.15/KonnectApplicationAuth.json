@@ -51,6 +51,16 @@
                     },
                     "type": "object"
                   },
+                  "principals": {
+                    "properties": {
+                      "enabled": {
+                        "default": false,
+                        "description": "When true, fetch application principal from Kong Identity after authentication",
+                        "type": "boolean"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "strategy_id": {
                     "description": "The strategy id the config is tied to.",
                     "type": "string"
@@ -200,6 +210,11 @@
                       },
                       "bearer_token_cookie_name": {
                         "description": "The name of the cookie in which the bearer token is passed.",
+                        "type": "string"
+                      },
+                      "bearer_token_header_name": {
+                        "description": "The name of the HTTP header from which the bearer token is retrieved. When configured, only this header is checked for the bearer token. ",
+                        "minLength": 1,
                         "type": "string"
                       },
                       "bearer_token_param_type": {
@@ -477,6 +492,20 @@
                         "type": "array",
                         "x-encrypted": true
                       },
+                      "cluster_cache_items": {
+                        "default": [
+                          "introspection"
+                        ],
+                        "description": "Specifies which items are stored in the cluster cache backend configured via `cluster_cache_strategy`. Allowed values are `\"introspection\"` and `\"tokens\"`. When `\"tokens\"` is included, access and refresh token material is AES-encrypted before being written to the cache; enable only when your Redis deployment meets your compliance requirements. Defaults to `[\"introspection\"]`. An empty set disables all cluster caching regardless of `cluster_cache_strategy`.",
+                        "items": {
+                          "enum": [
+                            "introspection",
+                            "tokens"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
                       "cluster_cache_redis": {
                         "properties": {
                           "cloud_authentication": {
@@ -720,7 +749,7 @@
                       },
                       "cluster_cache_strategy": {
                         "default": "off",
-                        "description": "The strategy to use for the cluster cache. If set, the plugin will share cache with nodes configured with the same strategy backend. Currentlly only introspection cache is shared.",
+                        "description": "The strategy to use for the cluster cache. If set, the plugin will share introspection cache with nodes configured with the same strategy backend.",
                         "enum": [
                           "off",
                           "redis"
@@ -1335,6 +1364,51 @@
                         "description": "With this parameter, you can preserve request query arguments even when doing authorization code flow.",
                         "type": "boolean"
                       },
+                      "principals": {
+                        "description": "Configuration for Kong Identity principal hydration after token verification.",
+                        "properties": {
+                          "directory": {
+                            "default": "default",
+                            "description": "The Kong Identity directory instance to look up against.",
+                            "type": "string"
+                          },
+                          "enabled": {
+                            "default": false,
+                            "description": "When true, query Kong Identity to map a Principal after token verification.",
+                            "type": "boolean"
+                          },
+                          "error_on_miss": {
+                            "default": true,
+                            "description": "When true (default), return 401 if fail to match a Principal in Kong Identity after token verification. When false, the request continues without authenticated_principal set.",
+                            "type": "boolean"
+                          },
+                          "match_consumer": {
+                            "default": true,
+                            "description": "If a Consumer is attached to the matched Principal in Kong Identity, load it and set it in the request context, overriding consumer_by.",
+                            "type": "boolean"
+                          },
+                          "match_consumer_groups": {
+                            "default": true,
+                            "description": "If Consumer Groups are attached to the matched Principal in Kong Identity, load them, overriding consumer_groups_claim.",
+                            "type": "boolean"
+                          },
+                          "principal_by": {
+                            "description": "Custom identity name for a type=custom Kong Identity lookup. When absent and principal_claim is set, an OIDC lookup is performed using principal_claim as the claim name instead of 'sub'.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "principal_claim": {
+                            "description": "Token claim to use for the Kong Identity lookup. If multiple values are set, it means the claim is inside a nested object of the token payload. When principal_by is also set, performs a custom identity lookup (type=custom). When set alone, performs an OIDC lookup using this claim name instead of the default 'sub'.",
+                            "items": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "minLength": 1,
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
                       "proof_of_possession_auth_methods_validation": {
                         "default": true,
                         "description": "If set to true, only the auth_methods that are compatible with Proof of Possession (PoP) can be configured when PoP is enabled. If set to false, all auth_methods will be configurable and PoP checks will be silently skipped for those auth_methods that are not compatible with PoP.",
@@ -1359,6 +1433,91 @@
                           "strict"
                         ],
                         "type": "string"
+                      },
+                      "proof_of_possession_mtls_from_header": {
+                        "description": "Configuration for reading the client certificate from an HTTP header injected by a WAF or L7 proxy that terminates TLS. When configured, the plugin reads and validates the certificate from the specified header for mTLS Proof-of-Possession (PoP) verification instead of (or in addition to) the TLS layer certificate.",
+                        "properties": {
+                          "allow_partial_chain": {
+                            "default": false,
+                            "description": "Allow certificate verification with only an intermediate certificate. When enabled, a full chain to the root CA is not required.",
+                            "type": "boolean"
+                          },
+                          "ca_certificates": {
+                            "description": "List of CA Certificate UUIDs to use when validating the client certificate chain. At least one is required.",
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "cert_cache_ttl": {
+                            "default": 60000,
+                            "description": "Time in milliseconds to cache the revocation check result for a given certificate.",
+                            "type": "number"
+                          },
+                          "certificate_header_format": {
+                            "default": "url_encoded",
+                            "description": "Encoding format of the certificate in the header. Supported formats: `url_encoded`, `base64_encoded`.",
+                            "enum": [
+                              "base64_encoded",
+                              "url_encoded"
+                            ],
+                            "type": "string"
+                          },
+                          "certificate_header_name": {
+                            "description": "Name of the HTTP header that contains the injected client certificate",
+                            "type": "string"
+                          },
+                          "http_proxy_host": {
+                            "description": "A string representing a host name, such as example.com.",
+                            "type": "string"
+                          },
+                          "http_proxy_port": {
+                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                            "maximum": 65535,
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "http_timeout": {
+                            "default": 30000,
+                            "description": "HTTP timeout in milliseconds when communicating with the OCSP server or downloading CRL.",
+                            "type": "number"
+                          },
+                          "https_proxy_host": {
+                            "description": "A string representing a host name, such as example.com.",
+                            "type": "string"
+                          },
+                          "https_proxy_port": {
+                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                            "maximum": 65535,
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "revocation_check_mode": {
+                            "default": "IGNORE_CA_ERROR",
+                            "description": "Controls client certificate revocation check behavior. `SKIP` disables revocation checking. `IGNORE_CA_ERROR` respects revocation status when reachable but ignores network errors. `STRICT` requires a successful revocation check.",
+                            "enum": [
+                              "IGNORE_CA_ERROR",
+                              "SKIP",
+                              "STRICT"
+                            ],
+                            "type": "string"
+                          },
+                          "secure_source": {
+                            "default": true,
+                            "description": "When set to `true`, only requests from trusted IP addresses (configured in `trusted_ips` in kong.conf) are allowed to use the certificate header. This prevents direct header injection from untrusted clients.",
+                            "type": "boolean"
+                          },
+                          "ssl_verify": {
+                            "default": true,
+                            "description": "Verify the TLS certificate of the OCSP responder or CRL distribution point server.",
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "ca_certificates",
+                          "certificate_header_name"
+                        ],
+                        "type": "object"
                       },
                       "pushed_authorization_request_endpoint": {
                         "description": "The pushed authorization endpoint. If set it overrides the value in `pushed_authorization_request_endpoint` returned by the discovery endpoint.",
@@ -2044,12 +2203,12 @@
                               },
                               "empty_audience": {
                                 "default": false,
-                                "description": "Use empty audiences. Use this field to override audiences defined in `config.audience`.",
+                                "description": "Use empty audiences. Use this field to remove audiences defined in `config.audience`.",
                                 "type": "boolean"
                               },
                               "empty_scopes": {
                                 "default": false,
-                                "description": "Use empty scopes. Use this field to override scopes defined in `config.scopes`.",
+                                "description": "Use empty scopes. Use this field to remove scopes defined in `config.scopes`.",
                                 "type": "boolean"
                               },
                               "scopes": {
@@ -2067,7 +2226,7 @@
                             "items": {
                               "properties": {
                                 "conditions": {
-                                  "description": "A tokens will only be exchange when it matches all these criteria. To exchanging tokens issued from a different issuer, conditions must not be defined; On the contrary, to exchange tokens issued from the target issuer itself, conditions must be defined.",
+                                  "description": "A token will only be exchanged when it matches all these criteria. To exchange tokens issued by a different issuer, `conditions` must not be defined. In contrast, to exchange tokens issued by the target issuer itself, `conditions` must be defined.",
                                   "properties": {
                                     "has_audience": {
                                       "items": {
@@ -2099,6 +2258,15 @@
                                 "issuer": {
                                   "description": "Tokens of whose iss claim matches this value will be exchanged.",
                                   "type": "string"
+                                },
+                                "jwks_uri": {
+                                  "description": "An explicit JWKS endpoint for this issuer. This field should be left empty when this issuer is the same as the target issuer. It is only used when `verify_signature` is `true`. When set, Kong fetches the signing keys from this URI directly instead of using OIDC Discovery.",
+                                  "type": "string"
+                                },
+                                "verify_signature": {
+                                  "default": false,
+                                  "description": "When true, Kong cryptographically verifies the signature of the incoming subject token before exchanging it. This field should be left empty or set to `false` when this issuer is the same as the target issuer. Defaults to `false` for backward compatibility.",
+                                  "type": "boolean"
                                 }
                               },
                               "required": [
@@ -2375,6 +2543,16 @@
                     "required": [
                       "issuer"
                     ],
+                    "type": "object"
+                  },
+                  "principals": {
+                    "properties": {
+                      "enabled": {
+                        "default": false,
+                        "description": "When true, fetch application principal from Kong Identity after authentication",
+                        "type": "boolean"
+                      }
+                    },
                     "type": "object"
                   },
                   "strategy_id": {
