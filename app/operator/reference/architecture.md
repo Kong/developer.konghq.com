@@ -52,7 +52,7 @@ flowchart LR
             GWClass[GatewayClass]
             GW[Gateway]
             Routes["HTTPRoute / GRPCRoute<br/>TCPRoute / UDPRoute"]
-            DP["data plane<br/>({{site.base_gateway}}, DB-less)"]
+            DP["Data plane<br/>({{site.base_gateway}}, DB-less)"]
             S[Upstream services]
         end
 
@@ -101,7 +101,7 @@ flowchart LR
 
         subgraph AppNS[Application Namespace]
             KonnectCRs["KonnectAPIAuthConfiguration<br/>KonnectGatewayControlPlane<br/>Kong entity CRDs"]
-            DP["data plane + KonnectExtension<br/>({{site.base_gateway}}, DB-less)"]
+            DP["Data plane + KonnectExtension<br/>({{site.base_gateway}}, DB-less)"]
             S[Upstream services]
         end
 
