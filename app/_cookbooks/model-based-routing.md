@@ -273,11 +273,11 @@ The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin on the model-selecti
 
 The model responds with a single word ("fast" or "smart").
 
-### DataKit: Route selection orchestration
+### Datakit: Route selection orchestration
 
-The [DataKit](/plugins/datakit/) plugin on the default-llm Route orchestrates the model selection flow. It extracts the prompt from the client request, calls the `/model-selection` Route, parses the tier recommendation from the response, and modifies the request body's `model` field before the request reaches the AI Proxy Advanced plugin.
+The [Datakit](/plugins/datakit/) plugin on the default-llm Route orchestrates the model selection flow. It extracts the prompt from the client request, calls the `/model-selection` Route, parses the tier recommendation from the response, and modifies the request body's `model` field before the request reaches the AI Proxy Advanced plugin.
 
-DataKit operates as a workflow engine with node-based processing. Each node performs one transformation, and nodes connect by referencing each other's outputs.
+Datakit operates as a workflow engine with node-based processing. Each node performs one transformation, and nodes connect by referencing each other's outputs.
 
 #### Configuration details
 
