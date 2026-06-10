@@ -7,7 +7,6 @@ breadcrumbs:
   - /ai-gateway/
 
 works_on:
- - on-prem
  - konnect
 
 products:
@@ -44,12 +43,6 @@ In {{site.ai_gateway}} 2.0.0 and later, load balancing is configured on the [Mod
 >
 > For new {{site.ai_gateway}} deployments, use the Model entity workflow.
 -->
-
-### Request routing by model alias
-
-Model aliases allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
-
-Each target in a Model entity can have an optional [`model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
 
 ### Load balancing algorithms
 
@@ -123,6 +116,12 @@ rows:
 <!--vale on-->
 
 For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai-model/#algorithm-examples) in the [Model entity](/ai-gateway/entities/ai-model/) reference.
+
+### Request routing by model alias
+
+Model aliases allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
+
+Each target in a Model entity can have an optional [`model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
 
 ### Retry and fallback
 
@@ -227,18 +226,6 @@ rows:
       Route requests by considering cost, balancing model performance with budget targets.
 {% endtable %}
 <!--vale on-->
-
-#### Version compatibility for fallbacks
-
-{:.info}
-> **{{site.base_gateway}} version compatibility for fallbacks:**
-> {% new_in 3.10 %}
-> - Full fallback support across targets, even with different API formats.
-> - Mix models from different providers if needed (for example, OpenAI and {{ site.mistral }}).
->
-> Pre-3.10:
-> - Fallbacks only allowed between targets using the same API format.
-> - Example: OpenAI-to-OpenAI fallback is supported; OpenAI-to-OLLAMA is not.
 
 ### Health check and circuit breaker
 
