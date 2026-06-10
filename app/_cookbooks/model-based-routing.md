@@ -14,8 +14,7 @@ works_on:
 min_version:
   gateway: '3.14'
 categories:
-  - llm
-  - cost-optimization
+  - llm-routing
 featured: true
 popular: false
 
@@ -198,10 +197,10 @@ The same Key Auth configuration applies to both the `model-selection` and `defau
 
 When the DataKit plugin on the default-llm Route calls the model-selection Route internally, it extracts the `apikey` header from the incoming client request and forwards it, so the internal call also passes authentication.
 
-For production deployments, use [{{site.base_gateway}} Vaults](/gateway/latest/kong-enterprise/secrets-management/) to store API keys:
+For production deployments, use [{{site.base_gateway}} Vaults](/gateway/secrets-management/) to store API keys:
 
 {:.info}
-> In production, store credentials in [{{site.base_gateway}} Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. {{site.base_gateway}} supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_product_name}} Config Store.
+> In production, store credentials in [{{site.base_gateway}} Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. {{site.base_gateway}} supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_product_name}} Config Store.
 
 ### AI Prompt Decorator: Inject routing instructions
 
