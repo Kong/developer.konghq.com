@@ -87,6 +87,9 @@
       "additionalProperties": false
     }
   },
+  "not": {
+    "required": ["tier", "tiers"]
+  },
   "if": {
     "properties": {
       "products": {
