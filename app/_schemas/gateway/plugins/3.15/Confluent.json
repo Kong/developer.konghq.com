@@ -60,6 +60,16 @@
           "x-encrypted": true,
           "x-referenceable": true
         },
+        "error_handling": {
+          "properties": {
+            "return_error_message": {
+              "default": false,
+              "description": "When enabled, the Kafka client error message is returned to the HTTP client. Useful for debugging but may expose internal details, so should be disabled in production.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "forward_body": {
           "default": true,
           "description": "Include the request body in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
@@ -80,6 +90,56 @@
           "description": "Include the request URI and URI arguments (as in, query arguments) in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
           "type": "boolean"
         },
+        "headers": {
+          "description": "Configuration for forwarding HTTP headers as Kafka record headers.",
+          "properties": {
+            "exclude_headers": {
+              "default": [],
+              "description": "Blocklist of HTTP header names to exclude from forwarding. Used when `forward_all_by_default` is `enabled`.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "forward_all_by_default": {
+              "default": false,
+              "description": "When `false`, only headers listed in `include_headers` are forwarded. When `true`, all headers except those in `exclude_headers` are forwarded.",
+              "type": "boolean"
+            },
+            "forward_http_headers_as_record_headers": {
+              "default": true,
+              "description": "Whether to forward HTTP headers as Kafka record headers.",
+              "type": "boolean"
+            },
+            "include_headers": {
+              "default": [],
+              "description": "Allowlist of HTTP header names to forward as Kafka record headers. Used when `forward_all_by_default` is `disabled`.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "name_mappings": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "default": {},
+              "description": "Map of HTTP header names to Kafka record header names. If an HTTP header name matches a key, the corresponding value is used as the Kafka record header name.",
+              "type": "object"
+            },
+            "repeated_headers_behavior": {
+              "default": "retain_duplicates",
+              "description": "How to handle repeated HTTP headers: `concatenate_by_comma` joins values with a comma, `take_first` uses only the first value, `retain_duplicates` creates separate Kafka record headers for each value.",
+              "enum": [
+                "concatenate_by_comma",
+                "retain_duplicates",
+                "take_first"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
         "keepalive": {
           "default": 60000,
           "description": "Keepalive timeout in milliseconds.",
@@ -99,6 +159,47 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "oauthbearer": {
+          "description": "Options for SASL OAUTHBEARER authentication. When set, takes precedence over `cluster_api_key`/`cluster_api_secret`.",
+          "properties": {
+            "client_id": {
+              "description": "The OAuth2 client ID. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            },
+            "client_secret": {
+              "description": "The OAuth2 client secret. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+              "type": "string",
+              "x-encrypted": true,
+              "x-referenceable": true
+            },
+            "extensions": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Key-value pairs sent as extensions in the OAUTHBEARER SASL handshake (e.g. logicalCluster, identityPoolId).",
+              "type": "object"
+            },
+            "scopes": {
+              "description": "List of OAuth2 scopes to request.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "token_endpoint_tls_verify": {
+              "default": true,
+              "description": "Whether to verify the TLS certificate of the token endpoint.",
+              "type": "boolean"
+            },
+            "token_endpoint_url": {
+              "description": "The URL of the OAuth2 token endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            }
+          },
+          "type": "object"
         },
         "producer_async": {
           "default": true,
@@ -411,8 +512,6 @@
         }
       },
       "required": [
-        "cluster_api_key",
-        "cluster_api_secret",
         "topic"
       ],
       "type": "object"

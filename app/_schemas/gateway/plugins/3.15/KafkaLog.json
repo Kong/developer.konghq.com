@@ -5,13 +5,55 @@
         "authentication": {
           "properties": {
             "mechanism": {
-              "description": "The SASL authentication mechanism.  Supported options: `PLAIN`, `SCRAM-SHA-256` or `SCRAM-SHA-512`.",
+              "description": "The SASL authentication mechanism.  Supported options: `PLAIN`, `SCRAM-SHA-256`, `SCRAM-SHA-512`, or `OAUTHBEARER`.",
               "enum": [
+                "OAUTHBEARER",
                 "PLAIN",
                 "SCRAM-SHA-256",
                 "SCRAM-SHA-512"
               ],
               "type": "string"
+            },
+            "oauthbearer": {
+              "description": "Options for SASL OAUTHBEARER authentication. Required when `mechanism` is `OAUTHBEARER`.",
+              "properties": {
+                "client_id": {
+                  "description": "The OAuth2 client ID. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "client_secret": {
+                  "description": "The OAuth2 client secret. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "extensions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Key-value pairs sent as extensions in the OAUTHBEARER SASL handshake (e.g. logicalCluster, identityPoolId).",
+                  "type": "object"
+                },
+                "scopes": {
+                  "description": "List of OAuth2 scopes to request.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "token_endpoint_tls_verify": {
+                  "default": true,
+                  "description": "Whether to verify the TLS certificate of the token endpoint.",
+                  "type": "boolean"
+                },
+                "token_endpoint_url": {
+                  "description": "The URL of the OAuth2 token endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                }
+              },
+              "type": "object"
             },
             "password": {
               "description": "Password for SASL authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",

@@ -2,6 +2,16 @@
   "properties": {
     "config": {
       "properties": {
+        "client_certificate": {
+          "description": "Certificate to use as the mTLS client certificate when connecting to the configured HTTPS endpoint.",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-foreign": true
+        },
         "content_type": {
           "default": "application/json",
           "description": "Indicates the type of data sent. The only available option is `application/json`.",

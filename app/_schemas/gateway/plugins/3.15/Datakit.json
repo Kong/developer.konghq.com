@@ -827,6 +827,11 @@
                     "type": "string",
                     "x-lua-required": true
                   },
+                  "non_nil": {
+                    "default": false,
+                    "description": "When true, the property value must exist: in SET mode, input must not be nil/null; in GET mode, output must not be nil/null.",
+                    "type": "boolean"
+                  },
                   "output": {
                     "description": "Property output. This can be connected regardless of whether the node is operating in GET mode or SET mode.",
                     "maxLength": 255,
@@ -1317,5 +1322,13 @@
   },
   "required": [
     "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "redis-ee",
+      "paths": [
+        "config.resources.cache.redis"
+      ]
+    }
   ]
 }
