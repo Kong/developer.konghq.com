@@ -418,7 +418,7 @@ deck gateway sync recipes/model-based-routing/kong-config/deck/multi-provider.ya
 ```
 {: data-test-step="block" .collapsible }
 
-The configuration file contents:
+The `multi-provider.yaml` file contents:
 
 {%- raw %}
 
