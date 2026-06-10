@@ -679,7 +679,7 @@ curl -X POST http://localhost:8000/chat \
   -i
 ```
 
-Check the `X-Kong-LLM-Model` response header - it should show `global.anthropic.claude-sonnet-4-5-20250929-v1:0`, confirming routing to the AWS Bedrock smart tier.
+Check the `X-Kong-LLM-Model` response header - it should show the model you configured for the smart tier (for example, `anthropic.claude-3-5-sonnet-20241022-v2:0`), confirming routing to the AWS Bedrock smart tier.
 
 Example response for complex prompt (truncated):
 
