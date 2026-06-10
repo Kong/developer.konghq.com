@@ -1,8 +1,8 @@
 ---
-title: "Embedding-based similarity matching in {{site.ai_gateway}} policies"
+title: "Embedding-based similarity matching in {{site.ai_gateway}}"
 layout: reference
 content_type: reference
-description: This reference explains how {{site.ai_gateway}} policies use embedding-based similarity to compare prompts with various inputs—such as cached entries, routing targets, document chunks, or allow/deny lists.
+description: This reference explains how {{site.ai_gateway}} uses embedding-based similarity to compare prompts with various inputs—such as cached entries, target model descriptions, document chunks, or allow/deny lists.
 breadcrumbs:
   - /ai-gateway/
 
