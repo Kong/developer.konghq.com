@@ -918,7 +918,7 @@
   }
 
   .switch__slider:before {
-    @apply absolute content-[''] h-3 w-3 left-0 top-px bg-links rounded-full transition-transform duration-300;
+    @apply absolute content-[''] h-3 w-3 left-px top-px bg-links rounded-full transition-transform duration-300;
   }
 
   input:checked + .switch__slider:before {
