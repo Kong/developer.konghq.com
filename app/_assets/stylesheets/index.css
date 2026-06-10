@@ -135,11 +135,11 @@
   .dark {
     --color-bg-header: 0, 20, 8;
     --color-bg-primary: 0, 20, 8;
-    --color-bg-secondary: 24, 32, 25;
-    --color-bg-terciary: 48, 53, 47;
-    --color-bg-code-block: 48, 53, 47;
+    --color-bg-secondary: 13, 26, 17;
+    --color-bg-terciary: 36, 42, 34;
+    --color-bg-code-block: 36, 42, 34;
     --color-bg-code-block-header: 24, 32,25;
-    --color-bg-hover-component: 48, 53, 47;
+    --color-bg-hover-component: 36, 42, 34;
 
     --color-text-primary: 255, 255, 255;
     --color-text-secondary: 174, 181, 167;
