@@ -60,6 +60,26 @@
           },
           "type": "array"
         },
+        "principals": {
+          "properties": {
+            "directory": {
+              "default": "default",
+              "description": "The Kong Identity directory instance to authenticate against.",
+              "type": "string"
+            },
+            "enabled": {
+              "default": false,
+              "description": "When true, authenticate against Kong Identity instead of local credentials.",
+              "type": "boolean"
+            },
+            "error_on_miss": {
+              "default": true,
+              "description": "When true (default), return 401 if no matching principal is found in Kong Identity. When false, allow the request to continue unauthenticated instead.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "realm": {
           "description": "When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value.",
           "type": "string"

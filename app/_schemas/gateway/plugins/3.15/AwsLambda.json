@@ -138,6 +138,11 @@
           "minimum": 0,
           "type": "integer"
         },
+        "preserve_lambda_api_error_code": {
+          "default": false,
+          "description": "When enabled, the HTTP status code returned by the AWS Lambda API is forwarded to the client instead of mapping all errors to HTTP 500. Applies to 4xx and 5xx responses from the Lambda API.",
+          "type": "boolean"
+        },
         "proxy_url": {
           "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
           "type": "string"

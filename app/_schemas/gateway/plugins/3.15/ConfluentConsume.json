@@ -71,6 +71,26 @@
           "x-encrypted": true,
           "x-referenceable": true
         },
+        "consumer_group": {
+          "description": "Configuration for the Kafka consumer group ID.",
+          "properties": {
+            "consumer_group_id": {
+              "description": "The fixed consumer group ID to use when mode is set to `manual`. For SSE and WebSocket modes, a `.<node_id>` suffix is automatically appended.",
+              "type": "string"
+            },
+            "mode": {
+              "default": "random",
+              "description": "The strategy to determine the consumer group ID. `random`: a hash `com.konghq.kafka.<md5>` over the plugin ID (plus consumer identifier/IP and node ID for SSE/WebSocket). `kong_consumer`: uses the authenticated consumer's `username`, `custom_id`, then `id`, directly; falls back to `random` if no consumer is authenticated. `manual`: uses `consumer_group_id` directly. For SSE/WebSocket, `manual` and `kong_consumer` group IDs get a `.<node_id>` suffix.",
+              "enum": [
+                "kong_consumer",
+                "manual",
+                "random"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
         "dlq_topic": {
           "description": "The topic to use for the Dead Letter Queue.",
           "type": "string"
@@ -83,6 +103,16 @@
           "default": false,
           "description": "When true, 'latest' offset reset behaves correctly (starts from end). When false (default), maintains backwards compatibility where 'latest' acts like 'earliest'.",
           "type": "boolean"
+        },
+        "error_handling": {
+          "properties": {
+            "return_error_message": {
+              "default": false,
+              "description": "When enabled, the Kafka client error message is returned to the HTTP client. Useful for debugging but may expose internal details, so should be disabled in production.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
         },
         "keepalive": {
           "default": 60000,
@@ -118,6 +148,47 @@
             "websocket"
           ],
           "type": "string"
+        },
+        "oauthbearer": {
+          "description": "Options for SASL OAUTHBEARER authentication. When set, takes precedence over `cluster_api_key`/`cluster_api_secret`.",
+          "properties": {
+            "client_id": {
+              "description": "The OAuth2 client ID. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            },
+            "client_secret": {
+              "description": "The OAuth2 client secret. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+              "type": "string",
+              "x-encrypted": true,
+              "x-referenceable": true
+            },
+            "extensions": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Key-value pairs sent as extensions in the OAUTHBEARER SASL handshake (e.g. logicalCluster, identityPoolId).",
+              "type": "object"
+            },
+            "scopes": {
+              "description": "List of OAuth2 scopes to request.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "token_endpoint_tls_verify": {
+              "default": true,
+              "description": "Whether to verify the TLS certificate of the token endpoint.",
+              "type": "boolean"
+            },
+            "token_endpoint_url": {
+              "description": "The URL of the OAuth2 token endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            }
+          },
+          "type": "object"
         },
         "schema_registry": {
           "description": "The plugin-global schema registry configuration.",
@@ -572,8 +643,6 @@
         }
       },
       "required": [
-        "cluster_api_key",
-        "cluster_api_secret",
         "topics"
       ],
       "type": "object"
