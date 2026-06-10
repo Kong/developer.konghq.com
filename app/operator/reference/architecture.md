@@ -31,7 +31,7 @@ related_resources:
     url: /operator/dataplanes/konnectextension/
 ---
 
-{{site.operator_product_name}} is a [Kubernetes Operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) that manages the lifecycle of Kong Gateway deployments on Kubernetes. It supports two primary deployment models: a self-hosted control plane and a {{site.konnect_short_name}}-hosted control plane.
+{{site.operator_product_name}} is a [Kubernetes Operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) that manages the lifecycle of {{site.base_gateway}} deployments on Kubernetes. It supports two primary deployment models: a self-hosted control plane and a {{site.konnect_short_name}}-hosted control plane.
 
 ## Self-hosted control plane
 
@@ -52,7 +52,7 @@ flowchart LR
             GWClass[GatewayClass]
             GW[Gateway]
             Routes["HTTPRoute / GRPCRoute<br/>TCPRoute / UDPRoute"]
-            DP["data plane<br/>(Kong Gateway, DB-less)"]
+            DP["data plane<br/>({{site.base_gateway}}, DB-less)"]
             S[Upstream services]
         end
 
@@ -101,7 +101,7 @@ flowchart LR
 
         subgraph AppNS[Application Namespace]
             KonnectCRs["KonnectAPIAuthConfiguration<br/>KonnectGatewayControlPlane<br/>Kong entity CRDs"]
-            DP["data plane + KonnectExtension<br/>(Kong Gateway, DB-less)"]
+            DP["data plane + KonnectExtension<br/>({{site.base_gateway}}, DB-less)"]
             S[Upstream services]
         end
 
