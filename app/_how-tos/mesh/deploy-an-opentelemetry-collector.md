@@ -261,7 +261,7 @@ For background on the push model and topology trade-offs, see [OpenTelemetry col
 1. Create a dedicated namespace for the collector:
 
    ```sh
-   kubectl create namespace observability
+kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -
    ```
 
    The collector Pod must run without a sidecar, otherwise the sidecar would push telemetry back through the collector it runs alongside, creating a circular dependency.
