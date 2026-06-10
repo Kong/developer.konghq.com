@@ -742,7 +742,7 @@
   }
 
   .navbar-item__trigger_text {
-    @apply text-base lg:text-sm;
+    @apply text-base lg:text-sm text-secondary;
   }
 
   .navbar-item__trigger_icon {
