@@ -711,7 +711,7 @@ Content-Type: application/json
 
 1. **Simple prompt routing:** The simple prompt ("Hi there! What's 2 + 2?") routes to OpenAI's fast tier. The DataKit plugin calls the model-selection Route, OpenAI o3-mini analyzes the prompt complexity, returns "fast", DataKit updates the request body, and AI Proxy Advanced routes to the OpenAI target. The `X-Kong-LLM-Model` header shows `gpt-4o-mini`.
 
-2. **Complex prompt routing:** The complex prompt (binary search implementation) routes to AWS Bedrock's smart tier. The model-selection LLM recognizes this as a reasoning-heavy task and returns "smart", which DataKit forwards to the AWS Bedrock target (Claude). The `X-Kong-LLM-Model` header shows `global.anthropic.claude-sonnet-4-5-20250929-v1:0`.
+2. **Complex prompt routing:** The complex prompt (binary search implementation) routes to AWS Bedrock's smart tier. The model-selection LLM recognizes this as a reasoning-heavy task and returns "smart", which Datakit forwards to the AWS Bedrock target (Claude). The `X-Kong-LLM-Model` header shows `anthropic.claude-3-5-sonnet-20241022-v2:0`.
 
 3. **`X-Kong-LLM-Model` header:** Every response includes this header showing which model served the request. In production, this header enables per-request observability — your application can log it for cost attribution or debugging.
 
