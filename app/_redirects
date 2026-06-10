@@ -135,6 +135,7 @@
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
 /mesh/use-kuma/ /mesh/interact-with-control-plane/
+/mesh/use-mesh-cli/ /mesh/interact-with-control-plane/
 /mesh/configure-transparent-proxying/   /mesh/transparent-proxying/
 /mesh/upgrade-notes/    /mesh/version-specific-upgrade-notes/
 /metering-and-billing/billing-invoicing-subscriptions/  /metering-and-billing/billing-invoicing/
