@@ -106,7 +106,7 @@ The solution uses two Routes working in tandem:
 
 1. **Model selection Route:** Receives prompts, analyzes complexity via OpenAI o3-mini, and returns a tier recommendation ("fast" or "smart").
 
-2. **Default LLM Route:** Your application's main chat endpoint. The DataKit plugin intercepts requests, calls the model selection Route, extracts the tier recommendation, modifies the request body to specify the recommended tier, and forwards it to the AI Proxy Advanced plugin. The plugin has two targets — one for OpenAI (fast tier) and one for AWS Bedrock (smart tier) — and routes based on the tier field.
+2. **Default LLM Route:** Your application's main chat endpoint. The Datakit plugin intercepts requests, calls the model selection Route, extracts the tier recommendation, modifies the request body to specify the recommended tier, and forwards it to the AI Proxy Advanced plugin. The plugin has two targets — one for OpenAI (fast tier) and one for AWS Bedrock (smart tier) — and routes based on the tier field.
 
 This architecture provides:
 
