@@ -645,6 +645,55 @@ headers["X-Another"][2] -- "baz"
 
 
 
+## kong.request.get_raw_headers()
+
+Returns request headers parsed from the raw HTTP header block.
+
+ This function reads `ngx.req.raw_header(true)` and parses it into a Lua
+ table. Header names are normalized to lowercase. If a header appears
+ multiple times, the value is an array preserving the original order.
+
+ Lookup is case-insensitive. It first checks the original header name after
+ lowercasing it. If that exact lowercase key is absent and the requested
+ name contains underscores, it performs one fallback lookup with
+ underscores replaced by dashes. Dashed and underscored names still remain
+ distinct stored keys and are not merged or rewritten into each other.
+
+ This API is only available for HTTP/1.x. For HTTP/2 or higher,
+ it returns `nil` and an error message.
+
+
+**Phases**
+
+* rewrite, access, header_filter, response, body_filter, log, admin_api
+
+**Returns**
+
+1.  `table|nil`:  Parsed request headers table, or `nil` when unavailable.
+
+1.  `nil|string`:  Error message when raw headers are unavailable.
+
+
+**Usage**
+
+``` lua
+-- Given request headers:
+--   X-Foo-Bar: hello
+--   X_Foo_Bar: world
+local headers = kong.request.get_raw_headers()
+
+headers["X-Foo-Bar"] -- "hello"
+headers["x-foo-bar"] -- "hello"
+headers["X_Foo_Bar"] -- "world"
+headers["x_foo_bar"] -- "world"
+
+-- If only `X-Foo-Bar: hello` is present, then an underscored lookup
+-- falls back once to the dashed key:
+headers["X_Foo_Bar"] -- "hello"
+```
+
+
+
 ## kong.request.get_raw_body()
 
 Returns the plain request body.
