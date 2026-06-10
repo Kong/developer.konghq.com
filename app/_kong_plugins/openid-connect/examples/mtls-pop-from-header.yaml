@@ -1,0 +1,62 @@
+title: "mTLS Proof-of-Possession with certificate in header"
+description: |
+  Configure the OpenID Connect plugin for mTLS Proof-of-Possession (PoP) validation
+  when the client certificate is injected via an HTTP header by a WAF or L7 proxy.
+extended_description: |
+  Configure the OpenID Connect plugin to validate [certificate-bound access tokens](/plugins/openid-connect/#certificate-bound-access-tokens)
+  in deployments where TLS is terminated before reaching {{site.base_gateway}}.
+
+  When a WAF or load balancer terminates TLS, it injects the client certificate as an HTTP header.
+  Use `proof_of_possession_mtls_from_header` to tell the plugin which header to read the certificate from, and set `proof_of_possession_mtls: strict` to validate that the certificate thumbprint matches the `cnf.x5t#S256` claim bound in the access token.
+
+  For a complete tutorial, see [Configure OIDC with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/).
+
+weight: 821
+
+requirements:
+  - An identity provider (IdP) configured with OAuth 2.0 Mutual TLS Certificate Bound Access Tokens
+  - A CA certificate added as a [CA Certificate entity](/gateway/entities/ca-certificate/) in {{site.base_gateway}}
+  - A WAF or L7 proxy that terminates TLS and injects the client certificate as an HTTP header
+
+config:
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  auth_methods:
+    - bearer
+  proof_of_possession_mtls: strict
+  proof_of_possession_auth_methods_validation: true
+  proof_of_possession_mtls_from_header:
+    certificate_header_name: x-client-cert
+    certificate_header_format: base64_encoded
+    ca_certificates:
+      - ${ca-certificate-id}
+    ssl_verify: true
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: The well-known issuer endpoint of your IdP, for example `http://keycloak.test:8080/realms/master`.
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
+  ca-certificate-id:
+    value: $CA_CERT_ID
+    description: The UUID of the CA Certificate entity in {{site.base_gateway}} used to validate the client certificate.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: fapi
+
+min_version:
+  gateway: '3.15'

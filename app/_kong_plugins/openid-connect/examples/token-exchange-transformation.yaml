@@ -68,3 +68,6 @@ tools:
   - terraform
 
 group: other
+
+min_version:
+  gateway: '3.14'

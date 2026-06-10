@@ -1,0 +1,9 @@
+name: headers
+service: 
+  name: example-clean-service
+paths:
+- /headers
+preserve_host: false
+protocols:
+- http
+- https
