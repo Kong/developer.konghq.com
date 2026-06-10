@@ -266,7 +266,7 @@ In this example:
 * `proof_of_possession_auth_methods_validation`: Ensures that only authentication methods compatible with PoP can be used when PoP is enabled.
 * `proof_of_possession_mtls_from_header`: Tells the plugin to read the client certificate from the `x-client-cert` HTTP header instead of the TLS layer.
   * `certificate_header_name`: The name of the HTTP header containing the client certificate.
-  * `certificate_header_format`: The encoding of the certificate in the header. `base64_encoded` means the certificate is base64-encoded PEM format.
+  * `certificate_header_format`: The encoding of the certificate in the header. `base64_encoded` means the certificate bytes are base64-encoded (for example, from a DER-encoded certificate).
   * `ca_certificates`: A list of CA Certificate entity UUIDs that the plugin uses to validate the certificate in the header.
   * `ssl_verify`: Validates the certificate chain against the configured CA certificates.
   * `secure_source`: When set to `true` (default), the plugin only reads the certificate header if the client IP is in {{site.base_gateway}}'s trusted IP list.

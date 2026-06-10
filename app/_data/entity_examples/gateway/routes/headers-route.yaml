@@ -1,9 +1,9 @@
 name: headers
-service: 
+service:
   name: example-clean-service
 paths:
-- /headers
+  - /headers
 preserve_host: false
 protocols:
-- http
-- https
+  - http
+  - https
