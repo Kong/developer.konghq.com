@@ -21,6 +21,7 @@ groups:
   - title: Reference
     sections:
       - items:
+          - path: /operator/reference/architecture/
           - path: /operator/reference/configuration-options/
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/

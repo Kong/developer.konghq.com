@@ -13,6 +13,13 @@ breadcrumbs:
     group: Gateway Deployment
     section: Key Concepts
 
+related_resources:
+  - text: "{{site.operator_product_name}} architecture"
+    url: /operator/reference/architecture/
+  - text: "Gateway API"
+    url: /operator/dataplanes/gateway-api/
+  - text: "Gateway configuration"
+    url: /operator/dataplanes/gateway-configuration/
 ---
 
 {{ site.operator_product_name }} reconciles `Gateway` resources differently to {{ site.kic_product_name }}. {{ site.operator_product_name }}'s approach is known as _managed_ gateways, and the {{ site.kic_product_name }} approach is referred to as [_unmanaged_ gateways](/kubernetes-ingress-controller/gateway-api/#unmanaged-gateways).
