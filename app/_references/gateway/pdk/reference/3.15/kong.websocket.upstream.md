@@ -91,10 +91,6 @@ Set the status code for a close frame.
  will result in an exception.
 
 
-**Phases**
-
-* ws_upstream_frame
-
 **Parameters**
 
 * **status** (`number`):  The desired status code
@@ -125,10 +121,6 @@ Drop the current frame.
  Close frames cannot be dropped. Calling this function for a close
  frame will result in an exception.
 
-**Phases**
-
-* ws_upstream_frame
-
 **Usage**
 
 ``` lua
@@ -149,10 +141,6 @@ Close the WebSocket connection.
  executed.
 
 
-**Phases**
-
-* ws_upstream_frame
-
 **Parameters**
 
 * **status** (`number`, _optional_):  Status code of the upstream close frame
@@ -169,7 +157,9 @@ kong.websocket.upstream.close(1009, "Invalid message",
 
 
 
-## kong.websocket.upstream.set_max_payload_size(size)
+
+
+## kong.size
 
 Set the maximum allowed payload size for upstream frames.
 
@@ -186,13 +176,6 @@ Set the maximum allowed payload size for upstream frames.
  status code `1009` is sent to the upstream, and the connection is closed.
 
  This limit does not apply to control frames (close/ping/pong).
-
-
-**Phases**
-
-* ws_handshake
-
-**Parameters**
 
 * **size** (`integer`):  The limit (`0` resets to the default limit)
 
