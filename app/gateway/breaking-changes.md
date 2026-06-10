@@ -33,6 +33,21 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.15.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-15-0-0) for all the changes in this release.
+
+### 3.15.0.0
+
+Breaking changes in the 3.15.0.0 release.
+
+#### License expiration changes
+
+When a license expires, you can no longer change any {{site.base_gateway}} configuration.
+The Admin API and all interfaces become read-only until a valid license is applied.
+
+Existing configuration continues to be used, and all proxy traffic is processed as before the expiration.
+
 ## 3.14.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this release.
@@ -757,6 +772,11 @@ As a result, the following are prohibited:
 * Any cipher suite using RC4
 * SSL version 3
 Additionally, compression is disabled.
+
+#### OpenResty header enforcement
+
+OpenResty was bumped from 1.21.4.2 to 1.25.3.1, picking up stricter header validation from Nginx.
+Starting from 1.23.2, Nginx strictly enforces [RFC 9112](https://datatracker.ietf.org/doc/html/rfc9112) and treats upstream responses that contain duplicate `Content-Length` headers, duplicate `Transfer-Encoding` headers, or both headers as invalid, returning a `502 Bad Gateway`.
 
 #### Kong Manager Enterprise
 

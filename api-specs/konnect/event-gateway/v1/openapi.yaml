@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@7afc9a5202301ac612ade06b625c3235b2ff54ec
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7afc9a5202301ac612ade06b625c3235b2ff54ec'
+  x-oas-source: kong/platform-api@1d10a1973e6bd490a6d2a07505bd124c87f2608c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1d10a1973e6bd490a6d2a07505bd124c87f2608c'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -4979,6 +4979,22 @@ components:
               $ref: '#/components/schemas/SchemaValidationType'
             schema_registry:
               $ref: '#/components/schemas/SchemaRegistryReference'
+            failure_mode:
+              $ref: '#/components/schemas/ConsumeFailureMode'
+            validate_key:
+              description: |-
+                If true, validate the record key.
+
+                **Requires a minimum runtime version of `1.2`**.
+              type: boolean
+              x-min-runtime-version: '1.2'
+            validate_value:
+              description: |-
+                If true, validate the record value.
+
+                **Requires a minimum runtime version of `1.2`**.
+              type: boolean
+              x-min-runtime-version: '1.2'
             key_validation_action:
               $ref: '#/components/schemas/ConsumeKeyValidationAction'
             value_validation_action:
@@ -5113,6 +5129,22 @@ components:
       properties:
         schema_registry:
           $ref: '#/components/schemas/SchemaRegistryReference'
+        failure_mode:
+          $ref: '#/components/schemas/ProduceFailureMode'
+        validate_key:
+          description: |-
+            If true, validate the record key.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        validate_value:
+          description: |-
+            If true, validate the record value.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
         key_validation_action:
           $ref: '#/components/schemas/ProduceKeyValidationAction'
         value_validation_action:
@@ -5130,6 +5162,22 @@ components:
       properties:
         schema_registry:
           $ref: '#/components/schemas/SchemaRegistryReference'
+        failure_mode:
+          $ref: '#/components/schemas/ProduceFailureMode'
+        validate_key:
+          description: |-
+            If true, validate the record key.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        validate_value:
+          description: |-
+            If true, validate the record value.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
         key_validation_action:
           $ref: '#/components/schemas/ProduceKeyValidationAction'
         value_validation_action:
@@ -5382,29 +5430,35 @@ components:
         - error
         - passthrough
     ProduceFailureMode:
-      description: |
+      description: |-
         Describes how to handle a failure in a policy applied to produced records.
         * `reject` - rejects the record batch.
         * `passthrough` - passes the record silently to the backend cluster even though policy execution failed.
         * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).
+
+        **Requires a minimum runtime version of `1.2`**.
       type: string
       enum:
         - reject
         - passthrough
         - mark
+      x-min-runtime-version: '1.2'
     ConsumeFailureMode:
-      description: |
+      description: |-
         Describes how to handle a failure in a policy applied to consumed records.
         * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it.
         * `skip` - the record is not delivered to the client.
         * `passthrough` - passes the record to the client even though policy execution failed.
         * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).
+
+        **Requires a minimum runtime version of `1.2`**.
       type: string
       enum:
         - error
         - skip
         - passthrough
         - mark
+      x-min-runtime-version: '1.2'
     EncryptionRecordPart:
       description: |
         * key - encrypt the record key
@@ -5500,21 +5554,27 @@ components:
         - name
     ConsumeKeyValidationAction:
       description: |
+        Deprecated. Use `failure_mode`.
+
         Defines a behavior when record key is not valid.
         * mark - marks a record with kong/server header and client ID value
           to help to identify the clients violating schema.
         * skip - skips delivering a record.
       type: string
+      deprecated: true
       enum:
         - mark
         - skip
     ConsumeValueValidationAction:
       description: |
+        Deprecated. Use `failure_mode`.
+
         Defines a behavior when record value is not valid.
         * mark - marks a record with kong/server header and client ID value
           to help to identify the clients violating schema.
         * skip - skips delivering a record.
       type: string
+      deprecated: true
       enum:
         - mark
         - skip

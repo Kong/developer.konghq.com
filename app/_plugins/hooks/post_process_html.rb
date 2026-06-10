@@ -21,14 +21,14 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
       next if heading.ancestors('.accordion-trigger').any?
       next unless heading['id']
 
-      # handle new-in badge
+      # Use the heading's text content, excluding any new-in badge.
       text = if ['/mesh/changelog/', '/mesh/version-specific-upgrade-notes/'].include?(@page_or_doc.url)
                # special case, it has links in the headings
                heading.content.strip
              else
-               text = heading.children.find(&:text?)&.text&.strip
-               text = heading.content.strip if text.nil? || text.empty?
-               text
+               heading_without_badge = heading.dup
+               heading_without_badge.css('.new-in').each(&:remove)
+               heading_without_badge.content.strip
              end
       old_id = heading['id']
 
@@ -108,7 +108,7 @@ class KongPluginsMetaInjector
   def process
     return unless should_inject?
 
-    inject_meta_tag(build_meta_tag)
+    @page_or_doc.output = @page_or_doc.output.sub('</head>', "  #{build_meta_tag}\n</head>")
   end
 
   private
@@ -123,21 +123,6 @@ class KongPluginsMetaInjector
 
   def build_meta_tag
     %(<meta name="algolia:kong_plugins" content="#{kong_plugins.join(', ')}">)
-  end
-
-  def inject_meta_tag(meta_tag)
-    doc = Nokogiri::HTML(@page_or_doc.output)
-    head = doc.at_css('head')
-
-    last_meta = head.css('meta').last
-
-    if last_meta
-      last_meta.add_next_sibling("\n  #{meta_tag}")
-    else
-      head.prepend_child("#{meta_tag}\n  ")
-    end
-
-    @page_or_doc.output = doc.to_html
   end
 end
 

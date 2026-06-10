@@ -28,9 +28,9 @@ async function getLatestReleasess(releases) {
     .map((item) => item.obj);
 }
 
-async function fetchDeckReleaseNames() {
+async function main() {
   const response = await fetch(
-    "https://api.github.com/repos/kong/deck/releases"
+    "https://api.github.com/repos/kong/deck/releases",
   );
   if (!response.ok) {
     console.error("Failed to fetch releases:", response.statusText);
@@ -42,7 +42,7 @@ async function fetchDeckReleaseNames() {
 
   const deckDataPath = path.resolve(
     __dirname,
-    "../../app/_data/tools/deck.yml"
+    "../../app/_data/tools/deck.yml",
   );
 
   const seenReleases = {};
@@ -74,12 +74,25 @@ async function fetchDeckReleaseNames() {
       (r) =>
         `  - release: "${r.release}"\n    version: "${r.version}"\n${
           r.latest ? `    latest: true\n` : ""
-        }    released: ${r.published_at}`
+        }    released: ${r.published_at}`,
     )
     .join("\n")}`;
 
   fs.writeFileSync(deckDataPath, yamlContent, "utf8");
   console.log("Updated deck.yml successfully");
+
+  const latestVersion = releaseNames[0].name.replace(/^v/, "");
+  const dockerfilePath = path.resolve(
+    __dirname,
+    "../../tools/automated-tests/docker/Dockerfile",
+  );
+  const dockerfileContent = fs.readFileSync(dockerfilePath, "utf8");
+  const updatedDockerfile = dockerfileContent.replace(
+    /https:\/\/github\.com\/Kong\/deck\/releases\/download\/v[0-9]+\.[0-9]+\.[0-9]+\/deck_v[0-9]+\.[0-9]+\.[0-9]+_\$\{ARCH\}\.deb/,
+    `https://github.com/Kong/deck/releases/download/v${latestVersion}/deck_v${latestVersion}_\${ARCH}.deb`,
+  );
+  fs.writeFileSync(dockerfilePath, updatedDockerfile, "utf8");
+  console.log("Updated Dockerfile deck version successfully");
 }
 
-fetchDeckReleaseNames();
+main();

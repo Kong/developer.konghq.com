@@ -34,15 +34,13 @@
 {% endif %}
 {% endcapture %}
 
-<div {% if include.id %}id="{{ include.id }}"{% endif %} class="card {% if include.featured %}card__featured{% else %}card__bordered{% endif %} {{ include.css_class}} ">
+<div {% if include.id %}id="{{ include.id }}"{% endif %} class="card {% if include.featured %}card__featured{% else %}card__bordered{% endif %} {% if include.tech_preview %}relative overflow-hidden{% endif %} {{ include.css_class}} ">
     {% if include.featured %}
     <div class="text-xs absolute transform rotate-45 bg-brand-saturated dark:bg-terciary text-center text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">
-    {% if include.featured != true %}
-    {{ include.featured }}
-    {% else %}
-    Recommended
-    {% endif %}
+    {% if include.featured != true %}{{ include.featured }}{% else %}Recommended{% endif %}
     </div>
+    {% elsif include.tech_preview %}
+    <div class="text-xs absolute transform rotate-45 bg-semantic-yellow-secondary text-center text-semantic-yellow-primary font-semibold py-1 right-[-35px] top-[32px] w-[170px]">Tech Preview</div>
     {% endif %}
 
     {% if include.cta_url %}

@@ -215,7 +215,7 @@ mesh:
     - '\[.*\]\(https:\/\/github\.com\/[kK]ong\/kong-mesh.*\)'
 
 # Version vars
-latest_gateway_oss_version: "3.9.1"
+latest_gateway_oss_version: "3.9.2"
 
 # Operator vars
 operator_gatewayconfiguration_api_version: "v2beta1"
@@ -226,7 +226,7 @@ operator_kongroute_api_version: "v1alpha1"
 operator_kongcertificate_api_version: "v1alpha1"
 operator_kongreferencegrant_api_version: "v1alpha1"
 operator_kongpluginbinding_api_version: "v1alpha1"
-gwapi_version: "1.4.1" 
+gwapi_version: "1.5.1" 
 render_banner: false
 
 # Copy

@@ -196,7 +196,10 @@ While you are creating or editing an API document, you can also choose to publis
 To create a new API document, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
+1. Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. 
+1. Click the **Documentation** tab, and then click **New document** to create a new Markdown document. 
+
+If you want to upload an existing Markdown documentation file, use the API or Terraform.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-document):
