@@ -10,7 +10,7 @@ First, make a GET request to the {{site.konnect_short_name}} Cloud Gateways API 
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/cloud-gateways/provider-accounts
+url: /v2/cloud-gateways/provider-accounts?filter%5Bprovider%5D%5Beq%5D=azure
 status_code: 201
 region: global
 method: GET
@@ -20,7 +20,7 @@ headers:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Save the `provider_account_id` from the output to use in your Terraform resource.
+Save the `id` from the output to use in your Terraform resource.
 
 The supported region, availability zones, and CIDR blocks depend on your provider account. List the values that Azure supports from the availability endpoint:
 
@@ -30,7 +30,7 @@ curl -s -H "Authorization: Bearer $KONNECT_TOKEN" \
   jq '.providers[] | select(.provider == "azure") | .regions[] | {region, availability_zones, cidr_blocks}'
 ```
 
-Use a supported `region`, its `availability_zones`, and one of its supported `cidr_blocks` in the following configuration:
+Use a supported `region`, its `availability_zones`, and a CIDR subnet inside one of the supported `cidr_blocks` in the following configuration:
 
 ```hcl
 echo '
@@ -45,9 +45,9 @@ resource "konnect_cloud_gateway_network" "my_cloudgatewaynetwork" {
     "eastus2-az3"
   ]
 
-  cidr_block      = "10.0.0.0/8"
+  cidr_block      = "10.99.98.0/23"
 
-  cloud_gateway_provider_account_id = "a6e541b4-8fd6-4562-885e-b82d35ebdde9"
+  cloud_gateway_provider_account_id = "d53d2872-514f-4fb9-819e-43bd792b4759"
 }
 
 resource "konnect_gateway_control_plane" "my_cp" {
@@ -55,6 +55,11 @@ resource "konnect_gateway_control_plane" "my_cp" {
   cloud_gateway = true
 }
 ' >> main.tf
+```
+
+Create the Azure network resource using Terraform:
+```sh
+terraform apply -auto-approve
 ```
 
 {:.warning}
