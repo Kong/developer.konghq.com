@@ -36,16 +36,12 @@ related_resources:
     icon: /assets/icons/redis.svg
 ---
 
-In large language tasks, applications that interact with language models rely on semantic search—not by exact word matches, but by similarity in meaning. This is achieved using vector embeddings, which represent pieces of text as points in a high-dimensional space.
-
-These embeddings enable the concept of semantic similarity, where the “distance” between vectors reflects how closely related two pieces of text are. Similarity can be measured using techniques like cosine similarity or Euclidean distance, forming the quantitative basis for comparing meaning.
+Vector embeddings represent text as points in high-dimensional space, where the distance between vectors reflects semantic similarity. This enables semantic search—comparing meaning rather than exact words—powering LLM workflows like intelligent caching, retrieval, classification, and anomaly detection.
 
 ![Vector embeddings example](/assets/images/ai-gateway/vectors.svg)
 > _**Figure 1:** A simplified representation of vector text embeddings in a three-dimensional space._
 
-For example, in the image, "king" and "emperor" are semantically more similar than a "king" is to an "otter".
-
-Vector embeddings power a range of LLM workflows, including semantic search, document clustering, recommendation systems, anomaly detection, content similarity analysis, and classification via auto-labeling.
+For example, in the image, “king” and “emperor” are semantically more similar than “king” is to “otter”. Similarity is measured using techniques like cosine similarity or Euclidean distance, which quantify the relationship between vectors.
 
 ## Semantic similarity in {{site.ai_gateway}}
 
