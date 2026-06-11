@@ -48,7 +48,7 @@ rows:
             config:
               header:
                 type: h2
-                text: "Create MCP servers from API specs {% new_in 2.0 %}"
+                text: "Generate MCP servers from API specs {% new_in 2.0 %}"
               blocks:
                 - type: text
                   text: |
@@ -56,7 +56,7 @@ rows:
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
-              title: AI MCP Server
+              title: AI MCP Server entity
               description: Generate an AI MCP Server from an API spec to expose tools and services over MCP in {{site.ai_gateway}}.
               ctas:
                 - text: AI MCP Server reference
