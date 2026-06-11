@@ -85,7 +85,7 @@
     </script>
     {% endif %}
 
-    {% if jekyll.environment == "production" and page.url != '/search/' %}
+    {% if jekyll.environment == "production" and page.url != '/search/' and page.url != '/support/' %}
     <!-- Disable Segment on /search/ for now -->
     <!-- Segment start for konghq.com -->
      {% assign category = "'" | append: page.content_type | append: "'" %}
