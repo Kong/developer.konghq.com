@@ -47,13 +47,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Turn any API into an MCP server using the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity. This approach does not require an LLM and provides full control over production workloads.
-
-                    The AI MCP Server entity:
-                    - Converts API schemas into MCP-compatible tool definitions
-                    - Aggregates multiple APIs into a single MCP server endpoint
-                    - Supports serverless deployments for dynamic tool generation
-                    - Integrates with AI assistants like Claude Desktop and other MCP clients
+                    {{site.ai_gateway}} {% new_in 2.0 %} manages MCP traffic through the entity model. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to expose MCP tools and services, then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
