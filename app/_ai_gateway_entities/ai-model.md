@@ -323,7 +323,7 @@ Substitution applies to the [`name`](#schema-aigateway-model-target-models-name)
 * `$(uri_captures.path_parameter_name)`: the value of a captured URI path parameter.
 * `$(query_params.query_parameter_name)`: the value of a query string parameter.
 
-For examples on using templating, consult the {{site.ai_gateway}} documentation and API reference.
+For examples of using templating, consult the {{site.ai_gateway}} documentation and API reference.
 
 ## Access control
 
@@ -349,7 +349,7 @@ For further information, see the [Policy entity](/ai-gateway/entities/ai-policy/
 
 A Policy attached to a Model runs on the Service of the Model's derived primitives. That Policy runs at the [priority](/gateway/entities/plugin/#plugin-priority) determined by its type, which affects when it executes relative to other Policies on the request.
 
-Model routing itself executes at a specific point in the request pipeline. Policies whose types run before that point (higher priority) execute before the Model is resolved. Authentication Policies (such as OpenID Connect) fall into this category. They gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available until after Model resolution.
+Model routing executes at a specific point in the request pipeline. Policies have different priorities that determine when they run.  Higher priority Policies types may run before the Model routing is resolved. Authentication Policies (such as OpenID Connect) fall into this category. They gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available until after Model resolution.
 
 For Policies whose behavior depends on the resolved Model identity, use Policy types that run at or after Model resolution, or use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to adjust execution order as needed.
 
