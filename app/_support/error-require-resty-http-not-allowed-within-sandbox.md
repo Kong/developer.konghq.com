@@ -25,7 +25,7 @@ related_resources:
 
 ## Problem
 
-When attempting to use a plugin that allows execution of arbitrary Lua code (i.e.: serverless plugins, exit transformer, etc) you receive the message:
+When attempting to use a plugin that allows execution of arbitrary Lua code (that is, serverless plugins, exit transformer, and so on) you receive the message:
 
 ```json
 {"message":"An unexpected error occurred"}
@@ -39,7 +39,7 @@ A review of the Kong error log shows something similar to the below:
 
 ## Cause
 
-These types of plugins, by default, operate in a sandboxed environment. The sandbox function has restricted access to the global environment and only has access to standard Lua functions that will generally not cause harm to the Kong Gateway node. This means you cannot arbitrarily "require" certain modules, in our example here `resty.http`.
+These types of plugins, by default, operate in a sandboxed environment. The sandbox function has restricted access to the global environment and only has access to standard Lua functions that will generally not cause harm to the {{site.base_gateway}} node. This means you cannot arbitrarily "require" certain modules, in our example here `resty.http`.
 
 ## Solution
 

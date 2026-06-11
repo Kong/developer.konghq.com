@@ -1,7 +1,7 @@
 ---
 title: How to enforce strict JSON body schemas when using the OAS validation plugin
 content_type: support
-description: Set the additionalProperties field to false in your OAS body schema so the OAS validation plugin rejects request bodies containing keys not defined in the schema.
+description: Set the `additionalProperties` field to `false` in your OAS body schema so the OAS validation plugin rejects request bodies containing keys not defined in the schema.
 products:
   - gateway
 works_on:

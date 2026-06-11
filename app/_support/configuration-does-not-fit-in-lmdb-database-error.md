@@ -1,7 +1,7 @@
 ---
 title: "\"Configuration does not fit in LMDB database\" Error"
 content_type: support
-description: Pushing configuration to data planes fails with an HTTP 413 "Configuration does not fit in LMDB database" error; raise lmdb_map_size to fix it.
+description: Pushing configuration to data planes fails with an HTTP 413 "Configuration does not fit in LMDB database" error; raise `lmdb_map_size` to fix it.
 products:
   - gateway
 works_on:
@@ -28,7 +28,7 @@ We see configurations failing to get pushed to our data planes.
 
 ## Solution
 
-The default size of the LMDB is 128m. To increase the size, we need to make the following changes to our configuration.
+The default size of the LMDB is `128m`. To increase the size, make the following changes to your configuration.
 
 General:
 

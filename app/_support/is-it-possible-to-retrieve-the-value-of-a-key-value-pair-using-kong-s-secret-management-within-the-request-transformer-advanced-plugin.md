@@ -24,7 +24,7 @@ You want to retrieve the value of a key-value pair from Kong's Secret Management
 
 ## Solution
 
-You can achieve this using the Request Transformer Advanced plugin with the following configuration for adding a header.
+You can retrieve the secret using the Request Transformer Advanced plugin with the following configuration for adding a header.
 
 1. Make sure you enable `KONG_UNTRUSTED_LUA="on"` in your Kong configuration.
 2. Add the following under `config.add_headers`:
@@ -35,6 +35,6 @@ You can achieve this using the Request Transformer Advanced plugin with the foll
            .. value end end)())
    ```
 
-Note: Make sure you have made the required changes to the vault reference
+Make sure you have made the required changes to the Vault reference.
 
 This configuration dynamically retrieves a token from Kong's Secret Management (Vault) and appends it to the `Authorization` header as a Bearer token.

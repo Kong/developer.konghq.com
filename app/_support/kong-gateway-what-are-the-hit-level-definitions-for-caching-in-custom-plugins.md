@@ -1,14 +1,14 @@
 ---
-title: "Kong Gateway: hit_level definitions for caching in custom plugins"
+title: "{{site.base_gateway}}: `hit_level` definitions for caching in custom plugins"
 content_type: support
-description: The hit_level value indicates which cache level (L1, L2, or L3) a value was fetched from when implementing caching in a custom plugin.
+description: "The `hit_level` value indicates which cache level (L1, L2, or L3) a value was fetched from when implementing caching in a custom plugin."
 products:
   - gateway
 works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Kong Gateway: What are the hit_level definitions for caching in custom plugins?"
+  q: "{{site.base_gateway}}: What are the `hit_level` definitions for caching in custom plugins?"
   a: |
     When implementing caching in a custom plugin, `hit_level` indicates which cache level a value was
     fetched from:
@@ -22,7 +22,7 @@ tldr:
 related_resources: []
 ---
 
-## hit_level definitions for caching in custom plugins
+## `hit_level` definitions for caching in custom plugins
 
 When writing a custom plugin and implementing caching as part of it, the `hit_level` applies to which level the value was fetched from. The cache level hierarchy is:
 

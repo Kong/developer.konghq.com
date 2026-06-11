@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Proxy Caching Advanced plugin always bypasses the cache and hits the API"
+title: "{{site.base_gateway}}: Proxy Caching Advanced plugin always bypasses the cache and hits the API"
 content_type: support
 description: "The Proxy Caching Advanced plugin may always bypass the cache and hit the API if the upstream response's content type is not included in the plugin's configuration."
 products:
@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Kong Gateway: Why is the Proxy Caching Advanced plugin always bypassing the cache and hitting the API?"
+  q: "{{site.base_gateway}}: Why is the Proxy Caching Advanced plugin always bypassing the cache and hitting the API?"
   a: |
     The Proxy Caching Advanced plugin bypasses the cache (shown by the `x-cache-status: bypass` response
     header) when the upstream response's content type is not included in the plugin's configuration. Check

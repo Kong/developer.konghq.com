@@ -1,7 +1,7 @@
 ---
 title: Creating additional Kubernetes resources when using the Kong Helm chart
 content_type: support
-description: The helm charts support an array parameter, extraObjects, that can be used for this purpose.
+description: The Helm charts support an array parameter, `extraObjects`, that you can use for this purpose.
 products:
   - kic
 works_on:
@@ -24,9 +24,9 @@ Sometimes it is desirable to create additional Kubernetes resources upon deploym
 
 ## Steps
 
-The helm charts support an array parameter, `extraObjects`, that can be used for this purpose.
+The Helm charts support an array parameter, `extraObjects`, that you can use for this purpose.
 
-Each new resource should be an entry in the Array. For example, the below contains two manifests to create Kubernetes Secrets:
+Each new resource is an entry in the array. For example, the following array contains two manifests that create Kubernetes Secrets:
 
 ```yaml
 image:

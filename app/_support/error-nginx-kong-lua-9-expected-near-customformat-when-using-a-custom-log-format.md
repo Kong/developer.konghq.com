@@ -1,7 +1,7 @@
 ---
 title: "Error: \"nginx_kong.lua:9: '=' expected near 'customformat'\" when using a custom log_format"
 content_type: support
-description: This can occur when attempting to use log_format outside the http context.
+description: This can occur when attempting to use `log_format` outside the http context.
 products:
   - gateway
 works_on:
@@ -19,7 +19,7 @@ related_resources: []
 
 ## Problem
 
-When attempting to use a custom `log_format` in an nginx template, for example when using the correlation ID plugin to log IDs, the below error is seen on startup or reload:
+When attempting to use a custom `log_format` in an nginx template, for example when using the Correlation ID plugin to log IDs, the following error appears on startup or reload:
 
 ```
 
@@ -43,7 +43,7 @@ Where `customformat` is the name you've given to the `log_format`.
 
 ## Cause
 
-This can occur when attempting to use `log_format` outside the `http` context. As noted in the docs, `log_format` can only be used within this context.
+This can occur when attempting to use `log_format` outside the `http` context. The `log_format` directive can only be used within the `http` context.
 
 ## Solution
 

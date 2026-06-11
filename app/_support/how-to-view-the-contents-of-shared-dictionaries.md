@@ -1,7 +1,7 @@
 ---
 title: How to view the contents of shared dictionaries
 content_type: support
-description: We can use a pre-function plugin to report the contents of the SHM LRU Dictionaries in Kong.
+description: Use a pre-function plugin to report the contents of the SHM LRU dictionaries in Kong.
 products:
   - gateway
 works_on:
@@ -22,9 +22,9 @@ How do you see the contents of the shared dictionaries?
 
 ## Steps
 
-We can use a pre-function plugin to report the contents of the SHM LRU Dictionaries in Kong.
+Use a `pre-function` plugin to report the contents of the SHM LRU dictionaries in Kong.
 
-Below are the examples of the `pre-function` plugin code you can use which inspects the `kong_rate_limiting_counters` dictionary for the first 2000 keys.
+The following examples show `pre-function` plugin code that inspects the `kong_rate_limiting_counters` dictionary for the first 2000 keys.
 
 The Lua code:
 
@@ -68,7 +68,7 @@ plugin: pre-function
 
 The result in the Kong log:
 
-```
+```text
 2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:6 [pre-function] keys retrieved: 4, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] 1jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669469|1|172.18.0.1|diff, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 2023/02/06 07:44:30 [error] 2209#0: *991 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:1 [pre-function] PRE FUNCTION EXECUTED, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"

@@ -1,7 +1,7 @@
 ---
-title: How to setup a maintenance page inside Kong Gateway
+title: How to set up a maintenance page inside {{site.base_gateway}}
 content_type: support
-description: "How to display a maintenance page in Kong Gateway using the Request Termination plugin to return a custom message and content type."
+description: "How to display a maintenance page in {{site.base_gateway}} using the Request Termination plugin to return a custom message and content type."
 products:
   - gateway
 works_on:
@@ -11,7 +11,7 @@ related_resources:
   - text: Request Termination plugin
     url: /plugins/request-termination/
 tldr:
-  q: How do I set up a maintenance page in Kong Gateway to display a message to users when an endpoint is being worked on?
+  q: How do I set up a maintenance page in {{site.base_gateway}} to display a message to users when an endpoint is being worked on?
   a: |
     Use the Request Termination plugin, enabled on the specific route or service (or globally for
     all services). Set `config.body` to your maintenance messaging and `config.content_type` to
@@ -20,7 +20,7 @@ tldr:
 
 ## Overview
 
-This article describes how to set up a maintenance page in Kong Gateway. If an endpoint is being worked on, you can enable this page to display a message to users.
+This article describes how to set up a maintenance page in {{site.base_gateway}}. If an endpoint is being worked on, you can enable this page to display a message to users.
 
 ## Steps
 

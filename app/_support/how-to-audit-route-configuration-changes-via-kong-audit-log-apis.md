@@ -1,7 +1,7 @@
 ---
 title: Auditing Route configuration changes via Kong Audit Log APIs
 content_type: support
-description: Use the Kong Enterprise audit log APIs to trace who changed a route and to detect routes created with empty or missing paths.
+description: Use the {{site.ee_product_name}} audit log APIs to trace who changed a Route and to detect Routes created with empty or missing paths.
 products:
   - gateway
 works_on:
@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: How to audit Route configuration changes via Kong Audit Log APIs?
   a: |
-    Kong Enterprise provides two audit log endpoints: `/audit/requests` (captures who did what,
+    {{site.ee_product_name}} provides two audit log endpoints: `/audit/requests` (captures who did what,
     including HTTP method, user, and payload) and `/audit/objects` (captures the data entity that
     was created or updated, with full snapshots). Ensure audit logging is enabled with
     `KONG_AUDIT_LOG: "on"`, then use the provided `kong-audit-query.sh` script to identify the RBAC
@@ -21,11 +21,11 @@ related_resources: []
 
 ## Overview
 
-In large-scale Kong Gateway deployments, teams often automate route provisioning via CI/CD. A common issue arises when routes are created with missing or empty `paths`, leading to 409 Conflict errors during deployment due to route collisions.
+In large-scale {{site.base_gateway}} deployments, teams often automate Route provisioning via CI/CD. A common issue arises when Routes are created with missing or empty `paths`, leading to 409 Conflict errors during deployment due to Route collisions.
 
 ## Steps
 
-In environments where multiple teams or pipelines interact with Kong Gateway, it is vital to trace configuration changes, especially for objects like routes. Kong Enterprise provides two audit log endpoints:
+In environments where multiple teams or pipelines interact with {{site.base_gateway}}, it is vital to trace configuration changes, especially for objects like Routes. {{site.ee_product_name}} provides two audit log endpoints:
 
 1. `/audit/requests`: captures who did what, including HTTP method, user, and payload.
 2. `/audit/objects`: captures what data entity was created/updated, with full snapshots.

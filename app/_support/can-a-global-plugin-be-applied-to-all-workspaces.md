@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: "Can a \"global\" plugin be applied to all workspaces"
   a: |
-    No. A plugin that isn't associated with any service, route, or consumer is considered global
+    No. A plugin that isn't associated with any Service, Route, or Consumer is considered global
     and runs on every request, but only within its own workspace. There is no way to set up a
     plugin that's automatically applied to all workspaces.
 related_resources: []
@@ -18,6 +18,6 @@ related_resources: []
 
 ## Global plugins and workspace scope
 
-A plugin which is not associated with any service, route, or consumer is considered global and will be run on every request, within that workspace.
+A plugin that is not associated with any Service, Route, or Consumer is considered global and runs on every request, within that workspace.
 
-Therefore, it is not possible to set up a plugin that would automatically be applied to all workspaces.
+Therefore, you cannot set up a plugin that automatically applies to all workspaces.

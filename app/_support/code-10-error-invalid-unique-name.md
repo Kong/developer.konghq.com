@@ -11,7 +11,7 @@ tldr:
   q: "Why do I get a Code 10 \"invalid unique name\" error when creating an entity named auth?"
   a: |
     This error is returned because of a pre-existing Admin API endpoint named `auth`. Route
-    matching preferences the existing Admin API endpoint over a newly created entity, so entity
+    matching prefers the existing Admin API endpoint over a newly created entity, so entity
     names that collide with reserved endpoints (such as `auth`, `services`, `routes`, `consumers`,
     and others listed in the error) must be avoided when creating new entities.
 related_resources: []
@@ -19,13 +19,13 @@ related_resources: []
 
 ## Problem
 
-Using a fresh `kong` image in DB mode after running `kong migrations bootstrap`, when an attempt is made to get an upstream named `auth` by making the request:
+Using a fresh `kong` image in DB mode after running `kong migrations bootstrap`, you try to get an Upstream named `auth` by making the request:
 
 ```bash
 curl http://localhost:8001/upstreams/auth
 ```
 
-The below error is returned:
+The following error is returned:
 
 ```json
 {"code":10,"name":"invalid unique name","message":"must not be one of: workspaces, consumers, certificates, services, routes, snis, upstreams, targets, consumer_groups, plugins, tags, ca_certificates, clustering_data_planes, parameters, vaults, key_sets, keys, filter_chains, files, legacy_files, workspace_entity_counters, consumer_reset_secrets, credentials, audit_requests, audit_objects, rbac_users, rbac_roles, rbac_user_roles, rbac_role_entities, rbac_role_endpoints, admins, developers, document_objects, applications, application_instances, groups, group_rbac_roles, login_attempts, keyring_meta, keyring_keys, event_hooks, licenses, consumer_group_plugins, consumer_group_consumers, rbac_user_groups"}
@@ -37,7 +37,7 @@ This error is returned because of a pre-existing Admin API endpoint named `auth`
 
 ## Solution
 
-Along with the referenced list in the error, the below list of entity names should be avoided when creating new entities as route matching will preference the existing Admin API endpoint over the newly created one:
+Along with the referenced list in the error, avoid the following entity names when creating new entities, because Route matching prefers the existing Admin API endpoint over the newly created one:
 
 ```
 /keyring,

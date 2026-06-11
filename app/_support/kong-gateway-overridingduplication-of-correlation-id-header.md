@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Overriding/Duplication Of Correlation ID Header"
+title: "{{site.base_gateway}}: Overriding and duplication of the Correlation ID header"
 content_type: support
 description: "Explains why the Correlation ID plugin is bypassed when a request already supplies the Kong-Request-Id header, and the resulting override and duplication concerns."
 products:

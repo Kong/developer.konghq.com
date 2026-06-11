@@ -44,4 +44,4 @@ This could explain why the interleaving occurs for logs whose size is bigger tha
 
 The file-log plugin uses `write()` directly to output to a file. This is already a blocking I/O operation, which could affect performance, and there is no locking mechanism in `/dev/stdout`.
 
-As a workaround, we would suggest removing any unneeded response headers or any data that isn't required from the file-log by using the `custom-fields-by-lua` field.
+As a workaround, we recommend removing any unneeded response headers or any data that isn't required from the file-log by using the `custom-fields-by-lua` field.

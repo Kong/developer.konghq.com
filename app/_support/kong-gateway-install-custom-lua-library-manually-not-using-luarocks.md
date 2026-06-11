@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Install custom lua library manually (not using luarocks)"
+title: "{{site.base_gateway}}: Install custom Lua library manually (not using `luarocks`)"
 content_type: support
 description: The custom library would need to be installed on Kong for the plugin to be able to reference the library.
 products:
@@ -25,7 +25,7 @@ related_resources: []
 
 ## Problem
 
-We would like to deploy a custom plugin that is utilizing a custom library without installing through a custom image or through luarocks.
+We would like to deploy a custom plugin that uses a custom library without installing through a custom image or through `luarocks`.
 
 We are receiving the error:
 

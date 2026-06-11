@@ -24,7 +24,7 @@ How Can I Insert a Field from the Request Body into the Header for Rate Limiting
 
 ## Steps
 
-To achieve the goal of inserting a field from the request body directly into the header, which is necessary for enabling rate limiting on a specific field in Kong, you can utilize the pre-function plugin in conjunction with the Kong Plugin Development Kit (PDK). This approach allows you to manipulate the request before it reaches the upstream service, enabling you to extract the desired field from the request body and insert it into the request header.
+To insert a field from the request body directly into the header so you can rate limit on a specific field in Kong, use the Pre-function plugin together with the Kong Plugin Development Kit (PDK). This approach lets you manipulate the request before it reaches the upstream Service, so you can extract the desired field from the request body and insert it into the request header.
 
 Here is a practical example of how you can accomplish this task:
 

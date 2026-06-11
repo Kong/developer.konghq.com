@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Retaining the browser Cookie when forwarding a request through a post-function plugin"
+title: "{{site.base_gateway}}: Retaining the browser Cookie when forwarding a request through a post-function plugin"
 content_type: support
 description: When a request is forwarded through a Kong post-function plugin, the browser Cookie may not be retained; use pre-function and post-function plugins with kong.ctx.shared to capture and forward the Cookie header.
 products:
@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Kong Gateway: How can I ensure that a request forwarded through a Kong post-function plugin retains the Cookie passed from the browser?"
+  q: "{{site.base_gateway}}: How can I ensure that a request forwarded through a Kong post-function plugin retains the Cookie passed from the browser?"
   a: |
     The `Cookie` header is not retained because the request handling does not propagate it to the upstream
     service. Use a `pre-function` plugin to capture the header and store it in shared context with
@@ -29,7 +29,7 @@ This problem can arise when the request handling does not correctly propagate th
 
 ## Solution
 
-You can use a combination of `pre-function` and `post-function` plugins to capture and forward the `Cookie` header correctly. Here's how you can implement this solution:
+You can use a combination of `pre-function` and `post-function` plugins to capture and forward the `Cookie` header correctly. To implement this solution, follow these steps:
 
 1. Use the `pre-function` plugin to store the `Cookie` in a shared context (`kong.ctx.shared`):
 
@@ -39,7 +39,7 @@ You can use a combination of `pre-function` and `post-function` plugins to captu
    kong.ctx.shared.cookie = kong.request.get_header("Cookie")
    ```
 
-   or using a specific cookie name rather than the entire cookie header
+   Or, use a specific cookie name rather than the entire cookie header:
 
    ```lua
    kong.ctx.shared.session_cookie = ngx.var.cookie_session
@@ -55,6 +55,6 @@ You can use a combination of `pre-function` and `post-function` plugins to captu
 
 This approach ensures that the `Cookie` passed from the browser is retained and forwarded correctly through the `post-function` plugin, allowing the request to be authenticated and authorized by the upstream service.
 
-It's important to note that the shared context (`kong.ctx.shared`) is specific to the current request, ensuring that Cookies from concurrent requests are handled correctly without interference.
+The shared context (`kong.ctx.shared`) is specific to the current request, which ensures that Cookies from concurrent requests are handled correctly without interference.
 
-Remember, this code snippet is a basic example and requires review for being implemented in any environment. This should never be used without thorough testing. Depending on your specific requirements and setup, you might need to add additional error handling or logic to suit your needs.
+This code snippet is a basic example and requires review before you implement it in any environment. Do not use this code without thorough testing. Depending on your specific requirements and setup, you might need to add additional error handling or logic to suit your needs.

@@ -1,7 +1,7 @@
 ---
 title: "Kong Manager login error: config.secret length must be at least 1"
 content_type: support
-description: "Logging into Kong Manager fails with a config.client_secret schema violation when the OIDC client_secret value is empty."
+description: "Logging into Kong Manager fails with a `config.client_secret` schema violation when the OIDC `client_secret` value is empty."
 products:
   - gateway
 works_on:
@@ -44,4 +44,4 @@ schema violation (config.client_secret: {"length must be at least 1"})
 
 ## Solution
 
-To resolve this, add the correct value to `client_secret` and restart Kong. On next login, you will now proceed without issue.
+To resolve this, add the correct value to `client_secret` and restart Kong. On the next login, you can proceed without issue.

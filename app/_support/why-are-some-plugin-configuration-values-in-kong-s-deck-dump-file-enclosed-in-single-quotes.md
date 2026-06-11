@@ -1,14 +1,14 @@
 ---
 title: "Single quotes around plugin configuration values in Kong's deck dump file"
 content_type: support
-description: "When working with Kong's deck dump files, especially for plugins like the open id connect plugin, you might notice that some configuration values are enclosed in single quotes."
+description: "When working with Kong's deck dump files, especially for plugins like the OpenID Connect plugin, you might notice that some configuration values are enclosed in single quotes."
 products:
   - gateway
 works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Why are some plugin configuration values in Kong's deck dump file enclosed in single quotes ?"
+  q: "Why are some plugin configuration values in Kong's deck dump file enclosed in single quotes?"
   a: |
     deck dump files use YAML, and per the YAML 1.2 specification certain characters can cause the parser
     to misinterpret an unquoted string as a different data type or structure. To prevent this, YAML encloses
