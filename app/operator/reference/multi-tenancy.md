@@ -48,7 +48,7 @@ Each tenant is represented by a `Gateway`, provisioned using three resources:
 For each `Gateway`, {{ site.operator_product_name }} creates:
 
 * One in-memory {{ site.kic_product_name_short }} instance embedded inside the {{ site.operator_product_name }} Pod, which watches Gateway API resources and translates them into Kong configuration.
-* One*data plane deployment running {{ site.base_gateway }} in DB-less mode.
+* One data plane deployment running {{ site.base_gateway }} in DB-less mode.
 
 Multiple `Gateway` resources can coexist in the same cluster. The resulting in-memory {{ site.kic_product_name_short }} instances and data plane Pods are independent of each other. A single {{ site.operator_product_name }} installation manages them all.
 

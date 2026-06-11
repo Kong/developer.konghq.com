@@ -28,10 +28,10 @@ By default, {{ site.operator_product_name }}'s `ControlPlane` watches all namesp
 
 You can restrict namespace watching in two ways depending on how you manage your gateways:
 
-* *Managed Gateways (Gateway API flow): Set `watchNamespaces` via `GatewayConfiguration.spec.controlPlaneOptions`. You do not create a `ControlPlane` directly. See [Multi-tenancy](/operator/reference/multi-tenancy/) for the full use case.
+* Managed Gateways (Gateway API flow): Set `watchNamespaces` via `GatewayConfiguration.spec.controlPlaneOptions`. You do not create a `ControlPlane` directly. See [Multi-tenancy](/operator/reference/multi-tenancy/) for the full use case.
 * Direct `ControlPlane` management: Set `watchNamespaces` directly in the `ControlPlane`'s `spec`.
 
-## watchNamespaces types
+## `watchNamespaces` types
 
 The `watchNamespaces.type` field accepts three values:
 
