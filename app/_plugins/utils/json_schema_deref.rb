@@ -34,7 +34,11 @@ module Jekyll
         deref = inline_ref(m[:name], ref, in_progress)
         siblings = hash.except('$ref').transform_values { |v| resolve_node(v, in_progress) }
 
-        deref.is_a?(Hash) ? deref.merge(siblings) : deref
+        return deref unless deref.is_a?(Hash)
+
+        merged = deref.merge(siblings)
+        merged['description'] = deref['description'] if deref.key?('description')
+        merged
       end
 
       def inline_ref(name, ref, in_progress)
