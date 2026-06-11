@@ -13,6 +13,8 @@
    metadata:
      name: httpbin-route
      namespace: kong
+     annotations:
+       konghq.com/strip-path: "true"
    spec:
      parentRefs:
        - name: kong
