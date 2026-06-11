@@ -53,66 +53,85 @@ prereqs:
 
 ## Deploy a test service in each namespace
 
-Deploy the echo service in both tenant namespaces:
+1. Deploy the echo service in both tenant namespaces:
 
-```bash
-kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong-gw-public
-kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong-gw-private
-```
+   ```bash
+   kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong-gw-public
+   kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong-gw-private
+   ```
+
+1. Wait for both deployments to be ready:
+
+   ```bash
+   kubectl rollout status deployment/echo -n kong-gw-public --timeout=60s
+   kubectl rollout status deployment/echo -n kong-gw-private --timeout=60s
+   ```
 
 ## Create an HTTPRoute for the public gateway
 
-Create an `HTTPRoute` in the `kong-gw-public` namespace pointing to the echo service:
+1. Create an `HTTPRoute` in the `kong-gw-public` namespace pointing to the echo service:
 
-```bash
-kubectl apply -f - <<EOF
-kind: HTTPRoute
-apiVersion: gateway.networking.k8s.io/v1
-metadata:
-  name: echo
-  namespace: kong-gw-public
-spec:
-  parentRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: gw-public
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /echo
-    backendRefs:
-    - name: echo
-      port: 1027
-EOF
-```
+   ```bash
+   kubectl apply -f - <<EOF
+   kind: HTTPRoute
+   apiVersion: gateway.networking.k8s.io/v1
+   metadata:
+     name: echo
+     namespace: kong-gw-public
+   spec:
+     parentRefs:
+     - group: gateway.networking.k8s.io
+       kind: Gateway
+       name: gw-public
+     rules:
+     - matches:
+       - path:
+           type: PathPrefix
+           value: /echo
+       backendRefs:
+       - name: echo
+         port: 1027
+   EOF
+   ```
+
+1. Wait for the route to be accepted by the gateway:
+
+   ```bash
+   kubectl wait --for=condition=Accepted=True httproute/echo -n kong-gw-public --timeout=60s
+   ```
 
 ## Create an HTTPRoute for the private gateway
 
-Create an equivalent `HTTPRoute` in the `kong-gw-private` namespace:
+1. Create an equivalent `HTTPRoute` in the `kong-gw-private` namespace:
 
-```bash
-kubectl apply -f - <<EOF
-kind: HTTPRoute
-apiVersion: gateway.networking.k8s.io/v1
-metadata:
-  name: echo
-  namespace: kong-gw-private
-spec:
-  parentRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: gw-private
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /echo
-    backendRefs:
-    - name: echo
-      port: 1027
-EOF
-```
+   ```bash
+   kubectl apply -f - <<EOF
+   kind: HTTPRoute
+   apiVersion: gateway.networking.k8s.io/v1
+   metadata:
+     name: echo
+     namespace: kong-gw-private
+   spec:
+     parentRefs:
+     - group: gateway.networking.k8s.io
+       kind: Gateway
+       name: gw-private
+     rules:
+     - matches:
+       - path:
+           type: PathPrefix
+           value: /echo
+       backendRefs:
+       - name: echo
+         port: 1027
+   EOF
+   ```
+
+1. Wait for the route to be accepted by the gateway:
+
+   ```bash
+   kubectl wait --for=condition=Accepted=True httproute/echo -n kong-gw-private --timeout=60s
+   ```
 
 ## Validate
 
