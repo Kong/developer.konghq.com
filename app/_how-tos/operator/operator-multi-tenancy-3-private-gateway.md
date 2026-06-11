@@ -98,7 +98,7 @@ EOF
 
 ## Create a Gateway
 
-Create the `Gateway` resource in the `kong-gw-private` namespace, referencing the `GatewayClass` above:
+Create the `Gateway` resource in the `kong-gw-private` namespace. The private gateway uses port 8080 to avoid a host-port conflict with the public gateway on single-node clusters (such as OrbStack, k3s, or kind) where each LoadBalancer service binds a host port.
 
 ```bash
 kubectl apply -f - <<EOF
@@ -112,7 +112,7 @@ spec:
   listeners:
   - name: http
     protocol: HTTP
-    port: 80
+    port: 8080
 EOF
 ```
 

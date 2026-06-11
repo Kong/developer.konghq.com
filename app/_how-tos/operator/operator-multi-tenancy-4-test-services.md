@@ -69,69 +69,57 @@ prereqs:
 
 ## Create an HTTPRoute for the public gateway
 
-1. Create an `HTTPRoute` in the `kong-gw-public` namespace pointing to the echo service:
+Create an `HTTPRoute` in the `kong-gw-public` namespace pointing to the echo service:
 
-   ```bash
-   kubectl apply -f - <<EOF
-   kind: HTTPRoute
-   apiVersion: gateway.networking.k8s.io/v1
-   metadata:
-     name: echo
-     namespace: kong-gw-public
-   spec:
-     parentRefs:
-     - group: gateway.networking.k8s.io
-       kind: Gateway
-       name: gw-public
-     rules:
-     - matches:
-       - path:
-           type: PathPrefix
-           value: /echo
-       backendRefs:
-       - name: echo
-         port: 1027
-   EOF
-   ```
-
-1. Wait for the route to be accepted by the gateway:
-
-   ```bash
-   kubectl wait --for=condition=Accepted=True httproute/echo -n kong-gw-public --timeout=60s
-   ```
+```bash
+kubectl apply -f - <<EOF
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: echo
+  namespace: kong-gw-public
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: gw-public
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /echo
+    backendRefs:
+    - name: echo
+      port: 1027
+EOF
+```
 
 ## Create an HTTPRoute for the private gateway
 
-1. Create an equivalent `HTTPRoute` in the `kong-gw-private` namespace:
+Create an equivalent `HTTPRoute` in the `kong-gw-private` namespace:
 
-   ```bash
-   kubectl apply -f - <<EOF
-   kind: HTTPRoute
-   apiVersion: gateway.networking.k8s.io/v1
-   metadata:
-     name: echo
-     namespace: kong-gw-private
-   spec:
-     parentRefs:
-     - group: gateway.networking.k8s.io
-       kind: Gateway
-       name: gw-private
-     rules:
-     - matches:
-       - path:
-           type: PathPrefix
-           value: /echo
-       backendRefs:
-       - name: echo
-         port: 1027
-   EOF
-   ```
-
-1. Wait for the route to be accepted by the gateway:
-
-   ```bash
-   kubectl wait --for=condition=Accepted=True httproute/echo -n kong-gw-private --timeout=60s
-   ```
+```bash
+kubectl apply -f - <<EOF
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: echo
+  namespace: kong-gw-private
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: gw-private
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /echo
+    backendRefs:
+    - name: echo
+      port: 1027
+EOF
+```
 
 ## Validate
 
@@ -144,7 +132,7 @@ export PRIVATE_GW_IP=$(kubectl get gateway gw-private -n kong-gw-private \
   -o jsonpath='{.status.addresses[0].value}')
 ```
 
-Both gateways should respond on `/echo`:
+The public gateway listens on port 80 and the private gateway on port 8080. Both should respond on `/echo`:
 
 {% validation request-check %}
 url: /echo
@@ -156,11 +144,53 @@ konnect_url: $PUBLIC_GW_IP
 {% validation request-check %}
 url: /echo
 status_code: 200
-on_prem_url: $PRIVATE_GW_IP
-konnect_url: $PRIVATE_GW_IP
+on_prem_url: http://$PRIVATE_GW_IP:8080
+konnect_url: http://$PRIVATE_GW_IP:8080
 {% endvalidation %}
 
-<!-- GAP: There is no built-in mechanism in Kong Operator to verify that a route in namespace A
-     is NOT reachable through the gateway in namespace B. The isolation is enforced by the
-     watchNamespaces scoping (logical isolation), not by a NetworkPolicy (network-level isolation).
-     Users who need hard network-level isolation should add Kubernetes NetworkPolicy resources. -->
+## Test isolation
+
+Both gateways responding on `/echo` confirms they are running, but it does not prove isolation — both routes happen to use the same path. The following test deploys a route that only exists in `kong-gw-private` and verifies that the public gateway has no knowledge of it.
+
+Create an `HTTPRoute` for a `/private` path in `kong-gw-private` only:
+
+```bash
+kubectl apply -f - <<EOF
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: private-only
+  namespace: kong-gw-private
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: gw-private
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /private
+    backendRefs:
+    - name: echo
+      port: 1027
+EOF
+```
+
+Confirm it is accessible via the private gateway:
+
+{% validation request-check %}
+url: /private
+status_code: 200
+on_prem_url: http://$PRIVATE_GW_IP:8080
+konnect_url: http://$PRIVATE_GW_IP:8080
+{% endvalidation %}
+
+Confirm it returns 404 on the public gateway:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" http://$PUBLIC_GW_IP/private
+# Expected: 404
+```
+
+The public gateway returns 404 because its in-memory KIC only watches `kong-gw-public`. The `private-only` HTTPRoute lives in `kong-gw-private`, so the public KIC never processes it and never programs it into the public DataPlane. No matter what routes are deployed in `kong-gw-private`, they are completely invisible to `gw-public` — and vice versa. This is namespace isolation working as intended.
