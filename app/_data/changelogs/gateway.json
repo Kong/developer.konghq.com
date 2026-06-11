@@ -22742,6 +22742,15 @@
       }
     ]
   },
+  "3.11.0.13": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for limiting the maximum number of headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
   "3.12.0.8": {
     "kong-ee": [
       {
