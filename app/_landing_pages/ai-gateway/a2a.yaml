@@ -54,7 +54,7 @@ rows:
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
-              title: AI Agent
+              title: AI Agent entity
               description: Create and expose A2A agents using the AI Agent in {{site.ai_gateway}}.
               ctas:
                 - text: AI Agent reference
