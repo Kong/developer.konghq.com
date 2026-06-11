@@ -45,7 +45,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Create [AI Agent](/ai-gateway/entities/ai-agent/) entities to proxy your A2A endpoints through {{site.ai_gateway}} to your backend agents. Then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+                    Create [AI Agent](/ai-gateway/entities/ai-agent/) entities to proxy your A2A endpoints through {{site.ai_gateway}} to unlock observability into agent communication. Attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication and access control.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
