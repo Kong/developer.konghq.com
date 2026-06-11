@@ -430,6 +430,9 @@ config:
   - name: real_ip_header
   - name: headers
   - name: trusted_ips
+  - name: otel_resource_attributes
+    prefix: false
+    description: A comma-separated list of key-value pairs (for example, `region=us-east-1`,`env=production`) that the SDK must attach to all telemetry as resource attributes. These are used in the [OpenTelemetry plugin](/plugins/opentelemetry/#resource-attributes).
   - name: pdk_response_exit_header_filter_early_exit
 {% endkong_config_table %}
 <!--vale on -->
