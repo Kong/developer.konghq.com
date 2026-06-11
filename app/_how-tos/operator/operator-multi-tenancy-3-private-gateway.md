@@ -43,14 +43,12 @@ prereqs:
   skip_product: true
 ---
 
-<!-- SOURCE: Baptiste's gist https://gist.github.com/bcollard/44caa409cdf7d796506a7a2e61a4a0d5 -->
-
 ## Create a GatewayConfiguration
 
-As with the public gateway, `controlPlaneOptions.watchNamespaces.type: own` restricts the in-memory KIC to watch only the `kong-gw-private` namespace.
+As with the public gateway, `controlPlaneOptions.watchNamespaces.type: own` restricts the in-memory {{ site.kic_product_name_short }} to watch only the `kong-gw-private` namespace.
 
 ```bash
-kubectl apply -f - <<EOF
+echo '
 kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
@@ -67,7 +65,7 @@ spec:
   controlPlaneOptions:
     watchNamespaces:
       type: own
-EOF
+' | kubectl apply -f -
 ```
 
 ## Create a GatewayClass
@@ -75,7 +73,7 @@ EOF
 1. Create a `GatewayClass` that references the `GatewayConfiguration` above:
 
    ```bash
-   kubectl apply -f - <<EOF
+   echo '
    kind: GatewayClass
    apiVersion: gateway.networking.k8s.io/v1
    metadata:
@@ -87,7 +85,7 @@ EOF
        kind: GatewayConfiguration
        name: gw-private
        namespace: kong-gw-private
-   EOF
+   ' | kubectl apply -f -
    ```
 
 1. Wait for {{ site.operator_product_name }} to accept the `GatewayClass`:
@@ -98,27 +96,33 @@ EOF
 
 ## Create a Gateway
 
-Create the `Gateway` resource in the `kong-gw-private` namespace. The private gateway uses port 8080 to avoid a host-port conflict with the public gateway on single-node clusters (such as OrbStack, k3s, or kind) where each LoadBalancer service binds a host port.
+1. Create the `Gateway` resource in the `kong-gw-private` namespace. The private gateway uses port 8080 to avoid a host-port conflict with the public gateway on single-node clusters (such as OrbStack, k3s, or kind) where each LoadBalancer service binds a host port.
 
-```bash
-kubectl apply -f - <<EOF
-kind: Gateway
-apiVersion: gateway.networking.k8s.io/v1
-metadata:
-  name: gw-private
-  namespace: kong-gw-private
-spec:
-  gatewayClassName: gw-private
-  listeners:
-  - name: http
-    protocol: HTTP
-    port: 8080
-EOF
-```
+   ```bash
+   echo '
+   kind: Gateway
+   apiVersion: gateway.networking.k8s.io/v1
+   metadata:
+     name: gw-private
+     namespace: kong-gw-private
+   spec:
+     gatewayClassName: gw-private
+     listeners:
+     - name: http
+       protocol: HTTP
+       port: 8080
+   ' | kubectl apply -f -
+   ```
+
+1. Wait for the gateway to be programmed:
+
+   ```bash
+   kubectl wait --for=condition=Programmed=True gateway/gw-private -n kong-gw-private --timeout=120s
+   ```
 
 ## Validate
 
-Wait for the private gateway to become ready:
+Verify the private gateway was reconciled successfully:
 
 {% validation kubernetes-resource %}
 kind: Gateway
