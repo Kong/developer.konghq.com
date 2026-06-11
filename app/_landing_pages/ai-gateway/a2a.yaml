@@ -29,6 +29,11 @@ rows:
 
               {{site.ai_gateway}} acts as a control and observability layer for A2A traffic, enabling you to route agent-to-agent requests, extract task metadata, rewrite agent card URLs, and feed structured metrics into the Konnect analytics pipeline. In {{site.ai_gateway}} {% new_in 2.0 %}, you configure A2A traffic using [AI Agents](/ai-gateway/entities/ai-agent/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
 
+              Learn how to:
+              - [Proxy A2A traffic via {{site.ai_gateway}}](#proxy-a2a-traffic-via-ai-gateway-new-in-2-0)
+              - [Secure and govern A2A traffic](#secure-and-govern-a2a-traffic)
+              - [Observe A2A traffic](#observe-a2a-traffic)
+
       - blocks:
           - type: image
             config:
@@ -41,11 +46,11 @@ rows:
             config:
               header:
                 type: h2
-                text: "Create A2A Agents {% new_in 2.0 %}"
+                text: "Proxy A2A traffic via {{site.ai_gateway}} {% new_in 2.0 %}"
               blocks:
                 - type: text
                   text: |
-                    Create [AI Agents](/ai-gateway/entities/ai-agent/) to route your A2A endpoints through {{site.ai_gateway}} to your backend agents. Then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+                    Create [AI Agent](/ai-gateway/entities/ai-agent/) entities to proxy your A2A endpoints through {{site.ai_gateway}} to your backend agents. Then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
@@ -61,7 +66,7 @@ rows:
             config:
               header:
                 type: h2
-                text: "Secure A2A traffic"
+                text: "Secure and govern A2A traffic"
               blocks:
                 - type: text
                   text: |
@@ -69,7 +74,7 @@ rows:
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Security Policies
+              title: Secure and govern with Policies
               description: Secure A2A agents and control access with Policies.
               ctas:
                 - text: OpenID Connect
