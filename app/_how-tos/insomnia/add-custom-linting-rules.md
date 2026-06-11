@@ -69,7 +69,7 @@ rules:
 
 ## Validate
 
-Close and reopen the document to apply the changes. In this example, you can confirm the rule fires by adding a tag without a description:
+In this example, you can confirm the rule triggers by removing the description for the `GET /flights` endpoint. This will be flagged since the ruleset doesn't allow tags without a description:
 
 ```yaml
 tags:
