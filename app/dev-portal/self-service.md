@@ -200,12 +200,13 @@ rows:
 
 ### Apply a plugin to an application using a {{site.identity}} principal
 
-We recommend this method because it applies the plugin based on the application's principal, without requiring you to map the application to a Gateway Consumer.
+This method applies the plugin based on the application's principal, without requiring you to map the application to a Gateway Consumer.
 The plugin runs whenever a request authenticates as that application, using a [conditional plugin execution](/gateway/configure-conditional-plugin-execution/) expression that references the application's `principal.id`.
 
 In this example, we'll use the [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin, but you can apply any plugin to an application's principal with `principal.id`.
 
 1. List the applications in your portal, filtering by the application's name, and capture its ID as the `PRINCIPAL_ID` variable. Replace `$APPLICATION_NAME` with the name of your application:
+{% capture copy-app-id %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/portals/$PORTAL_ID/applications?filter%5Bname%5D%5Beq%5D=$APPLICATION_NAME
@@ -217,8 +218,11 @@ capture:
     jq: '.data[0].id'
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endcapture %}
+{{ copy-app-id | indent: 3}}
    The principal ID is the same as the application's ID. 
 1. Configure the Rate Limiting Advanced plugin and use a conditional plugin execution expression to apply it to the application's principal. Replace `$CONTROL_PLANE_ID` with the ID of the control plane that your API is linked to:
+{% capture apply-plugin %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins/
@@ -237,7 +241,8 @@ body:
   condition: 'principal.id == "$PRINCIPAL_ID"'
 {% endkonnect_api_request %}
 <!--vale on-->
-
+{% endcapture %}
+{{ apply-plugin | indent: 3}}
 Any request that authenticates as this application is now rate limited to 200 requests every 30 minutes.
 
 ### Map an application to a Consumer
