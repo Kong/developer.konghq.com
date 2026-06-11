@@ -32,7 +32,7 @@ prereqs:
 faqs:
   - q: How can I use custom linting with Inso CLI?
     a: |
-      Create a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format, and upload it in the same directory as the OAS file to lint.
+      Create a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format, and upload it to an OAS file document in Insomnia by clicking the upload icon for the **Default OAS Ruleset**.
 
 ---
 
