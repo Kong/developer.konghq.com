@@ -29,9 +29,12 @@ module Jekyll
         return hash.transform_values { |v| resolve_node(v, in_progress) } unless ref
 
         m = INTERNAL_REF.match(ref)
-        return inline_ref(m[:name], ref, in_progress) if m
+        return hash.transform_values { |v| resolve_node(v, in_progress) } unless m
 
-        hash
+        deref = inline_ref(m[:name], ref, in_progress)
+        siblings = hash.except('$ref').transform_values { |v| resolve_node(v, in_progress) }
+
+        deref.is_a?(Hash) ? deref.merge(siblings) : deref
       end
 
       def inline_ref(name, ref, in_progress)
