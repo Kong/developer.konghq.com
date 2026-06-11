@@ -15,6 +15,7 @@
      namespace: kong
      annotations:
        konghq.com/strip-path: "true"
+       konghq.com/preserve-host: "false"
    spec:
      parentRefs:
        - name: kong
