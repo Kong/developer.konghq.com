@@ -30,7 +30,7 @@ faqs:
       Yes. SCIM tokens can expire depending on the refresh method you chose when configuring SCIM:
       
       - Manual refresh: the token expires at the expiration date you pick.
-      - Automatic refresh (requires OAuth 2.0): the token expires and {{ site.data.products.insomnia.name }} automatically refreshes it.
+      - Automatic refresh (requires OAuth 2.0) {% new_in 13 %}: the token expires and {{ site.data.products.insomnia.name }} automatically refreshes it.
       
       If the automatic refresh fails, {{ site.data.products.insomnia.name }} warns the account owner and co-owners by email and on the SCIM view starting 20 days before the token expires. To resolve it, manually refresh the token on the [SCIM](https://app.insomnia.rest/app/enterprise/scim) view.
 
@@ -131,7 +131,7 @@ Administrators can view the current SCIM token status in {{ site.data.products.i
   - If SCIM is enabled.
   - If the token is valid, expiring soon, or expired.
 
-Configuring SCIM with OAuth 2.0 lets {{ site.data.products.insomnia.name }} automatically refresh the token. When a token is close to expiration and cannot be refreshed automatically, {{ site.data.products.insomnia.name }} displays a warning message on the SCIM page and sends email notifications starting 20 days before the token expires.
+{% new_in 13 %} Configuring SCIM with OAuth 2.0 lets {{ site.data.products.insomnia.name }} automatically refresh the token. When a token is close to expiration and cannot be refreshed automatically, {{ site.data.products.insomnia.name }} displays a warning message on the SCIM page and sends email notifications starting 20 days before the token expires.
 
 ### Connector URL and token
 
@@ -146,7 +146,7 @@ When generating the token, you can choose an expiration window. Available option
 
 When you enable SCIM, choose between these two options:
 
-- Automatic refresh (requires OAuth 2.0): {{ site.data.products.insomnia.name }} automatically refreshes the SCIM tokens before they expire.
+- Automatic refresh (requires OAuth 2.0) {% new_in 13 %}: {{ site.data.products.insomnia.name }} automatically refreshes the SCIM tokens before they expire.
 - Manual refresh: SCIM tokens expire based on the expiration window selected when the token is generated in {{ site.data.products.insomnia.name }}.
 
 If the token expires and is not renewed:
