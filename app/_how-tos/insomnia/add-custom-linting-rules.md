@@ -82,7 +82,7 @@ This causes a new warning to appear:
 tag-description Tags must have a description.
 ```
 
-## Override the rules
+## Override the rules {% new_in 13 %} 
 
 Override the linting rules and use another ruleset, by using either Inso CLI or `.spectral.yaml`:
 
