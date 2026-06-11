@@ -52,16 +52,16 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.ai_gateway}} 2.0 manages MCP traffic through the entity model. Create an [MCP Server Entity](/ai-gateway/entities/ai-mcp-server/) to expose MCP tools and services, then attach [Policy Entities](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+                    {{site.ai_gateway}} 2.0 manages MCP traffic through the entity model. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to expose MCP tools and services, then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
-              title: MCP Server Entity
-              description: Configure and expose MCP tools and services using the MCP Server Entity in {{site.ai_gateway}}.
+              title: AI MCP Server
+              description: Configure and expose MCP tools and services using the AI MCP Server in {{site.ai_gateway}}.
               ctas:
-                - text: MCP Server entity reference
+                - text: AI MCP Server reference
                   url: "/ai-gateway/entities/ai-mcp-server/"
-                - text: Policy entity reference
+                - text: AI Policy reference
                   url: "/ai-gateway/entities/ai-policy/"
       - blocks:
           - type: structured_text
