@@ -22,7 +22,7 @@ tags:
   - load-balancing
 
 min_version:
-  ai-gateway: '2.0.0'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -37,9 +37,9 @@ In {{site.ai_gateway}} 2.0.0 and later, load balancing is configured on the [Mod
 
 <!-- Commented out for future reference - Compatibility with existing configurations
 {:.info}
-> With {{site.ai_gateway}} 2.0.0, both configuration approaches can appear in existing deployments:
+> With {{site.ai_gateway}} 2.0, both configuration approaches can appear in existing deployments:
 > - Legacy plugin-based approach: configure load balancing directly on [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin instances.
-> - {{site.ai_gateway}} 2.0.0 approach: configure load balancing on the [Model entity](/ai-gateway/entities/ai-model/) with `config.balancer` and `target_models`.
+> - {{site.ai_gateway}} 2.0 approach: configure load balancing on the [Model entity](/ai-gateway/entities/ai-model/) with `config.balancer` and `target_models`.
 >
 > For new {{site.ai_gateway}} deployments, use the Model entity workflow.
 -->
