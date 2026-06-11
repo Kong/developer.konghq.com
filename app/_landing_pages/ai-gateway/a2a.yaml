@@ -45,7 +45,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Create an [Agent Entity](/ai-gateway/entities/agent/) to route your A2A endpoints through {{site.ai_gateway}} to your backend agents to unlock observability into agent communication.
+                    Create an [Agent Entity](/ai-gateway/entities/ai-agent/) to route your A2A endpoints through {{site.ai_gateway}} to your backend agents to unlock observability into agent communication.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
@@ -53,9 +53,9 @@ rows:
               description: Configure A2A traffic and expose agents using the Entity model in {{site.ai_gateway}} {% new_in 2.0 %}.
               ctas:
                 - text: Agent entity reference
-                  url: "/ai-gateway/entities/agent/"
+                  url: "/ai-gateway/entities/ai-agent/"
                 - text: Policy entity reference
-                  url: "/ai-gateway/entities/policy/"
+                  url: "/ai-gateway/entities/ai-policy/"
       - blocks:
           - type: structured_text
             config:

@@ -1,13 +1,15 @@
 metadata:
   title: "MCP Traffic Gateway"
   content_type: landing_page
-  description: This page is an introduction to MCP Traffic Gateway capabilites in {{site.ai_gateway}}.
+  description: This page is an introduction to MCP Traffic Gateway capabilities in {{site.ai_gateway}}.
   products:
     - ai-gateway
     - gateway
   works_on:
     - on-prem
     - konnect
+  breadcrumbs:
+    - /ai-gateway/
   tags:
     - ai
     - mcp
@@ -31,7 +33,7 @@ rows:
               {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability.
 
               Learn how to:
-              - [Configure MCP servers with Entities and Policies](#configure-mcp-servers-with-entities-and-policies)
+              - [Configure MCP servers with Entities and Policies](#configure-mcp-servers-with-entities-and-policies-new-in-2-0-0)
               - [Secure MCP servers with Policies](#secure-mcp-servers-with-policies)
               - [Observe MCP traffic logs and metrics](#mcp-traffic-observability)
       - blocks:
@@ -50,7 +52,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.ai_gateway}} 2.0 manages MCP traffic through the entity model. Create an [MCP Server Entity](/ai-gateway/entities/mcp-server/) to expose MCP tools and services, then attach [Policy Entities](/ai-gateway/entities/policy/) for authentication, access control, and observability.
+                    {{site.ai_gateway}} 2.0 manages MCP traffic through the entity model. Create an [MCP Server Entity](/ai-gateway/entities/ai-mcp-server/) to expose MCP tools and services, then attach [Policy Entities](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
@@ -58,9 +60,9 @@ rows:
               description: Configure MCP traffic and expose tools using the Entity model in {{site.ai_gateway}} 2.0.
               ctas:
                 - text: MCP Server entity reference
-                  url: "/ai-gateway/entities/mcp-server/"
+                  url: "/ai-gateway/entities/ai-mcp-server/"
                 - text: Policy entity reference
-                  url: "/ai-gateway/entities/policy/"
+                  url: "/ai-gateway/entities/ai-policy/"
       - blocks:
           - type: structured_text
             config:
@@ -78,7 +80,7 @@ rows:
               description: Secure MCP servers and control access to tools with Policies.
               ctas:
                 - text: MCP OAuth2 policy
-                  url: "/ai-gateway/entities/policy/"
+                  url: "/ai-gateway/entities/ai-policy/"
                 - text: Monitor MCP traffic metrics
                   url: "/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics"
                 - text: Review MCP audit logs
