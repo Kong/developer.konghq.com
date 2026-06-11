@@ -30,7 +30,7 @@
     --color-border-primary: 186, 193, 184;
     --opacity-border-primary: 0.60;
 
-    --color-shadow-primary: 205, 212, 203, 0.2;
+   --color-shadow-primary: 0, 20, 8, 0.2;
 
     --color-brand: 204, 255, 0;
     --color-brand-saturated: 204, 255, 0;
