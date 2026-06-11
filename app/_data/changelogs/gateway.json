@@ -22705,5 +22705,32 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.10.0.13": {
+    "kong": [
+      {
+        "message": "Fixed an issue where DP syncing failed with large configs. Added yielding to prevent CPU stall, and set Konnect mode RPC timeout to 30 seconds for successful full-sync.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Fixed an issue where incremental DP (sync v2) would not export config to fallback storage when the control plane uses periodic polling instead of notify_new_version.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed Kafka broker returning failed connections to the keepalive pool, added SSL handshake retry, and improved error propagation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where `kong.service.set_tls_cert_key` did not update the upstream keepalive pool name. Now includes a cert fingerprint for proper connection isolation.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }

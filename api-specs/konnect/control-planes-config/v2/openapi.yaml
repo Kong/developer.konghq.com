@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.14.0
-  x-oas-source: kong/platform-api@f1461f48443cf00ac3ef6861e25393491686c91f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f1461f48443cf00ac3ef6861e25393491686c91f'
+  x-oas-source: kong/platform-api@d0f27c86c7b35daf6a395511bd13290f1cb8181f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d0f27c86c7b35daf6a395511bd13290f1cb8181f'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -9659,7 +9659,7 @@ components:
               page:
                 type: object
                 properties:
-                  total:
+                  total_count:
                     type: integer
     list-nodes:
       description: Example response
@@ -9701,7 +9701,7 @@ components:
               page:
                 type: object
                 properties:
-                  total:
+                  total_count:
                     type: integer
                   next:
                     type: string
@@ -9726,7 +9726,7 @@ components:
               page:
                 type: object
                 properties:
-                  total:
+                  total_count:
                     type: integer
     get-node:
       description: Example response
@@ -9794,7 +9794,7 @@ components:
               page:
                 type: object
                 properties:
-                  total:
+                  total_count:
                     type: integer
     plugin-schemas:
       description: A response for a single custom plugin schema.

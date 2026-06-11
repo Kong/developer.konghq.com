@@ -1,10 +1,8 @@
-require 'nokogiri'
-
 module SectionWrapper
   class HowTo < Base
     def section_title(h2, slug, title)
       h2.add_class('how-to-step--title')
-      Nokogiri::HTML::DocumentFragment.parse <<-HTML
+      <<~HTML
         <a aria-label="Anchor" href="##{slug}" title="#{title}" class="link-anchor flex items-center justify-between hover:no-underline accordion-trigger">
           <div class="flex items-center gap-2 group w-full">
           #{h2.to_html}
@@ -19,23 +17,22 @@ module SectionWrapper
       HTML
     end
 
-    def build_wrapper(section_title = '', topology = '')
-      topology = "data-deployment-topology=\"#{topology}\"" if !topology.nil? && !topology.empty?
-      wrapper = if section_title != ''
-                  <<-HTML
-          <div #{topology} class="flex flex-col gap-4 border-b border-primary/5 pb-8 accordion-item">
-            #{section_title}
-            <div class="content accordion-panel"></div>
+    def build_wrapper_string(title_html, topology, body_html)
+      topology_attr = topology && !topology.empty? ? %( data-deployment-topology="#{topology}") : ''
+      if title_html.to_s.strip.empty?
+        <<~HTML
+          <div#{topology_attr} class="flex flex-col gap-4 border-b border-primary/5 pb-8">
+            <div class="content">#{body_html}</div>
           </div>
-                  HTML
-                else
-                  <<-HTML
-        <div #{topology} class="flex flex-col gap-4 border-b border-primary/5 pb-8">
-          <div class="content"></div>
-        </div>
-                  HTML
-                end
-      Nokogiri::HTML::DocumentFragment.parse(wrapper)
+        HTML
+      else
+        <<~HTML
+          <div#{topology_attr} class="flex flex-col gap-4 border-b border-primary/5 pb-8 accordion-item">
+            #{title_html}
+            <div class="content accordion-panel">#{body_html}</div>
+          </div>
+        HTML
+      end
     end
   end
 end
