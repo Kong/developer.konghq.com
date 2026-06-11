@@ -27,7 +27,7 @@ rows:
             config: |
               The [Agent-to-Agent (A2A)](https://a2aproject.github.io/A2A/) protocol defines how AI agents communicate with each other over HTTP using JSON-RPC and REST bindings. As agent-to-agent communication moves into production, teams need visibility into A2A traffic and control over how it flows.
 
-              {{site.ai_gateway}} can act as a transparent proxy for A2A traffic. The [AI A2A Proxy](/plugins/ai-a2a-proxy/) plugin auto-detects A2A requests, extracts task metadata, rewrites agent card URLs, and feeds structured metrics into the Konnect analytics pipeline and [OpenTelemetry](/plugins/opentelemetry/) tracing.
+              {{site.ai_gateway}} acts as a control and observability layer for A2A traffic, enabling you to route agent-to-agent requests, extract task metadata, rewrite agent card URLs, and feed structured metrics into the Konnect analytics pipeline.
 
       - blocks:
           - type: image
@@ -40,74 +40,44 @@ rows:
           - type: structured_text
             config:
               header:
-                type: h3
-                text: "Using {{site.ai_gateway}} entities {% new_in 2.0.0 %}"
+                type: h2
+                text: "Configure A2A Agents with Entities and Policies {% new_in 2.0.0 %}"
               blocks:
                 - type: text
                   text: |
-                    If you're using {{site.ai_gateway}} 2.0.0 or later, configure A2A traffic through the entity model:
-                    create an [Agent entity](/ai-gateway/entities/agent/) with `type: a2a`, then attach [Policy entities](/ai-gateway/entities/policy/) for authentication, guardrails, rate limiting, and other controls.
-
-                    The runtime behavior remains plugin-based under the hood, but control-plane configuration is managed through entities.
-      - blocks:
+                    Create an [Agent Entity](/ai-gateway/entities/agent/) to route your A2A endpoints through {{site.ai_gateway}} to your backend agents to unlock observability into agent communication.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
-              title: A2A entities {% new_in 2.0.0 %}
-              description: Configure A2A with Agent and Policy entities in the new {{site.ai_gateway}} model.
+              title: Agent Entity
+              description: Configure A2A traffic and expose agents using the Entity model in {{site.ai_gateway}} {% new_in 2.0 %}.
               ctas:
                 - text: Agent entity reference
                   url: "/ai-gateway/entities/agent/"
                 - text: Policy entity reference
                   url: "/ai-gateway/entities/policy/"
-
-  - columns:
       - blocks:
           - type: structured_text
             config:
               header:
                 type: h2
-                text: "Proxy A2A Traffic"
+                text: "Secure A2A Agents with Policies"
               blocks:
                 - type: text
                   text: |
-                    The AI A2A Proxy plugin records A2A protocol metadata so you can analyze how agent-to-agent requests are processed.
-                    This plugin-first path remains the default for users on versions before 2.0.0.
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                type: h4
-                text: "Secure A2A endpoints"
-              blocks:
-                - type: text
-                  text: |
-                    The AI A2A Proxy plugin handles A2A protocol concerns independently of authentication. Apply any {{site.base_gateway}} authentication plugin to the same service or route to secure your A2A endpoints.
-
-  - columns:
-      - blocks:
-          - type: card
-            config:
-              icon: /assets/icons/ai.svg
-              title: Proxy and observe A2A traffic
-              description: |
-                Export A2A metrics and traces with the AI A2A Proxy plugin and OpenTelemetry.
-              ctas:
-                - text: AI A2A Proxy plugin overview
-                  url: "/plugins/ai-a2a-proxy/"
-                - text: Proxy A2A agents through AI Gateway
-                  url: "/how-to/proxy-a2a-agents/"
-      - blocks:
+                    Attach Policies to your Agent entities to secure access, control traffic, and monitor usage. You can also add {{site.base_gateway}} plugins for rate limiting and additional traffic controls.
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Secure A2A endpoints
-              description: Apply authentication to A2A routes using standard gateway plugins.
+              title: Secure and govern A2A traffic
+              description: Secure A2A agents and control access with Policies and {{site.base_gateway}} plugins.
               ctas:
-                - text: Secure A2A endpoints with OpenID Connect and Okta
-                  url: "/how-to/secure-a2a-endpoints-with-oidc/"
-                - text: Secure A2A endpoints with Key Authentication
-                  url: "/how-to/secure-a2a-endpoints/"
+                - text: OpenID Connect
+                  url: "/plugins/openid-connect/"
+                - text: Rate Limiting
+                  url: "/plugins/rate-limiting/"
+                - text: A2A audit logs
+                  url: "/ai-gateway/ai-audit-log-reference/#ai-a2a-proxy-logs"
 
   - header:
       type: h2
@@ -116,7 +86,7 @@ rows:
         {{site.ai_gateway}} records A2A protocol traffic data so you can analyze how agent-to-agent requests are processed and resolved.
         - Audit logs capture task IDs, JSON-RPC method calls, payloads, latencies, and errors.
         - OpenTelemetry spans record task state, context IDs, TTFB, SSE event counts, and response sizes.
-        - Log plugins (File Log, HTTP Log, TCP Log, and others) consume the structured `ai.a2a` namespace emitted by the AI A2A Proxy plugin.
+        - Metrics track A2A-specific signals and performance indicators over time.
     column_count: 3
     columns:
       - blocks:
@@ -169,34 +139,37 @@ rows:
       type: h2
       text: "Govern A2A traffic"
       description: |
-        Use {{site.base_gateway}} plugins to control how A2A traffic flows through the gateway.
-        Rate limiting, traffic control, and request transformation plugins work with A2A routes the same way they work with any other proxied traffic.
+        Manage how A2A traffic flows through {{site.ai_gateway}} using Policies and plugins.
+        Apply rate limiting, traffic control, and request transformation to A2A routes.
     column_count: 2
     columns:
       - blocks:
         - type: card
           config:
-            title: Rate limit A2A traffic
-            description: Apply rate limiting to A2A routes using standard gateway plugins.
-            cta:
-              url: /how-to/rate-limit-a2a-traffic/
-              align: end
+            title: Rate Limiting
+            description: Control A2A traffic rate with standard gateway plugins.
+            icon: /assets/icons/ai.svg
+            ctas:
+              - text: Rate Limiting plugin
+                url: /plugins/rate-limiting/
       - blocks:
         - type: card
           config:
-            title: Limit A2A request size
-            description: Use the Request Size Limiting plugin to restrict the size of A2A requests and responses
-            cta:
-              url: /how-to/limit-a2a-request-size/
-              align: end
-  - header:
-      type: h2
-      text: A2A how-to guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              tags:
-                - a2a
-              quantity: 5
-              allow_empty: true
+            title: Authentication and Authorization
+            description: Secure A2A routes with authentication plugins.
+            icon: /assets/icons/lock.svg
+            ctas:
+              - text: Authentication plugins
+                url: /plugins/?category=authentication
+
+  # - header:
+  #     type: h2
+  #     text: A2A how-to guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             tags:
+  #               - a2a
+  #             quantity: 5
+  #             allow_empty: true
