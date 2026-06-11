@@ -19,6 +19,8 @@ breadcrumbs:
 
 ## KongLicense
 
+`KongLicense` is a cluster-scoped resource. A single `KongLicense` applied to the cluster is shared by all `Gateway` instances managed by that {{ site.operator_product_name }} installation, you don't need to create one per tenant or per namespace.
+
 1. Create a file named `license.json` containing your {{site.ee_product_name}} license.
 
 1. Create a `KongLicense` object with the `rawLicenseString` field set to your license:

@@ -39,12 +39,14 @@ tldr:
 
 prereqs:
   skip_product: true
+  inline:
+    - title: Kong Enterprise license
+      icon_url: /assets/icons/key.svg
+      content: |
+        Save your {{site.ee_product_name}} license as `license.json` in your current working directory. If you don't have a license, contact your Kong representative.
 ---
 
-<!-- SOURCE: control-plane-watch-namespaces.md#multi-tenancy-using-watch-namespaces,
-     Baptiste's gist https://gist.github.com/bcollard/44caa409cdf7d796506a7a2e61a4a0d5 -->
-
-This guide deploys two independent {{ site.base_gateway }} instances — one public-facing, one private — on the same cluster using a single {{ site.operator_product_name }} installation. Each gateway is scoped to its own namespace so that its in-memory KIC only processes routes from that namespace.
+This series deploys two independent {{ site.base_gateway }} instances — one public-facing, one private — on the same cluster using a single {{ site.operator_product_name }} installation. Each gateway is scoped to its own namespace so that its in-memory {{ site.kic_product_name_short }} only processes routes from that namespace.
 
 The following diagram shows the end state you'll build across this series:
 
@@ -94,8 +96,6 @@ kubectl create namespace kong-gw-private
 
 ## Install {{ site.operator_product_name }}
 
-<!-- SOURCE: control-plane-watch-namespaces.md#multi-tenancy-using-watch-namespaces -->
-
 1. Add the Kong Helm chart repository:
 
    ```bash
@@ -116,26 +116,32 @@ kubectl create namespace kong-gw-private
    EOF
    ```
 
-## Validate
+1. Wait for {{ site.operator_product_name }} to be ready:
 
-Wait for {{ site.operator_product_name }} to be ready:
-
+{% capture validate %}
 {% include prereqs/products/operator-validate-deployment.md %}
+{% endcapture %}
+
+{{validate | indent}}
 
 ## Apply a KongLicense
 
-<!-- SOURCE: Baptiste's gist; KongLicense applied once in kong-system is shared by all Gateways -->
-<!-- GAP: This behaviour is not documented in the product docs. A single KongLicense in
-     kong-system covers all Gateways managed by this operator installation. -->
+Apply the license once in `kong-system`. It's shared by all gateways managed by this operator installation.
 
-Apply the license once in `kong-system`. It is shared by all gateways managed by this operator installation. This assumes your license file is at `./license.json`.
+1. Apply the `KongLicense`:
 
-```bash
-kubectl -n kong-system apply -f - <<EOF
-apiVersion: configuration.konghq.com/v1alpha1
-kind: KongLicense
-metadata:
-  name: kong-license
-rawLicenseString: '$(cat ./license.json)'
-EOF
-```
+   ```bash
+   echo "
+   apiVersion: configuration.konghq.com/v1alpha1
+   kind: KongLicense
+   metadata:
+     name: kong-license
+   rawLicenseString: '$(cat ./license.json)'
+   " | kubectl -n kong-system apply -f -
+   ```
+
+1. Wait for {{ site.operator_product_name }} to pick up the license:
+
+   ```bash
+   kubectl wait --for=condition=Programmed=True konglicense/kong-license --timeout=60s
+   ```

@@ -1,5 +1,5 @@
 ---
-title: Deploy test services and validate isolation
+title: Deploy test services
 description: "Deploy a backend service and HTTPRoute in each tenant namespace, then confirm that each gateway only serves its own routes."
 content_type: how_to
 
@@ -40,7 +40,7 @@ next_steps:
 tldr:
   q: How do I verify that two gateways are isolated from each other?
   a: |
-    Deploy a backend service and `HTTPRoute` in each tenant namespace. Each in-memory KIC
+    Deploy a backend service and `HTTPRoute` in each tenant namespace. Each in-memory {{ site.kic_product_name_short }}
     is scoped to its own namespace via `watchNamespaces.type: own`, so routes in
     `kong-gw-public` are invisible to the private gateway and vice versa.
 
@@ -48,10 +48,7 @@ prereqs:
   skip_product: true
 ---
 
-<!-- SOURCE: Baptiste's gist https://gist.github.com/bcollard/44caa409cdf7d796506a7a2e61a4a0d5,
-     operator-get-started-gateway-api-3-create-route.md -->
-
-## Deploy a test service in each namespace
+## Deploy test services
 
 1. Deploy the echo service in both tenant namespaces:
 
@@ -72,7 +69,7 @@ prereqs:
 Create an `HTTPRoute` in the `kong-gw-public` namespace pointing to the echo service:
 
 ```bash
-kubectl apply -f - <<EOF
+echo '
 kind: HTTPRoute
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
@@ -91,15 +88,15 @@ spec:
     backendRefs:
     - name: echo
       port: 1027
-EOF
+' | kubectl apply -f -
 ```
 
-## Create an HTTPRoute for the private gateway
+## Create two HTTPRoutes for the private gateway
 
-Create an equivalent `HTTPRoute` in the `kong-gw-private` namespace:
+Create two `HTTPRoute` resources in the `kong-gw-private` namespace. One is equivalent to the one in the `kong-gw-public` namespace, and the other is a `/private` path in `kong-gw-private` only:
 
 ```bash
-kubectl apply -f - <<EOF
+echo '
 kind: HTTPRoute
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
@@ -118,44 +115,7 @@ spec:
     backendRefs:
     - name: echo
       port: 1027
-EOF
-```
-
-## Validate
-
-Get the external IP address for each gateway:
-
-```bash
-export PUBLIC_GW_IP=$(kubectl get gateway gw-public -n kong-gw-public \
-  -o jsonpath='{.status.addresses[0].value}')
-export PRIVATE_GW_IP=$(kubectl get gateway gw-private -n kong-gw-private \
-  -o jsonpath='{.status.addresses[0].value}')
-```
-
-The public gateway listens on port 80 and the private gateway on port 8080. Both should respond on `/echo`:
-
-{% validation request-check %}
-url: /echo
-status_code: 200
-on_prem_url: $PUBLIC_GW_IP
-konnect_url: $PUBLIC_GW_IP
-{% endvalidation %}
-
-{% validation request-check %}
-url: /echo
-status_code: 200
-on_prem_url: http://$PRIVATE_GW_IP:8080
-konnect_url: http://$PRIVATE_GW_IP:8080
-{% endvalidation %}
-
-## Test isolation
-
-Both gateways responding on `/echo` confirms they are running, but it does not prove isolation — both routes happen to use the same path. The following test deploys a route that only exists in `kong-gw-private` and verifies that the public gateway has no knowledge of it.
-
-Create an `HTTPRoute` for a `/private` path in `kong-gw-private` only:
-
-```bash
-kubectl apply -f - <<EOF
+---
 kind: HTTPRoute
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
@@ -174,23 +134,66 @@ spec:
     backendRefs:
     - name: echo
       port: 1027
-EOF
+' | kubectl apply -f -
 ```
 
-Confirm it is accessible via the private gateway:
+## Validate
 
+1. Get the external IP address for each gateway:
+
+   ```bash
+   export PUBLIC_GW_IP=$(kubectl get gateway gw-public -n kong-gw-public \
+     -o jsonpath='{.status.addresses[0].value}')
+   echo $PUBLIC_GW_IP
+   export PRIVATE_GW_IP=$(kubectl get gateway gw-private -n kong-gw-private \
+     -o jsonpath='{.status.addresses[0].value}')
+   echo $PRIVATE_GW_IP
+   ```
+
+{% capture check_1 %}
+{% validation request-check %}
+url: /echo
+status_code: 200
+on_prem_url: $PUBLIC_GW_IP
+konnect_url: $PUBLIC_GW_IP
+{% endvalidation %}
+{% endcapture %}
+
+{% capture check_2 %}
+{% validation request-check %}
+url: /echo
+status_code: 200
+on_prem_url: $PRIVATE_GW_IP:8080
+konnect_url: $PRIVATE_GW_IP:8080
+{% endvalidation %}
+{% endcapture %}
+
+{% capture check_3 %}
 {% validation request-check %}
 url: /private
 status_code: 200
-on_prem_url: http://$PRIVATE_GW_IP:8080
-konnect_url: http://$PRIVATE_GW_IP:8080
+on_prem_url: $PRIVATE_GW_IP:8080
+konnect_url: $PRIVATE_GW_IP:8080
 {% endvalidation %}
+{% endcapture %}
 
-Confirm it returns 404 on the public gateway:
+{% capture check_4 %}
+{% validation request-check %}
+url: /private
+status_code: 200
+on_prem_url: $PUBLIC_GW_IP
+konnect_url: $PUBLIC_GW_IP
+{% endvalidation %}
+{% endcapture %}
 
-```bash
-curl -s -o /dev/null -w "%{http_code}\n" http://$PUBLIC_GW_IP/private
-# Expected: 404
-```
+1. The public gateway listens on port 80 and the private gateway on port 8080. Check that both return a `200` response on `/echo`:
+   
+   {{check_1 | indent}}
+   {{check_2 | indent}}
 
-The public gateway returns 404 because its in-memory KIC only watches `kong-gw-public`. The `private-only` HTTPRoute lives in `kong-gw-private`, so the public KIC never processes it and never programs it into the public DataPlane. No matter what routes are deployed in `kong-gw-private`, they are completely invisible to `gw-public` — and vice versa. This is namespace isolation working as intended.
+1. Send a request to the Route that only exists in `kong-gw-private` to verify that the public gateway has no knowledge of it:
+
+   {{check_3 | indent}}
+   {{check_4 | indent}}
+
+The public gateway returns 404 because its in-memory {{ site.kic_product_name_short }} only watches `kong-gw-public`. The `private-only` HTTPRoute lives in `kong-gw-private`, so the public {{ site.kic_product_name_short }} never processes it and never programs it into the public data plane. No matter what routes are deployed in `kong-gw-private`, they are completely invisible to `gw-public` — and vice versa. This is namespace isolation working as intended.

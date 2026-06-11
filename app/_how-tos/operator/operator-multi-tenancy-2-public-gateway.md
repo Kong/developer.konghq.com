@@ -43,16 +43,12 @@ prereqs:
   skip_product: true
 ---
 
-<!-- SOURCE: Baptiste's gist https://gist.github.com/bcollard/44caa409cdf7d796506a7a2e61a4a0d5,
-     GatewayConfigControlPlaneOptions in custom-resources.md,
-     control-plane-watch-namespaces.md -->
-
 ## Create a GatewayConfiguration
 
-The `controlPlaneOptions.watchNamespaces.type: own` field restricts the in-memory KIC for this gateway to watch only the `kong-gw-public` namespace. Without this, it would watch all namespaces and process routes belonging to other tenants.
+The `controlPlaneOptions.watchNamespaces.type: own` field restricts the in-memory {{ site.kic_product_name_short }} for this gateway to watch only the `kong-gw-public` namespace. Without this, it would watch all namespaces and process routes belonging to other tenants.
 
 ```bash
-kubectl apply -f - <<EOF
+echo '
 kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
@@ -69,17 +65,15 @@ spec:
   controlPlaneOptions:
     watchNamespaces:
       type: own
-EOF
+' | kubectl apply -f -
 ```
 
 ## Create a GatewayClass
 
-<!-- SOURCE: operator-get-started-gateway-api-2-create-gateway.md -->
-
 1. Create a `GatewayClass` that references the `GatewayConfiguration` above:
 
    ```bash
-   kubectl apply -f - <<EOF
+   echo '
    kind: GatewayClass
    apiVersion: gateway.networking.k8s.io/v1
    metadata:
@@ -91,7 +85,7 @@ EOF
        kind: GatewayConfiguration
        name: gw-public
        namespace: kong-gw-public
-   EOF
+   ' | kubectl apply -f -
    ```
 
 1. Wait for {{ site.operator_product_name }} to accept the `GatewayClass`:
@@ -102,27 +96,33 @@ EOF
 
 ## Create a Gateway
 
-Create the `Gateway` resource in the `kong-gw-public` namespace, referencing the `GatewayClass` above:
+1. Create the `Gateway` resource in the `kong-gw-public` namespace, referencing the `GatewayClass` above:
 
-```bash
-kubectl apply -f - <<EOF
-kind: Gateway
-apiVersion: gateway.networking.k8s.io/v1
-metadata:
-  name: gw-public
-  namespace: kong-gw-public
-spec:
-  gatewayClassName: gw-public
-  listeners:
-  - name: http
-    protocol: HTTP
-    port: 80
-EOF
-```
+   ```bash
+   echo '
+   kind: Gateway
+   apiVersion: gateway.networking.k8s.io/v1
+   metadata:
+     name: gw-public
+     namespace: kong-gw-public
+   spec:
+     gatewayClassName: gw-public
+     listeners:
+     - name: http
+       protocol: HTTP
+       port: 80
+   ' | kubectl apply -f -
+   ```
+
+1. Wait for the gateway to be programmed:
+
+   ```bash
+   kubectl wait --for=condition=Programmed=True gateway/gw-public -n kong-gw-public --timeout=120s
+   ```
 
 ## Validate
 
-Wait for the public gateway to become ready:
+Verify the public gateway was reconciled successfully:
 
 {% validation kubernetes-resource %}
 kind: Gateway
