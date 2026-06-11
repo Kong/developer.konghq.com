@@ -52,7 +52,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.ai_gateway}} manages MCP traffic through the entity model. Generate an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) from an API spec to expose tools and services over MCP, then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+                    {{site.ai_gateway}} manages MCP traffic through the entity model. Generate an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) from an API spec to expose tools and services over MCP.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
