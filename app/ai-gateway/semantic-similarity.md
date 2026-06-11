@@ -76,8 +76,6 @@ Semantic similarity is used differently depending on the feature:
 - AI RAG Injector compares prompts against vectorized document chunks to retrieve relevant context.
 - AI Semantic Prompt Guard and AI Semantic Response Guard compare content against vectorised allow and deny lists to detect misuse patterns semantically.
 
-
-
 ## Dimensionality
 
 Embedding models work by converting text into high-dimensional floating-point arrays where mathematical distance reflects semantic relationship. In other words, ingested text data becomes points in a vector space, which enables similarity searches in vector databases, and the dimension of embeddings plays a critical role for this.
@@ -188,7 +186,7 @@ Cosine similarity measures the angle between vectors, ignoring their magnitude. 
 ![Cosine similarity example](/assets/images/ai-gateway/cosine-similarity.svg)
 > _**Figure 2:** Visualization of cosine similarity as the angle between vector directions._
 
-Cosine tends to perform well across both low and high dimensional space, especially in high-diversity datasets because it captures vector orientation rather than size. This can be useful, for example, when comparing texts about Microsoft, Apple, and {{ site.google}}.
+Cosine tends to perform well across both low and high dimensional space, especially in high-diversity datasets because it captures vector orientation rather than size. This can be useful, for example, when comparing texts about Microsoft, Apple, and {{site.google}}.
 
 #### Euclidean distance
 
@@ -231,7 +229,7 @@ rows:
 
 ## Similarity threshold
 
-The `config.vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine—such as Redis or PostgreSQL (pgvector)—and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
+The `config.vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine (such as Redis or PostgreSQL with pgvector) and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
 
 
 The threshold defines how permissive the matching is. **Higher threshold values allow looser matches, while lower values enforce stricter matching.** The threshold range is 0 to 1.
@@ -253,7 +251,7 @@ The closer your similarity threshold is to `1`, the more likely you are to get *
 
 This happens because vector embeddings are not perfectly robust to minor semantic shifts, especially for short or ambiguous prompts. Raising the threshold narrows the match window, so you're effectively demanding a near-exact match in a complex vector space, which is rare unless the input is repeated verbatim.
 
-The chart below illustrates this effect: as the similarity threshold increase (for example, becomes more strict), the cache hit rate typically falls. This reflects the broader acceptance of matches in the embedding space, which helps reduce redundant LLM calls at the cost of some semantic looseness.
+The chart below illustrates this effect: as the similarity threshold increases (for example, becomes more strict), the cache hit rate typically falls. This reflects the broader acceptance of matches in the embedding space, which helps reduce redundant LLM calls at the cost of some semantic looseness.
 
 ![Similarity threshold and cache rate hits](/assets/images/ai-gateway/cache-hit-rate.svg)
 > _**Figure 5:** As the similarity threshold decreases (becomes more permissive), cache hit rate increases—illustrating the trade-off between strict semantic matching and LLM efficiency._
