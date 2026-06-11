@@ -562,7 +562,23 @@ To enable DPoP for OpenID Connect:
 
 See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for more detail.
 
-## Token exchange {% new_in 3.14 %}
+## Multi-IdP support
+
+If your APIs serve clients that authenticate with different identity providers, the OIDC plugin can validate tokens from multiple issuers at the gateway layer, so backends don't need per-IdP logic.
+
+You can implement this in one of the following ways:
+
+* **Trusted issuers registry**: Configure the OIDC plugin with a list of trusted issuers and their JWKS endpoints using [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) and [`config.extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris).
+{{site.base_gateway}} validates incoming tokens against the appropriate public keys and forwards them to the backend as-is.
+This works best when token formats are consistent across IdPs.
+
+* **Token exchange** {% new_in 3.14 %}: Configure the OIDC plugin to swap incoming tokens for a canonical token from one trusted issuer using `config.token_exchange`.
+The backend always receives tokens from a single issuer regardless of which IdP the client used.
+This works best when backends must trust one issuer, or when you need to normalize scopes and claims across IdPs.
+
+For a detailed comparison, configuration parameters, and examples, see [Multi-IdP token validation at the gateway layer](/plugins/openid-connect/multi-idp/).
+
+### Token exchange {% new_in 3.14 %}
 
 The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
 The RFC defines a protocol approach to support scenarios where a client can exchange a token for a new token by interacting with the authorization server. 
@@ -571,7 +587,7 @@ This is particularly useful in complex environments like microservices or cross-
 {:.info}
 > **Note**: The OpenID Connect plugin only supports exchanging access tokens.
 
-### Why use token exchange?
+#### Why use token exchange?
 
 Token exchange can be used in several critical use cases:
 
@@ -586,7 +602,7 @@ For example, a frontend service needs to trade its token for a new token with sp
 > Because token exchange allows for the creation of new tokens, trust models are vital. 
 The trust model must strictly define which clients are allowed to exchange tokens and which scopes they are permitted to elevate or downgrade to prevent security flaws like privilege escalations.
 
-### How token exchange works
+#### How token exchange works
 
 In a typical [OAuth flow](#kong-oauth-token-authentication-flow), a token is obtained to access a resource. 
 However, in a token exchange, a client already has a token (the "subject token"). 
@@ -613,7 +629,7 @@ Set up token exchange:
 * [Example: Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
 * [How-to: Configure OIDC with token exchange](/how-to/configure-oidc-with-token-exchange/)
 
-#### Key terms
+##### Key terms
 
 The token exchange flow uses the following terms:
 
