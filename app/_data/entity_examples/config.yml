@@ -60,6 +60,7 @@ formats:
       # core entities
       consumer:       '/consumers/'
       consumer_group: '/consumer_groups/'
+      model:          '/models/'
       route:          '/routes/'
       service:        '/services/'
       target:         '/upstreams/{upstream}/targets/'
@@ -89,6 +90,10 @@ formats:
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
       global:         '/plugins/'
+    ai_policy_endpoints:
+      ai_model:      '/models/{ai_model}/policies/'
+      ai_agent:      '/agents/{ai_agent}/policies/'
+      ai_mcp_server: '/mcp-servers/{ai_mcp_server}/policies/'
     variables:
       <<: *variables
       ai_gateway:
