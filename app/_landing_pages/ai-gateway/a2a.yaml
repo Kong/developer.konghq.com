@@ -41,7 +41,7 @@ rows:
             config:
               header:
                 type: h2
-                text: "Configure A2A Agents with Entities and Policies {% new_in 2.0.0 %}"
+                text: "Configure A2A Agents with Entities and Policies {% new_in 2.0 %}"
               blocks:
                 - type: text
                   text: |
@@ -50,7 +50,7 @@ rows:
             config:
               icon: /assets/icons/linked-services.svg
               title: Agent Entity
-              description: Configure A2A traffic and expose agents using the Entity model in {{site.ai_gateway}} {% new_in 2.0 %}.
+              description: Configure and expose A2A agents using the Agent Entity in {{site.ai_gateway}} {% new_in 2.0 %}.
               ctas:
                 - text: Agent entity reference
                   url: "/ai-gateway/entities/ai-agent/"

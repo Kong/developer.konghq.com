@@ -31,7 +31,7 @@ rows:
 
                     But infrastructure often falls behind, with challenges around authentication, rate limiting, data security, observability, and constant provider changes.
 
-                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. In this model, a [**Policy**](/ai-gateway/entities/ai-policy/) {% new_in 2.0.0 %} is a first-class entity that applies governance behavior at a chosen scope (such as a [Model](/ai-gateway/entities/ai-model/), [Agent](/ai-gateway/entities/ai-agent/), [MCP Server](/ai-gateway/entities/ai-mcp-server/), [Consumer](/ai-gateway/entities/ai-consumer/), or [Consumer Group](/ai-gateway/entities/ai-consumer-group/)). Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
+                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. In this model, a [**Policy**](/ai-gateway/entities/ai-policy/) {% new_in 2.0 %} is a first-class entity that applies governance behavior at a chosen scope (such as a [Model](/ai-gateway/entities/ai-model/), [Agent](/ai-gateway/entities/ai-agent/), [MCP Server](/ai-gateway/entities/ai-mcp-server/), [Consumer](/ai-gateway/entities/ai-consumer/), or [Consumer Group](/ai-gateway/entities/ai-consumer-group/)). Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
 
 
       - blocks:
@@ -69,7 +69,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Gateway entities {% new_in 2.0.0 %}
+            title: AI Gateway entities {% new_in 2.0 %}
             description: Learn the AI, MCP, and A2A entities and how resources map to each gateway type.
             icon: /assets/icons/linked-services.svg
             cta:
@@ -78,7 +78,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI policies {% new_in 2.0.0 %}
+            title: AI policies {% new_in 2.0 %}
             description: Attach policy-managed governance behavior to Models, Agents, MCP Servers, and identities.
             icon: /assets/icons/plug.svg
             cta:
@@ -98,7 +98,7 @@ rows:
       type: h2
       text: Three traffic types, unified control
       description: |
-        Govern, secure, and observe all AI traffic through dedicated AI Gateway entities {% new_in 2.0.0 %}.
+        Govern, secure, and observe all AI traffic through dedicated AI Gateway entities {% new_in 2.0 %}.
         Model entities manage LLM traffic, MCP Server entities expose and control tools, and Agent entities route A2A traffic.
         Each includes built-in authentication, policy enforcement, and observability.
     column_count: 3
@@ -134,7 +134,7 @@ rows:
       type: h2
       text: "{{site.ai_gateway}} providers"
       description: |
-        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining [Provider](/ai-gateway/entities/ai-provider/) and [Model](/ai-gateway/entities/ai-model/) entities {% new_in 2.0.0 %}.
+        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining [Provider](/ai-gateway/entities/ai-provider/) and [Model](/ai-gateway/entities/ai-model/) entities {% new_in 2.0 %}.
         [Provider](/ai-gateway/entities/ai-provider/) entities store upstream connectivity and credentials, while [Model](/ai-gateway/entities/ai-model/) entities reference Providers to expose stable client-facing endpoints and routing behavior.
     column_count: 4
     columns:
@@ -207,7 +207,7 @@ rows:
                     - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
       - header:
           type: h2
-          text: "Tools to manage {{site.ai_gateway}} {% new_in 2.0.0 %}"
+          text: "Tools to manage {{site.ai_gateway}} {% new_in 2.0 %}"
         blocks:
           - type: structured_text
             config:
@@ -230,7 +230,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Models {% new_in 2.0.0 %}
+            title: AI Models {% new_in 2.0 %}
             description: Define client-facing AI endpoints, capabilities, and routing behavior.
             icon: /assets/icons/plugins/universal-api.svg
             cta:
@@ -239,7 +239,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Providers {% new_in 2.0.0 %}
+            title: AI Providers {% new_in 2.0 %}
             description: Use Provider entity to configure LLM provider connectivity, credentials, and provider types.
             icon: /assets/icons/plugins/ai-proxy-advanced.png
             cta:
@@ -755,11 +755,11 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: Is {{site.ai_gateway}} {% new_in 2.0.0 %} available for all deployment modes?
+            - q: Is {{site.ai_gateway}} {% new_in 2.0 %} available for all deployment modes?
               a: |
                 {{site.ai_gateway}} capabilities (AI, MCP, and A2A traffic management) are available across [deployment modes](/gateway/deployment-topologies/), including {{site.konnect_short_name}}, self-hosted traditional, hybrid, and DB-less, and on Kubernetes via the [{{site.kic_product_name}}](/kubernetes-ingress-controller/).
 
-            - q: Why should I use {{site.ai_gateway}} {% new_in 2.0.0 %} instead of adding the LLM's API behind {{site.base_gateway}}?
+            - q: Why should I use {{site.ai_gateway}} {% new_in 2.0 %} instead of adding the LLM's API behind {{site.base_gateway}}?
               a: |
                 If you just add an LLM's API behind {{site.base_gateway}}, you can only interact at the API level with internal traffic.
                 With {{site.ai_gateway}} policies and runtime components, {{site.base_gateway}} can understand the prompts that are being sent through the gateway.

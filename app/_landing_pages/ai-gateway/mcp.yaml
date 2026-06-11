@@ -48,7 +48,7 @@ rows:
             config:
               header:
                 type: h2
-                text: "Configure MCP servers with Entities and Policies {% new_in 2.0.0 %}"
+                text: "Configure MCP servers with Entities and Policies {% new_in 2.0 %}"
               blocks:
                 - type: text
                   text: |
@@ -57,7 +57,7 @@ rows:
             config:
               icon: /assets/icons/linked-services.svg
               title: MCP Server Entity
-              description: Configure MCP traffic and expose tools using the Entity model in {{site.ai_gateway}} 2.0.
+              description: Configure and expose MCP tools and services using the MCP Server Entity in {{site.ai_gateway}}.
               ctas:
                 - text: MCP Server entity reference
                   url: "/ai-gateway/entities/ai-mcp-server/"
@@ -133,4 +133,31 @@ rows:
             cta:
               url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
               align: end
+
+  - header:
+      type: h2
+      text: "Govern MCP traffic"
+      description: |
+        Manage how MCP traffic flows through {{site.ai_gateway}} using Policies and plugins.
+        Apply rate limiting, traffic control, and access policies to MCP routes.
+    column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Rate Limiting
+            description: Control MCP traffic rate with standard gateway plugins.
+            icon: /assets/icons/ai.svg
+            ctas:
+              - text: Rate Limiting plugin
+                url: /plugins/rate-limiting/
+      - blocks:
+        - type: card
+          config:
+            title: Authentication and Authorization
+            description: Secure MCP routes with authentication plugins.
+            icon: /assets/icons/lock.svg
+            ctas:
+              - text: Authentication plugins
+                url: /plugins/?category=authentication
 
