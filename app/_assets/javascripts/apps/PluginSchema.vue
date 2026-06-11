@@ -34,6 +34,6 @@ const schema = window.schema;
 }
 
 :deep(.default-markdown ul) {
-  @apply ml-4;
+  @apply ml-4 !important;
 }
 </style>
