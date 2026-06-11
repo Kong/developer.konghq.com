@@ -67,7 +67,7 @@ class CookbooksIndex {
     this.heroPills.forEach((pill) => {
       const active = pill.dataset.category === this.activeCategory;
       pill.classList.toggle("bg-brand-saturated/20", active);
-      pill.classList.toggle("border-brand-saturated/40", active);
+      pill.classList.toggle("border-brand-saturated", active);
     });
   }
 

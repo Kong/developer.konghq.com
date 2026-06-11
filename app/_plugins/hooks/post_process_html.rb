@@ -73,7 +73,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
 
       span = Nokogiri::HTML::DocumentFragment.parse(
         <<-HTML
-          <span class="text-brand hidden link-anchor-icon group-hover:flex">
+          <span class="hidden link-anchor-icon group-hover:flex">
             #{File.read('app/assets/icons/link.svg')}
           </span>
         HTML
