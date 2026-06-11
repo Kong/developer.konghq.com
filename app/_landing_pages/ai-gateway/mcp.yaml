@@ -33,7 +33,7 @@ rows:
               {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability. In {{site.ai_gateway}} {% new_in 2.0 %}, you configure MCP traffic using [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
 
               Learn how to:
-              - [Configure MCP servers with Entities and Policies](#configure-mcp-servers-with-entities-and-policies-new-in-2-0-0)
+              - [Create MCP servers from API specs](#create-mcp-servers-from-api-specs-new-in-2-0)
               - [Secure MCP servers with Policies](#secure-mcp-servers-with-policies)
               - [Observe MCP traffic logs and metrics](#mcp-traffic-observability)
       - blocks:
@@ -48,7 +48,7 @@ rows:
             config:
               header:
                 type: h2
-                text: "Configure MCP servers with Entities and Policies {% new_in 2.0 %}"
+                text: "Create MCP servers from API specs {% new_in 2.0 %}"
               blocks:
                 - type: text
                   text: |
