@@ -11,6 +11,7 @@ related_resources:
     url: /gateway/authentication/
   - text: Token exchange in OIDC
     url: /plugins/openid-connect/#token-exchange
+  - text: Configure multi-IdP with a trusted issuer registry
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 

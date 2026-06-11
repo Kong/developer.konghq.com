@@ -1,3 +1,4 @@
+<!--vale off-->
 {% mermaid %}
 sequenceDiagram
     participant C as Client
@@ -18,7 +19,6 @@ sequenceDiagram
     end
     K->>K: Verify signature
     K->>K: Check iss against issuers_allowed
-    K->>K: Verify exp, nbf
     K->>U: Proxy request with original token
     activate U
     U-->>K: Response
@@ -26,3 +26,4 @@ sequenceDiagram
     K-->>C: Response
     deactivate K
 {% endmermaid %}
+<!--vale on-->

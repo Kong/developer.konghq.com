@@ -1,5 +1,5 @@
 ---
-title: Multi-IdP token validation at the Gateway layer
+title: Multi-IdP token validation with OpenID Connect
 
 description: "Configure the OpenID Connect plugin to validate tokens from multiple identity providers using a trusted issuer registry or token exchange."
 content_type: reference
@@ -29,8 +29,7 @@ related_resources:
     url: /how-to/configure-oidc-with-token-exchange/
 ---
 
-If your APIs serve clients from multiple identity providers (IdPs), for example employees using Okta, B2B partners using Azure AD, or legacy systems on an in-house IdP, the [OpenID Connect (OIDC) plugin](/plugins/openid-connect/) can act as a federated authentication broker at the gateway layer.
-Backends don't need per-IdP validation logic.
+If your APIs serve clients from multiple identity providers (IdPs), (for example, employees using Okta, B2B partners using Azure AD, or legacy systems on an in-house IdP), the [OpenID Connect (OIDC) plugin](/plugins/openid-connect/) can act as a federated authentication broker at the gateway layer. In this setup, backends don't need per-IdP validation logic.
 {{site.base_gateway}} centralizes auth policy and forwards only the verified identity context upstream.
 
 The OIDC plugin supports two approaches for multi-IdP authentication, both using [JWT access token (bearer) auth](/plugins/openid-connect/#jwt-access-token-authentication-flow).
@@ -64,6 +63,7 @@ rows:
 
 ## Option 1: Trusted issuers registry
 
+In this approach, {{site.base_gateway}} acts as a federated authentication broker maintaining a registry of trusted issuers and their public key endpoints.
 The plugin inspects the `iss` claim of an incoming bearer token, looks up the matching JWKS endpoint from the configured list, validates the token signature and standard claims, then forwards the verified request upstream.
 No token transformation occurs.
 
@@ -163,7 +163,7 @@ config:
 When a client from `idp-b` presents a bearer token, {{site.base_gateway}} validates it, then exchanges it with `idp-a` to produce a token the upstream service trusts.
 Tokens already issued by `idp-a` are validated as-is unless conditions require an exchange.
 
-For more detail and complete walkthroughs:
+For more detail, see:
 * [Plugin example: Token exchange for cross-domain security](/plugins/openid-connect/examples/token-exchange-cross-domain/)
 * [Plugin example: Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
 * [How-to: Configure OpenID Connect with token exchange using Keycloak](/how-to/configure-oidc-with-token-exchange/)

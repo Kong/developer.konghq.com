@@ -1,8 +1,8 @@
 ---
-title: Configure OpenID Connect with multiple IdPs using a trusted issuers registry
+title: Configure OpenID Connect with multiple IdPs using a trusted issuer registry
 permalink: /how-to/configure-oidc-with-multi-idp/
 content_type: how_to
-description: Learn how to configure the OpenID Connect plugin to validate tokens from multiple identity providers using a trusted issuers registry.
+description: Learn how to configure the OpenID Connect plugin to validate tokens from multiple identity providers using a trusted issuer registry.
 
 related_resources:
   - text: OpenID Connect in {{site.base_gateway}}
@@ -11,6 +11,8 @@ related_resources:
     url: /gateway/authentication/
   - text: Multi-IdP token validation at the gateway layer
     url: /plugins/openid-connect/multi-idp/
+  - text: Configure OpenID Connect with token exchange
+    url: /how-to/configure-oidc-with-token-exchange/
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 
@@ -110,17 +112,17 @@ variables:
 
 Auth configuration:
 * `issuer`: The primary IdP URL, used for discovery and as the canonical issuer reference.
-* `using_pseudo_issuer`: Disables OIDC discovery from the `issuer` URL. Required here because {{site.base_gateway}} runs inside Docker and can't reach `localhost:8080` directly. The `issuer` value is still used to match the `iss` claim in tokens from realm-a.
-* `jwks_endpoint`: Explicit JWKS endpoint that {{site.base_gateway}} uses to fetch signing keys for realm-a. Uses the `keycloak` container name, which is reachable from {{site.base_gateway}} over the shared Docker network.
-* `extra_jwks_uris`: The JWKS endpoint for realm-b. The plugin checks the primary JWKS first, then falls back to this list.
+* `using_pseudo_issuer`: Disables OIDC discovery from the `issuer` URL. Required here because {{site.base_gateway}} runs inside Docker and can't reach `localhost:8080` directly. The `issuer` value is still used to match the `iss` claim in tokens from `realm-a`.
+* `jwks_endpoint`: Explicit JWKS endpoint that {{site.base_gateway}} uses to fetch signing keys for `realm-a`. Uses the `keycloak` container name, which is reachable from {{site.base_gateway}} over the shared Docker network.
+* `extra_jwks_uris`: The JWKS endpoint for `realm-b`. The plugin checks the primary JWKS first, then falls back to this list.
 * `issuers_allowed`: Explicit allowlist of accepted issuers. Tokens whose `iss` claim doesn't match one of these values are rejected.
-* `verify_claims`: Set to `false` so that the `iss` claim is checked against `issuers_allowed` instead of requiring it to equal `config.issuer`. Without this, tokens from realm-b would fail claim verification.
+* `verify_claims`: Set to `false` so that the `iss` claim is checked against `issuers_allowed` instead of requiring it to equal `config.issuer`. Without this, tokens from `realm-b` would fail claim verification.
 
 ## Validate the flow
 
 ### Token from realm-a
 
-Get a client credentials token from realm-a:
+Get a client credentials token from `realm-a`:
 
 ```sh
 TOKEN_A=$(curl -s -X POST \
@@ -146,7 +148,7 @@ When you decode the token in the forwarded `Authorization` header, the `iss` cla
 
 ### Token from realm-b
 
-Get a client credentials token from realm-b:
+Get a client credentials token from `realm-b`:
 
 ```sh
 TOKEN_B=$(curl -s -X POST \
