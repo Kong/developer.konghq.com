@@ -21,7 +21,7 @@ related_resources:
 
 tldr:
   q: How do I customize linting in {{ site.data.products.insomnia.name }} ?
-  a: In your {{ site.data.products.insomnia.name }}  project, add a YAML file containing your custom ruleset.
+  a: In your {{ site.data.products.insomnia.name }}  document, click the upload icon for the **Default OAS Ruleset** and add a Spectral ruleset YAML file with your custom ruleset.
 
 prereqs:
   inline:
