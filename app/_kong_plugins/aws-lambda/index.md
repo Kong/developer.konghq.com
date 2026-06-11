@@ -88,3 +88,15 @@ If the [`config.aws_region`](./reference/#schema--config-aws_region) parameter i
 AWS region through the environment variables `AWS_REGION` and `AWS_DEFAULT_REGION`,
 in that order. If none of these are set, a runtime error `no region or host specified`
 will be thrown.
+
+## Preserve error codes {% new_in 3.15 %}
+
+By default, when the Lambda Invoke API rejects a call before the function runs (for example, a `400 Bad Request` or `403 Forbidden`), {{site.base_gateway}} returns a generic `HTTP 500` to the client.
+This makes it difficult to distinguish authorization failures from bad requests.
+
+You can enable [`preserve_lambda_api_error_code`](/plugins/aws-lambda/reference/#schema--config-preserve_lambda_api_error_code) to return the original `4xx` or `5xx` status code from the Lambda API instead.
+This setting only applies when the Lambda Invoke API itself returns `status >= 400`, and doesn't affect errors raised inside a successfully invoked function.
+
+{{site.base_gateway}} sanitizes the client response body to `{"message":"Upstream Lambda invocation failed"}` and never exposes AWS error messages or ARNs to clients.
+
+If the {{site.base_gateway}} log level is set to `error`, it logs the full error detail regardless of this setting: `AWS Lambda API returned error: <msg>, status code: <code>`.
