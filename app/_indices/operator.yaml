@@ -21,6 +21,8 @@ groups:
   - title: Reference
     sections:
       - items:
+          - path: /operator/reference/architecture/
+          - path: /operator/reference/multi-tenancy/
           - path: /operator/reference/configuration-options/
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
@@ -63,6 +65,7 @@ groups:
           - path: /operator/dataplanes/how-to/use-custom-ca-certificate/
           - path: /operator/dataplanes/how-to/deploy-custom-plugins/
           - path: /operator/dataplanes/how-to/handle-ingress/
+          - path: /operator/dataplanes/how-to/multi-tenancy/setup/
           - path: /operator/dataplanes/how-to/configure-plugins-for-httproute/
       - title: Observability
         items:

@@ -41,3 +41,6 @@ mcp-acls:
 mesh-get-started-universal:
   title: Get started with {{site.mesh_product_name}} on Universal
   url: /mesh/get-started/universal/install/
+operator-multi-tenancy:
+  title: Deploy multiple isolated gateways on the same cluster
+  url: /operator/dataplanes/how-to/multi-tenancy/setup/
