@@ -73,8 +73,11 @@ You can view the content of the file by clicking `Custom Ruleset` in {{ site.dat
 In this example, you can confirm the rule triggers by removing the description for the `GET /flights` endpoint. This will be flagged since the ruleset doesn't allow tags without a description:
 
 ```yaml
-tags:
-  - name: flight-data
+"/flights":
+    get:
+      summary: Get KongAir planned flights
+      tags:
+      - flight-data
 ```
 
 This causes a new warning to appear:
