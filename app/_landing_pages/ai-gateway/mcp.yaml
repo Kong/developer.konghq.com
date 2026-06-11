@@ -30,7 +30,7 @@ rows:
             config: |
               AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
 
-              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability. In {{site.ai_gateway}} 2.0, you configure MCP traffic using [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability. In {{site.ai_gateway}} {% new_in 2.0 %}, you configure MCP traffic using [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
 
               Learn how to:
               - [Configure MCP servers with Entities and Policies](#configure-mcp-servers-with-entities-and-policies-new-in-2-0-0)
