@@ -52,7 +52,13 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.ai_gateway}} manages MCP traffic through the entity model. Generate an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) from an API spec to expose tools and services over MCP.
+                    Turn any API into an MCP server using the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity. This approach does not require an LLM and provides full control over production workloads.
+
+                    The AI MCP Server entity:
+                    - Converts API schemas into MCP-compatible tool definitions
+                    - Aggregates multiple APIs into a single MCP server endpoint
+                    - Supports serverless deployments for dynamic tool generation
+                    - Integrates with AI assistants like Claude Desktop and other MCP clients
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
@@ -72,7 +78,13 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entities for OAuth2 authentication, rate limiting, and traffic control.
+                    Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entities to apply security, governance, and observability controls across your MCP infrastructure.
+
+                    Use AI Policies and Kong Gateway plugins to:
+                    - Secure access with the MCP OAuth2 policy or other authentication methods
+                    - Monitor MCP traffic using AI metrics and AI audit logs
+                    - Enforce access controls for MCP tool usage
+                    - Govern usage with rate limiting and traffic control plugins
           - type: card
             config:
               icon: /assets/icons/lock.svg
