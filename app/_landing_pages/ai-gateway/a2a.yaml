@@ -45,7 +45,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Create [AI Agent](/ai-gateway/entities/ai-agent/) entities to proxy your A2A endpoints through {{site.ai_gateway}} to unlock observability into agent communication. Attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication and access control.
+                    Create [AI Agent](/ai-gateway/entities/ai-agent/) entities to proxy your A2A endpoints through {{site.ai_gateway}} to unlock observability into agent communication.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
@@ -65,7 +65,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Protect your A2A agents using AI Policies and {{site.base_gateway}} plugins. Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI Agent](/ai-gateway/entities/ai-agent/) entities for authentication, then use rate limiting and other security plugins to enforce traffic policies.
+                    Secure access to your A2A agents by attaching [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI Agent](/ai-gateway/entities/ai-agent/) entities for authentication and traffic control.
           - type: card
             config:
               icon: /assets/icons/lock.svg
