@@ -34,7 +34,7 @@ rows:
 
               Learn how to:
               - [Create MCP servers from API specs](#create-mcp-servers-from-api-specs-new-in-2-0)
-              - [Secure MCP servers](#secure-mcp-servers)
+              - [Secure and govern MCP servers](#secure-and-govern-mcp-servers)
               - [Observe MCP traffic](#observe-mcp-traffic)
       - blocks:
           - type: image
@@ -68,19 +68,23 @@ rows:
             config:
               header:
                 type: h2
-                text: "Secure MCP servers"
+                text: "Secure and govern MCP servers"
               blocks:
                 - type: text
                   text: |
-                    Protect your MCP servers using AI Policies. Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entities for OAuth2 authentication and access control.
+                    Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entities for OAuth2 authentication, rate limiting, and traffic control.
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Security with AI Policies
-              description: Secure MCP servers and control access to tools with AI Policies.
+              title: Security and governance with Policies
+              description: Secure MCP servers and govern traffic with AI Policies.
               ctas:
-                - text: AI Policy reference
+                - text: MCP OAuth2 policy
                   url: "/ai-gateway/entities/ai-policy/"
+                - text: Rate Limiting
+                  url: "/plugins/rate-limiting/"
+                - text: Observability
+                  url: "/ai-gateway/ai-audit-log-reference/#ai-mcp-logs"
 
   - header:
       type: h2
