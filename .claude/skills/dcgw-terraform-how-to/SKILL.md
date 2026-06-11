@@ -37,7 +37,7 @@ Ask the user: are they writing a new how-to, or revising an existing one?
 
 Determine which cloud provider and which DCGW feature the how-to covers. This selects the prereq includes, the transit gateway attachment `kind`, the tags, and the validation approach:
 
-- **Azure**: VNet peering, Virtual WAN (vHub), private DNS, outbound DNS resolver
+- **Azure**: VNet peering, Virtual WAN (vHub), private DNS, outbound DNS resolver. **Note:** VNet peering, VWAN, and likely other Azure DCGW private networking features cannot be fully Terraformed. The Entra admin consent step (approving the Konnect app in the reader's Azure tenant) requires the Konnect UI and has no Terraform or API equivalent. Do not draft a fully Terraform-driven how-to for these features.
 - **AWS**: VPC peering, Transit Gateway, resource endpoints, managed cache
 - **GCP**: VPC peering, private DNS
 - **Cross-cloud**: managed cache, custom domains, private hosted zones
@@ -52,11 +52,9 @@ Work through these in order. Wait for answers before moving on. Skip anything a 
 
 ### 3a. Prerequisites vs. provisioned resources
 
-The Konnect cloud gateway **network** and the cloud-enabled **control plane** are usually prerequisites the reader already has, not steps the guide creates. By default, treat them as prereqs: reference an existing `Ready` network and a `konnect_gateway_control_plane` (with `cloud_gateway = true`) through prereq includes and exported env vars like `$KONNECT_NETWORK_ID` and `$CONTROL_PLANE_ID`.
+Each cloud provider should have a dedicated prereq include that provisions a DCGW network and a cloud-enabled control plane for readers who don't already have them. For Azure this is `prereqs/dcgw-azure-network-cp`. Use the relevant provider's include as a prereq item in the how-to. Do not re-explain the network or control plane setup inline — the include handles it.
 
-Ask the user explicitly: does this how-to provision the network and control plane with Terraform, or assume they already exist? Only collect their Terraform config when the guide actually creates them:
-- `konnect_cloud_gateway_network`: exact `region`, `availability_zones`, `cidr_block`, and how the provider account is looked up (`konnect_cloud_gateway_provider_account_list` data source).
-- `konnect_gateway_control_plane`: exact `name`, with `cloud_gateway = true`.
+The include walks the reader through: retrieving the provider account ID from the Konnect API, listing supported regions/AZs/CIDRs from the availability endpoint, appending the HCL to `main.tf` with a hardcoded provider account ID the reader substitutes, and running `terraform apply`. See `references/dcgw-terraform-patterns.md` for the full description of what the include does.
 
 ### 3b. The feature the how-to provisions
 
@@ -78,6 +76,8 @@ Most DCGW guides require steps on the cloud provider side that Terraform doesn't
 - **GCP**: creating the matching VPC peering resource (gcloud)
 
 These are often already captured in shared includes. Check `references/dcgw-terraform-patterns.md` before writing them inline.
+
+**`TF_VAR_*` exports go in the prereq block, not the body.** Whatever cloud resource values the reader must supply (subscription IDs, resource group names, VNet/VPC names, etc.) should be exported as `TF_VAR_*` env vars in the prereq item for that cloud resource. This applies regardless of provider.
 
 ### 3d. Validation
 

@@ -61,7 +61,7 @@ related_resources:
   - text: Configure an Azure Dedicated Cloud Gateway with VNET peering
     url: /dedicated-cloud-gateways/azure-peering/
 prereqs:
-  skip_product: true
+  show_works_on: false
   inline:
     - title: Terraform and the Konnect provider
       include_content: prereqs/products/konnect-terraform
@@ -113,8 +113,9 @@ Relevant prereq includes:
 - `prereqs/terraform` — minimal "install Terraform" line, when you only need the binary
 - `prereqs/azure-cli`, `prereqs/entra-tenant` — Azure guides
 - `prereqs/dedicated-cloud-gateways` — the standard DCGW prereq used by the API-based guides; useful when the reader needs an existing network
+- `prereqs/dcgw-azure-network-cp` — full Terraform network + control plane setup for Azure (see "Network + control plane prereq" below). Each cloud provider should have its own equivalent include.
 
-When the network and control plane are prerequisites (the common case), state that the reader needs an existing `Ready` DCGW network and a cloud-enabled control plane, and have them export `KONNECT_NETWORK_ID` / `CONTROL_PLANE_ID`.
+**Where to put `TF_VAR_*` exports:** reader-supplied cloud resource values (subscription IDs, resource group names, VNet/VPC names, and similar) should be exported in the prereq item for that cloud resource, not scattered through the body. This keeps all "set up before you start" steps in one place and applies regardless of cloud provider.
 
 ---
 
@@ -208,34 +209,46 @@ The Azure blocks take no `cidr_blocks` (the AWS VPC peering / transit gateway va
 
 ### Network + control plane prereq
 
-The network and a cloud-enabled control plane are usually prereqs. When the guide provisions them with Terraform (for readers who don't have them yet), the pattern is a `konnect_cloud_gateway_network` plus a `konnect_gateway_control_plane` with `cloud_gateway = true`. The shared include `prereqs/dcgw-azure-network-cp` (`app/_includes/prereqs/dcgw-azure-network-cp.md`) does exactly this for Azure and is the include to reuse in Azure peering guides:
+Each cloud provider should have its own prereq include that provisions a DCGW network and a cloud-enabled control plane for readers who don't already have them. The Azure one is `prereqs/dcgw-azure-network-cp` (`app/_includes/prereqs/dcgw-azure-network-cp.md`). Use the relevant provider's include in any DCGW Terraform guide for that provider.
 
-```hcl
-resource "konnect_cloud_gateway_network" "my_cloudgatewaynetwork" {
-  name               = "Terraform Network"
-  region             = "eastus2"
-  availability_zones = ["eastus2-az2", "eastus2-az3"]
-  cidr_block         = "10.4.0.0/16"
-  cloud_gateway_provider_account_id = data.konnect_cloud_gateway_provider_account_list.my_cloudgatewayprovideraccountlist.data[0].id
-}
+The include does the full setup in sequence:
 
-resource "konnect_gateway_control_plane" "my_cp" {
-  name          = "Azure CGW Control Plane"
-  cloud_gateway = true
-}
-```
+1. Calls the Konnect API (`GET /v2/cloud-gateways/provider-accounts?filter[provider][eq]=azure`) to retrieve the reader's provider account ID. The reader saves this ID to use in the HCL.
+2. Shows a `curl` command against the availability endpoint so the reader can look up supported regions, availability zones, and CIDR blocks for their account:
 
-The network takes 30-40 minutes to reach `Ready`. Downstream resources that reference `konnect_cloud_gateway_network.my_cloudgatewaynetwork.id` get an implicit dependency, so a single `terraform apply` provisions the network before the dependent resource.
+   ```sh
+   curl -s -H "Authorization: Bearer $KONNECT_TOKEN" \
+     https://global.api.konghq.com/v2/cloud-gateways/availability.json | \
+     jq '.providers[] | select(.provider == "azure") | .regions[] | {region, availability_zones, cidr_blocks}'
+   ```
 
-The `region`, `availability_zones`, and `cidr_block` are **provider- and account-specific, don't hardcode or guess them**. A wrong combination returns `400 Invalid Parameters` ("cloud provider account, region, and availability zone targets are not supported"). The supported values come from the availability endpoint, so tell the reader to look them up and substitute:
+3. Provides the HCL (via `echo '...' >> main.tf`) using a **hardcoded provider account ID** that the reader substitutes from step 1 — not the `konnect_cloud_gateway_provider_account_list` data source. The region, availability zones, and CIDR block are also literal values the reader substitutes from step 2.
 
-```sh
-curl -s -H "Authorization: Bearer $KONNECT_TOKEN" \
-  https://global.api.konghq.com/v2/cloud-gateways/availability.json | \
-  jq '.providers[] | select(.provider == "azure") | .regions[] | {region, availability_zones, cidr_blocks}'
-```
+   ```hcl
+   data "konnect_cloud_gateway_provider_account_list" "my_cloudgatewayprovideraccountlist" {
+   }
 
-`availability_zones` is a list and doesn't map cleanly to a `TF_VAR_` env var, so leave region/AZs/CIDR as literal values the reader substitutes (or use a `terraform.tfvars` file), rather than env-var variables.
+   resource "konnect_cloud_gateway_network" "my_cloudgatewaynetwork" {
+     name   = "Terraform Network"
+     region = "eastus2"
+     availability_zones = [
+       "eastus2-az2",
+       "eastus2-az3"
+     ]
+     cidr_block                        = "10.99.98.0/23"
+     cloud_gateway_provider_account_id = "YOUR_PROVIDER_ACCOUNT_ID"
+   }
+
+   resource "konnect_gateway_control_plane" "my_cp" {
+     name          = "Azure CGW Control Plane"
+     cloud_gateway = true
+   }
+   ```
+
+4. Runs `terraform apply -auto-approve` to create the network and control plane.
+5. Warns that the network takes 30-40 minutes to reach `Ready` and that downstream resources can't be configured until it does.
+
+Downstream resources in the same Terraform project reference the network by attribute (`konnect_cloud_gateway_network.my_cloudgatewaynetwork.id`), which creates an implicit dependency so the network provisions first. `availability_zones` is a list and doesn't map cleanly to a `TF_VAR_` env var, so region/AZs/CIDR are left as literal placeholder values rather than variables.
 
 ---
 
@@ -276,7 +289,7 @@ Mirror the structure of `app/_how-tos/gateway/terraform-gateway-authentication.m
    ```
    {:.no-copy-code}
    ````
-4. **Cloud provider side steps**: the part Terraform can't do (Azure role + service principal assignment, AWS accept peering + route table, GCP peering resource). Reuse a shared include if one exists, otherwise write exact CLI/UI steps.
+4. **Cloud provider side steps**: the part Terraform can't do (AWS accept peering + route table, GCP peering resource). Reuse a shared include if one exists, otherwise write exact CLI/UI steps. **Azure constraint:** for Azure VNet peering, VWAN, and similar Azure private networking features, the Entra admin consent step requires the Konnect UI (it generates an approval link the reader must open). These features cannot be fully Terraformed. Do not write a fully Terraform-driven how-to for them.
 5. **Validate** (see below).
 
 ### Passing inputs
@@ -309,16 +322,16 @@ Don't interpolate shell env vars into the echoed HCL (`name = "'$FOO'"`), it's f
 
 ### Validation
 
-Default pattern: pull the resource id out of the Terraform state, then confirm via the Konnect API.
+Default pattern: pull the resource id out of the Terraform state, then confirm via the Konnect API. Name the variable after the feature (for example `VNET_PEERING_ID`, `VPC_PEERING_ID`), not just `TRANSIT_GATEWAY_ID`.
 
 ```bash
-TRANSIT_GATEWAY_ID=$(terraform show -json | jq -r '.values.root_module.resources[] | select(.address == "konnect_cloud_gateway_transit_gateway.my_tgw") | .values.id')
+VNET_PEERING_ID=$(terraform show -json | jq -r '.values.root_module.resources[] | select(.address == "konnect_cloud_gateway_transit_gateway.my_vnet_peering") | .values.id')
 ```
 
 ```
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/cloud-gateways/networks/$KONNECT_NETWORK_ID/transit-gateways/$TRANSIT_GATEWAY_ID
+url: /v2/cloud-gateways/networks/$KONNECT_NETWORK_ID/transit-gateways/$VNET_PEERING_ID
 status_code: 200
 method: GET
 {% endkonnect_api_request %}
@@ -348,7 +361,7 @@ When readiness is only visible in the UI (peering takes 30-40 minutes to reach `
 
 All under `app/_how-tos/dedicated-cloud-gateways/`. None use Terraform yet, so use them for **structure, prose, and validation style**, not for the config method.
 
-- `azure-vnet-peering.md` — closest structural model for an Azure Terraform guide. Uses `{% include_cached /sections/azure-peering.md %}` (diagram), `/sections/azure-dcgw-network-setup.md`, `/sections/azure-dcgw-vnet-peering-setup.md`, and a UI `Ready` validation.
+- `azure-vnet-peering.md` — closest structural model for an Azure guide. Uses `{% include_cached /sections/azure-peering.md %}` (diagram), `/sections/azure-dcgw-network-setup.md`, `/sections/azure-dcgw-vnet-peering-setup.md`, and a UI `Ready` validation. A Terraform variant was explored but not published because the Entra consent step requires the Konnect UI. The guide includes a FAQ ("How do I manage my Azure VNet peering with Terraform?") showing the resource block for readers who want the Terraform reference.
 - `azure-virtual-wan.md` (+ `-with-private-dns`, `-with-outbound-dns-resolver`) — vHub variants.
 - `aws-vpc-peering.md` — API-driven AWS peering, shows the `konnect_api_request` POST body and AWS-side accept + route table steps.
 - `gcp-vpc-peering.md` — uses `{% navtabs %}` to show API vs UI; good model for adding a Terraform tab.
