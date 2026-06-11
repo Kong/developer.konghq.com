@@ -18,7 +18,6 @@ schema:
 works_on:
   - konnect
 tools:
-  - deck
   - konnect-api
 related_resources:
   - text: About {{site.ai_gateway}}
@@ -38,7 +37,7 @@ related_resources:
 faqs:
   - q: What's the difference between a Model entity and the `model` field in a Policy configuration?
     a: |
-      A Model entity is the first-class {{site.ai_gateway}} entity you declare through the {{site.konnect_short_name}} API, UI, or decK.
+      A Model entity is the first-class {{site.ai_gateway}} entity you declare through the {{site.konnect_short_name}} API and UI.
       It defines routing, capabilities, and load balancing. A Policy is a reusable configuration that adds behavior (like caching or guardrails) to a Model.
       You declare both separately and attach Policies to Models.
 
@@ -103,7 +102,7 @@ A Model is a first-class {{site.ai_gateway}} entity that represents an AI model 
 
 A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services or Routes by hand.
 
-Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API:
 
 {% table %}
 columns:
