@@ -75,7 +75,7 @@ breadcrumbs:
     kubectl create secret generic kong-enterprise-license --from-file=license=./license.json -n default
     ```
 
-1. Specify the `KONG_LICENSE_DATA` environment variable for your DataPlane pods. This can be provided on the `DataPlane` or `GatewayConfiguration`
+1. Specify the `KONG_LICENSE_DATA` environment variable for your DataPlane pods. This can be provided on the `DataPlane` or `GatewayConfiguration`.
 
 ### DataPlane
 
