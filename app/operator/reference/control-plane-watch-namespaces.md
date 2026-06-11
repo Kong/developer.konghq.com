@@ -14,6 +14,14 @@ products:
 
 min_version:
   operator: '1.6'
+
+related_resources:
+  - text: "Multi-tenancy"
+    url: /operator/reference/multi-tenancy/
+  - text: "Deploy multiple isolated gateways"
+    url: /operator/dataplanes/how-to/multi-tenancy/setup/
+  - text: "{{site.operator_product_name}} architecture"
+    url: /operator/reference/architecture/
 ---
 
 By default, {{ site.operator_product_name }}'s `ControlPlane` watches all namespaces.
