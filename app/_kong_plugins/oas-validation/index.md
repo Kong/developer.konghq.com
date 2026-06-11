@@ -156,7 +156,9 @@ rows:
       `structured_errors` {% new_in 3.15 %}
     default: "`false`"
     description: |
-      Enable `structured_errors` to receive validation errors as a structured list instead of a flat string, following [JSON Schema draft 2020-12 Output Structure](https://json-schema.org/draft/2020-12/json-schema-core#name-output-structure). Each error includes `instanceLocation` (the path in the request or response body where the violation occurred) and `keywordLocation` (the path in the schema that triggered the error). 
+      Enable `structured_errors` to receive validation errors as an `errors` array instead of a flat string, following [JSON Schema draft 2020-12 Output Structure](https://json-schema.org/draft/2020-12/json-schema-core#name-output-structure). Each error includes `instanceLocation` (the path in the request or response body where the violation occurred), `keywordLocation` (the path in the schema that triggered the error), and `error`.
+      <br><br>
+      Requires `verbose_response` to be set to `true`.
       <br><br>
       When disabled, the plugin preserves the original non-structured error format.
   - param: |

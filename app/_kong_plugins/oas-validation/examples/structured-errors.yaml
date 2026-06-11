@@ -20,6 +20,7 @@ config:
     contents of entire API spec go here
   structured_errors: true
   max_structured_errors: 10
+  verbose_response: true
 
 tools:
   - deck
