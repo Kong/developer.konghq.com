@@ -17,7 +17,7 @@ tags:
   - load-balancing
 
 min_version:
-  ai-gateway: '2.0.0'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
