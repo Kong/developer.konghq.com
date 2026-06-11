@@ -55,7 +55,7 @@ rows:
             config:
               icon: /assets/icons/linked-services.svg
               title: AI Agent entity
-              description: Create and expose A2A agents using the AI Agent in {{site.ai_gateway}}.
+              description: Proxy A2A traffic using the AI Agent in {{site.ai_gateway}}.
               ctas:
                 - text: AI Agent reference
                   url: "/ai-gateway/entities/ai-agent/"
