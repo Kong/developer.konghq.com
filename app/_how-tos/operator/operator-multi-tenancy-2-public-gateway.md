@@ -76,23 +76,29 @@ EOF
 
 <!-- SOURCE: operator-get-started-gateway-api-2-create-gateway.md -->
 
-Create a `GatewayClass` that references the `GatewayConfiguration` above:
+1. Create a `GatewayClass` that references the `GatewayConfiguration` above:
 
-```bash
-kubectl apply -f - <<EOF
-kind: GatewayClass
-apiVersion: gateway.networking.k8s.io/v1
-metadata:
-  name: gw-public
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
-    name: gw-public
-    namespace: kong-gw-public
-EOF
-```
+   ```bash
+   kubectl apply -f - <<EOF
+   kind: GatewayClass
+   apiVersion: gateway.networking.k8s.io/v1
+   metadata:
+     name: gw-public
+   spec:
+     controllerName: konghq.com/gateway-operator
+     parametersRef:
+       group: gateway-operator.konghq.com
+       kind: GatewayConfiguration
+       name: gw-public
+       namespace: kong-gw-public
+   EOF
+   ```
+
+1. Wait for {{ site.operator_product_name }} to accept the `GatewayClass`:
+
+   ```bash
+   kubectl wait --for=condition=Accepted=True gatewayclass/gw-public --timeout=60s
+   ```
 
 ## Create a Gateway
 
