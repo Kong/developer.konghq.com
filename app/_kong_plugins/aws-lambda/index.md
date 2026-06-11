@@ -56,7 +56,7 @@ Any form parameter sent along with the request is also sent as an argument to th
 
 The AWS Lambda plugin will automatically fetch the IAM role credential according to the following
 precedence order:
-1. Fetch from the credentials defined in the [`config.aws_key`](./reference/#schema--config-aws_key) and [`config.aws_secret`](./reference/#schema--config-aws_secret) parameters in the plugin configuration.
+1. Fetch from the credentials defined in the [`config.aws_key`](/plugins/aws-lambda/reference/#schema--config-aws-key) and [`config.aws_secret`](/plugins/aws-lambda/reference/#schema--config-aws-secret) parameters in the plugin configuration.
 
    {:.info}
    > By default, cURL sends payloads with an
@@ -76,7 +76,7 @@ precedence order:
 {:.info}
 > **Note:** IAM Identity Center credential provider and Process credential provider are not supported.
 
-If you also specify the [`config.aws_assume_role_arn`](./reference/#schema--config-aws_assume_role_arn) parameter, the plugin will try to perform
+If you also specify the [`config.aws_assume_role_arn`](/plugins/aws-lambda/reference/#schema--config-aws-assume-role-arn) parameter, the plugin will try to perform
 an additional [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
 action. This requires the {{site.base_gateway}} process to make an HTTPS request to the AWS STS service API after
 configuring the AWS access key/secret or fetching credentials automatically from EC2/ECS/EKS IAM roles.
@@ -84,7 +84,7 @@ If it succeeds, the plugin will fetch temporary security credentials that give t
 
 ## AWS region
 
-If the [`config.aws_region`](./reference/#schema--config-aws_region) parameter isn't specified, the plugin attempts to get the
+If the [`config.aws_region`](/plugins/aws-lambda/reference/#schema--config-aws-region) parameter isn't specified, the plugin attempts to get the
 AWS region through the environment variables `AWS_REGION` and `AWS_DEFAULT_REGION`,
 in that order. If none of these are set, a runtime error `no region or host specified`
 will be thrown.
@@ -94,9 +94,16 @@ will be thrown.
 By default, when the Lambda Invoke API rejects a call before the function runs (for example, a `400 Bad Request` or `403 Forbidden`), {{site.base_gateway}} returns a generic `HTTP 500` to the client.
 This makes it difficult to distinguish authorization failures from bad requests.
 
-You can enable [`preserve_lambda_api_error_code`](/plugins/aws-lambda/reference/#schema--config-preserve_lambda_api_error_code) to return the original `4xx` or `5xx` status code from the Lambda API instead.
+You can enable [`config.preserve_lambda_api_error_code`](/plugins/aws-lambda/reference/#schema--config-preserve-lambda-api-error-code) to return the original `4xx` or `5xx` status code from the Lambda API instead.
 This setting only applies when the Lambda Invoke API itself returns `status >= 400`, and doesn't affect errors raised inside a successfully invoked function.
+
+### Response sanitization
 
 {{site.base_gateway}} sanitizes the client response body to `{"message":"Upstream Lambda invocation failed"}` and never exposes AWS error messages or ARNs to clients.
 
-If the {{site.base_gateway}} log level is set to `error`, it logs the full error detail regardless of this setting: `AWS Lambda API returned error: <msg>, status code: <code>`.
+If the {{site.base_gateway}} log level is set to `error`, it logs the full error detail regardless of this setting. For example:
+
+```
+AWS Lambda API returned error: <msg>, status code: <code>`.
+```
+{:.no-copy-code}
