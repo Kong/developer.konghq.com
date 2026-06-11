@@ -1,8 +1,8 @@
 Now that your Dedicated Cloud Gateway Azure network is ready, you can configure VNET peering to connect your Azure virtual network to your Dedicated Cloud Gateway.
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
+1. Click the **Networks** tab.
 1. From the action menu next to your Azure network, select "Configure private networking".
 1. Click **Virtual network peering**.
 1. In the **Tenant ID** field, enter [your Microsoft Entra tenant ID](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant).

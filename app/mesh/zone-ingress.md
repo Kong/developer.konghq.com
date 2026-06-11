@@ -10,6 +10,8 @@ breadcrumbs:
   - /mesh/
 
 related_resources:
+  - text: Deploy a multi-zone global control plane in Universal mode with Docker
+    url: /mesh/deploy-multi-zone-global-control-plane-universal-docker/
   - text: Zone Egress
     url: /mesh/zone-egress/
   - text: MeshMultiZoneService

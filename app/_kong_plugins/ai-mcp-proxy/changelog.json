@@ -51,6 +51,42 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.2": [
+    {
+      "message": "Fixed an issue where WWW-Authenticate: Bearer error=\"insufficient_scope\" header was not emitted.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.14.0.3": [
+    {
+      "message": "Fixed an issue where raw non-200 upstream responses triggered misleading MCP body parse warnings.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where, since 3.14, call tools converted from API could fail when Kong used a self-signed certificate.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where tool id might be repeated.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.14.0.5": [
+    {
+      "message": "Fixed stale tools cache after full-sync reconfigure (e.g. `deck sync`), causing `tools/list` to return empty results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where converted HTTPS MCP tool calls lost the original forwarded port on the internal TLS Unix socket.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for MCP ACL control.\n",
@@ -148,6 +184,18 @@
     },
     {
       "message": "Fixed an issue where we have not reported metrics to konnect since 3.13.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.13.0.4": [
+    {
+      "message": "Fixed an issue where ACL denial caused parsing body failure.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where we didn't keep the port after MCP conversion.",
       "scope": "Plugin",
       "type": "bugfix"
     }

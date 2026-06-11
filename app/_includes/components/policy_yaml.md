@@ -1,6 +1,7 @@
 {%- navtabs "policy-yaml" additional_classes heading_level -%}
-{%- if use_meshservice -%}
+{%- if show_kubernetes -%}
 {%- navtab "Kubernetes" -%}
+{%- if use_meshservice -%}
 {%- if page.output_format != 'markdown' -%}
 <div class="meshservice text-sm">
 <label class="flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center">
@@ -11,8 +12,14 @@
 {{kube_legacy | liquify}}
 {% if page.output_format == 'markdown' %}Using `MeshService` Kubernetes resources:{% endif %}
 {{kube | liquify}}
+{%- else -%}
+{{kube_legacy | liquify}}
+{%- endif -%}
 {%- endnavtab -%}
+{%- endif -%}
+{%- if show_universal -%}
 {%- navtab "Universal" -%}
+{%- if use_meshservice -%}
 {%- if page.output_format != 'markdown' -%}
 <div class="meshservice text-sm">
 <label class="flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center">
@@ -23,18 +30,14 @@
 {{uni_legacy | liquify}}
 {% if page.output_format == 'markdown' %}Using `MeshService` Kubernetes resources:{% endif %}
 {{uni | liquify}}
-{%- endnavtab -%}
 {%- else -%}
-{%- navtab "Kubernetes" -%}
-{{kube_legacy | liquify}}
-{%- endnavtab -%}
-{% navtab "Universal" %}
 {{uni_legacy | liquify}}
+{%- endif -%}
 {%- endnavtab -%}
 {%- endif -%}
 {%- if show_tf -%}
 {%- navtab "Terraform" %}
-Please adjust **konnect_mesh_control_plane.my_meshcontrolplane.id** and **konnect_mesh.my_mesh.name** according to your current configuration.
+Adjust **konnect_mesh_control_plane.my_meshcontrolplane.id** and **konnect_mesh.my_mesh.name** according to your current configuration.
 {: .text-sm}
 
 {{ terraform_content | liquify }}

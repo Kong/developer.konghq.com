@@ -7,7 +7,7 @@ layout: reference
 
 works_on:
   - konnect
-beta: true
+
 tools:
   - kongctl
 

@@ -184,11 +184,52 @@ Once this is configured, you'll be able to reach the Service on the same IP and 
 
 ### Upgrades
 
+The core `iptables` rules that {{site.mesh_product_name}}'s transparent proxy applies rarely change, but new features occasionally require updates.
+
+#### Uninstall the transparent proxy
+
 Before upgrading to the next version of {{site.mesh_product_name}}, we recommend uninstalling the transparent proxy before replacing the `kumactl` binary:
 
 ```sh
 kumactl uninstall transparent-proxy
 ```
+
+#### Clean up existing iptables rules manually
+
+{:.warning}
+> {% new_in 2.9 %} If you're upgrading from {{site.mesh_product_name}} version 2.9 or later, and you have **not** manually disabled comments by setting `comments.disabled` to `true` in the transparent proxy configuration, **this step is unnecessary**.
+>
+> Starting with {{site.mesh_product_name}} 2.9, the transparent proxy tags all `iptables` rules with comments so {{site.mesh_product_name}} can track rule ownership. `kumactl` uses these comments to automatically clean up rules and custom chains created by previous transparent proxy versions. The cleanup runs at the start of the installation, so no manual cleanup is needed.
+
+To manually remove existing `iptables` rules, either restart the host (if the rules weren't persisted with system start-up scripts or `firewalld`) or run the following commands.
+
+{:.danger}
+> These commands remove **all** `iptables` rules and **all** custom chains in the specified tables, including those created by {{site.mesh_product_name}} and any other applications or services.
+
+```sh
+iptables --table nat --flush         # Flush all rules in the NAT table (IPv4)
+ip6tables --table nat --flush        # Flush all rules in the NAT table (IPv6)
+iptables --table nat --delete-chain  # Delete all custom chains in the NAT table (IPv4)
+ip6tables --table nat --delete-chain # Delete all custom chains in the NAT table (IPv6)
+
+# The raw table contains rules for DNS traffic redirection
+iptables --table raw --flush         # Flush all rules in the raw table (IPv4)
+ip6tables --table raw --flush        # Flush all rules in the raw table (IPv6)
+
+# The mangle table contains rules to drop invalid packets
+iptables --table mangle --flush      # Flush all rules in the mangle table (IPv4)
+ip6tables --table mangle --flush     # Flush all rules in the mangle table (IPv6)
+```
+
+#### Install the new transparent proxy
+
+Reinstall the transparent proxy:
+
+```sh
+kumactl install transparent-proxy --kuma-dp-user kuma-dp --redirect-dns --verbose
+```
+
+The command installs the latest version of the transparent proxy with the specified configuration. Adjust the flags as needed for your environment.
 
 ## Configuration
 

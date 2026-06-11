@@ -1,0 +1,4 @@
+{%- if include.beta -%}{%- assign type = 'beta' -%}{%- endif -%}
+{%- if include.tech_preview -%}{%- assign type = 'tech_preview' -%}{%- endif -%}
+{%- assign stage = site.data.stages[type] -%}
+<blockquote class="warning"><span>This feature is currently in <a href="{{stage.url}}">{{ stage.text }}</a> and should not be used in a production environment.</span></blockquote>

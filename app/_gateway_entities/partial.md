@@ -42,6 +42,45 @@ works_on:
 
 min_version:
   gateway: '3.10'
+
+faqs:
+  - q: Can I reference Partials by name in decK?
+    a: |
+      Yes. Tag the Partial, then add `default_lookup_tags.partials` to the decK config for the plugin. This avoids tracking Partial IDs as CI/CD variables across environments. If names and tags stay consistent, the same plugin will sync to every {{ site.base_gateway }} instance.
+
+      Define the Partial with a tag so decK can look it up:
+
+      ```yaml
+      # partials.yaml
+      _format_version: "3.0"
+      partials:
+        - name: my-redis-config
+          type: redis-ee
+          tags:
+            - shared-redis
+          config:
+            host: redis.example.com
+            port: 6379
+      ```
+
+      In the decK config for the plugin, declare `default_lookup_tags.partials` and reference the Partial by name:
+
+      ```yaml
+      # plugins.yaml
+      _format_version: "3.0"
+      _info:
+        default_lookup_tags:
+          partials:
+            - shared-redis
+      plugins:
+        - name: proxy-cache-advanced
+          partials:
+            - name: my-redis-config
+          config:
+            strategy: redis
+      ```
+
+      See the [tags documentation](/deck/gateway/tags/#partial-configuration-and-foreign-keys) for more on `default_lookup_tags`.
 ---
 
 ## What is a Partial?

@@ -30,7 +30,7 @@ related_resources:
     url: /how-to/auth0-dcr/
   - text: Configure Dynamic Client Registration with Azure
     url: /how-to/azure-ad-dcr/
-  - text: Configure Dynamic Client Registration with Kong Identity
+  - text: Configure Dynamic Client Registration with {{site.identity}}
     url: /how-to/kong-identity-dcr/
   - text: About OIDC Dynamic Client Registration
     url: https://openid.net/specs/openid-connect-registration-1_0.html
@@ -77,6 +77,9 @@ In {{site.dev_portal}}, you can create and use multiple DCR configurations. You 
 1. In the **Scopes** field, enter your scopes.
 1. In the **Credential Claims** field, enter your claims.
 1. In the **Auth Methods** dropdown menu, select your auth methods. 
+1. (Optional) To configure OIDC-related settings:
+   1. Click **Advanced configuration**.
+   1. Enter a valid JSON OpenID Connect configuration object.
 1. Click **Create**.
 {% endnavtab %}
 {% navtab "API" %}
@@ -169,7 +172,7 @@ Each method is available when using the following DCR identity providers:
 * [Curity](/how-to/curity-dcr/)
 * [Azure](/how-to/azure-ad-dcr/)
 * [Auth0](/how-to/auth0-dcr/)
-* [Kong Identity](/how-to/kong-identity-dcr/)
+* [{{site.identity}}](/how-to/kong-identity-dcr/)
 
 {:.info}
 > **Note:** When using DCR, each application automatically receives a client ID and secret. These credentials can be used to authenticate directly with services using the client credentials grant, or to obtain an access token from the identity provider when using the bearer token authentication method.
@@ -202,7 +205,7 @@ rows:
   - vendor: "Azure"
     endpoint: "POST `https://login.microsoftonline.com/$YOUR_TENANT_ID/oauth2/v2.0/token`"
     body: '`{ "grant_type": "client_credentials", "scope": "https://graph.microsoft.com/.default" }`'
-  - vendor: "Kong Identity"
+  - vendor: "{{site.identity}}"
     endpoint: "POST `https://$YOUR_KONNECT_DOMAIN.us.identity.konghq.com/oauth2/v1/`"
     body: '`{ "grant_type": "client_credentials", "scope": "openid" }`'
 {% endtable %}

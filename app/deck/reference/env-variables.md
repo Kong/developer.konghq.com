@@ -1,6 +1,6 @@
 ---
-title: Environment variables for decK
-description: Use environment variables to provide runtime configuration
+title: Using environment variables in state files
+description: Reference environment variables within your decK state files to pass per-environment configuration at runtime
 
 content_type: reference
 layout: reference
@@ -20,10 +20,12 @@ related_resources:
     url: /gateway/entities/
 ---
 
-decK can read environment variables at runtime, allowing you to pass per-environment configuration.
+decK can read environment variables at runtime, allowing you to pass per-environment configuration directly in your state files.
 
-To allow decK to read environment variables, reference them as
-`{%raw%}${{ env "DECK_*" }}{%endraw%}` in your state file.
+{:.info}
+> **Note:** For configuring decK's connection and behavior using environment variables (as substitutes for CLI flags), see [decK configuration](/deck/configuration/).
+
+To allow decK to read environment variables, reference them as `{%raw%}${{ env "DECK_*" }}{%endraw%}` in your state file.
 
 The following example configures a Vault token using a decK environment variable:
 

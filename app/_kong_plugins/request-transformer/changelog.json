@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.4": [
+    {
+      "message": "Fixed an issue where the `add.headers` operation lowercased the header name, causing the configured letter case to be lost when adding new headers to the request.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed an issue where renamed query parameters, url-encoded body parameters, and json body parameters were not handled properly when target name is the same as the source name in the request.",

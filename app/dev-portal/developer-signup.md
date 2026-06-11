@@ -117,3 +117,9 @@ Choose one of the following methods to generate credentials:
 - **OIDC**: Manually create the app in your identity provider (IdP) and match the Dev Portal reference ID with the client ID.
 
 Once your app has products, credentials, and approval, you can begin making requests using the configured credentials.
+
+## Limitations
+
+Keep the following limitations in mind for developers and applications:
+* Each developer can create a maximum of 500 applications.
+* Each application can have a maximum of 20 API keys.

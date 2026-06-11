@@ -165,7 +165,7 @@ A large difference between the performance in the second and third steps indicat
 In this case, the CPU available to applications is variable, which leads to noise in the stats. 
 For more information, see the [Burstable performance instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances.html) AWS documentation.
 * Ensure you aren't hitting bandwidth limits, TCP connections per unit time limits, or Packet Per Second (PPS) limits. 
-For more information, see the [Amazon EC2 instance network bandwidth](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html) AWS documentation.
+For more information, see the [{{ site.amazon }} EC2 instance network bandwidth](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html) AWS documentation.
 
 ## Configuration changes during benchmark tests
 

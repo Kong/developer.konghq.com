@@ -64,7 +64,7 @@ To configure Datakit using the flow editor:
 
 1. In the {{site.konnect_short_name}} sidebar, navigate to [API Gateway](https://cloud.konghq.com/gateway-manager/). 
 1. Click your control plane. 
-1. In the API Gateway sidebar, click **Plugins**.  
+1. Click the **Plugins** tab.
 1. Click **New Plugin**.
 1. Click **Datakit**.
 1. In the Plugin Configuration section, click **Go to flow editor**.

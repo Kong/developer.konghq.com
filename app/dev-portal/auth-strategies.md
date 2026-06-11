@@ -86,8 +86,8 @@ If your portal is marked as **Private**, this strategy is also set as the defaul
 
 To create an additional key auth strategy:
 
-1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
-1. In the Dev Portal sidebar, click **Application Auth**.
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Application Auth**.
 1. Click **New authentication strategy**.
 1. In the **Name** field, enter a name for internal use.
 1. In the **Display name** field, enter a name for external use that is visible to developers.
@@ -225,9 +225,10 @@ The default auth strategy of a Dev Portal will apply to any APIs that are publis
 
 If you want to override the default auth strategy, you can configure a different auth strategy on a [per API](#apply-an-auth-strategy-to-an-api) or [per API package](#apply-an-auth-strategy-to-an-api-package) basis.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Portals**.
 1. Click your Dev Portal.
-1. From the **Actions** dropdown menu, select "Settings". 
+1. Click the **Settings** tab.
 1. Click the **Security** tab.
 1. From the **Authentication strategy** dropdown menu, select the auth strategy you want to set as the default.
 1. Click **Save changes**.

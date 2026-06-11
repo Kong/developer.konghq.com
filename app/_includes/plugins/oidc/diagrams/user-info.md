@@ -12,9 +12,9 @@ sequenceDiagram
     deactivate client
     kong->>kong: load access token
     activate idp
-    kong->>idp: IdP/userinfo<br>with client credentials<br>and access token
+    kong->>idp: IdP/userinfo<br>with access token
     deactivate kong
-    idp->>idp: authenticate client and<br>verify token
+    idp->>idp: verify access token
     activate kong
     idp->>kong: return user info <br>response
     deactivate idp

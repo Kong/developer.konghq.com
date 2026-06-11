@@ -1,3 +1,6 @@
 [submodule "app/.repos/kuma"]
 	path = app/.repos/kuma
 	url = https://github.com/kumahq/kuma-website.git
+[submodule "app/.repos/ai-marketplace"]
+	path = app/.repos/ai-marketplace
+	url = https://github.com/Kong/ai-marketplace.git

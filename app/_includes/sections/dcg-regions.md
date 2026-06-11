@@ -118,7 +118,7 @@ rows:
 * Asia Pacific:
     * Australia East (`australiaeast`)    
 
-#### Google
+#### {{ site.google}}
 
 * North America:
     * South Carolina (`us-east1`)

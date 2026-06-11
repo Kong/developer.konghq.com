@@ -40,7 +40,7 @@ faqs:
       The `pg_user` {{site.base_gateway}} configuration parameter (environment variable `KONG_PG_USER`) must be set to the PostgreSQL role name that the validator maps from the token. If they don't match, the connection will fail.
 ---
 
-{{site.base_gateway}} supports connecting to [PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/) using OAuth2 authentication via the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism and a [server-side validator](https://github.com/percona/pg_oidc_validator). This is a more secure alternative to password-based authentication that enables single sign-on (SSO) and centralized access management through any OIDC-compliant identity provider such as Okta, Azure AD, Google, or Keycloak.
+{{site.base_gateway}} supports connecting to [PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/) using OAuth2 authentication via the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism and a [server-side validator](https://github.com/percona/pg_oidc_validator). This is a more secure alternative to password-based authentication that enables single sign-on (SSO) and centralized access management through any OIDC-compliant identity provider such as Okta, Azure AD, {{ site.google}}, or Keycloak.
 
 ## Architecture
 

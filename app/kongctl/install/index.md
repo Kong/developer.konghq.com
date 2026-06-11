@@ -7,7 +7,7 @@ layout: reference
 
 works_on:
   - konnect
-beta: true
+
 tools:
   - kongctl
 
@@ -30,6 +30,9 @@ columns:
   - title: Description
     key: description
 rows:
+  - command: |
+      [kongctl install extension](/kongctl/install/extension/)
+    description: "Install a kongctl CLI extension."
   - command: |
       [kongctl install skills](/kongctl/install/skills/)
     description: "Install kongctl agent skills."

@@ -10,7 +10,7 @@ related_resources:
   - text: Built-in gateways
     url: /mesh/built-in-gateway/
   - text: Use Kong as a delegated Gateway
-    url: '/mesh/gateway-delegated/'
+    url: '/mesh/use-kong-as-delegated-gateway/'
   - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
 

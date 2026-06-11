@@ -24,6 +24,11 @@ faqs:
   - q: Why don't I see any events in my customer's invoice?
     a: |
       {% include faqs/no-events-in-invoice.md %}
+  - q: |
+      {% include faqs/metering-event-retention.md section='question' %}
+    a: |
+      {% include faqs/metering-event-retention.md section='answer' %}
+
 ---
 
 An event can be anything you need to track accurately over time for billing or analytics purposes. For example, a CI/CD product can include active or parallel jobs, build minutes, network traffic, storage used, or other product-related actions.

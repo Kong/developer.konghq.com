@@ -54,7 +54,7 @@ prereqs:
 
         1. In the {{site.konnect_short_name}} sidebar, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/).
         1. Click your Dedicated Cloud Gateway.
-        1. In the API Gateway sidebar, click **Gateway Services**.
+        1. Click the **Gateway Services** tab.
         1. Click **New gateway service**.
         1. In the **Full URL** field, enter your resource domain, appended with `/anything`. For example: `http://YOUR-RESOURCE-DOMAIN-NAME/anything`
         1. In the **Name** field, enter `example-service`.

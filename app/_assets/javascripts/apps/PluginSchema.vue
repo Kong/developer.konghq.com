@@ -32,4 +32,8 @@ const schema = window.schema;
 :deep(.default-markdown a[href^="https://"]) {
   @apply bg-none pr-0 !important;
 }
+
+:deep(.default-markdown ul) {
+  @apply ml-4 !important;
+}
 </style>

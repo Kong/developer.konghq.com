@@ -9,6 +9,7 @@ Flags:
       --db-update-propagation-delay db_update_propagation   artificial delay (in seconds) that is injected between insert operations 
                                                             for related entities (usually for Cassandra deployments).
                                                             See db_update_propagation in kong.conf.
+  -W, --errors-as-warnings string                           Treat the given comma-separated diagnostic codes as warnings.
   -h, --help                                                help for sync
       --json-output                                         generate command execution report in a JSON format
       --no-mask-deck-env-vars-value                         do not mask DECK_ environment variable values at diff output.
@@ -24,9 +25,9 @@ Flags:
                                                             If set to true, deck skips listing consumers with consumer-groups,
                                                             thus gaining some performance with large configs.
                                                             Usage of this flag without apt select-tags and default-lookup-tags can be problematic.
-                                                            This flag is not valid with Konnect.
       --skip-hash-for-basic-auth                            do not sync hash for basic auth credentials.
                                                             This flag is only valid with Konnect.
+  -E, --warnings-as-errors string                           Treat the given comma-separated diagnostic codes as errors.
   -w, --workspace string                                    Sync configuration to a specific workspace (Kong Enterprise only).
                                                             This takes precedence over _workspace fields in state files.
       --yes yes                                             assume yes to prompts and run non-interactively.

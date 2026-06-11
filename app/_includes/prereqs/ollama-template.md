@@ -1,8 +1,8 @@
-To complete this tutorial, make sure you have Ollama installed and running locally.
+To complete this tutorial, make sure you have {{ site.ollama }} installed and running locally.
 
-1. Visit the [Ollama download page](https://ollama.com/download) and download the installer for your operating system. Follow the installation instructions for your platform.
+1. Visit the [{{ site.ollama }} download page](https://ollama.com/download) and download the installer for your operating system. Follow the installation instructions for your platform.
 
-1. If Ollama isn't already running, start Ollama:
+1. If {{ site.ollama }} isn't already running, start {{ site.ollama }}:
    ```sh
    ollama start
    ```
@@ -24,7 +24,7 @@ To complete this tutorial, make sure you have Ollama installed and running local
    {{ var | indent: 3 }}
 
 
-   By default, Ollama runs at `localhost:11434`. You can verify this by running:
+   By default, {{ site.ollama }} runs at `localhost:11434`. You can verify this by running:
 
    ```sh
    lsof -i :11434
@@ -38,7 +38,7 @@ To complete this tutorial, make sure you have Ollama installed and running local
      ```
      {:.no-copy-code}
 
-   - If Ollama is running on a different port, run:
+   - If {{ site.ollama }} is running on a different port, run:
 
      ```sh
      sudo lsof -iTCP -sTCP:LISTEN -n -P

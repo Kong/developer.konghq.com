@@ -27,3 +27,4 @@ variables:
 tools:
   - konnect-api
   - terraform
+  - kongctl

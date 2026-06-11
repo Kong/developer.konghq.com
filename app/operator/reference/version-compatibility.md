@@ -25,22 +25,22 @@ The following table presents the general compatibility of {{site.operator_produc
 {% version_compatibility_table %}
 product: "{{ site.kic_product_name }}"
 versions:
-  - 2.11
-  - 2.12
-  - 3.0
-  - 3.1
-  - 3.2
-  - 3.3
-  - 3.4
+  - "2.11"
+  - "2.12"
+  - "3.0"
+  - "3.1"
+  - "3.2"
+  - "3.3"
+  - "3.4"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
-  1.0.x: [2.11, 2.12, 3.0, 3.1, 3.2, 3.3, 3.4]
-  1.1.x: [2.11, 2.12, 3.0, 3.1, 3.2, 3.3, 3.4]
-  1.2.x: [3.1, 3.2, 3.3, 3.4]
-  1.3.x: [3.1, 3.2, 3.3, 3.4]
-  1.4.x: [3.1, 3.2, 3.3, 3.4]
-  1.5.x: [3.1, 3.2, 3.3, 3.4]
-  1.6.x: [3.1, 3.2, 3.3, 3.4]
+  "1.0.x": ["2.11", "2.12", "3.0", "3.1", "3.2", "3.3", "3.4"]
+  "1.1.x": ["2.11", "2.12", "3.0", "3.1", "3.2", "3.3", "3.4"]
+  "1.2.x": ["3.1", "3.2", "3.3", "3.4"]
+  "1.3.x": ["3.1", "3.2", "3.3", "3.4"]
+  "1.4.x": ["3.1", "3.2", "3.3", "3.4"]
+  "1.5.x": ["3.1", "3.2", "3.3", "3.4"]
+  "1.6.x": ["3.1", "3.2", "3.3", "3.4"]
 {% endversion_compatibility_table %}
 
 ### General
@@ -51,19 +51,19 @@ Users should expect all the combinations marked with true to work and to be supp
 {% version_compatibility_table %}
 product: "Kubernetes"
 versions:
-  - 1.27
-  - 1.28
-  - 1.29
-  - 1.30
-  - 1.31
-  - 1.32
-  - 1.33
-  - 1.34
-  - 1.35
+  - "1.27"
+  - "1.28"
+  - "1.29"
+  - "1.30"
+  - "1.31"
+  - "1.32"
+  - "1.33"
+  - "1.34"
+  - "1.35"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
-  2.0.x: [1.28, 1.29, 1.30, 1.31, 1.32, 1.33]
-  2.1.x: [1.30, 1.31, 1.32, 1.33, 1.34, 1.35]
+  "2.0.x": ["1.28", "1.29", "1.30", "1.31", "1.32", "1.33"]
+  "2.1.x": ["1.30", "1.31", "1.32", "1.33", "1.34", "1.35"]
 {% endversion_compatibility_table %}
 
 ### Gateway API
@@ -76,15 +76,15 @@ of Gateway API features might be limited to those.
 {% version_compatibility_table %}
 product: "Gateway API"
 versions:
-  - 1.0.0
-  - 1.1.0
-  - 1.2.0
-  - 1.3.0
-  - 1.4.0
+  - "1.0.0"
+  - "1.1.0"
+  - "1.2.0"
+  - "1.3.0"
+  - "1.4.0"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
-  2.0.x: [1.0.0, 1.1.0, 1.2.0, 1.3.0]
-  2.1.x: [1.0.0, 1.1.0, 1.2.0, 1.3.0, 1.4.0]
+  "2.0.x": ["1.0.0", "1.1.0", "1.2.0", "1.3.0"]
+  "2.1.x": ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0"]
 {% endversion_compatibility_table %}
 
 [gateway-api]: https://github.com/kubernetes-sigs/gateway-api
@@ -108,13 +108,13 @@ Below table contains a compatibility matrix for `kubernetes-configuration` CRDs 
 {% version_compatibility_table %}
 product: "kubernetes-configuration"
 versions:
-  - 1.3.x
-  - 1.4.x
+  - "1.3.x"
+  - "1.4.x"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
-  1.4.x: []
-  1.5.x: [1.3.x]
-  1.6.x: [1.3.x, 1.4.x]
+  "1.4.x": []
+  "1.5.x": ["1.3.x"]
+  "1.6.x": ["1.3.x", "1.4.x"]
 {% endversion_compatibility_table %}
 
 [kcfg]: https://github.com/Kong/kubernetes-configuration

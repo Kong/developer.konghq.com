@@ -1,12 +1,13 @@
 ---
-title: "Kong Identity"
+title: "{{site.identity}}"
 content_type: reference
 layout: reference
 
 products:
+    - identity
     - konnect
 
-permalink: /kong-identity/
+permalink: /identity/
 works_on:
     - konnect
 search_aliases:
@@ -19,55 +20,55 @@ api_specs:
     - konnect/kong-identity
 
 related_resources:
-  - text: Configure the OIDC plugin with Kong Identity
+  - text: Configure the OIDC plugin with {{site.identity}}
     url: /how-to/configure-kong-identity-oidc/
-  - text: Configure the Upstream OAuth plugin with Kong Identity
+  - text: Configure the Upstream OAuth plugin with {{site.identity}}
     url: /how-to/configure-kong-identity-upstream-oauth/
-  - text: Configure the OAuth 2.0 Introspection plugin with Kong Identity
+  - text: Configure the OAuth 2.0 Introspection plugin with {{site.identity}}
     url: /how-to/configure-kong-identity-oauth-introspection/
-  - text: Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration
+  - text: Automatically create Dev Portal applications in {{site.identity}} with Dynamic Client Registration
     url: /how-to/kong-identity-dcr/
-  - text: Set up Kong Event Gateway with Kong Identity OAuth
+  - text: Set up Kong Event Gateway with {{site.identity}} OAuth
     url: /how-to/event-gateway/kong-identity-oauth/
 
 description: |
-  Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate and authorize API access. Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. 
+  {{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate and authorize API access. {{site.identity}} implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. 
 
 ---
 
 {:.success}
 > **Get started:**
-> * [Configure the OIDC plugin with Kong Identity](/how-to/configure-kong-identity-oidc/)
-> * [Configure the Upstream OAuth plugin with Kong Identity](/how-to/configure-kong-identity-upstream-oauth/)
-> * [Configure the OAuth 2.0 Introspection plugin with Kong Identity](/how-to/configure-kong-identity-oauth-introspection/)
-> * [Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration](/how-to/kong-identity-dcr/)
+> * [Configure the OIDC plugin with {{site.identity}}](/how-to/configure-kong-identity-oidc/)
+> * [Configure the Upstream OAuth plugin with {{site.identity}}](/how-to/configure-kong-identity-upstream-oauth/)
+> * [Configure the OAuth 2.0 Introspection plugin with {{site.identity}}](/how-to/configure-kong-identity-oauth-introspection/)
+> * [Automatically create Dev Portal applications in {{site.identity}} with Dynamic Client Registration](/how-to/kong-identity-dcr/)
 
-Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
-Specifically, Kong Identity can be used for machine-to-machine authentication. 
+{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
+Specifically, {{site.identity}} can be used for machine-to-machine authentication. 
 
-You can use Kong Identity to:
+You can use {{site.identity}} to:
 * Create authorization servers per region
 * Issue and validate access tokens
 * Integrate secure authentication into your {{site.base_gateway}} APIs 
 
-Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. Kong Identity can be used with the following Kong plugins:
+{{site.identity}} implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. {{site.identity}} can be used with the following Kong plugins:
 * [OpenID Connect plugin](/plugins/openid-connect/)
 * [OAuth2.0 Introspection plugin](/plugins/oauth2-introspection/)
 * [Upstream OAuth plugin](/plugins/upstream-oauth/)
 
-## How Kong Identity works
+## How {{site.identity}} works
 
-Kong Identity allows you to create auth servers, claims, scopes, and clients in {{site.konnect_short_name}} using the [{{site.konnect_short_name}} API](/api/konnect/kong-identity/v1/#/). Each of these components plays a specific role in how access is managed:
+{{site.identity}} allows you to create auth servers, claims, scopes, and clients in {{site.konnect_short_name}} using the [{{site.konnect_short_name}} API](/api/konnect/kong-identity/v1/#/). Each of these components plays a specific role in how access is managed:
 * **Auth server:** Issue OAuth 2.0 and OpenID Connect tokens that you can use to authenticate a client (machine) with your Gateway Services. Each auth server is unique to your organization and [{{site.konnect_short_name}} region](/konnect-platform/geos/). We recommend creating different auth servers for different environments or subsidiaries.
 * **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
 * **Scopes:** Define what those clients are allowed to access. 
 * **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services.
 
-To use Kong Identity for authentication, you must configure one of the supported plugins (OpenID Connect, OAuth2.0 Introspection, or Upstream OAuth). These plugins determine how tokens are validated, introspected, or passed along to upstream services.
+To use {{site.identity}} for authentication, you must configure one of the supported plugins (OpenID Connect, OAuth2.0 Introspection, or Upstream OAuth). These plugins determine how tokens are validated, introspected, or passed along to upstream services.
 
-## Kong Identity client credential authentication flow
+## {{site.identity}} client credential authentication flow
 
-The following diagram shows how authentication works with Kong Identity:
+The following diagram shows how authentication works with {{site.identity}}:
 
 <!--vale off-->
 {% mermaid %}
@@ -90,7 +91,7 @@ sequenceDiagram
 <!--vale on-->
 
 {% comment %}
-## Kong Identity authorization code flow
+## {{site.identity}} authorization code flow
 
 In the authorization code flow:
 1. (Optional) The client application displays the user consent page and authenticates the user (this part is handled outside {{site.base_gateway}}). When the user clicks **Authorize**, the client app calls the `/authorize` endpoint created by attaching the OAuth2 plugin to a service.
@@ -104,15 +105,6 @@ In the authorization code flow:
 6. The client uses the access token to call protected APIs.
 {% endcomment %}
 
-## Kong Consumer Group claim authorization flow
-When using plugins scoped to Consumer Groups:
-1. In **{{site.konnect_short_name}} > API Gateway > Consumers**, the client creates the Consumer. Each user that needs access is represented as a Consumer.
-
-   {:.info}
-   > If using OIDC, you don’t need to manually map credentials. The OIDC plugin automatically maps clients to Consumers based on token claims.
-2. The client defines the required Consumer Groups in {{site.konnect_short_name}}, and then applies the desired plugin at the Consumer Group scope.
-3. The client assigns each Consumer to the appropriate Consumer Group. Once assigned, the plugin configuration at the group level automatically applies to the Consumer.
-
 ## Claim configuration
 
 You can [configure each claim](#configure-kong-identity) to be included or not in the JWT token issued by the authorization server, based on the scopes the client requests. 
@@ -123,7 +115,7 @@ You can configure a claim in two ways:
 - Using the Konnect API.
 
 When configuring a claim, you can choose from the following options:
-
+<!--vale off-->
 {% table %}
 columns:
   - title: UI setting
@@ -146,7 +138,7 @@ rows:
     description: The claim exists in the auth server for internal reference but is never embedded in tokens.
     example: A "department" claim used to organize clients internally. It's saved in the auth server but never sent to APIs.
 {% endtable %}
-
+<!--vale on-->
 ### API parameters
 
 Configure the claim by sending a `POST` request to the [`/auth-servers/{authServerId}/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim).
@@ -252,7 +244,6 @@ Dynamic claims can use the context passed to the client during authentication in
 
 <!--vale off-->
 {% table %}
-item_title: JWT context variables
 columns:
   - title: Variable Name
     key: variable
@@ -529,9 +520,9 @@ rows:
 <!--vale on -->
 
 
-## Configure Kong Identity
+## Configure {{site.identity}}
 
-To configure Kong Identity, do the following:
+To configure {{site.identity}}, do the following:
 
 {% navtabs "api-version" %}
 {% navtab "{{site.konnect_short_name}} UI" %}

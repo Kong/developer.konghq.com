@@ -3,7 +3,7 @@ title: kongctl dump tf-import
 description: Export configurations into Terraform format.
 content_type: reference
 layout: reference
-beta: true
+
 works_on:
   - on-prem
   - konnect

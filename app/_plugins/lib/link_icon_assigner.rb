@@ -50,7 +50,7 @@ module Jekyll
     end
 
     def icon_for_content_type
-      return 'service-document' if ENV['KONG_PRODUCTS']
+      return 'service-document' if Jekyll.env == 'development' && (ENV['KONG_PRODUCTS'] || ENV['PAGE_PATHS'])
 
       url = URI.parse(@resource['url']).path
       final_url = resolve_final_path(url, site_redirects)

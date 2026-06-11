@@ -13,6 +13,7 @@ related_resources:
 tools:
     - konnect-api
     - terraform
+    - kongctl
 
 works_on:
   - konnect

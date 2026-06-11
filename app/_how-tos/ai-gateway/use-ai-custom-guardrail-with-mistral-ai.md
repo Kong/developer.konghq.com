@@ -94,13 +94,13 @@ variables:
 
 Enable the [AI Custom Guardrail](/plugins/ai-custom-guardrail/) with the following data:
 
-* The [Mistral Moderation API](https://docs.mistral.ai/capabilities/guardrailing#moderation) URL
-* Your Mistral API key
-* The Mistral model to use
-* The input content to send to the Mistral Moderation API
+* The [{{ site.mistral }} Moderation API](https://docs.mistral.ai/capabilities/guardrailing#moderation) URL
+* Your {{ site.mistral }} API key
+* The {{ site.mistral }} model to use
+* The input content to send to the {{ site.mistral }} Moderation API
 * The function that defines how to parse the response
 
-In this example, the Mistral Moderation API response contains a `results` array containing a `categories` object with a list of different moderation categories. If the input matches one of the categories, its value will be `true`. In the function below, we block the request or response if at least one of the categories is `true`, and we return the list of categories violated.
+In this example, the {{ site.mistral }} Moderation API response contains a `results` array containing a `categories` object with a list of different moderation categories. If the input matches one of the categories, its value will be `true`. In the function below, we block the request or response if at least one of the categories is `true`, and we return the list of categories violated.
 
 {% entity_examples %}
 entities:

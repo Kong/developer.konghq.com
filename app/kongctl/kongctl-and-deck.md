@@ -2,7 +2,7 @@
 title: kongctl and decK
 description: Learn how to use kongctl and decK together for declarative management of the entire API platform
 
-beta: true
+
 
 content_type: reference
 layout: reference
@@ -72,7 +72,7 @@ control_planes:
 
 In this example:
 * The `prod-cp` control plane has decK configuration defined.
-* decK will apply the `kong.yaml` state file with the `--select-tag=kongctl` flag.
+* decK applies the `kong.yaml` state file with the `--select-tag=kongctl` flag.
 * The `billing-gw` Gateway Service is resolved externally by finding a Service with `name: "billing-service"`.
 
 ### Configuration fields
@@ -193,7 +193,7 @@ kongctl plans store decK configuration and base directories for later execution:
 
 ### Control plane creation
 
-If a control plane created in the same plan:
+When a control plane is created in the same plan:
 
 * kongctl can't run `deck gateway diff` (because the control plane ID isn't available yet)
 * kongctl automatically includes the external tool step in the plan
@@ -213,7 +213,7 @@ kongctl automatically injects required flags when invoking decK.
 * `--no-color`: Removes ANSI color codes
 
 {:.warning}
-> **Do not specify these flags yourself**. kongctl will add them automatically and duplicate flags may cause errors.
+> **Do not specify these flags yourself**. kongctl adds them automatically and duplicate flags may cause errors.
 
 ## Select tags and resource ownership
 

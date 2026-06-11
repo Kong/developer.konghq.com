@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: Konnect API Products
+  title: Konnect API Products (Legacy)
   version: 2.0.0
-  description: The API for Kong Konnect API Products.
+  description: 'Legacy API for managing API Products on the classic Dev Portal (v2). For new integrations, see [Konnect API Catalog V3](https://developer.konghq.com/api/konnect/api-catalog/v3/).'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
+  x-oas-source: kong/platform-api@eb1c36538ed71b892eb93a7ca7f00a791fff84f8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/eb1c36538ed71b892eb93a7ca7f00a791fff84f8'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region

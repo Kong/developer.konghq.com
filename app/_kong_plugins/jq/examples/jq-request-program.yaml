@@ -12,6 +12,7 @@ config:
     select(.name == "James Dean").name = "John Doe"
 
 tools:
+  - deck
   - admin-api
   - konnect-api
   - kic

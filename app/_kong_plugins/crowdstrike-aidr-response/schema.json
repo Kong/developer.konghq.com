@@ -1,0 +1,143 @@
+{
+  "properties": {
+    "config": {
+      "type": "object",
+      "required": [
+        "ai_guard_api_key",
+        "upstream_llm"
+      ],
+      "properties": {
+        "ai_guard_api_base_url": {
+          "type": "string",
+          "default": "https://api.crowdstrike.com/aidr/aiguard",
+          "description": "CrowdStrike AIDR API base URL.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+        },
+        "ai_guard_api_key": {
+          "type": "string",
+          "description": "CrowdStrike AIDR API Key.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/)."
+        },
+        "upstream_llm": {
+          "type": "object",
+          "description": "Configuration for the upstream LLM provider.",
+          "required": [
+            "provider",
+            "api_uri"
+          ],
+          "properties": {
+            "provider": {
+              "type": "string",
+              "description": "Provider name used to translate the LLM request to CrowdStrike AIDR format, e.g. 'openai'",
+              "enum": [
+                "anthropic",
+                "azureai",
+                "bedrock",
+                "cohere",
+                "gemini",
+                "kong",
+                "openai"
+              ]
+            },
+            "api_uri": {
+              "type": "string",
+              "description": "API URI for the route this plugin is applied to"
+            }
+          }
+        },
+        "app_id": {
+          "type": "string",
+          "description": "Id of source application/agent"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "User/Service account id/service account"
+        },
+        "llm_provider": {
+          "type": "string",
+          "description": "Underlying LLM provider name (e.g. 'OpenAI', 'Anthropic')"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model used to perform the event (e.g. 'gpt-4')"
+        },
+        "model_version": {
+          "type": "string",
+          "description": "Model version used to perform the event (e.g. '4')"
+        },
+        "source_location": {
+          "type": "string",
+          "description": "Location of user or app or agent"
+        },
+        "tenant_id": {
+          "type": "string",
+          "description": "For gateway-like integrations with multi-tenant support"
+        },
+        "collector_instance_id": {
+          "type": "string",
+          "description": "AIDR collector instance id"
+        },
+        "extra_info": {
+          "type": "object",
+          "description": "Additional metadata as key-value pairs",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "protocols": {
+      "type": "array",
+      "default": [
+        "http",
+        "https"
+      ],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "http",
+          "https"
+        ]
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "consumer_group": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

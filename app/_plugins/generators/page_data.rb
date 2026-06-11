@@ -14,6 +14,7 @@ module Jekyll
     def process_pages(site) # rubocop:disable Metrics/AbcSize
       site.pages.each do |page|
         Data::EditLink::Base.new(site:, page:).process
+        Data::Prerequisites.new(site:, page:).process
         Data::Breadcrumbs.new(site:, page:).process
         Data::APISpecs.new(site:, page:).process
         Data::Seo.new(site:, page:).process

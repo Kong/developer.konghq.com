@@ -62,7 +62,7 @@ rows:
       - blocks:
         - type: api
           config:
-            title: Konnect API Builder
+            title: Konnect API Catalog
       - blocks:
         - type: api
           config:

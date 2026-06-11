@@ -3,7 +3,7 @@ title: kongctl diff konnect
 description: "Show {{site.konnect_short_name}} configuration differences."
 content_type: reference
 layout: reference
-beta: true
+
 works_on:
   - on-prem
   - konnect

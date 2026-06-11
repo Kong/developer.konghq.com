@@ -1,66 +1,51 @@
 <!--vale off-->
 
-## Prerequisites
+# Konnect Screenshots
 
-Make sure python3 and pipenv are installed:
-
-1. Install `python3`:
-
-    ```
-    brew install python3
-    ```
-
-2. Install `pipenv`:
-
-    ```
-    python3 -m pip install pipenv
-    ```
+Screenshots are captured using the [kong-product-org/shot-scraper](https://github.com/kong-product-org/shot-scraper) fork. Screenshot configs and macros live in that repo. Output images are written to `app/assets/images/` in this repo.
 
 ## Setup
 
-We're using a fork of `shot-scraper` in order to store reusable macros in an external file.
-This has been [submitted as a PR](https://github.com/simonw/shot-scraper/pull/111) but not yet merged.
+Clone the fork and install:
 
-This means that you'll need to install from the fork to generate screenshots:
-
-```
-git clone https://github.com/mheap/shot-scraper -b macros-support
+```bash
+git clone https://github.com/kong-product-org/shot-scraper
 cd shot-scraper
-python3 -m pipenv shell
-pip install .
+make install
 ```
-
-You'll need to run `python3 -m pipenv shell` any time you want to use the tool.
 
 ## Authentication
 
-Konnect requires authentication before it will show you the pages you need. 
-Run the following command, then press `<enter>` once you see the Konnect dashboard.
-
-> If you want to use a personal org, switch the Okta URL for https://cloud.konghq.com/login. 
-> You'll also need to update the URLs in each screenshot configuration e.g. different runtime
-> group IDs.
-
 ```bash
-shot-scraper auth https://konghq.okta.com/app/UserHome /tmp/auth.json
+make set-env   # prints the export command — add it to your shell profile
+make auth      # opens a browser to log in to Konnect
 ```
 
-## Usage
+## Taking screenshots
 
-Running the following command to regenerate screenshots:
+Run from inside the shot-scraper repo:
 
 ```bash
-cd /path/to/docs
-cd tools/screenshots
-shot-scraper multi  -a /tmp/auth.json --macro macros.yaml MY_SCREENSHOTS_FILE.yaml
+make screenshot konnect/platform/overview.yaml
 ```
 
-## Debugging
-
-When building new screenshots, it's helpful to see the browser. This is not currently an 
-available `shot-scraper` option, so run the following command to patch it to show the browser:
+If your docs repo is not at `../developer.konghq.com`, pass the path explicitly:
 
 ```bash
-export F=`which shot-scraper | sed 's#bin/shot-scraper#/lib/python3.10/site-packages/shot_scraper/cli.py#'`
-cat <<< "$(awk 'NR==335{print "    browser_kwargs[\"headless\"] = False"}1' $F | less)" > $F
+make screenshot konnect/platform/overview.yaml DOCS_DIR=/path/to/developer.konghq.com
+```
+
+Available configs:
+
+```
+konnect/ai-manager/
+konnect/analytics/
+konnect/catalog/
+konnect/datakit/
+konnect/debugger/
+konnect/dev-portal/
+konnect/event-gateway/
+konnect/gateway-manager/
+konnect/mesh-manager/
+konnect/platform/
 ```

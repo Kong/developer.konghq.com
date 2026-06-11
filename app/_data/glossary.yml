@@ -20,7 +20,7 @@ definitions:
       [Consumer entity](/gateway/entities/consumer/#what-are-credentials-and-why-do-i-need-them)
   - term: Dev Portal
     description: |
-      A web application that functions as a collection of API products, specs, and documentation objects. 
+      A web application that functions as a collection of APIs, specs, and documentation objects. 
       The purpose of a Dev Portal is to allow registration and consumption of services running through Kong to other teams, developers, and partners.
     url: |
       [Dev Portal](/dev-portal/)

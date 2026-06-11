@@ -1564,6 +1564,11 @@
       "description": "Selects the router implementation to use when\nperforming request routing. Incremental router\nrebuild is available when the flavor is set\nto either `expressions` or\n`traditional_compatible`, which could\nsignificantly shorten rebuild time for a large\nnumber of routes.\n\nAccepted values are:\n\n- `traditional_compatible`: the DSL-based expression\n  router engine will be used under the hood. However,\n  the router config interface will be the same\n  as `traditional`, and expressions are\n  automatically generated at router build time.\n  The `expression` field on the `route` object\n  is not visible.\n- `expressions`: the DSL-based expression router engine\n  will be used under the hood. The traditional router\n  config interface is still visible, and you can also write\n  router Expressions manually and provide them in the\n  `expression` field on the `route` object.\n- `traditional`: the pre-3.0 router engine will be\n  used. The config interface will be the same as\n  pre-3.0 Kong, and the `expression` field on the\n  `route` object is not visible.\n\n  Deprecation warning: In Kong 3.0, `traditional`\n  mode should be avoided and only be used if\n  `traditional_compatible` does not work as expected.\n  This flavor of the router will be removed in the next\n  major release of Kong.\n",
       "sectionTitle": "TUNING & BEHAVIOR"
     },
+    "route_match_calculation": {
+      "defaultValue": "original",
+      "description": "When using the `traditional_compatible` or `expressions`\nrouter flavors, select the router matching calculation\nmethod to use.\n\nAccepted values are:\n- `original`: the default value. It retains the current\n `3.x` router matching behavior without changes.\n- `strict`: enforces the router matching behavior with\ncorrected calculation.\n",
+      "sectionTitle": "TUNING & BEHAVIOR"
+    },
     "lua_max_req_headers": {
       "defaultValue": "100",
       "description": "Maximum number of request headers to parse by default.\n\nThis argument can be set to an integer between 1 and 1000.\n\nWhen proxying, Kong sends all the request headers,\nand this setting does not have any effect. It is used\nto limit Kong and its plugins from reading too many\nrequest headers.\n",

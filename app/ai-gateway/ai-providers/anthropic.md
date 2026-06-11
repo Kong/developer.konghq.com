@@ -76,7 +76,7 @@ data:
       header_value: ${key}
     model:
       provider: anthropic
-      name: claude-3-5-sonnet-latest
+      name: claude-sonnet-4-6
       options:
         anthropic_version: "2023-06-01"
         max_tokens: 512

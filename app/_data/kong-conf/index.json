@@ -80,8 +80,8 @@
     },
     {
       "title": "VITALS",
-      "start": 2415,
-      "end": 2480,
+      "start": 2420,
+      "end": 2485,
       "description": ""
     },
     {
@@ -98,20 +98,20 @@
     },
     {
       "title": "DEVELOPER PORTAL",
-      "start": 2499,
-      "end": 2731,
+      "start": 2504,
+      "end": 2736,
       "description": ""
     },
     {
       "title": "DEFAULT DEVELOPER PORTAL AUTHENTICATION",
-      "start": 2732,
-      "end": 2848,
+      "start": 2737,
+      "end": 2853,
       "description": "Referenced on workspace creation to set Dev Portal authentication defaults\nin the database for that particular workspace.\n\n"
     },
     {
       "title": "DEFAULT PORTAL SMTP CONFIGURATION",
-      "start": 2849,
-      "end": 3037,
+      "start": 2854,
+      "end": 3042,
       "description": "Referenced on workspace creation to set SMTP defaults in the database\nfor that particular workspace.\n\n"
     },
     {
@@ -1212,6 +1212,11 @@
       "description": "Selects the router implementation to use when\nperforming request routing. Incremental router\nrebuild is available when the flavor is set\nto either `expressions` or\n`traditional_compatible`, which could\nsignificantly shorten rebuild time for a large\nnumber of routes.\n\nAccepted values are:\n\n- `traditional_compatible`: the DSL-based expression\n  router engine will be used under the hood. However,\n  the router config interface will be the same\n  as `traditional`, and expressions are\n  automatically generated at router build time.\n  The `expression` field on the `route` object\n  is not visible.\n- `expressions`: the DSL-based expression router engine\n  will be used under the hood. The traditional router\n  config interface is still visible, and you can also write\n  router Expressions manually and provide them in the\n  `expression` field on the `route` object.\n- `traditional`: the pre-3.0 router engine will be\n  used. The config interface will be the same as\n  pre-3.0 Kong, and the `expression` field on the\n  `route` object is not visible.\n\n  Deprecation warning: In Kong 3.0, `traditional`\n  mode should be avoided and only be used if\n  `traditional_compatible` does not work as expected.\n  This flavor of the router will be removed in the next\n  major release of Kong.\n",
       "sectionTitle": "TUNING & BEHAVIOR"
     },
+    "route_match_calculation": {
+      "defaultValue": "original",
+      "description": "When using the `traditional_compatible` or `expressions`\nrouter flavors, select the router matching calculation\nmethod to use.\n\nAccepted values are:\n- `original`: the default value. It retains the current\n `3.x` router matching behavior without changes.\n- `strict`: enforces the router matching behavior with\ncorrected calculation.\n",
+      "sectionTitle": "TUNING & BEHAVIOR"
+    },
     "lua_max_req_headers": {
       "defaultValue": "100",
       "description": "Maximum number of request headers to parse by default.\n\nThis argument can be set to an integer between 1 and 1000.\n\nWhen proxying, Kong sends all the request headers,\nand this setting does not have any effect. It is used\nto limit Kong and its plugins from reading too many\nrequest headers.\n",
@@ -2139,6 +2144,14 @@
         "gateway": "3.10"
       }
     },
+    "lru_cache_size": {
+      "defaultValue": "500000",
+      "description": "The maximum number of entries allowed in the two LRU\ncaches on each worker process, used by Kong’s caching\nsystem. The LRU cache is the first-level cache and is\nchecked before the shared caches defined by\n`mem_cache_size`.\n\nLower values can significantly reduce Kong’s memory\nusage, but may result in reduced performance.\n\nThis argument can be set to an integer between 1000\n(thousand) and 1000000 (million).\n\n**Note**: This setting specifies the number of cache\nentries, not the amount of memory. Actual memory usage\ndepends on what is cached and can vary by deployment.\n",
+      "sectionTitle": "NGINX",
+      "min_version": {
+        "gateway": "3.10"
+      }
+    },
     "consumers_mem_cache_size": {
       "defaultValue": "128m",
       "description": "Size of the shared memory cache for consumers\nand credentials.\n\nThe accepted units are `k` and `m`, with a minimum\nrecommended value of a few MBs.\n\n**Note**: This is only used when the \"externalized consumers\"\nfeature is active.\n",
@@ -2158,6 +2171,14 @@
     "admin_gui_csp_header_value": {
       "defaultValue": null,
       "description": "The value of the `Content-Security-Policy` (CSP) header for Kong Manager.\n\nThis configuration controls the value of the CSP header when serving\nKong Manager. If omitted or left empty, the default CSP header value\nwill be used.\n\nThis is an advanced configuration intended for cases where the default\nCSP header value does not meet your requirements. Use with caution.\n\nFor more information on the CSP header, see:\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy\n",
+      "sectionTitle": "KONG MANAGER",
+      "min_version": {
+        "gateway": "3.10"
+      }
+    },
+    "admin_gui_hide_konnect_cta": {
+      "defaultValue": "off",
+      "description": "Hides all Konnect call to actions in Kong Manager.\nThis setting is only relevant for on-prem installations\nof Kong Enterprise.\n",
       "sectionTitle": "KONG MANAGER",
       "min_version": {
         "gateway": "3.10"
@@ -2191,14 +2212,6 @@
       "defaultValue": "off",
       "description": "When enabled, plugin options stored as vault secrets are\nloaded only when they are first requested. This can improve\nstartup performance when using many vault references. When\ndisabled, all vault secrets are loaded during initialization.\n",
       "sectionTitle": "TUNING & BEHAVIOR",
-      "min_version": {
-        "gateway": "3.11"
-      }
-    },
-    "admin_gui_hide_konnect_cta": {
-      "defaultValue": "off",
-      "description": "Hides all Konnect call to actions in Kong Manager.\nThis setting is only relevant for on-prem installations\nof Kong Enterprise.\n",
-      "sectionTitle": "KONG MANAGER",
       "min_version": {
         "gateway": "3.11"
       }
@@ -2383,14 +2396,6 @@
       "defaultValue": "error",
       "description": "Controls the behavior when a deprecated\n(alias) field and its canonical replacement\nfield are both present in a configuration\nwith mismatched values.\n\nAccepted values are:\n\n- `error`: (default) reject the configuration\n  with a schema violation error, requiring the\n  operator to resolve the conflict before\n  proceeding. This is the recommended setting\n  for most deployments.\n- `warn`: accept the configuration and log a\n  warning instead of rejecting it. When a\n  conflict is detected, the canonical (new)\n  field value always takes precedence over the\n  deprecated alias value.\n\nThis option is intended for deployments with\na large number of legacy plugin configurations\n(e.g. deprecated `timeout` coexisting with\n`connect_timeout` / `read_timeout` /\n`send_timeout`) that cannot be corrected\nprior to upgrading. Setting this to `warn`\nunblocks the upgrade while still surfacing\nthe conflicts in logs for future cleanup.\n",
       "sectionTitle": "GENERAL",
-      "min_version": {
-        "gateway": "3.14"
-      }
-    },
-    "lru_cache_size": {
-      "defaultValue": "500000",
-      "description": "The maximum number of entries allowed in the two LRU\ncaches on each worker process, used by Kong’s caching\nsystem. The LRU cache is the first-level cache and is\nchecked before the shared caches defined by\n`mem_cache_size`.\n\nLower values can significantly reduce Kong’s memory\nusage, but may result in reduced performance.\n\nThis argument can be set to an integer between 1000\n(thousand) and 1000000 (million).\n\n**Note**: This setting specifies the number of cache\nentries, not the amount of memory. Actual memory usage\ndepends on what is cached and can vary by deployment.\n",
-      "sectionTitle": "NGINX",
       "min_version": {
         "gateway": "3.14"
       }

@@ -176,7 +176,7 @@ variables:
 
 ## Configure the AI Lakera Guard plugin
 
-After configuring AI Proxy to route requests to Anthropic LLM, let's apply the AI [Lakera Guard](/plugins/ai-lakera-guard/) plugin to enforce content safety on prompts and responses. In our example, the plugin is configured to use the project we [created earlier](./#lakera-policy-and-project) and reveal blocked categories when content is filtered by setting `reveal_failure_categories` to `true`.
+After configuring AI Proxy to route requests to {{ site.anthropic }} LLM, let's apply the AI [Lakera Guard](/plugins/ai-lakera-guard/) plugin to enforce content safety on prompts and responses. In our example, the plugin is configured to use the project we [created earlier](./#lakera-policy-and-project) and reveal blocked categories when content is filtered by setting `reveal_failure_categories` to `true`.
 
 {% entity_examples %}
 entities:

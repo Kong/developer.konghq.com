@@ -77,7 +77,7 @@ Here's how it works if you apply it to both requests and responses:
 {% mermaid %}
 sequenceDiagram
   autonumber
-  participant Client
+  participant client as Client
   participant custguardrail as AI Custom Guardrail plugin
   participant guardrail as Guardrail service
   participant proxy as AI Proxy/Advanced plugin

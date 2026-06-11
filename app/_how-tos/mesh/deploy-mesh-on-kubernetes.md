@@ -16,15 +16,22 @@ works_on:
   - konnect
   - on-prem
 
+tags:
+  - get-started
+  - install
+
+search_aliases:
+  - quickstart
+
 tldr:
-  q: How do I install Mesh on Kubernetes
+  q: How do I install Mesh on Kubernetes?
   a: Install {{site.mesh_product_name}} on your Kubernetes cluster using Helm, and deploy the {{site.mesh_product_name}} demo application.
 
 prereqs:
   inline:
     - title: Create a {{site.mesh_product_name}} Control Plane
       content: |
-        This tutorial requires a {{site.konnect_short_name}} Plus account. If you don't have one, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
+        This tutorial requires a {{site.konnect_short_name}} Plus account. If you don't have one, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs).
 
         After creating your {{site.konnect_short_name}} account, [create the Kong Mesh Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
     - title: Helm

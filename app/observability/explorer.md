@@ -21,8 +21,8 @@ faqs:
   - q: What data can I collect Analytics from?
     a: |
         * **API**
-        * **API Product**
-        * **API Product Version**
+        * **API Product** (Classic)
+        * **API Product Version** (Classic)
         * **Application**
         * **Consumer**
         * **Control Plane**
@@ -64,6 +64,10 @@ faqs:
   - q: What's the difference between the Kong latency and Kong internal latency metrics?
     a: |
       The Kong latency metric represents time spent within the Gateway and excludes upstream response time. In contrast, the Kong internal latency metric represents the Gateway's pure internal processing time, specifically the time between when the Gateway receives the request and when it sends the request to the upstream service. We strongly recommend using Kong internal latency to measure and monitor Kong's own latency.
+  - q: |
+      {% include faqs/metrics-endpoint.md section='question' %}
+    a: |
+      {% include faqs/metrics-endpoint.md section='answer' %}
 
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.observability}}"

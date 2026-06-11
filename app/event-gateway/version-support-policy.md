@@ -124,7 +124,11 @@ This policy is a **summary** and is qualified by the broader [Kong Support and M
 
 
 ## Release timeline
+
+The following {{site.event_gateway}} versions are currently supported by Kong:
+
 <!--vale off-->
+{% assign egw_releases = site.data.products["event-gateway"].releases | reverse %}
 {% table %}
 columns:
   - title: Version
@@ -136,9 +140,11 @@ columns:
   - title: End of Sunset Support
     key: sunset
 rows:
-  - version: "1.0"
-    release: "2025-11-06"
-    full_support: "2026-11-06"
-    sunset: "2027-11-06"
+{% for release in egw_releases %}
+  - version: "{{ release.release }}.x"
+    release: "{{ release.release_date }}"
+    full_support: "{{ release.eol }}"
+    sunset: "{{ release.sunset }}"
+{% endfor %}
 {% endtable %}
 <!--vale on-->

@@ -1,8 +1,8 @@
 After your Azure private networking configuration is ready in {{site.konnect_short_name}}, you can configure private DNS.
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
+1. Click the **Networks** tab.
 1. From the action menu next to your Azure network, select "Configure private DNS".
 1. Click **Private hosted zone**.
 1. In the **Name** field, enter the fully qualified domain name for your private hosted zone in Azure.

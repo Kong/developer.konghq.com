@@ -3,8 +3,14 @@ A vector database can be used to store vector embeddings, or numerical represent
 The {{include.name}} plugin supports the following vector databases:
 * Using `config.vectordb.strategy: redis` and parameters in `config.vectordb.redis`:
   * **[Redis](https://redis.io/docs/latest/stack/search/reference/vectors/)** with Vector Similarity Search (VSS)
-  * **[AWS MemoryDB for Redis](https://docs.aws.amazon.com/memorydb/latest/devguide/vector-search-overview.html)** {% new_in 3.12 %}
+  * **[Redis Cloud](https://redis.io/cloud/)**
   * **[Valkey](https://valkey.io/topics/search/)** {% new_in 3.14 %}: When you configure `vectordb.strategy: redis`, {{site.base_gateway}} queries the server and checks the server name field. If it detects Valkey request, it automatically uses the Valkey-specific driver.
+  * Managed Redis with cloud authentication:
+    * **AWS ElastiCache** (`auth_provider: aws`)
+    * **Azure Managed Redis** (`auth_provider: azure`)
+    * **Google Cloud Memorystore** (`auth_provider: gcp`)
+
+    For configuration details, see [Using cloud authentication with Redis](#using-cloud-authentication-with-redis).
 * Using `config.vectordb.strategy: pgvector` and parameters in `config.vectordb.pgvector`:
   * **[PostgreSQL with pgvector](https://github.com/pgvector/pgvector)** {% new_in 3.10 %}
 

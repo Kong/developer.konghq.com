@@ -31,7 +31,7 @@ faqs:
       * Persistence of request/responses and history
 ---
 
-With the growing emergence of Internet of Things (IoT), microservices and mesh networks, APIs need to be more performant and scalable than ever before. This has given rise to the growing adoption of [gRPC](https://grpc.io/), a high-performance, open source, universal RPC framework developed at Google.
+With the growing emergence of Internet of Things (IoT), microservices and mesh networks, APIs need to be more performant and scalable than ever before. This has given rise to the growing adoption of [gRPC](https://grpc.io/), a high-performance, open source, universal RPC framework developed at {{ site.google}}.
 
 Insomnia supports making gRPC requests. You can create one by clicking the **+** button on the left panel of a collection and selecting **gRPC Request**. Once this is done, configure your request:
 

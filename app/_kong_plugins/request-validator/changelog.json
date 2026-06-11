@@ -1,4 +1,11 @@
 {
+  "3.14.0.5": [
+    {
+      "message": "Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Provided detailed error messages for `oneOf` / `anyOf` subschemas.\n",
@@ -22,6 +29,13 @@
     {
       "message": "Added support for specifying JSON schema draft versions.",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.11": [
+    {
+      "message": "Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],
@@ -71,6 +85,13 @@
   "3.6.0.0": [
     {
       "message": "**Request Validator** The Request Validator plugin now validates the request body schema when json is the suffix value in the request content type's subtype, for example `application/merge-patch+json`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.26": [
+    {
+      "message": "Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

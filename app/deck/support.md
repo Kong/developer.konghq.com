@@ -37,3 +37,9 @@ The {{ site.konnect_short_name }} API returns the most recent {{ site.base_gatew
 decK guarantees compatibility with all supported {{ site.base_gateway }} versions.
 
 Changes to {{ site.base_gateway }} may result in changes to decK. We recommend updating decK regularly, as the most recent version will work with both old versions of {{ site.base_gateway }} _and_ the latest version simultaneously.
+
+## decK versions
+
+The latest version of decK is **{{site.data.deck_latest.version}}**. We recommend keeping your decK version up-to-date whenever possible.
+
+For all available versions of decK, see the [decK releases page on GitHub](https://github.com/Kong/deck/releases).

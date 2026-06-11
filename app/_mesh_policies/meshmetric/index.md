@@ -10,6 +10,12 @@ min_version:
   mesh: '2.6'
 
 icon: meshmetric.png
+
+related_resources:
+  - text: Deploy an OpenTelemetry collector
+    url: /mesh/deploy-an-opentelemetry-collector/
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/meshopentelemetrybackend/
 ---
 {{site.mesh_product_name}} facilitates consistent traffic metrics across all data plane proxies in your mesh.
 
@@ -620,42 +626,5 @@ Dataplane Proxy will scrape metrics from Envoy and other [applications](/docs/{{
 and push them to configured OpenTelemetry collector, by default every **60 seconds** (use `refreshInterval` to change it).
 
 When you configure application scraping make sure to specify `application.name` to use [OpenTelemetry scoping](https://opentelemetry.io/docs/concepts/instrumentation-scope/).
-
-#### Pushing metrics from application to OpenTelemetry collector directly
-
-Right now if you want to expose metrics from your application to OpenTelemetry collector you can access collector directly.
-
-If you have disabled [passthrough](/docs/{{ page.release }}/networking/non-mesh-traffic/#outgoing) in your Mesh you need to
-configure [ExternalService](/docs/{{ page.release }}/policies/external-services/#external-service) with you collector endpoint. Example ExternalService:
-
-{% tabs %}
-{% tab Kubernetes %}
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: ExternalService
-mesh: default
-metadata:
-  name: otel-collector
-spec:
-  tags:
-    kuma.io/service: otel-collector-grpc
-    kuma.io/protocol: grpc
-  networking:
-    address: otel-collector.observability.svc.cluster.local:4317
-```
-{% endtab %}
-{% tab Universal %}
-```yaml
-type: ExternalService
-mesh: default
-name: otel-collector
-tags:
-  kuma.io/service: otel-collector-grpc
-  kuma.io/protocol: grpc
-networking:
-  address: otel-collector.observability.svc.cluster.local:4317
-```
-{% endtab %}
-{% endtabs %}
 
 {% endif_version %}

@@ -1,0 +1,22 @@
+title: 'MeshIdentity with Spire provider'
+tools: 
+  - kubernetes
+description: 'Apply a MeshIdentity policy using the Spire certificate provider to all data plane proxies.'
+weight: 920
+requirements:
+  - "A [MeshService](/mesh/meshservice/) resource must be configured in your mesh."
+namespace: kong-mesh-demo
+config:
+  type: MeshIdentity
+  name: identity-spire
+  mesh: default
+  spec:
+    selector:
+      dataplane:
+        matchLabels: {}
+    spiffeID:
+      trustDomain: default.us-east.mesh.local
+      path: "/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}"
+    provider:
+      type: Spire
+      spire: {}

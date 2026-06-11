@@ -17,7 +17,8 @@ related_resources:
 tools:
     - konnect-api
     - terraform
-tags: 
+    - kongctl
+tags:
   - policy
 works_on:
   - konnect

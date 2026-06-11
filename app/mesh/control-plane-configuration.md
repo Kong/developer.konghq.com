@@ -15,7 +15,7 @@ related_resources:
   - text: Policy Hub
     url: /mesh/policies/
   - text: Use Kong as a delegated Gateway
-    url: '/mesh/gateway-delegated/'
+    url: '/mesh/use-kong-as-delegated-gateway/'
   - text: Data plane health
     url: /mesh/dataplane-health/
 ---

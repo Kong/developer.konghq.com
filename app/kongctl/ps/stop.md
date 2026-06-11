@@ -3,7 +3,7 @@ title: kongctl ps stop
 description: Stop Kong processes.
 content_type: reference
 layout: reference
-beta: true
+
 works_on:
   - on-prem
   - konnect

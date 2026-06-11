@@ -13,6 +13,7 @@ endif
 # Installs yarn packages and gems.
 install:
 	mise install
+	git submodule sync --recursive
 	git submodule update --init
 	corepack enable
 	yarn install --immutable

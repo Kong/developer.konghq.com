@@ -18,6 +18,7 @@
         {% if forloop.first %} tabindex="0" {% else %} tabindex="-1" {% endif %}
         data-slug="{{ slug }}"
       >
+        {% if tab[1].attributes.icon %}{% include_svg tab[1].attributes.icon width="16" height="16" %}{% endif %}
         {{ tab[0] | markdownify | markdown }}
       </button>
     {% endfor %}

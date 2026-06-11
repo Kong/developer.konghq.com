@@ -81,11 +81,11 @@ columns:
     key: config
 rows:
   - usecase: "View current log level<sup>1</sup>"
-    config: "[`/debug/node/log-level/`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level/)"
+    config: "[`/debug/node/log-level`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level)"
   - usecase: "Modify the log level for an individual {{site.base_gateway}} node"
-    config: "[`/debug/node/log-level/{logLevel}`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level-log_level/)"
+    config: "[`/debug/node/log-level/{logLevel}`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level-log_level)"
   - usecase: "Change the log level of the {{site.base_gateway}} cluster"
-    config: "[`/debug/cluster/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/update-debug-cluster-log-level/)"
+    config: "[`/debug/cluster/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/update-debug-cluster-log-level)"
   - usecase: "Keep the log level of new nodes added to the cluster in sync with other nodes in the cluster"
     config: |
       Change the [`log_level`](/gateway/configuration/#log-level) entry in `kong.conf` to `KONG_LOG_LEVEL`, and start every new node with the `KONG_LOG_LEVEL` env variable set.

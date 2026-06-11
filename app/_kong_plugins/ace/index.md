@@ -42,6 +42,10 @@ search_aliases:
 
 {% include /plugins/ace/ace-overview.md %}
 
+## When to use the ACE plugin instead of KAA
+
+{% include /dev-portal/kaa-vs-ace.md %}
+
 ## Route matching policy
 
 {% include /plugins/ace/ace-route-matching.md %}

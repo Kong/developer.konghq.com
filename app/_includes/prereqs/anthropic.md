@@ -1,5 +1,5 @@
-For this task, you need an Anthropic API key.
-1. Create an [Anthropic Console](https://console.anthropic.com/) account.
+For this task, you need an {{ site.anthropic }} API key.
+1. Create an [{{ site.anthropic }} Console](https://console.anthropic.com/) account.
 1. Generate an API key from the console settings.
 1. Create a decK variable with your API key:
 

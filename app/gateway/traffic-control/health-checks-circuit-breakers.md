@@ -233,7 +233,7 @@ For Hybrid mode deployments both with {{site.konnect_short_name}} and on-prem, y
 You can do this in the {{site.konnect_short_name}} UI: 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Select your control plane.
-1. In the API Gateway sidebar, click **Upstreams**.
+1. Click the **Upstreams** tab.
 1. Select the desired Upstream.
 1. From the **Actions** menu, click **Edit Configuration**. 
 1. Enable **Active Health Checks**

@@ -15,3 +15,4 @@ config:
 tools:
   - konnect-api
   - terraform
+  - kongctl

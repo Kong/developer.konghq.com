@@ -44,6 +44,54 @@ kumactl generate zone-token \
 
 {% endif %}
 
+{% if type == "dataplane" %}
+
+{% assign issuer = "dpServer.authn.dpProxy.dpToken.enableIssuer" %}
+{% assign secrets = "dpServer.authn.dpProxy.dpToken.validator.useSecrets" %}
+
+{% capture conf %}
+```yaml
+dpServer:
+  authn:
+    dpProxy:
+      type: dpToken
+      dpToken:
+        enableIssuer: false # disable control plane token issuer that uses secrets
+        validator:
+          useSecrets: false # do not use signing key stored in secrets to validate the token
+          publicKeys:
+          - kid: "key-1"
+            mesh: default
+            key: |
+              -----BEGIN RSA PUBLIC KEY-----
+              MIIBCgKCAQEAsS61a79gC4mkr2Ltwi09ajakLyUR8YTkJWzZE805EtTkEn/rL2u/
+              ...
+              se7sx2Pt/NPbWFFTMGVFm3A1ueTUoorW+wIDAQAB
+              -----END RSA PUBLIC KEY-----
+```
+{% endcapture %}
+
+{% capture kumactl %}
+```sh
+kumactl generate dataplane-token \
+  --name dp-echo-1 \
+  --mesh default \
+  --tag kuma.io/service=backend,backend-admin \
+  --valid-for 720h > /tmp/kuma-dp-echo1-token \
+  --signing-key-path /tmp/key-private.pem \
+  --kid key-1
+```
+{% endcapture %}
+
+{% capture claims %}
+* `Name`: The name of the data plane proxy.
+* `Mesh`: The name of the mesh.
+* `Tags`: A map of string to list of strings representing the tags.
+* `Workload`: The workload label value for the data plane proxy. {% new_in 2.13 %}
+{% endcapture %}
+
+{% endif %}
+
 {% if type == "user" %}
 
 {% assign issuer = "apiServer.authn.tokens.enableIssuer" %}

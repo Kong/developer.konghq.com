@@ -32,6 +32,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.11": [
+    {
+      "message": "Fixed an issue where region was not permitted to be null for remote identity realms.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed to retain order of query arguments when hiding the credentials.",

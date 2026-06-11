@@ -27,17 +27,17 @@ faqs:
     a: A team is a group of users with access to the same roles. Teams allow assigning access to {{site.konnect_short_name}} resources based on roles.
   - q: What is a role in {{site.konnect_short_name}}?
     a: |
-      A role defines predefined access to a particular resource or instances of a resource type. For example, API product roles can be scoped to a specific API product or all API products, while Control Plane roles can be scoped to a specific Control Plane or all Control Planes.
+      A role defines predefined access to a particular resource or instances of a resource type. For example, Catalog API roles can be scoped to a specific API or all APIs, while Control Plane roles can be scoped to a specific Control Plane or all Control Planes.
   - q: Can predefined teams in {{site.konnect_short_name}} be modified or deleted?
     a: No, predefined teams have fixed role sets that cannot be modified or deleted.
-  - q: I have the `API Products Publisher` role for the API product I want to publish, why don't I see any classic Dev Portals that I can publish to?
-    a: To publish API products to a classic Dev Portal, you need at least a `Viewer` role for Dev Portal in addition to the `API Products Publisher` role.
   - q: My team has a Dev Portal, why can't I see APIs?
     a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
   - q: |
       {% include faqs/report-dashboard-sharing.md section='question' feature="report" %}
     a: |
       {% include faqs/report-dashboard-sharing.md section='answer' feature="report" %}
+  - q: "Can the Organization Owner role be assigned to an SSO-controlled account?"
+    a: "Yes, an SSO-controlled account is just a {{site.konnect_short_name}} user. As long as the account is an Organization Admin, they can be assigned to the Organization Owner role."
 ---
 
 To help secure and govern your environment, {{site.konnect_short_name}} provides
@@ -233,7 +233,7 @@ You can manage a user's roles by navigating to [**Organization**](https://cloud.
 
 #### Add-ons
 
-The following table describes the predefined roles for Dedicated Cloud Gateway add-ons, like [managed cache](/dedicated-cloud-gateways/reference/#managed-cache-for-redis):
+The following table describes the predefined roles for Dedicated Cloud Gateway add-ons, like [managed cache](/dedicated-cloud-gateways/managed-cache/):
 
 <!--vale off-->
 {% table %}
@@ -288,7 +288,7 @@ rows:
 
 #### Auth servers
 
-The following table describes the predefined roles for [Kong Identity](/kong-identity/) authorization servers:
+The following table describes the predefined roles for [{{site.identity}}](/identity/) authorization servers:
 
 <!--vale off-->
 {% table %}

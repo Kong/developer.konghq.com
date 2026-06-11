@@ -30,8 +30,12 @@ related_resources:
     url: /gateway/upgrade/in-place/
   - text: "Rolling upgrade"
     url: /gateway/upgrade/rolling/
+  - text: "Convert Gateway entity configuration from 3.4 to 3.10"
+    url: /gateway/upgrade/convert-lts-34-310/
   - text: "{{site.base_gateway}} upgrade"
     url: /gateway/upgrade/
+  - text: "{{site.base_gateway}} 3.10 to 3.14 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-310-314/
   - text: "{{site.base_gateway}} 2.8 to 3.4 LTS upgrade"
     url: /gateway/upgrade/lts-upgrade-28-34/
 

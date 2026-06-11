@@ -1,6 +1,6 @@
-This tutorial requires a DeepSeek API key.
+This tutorial requires a {{ site.deepseek }} API key.
 
-1. Create a [DeepSeek Platform](https://platform.deepseek.com/) account.
+1. Create a [{{ site.deepseek }} Platform](https://platform.deepseek.com/) account.
 1. Click **API keys**.
 1. Click **Create new API key**.
 1. In the **Name** field, enter `Kong`.

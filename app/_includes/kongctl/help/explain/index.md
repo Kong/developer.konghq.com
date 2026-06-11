@@ -9,6 +9,8 @@ Examples:
   kongctl explain api.versions
   # Explain a specific field
   kongctl explain api.publications.portal_id
+  # Explain analytics dashboard tiles and valid discriminator values
+  kongctl explain analytics.dashboards --extended
   # Retrieve the machine-readable schema as JSON Schema
   kongctl explain api --output json
   # Retrieve the same schema serialized as YAML
@@ -18,8 +20,8 @@ Examples:
 Flags:
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ 3024_day, 3024_night, aardvark_blue, abernathy, adventure ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
+                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
+                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --extended                Include extended field details in text output
@@ -39,6 +41,10 @@ Flags:
       --log-level string        Configures the logging level. Execution logs are written to STDERR.
                                 - Config path: [ log-level ]
                                 - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
+                                - Config path: [ telemetry.enabled ]
+                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")

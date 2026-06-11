@@ -4,7 +4,7 @@ description: "Apply the KONGCTL-namespace label to an existing {{site.konnect_sh
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

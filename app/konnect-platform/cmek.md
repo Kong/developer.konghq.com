@@ -90,7 +90,7 @@ To configure CMEK, you need:
 
 1. In {{site.konnect_short_name}}, navigate to [**Encryption Keys**](https://cloud.konghq.com/global/organization/settings/encryption-keys/).
 1. Click **Link key**.
-1. Enter the **Name**, **Amazon Resource Name**, **description**, and **Region**. 
+1. Enter the **Name**, **{{ site.amazon }} Resource Name**, **description**, and **Region**. 
 1. Click **Connect**. 
 
 ## User responsibilities

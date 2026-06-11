@@ -107,7 +107,7 @@ command: |
   curl -X POST http://localhost:8200/v1/secret/data/customer/acme \
        -H "X-Vault-Token: $VAULT_TOKEN" \
        -H "Content-Type: application/json" \
-       -d '{"data":{"name":"ACME Inc."}}' \
+       -d '{"data":{"name":"ACME Inc."}}'
 expected:
   return_code: 0
 render_output: false

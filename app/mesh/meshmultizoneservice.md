@@ -16,8 +16,8 @@ related_resources:
     url: /mesh/dns/
   - text: Resource sizing guidelines
     url: /mesh/resource-sizing-guidelines/
-  - text: Version compatibility
-    url: /mesh/version-compatibility/
+  - text: Validated versions
+    url: /mesh/validated-versions/
   - text: Zone ingress
     url: /mesh/zone-ingress/
   - text: Zone egress

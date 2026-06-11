@@ -97,7 +97,7 @@ expected:
 render_output: false
 {% endvalidation %}
 
-Next, replace the placeholder with your Mistral API key and run:
+Next, replace the placeholder with your {{ site.mistral }} API key and run:
 
 {% validation custom-command %}
 command: |
@@ -175,4 +175,4 @@ value: $DECK_OPENAI_API_KEY
 {% endvalidation %}
 
 
-If the vault was configured correctly, this command should return the value of the secrets for OpenAI and Mistral. You can use `{vault://hashicorp-vault/openai/key}` and `{vault://hashicorp-vault/mistral/key}` to reference the secret in any referenceable field.
+If the vault was configured correctly, this command should return the value of the secrets for OpenAI and {{ site.mistral }}. You can use `{vault://hashicorp-vault/openai/key}` and `{vault://hashicorp-vault/mistral/key}` to reference the secret in any referenceable field.

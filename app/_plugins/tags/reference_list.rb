@@ -22,7 +22,7 @@ module Jekyll
 
       references = fetch_references(config)
 
-      if references.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil?
+      if references.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil? && ENV['PAGE_PATHS'].nil?
         raise "No references found for #{@context['page']['path']} - #{config}"
       end
 

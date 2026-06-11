@@ -129,6 +129,9 @@ priority: 50
 It's also best to reduce the number of `Route` entities created by leveraging the
 logical combination capability of the expressions language.
 
+If you find that a Route with lower priority is matched over Routes with higher priority and common [routing criteria](/gateway/entities/route/#routing-criteria) (for example, same `hosts`), 
+try setting the [`route_match_calculation`](/gateway/configuration/#route-match-calculation) property in `kong.conf` to `strict`.
+
 ### Combining routes
 
 If multiple routes result in the same `Service` and `Plugin` config being used,

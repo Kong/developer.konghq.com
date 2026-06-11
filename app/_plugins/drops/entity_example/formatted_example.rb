@@ -11,7 +11,8 @@ module Jekyll
           'kic'         => 'KIC',
           'operator'    => 'KIC',
           'ui'          => 'UI',
-          'terraform'   => 'Terraform'
+          'terraform'   => 'Terraform',
+          'kongctl'     => 'Kongctl'
         }
 
         def initialize(format:, presenter_class:, example_drop:)

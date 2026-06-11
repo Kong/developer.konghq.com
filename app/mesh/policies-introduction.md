@@ -101,6 +101,9 @@ Producer policies allow service owners to define recommended client-side behavio
 This lets backend owners publish sensible defaults (timeouts, retries, limits) for consumers,
 while individual clients can still refine those settings with their own [consumer](#consumer-policies) policies.
 
+{:.warning}
+> A default consumer policy can override a service-specific producer policy if they are in the same namespace. For more information, see [Same-namespace exception](#same-namespace-exception).
+
 The following policy tells {{ site.mesh_product_name }} to apply 3 retries with a backoff from `15s` to `1m`
 on 5xx errors to any client calling `backend`:
 
@@ -372,6 +375,82 @@ default:
     streamIdleTimeout: 5m  # kept from producer: consumer didn't set it
     maxStreamDuration: 1m  # added by consumer
 ```
+
+### Same-namespace exception
+
+On Kubernetes, a consumer default in the same namespace can still override a producer policy for a specific service.
+This happens because the policy role is evaluated before `spec.to[].targetRef`.
+
+{% navtabs "same-namespace-exception" %}
+{% navtab "Producer" %}
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshTimeout
+metadata:
+  name: producer-policy
+  namespace: kuma-demo
+spec:
+  targetRef:
+    kind: Mesh
+  to:
+    - targetRef:
+        kind: MeshService
+        name: redis
+        namespace: kuma-demo
+      default:
+        connectionTimeout: 10s
+```
+
+{% endnavtab %}
+{% navtab "Consumer default" %}
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshTimeout
+metadata:
+  name: consumer-default
+  namespace: kuma-demo
+spec:
+  targetRef:
+    kind: Mesh
+  to:
+    - targetRef:
+        kind: Mesh
+      default:
+        connectionTimeout: 5s
+```
+
+{% endnavtab %}
+{% navtab "Updated consumer policy" %}
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshTimeout
+metadata:
+  name: consumer-specific
+  namespace: kuma-demo
+spec:
+  targetRef:
+    kind: Mesh
+  to:
+    - targetRef:
+        kind: MeshService
+        name: checkout
+      default:
+        connectionTimeout: 5s
+    - targetRef:
+        kind: MeshService
+        name: payments
+      default:
+        connectionTimeout: 5s
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+In this example, `consumer-default` overrides `producer-policy`.
+To keep `producer-policy` effective, replace the mesh-wide consumer default with service-specific entries like `consumer-specific`, or split them into separate consumer policies and leave `redis` out.
 
 ## Metadata
 

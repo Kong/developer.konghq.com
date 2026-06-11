@@ -3,7 +3,7 @@ title: kongctl get me
 description: Get current user information.
 content_type: reference
 layout: reference
-beta: true
+
 works_on:
   - on-prem
   - konnect

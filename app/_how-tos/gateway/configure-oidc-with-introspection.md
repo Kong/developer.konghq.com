@@ -44,7 +44,7 @@ prereqs:
       - example-route
   inline:
     - title: Set up Keycloak
-      include_content: prereqs/auth/oidc/keycloak-password
+      include_content: prereqs/auth/oidc/keycloak-password-with-introspection
       icon_url: /assets/icons/keycloak.svg
 
 tags:
@@ -68,6 +68,10 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
+
+## Generate salt token
+
+{% include how-tos/steps/deck-salt-token.md %}
 
 ## Enable the OpenID Connect plugin with introspection
 
@@ -95,6 +99,7 @@ entities:
         - password
         bearer_token_param_type:
         - header
+        cache_tokens_salt: ${salt-token}
 variables:
   issuer:
     value: $ISSUER
@@ -102,6 +107,8 @@ variables:
     value: $CLIENT_ID
   client-secret:
     value: $CLIENT_SECRET
+  salt-token:
+    value: $TOKEN_SALT
 {% endentity_examples %}
 
 In this example:
@@ -122,6 +129,7 @@ method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+retry: true
 extract_body:
   - name: 'headers.Authorization'
     variable: TOKEN

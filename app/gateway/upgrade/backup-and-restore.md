@@ -28,6 +28,8 @@ related_resources:
     url: /gateway/upgrade/in-place/
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
+  - text: "3.10 to 3.14 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-310-314/
   - text: "3.4 to 3.10 LTS upgrade"
     url: /gateway/upgrade/lts-upgrade-34-310/
   - text: "2.8 to 3.4 LTS upgrade"
@@ -84,7 +86,7 @@ If you're running {{site.base_gateway}} as a control plane in {{site.konnect_sho
 Review the list of [entities managed by decK](/deck/reference/entities/) to see what can be backed up using this method.
 
 {:.info}
-It does not back up Dev Portal, API Products, {{site.konnect_catalog}}, and so on. 
+> decK **does not** back up Dev Portal, {{site.konnect_catalog}}, Observability, and so on. 
 Data stored in these applications, such as API specs and documents, must be manually backed up.
 
 ### Back up a {{site.konnect_short_name}} control plane

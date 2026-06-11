@@ -1,0 +1,107 @@
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Source</div>
+  <div class="flex gap-1.5 items-center">
+    {% include_svg '/assets/icons/github.svg' width="16" height="16" %}
+    <a href="{{ page.source_url }}">{{ page.title }}</a>
+  </div>
+</div>
+
+{% if page.plugin_name %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Owning plugin</div>
+  <div class="flex gap-3 items-center flex-wrap">
+    <a href="{{ page.plugin_source_url }}">{{ page.plugin_name }}</a>
+  </div>
+</div>
+{% endif %}
+
+{% if page.version %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Version</div>
+  <div class="flex gap-1.5">
+    {% include badge.html text=page.version %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.author %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Author</div>
+  <div class="flex gap-1.5">
+    <span>{{ page.author }}</span>
+  </div>
+</div>
+{% endif %}
+
+{% if page.license %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">License</div>
+  <div class="flex gap-1.5">
+    {% if page.license_is_file and page.license_url %}
+      <a href="{{ page.license_url }}">{{ page.license }}</a>
+    {% else %}
+      <span>{{ page.license }}</span>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.skill_category %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Category</div>
+  <div class="flex gap-1.5">
+    {% assign url = "/skills/?category=" | append: page.skill_category %}
+    {% include badge.html text=page.skill_category url=url %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.products != empty %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Products</div>
+  <div class="flex gap-1.5 items-start flex-wrap">
+    {% for product in page.products %}
+    {% assign url = "/skills/?product=" | append: product %}
+    <a href="{{ url }}">{{ product }}</a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.allowed_tools %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Allowed tools</div>
+  <div class="flex gap-1.5 flex-wrap">
+    {% assign tools = page.allowed_tools | split: ' ' %}
+    {% for tool in tools %}
+      <span>{{ tool }}</span>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.scripts or page.references or page.assets %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Contains</div>
+  <div class="flex flex-col gap-1.5 flex-wrap">
+      {% if page.scripts %}
+        <a href="{{ page.scripts_url }}" class="flex items-center gap-2 hover:no-underline">
+          <div class="flex text-brand shrink-0">{% include_svg '/assets/icons/skills/scripts.svg' width="16" height="16" %}</div>
+          <span>Scripts</span>
+        </a>
+      {% endif %}
+      {% if page.references %}
+        <a href="{{ page.references_url }}" class="flex items-center gap-2 hover:no-underline">
+          <div class="flex text-brand shrink-0">{% include_svg '/assets/icons/skills/references.svg' width="16" height="16" %}</div>
+          <span>References</span>
+        </a>
+      {% endif %}
+      {% if page.assets %}
+        <a href="{{ page.assets_url }}" class="flex items-center gap-2 hover:no-underline">
+          <div class="flex text-brand shrink-0">{% include_svg '/assets/icons/skills/assets.svg' width="16" height="16" %}</div>
+          <span>Assets</span>
+        </a>
+      {% endif %}
+  </div>
+</div>
+{% endif %}
