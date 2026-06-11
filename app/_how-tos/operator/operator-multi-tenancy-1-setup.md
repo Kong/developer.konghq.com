@@ -40,7 +40,7 @@ tldr:
 prereqs:
   skip_product: true
   inline:
-    - title: Kong Enterprise license
+    - title: "{{site.ee_product_name}} license"
       icon_url: /assets/icons/key.svg
       content: |
         Save your {{site.ee_product_name}} license as `license.json` in your current working directory. If you don't have a license, contact your Kong representative.
