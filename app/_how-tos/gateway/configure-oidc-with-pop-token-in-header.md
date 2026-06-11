@@ -163,6 +163,9 @@ In this how-to guide, you need the following certificates:
 
 1. Open the Keycloak admin console at `http://localhost:8080/admin/master/console/`.
 
+1. Log in with the credentials you set in the `docker run` command. 
+   For this example, we set username `admin`, password `admin`.
+
 1. In the sidebar, open **Clients**, then click **Create client**.
 
 1. Configure the client:
@@ -190,13 +193,12 @@ rows:
 {% endcapture %}
 {{ keycloak-client | indent: 3 }}
 
-1. Click the **Credentials** tab.
-1. Set **Client Authenticator** to **Client ID and Secret**.
-1. Copy the **Client Secret**.
 1. Click the **Advanced** tab.
 1. In the **Advanced settings** section, enable **OAuth 2.0 Mutual TLS Certificate Bound Access Tokens Enabled**.
 1. Click **Save** at the bottom of the Advanced settings section.
-
+1. Click the **Credentials** tab.
+1. Set **Client Authenticator** to **Client ID and Secret**.
+1. Copy the **Client Secret**.
 1. Export your client credentials and Keycloak issuer.
    `DECK_ISSUER` uses `localhost` because that's the pinned issuer in tokens.
    `DECK_JWKS_ENDPOINT` uses the `keycloak` container name because {{site.base_gateway}} fetches the JWKS from inside Docker:
