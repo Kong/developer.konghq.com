@@ -50,7 +50,7 @@ rows:
             config:
               icon: /assets/icons/linked-services.svg
               title: AI Agent
-              description: Configure and expose A2A agents using the AI Agent in {{site.ai_gateway}} {% new_in 2.0 %}.
+              description: Configure and expose A2A agents using the AI Agent in {{site.ai_gateway}}.
               ctas:
                 - text: AI Agent reference
                   url: "/ai-gateway/entities/ai-agent/"
@@ -65,7 +65,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Attach Policies to your Agent entities to secure access, control traffic, and monitor usage. You can also add {{site.base_gateway}} plugins for rate limiting and additional traffic controls.
+                    Attach AI Policies to your AI Agents to secure access, control traffic, and monitor usage. You can also add {{site.base_gateway}} plugins for rate limiting and additional traffic controls.
           - type: card
             config:
               icon: /assets/icons/lock.svg

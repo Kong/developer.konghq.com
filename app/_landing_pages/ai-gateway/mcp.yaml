@@ -52,7 +52,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.ai_gateway}} {% new_in 2.0 %} manages MCP traffic through the entity model. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to expose MCP tools and services, then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+                    {{site.ai_gateway}} manages MCP traffic through the entity model. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to expose MCP tools and services, then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
@@ -72,7 +72,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Attach Policies to your MCP Server entities to secure access, control traffic, and monitor usage. For example, use MCP OAuth2 for authentication, rate limiting Policies for traffic control, and audit logging for observability.
+                    Attach AI Policies to your AI MCP Servers to secure access, control traffic, and monitor usage. For example, use MCP OAuth2 for authentication, rate limiting AI Policies for traffic control, and audit logging for observability.
           - type: card
             config:
               icon: /assets/icons/lock.svg

@@ -493,7 +493,7 @@ rows:
             blocks:
             - type: text
               text: |
-                {{site.ai_gateway}} helps mitigate these challenges by offering policy-managed capabilities attached to [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and identity entities.
+                {{site.ai_gateway}} helps mitigate these challenges by offering policy-managed capabilities attached to [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), [AI Consumers](/ai-gateway/entities/ai-consumer/), and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/).
 
                 - [**Data governance**](./#data-governance): Control how sensitive information is handled and shared with AI models.
                 - [**Prompt engineering**](./#prompt-engineering): Customize and optimize prompts to deliver consistent, high-quality AI outputs.
