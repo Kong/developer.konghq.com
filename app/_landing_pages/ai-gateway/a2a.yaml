@@ -29,6 +29,7 @@ rows:
 
               {{site.ai_gateway}} acts as a control and observability layer for A2A traffic, enabling you to route agent-to-agent requests, extract task metadata, rewrite agent card URLs, and feed structured metrics into the Konnect analytics pipeline. In {{site.ai_gateway}} {% new_in 2.0 %}, you configure A2A traffic using [AI Agents](/ai-gateway/entities/ai-agent/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
 
+
       - blocks:
           - type: image
             config:
@@ -41,16 +42,16 @@ rows:
             config:
               header:
                 type: h2
-                text: "Configure A2A Agents with Entities and Policies {% new_in 2.0 %}"
+                text: "Create A2A Agents {% new_in 2.0 %}"
               blocks:
                 - type: text
                   text: |
-                    Create an [AI Agent](/ai-gateway/entities/ai-agent/) to route your A2A endpoints through {{site.ai_gateway}} to your backend agents to unlock observability into agent communication.
+                    Create [AI Agents](/ai-gateway/entities/ai-agent/) to route your A2A endpoints through {{site.ai_gateway}} to your backend agents. Then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
           - type: card
             config:
               icon: /assets/icons/linked-services.svg
               title: AI Agent
-              description: Configure and expose A2A agents using the AI Agent in {{site.ai_gateway}}.
+              description: Create and expose A2A agents using the AI Agent in {{site.ai_gateway}}.
               ctas:
                 - text: AI Agent reference
                   url: "/ai-gateway/entities/ai-agent/"
@@ -61,27 +62,27 @@ rows:
             config:
               header:
                 type: h2
-                text: "Secure A2A Agents with Policies"
+                text: "Secure A2A traffic"
               blocks:
                 - type: text
                   text: |
-                    Attach AI Policies to your AI Agents to secure access, control traffic, and monitor usage. You can also add {{site.base_gateway}} plugins for rate limiting and additional traffic controls.
+                    Protect your A2A agents using AI Policies and {{site.base_gateway}} plugins. Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI Agent](/ai-gateway/entities/ai-agent/) entities for authentication, then use rate limiting and other security plugins to enforce traffic policies.
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Secure and govern A2A traffic
-              description: Secure A2A agents and control access with Policies and {{site.base_gateway}} plugins.
+              title: Security Policies
+              description: Secure A2A agents and control access with Policies.
               ctas:
                 - text: OpenID Connect
                   url: "/plugins/openid-connect/"
                 - text: Rate Limiting
-                  url: "/plugins/rate-limiting/"
-                - text: A2A audit logs
-                  url: "/ai-gateway/ai-audit-log-reference/#ai-a2a-proxy-logs"
+                  url: "/plugins/?category=traffic-control"
+                - text: Authentication plugins
+                  url: "/plugins/?category=authentication"
 
   - header:
       type: h2
-      text: "A2A traffic observability"
+      text: "Observe A2A traffic"
       description: |
         {{site.ai_gateway}} records A2A protocol traffic data so you can analyze how agent-to-agent requests are processed and resolved.
         - Audit logs capture task IDs, JSON-RPC method calls, payloads, latencies, and errors.
@@ -134,30 +135,3 @@ rows:
             cta:
               url: /observability/explorer/?tab=agentic-usage#metrics
               align: end
-
-  - header:
-      type: h2
-      text: "Govern A2A traffic"
-      description: |
-        Manage how A2A traffic flows through {{site.ai_gateway}} using Policies and plugins.
-        Apply rate limiting, traffic control, and request transformation to A2A routes.
-    column_count: 2
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: Rate Limiting
-            description: Control A2A traffic rate with standard gateway plugins.
-            icon: /assets/icons/ai.svg
-            ctas:
-              - text: Rate Limiting plugin
-                url: /plugins/rate-limiting/
-      - blocks:
-        - type: card
-          config:
-            title: Authentication and Authorization
-            description: Secure A2A routes with authentication plugins.
-            icon: /assets/icons/lock.svg
-            ctas:
-              - text: Authentication plugins
-                url: /plugins/?category=authentication

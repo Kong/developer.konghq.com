@@ -68,44 +68,23 @@ rows:
             config:
               header:
                 type: h2
-                text: "Secure MCP servers with Policies"
+                text: "Secure MCP servers"
               blocks:
                 - type: text
                   text: |
-                    Attach AI Policies to your AI MCP Servers to secure access, control traffic, and monitor usage. For example, use MCP OAuth2 for authentication, rate limiting AI Policies for traffic control, and audit logging for observability.
+                    Protect your MCP servers using AI Policies. Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entities for OAuth2 authentication and access control.
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Secure and govern MCP traffic
-              description: Secure MCP servers and control access to tools with Policies.
+              title: Security with AI Policies
+              description: Secure MCP servers and control access to tools with AI Policies.
               ctas:
-                - text: MCP OAuth2 policy
+                - text: AI Policy reference
                   url: "/ai-gateway/entities/ai-policy/"
-                - text: Monitor MCP traffic metrics
-                  url: "/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics"
-                - text: Review MCP audit logs
-                  url: "/ai-gateway/ai-audit-log-reference/#ai-mcp-logs"
 
   - header:
       type: h2
-      text: "MCP Registry (tech preview)"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}.
-                    This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
-          - type: button
-            config:
-              text: "Enable MCP Registry in {{site.konnect_short_name}} Labs"
-              url: /catalog/mcp-registry/
-
-  - header:
-      type: h2
-      text: "MCP traffic observability"
+      text: "Observe MCP traffic"
     columns:
       - blocks:
           - type: structured_text
@@ -136,28 +115,18 @@ rows:
 
   - header:
       type: h2
-      text: "Govern MCP traffic"
-      description: |
-        Manage how MCP traffic flows through {{site.ai_gateway}} using Policies and plugins.
-        Apply rate limiting, traffic control, and access policies to MCP routes.
-    column_count: 2
+      text: "MCP Registry (tech preview)"
     columns:
       - blocks:
-        - type: card
-          config:
-            title: Rate Limiting
-            description: Control MCP traffic rate with standard gateway plugins.
-            icon: /assets/icons/ai.svg
-            ctas:
-              - text: Rate Limiting plugin
-                url: /plugins/rate-limiting/
-      - blocks:
-        - type: card
-          config:
-            title: Authentication and Authorization
-            description: Secure MCP routes with authentication plugins.
-            icon: /assets/icons/lock.svg
-            ctas:
-              - text: Authentication plugins
-                url: /plugins/?category=authentication
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}.
+                    This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
+          - type: button
+            config:
+              text: "Enable MCP Registry in {{site.konnect_short_name}} Labs"
+              url: /catalog/mcp-registry/
 
