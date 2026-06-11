@@ -7,6 +7,16 @@ products:
 works_on:
   - on-prem
   - konnect
+tldr:
+  q: How do I get the time when Kong sends a request to upstream and the time Kong gets the whole response from upstream?
+  a: |
+    Use the `post-function` and `pre-function` plugins. The time Kong sends a request to upstream can be
+    obtained at the end of the access phase with `post-function` (which runs after all other plugins), and
+    the time Kong gets the whole response can be obtained at the beginning of the log phase with `pre-function`
+    (which runs before all other plugins). First set `untrusted_lua_sandbox_requires = socket` (or the env var
+    `KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES = socket` in a container) so the plugins can use the socket package,
+    then enable the plugins on the target route/service to call `socket.gettime()*1000` and log the times,
+    which appear in the Kong error log.
 related_resources:
   - text: plugin execution order
     url: /konnect/reference/plugins/#plugin-execution-order
@@ -38,13 +48,13 @@ We could implement it by following the steps below:
 
 1. Set the parameter below for Kong to use the socket package in the `pre-function`/`post-function` plugins:
 
-   ```
+   ```bash
    untrusted_lua_sandbox_requires = socket
    ```
 
-   If you run Kong with a container, please set the env var below instead:
+   If you run Kong with a container, set the env var below instead:
 
-   ```
+   ```bash
    KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES = socket
    ```
 
