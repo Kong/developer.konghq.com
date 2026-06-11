@@ -38,14 +38,6 @@ faqs:
 
 {{ site.data.products.insomnia.name }}  provides a default linting ruleset. Override it to add your custom linting rules by following these steps:
 
-## Upload the ruleset file
-
-From the {{ site.data.products.insomnia.name }}  app, upload a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format. Upload it from the project containing the design document with the OpenAPI specifications (OAS) to lint.
-
-This places the ruleset file in the local working directory. {{ site.data.products.insomnia.name }}  renames this custom ruleset as `.spectral.yaml`.
-
-You can view the content of the file by clicking `Custom Ruleset` in {{ site.data.products.insomnia.name }} , but not edit the file from the UI.
-
 ## Define the rules
 
 The custom ruleset overrides the default one. To create a new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extends` property.
@@ -66,6 +58,15 @@ rules:
       field: description
       function: truthy
 ```
+
+## Upload the ruleset file
+
+1. In the {{ site.data.products.insomnia.name }}  app, navigate to a document with the OAS file you want to lint.
+2. Click the upload icon for **Default OAS Ruleset** at the bottom of the pane.
+
+This places the ruleset file in the local working directory. {{ site.data.products.insomnia.name }}  renames this custom ruleset as `.spectral.yaml`.
+
+You can view the content of the file by clicking `Custom Ruleset` in {{ site.data.products.insomnia.name }}. If you want to make changes to the file, edit it locally.
 
 ## Validate
 
