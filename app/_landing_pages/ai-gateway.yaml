@@ -70,7 +70,7 @@ rows:
         - type: card
           config:
             title: AI Gateway entities {% new_in 2.0 %}
-            description: Learn the AI Agents, MCP Servers, and A2A Agents and how resources map to each gateway type.
+            description: Learn the AI Agents, AI MCP Servers, and how resources map to each gateway type.
             icon: /assets/icons/linked-services.svg
             cta:
               url: /ai-gateway/entities/
@@ -79,7 +79,7 @@ rows:
         - type: card
           config:
             title: AI Policies {% new_in 2.0 %}
-            description: Attach policy-managed governance behavior to AI Models, AI Agents, AI MCP Servers, and identities.
+            description: Attach policy-managed governance behavior to AI Models, AI Agents, AI MCP Servers, AI Consumers, and AI Consumer Groups.
             icon: /assets/icons/plug.svg
             cta:
               url: /ai-gateway/entities/ai-policy/
@@ -249,7 +249,7 @@ rows:
         - type: card
           config:
             title: Rate limiting
-            description: Apply rate-limiting policies to Models, Agents, MCP Servers, and identities.
+            description: Apply rate-limiting policies to AI Models, AI Agents, AI MCP Servers, AI Consumers, and AI Consumer Groups.
             icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
             cta:
               url: /plugins/ai-rate-limiting-advanced/

@@ -34,8 +34,8 @@ rows:
 
               Learn how to:
               - [Create MCP servers from API specs](#create-mcp-servers-from-api-specs-new-in-2-0)
-              - [Secure MCP servers with Policies](#secure-mcp-servers-with-policies)
-              - [Observe MCP traffic logs and metrics](#mcp-traffic-observability)
+              - [Secure MCP servers](#secure-mcp-servers)
+              - [Observe MCP traffic](#observe-mcp-traffic)
       - blocks:
           - type: image
             config:

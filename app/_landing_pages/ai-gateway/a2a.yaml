@@ -29,7 +29,6 @@ rows:
 
               {{site.ai_gateway}} acts as a control and observability layer for A2A traffic, enabling you to route agent-to-agent requests, extract task metadata, rewrite agent card URLs, and feed structured metrics into the Konnect analytics pipeline. In {{site.ai_gateway}} {% new_in 2.0 %}, you configure A2A traffic using [AI Agents](/ai-gateway/entities/ai-agent/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
 
-
       - blocks:
           - type: image
             config:
@@ -98,15 +97,6 @@ rows:
             description: Review AI A2A Proxy log output fields, task states, and payload capture.
             cta:
               url: /ai-gateway/ai-audit-log-reference/#ai-a2a-proxy-logs
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Logging plugins
-            description: Send A2A traffic data to File Log, HTTP Log, TCP Log, and other destinations.
-            icon: /assets/icons/audit.svg
-            cta:
-              url: /plugins/?category=logging
               align: end
       - blocks:
         - type: card
