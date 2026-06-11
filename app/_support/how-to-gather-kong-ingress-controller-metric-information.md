@@ -17,7 +17,7 @@ tldr:
     explanation of their meanings.
 related_resources:
   - text: "Prometheus metrics documentation for the Kong Ingress Controller"
-    url: /kubernetes-ingress-controller/production/observability/prometheus/
+    url: /kubernetes-ingress-controller/observability/prometheus/
 ---
 
 ## Overview

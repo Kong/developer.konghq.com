@@ -9,7 +9,7 @@ works_on:
   - konnect
 related_resources:
   - text: Request Termination plugin
-    url: /hub/kong-inc/request-termination/
+    url: /plugins/request-termination/
 tldr:
   q: How do I set up a maintenance page in Kong Gateway to display a message to users when an endpoint is being worked on?
   a: |

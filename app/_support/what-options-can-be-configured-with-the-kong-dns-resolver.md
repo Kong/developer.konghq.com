@@ -22,7 +22,7 @@ tldr:
     For additional details on these settings, refer to the documentation for `resolv.conf`.
 related_resources:
   - text: DNS resolver section
-    url: /reference/configuration/#dns-resolver-section
+    url: /gateway/configuration/#dns-resolver-section
   - text: resolv.conf documentation
     url: https://man7.org/linux/man-pages/man5/resolv.conf.5.html
 ---

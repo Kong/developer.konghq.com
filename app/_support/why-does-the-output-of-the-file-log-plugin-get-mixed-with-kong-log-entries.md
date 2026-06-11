@@ -17,9 +17,9 @@ tldr:
     remove any unneeded response headers or data from the file-log output using the `custom-fields-by-lua` field.
 related_resources:
   - text: file-log
-    url: /hub/kong-inc/file-log/
+    url: /plugins/file-log/
   - text: custom-fields-by-lua
-    url: /hub/kong-inc/file-log/#custom-fields-by-lua
+    url: /plugins/file-log/#custom-fields-by-lua
   - text: Kong charts values.yaml
     url: https://github.com/Kong/charts/blob/kong-2.47.0/charts/kong/values.yaml#L101-L108
   - text: Pipe Atomicity

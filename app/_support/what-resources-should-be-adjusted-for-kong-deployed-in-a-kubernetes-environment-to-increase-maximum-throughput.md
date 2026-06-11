@@ -18,7 +18,7 @@ tldr:
     or horizontally (more pods) based on the results, and monitor closely afterward.
 related_resources:
   - text: Kong Sizing Guidelines
-    url: /gateway/production/sizing-guidelines/#scaling-dimensions
+    url: /gateway/resource-sizing-guidelines/#scaling-dimensions
 ---
 
 ## Problem

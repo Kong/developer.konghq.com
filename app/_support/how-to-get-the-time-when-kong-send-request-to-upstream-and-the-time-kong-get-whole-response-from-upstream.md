@@ -19,13 +19,13 @@ tldr:
     which appear in the Kong error log.
 related_resources:
   - text: plugin execution order
-    url: /konnect/reference/plugins/#plugin-execution-order
+    url: /gateway/entities/plugin/#dynamic-plugin-ordering
   - text: pre-function plugin configuration
-    url: /hub/kong-inc/pre-function/configuration/
+    url: /plugins/pre-function/
   - text: post-function plugin configuration
-    url: /hub/kong-inc/post-function/configuration/
+    url: /plugins/post-function/
   - text: untrusted_lua_sandbox_requires
-    url: /gateway/reference/configuration/#untrusted_lua_sandbox_requires
+    url: /gateway/configuration/#untrusted-lua-sandbox-requires
 ---
 
 ## Overview
