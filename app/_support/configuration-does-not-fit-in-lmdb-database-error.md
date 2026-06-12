@@ -1,5 +1,5 @@
 ---
-title: "\"Configuration does not fit in LMDB database\" Error"
+title: "HTTP 413 \"Configuration does not fit in LMDB database\" error when pushing config to data planes"
 content_type: support
 description: Pushing configuration to data planes fails with an HTTP 413 "Configuration does not fit in LMDB database" error; raise `lmdb_map_size` to fix it.
 products:

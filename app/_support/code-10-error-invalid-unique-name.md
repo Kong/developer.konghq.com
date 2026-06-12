@@ -1,5 +1,5 @@
 ---
-title: "Code 10 Error: Invalid Unique Name"
+title: "Code 10 \"invalid unique name\" error when an entity name matches a reserved Admin API endpoint"
 content_type: support
 description: "This error is returned because of a pre-existing Admin API endpoint named 'auth'."
 products:

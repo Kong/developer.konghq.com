@@ -1,5 +1,5 @@
 ---
-title: "Error: require 'resty.http' not allowed within sandbox"
+title: "\"require 'resty.http' not allowed within sandbox\" error in serverless or Exit Transformer plugins"
 content_type: support
 description: Plugins that execute arbitrary Lua code run in a sandbox that blocks require of certain modules; allow the module or disable the sandbox to resolve it.
 products:

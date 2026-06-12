@@ -1,5 +1,5 @@
 ---
-title: "No 'Access-Control-Allow-Origin' header is present on the requested resource"
+title: "No 'Access-Control-Allow-Origin' header on the response when using the CORS plugin"
 content_type: support
 description: "The CORS plugin omits the Access-Control-Allow-Origin header when config.origins contains an invalid character or when the request origin does not match a configured origin."
 products:
