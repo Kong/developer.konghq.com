@@ -1,5 +1,5 @@
 ---
-title: Configuring Consumer Groups Rate Limiting Policy after upgrading to the latest Kong version
+title: Configuring Consumer Groups Rate Limiting policy after upgrading to the latest Kong version
 content_type: support
 description: After upgrading Kong gateway to latest version, the method for configuring the Rate Limiting Policy / Rate limiting plugin for Consumer Groups has changed.
 products:
@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I configure the Consumer Groups Rate Limiting Policy after upgrading to the latest Kong version?
+  q: How do I configure the Consumer Groups Rate Limiting policy after upgrading to the latest Kong version?
   a: |
     After upgrading (for example, from `3.4.3.13` to `3.10.0.x`), the Consumer Group policy is
     deprecated and policies are now applied through the Plugins tab instead of the Policy tab. Use
@@ -26,7 +26,7 @@ related_resources:
 
 ## Overview
 
-How to configure Consumer Groups Rate Limiting Policy after upgrading from Kong version 3.4.3.13 to 3.10.0.x or in latest version where consumer group policy is deprecated.
+How to configure Consumer Groups Rate Limiting policy after upgrading from Kong version 3.4.3.13 to 3.10.0.x or in latest version where consumer group policy is deprecated.
 
 ## Steps
 

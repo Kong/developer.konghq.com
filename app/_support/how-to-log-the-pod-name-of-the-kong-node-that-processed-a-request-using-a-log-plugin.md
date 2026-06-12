@@ -1,5 +1,5 @@
 ---
-title: How to log the pod name of the kong node that processed a request when using a Kong log plugin
+title: How to log the pod name of the Kong node that processed a request when using a Kong log plugin
 content_type: support
 description: Add the data plane pod name to Kong log plugin output by exposing the container HOSTNAME variable through the config.custom_fields_by_lua property.
 products:

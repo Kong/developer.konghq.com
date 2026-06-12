@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}}: Retaining the browser Cookie when forwarding a request through a post-function plugin"
+title: "{{site.base_gateway}}: Retaining the browser cookie when forwarding a request through a post-function plugin"
 content_type: support
 description: When a request is forwarded through a Kong post-function plugin, the browser Cookie may not be retained; use pre-function and post-function plugins with kong.ctx.shared to capture and forward the Cookie header.
 products:

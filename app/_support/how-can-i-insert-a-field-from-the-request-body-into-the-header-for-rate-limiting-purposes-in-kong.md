@@ -1,5 +1,5 @@
 ---
-title: Insert a Field from the Request Body into the Header for Rate Limiting in Kong
+title: Insert a field from the request body into the header for rate limiting in Kong
 content_type: support
 description: Use the pre-function plugin with the Kong PDK to extract a field from the request body and insert it into a request header so you can rate limit on that field.
 products:

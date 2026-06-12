@@ -1,5 +1,5 @@
 ---
-title: Enable OCSP Stapling in Kong and Handle OCSP Server Downtime
+title: Enable OCSP stapling in Kong and handle OCSP server downtime
 content_type: support
 description: Configure OCSP Stapling in Kong with the relevant NGINX environment variables, and understand how Kong behaves when the OCSP responder is unavailable.
 products:

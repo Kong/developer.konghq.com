@@ -1,5 +1,5 @@
 ---
-title: Auditing Route configuration changes via Kong Audit Log APIs
+title: Auditing Route configuration changes via Kong audit log APIs
 content_type: support
 description: Use the {{site.ee_product_name}} audit log APIs to trace who changed a Route and to detect Routes created with empty or missing paths.
 products:
