@@ -51,7 +51,7 @@ cleanup:
 related_resources:
   - text: Set up {{site.event_gateway}} with Kong Identity OAuth
     url: /event-gateway/kong-identity-oauth/
-  - text: Enrich Kafka connections with Kong Identity principal metadata
+  - text: Enrich Kafka SASL PLAIN connections with Kong Identity principal metadata
     url: /event-gateway/kong-identity-metadata-integration/
   - text: Modify Headers policy
     url: /event-gateway/policies/modify-headers/
