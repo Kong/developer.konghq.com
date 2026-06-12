@@ -60,29 +60,29 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Get started
-            description: Proxy your first LLM through {{site.ai_gateway}} with our guided setup.
-            icon: /assets/icons/rocket.svg
+            title: LLM quickstart
+            description: Proxy your first model through {{site.ai_gateway}} with a guided setup.
+            icon: /assets/icons/llm-quickstart.svg
             cta:
               url: /ai-gateway/get-started/
               align: end
       - blocks:
         - type: card
           config:
-            title: AI Gateway entities {% new_in 2.0 %}
-            description: Learn the AI Agents, AI MCP Servers, and how resources map to each gateway type.
-            icon: /assets/icons/linked-services.svg
+            title: MCP quickstart
+            description: Expose and observe your first tool server over Model Context Protocol.
+            icon: /assets/icons/mcp-quickstart.svg
             cta:
-              url: /ai-gateway/entities/
+              url: /ai-gateway/mcp/
               align: end
       - blocks:
         - type: card
           config:
-            title: AI Policies {% new_in 2.0 %}
-            description: Attach policy-managed governance behavior to AI Models, AI Agents, AI MCP Servers, AI Consumers, and AI Consumer Groups.
-            icon: /assets/icons/plug.svg
+            title: A2A quickstart
+            description: Route and secure agent-to-agent traffic with protocol-aware observability.
+            icon: /assets/icons/a2a-quickstart.svg
             cta:
-              url: /ai-gateway/entities/ai-policy/
+              url: /ai-gateway/a2a/
               align: end
 
   - header:
@@ -165,6 +165,32 @@ rows:
             cta:
               url: /ai-gateway/a2a/
               align: end
+
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Universal API"
+            blocks:
+              - type: text
+                text: |
+                    Kong's {{site.ai_gateway}} Universal API is configured through entity resources, primarily [AI Models](/ai-gateway/entities/ai-model/) and [AI Providers](/ai-gateway/entities/ai-provider/), to provide a single, standardized interface for interacting with models across multiple providers.
+
+                    - [**Easy to use**](/ai-gateway/entities/ai-model/): Define one [AI Model](/ai-gateway/entities/ai-model/) and expose a stable client-facing endpoint.
+
+                    - [**Load balancing**](/ai-gateway/load-balancing/): Distribute requests across target models for performance and cost efficiency.
+
+                    - [**Retry and fallback**](/ai-gateway/load-balancing/#retry-and-fallback): Route requests based on performance, cost, or availability.
+
+                    - [**Policy integration**](/ai-gateway/entities/ai-policy/): Attach [AI Policies](/ai-gateway/entities/ai-policy/) for auth, guardrails, and transformations.
+
+    - blocks:
+        - type: image
+          config:
+            url: /assets/images/gateway/universal-api.svg
+            alt_text: Overview of AI gateway
+
   - header:
       type: h2
       text: "{{site.ai_gateway}} providers"
@@ -216,7 +242,7 @@ rows:
                 - type: unordered_list
                   items:
                     - "[{{site.ai_gateway}} editor](https://cloud.konghq.com/ai-gateway): GUI for managing all your {{site.ai_gateway}} resources in one place."
-                    - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
+                    # - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
                     - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.ai_gateway}} resources within {{site.konnect_short_name}} Control Planes via an API."
                     - "[kongctl](/kongctl/): Use Kong's swiss-army knife command line tool for managing and interacting with {{site.ai_gateway}} resources and configurations within {{site.konnect_short_name}}."
       - header:
@@ -231,6 +257,50 @@ rows:
                     - "[{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for {{site.ai_gateway}}."
                     - "[Deployment topologies](/gateway/deployment-topologies/): Learn about the different ways to deploy {{ site.base_gateway }}."
                     - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
+
+  # - columns:
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           title: AI Model reference
+  #           description: Use an AI Model to define a client-facing AI endpoint with capabilities, formats, and routing behavior.
+  #           icon: /assets/icons/model.svg
+  #           cta:
+  #             url: /ai-gateway/entities/ai-model/
+  #             align: end
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           title: AI Provider reference
+  #           description: Use an AI Provider to configure upstream LLM connectivity and authentication, then reuse it across AI Models.
+  #           icon: /assets/icons/provider.svg
+  #           cta:
+  #             url: /ai-gateway/entities/ai-provider/
+  #             align: end
+
+  - header:
+      type: h2
+      text: "Manage {{site.ai_gateway}} entities"
+      description: |
+        {{site.ai_gateway}} is built around AI entities. Create Models, Providers, Agents, and MCP Servers to manage your AI traffic. Attach AI Policies to enforce authentication, rate limiting, guardrails, transformations, and governance across any entity.
+    column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Entities {% new_in 2.0 %}
+            description: Learn about AI Models, AI Providers, AI Agents, AI MCP Servers, and AI Consumers.
+            cta:
+              url: /ai-gateway/entities/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI Policies {% new_in 2.0 %}
+            description: Attach governance behavior for authentication, guardrails, transformations, and more.
+            cta:
+              url: /ai-gateway/entities/ai-policy/
+              align: end
 
   - columns:
       - blocks:
@@ -256,51 +326,6 @@ rows:
             config:
               url: /assets/images/konnect/ai-manager.png
               alt_text: "{{site.ai_gateway}} Dashboard in Konnect"
-  - header:
-    type: h2
-  - columns:
-    - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Universal API"
-            blocks:
-              - type: text
-                text: |
-                    Kong's {{site.ai_gateway}} Universal API is configured through entity resources, primarily [AI Models](/ai-gateway/entities/ai-model/) and [AI Providers](/ai-gateway/entities/ai-provider/), to provide a single, standardized interface for interacting with models across multiple providers.
-
-                    - [**Easy to use**](/ai-gateway/entities/ai-model/): Define one [AI Model](/ai-gateway/entities/ai-model/) and expose a stable client-facing endpoint.
-
-                    - [**Load balancing**](/ai-gateway/load-balancing/): Distribute requests across target models for performance and cost efficiency.
-
-                    - [**Retry and fallback**](/ai-gateway/load-balancing/#retry-and-fallback): Route requests based on performance, cost, or availability.
-
-                    - [**Policy integration**](/ai-gateway/entities/ai-policy/): Attach [AI Policies](/ai-gateway/entities/ai-policy/) for auth, guardrails, and transformations.
-
-    - blocks:
-        - type: image
-          config:
-            url: /assets/images/gateway/universal-api.svg
-            alt_text: Overview of AI gateway
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Model reference
-            description: Use an AI Model to define a client-facing AI endpoint with capabilities, formats, and routing behavior.
-            icon: /assets/icons/model.svg
-            cta:
-              url: /ai-gateway/entities/ai-model/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: AI Provider reference
-            description: Use an AI Provider to configure upstream LLM connectivity and authentication, then reuse it across AI Models.
-            icon: /assets/icons/provider.svg
-            cta:
-              url: /ai-gateway/entities/ai-provider/
-              align: end
 
   - header:
       type: h2
