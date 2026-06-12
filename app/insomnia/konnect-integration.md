@@ -1,7 +1,7 @@
 ---
 title: "{{ site.konnect_short_name }} Gateway Service integration in {{ site.data.products.insomnia.name }}"
 
-description: "Link {{ site.konnect_short_name }} to send requests from Insomnia against Routes in  your Gateway Services from {{ site.data.products.insomnia.name }}." 
+description: "Link {{ site.konnect_short_name }} to send requests from {{ site.data.products.insomnia.name }} to Routes in your Gateway Services.
 
 content_type: reference
 layout: reference
@@ -16,7 +16,7 @@ products:
 tier: enterprise
 
 next_steps:
-  - text: Link a {{ site.konnect_short_name }} Service Gateway to {{ site.data.products.insomnia.name }}
+  - text: Link a {{ site.konnect_short_name }} Gateway Service to {{ site.data.products.insomnia.name }}
     url: /how-to/link-konnect-to-insomnia/
 
 related_resources:
@@ -37,21 +37,18 @@ faqs:
   - q: Can I use the {{ site.konnect_short_name }} integration with my on-prem Gateway?
     a: |
       No, the {{ site.konnect_short_name }} integration only works with Gateway Services hosted in {{ site.konnect_short_name }}, not on-prem {{site.base_gateway}}.
-  - q: What is the "Skipped routes" Collection?
+  - q: What is the "Skipped Routes" Collection?
     a: |
       The "Skipped Routes" Collection contains Routes using an unsupported protocol. You can't use the Collection runner to send requests against them.    
   - q: Why does {{ site.data.products.insomnia.name }} skip some Routes?
     a: |
-      {{ site.data.products.insomnia.name }} skips Routes that use an unsupported protocol, such as SNI matching, TCP, or UDP. {{ site.data.products.insomnia.name }} displays the skipped routes in a separate collection named "Skipped routes".
-  - q: Can I use the {{ site.konnect_short_name }} integration with my on-prem Gateway?
-    a: |
-      No, the {{ site.konnect_short_name }} integration only works with Gateway Services hosted in {{ site.konnect_short_name }}, not on-prem {{site.base_gateway}}.
+      {{ site.data.products.insomnia.name }} skips Routes that use an unsupported protocol, such as SNI matching, TCP, or UDP. {{ site.data.products.insomnia.name }} displays the skipped Routes in a separate collection named "Skipped Routes".
 
 ---
 
 ## About the {{ site.konnect_short_name }} integration
 
-Starting from {{ site.data.products.insomnia.name }} `v13`, Enterprise users can link {{ site.data.products.insomnia.name }} to Gateway Services deployed in {{ site.konnect_short_name }}. The integration allows sending requests from Collections against Routes pulled from {{ site.konnect_short_name }}, using the {{ site.data.products.insomnia.name }} app.
+Starting from {{ site.data.products.insomnia.name }} 13, Enterprise users can link {{ site.data.products.insomnia.name }} to Gateway Services deployed in {{ site.konnect_short_name }}. The integration allows sending requests from Collections against Routes pulled from {{ site.konnect_short_name }}, using the {{ site.data.products.insomnia.name }} app.
 
 After connecting and syncing your Gateway Services, {{ site.data.products.insomnia.name }}:
 
@@ -60,9 +57,9 @@ After connecting and syncing your Gateway Services, {{ site.data.products.insomn
 - Pulls the Routes from each Gateway Service.
 - Lists the Routes in Collections for each Gateway Service.
 
-## Prerequisites
+### Requirements
 
-- An {{ site.data.products.insomnia.name }} [Enterprise account](/insomnia/enterprise/) (not trial)
+- An {{ site.data.products.insomnia.name }} [Enterprise account](/insomnia/enterprise/)
 - A {{ site.konnect_short_name }} [Gateway Service](/gateway/).
 - A [Personal Access Token (PAT)](/konnect-api/#personal-access-tokens) 
 
@@ -99,12 +96,12 @@ rows:
       From the **Konnect** tab, click **Sync**.
 {% endtable %}
 
-### Syncing
+### Sync
 
 Every time you click **Sync** from the {{ site.konnect_short_name }} tab, {{ site.data.products.insomnia.name }} pulls changes from {{ site.konnect_short_name }}. Syncing:
 
 - Doesn't push any changes from {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }}.
-- Pulls any changes or configurations from {{ site.konnect_short_name }} for the related Routes.
+- Pulls changes or configurations from {{ site.konnect_short_name }} for the related Routes.
 
 
 This preserves the local changes on Routes while allowing pulling any updates from {{ site.konnect_short_name }}.
