@@ -60,7 +60,7 @@ In your workspace, {{ site.data.products.insomnia.name }} now displays the {{ si
 On first Sync, set the proxy URL for each Gateway Service:
 
 1. From your {{ site.data.products.insomnia.name }} workspace, go to the {{ site.konnect_short_name }} tab
-1. Select a Gateway Service: `example service` in this guide.
+1. Select a Gateway Service: `example-service` in this guide.
 1. Open the **Base Environment** file
 1. Input the proxy URLs for the selected Gateway Service. For `example-service`, set `proxy_host` to `localhost:8000` 
 

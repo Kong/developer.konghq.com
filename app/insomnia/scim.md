@@ -133,7 +133,7 @@ Administrators can view the current SCIM token status in {{ site.data.products.i
 
 When a token is close to expiration and cannot be refreshed automatically, {{ site.data.products.insomnia.name }} displays a warning message on the SCIM page and sends email notifications starting 20 days before the token expires.
 
-{% new_in 13 %} When SCIM is configured with OAuth 2.0, {{ site.data.products.insomnia.name }} automatically refresh the token. 
+{% new_in 13 %} When SCIM is configured with OAuth 2.0, {{ site.data.products.insomnia.name }} automatically refreshes the token.
 
 ### Connector URL and token
 
