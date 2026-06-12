@@ -38,7 +38,7 @@ No labels documented.
 |Gauge     |N/A       |
 
 
-**Description:** The version of the configuration loaded from the control plane
+**Description:** Version number of the configuration loaded from the control plane. Updated each time the control plane pushes a new config.
 
 **Labels:**
 
@@ -155,12 +155,15 @@ No labels documented.
 
 ### `kong.keg.kafka.decrypt.attempts`
 
+{:.info}
+> **Deprecated.** Use `kong.keg.kafka.policy.invocations` instead.
+
 |Type      |Unit      |
 |:---------|:---------|
 |Counter   |N/A       |
 
 
-**Description:** DEPRECATED - Use kong.keg.kafka.policy.invocations instead. The number of attempts to decrypt records. This includes both successful and failed calls
+**Description:** The number of attempts to decrypt records. This includes both successful and failed calls
 
 **Labels:**
 
@@ -173,12 +176,15 @@ No labels documented.
 
 ### `kong.keg.kafka.encrypt.attempts`
 
+{:.info}
+> **Deprecated.** Use `kong.keg.kafka.policy.invocations` instead.
+
 |Type      |Unit      |
 |:---------|:---------|
 |Counter   |N/A       |
 
 
-**Description:** DEPRECATED - Use kong.keg.kafka.policy.invocations instead. The number of attempts to encrypt records. This includes both successful and failed calls
+**Description:** The number of attempts to encrypt records. This includes both successful and failed calls
 
 **Labels:**
 
@@ -191,12 +197,15 @@ No labels documented.
 
 ### `kong.keg.kafka.kscheme.attempts`
 
+{:.info}
+> **Deprecated.** Use `kong.keg.kafka.policy.invocations` instead.
+
 |Type      |Unit      |
 |:---------|:---------|
 |Counter   |N/A       |
 
 
-**Description:** DEPRECATED - Use kong.keg.kafka.policy.invocations instead. The number of attempts to run kscheme scripts. This includes both successful and failed calls
+**Description:** The number of attempts to run kscheme scripts. This includes both successful and failed calls
 
 **Labels:**
 
@@ -443,12 +452,15 @@ No labels documented.
 
 ### `kong.keg.kafka.schema.validation.attempts`
 
+{:.info}
+> **Deprecated.** Use `kong.keg.kafka.policy.invocations` instead.
+
 |Type      |Unit      |
 |:---------|:---------|
 |Counter   |N/A       |
 
 
-**Description:** DEPRECATED - Use kong.keg.kafka.policy.invocations instead. The number of attempts to validate schema. This includes both successful and failed calls
+**Description:** The number of attempts to validate schema. This includes both successful and failed calls
 
 **Labels:**
 
@@ -479,6 +491,9 @@ No labels documented.
 ## Konnect
 
 ### `kong.keg.konnect.analytics.bytes.sent`
+
+{:.info}
+> **Deprecated.** Use `kong.keg.konnect.analytics.sent` instead: the standard unit `By` belongs in metric metadata, not in the name.
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -525,6 +540,19 @@ No labels documented.
 
 
 **Description:** Total number of events added to the queue
+
+**Labels:**
+
+No labels documented.
+
+### `kong.keg.konnect.analytics.sent`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Counter   |`by`      |
+
+
+**Description:** Total bytes sent in binary websocket messages to the analytics endpoint
 
 **Labels:**
 

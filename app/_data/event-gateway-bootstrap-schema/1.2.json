@@ -148,8 +148,8 @@
             "type": "string"
           },
           "default": [
-            "[::1]:8080",
-            "127.0.0.1:8080"
+            "127.0.0.1:8080",
+            "[::1]:8080"
           ]
         }
       },
@@ -292,8 +292,33 @@
       ]
     },
     "TracesSampler": {
-      "description": "Trace sampler strategy.\n\nCorresponds to the `OTEL_TRACES_SAMPLER` environment variable defined in the\n[OpenTelemetry SDK environment variables specification](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/#general-sdk-configuration).\n\nCurrently only `parentbased_traceidratio` is supported.\nThis field exists for spec compliance. Support for additional samplers may be added\nin future releases.",
+      "description": "Trace sampler strategy.\n\nCorresponds to the `OTEL_TRACES_SAMPLER` environment variable defined in the\n[OpenTelemetry SDK environment variables specification](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/#general-sdk-configuration).",
       "oneOf": [
+        {
+          "description": "Always-On sampler",
+          "type": "string",
+          "const": "always_on"
+        },
+        {
+          "description": "Always-Off sampler",
+          "type": "string",
+          "const": "always_off"
+        },
+        {
+          "description": "Trace ID ratio-based sampler.",
+          "type": "string",
+          "const": "traceidratio"
+        },
+        {
+          "description": "Parent-based Always-On sampler.",
+          "type": "string",
+          "const": "parentbased_always_on"
+        },
+        {
+          "description": "Parent-based Always-Off sampler.",
+          "type": "string",
+          "const": "parentbased_always_off"
+        },
         {
           "description": "Parent-based trace ID ratio sampler.",
           "type": "string",
