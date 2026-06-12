@@ -25,7 +25,7 @@ services:
 EOF
 ```
 
-Export your OAuth token:
+(Optional) If your `/openai` Route is protected by an auth plugin, export an access token that the agent can use when calling it:
 
 ```sh
 export DECK_OAUTH_TOKEN=your-kong-oauth-token
