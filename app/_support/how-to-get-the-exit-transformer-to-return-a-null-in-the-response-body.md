@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: Disclaimer - review the untrusted_lua configuration reference before updating this on your environment
+  - text: "Disclaimer - review the `untrusted_lua` configuration reference before updating this on your environment"
     url: /gateway/configuration/#untrusted-lua
 tldr:
   q: How do I configure the Exit Transformer plugin to return a field with a null value in the response body?

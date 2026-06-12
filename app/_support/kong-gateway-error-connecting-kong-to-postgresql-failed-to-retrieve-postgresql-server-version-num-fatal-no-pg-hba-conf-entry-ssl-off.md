@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}}: Error connecting Kong to PostgreSQL: \"Failed to retrieve PostgreSQL server_version_num: FATAL: No pg_hba.conf entry\" & \"ssl off\" or \"no encryption\""
+title: "{{site.base_gateway}}: Error connecting Kong to PostgreSQL: `Failed to retrieve PostgreSQL server_version_num: FATAL: No pg_hba.conf entry` & \"ssl off\" or \"no encryption\""
 content_type: support
 description: This error occurs when Kong connects to the PostgreSQL DB server without SSL, but the server requires SSL connections.
 products:
@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Why do I get \"Failed to retrieve PostgreSQL server_version_num: FATAL: no pg_hba.conf entry\" with \"SSL off\" or \"no encryption\" when connecting Kong to PostgreSQL?"
+  q: "Why do I get `Failed to retrieve PostgreSQL server_version_num: FATAL: no pg_hba.conf entry` with \"SSL off\" or \"no encryption\" when connecting Kong to PostgreSQL?"
   a: |
     This error occurs when Kong connects to the PostgreSQL server without SSL, but the server requires SSL
     connections. The recommended fix is to configure Kong to connect using SSL by setting `pg_ssl` to `on`,

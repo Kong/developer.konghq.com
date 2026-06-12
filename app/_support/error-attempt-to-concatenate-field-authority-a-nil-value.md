@@ -15,7 +15,7 @@ tldr:
     (`KONG_ADMIN_GUI_URL=127.0.0.1:8002`). Set it to a valid value using the format
     `<scheme>://<IP / HOSTNAME>(:<PORT>)`, for example `KONG_ADMIN_GUI_URL=http://127.0.0.1:8002`.
 related_resources:
-  - text: "{{site.base_gateway}} admin_gui_url configuration"
+  - text: "{{site.base_gateway}} `admin_gui_url` configuration"
     url: /gateway/configuration/#admin-gui-url
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: "Getting \"This instance contains workspaced entities that need a custom migration\" in helm upgrade"
+title: "Getting `This instance contains workspaced entities that need a custom migration` in Helm upgrade"
 content_type: support
 description: "This error during a Helm upgrade usually means you are using an older chart version; update the Helm repo and rerun the upgrade."
 products:
@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why does my Helm upgrade fail with "This instance contains workspaced entities that need a custom migration"?
+  q: "Why does my Helm upgrade fail with `This instance contains workspaced entities that need a custom migration`?"
   a: |
     This error during the `helm upgrade` is usually because you are using an older chart version.
     Update the Helm repo locally with `helm repo update`, then rerun the upgrade, for example:

@@ -1,5 +1,5 @@
 ---
-title: "Error: \"nginx_kong.lua:9: '=' expected near 'customformat'\" when using a custom log_format"
+title: "Error: `nginx_kong.lua:9: '=' expected near 'customformat'` when using a custom `log_format`"
 content_type: support
 description: This can occur when attempting to use `log_format` outside the http context.
 products:
@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Why do I get \"nginx_kong.lua:9: '=' expected near 'customformat'\" when using a custom log_format?"
+  q: "Why do I get `nginx_kong.lua:9: '=' expected near 'customformat'` when using a custom `log_format`?"
   a: |
     This occurs when `log_format` is placed outside the `http` context in a custom nginx template —
     `log_format` can only be used within the `http` context. When using a custom template, properly

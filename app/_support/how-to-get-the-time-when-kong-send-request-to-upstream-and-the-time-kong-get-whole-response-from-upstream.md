@@ -24,7 +24,7 @@ related_resources:
     url: /plugins/pre-function/
   - text: post-function plugin configuration
     url: /plugins/post-function/
-  - text: untrusted_lua_sandbox_requires
+  - text: "`untrusted_lua_sandbox_requires`"
     url: /gateway/configuration/#untrusted-lua-sandbox-requires
 ---
 

@@ -17,9 +17,9 @@ tldr:
     or turn off the sandbox by setting `untrusted_lua` to `on`. Allowing modules or disabling the
     sandbox can create opportunities to escape it, so proceed with caution.
 related_resources:
-  - text: untrusted_lua_sandbox_requires
+  - text: "`untrusted_lua_sandbox_requires`"
     url: /gateway/configuration/#untrusted-lua-sandbox-requires
-  - text: untrusted_lua
+  - text: "`untrusted_lua`"
     url: /gateway/configuration/#untrusted-lua
 ---
 
