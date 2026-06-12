@@ -115,7 +115,7 @@ rows:
           config:
             title: Voice AI endpoints
             description: Proxy voice-to-text and text-to-speech AI services with governance.
-            icon: /assets/icons/mic.svg
+            icon: /assets/icons/ai.svg
             cta:
               url: /cookbooks/voice-ai/
               align: end
