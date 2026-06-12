@@ -1,7 +1,7 @@
 ---
 title: "{{ site.konnect_short_name }} Gateway Service integration in {{ site.data.products.insomnia.name }}"
 
-description: "Link {{ site.konnect_short_name }} to send requests from {{ site.data.products.insomnia.name }} to Routes in your Gateway Services.
+description: "Link {{ site.konnect_short_name }} to send requests from {{ site.data.products.insomnia.name }} to Routes in your Gateway Services."
 
 content_type: reference
 layout: reference
