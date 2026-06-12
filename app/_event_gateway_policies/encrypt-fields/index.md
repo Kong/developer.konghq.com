@@ -29,7 +29,7 @@ categories:
 
 related_resources:
   - text: Decrypt fields policy
-    url: /event-gateway/policies/decrypt_fields/
+    url: /event-gateway/policies/decrypt-fields/
   - text: Virtual clusters
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies

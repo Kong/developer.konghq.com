@@ -164,7 +164,7 @@ rows:
     nested: |
       * [Modify Headers](/event-gateway/policies/modify-headers/)
       * [Skip Records](/event-gateway/policies/skip-record/)
-      * [Decrypt fields](/event-gateway/policies/encrypt-fields/)
+      * [Decrypt fields](/event-gateway/policies/decrypt-fields/)
     
 {% endtable %}
 <!--vale on-->

@@ -12,7 +12,7 @@ tags:
 
 schema:
   api: konnect/event-gateway
-  path: /schemas/EventGatewayDecryptPolicy
+  path: /schemas/EventGatewayParsedRecordDecryptFieldsPolicy
 
 api_specs:
   - konnect/event-gateway
