@@ -18,11 +18,9 @@ tags:
 
 plugins:
   - opentelemetry
-  - ai-proxy
-  - ai-proxy-advanced
 
 min_version:
-  ai-gateway: '2.0.0'
+  ai-gateway: '2.0'
 
 tech_preview: true
 toc_depth: 2
@@ -34,12 +32,8 @@ related_resources:
     url: /ai-gateway/llm-open-telemetry/
   - text: "Monitor AI LLM metrics (Prometheus)"
     url: /ai-gateway/monitor-ai-llm-metrics/
-  - text: "Proxy A2A agents through {{site.ai_gateway}}"
-    url: /how-to/proxy-a2a-agents/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
   - text: OpenTelemetry plugin
     url: /plugins/opentelemetry/
   - text: Full OpenTelemetry metrics reference
@@ -48,7 +42,6 @@ related_resources:
     url: /gateway/tracing/
 
 works_on:
-  - on-prem
   - konnect
 ---
 
