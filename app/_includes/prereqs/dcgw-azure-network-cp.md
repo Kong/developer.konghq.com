@@ -11,7 +11,7 @@ First, make a GET request to the {{site.konnect_short_name}} Cloud Gateways API 
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/cloud-gateways/provider-accounts?filter%5Bprovider%5D%5Beq%5D=azure
-status_code: 201
+status_code: 200
 region: global
 method: GET
 headers:
@@ -34,9 +34,6 @@ Use a supported `region`, its `availability_zones`, and a CIDR subnet inside one
 
 ```hcl
 echo '
-data "konnect_cloud_gateway_provider_account_list" "my_cloudgatewayprovideraccountlist" {
-}
-
 resource "konnect_cloud_gateway_network" "my_cloudgatewaynetwork" {
   name   = "Terraform Network"
   region = "eastus2"

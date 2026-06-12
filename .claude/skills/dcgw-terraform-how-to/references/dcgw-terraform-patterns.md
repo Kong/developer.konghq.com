@@ -17,7 +17,7 @@ Reference for drafting Terraform-based Dedicated Cloud Gateways how-tos. Read th
 
 ## Frontmatter schema and template
 
-Frontmatter is validated against `app/_data/schemas/frontmatter/how_to.json` (which extends `base.json`). Required fields for a how-to: `tldr` (with `q` and `a`), `content_type`, `title`, `products`, `permalink`.
+Frontmatter is validated against `app/_data/schemas/frontmatter/how_to.json` (which extends `base.json`). Schema-required fields for a how-to: `tldr` (with `q` and `a`), `content_type`, `title`, `products`, `permalink`; repo convention is to also include `description` and, for DCGW Terraform how-tos, `works_on: [konnect]` and `tools: [terraform]`.
 
 DCGW conventions:
 - `permalink: /dedicated-cloud-gateways/<slug>/`
