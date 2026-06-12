@@ -35,8 +35,8 @@ if not keys then
    kong.log.err("cannot fetch keys in shared dict! ", err)
 else
    kong.log.err("keys retrieved: ", #keys)
-   for k, v in pairs(keys) do
-       kong.log.err(k, v)
+   for _, key in ipairs(keys) do
+       kong.log.err(key)
    end
 end
 kong.log.err("PRE FUNCTION ENDED")
@@ -58,8 +58,8 @@ config:
       kong.log.err("cannot fetch keys in shared dict! ", err)
     else
       kong.log.err("keys retrieved: ", #keys)
-      for k, v in pairs(keys) do
-        kong.log.err(k, v)
+      for _, key in ipairs(keys) do
+        kong.log.err(key)
       end
     end
     kong.log.err("PRE FUNCTION ENDED")
@@ -70,10 +70,10 @@ The result in the Kong log:
 
 ```text
 2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:6 [pre-function] keys retrieved: 4, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
-2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] 1jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669469|1|172.18.0.1|diff, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
+2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669469|1|172.18.0.1|diff, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 2023/02/06 07:44:30 [error] 2209#0: *991 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:1 [pre-function] PRE FUNCTION EXECUTED, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
-2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] 2jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669469|1|172.18.0.1|sync, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
-2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] 3jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669470|1|172.18.0.1|diff, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
-2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] 4jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669470|1|172.18.0.1|sync, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
+2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669469|1|172.18.0.1|sync, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
+2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669470|1|172.18.0.1|diff, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
+2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669470|1|172.18.0.1|sync, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:11 [pre-function] PRE FUNCTION ENDED, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 ```
