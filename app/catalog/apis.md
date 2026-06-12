@@ -483,7 +483,7 @@ Once published, the API appears in the selected {{site.dev_portal}}. If [user au
 
 ### Allow developers to try requests from the {{site.dev_portal}} spec renderer
 
-When you upload a spec for your API to {{site.dev_portal}}, you can use the **Try it!** feature to allow developers to try your API right from {{site.dev_portal}}. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in {{site.dev_portal}} and send the request with their configuration. 
+When you upload a spec for your API to {{site.dev_portal}}, you can use the **Try it!** feature to allow developers to try your API right from {{site.dev_portal}}. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in {{site.dev_portal}} and send the live request with their configuration.
 
 The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). 
 
@@ -538,6 +538,54 @@ components:
         clientCredentials:
           tokenUrl: 'https://example.com/oauth/token'
 ```
+
+#### Spec renderer feature support
+
+The following table describes additional supported features of the spec renderer in {{site.dev_portal}}:
+
+{% table %}
+columns:
+  - title: Feature
+    key: feature
+  - title: Details
+    key: details
+rows:
+  - feature: Try it! console
+    details: |
+      * Developers can click **Open in Insomnia** for any operation. This is enabled by default and can be separately hidden from the in-browser console.
+      * Supports multiple servers.
+      * Supports custom server URLs.
+  - feature: Code samples
+    details: |
+      * Autogenerates request snippets in eight languages: Shell (cURL), Python, Node, JavaScript, Go, Java, C#, and Ruby
+      * Custom code examples aren't supported.
+  - feature: Endpoints and operations
+    details: |
+      * Per-operation deep links. You can copy link anchors to share a direct URL to an operation.
+      * Tag-based grouping of operations and tag/attribute filtering of APIs in the {{site.dev_portal}} sidebar.
+      * Specify internal endpoints (with `x-internal`) with an option to hide them from the rendered docs.
+      * Badges for deprecated endpoints with an option to hide deprecated operations.
+      * Multiple named request/response examples (renders the OpenAPI `examples` object).
+  - feature: Schema and model rendering
+    details: |
+      * Dedicated schemas/models section that can be hidden.
+      * Expandable nested schemas with a configurable default expansion depth.
+      * Constraint display: `enum` (shown as badges), `pattern`, min/max, lengths, `multipleOf`, `default`, `additionalProperties`, and array item types.
+      * Schema composition (for example, `allOf`).
+  - feature: Servers and security
+    details: |
+      * Developers can select servers from a list with support for server variables (templated server URLs).
+      * Security scheme rendering (such as, API key and OAuth2 flows).
+  - feature: AsyncAPI
+    details: |
+      * Supports channels, operations, and messages/payloads.
+      * Supports protocol bindings at the server, channel, operation, and message levels.
+      * Supports Avro/multi-format schema payloads.
+  - feature: Display and download
+    details: |
+      * Developers can download specs from a button that supports YAML or JSON output.
+      * Collapsible sections. You can choose either previous and next navigation buttons or continuous scrolling.
+{% endtable %}
 
 ### Filtering published APIs in {{site.dev_portal}}
 
