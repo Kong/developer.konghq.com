@@ -55,8 +55,10 @@ related_resources:
 prereqs:
   entities:
     services:
+      - openai
       - a2a-kongair-agent
     routes:
+      - openai-route
       - a2a-kongair-route
   inline:
     - title: OpenAI API key
