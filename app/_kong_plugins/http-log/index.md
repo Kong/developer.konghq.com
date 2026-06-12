@@ -100,7 +100,7 @@ and the log server presents its certificate to {{site.base_gateway}}.
 
 To use mTLS for HTTP logging:
 1. Create a [Certificate](/gateway/entities/certificate/) entity in {{site.base_gateway}} containing the client certificate and private key that {{site.base_gateway}} will present to the log server.
-1. Configure the plugin's [`client_certificate`](/plugins/http-log/reference/#schema--config-client-certificate) parameter to reference that Certificate entity by ID.
+1. Configure the plugin's [`config.client_certificate`](/plugins/http-log/reference/#schema--config-client-certificate) parameter to reference that Certificate entity by ID.
 1. Configure {{site.base_gateway}} to trust the CA that signed the log server's certificate by setting `lua_ssl_trusted_certificate` in `kong.conf`, or the `KONG_LUA_SSL_TRUSTED_CERTIFICATE` environment variable.
 
 For more information, see:
