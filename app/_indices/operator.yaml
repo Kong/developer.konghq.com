@@ -64,6 +64,9 @@ groups:
           - path: /operator/dataplanes/how-to/deploy-custom-plugins/
           - path: /operator/dataplanes/how-to/handle-ingress/
           - path: /operator/dataplanes/how-to/configure-plugins-for-httproute/
+          - path: /operator/dataplanes/how-to/set-timeouts-and-retries/
+          - path: /operator/dataplanes/how-to/set-host-header/
+          - path: /operator/dataplanes/how-to/configure-upstream-policy/
       - title: Observability
         items:
           - path: /operator/dataplanes/reference/metrics/operator/
@@ -74,6 +77,7 @@ groups:
           - path: /operator/dataplanes/reference/podtemplatespec/
           - path: /operator/dataplanes/reference/autoscale-gateway/
           - path: /operator/dataplanes/reference/autoscale-workloads/
+          - path: /operator/dataplanes/reference/service-annotations/
       - title: Upgrading
         items:
           - path: /operator/migrate/migrate-1.6.x-2.0.0/
