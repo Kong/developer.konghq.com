@@ -72,9 +72,7 @@ faqs:
 Add the Request Termination plugin to your Route with a `condition` expression. 
 In this example, the plugin only triggers when the request includes the header `x-block: true`, and blocks the request. 
 Requests without this header are proxied to the upstream service.
-
-<!-- decK doesn't support this yet -->
-<!-- {% entity_examples %}
+{% entity_examples %}
 entities:
   plugins:
     - name: request-termination
@@ -83,24 +81,7 @@ entities:
         status_code: 403
         message: "Forbidden by condition"
       condition: 'http.headers.x_block == "true"'
-{% endentity_examples %} -->
-
-<!--vale off-->
-{% control_plane_request %}
-url: /routes/example-route/plugins
-method: POST
-status_code: 201
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
-body:
-  name: request-termination
-  config:
-    status_code: 403
-    message: "Forbidden by condition"
-  condition: "http.headers.x_block == \"true\""
-{% endcontrol_plane_request %}
-<!--vale on-->
+{% endentity_examples %}
 
 {:.info}
 > Header names are always normalized to lowercase with hyphens replaced by underscores.
