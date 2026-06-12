@@ -11,7 +11,8 @@ extended_description: |
   Use `max_structured_errors` to cap the number of errors returned.
   Any errors over the cap are discarded.
 
-min_version: '3.15'
+min_version:
+  gateway: '3.15'
 
 weight: 850
 
