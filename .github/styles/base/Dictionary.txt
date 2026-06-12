@@ -34,6 +34,8 @@ AppRole
 appsentinels
 arg
 args
+ARN
+ARNs
 arya
 assumeRole
 async
