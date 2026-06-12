@@ -258,5 +258,13 @@
       },
       "type": "object"
     }
-  }
+  },
+  "x-supported-partials": [
+    {
+      "name": "redis-ce",
+      "paths": [
+        "config.redis"
+      ]
+    }
+  ]
 }

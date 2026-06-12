@@ -193,6 +193,13 @@ rows:
       This upgrade changes the expected regex syntax, and any incompatible regular expressions will prevent {{site.base_gateway}} from applying configuration.
     action: |
       Review all regexes in your entity configuration and adjust based on the [PCRE2 syntax reference](https://www.pcre.org/current/doc/html/pcre2syntax.html).
+  - category: Dependencies
+    description: |
+      OpenResty was bumped from 1.21.4.2 to 1.25.3.1, picking up stricter header validation from Nginx.
+       Starting from 1.23.2, Nginx strictly enforces [RFC 9112](https://datatracker.ietf.org/doc/html/rfc9112) and treats upstream responses that contain duplicate `Content-Length` headers, duplicate `Transfer-Encoding` headers, or both headers as invalid, returning a `502 Bad Gateway`.
+    action: |
+      Ensure that your upstream services don't emit duplicate `Content-Length`/`Transfer-Encoding` headers or both headers in the same response. 
+      If both headers exist in the response, remove the redundant `Transfer-Encoding` header.
 {% endtable %}
 
 
@@ -273,5 +280,5 @@ rows:
       Free mode is deprecated and will be removed in a future 3.x version of {{site.ee_product_name}}.
       At that point, running {{site.base_gateway}} without a license will behave the same as running it with an expired license.
     action: |
-      Try out [{{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=upgrade-guide), or reach out to [Kong Sales](https://konghq.com/contact-sales?utm_medium=referral&utm_source=docs&utm_content=upgrade-guide) for a demo.
+      Try out [{{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=upgrade-guide), or reach out to [Kong Sales](https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=upgrade-guide) for a demo.
 {% endtable %}

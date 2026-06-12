@@ -7,7 +7,7 @@
 {% assign name = plugin.name %}
 {% if plugin.act_as_plugin %}{% assign name = plugin.act_as_plugin_name %}{% endif %}
 <div
-  class="card card__bordered min-h-[260px]"
+  class="card card__highlighted min-h-[260px]"
   data-card="plugin"
   data-category="{{plugin.categories | join: ','}}"
   data-deployment-topology="{{plugin.works_on | join: ','}}"
@@ -17,7 +17,7 @@
   {% if plugin.tier %}data-tier="{{plugin.tier}}"{% endif %}
 >
     <a href="{{plugin.url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
-        <img src="{{ plugin.icon }}" class="w-8 h-8"/>
+        <img src="{{ plugin.icon }}" class="card__icon"/>
 
         <div class="flex flex-col gap-3 flex-grow">
             <h4>{{ name | liquify }}</h4>

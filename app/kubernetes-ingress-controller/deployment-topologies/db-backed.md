@@ -47,11 +47,11 @@ flowchart LR
 
 A[<img src="/assets/icons/kubernetes.svg" style="max-height:20px"> API Server]
 KIC1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC 
-&lpar;Active&rpar;]
+&amp;lpar;Active&amp;rpar;]
 KIC2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
-&lpar;Standby&rpar;]
+&amp;lpar;Standby&amp;rpar;]
 KIC3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
-&lpar;Standby&rpar;]
+&amp;lpar;Standby&amp;rpar;]
 DP1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
 DP2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
 DP3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
@@ -101,11 +101,11 @@ flowchart LR
 
 A[<img src="/assets/icons/kubernetes.svg" style="max-height:20px"> API Server]
 KIC1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC 
-&lpar;Active&rpar;]
+&amp;lpar;Active&amp;rpar;]
 KIC2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
-&lpar;Standby&rpar;]
+&amp;lpar;Standby&amp;rpar;]
 KIC3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
-&lpar;Standby&rpar;]
+&amp;lpar;Standby&amp;rpar;]
 CP[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane]
 DP1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
 DP2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]

@@ -42,7 +42,7 @@ A TLS trust bundle is a collection of trusted CA certificates that {{site.event_
 
 Trust bundles can contain:
 * **Literal PEM certificates**: The CA certificate is stored directly. Literal values are encrypted at rest and omitted from API responses.
-* **Vault or environment references**: A template expression like `${env['MY_CA_CERT']}` that is resolved at runtime by the data plane.
+* **Environment references**: A template expression like `${env['MY_CA_CERT']}` that is resolved at runtime by the data plane.
 
 Trust bundles are evaluated in order. Verification stops at the first trust bundle that successfully validates the client certificate chain. If no trust bundle validates the certificate, the connection is closed when the client authentication mode is `required`.
 

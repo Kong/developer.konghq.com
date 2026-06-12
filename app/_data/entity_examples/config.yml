@@ -133,6 +133,7 @@ formats:
       listener:        '/listeners'
       schema_registry: '/schema-registries'
       static_key:      '/static-keys'
+      tls_trust_bundle: '/tls-trust-bundles'
     ai_endpoints:
       model:           '/models'
       policy:          '/policies'

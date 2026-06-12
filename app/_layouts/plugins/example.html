@@ -6,7 +6,7 @@ layout: plugins/without_aside
   <nav class="hidden md:flex gap-8 basis-1/4">
     <div class="flex gap-3 flex-col">
       {% if page.basic_examples != empty %}
-      <div class="text-sm text-brand font-semibold">Basic use cases</div>
+      <div class="text-sm text-links font-semibold">Basic use cases</div>
       <ul class="tabcolumn">
         {% for example in page.basic_examples %}
           <li>
@@ -16,7 +16,7 @@ layout: plugins/without_aside
       </ul>
       {% endif %}
       {% for group_examples in page.examples_by_group %}
-        <div class="text-sm text-brand font-semibold">{{group_examples[0]}}</div>
+        <div class="text-sm text-links font-semibold">{{group_examples[0]}}</div>
         <ul class="tabcolumn">
           {% for example in group_examples[1] %}
             <li>

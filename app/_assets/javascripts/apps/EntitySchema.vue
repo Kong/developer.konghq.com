@@ -81,11 +81,11 @@ async function fetchSpec() {
 
 <style scoped>
 :deep(code) {
-  @apply bg-secondary rounded border border-brand-saturated/40 text-xs py-0 px-1 !important;
+  @apply bg-secondary rounded border border-primary text-xs py-0 px-1 !important;
 }
 
 :deep(.property-field-default-value) {
-  @apply bg-secondary rounded border border-brand-saturated/40 text-xs py-0 px-1 shadow-none !important;
+  @apply bg-secondary rounded border border-primary text-xs py-0 px-1 shadow-none !important;
 }
 
 :deep(.kui-icon.link-icon) {
@@ -96,7 +96,7 @@ async function fetchSpec() {
 :deep(.property-field-pattern-value),
 :deep(.property-field-enum-value),
 :deep(.property-field-example-value) {
-  @apply border border-brand-saturated/40 !important;
+  @apply border border-primary !important;
 }
 
 :deep(.default-markdown a[href^="http://"]),
