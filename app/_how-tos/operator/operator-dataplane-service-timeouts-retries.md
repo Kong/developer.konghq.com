@@ -59,12 +59,28 @@ kubectl annotate service httpbin -n kong \
 
 The annotations have the following effects:
 
-| Annotation | Value | Effect |
-|---|---|---|
-| `konghq.com/connect-timeout` | `3000` | {{site.base_gateway}} waits up to 3 seconds to establish a TCP connection |
-| `konghq.com/read-timeout` | `5000` | {{site.base_gateway}} waits up to 5 seconds for the upstream to send a response |
-| `konghq.com/write-timeout` | `5000` | {{site.base_gateway}} waits up to 5 seconds when sending data upstream |
-| `konghq.com/retries` | `3` | Failed requests are retried up to 3 times before returning an error |
+{% table %}
+columns:
+  - title: "Annotation"
+    key: "annotation"
+  - title: "Value"
+    key: "value"
+  - title: "Effect"
+    key: "effect"
+rows:
+  - annotation: "`konghq.com/connect-timeout`"
+    value: "`3000`"
+    effect: "{{site.base_gateway}} waits up to 3 seconds to establish a TCP connection"
+  - annotation: "`konghq.com/read-timeout`"
+    value: "`5000`"
+    effect: "{{site.base_gateway}} waits up to 5 seconds for the upstream to send a response"
+  - annotation: "`konghq.com/write-timeout`"
+    value: "`5000`"
+    effect: "{{site.base_gateway}} waits up to 5 seconds when sending data upstream"
+  - annotation: "`konghq.com/retries`"
+    value: "`3`"
+    effect: "Failed requests are retried up to 3 times before returning an error"
+{% endtable %}
 
 All timeout values are in milliseconds.
 

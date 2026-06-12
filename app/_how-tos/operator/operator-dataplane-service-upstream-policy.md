@@ -120,6 +120,7 @@ kubectl annotate service echo -n kong \
    Running on Pod echo-6d8f4c9b7-xk2vt.
    Running on Pod echo-6d8f4c9b7-xk2vt.
    ```
+{:.no-copy-code}
 
 1. Send requests with a different header value to confirm they land on a different Pod:
 

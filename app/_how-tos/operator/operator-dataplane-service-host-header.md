@@ -43,7 +43,7 @@ related_resources:
     url: /operator/dataplanes/reference/service-annotations/
 ---
 
-By default, {{site.base_gateway}} sets the `Host` header to the IP address of the individual Pod it is forwarding the request to. Some upstream services perform host-based virtual hosting or access control and require a specific `Host` header value. You can override this behavior using the `konghq.com/host-header` annotation.
+By default, {{site.base_gateway}} sets the `Host` header to the IP address of the individual Pod it forwards the request to. Some upstream services perform host-based virtual hosting or access control and require a specific `Host` header value. You can override this behavior using the `konghq.com/host-header` annotation.
 
 ## Check the default behavior
 
@@ -69,6 +69,7 @@ By default, {{site.base_gateway}} sets the `Host` header to the IP address of th
      }
    }
    ```
+{:.no-copy-code}
 
 ## Annotate the Service
 
@@ -97,6 +98,7 @@ The `Host` header in the upstream request now reflects the configured value:
   }
 }
 ```
+{:.no-copy-code}
 
 {:.info}
 > **Note**: If the client-side `Host` header must be preserved instead, use the `konghq.com/preserve-host: "true"` annotation on the `HTTPRoute` or `Ingress` resource. When `preserve-host` is set to `true`, it takes precedence over `konghq.com/host-header`.
