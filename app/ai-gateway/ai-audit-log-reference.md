@@ -19,16 +19,16 @@ description: "{{site.ai_gateway}} provides a standardized logging format for AI 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "{{site.base_gateway}} logs"
-    url: /gateway/logs/
+  - text: "{{site.ai_gateway}} logs"
+    url: /ai-gateway/ai-logs/
 
 works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} emits structured analytics logs for [AI plugins](/plugins/?category=ai) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/gateway/logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment. 
+{{site.ai_gateway}} emits structured analytics logs for [AI plugins](/plugins/?category=ai) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment. 
 
-You can set the [global log level](/gateway/logs/#configure-log-levels) for {{site.ai_gateway}} via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
+You can set the [global log level](/ai-gateway/ai-logs/#configure-log-levels) for {{site.ai_gateway}} via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
 
 When operating {{site.ai_gateway}} alongside {{site.base_gateway}}, logs are stored separately in each products run time environment.
 
