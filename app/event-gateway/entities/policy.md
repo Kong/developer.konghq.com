@@ -159,12 +159,12 @@ rows:
   - parent: "[Schema Validation produce](/event-gateway/policies/schema-validation-produce/)"
     nested: |
       * [Modify Headers](/event-gateway/policies/modify-headers/)
-      * [Encrypt fields](/event-gateway/policies/encrypt-fields/)
+      * [Encrypt Fields](/event-gateway/policies/encrypt-fields/)
   - parent: "[Schema Validation consume](/event-gateway/policies/schema-validation-consume/)"
     nested: |
       * [Modify Headers](/event-gateway/policies/modify-headers/)
       * [Skip Records](/event-gateway/policies/skip-record/)
-      * [Decrypt fields](/event-gateway/policies/decrypt-fields/)
+      * [Decrypt Fields](/event-gateway/policies/decrypt-fields/)
     
 {% endtable %}
 <!--vale on-->

@@ -1,8 +1,8 @@
 ---
-title: Encrypt fields
-name: Encrypt fields
+title: Encrypt Fields
+name: Encrypt Fields
 content_type: plugin
-description: Encrypt fields of Kafka records
+description: Encrypt fields of Kafka records.
 products:
     - event-gateway
 works_on:
@@ -28,7 +28,7 @@ categories:
   - security
 
 related_resources:
-  - text: Decrypt fields policy
+  - text: Decrypt Fields policy
     url: /event-gateway/policies/decrypt-fields/
   - text: Virtual clusters
     url: /event-gateway/entities/virtual-cluster/
@@ -38,17 +38,20 @@ related_resources:
     url: /event-gateway/entities/static-key/
   - text: Encrypt and decrypt Kafka message fields with {{site.event_gateway}}
     url: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
+
+min_version:
+  event-gateway: '1.2'
 ---
 
-This Encrypt fields policy is used to encrypt fields of Kafka messages that
-have been validated to conform to a schema.
-The Encrypt fields policy uses AES-256-GCM for encryption, therefore keys must be 256 bits long.
+The Encrypt Fields policy is used to encrypt fields of Kafka messages that have been validated to conform to a schema.
 
-Use this policy together with the [Decrypt fields policy](/event-gateway/policies/decrypt-fields/), which decrypts fields of a message using the same referenced key, to enforce standards for encryption across {{site.event_gateway}} clients.
+This policy uses AES-256-GCM for encryption, therefore keys must be 256 bits long.
+
+Use the Encrypt Fields policy together with the [Decrypt Fields policy](/event-gateway/policies/decrypt-fields/), which decrypts fields of a message using the same referenced key, to enforce standards for encryption across {{site.event_gateway}} clients.
 
 ## Use cases
 
-Common use cases for the Encrypt fields policy:
+Common use cases for the Encrypt Fields policy:
 
 <!--vale off-->
 {% table %}

@@ -36,3 +36,6 @@ tools:
   - konnect-api
   - terraform
   - kongctl
+
+min_version:
+  event-gateway: '1.2'

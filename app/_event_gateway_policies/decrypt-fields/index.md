@@ -1,8 +1,8 @@
 ---
-title: Decrypt fields
-name: Decrypt fields
+title: Decrypt Fields
+name: Decrypt Fields
 content_type: plugin
-description: Decrypt fields of Kafka message that were previously encrypted using the referenced key
+description: Decrypt fields of a Kafka message that were previously encrypted using the referenced key.
 products:
     - event-gateway
 works_on:
@@ -38,12 +38,15 @@ categories:
   - security
 
 icon: graph.svg
+
+min_version:
+  event-gateway: '1.2'
 ---
 
-The Decrypt policy decrypts fields of Kafka messages that were previously encrypted using a referenced key.  
+The Decrypt Policy decrypts fields of Kafka messages that were previously encrypted using a referenced key.  
 Use this policy to enforce consistent decryption standards across {{site.event_gateway}} clients.
 
-This policy uses **AES-256-GCM** for decryption, which requires keys to be **256 bits** in length.
+This policy uses AES-256-GCM for decryption, therefore keys must be 256 bits long.
 
 Use this policy together with the [Encrypt fields policy](/event-gateway/policies/encrypt-fields/), which encrypts fields of a message using the same referenced key.
 

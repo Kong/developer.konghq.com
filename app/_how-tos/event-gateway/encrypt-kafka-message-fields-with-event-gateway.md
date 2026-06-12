@@ -48,12 +48,17 @@ related_resources:
     url: /event-gateway/
   - text: Static keys
     url: /event-gateway/entities/static-key/
-  - text: Encrypt fields policy
+  - text: Encrypt Fields policy
     url: /event-gateway/policies/encrypt-fields/
-  - text: Decrypt fields policy
+  - text: Decrypt Fields policy
     url: /event-gateway/policies/decrypt-fields/
+  - text: Encrypt and decrypt Kafka messages
+    url: /event-gateway/encrypt-kafka-messages-with-event-gateway/
 ---
 
+{:.info}
+> If you need to encrypt and decrypt whole Kafka messages instead of specific fields, use the Decrypt and Encrypt policies. 
+See [Encrypt and decrypt Kafka messages](/event-gateway/encrypt-kafka-messages-with-event-gateway/) for a complete how-to guide.
 
 ## Configure a Kafka cluster
 
@@ -236,7 +241,8 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-The `value_validation_action: reject` setting ensures that the entire batch containing an invalid message is rejected, and the producer receives an error. Alternatively, you can use `mark`, which passes the message to the broker but adds a `kong/sverr-value` header to flag it as invalid.
+The `value_validation_action: reject` setting ensures that the entire batch containing an invalid message is rejected, and the producer receives an error. 
+Alternatively, you can use `mark`, which passes the message to the broker but adds a `kong/sverr-value` header to flag it as invalid.
 
 ## Add a field encryption policy
 
@@ -343,7 +349,7 @@ message produced (partition=0	offset=0)
 ```
 {:.no-copy-code}
 
-Now let's verify that the message was encrypted, by consuming the message directly.
+Now let's verify that the message was encrypted by consuming the message directly:
 
 {% validation custom-command %}
 command: |
@@ -355,7 +361,7 @@ render_output: false
 {% endvalidation %}
 
 You should see the following response:
-```shell
+```json
 {
 	"Partition": 0,
 	"Offset": 0,
@@ -369,7 +375,7 @@ You should see the following response:
 
 The field encryption policy appends a `kong/enc` header to each message. This header identifies the encryption key by its ID.
 
-Now let's verify that the field decryption policy works by consuming the message through the virtual cluster.
+Now let's verify that the field decryption policy works by consuming the message through the virtual cluster:
 
 {% validation custom-command %}
 command: |
@@ -380,9 +386,9 @@ expected:
 render_output: false
 {% endvalidation %}
 
-The output should look like:
+The output should look like this, with the value decrypted:
 
-```shell
+```json
 {"personal": {"ssn": "100-00-00001"}}
 ```
 {:.no-copy-code}

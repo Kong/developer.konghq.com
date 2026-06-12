@@ -12,7 +12,7 @@ extended_description: |
 requirements:
  - "A [static key](/event-gateway/entities/static-key/)."
  - "A corresponding [Encrypt fields policy](/event-gateway/policies/encrypt-fields/examples/encrypt-with-static-key/) that uses the static key.
-   Event Gateway uses the key reference in the message payload set by the Encrypt fields policy and looks for the actual key in `key_sources` to successfully decrypt."
+   {{site.event_gateway_short}} uses the key reference in the message payload set by the Encrypt fields policy and looks for the actual key in `key_sources` to successfully decrypt."
 
 weight: 900
 
@@ -30,3 +30,6 @@ tools:
   - konnect-api
   - terraform
   - kongctl
+
+min_version:
+  event-gateway: '1.2'

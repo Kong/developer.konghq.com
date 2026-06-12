@@ -1,6 +1,6 @@
 title: Encrypt fields with AWS Key Vault
 
-description: Use an AWS Key Vault to encrypt fields of message value.
+description: Use an AWS Key Vault to encrypt fields of a message value.
 
 weight: 900
 
@@ -33,3 +33,6 @@ tools:
   - konnect-api
   - terraform
   - kongctl
+
+min_version:
+  event-gateway: '1.2'
