@@ -2,9 +2,9 @@
 <div class="card card__highlighted min-h-[260px]">
     <a href="{{policy.url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
         {% if policy.icon %}
-        <img src="{{ policy.icon }}" class="card__icon"/>
+        <img src="{{ policy.icon }}" class="card__icon w-8 h-8"/>
         {% else %}
-        <div class="card__icon"></div>
+        <div class="card__icon w-8 h-8"></div>
         {% endif %}
 
         <div class="flex flex-col gap-3 flex-grow">
