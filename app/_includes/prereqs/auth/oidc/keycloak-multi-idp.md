@@ -31,7 +31,7 @@ The steps will be similar with other standard identity providers.
    export KEYCLOAK_HOST='localhost'
    ```
 
-   Because we're using Docker for this demo, we have to configure a few networking parameters:
+   Because we're using Docker for this demo, we must configure a few networking parameters:
    * `DECK_REALM_A_ISSUER` and `DECK_REALM_B_ISSUER` use `localhost` because that's how you access Keycloak from your machine.
    * `DECK_REALM_A_JWKS` and `DECK_REALM_B_JWKS` use the container name `keycloak` because {{site.base_gateway}} runs inside Docker and reaches Keycloak over the shared `kong-quickstart-net` network.
 
@@ -67,14 +67,14 @@ rows:
   - section: "**Capability config**"
     settings: |
       * Toggle **Client authentication** to **on**
-      * Make sure that **Service accounts roles** is checked.
+      * Select the **Service accounts roles** checkbox.
 {% endtable %}
 <!--vale on-->
 
 Find the credentials for `client-a`:
 
 1. In the sidebar, open **Clients**, and select `client-a`.
-1. Open the **Credentials** tab.
+1. Click the **Credentials** tab.
 1. Set **Client Authenticator** to **Client ID and Secret**.
 1. Copy the **Client Secret**.
 1. Export the client secret to an environment variable:
@@ -113,7 +113,7 @@ rows:
   - section: "**Capability config**"
     settings: |
       * Toggle **Client authentication** to **on**
-      * Make sure that **Service accounts roles** is checked.
+      * Select the **Service accounts roles** checkbox.
 {% endtable %}
 <!--vale on-->
 

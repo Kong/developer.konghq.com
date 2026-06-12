@@ -187,7 +187,7 @@ rows:
   - error: Expired token
     log: "`invalid exp claim (<timestamp>) was specified for access token`"
     cause: |
-      The token's `exp` claim is in the past. Get a fresh token from the IdP.
+      The token's `exp` claim is in the past. Get a new token from the IdP.
   - error: Signature verification failure
     log: "`invalid signature (pkey:verify: ...)`"
     cause: |
