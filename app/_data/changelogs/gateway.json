@@ -22421,7 +22421,7 @@
         "scope": "Core"
       },
       {
-        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-40460, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
         "type": "bugfix",
         "scope": "Core"
       }
@@ -22447,7 +22447,7 @@
         "scope": "Core"
       },
       {
-        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-40460, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
         "type": "bugfix",
         "scope": "Core"
       }
@@ -22473,7 +22473,7 @@
         "scope": "Core"
       },
       {
-        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-40460, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
         "type": "bugfix",
         "scope": "Core"
       }
@@ -22499,7 +22499,7 @@
         "scope": "Core"
       },
       {
-        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-40460, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
         "type": "bugfix",
         "scope": "Core"
       }
@@ -22525,7 +22525,7 @@
         "scope": "Core"
       },
       {
-        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-40460, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
         "type": "bugfix",
         "scope": "Core"
       }
@@ -22551,7 +22551,7 @@
         "scope": "Core"
       },
       {
-        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-40460, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
         "type": "bugfix",
         "scope": "Core"
       }
@@ -22732,5 +22732,59 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.14.0.6": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for limiting the maximum number of headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.11.0.13": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for limiting the maximum number of headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.12.0.8": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for limiting the maximum number of headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.13.0.6": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for limiting the maximum number of headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.10.0.14": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for limiting the maximum number of headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.4.3.28": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for limiting the maximum number of headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
   }
 }

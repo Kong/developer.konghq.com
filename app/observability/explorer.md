@@ -61,6 +61,9 @@ faqs:
        - Download the chart view by selecting **Export CSV**. The file includes the current filters and time window.
   - q: Why don't I see any data in the Map chart view?
     a: If you're sending requests from an internal IP address (local), those won't display in the Map chart in {{site.observability}}, even if `konnect_mode` is off.
+  - q: What's the difference between the Kong latency and Kong internal latency metrics?
+    a: |
+      The Kong latency metric represents time spent within the Gateway and excludes upstream response time. In contrast, the Kong internal latency metric represents the Gateway's pure internal processing time, specifically the time between when the Gateway receives the request and when it sends the request to the upstream service. We strongly recommend using Kong internal latency to measure and monitor Kong's own latency.
   - q: |
       {% include faqs/metrics-endpoint.md section='question' %}
     a: |
@@ -137,6 +140,10 @@ rows:
     category: "Latency"
     description: |
       The time, in milliseconds, spent within {{site.base_gateway}} processing a request, excluding upstream response time. Users can choose from different percentiles (p99, p95, and p50). For example, a 99th percentile Kong latency of 10 milliseconds means that 99 out of 100 requests took less than 10 ms to be processed in {{site.base_gateway}} before reaching the upstream service.
+  - metric: "Kong internal latency"
+    category: "Latency"
+    description: |
+      {% new_in 3.14 %} The time, in milliseconds, it takes for {{site.base_gateway}} to receive the request and send it to the upstream service. Users can choose from average (avg) or different percentiles (p99, p95, and p50).
   - metric: "Request Size"
     category: "Size"
     description: |

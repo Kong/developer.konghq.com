@@ -17,6 +17,7 @@ class ProductsRenderer
     products.any? do |product|
       return true if page.respond_to?(:dir) && page.dir == '/'
       return true if page.url == '/how-to/'
+      return true if page.url == '/plugins/'
 
       case product
       when '*'
@@ -34,6 +35,7 @@ class ProductsRenderer
     products.any? do |product|
       return true if page.respond_to?(:dir) && page.dir == '/'
       return true if page.url == '/how-to/'
+      return true if page.url == '/plugins/'
 
       case product
       when '*'

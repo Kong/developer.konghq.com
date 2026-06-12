@@ -49,7 +49,12 @@ module.exports = {
       },
       colors: {
         brand: "rgb(var(--color-brand), <alpha-value>)",
-        "brand-saturated": "rgb(var(--color-brand-saturated), <alpha-value>)",
+        links: "rgb(var(--color-text-links), <alpha-value>)",
+        icon: "rgb(var(--color-icon-primary), <alpha-value>)",
+        "brand-saturated": ({ opacityValue, opacityVariable }) =>
+          opacityVariable === undefined && opacityValue !== undefined
+            ? `rgb(var(--color-brand-saturated), ${opacityValue})`
+            : `rgb(var(--color-brand-saturated), var(--opacity-brand-saturated, 1))`,
         "semantic-red-primary":
           "rgb(var(--color-semantic-red-primary), <alpha-value>)",
         "semantic-red-secondary":
@@ -82,19 +87,28 @@ module.exports = {
           "rgb(var(--color-semantic-teal-primary), <alpha-value>)",
         "semantic-teal-secondary":
           "rgb(var(--color-semantic-teal-secondary), <alpha-value>)",
+        "scroll-bar-thumb": "rgb(var(--color-scroll-bar-thumb), <alpha-value>)",
       },
       textColor: {
         primary: "rgb(var(--color-text-primary), <alpha-value>)",
         secondary: "rgb(var(--color-text-secondary), <alpha-value>)",
         terciary: "rgb(var(--color-text-terciary), <alpha-value>)",
+        links: "rgb(var(--color-text-links), <alpha-value>)",
+        button: "rgb(var(--color-text-button), <alpha-value>)",
+        "secondary-constant":
+          "rgb(var(--color-text-secondary-constant), <alpha-value>)",
       },
       borderColor: {
-        primary: "rgb(var(--color-border-primary), <alpha-value>)",
+        primary: ({ opacityValue, opacityVariable }) =>
+          opacityVariable === undefined && opacityValue !== undefined
+            ? `rgb(var(--color-border-primary), ${opacityValue})`
+            : `rgb(var(--color-border-primary), var(--opacity-border-primary, 1))`,
       },
       divideColor: {
         primary: "rgb(var(--color-border-primary), <alpha-value>)",
       },
       backgroundColor: {
+        header: "rgb(var(--color-bg-header), <alpha-value>)",
         primary: "rgb(var(--color-bg-primary), <alpha-value>)",
         secondary: "rgb(var(--color-bg-secondary), <alpha-value>)",
         terciary: "rgb(var(--color-bg-terciary), <alpha-value>)",
@@ -103,6 +117,7 @@ module.exports = {
           "rgb(var(--color-bg-code-block-header), <alpha-value>)",
         "hover-component":
           "rgb(var(--color-bg-hover-component), <alpha-value>)",
+        "icon-primary": "rgb(var(--color-icon-primary), <alpha-value>)",
       },
       boxShadow: {
         primary: "0 4px 12px 0 rgb(var(--color-shadow-primary))",

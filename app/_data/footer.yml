@@ -63,7 +63,7 @@ plugins:
     view_all:
       text: View all &rarr;
       url: /plugins/
-      cssClass: text-brand
+      cssClass: text-links
 
 
 how_tos:
@@ -84,7 +84,7 @@ how_tos:
     view_all:
       text: View all &rarr;
       url: /how-to/
-      cssClass: text-brand
+      cssClass: text-links
 
 support:
   title: Support

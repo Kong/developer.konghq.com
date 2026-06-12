@@ -1,13 +1,13 @@
 {% assign policy = include.policy %}
 <div
-  class="card card__bordered min-h-[260px]"
+  class="card card__highlighted min-h-[260px]"
   data-card="plugin"
   data-policy-target="{{policy.policy_target}}"
   data-phases="{{policy.phases | join: ','}}"
   data-category="{{policy.categories | join: ','}}"
 >
     <a href="{{policy.url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
-        <img src="{{ policy.icon }}" class="w-8 h-8"/>
+        {% include_svg policy.icon class="card__icon" %}
 
         <div class="flex flex-col gap-3 flex-grow">
             <h4>{{ policy.name | liquify }}</h4>

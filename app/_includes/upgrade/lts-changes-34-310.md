@@ -280,5 +280,5 @@ rows:
       Free mode is deprecated and will be removed in a future 3.x version of {{site.ee_product_name}}.
       At that point, running {{site.base_gateway}} without a license will behave the same as running it with an expired license.
     action: |
-      Try out [{{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=upgrade-guide), or reach out to [Kong Sales](https://konghq.com/contact-sales?utm_medium=referral&utm_source=docs&utm_content=upgrade-guide) for a demo.
+      Try out [{{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=upgrade-guide), or reach out to [Kong Sales](https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=upgrade-guide) for a demo.
 {% endtable %}
