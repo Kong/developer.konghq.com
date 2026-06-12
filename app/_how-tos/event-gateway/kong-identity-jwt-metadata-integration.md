@@ -41,6 +41,9 @@ prereqs:
     - title: Start a local Kafka cluster
       position: before
       include_content: knep/docker-compose-start
+    - title: Kong Identity directory
+      include_content: prereqs/kong-identity-directory
+      icon_url: /assets/icons/identity.svg
 
 cleanup:
   inline:
@@ -177,31 +180,9 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Create a Kong Identity directory
-
-A directory groups principals around an organizational boundary. Create one to hold the principals for this guide:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories
-status_code: 201
-method: POST
-body:
-  name: event-gateway-directory
-  description: Directory for Event Gateway principals
-  allow_all_control_planes: true
-extract_body:
-  - name: id
-    variable: DIRECTORY_ID
-capture:
-  - variable: DIRECTORY_ID
-    jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
 ## Create a principal with team metadata
 
-Create a principal in the directory and attach the `team` metadata. The Modify Headers policy will read this value at request time:
+Create a principal in the directory you created in the prerequisites and attach the `team` metadata. The Modify Headers policy will read this value at request time:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -242,9 +223,17 @@ body:
 
 For the `client_credentials` grant, Kong Identity sets the JWT `sub` claim to the client ID, so the identity's `claim.value` is the `CLIENT_ID` captured earlier.
 
-## Create the backend cluster
+## Connect the `event-gateway-quickstart` to the same network as Kafka
 
-Create a [backend cluster](/event-gateway/entities/backend-cluster/) pointing at the local Kafka brokers:
+Configure the `event-gateway-quickstart` container you created in the prerequisites to use the same network as your Kafka cluster:
+
+```sh
+docker network connect kafka_event_gateway event-gateway-quickstart
+```
+
+This allows the two containers to communicate.
+
+## Create the backend cluster
 
 <!--vale off-->
 {% include knep/create-backend-cluster.md insecure=true %}
@@ -271,7 +260,7 @@ body:
       jwks:
         endpoint: $ISSUER_URL/.well-known/jwks
       fetch_kong_identity_principal:
-        directory: event-gateway-directory
+        directory: kong-identity-directory
         failure_mode: error
 extract_body:
   - name: id
@@ -351,8 +340,8 @@ body:
 
 ## Configure kafkactl
 
-{:.warning}
-> This step requires a `kafkactl` version >= 5.17.0. To check your version, run `kafkactl version`.
+{:.danger}
+> This step requires a `kafkactl` version 5.17.0 or later. To check your version, run `kafkactl version`.
 > <br><br>
 > Note that this script is for demo purposes only and hard-codes the client ID, client secret, and scope.
 > For production, we recommend securing sensitive data.
@@ -458,4 +447,4 @@ x-team:operators#test-message
 ```
 {:.no-copy-code}
 
-{{site.event_gateway_short}} validated the JWT against the auth server's JWKS, looked up the principal in the `event-gateway-directory` Kong Identity directory by matching the token's `iss` and `sub` against the `oidc` identity, attached the principal's metadata to the connection, and applied the Modify Headers policy because `context.auth.principal.metadata.team` was `operators`.
+{{site.event_gateway_short}} validated the JWT against the auth server's JWKS, looked up the principal in the `kong-identity-directory` Kong Identity directory by matching the token's `iss` and `sub` against the `oidc` identity, attached the principal's metadata to the connection, and applied the Modify Headers policy because `context.auth.principal.metadata.team` was `operators`.
