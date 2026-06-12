@@ -25,6 +25,13 @@
 - [Install via Docker](/gateway/install/docker/)
 - [Install via Docker in read-only mode](/gateway/install/docker-read-only/)
 
+### Distroless image
+
+The distroless image contains only the {{site.base_gateway}} runtime and its dependencies, with no shell, package manager, or OS tooling.
+It's available for `linux/amd64` and `linux/arm64`.
+
+- [Install via distroless image](/gateway/install/docker-distroless/)
+
 ### Build your own
 
 {{site.base_gateway}} is distributed as prebuilt `deb` and `rpm` packages, in addition to official Docker images hosted on [Docker Hub](https://hub.docker.com/r/kong).
@@ -101,6 +108,26 @@ Configure {{site.base_gateway}} using Kubernetes-native resources such as `httpr
     </div>
 
     <div class="border-t border-primary"></div>
+
+    <div class="flex flex-col gap-2">
+        <div class="flex gap-2">
+            <h3 class="font-semibold text-base leading-6">Distroless image</h3>
+        </div>
+
+        <div class="flex text-secondary">
+            <p>
+                The distroless image contains only the {{site.base_gateway}} runtime and its dependencies, with no shell, package manager, or OS tooling.
+                It's available for AMD64 and ARM64 architectures.
+            </p>
+        </div>
+
+        <a href="/gateway/install/docker-distroless/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
+            Install via distroless image
+            <span class="flex text-terciary h-5 w-5">&rarr;</span>
+        </a>
+    </div>
+
+    <div class="border-t border-primary/5"></div>
 
     <div class="flex flex-col gap-2">
         <div class="flex gap-2">
