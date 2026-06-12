@@ -1,0 +1,41 @@
+description: |
+  Send HTTP logs over mTLS by configuring a client certificate for mutual TLS authentication with the log server.
+
+extended_description: |
+  Send HTTP logs over mTLS by configuring a client certificate for mutual TLS authentication with the log server. 
+
+  For a complete how-to guide that shows how to set up a log server with mTLS and send {{site.base_gateway}} logs to it, see [Configure HTTP logging over mTLS](/how-to/configure-mtls-for-http-log/).
+title: 'Send HTTP logs over mTLS'
+
+weight: 850
+
+requirements:
+  - You have a log server with mTLS enabled.
+  - You have added a client [Certificate entity](/gateway/entities/certificate/) to {{site.base_gateway}} containing the certificate and private key to present to the log server.
+  - You have configured {{site.base_gateway}} to trust the CA that signed the log server's certificate using [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate).
+
+variables:
+  log-server-url:
+    description: 'The HTTPS endpoint of the log server that receives {{site.base_gateway}} logs.'
+    value: $LOG_SERVER_URL
+  client-cert-id:
+    description: 'The ID of the client Certificate entity in {{site.base_gateway}}.'
+    value: $CLIENT_CERT_ID
+
+config:
+  http_endpoint: ${log-server-url}
+  ssl_verify: true
+  client_certificate:
+    id: ${client-cert-id}
+  method: POST
+  timeout: 10000
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.15'
