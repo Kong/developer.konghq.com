@@ -17,7 +17,9 @@ Reference for drafting Terraform-based Dedicated Cloud Gateways how-tos. Read th
 
 ## Frontmatter schema and template
 
-Frontmatter is validated against `app/_data/schemas/frontmatter/how_to.json` (which extends `base.json`). Schema-required fields for a how-to: `tldr` (with `q` and `a`), `content_type`, `title`, `products`, `permalink`; repo convention is to also include `description` and, for DCGW Terraform how-tos, `works_on: [konnect]` and `tools: [terraform]`.
+Frontmatter is validated against `app/_data/schemas/frontmatter/how_to.json` (which extends `base.json`). Schema-required fields for a how-to: `tldr` (with `q` and `a`), `content_type`, `title`, `products`, `permalink`,  `description` and, for DCGW Terraform how-tos, `works_on: [konnect]` and `tools: [terraform]`.
+
+The goal of the `tldr` is that an experienced user can read it and know what they need to do without reading the rest of the how-to. It should be specific enough, like naming the Terraform resource like "Define a `konnect_cloud_gateway_transit_gateway` resource with an `azure-vnet-peering-attachment`" without being too verbose and repeating the content of the how-to body.
 
 DCGW conventions:
 - `permalink: /dedicated-cloud-gateways/<slug>/`
