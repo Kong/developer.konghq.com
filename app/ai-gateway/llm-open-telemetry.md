@@ -20,7 +20,7 @@ plugins:
   - opentelemetry
 
 min_version:
-  gateway: '2.0'
+  ai-gateway: '2.0'
 
 tech_preview: true
 
@@ -39,7 +39,6 @@ related_resources:
     url: /gateway/tracing/
 
 works_on:
-  - on-prem
   - konnect
 ---
 
