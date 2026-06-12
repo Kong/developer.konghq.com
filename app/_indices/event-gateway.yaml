@@ -44,7 +44,6 @@ sections:
       - path: /event-gateway/configure-sasl-plain-backend-cluster-auth/
       - path: /event-gateway/configure-mtls-backend-cluster-auth/
       - path: /event-gateway/validate-avro-messages-with-schema-registry/
-      - path: /event-gateway/kong-identity-metadata-integration/
       - path: /event-gateway/configure-topic-aliases/
   - title: "References"
     items:
