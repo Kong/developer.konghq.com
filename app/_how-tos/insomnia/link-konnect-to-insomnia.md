@@ -1,5 +1,5 @@
 ---
-title: Link a {{ site.konnect_short_name }} to {{ site.data.products.insomnia.name }} 
+title: Link a {{ site.konnect_short_name }} Service to {{ site.data.products.insomnia.name }} 
 permalink: /how-to/link-konnect-to-insomnia/
 
 content_type: how_to
