@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -10,48 +10,59 @@
     --removed-body-scroll-bar-size: 4px;
     --ai-assistant-sidebar-width: 480px;
 
-    --color-bg-primary: 247, 251, 255;
-    --color-bg-secondary: 255, 255, 255;
-    --color-bg-terciary: 7, 53, 103;
-    --color-bg-code-block: 229, 247, 255;
-    --color-bg-code-block-header: 28, 85, 146;
-    --color-bg-hover-component: 235, 244, 254;
+    --color-icon-primary: 103, 107, 102;
 
-    --color-text-primary: 5, 47, 92;
-    --color-text-secondary: 74, 96, 120;
-    --color-text-terciary: 99, 119, 140;
+    --color-bg-header: 205, 212, 203;
+    --color-bg-primary: 215, 222, 212;
+    --color-bg-secondary: 231, 237, 229;
+    --color-bg-terciary: 243, 246, 242;
+    --color-bg-code-block: 243, 246, 242;
+    --color-bg-code-block-header: 205, 212, 203;
+    --color-bg-hover-component: 243, 246, 242;
 
-    --color-border-primary: 5, 47, 92;
-    --color-shadow-primary: 5, 47, 92, 0.04;
+    --color-text-primary: 0, 20, 8;
+    --color-text-secondary: 74, 77, 73;
+    --color-text-terciary: 103, 107, 102;
+    --color-text-links: 78, 120, 13;
+    --color-text-button: 0, 0, 0;
+    --color-text-secondary-constant: 74, 77, 73;
 
-    --color-brand: 66, 140, 220;
-    --color-brand-saturated: 24, 128, 240;
+    --color-border-primary: 186, 193, 184;
+    --opacity-border-primary: 0.60;
 
-    --color-semantic-red-primary: 214, 67, 67;
-    --color-semantic-red-secondary: 255, 229, 229;
+    --color-shadow-primary: 205, 212, 203, 0.2;
 
-    --color-semantic-yellow-primary: 220, 158, 66;
-    --color-semantic-yellow-secondary: 255, 252, 224;
+    --color-brand: 204, 255, 0;
+    --color-brand-saturated: 204, 255, 0;
+    --opacity-brand-saturated: 0.2;
 
-    --color-semantic-blue-primary: 33, 112, 197;
-    --color-semantic-blue-secondary: 229, 247, 255;
+    --color-semantic-red-primary: 180, 91, 91;
+    --color-semantic-red-secondary: 235, 223, 223;
 
-    --color-semantic-green-primary: 66, 174, 148;
-    --color-semantic-green-secondary: 224, 255, 249;
+    --color-semantic-yellow-primary: 167, 134, 38;
+    --color-semantic-yellow-secondary: 237, 232, 217;
 
-    --color-semantic-grey-primary: 84, 86, 88;
-    --color-semantic-grey-secondary: 242, 242, 242;
+    --color-semantic-blue-primary: 79, 130, 179;
+    --color-semantic-blue-secondary: 220, 227, 232;
 
-    --color-semantic-purple-primary: 151, 71, 255;
-    --color-semantic-purple-secondary: 240, 229, 255;
+    --color-semantic-green-primary: 63, 147, 103;
+    --color-semantic-green-secondary: 218, 236, 220;
 
-    --color-semantic-orange-primary: 226, 113, 64;
-    --color-semantic-orange-secondary: 255, 238, 229;
+    --color-semantic-grey-primary: 103, 107, 102;
+    --color-semantic-grey-secondary: 223, 227, 222;
 
-    --color-semantic-teal-primary: 64, 199, 226;
-    --color-semantic-teal-secondary: 224, 250, 255;
+    --color-semantic-purple-primary: 140, 104, 196;
+    --color-semantic-purple-secondary: 232, 227, 239;
 
-    --color-shadow-hover-card: 24, 128, 240, 0.16;
+    --color-semantic-orange-primary: 184, 119, 67;
+    --color-semantic-orange-secondary: 232, 227, 239;
+
+    --color-semantic-teal-primary: 78, 153, 147;
+    --color-semantic-teal-secondary: 215, 230, 228;
+
+    --color-shadow-hover-card: 204, 255, 0, 0.08;
+
+    --color-scroll-bar-thumb: var(--color-text-links);
 
     --kui-border-width-20: 1px;
 
@@ -59,19 +70,19 @@
     --kui-color-text-neutral-strong: rgb(var(--color-text-secondary));
     --kui-color-text-neutral: rgb(var(--color-text-primary));
     --kui-color-text: rgb(var(--color-text-primary));
-    --kui-color-text-primary: rgb(var(--color-brand));
-    --kui-color-text-primary-strong: rgb(var(--color-brand));
-    --kui-color-text-primary-stronger: rgb(var(--color-brand));
+    --kui-color-text-primary: rgb(var(--color-text-links));
+    --kui-color-text-primary-strong: rgb(var(--color-text-links));
+    --kui-color-text-primary-stronger: rgb(var(--color-text-links));
     --kui-color-text-danger: rgb(var(--color-semantic-red-primary));
     --kui-color-background: rgb(var(--color-bg-secondary));
     --kui-color-background-primary-weaker: rgb(var(--color-semantic-blue-secondary));
     --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
-    --kui-color-border: rgb(var(--color-border-primary), 0.05);
+    --kui-color-border: rgb(var(--color-border-primary), var(--opacity-border-primary));
     --kui-color-border-primary: rgb(var(--color-brand));
     --kui-color-border-primary-strong: rgb(var(--color-brand));
-    --kui-shadow-border: rgb(var(--color-brand-saturated), 0.4);
+    --kui-shadow-border: rgb(var(--color-brand-saturated), var(--opacity-brand-saturated));
     --kui-shadow-border-primary: rgb(none, none, none);
-    --kui-color-background-primary-weakest: rgb(var(--color-brand-saturated), 0.04);
+    --kui-color-background-primary-weakest: rgb(var(--color-brand-saturated), var(--opacity-brand-saturated));
     --kui-color-background-neutral-weaker: rgb(var(--color-bg-secondary));
 
     --kui-method-color-text-get: rgb(var(--color-semantic-blue-primary));
@@ -95,8 +106,8 @@
     --color-gateway-background: var(--color-semantic-green-secondary);
     --color-insomnia-brand: var(--color-semantic-purple-primary);
     --color-insomnia-background: var(--color-semantic-purple-secondary);
-    --color-kic-brand: var(--color-brand);
-    --color-kic-background: var(--color-semantic-blue-secondary);
+    --color-kic-brand: var(--color-semantic-grey-primary);
+    --color-kic-background: var(--color-semantic-grey-secondary);
     --color-mesh-brand: var(--color-semantic-orange-primary);
     --color-mesh-background: var(--color-semantic-orange-secondary);
     --color-catalog-brand: var(--color-semantic-red-primary);
@@ -107,8 +118,8 @@
     --color-konnect-background: var(--color-semantic-grey-secondary);
     --color-konnect-reference-platform-brand: var(--color-semantic-teal-primary);
     --color-konnect-reference-platform-background: var(--color-semantic-teal-secondary);
-    --color-operator-brand: var(--color-semantic-blue-primary);
-    --color-operator-background: var(--color-semantic-blue-secondary);
+    --color-operator-brand: var(--color-semantic-grey-primary);
+    --color-operator-background: var(--color-semantic-grey-secondary);
     --color-api-products-brand: var(--color-semantic-orange-primary);
     --color-api-products-background: var(--color-semantic-orange-secondary);
     --color-metering-and-billing-brand: var(--color-semantic-orange-primary);
@@ -122,45 +133,52 @@
   }
 
   .dark {
-    --color-bg-primary: 2, 20, 40;
-    --color-bg-secondary: 4, 40, 79;
-    --color-bg-terciary: 28, 85, 146;
-    --color-bg-code-block: 7, 53, 103;
-    --color-bg-code-block-header: 4, 40, 79;
-    --color-bg-hover-component: 7, 53, 103;
+    --color-bg-header: 0, 20, 8;
+    --color-bg-primary: 0, 20, 8;
+    --color-bg-secondary: 13, 26, 17;
+    --color-bg-terciary: 36, 42, 34;
+    --color-bg-code-block: 36, 42, 34;
+    --color-bg-code-block-header: 24, 32,25;
+    --color-bg-hover-component: 36, 42, 34;
 
     --color-text-primary: 255, 255, 255;
-    --color-text-secondary: 191, 202, 213;
-    --color-text-terciary: 170, 185, 200;
+    --color-text-secondary: 174, 181, 167;
+    --color-text-terciary: 161, 166, 159;
+    --color-text-links: 204, 255, 0;
+    --color-text-button: 0, 0, 0;
+    --color-text-secondary-constant: 205, 212, 203;
 
-    --color-border-primary: 255, 255, 255;
-    --color-shadow-primary: 2, 20, 40, 0.08;
+    --opacity-brand-saturated: 0.15;
 
-    --color-semantic-red-primary: 214, 67, 67;
-    --color-semantic-red-secondary: 44, 17, 17;
+    --color-border-primary: 49, 57, 25;
+    --opacity-border-primary: 0.72;
+    --color-shadow-primary: 0, 20, 8, 0.2;
 
-    --color-semantic-yellow-primary: 255, 198, 115;
-    --color-semantic-yellow-secondary: 64, 42, 10;
+    --color-semantic-red-primary: 201, 110, 115;
+    --color-semantic-red-secondary: 48, 25, 27;
 
-    --color-semantic-blue-primary: 66, 140, 220;
-    --color-semantic-blue-secondary: 4, 40, 79;
+    --color-semantic-yellow-primary: 211, 176, 74;
+    --color-semantic-yellow-secondary: 52, 45, 18;
 
-    --color-semantic-green-primary: 134, 226, 204;
-    --color-semantic-green-secondary: 18, 51, 43;
+    --color-semantic-blue-primary: 109, 156, 210;
+    --color-semantic-blue-secondary: 21, 38, 51;
 
-    --color-semantic-grey-primary: 192, 193, 195;
-    --color-semantic-grey-secondary: 35, 36, 36;
+    --color-semantic-green-primary: 98, 185, 133;
+    --color-semantic-green-secondary: 19, 39, 28;
 
-    --color-semantic-purple-primary: 220, 193, 255;
-    --color-semantic-purple-secondary: 65, 37, 102;
+    --color-semantic-grey-primary: 174, 181, 167;
+    --color-semantic-grey-secondary: 28, 34, 30;
 
-    --color-semantic-orange-primary: 226, 113, 64;
-    --color-semantic-orange-secondary: 54, 36, 28;
+    --color-semantic-purple-primary: 165, 133, 216;
+    --color-semantic-purple-secondary: 42, 34, 53;
 
-    --color-semantic-teal-primary: 64, 199, 226;
-    --color-semantic-teal-secondary: 16, 61, 70;
+    --color-semantic-orange-primary: 208, 138, 82;
+    --color-semantic-orange-secondary: 51, 34, 24;
 
-    --color-shadow-hover-card: 24, 128, 240, 0.4;
+    --color-semantic-teal-primary: 98, 176, 171;
+    --color-semantic-teal-secondary: 21, 48, 49;
+
+    --color-shadow-hover-card: 204, 255, 0, 0.08;
   }
 
   *::-webkit-scrollbar {
@@ -168,7 +186,7 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    @apply bg-brand rounded-lg;
+    @apply bg-scroll-bar-thumb rounded-lg;
   }
 
   *::-webkit-scrollbar-track {
@@ -176,7 +194,7 @@
   }
 
   html {
-    font-family: "Inter", system-ui, sans-serif;
+    font-family: "Funnel Sans", system-ui, sans-serif;
     @apply text-secondary font-normal;
   }
 
@@ -187,7 +205,7 @@
   }
 
   code {
-    font-family: "JetBrains Mono", system-ui, sans-serif;
+    font-family: "Roboto Mono", system-ui, sans-serif;
     /* The font we use for codeblocks includes a ligature that renders things like
       != as ≠, this property disables all ligatures.
     */
@@ -254,7 +272,7 @@
   }
 
   th:not(:last-child) {
-    @apply border-r border-primary/5;
+    @apply border-r border-primary;
   }
 
   td {
@@ -262,11 +280,11 @@
   }
 
   td:not(:last-child) {
-    @apply border-r border-primary/5;
+    @apply border-r border-primary;
   }
 
   tbody tr {
-    @apply border-t border-primary/5;
+    @apply border-t border-primary;
   }
 
   details[open] summary .chevron-icon {
@@ -294,19 +312,20 @@
   }
 
   a {
-    @apply hover:underline;
+    @apply hover:underline text-links;
   }
 
   main a {
-    @apply text-brand;
+    @apply text-links;
   }
 
   a code {
-    @apply text-brand;
+    @apply text-links;
   }
 
   a[href^='http']:not([href^='#']):not([href^='https://insomnia.rest/run']):not(.no-icon)::after {
-    @apply w-3 h-3 inline-block bg-contain bg-no-repeat align-middle bg-[url('/assets/icons/external-link.svg')] ml-1.5 content-[''];
+    @apply w-3 h-3 inline-block align-middle ml-1.5 content-[''] bg-links;
+    mask: url('/assets/icons/external-link.svg') no-repeat center / contain;
   }
 
   h3[id^="includes-kumahq-kuma-"][id$="-changelog"] {
@@ -324,83 +343,20 @@
   }
 
   .button.button--primary {
-    @apply !bg-brand !text-white !border-transparent;
+    @apply !bg-brand !text-button !border-transparent;
   }
 
-  .konami .button.button--primary {
-    color: rgb(0, 15, 6) !important;
-  }
-
-  /* Konami theme: recolor hardcoded #428CDC icons to Electric Lime */
-  .konami svg path[fill="#428CDC" i],
-  .konami svg rect[fill="#428CDC" i],
-  .konami svg circle[fill="#428CDC" i],
-  .konami svg polygon[fill="#428CDC" i],
-  .konami svg g[fill="#428CDC" i] path {
-    fill: rgb(204, 255, 0) !important;
-  }
-
-  /* Konami theme: recolor header logo text */
-  .konami svg path[fill="#052f5c" i] {
-    fill: rgb(255, 255, 255) !important;
-  }
-
-  .konami img[src$=".svg"][src*="/icons/"] {
-    filter: hue-rotate(221deg) saturate(1.47) brightness(0.89);
-  }
-
-  .konami .card {
-    border: 1px solid rgb(204, 255, 0) !important;
-  }
-
-  /* Konami theme: recolor decorative page header icons (all share the same blue gradient palette) */
-  .konami svg[viewBox="0 0 321 286"],
-  .konami svg[viewBox="0 0 268 302"],
-  .konami svg[viewBox="0 0 252 252"],
-  .konami svg[viewBox="0 0 300 219"],
-  .konami svg[viewBox="0 0 404 148"] {
-    filter: hue-rotate(221deg) saturate(1.47) brightness(0.89);
-  }
-
-  /* Konami theme: dark checkmark on lime checkbox */
-  .konami .checkbox--checked,
-  .konami .ais-RefinementList-checkbox:checked {
-    color: rgb(0, 15, 6) !important;
-  }
-
-  /* Konami theme: dark knob on lime switch slider */
-  .konami .switch__slider:before {
-    background-color: rgb(0, 15, 6) !important;
-  }
-
-  /* Konami theme: make pagination items visible against page bg */
-  .konami .ais-Pagination-item {
-    background-color: rgb(0, 26, 12) !important;
-  }
-
-  /* Konami theme: retheme the background gradient border */
-  .konami .background-gradient {
-    background: linear-gradient(transparent, transparent) padding-box,
-      linear-gradient(227.59deg, rgb(0, 37, 18) 6.43%, rgb(100, 230, 180) 30.81%, rgb(204, 255, 0) 50%, rgb(100, 230, 180) 65.64%, rgb(0, 37, 18) 100%) border-box !important;
-  }
-
-  /* Konami theme; dark text on badges.
-     Attribute selector avoids Tailwind @apply expansion that generates invalid
-     `.badge*::-webkit-scrollbar-thumb` selectors rejected by Lightning CSS. */
-  .konami a.badge[class~="bg-brand"] {
-    color: rgb(0, 15, 6) !important;
-  }
   .button.button--secondary {
     @apply !border-brand !text-primary;
   }
 
   .button.button--filters {
-    @apply !border-brand !bg-secondary !border-brand-saturated/40 !text-terciary;
+    @apply !bg-secondary !border-primary !text-terciary;
   }
 
   /* single backticks */
   code:not(:is(pre code)) {
-    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-sm px-1;
+    @apply text-primary bg-secondary rounded border border-primary text-sm px-1;
   }
 
   .content {
@@ -485,7 +441,7 @@
     }
 
     rect, circle, ellipse, polygon {
-      @apply fill-transparent stroke-[rgb(var(--color-brand))] !important;
+      @apply fill-transparent stroke-[rgb(var(--color-icon-primary))] !important;
     }
 
     .label-container {
@@ -501,7 +457,7 @@
     }
 
     path {
-      @apply fill-[context-stroke] stroke-[rgb(var(--color-brand))] stroke-1 !important
+      @apply fill-[context-stroke] stroke-[rgb(var(--color-icon-primary))] stroke-1 !important
     }
   }
 
@@ -530,7 +486,7 @@
     }
 
     .messageLine0 {
-      @apply stroke-[rgb(var(--color-brand))] !important;
+      @apply stroke-[rgb(var(--color-icon-primary))] !important;
     }
 
     circle {
@@ -539,7 +495,7 @@
   }
 
   .badge {
-    @apply rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated/40;
+    @apply rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated;
   }
 
   .badge.deprecated {
@@ -563,7 +519,7 @@
   }
 
   .tablist {
-    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center overflow-x-auto;
+    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary w-full items-center overflow-x-auto;
   }
 
   .tabcolumn {
@@ -585,6 +541,10 @@
   .tab-button__horizontal {
     @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0 gap-1;
 
+    &:not(.tab-button__horizontal--active):hover {
+      @apply text-links font-semibold;
+    }
+
     &.tab-button__horizontal--active {
       @apply tab-button--active border-b-2 pb-[10px] !important;
     }
@@ -599,23 +559,39 @@
   }
 
   .card {
-    @apply flex rounded-md bg-secondary shadow-primary h-full;
+    @apply flex rounded-md bg-secondary shadow-primary h-full border border-primary;
   }
 
-  .card__bordered {
-    @apply border border-primary/5 hover:border hover:border-brand-saturated/40 hover:shadow-hover-card;
+  .card__highlighted {
+    @apply border border-primary hover:border hover:border-brand-saturated hover:shadow-hover-card;
+  }
+
+  .card__icon {
+    @apply w-5 h-5;
+  }
+
+  .dark .card a:hover .card__arrow {
+    @apply text-brand;
+  }
+
+  .card__arrow {
+    @apply text-terciary;
   }
 
   .card__featured {
-    @apply border-brand-saturated/80 hover:border-brand-saturated border-2 relative overflow-hidden hover:shadow-hover-card;
+    @apply border-brand-saturated hover:border-brand-saturated border-2 relative overflow-hidden hover:shadow-hover-card;
   }
 
   .kong-conf-param h3 > a {
-    @apply text-brand-saturated;
+    @apply text-links font-normal;
   }
 
   .kong-conf-param code {
     @apply text-sm;
+  }
+
+  .kong-conf-param-name {
+    @apply text-links py-3 text-sm font-normal;
   }
 
   #toc {
@@ -641,11 +617,6 @@
     content: counter(toc-counter) ".";
   }
 
-  .background-gradient {
-    background: linear-gradient(transparent, transparent) padding-box,
-    linear-gradient(227.59deg, #E9EEF7 6.43%, #3CB087 30.81%, #11A06B 36.89%, #286FEB 65.64%, #E9EEF7 100%) border-box;
-  }
-
   .filters {
     @apply w-full h-full md:sticky flex flex-col md:flex left-0 self-start md:top-24 md:self-start md:h-auto;
   }
@@ -663,7 +634,7 @@
   }
 
   .mobile-drawer__footer {
-    @apply flex w-full gap-3 p-6 bg-secondary border-t border-primary/5 md:hidden;
+    @apply flex w-full gap-3 p-6 bg-secondary border-t border-primary md:hidden;
   }
 
   .filter-results-field {
@@ -675,7 +646,7 @@
   }
 
   .filter-results-field__input {
-    @apply flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3 md:pl-11 items-center w-full;
+    @apply flex gap-2 bg-secondary rounded-md border border-primary py-2 px-3 md:pl-11 items-center w-full;
 
     &::-webkit-search-cancel-button {
       cursor: pointer;
@@ -691,7 +662,7 @@
   }
 
   .product-icon--bordered {
-    @apply border-[0.28px] border-primary/[.08];
+    @apply border-[0.28px] border-primary;
   }
 
   .how-to,
@@ -713,7 +684,7 @@
   }
 
   .top-nav__controls {
-    @apply flex shrink-0 items-center bg-secondary w-full lg:hidden h-[64px] px-6 border-b border-primary/5 justify-between;
+    @apply flex shrink-0 items-center bg-secondary w-full lg:hidden h-[64px] px-6 border-b border-primary justify-between;
   }
 
   .top-nav--opened {
@@ -775,7 +746,7 @@
   }
 
   .navbar-item__trigger_text {
-    @apply text-base lg:text-sm;
+    @apply text-base lg:text-sm text-secondary;
   }
 
   .navbar-item__trigger_icon {
@@ -795,11 +766,11 @@
   }
 
   .navbar-item__menu {
-    @apply hidden absolute top-9 list-none ml-0 grid-cols-2 max-w-max w-svw gap-4 border rounded-lg lg:p-6 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2;
+    @apply hidden absolute top-9 list-none ml-0 grid-cols-2 max-w-max w-svw gap-4 border rounded-lg lg:p-6 bg-secondary border-primary shadow-primary left-1/2 -translate-x-1/2;
   }
 
   .navbar-item__icon {
-    @apply inline-flex text-brand w-6 h-6 items-center justify-center !p-0;
+    @apply inline-flex text-icon w-6 h-6 items-center justify-center !p-0;
   }
 
   .feedback__button--active[value="true"] {
@@ -815,7 +786,7 @@
   }
 
   .dropdown-menu {
-    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2 z-10;
+    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary shadow-primary left-1/2 -translate-x-1/2 z-10;
 
     ul {
       @apply list-none ml-0;
@@ -872,7 +843,7 @@
 
 
   .skill .heading-section h2 {
-    @apply border-b border-primary/5 pb-2;
+    @apply border-b border-primary pb-2;
   }
 
   .skill table {
@@ -918,11 +889,11 @@
 
   .custom-code-block__header {
     clipboard-copy {
-      @apply hover:border-white text-white hover:text-white;
+      @apply hover:border-primary text-primary hover:text-primary;
     }
 
     .collapsible-toggle {
-      @apply hover:border-white text-white hover:text-white;
+      @apply hover:border-primary text-primary hover:text-primary;
     }
   }
 
@@ -947,11 +918,11 @@
   }
 
   .switch__slider {
-    @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-brand rounded-full;
+    @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-brand-saturated rounded-full border-primary border;
   }
 
   .switch__slider:before {
-    @apply absolute content-[''] h-3 w-3 left-0.5 top-0.5 bg-white rounded-full transition-transform duration-300;
+    @apply absolute content-[''] h-3 w-3 left-px top-px bg-links rounded-full transition-transform duration-300;
   }
 
   input:checked + .switch__slider:before {
@@ -965,10 +936,22 @@
       outline-color: -webkit-focus-ring-color;
     }
   }
+
+  .info-box {
+    @apply  flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full border border-primary;
+
+    a:not(.badge) {
+      @apply text-terciary;
+    }
+
+    .bg-links[style*="mask:url"] {
+      @apply bg-icon;
+    }
+  }
 }
 
 #ask-ai-button {
-  @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 gap-1 bg-secondary;
+  @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary gap-1 bg-secondary;
 }
 
 body > #wrapper {
@@ -977,6 +960,10 @@ body > #wrapper {
 
 body.ai-assistant-open > #wrapper {
   @apply xl:pr-[var(--ai-assistant-sidebar-width)];
+}
+
+.link-anchor-icon {
+  @apply text-links;
 }
 
 .ai-assistant-aware-px {
@@ -1000,7 +987,7 @@ body.ai-assistant-open > #wrapper {
 }
 
 .ais-Pagination-item {
-  @apply bg-primary px-2 py-[6px] border border-primary/5 rounded-md w-[38px] h-[34px] flex items-center;
+  @apply bg-primary px-2 py-[6px] border border-primary rounded-md w-[38px] h-[34px] flex items-center;
 }
 
 .ais-Pagination-item:hover {
@@ -1012,7 +999,7 @@ body.ai-assistant-open > #wrapper {
 }
 
 .ais-Pagination-item--selected {
-  @apply bg-secondary border-brand-saturated font-bold;
+  @apply bg-secondary border-brand font-bold;
 }
 
 .ais-Pagination-link {
@@ -1032,11 +1019,28 @@ body.ai-assistant-open > #wrapper {
 }
 
 .checkbox, .ais-RefinementList-checkbox {
-  @apply form-checkbox bg-secondary rounded border border-primary/[.08] dark:border-primary/5;
+  @apply form-checkbox bg-secondary rounded border border-primary;
 }
 
-.checkbox--checked, .ais-RefinementList-checkbox:checked {
-  @apply bg-brand-saturated;
+.checkbox:checked, .ais-RefinementList-checkbox:checked {
+  @apply bg-links border-primary;
+}
+
+.checkbox:checked:focus, .ais-RefinementList-checkbox:checked:focus {
+  @apply bg-links;
+}
+
+.checkbox:checked:hover, .ais-RefinementList-checkbox:checked:hover {
+  @apply bg-links;
+}
+
+/* override checkbox checkmark color */
+[type='checkbox']:checked {
+  background-image: url("data:image/svg+xml,<svg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'><path d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/></svg>");
+}
+
+.dark [type='checkbox']:checked {
+  background-image: url("data:image/svg+xml,<svg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'><path d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/></svg>");
 }
 
 .ais-Panel--noRefinement {
@@ -1070,7 +1074,7 @@ body.ai-assistant-open > #wrapper {
   }
 
   .select-item-label {
-    @apply text-primary bg-secondary border-b border-primary/5 hover:bg-brand/15 !important;
+    @apply text-primary bg-secondary border-b border-primary hover:bg-brand/15 !important;
   }
 }
 

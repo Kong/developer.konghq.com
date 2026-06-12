@@ -35,7 +35,7 @@ sections:
             url: /index/catalog/
 
       - title: Insomnia
-        icon: /assets/icons/insomnia/insomnia-logo-bug.svg
+        icon: /assets/icons/insomnia/insomnia.svg
         icon_alt: Insomnia icon
         description: "Design, debug, test, and mock APIs locally, on Git, or cloud"
         links:

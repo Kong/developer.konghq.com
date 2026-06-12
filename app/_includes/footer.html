@@ -1,9 +1,8 @@
-<footer class="flex flex-col border-t border-primary/5 relative text-sm">
+<footer class="flex flex-col border-t border-primary relative text-sm">
     <div class="flex flex-col md:flex-row pt-7 md:pt-16 pb-6 md:pb-12 gap-5 w-full max-w-screen-2xl 2xl:mx-auto px-6 md:px-8 ai-assistant-aware-px">
         <div class="flex flex-col gap-6 w-full md:w-1/2">
             <div class="flex">
-                <img src="/assets/logos/brand/KongPrimary.svg" alt="Kong Logo" id="kong-logo" class="flex dark:hidden">
-                <img src="/assets/logos/brand/Kong-Logotype.svg" alt="Kong Logo" id="kong-logo" class="hidden dark:flex">
+                {% include_svg '/assets/logos/brand/KongPrimary.svg' id="kong-logo" %}
             </div>
             <div class="flex flex-col gap-2">
                 <h5 class="flex font-bold uppercase">Powering the API world</h5>
@@ -13,14 +12,14 @@
         <div class="flex flex-col gap-4 md:items-end text-normal justify-center w-full md:w-1/2 p-6 md:p-0 rounded-md bg-secondary md:bg-transparent shadow-primary md:shadow-none">
             <div class="font-semibold text-primary text-base">Ready to get started with Kong?</div>
             <div class="flex gap-3">
-                <a class="button button--primary no-icon" href="https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=footer">Start free trial</a>
-                <a class="button button--secondary no-icon" href="https://konghq.com/contact-sales?utm_medium=referral&utm_source=docs&utm_content=footer">Get a Demo</a>
+                <a class="button button--primary no-icon" href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=footer">Start free trial</a>
+                <a class="button button--secondary no-icon" href="https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=footer">Get a Demo</a>
             </div>
         </div>
     </div>
 
     <div class="w-full max-w-screen-2xl 2xl:mx-auto px-6 md:px-8 ai-assistant-aware-px">
-        <div class="flex w-full border-t border-primary/5"></div>
+        <div class="flex w-full border-t border-primary"></div>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-5 w-full max-w-screen-2xl 2xl:mx-auto pb-12 pt-6 md:pt-12 px-6 md:px-8 ai-assistant-aware-px">
@@ -35,7 +34,7 @@
         {% endfor %}
     </div>
 
-    <div class="flex border-t border-primary/5 w-full"></div>
+    <div class="flex border-t border-primary w-full"></div>
     <div
         class="flex gap-5 justify-between flex-start md:items-center font-normal flex-col md:flex-row w-full max-w-screen-2xl 2xl:mx-auto py-4 px-5 md:px-8 ai-assistant-aware-px">
         <div class="flex gap-6">
@@ -66,47 +65,4 @@
             <span class="text-terciary">&copy; Kong Inc. {{ site.time | date: '%Y' }} &nbsp;</span>
         </div>
     </div>
-
-    <svg class="pointer-events-none	absolute bottom-0 opacity-30 dark:opacity-40 fill-brand-saturated" width="400" height="400" viewBox="0 0 400 400"
-        fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#clip0_7381_16494)">
-            <g filter="url(#filter0_f_7381_16494)">
-                <path
-                    d="M1.52588e-05 190C27.5776 190 54.8852 195.432 80.3636 205.985C105.842 216.539 128.992 232.007 148.492 251.508C167.993 271.008 183.461 294.158 194.015 319.637C204.568 345.115 210 372.423 210 400L0 400L1.52588e-05 190Z" />
-            </g>
-        </g>
-        <defs>
-            <filter id="filter0_f_7381_16494" x="-172" y="18" width="554" height="554" filterUnits="userSpaceOnUse"
-                color-interpolation-filters="sRGB">
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                <feGaussianBlur stdDeviation="86" result="effect1_foregroundBlur_7381_16494" />
-            </filter>
-            <clipPath id="clip0_7381_16494">
-                <rect width="400" height="400" fill="white" />
-            </clipPath>
-        </defs>
-    </svg>
-
-    <svg class="pointer-events-none	absolute bottom-0 right-0 opacity-30 dark:opacity-40 fill-brand-saturated" width="400" height="400" viewBox="0 0 400 400"
-        fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#clip0_7381_16496)">
-            <g filter="url(#filter0_f_7381_16496)">
-                <path
-                    d="M400 190C372.422 190 345.115 195.432 319.636 205.985C294.158 216.539 271.008 232.007 251.508 251.507C232.007 271.008 216.539 294.158 205.985 319.636C195.432 345.115 190 372.422 190 400L400 400L400 190Z" />
-            </g>
-        </g>
-        <defs>
-            <filter id="filter0_f_7381_16496" x="18" y="17.9998" width="554" height="554" filterUnits="userSpaceOnUse"
-                color-interpolation-filters="sRGB">
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                <feGaussianBlur stdDeviation="86" result="effect1_foregroundBlur_7381_16496" />
-            </filter>
-            <clipPath id="clip0_7381_16496">
-                <rect width="400" height="400" fill="white" />
-            </clipPath>
-        </defs>
-    </svg>
-
 </footer>

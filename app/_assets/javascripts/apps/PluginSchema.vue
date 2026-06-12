@@ -24,12 +24,16 @@ const schema = window.schema;
 :deep(.property-field-default-value),
 :deep(.property-field-pattern-value),
 :deep(.property-field-enum-value),
-:deep( .property-field-example-value) {
-  @apply border border-brand-saturated/40 !important;
+:deep(.property-field-example-value) {
+  @apply border border-primary !important;
 }
 
 :deep(.default-markdown a[href^="http://"]),
 :deep(.default-markdown a[href^="https://"]) {
   @apply bg-none pr-0 !important;
+}
+
+:deep(.default-markdown ul) {
+  @apply ml-4 !important;
 }
 </style>

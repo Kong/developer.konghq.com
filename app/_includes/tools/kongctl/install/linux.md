@@ -1,4 +1,19 @@
-Download the latest kongctl binary for Linux from the [GitHub releases page](https://github.com/Kong/kongctl/releases).
+Install or update kongctl on Linux with the installation script:
+
+```sh
+curl -fsSL https://get.konghq.com/kongctl | sh
+```
+
+The script detects your platform, verifies release checksums, and installs the `kongctl` binary to a local bin directory such as `$HOME/.local/bin`.
+Make sure the installation directory is in your `PATH` before running `kongctl`.
+
+Verify the installation:
+
+```sh
+kongctl version --full
+```
+
+To install kongctl manually, download the latest Linux binary from the [GitHub releases page](https://github.com/Kong/kongctl/releases).
 
 1. Download the binary:
    ```sh
@@ -15,7 +30,7 @@ Download the latest kongctl binary for Linux from the [GitHub releases page](htt
    sudo mv kongctl /usr/local/bin/
    ```
 
-1. Verify the installation:
+1. Verify the manual installation:
    ```sh
    kongctl version --full
    ```
