@@ -5,14 +5,13 @@ layout: reference
 
 products:
   - ai-gateway
-  - gateway
 
 tags:
   - ai
   - logging
 
 min_version:
-  gateway: '3.6'
+  ai-gateway: '3.0'
 breadcrumbs:
   - /ai-gateway/
 description: "{{site.ai_gateway}} provides a standardized logging format for AI plugins, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
@@ -20,13 +19,10 @@ description: "{{site.ai_gateway}} provides a standardized logging format for AI 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
 
 works_on:
-  - on-prem
   - konnect
 ---
 
