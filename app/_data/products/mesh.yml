@@ -59,8 +59,9 @@ releases:
   - version: 2.11.15
     release: "2.11"
     releaseDate: "2025-06-10"
-    eol: "2026-06-10"
+    eol: "2026-12-10"
     branch: release-2.11
+    extensionMonths: 6
   - version: 2.12.12
     release: "2.12"
     releaseDate: "2025-09-09"
@@ -68,12 +69,15 @@ releases:
     branch: release-2.12
   - version: 2.13.8
     release: "2.13"
-    latest: true
     releaseDate: "2025-12-22"
     eol: "2027-12-22"
     branch: release-2.13
     lts: true
-  - version: preview
+  - version: 2.14.0
     release: "2.14"
+    latest: true
+    branch: release-2.14
+  - version: preview
+    release: "2.15"
     branch: master
     label: dev
