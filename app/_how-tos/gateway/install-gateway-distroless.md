@@ -104,7 +104,7 @@ mkdir -p declarative
 
 Then, create a `kong.yml` file with your entire Gateway configuration. For example, the following file creates a Service and a Route:
 
-```sh
+```yaml
 cat <<EOF > declarative/kong.yml
 _format_version: "3.0"
 services:
@@ -114,6 +114,9 @@ services:
   - name: example-route
     paths:
     - /anything
+    protocols:
+    - http
+    - https
 EOF
 ```
 
@@ -145,12 +148,23 @@ docker run -d \
 
 ## Validate
 
-Check that {{site.base_gateway}} is running by accessing the `example-route` Route:
+First, check that {{site.base_gateway}} is running by check port 8000:
 
+<!--vale off-->
 {% control_plane_request %}
-url: '/anything'
+url: '/services'
 method: GET
 status_code: 200
 {% endcontrol_plane_request %}
+<!--vale on-->
 
-This should return an `HTTP/1.1 200 OK` response.
+You should get a `200` response with a list of Gateway Services.
+
+Then, access a configured Route through the proxy URL on port 8001:
+
+{% validation request-check %}
+url: /anything
+status_code: 200
+{% endvalidation %}
+
+This should return an `200` response, this time with the results from your Route.
