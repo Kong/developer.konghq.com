@@ -15,7 +15,7 @@ module Jekyll
       @site = context.registers[:site]
       @page = @context.environments.first['page']
 
-      raise ArgumentError, 'Missing required parameter `version` for {% new_in %} ' unless @param
+      raise ArgumentError, 'Missing required parameter `version` for {% new_in %} ' if @param.to_s.empty?
 
       version = Gem::Version.correct?(@param) ? @param : context[@param]
 
