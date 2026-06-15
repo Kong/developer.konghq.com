@@ -127,9 +127,10 @@ Default_application_auth_strategy_id: null (none) or auth strategy uuid
 
 You can control whether admin email notifications include developer details when a developer registers an account or creates an Application for your {{site.dev_portal}}.
 By default, **Hide developer details in admin emails** is enabled and developer details are omitted from admin emails.
-When you disable **Hide developer details in admin emails**, admin emails include the following information:
-* Organization name
-* Application name (only for application registrations)
+Organization and {{site.dev_portal}} name are always included in developer account registration emails.
+Organization, {{site.dev_portal}}, and application name are always included developer application registration emails.
+
+When you disable **Hide developer details in admin emails**, admin emails also include the following information:
 * Developer name
 * Developer email
 
