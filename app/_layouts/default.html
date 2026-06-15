@@ -210,6 +210,14 @@
     {% endif %}
     {% endif %}
 
+    {% if site.ENABLE_ADOBE %}
+      {% if jekyll.environment == "production" %}
+      <script src="https://assets.adobedtm.com/8f6dec44d586/4a6d3ebc9183/launch-2b6116abbf50.min.js" async></script>
+      {% elsif jekyll.environment == "preview" %}
+      <script src="https://assets.adobedtm.com/8f6dec44d586/4a6d3ebc9183/launch-33a8f135e7f2-development.min.js" async></script>
+      {% endif %}
+    {% endif %}
+
     {% include structured_data.html %}
 
     {% vite_client_tag %}
