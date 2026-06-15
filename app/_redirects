@@ -371,4 +371,4 @@
 /api/konnect/api-builder/ /api/konnect/api-catalog/   301
 
 # ai-gateway previous-major wildcard — added by migration skill on 2026-06-15
-/ai-gateway/*  /ai-gateway/v1/:splat  301!
+/ai-gateway/*  /ai-gateway/v1/:splat  301
