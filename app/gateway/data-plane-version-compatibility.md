@@ -32,7 +32,7 @@ If you experience compatibility errors, [upgrade your data plane nodes](/gateway
 
 ## Compatibility status
 
-{{site.konnect_short_name}} Gateway Manager displays a **Compatibility status** badge for each data plane node. To see it, go to **Gateway Manager**, select a control plane, and open the **Data plane Nodes** list page. The **Compatibility status** column shows one of the following statuses:
+{{site.konnect_short_name}} Gateway Manager displays a **Compatibility status** badge for each data plane node. To see it, go to **Gateway Manager**, select a control plane, and open the **Data plane nodes** tab. The **Compatibility status** column shows one of the following statuses:
 
 {% table %}
 columns:
