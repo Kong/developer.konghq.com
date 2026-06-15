@@ -1,13 +1,13 @@
 {:.danger}
-> **You cannot edit a Dedicated Cloud Gateway network CIDR:** To change the CIDR of a network, you must recreate the entire network. You cannot edit the CIDR of an existing network. 
+> **You cannot edit an existing Dedicated Cloud Gateway network CIDR:** To change a network's CIDR, recreate the network with the new CIDR.
 
-Before you create a Dedicated Cloud Gateway network, determine which CIDR range you want to use for your network.
+Before creating a Dedicated Cloud Gateway network, choose the CIDR range you want to use.
 A CIDR block defines the range of IP addresses available for your Dedicated Cloud Gateway. 
 If you're configuring private network connectivity, this CIDR block **must not** overlap with CIDR blocks assigned in your own cloud service provider networks to prevent conflicts.
-Keep in mind that your Dedicated Cloud Gateway network CIDR block must be large enough to cover the Kong infrastructure Kong will provision inside it, such as the data plane nodes, the DNS proxy, internal load balancers, and any other components Kong manages. 
+The CIDR block must also be large enough to accommodate all Kong-managed infrastructure provisioned inside the network such as the data plane nodes, the DNS proxy, internal load balancers, and other components.
 
-Keep the following CIDR requirements in mind when you're deciding your network CIDR range:
-* **Prefix length:** The CIDR block must have a prefix length between `/16` and `/23`. `/23` blocks are only supported for up to 3 availability zones.
+Keep the following requirements in mind when choosing your network CIDR range:
+* **Prefix length:** The CIDR block must have a prefix length between `/16` and `/23`. `/23` blocks support a maximum of 3 availability zones.
 * **Private IP Range:** The entire CIDR block must fall within one of these private IP ranges:
   * 10.0.0.0/8
   * 100.64.0.0/10
@@ -28,8 +28,7 @@ Keep the following CIDR requirements in mind when you're deciding your network C
 > * 198.18.0.0/16
 
 
-Depending on how many Availability Zones (AZs) you plan to use for your Dedicated Cloud Gateway deployment also determines minimum CIDR ranges. 
-
+The number of availability zones (AZs) you plan to use determines the minimum CIDR range for your Dedicated Cloud Gateway network.
 Keep the following in mind:
 * Cloud service providers enforce a minimum subnet mask of /28 (16 IPs) and a maximum of /16 (65,536 IPs) for any subnet.
 * The following table reflects the minimum recommended CIDR sizes for Dedicated Cloud Gateway deployments to ensure sufficient IP address space for the required infrastructure.
@@ -58,9 +57,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-How many IPs are usable depends on if you’re using a public or private subnet, your network’s CIDR range, and AZ count.
-* **Public subnets:** Kong reserves around ~50 IPs in total (used by Kong's internal services and cloud provider reserves).
-* **Private subnets:** The cloud provider your Dedicated Cloud Gateway is deployed on reserves 5 IPs. It cannot use subnets that with less than 8 IPs, so Kong reserves ~15 IPs per AZ.
+How many IPs are usable depends on whether you're using a public or private subnet, your network's CIDR range, and AZ count.
+* **Public subnets:** Kong reserves about 50 IPs in total (used by Kong's internal services and cloud provider reserves).
+* **Private subnets:** The cloud provider your Dedicated Cloud Gateway is deployed on reserves 5 IPs. It cannot use subnets that have fewer than 8 IPs, so Kong reserves about 15 IPs per AZ.
 
 The following table describes how many IPs are usable depending on your CIDR range and AZ count. 
 The recommended data plane count examples assume a maximum of 15 data planes per AZ and each data plane group needs one public IP in one AZ.
