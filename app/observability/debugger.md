@@ -30,6 +30,8 @@ related_resources:
     url: /konnect-platform/cmek/
   - text: "{{site.base_gateway}} tracing reference"
     url: /gateway/tracing/
+  - text: Using Debugger for Datakit
+    url: /observability/datakit-debugger/
 ---
 
 {{site.konnect_short_name}} Debugger provides a connected debugging experience and real-time trace-level visibility into API traffic, enabling you to:
