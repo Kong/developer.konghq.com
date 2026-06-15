@@ -13,7 +13,7 @@ services:
       - OPENAI_API_KEY=${DECK_OPENAI_API_KEY}
       - OPENAI_MODEL=gpt-5-mini
       
-      # Route OpenAI calls through {{site.base_gateway}} (v2.0.0+)
+      # Route OpenAI calls through {{site.base_gateway}}
       - OPENAI_BASE_URL=http://host.docker.internal:8000/openai
       - HTTP_HEADERS={"Authorization": "Bearer ${DECK_OAUTH_TOKEN}"}
       
@@ -31,16 +31,10 @@ EOF
 export DECK_OAUTH_TOKEN=your-kong-oauth-token
 ```
 
-If using API key authentication instead, replace `HTTP_HEADERS` with:
-
-```sh
-HTTP_HEADERS={"apikey": "your-kong-api-key"}
-```
-
 Start the agent:
 
 ```sh
 docker compose up -d
 ```
 
-The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle flight route queries. By default, it routes OpenAI API calls through {{site.base_gateway}} at `http://host.docker.internal:8000/openai`. In this guide, the gateway service points to `host.docker.internal:10000` instead of the container name because {{site.base_gateway}} runs in its own container with a separate DNS resolver.
+The agent listens on port 10000 and routes OpenAI API calls through {{site.base_gateway}} at `http://host.docker.internal:8000/openai`.
