@@ -15,7 +15,7 @@
       "patternProperties": {
         "^[a-zA-Z_-]+$": {
           "type": "string",
-          "pattern": "^\\d+\\.\\d+$"
+          "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
         }
       },
       "additionalProperties": false
