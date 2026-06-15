@@ -31,6 +31,7 @@ related_resources:
 {:.warning}
 > This resource is experimental.
 > It requires [MeshService](/mesh/meshservice/) to be enabled.
+> It works on Kubernetes since version 2.12, and on Universal since version 2.13.
 
 `MeshIdentity` is a resource that defines how workloads in a mesh obtain their cryptographic identity.
 It separates the responsibility of issuing identities from establishing trust,
@@ -75,7 +76,7 @@ spec:
 ```
 {% endraw %}
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (2.13+)" %}
 {% raw %}
 ```yaml
 type: MeshIdentity
@@ -180,7 +181,7 @@ spec:
 {% endraw %}
 
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (2.13+)" %}
 
 {% raw %}
 
