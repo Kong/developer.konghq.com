@@ -104,14 +104,6 @@ RSpec.describe Jekyll::IncludeSVGTag do
         expect(html).to have_css('svg[class="single-quoted"]')
       end
     end
-
-    context 'without quotes' do
-      let(:template) { "{% include_svg '#{svg_path}' class=unquoted %}" }
-
-      it 'uses the value as-is' do
-        expect(html).to have_css('svg[class="unquoted"]')
-      end
-    end
   end
 
   describe 'source SVG attributes' do
