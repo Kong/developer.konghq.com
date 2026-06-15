@@ -4,7 +4,6 @@ content_type: reference
 layout: reference
 
 works_on:
- - on-prem
  - konnect
 
 products:
@@ -15,10 +14,6 @@ tags:
   - ai
   - streaming
   - ai-proxy
-
-plugins:
-  - ai-proxy
-  - ai-proxy-advanced
 
 min_version:
   ai-gateway: '3.0'
@@ -68,7 +63,6 @@ In a standard LLM transaction, requests proxied directly to the LLM look like th
 sequenceDiagram
   actor Client
   participant {{site.ai_gateway}}
-  Note right of {{site.ai_gateway}}: AI Proxy Advanced plugin
   Client->>+{{site.ai_gateway}}:
   destroy {{site.ai_gateway}}
   {{site.ai_gateway}}->>+Cloud LLM: Sends proxy request information
@@ -80,8 +74,7 @@ When streaming is requested, requests proxied directly to the LLM look like this
 {% mermaid %}
 flowchart LR
   A(client)
-  B({{site.ai_gateway}} Gateway with
-  AI Proxy Advanced plugin)
+  B({{site.ai_gateway}})
   C(Cloud LLM)
   D[[transform frame]]
   E[[read frame]]
@@ -118,10 +111,10 @@ It also estimates tokens for LLM services that decided to not stream back the to
 
 ## Streaming limitations
 
-Keep the following limitations in mind when you configure streaming for the {{site.ai_gateway}} plugin:
+Keep the following limitations in mind when you configure streaming for the {{site.ai_gateway}}:
 
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
-* You can't use the [Response Transformer plugin](/plugins/response-transformer/) or any other response phase plugin when streaming is configured.
+* You can't add Policies that use the [Response Transformer plugin](/plugins/response-transformer/) or any other response phase plugin when streaming is configured.
 * The [AI Request Transformer plugin](/plugins/ai-request-transformer/) plugin **will** work, but the [AI Response Transformer plugin](/plugins/ai-response-transformer/) **will not**. This is because {{site.ai_gateway}} can't check every single response token against a separate system.
 * Streaming currently doesn't work with the HTTP/2 protocol. You must disable this in your [`proxy_listen`](/gateway/configuration/#proxy-listen) configuration.
 
@@ -186,7 +179,7 @@ for chunk in stream:
 
 ### Response streaming configuration parameters
 
-In the AI Proxy and AI Proxy Advanced plugin configuration, you can set an optional field `config.response_streaming` to one of three values:
+In the [Model](/ai-gateway/entities/ai-model/) configuration, you can set an optional field `config.response_streaming` to one of three values:
 
 {% table %}
 columns:
