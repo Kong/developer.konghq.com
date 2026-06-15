@@ -48,7 +48,6 @@ The following example shows the full structure:
 
 {% navtabs "meshidentity-structure" %}
 {% navtab "Kubernetes" %}
-{% raw %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshIdentity
@@ -62,8 +61,8 @@ spec:
     dataplane:
       matchLabels: {}
   spiffeID:
-    trustDomain: "{{ .Mesh }}.{{ .Zone }}.mesh.local"
-    path: "/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}"
+    trustDomain: "{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}"
+    path: "{% raw %}/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}{% endraw %}"
   provider:
     type: Bundled
     bundled:
@@ -73,8 +72,6 @@ spec:
         expiry: 24h
       autogenerate:
         enabled: true
-```
-{% endraw %}
 {% endnavtab %}
 {% navtab "Universal (2.13+)" %}
 {% raw %}
