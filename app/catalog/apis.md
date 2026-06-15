@@ -550,14 +550,15 @@ columns:
   - title: Details
     key: details
 rows:
-  - feature: Try it! console
+  - feature: |
+      **Try it!** console
     details: |
       * Developers can click **Open in Insomnia** for any operation. This is enabled by default and can be separately hidden from the in-browser console.
       * Supports multiple servers.
       * Supports custom server URLs.
   - feature: Code samples
     details: |
-      * Autogenerates request snippets in eight languages: Shell (cURL), Python, Node, JavaScript, Go, Java, C#, and Ruby
+      * Autogenerates request snippets in eight languages: Shell (cURL), Python, Node, JavaScript, Go, Java, C#, and Ruby.
       * Custom code examples aren't supported.
   - feature: Endpoints and operations
     details: |
@@ -575,7 +576,7 @@ rows:
   - feature: Servers and security
     details: |
       * Developers can select servers from a list with support for server variables (templated server URLs).
-      * Security scheme rendering (such as, API key and OAuth2 flows).
+      * Security scheme rendering (for example, API key and OAuth2 flows).
   - feature: AsyncAPI
     details: |
       * Supports channels, operations, and messages/payloads.
@@ -583,8 +584,8 @@ rows:
       * Supports Avro/multi-format schema payloads.
   - feature: Display and download
     details: |
-      * Developers can download specs from a button that supports YAML or JSON output.
-      * Collapsible sections. You can choose either previous and next navigation buttons or continuous scrolling.
+      * Developers can download specs using a button that supports YAML or JSON output.
+      * Collapsible sections. You can choose either **previous** and **next** navigation buttons or continuous scrolling.
 {% endtable %}
 
 ### Filtering published APIs in {{site.dev_portal}}
