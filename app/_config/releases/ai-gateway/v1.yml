@@ -262,9 +262,6 @@ app/_how-tos/ai-gateway/v1/use-gemini-sdk-chat.md:
 app/_how-tos/ai-gateway/v1/use-langchain-with-ai-proxy.md:
   status: pending
   canonical_url:
-app/_how-tos/ai-gateway/v1/use-litellm-with-ai-proxy.md:
-  status: pending
-  canonical_url:
 app/_how-tos/ai-gateway/v1/use-qwen-code-with-ai-gateway.md:
   status: pending
   canonical_url:
