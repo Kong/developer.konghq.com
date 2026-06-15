@@ -28,7 +28,7 @@ tldr:
   q: How do I run {{site.base_gateway}} using the distroless image?
   a: |
     Pull `kong/kong-gateway:{{site.data.gateway_latest.ee-version}}-distroless` and run it with configuration passed via environment variables.
-    The distroless image has no shell, so you must configure Gateway at container startup.
+    The distroless image has no shell, so you must configure {{site.base_gateway}} at container startup.
 
 prereqs:
   skip_product: true
@@ -60,7 +60,7 @@ faqs:
   - q: Can I run the distroless image with a database?
     a: |
       Yes. The distroless image supports the same deployment modes as other {{site.base_gateway}} images.
-      This guide uses DB-less mode, which requires no separate database container.
+      This guide uses [DB-less mode](/gateway/db-less-mode/), which requires no separate database container.
 
       If you need a database-backed deployment, start a Postgres container first and run `kong migrations bootstrap` before starting the Gateway.
       See [Install {{site.base_gateway}} using Docker Compose](/gateway/install/docker/) for a database-backed example.
@@ -93,7 +93,7 @@ docker network create kong-net
 
 ## Create a declarative configuration file
 
-In DB-less mode, you provide your Gateway configuration in a YAML file at startup.
+In [DB-less mode](/gateway/db-less-mode/), you provide your Gateway configuration in a YAML file at startup.
 
 
 Create a directory for your Kong configuration:
@@ -143,12 +143,12 @@ docker run -d \
 ```
 
 {:.info}
-> Because the distroless image has no shell, all {{site.base_gateway}} configuration must be passed as environment variables (`KONG_*`) or in a mounted `kong.conf` file.
+> Because the distroless image has no shell, all {{site.base_gateway}} configuration must be passed as [environment variables (`KONG_*`)](/gateway/manage-kong-conf/#environment-variables) or in a mounted `kong.conf` file.
 > You **cannot** run `kong` commands inside the container after it starts.
 
 ## Validate
 
-First, check that {{site.base_gateway}} is running by check port 8000:
+First, check that {{site.base_gateway}} is running by checking port 8000:
 
 <!--vale off-->
 {% control_plane_request %}
