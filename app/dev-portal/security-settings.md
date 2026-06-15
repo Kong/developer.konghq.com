@@ -123,6 +123,16 @@ Default_application_auth_strategy_id: null (none) or auth strategy uuid
 ```
 -->
 
+## Hide developer details in admin emails
+
+You can choose to see personally identifiable information for a developer who registers an account or creates an app for your {{site.dev_portal}} in email notifications. 
+By default, developer details are omitted from admin emails.
+When you disable **Hide developer details in admin emails**, you'll see the following information in admin emails:
+* Organization name
+* Application name (only for application registrations)
+* Developer name
+* Developer email
+
 ## Specify IP addresses that can connect to your {{site.dev_portal}}
 
 You can specify an IP address or a range of IP addresses that are allowed to connect to a {{site.dev_portal}} through its supported interfaces. 
