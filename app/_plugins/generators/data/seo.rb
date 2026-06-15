@@ -15,6 +15,7 @@ module Jekyll
 
         if !canonical?
           @page.data['seo_noindex'] = true
+          @page.data['canonical?'] = false
         else
           @page.data.merge!('canonical?' => true, 'canonical_url' => @page.url)
         end
