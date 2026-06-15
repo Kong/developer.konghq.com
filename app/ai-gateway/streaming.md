@@ -16,7 +16,7 @@ tags:
   - ai-proxy
 
 min_version:
-  ai-gateway: '3.0'
+  ai-gateway: '2.0'
 
 description: This guide walks you through setting up Models with streaming.
 ---
