@@ -74,6 +74,6 @@ When `additionalProperties` is set to `false`:
       additionalProperties: false
 ```
 
-The additional `blah` key in the request body is not explicitly defined in the schema above, and `additionalProperties` is not disallowed, therefore the request will fail validation.
+The additional `blah` key in the request body is not explicitly defined in the schema above, and because `additionalProperties` is set to `false`, additional keys are not allowed, therefore the request fails validation.
 
 This is the fail-safe scenario.

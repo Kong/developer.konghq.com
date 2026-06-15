@@ -34,7 +34,7 @@ The Proxy Caching Advanced plugin bypasses the cache and hits the API when the u
 3. (Optional) Adjust NGINX buffer sizes if you're dealing with large responses:
 
    ```bash
-   KONG_NGINX_HTTP_PROXY_BUFFERS="8 16k";
+   KONG_NGINX_HTTP_PROXY_BUFFERS="8 16k"
    ```
 4. Test the fix by checking if `x-cache-status` shows `HIT` on repeated requests.
 

@@ -27,7 +27,7 @@ When working with Kong's deck dump files, especially for plugins like the OpenID
 
 Here are some common scenarios where you'll see values enclosed in quotes in a YAML file:
 
-- Characters such as `#`, `:`, `{`, `}`, `[`, `]`, `,`, `&`, `*`, `?`, `|`, `-`, ``, `=`, `!`, `%`, `@`, `` ` ``, along with any quote character (`'` or `"`), can trigger this behavior.
+- Characters such as `#`, `:`, `{`, `}`, `[`, `]`, `,`, `&`, `*`, `?`, `|`, `-`, `=`, `!`, `%`, `@`, `` ` ``, along with any quote character (`'` or `"`), can trigger this behavior.
 - Leading zeros in purely numeric strings.
 - Strings that match boolean values (`true`, `false`, `on`, `off`) or `null` values exactly.
 
