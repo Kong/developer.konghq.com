@@ -272,8 +272,6 @@ rows:
                   * Standalone MCP {{site.code_mode}} released GA (May 18, 2026)
 
                   * Public Beta release (December 19, 2025)
-
-                  For a complete changelog of all {{site.konnect_product_name}} MCP Server releases, see the [{{site.konnect_product_name}} MCP Server changelog](/konnect-platform/konnect-mcp/changelog/).
                   
   - header:
         text: "Frequently asked questions"
