@@ -42,13 +42,13 @@ columns:
     key: description
 rows:
   - status: Compatible
-    description: This data plane node supports the configuration from the control plane.
+    description: "This data plane node supports the configuration from the control plane."
   - status: Compatible with limitations
-    description: This data plane node is operating normally, but some newer features may be limited because of its Kong Gateway version.
+    description: "This data plane node is operating normally, but some newer features may be limited because of its {{site.base_gateway}} version."
   - status: Incompatible
-    description: This data plane node has compatibility issues that may prevent it from receiving or applying the full control plane configuration.
+    description: "This data plane node has compatibility issues that may prevent it from receiving or applying the full control plane configuration."
   - status: Unknown
-    description: Konnect can't determine the compatibility status for this data plane node. Check the node connection and Kong Gateway version.
+    description: "{{site.konnect_short_name}} can't determine the compatibility status for this data plane node. Check the node connection and {{site.base_gateway}} version."
 {% endtable %}
 
 ## Compatibility errors
