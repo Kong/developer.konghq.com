@@ -3,7 +3,7 @@ description: 'Use MeshTrafficPermission to allow requests from every workload in
 
 weight: 800
 
-namespace: kuma-demo
+namespace: kong-mesh-demo
 config:
   type: MeshTrafficPermission
   name: allow-observability-ns

@@ -3,7 +3,7 @@ description: 'Use MeshTrafficPermission to deny traffic from a namespace on a sp
 
 weight: 700
 
-namespace: kuma-demo
+namespace: kong-mesh-demo
 config:
   type: MeshTrafficPermission
   name: deny-observability-ns

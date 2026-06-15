@@ -3,7 +3,7 @@ description: 'Use MeshTrafficPermission to deny requests from every workload in 
 
 weight: 900
 
-namespace: kuma-demo
+namespace: kong-mesh-demo
 config:
   type: MeshTrafficPermission
   name: deny-malicious-ns

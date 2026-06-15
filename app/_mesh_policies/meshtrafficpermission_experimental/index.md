@@ -30,20 +30,18 @@ related_resources:
 > This resource is experimental.
 > Enable [MeshIdentity](/mesh/policies/meshidentity/) before you apply `MeshTrafficPermission`.
 
-## Overview
-
 `MeshTrafficPermission` defines which clients can access services inside a mesh based on their SPIFFE identities.
 If no `MeshTrafficPermission` applies, the default behavior is to deny all requests.
 
 You can use `MeshTrafficPermission` to:
 
-* deny requests from specific clients or namespaces so service owners cannot override that deny rule
+* deny requests from specific clients or namespaces so service owners can't override that deny rule
 * allow groups of clients, such as all workloads in a namespace, to access services by default
 * shadow-deny traffic so you can validate a policy before you enforce it
 
 The following example shows a common rule set:
 
-{% policy_yaml namespace=kuma-demo %}
+{% policy_yaml namespace=kong-mesh-demo %}
 
 ```yaml
 type: MeshTrafficPermission
@@ -79,18 +77,16 @@ and from the specific `test/client` identity, while continuing to accept other i
 
 `MeshTrafficPermission` uses three matcher lists:
 
-* `deny`: Clients that must always be denied
-* `allow`: Clients that are explicitly allowed
-* `allowWithShadowDeny`: Clients that are allowed, but also logged as if they were denied
+* `deny`: Clients that must always be denied.
+* `allow`: Clients that are explicitly allowed.
+* `allowWithShadowDeny`: Clients that are allowed, but also logged as if they were denied. This lets you test a new policy before you enforce a deny rule.
 
-`allowWithShadowDeny` helps you test a new policy before you enforce a deny rule.
-
-Requests are evaluated in this order:
+The policy evaluates requests in this order:
 
 1. If a request matches at least one `deny` matcher, the result is `DENY`.
-1. Otherwise, if a request matches at least one `allow` or `allowWithShadowDeny` matcher, the result is `ALLOW`.
+1. If a request matches no `deny` matcher and at least one `allow` or `allowWithShadowDeny` matcher, the result is `ALLOW`.
 1. If no matcher applies, the result is `DENY`.
 
-See the **Examples** tab for ready-to-apply policies that deny namespace-wide traffic,
+See the [Examples](./examples/) tab for ready-to-apply policies that deny namespace-wide traffic,
 allow namespace-wide traffic, and override a mesh-wide allow rule on a specific service port.
-Use the **Configuration reference** tab for the complete schema.
+See the [Configuration reference](./reference/) tab for the complete schema.
