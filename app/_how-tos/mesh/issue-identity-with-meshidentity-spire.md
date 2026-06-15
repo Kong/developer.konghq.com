@@ -57,7 +57,7 @@ next_steps:
   - text: Issue identity with the bundled provider
     url: /mesh/issue-identity-with-meshidentity/
   - text: MeshTrafficPermission with SPIFFE ID matchers
-    url: /mesh/policies/meshtrafficpermission/
+    url: /mesh/policies/meshtrafficpermission_experimental/
 ---
 
 {:.warning}
