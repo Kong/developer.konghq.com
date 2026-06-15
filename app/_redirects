@@ -369,3 +369,6 @@
 # Spec renames
 /api/konnect/api-builder/v3/ /api/konnect/api-catalog/v3/   301
 /api/konnect/api-builder/ /api/konnect/api-catalog/   301
+
+# ai-gateway previous-major wildcard — added by migration skill on 2026-06-15
+/ai-gateway/*  /ai-gateway/v1/:splat  301!

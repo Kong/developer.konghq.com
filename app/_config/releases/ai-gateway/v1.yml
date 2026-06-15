@@ -1,0 +1,378 @@
+app/_how-tos/ai-gateway/v1/authenticate-openai-sdk-clients-with-key-auth.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/azure-batches.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/compare-llm-models-accuracy.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/compress-llm-prompts.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/configure-hashicorp-vault-as-a-vault-for-llm-providers.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/create-a-complex-ai-chat-history.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/filter-knowledge-based-queries-with-rag-injector.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/forward-openai-sdk-model-to-ai-proxy-advanced.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/get-started-with-ai-gateway.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/limit-a2a-body-size.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/meter-llm-traffic.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/protect-sensitive-information-output-with-ai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/protect-sensitive-information-with-ai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/proxy-a2a-agents.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/rate-limit-a2a-traffic.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/rotate-secrets-in-google-cloud-secret.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/route-azure-sdk-to-multiple-azure-deployments.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/route-azure-sdk-to-specific-deployments.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/route-requests-by-model-alias.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/secure-a2a-traffic.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/secure-a2a-with-oidc.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/send-asynchronous-llm-requests.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-anthropic.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-aws-bedrock.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-cerebras.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-cohere.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-dashscope.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-databricks.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-deepseek.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-gemini.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-huggingface.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-ollama-qwen.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-ollama.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-openai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-advanced-with-vertex-ai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-for-image-generation-with-grok.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-anthropic.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-aws-bedrock.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-cerebras.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-cohere.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-dashscope.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-databricks.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-deepseek.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-gemini.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-huggingface.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-ollama-qwen.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-ollama.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-openai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-ai-proxy-with-vertex-ai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-jaeger-with-gen-ai-otel-for-tool-calls.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/set-up-jaeger-with-gen-ai-otel.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/store-a-mistral-api-key-as-a-secret-in-konnect-config-store.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/strip-model-from-open-ai-sdk-requests.md.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/transform-a-client-request-with-ai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/transform-a-response-with-ai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-agno-with-ai-proxy.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-aws-guardrails-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-custom-guardrail-with-mistral-ai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-gcp-model-armor-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-lakera-guard-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-prompt-decorator-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-prompt-guard-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-prompt-template-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-rag-injector-acls.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-rag-injector-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-semantic-prompt-guard-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-ai-semantic-response-guard-plugin.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-azure-ai-content-safety.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-bedrock-function-calling-with-streaming.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-bedrock-function-calling.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-bedrock-rerank-api.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-anthropic.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-azure.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-bedrock.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-dashscope.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-gemini.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-huggingface.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-openai.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-vertex.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-codex-with-ai-gateway.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-cohere-rerank-api.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-custom-function-for-ai-rate-limiting.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-gemini-3-google-search.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-gemini-3-image-config.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-gemini-3-thinking-config.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-gemini-cli-with-ai-gateway.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-gemini-sdk-chat.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-langchain-with-ai-proxy.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-litellm-with-ai-proxy.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-qwen-code-with-ai-gateway.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-semantic-load-balancing-with-dynamic-vault-authentication.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-semantic-load-balancing.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-vertex-sdk-chat.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/use-vertex-sdk-for-streaming.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/visualize-ai-gateway-metrics-with-kibana.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/visualize-llm-metrics-with-grafana.md:
+  status: pending
+  canonical_url:
+app/_landing_pages/ai-gateway/v1.yaml:
+  status: pending
+  canonical_url:
+app/_landing_pages/ai-gateway/v1/a2a.yaml:
+  status: pending
+  canonical_url:
+app/_landing_pages/ai-gateway/v1/ai-clis.yaml:
+  status: pending
+  canonical_url:
+app/_landing_pages/ai-gateway/v1/ai-data-gov.yaml:
+  status: pending
+  canonical_url:
+app/_landing_pages/ai-gateway/v1/ai-providers.yaml:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-audit-log-reference.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-otel-metrics.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/anthropic.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/azure.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/bedrock.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/cerebras.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/cohere.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/dashscope.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/databricks.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/deepseek.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/gemini.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/huggingface.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/llama.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/mistral.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/ollama.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/openai.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/vertex.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/vllm.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/ai-providers/xai.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/llm-open-telemetry.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/load-balancing.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/monitor-ai-llm-metrics.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/resource-sizing-guidelines-ai.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/semantic-similarity.md:
+  status: pending
+  canonical_url:
+app/ai-gateway/v1/streaming.md:
+  status: pending
+  canonical_url:
