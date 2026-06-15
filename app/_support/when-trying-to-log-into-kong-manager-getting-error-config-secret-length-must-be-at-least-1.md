@@ -1,5 +1,5 @@
 ---
-title: "Kong Manager login error: config.secret length must be at least 1"
+title: "Kong Manager login error: `config.client_secret` length must be at least 1"
 content_type: support
 description: "Logging into Kong Manager fails with a `config.client_secret` schema violation when the OIDC `client_secret` value is empty."
 products:
@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "When trying to Log into kong manager getting error \"config.secret: length must be at least 1\""
+  q: "When trying to log into Kong Manager, getting the error `config.client_secret: length must be at least 1`"
   a: |
     This error occurs when the value inside `client_secret` is empty, for example if the variable
     was wiped out or contains no data, resulting in a schema violation

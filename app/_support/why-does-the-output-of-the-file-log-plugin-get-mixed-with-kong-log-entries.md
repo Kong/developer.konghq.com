@@ -30,7 +30,7 @@ related_resources:
     url: https://github.com/torvalds/linux/blob/v5.15/include/uapi/linux/limits.h#L14
 ---
 
-## Why does the output of the file-log plugin get mixed with Kong log entries
+## Why does the output of the file-log plugin get mixed with Kong log entries?
 
 When running in Kubernetes, some of Kong's logs are directed to `/dev/stdout`.
 

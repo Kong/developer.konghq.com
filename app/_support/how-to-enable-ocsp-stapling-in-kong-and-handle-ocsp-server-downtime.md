@@ -37,7 +37,7 @@ KONG_NGINX_PROXY_SSL_STAPLING_VERIFY=on
 Additionally, to ensure the OCSP response is validated correctly, you should include the complete certificate chain of the issuer for the server certificate whose OCSP response we are validating. This can be achieved by setting the following variables:
 
 ```shell
-KONG_NGINX_PROXY_SSL_TRUSTED_CERTIFICATE=
+KONG_NGINX_PROXY_SSL_TRUSTED_CERTIFICATE=/path/to/issuer-ca-chain.pem
 ```
 
 It's important to note that if Kong is unable to retrieve the OCSP response from the responder, it will not staple the response in the TLS handshake. However, the handshake will still succeed, and the connection will be established as expected. This behavior ensures that your service remains accessible even if the OCSP server is temporarily unavailable.

@@ -60,7 +60,7 @@ plugins:
 - config:
     custom_fields_by_lua:
       x-pod-name: return kong.vault.get("{vault://env/hostname}")
-    path: /tmp/filelog
+    path: /tmp/file.log
     reopen: false
   enabled: true
   name: file-log

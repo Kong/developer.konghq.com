@@ -13,7 +13,7 @@ tldr:
     {{site.ee_product_name}} provides two audit log endpoints: `/audit/requests` (captures who did what,
     including HTTP method, user, and payload) and `/audit/objects` (captures the data entity that
     was created or updated, with full snapshots). Ensure audit logging is enabled with
-    `KONG_AUDIT_LOG: "on"`, then use the provided `kong-audit-query.sh` script to identify the RBAC
+    `KONG_AUDIT_LOG=on`, then use the provided `kong-audit-query.sh` script to identify the RBAC
     user who created a specific route, or to detect routes with empty or missing `paths` that can
     cause 409 Conflict collisions.
 related_resources: []
@@ -138,7 +138,7 @@ main() {
 main
 ```
 
-Note: Replace the `BASE` and `PASSWORD` in the script with the Admin API endpoint and the RBAC password/token.
+Note: Replace the `BASE` and `TOKEN` in the script with the Admin API endpoint and the RBAC password/token.
 
 ### Setup instructions
 
@@ -153,7 +153,7 @@ Note: Replace the `BASE` and `PASSWORD` in the script with the Admin API endpoin
 1. Ensure Kong audit logging is enabled in your Kong configuration:
 
    ```bash
-   KONG_AUDIT_LOG: "on"
+   KONG_AUDIT_LOG=on
    ```
 
    Without this, Kong will not emit any audit log events, and the script will return empty results.
