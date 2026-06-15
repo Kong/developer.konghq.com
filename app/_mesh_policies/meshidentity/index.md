@@ -72,6 +72,7 @@ spec:
         expiry: 24h
       autogenerate:
         enabled: true
+```
 {% endnavtab %}
 {% navtab "Universal (2.13+)" %}
 {% raw %}
