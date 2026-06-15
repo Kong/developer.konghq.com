@@ -22,6 +22,8 @@ module Jekyll
       end
 
       def canonical?
+        return false if MajorReleaseCalculator.new(@page.data).previous_major?
+
         case @page.data['content_type']
         when 'how_to', 'landing_page', 'concept', 'plugin'
           true
