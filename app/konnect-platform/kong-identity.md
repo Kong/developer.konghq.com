@@ -567,10 +567,10 @@ body:
 {% endkonnect_api_request %}
 {% endcapture %}
 {{ auth-server | indent: 3 }}
+<!--vale on-->
 
    {:.warning}
    > You are limited to 50 auth servers.
-<!--vale on-->
 1. Export the auth server ID and issuer URL:
    ```sh
    export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
