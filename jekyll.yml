@@ -44,6 +44,8 @@ collections:
     output: true
   cookbooks:
     output: true
+  ai_integrations:
+    output: true
 
 defaults:
   - scope:
@@ -90,6 +92,15 @@ defaults:
       permalink: "/cookbooks/:path/"
       breadcrumbs:
         - "/cookbooks/"
+  - scope:
+      path: "_ai_integrations"
+      type: "ai_integrations"
+    values:
+      layout: "ai_integration"
+      content_type: "ai_integration"
+      permalink: "/ai-integrations/:path/"
+      breadcrumbs:
+        - "/ai-integrations/"
 
 reference_metadata:
   event-gateway:

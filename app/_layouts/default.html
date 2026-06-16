@@ -239,6 +239,10 @@
       {% vite_javascript_tag cookbooks %}
     {% endif %}
 
+    {% if page.ai_integrations_index %}
+      {% vite_javascript_tag ai-integrations %}
+    {% endif %}
+
     {% if page.skills_index %}
       {% vite_javascript_tag skills %}
     {% endif %}
