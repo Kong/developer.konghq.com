@@ -328,4 +328,4 @@ For example, `jwt_decode` output is an object with `header`, `payload`, and `sig
 
 If the `jwt_decode` output is then passed through a `jq` node that reshapes it, write your JSONPath rule relative to the `jq` output structure instead.
 
-To redact any field named `sub` regardless of its position in the structure, use the resursive deep-scan JSONPath rule `$..sub`.
+To redact any field named `sub` regardless of its position in the structure, use the recursive deep-scan JSONPath rule `$..sub`.
