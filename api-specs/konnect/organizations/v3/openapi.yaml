@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@92cd0a81e40851427a090d17850f88e1ff84dd1e
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/92cd0a81e40851427a090d17850f88e1ff84dd1e'
+  x-oas-source: kong/platform-api@2f417aecb49b4cad4a6f3a03a72a407e70bba8a9
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2f417aecb49b4cad4a6f3a03a72a407e70bba8a9'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -728,6 +728,7 @@ components:
                 type: boolean
               max_expiration_period_days:
                 $ref: '#/components/schemas/MaxPATExpirationPeriodDays'
+            additionalProperties: false
             minProperties: 1
           examples:
             Example Request Body:
