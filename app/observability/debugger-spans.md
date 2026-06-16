@@ -20,6 +20,8 @@ tags:
 related_resources:
   - text: The {{site.konnect_short_name}} Debugger
     url: /observability/debugger/
+  - text: Using Debugger for Datakit
+    url: /observability/datakit-debugger/
 ---
 
 
