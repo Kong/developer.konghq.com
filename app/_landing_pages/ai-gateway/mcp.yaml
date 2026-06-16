@@ -124,7 +124,7 @@ rows:
         - type: card
           config:
             title: MCP traffic metrics
-            description: Expose and visualize LLM metrics for MCP traffic.
+            description: Expose and visualize MCP metrics for traffic observability.
             cta:
               url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
               align: end
