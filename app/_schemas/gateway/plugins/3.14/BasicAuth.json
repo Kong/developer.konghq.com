@@ -214,5 +214,13 @@
       },
       "type": "object"
     }
-  }
+  },
+  "x-supported-partials": [
+    {
+      "name": "redis-ce",
+      "paths": [
+        "config.brute_force_protection.redis"
+      ]
+    }
+  ]
 }

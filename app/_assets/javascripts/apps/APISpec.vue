@@ -178,7 +178,7 @@ const openSlideoutToc = async () => {
 :deep(.property-field-default-value),
 :deep(.property-field-enum-value),
 :deep( .property-field-example-value) {
-  @apply border border-brand-saturated/40 !important;
+  @apply border border-primary !important;
 }
 
 :deep(.default-markdown a[href^="http://"]),
@@ -187,7 +187,7 @@ const openSlideoutToc = async () => {
 }
 
 :deep(.overview-server-list button.secondary) {
-  @apply !bg-brand !text-white;
+  @apply !bg-brand !text-button;
 }
 
 :deep(.overview-server-list button.tertiary) {

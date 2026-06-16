@@ -1,7 +1,7 @@
 {% if include.render_context %}
 {% details %}
 css_classes:
-  details: "flex flex-col border-b border-primary/5"
+  details: "flex flex-col border-b border-primary"
   summary: "py-3 px-5 text-primary list-none cursor-pointer"
   wrapper: "bg-secondary shadow-primary rounded-md flex flex-col text-sm"
   float_right: true
@@ -26,6 +26,8 @@ content: |
 {% case include.presenter.entity_type %}
 {% when 'plugin' %}
 Add the following to your Terraform configuration to create a Konnect Gateway Plugin:
+{% else %}
+Add the following to your Terraform configuration:
 {% endcase %}
 {% endif %}
 {% include components/entity_example/format/snippets/terraform.md presenter=include.presenter %}

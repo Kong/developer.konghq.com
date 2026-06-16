@@ -13,9 +13,9 @@ platform:
     service_mesh:
       text: Service Mesh
       url: https://konghq.com/products/kong-mesh
-    api_builder:
-      text: API Builder
-      url: https://konghq.com/products/kong-insomnia
+    dev_portal:
+      text: Dev Portal
+      url: https://konghq.com/products/kong-konnect/features/developer-portal
     pricing:
       text: Pricing
       url: https://konghq.com/pricing
@@ -63,7 +63,7 @@ plugins:
     view_all:
       text: View all &rarr;
       url: /plugins/
-      cssClass: text-brand
+      cssClass: text-links
 
 
 how_tos:
@@ -84,7 +84,7 @@ how_tos:
     view_all:
       text: View all &rarr;
       url: /how-to/
-      cssClass: text-brand
+      cssClass: text-links
 
 support:
   title: Support
