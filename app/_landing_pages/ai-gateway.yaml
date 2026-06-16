@@ -734,19 +734,19 @@ rows:
             cta:
               url: /ai-gateway/ai-otel-metrics/
               align: end
+# COMMENTING OUT UNTIL WE HAVE HOW-TO GUIDES TO LINK TO FOR 2.0
+  # - header:
+  #     type: h2
+  #     text: How-to Guides
 
-  - header:
-      type: h2
-      text: How-to Guides
-
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              tags:
-                - ai
-              quantity: 5
-              allow_empty: true
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             tags:
+  #               - ai
+  #             quantity: 5
+  #             allow_empty: true
 
   - header:
       text: "Frequently Asked Questions"
