@@ -46,7 +46,7 @@ Breaking changes in the 3.15.0.0 release.
 When a license expires, you can no longer change any {{site.base_gateway}} configuration.
 The Admin API and all interfaces become read-only until a valid license is applied.
 
-Existing configuration continues to be used, and all proxy traffic is processed as before the expiration.
+{{site.base_gateway}} continues to use the existing configuration, and all proxy traffic is processed as it was before the license expired.
 
 The following Admin API endpoints can still be used with an expired license:
 * `/licenses` is available to upload a new license.
