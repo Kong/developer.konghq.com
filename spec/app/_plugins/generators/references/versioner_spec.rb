@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../../../../app/_plugins/generators/references/versioner'
-require_relative '../../../../../app/_plugins/generators/references/page/base'
-require_relative '../../../../../app/_plugins/generators/release_info/builder'
-require_relative '../../../../../app/_plugins/generators/release_info/product'
-require_relative '../../../../../app/_plugins/generators/release_info/tool'
-require_relative '../../../../../app/_plugins/drops/release'
-require_relative '../../../../../app/_plugins/drops/releases_dropdown'
-require_relative '../../../../../app/_plugins/generators/utils/version'
-require_relative '../../../../../app/_plugins/generators/custom_jekyll_page'
+require_relative '../../../../spec_helper'
 
 RSpec.describe Jekyll::ReferencePages::Versioner do
   subject(:versioner) { described_class.new(site:, page:) }
