@@ -58,11 +58,14 @@ You can use {{site.identity}} to:
 
 ## How {{site.identity}} works
 
-{{site.identity}} allows you to create auth servers, claims, scopes, and clients in {{site.konnect_short_name}} using the [{{site.konnect_short_name}} API](/api/konnect/kong-identity/v1/#/). Each of these components plays a specific role in how access is managed:
+{{site.identity}} allows you to create auth servers, claims, scopes, clients, and principals in {{site.konnect_short_name}} using the [{{site.konnect_short_name}} API](/api/konnect/kong-identity/v1/#/). Each of these components plays a specific role in how access is managed:
 * **Auth server:** Issue OAuth 2.0 and OpenID Connect tokens that you can use to authenticate a client (machine) with your Gateway Services. Each auth server is unique to your organization and [{{site.konnect_short_name}} region](/konnect-platform/geos/). We recommend creating different auth servers for different environments or subsidiaries.
 * **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
 * **Scopes:** Define what those clients are allowed to access. 
 * **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services.
+* **Principals:** Represents an external client, workload, or a human authenticating to a {{site.base_gateway}} (not a {{site.konnect_short_name}} user or {{site.dev_portal}} developer) that authenticates to a {{site.base_gateway}}.
+* **Directories:** Regional collection of principals. 
+  Each {{site.konnect_short_name}} organization can provision up to one directory per region by default.
 
 To use {{site.identity}} for authentication, you must configure one of the supported plugins (OpenID Connect, OAuth2.0 Introspection, or Upstream OAuth). These plugins determine how tokens are validated, introspected, or passed along to upstream services.
 
@@ -519,6 +522,11 @@ rows:
 {% endtable %}
 <!--vale on -->
 
+## Principals and directories
+
+{% include sections/principals-and-directories.md %}
+
+For more information, see the [Principals reference](/identity/principals/).
 
 ## Configure {{site.identity}}
 
