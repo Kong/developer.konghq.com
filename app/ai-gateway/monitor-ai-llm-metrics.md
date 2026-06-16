@@ -12,7 +12,7 @@ tags:
   - monitoring
 
 min_version:
-  ai-gateway: '3.0'
+  ai-gateway: '2.0'
 
 description: "This guide walks you through collecting AI metrics and sending them to Prometheus."
 
@@ -45,7 +45,7 @@ AI metrics exported by the Prometheus plugin can be graphed in Grafana using [{{
 
 The following sections describe the AI metrics that are available.
 
-{% include /ai-gateway/llm-metrics.md %}
+{% include /ai-gateway/v2/llm-metrics.md %}
 
 ## Overview
 
