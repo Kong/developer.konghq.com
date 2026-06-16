@@ -32,6 +32,8 @@ related_resources:
     url: /gateway/datakit/
   - text: Get started with Datakit
     url: /how-to/get-started-with-datakit/
+  - text: Using Debugger for Datakit
+    url: /observability/datakit-debugger/
 
 min_version:
   gateway: '3.11'
@@ -1838,6 +1840,7 @@ Refer to the [Vault node](#vault-node) for more details on how to use vault refe
 ## Debugging
 
 Datakit includes support for debugging your configuration.
+For deeper tracing in production, you can also use the [{{site.konnect_short_name}} Debugger](/observability/datakit-debugger/), which captures Datakit node spans and I/O values per lifecycle event without exposing data in client responses.
 
 {:.warning}
 > Enabling the `debug` option in Datakit is considered unsafe for production
