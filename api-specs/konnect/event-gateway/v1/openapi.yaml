@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@1d10a1973e6bd490a6d2a07505bd124c87f2608c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1d10a1973e6bd490a6d2a07505bd124c87f2608c'
+  x-oas-source: kong/platform-api@a5fb5ead854655e6281e1cd050c6be545821f775
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a5fb5ead854655e6281e1cd050c6be545821f775'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3019,15 +3019,6 @@ components:
           minLength: 1
       required:
         - name
-    SchemaValidationType:
-      description: |
-        How to validate the schema and parse the record.
-        * confluent_schema_registry - validates against confluent schema registry.
-        * json - simple JSON parsing without the schema.
-      type: string
-      enum:
-        - confluent_schema_registry
-        - json
     SchemaRegistryCreate:
       description: The typed schema of the schema registry to create it.
       discriminator:
@@ -4972,35 +4963,9 @@ components:
         labels:
           $ref: '#/components/schemas/Labels'
         config:
-          description: The configuration of the schema validation policy.
+          description: The configuration of the policy.
           type: object
-          properties:
-            type:
-              $ref: '#/components/schemas/SchemaValidationType'
-            schema_registry:
-              $ref: '#/components/schemas/SchemaRegistryReference'
-            failure_mode:
-              $ref: '#/components/schemas/ConsumeFailureMode'
-            validate_key:
-              description: |-
-                If true, validate the record key.
-
-                **Requires a minimum runtime version of `1.2`**.
-              type: boolean
-              x-min-runtime-version: '1.2'
-            validate_value:
-              description: |-
-                If true, validate the record value.
-
-                **Requires a minimum runtime version of `1.2`**.
-              type: boolean
-              x-min-runtime-version: '1.2'
-            key_validation_action:
-              $ref: '#/components/schemas/ConsumeKeyValidationAction'
-            value_validation_action:
-              $ref: '#/components/schemas/ConsumeValueValidationAction'
-          required:
-            - type
+          $ref: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicyConfig'
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
@@ -5041,6 +5006,82 @@ components:
         - type
         - config
       title: Schema Validation
+    EventGatewayConsumeSchemaValidationPolicyConfig:
+      description: The configuration of the consume schema validation policy.
+      discriminator:
+        propertyName: type
+        mapping:
+          confluent_schema_registry: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig'
+          json: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicyJsonConfig'
+      oneOf:
+        - $ref: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig'
+        - $ref: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicyJsonConfig'
+    EventGatewayConsumeSchemaValidationPolicyJsonConfig:
+      description: The configuration of the consume schema validation policy when using JSON parsing without schema.
+      type: object
+      properties:
+        schema_registry:
+          $ref: '#/components/schemas/SchemaRegistryReference'
+        failure_mode:
+          $ref: '#/components/schemas/ConsumeFailureMode'
+        validate_key:
+          description: |-
+            If true, validate the record key.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        validate_value:
+          description: |-
+            If true, validate the record value.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        key_validation_action:
+          $ref: '#/components/schemas/ConsumeKeyValidationAction'
+        value_validation_action:
+          $ref: '#/components/schemas/ConsumeValueValidationAction'
+        type:
+          type: string
+          enum:
+            - json
+          x-terraform-transform-const: true
+      required:
+        - type
+    EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig:
+      description: The configuration of the consume schema validation policy when using a schema registry.
+      type: object
+      properties:
+        schema_registry:
+          $ref: '#/components/schemas/SchemaRegistryReference'
+        failure_mode:
+          $ref: '#/components/schemas/ConsumeFailureMode'
+        validate_key:
+          description: |-
+            If true, validate the record key.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        validate_value:
+          description: |-
+            If true, validate the record value.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        key_validation_action:
+          $ref: '#/components/schemas/ConsumeKeyValidationAction'
+        value_validation_action:
+          $ref: '#/components/schemas/ConsumeValueValidationAction'
+        type:
+          type: string
+          enum:
+            - confluent_schema_registry
+          x-terraform-transform-const: true
+      required:
+        - type
     EventGatewayProduceSchemaValidationPolicy:
       description: A policy that validates produce messages against a schema registry.
       type: object
