@@ -46,7 +46,48 @@ Breaking changes in the 3.15.0.0 release.
 When a license expires, you can no longer change any {{site.base_gateway}} configuration.
 The Admin API and all interfaces become read-only until a valid license is applied.
 
-Existing configuration continues to be used, and all proxy traffic is processed as before the expiration.
+{{site.base_gateway}} continues to use the existing configuration, and all proxy traffic is processed as it was before the license expired.
+
+The following Admin API endpoints can still be used with an expired license:
+* `/licenses` is available to upload a new license.
+* `/keyring/recover`, `/keyring/import`, and `/keyring/import/raw` are available so that a keyring-encrypted license can be decrypted across restarts.
+
+[Upload a valid license](/gateway/entities/license/#deploy-a-license) to restore full read-write access to the Admin API.
+
+#### License metrics attribute renames
+
+In the [Prometheus](/plugins/prometheus/) and [OpenTelemetry](/plugins/opentelemetry/) plugins, the following license metric label values have been renamed:
+* `ee_entity_read` is now `entity_read`
+* `ee_entity_write` is now `entity_write`
+
+This affects `kong_enterprise_license_features` in Prometheus and `kong.ee.license.features` in OpenTelemetry.
+Update any dashboards and alerts that reference the old values.
+
+#### Plugin execution error attribution
+
+The [Prometheus plugin's](/plugins/prometheus/) `source` label has a new value: `custom`.
+Previously, `source` was either `service` for upstream errors, or `kong` for all plugin errors.
+{{site.base_gateway}} now sets `source="custom"` for HTTP 500 errors from custom plugins and custom Lua code run by bundled plugins (for example, from `custom_fields_by_lua`).
+
+{:.warning}
+> **Caution**: Log-phase custom plugin errors aren't attributed to `custom` because the Prometheus plugin runs before other plugins in the log phase.
+
+Update any dashboards and alert rules that filter or aggregate on the `source` label to account for the new value.
+
+#### Conditional plugin execution language
+
+{% include_cached /gateway/expressions/migrate.md %}
+
+#### Workspace names
+
+Workspace names that match a top-level Admin API route segment are no longer allowed.
+The schema validator now rejects these names on create and update.
+
+{{site.base_gateway}} checks for conflicts at startup and before running migrations.
+If it detects a conflict, {{site.base_gateway}} exits with an error listing the conflicting Workspace names and asks you to rename them before starting or migrating.
+
+Existing Workspaces created before this check was introduced must be renamed manually.
+To find reserved segments, call `GET /endpoints` and review the first path component of each route.
 
 ## 3.14.x breaking changes
 
