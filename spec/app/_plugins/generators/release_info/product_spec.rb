@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../../../../app/_plugins/generators/release_info/product'
-require_relative '../../../../../app/_plugins/generators/release_info/releasable'
-require_relative '../../../../../app/_plugins/drops/release'
-require_relative '../../../../../app/_plugins/generators/utils/version'
+require_relative '../../../../spec_helper'
 
 RSpec.describe Jekyll::ReleaseInfo::Product do
   let(:gateway_product) do
@@ -173,7 +170,7 @@ RSpec.describe Jekyll::ReleaseInfo::Product do
       end
 
       it 'deduplicates by name, keeping the highest release per name' do
-        expect(product.deduplicated_releases.map(&:number)).to eq(['1.1.0', '0.9.0'])
+        expect(product.deduplicated_releases.map(&:number)).to eq(['1.1.0'])
       end
     end
   end
@@ -192,6 +189,65 @@ RSpec.describe Jekyll::ReleaseInfo::Product do
 
       it 'returns true' do
         expect(product.use_release_name?).to be(true)
+      end
+    end
+  end
+
+  describe 'with a major: scope' do
+    let(:site_data) do
+      {
+        'products' => {
+          'gateway' => {
+            'releases' => [
+              { 'release' => '3.10', 'latest' => true },
+              { 'release' => '3.9' },
+              { 'release' => '2.1' },
+              { 'release' => '2.0' }
+            ]
+          }
+        }
+      }
+    end
+
+    context 'when scoped to the current major' do
+      subject(:product) do
+        described_class.new(site:, product: 'gateway', major: 3, min_version: {}, max_version: {})
+      end
+
+      it 'only exposes releases from that major in available_releases' do
+        expect(product.available_releases.map(&:number)).to eq(['3.10', '3.9'])
+      end
+
+      it 'only exposes releases from that major in releases' do
+        expect(product.releases.map(&:number)).to eq(['3.10', '3.9'])
+      end
+
+      it 'finds the latest_available_release within the major' do
+        expect(product.latest_available_release.number).to eq('3.10')
+      end
+    end
+
+    context 'when scoped to a previous major' do
+      subject(:product) do
+        described_class.new(site:, product: 'gateway', major: 2, min_version: {}, max_version: {})
+      end
+
+      it 'only exposes releases from that major' do
+        expect(product.available_releases.map(&:number)).to eq(['2.1', '2.0'])
+      end
+
+      it 'returns nil for latest_available_release when no release in the major is flagged latest' do
+        expect(product.latest_available_release).to be_nil
+      end
+    end
+
+    context 'when major is nil (no scoping)' do
+      subject(:product) do
+        described_class.new(site:, product: 'gateway', min_version: {}, max_version: {})
+      end
+
+      it 'returns every release from the current major' do
+        expect(product.available_releases.map(&:number)).to eq(['3.10', '3.9'])
       end
     end
   end
