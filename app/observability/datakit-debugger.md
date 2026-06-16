@@ -32,15 +32,14 @@ min_version:
 ---
 
 When you run a [Debugger session](/observability/debugger/) on a {{site.base_gateway}} instance that uses the [Datakit plugin](/plugins/datakit/), Debugger captures tracing data for each Datakit node in the pipeline.
-This gives you visibility into how data flows through your Datakit configuration.
-You can see which nodes ran, what values they received and produced, and where errors or skips occurred.
+This gives you visibility into how data flows through your Datakit configuration, which nodes ran, what values they received and produced, and where errors or skips occurred.
 
 Datakit tracing provides debugging detail without exposing sensitive data.
 {{site.base_gateway}} tracks values as they move through the Datakit workflow and applies redaction and sanitization rules before sending trace data to {{site.konnect_short_name}}.
 
 ## Enable tracing event collection
 
-To collect Datakit tracing events, start a {{site.konnect_short_name}} Debugger session with body payload capture.
+To collect Datakit tracing events, start a {{site.konnect_short_name}} Debugger session with body payload capture enabled.
 If header-only payload capture is enabled, node spans will be recorded but tracing events won't be uploaded.
 
 ## Datakit node spans
@@ -50,7 +49,7 @@ For each Datakit node that executes, Debugger creates a span named `kong.datakit
 Node spans capture metadata about node execution but don't contain node input or output values.
 Values are only captured in the separate Datakit tracing event payload.
 
-If a node is skipped due to branch routing rules, it normally won't create a span because execution hasn't started.
+If a node is skipped due to branch routing rules, it won't create a span because execution hasn't started.
 Information about skipped nodes is available in Datakit tracing events.
 
 Each span includes the following attributes:
