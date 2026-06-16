@@ -21,6 +21,9 @@
         <div class="grid gap-4 {% unless h2_col %}heading-section{% endunless %}">
           {% if row.header %}
               {% include landing_pages/header.md config = row.header %}
+              {% if row.header.type == 'h1' %}
+              <div class="flex flex-col mt-2">{% include banners/cross_major_banner.html %}</div>
+              {% endif %}
           {% endif %}
 
           {% if row.columns %}
