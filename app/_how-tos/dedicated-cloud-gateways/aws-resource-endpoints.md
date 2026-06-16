@@ -152,3 +152,28 @@ Additionally, you can validate that the resource endpoint connections in {{site.
 ```sh
 curl -i -X GET "http://$RESOURCE_DOMAIN_NAME/anything"
 ```
+
+## Configure VPC security group inbound rules
+
+When using AWS Resource Endpoints with Dedicated Cloud Gateways, traffic flows through AWS VPC Lattice before reaching your backend resources.
+VPC Lattice terminates the connection from your Dedicated Cloud Gateway and opens a new connection to your backend services.
+Because of this, the source IP of this new connection is an AWS-managed Lattice IP, not the original Dedicated Cloud Gateway IP.
+This is why you must configure your inbound VPC security group rules with the managed prefix list to allow this traffic.
+
+1. In AWS, navigate to your VPC console.
+1. From the VPC sidebar, click **Managed prefix lists**.
+1. Search for the region where your backend resources (NLB/target group) are deployed (for example: `com.amazonaws.<backend-resource-region>.vpc-lattice`). 
+1. Copy the prefix list ID. 
+1. From the VPC sidebar, click **Security groups**.
+1. Create a new security group or edit the inbound rules of an existing security group.
+1. In the **Source** field, enter the prefix list IDs, for example `pl-123456...`.
+1. Repeat steps 1-7 for all regions where your backend resources are deployed.
+
+## Troubleshooting timeouts
+
+If requests time out and your NLB shows no incoming traffic:
+* Verify the security group attached to your backend allows the Lattice prefix list.
+* Confirm the correct region-specific prefix list is used in your security group inbound rules.
+* Validate the Resource Endpoint connection is in the `READY` state in {{site.konnect_short_name}}.
+* Confirm the Gateway Service upstream host matches the Resource Endpoint domain name.
+* Check NLB target group health.
