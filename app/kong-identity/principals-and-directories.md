@@ -141,7 +141,7 @@ For example, an Request Termination plugin can block access only when `principal
 Plugins can read principal attributes from the request context after authentication. 
 The only way to scope plugins to a principal is by using [conditional plugin execution](/gateway/configure-conditional-plugin-execution/) on the principal metadata.
 
-For example, a rate limiting plugin scoped to gold-tier principals would use a condition like this:
+For example, a plugin scoped to gold-tier principals would use a condition like this:
 
 ```yaml
 condition: principal.metadata.tier == "gold"
@@ -151,7 +151,7 @@ The following request context fields are available to plugins:
 
 * `principal.id`: The UUID of the principal
 * `principal.metadata.*`: Any metadata key on the principal
-* `principal.identities.*`: Any identity on the principal
+* `principal.display_name`: The name of the principal
 
 ## Controlling {{site.event_gateway_short}} policy execution based on principals
 
@@ -454,10 +454,6 @@ body:
   consumer_id: $CONSUMER_ID
 {% endkonnect_api_request %}
 <!--vale on-->
-
-### Link a principal to a Consumer Group
-
-placeholder, need array config
 
 ### Custom
 
