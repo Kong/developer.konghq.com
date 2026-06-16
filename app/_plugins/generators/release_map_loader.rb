@@ -4,7 +4,7 @@ require_relative '../services/release_map'
 
 module Jekyll
   class ReleaseMapLoader < Generator
-    priority :low
+    priority :high
 
     def generate(site)
       ReleaseMap.load_all(site).each do |source_path, config|
