@@ -10,7 +10,7 @@ require 'jekyll'
 require 'liquid'
 require 'capybara'
 
-Dir[File.join(PROJECT_ROOT, 'app/_plugins/{tags,blocks,lib,filters,services}/**/*.rb')].sort.each do |f|
+Dir[File.join(PROJECT_ROOT, 'app/_plugins/**/*.rb')].sort.each do |f|
   require f
 end
 
