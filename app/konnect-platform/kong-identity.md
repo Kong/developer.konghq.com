@@ -63,7 +63,7 @@ You can use {{site.identity}} to:
 * **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
 * **Scopes:** Define what those clients are allowed to access. 
 * **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services.
-* **Principals:** Represents an external client, workload, or a human authenticating to a {{site.base_gateway}} (not a {{site.konnect_short_name}} user or {{site.dev_portal}} developer) that authenticates to a {{site.base_gateway}}.
+* **Principals:** Represent external clients, workloads, or humans authenticating to a {{site.base_gateway}} (not a {{site.konnect_short_name}} user or {{site.dev_portal}} developer).
 * **Directories:** Regional collection of principals. 
   Each {{site.konnect_short_name}} organization can provision up to one directory per region by default.
 

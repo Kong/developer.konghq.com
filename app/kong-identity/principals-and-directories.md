@@ -125,7 +125,7 @@ Each product has its own representation of who is authenticating: {{site.base_ga
 Metadata is a set of key/value pairs attached to a principal that are made available in the request context of a {{site.base_gateway}} or {{site.event_gateway_short}} after that principal has been authenticated, or looked up, in the request context.
 
 You can use metadata to configure how a gateway behaves when that principal is authenticated to it.
-For example, an Request Termination plugin can block access only when `principal.metadata.business_unit == "payments"`.
+For example, a Request Termination plugin can block access only when `principal.metadata.business_unit == "payments"`.
 
 ## Controlling {{site.base_gateway}} plugin execution based on principals
 
