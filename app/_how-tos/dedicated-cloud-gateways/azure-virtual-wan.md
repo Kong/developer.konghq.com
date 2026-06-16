@@ -51,6 +51,13 @@ faqs:
 
       <!--vale off-->
       ```hcl
+      echo '
+      variable "network_id" {}
+      variable "tenant_id" {}
+      variable "resource_group_name" {}
+      variable "vhub_name" {}
+      variable "subscription_id" {}
+
       resource "konnect_cloud_gateway_transit_gateway" "my_vhub_peering" {
         network_id = var.network_id
 
@@ -66,6 +73,7 @@ faqs:
           }
         }
       }
+      ' >> main.tf
       ```
       <!--vale on-->
 next_steps:
