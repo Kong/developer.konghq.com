@@ -5,7 +5,6 @@ layout: reference
 
 products:
   - ai-gateway
-  - gateway
 
 breadcrumbs:
   - /ai-gateway/
@@ -45,7 +44,7 @@ works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic by configuring a [policy](/ai-gateway/entities/ai-policy/) using the [OpenTelemetry plugin](/plugins/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
+{{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic by configuring an [OpenTelemetry Policy](/plugins/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
 
 You can use these metrics to:
 
@@ -65,39 +64,40 @@ To collect AI OTLP metrics, enable the following settings:
 columns:
   - title: Setting
     key: setting
-  - title: Plugin
-    key: plugin
+  - title: Policy
+    key: policy
   - title: Required for
     key: required_for
 rows:
   - setting: "`config.metrics.enable_ai_metrics`: `true`"
-    plugin: "[OpenTelemetry](/plugins/opentelemetry/reference/)"
+    policy: "[OpenTelemetry](/plugins/opentelemetry/reference/)"
     required_for: "All AI metrics"
   - setting: "`config.metrics.endpoint`"
-    plugin: "[OpenTelemetry](/plugins/opentelemetry/reference/)"
+    policy: "[OpenTelemetry](/plugins/opentelemetry/reference/)"
     required_for: "All AI metrics (set to a valid OTLP-compatible metrics endpoint)"
   - setting: "`config.logging.log_statistics`: `true`"
-    plugin: "[AI Proxy](/plugins/ai-proxy/reference/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/)"
+    policy: "[AI Proxy](/plugins/ai-proxy/reference/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/)"
     required_for: "[Gen AI metrics](#gen-ai-metrics-otel-semantic-conventions)"
   - setting: "`config.logging.log_statistics`: `true`"
-    plugin: "[AI MCP Proxy](/plugins/ai-mcp-proxy/reference/)"
+    policy: "[AI MCP Proxy](/plugins/ai-mcp-proxy/reference/)"
     required_for: "[MCP metrics](#mcp-metrics)"
   - setting: "`config.logging.log_statistics`: `true`"
-    plugin: "[AI A2A Proxy](/plugins/ai-a2a-proxy/reference/)"
+    policy: "[AI A2A Proxy](/plugins/ai-a2a-proxy/reference/)"
     required_for: "[A2A metrics](#a2a-metrics)"
 {% endtable %}
 <!-- vale on -->
 
 Some metrics have additional requirements:
 
-* `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry plugin](/plugins/opentelemetry/reference/).
-* The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry plugin](/plugins/opentelemetry/reference/).
+* `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry Policy](/plugins/opentelemetry/reference/).
+* The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry Policy](/plugins/opentelemetry/reference/).
 
 ## Gen AI metrics (OTLP semantic conventions)
 
 These metrics follow the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/). They capture request duration, upstream latency, token usage, and streaming performance.
 
 ### Metric reference
+
 {% include plugins/otel/metric_tables.md metric_prefixes="gen_ai." %}
 
 ## Kong Gen AI metrics
@@ -106,7 +106,7 @@ These metrics use the `kong.gen_ai.*` namespace and capture Kong-specific AI obs
 
 ### kong.gen_ai.llm.cost
 
-Cost of AI requests. To populate this metric, define `model.options.input_cost` and `model.options.output_cost` in the [AI Proxy](/plugins/ai-proxy/reference/#schema--config-model-options-input-cost) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/#schema--config-targets-model-options-input-cost) plugin configuration.
+Cost of AI requests. To populate this metric, define `model.options.input_cost` and `model.options.output_cost` in the [Model](/ai-gateway/entities/ai-model/) configuration.
 
 * **Type**: Counter
 * **Unit**: `{cost}`
@@ -216,7 +216,7 @@ These metrics provide observability into MCP (Model Context Protocol) server int
 
 ### mcp.client.operation.duration
 
-Duration of the MCP request as observed by the sender. Only available when the [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/) is in passthrough-listener mode (the upstream is an MCP server). Requires `enable_latency_metrics` set to `true`.
+Duration of the MCP request as observed by the sender. Only available when {{site.ai_gateway}} is in passthrough-listener mode (the upstream is an MCP server). Requires `enable_latency_metrics` set to `true`.
 
 * **Type**: Histogram
 * **Unit**: `s` (seconds)
