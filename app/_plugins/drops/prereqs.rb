@@ -120,6 +120,15 @@ module Jekyll
                            .select { |p| ProductIncludePrereqs.exist?(p) }
       end
 
+      def render_gateway_prereq?
+        _products = @page.data.fetch('products', [])
+        return false unless _products.include?('gateway')
+        return true unless _products.include?('ai-gateway')
+
+        major_version = @page.data.dig('major_version', 'ai-gateway')
+        major_version && major_version == 1
+      end
+
       def tools
         @tools ||= fetch_or_fail(@page, 'tools', [])
       end
