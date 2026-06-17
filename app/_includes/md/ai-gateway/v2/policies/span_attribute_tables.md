@@ -1,18 +1,6 @@
 {%- assign spans = site.data.ai-gateway.v2.otel-span-attributes.spans -%}
 {%- assign attributes = site.data.ai-gateway.v2.otel-span-attributes.attributes -%}
-{%- assign span_names = include.span_names | split: ',' -%}
 {% for span in spans %}
-{% if include.span_names %}
-{% assign found = false %}
-{% for span_name in span_names %}
-{% assign stripped = span_name | strip %}
-{% if span.name == stripped %}
-{% assign found = true %}
-{% break %}
-{% endif %}
-{% endfor %}
-{% unless found %}{% continue %}{% endunless %}
-{% endif %}
 #### {{ span.title | default: span.name }}{% if span.min_version != "" %} {% new_in span.min_version %}{% endif %}
 
 {{ span.description }}

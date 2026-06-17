@@ -1,13 +1,10 @@
 {%- assign metrics = site.data.ai-gateway.v2.otel-metrics.metrics -%}
 {%- assign attributes = site.data.ai-gateway.v2.otel-metrics.attributes -%}
-{%- assign metric_prefixes = include.metric_prefixes | split: ',' -%}
 {% for metric in metrics %}
 {% if include.metric_prefixes %}
 {% assign found = false %}
-{% for prefix in metric_prefixes %}
-{% assign prefix_stripped = prefix | strip %}
-{% assign metric_prefix = metric.name | slice: 0, prefix_stripped.size %}
-{% if metric_prefix == prefix_stripped %}
+{% for prefix in include.metric_prefixes | split: ',' %}
+{% if metric.name | slice: 0, prefix.size | strip == prefix | strip %}
 {% assign found = true %}
 {% break %}
 {% endif %}
