@@ -383,11 +383,11 @@ rows:
     description: "The UUID of the authenticated Principal. `null` if no Principal is authenticated."
     example: |
       `principal.id == "a1b2c3d4-..."`
-  - field: "`principal.name`"
+  - field: "`principal.display_name`"
     type: "`string`"
     description: "The display name of the authenticated Principal. `null` if no Principal is authenticated."
     example: |
-      `principal.name == "alice"`
+      `principal.display_name == "alice"`
   - field: "`principal.metadata`"
     type: "`Map`"
     description: |
