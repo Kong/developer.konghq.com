@@ -8,6 +8,7 @@
     - Optionally configure your shell to [activate mise](https://mise.jdx.dev/getting-started.html#activate-mise) automatically.
     - You may need to run `mise trust` when first opening a new repository.
 - [libyaml](https://github.com/yaml/libyaml).
+    - Required for fast, native YAML parsing and configuration file processing.
 
 ## Run Locally
 
