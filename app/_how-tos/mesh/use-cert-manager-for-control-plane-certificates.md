@@ -35,9 +35,9 @@ related_resources:
     url: /mesh/deploy-mesh-self-managed/
 ---
 
-By default, {{site.mesh_product_name}} generates its own self-signed control plane certificates at startup. Using cert-manager lets you manage the full certificate lifecycle — issuance, rotation, and expiry — outside of the control plane itself. This guide walks you through creating the required cert-manager resources and configuring {{site.mesh_product_name}} to use them.
+By default, {{site.mesh_product_name}} generates its own self-signed control plane certificates at startup. Using cert-manager lets you manage the full certificate lifecycle — issuance, rotation, and expiration — outside of the control plane itself. This guide walks you through creating the required cert-manager resources and configuring {{site.mesh_product_name}} to use them.
 
-## Create the Kong Mesh namespace
+## Create the {{site.mesh_product_name}} namespace
 
 The cert-manager resources in the following steps are scoped to the `kong-mesh-system` namespace, which {{site.mesh_product_name}} uses at install time. Create it now so the namespace exists before you apply any certificates:
 
@@ -172,7 +172,7 @@ Verify that the control plane is running and using the cert-manager-issued certi
      openssl x509 -noout -subject -issuer -dates
    ```
 
-   The output should show `kong-mesh-selfsigned-ca` as the issuer and an expiry date 90 days from issuance. For example: 
+   The output should show `kong-mesh-selfsigned-ca` as the issuer and an expiration date 90 days from issuance. For example: 
 
    ```text
    subject=
