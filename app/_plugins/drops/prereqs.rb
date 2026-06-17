@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative './prereqs/product_entities_prereqs'
+require_relative './prereqs/product_include_prereqs'
+require_relative './prereqs/data_prereqs'
 
 module Jekyll
   module Drops
     class Prereqs < Liquid::Drop # rubocop:disable Style/Documentation
-      PRODUCT_INCLUDES = Dir.glob('app/_includes/prereqs/products/*.md')
-                            .map { |f| File.basename(f, '.md') }.to_set.freeze
-
       def initialize(page:, site:) # rubocop:disable Lint/MissingSuper
         @page = page
         @site = site
@@ -79,6 +79,14 @@ module Jekyll
         end
       end
 
+      def entities_product_include
+        @entities_product_include ||= ProductEntitiesPrereqs.new(
+          product: entities_product,
+          major: @page.data.dig('major_version', entities_product),
+          product_data: @site.data.dig('products', entities_product)
+        ).versioned_include
+      end
+
       def data
         product = entities_product
 
@@ -109,7 +117,7 @@ module Jekyll
       def products
         @products ||= @page.data.fetch('products', [])
                            .reject { |p| %w[gateway ai-gateway].include?(p) } # we handle this in the templates
-                           .select { |p| PRODUCT_INCLUDES.include?(p) }
+                           .select { |p| ProductIncludePrereqs.exist?(p) }
       end
 
       def tools
