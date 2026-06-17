@@ -1710,16 +1710,6 @@ releases:
     ee-version: "3.15.0.0"
     eol: TBA
     distributions:
-      - amazonlinux2:
-          package: true
-          package_support:
-            fips: false
-            arm: true
-            graviton: true
-          docker: true
-          docker_support:
-            arm: true
-          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
