@@ -105,3 +105,7 @@ In traditional mode, {{site.base_gateway}} will log an error-level message at st
 In DB-less mode, if the declarative configuration file contains a `kafka-consume` plugin scoped to a Service, {{site.base_gateway}} will fail to start. In this case, you must update the declarative configuration before restarting {{site.base_gateway}}.
 
 In hybrid mode, if a `kafka-consume` plugin scoped to a Service exists in PostgreSQL, upgrading and restarting the control plane will succeed. However, before updating the data plane, you must update the plugin configuration. Otherwise, once the data plane is upgraded and restarted, it will fail to sync the configuration due to validation errors.
+
+## Authentication
+
+{% include_cached /plugins/kafka/auth.md slug=page.slug %}

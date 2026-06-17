@@ -133,6 +133,9 @@ rows:
     desc: "Enable SSL validation."
   - example: "[URI capture](./examples/uri-capture/)"
     desc: "Capture the URI of the request and use it as the message destination name."
+  - example: |
+      [OAuth 2.0 client credentials](./examples/oauth-client-credentials/) {% new_in 3.15 %}
+    desc: "Authenticate to a Solace broker using the `CLIENT_CREDENTIALS` scheme, with Kong fetching and renewing OAuth 2.0 tokens automatically."
 {% endtable %}
 
 ## Implementation details
@@ -150,3 +153,7 @@ The plugin supports the following modes of operation:
 ### Message delivery guarantees
 
 {% include /plugins/confluent-kafka-consume/message-delivery.md %}
+
+## Authentication
+
+{% include_cached /plugins/solace/auth.md slug=page.slug %}

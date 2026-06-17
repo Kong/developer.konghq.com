@@ -62,6 +62,10 @@ For more information, see the [Confluent Cloud documentation](https://docs.confl
 
 Kong also provides a [plugin for publishing messages to Confluent Cloud](/plugins/confluent/).
 
+## Authentication
+
+{% include_cached /plugins/confluent/auth.md slug=page.slug %}
+
 ## Implementation details
 
 The plugin supports the following modes of operation:
