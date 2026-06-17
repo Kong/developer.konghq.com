@@ -1,5 +1,5 @@
-{%- assign metrics = site.data.ai-gateway.v1.otel-metrics.metrics -%}
-{%- assign attributes = site.data.ai-gateway.v1.otel-metrics.attributes -%}
+{%- assign metrics = site.data.ai-gateway.v2.otel-metrics.metrics -%}
+{%- assign attributes = site.data.ai-gateway.v2.otel-metrics.attributes -%}
 {%- assign metric_prefixes = include.metric_prefixes | split: ',' -%}
 {% for metric in metrics %}
 {% if include.metric_prefixes %}

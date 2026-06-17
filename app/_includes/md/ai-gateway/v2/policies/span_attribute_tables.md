@@ -1,5 +1,5 @@
-{%- assign spans = site.data.ai-gateway.v1.otel-span-attributes.spans -%}
-{%- assign attributes = site.data.ai-gateway.v1.otel-span-attributes.attributes -%}
+{%- assign spans = site.data.ai-gateway.v2.otel-span-attributes.spans -%}
+{%- assign attributes = site.data.ai-gateway.v2.otel-span-attributes.attributes -%}
 {%- assign span_names = include.span_names | split: ',' -%}
 {% for span in spans %}
 {% if include.span_names %}
