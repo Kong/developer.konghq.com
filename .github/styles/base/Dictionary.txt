@@ -17,6 +17,7 @@ allow_terminated
 allowlist
 allowlisting
 allowlisted
+allowlists
 Amal
 amberflo
 andAll
@@ -237,6 +238,7 @@ eventTime
 evaluable
 example_service
 exfiltrate
+exfiltration
 extra_body
 failover
 fapi

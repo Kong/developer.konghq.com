@@ -298,7 +298,7 @@ plugins:
 {% endraw -%}
 {:.no-copy-code}
 
-**`access`**. An array of Lua source strings, each of which becomes a function executed during the `access` phase. Each function has full access to the [Kong PDK](/gateway/latest/pdk/) and the `ngx` namespace.
+**`access`**. An array of Lua source strings, each of which becomes a function executed during the `access` phase. Each function has full access to the [Kong PDK](/gateway/pdk/reference/) and the `ngx` namespace.
 
 **`ngx.req.set_header("apikey", ...)`**. The standard PDK function `kong.service.request.set_header` only mutates headers sent upstream; it does not change what later Plugins see. The Authorization-to-apikey rewrite has to be visible to the next Plugin in the chain (Key Auth), so the recipe drops down to `ngx.req.set_header`, which mutates the underlying nginx request and is visible to every PDK reader for the remainder of the request lifecycle.
 
@@ -437,7 +437,7 @@ rows:
 When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `Retry-After` header.
 
 {:.info}
-> In production, store provider credentials in [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. Per-developer Consumer credentials are also good vault candidates as the team scales beyond a handful of seats.
+> In production, store provider credentials in [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. Per-developer Consumer credentials are also good vault candidates as the team scales beyond a handful of seats.
 
 
 ## Apply the Kong configuration
@@ -1266,10 +1266,10 @@ If **Observability → Custom dashboards → `Copilot Usage`** shows no data 5+ 
 ## Variations and next steps
 
 - **Add SSO with Consumer Group tiers.** Replace Key Auth with the [OpenID Connect](/plugins/openid-connect/) Plugin pointed at your IdP, define Consumer Groups for `copilot-standard-users` and `copilot-power-users`, scope separate AI Proxy Advanced Plugins to each group, and let the user's group claim drive which model they can access. The [Claude Code SSO](/cookbooks/claude-code-sso/) recipe demonstrates this pattern end-to-end.
-- **Add code-secret PII redaction.** Add the [AI PII Sanitizer](/plugins/ai-pii-sanitizer/) Plugin before AI Proxy Advanced to redact API keys, tokens, and other secrets from prompts before they reach the LLM provider. Developers pasting `.env` snippets into Copilot Chat is a real exfiltration risk; this Plugin catches it server-side.
+- **Add code-secret PII redaction.** Add the [AI Sanitizer](/plugins/ai-sanitizer/) Plugin before AI Proxy Advanced to redact API keys, tokens, and other secrets from prompts before they reach the LLM provider. Developers pasting `.env` snippets into Copilot Chat is a real exfiltration risk; this Plugin catches it server-side.
 - **Switch to monthly token budgets.** The 60-second window here is intentionally aggressive for the demo so a few prompts visibly exhaust it. Production teams usually enforce monthly budgets, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%} for a 5 million token monthly ceiling per Consumer. Combine multiple `limits` entries to enforce burst and sustained budgets simultaneously.
 - **Multi-node rate limiting with Redis.** The recipe uses `strategy: local`, which keeps counters in memory on each Kong node. For multi-node clusters, switch to `strategy: redis` and point to a shared Redis instance.
-- **Move credentials into a vault.** Use [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) to source provider keys and Consumer credentials from HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, or the Konnect Config Store. Replace {% raw %}`${{ env "DECK_OPENAI_TOKEN" }}`{% endraw %} style references with `{vault://backend/key}` references.
+- **Move credentials into a vault.** Use [Kong Vaults](/gateway/secrets-management/) to source provider keys and Consumer credentials from HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, or the Konnect Config Store. Replace {% raw %}`${{ env "DECK_OPENAI_TOKEN" }}`{% endraw %} style references with `{vault://backend/key}` references.
 - **Cover non-Copilot OpenAI-format clients.** This recipe works for any client that speaks the OpenAI Chat Completions API and authenticates with `Authorization: Bearer`. Cursor, Continue, and similar IDE assistants can point at the same Route with their own Consumer credential.
 
 ## Cleanup
