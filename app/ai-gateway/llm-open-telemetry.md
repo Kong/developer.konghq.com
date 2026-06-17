@@ -66,7 +66,7 @@ The span data is sent to the configured OTEL endpoint through the [Kong tracing]
 
 ## Span attribute reference
 
-{% include plugins/otel/span_attribute_tables.md %}
+{% include md/ai-gateway/v2/policies/span_attribute_tables.md %}
 
 
 
