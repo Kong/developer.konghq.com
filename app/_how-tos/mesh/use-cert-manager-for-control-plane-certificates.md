@@ -37,6 +37,14 @@ related_resources:
 
 By default, {{site.mesh_product_name}} generates its own self-signed control plane certificates at startup. Using cert-manager lets you manage the full certificate lifecycle — issuance, rotation, and expiry — outside of the control plane itself. This guide walks you through creating the required cert-manager resources and configuring {{site.mesh_product_name}} to use them.
 
+## Create the Kong Mesh namespace
+
+The cert-manager resources in the following steps are scoped to the `kong-mesh-system` namespace, which {{site.mesh_product_name}} uses at install time. Create it now so the namespace exists before you apply any certificates:
+
+```sh
+kubectl create namespace kong-mesh-system
+```
+
 ## Create a self-signed ClusterIssuer
 
 A `ClusterIssuer` is a cluster-scoped resource that cert-manager uses to sign certificates. Create a self-signed one as the root of your certificate chain:
@@ -135,7 +143,6 @@ Install {{site.mesh_product_name}} and point the control plane TLS configuration
 helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
 helm repo update
 helm upgrade --install \
-  --create-namespace \
   --namespace kong-mesh-system \
   kong-mesh kong-mesh/kong-mesh \
   --set controlPlane.tls.general.secretName=control-plane-cert
