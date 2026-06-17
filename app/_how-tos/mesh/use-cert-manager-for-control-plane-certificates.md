@@ -37,11 +37,11 @@ related_resources:
     url: /mesh/cert-manager/
 ---
 
-By default, {{site.mesh_product_name}} generates its own self-signed control plane certificates at startup. Using cert-manager lets you manage the full certificate lifecycle — issuance, rotation, and expiration — outside of the control plane itself. This guide walks you through creating the required cert-manager resources and configuring {{site.mesh_product_name}} to use them.
+By default, {{site.mesh_product_name}} generates its own self-signed control plane certificates at startup. Using cert-manager lets you manage the full certificate lifecycle, issuance, rotation, and expiration, outside of the control plane itself. This guide walks you through creating the required cert-manager resources and configuring {{site.mesh_product_name}} to use them.
 
 ## Create the {{site.mesh_product_name}} namespace
 
-The cert-manager resources in the following steps are scoped to the `kong-mesh-system` namespace, which {{site.mesh_product_name}} uses at install time. Create it now so the namespace exists before you apply any certificates:
+The cert-manager resources in the following steps are scoped to the `kong-mesh-system` namespace, which {{site.mesh_product_name}} uses at install time:
 
 ```sh
 kubectl create namespace kong-mesh-system
@@ -102,40 +102,40 @@ spec:
 
 ## Create the control plane certificate
 
-Create a `Certificate` resource that cert-manager uses to issue and renew the control plane TLS certificate. The `dnsNames` must include all the DNS names that data planes use to reach the control plane:
+1. Create a `Certificate` resource that cert-manager uses to issue and renew the control plane TLS certificate. The `dnsNames` must include all the DNS names that data planes use to reach the control plane:
+   
+   ```sh
+   echo "apiVersion: cert-manager.io/v1
+   kind: Certificate
+   metadata:
+     name: control-plane-cert
+     namespace: kong-mesh-system
+   spec:
+     secretName: control-plane-cert
+     duration: 2160h
+     renewBefore: 360h
+     isCA: false
+     privateKey:
+       algorithm: RSA
+       encoding: PKCS1
+       size: 2048
+     usages:
+       - server auth
+     dnsNames:
+       - kong-mesh-control-plane.kong-mesh-system.svc
+       - kong-mesh-control-plane
+       - kong-mesh-control-plane.kong-mesh-system
+       - kong-mesh-control-plane.kong-mesh-system.svc.local
+     issuerRef:
+       name: kong-mesh-issuer
+       kind: Issuer" | kubectl apply -f -
+   ```
 
-```sh
-echo "apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: control-plane-cert
-  namespace: kong-mesh-system
-spec:
-  secretName: control-plane-cert
-  duration: 2160h # 90d
-  renewBefore: 360h # 15d
-  isCA: false
-  privateKey:
-    algorithm: RSA
-    encoding: PKCS1
-    size: 2048
-  usages:
-    - server auth
-  dnsNames:
-    - kong-mesh-control-plane.kong-mesh-system.svc
-    - kong-mesh-control-plane
-    - kong-mesh-control-plane.kong-mesh-system
-    - kong-mesh-control-plane.kong-mesh-system.svc.local
-  issuerRef:
-    name: kong-mesh-issuer
-    kind: Issuer" | kubectl apply -f -
-```
+1. Wait for the certificate to be issued:
 
-Wait for the certificate to be issued:
-
-```sh
-kubectl wait -n kong-mesh-system --for=condition=ready certificate/control-plane-cert --timeout=60s
-```
+   ```sh
+   kubectl wait -n kong-mesh-system --for=condition=ready certificate/control-plane-cert --timeout=60s
+   ```
 
 ## Install {{site.mesh_product_name}} with the cert-manager certificate
 
@@ -151,11 +151,12 @@ helm upgrade --install \
 kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
 ```
 
-If {{site.mesh_product_name}} is already installed, run `helm upgrade` instead of `helm install` with the same `--set` flag.
+{:.info}
+> If {{site.mesh_product_name}} is already installed, run `helm upgrade` instead of `helm install` with the same `--set` flag.
 
 ## Validate
 
-Verify that the control plane is running and using the cert-manager-issued certificate:
+Verify that the control plane is running and using the cert-manager-issued certificate.
 
 1. Confirm the control plane pod is healthy:
 
