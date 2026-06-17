@@ -1,6 +1,6 @@
 ---
 title: Use cert-manager for control plane certificates
-description: Learn how to use cert-manager to provision and rotate TLS certificates for the Kong Mesh control plane on Kubernetes.
+description: Learn how to use cert-manager to provision and rotate TLS certificates for the {{site.mesh_product_name}} control plane on Kubernetes.
 content_type: how_to
 permalink: /mesh/use-cert-manager-for-control-plane-certificates/
 products:
@@ -127,7 +127,7 @@ Wait for the certificate to be issued:
 kubectl wait -n kong-mesh-system --for=condition=ready certificate/control-plane-cert --timeout=60s
 ```
 
-## Install Kong Mesh with the cert-manager certificate
+## Install {{site.mesh_product_name}} with the cert-manager certificate
 
 Install {{site.mesh_product_name}} and point the control plane TLS configuration at the secret cert-manager created:
 
