@@ -11,7 +11,7 @@ tags:
   - logging
 
 min_version:
-  ai-gateway: '3.0'
+  ai-gateway: '2.0'
 breadcrumbs:
   - /ai-gateway/
 description: "{{site.ai_gateway}} provides a standardized logging format for AI plugins, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
