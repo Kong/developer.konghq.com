@@ -1,4 +1,4 @@
-Install cert-manager in your cluster. cert-manager issues and rotates certificates automatically.
+Install cert-manager in your cluster to issue and rotate certificates automatically:
 
 ```sh
 helm repo add jetstack https://charts.jetstack.io
