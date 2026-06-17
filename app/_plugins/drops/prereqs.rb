@@ -5,6 +5,9 @@ require 'yaml'
 module Jekyll
   module Drops
     class Prereqs < Liquid::Drop # rubocop:disable Style/Documentation
+      PRODUCT_INCLUDES = Dir.glob('app/_includes/prereqs/products/*.md')
+                            .map { |f| File.basename(f, '.md') }.to_set.freeze
+
       def initialize(page:, site:) # rubocop:disable Lint/MissingSuper
         @page = page
         @site = site
@@ -105,8 +108,8 @@ module Jekyll
 
       def products
         @products ||= @page.data.fetch('products', [])
-                           .reject { |p| %w[gateway ai-gateway].include?(p) }
-                           .select { |p| File.exist?(product_include_file_path(p)) }
+                           .reject { |p| %w[gateway ai-gateway].include?(p) } # we handle this in the templates
+                           .select { |p| PRODUCT_INCLUDES.include?(p) }
       end
 
       def tools
@@ -125,10 +128,6 @@ module Jekyll
 
       def prereqs
         @prereqs ||= fetch_or_fail(@page, 'prereqs', {})
-      end
-
-      def product_include_file_path(product)
-        File.join(@site.source, '_includes', 'prereqs', 'products', "#{product}.md")
       end
 
       def fetch_or_fail(page, key, default)
