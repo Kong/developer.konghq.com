@@ -68,8 +68,8 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration, plus [jq](https://jqlang.org/) for JSON processing in the apply and cleanup steps.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
-        1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
+        1. Install **decK** version 1.43 or later from [developer.konghq.com/deck](/deck/).
         1. Install **jq** from [jqlang.org](https://jqlang.org/).
 
         You can verify all three are installed:
@@ -1226,7 +1226,7 @@ The Gateway Service's **Analytics** tab and the **Observability** L1 menu remain
 Kong's Key Auth Plugin returns this when the `apikey` header is missing. Which, for Copilot, means the `Authorization` header was either absent or arrived as a bare `Bearer` with no value. Verify in this order:
 
 1. **Confirm the request reached Kong with a non-empty Bearer value.** Add the diagnostic `kong.log.notice` lines described in the [Confirm Bearer-to-apikey rewrite](#confirm-bearer-to-apikey-rewrite-and-temperature-strip) section and look for `"authorization":"Bearer <key>"`. If the value is literally `Bearer` with nothing after, VS Code did not resolve the secret placeholder.
-1. **Re-mint the placeholder.** Open **Manage Language Models...**, remove the Kong AI Gateway entry, run **Add Models... → Custom Endpoint → Chat Completions** again, and paste the key when prompted. A `chatLanguageModels.json` entry whose `apiKey` was hand-typed (rather than wizard-generated) is silently invalid even if its shape looks identical to a working one.
+1. **Re-mint the placeholder.** Open **Manage Language Models...**, remove the {{site.ai_gateway_name}} entry, run **Add Models... → Custom Endpoint → Chat Completions** again, and paste the key when prompted. A `chatLanguageModels.json` entry whose `apiKey` was hand-typed (rather than wizard-generated) is silently invalid even if its shape looks identical to a working one.
 1. **Strip stray characters from the key.** Copy the value with `printf '%s' "$DECK_COPILOT_KEY_ALICE"`. zsh's trailing `%` marker for newline-less output is a common silent-401 source.
 
 ### Dashboard is empty after a few minutes
@@ -1301,4 +1301,4 @@ Tear down Kong by deleting the local data plane and the {{site.konnect_product_n
 export KONNECT_CONTROL_PLANE_NAME='github-copilot-byok-recipe' && curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -k $KONNECT_TOKEN
 ```
 
-Remove the Kong AI Gateway entry from VS Code. Open the Chat view → model picker → **Manage Language Models...** → select **Kong AI Gateway** → **Remove**. This deletes the entry from `chatLanguageModels.json` AND the stored secret from the OS keychain. Copilot resumes routing to GitHub's hosted models for the seat.
+Remove the {{site.ai_gateway_name}} entry from VS Code. Open the Chat view → model picker → **Manage Language Models...** → select **{{site.ai_gateway_name}}** → **Remove**. This deletes the entry from `chatLanguageModels.json` AND the stored secret from the OS keychain. Copilot resumes routing to GitHub's hosted models for the seat.
