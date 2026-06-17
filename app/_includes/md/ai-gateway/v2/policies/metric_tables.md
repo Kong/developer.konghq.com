@@ -3,8 +3,11 @@
 {% for metric in metrics %}
 {% if include.metric_prefixes %}
 {% assign found = false %}
-{% for prefix in include.metric_prefixes | split: ',' %}
-{% if metric.name | slice: 0, prefix.size | strip == prefix | strip %}
+{% assign prefixes = include.metric_prefixes | split: ',' %}
+{% for prefix in prefixes %}
+{% assign prefix_stripped = prefix | strip %}
+{% assign metric_prefix = metric.name | slice: 0, prefix_stripped.size | strip %}
+{% if metric_prefix == prefix_stripped %}
 {% assign found = true %}
 {% break %}
 {% endif %}
