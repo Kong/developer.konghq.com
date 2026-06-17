@@ -17,7 +17,7 @@ tiers:
   insomnia: enterprise
 
 min_version:
-  insomnia: '13'
+  insomnia: '13.0'
 
 description: Link {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }} and send requests against a Route in your {{site.base_gateway}} Service.
 tags:
