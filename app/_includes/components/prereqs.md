@@ -20,7 +20,7 @@
 {%- endif -%}
 {% if prereqs.skip_product != true -%}
 {%- if page.products and prereqs.render_works_on? -%}
-{%- if page.products contains 'gateway' or page.products contains 'ai-gateway' -%}
+{%- if prereqs.render_gateway_prereq?  -%}
 {%- if page.works_on contains 'konnect' -%}
 {%- assign variables = prereqs.konnect -%}
 {%- assign ports = prereqs.ports -%}
