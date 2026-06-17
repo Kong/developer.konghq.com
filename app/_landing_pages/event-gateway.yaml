@@ -260,6 +260,14 @@ rows:
                       guide: |
                         [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                     - outcome: |
+                        Automatically apply policies based on the metadata of connected clients, with no per-user rule changes needed
+                      feature: |
+                        [Modify Headers policy](/event-gateway/policies/modify-headers/)
+                      guide: |
+                        [Enrich SASL PLAIN connections with principal metadata](/event-gateway/kong-identity-metadata-integration/)
+                        <br>
+                        [Enrich OAuth connections with principal metadata](/event-gateway/kong-identity-jwt-metadata-integration/)
+                    - outcome: |
                         Know exactly which teams and topics are driving cluster load, in real time, via in-platform dashboards or exported to your preferred tooling
                       feature: |
                         [Observability](/event-gateway/configure-observability-with-otel/)
