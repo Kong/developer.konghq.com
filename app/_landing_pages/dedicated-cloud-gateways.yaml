@@ -237,6 +237,42 @@ rows:
   
   - header:
       type: h2
+      text: "Security"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Public network security controls
+              description: |
+                Learn how to secure your public Dedicated Cloud Gateway network.
+              icon: /assets/icons/world.svg
+              cta:
+                text: Learn more
+                url: /dedicated-cloud-gateways/public-network/#security-controls
+      - blocks:
+          - type: card
+            config:
+              title: WAF for private networking
+              description: |
+                Learn how to secure your private Dedicated Cloud Gateway network with WAF.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: Learn more
+                url: /dedicated-cloud-gateways/private-network/#waf
+      - blocks:
+          - type: card
+            config:
+              title: Bot Detector (tech preview)
+              description: |
+                Bot Detector helps identify automated or suspicious traffic using signals like IP addresses, ASN, JA4 fingerprints, user agents, and request paths. 
+                Use Bot Detector to monitor matching traffic in monitor mode, or block matching traffic with configurable rules.
+              icon: /assets/icons/warning.svg
+              cta:
+                text: Enable Bot Detector in {{site.konnect_short_name}} Labs
+                url: https://cloud.konghq.com/global/organization/labs
+  
+  - header:
+      type: h2
       text: "Cluster management"
     columns:
       - blocks:
