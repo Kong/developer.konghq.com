@@ -114,10 +114,12 @@ module Jekyll
         end
       end
 
-      def products
-        @products ||= @page.data.fetch('products', [])
-                           .reject { |p| %w[gateway ai-gateway].include?(p) } # we handle this in the templates
-                           .select { |p| ProductIncludePrereqs.exist?(p) }
+      def product_includes_map
+        @product_includes_map ||= ProductIncludePrereqs.new(
+          products: @page.data.fetch('products', []),
+          major_version: @page.data.fetch('major_version', {}),
+          products_data: @site.data.fetch('products', {})
+        ).products_include_map
       end
 
       def render_gateway_prereq?

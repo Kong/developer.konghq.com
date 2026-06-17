@@ -414,7 +414,7 @@ RSpec.describe Jekyll::Drops::Prereqs do
     end
   end
 
-  describe '#products' do
+  describe '#product_includes_map' do
     let(:product_includes) do
       [
         'app/_includes/prereqs/products/mesh.md',
@@ -426,11 +426,24 @@ RSpec.describe Jekyll::Drops::Prereqs do
 
     before { stub_const('Jekyll::Drops::ProductIncludePrereqs::PRODUCT_INCLUDES', product_includes) }
 
-    context 'when products include gateway and ai-gateway' do
+    context 'when products include gateway' do
       let(:page_data) { super().merge('products' => %w[gateway ai-gateway mesh]) }
 
+      it 'skips gateway and returns the rest of the products' do
+        expect(drop.product_includes_map).to eq(
+          { 'mesh' => 'prereqs/products/mesh.md',
+            'ai-gateway' => 'prereqs/products/ai-gateway.md' }
+        )
+      end
+    end
+
+    context 'when products include ai-gateway with major_version 1' do
+      let(:page_data) do
+        super().merge('products' => %w[gateway ai-gateway mesh], 'major_version' => { 'ai-gateway' => 1 })
+      end
+
       it 'skips gateway and ai-gateway and returns the rest of the products' do
-        expect(drop.products).to eq(['mesh'])
+        expect(drop.product_includes_map).to eq({ 'mesh' => 'prereqs/products/mesh.md' })
       end
     end
 
@@ -438,12 +451,12 @@ RSpec.describe Jekyll::Drops::Prereqs do
       let(:page_data) { super().merge('products' => %w[mesh insomnia]) }
 
       it 'skips products with no include file and returns the rest' do
-        expect(drop.products).to eq(['mesh'])
+        expect(drop.product_includes_map).to eq({ 'mesh' => 'prereqs/products/mesh.md' })
       end
     end
 
     context 'when products are empty' do
-      it { expect(drop.products).to be_empty }
+      it { expect(drop.product_includes_map).to be_empty }
     end
   end
 
