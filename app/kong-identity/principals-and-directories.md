@@ -67,8 +67,11 @@ To authenticate using a credential, a principal must exist in the target directo
 ### Identities
 
 Identities are references to how a principal is known in other systems. 
-They are used for lookup after authentication has already happened somewhere else (like a third-party IdP), or to link a principal to an entity in another Kong product. 
-Identities are created on the principal as a separate resource after the principal is created.
+{{site.identity}} uses them either:
+
+- For lookup after authentication has already happened somewhere else (like a third-party IdP).
+- To link a principal to an entity in another Kong product. 
+You can add identities to the principal as a separate resource after you've created a principal.
 
 {{site.identity}} supports the following identity types:
 
@@ -98,7 +101,7 @@ rows:
 A single principal can have multiple identities, including multiple of the same type.
 
 {:.info}
-> **Lookup caching and time-to-live (TTL):** Principal lookups are cached, so additional lookups don't require a connection to {{site.identity}} until the cache is evicted. For {{site.base_gateway}}, the eviction rate is determined by the smallest of the following:
+> **Lookup caching and time-to-live (TTL):** {{site.identity}} caches principal lookups, so additional lookups don't require a connection to {{site.identity}} until it evicts the cache. For {{site.base_gateway}}, the eviction rate depends on the smallest of the following:
 > * The TTL set on the directory (10 minutes by default)
 > * The TTL set on a credential
 > * The caching configuration on {{site.base_gateway}}. Cached principals are in the general cache pool which can be configured by setting `db_cache_ttl`.
@@ -109,7 +112,7 @@ Principals centralize the concept of an authenticating entity across Kong produc
 Each product has its own representation of who is authenticating: {{site.base_gateway}} has Consumers and {{site.dev_portal}} has applications:
 
 * **Consumers**: Attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. When an authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. This allows existing Consumer-scoped plugins to function while you migrate to principals.
-* **Applications**: A {{site.dev_portal}} application can be mapped to a {{site.base_gateway}} Consumer through a principal, creating a 1:1:1 relationship between the application, the principal, and the Consumer. This is how you apply Consumer-scoped plugins (including ACE and KAA) to traffic from a {{site.dev_portal}} application: configure the plugin on the mapped Consumer, and it runs for any request authenticated as the application. Consumer-dimension analytics also include the application's activity once the mapping is in place. A Portal Admin maps an existing application to an existing Consumer; {{site.identity}} creates or updates the principal of type `application` behind the scenes.
+* **Applications**: You can map a {{site.dev_portal}} application to a {{site.base_gateway}} Consumer through a principal, creating a 1:1:1 relationship between the application, the principal, and the Consumer. This is how you apply Consumer-scoped plugins (including ACE and KAA) to traffic from a {{site.dev_portal}} application: configure the plugin on the mapped Consumer, and it runs for any request authenticated as the application. Consumer-dimension analytics also include the application's activity once the mapping is in place. A Portal Admin maps an existing application to an existing Consumer; {{site.identity}} creates or updates the principal of type `application` behind the scenes.
 
 #### When to use principals instead of Consumers
 
@@ -122,7 +125,7 @@ Each product has its own representation of who is authenticating: {{site.base_ga
 
 ### Metadata
 
-Metadata is a set of key/value pairs attached to a principal that are made available in the request context of a {{site.base_gateway}} or {{site.event_gateway_short}} after that principal has been authenticated, or looked up, in the request context.
+Metadata is a set of key-value pairs associated with a principal. {site.identity}} authenticates or looks up a principal, then makes the metadata available in the request context of a {{site.base_gateway}} or {{site.event_gateway_short}}.
 
 You can use metadata to configure how a gateway behaves when that principal is authenticated to it.
 For example, a Request Termination plugin can block access only when `principal.metadata.business_unit == "payments"`.
@@ -189,7 +192,7 @@ body:
 {% endnavtab %}
 {% navtab "UI" %}
 
-A default directory is automatically created when you [create your first principal](#configure-a-principal) in the UI.
+{{site.identity}} automatically creates a default directory when you [create your first principal](#configure-a-principal) in the UI.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -299,6 +302,8 @@ body:
         1. In the **Claim value** field, enter the expected value of the selected OIDC claim. For sub, this is the subject identifier.
 {% endnavtab %}
 {% navtab "Consumer" %}
+{:.info}
+   > If you weren't using Consumers before using principals, you won't see the Consumer option available, since principals are meant to replace Consumers in {{site.konnect_short_name}}.
   1. From the **Authentication type** dropdown menu, select "Consumer linking".
   1. From the **Control plane** dropdown menu, select the control plane where the Consumer exists.
   1. From the **Consumer** dropdown menu, select the Consumer that represents this principal.
@@ -323,7 +328,7 @@ body:
 
 The following are default limits for principals and directories:
 
-* 1 directory per region
+* 1 directory per region.
   Contact Kong Support if you need more than one directory.
 * 100,000 principals per directory. Contact Kong Support if you need higher limits.
 * 10 identities per principal
