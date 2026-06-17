@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../lib/major_version_resolver'
+
 module Jekyll
   module Drops
     class DataPrereqs
@@ -19,11 +21,18 @@ module Jekyll
 
       def versioned_key
         @versioned_key ||= if @major
-                             url_segment = @product_data['previous_major_url_segment']&.gsub('<major>', @major.to_s)
+                             url_segment = major_url_segement
                              "#{@product}/#{url_segment}"
                            else
                              @product
                            end
+      end
+
+      def major_url_segement
+        MajorVersionResolver.process(
+          product_data: @product_data,
+          major: @major
+        )
       end
 
       def entities_product_include_path
