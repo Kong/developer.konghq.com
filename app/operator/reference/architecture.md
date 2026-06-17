@@ -1,6 +1,6 @@
 ---
 title: "{{site.operator_product_name}} architecture"
-description: Learn about the {{site.operator_product_name}} architecture with a self-hosted control plane or with {{site.konnect_short_name}}, with a single or multiple tenants.
+description: Learn about the {{site.operator_product_name}} architecture with a self-hosted control plane or with {{site.konnect_short_name}}, for single-tenant and multi-tenant deployments.
 content_type: reference
 layout: reference
 
@@ -47,9 +47,12 @@ flowchart LR
             KO["{{site.operator_product_name}} Pod<br/>(Controller Manager<br/>+ in-memory {{site.kic_product_name_short}} per Gateway)"]
         end
 
+        subgraph ClusterScoped[Cluster-scoped resources]
+            GWClass[GatewayClass]
+        end
+
         subgraph AppNS[Application Namespace]
             GWConfig[GatewayConfiguration]
-            GWClass[GatewayClass]
             GW[Gateway]
             Routes["HTTPRoute / GRPCRoute<br/>TCPRoute / UDPRoute"]
             DP["Data plane<br/>({{site.base_gateway}}, DB-less)"]
@@ -71,7 +74,7 @@ flowchart LR
 
 {{site.operator_product_name}} watches for `GatewayClass` resources with `spec.controllerName: konghq.com/gateway-operator`. For each `Gateway` associated with such a `GatewayClass`, {{site.operator_product_name}}:
 
-1. Starts an in-memory {{site.kic_product_name}} instance to act as the control plane for that `Gateway`. This isn't a separately deployed Pod, it runs embedded inside the {{site.operator_product_name}} process.
+1. Starts an in-memory {{site.kic_product_name}} instance to act as the control plane for that `Gateway`. This isn't a separately deployed Pod; it runs embedded inside the {{site.operator_product_name}} process.
 2. Deploys a data plane: a {{site.base_gateway}} instance running in DB-less mode.
 3. Continuously pushes routing configuration from the in-memory {{site.kic_product_name_short}} to the data plane over mTLS via the Admin API.
 
@@ -120,4 +123,4 @@ flowchart LR
 
 {{site.operator_product_name}} reconciles Kubernetes CRDs, such as `KonnectAPIAuthConfiguration`, `KonnectGatewayControlPlane`, and Kong entity CRDs, against the {{site.konnect_short_name}} API over HTTPS.
 
-For data plane connectivity, {{site.operator_product_name}} deploys data plane Pods annotated with a `KonnectExtension`. These Pods connect to the {{site.konnect_short_name}}-hosted control plane over a secure WebSocket (WSS) connection to receive their configuration. There is no in-memory {{site.kic_product_name_short}} in this model, {{site.konnect_short_name}} acts as the control plane.
+For data plane connectivity, {{site.operator_product_name}} deploys data plane Pods annotated with a `KonnectExtension`. These Pods connect to the {{site.konnect_short_name}}-hosted control plane over a secure WebSocket (WSS) connection to receive their configuration. There is no in-memory {{site.kic_product_name_short}} in this model. {{site.konnect_short_name}} acts as the control plane.
