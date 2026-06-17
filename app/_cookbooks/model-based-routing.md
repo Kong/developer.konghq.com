@@ -191,9 +191,11 @@ The Key Auth plugin enforces authentication on both Routes using a shared `apike
 - **`hide_credentials: true`:** Strips the `apikey` header before forwarding requests to the LLM provider, so API keys never leave {{site.base_gateway}}.
 - **`key_names`:** Defines which header carries the key. The demo uses `apikey` via the OpenAI SDK's `default_headers` parameter.
 
-The same Key Auth configuration applies to both the `model-selection` and `default-llm` Routes. The recipe defines one Consumer (`demo-consumer`) with key `demo-consumer-key` that authenticates to both.
+The recipe defines two Consumers:
+- **`demo-consumer`:** Client-facing authentication. End users authenticate with `apikey: demo-consumer-key`.
+- **`internal-router`:** Service-to-service authentication. The Datakit plugin uses `apikey: internal-router-key` for internal calls to `/model-selection`.
 
-When the DataKit plugin on the default-llm Route calls the model-selection Route internally, it extracts the `apikey` header from the incoming client request and forwards it, so the internal call also passes authentication.
+This two-consumer pattern is standard for internal service-to-service traffic: clients authenticate once at the gateway edge, but internal service calls use separate credentials. When the DataKit plugin calls the model-selection Route internally, it uses the `internal-router-key` (via the `DECK_INTERNAL_ROUTER_KEY` environment variable), so the internal call passes authentication without needing to extract or forward the client's credentials.
 
 For production deployments, use [{{site.base_gateway}} Vaults](/gateway/secrets-management/) to store API keys:
 
@@ -386,7 +388,7 @@ The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin on the default-llm R
 - **`response_streaming: allow`:** Enables streaming responses for interactive chat applications. The client can receive tokens as they're generated.
 - **`model.model_alias`:** Maps the tier name to this target. When the DataKit plugin sets `.model = "fast"`, the plugin routes to OpenAI. When `.model = "smart"`, it routes to AWS Bedrock.
 - **Fast target (OpenAI):** Uses `{% raw %}${{ env "DECK_OPENAI_FAST_MODEL" }}{% endraw %}` (defaults to `gpt-4o-mini`) with Bearer token authentication.
-- **Smart target (AWS Bedrock):** Uses `{% raw %}${{ env "DECK_BEDROCK_SMART_MODEL" }}{% endraw %}` (defaults to `anthropic.claude-3-5-sonnet-20241022-v2:0`) with AWS IAM credentials and region configuration.
+- **Smart target (AWS Bedrock):** Uses `{% raw %}${{ env "DECK_BEDROCK_SMART_MODEL" }}{% endraw %}` (defaults to `us.anthropic.claude-haiku-4-5-20251001-v1:0`) with AWS IAM credentials and region configuration.
 
 The plugin adds an `X-Kong-LLM-Model` response header showing which model served the request. The demo script reads this header to confirm the provider routing decision.
 
@@ -397,7 +399,10 @@ Export your environment variables:
 ```bash
 export DECK_OPENAI_SELECTOR_SLM='o3-mini'                # Model selection (SLM)
 export DECK_OPENAI_FAST_MODEL='gpt-4o-mini'              # Fast tier
-export DECK_BEDROCK_SMART_MODEL='anthropic.claude-3-5-sonnet-20241022-v2:0'  # Smart tier (Claude on Bedrock)
+export DECK_BEDROCK_SMART_MODEL='us.anthropic.claude-haiku-4-5-20251001-v1:0'  # Smart tier (Claude on Bedrock)
+
+# Service-to-service authentication for internal Datakit calls
+export DECK_INTERNAL_ROUTER_KEY='internal-router-key'    # Must match the internal-router consumer's key
 
 # Also export your provider credentials
 export DECK_OPENAI_TOKEN='Bearer sk-...'
@@ -406,30 +411,29 @@ export DECK_AWS_SECRET_ACCESS_KEY='your-secret-access-key'
 export DECK_AWS_REGION='us-east-1'
 ```
 
-Create a file named `multi-provider.yaml` with the configuration below, then sync it to your Control Plane using decK:
-
-```bash
-deck gateway sync recipes/model-based-routing/kong-config/deck/multi-provider.yaml \
-  --konnect-token "${KONNECT_TOKEN}" \
-  --konnect-control-plane-name "${KONNECT_CONTROL_PLANE_NAME}"
-```
-{: data-test-step="block" .collapsible }
-
-The `multi-provider.yaml` file contents:
+Create the `multi-provider.yaml` file:
 
 {%- raw %}
 
-```yaml
+```bash
+cat <<'EOF' > multi-provider.yaml
+
 _format_version: '3.0'
 _info:
   select_tags:
     - model-based-routing-recipe
 
-# Consumer for authentication
+# Consumers for authentication
 consumers:
+  # Client-facing consumer
   - username: demo-consumer
     keyauth_credentials:
       - key: demo-consumer-key
+
+  # Service-to-service consumer for internal Datakit calls
+  - username: internal-router
+    keyauth_credentials:
+      - key: internal-router-key
 
 # Model selection service - analyzes prompts using OpenAI o3-mini
 services:
@@ -525,14 +529,14 @@ services:
               jq: |
                 ({"messages": .messages})
 
-            # Extract API key from request headers for internal call
+            # Use service-to-service API key for internal model-selection call
             - name: EXTRACT_AUTH
               type: jq
               input: request.headers
               output: service_request.headers
               jq: |
                 {
-                  apikey: (.apikey // .Apikey // .APIKey)
+                  apikey: "internal-router-key"
                 }
 
 
@@ -610,9 +614,18 @@ services:
               model:
                 provider: openai
                 name: ${{ env "DECK_OPENAI_SELECTOR_SLM" }}
+EOF
 ```
 {% endraw -%}
-{:.no-copy-code}
+
+Then sync it to your Control Plane using decK:
+
+```bash
+deck gateway sync multi-provider.yaml \
+  --konnect-token "${KONNECT_TOKEN}" \
+  --konnect-control-plane-name "${KONNECT_CONTROL_PLANE_NAME}"
+```
+{: data-test-step="block" }
 
 ## Try it out
 
@@ -676,7 +689,7 @@ curl -X POST http://localhost:8000/chat \
   -i
 ```
 
-Check the `X-Kong-LLM-Model` response header - it should show the model you configured for the smart tier (for example, `anthropic.claude-3-5-sonnet-20241022-v2:0`), confirming routing to the AWS Bedrock smart tier.
+Check the `X-Kong-LLM-Model` response header - it should show the model you configured for the smart tier (for example, `us.anthropic.claude-haiku-4-5-20251001-v1:0`), confirming routing to the AWS Bedrock smart tier.
 
 Example response for complex prompt (truncated):
 
@@ -708,7 +721,7 @@ Content-Type: application/json
 
 1. **Simple prompt routing:** The simple prompt ("Hi there! What's 2 + 2?") routes to OpenAI's fast tier. The Datakit plugin calls the model-selection Route, OpenAI o3-mini analyzes the prompt complexity, returns "fast", Datakit updates the request body, and AI Proxy Advanced routes to the OpenAI target. The `X-Kong-LLM-Model` header shows `gpt-4o-mini`.
 
-2. **Complex prompt routing:** The complex prompt (binary search implementation) routes to AWS Bedrock's smart tier. The model-selection LLM recognizes this as a reasoning-heavy task and returns "smart", which Datakit forwards to the AWS Bedrock target (Claude). The `X-Kong-LLM-Model` header shows `anthropic.claude-3-5-sonnet-20241022-v2:0`.
+2. **Complex prompt routing:** The complex prompt (binary search implementation) routes to AWS Bedrock's smart tier. The model-selection LLM recognizes this as a reasoning-heavy task and returns "smart", which Datakit forwards to the AWS Bedrock target (Claude). The `X-Kong-LLM-Model` header shows `us.anthropic.claude-haiku-4-5-20251001-v1:0`.
 
 3. **`X-Kong-LLM-Model` header:** Every response includes this header showing which model served the request. In production, this header enables per-request observability — your application can log it for cost attribution or debugging.
 
