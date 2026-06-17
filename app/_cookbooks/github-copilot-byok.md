@@ -839,7 +839,7 @@ rm -f kong-recipe.yaml
 
 ### Create the Copilot Usage dashboard
 
-Create a custom dashboard at the org level, pre-filtered to this recipe's Gateway Service. The dashboard surfaces cost, token usage, request volume, model mix, per-developer (Consumer) usage, and latency for traffic through the `github-copilot-byok` Service. The dashboard JSON is in the code block below; if a labelled dashboard from a prior apply already exists, the block reuses it instead of creating a duplicate.
+Create a custom dashboard at the org level, pre-filtered to this recipe's Gateway Service. The dashboard surfaces cost, token usage, request volume, model mix, per-developer (Consumer) usage, and latency for traffic through the `github-copilot-byok` Service. The dashboard JSON is in the code block below; if a labeled dashboard from a prior apply already exists, the block reuses it instead of creating a duplicate.
 
 ```bash
 # Look up the Control Plane and Service IDs so the dashboard's gateway_service
