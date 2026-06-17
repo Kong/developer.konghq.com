@@ -179,7 +179,7 @@ Choose the mode based on your security requirements and backend cluster configur
 
 ### Enrich connections with caller metadata
 
-After a client authenticates, you can configure the virtual cluster to look up the client in an {{site.identity}} directory and attach its metadata to the connection context. 
+After a client authenticates, you can configure the virtual cluster to look up the client in a {{site.identity}} directory and attach its metadata to the connection context.
 This metadata is available at `context.auth.principal.metadata` and can be used to drive policies automatically. 
 For example, setting a header based on which team a client belongs to, or skipping records that a client isn’t entitled to see.
 
