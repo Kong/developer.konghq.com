@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReleaseMap do
-  let(:fixture_source) { File.expand_path('spec/fixtures/app', Dir.pwd) }
+  let(:fixture_source) { File.expand_path('spec/fixtures/source', Dir.pwd) }
   let(:site) { instance_double(Jekyll::Site, source: fixture_source) }
 
   describe '.load_all' do
