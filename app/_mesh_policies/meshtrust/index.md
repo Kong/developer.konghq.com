@@ -18,8 +18,8 @@ related_resources:
     url: /mesh/policies/meshidentity/
   - text: Mesh TLS
     url: /mesh/policies/meshtls/
-  - text: Mesh Traffic Permission
-    url: /mesh/policies/meshtrafficpermission/
+  - text: MeshTrafficPermission with SPIFFE ID matchers
+    url: /mesh/policies/meshtrafficpermission_experimental/
 ---
 
 {:.warning}

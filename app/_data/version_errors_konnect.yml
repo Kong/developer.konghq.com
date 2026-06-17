@@ -4068,7 +4068,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.14.0.0` or above.
     DocumentationURL: |
-      [Plugin entity](/plugins/plugin/)
+      [Plugin entity](/gateway/entities/plugin/)
   - ID: D528
     Severity: warning
     Description: |
@@ -4091,7 +4091,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.14.0.0` or above.
     DocumentationURL: |
-      [Vaults entity](/plugins/vaults/)
+      [Vaults entity](/gateway/entities/vault/)
   - ID: D533
     Severity: warning
     Description: |
@@ -4101,7 +4101,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.14.0.0` or above.
     DocumentationURL: |
-      [Vaults entity](/plugins/vaults/)
+      [Vaults entity](/gateway/entities/vault/)
   - ID: D534
     Severity: warning
     Description: |
@@ -4111,7 +4111,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.14.0.0` or above.
     DocumentationURL: |
-      [Vaults entity](/plugins/vaults/)
+      [Vaults entity](/gateway/entities/vault/)
   - ID: D535
     Severity: warning
     Description: |
@@ -4123,7 +4123,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.14.0.0` or above.
     DocumentationURL: |
-      [Vaults entity](/plugins/vaults/)
+      [Vaults entity](/gateway/entities/vault/)
   - ID: D536
     Severity: warning
     Description: |
@@ -4132,7 +4132,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.14.0.0` or above.
     DocumentationURL: |
-      [Vaults entity](/plugins/vaults/)
+      [Vaults entity](/gateway/entities/vault/)
   - ID: D537
     Severity: warning
     Description: |

@@ -41,7 +41,7 @@ Static keys are resources that you can use in the [Encrypt](/event-gateway/polic
 A static key can contain a secret (Base64-encoded key) or a reference to a secret as a template string expression.
 
 * If the value is provided as plain text, it is encrypted at rest and omitted from API responses.
-* If provided as an expression, the expression itself is stored and returned by the API, e.g. `${vault.env["MY_ENV_VAR"]}`.
+* If provided as an expression, the expression itself is stored and returned by the API, e.g. `${env["MY_ENV_VAR"]}`.
 
 ## Set up a static key
 

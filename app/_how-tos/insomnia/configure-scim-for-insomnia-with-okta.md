@@ -17,7 +17,7 @@ tags:
 
 tldr:
     q: How do I configure SCIM with Okta in Insomnia?
-    a: Enable SCIM in Insomnia to generate a connection URL and token, then configure your Okta SAML application to enable SCIM provisioning and use the URL and token generated to integrate with Insomnia.
+    a: Enable SCIM with a Bearer Token in Insomnia to generate a connection URL and token, then configure your Okta SAML application to enable SCIM provisioning and use the URL and token generated to integrate with Insomnia.
 
 related_resources:
   - text: SCIM for Insomnia

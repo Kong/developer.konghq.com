@@ -8,6 +8,8 @@ Flags:
                                                             See db_update_propagation in kong.conf.
   -W, --errors-as-warnings string                           Treat the given comma-separated diagnostic codes as warnings.
   -h, --help                                                help for apply
+      --include-plugin-definitions                          allow deck to apply plugin definitions.
+                                                            Plugin definitions work with Konnect and Gateway versions >= 3.15.
       --json-output                                         generate command execution report in a JSON format
       --parallelism int                                     Maximum number of concurrent operations. (default 10)
       --silence-events                                      disable printing events to stdout

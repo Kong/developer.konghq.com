@@ -89,6 +89,9 @@ rows:
   - command: |
       [convert](/deck/file/convert/)
     description: Convert decK files from one format to another, for example {{site.base_gateway}} 2.x to 3.x.
+  - command: |
+      [format](/deck/file/format/)
+    description: Convert declarative configuration files between {{site.base_gateway}} DB-less declarative configuration and decK formats.
 {% endtable %}
 
 decK provides a [`deck file lint`](/deck/file/lint/) command which can be used to ensure that declarative configuration files meet defined standards before being used to configure {{ site.base_gateway }}.
