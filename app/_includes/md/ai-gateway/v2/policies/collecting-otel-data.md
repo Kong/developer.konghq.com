@@ -1,6 +1,7 @@
 ## Collecting telemetry data
 
 To set up an OpenTelemetry backend for {{site.ai_gateway}}, you need support for OTLP over HTTP with Protobuf encoding. You can:
+
 * Send data directly to an OpenTelemetry-compatible backend that natively supports OTLP over HTTP with Protobuf encoding, like Jaeger (v1.35.0+).
 
   This is the simplest setup, since it doesn't require any additional components between the data plane and the backend.

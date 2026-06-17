@@ -189,7 +189,7 @@ metrics:
       - error.type
   - name: mcp.client.operation.duration
     min_version: ""
-    description: Duration of the MCP request as observed by the sender. Only available when the AI MCP Proxy plugin is in passthrough-listener mode. Requires `enable_latency_metrics` set to `true`.
+    description: Duration of the MCP request as observed by the sender. Only available when the MCP entity is in passthrough-listener mode. Requires `enable_latency_metrics` set to `true`.
     unit: "s"
     type: Histogram
     attributes:
