@@ -164,23 +164,26 @@ Verify that the control plane is running and using the cert-manager-issued certi
    The `kong-mesh-control-plane` pod should show `Running` in the `STATUS` column.
    {:.no-copy-code}
 
-1. Inspect the certificate the control plane is serving:
+1. Inspect the certificate that cert-manager stored in the secret:
 
    ```sh
-   kubectl exec -n kong-mesh-system deploy/kong-mesh-control-plane -- \
-     openssl s_client -connect localhost:5678 -showcerts </dev/null 2>/dev/null | \
+   kubectl get secret -n kong-mesh-system control-plane-cert \
+     -o jsonpath='{.data.tls\.crt}' | base64 -d | \
      openssl x509 -noout -subject -issuer -dates
    ```
 
-   The output should show `kong-mesh-selfsigned-ca` as the issuer and an expiry date 90 days from issuance:
+   The output should show `kong-mesh-selfsigned-ca` as the issuer and an expiry date 90 days from issuance. For example: 
 
    ```text
-   subject=CN=kong-mesh-control-plane.kong-mesh-system.svc
+   subject=
    issuer=CN=kong-mesh-selfsigned-ca
-   notBefore=...
-   notAfter=...
+   notBefore=Jun 17 09:50:10 2026 GMT
+   notAfter=Sep 15 09:50:10 2026 GMT
    ```
    {:.no-copy-code}
+
+   {:.info}
+   > The subject is empty because cert-manager sets identity via SANs rather than a common name.
 
 1. Confirm cert-manager will renew the certificate automatically:
 
@@ -189,4 +192,3 @@ Verify that the control plane is running and using the cert-manager-issued certi
    ```
 
    The `READY` column should show `True`.
-   {:.no-copy-code}
