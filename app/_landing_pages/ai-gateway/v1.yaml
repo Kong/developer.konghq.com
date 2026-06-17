@@ -54,7 +54,7 @@ rows:
 
                   Or, launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.ai_gateway}} running on-prem:
                   ```sh
-                  curl -Ls https://get.konghq.com/ai | bash
+                  curl -Ls https://get.konghq.com/ai/v1 | bash
                   ```
 
   - columns:
