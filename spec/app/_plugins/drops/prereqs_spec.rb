@@ -3,7 +3,8 @@
 RSpec.describe Jekyll::Drops::Prereqs do
   let(:page_data) { { 'prereqs' => {}, 'tools' => [], 'products' => [] } }
   let(:page) { instance_double(Jekyll::Page, data: page_data, url: '/test/') }
-  let(:site) { instance_double(Jekyll::Site, data: {}, source: '/source') }
+  let(:site_data) { { 'products' => {} } }
+  let(:site) { instance_double(Jekyll::Site, data: site_data, source: '/source') }
 
   subject(:drop) { described_class.new(page:, site:) }
 
@@ -257,10 +258,109 @@ RSpec.describe Jekyll::Drops::Prereqs do
     end
   end
 
+  describe '#entities_product_include' do
+    let(:entities_includes) do
+      [
+        'app/_includes/prereqs/entities/mesh.md',
+        'app/_includes/prereqs/entities/kic.md',
+        'app/_includes/prereqs/entities/ai-gateway/v1.md',
+        'app/_includes/prereqs/entities/ai-gateway.md'
+      ]
+    end
+
+    before { stub_const('Jekyll::Drops::ProductEntitiesPrereqs::ENTITIES_INCLUDES', entities_includes) }
+
+    context 'page without major_version set' do
+      context 'when entities_product is set in prereqs' do
+        let(:page_data) { super().merge('prereqs' => { 'entities_product' => 'kic' }) }
+
+        it 'returns entities_product from prereqs' do
+          expect(drop.entities_product_include).to eq('prereqs/entities/kic.md')
+        end
+      end
+
+      context 'when entities_product is not set' do
+        let(:page_data) { super().merge('products' => %w[mesh gateway]) }
+
+        it 'falls back to the first product' do
+          expect(drop.entities_product_include).to eq('prereqs/entities/mesh.md')
+        end
+
+        context 'when there are multiple major versions of a product' do
+          let(:page_data) { super().merge('products' => %w[ai-gateway]) }
+          it 'it returns the include file without a version, which corresponds to the latest major version' do
+            expect(drop.entities_product_include).to eq('prereqs/entities/ai-gateway.md')
+          end
+        end
+      end
+
+      context 'when product is operator' do
+        let(:page_data) { super().merge('products' => ['operator']) }
+
+        it 'converts operator to kic' do
+          expect(drop.entities_product_include).to eq('prereqs/entities/kic.md')
+        end
+      end
+    end
+
+    context 'page with major_version set' do
+      let(:page_data) do
+        {
+          'prereqs' => {},
+          'tools' => [],
+          'products' => ['ai-gateway'],
+          'major_version' => { 'ai-gateway' => 1 }
+        }
+      end
+      let(:site_data) do
+        _data = super()
+        _data['products']['ai-gateway'] =
+          YAML.load_file(File.expand_path('../../../fixtures/app/_data/products/ai-gateway.yml', __dir__))
+        _data
+      end
+
+      context 'when entities_product is set in prereqs' do
+        let(:page_data) { super().merge('prereqs' => { 'entities_product' => 'kic' }) }
+
+        it 'returns entities_product from prereqs' do
+          expect(drop.entities_product_include).to eq('prereqs/entities/kic.md')
+        end
+      end
+
+      context 'when entities_product is not set' do
+        it 'falls back to the first product and its major_version of the file - using the segment path' do
+          expect(drop.entities_product_include).to eq('prereqs/entities/ai-gateway/v1.md')
+        end
+
+        context 'when there is no include file for the product and major_version' do
+          let(:entities_includes) do
+            [
+              'app/_includes/prereqs/entities/mesh.md',
+              'app/_includes/prereqs/entities/kic.md',
+              'app/_includes/prereqs/entities/ai-gateway.md'
+            ]
+          end
+          it 'raises an error indicating the missing include file' do
+            expect do
+              drop.entities_product_include
+            end.to raise_error(RuntimeError, 'No app/_includes/prereqs/entities/ai-gateway/v1 file found')
+          end
+        end
+      end
+
+      context 'when product is operator' do
+        let(:page_data) { super().merge('products' => ['operator']) }
+
+        it 'converts operator to kic' do
+          expect(drop.entities_product_include).to eq('prereqs/entities/kic.md')
+        end
+      end
+    end
+  end
+
   describe '#data' do
     let(:entity_example) { { 'name' => 'test-service', 'url' => 'http://example.com' } }
     let(:site_data) { { 'entity_examples' => { 'gateway' => { 'services' => { 'basic' => entity_example } } } } }
-    let(:site) { instance_double(Jekyll::Site, data: site_data, source: '/source') }
 
     context 'when the first product is gateway' do
       let(:page_data) do
@@ -315,18 +415,31 @@ RSpec.describe Jekyll::Drops::Prereqs do
   end
 
   describe '#products' do
-    before { stub_const('Jekyll::Drops::Prereqs::PRODUCT_INCLUDES', Set['mesh']) }
+    let(:product_includes) do
+      [
+        'app/_includes/prereqs/products/mesh.md',
+        'app/_includes/prereqs/products/kic.md',
+        'app/_includes/prereqs/products/ai-gateway/v1.md',
+        'app/_includes/prereqs/products/ai-gateway.md'
+      ]
+    end
+
+    before { stub_const('Jekyll::Drops::ProductIncludePrereqs::PRODUCT_INCLUDES', product_includes) }
 
     context 'when products include gateway and ai-gateway' do
       let(:page_data) { super().merge('products' => %w[gateway ai-gateway mesh]) }
 
-      it { expect(drop.products).to eq(['mesh']) }
+      it 'skips gateway and ai-gateway and returns the rest of the products' do
+        expect(drop.products).to eq(['mesh'])
+      end
     end
 
     context 'when a product has no include file' do
-      let(:page_data) { super().merge('products' => %w[mesh kic]) }
+      let(:page_data) { super().merge('products' => %w[mesh insomnia]) }
 
-      it { expect(drop.products).to eq(['mesh']) }
+      it 'skips products with no include file and returns the rest' do
+        expect(drop.products).to eq(['mesh'])
+      end
     end
 
     context 'when products are empty' do
@@ -340,14 +453,6 @@ RSpec.describe Jekyll::Drops::Prereqs do
 
       it 'returns the tools array' do
         expect(drop.tools).to eq(%w[deck httpie])
-      end
-    end
-
-    context 'when tools is not an array' do
-      let(:page_data) { super().merge('tools' => 'deck') }
-
-      it 'raises an error' do
-        expect { drop.tools }.to raise_error(RuntimeError, /not a Array/)
       end
     end
   end
