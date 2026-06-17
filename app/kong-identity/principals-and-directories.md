@@ -65,12 +65,12 @@ A single principal can have multiple credentials, including multiple credentials
 To authenticate using a credential, a principal must exist in the target directory with a matching credential set.
 
 ### Identities
-
-Identities are references to how a principal is known in other systems. 
+ 
+Identities are how other systems recognize the principal. 
 {{site.identity}} uses them either:
-
 - For lookup after authentication has already happened somewhere else (like a third-party IdP).
 - To link a principal to an entity in another Kong product. 
+
 You can add identities to the principal as a separate resource after you've created a principal.
 
 {{site.identity}} supports the following identity types:
@@ -268,53 +268,7 @@ body:
    A default name is generated, but you can change it.
 1. In the **Description** field, enter `Example principal`.
 1. Click **Next**.
-1. Click **Add authentication**.
-1. Configure an authentication type for the principal:
-{% navtabs "auth-type" %}
-{% navtab "Key auth" %}
-  1. From the **Authentication type** dropdown menu, select "Key".
-  1. Select a key option:
-      * To generate a key automatically, select **Generate automatically**.
-      * To use an existing key from your system, select **Enter manually**, then enter your key.
-  1. Set when the credential expires:
-      * To keep the key from expiring, select **Never**.
-      * To set an expiration, select **Set date and time**, then select a time range.
-{% endnavtab %}
-{% navtab "Basic auth" %}
-  1. From the **Authentication type** dropdown menu, select "Basic auth".
-  1. In the **Username** field, enter `example-user`.
-  1. Select a password option:
-      * To have {{site.identity}} create a password, select **Generate password automatically**.
-      * To set your own password, select **Enter a password manually**, then enter `example-password` in the password field.
-  1. Set when the credential expires:
-      * To keep the credential from expiring, select **Never**.
-      * To set an expiration, select **Set date and time**, then select a time range.
-{% endnavtab %}
-{% navtab "OAuth client" %}
-  1. From the **Authentication type** dropdown menu, select "OAuth client".
-  1. Select an auth server option:
-      * To let Kong manage the OAuth provider and handle token issuance and validation, select **Use Kong Identity auth server** and do the following:
-        1. From the **Authorization server** dropdown menu, select your authorization server.
-        1. From the **Client** dropdown menu, select your client.
-      * To connect to your existing OAuth provider, select **Use external auth server** and do the following:
-        1. In the **Issuer** field, enter the issuer URL of the external identity provider.
-        1. In the **Claim name** field, enter the OIDC claim used to identify the principal. Use sub for the subject identifier.
-        1. In the **Claim value** field, enter the expected value of the selected OIDC claim. For sub, this is the subject identifier.
-{% endnavtab %}
-{% navtab "Consumer" %}
-{:.info}
-   > If you weren't using Consumers before using principals, you won't see the Consumer option available, since principals are meant to replace Consumers in {{site.konnect_short_name}}.
-  1. From the **Authentication type** dropdown menu, select "Consumer linking".
-  1. From the **Control plane** dropdown menu, select the control plane where the Consumer exists.
-  1. From the **Consumer** dropdown menu, select the Consumer that represents this principal.
-{% endnavtab %}
-{% navtab "External identifier" %}
-  1. From the **Authentication type** dropdown menu, select "External identifier".
-  1. In the **Name** field, enter unique key that defines the identifier type.
-  1. In the **Value** field, enter the exact name of the value in your external system.
-{% endnavtab %}
-{% endnavtabs %}
-1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
+1. [Configure an authentication type](#configure-credentials-and-identities) for the principal.
 1. Click **Add**.
 1. Click **Next**.
 1. Add metadata to the principal by entering a key/value pair.
@@ -324,23 +278,7 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
-## Principal limitations
-
-The following are default limits for principals and directories:
-
-* 1 directory per region.
-  Contact Kong Support if you need more than one directory.
-* 100,000 principals per directory. Contact Kong Support if you need higher limits.
-* 10 identities per principal
-* 5 of each credential type per principal
-* 50 metadata keys per principal
-* 2 passwords per username (for rotation)
-* Usernames and API keys must be unique within a directory
-* Custom identity name and value combinations must be unique within a directory
-* OIDC identity issuer and claim combinations must be unique within a directory
-* Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
-
-## Example principal configurations
+## Configure credentials and identities
 
 The following examples show how to configure identities, credentials, and metadata on a principal. 
 Before using them, you need an [existing principal](#configure-a-principal) in a directory. 
@@ -348,6 +286,9 @@ Before using them, you need an [existing principal](#configure-a-principal) in a
 ### Basic auth
 
 Add a username and password credential to a principal so clients can authenticate at {{site.base_gateway}} with basic auth. 
+
+{% navtabs "basic-auth" %}
+{% navtab "API" %}
 This uses two API requests: first, create the basic auth entry with a username, then set a password on it. 
 The password secret is only returned when it's created and can't be retrieved again later.
 
@@ -374,10 +315,27 @@ body:
   secret: example-password
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the principal wizard, click **Add authentication**.
+1. From the **Authentication type** dropdown menu, select "Basic auth".
+1. In the **Username** field, enter `example-user`.
+1. Select a password option:
+    * To have {{site.identity}} create a password, select **Generate password automatically**.
+    * To set your own password, select **Enter a password manually**, then enter `example-password` in the password field.
+1. Set when the credential expires:
+    * To keep the credential from expiring, select **Never**.
+    * To set an expiration, select **Set date and time**, then select a time range.
+1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Key auth
 
 Add an API key credential to a principal so clients can authenticate at {{site.base_gateway}} with key auth. 
+
+{% navtabs "key-auth" %}
+{% navtab "API" %}
 The key can be system-generated (`v1`) or imported with a custom secret (`imported`). The key secret is only returned when it's created.
 
 Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/api-keys` endpoint:
@@ -391,10 +349,26 @@ body:
   type: v1
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the principal wizard, click **Add authentication**.
+1. From the **Authentication type** dropdown menu, select "Key".
+1. Select a key option:
+    * To generate a key automatically, select **Generate automatically**.
+    * To use an existing key from your system, select **Enter manually**, then enter your key.
+1. Set when the credential expires:
+    * To keep the key from expiring, select **Never**.
+    * To set an expiration, select **Set date and time**, then select a time range.
+1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
+{% endnavtab %}
+{% endnavtabs %}
 
 ### OpenID Connect
 
 Reference a principal authenticated by an external IdP such as Okta or Cognito. 
+
+{% navtabs "oidc" %}
+{% navtab "API" %}
 {{site.identity}} matches an incoming OAuth token by the token's issuer URL and a configurable claim. Most commonly the claim is `sub`, but any claim in the token can be used for lookup.
 
 Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint:
@@ -412,10 +386,24 @@ body:
     value: example-subject
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the principal wizard, click **Add authentication**.
+1. From the **Authentication type** dropdown menu, select "OAuth client".
+1. Select **Use external auth server**.
+1. In the **Issuer** field, enter the issuer URL of the external identity provider.
+1. In the **Claim name** field, enter the OIDC claim used to identify the principal. Use `sub` for the subject identifier.
+1. In the **Claim value** field, enter the expected value of the selected OIDC claim. For `sub`, this is the subject identifier.
+1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Auth server client
 
 Reference a client on a {{site.identity}} auth server in the same region. 
+
+{% navtabs "auth-server-client" %}
+{% navtab "API" %}
 Use this when {{site.identity}} is issuing the OAuth tokens and you want to map the issuing client to a principal.
 
 Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint:
@@ -431,10 +419,23 @@ body:
   client_id: $CLIENT_ID
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the principal wizard, click **Add authentication**.
+1. From the **Authentication type** dropdown menu, select "OAuth client".
+1. Select **Use Kong Identity auth server**.
+1. From the **Authorization server** dropdown menu, select your authorization server.
+1. From the **Client** dropdown menu, select your client.
+1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Link a principal to a Consumer
 
 Map a principal to a Consumer in a specific {{site.base_gateway}} control plane. 
+
+{% navtabs "consumer-identity" %}
+{% navtab "API" %}
 Use this when you want existing Consumer-scoped plugins to run for traffic authenticated as the principal.
 
 Send a `POST` request to the `/v2/directories/{directoryId}/principals/{principalId}/identities` endpoint:
@@ -450,10 +451,26 @@ body:
   consumer_id: $CONSUMER_ID
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "UI" %}
+
+{:.info}
+> If you weren't using Consumers before using principals, you won't see the Consumer option available, since principals are meant to replace Consumers in {{site.konnect_short_name}}.
+
+1. In the principal wizard, click **Add authentication**.
+1. From the **Authentication type** dropdown menu, select "Consumer linking".
+1. From the **Control plane** dropdown menu, select the control plane where the Consumer exists.
+1. From the **Consumer** dropdown menu, select the Consumer that represents this principal.
+1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Custom
 
 Look up a principal by an identifier from an external system. 
+
+{% navtabs "custom-identity" %}
+{% navtab "API" %}
 Common uses include matching a SASL username from a Kafka client connecting through {{site.event_gateway_short}}, or matching a non-standard claim in a token issued by an external IdP. 
 The `key` is the name you assign to the identifier, and `value` is the specific value to match against.
 
@@ -470,3 +487,28 @@ body:
   value: john
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the principal wizard, click **Add authentication**.
+1. From the **Authentication type** dropdown menu, select "External identifier".
+1. In the **Name** field, enter the unique key that defines the identifier type.
+1. In the **Value** field, enter the exact value in your external system.
+1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
+{% endnavtab %}
+{% endnavtabs %}
+
+## Principal limitations
+
+The following are default limits for principals and directories:
+
+* 1 directory per region.
+  Contact Kong Support if you need more than one directory.
+* 100,000 principals per directory. Contact Kong Support if you need higher limits.
+* 10 identities per principal
+* 5 of each credential type per principal
+* 50 metadata keys per principal
+* 2 passwords per username (for rotation)
+* Usernames and API keys must be unique within a directory
+* Custom identity name and value combinations must be unique within a directory
+* OIDC identity issuer and claim combinations must be unique within a directory
+* Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
