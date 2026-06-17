@@ -114,6 +114,7 @@ sections:
       - path: /mesh/signed-images/
       - path: /mesh/issue-identity-with-meshidentity/
       - path: /mesh/issue-identity-with-meshidentity-spire/
+      - path: /mesh/use-cert-manager-for-control-plane-certificates/
 
   - title: Observability
     items:

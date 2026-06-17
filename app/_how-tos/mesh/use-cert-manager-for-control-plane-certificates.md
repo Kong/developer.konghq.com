@@ -33,6 +33,8 @@ related_resources:
     url: /mesh/deploy-mesh-on-kubernetes/
   - text: Deploy Mesh (self-managed)
     url: /mesh/deploy-mesh-self-managed/
+  - text: Kubernetes cert-manager CA policy (data plane certificates)
+    url: /mesh/cert-manager/
 ---
 
 By default, {{site.mesh_product_name}} generates its own self-signed control plane certificates at startup. Using cert-manager lets you manage the full certificate lifecycle — issuance, rotation, and expiration — outside of the control plane itself. This guide walks you through creating the required cert-manager resources and configuring {{site.mesh_product_name}} to use them.

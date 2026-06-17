@@ -31,6 +31,8 @@ related_resources:
     url: /mesh/ca-rotation/
   - text: "{{site.mesh_product_name}} enterprise features"
     url: /mesh/enterprise/
+  - text: Use cert-manager for control plane certificates
+    url: /mesh/use-cert-manager-for-control-plane-certificates/
 ---
 
 You can use Kubernetes cert-manager as an mTLS backend for issuing Data Plane certificates in {{site.mesh_product_name}}.
