@@ -78,7 +78,7 @@ You can authenticate [centrally-managed Consumers](/gateway/entities/consumer/#c
 See [Realms for external Consumers in {{site.konnect_short_name}}](/plugins/key-auth/examples/identity-realms/) for an example configuration.
 
 {:.info}
-> **Note:** Identity realms require the Data Plane to have network connectivity to {{site.konnect_short_name}} to look up centrally-managed Consumers. The Data Plane reaches the realm at the identity endpoint `https://%s.identity.konghq.com`, where `%s` is the region. If the Data Plane can't reach {{site.konnect_short_name}}, realm-scoped authentication won't work.
+> **Note:** Identity realms require the Data Plane to have network connectivity to {{site.konnect_short_name}} to look up centrally-managed Consumers. The Data Plane reaches the realm at the identity endpoint `https:/{region}.identity.konghq.com`. If the Data Plane can't reach {{site.konnect_short_name}}, realm-scoped authentication won't work.
 
 Identity realms are scoped to the Control Plane by default (`scope: cp`).
 The order in which you configure the identity realm dictates the priority in which the Data Plane attempts to authenticate the provided API keys:
