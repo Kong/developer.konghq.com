@@ -31,6 +31,4 @@ RSpec.configure do |config|
   config.filter_run_when_matching :focus
   config.order = :random
   config.warnings = true
-
-  config.before(:suite) { JekyllSite.instance }
 end

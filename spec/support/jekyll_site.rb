@@ -19,6 +19,9 @@ module JekyllSite
         'git_branch' => 'main'
       )
     )
-    Jekyll::Site.new(config)
+    site = Jekyll::Site.new(config)
+    site.read
+    Jekyll::ReleaseMapLoader.new.generate(site)
+    site
   end
 end

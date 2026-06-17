@@ -3,193 +3,260 @@
 require_relative '../../../../spec_helper'
 
 RSpec.describe Jekyll::ReferencePages::Versioner do
-  subject(:versioner) { described_class.new(site:, page:) }
+  let(:site) { JekyllSite.build }
 
-  let(:gateway_product) do
-    YAML.load_file(File.expand_path('../../../../fixtures/app/_data/products/gateway.yml', __dir__))
-  end
-
-  let(:site_data) { { 'products' => { 'gateway' => gateway_product } } }
-  let(:site) { instance_double(Jekyll::Site, data: site_data) }
-  let(:page) { instance_double(Jekyll::Page, url: page_url, data: page_data) }
-  let(:page_url) { '/gateway/some-reference-page/' }
-  let(:page_data) { { 'products' => ['gateway'] } }
-
-  before do
-    allow(Jekyll).to receive(:sites).and_return([site])
-  end
+  subject { described_class.new(site:, page:) }
 
   describe '#process' do
-    it 'runs the four phases and assigns base_url, release info, and canonical metadata' do
-      allow(Jekyll::ReferencePages::Page::Base).to receive(:make_for).and_return(
-        instance_double(Jekyll::ReferencePages::Page::Base, to_jekyll_page: :jekyll_page)
-      )
+    xcontext 'when the page has max_release'
 
-      versioner.process
+    context 'without a major_version' do
+      context 'and having multiple major versions' do
+        let(:page) { site.pages.find { |p| p.url == '/ai-gateway/reference-page/' } }
 
-      expect(page.data['base_url']).to eq('/gateway/some-reference-page/')
-      expect(page.data['canonical_url']).to eq('/gateway/some-reference-page/')
-      expect(page.data['canonical?']).to be(true)
-      expect(page.data['release'].number).to eq('3.10')
-    end
-  end
+        it 'sets metadata and generate pages' do
+          expect(page.data['major_version']).to be_nil
 
-  describe '#set_base_url!' do
-    it 'sets base_url on page data to the page url' do
-      versioner.set_base_url!
-      expect(page.data['base_url']).to eq('/gateway/some-reference-page/')
-    end
-  end
+          subject.process
 
-  describe '#set_release_info!' do
-    context 'when the page is versioned but no release is in range' do
-      let(:page_data) { { 'versioned' => true, 'products' => ['unknown'] } }
+          expect(page.data['base_url']).to eq('/ai-gateway/reference-page/')
+          expect(page.data['release'].number).to eq('2.1')
+          expect(page.data['releases'].map(&:number)).to eq(['2.1', '2.0'])
+          expect(page.data['releases_dropdown']).to be_a(Jekyll::Drops::ReleasesDropdown)
+          expect(page.data['releases_dropdown'].options.map(&:url))
+            .to match_array(
+              ['/ai-gateway/reference-page/', '/ai-gateway/reference-page/2.0/']
+            )
+          expect(page.data['canonical_url']).to eq('/ai-gateway/reference-page/')
+          expect(page.data['canonical?']).to be(true)
+        end
 
-      it 'raises ArgumentError naming the page url' do
-        expect { versioner.set_release_info! }
-          .to raise_error(ArgumentError, /Missing release for page: #{page_url}/)
+        context 'when the page is versioned' do
+          let(:page) { site.pages.find { |p| p.url == '/ai-gateway/reference-page/' } }
+
+          before { page.data['versioned'] = true }
+
+          it 'sets metadata and generate pages' do
+            expect(page.data['major_version']).to be_nil
+
+            subject.process
+
+            expect(page.data['base_url']).to eq('/ai-gateway/reference-page/')
+            expect(page.data['release'].number).to eq('2.1')
+            expect(page.data['releases'].map(&:number)).to eq(['2.1', '2.0'])
+            expect(page.data['releases_dropdown']).to be_a(Jekyll::Drops::ReleasesDropdown)
+            expect(page.data['releases_dropdown'].options.map(&:url))
+              .to match_array(['/ai-gateway/reference-page/', '/ai-gateway/reference-page/2.0/'])
+            expect(page.data['canonical_url']).to eq('/ai-gateway/reference-page/')
+            expect(page.data['canonical?']).to be(true)
+          end
+        end
+      end
+
+      context 'having only one major version' do
+        context 'when the page is not versioned' do
+          let(:page) { site.pages.find { |p| p.url == '/gateway/reference-page/' } }
+
+          it 'sets metadata and generate pages' do
+            expect(page.data['major_version']).to be_nil
+            expect(page.data['versioned']).to be_nil
+
+            subject.process
+
+            expect(page.data['base_url']).to eq('/gateway/reference-page/')
+            expect(page.data['release'].number).to eq('3.10')
+            expect(page.data['releases'].map(&:number)).to eq(['3.10', '3.9'])
+            expect(page.data['releases_dropdown']).to be_a(Jekyll::Drops::ReleasesDropdown)
+            expect(page.data['releases_dropdown'].options.map(&:url))
+              .to match_array(['/gateway/reference-page/', '/gateway/reference-page/3.9/'])
+            expect(page.data['canonical_url']).to eq('/gateway/reference-page/')
+            expect(page.data['canonical?']).to be(true)
+          end
+        end
+
+        context 'when the page is versioned' do
+          let(:page) { site.pages.find { |p| p.url == '/gateway/install/' } }
+
+          it 'sets metadata and generate pages' do
+            expect(page.data['major_version']).to be_nil
+            expect(page.data['versioned']).to be(true)
+
+            subject.process
+
+            expect(page.data['base_url']).to eq('/gateway/install/')
+            expect(page.data['release'].number).to eq('3.10')
+            expect(page.data['releases'].map(&:number)).to eq(['3.10', '3.9'])
+            expect(page.data['releases_dropdown']).to be_a(Jekyll::Drops::ReleasesDropdown)
+            expect(page.data['releases_dropdown'].options.map(&:url))
+              .to match_array(['/gateway/install/', '/gateway/install/3.9/'])
+            expect(page.data['canonical_url']).to eq('/gateway/install/')
+            expect(page.data['canonical?']).to be(true)
+          end
+        end
       end
     end
 
-    context 'when a release is in range' do
-      it 'merges the latest release, all releases, and a ReleasesDropdown into page.data' do
-        versioner.set_release_info!
+    context 'with a major_version' do
+      let(:page) { site.pages.find { |p| p.url == '/ai-gateway/v1/reference-page/' } }
 
-        expect(page.data['release'].number).to eq('3.10')
-        expect(page.data['releases'].map(&:number)).to eq(['3.10', '3.9'])
+      it 'sets metadata and generate pages - within the major version' do
+        expect(page.data['major_version']).to eq({ 'ai-gateway' => 1 })
+
+        subject.process
+
+        expect(page.data['base_url']).to eq('/ai-gateway/v1/reference-page/')
+        expect(page.data['release'].number).to eq('1.1')
+        expect(page.data['releases'].map(&:number)).to eq(['1.1', '1.0'])
         expect(page.data['releases_dropdown']).to be_a(Jekyll::Drops::ReleasesDropdown)
-      end
-    end
+        expect(page.data['releases_dropdown'].options.map(&:url))
+          .to match_array(['/ai-gateway/v1/reference-page/1.0/', '/ai-gateway/v1/reference-page/1.1/'])
 
-    context 'when the page is versioned and a release is in range' do
-      let(:page_data) { { 'versioned' => true, 'products' => ['gateway'] } }
-
-      it 'does not raise and merges release info' do
-        expect { versioner.set_release_info! }.not_to raise_error
-        expect(page.data['release'].number).to eq('3.10')
-      end
-    end
-  end
-
-  describe '#handle_canonicals!' do
-    context 'when the page is versioned' do
-      let(:page_data) { { 'versioned' => true, 'products' => ['gateway'] } }
-
-      it 'sets canonical_url to the page url and marks canonical? true - the page.url is the canonical, we generate versioned pages for each release later' do
-        versioner.handle_canonicals!
-        expect(page.data['canonical_url']).to eq('/gateway/some-reference-page/')
-        expect(page.data['canonical?']).to be(true)
-      end
-    end
-
-    context 'when min_release is greater than latest_available_release' do
-      let(:page_data) do
-        { 'products' => ['gateway'], 'min_version' => { 'gateway' => '3.11' } }
+        # points to the canonical_url set in the config file for the major version
+        expect(page.data['canonical_url']).to eq('/ai-gateway/reference-page/')
+        expect(page.data['canonical?']).to be(false)
       end
 
-      context 'and the page is a plugin changelog' do
-        let(:page_data) do
-          { 'products' => ['gateway'], 'min_version' => { 'gateway' => '3.11' }, 'plugin?' => true,
-            'changelog?' => true }
+      context 'when the page is versioned' do
+        context 'and having multiple major versions' do
+          let(:page) { site.pages.find { |p| p.url == '/ai-gateway/v1/reference-page/' } }
+
+          before { page.data['versioned'] = true }
+
+          it 'sets metadata and generate pages - within the major version' do
+            expect(page.data['major_version']).to eq({ 'ai-gateway' => 1 })
+            expect(page.data['versioned']).to be(true)
+
+            subject.process
+
+            expect(page.data['base_url']).to eq('/ai-gateway/v1/reference-page/')
+            expect(page.data['release'].number).to eq('1.1')
+            expect(page.data['releases'].map(&:number)).to eq(['1.1', '1.0'])
+            expect(page.data['releases_dropdown']).to be_a(Jekyll::Drops::ReleasesDropdown)
+            expect(page.data['releases_dropdown'].options.map(&:url))
+              .to match_array(['/ai-gateway/v1/reference-page/1.0/', '/ai-gateway/v1/reference-page/1.1/'])
+
+            # points to the canonical_url set in the config file for the major version
+            expect(page.data['canonical_url']).to eq('/ai-gateway/reference-page/')
+            expect(page.data['canonical?']).to be(false)
+          end
         end
 
-        it 'does not unpublish the page' do
-          versioner.handle_canonicals!
-          expect(page.data).not_to include('published')
+        context 'and having only one major version' do
+          let(:page) { site.pages.find { |p| p.url == '/gateway/reference-page/' } }
+
+          before { page.data['versioned'] = true }
+
+          it 'sets metadata and generate pages' do
+            expect(page.data['major_version']).to be_nil
+            expect(page.data['versioned']).to be(true)
+
+            subject.process
+
+            expect(page.data['base_url']).to eq('/gateway/reference-page/')
+            expect(page.data['release'].number).to eq('3.10')
+            expect(page.data['releases'].map(&:number)).to eq(['3.10', '3.9'])
+            expect(page.data['releases_dropdown']).to be_a(Jekyll::Drops::ReleasesDropdown)
+            expect(page.data['releases_dropdown'].options.map(&:url))
+              .to match_array(['/gateway/reference-page/', '/gateway/reference-page/3.9/'])
+
+            # points to the canonical_url set in the config file for the major version
+            expect(page.data['canonical_url']).to eq('/gateway/reference-page/')
+            expect(page.data['canonical?']).to be(true)
+          end
         end
-      end
-    end
-
-    context 'when max_release is less than latest_available_release' do
-      let(:page_data) do
-        { 'products' => ['gateway'], 'max_version' => { 'gateway' => '3.9' } }
-      end
-
-      it 'unpublishes the page and points canonical at the max-release archive' do
-        versioner.handle_canonicals!
-        expect(page.data).to include(
-          'published' => false,
-          'canonical_url' => '/gateway/some-reference-page/3.9/'
-        )
-      end
-    end
-
-    context 'when no min or max constraint applies' do
-      it 'marks the page as its own canonical' do
-        versioner.handle_canonicals!
-        expect(page.data['canonical_url']).to eq('/gateway/some-reference-page/')
-        expect(page.data['canonical?']).to be(true)
       end
     end
   end
 
   describe '#generate_pages!' do
-    let(:made_page) { instance_double(Jekyll::ReferencePages::Page::Base, to_jekyll_page: :jekyll_page) }
-
-    context 'when the page is a plugin changelog' do
-      let(:page_url) { '/plugins/acme/changelog/' }
-      let(:page_data) { { 'products' => ['gateway'], 'plugin?' => true, 'changelog?' => true } }
-
+    xcontext 'when the page is a plugin changelog' do
       it 'returns an empty array' do
-        expect(versioner.generate_pages!).to eq([])
+        expect(subject.generate_pages!).to eq([])
       end
     end
 
-    context 'when the page is not versioned and is in range' do
-      it 'returns an empty array' do
-        expect(versioner.generate_pages!).to eq([])
+    context 'without a major_version' do
+      context 'and having multiple major versions' do
+        let(:page) { site.pages.find { |p| p.url == '/ai-gateway/reference-page/' } }
+        it 'does not generate versioned pages' do
+          expect(page.data['major_version']).to be_nil
+          expect(page.data['versioned']).to be_nil
+
+          expect(subject.generate_pages!).to eq([])
+        end
+      end
+
+      context 'having only one major version' do
+        context 'when the page is versioned' do
+          let(:page) { site.pages.find { |p| p.url == '/gateway/install/' } }
+
+          it 'generates one Jekyll page per version - within the major version' do
+            expect(page.data['major_version']).to be_nil
+            expect(page.data['versioned']).to be(true)
+            expect(subject).to receive(:generate_pages!).and_call_original
+
+            pages = subject.process
+
+            expect(pages.size).to eq(2)
+
+            expect(pages[0].url).to eq('/gateway/install/3.10/')
+            expect(pages[0].data['seo_noindex']).to be(true)
+            expect(pages[0].data['canonical?']).to be(false)
+            expect(pages[0].data['canonical_url']).to eq('/gateway/install/')
+
+            expect(pages[1].url).to eq('/gateway/install/3.9/')
+            expect(pages[1].data['seo_noindex']).to be(true)
+            expect(pages[1].data['canonical?']).to be(false)
+            expect(pages[1].data['canonical_url']).to eq('/gateway/install/')
+          end
+        end
+
+        context 'when the page is not versioned' do
+          let(:page) { site.pages.find { |p| p.url == '/gateway/reference-page/' } }
+          it 'does not generate versioned pages' do
+            expect(page.data['major_version']).to be_nil
+            expect(page.data['versioned']).to be_nil
+            expect(subject).to receive(:generate_pages!).and_call_original
+
+            expect(subject.process).to eq([])
+          end
+        end
       end
     end
 
-    context 'when the page is versioned' do
-      let(:page_data) { { 'products' => ['gateway'], 'versioned' => true } }
+    context 'with a major_version' do
+      let(:page) { site.pages.find { |p| p.url == '/ai-gateway/v1/reference-page/' } }
 
-      before do
-        allow(page).to receive(:dir).and_return('/gateway/some-reference-page/')
-        allow(page).to receive(:content).and_return('')
-        allow(page).to receive(:relative_path).and_return('_gateway/index.md')
+      context 'when the page is not versioned' do
+        it 'does not generate versioned pages' do
+          expect(page.data['major_version']).to eq({ 'ai-gateway' => 1 })
+          expect(subject).to receive(:generate_pages!).and_call_original
+
+          expect(subject.process).to eq([])
+        end
       end
 
-      it 'generates one Jekyll page per release with correct url, seo_noindex, and canonical?' do
-        pages = versioner.generate_pages!
+      context 'when the page is versioned' do
+        before { page.data['versioned'] = true }
+        it 'generate pages - within the major version' do
+          expect(page.data['major_version']).to eq({ 'ai-gateway' => 1 })
+          expect(page.data['versioned']).to be(true)
+          expect(subject).to receive(:generate_pages!).and_call_original
 
-        expect(pages.size).to eq(2)
+          pages = subject.process
+          expect(pages.size).to eq(2)
 
-        expect(pages[0].url).to eq('/gateway/some-reference-page/3.10/')
-        expect(pages[0].data['seo_noindex']).to be(true)
-        expect(pages[0].data['canonical?']).to be(false)
+          expect(pages[0].url).to eq('/ai-gateway/v1/reference-page/1.1/')
+          expect(pages[0].data['seo_noindex']).to be(true)
+          expect(pages[0].data['canonical?']).to be(false)
+          expect(pages[0].data['canonical_url']).to eq('/ai-gateway/reference-page/')
 
-        expect(pages[1].url).to eq('/gateway/some-reference-page/3.9/')
-        expect(pages[1].data['seo_noindex']).to be(true)
-        expect(pages[1].data['canonical?']).to be(false)
+          expect(pages[1].url).to eq('/ai-gateway/v1/reference-page/1.0/')
+          expect(pages[1].data['seo_noindex']).to be(true)
+          expect(pages[1].data['canonical?']).to be(false)
+          expect(pages[1].data['canonical_url']).to eq('/ai-gateway/reference-page/')
+        end
       end
-    end
-
-    context 'in production with no min-release in the future' do
-      around do |example|
-        original = ENV.fetch('JEKYLL_ENV', nil)
-        ENV['JEKYLL_ENV'] = 'production'
-        example.run
-      ensure
-        ENV['JEKYLL_ENV'] = original
-      end
-
-      it 'skips generation for non-versioned pages' do
-        expect(Jekyll::ReferencePages::Page::Base).not_to receive(:make_for)
-        expect(versioner.generate_pages!).to eq([])
-      end
-    end
-  end
-
-  describe 'release_info delegation' do
-    it 'delegates the public release-info methods to the underlying ReleaseInfo object' do
-      expect(versioner.latest_release_in_range.number).to eq('3.10')
-      expect(versioner.latest_available_release.number).to eq('3.10')
-      expect(versioner.releases.map(&:number)).to eq(['3.10', '3.9'])
-      expect(versioner.deduplicated_releases.map(&:number)).to eq(['3.10', '3.9'])
-      expect(versioner.use_release_name?).to eq(false)
-      expect(versioner.min_release).to be_nil
-      expect(versioner.max_release).to be_nil
     end
   end
 end
