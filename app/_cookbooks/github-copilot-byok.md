@@ -428,8 +428,10 @@ rows:
     description: "Maximum tokens allowed in the window."
   - header: "`X-AI-RateLimit-Remaining-{window}-{provider}`"
     description: "Tokens remaining in the current window."
-  - header: "`RateLimit-Reset`"
-    description: "Seconds until the window resets."
+  - header: "`X-AI-RateLimit-Reset`"
+    description: "Seconds until the quota is restored."
+  - header: "`X-AI-RateLimit-Retry-After`"
+    description: "Seconds clients should wait before retrying after a `429` response."
 {% endtable %}
 
 When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `Retry-After` header.
