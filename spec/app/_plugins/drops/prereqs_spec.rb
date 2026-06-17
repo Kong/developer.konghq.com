@@ -447,6 +447,32 @@ RSpec.describe Jekyll::Drops::Prereqs do
     end
   end
 
+  describe '#render_gateway_prereq?' do
+    context 'when products include gateway' do
+      let(:page_data) { super().merge('products' => %w[mesh kic gateway]) }
+
+      it { expect(subject.render_gateway_prereq?).to be(true) }
+    end
+
+    context 'when products include ai-gateway' do
+      context 'when major_version is set to 1' do
+        let(:page_data) do
+          super().merge('products' => %w[gateway ai-gateway], 'major_version' => { 'ai-gateway' => 1 })
+        end
+
+        it { expect(subject.render_gateway_prereq?).to be(true) }
+      end
+
+      context 'when major_version is not set' do
+        let(:page_data) do
+          super().merge('products' => %w[ai-gateway])
+        end
+
+        it { expect(subject.render_gateway_prereq?).to be(false) }
+      end
+    end
+  end
+
   describe '#tools' do
     context 'when tools are set' do
       let(:page_data) { super().merge('tools' => %w[deck httpie]) }
