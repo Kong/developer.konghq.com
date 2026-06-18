@@ -29,8 +29,9 @@ related_resources:
     url: /how-to/configure-oidc-with-token-exchange/
 ---
 
-If your APIs serve clients from multiple identity providers (IdPs), (for example, employees using Okta, B2B partners using Azure AD, or legacy systems on an in-house IdP), the [OpenID Connect (OIDC) plugin](/plugins/openid-connect/) can act as a federated authentication broker at the gateway layer. In this setup, backends don't need per-IdP validation logic.
-{{site.base_gateway}} centralizes auth policy and forwards only the verified identity context upstream.
+If your APIs serve clients from multiple identity providers (IdPs), the [OpenID Connect (OIDC) plugin](/plugins/openid-connect/) can act as a federated authentication broker at the gateway layer.
+For example, you might have employees using Okta, B2B partners using Azure AD, and legacy systems on an in-house IdP.
+In this setup, {{site.base_gateway}} centralizes auth policy and forwards only the verified identity context upstream, so backends don't need per-IdP validation logic.
 
 The OIDC plugin supports two approaches for multi-IdP authentication, both using [JWT access token (bearer) auth](/plugins/openid-connect/#jwt-access-token-authentication-flow).
 Clients authenticate against their respective IdPs and present the resulting bearer token to {{site.base_gateway}}:
@@ -57,8 +58,13 @@ rows:
     option1: "Any"
     option2: "3.14"
   - label: "Key config parameters"
-    option1: "`config.issuers_allowed`, `config.extra_jwks_uris`"
-    option2: "`config.token_exchange.subject_token_issuers`"
+    option1: 
+      * `config.issuers_allowed`
+      * `config.extra_jwks_uris`
+    option2: |
+      * `config.token_exchange.subject_token_issuers`
+      * `config.token_exchange.subject_token_issuers[].verify_signature` {% new_in 3.15 %}
+      * `config.token_exchange.subject_token_issuers[].jwks_uri` {% new_in 3.15 %}
 {% endtable %}
 
 ## Option 1: Trusted issuers registry
@@ -79,7 +85,7 @@ The plugin checks the primary discovery JWKS first, then falls back to these.
 This approach works best when tokens issued by each IdP follow the same claim naming conventions.
 
 {:.info}
-> The plugin uses `config.issuer` for discovery and to identify the primary issuer.
+> **Note**: The plugin uses `config.issuer` for discovery and to identify the primary issuer.
 > Tokens from other IdPs will fail `iss` claim verification unless you set [`config.verify_claims`](/plugins/openid-connect/reference/#schema--config-verify-claims) to `false` and control allowed issuers via `config.issuers_allowed` instead.
 
 If you update `config.extra_jwks_uris` after the plugin is already configured, [clear the discovery cache](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache) for the change to take effect.
@@ -131,6 +137,12 @@ Key configuration parameters:
 
 * [`config.token_exchange.subject_token_issuers`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers): Explicit list of trusted input issuers.
 The plugin only exchanges tokens whose `iss` claim matches an entry here.
+* [`config.token_exchange.subject_token_issuers[].verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) {% new_in 3.15 %}: Set to `true` to cryptographically verify the subject token's signature at the gateway before sending the exchange request to the IdP.
+Defaults to `false` for backward compatibility.
+We recommend enabling this for all subject token issuers because it prevents tokens with invalid signatures from consuming IdP resources.
+* [`config.token_exchange.subject_token_issuers[].jwks_uri`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-jwks-uri) {% new_in 3.15 %}: An optional explicit JWKS endpoint for the issuer.
+If not set, {{site.base_gateway}} resolves the JWKS URI from OIDC discovery.
+Only used when `verify_signature` is `true`.
 * [`config.token_exchange.conditions`](/plugins/openid-connect/reference/#schema--config-token-exchange-conditions): Optional per-issuer rules that control when to trigger the exchange.
 If the subject token issuer and the target issuer (the one configured in `config.issuer`) are different, exchange always triggers.
 If they match, conditions determine whether to exchange.
@@ -158,9 +170,10 @@ config:
   token_exchange:
     subject_token_issuers:
       - issuer: https://idp-b.example.com
+        verify_signature: true
 ```
 
-When a client from `idp-b` presents a bearer token, {{site.base_gateway}} validates it, then exchanges it with `idp-a` to produce a token the upstream service trusts.
+When a client from `idp-b` presents a bearer token, {{site.base_gateway}} verifies its signature, then exchanges it with `idp-a` to produce a token the upstream service trusts.
 Tokens already issued by `idp-a` are validated as-is unless conditions require an exchange.
 
 For more detail, see:
@@ -191,7 +204,8 @@ rows:
   - error: Signature verification failure
     log: "`invalid signature (pkey:verify: ...)`"
     cause: |
-      The signing key for the token's issuer isn't available to the plugin. 
-      * If using a trusted issuer registry, check that the issuer's JWKS endpoint is listed in `config.extra_jwks_uris` and that the [discovery cache has been cleared](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache) after any config change. 
-      * If using token exchange, confirm that `config.token_exchange.subject_token_issuers` includes the token's `iss` value.
+      The signing key for the token's issuer isn't available to the plugin.
+      * If using a trusted issuer registry, check that the issuer's JWKS endpoint is listed in `config.extra_jwks_uris` and that the [discovery cache has been cleared](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache) after any config change.
+      * If using token exchange without `verify_signature`, confirm that `config.token_exchange.subject_token_issuers` includes the token's `iss` value.
+      * If using token exchange with `verify_signature: true`, confirm that the JWKS endpoint is reachable from {{site.base_gateway}}. If you set `jwks_uri` explicitly, verify that URI is correct. If not set, check that OIDC discovery succeeds for the issuer URL.
 {% endtable %}
