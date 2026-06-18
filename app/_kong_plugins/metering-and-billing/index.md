@@ -5,7 +5,7 @@ tier: enterprise
 content_type: plugin
 
 publisher: kong-inc
-description: 'Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with {{site.konnect_short_name}} {{site.metering_and_billing}}.'
+description: 'A licensed add-on through {{site.konnect_short_name}} {{site.metering_and_billing}}. Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering.'
 
 
 products:
@@ -49,6 +49,10 @@ related_resources:
   - text: Meter API requests by Consumer with {{site.metering_and_billing}}
     url: /how-to/meter-api-requests-by-consumer/
 ---
+
+
+{:.danger}
+> {{site.metering_and_billing}} requires a separate purchase. [Contact Sales](https://konghq.com/contact-sales) for pricing and availability.
 
 The Metering & Billing plugin allows you to meter API requests and AI token usage for usage-based billing for both {{site.base_gateway}} on-prem and {{site.konnect_short_name}} deployments. 
 The plugin supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. 
