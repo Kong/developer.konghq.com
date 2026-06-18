@@ -156,7 +156,7 @@ rows:
         blocks:
         - type: text
           config: |
-            *KAi released GA on June 10th, 2026.*
+            *KAi v2 Agent released to preview on June 10th, 2026.*
 
             New features in this release include:
             * Artifacts support
