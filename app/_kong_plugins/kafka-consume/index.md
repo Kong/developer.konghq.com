@@ -102,9 +102,14 @@ If you try to scope this plugin to a Service on a fresh {{site.base_gateway}} in
 
 In traditional mode, {{site.base_gateway}} will log an error-level message at startup if a `kafka-consume` plugin scoped to a Service is detected. The plugin configuration must be updated after startup. Until the configuration is updated, requests to the previous plugin URL will continue to be forwarded to the upstream Service, and responses will be returned to the downstream client as before.
 
-In DB-less mode, if the declarative configuration file contains a `kafka-consume` plugin scoped to a Service, {{site.base_gateway}} will fail to start. In this case, you must update the declarative configuration before restarting {{site.base_gateway}}.
+In DB-less mode, if the declarative configuration file contains a `kafka-consume` plugin scoped to a Service, {{site.base_gateway}} will fail to start. In this case, proceed as follows:
 
-In hybrid mode, if a `kafka-consume` plugin scoped to a Service exists in PostgreSQL, upgrading and restarting the control plane will succeed. However, before updating the data plane, you must update the plugin configuration. Otherwise, once the data plane is upgraded and restarted, it will fail to sync the configuration due to validation errors.
+1. Update the declarative configuration 1. Restart {{site.base_gateway}}.
+
+In hybrid mode, if a `kafka-consume` plugin scoped to a Service exists in PostgreSQL, upgrading and restarting the control plane will succeed. Then, to avoid validation errors on sync, follow these steps:
+
+1. Update the plugin configuration.
+1. Update and restart the data plane.
 
 ## Authentication
 
