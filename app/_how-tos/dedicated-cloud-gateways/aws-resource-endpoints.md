@@ -150,7 +150,7 @@ Once the resource configuration mapping displays as `Ready`, your resource endpo
 Additionally, you can validate that the resource endpoint connections in {{site.konnect_short_name}} are working correctly by navigating to your [Gateway Service configured in the prerequisites](/dedicated-cloud-gateways/aws-resource-endpoints/#required-entities):
 
 ```sh
-curl -i -X GET "http://$RESOURCE_DOMAIN_NAME/anything"
+curl -i -X GET "$RESOURCE_DOMAIN_NAME"
 ```
 
 ## Configure VPC security group inbound rules
@@ -167,7 +167,7 @@ This is why you must configure your inbound VPC security group rules with the ma
 1. From the VPC sidebar, click **Security groups**.
 1. Create a new security group or edit the inbound rules of an existing security group.
 1. In the **Source** field, enter the prefix list IDs, for example `pl-123456...`.
-1. Repeat steps 1-7 for all regions where your backend resources are deployed.
+1. Repeat steps 1-8 for all regions where your backend resources are deployed.
 
 ## Troubleshooting timeouts
 
