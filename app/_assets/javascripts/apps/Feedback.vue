@@ -33,7 +33,7 @@
         <textarea
           id="feedback-message"
           v-model="message"
-          class="bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3"
+          class="bg-secondary rounded-md border border-primary py-2 px-3"
           :disabled="isSubmitting"
         ></textarea>
         <div class="flex gap-3 justify-end">

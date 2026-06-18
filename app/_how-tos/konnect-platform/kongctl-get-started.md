@@ -39,7 +39,7 @@ prereqs:
     - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial requires a {{site.konnect_short_name}} account. If you don't have an account, 
-        you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
+        you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs).
       icon_url: /assets/icons/gateway.svg
 
 next_steps:

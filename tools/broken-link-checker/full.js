@@ -1,3 +1,4 @@
+import "./lib/patch-http-timeout.js";
 import { promises as fs } from "fs";
 import minimist from "minimist";
 import checkSite from "./lib/check-site.js";

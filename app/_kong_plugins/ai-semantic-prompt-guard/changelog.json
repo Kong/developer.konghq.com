@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.5": [
+    {
+      "message": "Fixed an issue where full-sync reconfigure rebuilt semantic vectorDB indexes even when the plugin configuration was unchanged.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "deprecate config.rules.max_request_body_size with config.max_request_body_size.",

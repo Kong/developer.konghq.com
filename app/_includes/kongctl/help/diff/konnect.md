@@ -18,7 +18,7 @@ Examples:
 
 Flags:
       --base-dir string                   Base directory boundary for !file resolution.
-                                          Defaults to each -f source root (file: its parent dir, dir: the directory itself). For stdin, defaults to CWD.
+                                          Defaults to each -f source root (file: its parent dir, dir: the directory itself). For stdin and URLs, defaults to CWD.
                                           - Config path: [ konnect.declarative.base-dir ]
       --base-url string                   Base URL for Konnect API requests.
                                           - Config path: [ konnect.base-url ]
@@ -29,7 +29,7 @@ Flags:
                                           - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string                Path to the configuration file to load.
                                           - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -f, --filename strings                  Filename or directory to files to use to create the resource (can specify multiple)
+  -f, --filename strings                  File, directory, URL, or '-' to use to create the resource (can specify multiple)
       --full-content                      Display full content for large fields instead of summary
   -h, --help                              help for konnect
       --http-retry-backoff-factor float   Exponential backoff growth factor for retries (for example: 2.0).
@@ -63,6 +63,11 @@ Flags:
   -R, --recursive                         Process the directory used in -f, --filename recursively
       --region string                     Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                           - Config path: [ konnect.region ]
+      --remote-file-auth string           Authentication mode for remote -f URL sources (auto|none).
+                                          In auto mode, kongctl sends the current Konnect bearer token only to HTTPS Konnect hosts.
+                                          - Config path: [ konnect.declarative.remote-file-auth ] (default "auto")
+  -s, --remote-file-save-dir string       Save remote -f URL sources into this local directory before loading
+  -F, --remote-file-save-force            Overwrite existing files when saving remote -f URL sources with --remote-file-save-dir
       --require-any-namespace             Require explicit namespace on all resources (via kongctl.namespace or _defaults.kongctl.namespace).
                                           Cannot be used with --require-namespace.
                                           - Config path: [ konnect.declarative.require-any-namespace ]

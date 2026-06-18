@@ -3,7 +3,7 @@
 {% endif %}
 
 {% ifhascontent info_box %}
-<div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full">
+<div class="info-box">
 {% comment %}XXX: Unfortunately, this needs to be here because contentblock caches the content.{% endcomment %}
 {% if page.content_type == 'how_to' %}
     {% include_cached info_box/sections/controls.html works_on=page.works_on mobile=include.mobile %}
