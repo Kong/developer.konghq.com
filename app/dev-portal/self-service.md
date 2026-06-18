@@ -171,7 +171,7 @@ rows:
 Plugins can be applied to an application by either linking the application to an existing Consumer in {{site.base_gateway}} or applying the plugin via conditional execution logic to the associated principal.
 When a developer creates an application, {{site.dev_portal}} automatically creates a {{site.identity}} principal for this application. 
 This principal entity then helps link the application to an existing Consumer entity in {{site.base_gateway}}.
-{{site.identity}} doesn't store any credentials for applications, it is just used for mapping an application to a consumer.
+{{site.identity}} doesn't store any credentials for applications. It is only used for mapping an application to a Consumer.
 
 You can apply plugins to an application in two different ways:
 
