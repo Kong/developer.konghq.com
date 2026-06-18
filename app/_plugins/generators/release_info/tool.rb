@@ -7,9 +7,10 @@ module Jekyll
     class Tool
       include Releasable
 
-      def initialize(site:, tool:, min_version:, max_version:)
+      def initialize(site:, tool:, min_version:, max_version:, major: nil)
         @site = site
         @tool = tool
+        @major = major
         @min_version = min_version
         @max_version = max_version
       end
@@ -23,6 +24,10 @@ module Jekyll
 
       def key
         @key ||= @tool
+      end
+
+      def major_version_number
+        @major
       end
     end
   end

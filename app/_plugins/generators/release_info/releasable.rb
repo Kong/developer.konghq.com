@@ -18,11 +18,10 @@ module Jekyll
       end
 
       def latest_available_release
-        @latest_available_release ||= if @major
-                                        available_releases.max_by { |r| Gem::Version.new(r.number) }
-                                      else
-                                        available_releases.detect(&:latest?)
-                                      end
+        @latest_available_release ||= available_releases.detect(&:latest?) ||
+                                      (major_version_number && available_releases.max_by do |r|
+                                        Gem::Version.new(r.number)
+                                      end)
       end
 
       def min_release

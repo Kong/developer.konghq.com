@@ -20,6 +20,7 @@ RSpec.describe Jekyll::ReleaseInfo::Product do
       'products' => {
         'gateway' => {
           'releases' => [
+            { 'release' => '3.11', 'label' => 'dev' },
             { 'release' => '3.10', 'latest' => true },
             { 'release' => '3.9' },
             { 'release' => '2.1' },
@@ -55,7 +56,7 @@ RSpec.describe Jekyll::ReleaseInfo::Product do
         let(:major) { 3 }
 
         it 'only exposes releases from that major' do
-          expect(subject.available_releases.map(&:number)).to eq(['3.10', '3.9'])
+          expect(subject.available_releases.map(&:number)).to eq(['3.11', '3.10', '3.9'])
         end
       end
 
@@ -100,7 +101,7 @@ RSpec.describe Jekyll::ReleaseInfo::Product do
       context 'when scoped to the current major' do
         let(:major) { 3 }
         it 'only exposes releases from that major in releases' do
-          expect(subject.releases.map(&:number)).to eq(['3.10', '3.9'])
+          expect(subject.releases.map(&:number)).to eq(['3.11', '3.10', '3.9'])
         end
       end
 
