@@ -139,7 +139,7 @@ Key configuration parameters:
 The plugin only exchanges tokens whose `iss` claim matches an entry here.
 * [`config.token_exchange.subject_token_issuers[].verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) {% new_in 3.15 %}: Set to `true` to cryptographically verify the subject token's signature at the gateway before sending the exchange request to the IdP.
 Defaults to `false` for backward compatibility.
-We recommend enabling this for all subject token issuers because it prevents tokens with invalid signatures from consuming IdP resources.
+We recommend enabling this for all subject token issuers to prevent tokens with invalid signatures from consuming IdP resources.
 * [`config.token_exchange.subject_token_issuers[].jwks_uri`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-jwks-uri) {% new_in 3.15 %}: An optional explicit JWKS endpoint for the issuer.
 If not set, {{site.base_gateway}} resolves the JWKS URI from OIDC discovery.
 Only used when `verify_signature` is `true`.

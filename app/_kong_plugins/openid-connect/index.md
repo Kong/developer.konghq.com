@@ -648,7 +648,7 @@ The OpenID Connect plugin performs the following checks on the incoming token be
   * The token is not used before its time (`nbf` claim).
   * {% new_in 3.15 %} If [`verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{site.base_gateway}} cryptographically verifies the token signature before sending the exchange request to the IdP.
 1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered.
-1. If the `subject_token_issuer` and `target_issuer` are the same, then the configured conditions are evaluated to determine token exchange.
+1. If the `subject_token_issuer` and `target_issuer` are the same, the configured conditions are evaluated to determine whether to trigger token exchange.
 1. {{site.base_gateway}} uses its client credentials to trigger the exchange.
 
 Afterwards, the rest of the OpenID Connect plugin flow continues on the exchanged token.
@@ -673,16 +673,16 @@ Conditions look for the presence or absence of two claims: `scopes` and `audienc
 ### Subject token signature verification {% new_in 3.15 %}
 
 By default, {{site.base_gateway}} validates the `iss`, `exp`, and `nbf` claims of an incoming subject token but doesn't verify its cryptographic signature before sending the exchange request to the IdP.
-The IdP performs its own signature check, so validation happens eventually.
+The IdP performs its own signature check, so validation occurs.
 
-Enabling signature verification through {{site.base_gateway}} adds an earlier check that rejects tokens with invalid signatures before they reach the IdP.
+Enabling signature verification in {{site.base_gateway}} adds an earlier check that rejects tokens with invalid signatures before they reach the IdP.
 This reduces unnecessary round-trips to the IdP and keeps {{site.base_gateway}}'s security posture consistent with other authentication flows.
 
 You can configure this setting per issuer on each entry in [`config.token_exchange.subject_token_issuers`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers):
 
 * [`config.token_exchange.subject_token_issuers[].verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature): Set to `true` to enable signature verification for that issuer.
 Defaults to `false` for backward compatibility.
-We recommend enabling this for all subject token issuers because it prevents tokens with invalid signatures from consuming IdP resources.
+We recommend enabling this for all subject token issuers to prevent tokens with invalid signatures from consuming IdP resources.
 * [`config.token_exchange.subject_token_issuers[].jwks_uri`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-jwks-uri): An optional explicit JWKS endpoint for fetching the signing keys for this issuer.
 If not set, {{site.base_gateway}} resolves the JWKS URI from OIDC discovery using the issuer URL.
 Set this when the issuer doesn't publish a discovery document or when you want to pin to a specific key endpoint.
