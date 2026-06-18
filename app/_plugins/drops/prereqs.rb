@@ -3,7 +3,6 @@
 require 'yaml'
 require_relative './prereqs/product_entities_prereqs'
 require_relative './prereqs/product_include_prereqs'
-require_relative './prereqs/data_prereqs'
 
 module Jekyll
   module Drops
