@@ -58,7 +58,7 @@ rows:
     option1: "Any"
     option2: "3.14"
   - label: "Key config parameters"
-    option1: 
+    option1: |
       * `config.issuers_allowed`
       * `config.extra_jwks_uris`
     option2: |

@@ -648,7 +648,7 @@ The OpenID Connect plugin performs the following checks on the incoming token be
   * The token is not used before its time (`nbf` claim).
   * {% new_in 3.15 %} If [`verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{site.base_gateway}} cryptographically verifies the token signature before sending the exchange request to the IdP.
 1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered.
-1. If the `subject_token_issuer`and `target_issuer` are the same, then the configured conditions are evaluated to determine token exchange.
+1. If the `subject_token_issuer` and `target_issuer` are the same, then the configured conditions are evaluated to determine token exchange.
 1. {{site.base_gateway}} uses its client credentials to trigger the exchange.
 
 Afterwards, the rest of the OpenID Connect plugin flow continues on the exchanged token.
