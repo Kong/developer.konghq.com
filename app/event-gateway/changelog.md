@@ -14,6 +14,24 @@ tags:
 
 Changelog for supported {{site.event_gateway}} versions.
 
+## 1.2.0
+
+**Release date**: TBA
+
+### Features
+
+- **Topic aliases**: Virtual clusters can now expose backend Kafka topics under different client-facing names.
+Clients see the alias while {{site.event_gateway_short}} transparently routes requests to the original backend topic.
+This lets you rename topics for clients without changing client configuration, or provide multiple names for the same backend topic.
+  - [Virtual cluster reference: Topic aliases](/event-gateway/entities/virtual-cluster/#topic-aliases)
+  - [How-to: Configure topic aliases](/event-gateway/configure-topic-aliases/)
+- **Encrypt Fields policy**: A new produce-phase policy that encrypts fields of schema-validated Kafka messages using AES-256-GCM before they reach the backend cluster.
+  - [Encrypt Fields policy reference](/event-gateway/policies/encrypt-fields/)
+- **Decrypt Fields policy**: A new consume-phase policy that decrypts fields of Kafka messages that were previously encrypted using a referenced key.
+Use together with the Encrypt Fields policy to enforce consistent encryption standards across clients.
+  - [Decrypt Fields policy reference](/event-gateway/policies/decrypt-fields/)
+  - [How-to: Encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/)
+
 ## 1.1.0
 
 **Release date**: 2026/03/25
