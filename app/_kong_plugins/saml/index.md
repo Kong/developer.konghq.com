@@ -73,7 +73,7 @@ The minimum configuration required is:
 - The IdP sign-in URL (`idp_sso_url`): This is the IdP endpoint where
   SAML will issue `POST` requests. The SP needs to obtain this
   information from the IdP.
-- The issuer (`issuer`): This us the unique identifier of the IdP application.
+- The issuer (`issuer`): This is the unique identifier of the IdP application.
 
 The plugin currently supports SAML 2.0 with Microsoft Entra. Refer to the
 [Microsoft Entra SAML documentation](https://learn.microsoft.com/en-us/entra/architecture/auth-saml)
