@@ -33,8 +33,13 @@ breadcrumbs:
 
 Kafka record headers are multi-valued: the [Kafka protocol](https://cwiki.apache.org/confluence/display/KAFKA/KIP-82+-+Add+Record+Headers) allows the same header key to appear more than once in a single record, and clients can read every occurrence.
 
-{{site.event_gateway}} models record headers as a single value per key. When a record is processed by a policy that reads or transforms headers (for example, encryption, schema validation, or `modify_headers`), records that carry duplicate header keys are collapsed so that only the **last** value for each key is kept; earlier values with the same key are dropped.
+{{site.event_gateway_short}} models record headers as a single value per key. 
+When a record is processed by a policy that reads or transforms headers (for example, Encryption, Schema Validation, or Modify Headers policies), records that carry duplicate header keys are collapsed so that only the **last** value for each key is kept. 
+Earlier values with the same key are dropped.
 
-This affects only records that {{site.event_gateway}} decodes to apply record-level policies. If your clients rely on multiple headers that share the same key, don't route those topics through header-transforming policies. See the [{{site.event_gateway}} headers reference](/event-gateway/headers/) for the headers {{site.event_gateway}} adds and interprets.
+This only affects records that {{site.event_gateway_short}} decodes to apply record-level policies. 
+If your clients rely on multiple headers that share the same key, don't route those topics through header-transforming policies.
+
+See the [{{site.event_gateway}} headers reference](/event-gateway/headers/) for the headers {{site.event_gateway_short}} adds and interprets.
 
 
