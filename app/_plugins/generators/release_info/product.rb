@@ -17,7 +17,7 @@ module Jekyll
 
       def available_releases
         @available_releases ||= raw_releases
-                                .select { |r| major_of(r['release']) == major }
+                                .select { |r| major_of(r['release']) == major_version_number }
                                 .map { |r| Drops::Release.new(r) }
       end
 
@@ -47,11 +47,13 @@ module Jekyll
         version_string.to_s.split('.').first.to_i
       end
 
-      def major
-        @major ||= MajorResolver.new(
+      def major_version_number
+        return @major if @major
+
+        MajorResolver.new(
           site: @site,
           product: @product,
-          page_major_version: @major_version,
+          page_major_version: nil,
           min_version: @min_version[@product],
           max_version: @max_version[@product]
         ).resolve
