@@ -5,21 +5,15 @@ content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
 
 description: Configure the AI Proxy plugin to create a chat route.
 
 products:
-  - gateway
+
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
-
-plugins:
-  - ai-proxy
 
 entities:
   - service
