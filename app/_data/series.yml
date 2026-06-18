@@ -22,7 +22,7 @@ operator-get-started-event-gateway:
   url: /operator/get-started/event-gateway/install/
 mcp-traffic:
   title: Secure, govern and observe MCP traffic with {{site.ai_gateway}}
-  url: /mcp/secure-mcp-traffic/
+  url: /ai-gateway/v1/mcp/secure-mcp-traffic/
 hashicorp-vault-llms:
   title: Configure dynamic authentication to LLM providers
   url: /how-to/configure-hashicorp-vault-as-a-vault-for-llm-providers/

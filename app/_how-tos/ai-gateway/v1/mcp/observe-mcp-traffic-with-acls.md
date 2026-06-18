@@ -3,7 +3,7 @@ title: Observe MCP Traffic with Access Control Enabled
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
 
@@ -15,7 +15,7 @@ products:
   - ai-gateway
   - insomnia
 
-permalink: /mcp/observe-mcp-traffic-with-acls/
+permalink: /ai-gateway/v1/mcp/observe-mcp-traffic-with-acls/
 
 series:
   id: mcp-acls
@@ -68,6 +68,9 @@ prereqs:
       value: '0.0.0.0:8100'
 
 automated_tests: false
+major_version:
+  ai-gateway: 1
+
 ---
 
 ## Configure MCP tools in Chatwise

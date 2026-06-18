@@ -1,9 +1,9 @@
 ---
 title: Secure MCP tools with OAuth2 and Okta
 content_type: how_to
-permalink: /mcp/secure-mcp-tools-with-oauth2-and-okta/
+permalink: /ai-gateway/v1/mcp/secure-mcp-tools-with-oauth2-and-okta/
 breadcrumbs:
-  - /mcp/
+  - /ai-gateway/v1/mcp/
 
 description: Use the AI MCP OAuth2 plugin with Okta to protect MCP tools exposed through the AI MCP Proxy plugin
 
@@ -45,7 +45,7 @@ tools:
 
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
   - text: AI MCP OAuth2
@@ -72,11 +72,11 @@ prereqs:
 
           1. Ensure you have Node.js and npm installed. If needed, download them from https://nodejs.org.
 
-          1. Update `npx` to the latest version:
+          2. Update `npx` to the latest version:
               ```sh
               npm install -g npx
               ```
-          1. Install the Inspector:
+          3. Install the Inspector:
               ```sh
               npm install -g @modelcontextprotocol/inspector
               ```
@@ -98,6 +98,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 automated_tests: false
+major_version:
+  ai-gateway: 1
+
 ---
 
 ## Configure the AI MCP Proxy tools

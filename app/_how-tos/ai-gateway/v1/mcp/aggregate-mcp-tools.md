@@ -3,7 +3,7 @@ title: Aggregate MCP tools from multiple AI MCP Proxy plugins
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
   - text: Use Insomnia MCP clients to test aggregated MCP tools
@@ -14,7 +14,7 @@ description: Learn how to aggregate MCP tools from multiple RESTful APIs using A
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/aggregate-mcp-tools/
+permalink: /ai-gateway/v1/mcp/aggregate-mcp-tools/
 
 works_on:
   - on-prem
@@ -121,6 +121,8 @@ prereqs:
       - weather-route
       - currency-route
       - listener-route
+major_version:
+  ai-gateway: 1
 
 ---
 

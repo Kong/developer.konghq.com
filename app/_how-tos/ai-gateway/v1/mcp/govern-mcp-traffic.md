@@ -3,7 +3,7 @@ title: "Use {{site.ai_gateway}} to govern GitHub MCP traffic"
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advance/
   - text: AI Prompt Guard plugin
@@ -11,8 +11,8 @@ related_resources:
   - text: AI Rate Limiting Advanced plugin
     url: /plugins/ai-rate-limiting-advanced/
 breadcrumbs:
-    - /mcp/
-permalink: /mcp/govern-mcp-traffic/
+    - /ai-gateway/v1/mcp/
+permalink: /ai-gateway/v1/mcp/govern-mcp-traffic/
 
 series:
     id: mcp-traffic
@@ -62,6 +62,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 automated_tests: false
+major_version:
+  ai-gateway: 1
+
 ---
 
 ## Reconfigure the AI Proxy Advanced plugin

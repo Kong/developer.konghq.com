@@ -3,14 +3,14 @@ title: "Secure GitHub MCP Server traffic with {{ site.base_gateway }} and {{site
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advance/
   - text: Key Auth plugin
     url: /plugins/key-auth/
-permalink: /mcp/secure-mcp-traffic/
+permalink: /ai-gateway/v1/mcp/secure-mcp-traffic/
 breadcrumbs:
-  - /mcp/
+  - /ai-gateway/v1/mcp/
 
 description: Learn how to secure MCP traffic within GitHub remote MCP server with the Key Authentication plugin
 
@@ -83,6 +83,9 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+major_version:
+  ai-gateway: 1
+
 ---
 
 ## Configure the AI Proxy Advanced plugin

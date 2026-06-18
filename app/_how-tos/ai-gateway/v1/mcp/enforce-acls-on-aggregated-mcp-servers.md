@@ -3,13 +3,13 @@ title: Enforce ACLs on aggregated MCP servers
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
-    url: /mcp/use-access-controls-for-mcp-tools/
+    url: /ai-gateway/v1/mcp/use-access-controls-for-mcp-tools/
   - text: Aggregate MCP tools from multiple AI MCP Proxy plugins
-    url: /mcp/aggregate-mcp-tools/
+    url: /ai-gateway/v1/mcp/aggregate-mcp-tools/
 
 description: Restrict access to aggregated MCP tools using Consumer Groups. This guide shows how to define per-tool ACLs on conversion-only plugins and enforce them through a listener with the `include_consumer_groups` setting.
 
@@ -17,7 +17,7 @@ products:
   - gateway
   - ai-gateway
 
-permalink: /mcp/enforce-acls-on-aggregated-mcp-servers/
+permalink: /ai-gateway/v1/mcp/enforce-acls-on-aggregated-mcp-servers/
 
 works_on:
   - on-prem
@@ -88,6 +88,9 @@ prereqs:
       - mcp-aggregation
 
 automated_tests: false
+major_version:
+  ai-gateway: 1
+
 ---
 
 In this how-to, you'll restrict access to aggregated MCP tools using Consumer Groups. This allows you to define per-tool ACLs on conversion-only plugins and enforce them through a listener with the `include_consumer_groups` setting.
