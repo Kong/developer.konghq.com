@@ -1,0 +1,56 @@
+description: "Use a fixed, operator-chosen consumer group ID to work with ACL-enforced Kafka clusters."
+
+extended_description: |
+  Use a fixed, operator-chosen consumer group ID to work with ACL-enforced Kafka clusters.
+  Confluent Cloud enforces ACLs on consumer groups by default, so the default random group ID can't be pre-allowlisted.
+  
+  Because the group ID is stable, the plugin commits offsets under the same identity every time, so consumption picks up where it left off.
+
+title: 'Fixed consumer group ID'
+
+weight: 800
+
+min_version:
+  gateway: '3.15'
+
+requirements:
+  - You have a [Kafka cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud) in Confluent Cloud
+  - You have a [Kafka topic](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic) in the cluster
+  - The consumer group name is allowlisted in your Confluent Cloud ACLs
+
+variables:
+  host:
+    description: The bootstrap server host
+    value: $BOOTSTRAP_SERVER_HOST
+  key:
+    description: The API key to use for authentication
+    value: $API_KEY
+  secret:
+    description: The API secret to use for authentication
+    value: $API_SECRET
+  topic:
+    description: The name of the Kafka topic to consume from
+    value: $KAFKA_TOPIC
+  group_id:
+    description: The fixed consumer group ID, pre-allowlisted in your Confluent Cloud ACLs
+    value: $CONSUMER_GROUP_ID
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topics:
+  - name: ${topic}
+  mode: http-get
+  cluster_api_key: ${key}
+  cluster_api_secret: ${secret}
+  consumer_group:
+    mode: manual
+    consumer_group_id: ${group_id}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
