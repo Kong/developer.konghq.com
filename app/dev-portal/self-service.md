@@ -247,7 +247,7 @@ Any request that authenticates as this application is now rate limited to 200 re
 
 ### Map an application to a Consumer
 
-Mapping an application to a Consumer requires the [Consumer Viewer](/konnect-platform/teams-and-roles/#control-planes) role, granted for each API instance registered by the application.
+Mapping an application to a Consumer requires either the [Control Plane Admin or Consumer Admin](/konnect-platform/teams-and-roles/#control-planes) roles, granted for each API instance registered by the application.
 
 {% navtabs "map-consumer" %}
 {% navtab "API" %}
