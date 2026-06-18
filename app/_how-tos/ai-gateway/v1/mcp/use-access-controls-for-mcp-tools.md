@@ -3,7 +3,7 @@ title: Control MCP tool access with Consumer and Consumer Group ACLs
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
 
@@ -14,7 +14,7 @@ products:
   - ai-gateway
   - insomnia
 
-permalink: /mcp/use-access-controls-for-mcp-tools/
+permalink: /ai-gateway/v1/mcp/use-access-controls-for-mcp-tools/
 
 series:
   id: mcp-acls
@@ -97,6 +97,9 @@ faqs:
     a: |
       Prior to {{site.ai_gateway}} 3.14, requests that matched an MCP ACL deny rule or failed to match an allow list returned the JSON-RPC error code `INVALID_PARAMS -32602`.
       This has now changed to match the [MCP 2025-11-25 authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#error-handling) and returns `HTTP 403 Forbidden`.
+major_version:
+  ai-gateway: 1
+
 ---
 ## Set up Consumer authentication
 

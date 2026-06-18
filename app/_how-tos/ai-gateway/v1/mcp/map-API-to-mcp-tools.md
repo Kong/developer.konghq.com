@@ -3,7 +3,7 @@ title: Map a RESTful API to MCP tools
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
 
@@ -11,7 +11,7 @@ description: Learn how to use the AI MCP Proxy plugin to create an MCP from any 
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/map-api-to-mcp-tools/
+permalink: /ai-gateway/v1/mcp/map-api-to-mcp-tools/
 
 series:
   id: mcp-conversion
@@ -61,6 +61,9 @@ prereqs:
   konnect:
     - name: KONG_STATUS_LISTEN
       value: '0.0.0.0:8100'
+major_version:
+  ai-gateway: 1
+
 ---
 ## Install mock API Server
 
