@@ -47,17 +47,9 @@ faqs:
     a: |
       Because configuring virtual hub peering requires approving the {{site.konnect_short_name}} app in Microsoft Entra (a step that generates a link only available in the {{site.konnect_short_name}} UI), you must complete the initial setup using the UI before managing the resource in Terraform.
 
-      After the peering is `Ready`, you can import or reference the `konnect_cloud_gateway_transit_gateway` resource in Terraform. The following example shows what the resource block looks like:
-
+      After the peering is `Ready`, you can manage it with Terraform by importing the existing `konnect_cloud_gateway_transit_gateway` into your Terraform state. For a complete example, see [`cloud-gateways.tf`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/cloud-gateways.tf). The following example shows what the resource block looks like:
       <!--vale off-->
       ```hcl
-      echo '
-      variable "network_id" {}
-      variable "tenant_id" {}
-      variable "resource_group_name" {}
-      variable "vhub_name" {}
-      variable "subscription_id" {}
-
       resource "konnect_cloud_gateway_transit_gateway" "my_vhub_peering" {
         network_id = var.network_id
 
@@ -73,7 +65,6 @@ faqs:
           }
         }
       }
-      ' >> main.tf
       ```
       <!--vale on-->
 next_steps:
