@@ -3,6 +3,7 @@
 require 'yaml'
 require_relative './prereqs/product_entities_prereqs'
 require_relative './prereqs/product_include_prereqs'
+require_relative './prereqs/entity_examples_data'
 
 module Jekyll
   module Drops
@@ -91,20 +92,7 @@ module Jekyll
 
         yaml = {}
         yaml = { '_format_version' => '3.0' } if product == 'gateway'
-
-        prereqs.fetch('entities', []).each do |k, files|
-          entities = files.map do |f|
-            example = @site.data.dig('entity_examples', product, k, f)
-
-            unless example
-              raise ArgumentError,
-                    "Missing entity_example file in app/_data/entity_examples/#{product}/#{k}/#{f}.{yml,yaml}"
-            end
-
-            example
-          end
-          yaml.merge!(k => entities) if entities
-        end
+        yaml.merge!(entity_examples_data(product))
 
         if product == 'gateway'
           Jekyll::Utils::HashToYAML.new(yaml).convert.gsub("'3.0'", '"3.0"')
@@ -143,6 +131,16 @@ module Jekyll
       end
 
       private
+
+      def entity_examples_data(product)
+        EntityExamplesData.new(
+          product: product,
+          entities: prereqs.fetch('entities', []),
+          entity_examples: @site.data.fetch('entity_examples', {}),
+          major: @page.data.dig('major_version', product),
+          product_data: @site.data.dig('products', product)
+        ).to_h
+      end
 
       def prereqs
         @prereqs ||= fetch_or_fail(@page, 'prereqs', {})
