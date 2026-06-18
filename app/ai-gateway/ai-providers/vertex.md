@@ -106,5 +106,3 @@ The authentication chain follows the same order of precedence as the `gcloud` to
 1. Service account JSON defined in environment variable `GCP_SERVICE_ACCOUNT`.
 1. Workload IAM Role (for example, a GKE or Deployment Service Account).
 1. VM Instance defined IAM Role.
-
-{% include plugins/ai-proxy/providers/how-tos.md %}
