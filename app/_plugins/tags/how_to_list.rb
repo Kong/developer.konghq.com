@@ -29,7 +29,7 @@ module Jekyll
                 (!config.key?('works_on') || t.data.fetch('works_on', []).intersect?(config['works_on'])) &&
                 (!config.key?('tools') || t.data.fetch('tools', []).intersect?(config['tools'])) &&
                 (!config.key?('plugins') || t.data.fetch('plugins', []).intersect?(config['plugins'])) &&
-                (@page['major_version'].nil? || t.data.fetch('major_version', {}) == @page['major_version'])
+                (t.data.fetch('major_version', {}) == @page.fetch('major_version', {}))
 
         result << t if match
         break result if result.size == quantity

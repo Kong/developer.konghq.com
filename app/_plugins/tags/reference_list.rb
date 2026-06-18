@@ -48,8 +48,7 @@ module Jekyll
           match = (!config.key?('tags') || p.data.fetch('tags', []).intersect?(config['tags'])) &&
                   (!config.key?('products') || p.data.fetch('products', []).intersect?(config['products'])) &&
                   (!config.key?('tools') || p.data.fetch('tools', []).intersect?(config['tools'])) &&
-                  (@page['major_version'].nil? || t.data.fetch('major_version',
-                                                               {}) == @page['major_version'])
+                  (p.data.fetch('major_version', {}) == @page.fetch('major_version', {}))
 
           result << p if match
           break result if result.size == quantity
