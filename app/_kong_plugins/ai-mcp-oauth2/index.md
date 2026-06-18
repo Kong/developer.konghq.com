@@ -48,7 +48,7 @@ related_resources:
   - text: OAuth 2.0 specification for MCP
     url: https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization
   - text: MCP Traffic Gateway
-    url: /mcp/
+    url: /ai-gateway/v1/mcp/
 ---
 
 The AI MCP OAuth2 plugin secures Model Context Protocol (MCP) traffic on {{site.ai_gateway}} using [OAuth 2.0 specification for MCP servers](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization). It ensures only authorized MCP clients can access protected MCP servers, and acts as a crucial security layer for MCP servers.
