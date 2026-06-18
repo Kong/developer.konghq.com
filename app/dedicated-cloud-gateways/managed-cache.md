@@ -94,12 +94,16 @@ columns:
   - title: Notes
     key: notes
 rows:
-  - profile: Small/Dev/Test
+  - profile: Small/Dev/Test/Low Performance Env
     entities: "≤100 × ≤100 × 1 window"
     rps: "≤1,000"
-    instance: "`cache.t3.small`"
+    instance: "`cache.t3.micro` or `cache.t3.small`"
     sync: "0.5"
-    notes: Micro fails at 10K RPS. Small handles 1K RPS baseline cleanly.
+    notes: |
+      Appropriate for development, testing, and other low-load or low-performance environments.
+      These are burstable instance types, so performance may vary.
+      Micro fails at 10,000 RPS.
+      Small handles a 1,000 RPS baseline cleanly.
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
