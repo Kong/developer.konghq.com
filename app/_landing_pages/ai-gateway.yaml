@@ -561,19 +561,6 @@ rows:
               align: end
 
   - header:
-      type: h2
-      text: How-to Guides
-
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              tags:
-                - ai
-              quantity: 5
-              allow_empty: true
-
-  - header:
       text: "Frequently Asked Questions"
       type: h2
     columns:
