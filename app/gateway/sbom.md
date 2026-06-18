@@ -41,42 +41,42 @@ columns:
 rows:
   - version: 3.15.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.15 SBOM](https://packages.konghq.com/public/gateway-315/raw/names/security-assets/versions/3.15.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.15 SBOM](https://packages.konghq.com/public/gateway-315/raw/names/security-assets/versions/3.15.0.0/security-assets.tar.gz)
   - version: 3.14.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.14 SBOM](https://packages.konghq.com/public/gateway-314/raw/names/security-assets/versions/3.14.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.14 SBOM](https://packages.konghq.com/public/gateway-314/raw/names/security-assets/versions/3.14.0.0/security-assets.tar.gz)
   - version: 3.13.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.13 SBOM](https://packages.konghq.com/public/gateway-313/raw/names/security-assets/versions/3.13.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.13 SBOM](https://packages.konghq.com/public/gateway-313/raw/names/security-assets/versions/3.13.0.0/security-assets.tar.gz)
   - version: 3.12.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.12 SBOM](https://packages.konghq.com/public/gateway-312/raw/names/security-assets/versions/3.12.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.12 SBOM](https://packages.konghq.com/public/gateway-312/raw/names/security-assets/versions/3.12.0.0/security-assets.tar.gz)
   - version: 3.11.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.11 SBOM](https://packages.konghq.com/public/gateway-311/raw/names/security-assets/versions/3.11.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.11 SBOM](https://packages.konghq.com/public/gateway-311/raw/names/security-assets/versions/3.11.0.0/security-assets.tar.gz)
   - version: 3.10.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.10 SBOM](https://packages.konghq.com/public/gateway-310/raw/versions/3.10.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.10 SBOM](https://packages.konghq.com/public/gateway-310/raw/versions/3.10.0.0/security-assets.tar.gz)
   - version: 3.9.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.9 SBOM](https://packages.konghq.com/public/gateway-39/raw/versions/3.9.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.9 SBOM](https://packages.konghq.com/public/gateway-39/raw/versions/3.9.0.0/security-assets.tar.gz)
   - version: 3.8.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.8 SBOM](https://packages.konghq.com/public/gateway-38/raw/versions/3.8.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.8 SBOM](https://packages.konghq.com/public/gateway-38/raw/versions/3.8.0.0/security-assets.tar.gz)
   - version: 3.7.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.7 SBOM](https://packages.konghq.com/public/gateway-37/raw/versions/3.7.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.7 SBOM](https://packages.konghq.com/public/gateway-37/raw/versions/3.7.0.0/security-assets.tar.gz)
   - version: 3.6.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.6 SBOM](https://packages.konghq.com/public/gateway-36/raw/versions/3.6.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.6 SBOM](https://packages.konghq.com/public/gateway-36/raw/versions/3.6.0.0/security-assets.tar.gz)
   - version: 3.5.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.5 SBOM](https://packages.konghq.com/public/gateway-35/raw/versions/3.5.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.5 SBOM](https://packages.konghq.com/public/gateway-35/raw/versions/3.5.0.0/security-assets.tar.gz)
   - version: 3.4.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.4 SBOM](https://packages.konghq.com/public/gateway-34/raw/versions/3.4.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.4 SBOM](https://packages.konghq.com/public/gateway-34/raw/versions/3.4.0.0/security-assets.tar.gz)
   - version: 3.3.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.3 SBOM](https://packages.konghq.com/public/gateway-33/raw/versions/3.3.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.3 SBOM](https://packages.konghq.com/public/gateway-33/raw/versions/3.3.0.0/security-assets.tar.gz)
 
 {% endtable %}
