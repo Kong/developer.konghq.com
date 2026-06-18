@@ -1,6 +1,6 @@
 ---
 title: Monetize LLM traffic in {{site.konnect_short_name}}
-permalink: /how-to/meter-llm-traffic/
+permalink: /ai-gateway/v1/how-to/meter-llm-traffic/
 description: Learn how to Meter LLM traffic using {{site.konnect_short_name}} {{site.metering_and_billing}}.
 content_type: how_to
 
@@ -9,6 +9,7 @@ breadcrumbs:
 
 products:
     - gateway
+    - ai-gateway
     - metering-and-billing
 
 works_on:
