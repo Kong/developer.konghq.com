@@ -673,7 +673,7 @@ Conditions look for the presence or absence of two claims: `scopes` and `audienc
 ### Subject token signature verification {% new_in 3.15 %}
 
 By default, {{site.base_gateway}} validates the `iss`, `exp`, and `nbf` claims of an incoming subject token but doesn't verify its cryptographic signature before sending the exchange request to the IdP.
-The IdP performs its own signature check, so validation occurs.
+The IdP performs its own signature check, so validation happens eventually.
 
 Enabling signature verification in {{site.base_gateway}} adds an earlier check that rejects tokens with invalid signatures before they reach the IdP.
 This reduces unnecessary round-trips to the IdP and keeps {{site.base_gateway}}'s security posture consistent with other authentication flows.
