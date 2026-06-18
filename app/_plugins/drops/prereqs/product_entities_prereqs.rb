@@ -24,13 +24,13 @@ module Jekyll
 
       def versioned_key
         @versioned_key ||= if @major
-                             "#{@product}/#{major_url_segement}"
+                             "#{@product}/#{major_url_segment}"
                            else
                              @product
                            end
       end
 
-      def major_url_segement
+      def major_url_segment
         MajorVersionResolver.process(
           product_data: @product_data,
           major: @major
