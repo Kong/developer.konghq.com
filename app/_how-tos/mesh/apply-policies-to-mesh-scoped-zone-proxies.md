@@ -30,6 +30,20 @@ tldr:
     1. Apply policies to the zone proxies and verify them through Envoy stats, metrics, and access logs.
 
 faqs:
+  - q: How do I find the Dataplane labels and listener names for zone proxies?
+    a: |
+      {{site.mesh_product_name}} computes two `Dataplane` labels for mesh-scoped zone proxies:
+      - `kuma.io/listener-zoneingress: enabled`
+      - `kuma.io/listener-zoneegress: enabled`
+
+      Inspect the zone proxy `Dataplane` resources to find the listener names for your environment:
+
+      ```sh
+      kubectl --context $GLOBAL_PROFILE get dataplane -A -o json
+      ```
+
+      The ingress listener is typically `10001` and the egress listener `10002`.
+
   - q: How do I target a different zone proxy?
     a: |
       Use the same pattern as this guide:
@@ -39,21 +53,6 @@ faqs:
 ---
 
 Mesh-scoped zone proxies are ordinary `Dataplane` resources, so you must select them with policy `targetRef` labels instead of legacy `ZoneIngress` or `ZoneEgress` resources.
-
-## Find the zone proxy Dataplanes and listener names
-
-{{site.mesh_product_name}} computes two `Dataplane` labels for mesh-scoped zone proxies:
-- `kuma.io/listener-zoneingress: enabled`
-- `kuma.io/listener-zoneegress: enabled`
-
-Inspect the Dataplanes to see which labels are present and to find the listener names for your environment.
-In the example output below, the ingress listener is `10001` and the egress listener is `10002`.
-
-1. Inspect the zone proxy Dataplanes:
-
-   ```sh
-   kubectl --context $GLOBAL_PROFILE get dataplane -A -o json
-   ```
 
 ## Target MeshTrafficPermission at the zone egress
 

@@ -26,6 +26,58 @@ tldr:
     1. Install each zone control plane with a `kuma.meshes[]` entry.
     1. {{site.mesh_product_name}} renders a per-mesh Deployment and Service for each role, and generates the Dataplane listeners automatically.
 
+faqs:
+  - q: How do I list the per-mesh Deployments and Services?
+    a: |
+      Query `kong-mesh-system` filtered by mesh label:
+
+      ```sh
+      kubectl --context $ZONE1_PROFILE -n kong-mesh-system get deploy,svc -l kuma.io/mesh=default
+      ```
+
+      You'll see a `kong-mesh-default-ingress` and `kong-mesh-default-egress` Deployment, each with a matching Service.
+      A second mesh produces another pair named after its mesh.
+
+  - q: How do I confirm the Services carry the zone-proxy-type label?
+    a: |
+      ```sh
+      kubectl --context $ZONE1_PROFILE -n kong-mesh-system get svc \
+        -l k8s.kuma.io/zone-proxy-type -L k8s.kuma.io/zone-proxy-type
+      ```
+
+  - q: How do I confirm the ingress Services are NodePort?
+    a: |
+      Run the following for each zone and note the published port:
+
+      ```sh
+      kubectl --context $ZONE1_PROFILE -n kong-mesh-system get svc kong-mesh-default-ingress \
+        -o jsonpath='{.spec.type}{"\t"}{.spec.ports[0].nodePort}{"\n"}'
+      kubectl --context $ZONE2_PROFILE -n kong-mesh-system get svc kong-mesh-default-ingress \
+        -o jsonpath='{.spec.type}{"\t"}{.spec.ports[0].nodePort}{"\n"}'
+      ```
+
+  - q: How do I inspect the MeshZoneAddress resources?
+    a: |
+      `MeshZoneAddress` resources are namespaced, so query `kong-mesh-system` explicitly:
+
+      ```sh
+      kubectl --context $GLOBAL_PROFILE -n kong-mesh-system get meshzoneaddress -o json | \
+        jq -r '.items[] |
+          [
+            .metadata.labels["kuma.io/zone"],
+            .metadata.name,
+            (.spec.address + ":" + (.spec.port | tostring))
+          ] | @tsv'
+      ```
+
+      The addresses should use the shared Docker bridge IPs and the published ingress `NodePort` values.
+
+  - q: How do I view the zone proxy Dataplane resources?
+    a: |
+      ```sh
+      kubectl --context $GLOBAL_PROFILE get dataplane -A
+      ```
+
 prereqs:
   skip_product: true
   inline:
@@ -321,59 +373,6 @@ Publish each zone's trust bundle to the global control plane so it syncs everywh
    ```
 
 The global control plane syncs these trust bundles to all zones, enabling cross-zone certificate validation.
-
-## Inspect the zone proxy resources
-
-1. List the per-mesh Deployments and Services in zone-1:
-
-   ```sh
-   kubectl --context $ZONE1_PROFILE -n kong-mesh-system get deploy,svc -l kuma.io/mesh=default
-   ```
-
-   You'll see a `kong-mesh-default-ingress` and `kong-mesh-default-egress` Deployment, each with a matching Service.
-   A second mesh would produce another pair named after its mesh.
-
-1. Confirm the Services carry the `k8s.kuma.io/zone-proxy-type` label:
-
-   ```sh
-   kubectl --context $ZONE1_PROFILE -n kong-mesh-system get svc \
-     -l k8s.kuma.io/zone-proxy-type -L k8s.kuma.io/zone-proxy-type
-   ```
-
-1. Confirm that the zone-1 ingress Service is a `NodePort` and note the published port:
-
-   ```sh
-   kubectl --context $ZONE1_PROFILE -n kong-mesh-system get svc kong-mesh-default-ingress \
-     -o jsonpath='{.spec.type}{"\t"}{.spec.ports[0].nodePort}{"\n"}'
-   ```
-
-1. Confirm that the zone-2 ingress Service is a `NodePort` and note the published port:
-
-   ```sh
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system get svc kong-mesh-default-ingress \
-     -o jsonpath='{.spec.type}{"\t"}{.spec.ports[0].nodePort}{"\n"}'
-   ```
-
-1. Inspect the `MeshZoneAddress` resources on the global control plane.
-   They are namespaced resources, so query `kong-mesh-system` explicitly:
-
-   ```sh
-   kubectl --context $GLOBAL_PROFILE -n kong-mesh-system get meshzoneaddress -o json | \
-     jq -r '.items[] |
-       [
-         .metadata.labels["kuma.io/zone"],
-         .metadata.name,
-         (.spec.address + ":" + (.spec.port | tostring))
-       ] | @tsv'
-   ```
-
-   These addresses should use the shared Docker bridge IPs and the published ingress `NodePort` values.
-
-1. From the global control plane, look at the zone proxy `Dataplane` resources:
-
-   ```sh
-   kubectl --context $GLOBAL_PROFILE get dataplane -A
-   ```
 
 ## Verify cross-zone traffic
 
