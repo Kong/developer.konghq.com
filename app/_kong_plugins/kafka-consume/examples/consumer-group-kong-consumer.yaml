@@ -1,0 +1,47 @@
+description: "Set the Kafka consumer group ID from the authenticated {{site.base_gateway}} Consumer's username."
+
+extended_description: |
+  Set the Kafka consumer group ID from the authenticated {{site.base_gateway}} Consumer's username.
+  Each {{site.base_gateway}} Consumer gets its own Kafka consumer group and independent offset tracking.
+  On ACL-enforced clusters, group names match {{site.base_gateway}} Consumer usernames, so operators can pre-allowlist them.
+  
+  If no Consumer is authenticated, the plugin falls back to random mode and logs a warning.
+
+title: 'Consumer group ID per {{site.base_gateway}} Consumer'
+
+weight: 790
+
+min_version:
+  gateway: '3.15'
+
+requirements:
+  - You have a [Kafka cluster](https://kafka.apache.org/documentation/#quickstart)
+  - You have a [Kafka topic](https://kafka.apache.org/documentation/#quickstart_createtopic) in the cluster
+  - You have a [{{site.base_gateway}} Consumer](/gateway/entities/consumer/) with a username configured
+  - The {{site.base_gateway}} Consumer's username is allowlisted in your broker ACLs
+  - You have an [authentication plugin](/plugins/?category=authentication) configured (for example, `key-auth`)
+
+variables:
+  host:
+    description: The bootstrap server host
+    value: $BOOTSTRAP_SERVER_HOST
+  topic:
+    description: The name of the Kafka topic to consume from
+    value: $KAFKA_TOPIC
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topics:
+  - name: ${topic}
+  mode: http-get
+  consumer_group:
+    mode: kong_consumer
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
