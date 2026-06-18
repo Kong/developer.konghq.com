@@ -4,7 +4,7 @@ You can use the ACE plugin as an alternative to the {{site.konnect_short_name}} 
 Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create API package operations for Gateway Services.
 API packages use the ACE plugin to manage developer access control to APIs. 
 
-If you [apply a plugin to a {{site.dev_portal}} application](/dev-portal/self-service/#map-an-application-to-a-consumer), the ACE plugin looks up the application's principal to resolve the mapped Consumer at runtime, so any Consumer or principal-scoped plugins apply to the application's traffic. 
+If you [apply a plugin to a {{site.dev_portal}} application](/dev-portal/self-service/#apply-plugins-to-applications), the ACE plugin looks up the application's principal to resolve the mapped Consumer at runtime, so any Consumer or principal-scoped plugins apply to the application's traffic. 
 Principal lookups are cached, so additional lookups aren't required until the cache is evicted. 
 Cache eviction is controlled at the principal and {{site.base_gateway}}-level.
 
