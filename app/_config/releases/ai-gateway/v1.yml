@@ -334,6 +334,9 @@ app/_landing_pages/ai-gateway/v1/ai-data-gov.yaml:
 app/_landing_pages/ai-gateway/v1/ai-providers.yaml:
   status: pending
   canonical_url:
+app/_landing_pages/ai-gateway/v1/mcp.yaml:
+  status: pending
+  canonical_url:
 app/ai-gateway/v1/ai-audit-log-reference.md:
   status: pending
   canonical_url:

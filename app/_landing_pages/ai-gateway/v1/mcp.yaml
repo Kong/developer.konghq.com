@@ -1,0 +1,182 @@
+metadata:
+  title: "MCP Traffic Gateway"
+  content_type: landing_page
+  description: This page is an introduction to MCP Traffic Gateway capabilites in {{site.ai_gateway}}.
+  products:
+    - ai-gateway
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - ai
+    - mcp
+  major_version:
+    ai-gateway: 1
+
+rows:
+  - header:
+      type: h1
+      text: "A trust and control layer for proxying traffic to MCP servers"
+      sub_text: Gain control and visibility over AI agent infrastructure with {{site.ai_gateway}}-driven MCP capabilities
+
+  - header:
+      type: h2
+      text: Bring MCP servers to production securely with {{site.ai_gateway}}
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
+
+              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability.
+
+              Learn how to:
+              - [Autogenerate and secure MCP tools from any API](#autogenerate-mcp-servers-using-ai-mcp-proxy)
+              - [Apply security, governance, and observability controls to MCP servers](#apply-security-governance-and-observability-controls-to-mcp-servers)
+              - [Observe MCP traffic logs and metrics](#mcp-traffic-observability)
+              - [Leverage {{site.base_gateway}} for MCP traffic using how-to guides](#mcp-how-to-guides)
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/gateway/mcp-architecture.svg
+              alt_text: Overview of AI gateway
+
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              type: h2
+              text: "Autogenerate MCP servers using {{site.ai_gateway}}"
+            blocks:
+              - type: text
+                text: |
+                  {{site.ai_gateway}} lets you create and manage MCP servers without writing custom code. Transform any API into an MCP server, apply security and governance controls, and integrate them with AI assistants.
+
+  - header:
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              type: h2
+              text: "Autogenerate MCP servers using AI MCP Proxy"
+            blocks:
+              - type: text
+                text: |
+                  Turn any API into an MCP server using the AI MCP Proxy plugin. This approach does **not require an LLM** and provides full control over production workloads.
+
+                  The AI MCP Proxy plugin:
+                  - **Converts API schemas** into MCP-compatible tool definitions.
+                  - **Aggregates multiple APIs** into a single MCP server endpoint.
+                  - **Supports serverless deployments** for dynamic tool generation.
+                  - **Integrates with AI assistants** like Claude Desktop and other MCP clients.
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              type: h4
+              text: "Apply security, governance, and observability controls to MCP servers"
+            blocks:
+              - type: text
+                text: |
+                  Use available {{site.base_gateway}} [plugins](/plugins/) to:
+                  - **Secure access** with the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) or other authentication methods.
+                  - **Monitor MCP traffic** using [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
+                  - **Enforce access controls** for [MCP tool usage](/mcp/use-access-controls-for-mcp-tools/).
+                  - **Govern usage** with rate limiting and traffic control plugins.
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/mcp.svg
+            title: Autogenerate MCP tools from any API using AI MCP plugins
+            description: |
+              Explore guides to auto-generate MCP servers and tools without custom code.
+            ctas:
+              - text: Proxy MCP Traffic with the AI MCP Proxy plugin
+                url: "/plugins/ai-mcp-proxy/"
+              - text: Autogenerate a serverless MCP
+                url: "/mcp/map-api-to-mcp-tools/"
+              - text: Autogenerate MCP tools from any API schema
+                url: "/mcp/map-weather-api-to-mcp-tools/"
+              - text: "Aggregate MCP tools from multiple AI MCP Proxy plugins"
+                url: /mcp/aggregate-mcp-tools/
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/lock.svg
+            title: Secure and govern your MCP traffic
+            description: Apply security, governance, and observability to MCP servers that route LLM requests through AI Proxy plugins.
+            ctas:
+              - text: Secure MCP servers with the AI MCP OAuth2 plugin and Okta
+                url: "/mcp/secure-mcp-tools-with-oauth2-and-okta/"
+              - text: Monitor MCP traffic metrics
+                url: "/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics"
+              - text: Review AI MCP audit logs
+                url: "/ai-gateway/ai-audit-log-reference/#ai-mcp-logs"
+              - text: Enforce access controls for MCP tools usage
+                url: "/mcp/use-access-controls-for-mcp-tools/"
+
+  - header:
+      type: h2
+      text: "MCP Registry (tech preview)"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}.
+                    This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
+          - type: button
+            config:
+              text: "Enable MCP Registry in {{site.konnect_short_name}} Labs"
+              url: /catalog/mcp-registry/
+
+  - header:
+      type: h2
+      text: "MCP traffic observability"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.ai_gateway}} records detailed Model Context Protocol (MCP) traffic data so you can analyze how requests are processed and resolved.
+                    - Logs capture session IDs, JSON-RPC method calls, payloads, latencies, and errors.
+                    - Metrics track latency, response sizes, and error counts over time, giving you a complete view of MCP server performance and behavior.
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic audit log {% new_in 3.12 %}
+            description: Learn about {{site.ai_gateway}} logging capabilities for MCP traffic.
+            cta:
+              url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic metrics {% new_in 3.12 %}
+            description: Expose and visualize LLM metrics for MCP traffic.
+            cta:
+              url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
+              align: end
+
+  - header:
+      type: h2
+      text: MCP how-to guides
+
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - mcp
+              quantity: 5
+              allow_empty: true
+

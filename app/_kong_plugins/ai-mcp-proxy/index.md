@@ -7,9 +7,7 @@ tier: ai_gateway_enterprise
 publisher: kong-inc
 description: |
     Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools for AI clients, and observe MCP traffic in real time.
-breadcrumbs:
- - /ai-gateway/
- - /mcp/
+
 products:
     - gateway
     - ai-gateway
@@ -48,7 +46,7 @@ related_resources:
   - text: All {{site.ai_gateway}} plugins
     url: /plugins/?category=ai
   - text: Kong MCP traffic gateway
-    url: /mcp/
+    url: /ai-gateway/v1/mcp/
     icon: /assets/icons/mcp.svg
   - text: Create MCP tools from a RESTful API
     url: /mcp/map-api-to-mcp-tools/
@@ -100,7 +98,7 @@ faqs:
 
 next_steps:
   - text: Learn about Kong MCP traffic gateway
-    url: /mcp/
+    url: /ai-gateway/v1/mcp/
   - text: Learn about {{site.konnect_product_name}} MCP Server
     url: /mcp/kong-mcp/get-started/
   - text: Create MCP tools from a RESTful API
