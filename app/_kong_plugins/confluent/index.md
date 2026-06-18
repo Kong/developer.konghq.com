@@ -71,3 +71,7 @@ With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully
 ## Schema registry support {% new_in 3.11 %}
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
+
+## Kafka record headers {% new_in 3.15 %}
+
+{% include_cached /plugins/confluent-kafka-consume/record-headers.md name=page.name %}

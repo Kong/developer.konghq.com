@@ -66,6 +66,10 @@ When encoding request bodies, several things happen:
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
 
+## Kafka record headers {% new_in 3.15 %}
+
+{% include_cached /plugins/confluent-kafka-consume/record-headers.md name=page.name %}
+
 ## Debugging {% new_in 3.15 %}
 
 By default, when producing a message fails, the plugin returns a generic error to the HTTP client and logs the real cause in the {{site.base_gateway}} logs:
