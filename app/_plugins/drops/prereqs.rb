@@ -101,12 +101,12 @@ module Jekyll
         end
       end
 
+      def product_includes_map_keys
+        @product_includes_map_keys ||= product_includes_map.keys
+      end
+
       def product_includes_map
-        @product_includes_map ||= ProductIncludePrereqs.new(
-          products: @page.data.fetch('products', []),
-          major_version: @page.data.fetch('major_version', {}),
-          products_data: @site.data.fetch('products', {})
-        ).products_include_map
+        @product_includes_map ||= product_includes_prereqs.products_include_map
       end
 
       def render_gateway_prereq?
@@ -131,6 +131,14 @@ module Jekyll
       end
 
       private
+
+      def product_includes_prereqs
+        @product_includes_prereqs ||= ProductIncludePrereqs.new(
+          products: @page.data.fetch('products', []),
+          major_version: @page.data.fetch('major_version', {}),
+          products_data: @site.data.fetch('products', {})
+        )
+      end
 
       def entity_examples_data(product)
         EntityExamplesData.new(

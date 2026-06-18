@@ -7,7 +7,7 @@
 {%- endif -%}
 {% for prereq in prereqs.cloud -%}
 {%- assign prereq_include = 'prereqs/cloud/' | append: prereq[0] | append: '.md' %}{%- assign config = prereq[1] -%}
-{% include {{ prereq_include }} config=config products=prereqs.products %}
+{% include {{ prereq_include }} config=config products=prereqs.product_includes_map_keys %}
 {%- endfor -%}
 {%- if prereqs.kubernetes.gateway_api -%}
 {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes product=product %}
