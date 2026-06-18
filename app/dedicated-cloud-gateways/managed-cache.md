@@ -364,10 +364,9 @@ return {
       },
     },
   },
-`referenceable = true` is important since Kong dereferences these fields from [environment vaults](/gateway/entities/vault/).
 ```
 
-`referenceable = true` is important since Kong dereferences these fields from environment vaults.
+`referenceable = true` is important since {{site.base_gateway}} dereferences these fields from [environment vaults](/gateway/entities/vault/).
 
 The [`handler.lua`](/custom-plugins/handler.lua/) file is where the logic to connect and authenticate resides. 
 For example, if you're using an AWS managed cache, you'd configure the `handler.lua` file like the following:
