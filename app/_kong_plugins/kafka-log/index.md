@@ -85,4 +85,4 @@ slug=page.slug %}
 
 ## Authentication
 
-{% include_cached /plugins/kafka/auth.md slug=page.slug %}
+{% include_cached /plugins/kafka/auth.md slug=page.slug name=page.name %}

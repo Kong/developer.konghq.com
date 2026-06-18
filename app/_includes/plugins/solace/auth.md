@@ -1,4 +1,4 @@
-The plugin supports the following authentication schemes for Solace broker connections through [`session.authentication.scheme`](./reference/#schema--config-session-authentication-scheme):
+The {{include.name}} plugin supports the following authentication schemes for Solace broker connections through [`session.authentication.scheme`](./reference/#schema--config-session-authentication-scheme):
 {% table %}
 columns:
   - title: "Scheme"

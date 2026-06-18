@@ -64,7 +64,7 @@ Kong also provides a [plugin for publishing messages to Confluent Cloud](/plugin
 
 ## Authentication
 
-{% include_cached /plugins/confluent/auth.md slug=page.slug %}
+{% include_cached /plugins/confluent/auth.md slug=page.slug name=page.name %}
 
 ## Implementation details
 

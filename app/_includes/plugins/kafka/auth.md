@@ -1,4 +1,4 @@
-The plugin supports the following SASL authentication mechanisms for broker connections via [`authentication.mechanism`](./reference/#schema--config-authentication-mechanism):
+The {{include.name}} plugin supports the following SASL authentication mechanisms for broker connections via [`authentication.mechanism`](./reference/#schema--config-authentication-mechanism):
 {% table %}
 columns:
   - title: "Mechanism"

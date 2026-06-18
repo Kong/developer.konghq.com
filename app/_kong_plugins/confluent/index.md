@@ -66,7 +66,7 @@ With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully
 
 ## Authentication
 
-{% include_cached /plugins/confluent/auth.md slug=page.slug %}
+{% include_cached /plugins/confluent/auth.md slug=page.slug name=page.name %}
 
 ## Schema registry support {% new_in 3.11 %}
 

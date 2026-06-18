@@ -1,4 +1,4 @@
-The plugin supports the following authentication options for Confluent Cloud connections:
+The {{include.name}} plugin supports the following authentication options for Confluent Cloud connections:
 {% table %}
 columns:
   - title: "Auth method"

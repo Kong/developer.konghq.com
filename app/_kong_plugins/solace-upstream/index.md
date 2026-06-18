@@ -64,5 +64,5 @@ When encoding request bodies, several things happen:
 
 ## Authentication
 
-{% include_cached /plugins/solace/auth.md slug=page.slug %}
+{% include_cached /plugins/solace/auth.md slug=page.slug name=page.name %}
 

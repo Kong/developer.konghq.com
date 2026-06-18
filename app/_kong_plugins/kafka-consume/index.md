@@ -108,4 +108,4 @@ In hybrid mode, if a `kafka-consume` plugin scoped to a Service exists in Postgr
 
 ## Authentication
 
-{% include_cached /plugins/kafka/auth.md slug=page.slug %}
+{% include_cached /plugins/kafka/auth.md slug=page.slug name=page.name %}

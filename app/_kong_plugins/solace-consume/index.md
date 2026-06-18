@@ -156,4 +156,4 @@ The plugin supports the following modes of operation:
 
 ## Authentication
 
-{% include_cached /plugins/solace/auth.md slug=page.slug %}
+{% include_cached /plugins/solace/auth.md slug=page.slug name=page.name %}
