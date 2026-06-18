@@ -1,5 +1,5 @@
 ---
-title: "Getting `This instance contains workspaced entities that need a custom migration` in Helm upgrade"
+title: "This instance contains workspaced entities that need a custom migration in Helm upgrade"
 content_type: support
 description: "This error during a Helm upgrade usually means you are using an older chart version; update the Helm repo and rerun the upgrade."
 products:
@@ -21,7 +21,7 @@ related_resources: []
 
 ## Problem
 
-After running the `helm upgrade` command, the `wait-for-db` container fails and prints:
+When running a Helm upgrade, you encounter the following error:
 
 ```
 This instance contains workspaced entities that need a custom migration.
@@ -30,9 +30,6 @@ kong migrations upgrade-workspace-table vaults_beta
 Error: nginx not running in prefix: /tmp/tmp.okiPjN Run with --v (verbose) or --vv (debug) for more details
 ```
 
-## Cause
-
-This error during the upgrade is usually because you are using an older chart version.
 
 ## Solution
 

@@ -1,18 +1,12 @@
 ---
 title: "{{site.base_gateway}} FAQs"
-content_type: support
+content_type: reference
 description: "Answers to common questions about {{site.base_gateway}} plugins, workspaces, custom plugin caching, and DNS resolver configuration."
 products:
   - gateway
 works_on:
   - on-prem
   - konnect
-tldr:
-  q: Where can I find answers to common {{site.base_gateway}} questions?
-  a: |
-    This page collects frequently asked questions about {{site.base_gateway}}: plugin scope and
-    workspaces, retrieving secrets in the Request Transformer Advanced plugin, cache `hit_level`
-    definitions for custom plugins, and the configurable DNS resolver options.
 related_resources: []
 ---
 

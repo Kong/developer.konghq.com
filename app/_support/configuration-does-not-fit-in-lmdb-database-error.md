@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: "Why do configurations fail to push to data planes with an HTTP 413 \"Configuration does not fit in LMDB database\" error?"
   a: |
-    The default LMDB size is `128m`, and configurations that exceed it fail to get pushed to data
+    Because the default LMDB size is `128m`, and configurations that exceed it fail to get pushed to data
     planes. Increase the size by raising `lmdb_map_size` (for example, `KONG_LMDB_MAP_SIZE=256m`,
     or `lmdb_map_size: "256m"` on Kubernetes, along with a larger `prefixDir` `sizeLimit`).
 related_resources: []
@@ -18,17 +18,16 @@ related_resources: []
 
 ## Problem
 
-We see the following error in our Kong logs:
+The following LMDB error is returned when pushing configuration to data planes:
 
 ```
 time="2023-01-31T11:12:33Z" level=error msg="could not update kong admin" error="posting new config to /config: HTTP status 413 (message: \"Configuration does not fit in LMDB database, consider raising the \\\"lmdb_map_size\\\" config for Kong\")" subsystem=dataplane-synchronizer
 ```
 
-We see configurations failing to get pushed to our data planes.
 
 ## Solution
 
-The default size of the LMDB is `128m`. To increase the size, make the following changes to your configuration.
+Increase the size of the LMDB database by raising `lmdb_map_size` (for example, `KONG_LMDB_MAP_SIZE=256m`, or `lmdb_map_size: "256m"` on Kubernetes, along with a larger `prefixDir` `sizeLimit`).
 
 General:
 

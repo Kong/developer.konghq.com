@@ -14,7 +14,6 @@ tldr:
     `log_format` can only be used within the `http` context. When using a custom template, properly
     add the contents of `nginx_kong.lua` inside `http {}`, with the `log_format` directive defined
     there.
-related_resources: []
 ---
 
 ## Problem

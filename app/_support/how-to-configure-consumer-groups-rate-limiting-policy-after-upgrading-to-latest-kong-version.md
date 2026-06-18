@@ -1,12 +1,13 @@
 ---
-title: Configuring Consumer Groups Rate Limiting policy after upgrading to the latest Kong version
+title: How do I configure Consumer Groups Rate Limiting policy
 content_type: support
-description: After upgrading Kong gateway to latest version, the method for configuring the Rate Limiting Policy / Rate limiting plugin for Consumer Groups has changed.
+description: "After upgrading {{site.base_gateway}} to latest version, the method for configuring the Rate Limiting Policy / Rate limiting plugin for Consumer Groups has changed."
 products:
   - gateway
 works_on:
   - on-prem
   - konnect
+published: false
 tldr:
   q: How do I configure the Consumer Groups Rate Limiting policy after upgrading to the latest Kong version?
   a: |

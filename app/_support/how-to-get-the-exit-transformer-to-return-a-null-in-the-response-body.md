@@ -22,7 +22,7 @@ tldr:
 
 ## Overview
 
-When configuring the `exit-transformer` to respond with an updated response body, we notice that any field returned with `null` as its value is not being returned in the response body.
+When using the Exit Transformer plugin, you may want to return a field with a `null` value in the response body. However, if you try to assign a field a value of `null` directly in your Lua code, you will encounter an error because `null` is not defined in Lua.
 
 For example:
 
@@ -36,7 +36,7 @@ return function(status, body, headers)
 end
 ```
 
-How can we resolve this and have a `null` returned as its value?
+In the above code, `null` is not defined, so you will get an error in your logs. 
 
 ## Steps
 

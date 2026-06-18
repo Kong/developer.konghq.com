@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How to audit Route configuration changes via Kong Audit Log APIs?
+  q: How do I audit Route configuration changes via Kong Audit Log APIs?
   a: |
     {{site.ee_product_name}} provides two audit log endpoints: `/audit/requests` (captures who did what,
     including HTTP method, user, and payload) and `/audit/objects` (captures the data entity that
@@ -21,11 +21,8 @@ related_resources: []
 
 ## Overview
 
-In large-scale {{site.base_gateway}} deployments, teams often automate Route provisioning via CI/CD. A common issue arises when Routes are created with missing or empty `paths`, leading to 409 Conflict errors during deployment due to Route collisions.
-
-## Steps
-
 In environments where multiple teams or pipelines interact with {{site.base_gateway}}, it is vital to trace configuration changes, especially for objects like Routes. {{site.ee_product_name}} provides two audit log endpoints:
+
 
 1. `/audit/requests`: captures who did what, including HTTP method, user, and payload.
 2. `/audit/objects`: captures what data entity was created/updated, with full snapshots.
@@ -138,7 +135,8 @@ main() {
 main
 ```
 
-Note: Replace the `BASE` and `TOKEN` in the script with the Admin API endpoint and the RBAC password/token.
+{:.info} 
+> Replace the `BASE` and `TOKEN` in the script with the Admin API endpoint and the RBAC password/token.
 
 ### Setup instructions
 
