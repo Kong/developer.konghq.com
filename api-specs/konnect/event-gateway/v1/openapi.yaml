@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a5fb5ead854655e6281e1cd050c6be545821f775
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a5fb5ead854655e6281e1cd050c6be545821f775'
+  x-oas-source: kong/platform-api@9ed66dfc0b982c40fae52321ba4f585054ee9fbc
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9ed66dfc0b982c40fae52321ba4f585054ee9fbc'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -4132,9 +4132,6 @@ components:
           - name: record.headers
             type: object
             description: An associative array of header key value pairs.
-          - name: record.value.content
-            type: object
-            description: The content of the record value.
     EventGatewayDecryptPolicy:
       description: Decrypts Kafka records or keys using AES_256_GCM. Keys are therefore 256 bits long.
       type: object
