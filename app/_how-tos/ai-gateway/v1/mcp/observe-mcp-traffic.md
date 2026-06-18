@@ -3,16 +3,16 @@ title: "Observe GitHub MCP traffic with {{site.ai_gateway}}"
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
+    url: /ai-gateway/v1/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
   - text: Prometheus plugin
     url: /plugins/prometheus/
   - text: Monitor AI LLM metrics
     url: /ai-gateway/monitor-ai-llm-metrics/
-permalink: /mcp/observe-mcp-traffic/
+permalink: /ai-gateway/v1/mcp/observe-mcp-traffic/
 breadcrumbs:
-  - /mcp/
+  - /ai-gateway/v1/mcp/
 
 series:
     id: mcp-traffic
@@ -63,6 +63,9 @@ cleanup:
 
 
 automated_tests: false
+major_version:
+  ai-gateway: 1
+
 ---
 
 ## Reconfigure the AI Proxy Advanced plugin
