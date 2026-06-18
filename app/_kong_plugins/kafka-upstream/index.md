@@ -72,3 +72,7 @@ Known limitations:
 
 1. Message compression is not supported.
 1. In {{site.base_gateway}} 3.9 or earlier, the message format is not customizable.
+
+## Authentication
+
+{% include_cached /plugins/kafka/auth.md slug=page.slug name=page.name %}

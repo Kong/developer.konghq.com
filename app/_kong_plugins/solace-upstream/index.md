@@ -62,3 +62,7 @@ When encoding request bodies, several things happen:
   then the body will be base64-encoded to ensure that the message can be sent as JSON. In such a case,
   the message has an extra attribute called `body_base64` set to `true`.
 
+## Authentication
+
+{% include_cached /plugins/solace/auth.md slug=page.slug name=page.name %}
+
