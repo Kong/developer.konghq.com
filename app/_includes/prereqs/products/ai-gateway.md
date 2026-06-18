@@ -1,4 +1,4 @@
-{% assign summary='{{site.base_gateway}} running' %}
+{% assign summary='{{site.ai_gateway_name}} running' %}
 {% capture details_content %}
 Placeholder prereq
 ```bash
