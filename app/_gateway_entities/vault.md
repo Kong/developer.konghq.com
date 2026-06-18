@@ -610,10 +610,18 @@ By default, the vault looks for `AZURE_CLIENT_SECRET`, but you can customize thi
 
 If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
 
-At minimum, you'll also need to set Vault URI: 
+You also need to set `KONG_LUA_SSL_VERIFY_DEPTH` to at least `3` on your data plane to allow Kong to verify the Azure Key Vault TLS certificate chain:
+
+```bash
+export KONG_LUA_SSL_VERIFY_DEPTH=3
+```
+
+At minimum, you'll also need to set the following values on your data plane:
 
 ```sh
 export KONG_VAULT_AZURE_CERTS_VAULT_URI=https://your-vault.vault.azure.com
+export KONG_VAULT_AZURE_CERTS_TENANT_ID=YOUR_TENANT_ID
+export KONG_VAULT_AZURE_CERTS_CLIENT_ID=YOUR_CLIENT_ID
 ```
 
 If you're configuring via a Vault entity, set `vaults.name` to `azure-certs`.
@@ -1203,13 +1211,46 @@ rows:
 {% endnavtab %}
 {% navtab "File system" %}
 
-{% new_in 3.15 %} The file system vault reads secrets from files on the {{site.base_gateway}} data plane's local filesystem. 
-Secrets can be plain text files or JSON files. 
+{% new_in 3.15 %} The file system vault reads secrets from files on the {{site.base_gateway}} data plane's local filesystem.
 The file system vault doesn't require any external services or credentials.
+
+Secrets can be plain text files or JSON files. Set `vaults.config.prefix` to the directory containing your secret files, then reference secrets relative to that directory:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Format
+    key: format
+  - title: Example
+    key: example
+  - title: Reference format
+    key: reference
+rows:
+  - format: "JSON file (multiple secrets)"
+    example: |
+      ```json
+      {
+        "client_id": "abc",
+        "client_secret": "test123",
+        "issuer": "https://your-idp/oauth"
+      }
+      ```
+    reference: "`{vault://VAULT_PREFIX/filename.json/key}`"
+  - format: "Plain text file (single secret)"
+    example: |
+      ```
+      abc
+      ```
+    reference: "`{vault://VAULT_PREFIX/filename.txt}`"
+{% endtable %}
+<!--vale on-->
+
 
 If you're configuring via a Vault entity, set `vaults.name` to `fs`.
 
 For a complete tutorial, see [Configure the file system vault backend](/how-to/configure-file-system-as-a-vault-backend/).
+
+The following table lists the available configuration parameters for a file system vault:
 
 <!--vale off-->
 {% table %}
