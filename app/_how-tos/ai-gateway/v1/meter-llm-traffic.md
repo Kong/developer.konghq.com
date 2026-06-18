@@ -4,9 +4,6 @@ permalink: /ai-gateway/v1/how-to/meter-llm-traffic/
 description: Learn how to Meter LLM traffic using {{site.konnect_short_name}} {{site.metering_and_billing}}.
 content_type: how_to
 
-breadcrumbs:
-  - /metering-and-billing/
-
 products:
     - gateway
     - ai-gateway
