@@ -28,6 +28,9 @@ app/_how-tos/ai-gateway/v1/get-started-with-ai-gateway.md:
 app/_how-tos/ai-gateway/v1/limit-a2a-body-size.md:
   status: pending
   canonical_url:
+app/_how-tos/ai-gateway/v1/meter-llm-traffic.md:
+  status: pending
+  canonical_url:
 app/_how-tos/ai-gateway/v1/protect-sensitive-information-output-with-ai.md:
   status: pending
   canonical_url:
