@@ -403,7 +403,7 @@ The following table lists the environment variables that you can set while creat
 config:
   - name: log_level
     description: |
-      Log level of the data plane node. See http://nginx.org/en/docs/ngx_core_module.html#error_log for a list of accepted values.
+      Log level of the data plane node. See the [Nginx error log reference](http://nginx.org/en/docs/ngx_core_module.html#error_log) for a list of accepted values.
 
       The logs are available in {{site.konnect_short_name}}, in the **Logs** tab of the data plane node.
   - name: request_debug_token
