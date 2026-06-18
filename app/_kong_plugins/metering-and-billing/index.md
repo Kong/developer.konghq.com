@@ -51,7 +51,7 @@ related_resources:
 ---
 
 
-{:.danger}
+{:.ai}
 > {{site.metering_and_billing}} requires a separate purchase. [Contact Sales](https://konghq.com/contact-sales) for pricing and availability.
 
 The Metering & Billing plugin allows you to meter API requests and AI token usage for usage-based billing for both {{site.base_gateway}} on-prem and {{site.konnect_short_name}} deployments. 
