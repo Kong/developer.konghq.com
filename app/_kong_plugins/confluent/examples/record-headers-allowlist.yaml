@@ -1,4 +1,4 @@
-description: 'Forward HTTP request headers as Kafka record headers.'
+description: 'Forward selected HTTP request headers as Kafka record headers.'
 extended_description: |
   Use `config.headers` to copy HTTP request headers onto the produced Kafka record as native record headers.
   This makes routing, tracing, and tenancy context available to consumers without parsing the message payload.
@@ -14,16 +14,25 @@ min_version:
   gateway: '3.15'
 
 requirements:
- - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
- - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+- "[Create a Kafka cluster in Confluent Cloud](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud)"
+- "[Create a Kafka topic in the cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic)"
+- "Create an API key and secret in the cluster"
 
 variables:
   topic:
     description: The name of your Kafka topic.
     value: $KAFKA_TOPIC
+  cluster_api_key:
+    value: $CONFLUENT_CLUSTER_API_KEY
+    description: Your Confluent cluster API key.
+  cluster_api_secret:
+    value: $CONFLUENT_CLUSTER_API_SECRET
+    description: Your Confluent cluster API secret.
 
 config:
   topic: ${topic}
+  cluster_api_key: ${cluster_api_key}
+  cluster_api_secret: ${cluster_api_secret}
   headers:
     forward_http_headers_as_record_headers: true
     forward_all_by_default: false
