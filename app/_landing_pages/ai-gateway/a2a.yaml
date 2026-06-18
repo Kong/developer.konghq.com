@@ -162,14 +162,3 @@ rows:
             cta:
               url: /how-to/limit-a2a-request-size/
               align: end
-  - header:
-      type: h2
-      text: A2A how-to guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              tags:
-                - a2a
-              quantity: 5
-              allow_empty: true

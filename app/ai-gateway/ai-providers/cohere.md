@@ -96,5 +96,3 @@ variables:
 > For more configuration options and examples, see:
 > - [AI Proxy examples](/plugins/ai-proxy/examples/)
 > - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
-
-{% include plugins/ai-proxy/providers/how-tos.md %}
