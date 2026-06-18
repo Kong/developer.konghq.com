@@ -3,11 +3,9 @@ title: 'Apply policies to mesh-scoped zone proxies'
 description: 'Target mesh-scoped zone ingress and zone egress with MeshTrafficPermission, MeshMetric, and MeshAccessLog.'
 content_type: how_to
 permalink: /mesh/zone-proxy-policies/
-bread-crumbs:
+breadcrumbs:
   - /mesh/
 related_resources:
-  - text: 'Deploy mesh-scoped zone proxies'
-    url: '/mesh/zone-proxies/'
   - text: 'Mesh Traffic Permission'
     url: '/mesh/policies/meshtrafficpermission/'
   - text: 'Mesh Metric'
@@ -21,26 +19,30 @@ min_version:
 products:
   - mesh
 
+series:
+  id: mesh-scoped-zone-proxy
+  position: 2
+
 tldr:
   q: How do I target mesh-scoped zone proxies with {{site.mesh_product_name}} policies?
   a: |
-    1. Reuse the three-cluster setup from [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/).
-    1. Find the zone proxy Dataplanes and their listener names.
+    1. Find the zone proxy `Dataplane` resources and their listener names.
     1. Apply policies to the zone proxies and verify them through Envoy stats, metrics, and access logs.
 
-prereqs:
-  inline:
-    - title: Deploy mesh-scoped zone proxies
-      content: |
-        Follow [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/) and leave the three minikube clusters running.
+faqs:
+  - q: How do I target a different zone proxy?
+    a: |
+      Use the same pattern as this guide:
+      - Narrow `targetRef.kind: Dataplane` with `kuma.io/listener-zoneingress` or `kuma.io/listener-zoneegress`.
+      - Add `kuma.io/zone` to target one specific zone.
+      - Inspect `.spec.networking.listeners[].name` on the generated `Dataplane` and use that value as `sectionName` to target one exact listener.
 ---
 
-This guide reuses the `GLOBAL_PROFILE`, `ZONE1_PROFILE`, and `ZONE2_PROFILE` variables from [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/).
-Zone proxies appear as `Dataplane` resources, so you target them with `targetRef` labels and, when needed, a listener name.
+Mesh-scoped zone proxies are ordinary `Dataplane` resources, so you must select them with policy `targetRef` labels instead of legacy `ZoneIngress` or `ZoneEgress` resources.
 
 ## Find the zone proxy Dataplanes and listener names
 
-Zone proxy Dataplanes include these labels:
+{{site.mesh_product_name}} computes two `Dataplane` labels for mesh-scoped zone proxies:
 - `kuma.io/listener-zoneingress: enabled`
 - `kuma.io/listener-zoneegress: enabled`
 
@@ -53,19 +55,23 @@ In the example output below, the ingress listener is `10001` and the egress list
    kubectl --context $GLOBAL_PROFILE get dataplane -A -o json
    ```
 
-## Apply MeshTrafficPermission to zone egress
+## Target MeshTrafficPermission at the zone egress
 
-1. Create a simple HTTP service in zone-1 and register it as a `MeshExternalService`:
+1. Create the namespace for the external service:
 
    ```sh
-   kubectl --context $ZONE1_PROFILE create namespace kuma-demo-ext \
+   kubectl --context $ZONE1_PROFILE create namespace kong-mesh-demo-ext \
      --dry-run=client -o yaml | kubectl --context $ZONE1_PROFILE apply -f -
+   ```
 
+1. Deploy the external service:
+
+   ```sh
    echo 'apiVersion: apps/v1
    kind: Deployment
    metadata:
      name: external-service-kube
-     namespace: kuma-demo-ext
+     namespace: kong-mesh-demo-ext
    spec:
      replicas: 1
      selector:
@@ -87,14 +93,18 @@ In the example output below, the ingress listener is `10001` and the egress list
    kind: Service
    metadata:
      name: external-service-kube
-     namespace: kuma-demo-ext
+     namespace: kong-mesh-demo-ext
    spec:
      selector:
        app: external-service-kube
      ports:
        - port: 80
          targetPort: 5678' | kubectl --context $ZONE1_PROFILE apply -f -
+   ```
 
+1. Register the external service as a `MeshExternalService`:
+
+   ```sh
    echo 'apiVersion: kuma.io/v1alpha1
    kind: MeshExternalService
    metadata:
@@ -109,26 +119,8 @@ In the example output below, the ingress listener is `10001` and the egress list
        port: 80
        protocol: http
      endpoints:
-       - address: external-service-kube.kuma-demo-ext.svc.cluster.local
+       - address: external-service-kube.kong-mesh-demo-ext.svc.cluster.local
          port: 80' | kubectl --context $ZONE1_PROFILE apply -f -
-   ```
-
-1. Create a disposable curl client:
-
-   ```sh
-   kubectl --context $ZONE1_PROFILE create namespace mtp-client \
-     --dry-run=client -o yaml | kubectl --context $ZONE1_PROFILE apply -f -
-
-   kubectl --context $ZONE1_PROFILE label namespace mtp-client \
-     kuma.io/sidecar-injection=enabled --overwrite
-
-   kubectl --context $ZONE1_PROFILE -n mtp-client run debug-client \
-     --image=curlimages/curl:8.12.1 \
-     --restart=Never \
-     --command -- sleep 3600
-
-   kubectl --context $ZONE1_PROFILE -n mtp-client wait \
-     --for=condition=ready pod/debug-client --timeout=120s
    ```
 
 1. Apply a `MeshTrafficPermission` that targets the zone-1 egress listener directly.
@@ -158,17 +150,20 @@ In the example output below, the ingress listener is `10001` and the egress list
      kubectl --context $GLOBAL_PROFILE apply -f -
    ```
 
-1. Send the request through zone egress:
+1. Send the request through zone egress from the zone-1 `demo-app` pod:
 
    ```sh
-   kubectl --context $ZONE1_PROFILE -n mtp-client exec debug-client -c debug-client -- \
-     curl -sv --max-time 15 http://external-service-kube.extsvc.mesh.local
+   kubectl --context $ZONE1_PROFILE -n kong-mesh-demo exec deploy/demo-app -c demo-app -- \
+     wget -qO /dev/null http://external-service-kube.extsvc.mesh.local
    ```
+
+   The request should be denied by the egress policy.
 
 1. Check the RBAC stats on the zone-1 egress:
 
    ```sh
-   kubectl --context $ZONE1_PROFILE -n kong-mesh-system exec deploy/kong-mesh-default-egress -c kuma-sidecar -- \
+   kubectl --context $ZONE1_PROFILE -n kong-mesh-system \
+     exec deploy/kong-mesh-default-egress -c kuma-sidecar -- \
      wget -qO- 'http://127.0.0.1:9902/stats?filter=external-service-kube.*rbac'
    ```
 
@@ -208,11 +203,12 @@ Apply `MeshMetric` to the zone-2 ingress and read the Prometheus endpoint from i
 1. Read the metrics from the zone-2 ingress sidecar:
 
    ```sh
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system exec deploy/kong-mesh-default-ingress -c kuma-sidecar -- \
+   kubectl --context $ZONE2_PROFILE -n kong-mesh-system \
+     exec deploy/kong-mesh-default-ingress -c kuma-sidecar -- \
      sh -c '
-      POD_IP=$(hostname -i | awk "{print \$1}")
-      wget -qO- "http://$POD_IP:5670/metrics" | \
-        grep "kuma_proxy_role=\"zone-ingress\"" | sed -n "1,10p"
+       POD_IP=$(hostname -i | awk "{print \$1}")
+       wget -qO- "http://$POD_IP:5670/metrics" | \
+         grep "kuma_proxy_role=\"zone-ingress\"" | sed -n "1,10p"
      '
    ```
 
@@ -223,7 +219,7 @@ Apply `MeshMetric` to the zone-2 ingress and read the Prometheus endpoint from i
 Zone ingress does not terminate mTLS.
 Match the traffic by SNI.
 
-1. Apply a `MeshAccessLog` that logs the zone-2 `demo-app` SNI to a file on the ingress proxy:
+1. Apply a `MeshAccessLog` that logs the zone-2 `demo-app` SNI to the ingress proxy's stdout:
 
    ```sh
    echo 'apiVersion: kuma.io/v1alpha1
@@ -244,41 +240,35 @@ Match the traffic by SNI.
        - matches:
            - sni:
                type: Exact
-               value: sni.msvc.default.zone-2.kuma-demo.demo-app.5000
+               value: sni.msvc.default.zone-2.kong-mesh-demo.demo-app.5000
          default:
            backends:
              - type: File
                file:
-                 path: /tmp/zone-2-demo-app.log
+                 path: /dev/stdout
                  format:
                    type: Plain
-                   plain: "sni=%REQUESTED_SERVER_NAME%"' | \
+                   plain: "zone-ingress-sni=%REQUESTED_SERVER_NAME%"' | \
      kubectl --context $GLOBAL_PROFILE apply -f -
    ```
 
-1. Remove any previous log file, send the cross-zone request again, and read the latest access log entry:
+1. Send the cross-zone request again:
 
    ```sh
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system exec deploy/kong-mesh-default-ingress -c kuma-sidecar -- \
-     rm -f /tmp/zone-2-demo-app.log
-
-   kubectl --context $ZONE1_PROFILE -n kuma-demo exec deploy/demo-app -c demo-app -- \
-     wget -qO- http://demo-app.kuma-demo.svc.zone-2.mesh.local:5000/ >/dev/null
-
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system exec deploy/kong-mesh-default-ingress -c kuma-sidecar -- \
-     tail -n 1 /tmp/zone-2-demo-app.log
+   kubectl --context $ZONE1_PROFILE -n kong-mesh-demo exec deploy/demo-app -c demo-app -- \
+     wget -qO /dev/null http://demo-app.kong-mesh-demo.svc.zone-2.mesh.local:5000/
    ```
 
-   The log line should contain:
+1. Check the ingress proxy logs for the access log entry:
+
+   ```sh
+   kubectl --context $ZONE2_PROFILE -n kong-mesh-system logs deploy/kong-mesh-default-ingress \
+     -c kuma-sidecar | grep "zone-ingress-sni"
+   ```
+
+   The output should contain:
 
    ```text
-   sni=sni.msvc.default.zone-2.kuma-demo.demo-app.5000
+   zone-ingress-sni=sni.msvc.default.zone-2.kong-mesh-demo.demo-app.5000
    ```
    {:.no-copy-code}
-
-## Next steps
-
-If you want to target a different zone proxy, keep the same pattern:
-- narrow `targetRef.kind: Dataplane` with `kuma.io/listener-zoneingress` or `kuma.io/listener-zoneegress`
-- add `kuma.io/zone` when you want one specific zone
-- inspect `.spec.networking.listeners[].name` on the zone proxy `Dataplane` and use that listener name in `sectionName` when you want one exact listener

@@ -78,14 +78,12 @@ If you don't understand this table you should read [matching docs](/docs/{{ page
 
 ## Configuration
 
-{% if_version gte:2.14.x %}
-### Zone proxy listeners
+### Zone proxy listeners {% new_in 2.14 %}
 
 When `targetRef.kind: Dataplane` selects a mesh-scoped zone proxy, `MeshTrafficPermission` can use `spec.rules` instead of `spec.from`.
 The two forms are mutually exclusive.
 
-Use `targetRef.labels` to select the proxy role and zone.
-Use `targetRef.sectionName` to select the exact listener name from the zone proxy `Dataplane`.
+Use `targetRef.labels` to select the proxy role and zone, and `targetRef.sectionName` to select the exact listener name from the zone proxy `Dataplane`.
 For example, zone ingress can use `10001` and zone egress can use `10002`.
 
 On zone egress, destination matching happens through `rules[].default.allow[]` or `deny[]` entries.
@@ -113,7 +111,6 @@ spec:
 {% endpolicy_yaml %}
 
 For a complete walkthrough, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
-{% endif_version %}
 
 ### Action
 
