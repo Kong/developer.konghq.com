@@ -22,7 +22,7 @@
           {% if row.header %}
               {% include landing_pages/header.md config = row.header %}
               {% if row.header.type == 'h1' %}
-              <div class="flex flex-col mt-2">{% include banners/cross_major_banner.html %}</div>
+                  {% if page.canonical_url and page.major_version %}<div class="flex flex-col mt-2">{% include banners/cross_major_banner.html %}</div>{% endif %}
               {% endif %}
           {% endif %}
 
