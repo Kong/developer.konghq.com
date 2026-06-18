@@ -68,7 +68,7 @@ When encoding request bodies, several things happen:
 
 ## Debugging {% new_in 3.15 %}
 
-By default, produce failures return a generic error to the HTTP client and log the real cause in the {{site.base_gateway}} logs:
+By default, when producing a message fails, the plugin returns a generic error to the HTTP client and logs the real cause in the {{site.base_gateway}} logs:
 
 ```json
 {"message": "Bad Gateway", "error": "could not send message to topic"}
