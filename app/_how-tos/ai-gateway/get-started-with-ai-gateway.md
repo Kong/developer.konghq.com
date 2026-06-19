@@ -35,9 +35,6 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
     - title: Destroy the {{site.ai_gateway}} container
       include_content: cleanup/products/ai-gateway
       icon_url: /assets/icons/ai-gateway.svg
