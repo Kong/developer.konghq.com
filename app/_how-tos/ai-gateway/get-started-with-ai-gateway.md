@@ -58,8 +58,8 @@ prereqs:
         ```
 cleanup:
   inline:
-    - title: Delete the Provider and Model entities
-      include_content: md/ai-gateway/v2/cleanup/delete-provider-and-model
+    - title: Clean up {{site.konnect_product_name}} environment
+      include_content: md/ai-gateway/v2/cleanup/konnect
 
 min_version:
   ai-gateway: '2.0'
@@ -70,6 +70,7 @@ min_version:
 
 Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
 
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
 status_code: 201
@@ -88,6 +89,7 @@ body:
         - name: Authorization
           value: Bearer $OPENAI_API_KEY
 {% endkonnect_api_request %}
+<!-- vale on -->
 
 Save the Provider ID from the response for cleanup:
 
@@ -99,6 +101,7 @@ export PROVIDER_ID=ai-provider-id
 
 Create a [Model](/ai-gateway/entities/ai-model/) entity to specify which LLM models are available and declare their capabilities. Each capability generates a route on the service:
 
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/models
 status_code: 201
@@ -123,6 +126,7 @@ body:
     - name: gpt-4o
       provider: openai-provider
 {% endkonnect_api_request %}
+<!-- vale on -->
 
 Save the Model ID from the response for cleanup:
 
@@ -137,6 +141,7 @@ export MODEL_ID=ai-model-id
 
 Send a chat request to verify your setup:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /v1/chat/completions
 status_code: 200
@@ -151,3 +156,4 @@ body:
   - role: "user"
     content: "Say this is a test!"
 {% endvalidation %}
+<!-- vale on -->
