@@ -2,15 +2,8 @@
 layout: with_aside
 ---
 
-{% unless page.major_version %}
-{% if page.auto_generated %}
-  {% unless page.canonical? or page.latest? %}
-    <blockquote class="warning !block">
-    You are browsing documentation for an older version. See the <a href="{{page.canonical_url}}">latest documentation here</a>.
-    </blockquote>
-  {% endunless %}
-{% endif %}
-{% endunless %}
+{% capture banner %}{% include banners/auto_generated_reference.md %}{% endcapture %}
+{{ banner | markdownify }}
 
 {{ content }}
 
