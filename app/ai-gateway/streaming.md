@@ -4,33 +4,27 @@ content_type: reference
 layout: reference
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 breadcrumbs:
   - /ai-gateway/
 tags:
   - ai
   - streaming
-  - ai-proxy
-
-plugins:
-  - ai-proxy
-  - ai-proxy-advanced
-
+  
 min_version:
-  gateway: '3.7'
+  ai-gateway: '2.0'
 
-description: This guide walks you through setting up the AI Proxy and AI Proxy Advanced plugin with streaming.
+description: This guide walks you through setting up Models with streaming.
 ---
 
 ## What is request streaming?
 
-In an LLM (Large Language Model) inference request, {{site.base_gateway}} uses the upstream provider's REST API to generate the next chat message from the caller.
-Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.base_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the `max_tokens`, other request parameters, and the complexity of the request sent to the LLM model.
+In an LLM (Large Language Model) inference request, {{site.ai_gateway}} uses the upstream provider's REST API to generate the next chat message from the caller.
+
+Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.ai_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the `max_tokens`, other request parameters, and the complexity of the request sent to the LLM model.
 
 To avoid making the user wait for their chat response with a loading animation, most models can stream each word (or sets of words and tokens) back to the client. This allows the chat response to be rendered in real time.
 
@@ -55,23 +49,22 @@ for chunk in stream:
         print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
-The client won't have to wait for the entire response. Instead, tokens will appear as they come in.
+A client configured to use streaming won't have to wait for the entire response. Instead, tokens will appear as they come in.
 
-## How AI Proxy streaming works
+## How {{site.ai_gateway}} streaming works
 
 In streaming mode, a client can set `"stream": true` in their request, and the LLM server will stream each part of the response text (usually token-by-token) as a server-sent event.
-{{site.base_gateway}} captures each batch of events and translates them into the {{site.base_gateway}} inference format. This ensures that all providers are compatible with the same framework including OpenAI-compatible SDKs or similar.
+{{site.ai_gateway}} captures each batch of events and translates them into the {{site.ai_gateway}} inference format. This ensures that all providers are compatible with the same framework including OpenAI-compatible SDKs or similar.
 
 In a standard LLM transaction, requests proxied directly to the LLM look like this:
 
 {% mermaid %}
 sequenceDiagram
   actor Client
-  participant {{site.base_gateway}}
-  Note right of {{site.base_gateway}}: AI Proxy Advanced plugin
-  Client->>+{{site.base_gateway}}:
-  destroy {{site.base_gateway}}
-  {{site.base_gateway}}->>+Cloud LLM: Sends proxy request information
+  participant {{site.ai_gateway}}
+  Client->>+{{site.ai_gateway}}:
+  destroy {{site.ai_gateway}}
+  {{site.ai_gateway}}->>+Cloud LLM: Sends proxy request information
   Cloud LLM->>+Client: Sends chunk to client
 {% endmermaid %}
 
@@ -80,8 +73,7 @@ When streaming is requested, requests proxied directly to the LLM look like this
 {% mermaid %}
 flowchart LR
   A(client)
-  B({{site.base_gateway}} Gateway with
-  AI Proxy Advanced plugin)
+  B({{site.ai_gateway}})
   C(Cloud LLM)
   D[[transform frame]]
   E[[read frame]]
@@ -118,16 +110,16 @@ It also estimates tokens for LLM services that decided to not stream back the to
 
 ## Streaming limitations
 
-Keep the following limitations in mind when you configure streaming for the {{site.ai_gateway}} plugin:
+Keep the following limitations in mind when you configure streaming for the {{site.ai_gateway}}:
 
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
-* You can't use the [Response Transformer plugin](/plugins/response-transformer/) or any other response phase plugin when streaming is configured.
-* The [AI Request Transformer plugin](/plugins/ai-request-transformer/) plugin **will** work, but the [AI Response Transformer plugin](/plugins/ai-response-transformer/) **will not**. This is because {{site.base_gateway}} can't check every single response token against a separate system.
+* You can't add Policies that use the [Response Transformer](/plugins/response-transformer/) or any otherwise trigger in the response phase when streaming is configured.
+* The [AI Request Transformer Policy](/plugins/ai-request-transformer/) **will** work, but the [AI Response Transformer Policy](/plugins/ai-response-transformer/) **will not**. This is because {{site.ai_gateway}} can't check every single response token against a separate system.
 * Streaming currently doesn't work with the HTTP/2 protocol. You must disable this in your [`proxy_listen`](/gateway/configuration/#proxy-listen) configuration.
 
 ## Configuration
 
-The AI Proxy and AI Proxy Advanced plugins already support request streaming; all you have to do is request {{site.base_gateway}} to stream the response tokens back to you.
+{{site.ai_gateway}} already supports request streaming; all you have to do is add streaming to your request.
 
 The following is an example `llm/v1/completions` route streaming request:
 
@@ -140,7 +132,7 @@ The following is an example `llm/v1/completions` route streaming request:
 
 You should receive each batch of tokens as HTTP chunks, each containing one or many server-sent events.
 
-### Token usage in streaming responses {% new_in 3.13 %}
+### Token usage in streaming responses
 
 You can receive token usage statistics in an SSE streaming response. Set the following parameter in the request JSON:
 
@@ -153,7 +145,6 @@ You can receive token usage statistics in an SSE streaming response. Set the fol
 ```
 
 When you set this parameter, the `usage` object appears in the final SSE frame, before the `[DONE]` terminator. This object contains token count statistics for the request.
-
 
 The following example shows how to request and process token usage statistics in a streaming response:
 
@@ -187,7 +178,7 @@ for chunk in stream:
 
 ### Response streaming configuration parameters
 
-In the AI Proxy and AI Proxy Advanced plugin configuration, you can set an optional field `config.response_streaming` to one of three values:
+In the [Model](/ai-gateway/entities/ai-model/) configuration, you can set an optional field `config.response_streaming` to one of three values:
 
 {% table %}
 columns:
