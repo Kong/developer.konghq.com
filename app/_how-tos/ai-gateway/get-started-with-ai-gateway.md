@@ -2,47 +2,152 @@
 title: Get started with {{site.ai_gateway}}
 content_type: how_to
 permalink: /ai-gateway/get-started/
-description: Learn how to quickly get started with {{site.ai_gateway}}
+description: Learn how to proxy LLM traffic with {{site.ai_gateway}} entities in {{site.konnect_product_name}}
 products:
-    - ai-gateway
+  - ai-gateway
 
 works_on:
-    - konnect
+  - konnect
+
+entities:
+  - ai-provider
+  - ai-model
 
 tags:
-    - get-started
-    - ai
-    - openai
+  - get-started
+  - ai
 
 tldr:
-  q: What is {{site.ai_gateway}}, and how can I get started with it?
+  q: How do I proxy LLM traffic with {{site.ai_gateway}} entities?
   a: |
-    With {{site.ai_gateway}}, you can deploy AI infrastructure for traffic
-    that is sent to one or more LLMs.
+    {{site.ai_gateway}} provides first-class entities for managing LLM providers and models in {{site.konnect_product_name}}.
+    Create a Provider entity to connect to an LLM service like OpenAI, then create Model entities
+    to specify which models are available for requests.
+
+    This tutorial shows you how to set up a Provider and Model in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API.
 
 tools:
-    - deck
+  - konnect-api
 
 prereqs:
   inline:
-    - title: OpenAI
+    - title: OpenAI credentials
       content: |
-        This tutorial uses the AI Proxy plugin with OpenAI. You'll need to [create an OpenAI account](https://auth.openai.com/create-account) and [get an API key](https://platform.openai.com/api-keys). Once you have your API key, create an environment variable:
+        This tutorial uses OpenAI as the LLM provider. You'll need to [create an OpenAI account](https://auth.openai.com/create-account)
+        and [get an API key](https://platform.openai.com/api-keys). Save your API key for the next steps:
 
         ```sh
         export OPENAI_API_KEY='<api-key>'
         ```
 
+    - title: AI Gateway ID
+      content: |
+        Get your {{site.ai_gateway}} ID from {{site.konnect_product_name}}:
+
+        ```sh
+        curl --request GET \
+          --url 'https://us.api.konghq.com/v1/ai-gateways?page%5Bsize%5D=10&page%5Bnumber%5D=1' \
+          --header 'Accept: application/json, application/problem+json' \
+          --header "Authorization: Bearer $KONNECT_TOKEN"
+        ```
+
+        Save the `id` from the response:
+
+        ```sh
+        export AI_GATEWAY_ID='<your-ai-gateway-id>'
+        ```
 cleanup:
   inline:
-    - title: Destroy the {{site.ai_gateway}} container
-      include_content: cleanup/products/ai-gateway
-      icon_url: /assets/icons/ai-gateway.svg
+    - title: Delete the Provider and Model entities
+      include_content: md/ai-gateway/v2/cleanup/delete-provider-and-model
 
 min_version:
-    ai-gateway: '2.0'
+  ai-gateway: '2.0'
+
 ---
 
-## Placeholder
+## Create a Provider entity
 
-lorem ipsum
+Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
+
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: OpenAI Production
+  name: my-openai-account
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+        - name: Authorization
+          value: Bearer $OPENAI_API_KEY
+{% endkonnect_api_request %}
+
+Save the Provider ID from the response for cleanup:
+
+```bash
+export PROVIDER_ID=ai-provider-id
+```
+
+## Create a Model entity
+
+Create a [Model](/ai-gateway/entities/ai-model/) entity to specify which LLM models are available and declare their capabilities. Each capability generates a route on the service:
+
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/models
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: GPT-4o
+  name: my-gpt-4o
+  type: model
+  enabled: true
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  config:
+    route:
+      paths:
+        - /v1
+  target_models:
+    - name: gpt-4o
+      provider: openai-provider
+{% endkonnect_api_request %}
+
+Save the Model ID from the response for cleanup:
+
+```bash
+export MODEL_ID=ai-model-id
+```
+
+{:.info}
+> The `generate` capability creates a `/chat/completions` route. The `paths: ["/v1"]` setting defines the base path, so the final route becomes `/v1/chat/completions`.
+
+## Validate
+
+Send a chat request to verify your setup:
+
+{% validation request-check %}
+url: /v1/chat/completions
+status_code: 200
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $OPENAI_API_KEY'
+body:
+  model: gpt-4o
+  messages:
+  - role: "user"
+    content: "Say this is a test!"
+{% endvalidation %}

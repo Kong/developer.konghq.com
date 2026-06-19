@@ -1,8 +1,34 @@
-{% assign summary='{{site.ai_gateway_name}} running' %}
+{% assign summary='{{site.ai_gateway}} running' %}
 {% capture details_content %}
-Placeholder prereq
+
+This is a Konnect tutorial and requires a Konnect personal access token.
+
+1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+
+1. Export your token to an environment variable:
+
+   ```bash
+   export KONNECT_TOKEN='YOUR_KONNECT_PAT'
+   ```
+
+1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/quickstart/ai) to automatically provision a Control Plane and Data Plane in {{site.konnect_product_name}}, and configure your environment:
+
+   ```bash
+   curl -Ls https://get.konghq.com/quickstart/ai | bash -s -- -k $KONNECT_TOKEN
+   ```
+
+This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
+
 ```bash
-curl -Ls https://get.konghq.com/quickstart/ai | bash -s -- -d
+export AI_GATEWAY_ID=your-gateway-id
+export DECK_KONNECT_TOKEN=$KONNECT_TOKEN
+export DECK_KONNECT_CONTROL_PLANE_NAME=quickstart
+export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
+export KONNECT_PROXY_URL='http://localhost:8000'
 ```
+
+Copy and paste these into your terminal to configure your session.
+
 {% endcapture %}
+
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/ai-gateway.svg' %}
