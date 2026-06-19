@@ -241,7 +241,6 @@ spec:
 
 {% endraw %}
 
-
 ### Provider
 
 The `provider` field defines how identity certificates are issued.

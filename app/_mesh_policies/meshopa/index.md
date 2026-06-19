@@ -39,7 +39,6 @@ When the `MeshOPA` policy is applied, the control plane configures the following
 {% endtab %}
 {% endtabs %}
 {% endif_version %}
-{% if_version gte:2.6.x %}
 {% if_version lte:2.10.x %}
 {% tabs %}
 {% tab Sidecar %}
@@ -56,20 +55,6 @@ When the `MeshOPA` policy is applied, the control plane configures the following
 {% endtabs %}
 
 {% endif_version %}
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ❌  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ❌  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-| MeshGatewayRoute  | ❌        | ❌  | ❌   |
-
-{% endif_version %}
-
-
 
 ## Configuration
 
@@ -336,7 +321,6 @@ spec:
 {% navtab "Universal" %}
 
 The `run` command on the data plane proxy accepts the following equivalent parameters if you prefer not to set environment variables:
-
 
 ```
 --opa-addr

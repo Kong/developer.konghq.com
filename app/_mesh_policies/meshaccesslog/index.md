@@ -15,8 +15,6 @@ related_resources:
     url: /mesh/meshopentelemetrybackend/
 ---
 
-
-
 {% tip %}
 This guide assumes you have already configured your observability tools to work with Kuma.
 If you haven't, see the [observability docs](/docs/{{ page.release }}/explore/observability).
@@ -24,81 +22,30 @@ If you haven't, see the [observability docs](/docs/{{ page.release }}/explore/ob
 
 ## `targetRef` support matrix
 
-{% if_version gte:2.4.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version gte:2.4.x %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`             |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`             | Allowed kinds                                 |
 | ----------------------- | --------------------------------------------- |
 | `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
 | `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`  |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
-{% if_version lte:2.5.x %}
-| `targetRef`           | Allowed kinds                       |
-| --------------------- | ----------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`               |
-{% endif_version %}
-{% if_version gte:2.6.x %}
 | `targetRef`             | Allowed kinds                                    |
 | ----------------------- | ------------------------------------------------ |
 | `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with `tags` |
 | `to[].targetRef.kind`   | `Mesh`, `MeshService`                            |
 | `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
 {% endtab %}
 
-{% if_version gte:2.6.x %}
 {% tab Delegated Gateway %}
-{% if_version gte:2.6.x %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% endif_version %}
-{% if_version gte:2.9.x %}
 | `targetRef`             | Allowed kinds                                            |
 | ----------------------- | -------------------------------------------------------- |
 | `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
 | `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`             |
-{% endif_version %}
 {% endtab %}
-{% endif_version %}
 
 {% endtabs %}
-{% endif_version %}
-
-{% if_version lte:2.3.x %}
-
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ✅  | ✅   |
-| `MeshSubset`        | ✅        | ❌  | ❌   |
-| `MeshService`       | ✅        | ✅  | ❌   |
-| `MeshServiceSubset` | ✅        | ❌  | ❌   |
-
-{% endif_version %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -161,19 +108,11 @@ The default format string for `HTTP` traffic is:
 
 Example configuration:
 
-{% if_version lte:2.2.x %}
-```yaml
-format:
-  plain: '[%START_TIME%] %BYTES_RECEIVED%'
-```
-{% endif_version %}
-{% if_version gte:2.3.x %}
 ```yaml
 format:
   type: Plain
   plain: '[%START_TIME%] %BYTES_RECEIVED%'
 ```
-{% endif_version %}
 
 Example output:
 
@@ -185,17 +124,6 @@ Example output:
 
 Example configuration:
 
-{% if_version lte:2.2.x %}
-```yaml
-format:
-  json:
-    - key: "start_time"
-      value: "%START_TIME%"
-    - key: "bytes_received"
-      value: "%BYTES_RECEIVED%"
-```
-{% endif_version %}
-{% if_version gte:2.3.x %}
 ```yaml
 format:
   type: Json
@@ -205,7 +133,6 @@ format:
     - key: "bytes_received"
       value: "%BYTES_RECEIVED%"
 ```
-{% endif_version %}
 
 Example output:
 
@@ -219,33 +146,6 @@ Example output:
 {% details %}
 summary: "TCP configuration with default fields:"
 content: |
-  {% if_version lte:2.2.x %}
-  ```yaml
-  format:
-    json:
-      - key: "start_time"
-        value: "%START_TIME%"
-      - key: "response_flags"
-        value: "%RESPONSE_FLAGS%"
-      - key: "kuma_mesh"
-        value: "%KUMA_MESH%"
-      - key: "kuma_source_address_without_port"
-        value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
-      - key: "kuma_source_service"
-        value: "%KUMA_SOURCE_SERVICE%"
-      - key: "upstream_host"
-        value: "%UPSTREAM_HOST%"
-      - key: "kuma_destination_service"
-        value: "%KUMA_DESTINATION_SERVICE%"
-      - key: "duration_ms"
-        value: "%DURATION%"
-      - key: "bytes_sent"
-        value: "%BYTES_SENT%"
-      - key: "bytes_received"
-        value: "%BYTES_RECEIVED%"
-  ```
-  {% endif_version %}
-  {% if_version gte:2.3.x %}
   ```yaml
   format:
     type: Json
@@ -271,57 +171,11 @@ content: |
       - key: "bytes_received"
         value: "%BYTES_RECEIVED%"
   ```
-  {% endif_version %}
 {% enddetails %}
 
 {% details %}
 summary: "HTTP configuration with default fields:"
 content: |
-  {% if_version lte:2.2.x %}
-  ```yaml
-  format:
-    json:
-      - key: "start_time"
-        value: "%START_TIME%"
-      - key: "kuma_mesh"
-        value: "%KUMA_MESH%"
-      - key: 'method'
-        value: '"%REQ(:METHOD)%'
-      - key: "path"
-        value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-      - key: 'protocol'
-        value: '%PROTOCOL%'
-      - key: "response_code"
-        value: "%RESPONSE_CODE%"
-      - key: "response_flags"
-        value: "%RESPONSE_FLAGS%"
-      - key: "bytes_received"
-        value: "%BYTES_RECEIVED%"
-      - key: "bytes_sent"
-        value: "%BYTES_SENT%"
-      - key: "duration_ms"
-        value: "%DURATION%"
-      - key: "upstream_service_time"
-        value: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
-      - key: 'x_forwarded_for'
-        value: '"%REQ(X-FORWARDED-FOR)%"'
-      - key: 'user_agent'
-        value: '"%REQ(USER-AGENT)%"'
-      - key: 'request_id'
-        value: '"%REQ(X-REQUEST-ID)%"'
-      - key: 'authority'
-        value: '"%REQ(:AUTHORITY)%"'
-      - key: "kuma_source_service"
-        value: "%KUMA_SOURCE_SERVICE%"
-      - key: "kuma_destination_service"
-        value: "%KUMA_DESTINATION_SERVICE%"
-      - key: "kuma_source_address_without_port"
-        value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
-      - key: "upstream_host"
-        value: "%UPSTREAM_HOST%"
-  ```
-  {% endif_version %}
-  {% if_version gte:2.3.x %}
   ```yaml
   format:
     type: Json
@@ -365,9 +219,7 @@ content: |
       - key: "upstream_host"
         value: "%UPSTREAM_HOST%"
   ```
-  {% endif_version %}
 {% enddetails %}
-
 
 ### Backends
 
@@ -378,42 +230,24 @@ A backend determines where the logs end up.
 A TCP backend streams logs to a server via TCP protocol.
 You can configure a TCP backend with an address:
 
-{% if_version lte:2.2.x %}
-```yaml
-backends:
-  - tcp:
-      address: 127.0.0.1:5000
-```
-{% endif_version %}
-{% if_version gte:2.3.x %}
 ```yaml
 backends:
   - type: Tcp
     tcp:
       address: 127.0.0.1:5000
 ```
-{% endif_version %}
 
 #### File
 
 A file backend streams logs to a text file.
 You can configure a file backend with a path:
 
-{% if_version lte:2.2.x %}
-```yaml
-backends:
-  - file:
-      path: /dev/stdout
-```
-{% endif_version %}
-{% if_version gte:2.3.x %}
 ```yaml
 backends:
   - type: File
     file:
       path: /dev/stdout
 ```
-{% endif_version %}
 
 #### OpenTelemetry
 
@@ -421,23 +255,6 @@ An OpenTelemetry (OTEL) backend sends data to an OpenTelemetry server.
 You can configure an OpenTelemetry backend with an endpoint, [attributes](https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-attributes) (which contain additional information about the log) and [body](https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-body) (can be a string message, including multi-line, or it can be a structured data).
 Attributes and endpoints can use placeholders described in the [format section](#format).
 
-{% if_version eq:2.2.x %}
-```yaml
-backends:
-  - openTelemetry:
-      endpoint: otel-collector:4317
-      body:
-        kvlistValue:
-          values:
-            - key: "mesh"
-              value:
-                stringValue: "%KUMA_MESH%"
-      attributes:
-        - key: "start_time"
-          value: "%START_TIME%"
-```
-{% endif_version %}
-{% if_version gte:2.3.x %}
 ```yaml
 backends:
   - type: OpenTelemetry
@@ -453,7 +270,6 @@ backends:
         - key: "start_time"
           value: "%START_TIME%"
 ```
-{% endif_version %}
 
 ### Body
 Body is of type [any](https://opentelemetry.io/docs/specs/otel/logs/data-model/#type-any) (defined [here](https://github.com/open-telemetry/opentelemetry-proto/blob/342e1d4c3a1fe43312823ffb53bd38327f263059/opentelemetry/proto/common/v1/common.proto#L28-L40))

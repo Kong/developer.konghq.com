@@ -17,10 +17,8 @@ Circuit breakers - unlike active [MeshHealthChecks](/mesh/policies/meshhealthche
 additional traffic to our data plane proxies but they rather inspect the existing service traffic. They are also
 commonly used to prevent cascading failures.
 
-
 Like a real-world circuit breaker when the circuit is **closed** then traffic between a source and destination data
 plane proxy is allowed to freely flow through it. When it is **open** then the traffic is interrupted.
-
 
 The conditions that determine when a circuit breaker is closed or open are being configured on connection limits or
 outlier detection basis. For outlier detection to open circuit breaker you can configure what we call _detectors_.
@@ -38,34 +36,15 @@ policy.
 Data plane proxies with **passive** checks won't explicitly send requests to other data plane proxies to determine if
 target proxies are healthy or not.
 
-
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
 {% navtabs "support matrix" %}
 {% navtab "Sidecar" %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`             | Allowed kinds                                 |
 | ----------------------- | --------------------------------------------- |
 | `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
 | `to[].targetRef.kind`   | `Mesh`, `MeshService`                         |
-{% endif_version %}
 {% endnavtab %}
-
 
 {% navtab "Builtin Gateway" %}
 | `targetRef`             | Allowed kinds                                            |
@@ -75,96 +54,12 @@ target proxies are healthy or not.
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.9.x %}
 | `targetRef`             | Allowed kinds                                            |
 | ----------------------- | -------------------------------------------------------- |
 | `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
 | `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
 {% endnavtab %}
 {% endnavtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ✅  | ✅   |
-| `MeshSubset`        | ✅        | ❌  | ❌   |
-| `MeshService`       | ✅        | ✅  | ❌   |
-| `MeshServiceSubset` | ✅        | ❌  | ❌   |
-
-{% endif_version %}
-
-
-
-## TargetRef support matrix
-
-{% if_version gte:2.6.x %}
-{% tabs %}
-{% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                         |
-{% endif_version %}
-{% endtab %}
-
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endtab %}
-
-{% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% endtab %}
-{% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ✅  | ✅   |
-| `MeshSubset`        | ✅        | ❌  | ❌   |
-| `MeshService`       | ✅        | ✅  | ❌   |
-| `MeshServiceSubset` | ✅        | ❌  | ❌   |
-
-{% endif_version %}
 
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
@@ -209,7 +104,6 @@ For **gRPC** requests, the outlier detection will use the HTTP status mapped fro
 - **`healthyPanicThreshold`** - (optional) Allows to configure panic threshold for Envoy cluster. If not specified,
   the default is 50%. To disable panic mode, set to 0%.
 {% endif_version %}
-
 
 #### Detectors configuration
 

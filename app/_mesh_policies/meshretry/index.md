@@ -16,88 +16,29 @@ This policy enables {{site.mesh_product_name}} to know how to behave if there ar
 
 ## TargetRef support matrix
 
-{% if_version gte:2.4.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version gte:2.6.x %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshExternalService`             |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`           | Allowed kinds                                 |
 | --------------------- | --------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
 | `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshExternalService`  |
-{% endif_version %}
-{% if_version lte:2.5.x %}
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ✅  | ❌   |
-| `MeshSubset`        | ✅        | ❌  | ❌   |
-| `MeshService`       | ✅        | ✅  | ❌   |
-| `MeshServiceSubset` | ✅        | ❌  | ❌   |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
-{% if_version gte:2.6.x %}
 | `targetRef`           | Allowed kinds                                             |
 | --------------------- | --------------------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags` |
 | `to[].targetRef.kind` | `Mesh`                                                    |
-{% endif_version %}
-{% if_version lte:2.5.x %}
-| `targetRef.kind`    | top level | to  |
-| ------------------- | --------- | --- |
-| `Mesh`              | ✅        | ✅  |
-| `MeshGateway`       | ✅        | ❌  |
-| `MeshService`       | ✅        | ❌  |
-| `MeshServiceSubset` | ✅        | ❌  |
-{% endif_version %}
 {% endtab %}
 
-{% if_version gte:2.6.x %}
 {% tab Delegated Gateway %}
-{% if_version gte:2.6.x %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% endif_version %}
-{% if_version gte:2.9.x %}
 | `targetRef`           | Allowed kinds                                            |
 | --------------------- | -------------------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `MeshSubset` |
 | `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshExternalService`             |
-{% endif_version %}
 {% endtab %}
-{% endif_version %}
 
 {% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.3.x %}
-
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ✅  | ❌   |
-| `MeshSubset`        | ✅        | ❌  | ❌   |
-| `MeshService`       | ✅        | ✅  | ❌   |
-| `MeshServiceSubset` | ✅        | ❌  | ❌   |
-
-{% endif_version %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 

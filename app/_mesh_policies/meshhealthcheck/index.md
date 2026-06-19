@@ -9,8 +9,6 @@ type: policy
 icon: meshhealthcheck.png
 ---
 
-
-
 {% warning %}
 This policy uses new policy matching algorithm. 
 Do **not** combine with the deprecated HealthCheck policy.
@@ -33,27 +31,12 @@ This mode generates extra traffic to other proxies and services as described in 
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`           | Allowed kinds                                 |
 | --------------------- | --------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
 | `to[].targetRef.kind` | `Mesh`, `MeshService`                         |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
@@ -64,33 +47,13 @@ This mode generates extra traffic to other proxies and services as described in 
 {% endtab %}
 
 {% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.9.x %}
 | `targetRef`           | Allowed kinds                                            |
 | --------------------- | -------------------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
 | `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
 {% endtab %}
 
 {% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ✅  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ✅  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-
-{% endif_version %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -104,7 +67,6 @@ The health check protocol is selected by picking the most [specific protocol](/d
 and falls back to more general protocol when specified protocol has `disabled=true` in policy definition.
 See [protocol fallback example](#protocol-fallback).
 
-
 ## Common configuration
 
 - **`interval`** - (optional) interval between consecutive health checks, if not specified then equal to `1m`
@@ -117,14 +79,8 @@ See [protocol fallback example](#protocol-fallback).
 - **`intervalJitterPercent`** - (optional) if specified, during every interval Envoy will add `intervalJitter` *
   `intervalJitterPercent` / 100 to the wait time. If `intervalJitter` and
   `intervalJitterPercent` are both set, both of them will be used to increase the wait time.
-{% if_version lte:2.9.x %}
-- **`healthyPanicThreshold`** - (optional) allows to configure panic threshold for Envoy clusters. If not specified,
-  the default is 50%. To disable panic mode, set to 0%.
-{% endif_version %}
-{% if_version gte:2.10.x %}
 - **`healthyPanicThreshold`** - (optional) allows to configure panic threshold for Envoy clusters. If not specified,
   the default is 50%. To disable panic mode, set to 0%. ⚠️This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/docs/{{ page.release }}/policies/meshcircuitbreaker).⚠️
-{% endif_version %}
 - **`failTrafficOnPanic`** - (optional) if set to true, Envoy will not consider any hosts when the cluster is in
   'panic mode'. Instead, the cluster will fail all requests as if all hosts are unhealthy.
   This can help avoid potentially overwhelming a failing service.

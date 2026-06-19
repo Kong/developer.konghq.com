@@ -9,33 +9,17 @@ type: policy
 icon: meshhttproute.png
 ---
 
-
 The `MeshHTTPRoute` policy allows altering and redirecting HTTP requests
 depending on where the request is coming from and where it's going to.
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `MeshService`                                            |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `MeshService`                                            |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`           | Allowed kinds                                 |
 | --------------------- | --------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
 | `to[].targetRef.kind` | `MeshService`                                 |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
@@ -46,33 +30,13 @@ depending on where the request is coming from and where it's going to.
 {% endtab %}
 
 {% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `MeshService`                                            |
-{% endif_version %}
-{% if_version gte:2.9.x %}
 | `targetRef`           | Allowed kinds                                            |
 | --------------------- | -------------------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
 | `to[].targetRef.kind` | `MeshService`                                            |
-{% endif_version %}
 {% endtab %}
 
 {% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ❌  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ✅  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-
-{% endif_version %}
 
 If you don't understand this table you should read [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -180,7 +144,7 @@ rules:
 ### Matches
 
 - **`path`** - (optional) - HTTP path to match the request on
-  - **`type`** - one of `Exact`, {% if_version gte:2.3.x %}`PathPrefix`{% endif_version %}{% if_version lte:2.2.x %}`Prefix`{% endif_version %}, `RegularExpression`
+  - **`type`** - one of `Exact`, `PathPrefix`, `RegularExpression`
   - **`value`** - actual value that's going to be matched depending on the `type`
 - **`method`** - (optional) - HTTP2 method, available values are
   `CONNECT`, `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`, `POST`, `PUT`, `TRACE`
@@ -231,7 +195,7 @@ rules:
 
 ### Backends
 
-- **`kind`** - one of `MeshService`, `MeshServiceSubset`{% if_version gte:2.9.x %}, `MeshExtenalService`{% endif_version %}
+- **`kind`** - one of `MeshService`, `MeshServiceSubset`, `MeshExtenalService`
 - **`name`** - service name
 - **`tags`** - service tags, must be specified if the `kind` is `MeshServiceSubset`
 - **`weight`** - when a request matches the route, the choice of an upstream cluster

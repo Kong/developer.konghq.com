@@ -14,27 +14,12 @@ When using this policy, the [localityAwareLoadBalancing](/docs/{{ page.release }
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshMultiZoneService`            |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`           | Allowed kinds                                            |
 | --------------------- | -------------------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)`            |
 | `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshMultiZoneService`            |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
@@ -45,48 +30,18 @@ When using this policy, the [localityAwareLoadBalancing](/docs/{{ page.release }
 {% endtab %}
 
 {% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.9.x %}
 | `targetRef`           | Allowed kinds                                            |
 | --------------------- | -------------------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
 | `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
 {% endtab %}
 
 {% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ✅  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ✅  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-
-{% endif_version %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
 ## Configuration
 
-{% if_version lte:2.4.x %}
-### LocalityAwareness
-
-Locality-aware load balancing is enabled by default unlike its predecessor [localityAwareLoadBalancing](/docs/{{ page.release }}/policies/locality-aware).
-
-- **`disabled`** – (optional) allows to disable locality-aware load balancing. When disabled requests are distributed 
-across all endpoints regardless of locality.
-
-{% endif_version %}
-{% if_version gte:2.5.x %}
 ### LocalityAwareness
 Locality-aware load balancing provides robust and straightforward method for balancing traffic within and across zones. This not only allows you to route traffic across zones when the local zone service is unhealthy but also enables you to define traffic prioritization within the local zone and set cross-zone fallback priorities.
 
@@ -139,9 +94,6 @@ Using Zone Egress Proxy in multi-zone deployment poses certain limitations for t
 Moreover, Zone Egress is a simple proxy that uses long-lived L4 connection with each Zone Ingresses. Consequently, when a new `MeshLoadbalancingStrategy` with locality awareness is configured, connections won’t be refreshed, and locality awareness will apply only to new connections.
 
 Another thing you need to be aware of is how outbound traffic behaves when you use the `MeshCircuitBreaker`'s outlier detection to keep track of healthy endpoints. Normally, you would use `MeshCircuitBreaker` to act on failures and trigger traffic redirect to the next priority level if the number of healthy endpoints fall below `crossZone.failoverThreshold`. When you have a single instance of Zone Egress, all remote zones will be behind a single endpoint. Since `MeshCircuitBreaker` is configured on Data Plane Proxy, when one of the zones start responding with errors it will mark the whole Zone Egress as not healthy and won’t send traffic there even though there could be multiple zones with live endpoints. This will be changed in the future with overall improvements to the Zone Egress proxy.
-
-
-{% endif_version %}
 
 ### LoadBalancer
 

@@ -16,31 +16,12 @@ Do **not** combine with the deprecated Timeout policy policy.
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version gte:2.6.x %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                                             |
-| ----------------------- | ------------------------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset`, `MeshHTTPRoute` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                                     |
-| `from[].targetRef.kind` | `Mesh`                                                                    |
-{% endif_version %}
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                                             |
-| ----------------------- | ------------------------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshHTTPRoute`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`                              |
-| `from[].targetRef.kind` | `Mesh`                                                                    |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`             | Allowed kinds                                                  |
 | ----------------------- | -------------------------------------------------------------- |
 | `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshHTTPRoute`, `MeshSubset(deprecated)` |
 | `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`                   |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
@@ -51,49 +32,12 @@ Do **not** combine with the deprecated Timeout policy policy.
 {% endtab %}
 
 {% tab Delegated Gateway %}
-{% if_version gte:2.6.x %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                                             |
-| ----------------------- | ------------------------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset`, `MeshHTTPRoute` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                                     |
-{% endif_version %}
-{% endif_version %}
-{% if_version gte:2.9.x %}
 | `targetRef`             | Allowed kinds                                                             |
 | ----------------------- | ------------------------------------------------------------------------- |
 | `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshHTTPRoute`                                     |
 | `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`                              |
-{% endif_version %}
 {% endtab %}
 {% endtabs %}
-
-{% endif_version %}
-
-{% if_version lte:2.5.x %}
-{% if_version gte:2.3.x %}
-
-| TargetRef type    | top level | to  | from |
-|-------------------|-----------|-----|------|
-| Mesh              | ✅         | ✅   | ✅    |
-| MeshSubset        | ✅         | ❌   | ❌    |
-| MeshService       | ✅         | ✅   | ❌    |
-| MeshServiceSubset | ✅         | ❌   | ❌    |
-| MeshHTTPRoute     | ✅         | ❌   | ❌    |
-
-{% endif_version %}
-
-{% if_version lte:2.2.x %}
-
-| TargetRef type    | top level | to  | from |
-|-------------------|-----------|-----|------|
-| Mesh              | ✅         | ✅   | ✅    |
-| MeshSubset        | ✅         | ❌   | ❌    |
-| MeshService       | ✅         | ✅   | ❌    |
-| MeshServiceSubset | ✅         | ❌   | ❌    |
-
-{% endif_version %}
-{% endif_version %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -113,7 +57,7 @@ MeshTimeout policy lets you configure multiple timeouts:
 - `http.streamIdleTimeout`
 - `http.maxStreamDuration`
 - `http.maxConnectionDuration`
-{% if_version inline:true gte:2.6.x %}- `http.requestHeadersTimeout`{% endif_version %}
+- `http.requestHeadersTimeout`
 
 ### Timeouts explained
 
@@ -158,8 +102,6 @@ starting from when it was first established. If there are no active streams, the
 If there are any active streams, the drain sequence will kick-in, and the connection will be force-closed after 5
 seconds.
 
-{% if_version gte:2.6.x %}
 #### HTTP request headers timeout
 
 The amount of time that proxy will wait for the request headers to be received. The timer is activated when the first byte of the headers is received, and is disarmed when the last byte of the headers has been received.
-{% endif_version %}

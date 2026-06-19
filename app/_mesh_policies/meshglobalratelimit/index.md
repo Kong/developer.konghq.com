@@ -114,7 +114,6 @@ TODO: document how to generate and use zone token on universal.-->
 
 ## TargetRef support matrix
 
-{% if_version gte:2.7.x %}
 {% tabs %}
 {% tab Sidecar %}
 | `targetRef`             | Allowed kinds                         |
@@ -130,20 +129,6 @@ TODO: document how to generate and use zone token on universal.-->
 | `to[].targetRef.kind` | `Mesh`                                                    |
 {% endtab %}
 {% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| TargetRef type    | Top level | To  | From |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ❌  | ✅   |
-| MeshSubset        | ❌        | ❌  | ❌   |
-| MeshService       | ✅        | ❌  | ❌   |
-| MeshServiceSubset | ❌        | ❌  | ❌   |
-| MeshGatewayRoute  | ❌        | ❌  | ❌   |
-
-{% endif_version %}
-
 
 ## Configuration
 
@@ -440,8 +425,6 @@ spec:
 ## Ratelimit service
 
 {{site.mesh_product_name}} is using the Envoy Rate Limit service reference implementation. You can read the [source code and documentation](https://github.com/envoyproxy/ratelimit) from the Envoy Proxy GitHub repository.
-
-
 
 ## Ratelimit service
 

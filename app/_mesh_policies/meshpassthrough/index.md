@@ -18,24 +18,15 @@ When using this policy, the [passthrough mode](/docs/{{ page.release }}/networki
 
 {% tabs %}
 {% tab Sidecar %}
-{% if_version lte:2.9.x %}
-| `targetRef`           | Allowed kinds         |
-| --------------------- | --------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`  |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`           | Allowed kinds                                 |
 | --------------------- | --------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endif_version %}
 {% endtab %}
-{% if_version gte:2.9.x %}
 {% tab Delegated Gateway %}
 | `targetRef`             | Allowed kinds        |
 | ----------------------- | -------------------- |
 | `targetRef.kind`        | `Mesh`, `MeshSubset` |
 {% endtab %}
-{% endif_version %}
 {% endtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
@@ -72,28 +63,6 @@ The following describes the default configuration settings of the `MeshPassthrou
 Currently, support for partial subdomain matching is not implemented. For example, a match for `*w.example.com` will be rejected.
 {% endwarning %}
 
-{% if_version eq:2.9.x %}
-{% policy_yaml %}
-```yaml
-type: MeshPassthrough
-name: wildcard-passthrough
-mesh: default
-spec:
-  targetRef:
-    kind: Mesh
-    proxyTypes: ["Sidecar"]
-  default:
-    passthroughMode: Matched
-    appendMatch:
-    - type: Domain
-      value: '*.cluster-1.kafka.aws.us-east-2.com'
-      protocol: tls
-      port: 443
-```
-{% endpolicy_yaml %}
-{% endif_version %}
-
-{% if_version gte:2.10.x %}
 {% policy_yaml %}
 ```yaml
 type: MeshPassthrough
@@ -111,7 +80,6 @@ spec:
       port: 443
 ```
 {% endpolicy_yaml %}
-{% endif_version %}
 
 ### Security
 
@@ -128,5 +96,5 @@ If you rely on tags in the top-level `targetRef` you might consider securing the
 * Due to the nature of some traffic, it is not possible to combine certain protocols on the same port. You can create a `MeshPassthrough` policy that handles `tcp`, `tls`, and one of `http`, `http2`, or `grpc` traffic on the same port. Layer 7 protocols cannot be distinguished, which could introduce unexpected behavior.
 * It isn't possible to route passthrough traffic through the [zone egress](/docs/{{ page.release }}/production/cp-deployment/zoneegress/#zone-egress).
 * Wildcard domains with L7 protocol and all ports is not supported.
-* {% if_version gte:2.9.x %}Builtin gateway is not supported.{% endif_version %}{% if_version lte:2.8.x %}Gateways are currently not supported.{% endif_version %}
+* Builtin gateway is not supported.
 * Envoy prioritizes matches in the following order: [first by Port, second by Address IP, and third by SNI](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchainmatch). For example, if you have an HTTP domain match configured for a specific port (e.g., 80) and a CIDR match also configured for port 80, a request to this domain may match the CIDR configuration if the domain's address falls within the CIDR range. However, if the domain's address does not match the CIDR, the request might fail to match entirely due to the absence of an appropriate matcher for that IP. This behavior is a limitation and could potentially be addressed in the future with the adoption of the [Matcher API](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/advanced/matching/matching_api).
