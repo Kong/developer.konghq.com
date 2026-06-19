@@ -125,6 +125,7 @@ The policy whose name comes first in alphabetical order takes precedence.
 
 The following table contains examples of the selector field with different scopes:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Description
@@ -156,6 +157,7 @@ rows:
         selector: {}
       ```
 {% endtable %}
+<!-- vale on -->
 
 ### SPIFFE ID
 

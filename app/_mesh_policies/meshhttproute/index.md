@@ -16,6 +16,7 @@ depending on where the request is coming from and where it's going to.
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -28,9 +29,11 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`MeshService`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Builtin Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -43,9 +46,11 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -58,6 +63,7 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`MeshService`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% endnavtabs %}

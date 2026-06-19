@@ -18,6 +18,7 @@ When using this policy, the [passthrough mode](/docs/{{ page.release }}/networki
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -28,8 +29,10 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% navtab "Delegated Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -40,6 +43,7 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshSubset`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% endnavtabs %}
 

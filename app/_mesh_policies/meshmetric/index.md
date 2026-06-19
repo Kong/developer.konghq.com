@@ -41,6 +41,7 @@ To collect metrics from {{site.mesh_product_name}}, you need to expose metrics f
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -51,9 +52,11 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Builtin Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -64,9 +67,11 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -77,6 +82,7 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshSubset`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% endnavtabs %}

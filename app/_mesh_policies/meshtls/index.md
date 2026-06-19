@@ -15,6 +15,7 @@ icon: meshtls.png
 
 {% navtabs "targetref-for-mode" %}
 {% navtab "targetRef For mode" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -25,8 +26,10 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% navtab "targetRef For tls ciphers/version" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -39,6 +42,7 @@ rows:
   - targetref: "`from[].targetRef.kind`"
     allowed_kinds: "`Mesh`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% endnavtabs %}
 

@@ -52,9 +52,11 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshService`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Builtin Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -67,9 +69,11 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshService`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -82,6 +86,7 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshService`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% endnavtabs %}
 

@@ -22,6 +22,7 @@ It allows you to define granular rules about which services can communicate with
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -34,6 +35,7 @@ rows:
   - targetref: "`from[].targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshSubset`, `MeshServiceSubset`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% navtab "Builtin Gateway" %}
 `MeshTrafficPermission` isn't supported on builtin gateways. If applied via

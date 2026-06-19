@@ -26,6 +26,7 @@ When the `MeshOPA` policy is applied, the control plane configures the following
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -36,8 +37,10 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `Dataplane` {% new_in 2.11 %}, `MeshSubset` (deprecated), `MeshService` (removed in 2.11), `MeshServiceSubset` (removed in 2.11)"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% navtab "Builtin Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -48,6 +51,7 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshGateway`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -241,6 +245,7 @@ Encoding the policy in a Secret provides some security for policies that contain
 
 The following environment variables are available:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Variable
@@ -277,6 +282,7 @@ rows:
     what_it_configures: "Overrides for OPA configuration, in addition to config file(*)"
     default_value: nil
 {% endtable %}
+<!-- vale on -->
 
 {% navtabs  "configuration" %}
 {% navtab "kumactl" %}

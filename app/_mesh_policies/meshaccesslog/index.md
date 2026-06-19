@@ -23,6 +23,7 @@ related_resources:
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -35,9 +36,11 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Builtin Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -52,9 +55,11 @@ rows:
   - targetref: "`from[].targetRef.kind`"
     allowed_kinds: "`Mesh`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -67,6 +72,7 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% endnavtabs %}
@@ -91,6 +97,7 @@ For example:
 
 All _command operators_ [defined by Envoy](https://www.envoyproxy.io/docs/envoy/v1.22.0/configuration/observability/access_log/usage#command-operators) are supported, along with additional _command operators_ defined by {{site.mesh_product_name}}:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Command Operator
@@ -109,6 +116,7 @@ rows:
   - command_operator: "`%KUMA_TRAFFIC_DIRECTION%`"
     description: "Direction of the traffic, `INBOUND`, `OUTBOUND`, or `UNSPECIFIED`."
 {% endtable %}
+<!-- vale on -->
 
 All additional access log _command operators_ are valid to use with both `TCP` and `HTTP` traffic.
 
