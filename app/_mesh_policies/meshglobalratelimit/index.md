@@ -114,21 +114,37 @@ TODO: document how to generate and use zone token on universal.-->
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                         |
-| ----------------------- | ------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`   |
-| `from[].targetRef.kind` | `Mesh`                                |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`, `MeshService`"
+  - targetref: "`from[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`                                     |
-| `to[].targetRef.kind` | `Mesh`                                                    |
-{% endtab %}
-{% endtabs %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Configuration
 
@@ -347,7 +363,7 @@ apiVersion: kuma.io/v1alpha1
 kind: MeshRateLimit
 metadata:
   name: demo-local-rate-limit
-  namespace: kuma-system
+  namespace: kong-mesh-system
 spec:
   targetRef:
     kind: MeshService
@@ -469,7 +485,7 @@ You should refer to [ratelimit service documentation](https://github.com/envoypr
 
 ### Example
 
-The following example shows how to deploy and test a sample `MeshGlobalRateLimit` policy on Kubernetes, using the kuma-demo application.
+The following example shows how to deploy and test a sample `MeshGlobalRateLimit` policy on Kubernetes, using the kong-mesh-demo application.
 
 1. First, we need to deploy Redis in our Kubernetes cluster:
 
@@ -543,7 +559,7 @@ The following example shows how to deploy and test a sample `MeshGlobalRateLimit
 2. We are all set up. Now you can try making few requests to the external IP of your gateway and you will see an error after reaching limits. You can find the IP with command:
 
     ```bash
-    kubectl -n kuma-demo get service demo-app-gateway
+    kubectl -n kong-mesh-demo get service demo-app-gateway
     ```
 
     You can configure more with this demo, such as changing limits or trying out other examples from this documentation.

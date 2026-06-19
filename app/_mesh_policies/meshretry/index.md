@@ -16,29 +16,53 @@ This policy enables {{site.mesh_product_name}} to know how to behave if there ar
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                 |
-| --------------------- | --------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshExternalService`  |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`           | Allowed kinds                                             |
-| --------------------- | --------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags` |
-| `to[].targetRef.kind` | `Mesh`                                                    |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshExternalService`             |
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 

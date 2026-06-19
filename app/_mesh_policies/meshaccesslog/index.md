@@ -15,37 +15,61 @@ related_resources:
     url: /mesh/meshopentelemetrybackend/
 ---
 
-{% tip %}
-This guide assumes you have already configured your observability tools to work with Kuma.
-If you haven't, see the [observability docs](/docs/{{ page.release }}/explore/observability).
-{% endtip %}
+{:.info}
+> This guide assumes you have already configured your observability tools to work with {{site.mesh_product_name}}.
+> If you haven't, see the [observability docs](/docs/{{ page.release }}/explore/observability).
 
 ## `targetRef` support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`  |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                    |
-| ----------------------- | ------------------------------------------------ |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with `tags` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                            |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+  - targetref: "`from[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`             |
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -53,7 +77,7 @@ To learn more about the information in this table, see the [matching docs](/docs
 
 ### Format
 
-Kuma gives you full control over the format of the access logs.
+{{site.mesh_product_name}} gives you full control over the format of the access logs.
 
 The shape of a single log record is defined by a template string that uses [command operators](https://www.envoyproxy.io/docs/envoy/v1.22.0/configuration/observability/access_log/usage#command-operators) to extract and format data about a `TCP` connection or an `HTTP` request.
 
@@ -65,19 +89,30 @@ For example:
 
 `%START_TIME%` and `%KUMA_SOURCE_SERVICE%` are examples of available _command operators_.
 
-All _command operators_ [defined by Envoy](https://www.envoyproxy.io/docs/envoy/v1.22.0/configuration/observability/access_log/usage#command-operators) are supported, along with additional _command operators_ defined by Kuma:
+All _command operators_ [defined by Envoy](https://www.envoyproxy.io/docs/envoy/v1.22.0/configuration/observability/access_log/usage#command-operators) are supported, along with additional _command operators_ defined by {{site.mesh_product_name}}:
 
-| Command Operator                     | Description                                                      |
-|--------------------------------------|------------------------------------------------------------------|
-| `%KUMA_MESH%`                        | Name of the mesh in which traffic is flowing.                     |
-| `%KUMA_SOURCE_SERVICE%`              | Name of a `service` that is the `source` of traffic.              |
-| `%KUMA_DESTINATION_SERVICE%`         | Name of a `service` that is the `destination` of traffic.         |
-| `%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%` | Address of a `Dataplane` that is the `source` of traffic.         |
-| `%KUMA_TRAFFIC_DIRECTION%`           | Direction of the traffic, `INBOUND`, `OUTBOUND`, or `UNSPECIFIED`. |
+{% table %}
+columns:
+  - title: Command Operator
+    key: command_operator
+  - title: Description
+    key: description
+rows:
+  - command_operator: "`%KUMA_MESH%`"
+    description: Name of the mesh in which traffic is flowing.
+  - command_operator: "`%KUMA_SOURCE_SERVICE%`"
+    description: "Name of a `service` that is the `source` of traffic."
+  - command_operator: "`%KUMA_DESTINATION_SERVICE%`"
+    description: "Name of a `service` that is the `destination` of traffic."
+  - command_operator: "`%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%`"
+    description: "Address of a `Dataplane` that is the `source` of traffic."
+  - command_operator: "`%KUMA_TRAFFIC_DIRECTION%`"
+    description: "Direction of the traffic, `INBOUND`, `OUTBOUND`, or `UNSPECIFIED`."
+{% endtable %}
 
 All additional access log _command operators_ are valid to use with both `TCP` and `HTTP` traffic.
 
-Internally, Kuma [determines traffic protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma) based on the value of `kuma.io/protocol` tag on the `inbound` interface of a `destination` `Dataplane`.
+Internally, {{site.mesh_product_name}} [determines traffic protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma) based on the value of `kuma.io/protocol` tag on the `inbound` interface of a `destination` `Dataplane`.
 
 There are two types of `format`, `plain` and `json`.
 

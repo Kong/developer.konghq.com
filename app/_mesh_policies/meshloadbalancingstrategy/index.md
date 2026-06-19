@@ -14,29 +14,53 @@ When using this policy, the [localityAwareLoadBalancing](/docs/{{ page.release }
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)`            |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshMultiZoneService`            |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshMultiZoneService`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -57,9 +81,8 @@ localityAwareness:
 ```
 
 #### Configuring LocalityAware Load Balancing for traffic within the same zone
-{% warning %}
-If `crossZone` and/or `localZone` is defined, they take precedence over `disabled` and apply more specific configuration.
-{% endwarning %}
+{:.warning}
+> If `crossZone` and/or `localZone` is defined, they take precedence over `disabled` and apply more specific configuration.
 
 Local zone routing allows you to define traffic routing rules within a local zone, prioritizing data planes based on tags and their associated weights. This enables you to allocate specific traffic percentages to data planes with particular tags within the local zone. If there are no healthy endpoints within the highest priority group, the next priority group takes precedence. Locality awareness within the local zone relies on tags within inbounds, so it's crucial to ensure that the tags used in the policy are defined for the service (Dataplane object on Universal, PodTemplate labels on Kubernetes).
 
@@ -69,9 +92,8 @@ Local zone routing allows you to define traffic routing rules within a local zon
     - **`weight`** - (optional) weight of the tag used for load balancing. The bigger the weight the higher number of requests is routed to dataplanes with specific tag. By default we will adjust them so that 90% traffic goes to first tag, 9% to next, and 1% to third and so on.
 
 #### Configuring LocalityAware Load Balancing for traffic across zones
-{% warning %}
-Remember that cross-zone traffic requires [mTLS to be enabled](/docs/{{ page.release }}/policies/mutual-tls).
-{% endwarning %}
+{:.warning}
+> Remember that cross-zone traffic requires [mTLS to be enabled](/docs/{{ page.release }}/policies/mutual-tls).
 Advanced locality-aware load balancing provides a powerful means of defining how your service should behave when there is no instances of your service available or they are in a degraded state in your local zone. With this feature, you have the flexibility to configure the fallback behavior of your service, specifying the order in which it should attempt fallback options and defining different behaviors for instances located in various zones.
 
 - **`crossZone`** - (optional) allows to define behaviour when there is no healthy instances of the service. When not defined, cross zone traffic is disabled.

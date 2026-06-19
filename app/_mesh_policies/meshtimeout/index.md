@@ -9,35 +9,58 @@ type: policy
 icon: meshtimeout.png
 ---
 
-{% warning %}
-This policy uses new policy matching algorithm. 
-Do **not** combine with the deprecated Timeout policy policy.
-{% endwarning %}
+{:.warning}
+> This policy uses new policy matching algorithm.
+> Do **not** combine with the deprecated Timeout policy policy.
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                                                  |
-| ----------------------- | -------------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshHTTPRoute`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`                   |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshHTTPRoute`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags` |
-| `to[].targetRef.kind`   | `Mesh`                                                    |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-| `targetRef`             | Allowed kinds                                                             |
-| ----------------------- | ------------------------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshHTTPRoute`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`, `MeshExternalService`                              |
-{% endtab %}
-{% endtabs %}
+{% navtab "Delegated Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`, `MeshHTTPRoute`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+{% endnavtab %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -85,10 +108,9 @@ This timeout is strongly recommended for all requests (not just streaming reques
 defends against a peer that does not open the stream window once an entire response has been buffered to be sent to a
 downstream client.
 
-{% tip %}
-Stream timeouts apply even when you are only using HTTP/1.1 in you services. This is because every connection between
-data plane proxies is upgraded to HTTP/2.
-{% endtip %}
+{:.info}
+> Stream timeouts apply even when you are only using HTTP/1.1 in you services. This is because every connection between
+> data plane proxies is upgraded to HTTP/2.
 
 #### HTTP max stream duration
 

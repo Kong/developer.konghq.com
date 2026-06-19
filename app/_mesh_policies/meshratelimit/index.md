@@ -22,30 +22,45 @@ The policy is applied per service instance. This means that if a service `backen
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `from[].targetRef.kind` | `Mesh`                                        |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`from[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`           | Allowed kinds                                             |
-| --------------------- | --------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags` |
-| `to[].targetRef.kind` | `Mesh`                                                    |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
+{% navtab "Delegated Gateway" %}
 
-{% warning %}
-`MeshRateLimit` isn't supported on delegated gateways.
-{% endwarning %}
+{:.warning}
+> `MeshRateLimit` isn't supported on delegated gateways.
 
-{% endtab %}
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 

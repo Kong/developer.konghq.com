@@ -17,33 +17,53 @@ A `MeshProxyPatch` policy can modify:
 * [HTTP Filters](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/filter/http/http)
 * [VirtualHost](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#config-route-v3-virtualhost)
 
-{% warning %}
-This policy uses a new policy matching algorithm.
-Do **not** combine with [Proxy Template](/mesh/policies/proxy-template/).
-{% endwarning %}
+{:.warning}
+> This policy uses a new policy matching algorithm.
+> Do **not** combine with [Proxy Template](/mesh/policies/proxy-template/).
 
 ## `targetRef` support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                 |
-| --------------------- | --------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`      | Allowed kinds         |
-| ---------------- | --------------------- |
-| `targetRef.kind` | `Mesh`, `MeshGateway` |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset`"
+{% endtable %}
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -91,8 +111,8 @@ Available matchers:
 * `name` - name of the Cluster.
 * `origin` - origin of the Cluster.
 <!-- vale off -->
-{% tabs %}
-{% tab Kubernetes %}
+{% navtabs "environment" %}
+{% navtab "Kubernetes" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshProxyPatch
@@ -141,8 +161,8 @@ spec:
             name: test-cluster # optional: if absent, all clusters regardless of name will be removed
             origin: inbound # optional: if absent, all clusters regardless of its origin will be removed
 ```
-{% endtab %}
-{% tab Universal %}
+{% endnavtab %}
+{% navtab "Universal" %}
 ```yaml
 type: MeshProxyPatch
 mesh: default
@@ -189,8 +209,8 @@ spec:
             name: test-cluster # optional: if absent, all clusters regardless of name will be removed
             origin: inbound # optional: if absent, all clusters regardless of its origin will be removed
 ```
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 <!-- vale off -->
 #### Listener
 
@@ -206,8 +226,8 @@ Available matchers:
 * `origin` - origin of the Listener.
 * `tags` - tags of inbound or outbound Listeners. They match `Listener.metadata.filterMetadata[io.kuma.tags]` in XDS configuration.
 
-{% tabs %}
-{% tab Kubernetes %}
+{% navtabs "environment" %}
+{% navtab "Kubernetes" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshProxyPatch
@@ -255,8 +275,8 @@ spec:
             name: test-listener # optional: if absent, all listeners regardless of name will be removed
             origin: inbound # optional: if absent, all listeners regardless of its origin will be removed
 ```
-{% endtab %}
-{% tab Universal %}
+{% endnavtab %}
+{% navtab "Universal" %}
 ```yaml
 type: MeshProxyPatch
 mesh: default
@@ -302,8 +322,8 @@ spec:
             name: test-listener # optional: if absent, all listeners regardless of name will be removed
             origin: inbound # optional: if absent, all listeners regardless of its origin will be removed
 ```
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 #### Network Filter
 
@@ -324,8 +344,8 @@ Available matchers:
 * `listenerTags` - tags of inbound or outbound Listeners. They match `Listener.metadata.filterMetadata[io.kuma.tags]` in XDS configuration.
 * `origin` - origin of the Listener.
 
-{% tabs %}
-{% tab Kubernetes %}
+{% navtabs "environment" %}
+{% navtab "Kubernetes" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshProxyPatch
@@ -431,8 +451,8 @@ spec:
               kuma.io/service: backend
             origin: inbound # optional: if absent, all filters regardless of its origin will be removed
 ```
-{% endtab %}
-{% tab Universal %}
+{% endnavtab %}
+{% navtab "Universal" %}
 ```yaml
 type: MeshProxyPatch
 mesh: default
@@ -536,8 +556,8 @@ spec:
               kuma.io/service: backend
             origin: inbound # optional: if absent, all filters regardless of its origin will be removed
 ```
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 #### HTTP Filter
 
@@ -560,8 +580,8 @@ Available matchers:
 * `listenerTags` - tags of inbound or outbound Listeners. They match `Listener.metadata.filterMetadata[io.kuma.tags]` in XDS configuration.
 * `origin` - origin of the Listener.
 
-{% tabs %}
-{% tab Kubernetes %}
+{% navtabs "environment" %}
+{% navtab "Kubernetes" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshProxyPatch
@@ -659,8 +679,8 @@ spec:
               kuma.io/service: backend
             origin: inbound # optional: if absent, all filters regardless of its origin will be removed
 ```
-{% endtab %}
-{% tab Universal %}
+{% endnavtab %}
+{% navtab "Universal" %}
 ```yaml
 type: MeshProxyPatch
 mesh: default
@@ -756,8 +776,8 @@ spec:
               kuma.io/service: backend
             origin: inbound # optional: if absent, all filters regardless of its origin will be removed
 ```
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 #### VirtualHost
 
@@ -775,8 +795,8 @@ Available matchers:
 * `origin` - origin of the VirtualHost.
 * `routeConfigurationName` - name of the [RouteConfiguration](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto.html#http-route-configuration-proto).
 
-{% tabs %}
-{% tab Kubernetes %}
+{% navtabs "environment" %}
+{% navtab "Kubernetes" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshProxyPatch
@@ -829,8 +849,8 @@ spec:
             name: test-listener # optional: if absent, all virtual hsots regardless of name will be removed
             origin: inbound # optional: if absent, all virtual hosts regardless of its origin will be removed
 ```
-{% endtab %}
-{% tab Universal %}
+{% endnavtab %}
+{% navtab "Universal" %}
 ```yaml
 type: MeshProxyPatch
 mesh: default
@@ -881,8 +901,8 @@ spec:
             name: test-listener # optional: if absent, all virtual hsots regardless of name will be removed
             origin: inbound # optional: if absent, all virtual hosts regardless of its origin will be removed
 ```
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Merging
 

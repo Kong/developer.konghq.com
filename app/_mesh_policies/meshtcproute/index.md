@@ -16,28 +16,52 @@ depending on where the request is coming from and where it's going to.
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                 |
-| --------------------- | --------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind` | `MeshService`                                 |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`MeshService`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags` |
-| `to[].targetRef.kind`   | `Mesh`                                                    |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `MeshService`                                            |
-{% endtab %}
-{% endtabs %}
+{% navtab "Delegated Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`MeshService`"
+{% endtable %}
+{% endnavtab %}
+{% endnavtabs %}
 
 For more information, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
