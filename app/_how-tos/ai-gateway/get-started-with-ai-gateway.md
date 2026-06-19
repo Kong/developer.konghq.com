@@ -55,14 +55,16 @@ min_version:
 Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
 
 {% entity_example %}
-type: ai-provider
+type: provider
 data:
   name: openai-provider
-  provider_type: openai
+  type: openai
   config:
     auth:
-      header_name: Authorization
-      header_value: Bearer $OPENAI_API_KEY
+      type: basic
+      headers:
+        - name: Authorization
+          value: $OPENAI_API_KEY
 {% endentity_example %}
 
 ## Create a Model entity
@@ -73,13 +75,10 @@ Create a [Model](/ai-gateway/entities/ai-model/) entity to specify which LLM mod
 type: model
 data:
   name: my-gpt-4o
+  type: model
   enabled: true
-  config:
-    route:
-      paths:
-        - /v1
   capabilities:
-    - generate
+    - chat
   formats:
     - type: openai
   target_models:
@@ -89,7 +88,7 @@ data:
 {% endentity_example %}
 
 {:.success}
-The `generate` capability creates a `/chat/completions` route. The `paths` setting defines the base path prepended to this route template. With `paths: ["/v1"]`, the final route becomes `/v1/chat/completions`.
+The `chat` capability creates a `/chat/completions` route on your AI Gateway Model, allowing clients to send conversational requests to the upstream LLM.
 
 ## Validate
 
@@ -104,7 +103,7 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
-  model: my-gpt-4o
+  model: gpt-4o
   messages:
   - role: "user"
     content: "Say this is a test!"
