@@ -56,9 +56,7 @@ module Jekyll
       if config['status']
         raise ArgumentError, "invalid status: #{config['status']} for #{source_path}" if config['status'] != 'pending'
 
-        raise ArgumentError, "pending entry #{source_path} cannot have a canonical_url." if Jekyll.env == 'production'
-
-        Jekyll.logger.warn 'ReleaseMapLoader:', "Skipping validation for pending entry #{source_path}."
+        Jekyll.logger.warn 'ReleaseMapLoader:', "Pending entry #{source_path}."
 
       elsif config['canonical_url'].nil?
         raise ArgumentError, "blank canonical_url for non-pending entry #{source_path}."
