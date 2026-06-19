@@ -10,30 +10,21 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/vllm/
 
 works_on:
-  - on-prem
   - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
   - vllm
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
 
 min_version:
-  gateway: '3.14'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -70,8 +61,3 @@ variables:
   upstream_url:
     value: $VLLM_UPSTREAM_URL
 {% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)

@@ -360,8 +360,8 @@ app/ai-gateway/v1/ai-otel-metrics.md:
   status: pending
   canonical_url:
 app/ai-gateway/v1/ai-providers/anthropic.md:
-  status: pending
-  canonical_url:
+  #status: pending
+  canonical_url: /ai-gateway/ai-providers/anthropic/
 app/ai-gateway/v1/ai-providers/azure.md:
   status: pending
   canonical_url:
