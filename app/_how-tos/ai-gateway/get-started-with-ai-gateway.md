@@ -39,11 +39,27 @@ prereqs:
         ```sh
         export OPENAI_API_KEY='<api-key>'
         ```
+
+    - title: AI Gateway ID
+      content: |
+        Get your {{site.ai_gateway}} ID from {{site.konnect_product_name}}:
+
+        ```sh
+        curl --request GET \
+          --url 'https://us.api.konghq.com/v1/ai-gateways?page%5Bsize%5D=10&page%5Bnumber%5D=1' \
+          --header 'Accept: application/json, application/problem+json' \
+          --header "Authorization: Bearer $KONNECT_TOKEN"
+        ```
+
+        Save the `id` from the response:
+
+        ```sh
+        export AI_GATEWAY_ID='<your-ai-gateway-id>'
+        ```
 cleanup:
   inline:
     - title: Delete the Provider and Model entities
-      content: |
-        Delete the Provider and Model entities you created by sending `DELETE` requests to the {{site.konnect_product_name}} API.
+      include_content: md/ai-gateway/v2/cleanup/delete-provider-and-model
 
 min_version:
   ai-gateway: '2.0.0'
