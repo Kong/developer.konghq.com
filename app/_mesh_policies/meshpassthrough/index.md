@@ -53,7 +53,7 @@ The following describes the default configuration settings of the `MeshPassthrou
     - **`http`**
     - **`http2`**
     - **`grpc`**
-    {% if_version gte:2.10.x %}- **`mysql`**{% endif_version %}
+    {% new_in 2.10 %}- **`mysql`**
   
 ### Wildcard DNS matching
 
