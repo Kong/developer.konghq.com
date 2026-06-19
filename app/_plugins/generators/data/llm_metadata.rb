@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative 'title/base'
+require_relative '../../lib/major_version_resolver'
 
 module Jekyll
   module Data
@@ -31,12 +32,14 @@ module Jekyll
           'title' => @page.data['llm_title'],
           'description' => @page.data['description'],
           'url' => @page.url,
+          'canonical_url' => @page.data['canonical_url'],
           'content_type' => @page.data['content_type'],
           'third_party' => @page.data['third_party'],
           'premium_partner' => @page.data['premium_partner'],
           'ai_gateway_enterprise' => @page.data['ai_gateway_enterprise'],
           'min_version' => @page.data['min_version'],
           'tier' => @page.data['tier'],
+          'major_version' => resolve_major_version(@page.data['major_version']),
           'tiers' => resolve_tiers(@page.data['tiers']),
           'products' => resolve_names(@page.data['products'], 'products'),
           'tools' => resolve_names(@page.data['tools'], 'tools'),
@@ -55,6 +58,16 @@ module Jekyll
         return if Array(slugs).empty?
 
         Array(slugs).map { |slug| @site.data.dig(data_key, slug, 'name') || slug }
+      end
+
+      def resolve_major_version(major_version)
+        return if major_version.nil? || major_version.empty?
+
+        major_version.each_with_object({}) do |(product, version), out|
+          product_data = @site.data.dig('products', product) || {}
+          name = product_data['name'] || product
+          out[name] = Jekyll::MajorVersionResolver.process(product_data:, major: version)
+        end
       end
 
       def resolve_tiers(tiers)
