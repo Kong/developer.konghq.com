@@ -72,27 +72,31 @@ Create a [Model](/ai-gateway/entities/ai-model/) entity to specify which LLM mod
 {% entity_example %}
 type: model
 data:
-  name: gpt-4-turbo
+  name: my-gpt-4o
   enabled: true
+  config:
+    route:
+      paths:
+        - /v1
   capabilities:
-    - chat
+    - generate
   formats:
     - type: openai
   target_models:
-    - name: gpt-4-turbo
+    - name: gpt-4o
       provider:
         name: openai-provider
 {% endentity_example %}
 
 {:.success}
-The `chat` capability creates a `/v1/chat/cmpletions` route for chat completions.
+The `generate` capability creates a `/chat/completions` route. The `paths` setting defines the base path prepended to this route template. With `paths: ["/v1"]`, the final route becomes `/v1/chat/completions`.
 
 ## Validate
 
 Send a chat request to verify your setup:
 
 {% validation request-check %}
-url: /v1/chat/cmpletions
+url: /v1/chat/completions
 status_code: 200
 method: POST
 headers:
@@ -100,7 +104,7 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
-  model: gpt-4-turbo
+  model: my-gpt-4o
   messages:
   - role: "user"
     content: "Say this is a test!"
