@@ -408,6 +408,8 @@ kiali
 Kibana
 kibibytes
 kic
+kimi
+Kimi
 knative
 Knative's
 Knatives
@@ -886,6 +888,8 @@ validators
 Valkey
 vararg
 vc
+vercel
+Vercel
 viewport
 viewports
 vllm
