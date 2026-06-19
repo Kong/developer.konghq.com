@@ -33,7 +33,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -61,7 +61,7 @@ To learn more about the information in this table, see the [matching docs](/docs
 
 ## Configuration
 
-`MeshFaultInjection` allows configuring a list of HTTP faults. They execute in the same order as they were defined.
+`MeshFaultInjection` lets you configure a list of HTTP faults. They execute in the same order as they were defined.
 
 ```yaml
 default:
@@ -101,14 +101,14 @@ That means that for 70% of requests, it returns 500 and for 50% of the 30% that 
 Abort defines a configuration of not delivering requests to destination service and replacing the responses from destination data plane by
 predefined status code.
 
-- `httpStatus` - HTTP status code which will be returned to source side, has to be in [100 - 599] range
+- `httpStatus` - HTTP status code returned to the source side, in the [100 - 599] range
 - `percentage` - a percentage of requests on which abort will be injected, has to be in [0.0 - 100.0] range. If the value is a double number, put it in quotes.
 
 ### Delay
 
 Delay defines a configuration of delaying a response from a destination.
 
-- `value` - the duration during which the response will be delayed
+- `value` - the duration during which the response is delayed
 - `percentage` - a percentage of requests on which abort will be injected, has to be in [0.0 - 100.0] range. If the value is a double number, put it in quotes.
 
 ### ResponseBandwidth limit

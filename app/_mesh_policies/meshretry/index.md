@@ -34,7 +34,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -74,7 +74,7 @@ To learn more about the information in this table, see the [matching docs](/docs
 
 ## Configuration
 
-The policy let you configure retry behaviour for `HTTP`, `GRPC` and `TCP` protocols.
+The policy let you configure retry behavior for `HTTP`, `GRPC` and `TCP` protocols.
 The protocol is selected by picking the most [specific protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma).
 
 Each protocol has a separate section under `default` in the policy yaml.

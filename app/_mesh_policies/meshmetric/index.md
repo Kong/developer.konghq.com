@@ -55,7 +55,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -95,7 +95,7 @@ There are three main sections of the configuration: `sidecar`, `applications`, `
 The first two define how to scrape parts of the mesh (sidecar and underlying applications), the third one defines what to do with the data (in case of Prometheus instructs to scrape specific address, in case of OpenTelemetry defines where to push data).
 
 {:.info}
-> In contrast to [Traffic Metrics](/docs/{{ page.release }}/policies/traffic-metrics) all configuration is dynamic and no restarts of the Data Plane Proxies are needed.
+> In contrast to [Traffic Metrics](/docs/{{ page.release }}/policies/traffic-metrics) all configuration is dynamic and no restarts of the data plane proxies are needed.
 > You can define configuration refresh interval by using `KUMA_DATAPLANE_RUNTIME_DYNAMIC_CONFIGURATION_REFRESH_INTERVAL` env var or `{{site.set_flag_values_prefix}}dataplaneRuntime.dynamicConfiguration.refreshInterval` Helm value.
 
 ### Sidecar
@@ -255,7 +255,7 @@ By default, all available metrics are returned.
 
 ##### Secure metrics with TLS
 
-{{site.mesh_product_name}} allows configuring metrics endpoint with TLS.
+{{site.mesh_product_name}} lets you configure metrics endpoint with TLS.
 
 ```yaml
 backends:
@@ -318,7 +318,7 @@ We no longer support `activeMTLSBackend`, if you need to encrypt and authorize t
 
 ##### Running multiple Prometheus deployments
 
-If you need to run multiple instances of Prometheus and want to target different set of Data Plane Proxies you can do this by using Client ID setting on both `MeshMetric` (`clientId`) and [Prometheus configuration](https://github.com/prometheus/prometheus/pull/13278/files#diff-17f1012e0c2fbd9bcd8dff3c23b18ff4b6676eef3beca6f8a3e72e6a36633334R2233) (`client_id`).
+If you need to run multiple instances of Prometheus and want to target different set of data plane proxies you can do this by using Client ID setting on both `MeshMetric` (`clientId`) and [Prometheus configuration](https://github.com/prometheus/prometheus/pull/13278/files#diff-17f1012e0c2fbd9bcd8dff3c23b18ff4b6676eef3beca6f8a3e72e6a36633334R2233) (`client_id`).
 
 {:.warning}
 > Support for `clientId` was added in Prometheus version `2.50.0`.

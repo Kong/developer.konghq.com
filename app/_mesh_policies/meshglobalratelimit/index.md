@@ -62,12 +62,12 @@ limits, deny response is returned.
 
 Besides the basic service configuration that is provided on startup, the ratelimit service needs a limits configuration. Limits configuration
 is loaded dynamically from the control plane. Ratelimit service uses xDS protocol for this, which is the same protocol that the data plane proxy
-uses for communicating with the control plane. The control plane will periodically compute any new limits configuration and send it to ratelimit service.
+uses for communicating with the control plane. The control plane periodically computes any new limits configuration and sends it to the ratelimit service.
 
 ### Rate limiting algorithm
 
 The ratelimit service uses a fixed window algorithm. It allocates a new counter for each time unit. Let's assume that we have configured limits to 
-10 requests per minute. At the beginning of each minute, ratelimit service will create a new counter. 
+10 requests per minute. At the beginning of each minute, ratelimit service creates a new counter. 
 
 <center>
   <img src="/assets/images/mesh/ratelimit-algorithm.png"/>
@@ -95,8 +95,8 @@ When it comes to multi-zone deployments, you should deploy the ratelimit service
 </center>
 > Figure 3: Diagram of multi-zone ratelimit setup with Redis per zone.
 
-The first option is to deploy Redis in every zone. In this setup, limits will be applied per zone. Since each zone will have its own counters cache, 
-requests will be faster, and it will be easier to distribute your system geographically.
+The first option is to deploy Redis in every zone. In this setup, limits apply per zone. Since each zone has its own counters cache,
+requests are faster, and it will be easier to distribute your system geographically.
 
 <center>
   <img src="/assets/images/mesh/ratelimit-service-multizone-single-redis.png"/>
@@ -132,7 +132,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -353,7 +353,7 @@ spec:
 ### Combining MeshRateLimit with MeshGlobalRateLimit
 
 You can combine MeshRateLimit and MeshGlobalRateLimit policies. By doing this, you can specify a local limit that is more strict than the global rate limit.
-When the local rate limit is reached, the data plane proxy will stop sending requests to ratelimit service. 
+When the local rate limit is reached, the data plane proxy stops sending requests to the ratelimit service. 
 
 This could lower network traffic between the data plane proxy and the ratelimit service. Also, it can protect your ratelimit service from a DDoS "attack" by your services. 
 Moreover, this could be used to more evenly distribute traffic to the ratelimit service and mitigate the problem of depleting whole limit at the beginning of the counter window.
@@ -472,7 +472,7 @@ The descriptor key will always be `kuma.io/service`, and the descriptor value wi
 Therefore, we can deduct that this configuration will apply to `demo-app_kuma-demo_svc_5000` service in the `default`
 mesh. For the second part of the configuration, we have information about the request limit and unit to which 
 this limit will be applied. Shadow mode specifies if request should be limited after reaching the configured limit. If `shadow_mode` is set 
-to `true`, the ratelimit service will not deny requests to your service, it will only update the ratelimit service metrics.
+to `true`, the ratelimit service does not deny requests to your service, it only updates the ratelimit service metrics.
 
 ### Performance improvements
 
