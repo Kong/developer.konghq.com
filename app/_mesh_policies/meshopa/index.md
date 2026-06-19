@@ -24,37 +24,25 @@ When the `MeshOPA` policy is applied, the control plane configures the following
 
 ## TargetRef support matrix
 
-{% if_version gte:2.11.x %}Add `commentMore` actions
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endtab %}
+{% navtabs "targetref" %}
+{% navtab "Sidecar" %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`                                     |
-{% endtab %}
-{% endtabs %}
-{% endif_version %}
-{% if_version lte:2.10.x %}
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-{% endtab %}
+`targetRef.kind` supported values:
+- `Mesh`
+- `Dataplane` {% new_in 2.11 %}
+- `MeshSubset` (deprecated)
+- `MeshService` (removed in 2.11)
+- `MeshServiceSubset` (removed in 2.11)
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`                                     |
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% navtab "Built-in Gateway" %}
 
-{% endif_version %}
+`targetRef.kind` supported values:
+- `Mesh`
+- `MeshGateway`
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Configuration
 
