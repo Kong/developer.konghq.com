@@ -5,7 +5,14 @@ require_relative '../../../../app/_plugins/generators/release_map_loader'
 RSpec.describe Jekyll::ReleaseMapLoader do
   subject(:generator) { described_class.new }
 
-  let(:site) { instance_double(Jekyll::Site, pages: pages, documents: documents) }
+  let(:data) do
+    { 'products' => { 'ai-gateway' => { 'name' => 'AI Gateway',
+                                        'previous_major_url_segment' => 'v<major>',
+
+                                        'releases' => [{ 'release' => '2.0', 'latest' => true },
+                                                       { 'release' => '1.0' }] } } }
+  end
+  let(:site) { instance_double(Jekyll::Site, pages: pages, documents: documents, data:) }
   let(:pages) { [] }
   let(:documents) { [] }
 
@@ -29,6 +36,16 @@ RSpec.describe Jekyll::ReleaseMapLoader do
 
   let(:release_map) { {} }
 
+  shared_examples 'sets the banner info for a page' do
+    it 'attaches cross_major_banner_info to the page' do
+      generator.generate(site)
+      expect(prev_major_page.data['cross_major_banner_info']).to eq(
+        'product' => 'AI Gateway',
+        'major_version' => 'v1'
+      )
+    end
+  end
+
   describe '#generate' do
     context 'with a release-map entry pointing at a live current-major page' do
       let(:pages) { [prev_major_page, current_major_page] }
@@ -40,6 +57,8 @@ RSpec.describe Jekyll::ReleaseMapLoader do
         generator.generate(site)
         expect(prev_major_page.data['canonical_url']).to eq('/ai-gateway/valid-page/')
       end
+
+      it_behaves_like 'sets the banner info for a page'
     end
 
     context 'with a status: pending entry' do
@@ -52,6 +71,8 @@ RSpec.describe Jekyll::ReleaseMapLoader do
         generator.generate(site)
         expect(prev_major_page.data['canonical_url']).to be_nil
       end
+
+      it_behaves_like 'sets the banner info for a page'
     end
 
     context 'with a status other than pending entry' do
@@ -90,6 +111,8 @@ RSpec.describe Jekyll::ReleaseMapLoader do
         generator.generate(site)
         expect(prev_major_page.data['canonical_url']).to eq('/ai-gateway/v1/valid-page/')
       end
+
+      it_behaves_like 'sets the banner info for a page'
     end
   end
 end
