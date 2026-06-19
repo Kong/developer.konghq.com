@@ -17,7 +17,7 @@ related_resources:
     url: /mesh/kubernetes-gateway-api/
 
 min_version:
-  mesh: '2.9'
+  mesh: '2.11'
 
 products:
   - mesh
@@ -103,6 +103,9 @@ In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-ap
    kv-648747567c-qhmxj                2/2     Running   0          106s
    ```
    {:.no-copy-code}
+
+   {:.info}
+   > It can take a few minutes for the `built-in-gateway` Pod to appear. If you only see the `demo-app` and `kv` Pods, wait and try again.
    
 1. Export the gateway's public IP: 
 
@@ -213,7 +216,6 @@ In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-ap
    ```
    {:.no-copy-code}
 
-<!-- Removed until we figure out why it doesn't work
 
 ## Secure your endpoint
 
@@ -225,20 +227,40 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=$PROXY_IP"
    ```
 
-1. Create a Kubernetes secret containing the certificate and key:   
+1. Create a Kubernetes secret containing the certificate and key in the `kong-mesh-system` namespace:
+
    ```sh
    echo "apiVersion: v1
    kind: Secret
    metadata:
      name: my-gateway-certificate
-     namespace: kong-mesh-demo
+     namespace: kong-mesh-system
    type: kubernetes.io/tls
    data:
      tls.crt: "$(cat tls.crt | base64)"
      tls.key: "$(cat tls.key | base64)"" | kubectl apply -f - 
    ```
-   
-1. Update the gateway to use the certificate:
+
+1. Create a `ReferenceGrant` to allow the `Gateway` in `kong-mesh-demo` to reference the Secret in `kong-mesh-system`:
+
+   ```sh
+   echo "apiVersion: gateway.networking.k8s.io/v1beta1
+   kind: ReferenceGrant
+   metadata:
+     name: allow-gateway-cert
+     namespace: kong-mesh-system
+   spec:
+     from:
+       - group: gateway.networking.k8s.io
+         kind: Gateway
+         namespace: kong-mesh-demo
+     to:
+       - group: \"\"
+         kind: Secret
+         name: my-gateway-certificate" | kubectl apply -f -
+   ```
+
+1. Enable TLS and add the certificate to the `Gateway`:
 
    ```sh
    echo "apiVersion: gateway.networking.k8s.io/v1
@@ -255,7 +277,7 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
          tls:
            certificateRefs:
              - name: my-gateway-certificate
-               namespace: kong-mesh-demo" | kubectl apply -f -
+               namespace: kong-mesh-system" | kubectl apply -f -
    ```
 
 1. Send a request to the gateway:   
@@ -270,47 +292,54 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
 
    ```sh
    *   Trying 127.0.0.0:8080...
-   * Connected to 127.0.0.0 (127.0.0.0) port 8080
    * ALPN: curl offers h2,http/1.1
-   * (304) (OUT), TLS handshake, Client hello (1):
-   * (304) (IN), TLS handshake, Server hello (2):
-   * (304) (IN), TLS handshake, Unknown (8):
-   * (304) (IN), TLS handshake, Certificate (11):
-   * (304) (IN), TLS handshake, CERT verify (15):
-   * (304) (IN), TLS handshake, Finished (20):
-   * (304) (OUT), TLS handshake, Finished (20):
-   * SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+   * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+   * SSL Trust: peer verification disabled
+   * TLSv1.3 (IN), TLS handshake, Server hello (2):
+   * TLSv1.3 (IN), TLS change cipher, Change cipher spec (1):
+   * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+   * TLSv1.3 (IN), TLS handshake, Certificate (11):
+   * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+   * TLSv1.3 (IN), TLS handshake, Finished (20):
+   * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+   * TLSv1.3 (OUT), TLS handshake, Finished (20):
+   * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / x25519 / RSASSA-PSS
    * ALPN: server accepted h2
    * Server certificate:
-   *  subject: CN=127.0.0.0
-   *  start date: Jan  6 14:38:19 2026 GMT
-   *  expire date: Jan  6 14:38:19 2027 GMT
-   *  issuer: CN=127.0.0.0
-   *  SSL certificate verify result: self signed certificate (18), continuing anyway.
+   *   subject: CN=127.0.0.0
+   *   start date: May 29 16:22:26 2026 GMT
+   *   expire date: May 29 16:22:26 2027 GMT
+   *   issuer: CN=127.0.0.0
+   *   Certificate level 0: Public key type RSA (2048/112 Bits/secBits), signed using sha256WithRSAEncryption
+   * SSL certificate OpenSSL verify result: self-signed certificate (18)
+   *  SSL certificate verification failed, continuing anyway!
+   * Established connection to 127.0.0.0 (127.0.0.0 port 8080) from 192.168.139.3 port 63650 
    * using HTTP/2
    * [HTTP/2] [1] OPENED stream for https://127.0.0.0:8080/api/counter
    * [HTTP/2] [1] [:method: POST]
    * [HTTP/2] [1] [:scheme: https]
    * [HTTP/2] [1] [:authority: 127.0.0.0:8080]
    * [HTTP/2] [1] [:path: /api/counter]
-   * [HTTP/2] [1] [user-agent: curl/8.7.1]
+   * [HTTP/2] [1] [user-agent: curl/8.17.0]
    * [HTTP/2] [1] [accept: */*]
    > POST /api/counter HTTP/2
    > Host: 127.0.0.0:8080
-   > User-Agent: curl/8.7.1
+   > User-Agent: curl/8.17.0
    > Accept: */*
    > 
    * Request completely sent off
+   * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+   * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
    < HTTP/2 200 
    < content-type: application/json; charset=utf-8
    < x-demo-app-version: v1
-   < date: Tue, 06 Jan 2026 15:01:35 GMT
+   < date: Fri, 29 May 2026 16:22:48 GMT
    < content-length: 24
-   < x-envoy-upstream-service-time: 25
+   < x-envoy-upstream-service-time: 15
    < server: Kuma Gateway
    < strict-transport-security: max-age=31536000; includeSubDomains
    < 
    {"counter":2,"zone":""}
+   * Connection #0 to host 127.0.0.0:8080 left intact
    ```
    {:.no-copy-code}
--->

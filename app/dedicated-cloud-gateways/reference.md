@@ -408,10 +408,12 @@ config:
       The logs are available in {{site.konnect_short_name}}, in the **Logs** tab of the data plane node.
   - name: request_debug_token
   - name: tracing_instrumentations
+  - name: router_flavor
   - name: tracing_sampling_rate
+  - name: untrusted_lua
   - name: untrusted_lua_sandbox_requires
   - name: allow_debug_header
-  - name: header_upstream
+  - name: headers_upstream
     description: |
       Comma-separated list of headers Kong should inject in requests to upstream.
 
@@ -428,8 +430,12 @@ config:
   - name: real_ip_header
   - name: headers
   - name: trusted_ips
+  - name: pdk_response_exit_header_filter_early_exit
 {% endkong_config_table %}
 <!--vale on -->
+
+{:.warning}
+> **Important:** You can only set environment variables prefixed with `KONG_` or `OTEL_`.
 
 ### How do I set environment variables?
 

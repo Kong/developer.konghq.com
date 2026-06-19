@@ -35,7 +35,7 @@ sections:
             url: /index/catalog/
 
       - title: Insomnia
-        icon: /assets/icons/insomnia/insomnia-logo-bug.svg
+        icon: /assets/icons/insomnia/insomnia.svg
         icon_alt: Insomnia icon
         description: "Design, debug, test, and mock APIs locally, on Git, or cloud"
         links:
@@ -109,20 +109,6 @@ sections:
             url: /how-to/?products=mesh
           - text: All documentation
             url: /index/mesh/
-
-      - title: KIC
-        icon: /assets/icons/kubernetes.svg
-        icon_alt: Kong Ingress Controller icon
-        description: "Kong's Kubernetes-native controller to manage API traffic for containerized apps"
-        links:
-          - text: Overview
-            url: /kubernetes-ingress-controller/
-          - text: Install
-            url: /kubernetes-ingress-controller/install/
-          - text: How-to guides
-            url: /how-to/?products=kic
-          - text: All documentation
-            url: /index/kubernetes-ingress-controller/
 
       - title: Operator
         icon: /assets/icons/kubernetes.svg
