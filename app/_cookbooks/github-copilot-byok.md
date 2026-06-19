@@ -43,7 +43,7 @@ prereqs:
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
+        This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped control plane and local data plane.
 
         1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token. The same token is reused later for kongctl commands:
@@ -52,7 +52,7 @@ prereqs:
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped Control Plane name and run the quickstart script. The `-e` flags raise the data plane's nginx body buffer so Copilot's large request payloads (full conversation context, tool definitions, file contents) stay in memory instead of spilling to disk:
+        1. Set the recipe-scoped control plane name and run the quickstart script. The `-e` flags raise the data plane's nginx body buffer so Copilot's large request payloads (full conversation context, tool definitions, file contents) stay in memory instead of spilling to disk:
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='github-copilot-byok-recipe'
@@ -63,7 +63,7 @@ prereqs:
                --deck-output
            ```
 
-           This provisions a {{site.konnect_product_name}} Control Plane named `github-copilot-byok-recipe`, a local Data Plane connected to it, and prints `export` lines for the rest of the session vars. Paste those into your shell when prompted.
+           This provisions a {{site.konnect_product_name}} control plane named `github-copilot-byok-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars. Paste those into your shell when prompted.
     - title: kongctl + decK + jq
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration, plus [jq](https://jqlang.org/) for JSON processing in the apply and cleanup steps.
@@ -151,17 +151,19 @@ overview: |
   control point you own. Kong holds the provider API key and injects it server-side,
   authenticates each developer with a Consumer-scoped credential, normalizes the
   request body so reasoning models accept it, and attributes every token to a named
-  developer in {{site.konnect_short_name}} Analytics.
+  developer in {{site.konnect_short_name}} {{site.observability}}
 
   The recipe configures Copilot's
   [Bring Your Own Key (BYOK) Custom Endpoint](https://code.visualstudio.com/docs/copilot/customization/language-models)
   in VS Code to post to a Kong Route at `/github-copilot/v1/chat/completions`, then
-  uses four Kong Plugins on that Route: the [Pre-function](/plugins/pre-function/)
-  Plugin to normalize the request, the [Key Auth](/plugins/key-auth/) Plugin to
-  authenticate each developer, the [AI Proxy Advanced](/plugins/ai-proxy-advanced/)
-  Plugin to inject the provider key and forward the request, and the
-  [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) Plugin to enforce
-  per-Consumer token budgets.
+  uses four Kong plugins on that Route: 
+    * The [Pre-function](/plugins/pre-function/)
+  plugin to normalize the request
+    * The [Key Auth](/plugins/key-auth/) plugin to
+  authenticate each developer, 
+    * The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin to inject the provider key and forward the request
+    * The [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) plugin to enforce
+  per-Consumer token budgets
 
   Scope: this recipe governs Copilot Chat and agent traffic (the Chat view, agent
   modes, and Copilot CLI). Inline ghost-text code completions always run on
@@ -171,7 +173,7 @@ overview: |
 
 ## The problem
 
-Routing GitHub Copilot through a central control point breaks down on three independent fronts at once. Each one is a real wall teams hit; together they are why naive provider-credential reuse falls apart.
+Routing GitHub Copilot through a central control point breaks down on three independent fronts at once. Each one is a real wall teams hit; together they are why provider-credential reuse falls apart.
 
 **Credentials live on developer machines.** A team that enables Copilot BYOK without a gateway distributes provider API keys directly to every engineer through 1Password, shell profiles, or chat. Every request is indistinguishable on the provider bill, every leaked key is a fleet-wide rotation, and there is no way to revoke one developer without touching everyone.
 
@@ -182,7 +184,7 @@ Routing GitHub Copilot through a central control point breaks down on three inde
 ```
 {:.no-copy-code}
 
-There is nowhere in VS Code's BYOK configuration to fix this. The request has to be normalized at the gateway.
+You can't fix this in VS Code's BYOK configuration. The request has to be normalized at the gateway.
 
 **Org-policy model allowlists reject the wrong name.** GitHub Copilot Business and Enterprise let admins pin an allowlist of model IDs that BYOK requests are permitted to claim. A request that names any other model is rejected by Copilot before it ever leaves VS Code, with:
 
@@ -201,8 +203,8 @@ The root issue is that trust, normalization, and accounting all need to happen o
 
 This recipe puts {{site.base_gateway}} between VS Code and the LLM provider so every Copilot Chat or agent request flows through a server you control:
 
-- **Developers never hold the provider key.** Kong holds it and injects it server-side. Each developer authenticates to Kong with their own short-lived Consumer credential, which is the value they paste into VS Code's `apiKey` field. Rotating one developer is a single deck-config change; rotating the provider key is also one change, not a fleet-wide push.
-- **Per-Consumer attribution.** Every request is attributed to a named Consumer in {{site.konnect_short_name}} Analytics, so cost, token usage, and model mix can be sliced per developer.
+- **Developers never hold the provider key.** Kong holds it and injects it server-side. Each developer authenticates to Kong with their own short-lived Consumer credential, which is the value they paste into VS Code's `apiKey` field. Rotating one developer is a single decK-config change; rotating the provider key is also one change, not a fleet-wide push.
+- **Per-Consumer attribution.** Every request is attributed to a named Consumer in {{site.konnect_short_name}} {{site.observability}}, so cost, token usage, and model mix can be sliced per developer.
 - **Server-side request normalization.** A Pre-function Plugin instance runs ahead of every other Plugin on the Route and rewrites two things in the request before any other Plugin sees it: it converts Copilot's `Authorization: Bearer <apiKey>` header into the `apikey` header that the Key Auth Plugin expects, and it strips `temperature` from the JSON body so reasoning models accept the request.
 - **Token-budget rate limiting.** Each Consumer has a per-minute token budget enforced by the AI Rate Limiting Advanced Plugin. Exhaustion returns `429 Too Many Requests` until the window resets.
 - **Org-allowlist alignment.** The Kong target's `model_alias` is parameterized by `DECK_CHAT_MODEL`, so the same env var pins both the name VS Code sends and the name Kong matches against. If the org policy mandates `gpt-5-mini`, you set the env var to `gpt-5-mini`, and the VS Code `id` field uses the same value. Kong's `model.name` independently controls what is actually sent upstream.
@@ -238,7 +240,7 @@ columns:
 rows:
   - component: "VS Code GitHub Copilot extension"
     responsibility: "Posts Chat and agent requests to the Custom Endpoint URL using the OpenAI Chat Completions API shape."
-  - component: "Kong, [Pre-function](/plugins/pre-function/) Plugin"
+  - component: "Kong, [Pre-function](/plugins/pre-function/) plugin"
     responsibility: "Rewrites `Authorization: Bearer` to `apikey` so Key Auth can match it; strips `temperature` from the body so reasoning models accept it."
   - component: "Kong, [Key Auth](/plugins/key-auth/) Plugin"
     responsibility: "Validates the per-developer credential and attaches the request to the matching Consumer for downstream attribution and rate-limit counting."
@@ -437,7 +439,7 @@ rows:
 When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `Retry-After` header.
 
 {:.info}
-> In production, store provider credentials in [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. Per-developer Consumer credentials are also good vault candidates as the team scales beyond a handful of seats.
+> In production, store provider credentials in [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, Azure, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. Per-developer Consumer credentials are also good vault candidates as the team scales beyond a handful of seats.
 
 
 ## Apply the Kong configuration
@@ -1244,7 +1246,7 @@ If **Observability → Custom dashboards → `Copilot Usage`** shows no data 5+ 
    ```
    {% endraw %}
 
-   A healthy node shows a successful connection to `<region>.tp.konghq.com:443`. Repeated TLS or DNS errors mean telemetry is silently dropping; restart the container and re-check.
+   A healthy node shows a successful connection to `{region}.tp.konghq.com:443`. Repeated TLS or DNS errors mean telemetry is silently dropping; restart the container and re-check.
 
 1. **Confirm raw requests are landing in Konnect.** Open **Observability → Analytics → Requests**, scope to the `github-copilot-byok-recipe` Control Plane, and verify recent 2xx entries appear. If this view is populated but the custom dashboard is not, the dashboard's filter or tiles are the issue. If this view is also empty, telemetry is the issue (step 2).
 
