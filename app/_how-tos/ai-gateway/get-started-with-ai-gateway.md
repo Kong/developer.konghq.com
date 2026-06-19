@@ -70,18 +70,24 @@ min_version:
 
 Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
 
-{% entity_example %}
-type: provider
-data:
-  name: openai-provider
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: OpenAI Production
+  name: my-openai-account
   type: openai
   config:
     auth:
       type: basic
       headers:
         - name: Authorization
-          value: $OPENAI_API_KEY
-{% endentity_example %}
+          value: Bearer $OPENAI_API_KEY
+{% endkonnect_api_request %}
 
 ## Create a Model entity
 
