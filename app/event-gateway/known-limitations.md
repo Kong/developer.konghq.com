@@ -8,6 +8,16 @@ description: This page lists the current {{site.event_gateway}} limitations.
 related_resources:
   - text: "{{site.event_gateway}}"
     url: /event-gateway/
+  - text: "Upgrading {{site.event_gateway_short}}"
+    url: /event-gateway/upgrade/
+  - text: "{{site.event_gateway_short}} breaking changes and known issues"
+    url: /event-gateway/breaking-changes/
+  - text: "{{site.event_gateway_short}} version support"
+    url: /event-gateway/version-support-policy/
+  - text: "{{site.event_gateway_short}} changelog"
+    url: /event-gateway/changelog/
+  - text: "Verify {{site.event_gateway_short}} image signatures and attestations"
+    url: /event-gateway/verify-image-signatures-and-attestations/
 
 products:
     - event-gateway
