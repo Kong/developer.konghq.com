@@ -287,7 +287,7 @@ rows:
 {% navtabs  "configuration" %}
 {% navtab "kumactl" %}
 
-When you deploy the Mesh control plane, edit the `kong-mesh-control plane-config` ConfigMap:
+When you deploy the Mesh control plane, edit the `kong-mesh-control-plane-config` ConfigMap:
 
 ```yaml
 apiVersion: v1

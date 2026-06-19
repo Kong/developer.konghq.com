@@ -216,7 +216,7 @@ spec:
 ```
 {% endnavtab %}
 {% endnavtabs %}
-<!-- vale off -->
+<!-- vale on -->
 #### Listener
 
 Modifications that are applied on [Listeners](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#config-listener-v3-listener) resources.
