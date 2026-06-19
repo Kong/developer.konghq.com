@@ -20,6 +20,20 @@ module Jekyll
       page = find_page_by_path!(relative_path, site)
 
       page.data['canonical_url'] = config['canonical_url'] if config['canonical_url']
+
+      set_major_banner_info(site, page)
+    end
+
+    def set_major_banner_info(site, page)
+      major_version = page.data['major_version'].first
+
+      if major_version
+        product_data = site.data.dig('products', major_version[0])
+        page.data['cross_major_banner_info'] = {
+          'product' => product_data['name'],
+          'major_version' => MajorVersionResolver.process(product_data:, major: major_version[1])
+        }
+      end
     end
 
     def find_page_by_path!(relative_path, site)
