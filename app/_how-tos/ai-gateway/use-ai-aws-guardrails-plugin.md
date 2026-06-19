@@ -53,7 +53,9 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: AWS Account
       content: |
-        To complete this tutorial, you will need the following credentials
+        To complete this tutorial, you will need either:
+        
+        1. The following credentials:
 
         * AWS_REGION
         * AWS_ACCESS_KEY_ID
@@ -65,6 +67,8 @@ prereqs:
         export DECK_AWS_ACCESS_KEY_ID='YOUR_AWS_ACCESS_KEY'
         export DECK_AWS_SECRET_ACCESS_KEY='YOUR_AWS_SECRET_ACCESS_KEY'
         ```
+
+        2. Or an (e.g.) AWS IAM Web Identity / Instance Profile / etc IAM Role, assigned the the workload that is running the Kong instance(s).
       icon_url: /assets/icons/aws.svg
 
     - title: Bedrock Guardrail
@@ -116,6 +120,8 @@ variables:
 
 Now, we can configure our AI AWS Guardrails plugin to enforce content moderation policies by attaching a predefined Bedrock guardrail to requests.
 
+For static IAM keys, configure the plugin as follows:
+
 {% entity_examples %}
 entities:
   plugins:
@@ -139,6 +145,34 @@ variables:
     value: $AWS_SECRET_ACCESS_KEY
 {% endentity_examples %}
 
+
+Whereas for an assigned Web Identity / Instance Profile / etc IAM Role, simply leave the `aws_access_key_id` and `aws_secret_access_key`
+fields empty. In this setup example, Kong will run through the [standard credentials provider chain](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_default_chain.html) and select the first successfully
+authenticated credential set.
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-aws-guardrails
+      config:
+        guardrails_id: ${guardrails_id}
+        guardrails_version: ${guardrails_version}
+        aws_region: ${aws_region}
+variables:
+  guardrails_id:
+    value: $GUARDRAILS_ID
+  guardrails_version:
+    value: $GUARDRAILS_VERSION
+  aws_region:
+    value: $AWS_REGION
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+{% endentity_examples %}
+
+You can also set the `aws_assume_role_arn` to also use the assigned identity to assume a **second** role,
+either in the same AWS account or in another.
 
 ## Test the configuration
 
