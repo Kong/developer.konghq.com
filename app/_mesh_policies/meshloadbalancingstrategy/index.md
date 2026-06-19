@@ -10,7 +10,7 @@ icon: policy.svg
 ---
 
 This policy enables {{site.mesh_product_name}} to configure the load balancing strategy for traffic between services in the mesh.
-When using this policy, the [localityAwareLoadBalancing](/mesh/policies/meshloadbalancingstrategy/#localityawareness) flag is ignored.
+When using this policy, the `localityAwareLoadBalancing` flag is ignored.
 
 ## TargetRef support matrix
 
@@ -76,7 +76,7 @@ To learn more about the information in this table, see the [matching docs](/mesh
 Locality-aware load balancing provides robust and straightforward method for balancing traffic within and across zones. This not only allows you to route traffic across zones when the local zone service is unhealthy but also enables you to define traffic prioritization within the local zone and set cross-zone fallback priorities.
 
 #### Default behavior
-Locality-aware load balancing is enabled by default, unlike its predecessor [localityAwareLoadBalancing](/mesh/policies/meshloadbalancingstrategy/#localityawareness). Requests are distributed across all endpoints within the local zone first unless there are not enough healthy endpoints.
+Locality-aware load balancing is enabled by default, unlike its predecessor `localityAwareLoadBalancing`. Requests are distributed across all endpoints within the local zone first unless there are not enough healthy endpoints.
 
 #### Disabling locality aware routing
 If you do so, all endpoints regardless of their zone will be treated equally. To do this do:

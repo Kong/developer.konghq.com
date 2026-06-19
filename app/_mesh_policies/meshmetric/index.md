@@ -95,7 +95,7 @@ There are three main sections of the configuration: `sidecar`, `applications`, `
 The first two define how to scrape parts of the mesh (sidecar and underlying applications), the third one defines what to do with the data (in case of Prometheus instructs to scrape specific address, in case of OpenTelemetry defines where to push data).
 
 {:.info}
-> In contrast to [Traffic Metrics](/mesh/policies/meshmetric/) all configuration is dynamic and no restarts of the data plane proxies are needed.
+> In contrast to Traffic Metrics, all configuration is dynamic and no restarts of the data plane proxies are needed.
 > You can define configuration refresh interval by using `KUMA_DATAPLANE_RUNTIME_DYNAMIC_CONFIGURATION_REFRESH_INTERVAL` env var or `{{site.set_flag_values_prefix}}dataplaneRuntime.dynamicConfiguration.refreshInterval` Helm value.
 
 ### Sidecar
@@ -409,7 +409,7 @@ backends:
 ```
 
 This configuration tells {{site.mesh_product_name}} Dataplane Proxy to push metrics to [OpenTelemetry collector](https://opentelemetry.io/docs/collector/).
-Dataplane Proxy will scrape metrics from Envoy and other [applications](/mesh/policies/meshmetric/#applications) in a Pod/VM
+Dataplane Proxy will scrape metrics from Envoy and other applications in a Pod/VM
 and push them to configured OpenTelemetry collector, by default every **60 seconds** (use `refreshInterval` to change it).
 
 When you configure application scraping make sure to specify `application.name` to use [OpenTelemetry scoping](https://opentelemetry.io/docs/concepts/instrumentation-scope/).

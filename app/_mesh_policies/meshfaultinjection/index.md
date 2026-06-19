@@ -11,7 +11,7 @@ icon: meshfaultinjection.png
 
 {:.warning}
 > This policy uses a new policy matching algorithm.
-> Do **not** combine with the now deprecated [FaultInjection](/mesh/policies/meshfaultinjection/).
+> Do **not** combine with the now deprecated FaultInjection policy.
 
 ## `targetRef` support matrix
 
