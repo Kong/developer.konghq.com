@@ -224,7 +224,7 @@ rules:
 
 ### Backends
 
-- **`kind`** - one of `MeshService`, `MeshServiceSubset`, `MeshExtenalService`
+- **`kind`** - one of `MeshService`, `MeshServiceSubset`, `MeshExternalService`
 - **`name`** - service name
 - **`tags`** - service tags, must be specified if the `kind` is `MeshServiceSubset`
 - **`weight`** - when a request matches the route, the choice of an upstream cluster

@@ -70,7 +70,7 @@ The following describes the default configuration settings of the `MeshPassthrou
     - **`http`**
     - **`http2`**
     - **`grpc`**
-    {% new_in 2.10 %}- **`mysql`**
+    - {% new_in 2.10 %} **`mysql`**
   
 ### Wildcard DNS matching
 

@@ -10,8 +10,8 @@ icon: meshtimeout.png
 ---
 
 {:.warning}
-> This policy uses new policy matching algorithm.
-> Do **not** combine with the deprecated Timeout policy policy.
+> This policy uses a new policy matching algorithm.
+> Do **not** combine with the deprecated Timeout policy.
 
 ## TargetRef support matrix
 
@@ -115,7 +115,7 @@ defends against a peer that does not open the stream window once an entire respo
 downstream client.
 
 {:.info}
-> Stream timeouts apply even when you are only using HTTP/1.1 in you services. This is because every connection between
+> Stream timeouts apply even when you are only using HTTP/1.1 in your services. This is because every connection between
 > data plane proxies is upgraded to HTTP/2.
 
 #### HTTP max stream duration
