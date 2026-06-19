@@ -169,11 +169,14 @@ grok: Grok
 cerebras: Cerebras
 ollama: Ollama
 deepseek: DeepSeek
+vercel: Vercel
+kimi: Kimi
 # Product names
 google_cloud: Google Cloud
 google_analytics: Google Analytics
 claude: Claude
 claude_code: Claude Code
+kimi_code: Kimi Code
 gtm: Google Tag Manager
 
 
