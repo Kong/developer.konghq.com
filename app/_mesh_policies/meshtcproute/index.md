@@ -69,7 +69,7 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
-For more information, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+For more information, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 

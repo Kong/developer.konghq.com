@@ -68,7 +68,7 @@ rows:
 
 {% endnavtabs %}
 
-If you don't understand this table you should read [matching docs](/docs/{{ page.release }}/policies/introduction).
+If you don't understand this table you should read [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
@@ -113,7 +113,7 @@ Otherwise, we recommend migrating to new policies and then removing `TrafficRout
 
 When several `MeshHTTPRoute` policies target the same data plane proxy they're merged.
 Similar to the new policies the merging order is determined by
-[the top level targetRef](/docs/{{ page.release }}/policies/introduction).
+[the top level targetRef](/mesh/policies-introduction/).
 The difference is in `spec.to[].rules`.
 {{site.mesh_product_name}} treats `rules` as a key-value map
 where `matches` is a key and `default` is a value. For example MeshHTTPRoute policies:

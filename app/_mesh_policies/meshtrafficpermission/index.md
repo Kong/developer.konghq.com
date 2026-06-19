@@ -13,7 +13,7 @@ icon: meshtrafficpermission.png
 > Do **not** combine with the deprecated TrafficPermission policy.
 
 {:.info}
-> [Mutual TLS](/docs/{{ page.release }}/policies/mutual-tls) has to be enabled to make MeshTrafficPermission work.
+> [Mutual TLS](/mesh/policies/mutual-tls/) has to be enabled to make MeshTrafficPermission work.
 
 The `MeshTrafficPermission` policy provides access control within the Mesh.
 It allows you to define granular rules about which services can communicate with each other.
@@ -38,7 +38,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 {% navtab "Built-in Gateway" %}
-`MeshTrafficPermission` isn't supported on builtin gateways. If applied via
+`MeshTrafficPermission` isn't supported on built-in gateways. If applied via
 `spec.targetRef.kind: MeshService`, it has no effect.
 {% endnavtab %}
 
@@ -47,7 +47,7 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
-If you don't understand this table you should read [matching docs](/docs/{{ page.release }}/policies/introduction).
+If you don't understand this table you should read [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 

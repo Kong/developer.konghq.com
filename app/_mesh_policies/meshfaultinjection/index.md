@@ -11,7 +11,7 @@ icon: meshfaultinjection.png
 
 {:.warning}
 > This policy uses a new policy matching algorithm.
-> Do **not** combine with the now deprecated [FaultInjection](/docs/{{ page.release }}/policies/fault-injection).
+> Do **not** combine with the now deprecated [FaultInjection](/mesh/policies/meshfaultinjection/).
 
 ## `targetRef` support matrix
 
@@ -57,7 +57,7 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 

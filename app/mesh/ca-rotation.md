@@ -34,7 +34,7 @@ related_resources:
 
 
 {{site.mesh_product_name}} lets you provide secure communication between applications with mTLS. You can change the mTLS backend with 
-Certificate Authority rotation, to support a scenario such as migrating from the builtin CA to a Vault CA.
+Certificate Authority rotation, to support a scenario such as migrating from the built-in CA to a Vault CA.
 
 You can define many backends in the `mtls` section of the Mesh configuration. The Data Plane proxy is configured to support 
 certificates signed by the CA of each defined backend. However, the proxy uses only one certificate, specified by the `enabledBackend` 

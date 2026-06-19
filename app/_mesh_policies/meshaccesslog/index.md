@@ -17,7 +17,7 @@ related_resources:
 
 {:.info}
 > This guide assumes you have already configured your observability tools to work with {{site.mesh_product_name}}.
-> If you haven't, see the [observability docs](/docs/{{ page.release }}/explore/observability).
+> If you haven't, see the [observability docs](/mesh/observability/).
 
 ## `targetRef` support matrix
 
@@ -77,7 +77,7 @@ rows:
 
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
@@ -120,7 +120,7 @@ rows:
 
 All additional access log _command operators_ are valid to use with both `TCP` and `HTTP` traffic.
 
-Internally, {{site.mesh_product_name}} [determines traffic protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma) based on the value of `kuma.io/protocol` tag on the `inbound` interface of a `destination` `Dataplane`.
+Internally, {{site.mesh_product_name}} determines traffic protocol based on the value of `kuma.io/protocol` tag on the `inbound` interface of a `destination` `Dataplane`.
 
 There are two types of `format`, `plain` and `json`.
 

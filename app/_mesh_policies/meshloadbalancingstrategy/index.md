@@ -10,7 +10,7 @@ icon: policy.svg
 ---
 
 This policy enables {{site.mesh_product_name}} to configure the load balancing strategy for traffic between services in the mesh.
-When using this policy, the [localityAwareLoadBalancing](/docs/{{ page.release }}/policies/locality-aware) flag is ignored.
+When using this policy, the [localityAwareLoadBalancing](/mesh/policies/meshloadbalancingstrategy/#localityawareness) flag is ignored.
 
 ## TargetRef support matrix
 
@@ -68,7 +68,7 @@ rows:
 
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
@@ -76,7 +76,7 @@ To learn more about the information in this table, see the [matching docs](/docs
 Locality-aware load balancing provides robust and straightforward method for balancing traffic within and across zones. This not only allows you to route traffic across zones when the local zone service is unhealthy but also enables you to define traffic prioritization within the local zone and set cross-zone fallback priorities.
 
 #### Default behavior
-Locality-aware load balancing is enabled by default, unlike its predecessor [localityAwareLoadBalancing](/docs/{{ page.release }}/policies/locality-aware). Requests are distributed across all endpoints within the local zone first unless there are not enough healthy endpoints.
+Locality-aware load balancing is enabled by default, unlike its predecessor [localityAwareLoadBalancing](/mesh/policies/meshloadbalancingstrategy/#localityawareness). Requests are distributed across all endpoints within the local zone first unless there are not enough healthy endpoints.
 
 #### Disabling locality aware routing
 If you do so, all endpoints regardless of their zone will be treated equally. To do this do:
@@ -99,7 +99,7 @@ Local zone routing allows you to define traffic routing rules within a local zon
 
 #### Configuring LocalityAware load balancing for traffic across zones
 {:.warning}
-> Remember that cross-zone traffic requires [mTLS to be enabled](/docs/{{ page.release }}/policies/mutual-tls).
+> Remember that cross-zone traffic requires [mTLS to be enabled](/mesh/policies/mutual-tls/).
 Advanced locality-aware load balancing provides a powerful means of defining how your service should behave when there is no instances of your service available or they are in a degraded state in your local zone. With this feature, you have the flexibility to configure the fallback behavior of your service, specifying the order in which it should attempt fallback options and defining different behaviors for instances located in various zones.
 
 - **`crossZone`** - (optional) allows to define behavior when there is no healthy instances of the service. When not defined, cross zone traffic is disabled.

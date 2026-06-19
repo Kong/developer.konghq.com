@@ -24,7 +24,7 @@ When an unhealthy proxy returns to a healthy state,
 
 This policy provides **active** checks.
 If you want to configure **passive** checks,
-please use the [MeshCircuitBreaker](/docs/{{ page.release }}/policies/meshcircuitbreaker) policy.
+please use the [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) policy.
 Data plane proxies with **active** checks will explicitly send requests to other data plane proxies to determine if target proxies are healthy or not.
 This mode generates extra traffic to other proxies and services as described in the policy configuration.
 
@@ -84,7 +84,7 @@ rows:
 
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
@@ -92,7 +92,7 @@ The `MeshHealthCheck` policy supports both L4/TCP and L7/HTTP/gRPC checks.
 
 ### Protocol selection
 
-The health check protocol is selected by picking the most [specific protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma)
+The health check protocol is selected by picking the most specific protocol
 and falls back to more general protocol when specified protocol has `disabled=true` in policy definition.
 See [protocol fallback example](#protocol-fallback).
 
@@ -109,7 +109,7 @@ See [protocol fallback example](#protocol-fallback).
   `intervalJitterPercent` / 100 to the wait time. If `intervalJitter` and
   `intervalJitterPercent` are both set, both of them will be used to increase the wait time.
 - **`healthyPanicThreshold`** - (optional) allows to configure panic threshold for Envoy clusters. If not specified,
-  the default is 50%. To disable panic mode, set to 0%. ⚠️This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/docs/{{ page.release }}/policies/meshcircuitbreaker).⚠️
+  the default is 50%. To disable panic mode, set to 0%. ⚠️This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).⚠️
 - **`failTrafficOnPanic`** - (optional) if set to true, Envoy will not consider any hosts when the cluster is in
   'panic mode'. Instead, the cluster will fail all requests as if all hosts are unhealthy.
   This can help avoid potentially overwhelming a failing service.

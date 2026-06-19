@@ -31,7 +31,7 @@ proxy extends the [baseEjectionTime](#outlier-detection) multiplied by the numbe
 the fourth ejection lasts for a period of `4 * baseEjectionTime`.
 
 This policy provides **passive** checks.
-If you want to configure **active** checks, please use the [MeshHealthCheck](/docs/{{ page.release }}/policies/meshhealthcheck)
+If you want to configure **active** checks, please use the [MeshHealthCheck](/mesh/policies/meshhealthcheck/)
 policy.
 Data plane proxies with **passive** checks won't explicitly send requests to other data plane proxies to determine if
 target proxies are healthy or not.
@@ -92,7 +92,7 @@ rows:
 {% endnavtabs %}
 
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
@@ -112,7 +112,7 @@ To learn more about the information in this table, see the [matching docs](/docs
 
 ### Outlier detection
 
-Outlier detection can be configured for [HTTP, TCP or gRPC](/docs/{{ page.release }}/policies/protocol-support-in-kuma) traffic.
+Outlier detection can be configured for HTTP, TCP or gRPC traffic.
 
 {:.warning}
 > For **gRPC** requests, the outlier detection will use the HTTP status mapped from the `grpc-status` response header.
@@ -182,7 +182,7 @@ spec:
 
 This detection type takes into account only externally originated (transaction) errors, ignoring locally originated ones.
 
-[**HTTP**](/docs/{{ page.release }}/policies/protocol-support-in-kuma)
+**HTTP**
 
 If an upstream host is an HTTP-server, only 5xx types of error are taken into account (see Consecutive Gateway Failure for exceptions).
 

@@ -35,7 +35,7 @@ To collect metrics from {{site.mesh_product_name}}, you need to expose metrics f
 
 {:.info}
 > In the rest of this page we assume you have already configured your observability tools to work with {{site.mesh_product_name}}.
-> If you haven't already read the [observability docs](/docs/{{ page.release }}/explore/observability).
+> If you haven't already read the [observability docs](/mesh/observability/).
 
 ## TargetRef support matrix
 
@@ -87,7 +87,7 @@ rows:
 
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
@@ -95,7 +95,7 @@ There are three main sections of the configuration: `sidecar`, `applications`, `
 The first two define how to scrape parts of the mesh (sidecar and underlying applications), the third one defines what to do with the data (in case of Prometheus instructs to scrape specific address, in case of OpenTelemetry defines where to push data).
 
 {:.info}
-> In contrast to [Traffic Metrics](/docs/{{ page.release }}/policies/traffic-metrics) all configuration is dynamic and no restarts of the data plane proxies are needed.
+> In contrast to [Traffic Metrics](/mesh/policies/meshmetric/) all configuration is dynamic and no restarts of the data plane proxies are needed.
 > You can define configuration refresh interval by using `KUMA_DATAPLANE_RUNTIME_DYNAMIC_CONFIGURATION_REFRESH_INTERVAL` env var or `{{site.set_flag_values_prefix}}dataplaneRuntime.dynamicConfiguration.refreshInterval` Helm value.
 
 ### Sidecar
@@ -223,7 +223,7 @@ It is possible to configure it at the `Mesh` level, for all the applications in 
 Here are reasons where you'd want to use this feature:
 - Application metrics are labelled with your mesh parameters (tags, mesh, data plane name...), this means that in mixed Universal and Kubernetes mode metrics are reported with the same types of labels.
 - Both application and sidecar metrics are scraped at the same time. This makes sure they are coherent (with 2 different scrapers they can end up scraping at different intervals and make metrics harder to correlate).
-- If you disable [passthrough](/docs/{{ page.release }}/networking/non-mesh-traffic#outgoing) and your mesh uses mTLS and Prometheus is outside the mesh this is the only way to retrieve these metrics as the app is completely hidden behind the sidecar.
+- If you disable passthrough and your mesh uses mTLS and Prometheus is outside the mesh this is the only way to retrieve these metrics as the app is completely hidden behind the sidecar.
 
 Example section of the configuration:
 
@@ -277,7 +277,7 @@ When the certificate and key are available within the container, `kuma-sidecar` 
 * `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH`
 * `KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`
 
-It's possible to use a [`ContainerPatch`](/docs/{{ page.release }}/production/dp-config/dpp-on-kubernetes/#custom-container-configuration) to add variables to `kuma-sidecar`:
+It's possible to use a [`ContainerPatch`](/mesh/data-plane-kubernetes/#custom-container-configuration) to add variables to `kuma-sidecar`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -409,7 +409,7 @@ backends:
 ```
 
 This configuration tells {{site.mesh_product_name}} Dataplane Proxy to push metrics to [OpenTelemetry collector](https://opentelemetry.io/docs/collector/).
-Dataplane Proxy will scrape metrics from Envoy and other [applications](/docs/{{ page.release }}/policies/meshmetric/#applications) in a Pod/VM
+Dataplane Proxy will scrape metrics from Envoy and other [applications](/mesh/policies/meshmetric/#applications) in a Pod/VM
 and push them to configured OpenTelemetry collector, by default every **60 seconds** (use `refreshInterval` to change it).
 
 When you configure application scraping make sure to specify `application.name` to use [OpenTelemetry scoping](https://opentelemetry.io/docs/concepts/instrumentation-scope/).

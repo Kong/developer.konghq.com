@@ -67,7 +67,7 @@ FIPS support is provided by implementing Envoy's FIPS-compliant mode for BoringS
 
 {{site.mesh_product_name}} lets you provide secure communication between applications with mTLS.
 You can change the mTLS backend with [Certificate Authority rotation](/mesh/ca-rotation/),
-to support a scenario such as migrating from the builtin CA to a Vault CA.
+to support a scenario such as migrating from the built-in CA to a Vault CA.
 
 ## Role-Based Access Control (RBAC)
 

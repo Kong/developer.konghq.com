@@ -70,12 +70,12 @@ rows:
 
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
 The policy let you configure retry behavior for `HTTP`, `GRPC` and `TCP` protocols.
-The protocol is selected by picking the most [specific protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma).
+The protocol is selected by picking the most specific protocol.
 
 Each protocol has a separate section under `default` in the policy yaml.
 Some sections are common between protocols or have similar meaning.

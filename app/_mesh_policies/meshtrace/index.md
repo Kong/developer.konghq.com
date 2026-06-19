@@ -22,7 +22,7 @@ related_resources:
 This policy enables publishing traces to a third party tracing solution.
 
 Tracing is supported over HTTP, HTTP2, and gRPC protocols.
-You must [explicitly specify the protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma) for each service and data plane proxy you want to enable tracing for.
+You must explicitly specify the protocol for each service and data plane proxy you want to enable tracing for.
 
 {{site.mesh_product_name}} currently supports the following trace exposition formats:
 
@@ -92,7 +92,7 @@ rows:
 
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
