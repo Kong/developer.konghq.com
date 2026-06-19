@@ -24,6 +24,7 @@ The policy is applied per service instance. This means that if a service `backen
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -36,9 +37,11 @@ rows:
   - targetref: "`from[].targetRef.kind`"
     allowed_kinds: "`Mesh`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Builtin Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -51,6 +54,7 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}

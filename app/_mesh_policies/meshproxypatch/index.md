@@ -25,6 +25,7 @@ A `MeshProxyPatch` policy can modify:
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -35,9 +36,11 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Builtin Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -48,9 +51,11 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshGateway`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -61,6 +66,7 @@ rows:
   - targetref: "`targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset`"
 {% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% endnavtabs %}
@@ -110,7 +116,6 @@ Available operations:
 Available matchers:
 * `name` - name of the Cluster.
 * `origin` - origin of the Cluster.
-<!-- vale off -->
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 ```yaml
