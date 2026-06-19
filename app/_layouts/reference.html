@@ -2,6 +2,7 @@
 layout: with_aside
 ---
 
+{% unless page.major_version %}
 {% if page.auto_generated %}
   {% unless page.canonical? or page.latest? %}
     <blockquote class="warning !block">
@@ -9,6 +10,7 @@ layout: with_aside
     </blockquote>
   {% endunless %}
 {% endif %}
+{% endunless %}
 
 {{ content }}
 
