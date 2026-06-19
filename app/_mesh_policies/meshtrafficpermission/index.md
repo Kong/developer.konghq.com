@@ -8,36 +8,42 @@ content_type: plugin
 type: policy
 icon: meshtrafficpermission.png
 ---
-{% warning %}
-This policy uses new policy matching algorithm.
-Do **not** combine with the deprecated TrafficPermission policy.
-{% endwarning %}
+{:.warning}
+> This policy uses new policy matching algorithm.
+> Do **not** combine with the deprecated TrafficPermission policy.
 
-{% tip %}
-[Mutual TLS](/docs/{{ page.release }}/policies/mutual-tls) has to be enabled to make MeshTrafficPermission work.
-{% endtip %}
+{:.info}
+> [Mutual TLS](/docs/{{ page.release }}/policies/mutual-tls) has to be enabled to make MeshTrafficPermission work.
 
 The `MeshTrafficPermission` policy provides access control within the Mesh.
 It allows you to define granular rules about which services can communicate with each other.
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshServiceSubset`     |
-{% endtab %}
-{% tab Builtin Gateway %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`from[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`, `MeshServiceSubset`"
+{% endtable %}
+{% endnavtab %}
+{% navtab "Builtin Gateway" %}
 `MeshTrafficPermission` isn't supported on builtin gateways. If applied via
 `spec.targetRef.kind: MeshService`, it has no effect.
-{% endtab %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
+{% navtab "Delegated Gateway" %}
 `MeshTrafficPermission` isn't supported on delegated gateways.
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 If you don't understand this table you should read [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -55,7 +61,7 @@ If you don't understand this table you should read [matching docs](/docs/{{ page
 
 ### Service 'payments' allows requests from 'orders'
 
-{% policy_yaml namespace=kuma-demo %}
+{% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshTrafficPermission
 name: allow-orders
@@ -106,7 +112,7 @@ spec:
 
 ### Deny all
 
-{% policy_yaml namespace=kuma-demo %}
+{% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshTrafficPermission
 name: deny-all
@@ -139,7 +145,7 @@ spec:
 
 ### Allow all
 
-{% policy_yaml namespace=kuma-demo %}
+{% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshTrafficPermission
 name: allow-all
@@ -172,7 +178,7 @@ spec:
 
 ### Allow requests from zone 'us-east', deny requests from 'dev' environment
 
-{% policy_yaml namespace=kuma-demo %}
+{% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshTrafficPermission
 name: example-with-tags
@@ -231,8 +237,7 @@ spec:
       action: Deny
     ```
 
-{% tip %}
-Order of rules inside the `from` array matters. 
-Request from the proxy that has both `kuma.io/zone: east` and `env: dev` will be denied. 
-This is because the rule with `Deny` is later in the `from` array than any `Allow` rules.
-{% endtip %}
+{:.info}
+> Order of rules inside the `from` array matters.
+> Request from the proxy that has both `kuma.io/zone: east` and `env: dev` will be denied.
+> This is because the rule with `Deny` is later in the `from` array than any `Allow` rules.

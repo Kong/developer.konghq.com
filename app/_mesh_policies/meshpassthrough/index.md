@@ -16,26 +16,39 @@ When using this policy, the [passthrough mode](/docs/{{ page.release }}/networki
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                 |
-| --------------------- | --------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endtab %}
-{% tab Delegated Gateway %}
-| `targetRef`             | Allowed kinds        |
-| ----------------------- | -------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset` |
-{% endtab %}
-{% endtabs %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+{% endtable %}
+{% endnavtab %}
+{% navtab "Delegated Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+{% endtable %}
+{% endnavtab %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
 ## Configuration
 
-{% warning %}
-This policy doesn't work with sidecars without [transparent-proxy](/docs/{{ page.release }}/networking/transparent-proxying/#what-is-transparent-proxying).
-{% endwarning %}
+{:.warning}
+> This policy doesn't work with sidecars without [transparent-proxy](/docs/{{ page.release }}/networking/transparent-proxying/#what-is-transparent-proxying).
 
 The following describes the default configuration settings of the `MeshPassthrough` policy:
 
@@ -59,9 +72,8 @@ The following describes the default configuration settings of the `MeshPassthrou
 
 `MeshPassthrough` policy allows you to create a match for a wildcard subdomain.
 
-{% warning %}
-Currently, support for partial subdomain matching is not implemented. For example, a match for `*w.example.com` will be rejected.
-{% endwarning %}
+{:.warning}
+> Currently, support for partial subdomain matching is not implemented. For example, a match for `*w.example.com` will be rejected.
 
 {% policy_yaml %}
 ```yaml

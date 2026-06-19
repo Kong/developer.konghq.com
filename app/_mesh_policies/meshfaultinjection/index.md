@@ -9,34 +9,49 @@ type: policy
 icon: meshfaultinjection.png
 ---
 
-{% warning %}
-This policy uses a new policy matching algorithm.
-Do **not** combine with the now deprecated [FaultInjection](/docs/{{ page.release }}/policies/fault-injection).
-{% endwarning %}
+{:.warning}
+> This policy uses a new policy matching algorithm.
+> Do **not** combine with the now deprecated [FaultInjection](/docs/{{ page.release }}/policies/fault-injection).
 
 ## `targetRef` support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshServiceSubset`     |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`from[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`, `MeshServiceSubset`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`                                                   |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
+{% navtab "Delegated Gateway" %}
 
 `MeshFaultInjection` isn't supported on delegated gateways.
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 

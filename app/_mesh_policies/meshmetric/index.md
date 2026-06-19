@@ -33,33 +33,53 @@ Moreover, {{site.mesh_product_name}} provides integration with OpenTelemetry:
 
 To collect metrics from {{site.mesh_product_name}}, you need to expose metrics from proxies and applications.
 
-{% tip %}
-In the rest of this page we assume you have already configured your observability tools to work with {{site.mesh_product_name}}.
-If you haven't already read the [observability docs](/docs/{{ page.release }}/explore/observability).
-{% endtip %}
+{:.info}
+> In the rest of this page we assume you have already configured your observability tools to work with {{site.mesh_product_name}}.
+> If you haven't already read the [observability docs](/docs/{{ page.release }}/explore/observability).
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags` |
-{% endtab %}
+{% navtab "Builtin Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+{% endtable %}
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+{% endtable %}
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
@@ -68,10 +88,9 @@ To learn more about the information in this table, see the [matching docs](/docs
 There are three main sections of the configuration: `sidecar`, `applications`, `backends`.
 The first two define how to scrape parts of the mesh (sidecar and underlying applications), the third one defines what to do with the data (in case of Prometheus instructs to scrape specific address, in case of OpenTelemetry defines where to push data).
 
-{% tip %}
-In contrast to [Traffic Metrics](/docs/{{ page.release }}/policies/traffic-metrics) all configuration is dynamic and no restarts of the Data Plane Proxies are needed.
-You can define configuration refresh interval by using `KUMA_DATAPLANE_RUNTIME_DYNAMIC_CONFIGURATION_REFRESH_INTERVAL` env var or `{{site.set_flag_values_prefix}}dataplaneRuntime.dynamicConfiguration.refreshInterval` Helm value.
-{% endtip %}
+{:.info}
+> In contrast to [Traffic Metrics](/docs/{{ page.release }}/policies/traffic-metrics) all configuration is dynamic and no restarts of the Data Plane Proxies are needed.
+> You can define configuration refresh interval by using `KUMA_DATAPLANE_RUNTIME_DYNAMIC_CONFIGURATION_REFRESH_INTERVAL` env var or `{{site.set_flag_values_prefix}}dataplaneRuntime.dynamicConfiguration.refreshInterval` Helm value.
 
 ### Sidecar
 
@@ -111,7 +130,7 @@ Today only 3 profiles are available: `All`, `Basic` and `None`.
 
 ##### Include unused metrics of only Basic profile with manual exclude and include
 
-{% policy_yaml namespace=kuma-demo %}
+{% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshMetric
 mesh: default
@@ -139,7 +158,7 @@ spec:
 
 ##### Include only manually defined metrics
 
-{% policy_yaml namespace=kuma-demo %}
+{% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshMetric
 mesh: default
@@ -163,7 +182,7 @@ spec:
 
 ##### Exclude all metrics apart from one manually added
 
-{% policy_yaml namespace=kuma-demo %}
+{% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshMetric
 mesh: default
@@ -187,9 +206,8 @@ spec:
 
 ### Applications
 
-{% warning %}
-Metrics exposed by the application need to be in Prometheus format for the Dataplane Proxy to be able to parse and expose them to either Prometheus or OpenTelemetry backend.
-{% endwarning %}
+{:.warning}
+> Metrics exposed by the application need to be in Prometheus format for the Dataplane Proxy to be able to parse and expose them to either Prometheus or OpenTelemetry backend.
 
 In addition to exposing metrics from the data plane proxies, you might want to expose metrics from applications running next to the proxies.
 {{site.mesh_product_name}} allows scraping Prometheus metrics from the applications endpoint running in the same `Pod` or `VM`.
@@ -245,8 +263,8 @@ backends:
 
 In addition to the `MeshMetric` configuration, `kuma-sidecar` requires a provided certificate and key for its operation.
 
-{% tabs %}
-{% tab Kubernetes %}
+{% navtabs "environment" %}
+{% navtab "Kubernetes" %}
 
 When the certificate and key are available within the container, `kuma-sidecar` needs the paths to provided files as the following environment variables:
 
@@ -260,7 +278,7 @@ apiVersion: kuma.io/v1alpha1
 kind: ContainerPatch
 metadata:
   name: container-patch-1
-  namespace: kuma-system
+  namespace: kong-mesh-system
 spec:
   sidecarPatch:
     - op: add
@@ -277,16 +295,16 @@ spec:
         }'
 ```
 
-{% endtab %}
-{% tab Universal %}
+{% endnavtab %}
+{% navtab "Universal" %}
 
 Please upload the certificate and the key to the machine, and then define the following environment variables with the correct paths:
 
 	* `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH`
 	* `KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 ##### `activeMTLSBackend`
 
@@ -296,9 +314,8 @@ We no longer support `activeMTLSBackend`, if you need to encrypt and authorize t
 
 If you need to run multiple instances of Prometheus and want to target different set of Data Plane Proxies you can do this by using Client ID setting on both `MeshMetric` (`clientId`) and [Prometheus configuration](https://github.com/prometheus/prometheus/pull/13278/files#diff-17f1012e0c2fbd9bcd8dff3c23b18ff4b6676eef3beca6f8a3e72e6a36633334R2233) (`client_id`).
 
-{% warning %}
-Support for `clientId` was added in Prometheus version `2.50.0`.
-{% endwarning %}
+{:.warning}
+> Support for `clientId` was added in Prometheus version `2.50.0`.
 
 ###### Example Prometheus configuration
 

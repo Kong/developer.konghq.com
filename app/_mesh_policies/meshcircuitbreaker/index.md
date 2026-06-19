@@ -40,24 +40,48 @@ target proxies are healthy or not.
 
 {% navtabs "support matrix" %}
 {% navtab "Sidecar" %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                         |
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
 {% endnavtab %}
 
 {% navtab "Builtin Gateway" %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -84,9 +108,8 @@ To learn more about the information in this table, see the [matching docs](/docs
 
 Outlier detection can be configured for [HTTP, TCP or gRPC](/docs/{{ page.release }}/policies/protocol-support-in-kuma) traffic.
 
-{% warning %}
-For **gRPC** requests, the outlier detection will use the HTTP status mapped from the `grpc-status` response header.
-{% endwarning %}
+{:.warning}
+> For **gRPC** requests, the outlier detection will use the HTTP status mapped from the `grpc-status` response header.
 
 - **`disabled`** - (optional) When set to true, `outlierDetection` configuration won't take any effect.
 - **`interval`** - (optional) The time interval between ejection analysis sweeps. This can result in both new ejections
@@ -107,17 +130,16 @@ For **gRPC** requests, the outlier detection will use the HTTP status mapped fro
 
 Configuration for supported outlier detectors. At least one detector needs to be configured when policy is configured for outlier detection.
 
-{% tabs %}
-{% tab detectors Total Failures %}
+{% navtabs "detectors" %}
+{% navtab "Total Failures" %}
 
 Depending on mode the outlier detection can take into account all or externally originated (transaction) errors only. 
 
-{% tabs %}
-{% tab totalFailures_modes Default Mode %}
+{% navtabs "totalFailures-modes" %}
+{% navtab "Default Mode" %}
 
-{% tip %}
-Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-{% endtip %}
+{:.info}
+> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
 This detection type takes into account all generated errors: **locally originated** and **externally originated** (transaction) errors.
 
@@ -145,13 +167,12 @@ spec:
             consecutive: 10
 ```
 
-{% endtab %}
+{% endnavtab %}
 
-{% tab totalFailures_modes Split Mode %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 This detection type takes into account only externally originated (transaction) errors, ignoring locally originated ones.
 
@@ -159,9 +180,8 @@ This detection type takes into account only externally originated (transaction) 
 
 If an upstream host is an HTTP-server, only 5xx types of error are taken into account (see Consecutive Gateway Failure for exceptions).
 
-{% warning %}
-Properly formatted responses, even when they carry an operational error (like index not found, access denied) are not taken into account.
-{% endwarning %}
+{:.warning}
+> Properly formatted responses, even when they carry an operational error (like index not found, access denied) are not taken into account.
 
 **Configuration**
 
@@ -187,20 +207,19 @@ spec:
             consecutive: 10
 ```
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
-{% endtab %}
-{% tab detectors Gateway Failures %}
+{% endnavtab %}
+{% navtab "Gateway Failures" %}
 
 Depending on mode the outlier detection can take into account gateway failures with locally originated failures (default mode) or gateway failures only (split mode).
 
-{% tabs %}
-{% tab gatewayFailures_modes Default Mode %}
+{% navtabs "gatewayFailures-modes" %}
+{% navtab "Default Mode" %}
 
-{% tip %}
-Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-{% endtip %}
+{:.info}
+> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
 This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code) and local origin failures, such as **timeout**, **TCP reset** etc.
 
@@ -228,19 +247,17 @@ spec:
             consecutive: 10
 ```
 
-{% endtab %}
+{% endnavtab %}
 
-{% tab gatewayFailures_modes Split Mode %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code).
 
-{% warning %}
-This detector is supported only for HTTP traffic.
-{% endwarning %}
+{:.warning}
+> This detector is supported only for HTTP traffic.
 
 **Configuration**
 
@@ -267,26 +284,24 @@ spec:
             consecutive: 10
 ```
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
-{% endtab %}
-{% tab detectors Locally Originated Failures %}
+{% endnavtab %}
+{% navtab "Locally Originated Failures" %}
 
-{% warning %}
-This detection is supported only in Split Mode
-{% endwarning %}
+{:.warning}
+> This detection is supported only in Split Mode
 
 This detection takes into account only locally originated errors (timeout, reset, etc).
 
 If Envoy repeatedly cannot connect to an upstream host or communication with the upstream host is repeatedly interrupted, it will be ejected. Various locally originated problems are detected: timeout, TCP reset, ICMP errors, etc.
 
-{% tabs %}
-{% tab localOriginFailures_modes Split Mode %}
+{% navtabs "localOriginFailures-modes" %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 **Configuration**
 
@@ -311,16 +326,16 @@ spec:
           localOriginFailures:
             consecutive: 10
 ```
-{% endtab %}
-{% tab localOriginFailures_modes Default Mode %}
+{% endnavtab %}
+{% navtab "Default Mode" %}
 
 This detection is not supported in the Default Mode
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
-{% endtab %}
-{% tab detectors Success Rate %}
+{% endnavtab %}
+{% navtab "Success Rate" %}
 
 Success Rate based outlier detection aggregates success rate data from every host in an Envoy Cluster. Then at given intervals ejects hosts based on statistical outlier detection.
 
@@ -329,26 +344,24 @@ value.
 
 Moreover, detection will not be performed for a cluster if the number of hosts with the minimum required request volume in an interval is less than the `successRate.minimumHosts` value.
 
-{% tabs %}
-{% tab successRate_modes Default Mode %}
+{% navtabs "successRate-modes" %}
+{% navtab "Default Mode" %}
 
-{% tip %}
-Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-{% endtip %}
+{:.info}
+> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
 This detection type takes into account all types of errors: locally and externally originated.
 
-{% endtab %}
-{% tab successRate_modes Split Mode %}
+{% endnavtab %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 Locally originated errors and externally originated (transaction) errors are counted and treated separately.
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 **Configuration**
 
@@ -378,8 +391,8 @@ spec:
             standardDeviationFactor: "1.9"
 ```
 
-{% endtab %}
-{% tab detectors Failure Percentage %}
+{% endnavtab %}
+{% navtab "Failure Percentage" %}
 
 Failure Percentage based outlier detection functions similarly to success rate detection, in that it relies on success rate data from each host in an Envoy Cluster. However, rather than compare those values to the mean success rate of the Cluster as a whole, they are compared to a flat user-configured threshold. This threshold is configured via the [`failurePercentageThreshold`](#outlier-detection) field.
 
@@ -387,26 +400,24 @@ The other configuration fields for failure percentage based detection are simila
 
 Detection also will not be performed for an Envoy Cluster if the number of hosts with the minimum required request volume in an interval is less than the `failurePercentage.minimumHosts` value.
 
-{% tabs %}
-{% tab failurePercentage_modes Default Mode %}
+{% navtabs "failurePercentage-modes" %}
+{% navtab "Default Mode" %}
 
-{% tip %}
-Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-{% endtip %}
+{:.info}
+> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
 This detection type takes into account all types of errors: locally and externally originated.
 
-{% endtab %}
-{% tab failurePercentage_modes Split Mode %}
+{% endnavtab %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 Locally originated errors and externally originated (transaction) errors are counted and treated separately.
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 **Configuration**
 
@@ -436,8 +447,8 @@ spec:
             threshold: 85
 ```
 
-{% endtab %}
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
 <hr />
