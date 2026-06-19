@@ -48,7 +48,7 @@ The reconciliation loop runs once per minute. Wait 60 seconds, then refresh the 
 
 ## Can I use Secrets for Consumer credentials like in {{ site.kic_product_name }}?
 
-{{ site.operator_product_name }} uses new `Credential` CRDs for managing [consumer credentials](/operator/konnect/crd/gateway/consumer/). We plan to support Kubernetes `Secret` resources in a future release. [#618](https://github.com/Kong/gateway-operator/issues/618).
+Yes. Create a Kubernetes `Secret` labeled with `konghq.com/credential: <type>` and `konghq.com/secret: "true"`, then reference it in the `KongConsumer`'s `credentials` field. See [Manage Consumers and credentials](/operator/dataplanes/how-to/manage-consumers/) for a full example.
 
 ## Can I adopt existing {{ site.konnect_short_name }} entities?
 
