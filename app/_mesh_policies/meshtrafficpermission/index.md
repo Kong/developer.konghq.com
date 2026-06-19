@@ -37,7 +37,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 {% endnavtab %}
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 `MeshTrafficPermission` isn't supported on builtin gateways. If applied via
 `spec.targetRef.kind: MeshService`, it has no effect.
 {% endnavtab %}
@@ -87,7 +87,7 @@ For a complete walkthrough, see [Apply policies to mesh-scoped zone proxies](/me
 
 ### Action
 
-{{ site.mesh_product_name }} allows configuring one of 3 actions for a group of service's clients:
+{{ site.mesh_product_name }} lets you configure one of 3 actions for a group of service's clients:
 
 * `Allow` - allows incoming requests matching the from `targetRef`.
 * `Deny` - denies incoming requests matching the from `targetRef`

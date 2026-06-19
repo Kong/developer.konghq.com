@@ -20,7 +20,7 @@ When you enable this policy, you should also [disable passthrough mode](/docs/{{
 
 ## Usage
 
-Simple configuration of external service requires `name` of the resource, `kuma.io/service: service-name`, and `address`. By default, a protocol used for communication is `TCP`. It's possible to change that by configuring `kuma.io/protocol` tag. Apart from that, it's possible to define TLS configuration used for communication with external services. More information about configuration options can be found [here](#available-policy-fields).
+Simple configuration of external service requires `name` of the resource, `kuma.io/service: service-name`, and `address`. By default, a protocol used for communication is `TCP`. It's possible to change that by configuring `kuma.io/protocol` tag. Apart from that, it's possible to define TLS configuration used for communication with external services. For more information, see [available policy fields](#available-policy-fields).
 
 Below is an example of simple HTTPS external service:
 
@@ -101,7 +101,7 @@ Then `httpbin.org` is accessible at `127.0.0.1:10000`.
 {% endnavtab %}
 {% endnavtabs %}
 
-### Accessing the External Service
+### Accessing the external service
 
 Consuming the defined service from within the mesh for both Kubernetes and Universal deployments (assuming [transparent proxy](/docs/{{ page.release }}/production/dp-config/transparent-proxying/)) can be done:
 
@@ -128,7 +128,7 @@ The first approach has an advantage that we can apply HTTP based policies, becau
     * `address` the address of the external service. It has to be a valid IP address or a domain name, and must include a port.
     * `tls` is the section to configure the TLS originator when consuming the external service:
         * `enabled` turns on and off the TLS origination.
-        * `allowRenegotiation` turns on and off TLS renegotiation. It's not recommended enabling this for [security reasons](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/tls.proto).
+        * `allowRenegotiation` turns on and off TLS renegotiation. We don't recommend enabling this for [security reasons](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/tls.proto).
           However, some servers require this setting to fetch client certificate after TLS handshake. TLS renegotiation is not available in TLS v1.3.
         * `serverName` overrides the default Server Name Indication. Set this value to empty string to disable SNI.
         * `caCert` the CA certificate for the external service TLS verification.
@@ -137,10 +137,10 @@ The first approach has an advantage that we can apply HTTP based policies, becau
 
 As with other services, avoid duplicating service names under `kuma.io/service` with already existing ones. A good practice is to derive the tag value from the domain name or IP of the actual external service.
 
-### External Services and Locality Aware Load Balancing
+### External services and locality-aware load balancing
 
 There are might be scenarios when a particular external service should be accessible only from the particular zone. 
-In order to make it work we should use `kuma.io/zone` tag for external service. When this tag is set and [locality-aware load balancing](/docs/{{ page.release }}/policies/meshloadbalancingstrategy) is enabled
+To make it work we should use `kuma.io/zone` tag for external service. When this tag is set and [locality-aware load balancing](/docs/{{ page.release }}/policies/meshloadbalancingstrategy) is enabled
 then the traffic from the zone will be redirected only to external services associated with the zone using `kuma.io/zone` tag.
 
 Example:
@@ -171,11 +171,11 @@ In this example, when [locality-aware load balancing](/docs/{{ page.release }}/p
 `httpbin.mesh` it will be redirected to `zone-1.httpbin.org:80`. Whereas the same request from the `zone-2` will be redirected to `zone-2.httpbin.org:80`.
 
 {:.warning}
-> If `ZoneEgress` is enabled, there is a limitation that prevents the behavior described above from working. The control-plane replaces the external service's address in the remote zone with the IP address of `ZoneEgress`. This causes a problem because Envoy does not support a cluster that use both DNS and IP addresses as endpoints definition.
+> If `ZoneEgress` is enabled, there is a limitation that prevents the behavior described above from working. The control plane replaces the external service's address in the remote zone with the IP address of `ZoneEgress`. This causes a problem because Envoy does not support a cluster that use both DNS and IP addresses as endpoints definition.
 
-## Builtin Gateway support
+## Built-in Gateway support
 
 {{site.mesh_product_name}} Gateway fully supports external services.
 Note that mesh Dataplanes can be configured with the same `kuma.io/service` tag as an external service resource.
 In this scenario, {{site.mesh_product_name}} Gateway will prefer the ExternalService and not route any traffic to the Dataplanes.
-Note that before gateway becomes generally available this behaviour will change to be the same as for any other dataplanes.
+Note that before the gateway becomes generally available, this behavior matches that of any other dataplanes.

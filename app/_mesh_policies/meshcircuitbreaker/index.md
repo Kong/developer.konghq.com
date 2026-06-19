@@ -9,8 +9,8 @@ type: policy
 icon: meshcircuitbreaker.png
 ---
 
-This policy will look for errors in the live traffic being exchanged between our data plane proxies. It will mark a data
-proxy as unhealthy if certain conditions are met. The policy will ensure that no additional traffic can reach an
+This policy looks for errors in the live traffic being exchanged between our data plane proxies. It marks a data plane
+proxy as unhealthy if certain conditions are met. The policy ensures that no additional traffic can reach an
 unhealthy data plane proxy until it is healthy again.
 
 Circuit breakers - unlike active [MeshHealthChecks](/mesh/policies/meshhealthcheck/) - do not send
@@ -27,8 +27,8 @@ behavior. All detectors could coexist on the same outbound interface.
 
 Once one of the detectors has been triggered the corresponding data plane proxy is ejected from the set of the load
 balancer for a period equal to [baseEjectionTime](#outlier-detection). Every further ejection of the same data plane
-proxy will further extend the [baseEjectionTime](#outlier-detection) multiplied by the number of ejections: for example
-the fourth ejection will be lasting for a period of time of `4 * baseEjectionTime`.
+proxy extends the [baseEjectionTime](#outlier-detection) multiplied by the number of ejections: for example
+the fourth ejection lasts for a period of `4 * baseEjectionTime`.
 
 This policy provides **passive** checks.
 If you want to configure **active** checks, please use the [MeshHealthCheck](/docs/{{ page.release }}/policies/meshhealthcheck)
@@ -38,7 +38,7 @@ target proxies are healthy or not.
 
 ## TargetRef support matrix
 
-{% navtabs "support matrix" %}
+{% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
 <!-- vale off -->
 {% table %}
@@ -56,7 +56,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -227,7 +227,7 @@ Depending on mode the outlier detection can take into account gateway failures w
 {:.info}
 > Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
-This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code) and local origin failures, such as **timeout**, **TCP reset** etc.
+This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code) and local origin failures, such as **timeout**, **TCP reset** and so on
 
 **Configuration**
 
@@ -301,7 +301,7 @@ spec:
 
 This detection takes into account only locally originated errors (timeout, reset, etc).
 
-If Envoy repeatedly cannot connect to an upstream host or communication with the upstream host is repeatedly interrupted, it will be ejected. Various locally originated problems are detected: timeout, TCP reset, ICMP errors, etc.
+If Envoy repeatedly cannot connect to an upstream host or communication with the upstream host is repeatedly interrupted, it will be ejected. Various locally originated problems are detected: timeout, TCP reset, ICMP errors, and so on
 
 {% navtabs "localOriginFailures-modes" %}
 {% navtab "Split Mode" %}
@@ -345,10 +345,10 @@ This detection is not supported in the Default Mode
 
 Success Rate based outlier detection aggregates success rate data from every host in an Envoy Cluster. Then at given intervals ejects hosts based on statistical outlier detection.
 
-Success Rate outlier detection will not be calculated for a host if its request volume over the aggregation interval is less than the value of `successRate.requestVolume`
+Success Rate outlier detection is not calculated for a host if its request volume over the aggregation interval is less than the value of `successRate.requestVolume`
 value.
 
-Moreover, detection will not be performed for a cluster if the number of hosts with the minimum required request volume in an interval is less than the `successRate.minimumHosts` value.
+Moreover, detection is not performed for a cluster if the number of hosts with the minimum required request volume in an interval is less than the `successRate.minimumHosts` value.
 
 {% navtabs "successRate-modes" %}
 {% navtab "Default Mode" %}
@@ -404,7 +404,7 @@ Failure Percentage based outlier detection functions similarly to success rate d
 
 The other configuration fields for failure percentage based detection are similar to the fields for success rate detection. As with success rate detection, detection will not be performed for a host if its request volume over the aggregation interval is less than the `failurePercentage.requestVolume` value.
 
-Detection also will not be performed for an Envoy Cluster if the number of hosts with the minimum required request volume in an interval is less than the `failurePercentage.minimumHosts` value.
+Detection is also not performed for an Envoy Cluster if the number of hosts with the minimum required request volume in an interval is less than the `failurePercentage.minimumHosts` value.
 
 {% navtabs "failurePercentage-modes" %}
 {% navtab "Default Mode" %}
@@ -427,9 +427,9 @@ Locally originated errors and externally originated (transaction) errors are cou
 
 **Configuration**
 
-- **`failurePercentage.requestVolume`** - The minimum number of hosts in an Envoy Cluster in order to perform failure percentage-based ejection. If the total number of hosts in the Cluster is less than this value, failure percentage-based ejection will not be performed.
-- **`failurePercentage.minimumHosts`** - The minimum number of total requests that must be collected in one interval (as defined by the interval duration above) to perform failure percentage-based ejection for this host. If the volume is lower than this setting, failure percentage-based ejection will not be performed for this host.
-- **`failurePercentage.threshold`** - The failure percentage to use when determining failure percentage-based outlier detection. If the failure percentage of a given host is greater than or equal to this value, it will be ejected.
+- **`failurePercentage.requestVolume`** - The minimum number of hosts in an Envoy Cluster to perform failure percentage-based ejection. If the total number of hosts in the Cluster is less than this value, failure percentage-based ejection is not performed.
+- **`failurePercentage.minimumHosts`** - The minimum number of total requests that must be collected in one interval (as defined by the interval duration above) to perform failure percentage-based ejection for this host. If the volume is lower than this setting, failure percentage-based ejection is not performed for this host.
+- **`failurePercentage.threshold`** - The failure percentage to use when determining failure percentage-based outlier detection. If the failure percentage of a given host is greater than or equal to this value, it is ejected.
 
 **Example**
 

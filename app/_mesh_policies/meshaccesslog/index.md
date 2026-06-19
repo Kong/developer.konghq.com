@@ -39,7 +39,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -128,7 +128,7 @@ Plain accepts a string with _command operators_ and produces a string output.
 
 JSON accepts a list of key-value pairs that produces a valid JSON object.
 
-It is up to the user to decide which format type to use.
+The user decides which format type to use.
 Some system will automatically parse JSON logs and allow you to filter and query based on available keys.
 
 If a _command operator_ is specific to `HTTP` traffic, such as `%REQ(X?Y):Z%` or `%RESP(X?Y):Z%`, in the case of TCP traffic it will be replaced by a symbol "`-`" for `plain` and a `null` value for `json`.

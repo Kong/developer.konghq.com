@@ -48,7 +48,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -161,9 +161,9 @@ HTTP health checks are executed using HTTP2
   - when checking the response, “fuzzy” matching is performed such that
     each block must be found, and in the order specified, but not
     necessarily contiguous;
-  - if **`receive`** section won't be provided or will be empty, checks
-    will be performed as "connect only" and will be marked as successful
-    when TCP connection will be successfully established.
+  - if the **`receive`** section is not provided or is empty, checks
+    are performed as "connect only" and are marked as successful
+    when a TCP connection is established.
 
 ### gRPC
 

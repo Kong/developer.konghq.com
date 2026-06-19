@@ -34,7 +34,7 @@ rows:
 <!-- vale on -->
 {% endnavtab %}
 
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -104,7 +104,7 @@ The following describes the default configuration settings of the `MeshTCPRoute`
 
 ### Gateways
 
-In order to route TCP traffic for a MeshGateway, you need to target the
+To route TCP traffic for a MeshGateway, you need to target the
 MeshGateway in `spec.targetRef` and set `spec.to[].targetRef.kind: Mesh`.
 
 ### Interactions with `MeshHTTPRoute`
@@ -115,8 +115,8 @@ MeshGateway in `spec.targetRef` and set `spec.to[].targetRef.kind: Mesh`.
 
 `MeshTCPRoute` takes priority over [`TrafficRoute`](../traffic-route) when a proxy is targeted by both policies.
 
-All legacy policies like `Retry`, `TrafficLog`, `Timeout` etc. only match on routes defined by `TrafficRoute`.
-All new recommended policies like `MeshRetry`, `MeshAccessLog`, `MeshTimeout` etc. match on routes defined by `MeshTCPRoute` and `TrafficRoute`.
+All legacy policies like `Retry`, `TrafficLog`, `Timeout` and so on only match on routes defined by `TrafficRoute`.
+All new recommended policies like `MeshRetry`, `MeshAccessLog`, `MeshTimeout` and so on match on routes defined by `MeshTCPRoute` and `TrafficRoute`.
 
-If you don't use legacy policies, it's recommended to remove any existing `TrafficRoute`.
-Otherwise, it's recommended to migrate to new policies and then removing `TrafficRoute`.
+If you don't use legacy policies, we recommend removing any existing `TrafficRoute`.
+Otherwise, we recommend migrating to new policies and then removing `TrafficRoute`.

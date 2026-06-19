@@ -39,7 +39,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 {% endnavtab %}
-{% navtab "Builtin Gateway" %}
+{% navtab "Built-in Gateway" %}
 <!-- vale off -->
 {% table %}
 columns:
@@ -287,7 +287,7 @@ rows:
 {% navtabs  "configuration" %}
 {% navtab "kumactl" %}
 
-When you deploy the Mesh control plane, edit the `kong-mesh-control-plane-config` ConfigMap:
+When you deploy the Mesh control plane, edit the `kong-mesh-control plane-config` ConfigMap:
 
 ```yaml
 apiVersion: v1
@@ -414,9 +414,9 @@ spec:
 {% endnavtab %}
 {% endnavtabs %}
 
-By default, the body will not be sent to the agent.
+By default, the body is not sent to the agent.
 To send it, set `authConfig.requestBody.maxSize` to the maximum size of your body.
-If the request body is larger than this parameter, it will be truncated and the header `x-envoy-auth-partial-body` will be set to `true`.
+If the request body is larger than this parameter, it is truncated and the header `x-envoy-auth-partial-body` is set to `true`.
 
 ## Support for external API management servers
 
@@ -556,7 +556,7 @@ spec:
             }
 ```
 
-`appendPolicies` is a list you can append, therefore in the case of the data plane proxy `test-server_kuma-demo_svc_80` service, both policies will be applied.
+`appendPolicies` is a list you can append, therefore in the case of the data plane proxy `test-server_kuma-demo_svc_80` service, both policies are applied.
 
 {{site.mesh_product_name}} will autogenerate an additional OPA decision policy:
 ```rego
