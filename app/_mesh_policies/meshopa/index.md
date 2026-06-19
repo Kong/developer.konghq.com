@@ -35,7 +35,7 @@ columns:
     key: allowed_kinds
 rows:
   - targetref: "`targetRef.kind`"
-    allowed_kinds: "`Mesh`, `Dataplane` {% new_in 2.11 %}, `MeshSubset` (deprecated), `MeshService` (removed in 2.11), `MeshServiceSubset` (removed in 2.11)"
+    allowed_kinds: "`Mesh`, `Dataplane` (new_in 2.11), `MeshSubset` (deprecated), `MeshService` (removed in 2.11), `MeshServiceSubset` (removed in 2.11)"
 {% endtable %}
 <!-- vale on -->
 {% endnavtab %}

@@ -40,6 +40,7 @@ target proxies are healthy or not.
 
 {% navtabs "support matrix" %}
 {% navtab "Sidecar" %}
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
