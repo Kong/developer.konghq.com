@@ -756,6 +756,3 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
     ```
 
     The request is valid again because the token is signed with the `secret` private key, its payload includes the admin role, and it is not expired.
-
-<!-- links -->
-[protocols]: /mesh/policies/
