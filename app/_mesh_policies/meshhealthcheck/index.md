@@ -109,7 +109,11 @@ See [protocol fallback example](#protocol-fallback).
   `intervalJitterPercent` / 100 to the wait time. If `intervalJitter` and
   `intervalJitterPercent` are both set, both of them will be used to increase the wait time.
 - **`healthyPanicThreshold`** - (optional) allows to configure panic threshold for Envoy clusters. If not specified,
-  the default is 50%. To disable panic mode, set to 0%. ⚠️This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).⚠️
+  the default is 50%. To disable panic mode, set to 0%. 
+  
+  {:.warning}
+  > This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).
+
 - **`failTrafficOnPanic`** - (optional) if set to true, Envoy will not consider any hosts when the cluster is in
   'panic mode'. Instead, the cluster will fail all requests as if all hosts are unhealthy.
   This can help avoid potentially overwhelming a failing service.
