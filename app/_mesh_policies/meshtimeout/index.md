@@ -68,7 +68,7 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
@@ -76,7 +76,7 @@ This policy enables {{site.mesh_product_name}} to set timeouts on the inbound an
 depending on the protocol. Using this policy you can configure TCP and HTTP timeouts.
 Timeout configuration is split into two sections: common configuration and HTTP configuration.
 Common config is applied to both HTTP and TCP communication. HTTP timeouts apply only when
-the service is marked as http. More on this in [protocol support section](/docs/{{ page.release }}/policies/protocol-support-in-kuma).
+the service is marked as http. More on this in protocol support section.
 
 MeshTimeout policy lets you configure multiple timeouts:
 

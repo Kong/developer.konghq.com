@@ -12,7 +12,7 @@ min_version:
 icon: policy.svg
 ---
 This policy enables {{site.mesh_product_name}} to configure traffic to external destinations that is allowed to pass outside the mesh.
-When using this policy, the [passthrough mode](/docs/{{ page.release }}/networking/non-mesh-traffic/#outgoing) flag is ignored.
+When using this policy, the passthrough mode flag is ignored.
 
 ## TargetRef support matrix
 
@@ -47,12 +47,12 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
 {:.warning}
-> This policy doesn't work with sidecars without [transparent-proxy](/docs/{{ page.release }}/networking/transparent-proxying/#what-is-transparent-proxying).
+> This policy doesn't work with sidecars without [transparent-proxy](/mesh/transparent-proxying/).
 
 The following describes the default configuration settings of the `MeshPassthrough` policy:
 
@@ -110,7 +110,7 @@ If you rely on tags in the top-level `targetRef` you might consider securing the
 ### Limitations
 
 * Due to the nature of some traffic, it is not possible to combine certain protocols on the same port. You can create a `MeshPassthrough` policy that handles `tcp`, `tls`, and one of `http`, `http2`, or `grpc` traffic on the same port. Layer 7 protocols cannot be distinguished, which could introduce unexpected behavior.
-* It isn't possible to route passthrough traffic through the [zone egress](/docs/{{ page.release }}/production/cp-deployment/zoneegress/#zone-egress).
+* It isn't possible to route passthrough traffic through the [zone egress](/mesh/zone-egress/#zone-egress).
 * Wildcard domains with L7 protocol and all ports is not supported.
 * Built-in gateway is not supported.
 * Envoy prioritizes matches in the following order: [first by Port, second by Address IP, and third by SNI](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchainmatch). For example, if you have an HTTP domain match configured for a specific port (for example, 80) and a CIDR match also configured for port 80, a request to this domain may match the CIDR configuration if the domain's address falls within the CIDR range. However, if the domain's address does not match the CIDR, the request might fail to match entirely due to the absence of an appropriate matcher for that IP. This behavior is a limitation and could potentially be addressed in the future with the adoption of the [Matcher API](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/advanced/matching/matching_api).

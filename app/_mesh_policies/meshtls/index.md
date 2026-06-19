@@ -46,7 +46,7 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+To learn more about the information in this table, see the [matching docs](/mesh/policies-introduction/).
 
 ## Configuration
 
@@ -58,6 +58,6 @@ The following describes the default configuration settings of the `MeshTLS` poli
 
 {:.info}
 > Setting the TLS version and ciphers on both the client and server makes it harder to configure incorrectly.
-> If you want to try out a specific version/cipher combination, we recommend creating a [temporary mesh](/docs/{{ page.release }}/production/mesh/#usage), deploying two applications within it, and testing whether communication is working.
+> If you want to try out a specific version/cipher combination, we recommend creating a [temporary mesh](/mesh/mesh-multi-tenancy/), deploying two applications within it, and testing whether communication is working.
 > If you have a use case for configuring a different set of allowed versions/ciphers on different workloads, we'd love to hear about it.
 > In that case, please open an [issue](https://github.com/kumahq/kuma/issues).
