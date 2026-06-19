@@ -47,21 +47,23 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Anthropic Production
+  name: my-anthropic-account
+  type: anthropic
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: x-api-key
-      header_value: ${key}
-    model:
-      provider: anthropic
-      name: claude-sonnet-4-6
-      options:
-        anthropic_version: "2023-06-01"
-        max_tokens: 512
-        temperature: 1.0
-{% endentity_example %}
+      type: basic
+      headers:
+        - name: Authorization
+          value: Bearer <your-anthropic-key>
+{% endkonnect_api_request %}
+<!--vale on-->
  
