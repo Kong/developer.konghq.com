@@ -9,7 +9,6 @@ type: policy
 icon: meshfaultinjection.png
 ---
 
-
 {% warning %}
 This policy uses a new policy matching algorithm.
 Do **not** combine with the now deprecated [FaultInjection](/docs/{{ page.release }}/policies/fault-injection).
@@ -17,27 +16,12 @@ Do **not** combine with the now deprecated [FaultInjection](/docs/{{ page.releas
 
 ## `targetRef` support matrix
 
-{% if_version gte:2.7.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshServiceSubset`                |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshServiceSubset`                |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`             | Allowed kinds                                 |
 | ----------------------- | --------------------------------------------- |
 | `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
 | `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshServiceSubset`     |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
@@ -53,43 +37,6 @@ Do **not** combine with the now deprecated [FaultInjection](/docs/{{ page.releas
 
 {% endtab %}
 {% endtabs %}
-
-{% endif_version %}
-
-{% if_version eq:2.6.x %}
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-{% endtab %}
-
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`                                                   |
-{% endtab %}
-
-{% tab Delegated Gateway %}
-
-`MeshFaultInjection` isn't supported on delegated gateways.
-
-{% endtab %}
-{% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ❌  | ✅   |
-| `MeshSubset`        | ✅        | ❌  | ✅   |
-| `MeshService`       | ✅        | ❌  | ✅   |
-| `MeshServiceSubset` | ✅        | ❌  | ✅   |
-
-{% endif_version %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 

@@ -24,35 +24,11 @@ Do **not** combine with [Proxy Template](/mesh/policies/proxy-template/).
 
 ## `targetRef` support matrix
 
-{% if_version lte:2.4.x %}
-
-| `targetRef.kind`    | top level |
-|---------------------|-----------|
-| `Mesh`              | ✅         |
-| `MeshSubset`        | ✅         |
-| `MeshService`       | ✅         |
-| `MeshServiceSubset` | ✅         |
-
-{% endif_version %}
-{% if_version gte:2.5.x %}
-{% if_version gte:2.6.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`           | Allowed kinds                                 |
 | --------------------- | --------------------------------------------- |
 | `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
@@ -68,19 +44,6 @@ Do **not** combine with [Proxy Template](/mesh/policies/proxy-template/).
 {% endtab %}
 
 {% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-| `targetRef.kind`    | top level |
-|---------------------|-----------|
-| `Mesh`              | ✅         |
-| `MeshSubset`        | ✅         |
-| `MeshService`       | ✅         |
-| `MeshServiceSubset` | ✅         |
-| `MeshGateway`       | ✅         |
-
-{% endif_version %}
-{% endif_version %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 

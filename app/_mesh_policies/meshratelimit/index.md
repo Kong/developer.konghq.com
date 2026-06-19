@@ -9,7 +9,6 @@ type: policy
 icon: meshratelimit.png
 ---
 
-
 This policy enables per-instance service request limiting. Policy supports rate limiting of HTTP/HTTP2 requests and TCP connections.
 
 The `MeshRateLimit` policy leverages Envoy's [local rate limiting](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/local_rate_limit_filter) for HTTP/HTTP2 and [local rate limit filter](https://www.envoyproxy.io/docs/envoy/latest/configuration/listeners/network_filters/local_rate_limit_filter) for TCP connections.
@@ -23,27 +22,12 @@ The policy is applied per service instance. This means that if a service `backen
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
 {% tabs %}
 {% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version gte:2.10.x %}
 | `targetRef`             | Allowed kinds                                 |
 | ----------------------- | --------------------------------------------- |
 | `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
 | `from[].targetRef.kind` | `Mesh`                                        |
-{% endif_version %}
 {% endtab %}
 
 {% tab Builtin Gateway %}
@@ -62,18 +46,6 @@ The policy is applied per service instance. This means that if a service `backen
 {% endtab %}
 
 {% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ❌  | ✅   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ❌  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-
-{% endif_version %}
 
 To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
