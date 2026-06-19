@@ -68,7 +68,7 @@ rows:
 
 {% endnavtabs %}
 
-If you don't understand this table you should read [matching docs](/mesh/policies-introduction/).
+
 
 ## Configuration
 
