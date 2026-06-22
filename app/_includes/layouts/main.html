@@ -67,6 +67,8 @@
         {% include layouts/aside.html mobile=true %}
     </div>
     {% endif %}
+    {% if page.major_version %}
     {% include banners/cross_major_banner.html %}
+    {% endif %}
     {{ content }}
 </main>
