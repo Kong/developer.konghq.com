@@ -59,6 +59,13 @@ RSpec.describe Jekyll::ReleaseMapLoader do
       end
 
       it_behaves_like 'sets the banner info for a page'
+
+      it 'sets previous major urls to the canonical page' do
+        generator.generate(site)
+
+        expect(current_major_page.data['previous_major_urls'])
+          .to eq({ 'v1' => '/ai-gateway/v1/valid-page/' })
+      end
     end
 
     context 'with a status: pending entry' do
