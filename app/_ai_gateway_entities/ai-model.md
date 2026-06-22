@@ -141,7 +141,7 @@ When you create or update an AI Model, {{site.ai_gateway}} generates a fixed set
 * One [Gateway Service](/gateway/entities/service/).
 * One [Route](/gateway/entities/route/) per declared capability in the `capabilities` array.
 
-AI Provider credentials are added into the generated runtime configuration at generation time, sourced from the AI Provider entity that the AI Model's [`target_models`](/#schema-aigateway-model-target-models) reference. Updating the AI Provider propagates credential changes to every AI Model that uses it.
+AI Provider credentials are added into the generated runtime configuration at generation time, sourced from the AI Provider entity that the AI Model's [`target_models`](#schema-aigateway-model-target-models) reference. Updating the AI Provider propagates credential changes to every AI Model that uses it.
 
 Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against the underlying Service or Routes through the standard Admin API are rejected. To change anything about an AI Model's runtime footprint, update the AI Model entity. {{site.ai_gateway}} deletes and recreates the derived primitives within a single transaction.
 
@@ -214,9 +214,6 @@ rows:
     description: File uploads for long documents and structured input.
 {% endtable %}
 <!-- vale on -->
-
-{:.info}
-> **Upgrading from AI Gateway 1.x**: Update all Model capabilities to v2.0 enum values. Replace old names (`chat`, `responses`, `embeddings`, `assistants`, `audio-transcriptions`, etc.) with the v2.0 values shown above.
 
 ## Request and response formats
 

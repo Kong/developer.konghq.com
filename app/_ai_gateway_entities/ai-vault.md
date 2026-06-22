@@ -11,7 +11,7 @@ permalink: /ai-gateway/entities/ai-vault/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-description: Vaults for storing and referencing secrets used by {{site.ai_gateway}} entities.
+description: AI Vaults for storing and referencing secrets used by {{site.ai_gateway}} entities.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayVault

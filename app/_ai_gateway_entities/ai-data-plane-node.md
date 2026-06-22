@@ -11,7 +11,7 @@ permalink: /ai-gateway/entities/ai-data-plane-node/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-description: Data Plane nodes that run {{site.ai_gateway}} workloads and connect to the control plane.
+description: AI Data Plane Nodes that run {{site.ai_gateway}} workloads and connect to the control plane.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayDataPlaneNode
