@@ -115,6 +115,7 @@ docker exec --tty --interactive --privileged kong-mesh-demo-app bash
    runuser --user kong-mesh-data-plane-proxy -- \
      /usr/local/bin/kuma-dp run \
        --cp-address https://control-plane:5678 \
+       --skip-verify \
        --dataplane-token-file /demo/token-demo-app \
        --dataplane-file /demo/dataplane.yaml \
        --dataplane-var name=demo-app \
@@ -122,6 +123,11 @@ docker exec --tty --interactive --privileged kong-mesh-demo-app bash
        --dataplane-var port=5050 \
        > /demo/logs-data-plane-proxy-demo-app.log 2>&1 &
    ```
+
+   {% capture warning %}
+   {% include /mesh/skip-verify.md %}
+   {% endcapture %}
+   {{warning | indent}}
 
 1. After a few seconds, check the logs to verify the proxy is running:
 
