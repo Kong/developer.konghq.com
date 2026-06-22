@@ -16,7 +16,7 @@ Changelog for supported {{site.event_gateway}} versions.
 
 ## 1.1.1
 
-**Release date**: 2026/06/XX
+**Release date**: 2026/06/16
 
 ### Fixes
 
