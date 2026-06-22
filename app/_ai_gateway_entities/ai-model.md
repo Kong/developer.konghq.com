@@ -6,7 +6,7 @@ entities:
 products:
   - ai-gateway
 min_version:
-  ai-gateway: '2.0.0'
+  ai-gateway: '2.0'
 permalink: /ai-gateway/entities/ai-model/
 breadcrumbs:
   - /ai-gateway/
@@ -35,56 +35,50 @@ related_resources:
   - text: Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
 faqs:
-  - q: What's the difference between a Model entity and the `model` field in a Policy configuration?
+  - q: What's the difference between an AI Model entity and the `model` field in an AI Policy configuration?
     a: |
-      A Model entity is the first-class {{site.ai_gateway}} entity you declare through the {{site.konnect_short_name}} API and UI.
-      It defines routing, capabilities, and load balancing. A Policy is a reusable configuration that adds behavior (like caching or guardrails) to a Model.
-      You declare both separately and attach Policies to Models.
+      An AI Model entity is the first-class {{site.ai_gateway}} entity you declare through the {{site.konnect_short_name}} API and UI.
+      It defines routing, capabilities, and load balancing. An AI Policy is a reusable configuration that adds behavior (like caching or guardrails) to an AI Model.
+      You declare both separately and attach AI Policies to AI Models.
 
   - q: Can I edit the Service or Routes that {{site.ai_gateway}} generates from a Model?
     a: |
       No. Generated primitives are protected from direct modification through the standard Admin API.
       Update the Model entity instead, and {{site.ai_gateway}} recreates the underlying primitives within a single transaction.
 
-  # - q: How do I configure models in on-prem deployments?
-  #   a: |
-  #     {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
-  #     For on-prem deployments, configure AI proxy behavior using {{site.base_gateway}} directly through its plugin interface.
-  #     See the [{{site.base_gateway}} documentation](/gateway/) for available AI-related capabilities.
-
-  - q: What happens when I update a Model?
+  - q: What happens when I update an AI Model?
     a: |
-      {{site.ai_gateway}} deletes the Model's derived primitives and recreates them from the updated entity state, all within a single database transaction.
+      {{site.ai_gateway}} deletes the AI Model's derived primitives and recreates them from the updated entity state, all within a single database transaction.
       On failure, the transaction rolls back and no partial state is written.
 
-  - q: What happens when I delete a Model?
+  - q: What happens when I delete an AI Model?
     a: |
-      The Model and all its derived primitives (Service, Routes) are deleted within a single transaction.
+      The AI Model and all its derived primitives (Service, Routes) are deleted within a single transaction.
 
-  - q: Can I apply the same configuration to multiple Models?
+  - q: Can I apply the same configuration to multiple AI Models?
     a: |
-      Yes, by attaching one Policy with that configuration to each Model.
-      Policies are not shared between entities, each instance is independent.
-      See [Policy entity](/ai-gateway/entities/ai-policy/).
+      Yes, by attaching one AI Policy with that configuration to each AI Model.
+      AI Policies are not shared between entities, each instance is independent.
+      See [AI Policy entity](/ai-gateway/entities/ai-policy/).
 
-  - q: How do I limit which consumers can reach a Model?
+  - q: How do I limit which AI Consumers can reach an AI Model?
     a: |
-      Set the `acls` field on the Model with allow or deny lists.
-      Each entry is a string that references a Consumer, Consumer Group, or Authenticated Group by name.
+      Set the [`acls`](#schema-aigateway-model-acls) field on the AI Model with allow or deny lists.
+      Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name.
 
-  - q: Does the Model entity store provider credentials?
+  - q: Does the AI Model entity store AI Provider credentials?
     a: |
-      No. Provider credentials live on the [Provider entity](/ai-gateway/entities/ai-provider/) and are materialized into the underlying primitives at Model creation time.
-      Updating a Provider propagates the credential change to all Models that reference it.
+      No. AI Provider credentials live on the [AI Provider entity](/ai-gateway/entities/ai-provider/) and are materialized into the underlying primitives at AI Model creation time.
+      Updating an AI Provider propagates the credential change to all AI Models that reference it.
 
   - q: Can a client override the model name from the request body?
     a: |
-      By default, no. The request `model` field must match the upstream model on one of the Model's targets, otherwise the runtime returns a `400` error.
-      To accept a client-side alias, set [`config.target_models[].model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-model-alias) on each target. Clients can then send the alias value in the request `model` field instead of the upstream provider model name. See [Request routing by model alias](/ai-gateway/load-balancing/#request-routing-by-model-alias) for details and examples.
+      By default, no. The request `model` field must match the upstream model on one of the AI Model's targets, otherwise the runtime returns a `400` error.
+      To accept a client-side alias, set [`config.target_models[].model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-model-alias) on each target. Clients can then send the alias value in the request `model` field instead of the upstream AI Provider model name. See [Request routing by model alias](/ai-gateway/load-balancing/#request-routing-by-model-alias) for details and examples.
 
   - q: Can a client override `temperature`, `top_p`, or `top_k` from the request?
     a: |
-      Yes. Values for `temperature`, `top_p`, and `top_k` in the request take precedence over the per-target configuration declared on `target_models[].config`.
+      Yes. Values for `temperature`, `top_p`, and `top_k` in the request take precedence over the per-target configuration declared on [`target_models[].config`](#schema-aigateway-model-target-models-config).
 
   - q: Which algorithm does `lowest-latency` use to pick the fastest target?
     a: |
@@ -96,13 +90,13 @@ faqs:
 
 ---
 
-## What is a Model?
+## What is an AI Model?
 
-A Model is a first-class {{site.ai_gateway}} entity that represents an AI model endpoint exposed through {{site.ai_gateway}}.
+An AI Model is a first-class {{site.ai_gateway}} entity that represents an AI model endpoint exposed through {{site.ai_gateway}}.
 
-A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services or Routes by hand.
+An AI Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream AI Provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates an AI Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services or Routes by hand.
 
-Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API:
+AI Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API:
 
 {% table %}
 columns:
@@ -122,34 +116,34 @@ When you create a Model in {{site.konnect_short_name}} or via the API, the confi
 1. Choose a type (`model` or `api`) and declare which capabilities the Model exposes.
 1. Add one or more target models, each pointing to a Provider with credentials.
 1. Select a request and response format (default is `openai`).
-1. If you have more than one target, configure load balancing in `config.balancer`.
-1. Optionally, attach Policies to add additional capabilities and set `acls` to control access.
+1. If you have more than one target, configure load balancing in [`config.balancer`](#schema-aigateway-model-config-balancer).
+1. Optionally, attach Policies to add additional capabilities and set [`acls`](#schema-aigateway-model-acls) to control access.
 
 For a concrete example, see [Set up a Model](#set-up-a-model).
 
 ## How it works
 
-When you configure a Model, you define what capabilities it exposes, which upstream providers it routes to, and how requests are load-balanced and logged. At request time, the Model mediates traffic between clients and upstream provider APIs:
+When you configure an AI Model, you define what capabilities it exposes, which upstream AI Providers it routes to, and how requests are load-balanced and logged. At request time, the AI Model mediates traffic between clients and upstream AI Provider APIs:
 
-1. Translates between the request and response format chosen for the Model and the upstream provider's native format.
-1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [Provider](/ai-gateway/entities/ai-provider/), unless the target is a self-hosted model.
-1. Authenticates to the upstream provider using credentials stored on the Provider entity.
-1. Decorates the upstream request with per-target configuration (such as temperature or token-limit overrides) declared on `target_models[].config`.
-1. Records usage statistics (tokens, cost, latency) for attached log Policies, and optionally the full request and response when payload logging is enabled.
+1. Translates between the request and response format chosen for the AI Model and the upstream AI Provider's native format.
+1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [AI Provider](/ai-gateway/entities/ai-provider/), unless the target is a self-hosted model.
+1. Authenticates to the upstream AI Provider using credentials stored on the AI Provider entity.
+1. Decorates the upstream request with per-target configuration (such as temperature or token-limit overrides) declared on [`target_models[].config`](#schema-aigateway-model-target-models).
+1. Records usage statistics (tokens, cost, latency) for attached log AI Policies, and optionally the full request and response when payload logging is enabled.
 1. Fulfills requests to self-hosted models using the supported native format transformations.
 
-A single Model can expose multiple upstream providers behind a consistent client-facing format, so callers don't change their request shape when the underlying Provider changes.
+A single AI Model can expose multiple upstream AI Providers behind a consistent client-facing format, so callers don't change their request shape when the underlying AI Provider changes.
 
-## How a Model maps to runtime configuration
+## How an AI Model maps to runtime configuration
 
-When you create or update a Model, {{site.ai_gateway}} generates a fixed set of primitives:
+When you create or update an AI Model, {{site.ai_gateway}} generates a fixed set of primitives:
 
 * One [Gateway Service](/gateway/entities/service/).
 * One [Route](/gateway/entities/route/) per declared capability in the `capabilities` array.
 
-Provider credentials are added into the generated runtime configuration at generation time, sourced from the Provider entity that the Model's `target_models` reference. Updating the Provider propagates credential changes to every Model that uses it.
+AI Provider credentials are added into the generated runtime configuration at generation time, sourced from the AI Provider entity that the AI Model's [`target_models`](/#schema-aigateway-model-target-models) reference. Updating the AI Provider propagates credential changes to every AI Model that uses it.
 
-Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against the underlying Service or Routes through the standard Admin API are rejected. To change anything about a Model's runtime footprint, update the Model entity. {{site.ai_gateway}} deletes and recreates the derived primitives within a single transaction.
+Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against the underlying Service or Routes through the standard Admin API are rejected. To change anything about an AI Model's runtime footprint, update the AI Model entity. {{site.ai_gateway}} deletes and recreates the derived primitives within a single transaction.
 
 {:.info}
 > **Why a transaction instead of an in-place update?**
@@ -162,53 +156,73 @@ The [`capabilities`](#schema-aigateway-model-capabilities) field tells {{site.ai
 
 Model [`type`](#schema-aigateway-model-type) controls which capability set applies:
 
-* `model`: synchronous request/response workloads through generative APIs. Supported capabilities are `chat`, `embeddings`, `assistants`, `responses`, `audio-transcriptions`, `audio-translations`, `image-generation`, `image-edits`, `video-generations`, and `realtime`.
-* `api`: asynchronous workloads through the files and batches APIs. Supported capabilities are `batches` and `files`.
+* `model`: synchronous request/response workloads. Supported capabilities are `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, and `rerank`.
+* `api`: asynchronous workloads. Supported capabilities are `batches` and `files`.
 
-Not every provider supports every capability. The set of capabilities you can declare on a Model depends on what the provider in `target_models` exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
+Not every AI Provider supports every capability. The set of capabilities you can declare on an AI Model depends on what the AI Provider in [`target_models`](#schema-aigateway-model-target-models) exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
 
-The following table maps each capability to an OpenAI API reference. For load balancing configuration details, see [Load balancing](/ai-gateway/load-balancing/).
+{:.info}
+> **OpenAI-compatible format**
+>
+> By default, AI Models expose endpoints using OpenAI-compatible format at `/{model-name}/chat/completions`. Customize the endpoint paths through [`config.route.paths`](#schema-aigateway-model-config-route-paths) if needed.
 
 <!-- vale off -->
 {% table %}
 columns:
   - title: Capability
     key: capability
+  - title: Default OpenAI path
+    key: path
   - title: Description
     key: description
 rows:
-  - capability: "`chat`"
-    description: Conversational responses from a sequence of messages.
+  - capability: "`generate`"
+    path: "`/chat/completions`, `/completions`, `/responses`"
+    description: Text generation and conversational responses from generative models.
+  - capability: "`agentic`"
+    path: "`/assistants`"
+    description: Persistent tool-using agents with state management and metadata.
   - capability: "`embeddings`"
+    path: "`/embeddings`"
     description: Vector representations for semantic search and similarity matching.
-  - capability: "`assistants`"
-    description: Persistent tool-using agents with metadata for debugging and evaluation.
-  - capability: "`responses`"
-    description: REST-based full-text responses.
-  - capability: "`audio-transcriptions`"
-    description: Speech-to-text.
-  - capability: "`audio-translations`"
+  - capability: "`audio/speech`"
+    path: "`/audio/speech`"
+    description: Text-to-speech synthesis.
+  - capability: "`audio/transcription`"
+    path: "`/audio/transcriptions`"
+    description: Speech-to-text conversion.
+  - capability: "`audio/translation`"
+    path: "`/audio/translations`"
     description: Audio translation between languages.
-  - capability: "`image-generation`"
-    description: Generate images from text prompts.
-  - capability: "`image-edits`"
-    description: Modify images from text prompts.
-  - capability: "`video-generations`"
+  - capability: "`image`"
+    path: "`/images/generations`, `/images/edits`"
+    description: Generate or edit images from text prompts.
+  - capability: "`video`"
+    path: "`/videos`"
     description: Generate videos from text prompts.
   - capability: "`realtime`"
-    description: Bidirectional WebSocket streaming for low-latency, interactive voice and text.
+    path: "`/realtime`"
+    description: Bidirectional WebSocket streaming for low-latency interactive sessions.
+  - capability: "`rerank`"
+    path: "`/rerank`"
+    description: Rank documents by relevance to a query.
   - capability: "`batches`"
+    path: "`/batches`"
     description: Asynchronous bulk LLM requests for long workloads.
   - capability: "`files`"
+    path: "`/files`"
     description: File uploads for long documents and structured input.
 {% endtable %}
 <!-- vale on -->
+
+{:.info}
+> **Upgrading from AI Gateway 1.x**: Update all Model capabilities to v2.0 enum values. Replace old names (`chat`, `responses`, `embeddings`, `assistants`, `audio-transcriptions`, etc.) with the v2.0 values shown above.
 
 ## Request and response formats
 
 The [`formats`](#schema-aigateway-model-formats) array on a Model declares the request and response shapes the Model accepts. Each entry has a `type` that selects the format. The default `openai` format flattens upstream provider responses into the OpenAI shape, so clients can use a single request and response format across providers.
 
-To preserve a provider's native request and response format instead, set `formats[].type` to a non-OpenAI value. The Model passes requests upstream without conversion, while {{site.ai_gateway}} continues to provide analytics, logging, and cost calculation.
+To preserve a provider's native request and response format instead, set [`formats[].type`](#schema-aigateway-model-formats-type) to a non-OpenAI value. The Model passes requests upstream without conversion, while {{site.ai_gateway}} continues to provide analytics, logging, and cost calculation.
 
 <!-- vale off -->
 {% table %}
@@ -247,13 +261,13 @@ When a native format is set, only the corresponding provider is supported with i
 
 A Model is a virtual model: it exposes one route ([`config.route`](#schema-aigateway-model-config-route)) and one set of capabilities, and routes requests to one or more concrete upstream models declared in its [`target_models`](#schema-aigateway-model-target-models) array. Each entry represents a single upstream model instance with one URL.
 
-For each target, you provide the upstream model name (for example, `gpt-4o`) and reference the Provider to use by its `name`. Each target can also override settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
+For each target, you provide the upstream model name (for example, `gpt-4o`) and reference the Provider to use by its `name`. Each target can also override settings such as [`temperature`](#schema-aigateway-model-target-models-config-temperature), [`max_tokens`](#schema-aigateway-model-target-models-config-max-tokens), [`input_cost`](#schema-aigateway-model-target-models-config-input-cost), and [`output_cost`](#schema-aigateway-model-target-models-config-output-cost).
 
-There's no separate Target Model entity or endpoint. Target models are managed only as nested data inside a Model, through the same Model API surface used to create, update, and delete the parent. Adding, removing, or modifying a target is an update to the Model itself.
+There's no separate Target Model entity or endpoint. Target models are managed only as nested data inside an AI Model, through the same AI Model API surface used to create, update, and delete the parent. Adding, removing, or modifying a target is an update to the AI Model itself.
 
 ## Load balancing
 
-A Model routes to a single target by default. Add more than one target when you want redundancy, fallback between providers, or cost and latency optimization. When you have multiple targets, configure `config.balancer` to distribute requests according to a load balancing algorithm.
+A Model routes to a single target by default. Add more than one target when you want redundancy, fallback between providers, or cost and latency optimization. When you have multiple targets, configure [`config.balancer`](#schema-aigateway-model-config-balancer) to distribute requests according to a load balancing algorithm.
 
 When a Model has more than one target, the [load balancer](#schema-aigateway-model-config-balancer) sits between the virtual model and its targets, distributing requests according to `config.balancer`. For algorithm details, selection guidance, and tuning, see [Load balancing](/ai-gateway/load-balancing/).
 
@@ -326,21 +340,21 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Access control
 
-A Model's `acls` field controls which identities are allowed to reach the Model. The field accepts `allow` and `deny` lists. Each entry is a string that references a Consumer, Consumer Group, or Authenticated Group by name. Access is enforced at the Service level of the generated primitives.
+An AI Model's [`acls`](#schema-aigateway-model-acls) field controls which identities are allowed to reach the AI Model. The field accepts `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. Access is enforced at the Service level of the generated primitives.
 
-For per-request authentication and identity, configure the appropriate authentication Policy globally or attach it to the Model.
+For per-request authentication and identity, configure the appropriate authentication AI Policy globally or attach it to the AI Model.
 
 ## Attach Policies
 
-Policies apply configuration and behavior to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
+AI Policies apply configuration and behavior to an AI Model. An AI Policy attached to an AI Model runs at the Service level of the AI Model's generated primitives, so it applies to every request routed through any of the AI Model's capabilities.
 
-A Model declares the Policies it uses through its `policies` field. Each entry is a string that references a Policy by name or ID. {{site.konnect_short_name}} resolves these references against Policies created at `/v1/ai-gateways/{aiGatewayId}/policies`.
+An AI Model declares the AI Policies it uses through its [`policies`](#schema-aigateway-model-policies) field. Each entry is a string that references an AI Policy by name or ID. {{site.konnect_short_name}} resolves these references against AI Policies created at `/v1/ai-gateways/{aiGatewayId}/policies`.
 
-You can attach multiple Policies to a single Model. Each Policy is applied independently, so attaching the same Policy type twice with different configurations creates two separate instances.
+You can attach multiple AI Policies to a single AI Model. Each AI Policy is applied independently, so attaching the same AI Policy type twice with different configurations creates two separate instances.
 
-Not every Policy type is valid as a Model attachment.
+Not every AI Policy type is valid as an AI Model attachment.
 
-Policies attached to a Model are not deleted when the Model is deleted; only the Model's reference is removed.
+AI Policies attached to an AI Model are not deleted when the AI Model is deleted; only the AI Model's reference is removed.
 
 For further information, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
@@ -352,9 +366,24 @@ Model routing executes at a specific point in the request pipeline. Policies hav
 
 For Policies whose behavior depends on the resolved Model identity, use Policy types that run at or after Model resolution, or use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to adjust execution order as needed.
 
+## Upstream proxy configuration
+
+The [`config.proxy`](#schema-aigateway-model-config-proxy) object configures HTTP or HTTPS proxies for outbound requests to upstream AI providers. Set `http_proxy` or `https_proxy` with the proxy host and port to route plaintext or TLS requests through a forward proxy. Optionally provide [`auth`](#schema-aigateway-model-config-proxy-auth) credentials (username and password) to authenticate to the proxy, and use `no_proxy` to list hosts that bypass the proxy.
+
+Use this when your data plane sits behind a corporate forward proxy or needs to route through a bastion host.
+
+## Logging and observability
+
+The [`config.logging`](#schema-aigateway-model-config-logging) object configures request and response logging. Set [`statistics`](#schema-aigateway-model-config-logging-statistics) to true to record token counts, latency, and cost. Set [`payloads`](#schema-aigateway-model-config-logging-payloads) to true to also capture full request and response bodies, truncated at [`max_payload_size`](#schema-aigateway-model-config-logging-max-payload-size) bytes (default 1 MB).
+
+{:.warning}
+> Payload logging may expose sensitive data. Only enable when your logging pipeline is prepared to handle request and response bodies, and verify that logging destinations comply with your data residency and privacy policies.
+
+For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
+
 ## Set up a Model
 
-The following example creates an OpenAI Model that exposes both `chat` and `responses` capabilities, routed through a single OpenAI Provider, with token usage logging enabled.
+The following example creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
 
 {% entity_example %}
 type: model
@@ -364,8 +393,7 @@ data:
   type: model
   enabled: true
   capabilities:
-    - chat
-    - responses
+    - generate
   formats:
     - type: openai
   acls:

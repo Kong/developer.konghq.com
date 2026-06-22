@@ -6,75 +6,74 @@ entities:
 products:
   - ai-gateway
 min_version:
-  ai-gateway: '2.0.0'
+  ai-gateway: '2.0'
 permalink: /ai-gateway/entities/ai-policy/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-description: "Policies for {{site.ai_gateway}}."
+description: "AI Policies for {{site.ai_gateway}}."
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayPolicy
 works_on:
   - konnect
 tools:
-  - deck
   - konnect-api
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Model entity
+  - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
-  - text: Agent entity
+  - text: AI Agent entity
     url: /ai-gateway/entities/ai-agent/
-  - text: MCP Server entity
+  - text: AI MCP Server entity
     url: /ai-gateway/entities/ai-mcp-server/
   - text: Plugin entity
     url: /gateway/entities/plugin/
 faqs:
-  - q: Are Policies shared across multiple entities?
+  - q: Are AI Policies shared across multiple entities?
     a: |
-      No. Each Policy is an independent instance. To apply the same plugin
-      configuration to two Models, create two Policies with matching `config`,
-      one per Model.
+      No. Each AI Policy is an independent instance. To apply the same plugin
+      configuration to two AI Models, create two AI Policies with matching `config`,
+      one per AI Model.
 
-  - q: How is a Policy different from a plugin?
+  - q: How is an AI Policy different from a plugin?
     a: |
-      A Policy is a plugin instance configured through the {{site.ai_gateway}} entity surface
+      An AI Policy is a plugin instance configured through the {{site.ai_gateway}} entity surface
       instead of the classic `/plugins` endpoint. The runtime effect is the same: a plugin attached
-      at the appropriate scope. {{site.ai_gateway}} manages the Policy's lifecycle alongside the
+      at the appropriate scope. {{site.ai_gateway}} manages the AI Policy's lifecycle alongside the
       entity it's attached to.
 
-  - q: Can a Policy be scoped to a Consumer or Consumer Group?
+  - q: Can an AI Policy be scoped to an AI Consumer or AI Consumer Group?
     a: |
-      Yes. Add the Policy's `name` or `id` to the Consumer's or Consumer Group's `policies` array.
-      The plugin runs when the Consumer is identified during a request, or when a member of the
-      Consumer Group is identified.
+      Yes. Add the AI Policy's `name` or `id` to the AI Consumer's or AI Consumer Group's `policies` array.
+      The plugin runs when the AI Consumer is identified during a request, or when a member of the
+      AI Consumer Group is identified.
 
-  - q: What plugin types can a Policy use?
+  - q: What plugin types can an AI Policy use?
     a: |
-      Set the plugin name in the Policy's `type` field and provide the plugin's configuration
+      Set the plugin name in the AI Policy's `type` field and provide the plugin's configuration
       in the `config` field. Examples include `ai-sanitizer`, `ai-prompt-guard`,
       `ai-prompt-decorator`, `ai-rate-limiting-advanced`, and `openid-connect`. The supported set
       isn't enumerated on this page, refer to the {{site.ai_gateway}} plugin reference for the full list.
 
-  - q: What happens to a Policy when its parent entity is deleted?
+  - q: What happens to an AI Policy when its parent entity is deleted?
     a: |
-      Standalone Policies referenced from parent entities through a `policies` array are independent
+      Standalone AI Policies referenced from parent entities through a `policies` array are independent
       and aren't deleted when a referencing parent is deleted. The reference is simply removed.
 ---
 
-## What is a Policy?
+## What is an AI Policy?
 
-A Policy is an {{site.ai_gateway}} entity that represents an action, taken by a plugin, that can be attached to an {{site.ai_gateway}} entity.
+An AI Policy is an {{site.ai_gateway}} entity that represents an action, taken by a plugin, that can be attached to an {{site.ai_gateway}} entity.
 
-Each Policy declares a `type` (which is a plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. {{site.ai_gateway}} attaches the configured plugin at the scope you select: globally, or to a specific Model, Agent, or MCP Server.
+Each AI Policy declares a `type` (which is a plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. {{site.ai_gateway}} attaches the configured plugin at the scope you select: globally, or to a specific AI Model, AI Agent, or AI MCP Server.
 
-For the set of plugin types you can use as a Policy `type`, see the [AI plugin reference](/plugins/?category=ai).
+For the set of plugin types you can use as an AI Policy `type`, see the [AI plugin reference](/plugins/?category=ai).
 
-Policies are not shared. Each Policy is one plugin instance. To apply the same configuration to two parent entities, create two Policies.
+**AI Policies are not shared.** Each AI Policy is an independent plugin instance tied to its parent entity's lifecycle. To apply identical configuration to two AI Models, create two separate AI Policies with matching `config`. This design ensures that deleting an AI Model deletes only its own AI Policies, not configurations used by other entities.
 
-Policies are managed through the {{site.ai_gateway}} entity surface:
+AI Policies are managed through the {{site.ai_gateway}} entity surface:
 
 {% table %}
 columns:
@@ -87,38 +86,38 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/policies
 {% endtable %}
 
-## Policy scopes
+## AI Policy scopes
 
-A Policy is scoped by where it's referenced from. Each Policy is an independent plugin instance attached at exactly one scope. To apply the same configuration in multiple places, create one Policy per place.
+An AI Policy is scoped by where it's referenced from. Each AI Policy is an independent plugin instance attached at exactly one scope. To apply the same configuration in multiple places, create one AI Policy per place.
 
 The available scopes are:
 
-* **Global**: a Policy that no parent entity references runs for every {{site.ai_gateway}} route on the data plane. Non-AI traffic on the same data plane isn't affected.
-* **Model**: referenced from the `policies` array on a [Model entity](/ai-gateway/entities/ai-model/). The plugin runs at the Service of the Model's derived primitives.
-* **Agent**: referenced from the `policies` array on an [Agent entity](/ai-gateway/entities/ai-agent/). The plugin runs at the Service of the Agent's derived primitives.
-* **MCP Server**: referenced from the `policies` array on an [MCP Server entity](/ai-gateway/entities/ai-mcp-server/). The plugin runs at the Service of the MCP Server's derived primitives.
-* **Consumer**: referenced from the `policies` array on a [Consumer entity](/ai-gateway/entities/ai-consumer/). The plugin runs when the Consumer is identified during a request.
-* **Consumer Group**: referenced from the `policies` array on a [Consumer Group entity](/ai-gateway/entities/ai-consumer-group/). The plugin runs when a member of the Consumer Group is identified during a request.
+* **Global**: an AI Policy that no parent entity references runs for every {{site.ai_gateway}} route on the data plane. Non-AI traffic on the same data plane isn't affected.
+* **AI Model**: referenced from the `policies` array on an [AI Model entity](/ai-gateway/entities/ai-model/). The plugin runs at the Service of the AI Model's derived primitives.
+* **AI Agent**: referenced from the `policies` array on an [AI Agent entity](/ai-gateway/entities/ai-agent/). The plugin runs at the Service of the AI Agent's derived primitives.
+* **AI MCP Server**: referenced from the `policies` array on an [AI MCP Server entity](/ai-gateway/entities/ai-mcp-server/). The plugin runs at the Service of the AI MCP Server's derived primitives.
+* **AI Consumer**: referenced from the `policies` array on an [AI Consumer entity](/ai-gateway/entities/ai-consumer/). The plugin runs when the AI Consumer is identified during a request.
+* **AI Consumer Group**: referenced from the `policies` array on an [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/). The plugin runs when a member of the AI Consumer Group is identified during a request.
 
-### Creating Policies
+### Creating AI Policies
 
-All Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is set entirely through the reference-array mechanism above: add the Policy's `name` or `id` to the parent entity's `policies` array, or omit the reference for global scope.
+All AI Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is set entirely through the reference-array mechanism above: add the AI Policy's `name` or `id` to the parent entity's `policies` array, or omit the reference for global scope.
 
 ## Lifecycle
 
-Creating a Policy creates exactly one plugin entry in the underlying runtime. Updating a Policy updates that plugin entry. Deleting a Policy deletes that plugin entry. All scopes support standard CRUD operations through the matching path.
+Creating an AI Policy creates exactly one plugin entry in the underlying runtime. Updating an AI Policy updates that plugin entry. Deleting an AI Policy deletes that plugin entry. All scopes support standard CRUD operations through the matching path.
 
 The `config` field is passed through to the plugin without translation.
 
 {:.info}
 > **Plugin config schemas live with the plugin docs**
 >
-> {{site.ai_gateway}} does not define plugin configuration schemas under the Policy entity.
-> For each plugin you intend to use as a Policy `type`, look up that plugin's reference page for its `config` shape.
+> {{site.ai_gateway}} does not define plugin configuration schemas under the AI Policy entity.
+> For each plugin you intend to use as an AI Policy `type`, look up that plugin's reference page for its `config` shape.
 
-## Set up a global Policy
+## Set up a global AI Policy
 
-The following example creates a global PII sanitizer Policy that runs for every {{site.ai_gateway}} route.
+The following example creates a global PII sanitizer AI Policy that runs for every {{site.ai_gateway}} route.
 
 {% entity_example %}
 type: policy

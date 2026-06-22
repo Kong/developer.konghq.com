@@ -6,7 +6,7 @@ entities:
 products:
   - ai-gateway
 min_version:
-  ai-gateway: '2.0.0'
+  ai-gateway: '2.0'
 permalink: /ai-gateway/entities/ai-agent/
 breadcrumbs:
   - /ai-gateway/
@@ -18,7 +18,6 @@ schema:
 works_on:
   - konnect
 tools:
-  - deck
   - konnect-api
 related_resources:
   - text: About {{site.ai_gateway}}
@@ -49,7 +48,7 @@ faqs:
   - q: Why is the agent-card URL rewritten?
     a: |
       A2A clients use agent-card responses (at `/.well-known/agent-card.json`) to discover where to
-      send subsequent requests. Rewriting the `url` field, and any `additionalInterfaces[].url`
+      send subsequent requests. Rewriting the [`url`](#schema-aigateway-agent-config-url) field, and any [`additionalInterfaces[].url`](#schema-aigateway-agent-config-additional-interfaces-url)
       fields, to the {{site.ai_gateway}} address means clients route follow-up traffic through the
       gateway instead of bypassing it. The rewrite honors `X-Forwarded-*` headers when the gateway
       sits behind a load balancer.
@@ -60,30 +59,24 @@ faqs:
       buffering. The runtime counts SSE events, captures time-to-first-byte, and extracts task state
       from the final event for analytics. Latency is preserved.
 
-  - q: How do I limit which consumers can reach an Agent?
+  - q: How do I limit which AI Consumers can reach an AI Agent?
     a: |
-      Set the `acls` field on the Agent with allow or deny lists. Each entry is a string that
-      references a Consumer, Consumer Group, or Authenticated Group by name.
+      Set the [`acls`](#schema-aigateway-agent-acls) field on the AI Agent with allow or deny lists. Each entry is a string that
+      references an AI Consumer, AI Consumer Group, or Authenticated Group by name.
 
-  - q: Can the same plugin run on an Agent that I'd attach to a route or service?
+  - q: Can the same plugin run on an AI Agent that I'd attach to a route or service?
     a: |
-      Plugin configuration that applies to the Agent goes through the [Policy entity](/ai-gateway/entities/ai-policy/).
-      Attach Policies to the Agent through its `policies` field.
-
-  - q: How do I configure agents in on-prem deployments?
-    a: |
-      {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
-      For on-prem deployments, configure agent proxying using {{site.base_gateway}} plugins directly (for example, the AI A2A Proxy plugin).
-      See the [{{site.base_gateway}} plugin catalog](/gateway/plugins/) for available AI-related plugins.
+      Plugin configuration that applies to the AI Agent goes through the [AI Policy entity](/ai-gateway/entities/ai-policy/).
+      Attach AI Policies to the AI Agent through its [`policies`](#schema-aigateway-agent-policies) field.
 ---
 
-## What is an Agent?
+## What is an AI Agent?
 
-An Agent is a first-class {{site.ai_gateway}} entity that represents an upstream agent endpoint exposed through {{site.ai_gateway}}. An Agent has a type, either `a2a` for [Agent-to-Agent protocol](https://a2aproject.github.io/A2A/) traffic or `http` for generic HTTP agent routing, and a configuration that points {{site.ai_gateway}} at the upstream and shapes how requests flow.
+An AI Agent is a first-class {{site.ai_gateway}} entity that represents an upstream agent endpoint exposed through {{site.ai_gateway}}. An AI Agent has a type, either `a2a` for [Agent-to-Agent protocol](https://a2aproject.github.io/A2A/) traffic or `http` for generic HTTP agent routing, and a configuration that points {{site.ai_gateway}} at the upstream and shapes how requests flow.
 
-For `http` type Agents, requests are proxied without A2A-specific processing. For `a2a` type Agents, {{site.ai_gateway}} adds protocol-aware behavior on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry.
+For `http` type AI Agents, requests are proxied without A2A-specific processing. For `a2a` type AI Agents, {{site.ai_gateway}} adds protocol-aware behavior on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry.
 
-Agents can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+AI Agents can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
@@ -95,6 +88,14 @@ rows:
   - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/agents
 {% endtable %}
+
+## AI Agent types
+
+An AI Agent's [`type`](#schema-aigateway-agent-type) controls how requests are processed:
+
+**`a2a` (Agent-to-Agent):** Applies A2A protocol awareness to proxied traffic. The runtime detects A2A requests (JSON-RPC and REST bindings), rewrites agent-card URLs to the gateway address, emits structured A2A telemetry, and extracts task metadata for analytics. Use this when the upstream speaks the A2A protocol and you want full observability tied to A2A semantics.
+
+**`http`:** Generic HTTP proxy without A2A-specific processing. Requests pass through transparently. Use this for upstream agents that don't implement A2A or when you need a simple forward proxy without protocol-aware behavior.
 
 ## How A2A traffic flows
 
@@ -109,7 +110,7 @@ Non-A2A traffic, and traffic to `http` Agents, is proxied without these steps.
 
 ## Routing configuration
 
-Beyond the `url` field, Agents can define HTTP routing rules through `config.route`. This allows you to match requests by method, path, host, and other HTTP patterns. Use `route` when you need fine-grained control over which traffic reaches the Agent. If only a URL is needed, the `url` field is simpler.
+Beyond the [`url`](#schema-aigateway-agent-config-url) field, AI Agents can define HTTP routing rules through [`config.route`](#schema-aigateway-agent-config-route). This allows you to match requests by method, path, host, and other HTTP patterns. Use [`route`](#schema-aigateway-agent-config-route) when you need fine-grained control over which traffic reaches the AI Agent. If only a URL is needed, the [`url`](#schema-aigateway-agent-config-url) field is simpler.
 
 <!-- vale off -->
 {% mermaid %}
@@ -232,13 +233,13 @@ The canonical method name is what appears in OpenTelemetry span attributes and l
 
 #### JSON-RPC binding
 
-Detected by the `"jsonrpc"` field in the request body, combined with a recognized A2A method name or an `A2A-Version` request header. Recognized methods include `message/send`, `message/stream`, `tasks/get`, `tasks/list`, `tasks/cancel`, `tasks/resubscribe`, the `tasks/pushNotificationConfig/*` family, and `agent/getExtendedAgentCard`.
+Detected by the [`"jsonrpc"`](#schema-aigateway-agent-config-jsonrpc) field in the request body, combined with a recognized A2A method name or an `A2A-Version` request header. Recognized methods include `message/send`, `message/stream`, `tasks/get`, `tasks/list`, `tasks/cancel`, `tasks/resubscribe`, the `tasks/pushNotificationConfig/*` family, and `agent/getExtendedAgentCard`.
 
-A request carrying an `A2A-Version` header is treated as JSON-RPC even if the method isn't in the recognized list. When an unknown method is accepted this way, the `method` field in log output is recorded as `"unknown"` to bound metric cardinality. The OpenTelemetry span's `kong.a2a.operation` attribute still receives the actual method name.
+A request carrying an `A2A-Version` header is treated as JSON-RPC even if the method isn't in the recognized list. When an unknown method is accepted this way, the [`method`](#schema-aigateway-agent-config-method) field in log output is recorded as `"unknown"` to bound metric cardinality. The OpenTelemetry span's `kong.a2a.operation` attribute still receives the actual method name.
 
 ### Agent-card URL rewriting
 
-When an upstream agent returns an agent card, the runtime rewrites the `url` field, and any `additionalInterfaces[].url` fields, to the {{site.ai_gateway}} address. A2A clients then discover the gateway as the canonical endpoint instead of contacting the upstream directly. The rewrite uses `X-Forwarded-*` headers to construct the correct scheme, host, and port when the gateway is deployed behind a load balancer or reverse proxy.
+When an upstream agent returns an agent card, the runtime rewrites the [`url`](#schema-aigateway-agent-config-url) field, and any [`additionalInterfaces[].url`](#schema-aigateway-agent-config-additional-interfaces-url) fields, to the {{site.ai_gateway}} address. A2A clients then discover the gateway as the canonical endpoint instead of contacting the upstream directly. The rewrite uses `X-Forwarded-*` headers to construct the correct scheme, host, and port when the gateway is deployed behind a load balancer or reverse proxy.
 
 ## Logging and observability
 
@@ -275,13 +276,13 @@ Task state values surfaced in logs and spans are normalized to lowercase A2A spe
 
 ## Access control
 
-The `acls` field controls which identities are allowed to reach the Agent. The field accepts `allow` and `deny` lists. Each entry is a string that references a Consumer, Consumer Group, or Authenticated Group by name. Access is enforced before traffic reaches the upstream agent.
+The [`acls`](#schema-aigateway-agent-acls) field controls which identities are allowed to reach the AI Agent. The field accepts `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. Access is enforced before traffic reaches the upstream agent.
 
-For per-request authentication and identity, attach an authentication Policy to the Agent.
+For per-request authentication and identity, attach an authentication AI Policy to the AI Agent.
 
 ## Attach Policies
 
-Policies are how plugin configurations apply to an Agent. Attach them through the Agent's `policies` field. Each entry is a string that references a Policy by name or ID. Multiple Policies can attach to one Agent; each runs as an independent plugin instance.
+AI Policies are how plugin configurations apply to an AI Agent. Attach them through the AI Agent's [`policies`](#schema-aigateway-agent-policies) field. Each entry is a string that references an AI Policy by name or ID. Multiple AI Policies can attach to one AI Agent; each runs as an independent plugin instance.
 
 For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
