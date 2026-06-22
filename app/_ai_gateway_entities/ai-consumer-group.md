@@ -11,7 +11,7 @@ permalink: /ai-gateway/entities/ai-consumer-group/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-description: Consumer Groups for {{site.ai_gateway}}.
+description: AI Consumer Groups for {{site.ai_gateway}}.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayConsumerGroup
@@ -65,13 +65,13 @@ faqs:
       See the [AI Model entity](/ai-gateway/entities/ai-model/) reference.
 ---
 
-## What is a Consumer Group?
+## What is an AI Consumer Group?
 
-A Consumer Group is the {{site.ai_gateway}} entity that represents a collection of Consumers grouped for the purpose of applying shared Policies and access controls.
+An AI Consumer Group is the {{site.ai_gateway}} entity that represents a collection of AI Consumers grouped for the purpose of applying shared AI Policies and access controls.
 
 Use AI Consumer Groups to scope group-wide behavior, such as rate limits, prompt guards, or content moderation, without configuring each AI Consumer individually. AI Consumer Groups can appear in the `acls` field of AI Model, AI Agent, and AI MCP Server entities, where they gate access to those parent entities.
 
-Consumer Groups can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+AI Consumer Groups can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
 
 {% table %}
 columns:
@@ -84,40 +84,40 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/consumer-groups
 {% endtable %}
 
-## Configure a Consumer Group
+## Configure an AI Consumer Group
 
-When you create a Consumer Group, the configuration steps generally follow this order:
+When you create an AI Consumer Group, the configuration steps generally follow this order:
 
 1. Create the group with a [`display_name`](#schema-aigateway-consumer-group-display-name), [`name`](#schema-aigateway-consumer-group-name), and optional description.
-1. Optionally attach Policies for group-wide plugin execution (such as rate limits or content moderation).
-1. Assign Consumers to the group through each Consumer's `consumer_groups` array.
+1. Optionally attach AI Policies for group-wide plugin execution (such as rate limits or content moderation).
+1. Assign AI Consumers to the group through each AI Consumer's `consumer_groups` array.
 1. Optionally use the AI Consumer Group in `acls` on AI Model, AI Agent, or AI MCP Server entities to control access.
 
-For a concrete example, see [Set up a Consumer Group](#set-up-a-consumer-group).
+For a concrete example, see [Set up an AI Consumer Group](#set-up-an-ai-consumer-group).
 
 ## Membership
 
-A Consumer Group doesn't list its members directly. To add a Consumer to a Consumer Group, use the Consumer Group's membership management. A single Consumer can belong to multiple Consumer Groups.
+Membership is managed through the [AI Consumer entity](/ai-gateway/entities/ai-consumer/). Add an AI Consumer to one or more AI Consumer Groups by setting the `consumer_groups` array on the AI Consumer. A single AI Consumer can belong to multiple AI Consumer Groups.
 
-For Consumer configuration details, see the [Consumer entity](/ai-gateway/entities/ai-consumer/) reference.
+For AI Consumer configuration details, see the [AI Consumer entity](/ai-gateway/entities/ai-consumer/) reference.
 
-## Attach Policies
+## Attach AI Policies
 
-Policies attached to a Consumer Group run when a member of that group is identified during a request. To attach a Policy, add its `name` or `id` to the Consumer Group's [`policies`](#schema-aigateway-consumer-group-policies) array.
+AI Policies attached to an AI Consumer Group run when a member of that group is identified during a request. To attach an AI Policy, add its `name` or `id` to the AI Consumer Group's [`policies`](#schema-aigateway-consumer-group-policies) array.
 
-You can attach multiple Policies to a single Consumer Group. Each Policy is an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
+You can attach multiple AI Policies to a single AI Consumer Group. Each AI Policy is an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
 
-For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+For the supported plugin types and how AI Policies attach to other entities, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Use in parent entity ACLs
 
 The `acls` field on AI Model, AI Agent, and AI MCP Server entities accepts AI Consumer Group names alongside AI Consumer and Authenticated Group names. Add an AI Consumer Group to a parent entity's `acls.allow` list to permit its members access, or to `acls.deny` to block them.
 
-Consumer Group membership is resolved after the request is authenticated and the Consumer is identified.
+AI Consumer Group membership is resolved after the request is authenticated and the AI Consumer is identified.
 
-## Set up a Consumer Group
+## Set up an AI Consumer Group
 
-The following example creates an AI Consumer Group with one attached Policy that applies a shared rate limit to its members.
+The following example creates an AI Consumer Group with one attached AI Policy that applies a shared rate limit to its members.
 
 {% entity_example %}
 type: consumer_group
