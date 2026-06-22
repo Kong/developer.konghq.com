@@ -243,11 +243,13 @@ rows:
     diagnosis: |
       Diagnose whether {{site.base_gateway}} routed the request, whether it reached the upstream, whether the upstream returned an error, or whether a plugin terminated the request before it reached the upstream.
   - symptom: Authentication failures
-    filter: "`http.response.status_code == 401`"
-    diagnosis: Diagnose whether the authentication plugin executed.
+    filter: "`http.response.status_code == 401 || proxy.kong.upstream.status_code == 401`"
+    diagnosis: |
+      Look through the trace to verify whether the 401 was returned by the upstream, or whether the request was rejected by the authentication plugin and never reached the upstream.
   - symptom: Missing or unexpected request transformation
-    filter: "`http.route.name == \"your_route\"`"
-    diagnosis: Diagnose whether plugins executed in the expected order.
+    filter: |
+      Any of:<br>`proxy.kong.route.id == "<route-uuid>"`<br>`proxy.kong.service.id == "<service-uuid>"`<br>`http.path == "/v1/abc"`
+    diagnosis: Look at the summary view or spans view to diagnose whether plugins executed in the expected order.
   - symptom: Custom plugin failure
     filter: "`http.route.name == \"your_route\"`"
     diagnosis: |
