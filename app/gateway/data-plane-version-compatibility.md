@@ -44,13 +44,13 @@ columns:
     key: description
 rows:
   - status: Compatible
-    description: "This data plane node supports the configuration from the control plane."
+    description: "Fully supported."
   - status: Compatible with limitations
-    description: "This data plane node is operating normally, but some newer features may be limited because of its {{site.base_gateway}} version."
+    description: "Supported, but some features may be unavailable, because of the {{site.base_gateway}} version."
   - status: Incompatible
-    description: "This data plane node has compatibility issues that may prevent it from receiving or applying the full control plane configuration."
+    description: "Compatibility issues may prevent the node from receiving or applying the full control plane configuration."
   - status: Unknown
-    description: "{{site.konnect_short_name}} can't determine the compatibility status for this data plane node. Check the node connection and {{site.base_gateway}} version."
+    description: "Status can't be determined. Check the node connection and {{site.base_gateway}} version."
 {% endtable %}
 
 ## Compatibility errors
