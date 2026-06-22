@@ -83,8 +83,6 @@ The following example:
 - Sets a system-generated key (`v1`)
 - Stores the key secret as `$KEY_SECRET`
 
-VERIFY THE NAME OF THE KEY OUTPUT BY THE CLI
-
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/api-keys
@@ -98,15 +96,13 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+## Get the directory name
 
+To configure the Key Auth plugin, you'll need the name of the directory you created. Store it as `DECK_DIRECTORY-NAME` with this script:
+
+{% include /how-tos/steps/get-directory-name.md %}
 
 ## Configure the Key Auth plugin via decK
-
-Save the `directory_id` as a decK variable:
-
-```sh
-export DECK_DIRECTORY_ID=$DIRECTORY_ID
-```
 
 Enable the [Key Auth](/plugins/key-auth/) plugin to allow clients to authenticate with a key when they make a request:
 
@@ -122,7 +118,7 @@ entities:
         directory: ${directory_id}
 variables:
   directory_id:
-    value: $DIRECTORY_ID
+    value: $DIRECTORY_NAME
 formats:
   - deck
 {% endentity_examples %}
