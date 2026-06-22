@@ -1,4 +1,4 @@
-This tutorial requires a DeepSeek API key.
+This tutorial requires a {{ site.kimi }} API key.
 
 1. Create a [Kimi Platform](https://platform.kimi.ai/) account.
 1. Click **API keys**.
