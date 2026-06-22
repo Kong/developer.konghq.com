@@ -125,7 +125,7 @@ formats:
 
 This configuration:
 
-- Enables the pluging on `example-route`.
+- Enables the plugin on `example-route`.
 - Set the authentication method with Principals in the `example-directory` Directory.
 
 ## Validate
