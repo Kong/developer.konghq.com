@@ -11,7 +11,7 @@ permalink: /ai-gateway/entities/ai-agent/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-description: Agent entity used by {{site.ai_gateway}} for A2A and HTTP agent configurations.
+description: AI Agent entity used by {{site.ai_gateway}} for A2A and HTTP agent configurations.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayAgent
@@ -24,9 +24,9 @@ related_resources:
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
-  - text: Policy entity
+  - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
-  - text: Consumer Group entity
+  - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
   - text: A2A protocol specification
     url: https://a2aproject.github.io/A2A/
