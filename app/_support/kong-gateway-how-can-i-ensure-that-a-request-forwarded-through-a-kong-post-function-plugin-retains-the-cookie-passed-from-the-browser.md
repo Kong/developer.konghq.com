@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}}: Retaining the browser cookie when forwarding a request through a post-function plugin"
+title: "How can I ensure that a request forwarded through a Kong post-function plugin retains the Cookie passed from the browser?"
 content_type: support
 description: When a request is forwarded through a Kong post-function plugin, the browser Cookie may not be retained; use pre-function and post-function plugins with kong.ctx.shared to capture and forward the Cookie header.
 products:
@@ -26,8 +26,6 @@ When a request is forwarded through a Kong `post-function` plugin, the `Cookie` 
 ## Cause
 
 This problem can arise when the request handling does not correctly propagate the `Cookie` header to the upstream service.
-
-## Solution
 
 You can use a combination of `pre-function` and `post-function` plugins to capture and forward the `Cookie` header correctly. To implement this solution, follow these steps:
 

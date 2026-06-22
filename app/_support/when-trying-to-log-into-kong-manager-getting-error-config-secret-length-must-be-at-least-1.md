@@ -20,18 +20,10 @@ related_resources: []
 
 ## Problem
 
-When trying to log into Kong Manager we are receiving the following error:
+When trying to log into Kong Manager, you receive the following error:
 
 ```
 [error] 2142#0: *3867 [lua] kong.lua:429: fn(): kong[auth][postgres] schema violation (config.client_secret: {"length must be at least 1"}), client: 123.123.123.1, server: kong_admin, request: "GET /auth?Kong-Admin-User=sample@email.com HTTP/1.1", host:"localhost:8001", referrer: "http://localhost:8002/"
-```
-
-We are using OIDC as our auth method.
-
-Here is our config:
-
-```yaml
-KONG_ADMIN_GUI_AUTH_CONF: '{"issuer":"http://keycloak:9977/auth/realms/master/.well-known/openid-configuration","admin_claim":"email","client_id": ["kong"],"client_secret": ["${sample}"],"ssl_verify": false,"leeway": 60,"redirect_uri": ["http://localhost:8002"],"scopes": ["openid","profile","offline_access"],"auth_methods": ["authorization_code"], "admin_auto_create_rbac_token_disabled": false }'
 ```
 
 ## Cause

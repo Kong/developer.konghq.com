@@ -7,6 +7,7 @@ products:
 works_on:
   - on-prem
   - konnect
+published: false
 tldr:
   q: "Why does my Helm upgrade fail with `This instance contains workspaced entities that need a custom migration`?"
   a: |

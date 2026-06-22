@@ -1,5 +1,5 @@
 ---
-title: Getting the time when Kong sends a request to upstream and receives the whole response
+title: How to get the time when Kong sends a request to upstream and the time Kong gets the whole response from upstream
 content_type: support
 description: Use the pre-function and post-function plugins to log the time Kong sends a request to upstream and the time Kong receives the whole response.
 products:
@@ -24,17 +24,8 @@ related_resources:
     url: /plugins/pre-function/
   - text: post-function plugin configuration
     url: /plugins/post-function/
-  - text: "`untrusted_lua_sandbox_requires`"
-    url: /gateway/configuration/#untrusted-lua-sandbox-requires
 ---
 
-## Overview
-
-When I send a request to Kong, how can I get the following times?
-
-(1) The time when Kong sends a request to upstream
-
-(2) The time Kong gets the whole response from upstream
 
 ## Steps
 

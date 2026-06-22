@@ -7,6 +7,7 @@ products:
 works_on:
   - on-prem
   - konnect
+published: false
 tldr:
   q: "When trying to run `luarocks pack` on versions 3.x and above getting \"executor failed running\""
   a: |

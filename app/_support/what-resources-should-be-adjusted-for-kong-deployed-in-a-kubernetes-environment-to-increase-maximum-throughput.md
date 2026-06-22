@@ -1,5 +1,5 @@
 ---
-title: Adjusting resources to increase maximum throughput for Kong in Kubernetes
+title: "How do I adjust resources to increase maximum throughput for Kong in Kubernetes?"
 content_type: support
 description: "When scaling Kong in Kubernetes to increase maximum throughput, ensure adequate CPU and memory resources and use performance benchmarking to determine the precise requirements."
 products:

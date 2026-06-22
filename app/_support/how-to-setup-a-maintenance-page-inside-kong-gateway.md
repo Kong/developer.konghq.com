@@ -22,9 +22,8 @@ tldr:
 
 This article describes how to set up a maintenance page in {{site.base_gateway}}. If an endpoint is being worked on, you can enable this page to display a message to users.
 
-## Steps
 
-One of the easier ways to accomplish this is by using the Request Termination plugin.
+One of the easier ways to accomplish this is by using the [Request Termination plugin](/plugins/request-termination/).
 
 To begin, create the Request Termination plugin on the specific route/service in question (if all services then you can set the plugin globally).
 

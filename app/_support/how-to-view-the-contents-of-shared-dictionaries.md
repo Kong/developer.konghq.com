@@ -16,12 +16,6 @@ tldr:
 related_resources: []
 ---
 
-## Overview
-
-How do you see the contents of the shared dictionaries?
-
-## Steps
-
 Use a `pre-function` plugin to report the contents of the SHM LRU dictionaries in Kong.
 
 The following examples show `pre-function` plugin code that inspects the `kong_rate_limiting_counters` dictionary for the first 2000 keys.

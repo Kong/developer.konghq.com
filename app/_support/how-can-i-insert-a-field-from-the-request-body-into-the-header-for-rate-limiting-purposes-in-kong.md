@@ -1,5 +1,5 @@
 ---
-title: "How can I insert a field from the request body into the header for rate limiting purposes"
+title: "How can I insert a field from the request body into the header for rate limiting"
 content_type: support
 description: Use the pre-function plugin with the Kong PDK to extract a field from the request body and insert it into a request header so you can rate limit on that field.
 products:
@@ -46,6 +46,5 @@ end
 
 1. Once the pre-function plugin is correctly configured with this script, Kong will automatically insert the `number` field from the request body into the request header as `x-contact-number`. You can then set up rate limiting based on this header as per your requirements.
 
-Please note, the provided code snippet is a basic example meant to illustrate the concept. Depending on your specific use case, you might need to extend this script to handle various edge cases, such as requests with multiple contacts or missing fields. Implementing proper error handling and validation logic will ensure that your configuration is robust and can handle unexpected inputs gracefully.
 
 This method provides a flexible way to manipulate request headers based on the content of the request body, enabling more granular control over rate limiting and other policies in Kong.

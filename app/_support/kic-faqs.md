@@ -1,18 +1,12 @@
 ---
 title: "{{site.kic_product_name}} FAQs"
-content_type: support
+content_type: reference
 description: "Answers to common questions about {{site.kic_product_name}}, including gathering metrics and creating additional Kubernetes resources with the Helm chart."
 products:
   - kic
 works_on:
   - on-prem
   - konnect
-tldr:
-  q: Where can I find answers to common {{site.kic_product_name}} questions?
-  a: |
-    This page collects frequently asked questions about {{site.kic_product_name}}: how to gather
-    metrics from the controller, and how to create additional Kubernetes resources when deploying
-    with the Kong Helm chart.
 related_resources: []
 ---
 

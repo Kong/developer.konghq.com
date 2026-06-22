@@ -36,8 +36,6 @@ Error: [PostgreSQL error] failed to retrieve PostgreSQL server_version_num: FATA
 
 This error occurs when Kong connects to the PostgreSQL DB server without SSL, but the server requires SSL connections.
 
-## Solution
-
 To resolve this error, consider the following options:
 
 1. We recommend that you configure Kong to connect to the PostgreSQL DB server using SSL. The PostgreSQL configuration properties are documented in the documentation on PostgreSQL settings.

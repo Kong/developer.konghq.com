@@ -19,9 +19,6 @@ tldr:
 related_resources: []
 ---
 
-## Overview
-
-This article describes how to add the data plane pod name to the log produced by a Kong log plugin to make it easier to identify a specific Kong pod that processed the request.
 
 ## Steps
 
