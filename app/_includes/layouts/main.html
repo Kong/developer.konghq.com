@@ -57,7 +57,8 @@
         {% endifhascontent %}
 
         {%- if page.beta == true or page.tech_preview == true -%}
-        {%- include_cached banners/stage.html beta=page.beta tech_preview=page.tech_preview -%}
+        {% assign show_production_warning = true %}{% if page.url == '/plugins/ai-mcp-oauth2/' %}{% assign show_production_warning = false %}{% endif %}
+        {%- include_cached banners/stage.html beta=page.beta tech_preview=page.tech_preview show_production_warning=show_production_warning -%}
         {%- endif -%}
     </div>
 

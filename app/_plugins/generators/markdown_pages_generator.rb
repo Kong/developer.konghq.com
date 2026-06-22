@@ -82,8 +82,8 @@ module Jekyll
       content.gsub!(/<!--\s*vale on\s*-->/, '')
       content.gsub!(/<!--\s*vale off\s*-->/, '')
 
-      %w[info warning danger success neutral decorative].each do |type|
-        content.gsub!(/{:\s*.#{type}}/, '')
+      %w[info warning danger success neutral decorative ai].each do |type|
+        content.gsub!(/{:\s*\.#{type}[^}]*}/, '')
       end
 
       content
