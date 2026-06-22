@@ -30,6 +30,7 @@ module Jekyll
           @site.collections['references'].docs.each do |doc|
             page = Page.new(doc).to_jekyll_page
             @references[page.data['base_url']] << page
+            doc.data['published'] = false
 
             @site.pages << page
           end

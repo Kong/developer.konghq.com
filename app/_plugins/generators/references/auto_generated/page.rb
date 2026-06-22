@@ -24,6 +24,7 @@ module Jekyll
         def data
           @data ||= @doc
                     .data
+                    .deep_dup
                     .merge!(
                       'base_url' => base_url,
                       'latest?' => page_release == latest_available_release,
