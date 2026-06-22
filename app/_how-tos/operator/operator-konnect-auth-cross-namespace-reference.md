@@ -22,6 +22,8 @@ tldr:
 related_resources:
   - text: Reference Secrets across multiple namespaces
     url: /operator/konnect/how-to/secret-cross-namespace-reference/
+  - text: Enable static naming for Konnect control planes
+    url: /operator/konnect/how-to/static-naming/
 
 min_version:
   operator: '2.1'
@@ -142,3 +144,6 @@ To validate, check that the `KonnectGatewayControlPlane` resource was automatica
 ```sh
 kubectl get konnectgatewaycontrolplane -n kong
 ```
+
+{:.info}
+> By default, the generated `KonnectGatewayControlPlane` receives a dynamic name. Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` to use a predictable name based on the Gateway's namespace and name. Names cannot be changed after creation.
