@@ -1,0 +1,9 @@
+The [load balancer](/ai-gateway/load-balancing/) supports health checks and circuit breakers to improve reliability. If the number of unsuccessful attempts to a target reaches [`config.balancer.max_fails`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-max-fails), the load balancer stops sending requests to that target until it reconsiders the target after the period defined by [`config.balancer.fail_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-fail-timeout). The diagram below illustrates this behavior:
+
+![Circuit breaker](/assets/images/ai-gateway/circuit-breaker.jpg){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
+
+Consider an example where [`config.balancer.max_fails`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-max-fails) is 3 and [`config.balancer.fail_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-fail-timeout) is 10 seconds. When failed requests for a target reach 3, the target is marked unhealthy and the load balancer stops sending requests to it. After 10 seconds, the target is reconsidered. If the request to this target still fails, the target remains unhealthy and the load balancer continues to exclude it. If the request succeeds, the target is marked healthy again and recovers from the circuit breaker.
+
+The failure counter tracks total failures, not consecutive failures. If a target receives 2 failed requests, then 1 successful request within the timeout window, the counter remains at 2. The counter resets only when a successful request occurs after [`config.balancer.fail_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-fail-timeout) has elapsed since the last failed request.
+
+If all targets become unhealthy simultaneously, requests fail with `HTTP 500`.

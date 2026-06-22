@@ -5,28 +5,20 @@ layout: reference
 
 products:
   - ai-gateway
-  - gateway
 breadcrumbs:
   - /ai-gateway/
 tags:
   - ai
   - monitoring
 
-plugins:
-  - prometheus
-  - ai-proxy
-  - ai-proxy-advanced
-
 min_version:
-  gateway: '3.7'
+  ai-gateway: '2.0'
 
 description: "This guide walks you through collecting AI metrics and sending them to Prometheus."
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
   - text: Status API
     url: /api/gateway/status/
   - text: Admin API
@@ -35,45 +27,32 @@ related_resources:
     url: /how-to/visualize-llm-metrics-with-grafana/
 
 works_on:
-  - on-prem
   - konnect
 ---
 
-{{site.ai_gateway}} calls LLM-based services according to the settings of the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins.
-You can aggregate the LLM provider responses to count the number of tokens used by the AI plugins.
-If you have defined input and output costs in the models, you can also calculate cost aggregation.
-The metrics details also expose whether the requests have been cached by {{site.base_gateway}}, saving the cost of contacting the LLM providers, which improves performance.
+{{site.ai_gateway}} calls LLM-based services according to the settings of your [Providers](/ai-gateway/entities/ai-provider/) and [Models](/ai-gateway/entities/ai-model/). You can use the built in logging and a [Prometheus](/plugins/prometheus/) Policy to aggregate the LLM provider responses to count the number of tokens sent through {{site.ai_gateway}}. If you have defined input and output costs in the models, you can also calculate aggregate costs. You can also track whether the requests have been cached by {{site.ai_gateway}}, saving the cost of contacting the LLM providers, which improves performance.
 
-{% new_in 3.12 %} In addition to LLM usage, {{site.ai_gateway}} also tracks MCP server traffic. MCP metrics provide visibility into latency, response sizes, and error rates when AI plugins invoke external MCP tools and servers.
+In addition to LLM usage, {{site.ai_gateway}} can also log MCP server traffic. [MCP logging](/ai-gateway/entities/ai-mcp-server/#logging-and-audits) provides visibility into latency, response sizes, and error rates when AI plugins invoke external MCP tools and servers.
 
-{{site.ai_gateway}} exposes metrics related to Kong and proxied upstream services in
-[Prometheus](https://prometheus.io/docs/introduction/overview/)
-exposition format, which can be scraped by a Prometheus server.
+Create a [Prometheus Policy](/plugins/prometheus/) to expose metrics in the [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus server.
 
-The metrics are available on both the [Admin API](/api/gateway/admin-ee/) and the
-[Status API](/api/gateway/status/)  at the `http://{host}:{port}/metrics` endpoint.
-Note that the URL to those APIs is specific to your
-installation. See [Accessing the metrics](#accessing-the-metrics) for more information.
+The [Prometheus Policy](/plugins/prometheus/) records and exposes metrics at the node level. Your Prometheus server will need to discover all Kong nodes via a service discovery mechanism,
+and consume data from each node's Prometheus `/metrics` endpoint.
 
-The [Prometheus plugin](/plugins/prometheus/) records and exposes metrics at the node level. Your Prometheus
-server will need to discover all Kong nodes via a service discovery mechanism,
-and consume data from each node's configured `/metrics` endpoint.
-
-AI metrics exported by the plugin can be graphed in Grafana using [{{site.ai_gateway}} Dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
+AI metrics exported by the Prometheus plugin can be graphed in Grafana using [{{site.ai_gateway}} Dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
 
 ## Available metrics
 
 The following sections describe the AI metrics that are available.
 
-{% include /ai-gateway/llm-metrics.md %}
+{% include /ai-gateway/v2/llm-metrics.md %}
 
 ## Overview
 
-AI metrics are disabled by default as it may create high cardinality of metrics and may
-cause performance issues. To enable them:
+AI metrics are disabled by default as it may create high number of metrics and may cause performance issues. To enable them:
 
-* Set `config.ai_metrics` to `true` in the [Prometheus plugin configuration](/plugins/prometheus/reference/).
-* Set `config.logging.log_statistics` to `true` in the [AI Proxy](/plugins/ai-proxy/reference/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/reference/).
+* Set `config.ai_metrics` to `true` in the [Prometheus Policy configuration](/plugins/prometheus/reference/).
+* Set `config.logging.log_statistics` to `true` in the [Model](/ai-gateway/entities/ai-model/).
 
 ### LLM traffic metrics overview
 
@@ -112,10 +91,10 @@ ai_llm_provider_latency{ai_provider="provider1",ai_model="model1",cache_status="
 ```
 
 {:.info}
-> **Note:** If you don't use any cache plugins, then `cache_status`, `vector_db`,
+> **Note:** If you don't use any caching, then `cache_status`, `vector_db`,
 `embeddings_provider`, and `embeddings_model` values will be empty.
 >
-> To expose the `ai_llm_cost_total` metric, you must define the `model.options.input_cost` `model.options.output_cost` parameters. See the [AI Proxy](/plugins/ai-proxy/reference/#schema--config-model-options-input-cost) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/#schema--config-targets-model-options-input-cost) configuration references for more details.
+> To expose the `ai_llm_cost_total` metric, you must define the `model.options.input_cost` `model.options.output_cost` parameters. See the [Model](/ai-gateway/entities/ai-model/) configuration reference for more details.
 
 ### MCP traffic metrics overview
 
@@ -137,12 +116,11 @@ kong_ai_mcp_error_total{service="svc1",route="route1",type="Invalid Request",met
 
 ## Accessing the metrics
 
-In most configurations, the Kong Admin API will be behind a firewall or would
+In most configurations, the Kong Admin API and Prometheus Policy will be behind a firewall or would
 need to be set up to require authentication. Here are a couple of options to
 allow access to the `/metrics` endpoint to Prometheus:
 
-
-* If the Status API is enabled with the `status_listen` parameter in the [{{site.base_gateway}} configuration](/gateway/configuration/#status-listen), then its `/metrics` endpoint can be used. This is the preferred method, and this is also the only method compatible with {{site.konnect_short_name}}, since Data Planes can't use the Admin API.
+* If the Status API is enabled with the `status_listen` parameter in the [{{site.base_gateway}} configuration](/ai-gateway/configuration/#status-listen), then its `/metrics` endpoint can be used. This is the preferred method, and this is also the only method compatible with {{site.konnect_short_name}}, since Data Planes can't use the Admin API.
 
 * The `/metrics` endpoint is also available on the Admin API, which can be used
 if the Status API is not enabled. Note that this endpoint is unavailable
