@@ -39,23 +39,6 @@ prereqs:
         ```sh
         export OPENAI_API_KEY='<api-key>'
         ```
-
-    - title: AI Gateway ID
-      content: |
-        Get your {{site.ai_gateway}} ID from {{site.konnect_product_name}}:
-
-        ```sh
-        curl --request GET \
-          --url 'https://us.api.konghq.com/v1/ai-gateways?page%5Bsize%5D=10&page%5Bnumber%5D=1' \
-          --header 'Accept: application/json, application/problem+json' \
-          --header "Authorization: Bearer $KONNECT_TOKEN"
-        ```
-
-        Save the `id` from the response:
-
-        ```sh
-        export AI_GATEWAY_ID='<your-ai-gateway-id>'
-        ```
 cleanup:
   inline:
     - title: Clean up {{site.konnect_product_name}} environment
@@ -151,7 +134,7 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
-  model: gpt-4o
+  model: my-gpt-4o
   messages:
   - role: "user"
     content: "Say this is a test!"
