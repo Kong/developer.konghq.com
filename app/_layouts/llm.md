@@ -1,5 +1,6 @@
 {%- if page.content_type == 'landing_page' -%}
 {% include llm/frontmatter.md %}
+{% include llm/banners.md %}
 {% include llm/landing_page.md %}
 {%- else -%}
 {% include llm/frontmatter.md %}
