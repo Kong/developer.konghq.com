@@ -20,8 +20,8 @@ Changelog for supported {{site.event_gateway}} versions.
 
 ### Fixes
 
-- **Updated vulnerable dependencies and container base images**: Refreshed the runtime distroless base (patched OpenSSL/glibc) and removed the legacy `rustls/rustls-webpki` stack, clearing the outstanding advisories.
-- **Bumped `aws-lc-sys` / `aws-lc-rs`**: Pulled in the fixed AWS-LC crypto bindings (RUSTSEC-2026-0044, -0048).
+- **Updated vulnerable dependencies and container base images**: Refreshed the runtime distro-less base (patched OpenSSL/glibc) and removed the legacy `rustls/rustls-webpki` stack, clearing the outstanding advisories.
+- **Bumped `aws-lc-sys` / `aws-lc-rs`**: Pulled in the fixed AWS-LC bindings (RUSTSEC-2026-0044, -0048).
 - **Namespacing: consumer group rewrite**: Corrects how consumer group identifiers are rewritten when proxying, so group operations resolve to the right backend.
 - **ACLs: drop unsupported APIs**: Removes Kafka APIs that aren't supported under ACL handling, avoiding incorrect authorization behavior.
 
