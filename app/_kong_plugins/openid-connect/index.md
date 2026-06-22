@@ -87,13 +87,15 @@ faqs:
     a: |
       Yes, but since the OIDC plugin only accepts one issuer URL, this requires some extra configuration.
 
-      You can verify tokens issued by multiple IdP using the [`extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris) configuration option, with the following considerations:
+      You can verify tokens issued by multiple IdP using the [`extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris) configuration option with the following considerations:
 
       * Since the plugin only accepts a single issuer, any `iss` claim verification will fail for tokens that come from a different IdP than the one that was used in the issuer configuration option. Add all issuers as they appear in the `iss` claims of your tokens to the [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) setting.
       * If you make any changes to the `extra_jwks_uris` value, you have to clear the second level DB cache for the change to become effective.
       See [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache).
 
-      See the [Extra JWKs](/plugins/openid-connect/examples/extra-jwks/) configuration example for more detail.
+      You can also use [token exchange](#token-exchange), which allows exchanging an existing security token for a new one.
+
+      See the [OIDC multi-IdP](/plugins/openid-connect/multi-idp/) reference for more detail.
   - q: How do I enable the Proof Key for Code Exchange (PKCE) extension to the authorization code flow in the OIDC plugin?
     a: |
       The OIDC plugin supports PKCE out of the box, so you don't need to configure anything. 
@@ -561,6 +563,22 @@ To enable DPoP for OpenID Connect:
 * Use the [`config.proof_of_possession_dpop`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-dpop) configuration option to ensure that the supplied access token is bound to the client by verifying its association with the JWT provided in the request.
 
 See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for more detail.
+
+## Multi-IdP support
+
+If your APIs serve clients that authenticate with different identity providers, the OIDC plugin can validate tokens from multiple issuers at the gateway layer, so backends don't need per-IdP logic.
+
+You can implement this in one of the following ways:
+
+* **Trusted issuers registry**: Configure the OIDC plugin with a list of trusted issuers and their JWKS endpoints using [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) and [`config.extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris).
+{{site.base_gateway}} validates incoming tokens against the appropriate public keys and forwards them to the backend as-is.
+This works best when token formats are consistent across IdPs.
+
+* **Token exchange** {% new_in 3.14 %}: Configure the OIDC plugin to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](/plugins/openid-connect/reference/#schema--config-token-exchange).
+The backend always receives tokens from a single issuer regardless of which IdP the client used.
+This works best when backends must trust one issuer, or when you need to normalize scopes and claims across IdPs.
+
+For a detailed comparison, configuration parameters, and examples, see [Multi-IdP token validation at the gateway layer](/plugins/openid-connect/multi-idp/).
 
 ## Token exchange {% new_in 3.14 %}
 

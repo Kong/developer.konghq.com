@@ -42,6 +42,31 @@ prereqs:
     - title: Azure virtual WAN
       include_content: prereqs/dcgw-azure-vwan
       icon_url: /assets/icons/azure.svg
+faqs:
+  - q: "How do I manage my Azure virtual WAN peering with Terraform?"
+    a: |
+      Because configuring virtual hub peering requires approving the {{site.konnect_short_name}} app in Microsoft Entra (a step that generates a link only available in the {{site.konnect_short_name}} UI), you must complete the initial setup using the UI before managing the resource in Terraform.
+
+      After the peering is `Ready`, you can manage it with Terraform by importing the existing `konnect_cloud_gateway_transit_gateway` into your Terraform state. For a complete example, see [`cloud-gateways.tf`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/cloud-gateways.tf). The following example shows what the resource block looks like:
+      <!--vale off-->
+      ```hcl
+      resource "konnect_cloud_gateway_transit_gateway" "my_vhub_peering" {
+        network_id = var.network_id
+
+        azure_vhub_peering_gateway = {
+          name = "azure virtual hub peering"
+
+          transit_gateway_attachment_config = {
+            kind                = "azure-vhub-peering-attachment"
+            tenant_id           = var.tenant_id
+            subscription_id     = var.subscription_id
+            resource_group_name = var.resource_group_name
+            vhub_name           = var.vhub_name
+          }
+        }
+      }
+      ```
+      <!--vale on-->
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/

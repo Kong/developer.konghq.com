@@ -8,6 +8,8 @@ Flags:
                                               Warning: do not mix with consumer-group scoped plugins
   -W, --errors-as-warnings string             Treat the given comma-separated diagnostic codes as warnings.
   -h, --help                                  help for diff
+      --include-plugin-definitions            allow deck to diff plugin definitions.
+                                              Plugin definitions work with Konnect and Gateway versions >= 3.15.
       --json-output                           generate command execution report in a JSON format
       --no-mask-deck-env-vars-value           do not mask DECK_ environment variable values at diff output.
       --non-zero-exit-code                    return exit code 2 if there is a diff present,

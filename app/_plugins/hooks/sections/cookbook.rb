@@ -15,14 +15,24 @@ module SectionWrapper
     # current h4 section and pass through as-is (matching the old behavior in
     # which `move_sibling_content_into_wrapper` stopped at any h1-h4).
     def wrap_section_body(nodes)
-      out, pre, h4, body = +'', [], nil, nil
+      out = +''
+      pre = []
+      h4 = nil
+      body = nil
       nodes.each do |node|
         next if whitespace_only_text?(node)
+
         if heading?(node, 'h4')
-          out << flush_h4_pending(pre, h4, body); pre = []; h4 = node; body = []
+          out << flush_h4_pending(pre, h4, body)
+          pre = []
+          h4 = node
+          body = []
         elsif h4_boundary?(node)
-          out << flush_h4_pending(pre, h4, body); out << node.to_html
-          pre = []; h4 = nil; body = nil
+          out << flush_h4_pending(pre, h4, body)
+          out << node.to_html
+          pre = []
+          h4 = nil
+          body = nil
         elsif h4
           body << node
         else
@@ -36,6 +46,7 @@ module SectionWrapper
     def flush_h4_pending(pre, h4, body)
       return build_h4_section_string(h4, body) if h4
       return nodes_to_html(pre) if pre.any?
+
       ''
     end
 
@@ -56,7 +67,7 @@ module SectionWrapper
         <a aria-label="Anchor" href="##{slug}" title="#{escaped_title}" class="link-anchor flex items-center justify-between hover:no-underline accordion-trigger">
           <div class="flex items-center gap-2 group w-full">
             #{h4.to_html}
-            <span class="text-brand hidden link-anchor-icon group-hover:flex">
+            <span class="hidden link-anchor-icon group-hover:flex">
               #{File.read('app/assets/icons/link.svg')}
             </span>
           </div>
@@ -70,7 +81,7 @@ module SectionWrapper
     def build_h4_wrapper_string(title_html, body_html)
       <<~HTML
         <div class="accordion">
-          <div class="flex flex-col gap-4 border-b border-primary/5 accordion-item">
+          <div class="flex flex-col gap-4 border-b border-primary accordion-item">
             #{title_html}
             <div class="content accordion-panel">#{body_html}</div>
           </div>

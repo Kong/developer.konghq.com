@@ -1,0 +1,7 @@
+<svg fill="none" viewBox="0 0 320 280" height="240" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient id="kong-log-dark-grad-a" gradientUnits="userSpaceOnUse" x1="160.133" x2="160.133" y1="0" y2="263.794"><stop offset="0" stop-color="#375306"/><stop offset=".360573" stop-color="#1f3807"/><stop offset="1" stop-color="#001408"/></linearGradient>
+        <linearGradient id="kong-log-dark-grad-b" gradientUnits="userSpaceOnUse" x1="160.133" x2="160.133" y1="0" y2="265.595"><stop offset="0" stop-color="#375306" stop-opacity=".5"/><stop offset="1" stop-color="#428cdc" stop-opacity="0"/></linearGradient>
+    </defs>
+    <path d="m316.735 230.149-10.696 49.362h-58.843l3.552-13.474.064-.247-.165-.195-130.303-153.38 26.448-46.0509 30.579-.0245zm-153.661.969 29.429 36.43-4.889 11.963h-73.088l1.738-11.975.026-.181-.1-.154-17.2496-26.812 7.3446-9.271zm9.227-38.132-16.786 25.587h-55.6224l-.1465.19-38.4639 49.549h-.001l-8.6621 11.199h-49.12984v-60.151l46.22754-58.376h17.5869l.1377-.117 45.0796-38.455zm93.583-142.0622-7.895 8.17-.284.2939.237.3311 11.1 15.5126v16.3243l-31.663 25.8643-53.876-63.7794-.147-.1728h-30.977l12.286-22.5039 37.316-30.336947z" fill="url(#kong-log-dark-grad-a)" stroke="url(#kong-log-dark-grad-b)" stroke-width=".979021"/>
+</svg>

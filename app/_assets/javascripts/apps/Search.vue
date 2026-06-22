@@ -9,7 +9,7 @@
             <ais-panel>
                 <template  v-slot:default>
                     <div class="flex flex-col gap-3">
-                        <div class="text-sm text-brand font-semibold">Filter by type</div>
+                        <div class="text-sm text-links font-semibold">Filter by type</div>
                         <div class="flex flex-col gap-3">
                             <div class="ais-RefinementList">
                                 <ul class="ais-RefinementList-list tabcolumn">
@@ -30,7 +30,7 @@
             <ais-panel>
                 <template v-slot:default="{ hasRefinements }">
                     <div class="flex flex-col gap-3">
-                        <div class="text-sm text-brand font-semibold">Tags</div>
+                        <div class="text-sm text-links font-semibold">Tags</div>
                         <div class="flex flex-col gap-3">
                         <ais-static-tags-filter />
                         </div>
@@ -41,7 +41,7 @@
             <ais-panel>
                 <template v-slot:default="{ hasRefinements }">
                     <div class="flex flex-col gap-3" v-if="hasRefinements">
-                        <div class="text-sm text-brand font-semibold">Products</div>
+                        <div class="text-sm text-links font-semibold">Products</div>
                         <div class="flex flex-col gap-3">
                             <ais-products-filter attribute="products" :values="this.filters.products" />
                         </div>
@@ -53,7 +53,7 @@
             <ais-panel>
                 <template v-slot:default="{ hasRefinements }">
                     <div class="flex flex-col gap-3" v-if="hasRefinements">
-                        <div class="text-sm text-brand font-semibold">Tools</div>
+                        <div class="text-sm text-links font-semibold">Tools</div>
                         <div class="flex flex-col gap-3">
                             <ais-static-filter attribute="tools" :sort-by="['name']" :values="this.filters.tools" />
                         </div>
@@ -64,7 +64,7 @@
             <ais-panel>
                 <template v-slot:default="{ hasRefinements }">
                     <div class="flex flex-col gap-3" v-if="hasRefinements">
-                        <div class="text-sm text-brand font-semibold">Works on</div>
+                        <div class="text-sm text-links font-semibold">Works on</div>
                         <div class="flex flex-col gap-3">
                             <ais-static-filter attribute="works_on" :sort-by="['name']" :values="this.filters.works_on" />
                         </div>
@@ -99,7 +99,7 @@
                 <template v-slot="{ results: { hits } }">
                     <ais-hits v-show="hits.length > 0">
                         <template v-slot:item="{ item }">
-                            <div class="card card__bordered min-h-[260px]">
+                            <div class="card card__highlighted min-h-[260px]">
                                 <a :href="getPath(item.url)" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
                                     <div class="flex flex-col gap-3 flex-grow">
                                         <h4 v-if="item.content_type === 'plugin' && item.products && item.products.includes('mesh')"> {{ item.title }} Policy</h4>

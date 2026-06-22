@@ -5,8 +5,12 @@
 
 {% capture card_content %}
 {% if include.before_title %}{{ include.before_title }}{% endif %}
-{% if include.icon %}
-<img src="{{ include.icon }}" class="h-8 w-auto self-start"/>
+{% if include.icon %}{% assign extension = include.icon | slice: -4, 4 %}
+{% if extension == ".svg" %}
+{% include_svg include.icon class="card__icon self-start w-fit" %}
+{% else %}
+<img src="{{ include.icon }}" class="card__icon self-start"/>
+{% endif %}
 {% endif %}
 {% if include.title %}<{{ card_title_tag }}>{{ include.title | liquify }}</{{ card_title_tag }}>{% endif %}
 {% if include.description %}
@@ -20,7 +24,7 @@
 </div>
 {% endif %}
 {% if include.cta_text %}
-<div class="flex text-sm text-brand">
+<div class="flex text-sm text-links card__arrow">
 {{ include.cta_text | liquify }} &rarr;
 </div>
 {% endif %}
@@ -28,13 +32,13 @@
 {% if include.ctas %}
 <div class="flex flex-col w-full text-primary text-sm">
   {% for cta in include.ctas %}
-  <a class="no-icon flex justify-between py-3 {% unless forloop.last %}border-b border-primary/5{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline dark:text-white" href="{{ cta.url }}">{{ cta.text | liquify }} <span class="text-terciary">→</span></a>
+  <a class="no-icon flex justify-between py-3 text-primary {% unless forloop.last %}border-b border-primary{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ cta.url }}">{{ cta.text | liquify }} <span class="text-terciary">→</span></a>
   {% endfor %}
 </div>
 {% endif %}
 {% endcapture %}
 
-<div {% if include.id %}id="{{ include.id }}"{% endif %} class="card {% if include.featured %}card__featured{% else %}card__bordered{% endif %} {% if include.tech_preview %}relative overflow-hidden{% endif %} {{ include.css_class}} ">
+<div {% if include.id %}id="{{ include.id }}"{% endif %} class="card {% if include.featured %}card__featured{% else %}card__highlighted{% endif %} {% if include.tech_preview %}relative overflow-hidden{% endif %} {{ include.css_class}} ">
     {% if include.featured %}
     <div class="text-xs absolute transform rotate-45 bg-brand-saturated dark:bg-terciary text-center text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">
     {% if include.featured != true %}{{ include.featured }}{% else %}Recommended{% endif %}

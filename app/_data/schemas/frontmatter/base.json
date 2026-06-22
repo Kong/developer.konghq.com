@@ -73,7 +73,22 @@
     "tags": {
       "type": "array",
       "items": { "$ref": "schema:tags" }
+    },
+    "tier": {
+      "type": "string"
+    },
+    "tiers": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9-]*$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     }
+  },
+  "not": {
+    "required": ["tier", "tiers"]
   },
   "if": {
     "properties": {

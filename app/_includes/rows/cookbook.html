@@ -2,7 +2,7 @@
 {% assign cat = include.category %}
 {% assign rendered_description = cb.description | liquify %}
 <div
-  class="flex items-center gap-4 py-4 px-4 hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless include.last %}border-b border-primary/5{% endunless %}"
+  class="flex items-center gap-4 py-4 px-4 hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless include.last %}border-b border-primary{% endunless %}"
   data-card="cookbook-row"
   data-category="{{ cat.slug }}"
   data-categories="{{ cb.categories | join: ',' }}"
@@ -11,7 +11,7 @@
 >
   <a href="{{ cb.url }}" class="flex items-center gap-4 hover:no-underline text-secondary w-full">
     {% if cat.icon %}
-    <span class="text-brand">{% include_svg cat.icon width="32" height="32" %}</span>
+    <span class="text-icon">{% include_svg cat.icon width="24" height="24" %}</span>
     {% endif %}
 
     <div class="flex flex-col gap-0.5 flex-grow min-w-0">
