@@ -42,11 +42,17 @@ prereqs:
     - title: "{{site.konnect_product_name}} roles"
       include_content: prereqs/dev-portal-dcr-roles
       icon_url: /assets/icons/gateway.svg
-    - title: Configure a Dev Portal
-      include_content: prereqs/dev-portal-configure
+    - title: Configure a Dev Portal and an API
+      include_content: prereqs/dev-portal-and-api
       icon_url: /assets/icons/dev-portal.svg
-    - title: Publish an API
-      include_content: prereqs/publish-api
+    - title: Register a Dev Portal developer account
+      content: |
+        Register a test developer account with your Dev Portal by navigating to your Dev Portal and clicking **Sign up**:
+        ```sh
+        open https://$PORTAL_URL/
+        ```
+
+        For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations.
       icon_url: /assets/icons/dev-portal.svg
     - title: Azure AD
       content: |
@@ -173,6 +179,7 @@ url: /v3/apis/$API_ID/publications/$PORTAL_ID
 status_code: 201
 method: PUT
 body:
+  visibility: public
   auth_strategy_ids:
     - $AUTH_STRATEGY_ID
 {% endkonnect_api_request %}
