@@ -6,7 +6,7 @@ entities:
 products:
   - ai-gateway
 min_version:
-  ai-gateway: '2.0.0'
+  ai-gateway: '2.0'
 permalink: /ai-gateway/entities/ai-data-plane-certificate/
 breadcrumbs:
   - /ai-gateway/
@@ -19,7 +19,6 @@ works_on:
   - konnect
 tools:
   - konnect-api
-  - terraform
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
@@ -80,7 +79,7 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/data-plane-certificates
 {% endtable %}
 
-There is no on-prem equivalent for this entity. Self-managed {{site.base_gateway}} deployments use the existing [`/certificates`](/gateway/entities/certificate/) entity and [hybrid mode node configuration](/gateway/hybrid-mode/) instead.
+<!-- There is no on-prem equivalent for this entity. Self-managed {{site.base_gateway}} deployments use the existing [`/certificates`](/gateway/entities/certificate/) entity and [hybrid mode node configuration](/gateway/hybrid-mode/) instead. -->
 
 ## Trust model
 
