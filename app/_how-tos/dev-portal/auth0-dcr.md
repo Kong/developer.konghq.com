@@ -30,17 +30,16 @@ tldr:
       You can use Dynamic Client Registration to automatically create Dev Portal applications in Auth0. First, authorize an Auth0 application so {{site.konnect_short_name}} can use the Auth0 Management API on your behalf. Next, create an API audience that {{site.konnect_short_name}} applications will be granted access to. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR.
 
 prereqs:
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
+  skip_product: true
   inline:
+    - title: "{{site.konnect_product_name}}"
+      include_content: prereqs/products/konnect-account-only
+      icon_url: /assets/icons/gateway.svg
     - title: "{{site.konnect_product_name}} roles"
       include_content: prereqs/dev-portal-dcr-roles
       icon_url: /assets/icons/gateway.svg
-    - title: Configure a Dev Portal
-      include_content: prereqs/dev-portal-configure
+    - title: Configure a Dev Portal and an API
+      include_content: prereqs/dev-portal-and-api
       icon_url: /assets/icons/dev-portal.svg
     - title: Register a Dev Portal developer account
       content: |
@@ -48,11 +47,8 @@ prereqs:
         ```sh
         open https://$PORTAL_URL/
         ```
-        
-        For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations. 
-      icon_url: /assets/icons/dev-portal.svg
-    - title: Publish an API
-      include_content: prereqs/publish-api
+
+        For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations.
       icon_url: /assets/icons/dev-portal.svg
     - title: Auth0
       content: |
@@ -191,7 +187,9 @@ body:
         - azp
       scopes:
         - openid
-      audience:
+      token_post_args_names:
+        - audience
+      token_post_args_values:
         - "$AUDIENCE"
       auth_methods:
         - client_credentials
@@ -220,6 +218,7 @@ url: /v3/apis/$API_ID/publications/$PORTAL_ID
 status_code: 201
 method: PUT
 body:
+  visibility: public
   auth_strategy_ids:
     - $AUTH_STRATEGY_ID
 {% endkonnect_api_request %}
