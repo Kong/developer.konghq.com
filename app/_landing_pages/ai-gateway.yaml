@@ -85,7 +85,7 @@ rows:
       type: h2
       text: "{{site.ai_gateway}} providers"
       description: |
-        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining [AI Providers](/ai-gateway/entities/ai-provider/) and [AI Models](/ai-gateway/entities/ai-model/) {% new_in 2.0 %}.
+        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining [AI Providers](/ai-gateway/entities/ai-provider/) and [AI Models](/ai-gateway/entities/ai-model/).
         [AI Providers](/ai-gateway/entities/ai-provider/) store upstream connectivity and credentials, while [AI Models](/ai-gateway/entities/ai-model/) reference Providers to expose stable client-facing endpoints and routing behavior.
     column_count: 4
     columns:
@@ -159,7 +159,7 @@ rows:
     columns:
       - header:
           type: h3
-          text: "Tools to manage {{site.ai_gateway}} {% new_in 2.0 %}"
+          text: "Tools to manage {{site.ai_gateway}}"
         blocks:
           - type: structured_text
             config:
@@ -199,7 +199,7 @@ rows:
                 text: |
                   Define a single endpoint for any traffic type: LLM, MCP, or A2A. Use unified entity resources by configuring [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/) once, then reuse across consumers and policies.
 
-                  Govern, secure, and observe all AI traffic through dedicated AI Gateway entities {% new_in 2.0 %}. Each includes built-in authentication, policy enforcement, and observability.
+                  Govern, secure, and observe all AI traffic through dedicated AI Gateway entities. Each includes built-in authentication, policy enforcement, and observability.
 
                   - [**Easy to manage**](/ai-gateway/entities/ai-model/): Define your endpoint once and expose a stable interface to clients.
 
@@ -254,7 +254,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Entities {% new_in 2.0 %}
+            title: AI Entities
             description: Learn about AI Models, AI Providers, AI Agents, AI MCP Servers, and AI Consumers.
             cta:
               url: /ai-gateway/entities/
@@ -262,7 +262,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Policies {% new_in 2.0 %}
+            title: AI Policies
             description: Attach governance behavior for authentication, guardrails, transformations, and more.
             cta:
               url: /ai-gateway/entities/ai-policy/
@@ -567,11 +567,11 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: Is {{site.ai_gateway}} {% new_in 2.0 %} available for all deployment modes?
+            - q: Is {{site.ai_gateway}} available for all deployment modes?
               a: |
                 {{site.ai_gateway}} capabilities (AI, MCP, and A2A traffic management) are available across [deployment modes](/gateway/deployment-topologies/), including {{site.konnect_short_name}}, self-hosted traditional, hybrid, and DB-less, and on Kubernetes via the [{{site.kic_product_name}}](/kubernetes-ingress-controller/).
 
-            - q: Why should I use {{site.ai_gateway}} {% new_in 2.0 %} instead of adding the LLM's API behind {{site.base_gateway}}?
+            - q: Why should I use {{site.ai_gateway}} instead of adding the LLM's API behind {{site.base_gateway}}?
               a: |
                 If you just add an LLM's API behind {{site.base_gateway}}, you can only interact at the API level with internal traffic.
                 With {{site.ai_gateway}} AI Policies and runtime components, {{site.base_gateway}} can understand the prompts that are being sent through the gateway.
