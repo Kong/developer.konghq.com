@@ -13,5 +13,5 @@ capture:
 Export the directory name so decK can read it during sync:
 
 ```bash
-export DECK_DIRECTORY_NAME=$DECK_DIRECTORY_NAME
+export DECK_DIRECTORY_NAME
 ```
