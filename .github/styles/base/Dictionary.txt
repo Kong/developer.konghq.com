@@ -199,6 +199,7 @@ dict
 dicts
 digitalocean
 discovery_support
+distroless
 dlp
 DN
 dns
