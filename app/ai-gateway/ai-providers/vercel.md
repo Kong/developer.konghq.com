@@ -1,22 +1,22 @@
 ---
-title: "OpenAI provider"
+title: "Vercel provider"
 layout: reference
 content_type: reference
-description: Reference for supported capabilities for OpenAI provider
+description: Reference for supported capabilities for Vercel provider
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/
 
-permalink: /ai-gateway/ai-providers/openai/
-
-tools:
-  - konnect-api
+permalink: /ai-gateway/ai-providers/vercel/
 
 works_on:
  - konnect
 
 products:
   - ai-gateway
+
+tools:
+  - konnect-api
 
 tags:
   - ai
@@ -27,20 +27,20 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: OpenAI tutorials
-    url: /how-to/?tags=openai
-  - text: "{{site.ai_gateway}} plugins"
+  - text: "{{site.ai_gateway}} Policies"
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
-
 ---
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="OpenAI" %}
 
-## Configure {{ provider.name }} with AI Proxy
+{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Vercel" %}
+
+## Configure a {{ provider.name }} provider
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
+
+Note that, {{ site.vercel }} hosts [models](https://vercel.com/ai-gateway/models) from other providers so in this example we use `openai/gpt-5.5`.
 
 Here's a minimal configuration for chat completions:
 
@@ -54,14 +54,10 @@ data:
       header_name: Authorization
       header_value: Bearer ${key}
     model:
-      provider: openai
-      name: gpt-5.1
-      options:
-        max_tokens: 512
-        temperature: 1.0
+      provider: vercel
+      name: openai/gpt-5.5
+
 variables:
   key:
-    value: $OPENAI_API_KEY
-    description: The API key to use to connect to OpenAI.
+    value: "$VERCEL_API_KEY"
 {% endentity_example %}
-

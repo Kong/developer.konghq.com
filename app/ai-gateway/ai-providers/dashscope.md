@@ -10,48 +10,30 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/dashscope/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.13'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Dashscope tutorials
     url: /how-to/?tags=dashscope
-  - text: "{{site.ai_gateway}} plugins"
+  - text: "{{site.ai_gateway}} Policies"
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - dashscope
-    description: true
-    view_more: false
 ---
 
 
@@ -59,7 +41,7 @@ how_to_list:
 
 ## Configure {{ provider.name }} with AI Proxy
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
@@ -84,8 +66,3 @@ variables:
     value: $DASHSCOPE_API_KEY
     description: The API key to use to connect to DashScope.
 {% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)

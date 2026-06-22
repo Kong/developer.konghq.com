@@ -10,29 +10,19 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/llama/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.6'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -44,14 +34,6 @@ related_resources:
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - llama
-    description: true
-    view_more: false
 ---
 
 
@@ -59,7 +41,7 @@ how_to_list:
 
 ## Configure {{ provider.name }} with AI Proxy
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
@@ -76,8 +58,3 @@ data:
         llama2_format: ollama
         upstream_url: http://llama2-server.local:11434/api/chat
 {% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)

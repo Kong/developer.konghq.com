@@ -10,36 +10,26 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/bedrock/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.8'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Amazon Bedrock tutorials
     url: /how-to/?tags=bedrock
-  - text: "{{site.ai_gateway}} plugins"
+  - text: "{{site.ai_gateway}} Policies"
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
@@ -59,15 +49,6 @@ faqs:
     a: |
       {% include faqs/bedrock-rerank.md %}
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - bedrock
-    description: true
-    view_more: false
-
 ---
 
 
@@ -77,7 +58,7 @@ how_to_list:
 
 ## Configure {{ provider.name }} with AI Proxy
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
@@ -106,8 +87,3 @@ variables:
     value: $AWS_SECRET_ACCESS_KEY
     description: The AWS secret access key to use to connect to Bedrock.
 {% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)

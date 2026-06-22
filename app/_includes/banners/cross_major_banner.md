@@ -1,5 +1,9 @@
-{% if include.major_version -%}
+{% if include.canonical_url and include.major_version -%}
+{% if include.canonical_url == include.url %}
 {:.warning}
-> _You are browsing documentation for an older major version - {{page.cross_major_banner_info.major_version}} - of {{page.cross_major_banner_info.product}}._
+> This content is not available in the latest version.
+{% else %}
+{:.warning}
+> _You are browsing documentation for an older version._
 > _See the latest documentation [here]({{ include.canonical_url }})._
-{% endif %}
+{% endif %}{% endif %}
