@@ -19,7 +19,7 @@ module Jekyll
         @site = site
       end
 
-      def run # rubocop:disable Metrics/AbcSize
+      def run
         Dir.glob(File.join(site.source, "#{self.class.policies_folder}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{self.class.policies_folder}/", '').chomp('/')
 
