@@ -40,7 +40,7 @@ By default, {{ site.operator_product_name }} generates unique, dynamic names for
 The `gateway-operator.konghq.com/static-naming: "true"` annotation instructs {{site.operator_product_name}} to use a static, predictable name for the generated control plane based on the Gateway's namespace and name (for example, `default-hybrid`). This enables you to configure references before the control plane is created.
 
 {:.warning}
-> Once a `KonnectGatewayControlPlane` name is created, it cannot be modified. Plan your naming carefully before enabling this annotation.
+> Once a `KonnectGatewayControlPlane` name is created, it can't be modified. Plan your naming carefully before enabling this annotation.
 
 When static naming is enabled, {{site.operator_product_name}} derives the name for the `KonnectGatewayControlPlane` using the following logic:
 

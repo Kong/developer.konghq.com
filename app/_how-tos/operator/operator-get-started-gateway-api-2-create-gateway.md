@@ -184,7 +184,7 @@ content: |
   {{site.operator_product_name}} will automatically create the `DataPlane` and `KonnectGatewayControlPlane` resources.
 
   {:.info}
-  > By default, the generated `KonnectGatewayControlPlane` receives a dynamic name. Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` to use a predictable name based on the Gateway's namespace and name. Names cannot be changed after creation.
+  > By default, the generated `KonnectGatewayControlPlane` receives a dynamic name. Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` to use a predictable name based on the Gateway's namespace and name. Names can't be changed after creation.
 {% endkonnect %}
 
 {% on_prem %}
