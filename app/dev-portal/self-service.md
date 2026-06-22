@@ -205,7 +205,7 @@ The plugin runs whenever a request authenticates as that application, using a [c
 
 In this example, we'll use the [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin, but you can apply any plugin to an application's principal with `principal.id`.
 
-1. List the applications in your portal, filtering by the application's name, and capture its ID as the `PRINCIPAL_ID` variable. Replace `$APPLICATION_NAME` with the name of your application:
+1. List the applications in your portal, filtering by the application's name, and capture its ID as the `PRINCIPAL_ID` variable. Replace `$PORTAL_ID` with your portal ID and `$APPLICATION_NAME` with the name of your application:
 {% capture copy-app-id %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -251,7 +251,7 @@ Mapping an application to a Consumer requires either the [Control Plane Admin or
 
 {% navtabs "map-consumer" %}
 {% navtab "API" %}
-To map an application to an existing Consumer, send a `PUT` request to the registration's `consumer` endpoint with the ID of the Gateway Consumer:
+To map an application to an existing Consumer, send a `PUT` request to the registration's `consumer` endpoint with the ID of the Gateway Consumer. Replace `$PORTAL_ID`, `$APPLICATION_ID`, `$REGISTRATION_ID`, and `$CONSUMER_ID` with your values:
 
 <!--vale off-->
 {% konnect_api_request %}
