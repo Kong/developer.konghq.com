@@ -45,16 +45,21 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name:  llama2 Production
+  name: my- llama2-account
+  type:  llama2
   config:
-    route_type: llm/v1/chat
-    model:
-      provider: llama2
-      name: llama2
-      options:
-        llama2_format: ollama
-        upstream_url: http://llama2-server.local:11434/api/chat
-{% endentity_example %}
+    auth:
+      type: basic
+      - name: Authorization
+          value: Bearer $LLAMA_API_KEY
+{% endkonnect_api_request %}
+<!--vale on-->

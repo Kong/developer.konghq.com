@@ -47,21 +47,21 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Huggingface Production
+  name: my-huggingface-account
+  type: huggingface
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${token}
-    model:
-      provider: huggingface
-      name: Qwen/Qwen3-4B-Instruct-2507
-
-variables:
-  token:
-    value: $HUGGINGFACE_TOKEN
-    description: The token to use to connect to Hugging Face.
-{% endentity_example %}
+      type: basic
+      - name: Authorization
+          value: Bearer $HUGGINGFACE_TOKEN
+{% endkonnect_api_request %}
+<!--vale on-->

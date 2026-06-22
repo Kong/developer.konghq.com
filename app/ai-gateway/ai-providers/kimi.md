@@ -46,60 +46,21 @@ related_resources:
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/) as follows:
 
-{% entity_example %}
-type: provider
-data:
-  display_name: Kimi AI
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Kimi Production
   name: my-kimi-account
   type: kimi
   config:
     auth:
       type: basic
-      headers:
-        - name: Authorization
-          value: Bearer <your-api-key>
-{% endentity_example %}
-
-You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }} as follows:
-
-{% entity_example %}
-type: model
-data:
-  display_name: kimi k2.6 Production
-  name: kimi-k2.6-production
-  type: model
-  enabled: true
-  capabilities:
-    - chat
-    - responses
-  formats:
-    - type: openai
-  acls:
-    allow:
-      - internal-teams
-    deny: []
-  policies: []
-  target_models:
-    - name: kimi-k2.6
-      provider:
-        name: my-kimi-account
-      config:
-        temperature: 0.7
-        max_tokens: 4096
-        input_cost: 0.0000025
-        output_cost: 0.000010
-  config:
-    logging:
-      statistics: true
-      payloads: false
-    response_streaming: allow
-    max_request_body_size: 1048576
-    model:
-      name_header: true
-    balancer:
-      algorithm: round-robin
-      retries: 3
-      connect_timeout: 60000
-      read_timeout: 60000
-      write_timeout: 60000
-{% endentity_example %}
+      - name: Authorization
+          value: Bearer $KIMI_TOKEN
+{% endkonnect_api_request %}
+<!--vale on-->

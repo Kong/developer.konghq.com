@@ -60,22 +60,20 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Gemini Production
+  name: my-gemini-account
+  type: gemini
   config:
-    route_type: llm/v1/chat
     auth:
-      param_name: key
-      param_value: ${key}
-      param_location: query
-    model:
-      provider: gemini
-      name: gemini-2.5-flash
-
-variables:
-  key:
-    value: $GEMINI_API_KEY
-    description: The API key to use to connect to Gemini.
-{% endentity_example %}
+      type: gcp
+      service_account_json: "$GCP_SERVICE_ACCOUNT_JSON"
+{% endkonnect_api_request %}
+<!--vale on-->

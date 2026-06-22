@@ -45,24 +45,21 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Dashscope Production
+  name: my-dashscope-account
+  type: dashscope
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${key}
-    model:
-      provider: dashscope
-      name: qwen-plus
-      options:
-        max_tokens: 512
-        temperature: 1.0
-
-variables:
-  key:
-    value: $DASHSCOPE_API_KEY
-    description: The API key to use to connect to DashScope.
-{% endentity_example %}
+      type: basic
+      - name: Authorization
+          value: Bearer $DASHSCOPE_API_KEY
+{% endkonnect_api_request %}
+<!--vale on-->

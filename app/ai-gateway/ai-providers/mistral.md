@@ -66,3 +66,22 @@ variables:
     value: $MISTRAL_API_KEY
     description: The API key to use to connect to Mistral.
 {% endentity_example %}
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Mistral Production
+  name: my-mistral-account
+  type: mistral
+  config:
+    auth:
+      type: basic
+      - name: Authorization
+          value: Bearer $MISTRAL_API_KEY
+{% endkonnect_api_request %}
+<!--vale on-->

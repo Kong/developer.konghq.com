@@ -44,20 +44,21 @@ Note that, {{ site.vercel }} hosts [models](https://vercel.com/ai-gateway/models
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Vercel Production
+  name: my-vercel-account
+  type: vercel
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${key}
-    model:
-      provider: vercel
-      name: openai/gpt-5.5
-
-variables:
-  key:
-    value: "$VERCEL_API_KEY"
-{% endentity_example %}
+      type: basic
+      - name: Authorization
+          value: Bearer $VERCEL_API_KEY
+{% endkonnect_api_request %}
+<!--vale on-->

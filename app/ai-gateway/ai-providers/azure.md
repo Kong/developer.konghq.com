@@ -49,27 +49,22 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Azure Production
+  name: my-azure-account
+  type: azure
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${azure_key}
-    model:
-      provider: azure
-      options:
-        azure_api_version: "2025-01-01-preview"
-        azure_instance: ${azure_instance}
-        azure_deployment_id: ${azure_deployment}
-variables:
-  azure_key:
-    value: "$AZURE_OPENAI_API_KEY"
-  azure_instance:
-    value: "$AZURE_INSTANCE_NAME"
-  azure_deployment:
-    value: "$AZURE_DEPLOYMENT_ID"
-{% endentity_example %}
-
+      type: basic
+      headers:
+        - name: Authorization
+          value: Bearer $AZURE_OPENAI_API_KEY
+{% endkonnect_api_request %}
+<!--vale on-->

@@ -63,7 +63,9 @@ body:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer <your-anthropic-key>
+          value: Bearer $ANTHROPIC_API_KEY
+        - name: "anthropic-version"
+          value: "2023-06-01"
 {% endkonnect_api_request %}
 <!--vale on-->
  

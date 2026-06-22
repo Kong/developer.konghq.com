@@ -406,10 +406,10 @@ app/ai-gateway/v1/ai-providers/vertex.md:
   canonical_url: /ai-gateway/ai-providers/vertex/
 app/ai-gateway/v1/ai-providers/vllm.md:
   # status: pending
-  canonical_url: /ai-gateway/ai-providers/vllm
+  canonical_url: /ai-gateway/ai-providers/vllm/
 app/ai-gateway/v1/ai-providers/xai.md:
   # status: pending
-  canonical_url: /ai-gateway/ai-providers/xai
+  canonical_url: /ai-gateway/ai-providers/xai/
 app/ai-gateway/v1/llm-open-telemetry.md:
   status: pending
   canonical_url:

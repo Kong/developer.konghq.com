@@ -43,15 +43,16 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/p
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
-  config:
-    route_type: llm/v1/chat
-    model:
-      provider: ollama
-      name: llama3.2:1b
-      options:
-        upstream_url: http://localhost:11434/api/chat
-{% endentity_example %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Ollama Production
+  name: local-ollama
+  type: ollama
+{% endkonnect_api_request %}
+<!--vale on-->

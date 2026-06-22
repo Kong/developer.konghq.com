@@ -87,3 +87,24 @@ variables:
     value: $AWS_SECRET_ACCESS_KEY
     description: The AWS secret access key to use to connect to Bedrock.
 {% endentity_example %}
+
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: AWS Production
+  name: my-aws-account
+  type: bedrock
+  config:
+    auth:
+      type: aws
+      allow_override: false
+      aws_access_key_id: $AWS_ACCESS_KEY_ID
+      aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+{% endkonnect_api_request %}
+<!--vale on-->
