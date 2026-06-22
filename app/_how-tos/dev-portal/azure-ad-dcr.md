@@ -11,7 +11,7 @@ products:
 works_on:
     - konnect
 tools:
-  - konnect-api
+    - konnect-api
 entities: []
 automated_tests: false
 tags:
@@ -155,6 +155,8 @@ body:
       issuer: "$ISSUER_URL"
       credential_claim:
         - appid
+      scopes:
+        - openid
       auth_methods:
         - client_credentials
         - bearer
