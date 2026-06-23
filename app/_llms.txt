@@ -32,7 +32,7 @@ This file lists all available documentation pages as Markdown. Each link points 
 - [{{ p.llm_title | liquify }}]({{ site.links.web }}{{ p.url }}): {{ p.description | liquify | rstrip }}
 {% endfor %}
 
-## Plugins
+## API Gateway Plugins
 
 {% for p in plugin_pages -%}
 - [{{ p.llm_title | liquify }}]({{ site.links.web }}{{ p.url }}): {{ p.description | liquify | rstrip }}
