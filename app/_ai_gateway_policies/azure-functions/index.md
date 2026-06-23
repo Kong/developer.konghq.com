@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Invoke and manage Azure functions from {{site.ai_gateway_name}}
 ---

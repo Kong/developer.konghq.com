@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Let's Encrypt and ACMEv2 integration with {{site.ai_gateway_name}}
 ---

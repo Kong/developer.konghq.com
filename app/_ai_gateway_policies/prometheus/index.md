@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Expose metrics related to {{site.ai_gateway_name}} in Prometheus exposition format
 ---

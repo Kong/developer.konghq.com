@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Allows {{site.ai_gateway_name}} to connect to intermediary transparent HTTP
 ---
