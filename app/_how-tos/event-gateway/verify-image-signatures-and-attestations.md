@@ -103,7 +103,7 @@ The output lists the supply chain artifacts (signatures and attestations) that a
     ```
     {:.no-copy-code}
 
-    Pinning to a digest guarantees you verify exactly the image you're going to run, even if the tag is later repointed to a different image.
+    Pinning to a digest guarantees you verify exactly the image you're going to run, even if the tag is later moved to a different image.
 
 1. Verify the signature with `cosign verify`:
 
@@ -138,22 +138,22 @@ columns:
   - title: Attestation
     key: attestation
   - title: Predicate type
-    key: predicate_type
+    key: predicate
   - title: "`--type` value"
-    key: type_value
+    key: type
 rows:
   - attestation: SPDX SBOM
-    predicate_type: "`https://spdx.dev/Document`"
-    type_value: "`spdxjson`"
+    predicate: "`https://spdx.dev/Document`"
+    type: "`spdxjson`"
   - attestation: CycloneDX SBOM
-    predicate_type: "`https://cyclonedx.org/bom`"
-    type_value: "`cyclonedx`"
+    predicate: "`https://cyclonedx.org/bom`"
+    type: "`cyclonedx`"
   - attestation: Vulnerability scan (SARIF)
-    predicate_type: "`https://cosign.sigstore.dev/sarif/vuln/...`"
-    type_value: "`vuln`"
+    predicate: "`https://cosign.sigstore.dev/sarif/vuln/...`"
+    type: "`vuln`"
   - attestation: CIS Docker benchmark
-    predicate_type: "`https://cisecurity.org/docker/...`"
-    type_value: "_(use the full URL)_"
+    predicate: "`https://cisecurity.org/docker/...`"
+    type: "_(use the full URL)_"
 {% endtable %}
 
 {:.info}
