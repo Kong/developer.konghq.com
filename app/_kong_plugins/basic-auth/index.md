@@ -35,7 +35,7 @@ search_aliases:
   - username and password auth
 
 faqs:
-  - q: I updated my Consumer's username, why doesn't their password or basic authentication work anymore?
+  - q: I updated my Consumer/Principal's username, why doesn't their password or basic authentication work anymore?
     a: The basic auth password credential is encrypted in the database. {{site.base_gateway}} can only get the encrypted value of the password from the database. When you update the username or tag, {{site.base_gateway}} overwrites the password with its encrypted value. To fix this, enter the original password when you update the username or tag of the basic auth credential.
   - q: How do I delete a Consumer credential?
     a: You can delete a specific credential by sending a `DELETE` request to `/{workspace_id_or_name}/consumers/{consumer_id_or_name}/basic-auth/{credentials_id}`.
@@ -52,21 +52,21 @@ min_version:
   gateway: '1.0'
 ---
 
-The [Basic Authentication](https://datatracker.ietf.org/doc/html/rfc7617 ) plugin enforces username and password authentication for [Consumers](/gateway/entities/consumer/) when making a request to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). Consumers represent a developer or an application consuming the upstream service. 
+The [Basic Authentication](https://datatracker.ietf.org/doc/html/rfc7617 ) plugin enforces username and password authentication for [Consumers](/gateway/entities/consumer/) or [Principals](/identity/principals/) {% new_in 3.15 %} when making a request to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). Consumers and Principals represent a developer or an application consuming the upstream service. 
 
 Basic authentication can be used with both HTTP and HTTPS requests and is an effective way to add simple password protection to web applications.
 
 ## How it works
 
-The Basic Authentication plugin requires at least one Consumer to work. When you create the Consumer, you must specify a username and password, for example: `Ariel:Password`. The Consumer's password must be base64-encoded when it's used in the Authentication header. For example, `Ariel:Password` would become `QXJpZWw6UGFzc3dvcmQ=`.
+The Basic Authentication plugin requires at least one Consumer or a Principal {% new_in 3.15 %} to work. When you create the Consumer or the Principal, you must specify a username and password, for example: `Ariel:Password`. The credentials must be base64-encoded when it's used in the Authentication header. For example, `Ariel:Password` would become `QXJpZWw6UGFzc3dvcmQ=`.
 
-Then, you can enable the plugin on a Gateway Service, Route, or globally. When a Consumer makes a request to the associated Gateway Service or Route, the plugin checks for valid credentials in the `Proxy-Authorization` and `Authorization` headers (in that order). In {{site.base_gateway}} 3.13 or later, you can [protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection`. This will return an `429 Too Many Requests` error after the fourth failed login attempt.
+Then, you can enable the plugin on a Gateway Service, Route, or globally. When either a Consumer or a Principal {% new_in 3.15 %} makes a request to the associated Gateway Service or Route, the plugin checks for valid credentials in the `Proxy-Authorization` and `Authorization` headers (in that order). In {{site.base_gateway}} 3.13 or later, you can [protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection`. This will return an `429 Too Many Requests` error after the fourth failed login attempt.
 
 ### Using multiple authentication plugins
 
 You can use the Basic Authentication plugin along with other authentication plugins. This allows clients to use different authentication methods to access a given Gateway Service or Route. 
 
-The authentication plugins can be configured to always require authentication or only perform authentication if the Consumer wasn't already authenticated. For more information, see [Using multiple authentication methods](/gateway/authentication/#using-multiple-authentication-methods).
+The authentication plugins can be configured to always require authentication or only perform authentication if the Consumer or the Principal wasn't already authenticated. For more information, see [Using multiple authentication methods](/gateway/authentication/#using-multiple-authentication-methods).
 
 ## Use cases
 
@@ -83,9 +83,9 @@ rows:
   - use_case: "Allow or deny requests on a Gateway Service or Route"
     description: "Configure both the [ACL](/plugins/acl/) and Basic Authentication plugins to restrict access to a Service or a Route by adding Consumers to allowed or denied lists using arbitrary ACL groups."
   - use_case: "Authenticate on the upstream service"
-    description: "Configure the Basic Authentication plugin on a Route and then configure the Consumer credential in the `config.add.headers` property for the [Request Transformer](/plugins/request-transformer/) plugin."
+    description: "Configure the Basic Authentication plugin on a Route and then configure the  or the Principal credential in the `config.add.headers` property for the [Request Transformer](/plugins/request-transformer/) plugin."
   - use_case: "[Allow clients to choose their authentication method](/how-to/allow-multiple-authentication/)"
-    description: "Enable the Basic Authentication plugin and any other authentication plugins. Use the `config.anonymous` property on the plugins to determine if authentication is always performed or only when the Consumer wasn't already authenticated."
+    description: "Enable the Basic Authentication plugin and any other authentication plugins. Use the `config.anonymous` property on the plugins to determine if authentication is always performed or only when the Consumer or the Principals wasn't already authenticated."
   - use_case: "Check credentials per session"
     description: "When the [Session](/plugins/session/) plugin is enabled in conjunction with an authentication plugin, it runs before credential verification. If no session is found, then the authentication plugin runs again and credentials are checked normally. If the credential verification is successful, then the Session plugin creates a new session for usage with subsequent requests."
   - use_case: "Rate limit unauthenticated and authenticated users differently"
