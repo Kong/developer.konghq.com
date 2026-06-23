@@ -452,15 +452,22 @@ rows:
 
 ## {{ provider.name }} base URL
 
+{%- assign has_capability_path = false -%}
+{%- for url in provider.url_patterns -%}
+  {%- if url contains "{capability_path}" -%}
+    {%- assign has_capability_path = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
 {% if provider.url_is_variable %}
 The base URL is <code>{{ provider.url_patterns.first }}</code>, where `{capability_path}` is determined by the AI capability.
 {% elsif provider.url_patterns.size > 1 %}
-The base URL is {% for url in provider.url_patterns %}<code>{{ url }}</code>{% unless forloop.last %} or {% endunless %}{% endfor %}, where `{capability_path}` is determined by the AI capability.
+The base URL is {% for url in provider.url_patterns %}<code>{{ url }}</code>{% unless forloop.last %} or {% endunless %}{% endfor %}.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
 {% else %}
-The base URL is `{{ provider.url_patterns.first }}`, where `{capability_path}` is determined by the AI capability.
+The base URL is `{{ provider.url_patterns.first }}`.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
 {% endif %}
 
-{{site.ai_gateway}} uses this URL automatically. You only need to configure a URL if you're using a self-hosted or {{ provider.name }}-compatible endpoint, in which case set the `upstream_url` provider option.
+{{site.ai_gateway}} uses this URL automatically. You only need to configure a URL if you're using a self-hosted or {{ provider.name }}-compatible endpoint, in which case set the `upstream_url` option in your [AI Model](/ai-gateway/entities/ai-model/) configuration.
 
 {% else %}
 Provider "{{ include.provider_name }}" not found.
