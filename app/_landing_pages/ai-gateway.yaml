@@ -166,7 +166,7 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[Konnect {{site.ai_gateway}} editor](https://cloud.konghq.com/ai-gateway): GUI for managing all your {{site.ai_gateway}} resources in one place."
+                    - "[{{site.konnect_product_name}} {{site.ai_gateway}} editor](https://cloud.konghq.com/ai-gateway): GUI for managing all your {{site.ai_gateway}} resources in one place."
                     # - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
                     - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.ai_gateway}} resources within {{site.konnect_short_name}} Control Planes via an API."
                     - "[kongctl](/kongctl/): Use Kong's swiss-army knife command line tool for managing and interacting with {{site.ai_gateway}} resources and configurations within {{site.konnect_short_name}}."
@@ -246,9 +246,9 @@ rows:
 
   - header:
       type: h2
-      text: "Manage {{site.ai_gateway}} entities"
+      text: "Govern {{site.ai_gateway}} with entities and policies"
       description: |
-        {{site.ai_gateway}} is built around AI entities. Create Models, Providers, Agents, and MCP Servers to manage your AI traffic. Attach AI Policies to enforce authentication, rate limiting, guardrails, transformations, and governance across any entity.
+        Enforce authentication, rate limiting, guardrails, transformations, and governance by attaching AI Policies to your AI entities. Create Models, Providers, Agents, and MCP Servers to manage your AI traffic.
     column_count: 3
     columns:
       - blocks:
