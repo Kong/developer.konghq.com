@@ -63,9 +63,6 @@ In the [Prometheus](/plugins/prometheus/) and [OpenTelemetry](/plugins/opentelem
 This affects `kong_enterprise_license_features` in Prometheus and `kong.ee.license.features` in OpenTelemetry.
 Update any dashboards and alerts that reference the old values.
 
-#### Conditional plugin execution language
-
-{% include_cached /gateway/expressions/migrate.md %}
 
 #### Workspace names
 
