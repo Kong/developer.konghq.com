@@ -8,12 +8,14 @@ module Jekyll
       class Reference < Base
         include Policies::Pages::Reference
 
+        MARKDOWN_CONTENT = File.read('app/_includes/plugins/reference.md')
+
         def layout
           'ai_gateway_policies/reference'
         end
 
         def markdown_content
-          @markdown_content ||= File.read('app/_includes/plugins/reference.md')
+          MARKDOWN_CONTENT
         end
 
         def data
