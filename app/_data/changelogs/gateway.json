@@ -22539,5 +22539,214 @@
         "scope": "Default"
       }
     ]
+  },
+  "3.14.0.7": {
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-websocket from version 0.4.0.2 to 0.5.0 to solve an issue when handling protocol upgrade failure.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.6 to 3.5.7.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added the missing PDK functions to sandbox environments.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token introspection crashed when `client_auth` was set to `private_key_jwt` and `client_jwk` was provided as a JSON string.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where internal unix-socket subrequests lost the original client IP address, causing IP-aware plugins like ip-restriction to reject legitimate requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where empty JSON arrays in MCP server\nresponses were rewritten to empty objects when the plugin re-encoded the\nbody for ACL list filtering.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic streaming finish reasons are not mapped in OpenAI to Anthropic conversion.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the Anthropic driver dropped the `top_p`, `top_k`, and `stop` parameters when translating OpenAI-format requests. The driver now also omits `temperature`, `top_p`, and `top_k` for models that reject them (Claude Opus 4.7, Opus 4.8, and Fable), preventing upstream 400 errors.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsafe model names could construct upstream AI provider paths.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsafe batch id could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where an unsafe model name in native format adapters could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the xAI driver nested `reasoning_effort` under `reasoning.effort` and did not normalize `reasoning_content` in responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where native-format requests using a model alias were incorrectly proxying to upstream model.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where responses with unsupported content types could be returned with an incorrect gzip header.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where the Azure managed identity token was cached\nindefinitely and never refreshed, causing requests to fail with 401 after the\ntoken expired (roughly one hour).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Emitted the documented `X-AI-RateLimit-*` headers on `429` responses from policies that partition by `provider` or `model`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed policy integration with `ai-proxy`\nfor single-target and multi-target AI proxy routes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-request-transformer**: Fixed an issue where unsafe model name could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-response-guard**: Fixed an issue where the plugin failed to populate Redis with rule documents due to using worker ID gating instead of worker mutex for vectordb operations.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**datakit**: Added Lua control plane compatibility checks to prevent unsupported Datakit configurations from being pushed to older data planes in hybrid mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**debugger**: Fixed an issue where response body content capture consumed streaming response chunks.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the default key name `apikey` of the `key-auth` and `key-auth-enc` plugins was not redacted when captured by the Debugger. This has been resolved by adding `apikey` to the list of default redacted headers.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**exit-transformer**: Fixed an issue where a response body that was a JSON primitive (e.g. `false`) caused a 500 internal error.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a failure in a `dao:*:post` hook during insert/update/upsert\nwas silently swallowed, causing the DAO to return `nil` with no error.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where cluster mutex did not timeout immediately with `no_wait = true` when node level mutex is being held by another worker.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where DP syncing failed with large configs. Added yielding to prevent CPU stall, and set Konnect mode RPC timeout to 30 seconds for successful full-sync.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where hybrid data planes retried unrecoverable CP connection failures and ignored Retry-After delays on 429/503 responses, preventing avoidable reconnect storms.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where immediate cosocket SSL handshake errors could be reported as subsequent socket write failures.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `kong.service.set_tls_cert_key` did not update the upstream keepalive pool name. Now includes a cert fingerprint for proper connection isolation.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where paginated full sync could keep stale pending foreign-key references across a failed resume, causing spurious validation failures.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the `KONG_ANALYTICS_FLUSH_INTERVAL` environment variable was not correctly applied to the analytics flush interval.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Increased the default `proxy_ssl_verify_depth` and `lua_ssl_verify_depth` from `1` to `5`.",
+        "type": "bugfix",
+        "scope": "Configuration"
+      },
+      {
+        "message": "**kafka-upstream, kafka-log, kafka-consume, confluent, confluent-consume**: Fixed Kafka keepalive pools leaking connections across different SASL credentials and TLS verification settings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an inconsistency where `credential_claim` resolved the same claim name to a different value than `upstream_headers_claims` because it consulted the `id_token` before the `access_token`, while the upstream headers resolver consulted the `access_token` first. With IdPs (like Okta) that set distinct `sub` values in the two tokens, `authenticated_entity.id` did not match the upstream header the plugin set on the same request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where the `redirect_uri` parameter was sent to the token endpoint for all grant types. It is now included only for the `authorization_code` grant, as required by RFC 6749.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where request-scoped `resource_attributes` could leak across concurrent queued `traces`, `logs`, and access log exports when the plugin was configured globally.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the plugin crashed when DNS or balancer failures occurred during upstream retries.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**session**: Fixed an issue where concurrent authentication requests using Postgres for session storage caused race conditions and session creation collisions.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**tcp-log**: Fix the race condition where the balancer `tries` array gets cleared before the asynchronous timer thread can safely encode it.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai**: Removed unused redis connection when setting up Redis vectordb.",
+        "type": "performance",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**RBAC**: Improved PostgreSQL performance when deleting Admin API entities by adding an index used to clean up `rbac_role_entities` permissions.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ]
   }
 }

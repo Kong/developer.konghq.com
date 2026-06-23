@@ -87,6 +87,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.7": [
+    {
+      "message": "Fixed an issue where internal unix-socket subrequests lost the original client IP address, causing IP-aware plugins like ip-restriction to reject legitimate requests.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where empty JSON arrays in MCP server\nresponses were rewritten to empty objects when the plugin re-encoded the\nbody for ACL list filtering.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for MCP ACL control.\n",
