@@ -239,19 +239,19 @@ columns:
   - title: Min version
     key: min_version
 rows:
-{% if provider.capabilities.audio_speech %}
+{% if provider.capabilities.audio_speech.supported %}
   - capability: "speech{% if audio_speech_note_num != 0 %}<sup>{{ audio_speech_note_num }}</sup>{% endif %}"
     model_example: "{{ provider.capabilities.audio_speech.model_example }}"
     path_template: "`/audio/speech`"
     min_version: "{{ provider.capabilities.audio_speech.min_version }}"
 {% endif %}
-{% if provider.capabilities.audio_transcription %}
+{% if provider.capabilities.audio_transcription.supported %}
   - capability: "transcription{% if audio_transcription_note_num != 0 %}<sup>{{ audio_transcription_note_num }}</sup>{% endif %}"
     model_example: "{{ provider.capabilities.audio_transcription.model_example }}"
     path_template: "`/audio/transcriptions`"
     min_version: "{{ provider.capabilities.audio_transcription.min_version }}"
 {% endif %}
-{% if provider.capabilities.audio_translation %}
+{% if provider.capabilities.audio_translation.supported %}
   - capability: "translation{% if audio_translation_note_num != 0 %}<sup>{{ audio_translation_note_num }}</sup>{% endif %}"
     model_example: "{{ provider.capabilities.audio_translation.model_example }}"
     path_template: "`/audio/translations`"
