@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Noname Security machine learning & prevention blocking for {{site.ai_gateway_name}}
 ---

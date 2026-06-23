@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Cache and serve commonly requested responses in {{site.ai_gateway_name}}
 ---

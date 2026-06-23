@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Integrate Impart Security's WAF and API security protection platform with {{site.ai_gateway_name}}.
 ---

@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Integrate {{site.ai_gateway_name}} with a third-party OAuth 2.0 Authorization
 ---
