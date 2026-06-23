@@ -91,15 +91,15 @@ Before you configure the integration in {{site.konnect_short_name}}, you need yo
 
 Configure the EqualWeb integration in your {{site.dev_portal}} settings.
 
-1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. In the {{site.konnect_short_name}} sidebar, expand **{{site.dev_portal}}**.
 1. Click **Portals**.
-1. Click your Dev Portal.
+1. Click your {{site.dev_portal}}.
 1. Click the **Settings** tab.
 1. Click the **Integrations** tab.
 1. Click **EqualWeb**.
 1. Click the **Enabled** toggle.
-1. In the **Site key**, enter the site key from the EqualWeb widget you configured in the previously. For example: `79ad2e1ec52e63565e254555077aaaec`.
-1. (Optional) If you configured the widget design in EqualWeb, click **Advanced configurations** and enter the JSON configuration in the **** field with opening and closing brackets. For example:
+1. In the **Site key**, enter the site key from the EqualWeb widget you configured previously. For example: `79ad2e1ec52e63565e254555077aaaec`.
+1. (Optional) If you configured the widget design in EqualWeb, click **Advanced configurations** and enter the JSON configuration in the configuration field with opening and closing brackets. For example:
    ```json
    {
     "Position": "left",
