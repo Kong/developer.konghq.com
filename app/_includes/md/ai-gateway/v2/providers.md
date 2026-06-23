@@ -1,3 +1,4 @@
+<!--vale off-->
 {%- assign provider = include.providers.providers | where: "name", include.provider_name | first -%}
 {% if provider %}
 You can proxy requests to {{ provider.name }} AI models through {{site.ai_gateway}} by creating [AI Providers](/ai-gateway/entities/ai-provider/) and [AI Models](/ai-gateway/entities/ai-model/). This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
@@ -464,3 +465,4 @@ The base URL is `{{ provider.url_patterns.first }}`, where `{capability_path}` i
 {% else %}
 Provider "{{ include.provider_name }}" not found.
 {% endif %}
+<!--vale on-->

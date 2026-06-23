@@ -39,7 +39,7 @@ related_resources:
 
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="xAI" %}
 
-{% include plugins/ai-proxy/providers/native-routes.md providers=site.data.plugins.ai-proxy provider_name="xAI" %}
+{% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="xAI" %}
 
 ## Configure {{ provider.name }}
 
