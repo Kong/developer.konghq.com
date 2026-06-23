@@ -153,10 +153,13 @@ Mesh-scoped zone proxies are ordinary `Dataplane` resources, so you must select 
 
    ```sh
    kubectl --context $ZONE1_PROFILE -n kong-mesh-demo exec deploy/demo-app -c demo-app -- \
-     wget -qO /dev/null http://external-service-kube.extsvc.mesh.local
+     wget -S -O /dev/null http://external-service-kube.extsvc.mesh.local
    ```
 
-   The request should be denied by the egress policy.
+   The request should be denied by the egress policy and return `HTTP/1.1 403 Forbidden`.
+
+   {:.info}
+   > If the first attempt returns `wget: bad address`, wait a few seconds for the generated `extsvc.mesh.local` hostname to propagate and retry the same command.
 
 1. Check the RBAC stats on the zone-1 egress:
 
@@ -239,7 +242,7 @@ Match the traffic by SNI.
        - matches:
            - sni:
                type: Exact
-               value: sni.msvc.default.zone-2.kong-mesh-demo.demo-app.5000
+               value: sni.msvc.default.zone-2.kong-mesh-demo.demo-app.http
          default:
            backends:
              - type: File
@@ -268,6 +271,6 @@ Match the traffic by SNI.
    The output should contain:
 
    ```text
-   zone-ingress-sni=sni.msvc.default.zone-2.kong-mesh-demo.demo-app.5000
+   zone-ingress-sni=sni.msvc.default.zone-2.kong-mesh-demo.demo-app.http
    ```
    {:.no-copy-code}
