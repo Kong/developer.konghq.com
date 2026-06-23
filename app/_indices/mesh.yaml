@@ -151,8 +151,7 @@ sections:
       - path: /mesh/scenarios/external-ca-vault/
       - path: /mesh/scenarios/multi-zone-architecture/
       - path: /mesh/scenarios/mesh-scoped-zone-proxies/
-      - path: /mesh/scenarios/global-canary-releases/
-      - path: /mesh/scenarios/global-color-routing/
+      - path: /mesh/scenarios/global-routing/
       - path: /mesh/scenarios/mesh-passthrough/
       - path: /mesh/scenarios/meshexternalservice/
       - path: /mesh/scenarios/chaos-engineering/

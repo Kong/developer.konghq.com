@@ -47,15 +47,14 @@ Connect Kong Air's cloud regions and legacy data centers into a single mesh.
 
 11. **[Multi-Zone Architecture](/mesh/scenarios/multi-zone-architecture/)**: ZoneIngress, ZoneEgress, service federation, and Global/Zone CP sync.
 12. **[Mesh-Scoped Zone Proxies](/mesh/scenarios/mesh-scoped-zone-proxies/)**: Per-mesh zone proxies via the Helm `meshes:` list (new in 2.14).
-13. **[Global Canary Releases](/mesh/scenarios/global-canary-releases/)**: Zone-local canary rollouts across regions with `MeshMultiZoneService`.
-14. **[Global Color Routing](/mesh/scenarios/global-color-routing/)**: Affinity-based routing with same-color cross-zone failover.
+13. **[Global Routing: Canary Rollouts and Color Rings](/mesh/scenarios/global-routing/)**: Weighted canary rollouts and permanent color rings across zones with `MeshMultiZoneService`.
 
 ## Phase 4: Expert Operations
 Advanced patterns for controlling the perimeter and integrating external dependencies.
 
-15. **[Securing the Perimeter: MeshPassthrough](/mesh/scenarios/mesh-passthrough/)**: Move to a default-deny posture for outbound traffic.
-16. **[First-Class Dependencies: MeshExternalService](/mesh/scenarios/meshexternalservice/)**: Manage external APIs and databases as mesh citizens.
-17. **[Chaos Engineering: Fault Injection](/mesh/scenarios/chaos-engineering/)**: Proactively test mesh resilience with `MeshFaultInjection`.
+14. **[Securing the Perimeter: MeshPassthrough](/mesh/scenarios/mesh-passthrough/)**: Move to a default-deny posture for outbound traffic.
+15. **[First-Class Dependencies: MeshExternalService](/mesh/scenarios/meshexternalservice/)**: Manage external APIs and databases as mesh citizens.
+16. **[Chaos Engineering: Fault Injection](/mesh/scenarios/chaos-engineering/)**: Proactively test mesh resilience with `MeshFaultInjection`.
 
 ## Explore by role
 Prefer a role-based view? Each persona guide maps the scenarios to what that team owns:

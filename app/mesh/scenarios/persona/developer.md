@@ -12,8 +12,8 @@ products:
 next_steps:
   - text: "Traffic Splitting with MeshServices"
     url: "/mesh/scenarios/traffic-splitting-meshservices/"
-  - text: "Global Canary Releases"
-    url: "/mesh/scenarios/global-canary-releases/"
+  - text: "Global Routing: Canary Rollouts and Color Rings"
+    url: "/mesh/scenarios/global-routing/"
   - text: "Chaos Engineering: Fault Injection"
     url: "/mesh/scenarios/chaos-engineering/"
 ---

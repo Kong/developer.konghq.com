@@ -54,8 +54,9 @@ If Kong Air wants a custom naming scheme, that is an **operator-level customizat
 
 Kong Air uses a managed PostgreSQL instance for flight data. By defining it as a `MeshExternalService`, the application can reach it through a mesh-generated hostname instead of hardcoding the AWS endpoint directly.
 
-> [!NOTE]
-> On Kubernetes in multi-zone mode, `MeshExternalService` is a **system-namespace resource**. On a Zone CP, it must be created in `{{site.mesh_namespace}}` and carry the label `kuma.io/origin: zone`.
+{% tip %}
+On Kubernetes in multi-zone mode, `MeshExternalService` is a **system-namespace resource**. On a Zone CP, it must be created in `{{site.mesh_namespace}}` and carry the label `kuma.io/origin: zone`.
+{% endtip %}
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -124,7 +125,7 @@ The SNI for a zone-local `MeshExternalService` follows this deterministic format
 sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>
 ```
 
-Substitute the values directly from the resource metadata. For `flight-db` created in zone `zone1`:
+The final segment is the listener's section name, which for a `MeshExternalService` is its `match.port`. Substitute the values directly from the resource metadata. For `flight-db` created in zone `zone1`:
 
 ```
 sni.extsvc.kong-air-mesh.zone1.{{site.mesh_namespace}}.flight-db.5432
@@ -163,15 +164,17 @@ kubectl get meshidentity -n {{site.mesh_namespace}} \
 Multiple workloads, multiple rules. Add more entries under `rules[0].default.allow` to grant additional workloads access to the same or different external services. To allow a workload to reach *any* external service through zone egress, omit the `sni` field from that entry.
 {% endtip %}
 
-> [!NOTE]
-> The `deny-all by default` behavior is specific to **mesh-scoped zone proxies** introduced in 2.14. If you are still using the legacy global `ZoneEgress`, set `spec.routing.defaultForbidMeshExternalServiceAccess: true` on the `Mesh` resource to enforce a mesh-wide deny. That flag is removed in Kong Mesh 3.0.
+{% tip %}
+The `deny-all by default` behavior is specific to **mesh-scoped zone proxies** introduced in 2.14. If you are still using the legacy global `ZoneEgress`, set `spec.routing.defaultForbidMeshExternalServiceAccess: true` on the `Mesh` resource to enforce a mesh-wide deny.
+{% endtip %}
 
 ## 5. Securing AeroPay (HTTPS with TLS Origination)
 
 For the AeroPay API, Sarah (the Security Architect) wants to ensure all traffic is encrypted, but she doesn't want developers managing third-party CA bundles in application code. `MeshExternalService` is the resource intended to handle TLS origination at the sidecar.
 
-> [!IMPORTANT]
-> If Kong Air wants developers to call the service with plain HTTP inside the mesh, the **internal match port** should be an HTTP port such as `80`, while the upstream endpoint can still be `443`. The mesh-generated hostname will still come from the `HostnameGenerator`.
+{% tip %}
+If Kong Air wants developers to call the service with plain HTTP inside the mesh, the **internal match port** should be an HTTP port such as `80`, while the upstream endpoint can still be `443`. The mesh-generated hostname will still come from the `HostnameGenerator`.
+{% endtip %}
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -197,57 +200,62 @@ spec:
       serverName: api.aeropay.com
 ```
 
-> [!IMPORTANT]
-> **The ZoneEgress needs its own `MeshIdentity`, or external calls fail with a 503.** If the request path traverses a mesh-scoped zone egress and you see:
->
-> ```text
-> 503 Service Unavailable
-> TLS error: Secret is not supplied by SDS
-> ```
->
-> the cause is that the zone egress proxy has **no workload identity certificate**. This happens when your `MeshIdentity` selector matches only an application namespace (for example `kong-air-production`): the zone proxies run in `{{site.mesh_namespace}}`, so nothing matches them, the control plane issues no certificate, the SDS secret backing the egress's mTLS leg is never delivered, and the connection fails before it ever reaches the external endpoint. (This is why even a plain-HTTP `MeshExternalService` reproduces it: the failing leg is the in-mesh mTLS hop to the egress, not the external TLS origination.)
->
-> **Fix: make sure a `MeshIdentity` selects the zone proxies.** A `MeshIdentity` only covers the dataplanes its selector matches (an absent selector matches *nothing*), so the cleanest fix is a **single mesh-wide identity** that covers both your apps and the zone proxies with one CA, select on the mesh label rather than an app namespace:
->
-> ```yaml
-> apiVersion: kuma.io/v1alpha1
-> kind: MeshIdentity
-> metadata:
->   name: kong-air-identity
->   namespace: {{site.mesh_namespace}}
->   labels:
->     kuma.io/mesh: kong-air-mesh
-> spec:
->   selector:
->     dataplane:
->       matchLabels:
->         kuma.io/mesh: kong-air-mesh   # every dataplane in the mesh, incl. zone proxies
->   provider:
->     type: Bundled
->     bundled:
->       insecureAllowSelfSigned: true
->       autogenerate: { enabled: true }
->       meshTrustCreation: Enabled
->   spiffeID:
->     path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
->     trustDomain: kong-air-mesh.mesh.local
-> ```
->
-> The mesh-wide `MeshIdentity` from [Getting Started](/mesh/scenarios/getting-started-policy/) already covers the zone proxies. If yours is instead scoped to a single app namespace, **broaden its selector** to the mesh label rather than adding a second identity. Apply at the Global CP, then restart the zone proxies so they pick up a cert:
->
-> ```bash
-> # The mesh-scoped zone-proxy deployments carry the kuma.io/mesh label.
-> kubectl rollout restart deployment -n {{site.mesh_namespace}} -l kuma.io/mesh=kong-air-mesh
->
-> # Verify the egress now has an issued identity (its DataplaneInsight is named after the pod):
-> ZE=$(kubectl get pods -n {{site.mesh_namespace}} \
->   -l k8s.kuma.io/zone-proxy-type=egress -o jsonpath='{.items[0].metadata.name}')
-> kubectl get dataplaneinsight -n {{site.mesh_namespace}} "$ZE" \
->   -o jsonpath='{.status.mTLS.issuedBackend}'
-> # → a non-empty kri_mid_... backend (empty means no MeshIdentity selects the zone proxies)
-> ```
->
-> **Multi-zone:** prefer a **shared external CA** (Vault, cert-manager, or ACM, see [Enterprise PKI](/mesh/scenarios/external-ca-vault/)) over `autogenerate`. With `autogenerate`, every `MeshIdentity` mints its own per-zone CA, and each one then needs the same cross-zone `MeshTrust` reconciliation described in [Workload Identity](/mesh/scenarios/workload-identity/#cross-zone-trust-with-autogenerated-cas). A shared root means apps **and** zone proxies in **every** zone chain to one CA, so this just works. Avoid adding a separate per-namespace `autogenerate` identity for the zone proxies in multi-zone, it multiplies the CAs you have to reconcile.
+### Troubleshooting: external calls fail with a 503
+
+{% warning %}
+If a request through a mesh-scoped zone egress fails with the following, the zone egress proxy has **no workload identity certificate**:
+
+```
+503 Service Unavailable
+TLS error: Secret is not supplied by SDS
+```
+{% endwarning %}
+
+**Why it happens.** The zone egress proxies run in `{{site.mesh_namespace}}`. If your `MeshIdentity` selector matches only an application namespace (for example `kong-air-production`), nothing selects the zone proxies, so the control plane issues them no certificate. The SDS secret backing the egress's mTLS leg is never delivered, and the connection fails on the in-mesh mTLS hop before it ever reaches the external endpoint. (This is why even a plain-HTTP `MeshExternalService` reproduces it: the failing leg is the hop to the egress, not the external TLS origination.)
+
+**The fix: make sure a `MeshIdentity` selects the zone proxies.** A `MeshIdentity` only covers the dataplanes its selector matches (an absent selector matches *nothing*). The cleanest fix is a **single mesh-wide identity** that covers both your apps and the zone proxies with one CA, selecting on the mesh label rather than an app namespace:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshIdentity
+metadata:
+  name: kong-air-identity
+  namespace: {{site.mesh_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+spec:
+  selector:
+    dataplane:
+      matchLabels:
+        kuma.io/mesh: kong-air-mesh   # every dataplane in the mesh, incl. zone proxies
+  provider:
+    type: Bundled
+    bundled:
+      insecureAllowSelfSigned: true
+      autogenerate: { enabled: true }
+      meshTrustCreation: Enabled
+  spiffeID:
+    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
+    trustDomain: kong-air-mesh.mesh.local
+```
+
+The mesh-wide `MeshIdentity` from [Getting Started](/mesh/scenarios/getting-started-policy/) already covers the zone proxies. If yours is instead scoped to a single app namespace, **broaden its selector** to the mesh label rather than adding a second identity. Apply it at the Global CP, then restart the zone proxies so they pick up a certificate:
+
+```bash
+# The mesh-scoped zone-proxy deployments carry the kuma.io/mesh label.
+kubectl rollout restart deployment -n {{site.mesh_namespace}} -l kuma.io/mesh=kong-air-mesh
+
+# Verify the egress now has an issued identity (its DataplaneInsight is named after the pod):
+ZE=$(kubectl get pods -n {{site.mesh_namespace}} \
+  -l k8s.kuma.io/zone-proxy-type=egress -o jsonpath='{.items[0].metadata.name}')
+kubectl get dataplaneinsight -n {{site.mesh_namespace}} "$ZE" \
+  -o jsonpath='{.status.mTLS.issuedBackend}'
+# → a non-empty kri_mid_... backend (empty means no MeshIdentity selects the zone proxies)
+```
+
+{% tip %}
+**Multi-zone:** prefer a **shared external CA** (Vault, cert-manager, or ACM, see [Enterprise PKI](/mesh/scenarios/external-ca-vault/)) over `autogenerate`. With `autogenerate`, every `MeshIdentity` mints its own per-zone CA, and each one then needs the same cross-zone `MeshTrust` reconciliation described in [Workload Identity](/mesh/scenarios/workload-identity/#cross-zone-trust-with-autogenerated-cas). A shared root means apps **and** zone proxies in **every** zone chain to one CA, so this just works. Avoid adding a separate per-namespace `autogenerate` identity for the zone proxies in multi-zone, it multiplies the CAs you have to reconcile.
+{% endtip %}
 
 ## 6. Adding Resiliency with MeshRetry
 

@@ -48,7 +48,11 @@ Interaction with mesh-scoped ZoneEgress. If you've enabled mesh-scoped ZoneEgres
 The `MeshPassthrough` policy defines how the proxy handles traffic that doesn't match any known `MeshService` or `MeshExternalService`.
 
 ### Step 1: Broad "Allow" (Default Behavior)
-By default, {{site.mesh_product_name}} acts as if this policy exists with `passthroughMode: All`.
+With no `MeshPassthrough` policy in place, the mesh allows all outbound passthrough, so the effective behavior matches `passthroughMode: All`. The example below makes that explicit.
+
+{% tip %}
+If you create a `MeshPassthrough` but omit `passthroughMode`, the field defaults to **`Matched`**, not `All`, only destinations in `appendMatch` pass through. Set `passthroughMode: All` explicitly when you want the open-mesh behavior.
+{% endtip %}
 
 {% navtabs "passthrough-allow-all" %}
 {% navtab "Kubernetes (Zone CP)" %}
@@ -58,6 +62,8 @@ kind: MeshPassthrough
 metadata:
   name: allow-all-passthrough
   namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
@@ -90,6 +96,8 @@ kind: MeshPassthrough
 metadata:
   name: secure-perimeter
   namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
@@ -112,7 +120,7 @@ spec:
 {% endnavtabs %}
 
 ### Step 3: Selective Passthrough
-You can allow traffic based on IP ranges (CIDR) or ports, even without defining a formal `MeshExternalService`.
+You can allow specific destinations even without defining a formal `MeshExternalService`. Each `appendMatch` entry takes a `type` (`Domain`, `IP`, or `CIDR`), a `value`, an optional `port`, and a `protocol`.
 
 {% navtabs "passthrough-matched" %}
 {% navtab "Kubernetes (Zone CP)" %}
@@ -122,6 +130,8 @@ kind: MeshPassthrough
 metadata:
   name: selective-passthrough
   namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Mesh
@@ -130,6 +140,10 @@ spec:
     appendMatch:
       - type: IP
         value: "1.2.3.4"
+        port: 443
+        protocol: tls
+      - type: CIDR
+        value: "10.0.0.0/8"
         port: 443
         protocol: tls
       - type: Domain
@@ -153,6 +167,10 @@ spec:
         value: "1.2.3.4"
         port: 443
         protocol: tls
+      - type: CIDR
+        value: "10.0.0.0/8"
+        port: 443
+        protocol: tls
       - type: Domain
         value: "*.google.com"
         port: 80
@@ -162,11 +180,11 @@ spec:
 {% endnavtabs %}
 
 {% tip %}
-`Domain`-type entries in `appendMatch` **must** include a `protocol` field (e.g., `http`, `tls`, `grpc`). The API will reject the resource without it.
+`protocol` defaults to `tcp`, but a `Domain` match does **not** support `tcp` (or `mysql`). So every `Domain` entry must set an explicit L7 or TLS protocol (`tls`, `http`, `http2`, or `grpc`), otherwise the API rejects it. Only full-label wildcards are allowed (`*.google.com`), not partial ones like `*google.com`.
 {% endtip %}
 
 {% tip %}
-`appendMatch` entries with `type: IP` match a **bare IP address**, not CIDR notation. Use `1.2.3.4`, not `1.2.3.4/32`, unless your target version explicitly documents CIDR support for that matcher.
+Use the match `type` that fits the destination: `type: IP` takes a **bare IP** (`1.2.3.4`, no mask), and `type: CIDR` takes a **range** (`10.0.0.0/8`). They are validated accordingly, an IP value with a `/mask` or a CIDR value without one is rejected.
 {% endtip %}
 
 ## 3. Interaction with Egress Gateways
