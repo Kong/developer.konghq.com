@@ -45,28 +45,6 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
-  config:
-    route_type: llm/v1/chat
-    auth:
-      header_name: Authorization
-      header_value: Bearer ${key}
-    model:
-      provider: mistral
-      name: mistral-tiny
-      options:
-        mistral_format: openai
-        upstream_url: https://api.mistral.ai/v1/chat/completions
-
-variables:
-  key:
-    value: $MISTRAL_API_KEY
-    description: The API key to use to connect to Mistral.
-{% endentity_example %}
-
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
