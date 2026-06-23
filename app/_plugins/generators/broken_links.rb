@@ -31,7 +31,7 @@ module Jekyll
     end
 
     def build_page(site, sources)
-      PageWithoutAFile.new(site, __dir__, '', 'sources_urls_mapping.json').tap do |page|
+      PageWithoutAFile.new(site, site.source, '', 'sources_urls_mapping.json').tap do |page|
         page.data['layout'] = nil
         page.content = JSON.pretty_generate(sources)
       end
