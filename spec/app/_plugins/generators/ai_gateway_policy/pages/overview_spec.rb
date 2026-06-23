@@ -57,7 +57,8 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Overview do
     end
 
     it { expect(data['overview?']).to be(true) }
-    it { expect(data).not_to have_key('overview_url') }
+    it { expect(data['has_overview?']).to be(false) }
+    it { expect(data['overview_url']).to eq('/ai-gateway/policies/my-policy/') }
     it { expect(data['schema']).to eq({ 'properties' => { 'config' => {} } }) }
   end
 end
