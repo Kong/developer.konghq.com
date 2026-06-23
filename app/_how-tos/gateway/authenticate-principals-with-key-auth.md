@@ -30,6 +30,9 @@ entities:
 tags:
     - authentication
 
+tools:
+    - deck
+
 tldr:
   q: How do I authenticate Principals with key authentication?
   a: |
@@ -103,6 +106,7 @@ entities:
 variables:
   directory_name:
     value: $DIRECTORY_NAME
+format:
   - deck
 {% endentity_examples %}
 
