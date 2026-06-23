@@ -11,8 +11,7 @@ products:
     - gateway
 
 plugins:
-  - basic-auth
-
+  - key-auth
 works_on:
     - on-prem
     - konnect
