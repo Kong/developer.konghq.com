@@ -19,7 +19,17 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   end
 
   let(:site_config) { { 'ai_gateway_policies' => { 'metadata' => { 'keep' => %w[title name description icon] } } } }
-  let(:site) { instance_double(Jekyll::Site, data: { 'kong_plugins' => { slug => api_plugin_page } }, config: site_config) }
+  let(:scopes_data) { [{ 'name' => slug, 'scopes' => %w[models global] }] }
+  let(:site) do
+    instance_double(
+      Jekyll::Site,
+      data: {
+        'kong_plugins' => { slug => api_plugin_page },
+        'policies' => { 'ai-gateway' => { 'scopes' => scopes_data } }
+      },
+      config: site_config
+    )
+  end
 
   let(:release_info) do
     instance_double(
@@ -74,6 +84,22 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
 
     it 'merges frontmatter from index.md via super' do
       expect(metadata['products']).to eq(['ai-gateway'])
+    end
+
+    it 'includes the scopes for the matching slug' do
+      expect(metadata['scopes']).to eq(%w[models global])
+    end
+
+    context 'when no scopes entry matches the slug' do
+      let(:scopes_data) { [{ 'name' => 'other-policy', 'scopes' => %w[models] }] }
+
+      it { expect(metadata['scopes']).to eq([]) }
+    end
+
+    context 'when scopes data is absent' do
+      let(:scopes_data) { nil }
+
+      it { expect(metadata['scopes']).to eq([]) }
     end
   end
 end
