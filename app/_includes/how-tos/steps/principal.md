@@ -1,4 +1,4 @@
-Create the Principal by sending a POST request to the `/v2/directories/{directoryId}/principals` [endpoint](/api/konnect/kong-identity/v2/#/operations/createPrincipal):
+Create the Principal by sending a POST request to the `/v2/directories/{directoryId}/principals` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
