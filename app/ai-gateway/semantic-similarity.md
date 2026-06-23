@@ -266,7 +266,7 @@ The threshold defines how permissive the matching is. **Higher threshold values 
 
 * For **Euclidean distance**, the threshold is normalized to a 0–1 range and sets the maximum allowable distance between embedding vectors. A value of `0` requires exact matches (zero distance). A value of `1` permits the broadest possible matches. Typical configurations use `0.1–0.2` for strict matching and `0.5–0.8` for broader matching.
 
-In both cases, if the [{{site.base_gateway}} logs](/gateway/logs/) indicate "no target can be found under threshold X," increase the threshold value to allow more matches.
+In both cases, if the [{{site.ai_gateway}} logs](/ai-gateway/ai-logs/) indicate "no target can be found under threshold X," increase the threshold value to allow more matches.
 
 The optimal threshold depends on the selected distance metric, the embedding model's dimensionality, and the variation in your data. Tuning may be required for best results.
 
