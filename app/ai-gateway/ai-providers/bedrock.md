@@ -62,33 +62,6 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
-  config:
-    route_type: llm/v1/chat
-    auth:
-      allow_override: false
-      aws_access_key_id: ${key}
-      aws_secret_access_key: ${secret}
-    model:
-      provider: bedrock
-      name: meta.llama3-70b-instruct-v1:0
-      options:
-        bedrock:
-          aws_region: us-east-1
-
-variables:
-  key:
-    value: $AWS_ACCESS_KEY_ID
-    description: The AWS access key ID to use to connect to Bedrock.
-  secret:
-    value: $AWS_SECRET_ACCESS_KEY
-    description: The AWS secret access key to use to connect to Bedrock.
-{% endentity_example %}
-
-
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
@@ -108,3 +81,14 @@ body:
       aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Authentication with AWS
+
+You can also use {{ provider.name }} with AWS credentials by setting `auth` to `aws` and specifying:
+
+* **`access_key_id`** (optional): AWS access key ID for static IAM user credentials. If omitted, the default AWS credentials provider chain is used (EC2 instance profiles, environment variables, etc.).
+* **`secret_access_key`** (optional): AWS secret access key paired with `access_key_id`. Required if `access_key_id` is set.
+* **`assume_role_arn`** (optional): IAM role ARN to assume for temporary credentials. Useful for cross-account access.
+* **`role_session_name`** (optional): Session name for the assumed role. Required if `assume_role_arn` is set.
+* **`sts_endpoint_url`** (optional): Custom STS endpoint for role assumption. Defaults to `https://sts.amazonaws.com`.
+* **`batch_role_arn`** (optional): Separate role ARN for Bedrock batch API calls.
