@@ -460,7 +460,7 @@ rows:
 {%- endfor -%}
 
 {% if provider.url_is_variable %}
-The base URL is <code>{{ provider.url_patterns.first }}</code>, where `{capability_path}` is determined by the AI capability.
+The base URL is <code>{{ provider.url_patterns.first }}</code>.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
 {% elsif provider.url_patterns.size > 1 %}
 The base URL is {% for url in provider.url_patterns %}<code>{{ url }}</code>{% unless forloop.last %} or {% endunless %}{% endfor %}.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
 {% else %}
