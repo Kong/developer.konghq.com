@@ -172,7 +172,7 @@ Otherwise the field will be regenerated automatically with every update.
 
 ### Fallback from Redis
 
-{% include /ai-gateway/redis-fallback.md %}
+{% include md/ai-gateway/v2/redis-fallback.md %}
 
 ## Limit by IP address
 
@@ -191,14 +191,14 @@ You can see an example of this in the guide on [enforcing rate limiting tiers wi
 
 ## Throttle rate limits {% new_in 3.12 %}
 
-In {{site.base_gateway}} 3.12 or later, you can enable request throttling using the Rate Limiting Advanced plugin to improve clients' experience and protect upstream origin servers from being overwhelmed by traffic spikes. With throttling, requests that exceed the rate limit threshold can be delayed and retried, rather than immediately rejected with a `429` status code. 
+In {{site.base_gateway}} 3.12 or later, you can enable request throttling using the Rate Limiting Advanced plugin to improve clients' experience and protect upstream origin servers from being overwhelmed by traffic spikes. With throttling, requests that exceed the rate limit threshold can be delayed and retried, rather than immediately rejected with a `429` status code.
 
-We recommend setting `disable_penalty` to `true` when using throttle rate limits with sliding window. Because for the sliding window type, if you set `disable_penalty` to `false`, all requests, including denied ones, will still be counted toward the rate limit. This can lead to a situation where every subsequent window immediately reaches the limit, causing all requests to be denied. In this case, the throttling mechanism will not take effect, because there are no accepted requests left to throttle. 
+We recommend setting `disable_penalty` to `true` when using throttle rate limits with sliding window. Because for the sliding window type, if you set `disable_penalty` to `false`, all requests, including denied ones, will still be counted toward the rate limit. This can lead to a situation where every subsequent window immediately reaches the limit, causing all requests to be denied. In this case, the throttling mechanism will not take effect, because there are no accepted requests left to throttle.
 
 Throttled rate limits work like the following:
 1. When a request hits the rate limit, it's placed into a "waiting room" or queue. The client's connection is held during this delay.
    * This queue uses local, Redis, or cluster strategies to manage the queue of throttled requests using a counter-based approach.
-1. Requests in the queue are automatically retried after a configurable interval ([`config.throttling.interval`](/plugins/rate-limiting-advanced/reference/#schema--config-interval)). 
+1. Requests in the queue are automatically retried after a configurable interval ([`config.throttling.interval`](/plugins/rate-limiting-advanced/reference/#schema--config-interval)).
    * There's a limit to retries for individual requests ([`config.throttling.retry_times`](/plugins/rate-limiting-advanced/reference/#schema--config-retry-times)), and a cap to the total number of requests waiting ([`config.throttling.queue_limit`](/plugins/rate-limiting-advanced/reference/#schema--config-queue-limit)).
    * All concurrent requests will retry at approximately the same time once the specified interval has elapsed.
 1. If a request exceeds its maximum retries or if the waiting room is full, it will ultimately be rejected with a 429 response.
