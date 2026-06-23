@@ -22,11 +22,11 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Consumer entity
+  - text: AI Consumer entity
     url: /ai-gateway/entities/ai-consumer/
-  - text: Model entity
+  - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
-  - text: Policy entity
+  - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.base_gateway}} Consumer Group entity"
     url: /gateway/entities/consumer-group/
@@ -35,7 +35,7 @@ faqs:
     a: |
       The runtime entity is a regular Kong Consumer Group. The {{site.ai_gateway}} surface adds
       the entity convention ([`display_name`](#schema-aigateway-consumer-group-display-name), [`name`](#schema-aigateway-consumer-group-name), [`labels`](#schema-aigateway-consumer-group-labels)) and a required [`policies`](#schema-aigateway-consumer-group-policies) array
-      for attaching plugin instances at the group scope.
+      for attaching policies at the group scope.
 
   - q: Can I edit the underlying Kong Consumer Group that {{site.ai_gateway}} generates?
     a: |
@@ -44,8 +44,8 @@ faqs:
 
   - q: How do I assign a Consumer to a Consumer Group?
     a: |
-      You add a Consumer to a Consumer Group through the Consumer Group entity. 
-      See the [Consumer entity](/ai-gateway/entities/ai-consumer/) and 
+      You add a Consumer to a Consumer Group through the Consumer Group entity.
+      See the [Consumer entity](/ai-gateway/entities/ai-consumer/) and
       [Consumer Group entity](/ai-gateway/entities/ai-consumer-group/) references.
 
   - q: Can a Consumer belong to multiple Consumer Groups?
@@ -55,7 +55,7 @@ faqs:
   - q: How do I attach Policies to a Consumer Group?
     a: |
       Add the Policy's `name` or `id` to the Consumer Group's [`policies`](#schema-aigateway-consumer-group-policies) array.
-      The plugin runs when a member of the group is identified during a request.
+      The policy runs when a member of the group is identified during a request.
       See the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
   - q: How do I gate access to an AI Model, AI Agent, or AI MCP Server with an AI Consumer Group?
@@ -84,17 +84,6 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/consumer-groups
 {% endtable %}
 
-## Configure an AI Consumer Group
-
-When you create an AI Consumer Group, the configuration steps generally follow this order:
-
-1. Create the group with a [`display_name`](#schema-aigateway-consumer-group-display-name), [`name`](#schema-aigateway-consumer-group-name), and optional description.
-1. Optionally attach AI Policies for group-wide plugin execution (such as rate limits or content moderation).
-1. Assign AI Consumers to the group through each AI Consumer's `consumer_groups` array.
-1. Optionally use the AI Consumer Group in `acls` on AI Model, AI Agent, or AI MCP Server entities to control access.
-
-For a concrete example, see [Set up an AI Consumer Group](#set-up-an-ai-consumer-group).
-
 ## Membership
 
 Membership is managed through the [AI Consumer entity](/ai-gateway/entities/ai-consumer/). Add an AI Consumer to one or more AI Consumer Groups by setting the `consumer_groups` array on the AI Consumer. A single AI Consumer can belong to multiple AI Consumer Groups.
@@ -105,9 +94,9 @@ For AI Consumer configuration details, see the [AI Consumer entity](/ai-gateway/
 
 AI Policies attached to an AI Consumer Group run when a member of that group is identified during a request. To attach an AI Policy, add its `name` or `id` to the AI Consumer Group's [`policies`](#schema-aigateway-consumer-group-policies) array.
 
-You can attach multiple AI Policies to a single AI Consumer Group. Each AI Policy is an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
+You can attach multiple AI Policies to a single AI Consumer Group with different configurations, and each runs independently.
 
-For the supported plugin types and how AI Policies attach to other entities, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
+For supported policy types and how AI Policies attach to other entities, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Use in parent entity ACLs
 
@@ -125,7 +114,7 @@ data:
   display_name: Internal Teams
   name: internal-teams
   policies:
-    - rate-limit-internal-teams
+    - rate-limiting
 {% endentity_example %}
 
 ## Schema

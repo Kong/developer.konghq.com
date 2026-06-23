@@ -22,11 +22,11 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Consumer entity
+  - text: AI Consumer entity
     url: /ai-gateway/entities/ai-consumer/
-  - text: Consumer Group entity
+  - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
-  - text: Policy entity
+  - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
 faqs:
   - q: Why are credentials a separate entity instead of a field on the Consumer?
@@ -98,7 +98,7 @@ Deleting a Credential immediately stops it from authenticating. Deleting the par
 The following example issues a 24-hour API key credential to an existing Consumer named `mobile-app-production`.
 
 {% entity_example %}
-type: consumer-credential
+type: consumer_credential
 data:
   display_name: Mobile App - Dev Key
   name: mobile-app-dev-key
@@ -116,7 +116,7 @@ data:
 The following example issues an OAuth credential that maps an external OIDC client ID to an AI Consumer.
 
 {% entity_example %}
-type: consumer-credential
+type: consumer_credential
 data:
   display_name: Mobile App - OIDC Mapping
   name: mobile-app-oidc-mapping
