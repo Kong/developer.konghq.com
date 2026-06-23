@@ -33,7 +33,7 @@ related_resources:
 
 {{site.ai_gateway}} provides load balancing capabilities to distribute requests across multiple LLM models. You can use these features to improve fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-In {{site.ai_gateway}} 2.0.0 and later, load balancing is configured on the [Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `target_models`.
+In {{site.ai_gateway}}, load balancing is configured on the [Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `target_models`.
 
 <!-- Commented out for future reference - Compatibility with existing configurations
 {:.info}
@@ -239,21 +239,13 @@ columns:
   - title: Use
     key: use
 rows:
-  - setting: "[`connect_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-connect-timeout), [`read_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-read-timeout), [`write_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-write-timeout)"
+  - setting: "[`connect_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-connect-timeout), [`read_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-read-timeout), [`write_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-write-timeout)"
     use: "Reduce how long {{site.base_gateway}} waits before treating a target model as unavailable."
-  - setting: "[`max_fails`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-max-fails)"
+  - setting: "[`max_fails`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-max-fails)"
     use: "Set the number of failed attempts allowed before {{site.base_gateway}} marks a target model unhealthy."
-  - setting: "[`fail_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-fail-timeout)"
+  - setting: "[`fail_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-fail-timeout)"
     use: "Set how long {{site.base_gateway}} keeps a target model in a failed state before trying it again."
 {% endtable %}
 <!--vale on-->
 
-The load balancer supports health checks and circuit breakers to improve reliability. If the number of unsuccessful attempts to a target reaches [`config.balancer.max_fails`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-max-fails), the load balancer stops sending requests to that target until it reconsiders the target after the period defined by [`config.balancer.fail_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-fail-timeout). The diagram below illustrates this behavior:
-
-![Circuit breaker](/assets/images/ai-gateway/circuit-breaker.jpg){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
-
-Consider an example where [`config.balancer.max_fails`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-max-fails) is 3 and [`config.balancer.fail_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-fail-timeout) is 10 seconds. When failed requests for a target reach 3, the target is marked unhealthy and the load balancer stops sending requests to it. After 10 seconds, the target is reconsidered. If the request to this target still fails, the target remains unhealthy and the load balancer continues to exclude it. If the request succeeds, the target is marked healthy again and recovers from the circuit breaker.
-
-The failure counter tracks total failures, not consecutive failures. If a target receives 2 failed requests, then 1 successful request within the timeout window, the counter remains at 2. The counter resets only when a successful request occurs after [`config.balancer.fail_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-fail-timeout) has elapsed since the last failed request.
-
-If all targets become unhealthy simultaneously, requests fail with `HTTP 500`.
+{% include ai-gateway/v2/circuit-breaker.md %}
