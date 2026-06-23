@@ -8,6 +8,7 @@ skip:
   indices: true # skip indices
   mesh_policy: true # skip mesh policies generation, except for overviews
   event_gateway_policy: true # skip event gateway policies generation, except for overviews
+  ai_gateway_policy: true # skip aigw policies generation
   explorer: true # skip explorer
   auto_generated: true # skip auto_generated references, i.e. app/_referneces
   mesh: true # skip kuma to mesh generation
