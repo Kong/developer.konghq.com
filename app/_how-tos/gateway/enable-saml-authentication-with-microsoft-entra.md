@@ -76,7 +76,7 @@ prereqs:
             indent: 3
             {% endenv_variables %}
 
-        {:.warning}
+        {:.danger}
         > Do not include the `BEGIN CERTIFICATE` and `END CERTIFICATE` lines in the certificate variable. Add only the certificate contents.
 
       icon_url: /assets/icons/azure.svg
@@ -105,6 +105,9 @@ entities:
 
 Enable the [SAML plugin](/plugins/saml/) and provide the information to connect to your SAML application.
 We also need to provide a value for [`config.session_secret`](/plugins/saml/reference/#schema--config-session-secret), which should be a random 32-character string.
+
+{:.danger}
+> This example sets [`validate_assertion_signature`](/plugins/saml/reference/#schema--config-validate-assertion-signature) to `false` for testing purposes. Disabling signature validation is **not secure** and allows the plugin to accept unsigned or tampered SAML assertions, exposing your application to authentication bypass and assertion forgery attacks. **Do not disable signature validation in production.**
 
 {% entity_examples %}
 entities:
