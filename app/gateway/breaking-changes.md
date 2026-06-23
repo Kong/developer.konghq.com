@@ -54,15 +54,6 @@ The following Admin API endpoints can still be used with an expired license:
 
 [Upload a valid license](/gateway/entities/license/#deploy-a-license) to restore full read-write access to the Admin API.
 
-#### License metrics attribute renames
-
-In the [Prometheus](/plugins/prometheus/) and [OpenTelemetry](/plugins/opentelemetry/) plugins, the following license metric label values have been renamed:
-* `ee_entity_read` is now `entity_read`
-* `ee_entity_write` is now `entity_write`
-
-This affects `kong_enterprise_license_features` in Prometheus and `kong.ee.license.features` in OpenTelemetry.
-Update any dashboards and alerts that reference the old values.
-
 
 #### Workspace names
 
