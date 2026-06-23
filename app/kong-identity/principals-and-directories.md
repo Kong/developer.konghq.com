@@ -112,6 +112,7 @@ Principals centralize the concept of an authenticating entity across Kong produc
 Each product has its own representation of who is authenticating: {{site.base_gateway}} has Consumers and {{site.dev_portal}} has applications:
 
 * **Consumers**: Attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. When an authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. This allows existing Consumer-scoped plugins to function while you migrate to principals.
+* **Consumer Groups**: Map a principal to one or more Consumer Groups by setting the reserved `consumer_groups` key in the principal's [metadata](#metadata) to a list of Consumer Group UUIDs. Consumer Groups have a many-to-many relationship with principals: the same group can map to many principals, and one principal can map to many groups. If the principal is also mapped to a Consumer and that Consumer belongs to its own Consumer Groups, the gateway loads the union of both sets into the request context. Consumer Groups must be defined in the same {{site.base_gateway}} control plane and workspace as the plugin.
 * **Applications**: You can map a {{site.dev_portal}} application to a {{site.base_gateway}} Consumer through a principal, creating a 1:1:1 relationship between the application, the principal, and the Consumer. This is how you apply Consumer-scoped plugins (including ACE and KAA) to traffic from a {{site.dev_portal}} application: configure the plugin on the mapped Consumer, and it runs for any request authenticated as the application. Consumer-dimension analytics also include the application's activity once the mapping is in place. A Portal Admin maps an existing application to an existing Consumer; {{site.identity}} creates or updates the principal of type `application` behind the scenes.
 
 #### When to use principals instead of Consumers
@@ -464,6 +465,32 @@ body:
 1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
 {% endnavtab %}
 {% endnavtabs %}
+
+### Link a principal to Consumer Groups
+
+Map a principal to one or more Consumer Groups in a {{site.base_gateway}} control plane.
+
+Consumer Groups are mapped through the principal's metadata using the reserved `consumer_groups` key, not through the identities resource.
+
+Send a `PATCH` request to the `/v2/directories/{directoryId}/principals/{principalId}` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID
+status_code: 200
+method: PATCH
+body:
+  metadata:
+    consumer_groups:
+      - $CONSUMER_GROUP_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> Keep the following in mind when mapping Consumer Groups:
+> * If the principal is also mapped to a Consumer (for example, Consumer X) and that Consumer belongs to its own Consumer Groups (for example, Group C and Group D), and the principal's `consumer_groups` metadata also lists Group A and Group B, then all four groups (A, B, C, and D) load into the request context.
+> * Consumer Groups must be defined in the same control plane and workspace as the plugin.
+> * Consumer Groups have a many-to-many relationship with principals.
 
 ### Custom
 
