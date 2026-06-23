@@ -30,6 +30,11 @@ RSpec.describe Jekyll::Data::Title::Base do
       it { expect(subject).to be_a(Jekyll::Data::Title::Policy) }
     end
 
+    context 'when URL starts with /ai-gateway/policies/' do
+      let(:page_url) { '/ai-gateway/policies/some-policy/' }
+      it { expect(subject).to be_a(Jekyll::Data::Title::Policy) }
+    end
+
     context 'when content_type is reference' do
       let(:page_url) { '/gateway/reference/cli/' }
       let(:page_data) { { 'content_type' => 'reference' } }
