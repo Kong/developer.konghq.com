@@ -51,6 +51,7 @@ module Jekyll
                     .to_jekyll_page
 
         site.pages << reference
+        reference
       end
 
       def generate_example_pages(policy)
