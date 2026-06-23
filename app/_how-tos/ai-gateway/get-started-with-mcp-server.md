@@ -50,6 +50,7 @@ Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes 
 
 This example uses route-backed tool paths. Each tool path includes the public Route prefix `/cards-api`.
 
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/mcp-servers
 status_code: 201
@@ -124,6 +125,7 @@ body:
             type: integer
             default: 1
 {% endkonnect_api_request %}
+<!-- vale on -->
 
 ## Validate the MCP Server
 
