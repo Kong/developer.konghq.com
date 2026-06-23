@@ -228,4 +228,4 @@ rows:
 
 ### Health check and circuit breaker {% new_in 3.13 %}
 
-{% include ai-gateway/circuit-breaker.md %}
+{% include md/ai-gateway/v1/circuit-breaker.md %}
