@@ -1,6 +1,22 @@
-When you [create a Consumer](/gateway/entities/consumer/#set-up-a-consumer), you can specify a `key` with `keyauth_credentials` (declarative configuration) or the `/consumers/{usernameOrId}/{{include.slug}}` endpoint.
+When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer) or a Principal [LINK], you can specify a `key`.
 
-When authenticating, Consumers must specify their key in either the query, body, or header:
+{% navtabs "set a key" %}
+{% navtab "Consumers" %}
+
+- Declarative configuration with `keyauth_credentials`
+- The `/consumers/{usernameOrId}/{{include.slug}}` endpoint.
+
+{% endnavtab %}
+{% navtab "Principals" %}
+
+- A POST request to the `/v2/directories/{directoryId}/principals/{principalId}/api-keys` endpoint
+- The Konnect UI
+
+{% endnavtab %}
+{% endnavtabs %}
+
+
+When authenticating, Consumers and Principals must specify their key in either the query, body, or header:
 
 {% table %}
 columns:

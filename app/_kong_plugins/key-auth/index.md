@@ -56,7 +56,7 @@ The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key
 
 {% include_cached /plugins/key-auth/request-behavior.md %}
 
-## Consumer key management
+## Key management
 
 {% include_cached /plugins/key-auth/consumer-keys.md slug=page.slug %}
 
