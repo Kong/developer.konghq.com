@@ -6,7 +6,7 @@ related_resources:
   - text: Authentication
     url: /gateway/authentication/
   - text: Principals and directories
-     url: /identity/principals/ 
+    url: /identity/principals/ 
   
 
 description: Use the Basic Authentication plugin to allow Principals to authenticate with a username and password.
