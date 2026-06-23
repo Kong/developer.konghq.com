@@ -39,9 +39,9 @@ related_resources:
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Databricks" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Databricks" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
 
@@ -61,7 +61,8 @@ body:
   config:
     auth:
       type: basic
-      - name: Authorization
+      headers:
+        - name: Authorization
           value: Bearer $DATABRICKS_TOKEN
 {% endkonnect_api_request %}
 <!--vale on-->

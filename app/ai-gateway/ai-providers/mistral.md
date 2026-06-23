@@ -37,9 +37,9 @@ related_resources:
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Mistral" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Mistral" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
@@ -81,7 +81,8 @@ body:
   config:
     auth:
       type: basic
-      - name: Authorization
+      headers:
+        - name: Authorization
           value: Bearer $MISTRAL_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->

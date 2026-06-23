@@ -40,9 +40,9 @@ related_resources:
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Kimi" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Kimi" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/) as follows:
 
@@ -60,7 +60,8 @@ body:
   config:
     auth:
       type: basic
-      - name: Authorization
+      headers:
+        - name: Authorization
           value: Bearer $KIMI_TOKEN
 {% endkonnect_api_request %}
 <!--vale on-->
