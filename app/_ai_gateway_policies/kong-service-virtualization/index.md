@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Mock virtual API request and response pairs through {{site.ai_gateway_name}}
 ---

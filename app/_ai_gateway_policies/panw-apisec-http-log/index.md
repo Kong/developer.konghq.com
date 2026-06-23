@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Enhance your API security by integrating your {{site.ai_gateway_name}} with Cortex API Security
 ---

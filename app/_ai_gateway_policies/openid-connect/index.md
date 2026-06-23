@@ -6,4 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: Integrate {{site.ai_gateway_name}} with a third-party OpenID Connect provider
 ---
