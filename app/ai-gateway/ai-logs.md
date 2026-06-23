@@ -25,7 +25,7 @@ related_resources:
     url: /dedicated-cloud-gateways/konnect-logs/
   - text: "{{site.konnect_short_name}} platform audit logs"
     url: /konnect-platform/audit-logs/
-  - text: Logging plugins
+  - text: Logging Policies
     url: /plugins/?category=logging
   - text: Add Correlation IDs to {{site.ai_gateway}} logs
     url: /how-to/add-correlation-ids-to-gateway-logs/
@@ -37,7 +37,7 @@ works_on:
 
 Logging in {{site.ai_gateway}} allows you to see information, warnings, and errors about requests that are proxied by {{site.ai_gateway}}.
 
-The information in this reference doc helps you understand and modify {{site.ai_gateway}} logs. You can also set Policies with [logging plugins](/plugins/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
+The information in this reference doc helps you understand and modify {{site.ai_gateway}} logs. You can also set Policies with [logging Policies](/plugins/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
 
 ## Where are {{site.ai_gateway}} logs located?
 
@@ -56,7 +56,7 @@ columns:
     key: description
 rows:
   - level: "`debug`"
-    description: "Provides debug information about the plugin’s run loop and each individual plugin or other components. This should only be used during debugging. If this is enabled for extended periods of time, it can result in excess disk space consumption."
+    description: "Provides debug information about the Policy’s run loop and each individual Policy or other components. This should only be used during debugging. If this is enabled for extended periods of time, it can result in excess disk space consumption."
   - level: "`info` and `notice`"
     description: "Provides information about normal behavior, most of which can be ignored."
   - level: "`warn`"
@@ -121,7 +121,7 @@ You may need to customize what {{site.ai_gateway}} logs. For instance, you may w
 * Comply with GDPR or other data protection regulations
 * Remove instances of a specific piece of data from your logs, such as an email address
 
-These changes can be made to {{site.ai_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.ai_gateway}}'s [logging plugins](/plugins/?category=logging).
+These changes can be made to {{site.ai_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.ai_gateway}}'s [logging Policies](/plugins/?category=logging).
 
 Let's look at an example where you want to remove any instances of an email address from your {{site.ai_gateway}} logs. The email addresses may come through in different formats, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template.
 
@@ -188,7 +188,7 @@ Now, any request made with an email address in it will no longer be logged.
 
 ## {{site.ai_gateway}} logs
 
-{{site.ai_gateway}} collects logs for the [{{site.ai_gateway}} plugins](/plugins/?category=ai). This allows you to aggregate AI usage analytics across various providers.
+{{site.ai_gateway}} collects logs for the [{{site.ai_gateway}} Policies](/plugins/?category=ai). This allows you to aggregate AI usage analytics across various providers.
 
 Each log entry includes the following details:
 
@@ -214,7 +214,7 @@ rows:
     description: The total cost of the request (input and output cost).
   - property: "`ai.$PLUGIN_NAME.usage.time_per_token`"
     description: |
-      {% new_in 3.8 %} The average time to generate an output token, in milliseconds.
+      The average time to generate an output token, in milliseconds.
   - property: "`ai.$PLUGIN_NAME.meta.request_model`"
     description:  The model used for the AI request.
   - property: "`ai.$PLUGIN_NAME.meta.provider_name`"
@@ -222,25 +222,25 @@ rows:
   - property: "`ai.$PLUGIN_NAME.meta.response_model`"
     description:  The model used for the AI response.
   - property: "`ai.$PLUGIN_NAME.meta.plugin_id`"
-    description:  The unique identifier of the plugin.
+    description:  The unique identifier of the Policy.
   - property: "`ai.$PLUGIN_NAME.meta.llm_latency`"
     description: |
-      {% new_in 3.8 %} The time, in milliseconds, it took the LLM provider to generate the full response.
+      The time, in milliseconds, it took the LLM provider to generate the full response.
   - property: "`ai.$PLUGIN_NAME.cache.cache_status`"
     description: |
-      {% new_in 3.8 %} The cache status. This can be `Hit`, `Miss`, `Bypass` or `Refresh`.
+      The cache status. This can be `Hit`, `Miss`, `Bypass` or `Refresh`.
   - property: "`ai.$PLUGIN_NAME.cache.fetch_latency`"
     description: |
-      {% new_in 3.8 %} The time, in milliseconds, it took to return a cache response.
+      The time, in milliseconds, it took to return a cache response.
   - property: "`ai.$PLUGIN_NAME.cache.embeddings_provider`"
     description: |
-      {% new_in 3.8 %} For semantic caching, the provider used to generate the embeddings.
+      For semantic caching, the provider used to generate the embeddings.
   - property: "`ai.$PLUGIN_NAME.cache.embeddings_model`"
     description: |
-      {% new_in 3.8 %} For semantic caching, the model used to generate the embeddings.
+      For semantic caching, the model used to generate the embeddings.
   - property: "`ai.$PLUGIN_NAME.cache.embeddings_latency`"
     description: |
-      {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.{% endtable %}
+      For semantic caching, the time taken to generate the embeddings.{% endtable %}
 <!--vale on-->
 
 <!--

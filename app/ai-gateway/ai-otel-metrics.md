@@ -44,7 +44,7 @@ works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic through an [OpenTelemetry Policy](/plugins/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
+{{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic through an [OpenTelemetry AI Policy](/plugins/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
 
 You can use these metrics to:
 
@@ -89,8 +89,8 @@ rows:
 
 Some metrics have additional requirements:
 
-* `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry Policy](/plugins/opentelemetry/reference/).
-* The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry Policy](/plugins/opentelemetry/reference/).
+* `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry AI Policy](/plugins/opentelemetry/reference/).
+* The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry AI Policy](/plugins/opentelemetry/reference/).
 
 ## Gen AI metrics (OTLP semantic conventions)
 

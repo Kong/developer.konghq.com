@@ -14,7 +14,7 @@ min_version:
   ai-gateway: '2.0'
 breadcrumbs:
   - /ai-gateway/
-description: "{{site.ai_gateway}} provides a standardized logging format for AI plugins, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
+description: "{{site.ai_gateway}} provides a standardized logging format for AI Policies, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -26,13 +26,13 @@ works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} emits structured analytics logs for [AI plugins](/plugins/?category=ai) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment. 
+{{site.ai_gateway}} emits structured analytics logs for [AI Policies](/plugins/?category=ai) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment. 
 
 You can set the [global log level](/ai-gateway/ai-logs/#configure-log-levels) for {{site.ai_gateway}} via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
 
-When operating {{site.ai_gateway}} alongside {{site.base_gateway}}, logs are stored separately in each products run time environment.
+When operating {{site.ai_gateway}} alongside {{site.base_gateway}}, logs are stored separately in each product's run time environment.
 
-You can also use [logging plugins](/plugins/?category=logging) to route these logs to external systems, such as file systems, log aggregators, or monitoring tools.
+You can also use [logging Policies](/plugins/?category=logging) to route these logs to external systems, such as file systems, log aggregators, or monitoring tools.
 
 ## Log details
 
@@ -64,40 +64,40 @@ rows:
       Used for text-based requests (chat, completions, embeddings).
   - property: "`ai.proxy.usage.prompt_tokens_details`"
     description: |
-      {% new_in 3.11 %} A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`).
+      A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`).
   - property: "`ai.proxy.usage.completion_tokens`"
     description: |
       The number of tokens used for completion.
       Used for text-based responses (chat, completions).
   - property: "`ai.proxy.usage.completion_tokens_details`"
     description: |
-      {% new_in 3.11 %} A breakdown of completion tokens (`rejected_prediction_tokens`, `reasoning_tokens`, `accepted_prediction_tokens`, `audio_tokens`).
+       A breakdown of completion tokens (`rejected_prediction_tokens`, `reasoning_tokens`, `accepted_prediction_tokens`, `audio_tokens`).
   - property: "`ai.proxy.usage.total_tokens`"
     description: |
       The total number of tokens used (input + output).
       Includes prompt/completion tokens for text, and input/output tokens for non-text modalities.
   - property: "`ai.proxy.usage.input_tokens`"
     description: |
-      {% new_in 3.11 %} The total number of input tokens (text + image + audio).
+       The total number of input tokens (text + image + audio).
       Used for non-text requests (e.g., image or audio generation).
   - property: "`ai.proxy.usage.input_tokens_details`"
     description: |
-      {% new_in 3.11 %} A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
+       A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
   - property: "`ai.proxy.usage.output_tokens`"
     description: |
-      {% new_in 3.11 %} The total number of output tokens (text + audio).
+       The total number of output tokens (text + audio).
       Used for non-text responses (e.g., image or audio generation).
   - property: "`ai.proxy.usage.output_tokens_details`"
     description: |
-      {% new_in 3.11 %} A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
+       A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
   - property: "`ai.proxy.usage.cost`"
     description: The total cost of the request.
   - property: "`ai.proxy.usage.time_per_token`"
     description: |
-      {% new_in 3.8 %} Average time to generate an output token (ms).
+      Average time to generate an output token (ms).
   - property: "`ai.proxy.usage.time_to_first_token`"
     description: |
-      {% new_in 3.12 %} Time to receive the first output token (ms).
+      Time to receive the first output token (ms).
   - property: "`ai.proxy.meta.request_model`"
     description: The model used for the AI request.
   - property: "`ai.proxy.meta.response_model`"
@@ -105,18 +105,18 @@ rows:
   - property: "`ai.proxy.meta.provider_name`"
     description: The name of the AI service provider.
   - property: "`ai.proxy.meta.plugin_id`"
-    description: Unique identifier of the plugin instance.
+    description: Unique identifier of the Policy instance.
   - property: "`ai.proxy.meta.llm_latency`"
     description: |
-      {% new_in 3.8 %} Time taken by the LLM provider to generate the full response (ms).
+      Time taken by the LLM provider to generate the full response (ms).
   - property: "`ai.proxy.meta.request_mode`"
     description: |
-      {% new_in 3.12 %} The request mode. Can be `oneshot`, `stream`, or `realtime`.
+      The request mode. Can be `oneshot`, `stream`, or `realtime`.
 {% endtable %}
 
-### AI AWS Guardrails logs {% new_in 3.11 %}
+### AI AWS Guardrails logs
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), {{site.ai_gateway}} logs include fields under the `ai.proxy.aws-guardrails` object. These fields capture processing latency, the guardrails configuration applied, block reasons, and masking behavior.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI AWS Guardrails Policy](/plugins/ai-aws-guardrails/), {{site.ai_gateway}} logs include fields under the `ai.proxy.aws-guardrails` object. These fields capture processing latency, the guardrails configuration applied, block reasons, and masking behavior.
 
 {% table %}
 columns:
@@ -133,7 +133,7 @@ rows:
     description: "The version of the guardrail applied. Can be a numeric version or `DRAFT`."
   - property: "`ai.proxy.aws-guardrails.mode`"
     description: |
-      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+       The content guarding mode configured for the Policy. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
   - property: "`ai.proxy.aws-guardrails.input_processing_latency`"
     description: The time, in milliseconds, spent processing the request through the guardrail.
   - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
@@ -148,30 +148,30 @@ rows:
     description: "`true` if the response content was masked rather than blocked. Only present when `config.allow_masking` is `true`."
   - property: "`ai.proxy.aws-guardrails.input_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+       The name of the Policy that blocked the request. Empty if the request was allowed.
   - property: "`ai.proxy.aws-guardrails.output_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+       The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.aws-guardrails.input_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.aws-guardrails.output_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.aws-guardrails.guards_triggered_count`"
     description: |
-      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+       A counter that increments each time a block is triggered on either the input or output within a single request.
   - property: "`ai.proxy.aws-guardrails.input_faulty_prompt`"
     description: |
-      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+       The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
   - property: "`ai.proxy.aws-guardrails.output_faulty_response`"
     description: |
-      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
+       The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
-### AI GCP Model Armor logs {% new_in 3.12 %}
+### AI GCP Model Armor logs
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI GCP Model Armor plugin](/plugins/ai-gcp-model-armor/), {{site.ai_gateway}} logs include fields under the `ai.proxy.gcp-model-armor` object. These fields capture the template applied, processing latency, and reasons for blocking when content is flagged.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI GCP Model Armor Policy](/plugins/ai-gcp-model-armor/), {{site.ai_gateway}} logs include fields under the `ai.proxy.gcp-model-armor` object. These fields capture the template applied, processing latency, and reasons for blocking when content is flagged.
 
 {% table %}
 columns:
@@ -192,33 +192,33 @@ rows:
     description: "The check type or types that caused the response to be blocked, comma-separated. Empty if the response was allowed."
   - property: "`ai.proxy.gcp-model-armor.mode`"
     description: |
-      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+       The content guarding mode configured for the Policy. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
   - property: "`ai.proxy.gcp-model-armor.input_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+       The name of the Policy that blocked the request. Empty if the request was allowed.
   - property: "`ai.proxy.gcp-model-armor.output_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+       The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.gcp-model-armor.input_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.gcp-model-armor.output_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.gcp-model-armor.guards_triggered_count`"
     description: |
-      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+       A counter that increments each time a block is triggered on either the input or output within a single request.
   - property: "`ai.proxy.gcp-model-armor.input_faulty_prompt`"
     description: |
-      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+       The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
   - property: "`ai.proxy.gcp-model-armor.output_faulty_response`"
     description: |
-      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
+       The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
 ### AI Azure Content Safety logs
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/), {{site.ai_gateway}} writes to two separate log paths.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI Azure Content Safety Policy](/plugins/ai-azure-content-safety/), {{site.ai_gateway}} writes to two separate log paths.
 
 The first path records per-category severity data from the Azure Content Safety API. Each entry represents a category that breached its configured rejection threshold. Multiple entries can appear per request depending on which categories were configured and what was detected.
 
@@ -235,7 +235,7 @@ rows:
     description: "The numeric rejection severity threshold for the category that was breached (for example, `Hate`, `Violence`). Defined by `config.categories[*].rejection_level`. Multiple entries can appear per request."
 {% endtable %}
 
-The second path records plugin metadata and block reasons under the `ai.proxy.azure-content-safety` object:
+The second path records Policy metadata and block reasons under the `ai.proxy.azure-content-safety` object:
 
 {% table %}
 columns:
@@ -262,33 +262,33 @@ rows:
     description: The reason the response was blocked. Empty if the response was allowed.
   - property: "`ai.proxy.azure-content-safety.mode`"
     description: |
-      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+       The content guarding mode configured for the Policy. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
   - property: "`ai.proxy.azure-content-safety.input_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+       The name of the Policy that blocked the request. Empty if the request was allowed.
   - property: "`ai.proxy.azure-content-safety.output_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+       The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.azure-content-safety.input_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.azure-content-safety.output_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.azure-content-safety.guards_triggered_count`"
     description: |
-      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+       A counter that increments each time a block is triggered on either the input or output within a single request.
   - property: "`ai.proxy.azure-content-safety.input_faulty_prompt`"
     description: |
-      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+       The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
   - property: "`ai.proxy.azure-content-safety.output_faulty_response`"
     description: |
-      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
+       The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
-### AI Lakera Guard logs {% new_in 3.13 %}
+### AI Lakera Guard logs
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI Lakera Guard plugin](/plugins/ai-lakera-guard/), {{site.ai_gateway}} logs include additional fields under the `ai.proxy.lakera-guard` object. These fields capture processing latency, Lakera-assigned request UUIDs, block reasons, and violation details when requests or responses are blocked.
+If you create an [ AI Policy](/ai-gateway/entities/ai-policy/) using the [AI Lakera Guard Policy](/plugins/ai-lakera-guard/), {{site.ai_gateway}} logs include additional fields under the `ai.proxy.lakera-guard` object. These fields capture processing latency, Lakera-assigned request UUIDs, block reasons, and violation details when requests or responses are blocked.
 
 {% table %}
 columns:
@@ -303,7 +303,7 @@ rows:
     description: "The Lakera project identifier used for the inspection. Defaults to `default` if no project ID is configured."
   - property: "`ai.proxy.lakera-guard.mode`"
     description: |
-      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+       The content guarding mode configured for the Policy. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
   - property: "`ai.proxy.lakera-guard.input_processing_latency`"
     description: The time, in milliseconds, that Lakera took to process the request.
   - property: "`ai.proxy.lakera-guard.output_processing_latency`"
@@ -322,32 +322,32 @@ rows:
     description: "An array of violation objects present when Lakera blocks a response. The structure matches `input_block_detail`."
   - property: "`ai.proxy.lakera-guard.input_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+       The name of the Policy that blocked the request. Empty if the request was allowed.
   - property: "`ai.proxy.lakera-guard.output_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+       The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.lakera-guard.input_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.lakera-guard.output_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.lakera-guard.guards_triggered_count`"
     description: |
-      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+       A counter that increments each time a block is triggered on either the input or output within a single request.
   - property: "`ai.proxy.lakera-guard.input_faulty_prompt`"
     description: |
-      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+       The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
   - property: "`ai.proxy.lakera-guard.output_faulty_response`"
     description: |
-      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
+       The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
-### AI Custom Guardrail logs {% new_in 3.14 %}
+### AI Custom Guardrail logs 
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI Custom Guardrail plugin](/plugins/ai-custom-guardrail/), {{site.ai_gateway}} logs include additional fields under the `custom-guardrail` object. These fields record guardrail processing latency, block reasons, and the source and consumer identity associated with any triggered guards.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI Custom Guardrail Policy](/plugins/ai-custom-guardrail/), {{site.ai_gateway}} logs include additional fields under the `custom-guardrail` object. These fields record guardrail processing latency, block reasons, and the source and consumer identity associated with any triggered guards.
 
-The following fields appear in structured AI logs when the AI Custom Guardrail plugin is enabled:
+The following fields appear in structured AI logs when the AI Custom Guardrail Policy is enabled:
 
 {% table %}
 columns:
@@ -380,12 +380,12 @@ rows:
 {% endtable %}
 
 {:.info}
-> The plugin also allows you to define [custom metrics](/plugins/ai-custom-guardrail/#metrics) based on Lua expressions.
+> The Policy also allows you to define [custom metrics](/plugins/ai-custom-guardrail/#metrics) based on Lua expressions.
 
 
-### AI PII Sanitizer logs {% new_in 3.10 %}
+### AI PII Sanitizer logs
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), {{site.ai_gateway}} logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item, including the original value, redacted value, and detected entity type.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI PII Sanitizer Policy](/plugins/ai-sanitizer/), {{site.ai_gateway}} logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item, including the original value, redacted value, and detected entity type.
 
 {% table %}
 columns:
@@ -404,24 +404,24 @@ rows:
     description: A list of sanitized PII entities, each including the original text, redacted text, and the entity type.
   - property: "`ai.sanitizer.input_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+       The name of the Policy that blocked the request. Empty if the request was allowed.
   - property: "`ai.sanitizer.output_block_source`"
     description: |
-      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+       The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.sanitizer.input_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.sanitizer.output_block_consumer_id`"
     description: |
-      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.sanitizer.guards_triggered_count`"
     description: |
-      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+       A counter that increments each time a block is triggered on either the input or output within a single request.
 {% endtable %}
 
-### AI Prompt Compressor logs {% new_in 3.11 %}
+### AI Prompt Compressor logs 
 
-When the [AI Prompt Compressor plugin](/plugins/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, compression ratios, and metadata about the compression method and model used.
+When the [AI Prompt Compressor Policy](/plugins/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, compression ratios, and metadata about the compression method and model used.
 
 {% table %}
 columns:
@@ -448,9 +448,9 @@ rows:
     description: A summary or message describing the result of compression.
 {% endtable %}
 
-### AI RAG Injector logs {% new_in 3.10 %}
+### AI RAG Injector logs
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the embedding provider and model used.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI RAG Injector Policy](/plugins/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the embedding provider and model used.
 
 {% table %}
 columns:
@@ -477,9 +477,8 @@ rows:
     description: Model used to generate embeddings.
 {% endtable %}
 
-### AI Semantic Cache logs {% new_in 3.8 %}
-
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache/), {{site.ai_gateway}} logs include additional fields under the cache object for each plugin entry. These fields provide insight into cache behavior, such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
+### AI Semantic Cache logs
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI Semantic Cache Policy](/plugins/ai-semantic-cache/), {{site.ai_gateway}} logs include additional fields under the cache object for each Policy entry. These fields provide insight into cache behavior, such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
 
 {% table %}
 columns:
@@ -490,7 +489,7 @@ columns:
 rows:
   - property: "`ai.proxy.cache.cache_status`"
     description: |
-      {% new_in 3.8 %} The cache status. This can be `Hit`, `Miss`, `Bypass`, or `Refresh`.
+      The cache status. This can be `Hit`, `Miss`, `Bypass`, or `Refresh`.
   - property: "`ai.proxy.cache.fetch_latency`"
     description: The time, in milliseconds, it took to return a cached response.
   - property: "`ai.proxy.cache.embeddings_provider`"
@@ -505,9 +504,9 @@ rows:
 > **Note:** When returning a cached response, `time_per_token` and `llm_latency` are omitted.
 > The cache response can be returned either as a semantic cache or an exact cache. If it's returned as a semantic cache, it will include additional details such as the embeddings provider, embeddings model, and embeddings latency.
 
-### AI LLM as Judge logs {% new_in 3.12 %}
+### AI LLM as Judge logs
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI LLM as Judge plugin](/plugins/ai-llm-as-judge/), {{site.ai_gateway}} logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior, such as which models were scored, latency, and the numeric accuracy assigned by the judge.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI LLM as Judge Policy](/plugins/ai-llm-as-judge/), {{site.ai_gateway}} logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior, such as which models were scored, latency, and the numeric accuracy assigned by the judge.
 
 {% table %}
 columns:
@@ -531,14 +530,14 @@ rows:
 {% endtable %}
 
 
-### AI MCP logs {% new_in 3.12 %}
+### AI MCP logs
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI MCP plugin](/plugins/ai-mcp-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and {% new_in 3.13 %} access control audit entries.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI MCP Policy](/plugins/ai-mcp-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
 
 {:.info}
-> **Note:** Unlike other available AI plugins, the AI MCP plugin is not invoked as part of an AI request.
-> Instead, it is registered and executed as a regular plugin, allowing it to capture MCP traffic independently of AI request flow.
-> Do not configure the AI MCP plugin together with other `ai-*` plugins on the same service or route.
+> **Note:** Unlike other available AI Policies, the AI MCP Policy is not invoked as part of an AI request.
+> Instead, it is registered and executed as a regular Policy, allowing it to capture MCP traffic independently of AI request flow.
+> Do not configure the AI MCP Policy together with other `ai-*` Policies on the same service or route.
 
 The MCP log structure groups traffic by **MCP session ID**, with each session containing zero or more recorded JSON-RPC requests:
 
@@ -572,34 +571,34 @@ rows:
     description: The size of the JSON-RPC response body, in bytes.
   - property: "`ai.mcp.audit`"
     description: |
-      {% new_in 3.13 %} An array of access control audit entries. Each entry records whether access was allowed or denied for a specific MCP primitive or globally.
+      An array of access control audit entries. Each entry records whether access was allowed or denied for a specific MCP primitive or globally.
   - property: "`ai.mcp.audit[].primitive_name`"
     description: |
-      {% new_in 3.13 %} The name of the MCP primitive (for example, `list_users`).
+      The name of the MCP primitive (for example, `list_users`).
   - property: "`ai.mcp.audit[].primitive`"
     description: |
-      {% new_in 3.13 %} The type of MCP primitive (for example, `tool`, `resource`, or `prompt`).
+      The type of MCP primitive (for example, `tool`, `resource`, or `prompt`).
   - property: "`ai.mcp.audit[].action`"
     description: |
-      {% new_in 3.13 %} The access control decision: `allow` or `deny`.
+      The access control decision: `allow` or `deny`.
   - property: "`ai.mcp.audit[].consumer.name`"
     description: |
-      {% new_in 3.13 %} The name of the consumer making the request.
+      The name of the consumer making the request.
   - property: "`ai.mcp.audit[].consumer.id`"
     description: |
-      {% new_in 3.13 %} The UUID of the consumer.
+      The UUID of the consumer.
   - property: "`ai.mcp.audit[].consumer.identifier`"
     description: |
-      {% new_in 3.13 %} The type of consumer identifier (for example, `consumer_group`).
+      The type of consumer identifier (for example, `consumer_group`).
   - property: "`ai.mcp.audit[].scope`"
     description: |
-      {% new_in 3.13 %} The scope of the access control check.
+      The scope of the access control check.
 {% endtable %}
 <!-- vale on -->
 
-### AI A2A Proxy logs {% new_in 3.14 %}
+### AI A2A Proxy logs 
 
-If you create a [policy](/ai-gateway/entities/ai-policy/) using the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when [`config.logging.log_statistics`](/plugins/ai-a2a-proxy/reference/#schema--config-logging-log-statistics) is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
+If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI A2A Proxy Policy](/plugins/ai-a2a-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when [`config.logging.log_statistics`](/plugins/ai-a2a-proxy/reference/#schema--config-logging-log-statistics) is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
 
 {% include /plugins/ai-a2a-proxy/log-output-fields.md %}
 
