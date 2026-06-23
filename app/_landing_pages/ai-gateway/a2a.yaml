@@ -27,7 +27,7 @@ rows:
             config: |
               The [Agent-to-Agent (A2A)](https://a2aproject.github.io/A2A/) protocol defines how AI agents communicate with each other over HTTP using JSON-RPC and REST bindings. As agent-to-agent communication moves into production, teams need visibility into A2A traffic and control over how it flows.
 
-              {{site.ai_gateway}} acts as a control and observability layer for A2A traffic, enabling you to route agent-to-agent requests, extract task metadata, rewrite agent card URLs, and feed structured metrics into the Konnect analytics pipeline. In {{site.ai_gateway}} {% new_in 2.0 %}, you configure A2A traffic using [AI Agents](/ai-gateway/entities/ai-agent/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+              {{site.ai_gateway}} acts as a control and observability layer for A2A traffic, enabling you to route agent-to-agent requests, extract task metadata, rewrite agent card URLs, and feed structured metrics into the Konnect analytics pipeline. Configure A2A traffic using [AI Agents](/ai-gateway/entities/ai-agent/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
 
       - blocks:
           - type: image
@@ -41,7 +41,7 @@ rows:
             config:
               header:
                 type: h2
-                text: "Proxy A2A traffic via {{site.ai_gateway}} {% new_in 2.0 %}"
+                text: "Proxy A2A traffic via {{site.ai_gateway}}"
               blocks:
                 - type: text
                   text: |

@@ -15,7 +15,7 @@ rows:
   - header:
       type: h1
       text: "{{site.ai_gateway}}"
-      sub_text: Connectivity and governance layer for modern AI-native applications built on top of {{site.base_gateway}}
+      sub_text: Connectivity and governance layer for modern AI-native applications
   - columns:
       - blocks:
           - type: structured_text
@@ -35,7 +35,7 @@ rows:
                   text: |
                     [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to get started with {{site.ai_gateway}}.
 
-                    Or, launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.ai_gateway}} locally with a single command:
+                    Or, launch a local demo instance of {{site.ai_gateway}} with a single command:
                     ```sh
                     curl -Ls https://get.konghq.com/ai | bash
                     ```
@@ -85,8 +85,8 @@ rows:
       type: h2
       text: "{{site.ai_gateway}} providers"
       description: |
-        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining [AI Providers](/ai-gateway/entities/ai-provider/) and [AI Models](/ai-gateway/entities/ai-model/).
-        [AI Providers](/ai-gateway/entities/ai-provider/) store upstream connectivity and credentials, while [AI Models](/ai-gateway/entities/ai-model/) reference Providers to expose stable client-facing endpoints and routing behavior.
+        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining AI Providers and AI Models.
+        AI Providers store upstream connectivity and credentials, while AI Models reference Providers to expose stable client-facing endpoints and routing behavior.
     column_count: 4
     columns:
       - blocks:
@@ -166,7 +166,7 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[{{site.ai_gateway}} editor](https://cloud.konghq.com/ai-gateway): GUI for managing all your {{site.ai_gateway}} resources in one place."
+                    - "[Konnect {{site.ai_gateway}} editor](https://cloud.konghq.com/ai-gateway): GUI for managing all your {{site.ai_gateway}} resources in one place."
                     # - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
                     - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.ai_gateway}} resources within {{site.konnect_short_name}} Control Planes via an API."
                     - "[kongctl](/kongctl/): Use Kong's swiss-army knife command line tool for managing and interacting with {{site.ai_gateway}} resources and configurations within {{site.konnect_short_name}}."
@@ -254,18 +254,18 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Entities
-            description: Learn about AI Models, AI Providers, AI Agents, AI MCP Servers, and AI Consumers.
-            cta:
-              url: /ai-gateway/entities/
-              align: end
-      - blocks:
-        - type: card
-          config:
             title: AI Policies
             description: Attach governance behavior for authentication, guardrails, transformations, and more.
             cta:
               url: /ai-gateway/entities/ai-policy/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI Entities
+            description: Learn about AI Models, AI Providers, AI Agents, AI MCP Servers, and AI Consumers.
+            cta:
+              url: /ai-gateway/entities/
               align: end
       - blocks:
         - type: card
@@ -309,11 +309,11 @@ rows:
                     using the {{site.konnect_short_name}} platform.
 
                     Key features include:
-                    * **Routing and [load balancing](/ai-gateway/load-balancing/)**: Configure [AI Models](/ai-gateway/entities/ai-model/) and `target_models` routing across [AI Providers](/ai-gateway/entities/ai-provider/).
-                    * **Streaming and authentication**: Enable streaming responses on [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/); enforce auth through [AI Policies](/ai-gateway/entities/ai-policy/).
-                    * **Access control**: Use [AI Consumers](/ai-gateway/entities/ai-consumer/) and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), plus ACL fields on [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
-                    * **Usage analytics**: Monitor request and token volumes, track error rates, and measure average latency with historical comparisons.
-                    * **Visual traffic maps**: Explore interactive maps that show how requests flow between clients, entities, and upstreams in real time.
+                    * [Routing and load balancing](/ai-gateway/load-balancing/): Configure [AI Models](/ai-gateway/entities/ai-model/) and `target_models` routing across [AI Providers](/ai-gateway/entities/ai-provider/).
+                    * [Streaming and authentication](/ai-gateway/entities/ai-model/): Enable streaming responses on [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/); enforce auth through [AI Policies](/ai-gateway/entities/ai-policy/).
+                    * [Access control](/ai-gateway/entities/ai-consumer/): Use [AI Consumers](/ai-gateway/entities/ai-consumer/) and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), plus ACL fields on [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
+                    * [Usage analytics](/observability/explorer/): Monitor request and token volumes, track error rates, and measure average latency with historical comparisons.
+                    * [Visual traffic maps](/observability/explorer/): Explore interactive maps that show how requests flow between clients, entities, and upstreams in real time.
 
       - blocks:
           - type: image

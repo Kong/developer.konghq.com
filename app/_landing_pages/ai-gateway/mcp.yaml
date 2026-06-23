@@ -30,7 +30,7 @@ rows:
             config: |
               AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
 
-              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability. In {{site.ai_gateway}} {% new_in 2.0 %}, you configure MCP traffic using [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability. Configure MCP traffic using [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
 
               Learn how to:
               - [Create MCP servers from API specs](#create-mcp-servers-from-api-specs-new-in-2-0)
@@ -48,7 +48,7 @@ rows:
             config:
               header:
                 type: h2
-                text: "Generate MCP servers from API specs {% new_in 2.0 %}"
+                text: "Generate MCP servers from API specs"
               blocks:
                 - type: text
                   text: |
@@ -64,11 +64,9 @@ rows:
               icon: /assets/icons/linked-services.svg
               title: AI MCP Server entity
               description: Generate an AI MCP Server from an API spec to expose tools and services over MCP in {{site.ai_gateway}}.
-              ctas:
-                - text: AI MCP Server reference
-                  url: "/ai-gateway/entities/ai-mcp-server/"
-                - text: AI Policy reference
-                  url: "/ai-gateway/entities/ai-policy/"
+              cta:
+                text: AI MCP Server reference
+                url: "/ai-gateway/entities/ai-mcp-server/"
       - blocks:
           - type: structured_text
             config:
