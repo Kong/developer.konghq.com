@@ -22,10 +22,10 @@ prereqs:
         A running {{site.mesh_product_name}} deployment.
     - title: Resources
       content: |
-        Workloads to target (e.g., `flight-control`) and a client (e.g., `client-blu`) to generate traffic.
+        Workloads to target (e.g., `flight-control`) and a client (e.g., `check-in-api`) to generate traffic.
 next_steps:
-  - text: "Advanced Envoy Customization: MeshProxyPatch"
-    url: "/mesh/scenarios/mesh-proxy-patch/"
+  - text: "Explore the Persona Guides"
+    url: "/mesh/scenarios/persona/"
 ---
 ## 1. Why Inject Faults?
 
@@ -42,65 +42,13 @@ The `MeshFaultInjection` policy allows you to introduce three types of failure d
 Immediately return a specific HTTP status code for a percentage of requests.
 
 {% tip %}
-Use `kind: Dataplane` with `labels` in `targetRef` to select workloads. The older `kind: MeshService` / `MeshSubset` approaches at the top level are deprecated.
+Use `kind: Dataplane` with `labels` in `targetRef` to select the workloads being faulted. The `rules` block then names the callers whose requests should be faulted, using their SPIFFE identities. A `Prefix` match against the trust domain faults every caller; an `Exact` match faults one specific caller. (The older top-level `kind: MeshService` / `MeshSubset` selectors and the `spec.from` block are legacy forms, see the compatibility note after the example.)
 {% endtip %}
 
-{% danger %}
-The `spec.from` field shown below is deprecated in 2.14 and will be removed in 3.0. Current Kuma still accepts it but emits a deprecation warning on apply. For the modern equivalent, see the "Recommended for 2.14+" callout after the example.
-{% enddanger %}
-
 {% navtabs "fault-abort" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
-kind: MeshFaultInjection
-metadata:
-  name: test-flight-control-resilience
-  namespace: kong-air-production
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: flight-control
-      color: blu
-  from:
-    - targetRef:
-        kind: Mesh
-      default:
-        http:
-          - abort:
-              httpStatus: 503
-              percentage: 10' | kubectl apply -f -
-```
-{% endnavtab %}
-{% navtab "Universal" %}
-```bash
-echo 'type: MeshFaultInjection
-name: test-flight-control-resilience
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: flight-control
-      color: blu
-  from:
-    - targetRef:
-        kind: Mesh
-      default:
-        http:
-          - abort:
-              httpStatus: 503
-              percentage: 10' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
-
-{% tip %}
-**Recommended for 2.14+ — use `rules` with SPIFFE matchers.** The `rules` shape names the callers whose requests should be faulted using their SPIFFE identities. To fault every caller, use a `Prefix` match against the trust domain:
-
-```yaml
-apiVersion: kuma.io/v1alpha1
 kind: MeshFaultInjection
 metadata:
   name: test-flight-control-resilience
@@ -112,41 +60,104 @@ spec:
     kind: Dataplane
     labels:
       app: flight-control
-      color: blu
   rules:
     - matches:
         - spiffeID:
             type: Prefix
-            value: spiffe://kong-air-mesh/
+            value: spiffe://kong-air-mesh.mesh.local
       default:
         http:
           - abort:
               httpStatus: 503
-              percentage: 10
+              percentage: 10' | kubectl apply -f -
+```
+{% endnavtab %}
+{% navtab "Universal (Zone CP)" %}
+```bash
+echo 'type: MeshFaultInjection
+name: test-flight-control-resilience
+mesh: kong-air-mesh
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: flight-control
+  rules:
+    - matches:
+        - spiffeID:
+            type: Prefix
+            value: spiffe://kong-air-mesh.mesh.local
+      default:
+        http:
+          - abort:
+              httpStatus: 503
+              percentage: 10' | kumactl apply -f -
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match against that caller's SPIFFE ID, for example `spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/passenger-portal`. This ties chaos targeting to authenticated identity rather than topology.
+
+{% tip %}
+Legacy `spec.from` form. Older policies select callers with a `spec.from[].targetRef` (for example `kind: Mesh`) instead of `rules[].matches[].spiffeID`. It still works for backward compatibility, but prefer `rules` with SPIFFE matchers for new policies.
+{% endtip %}
+
+{% tip %}
+ZoneEgress-specific chaos in 2.14. The same rules model can fault a single external destination flowing through mesh-scoped zone egress by matching on **SNI**:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshFaultInjection
+metadata:
+  name: zone-egress-fault-injection
+  namespace: {{site.mesh_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      kuma.io/listener-zoneegress: enabled
+  rules:
+    - matches:
+        # SNI format: sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>
+        # See the MeshExternalService scenario for how to derive this value.
+        - sni:
+            type: Exact
+            value: sni.extsvc.kong-air-mesh.zone1.{{site.mesh_namespace}}.aeropay-api.80
+      default:
+        http:
+          - abort:
+              httpStatus: 503
+              percentage: 50
 ```
 
-To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match against that caller's SPIFFE ID — for example `spiffe://kong-air-mesh/passenger-portal`. This ties chaos targeting to authenticated identity rather than topology.
+That lets Kong Air inject failures for one external dependency without disturbing every other destination sharing the same zone egress proxy.
 {% endtip %}
 
 ### 2.2 HTTP Delay (Latency Simulation)
 Introduce a fixed delay before the request is processed, simulating a slow dependency.
 
 {% navtabs "fault-delay" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshFaultInjection
 metadata:
   name: test-check-in-api-latency
   namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Dataplane
     labels:
       app: check-in-api
-  from:
-    - targetRef:
-        kind: Mesh
+  rules:
+    - matches:
+        - spiffeID:
+            type: Prefix
+            value: spiffe://kong-air-mesh.mesh.local
       default:
         http:
           - delay:
@@ -154,7 +165,7 @@ spec:
               percentage: 50' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (Zone CP)" %}
 ```bash
 echo 'type: MeshFaultInjection
 name: test-check-in-api-latency
@@ -164,9 +175,11 @@ spec:
     kind: Dataplane
     labels:
       app: check-in-api
-  from:
-    - targetRef:
-        kind: Mesh
+  rules:
+    - matches:
+        - spiffeID:
+            type: Prefix
+            value: spiffe://kong-air-mesh.mesh.local
       default:
         http:
           - delay:
@@ -184,21 +197,25 @@ The delay duration field is named `value` (not `fixedDelay`). The `percentage` f
 Limit the speed at which the response body is delivered to the client.
 
 {% navtabs "fault-rate-limit" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshFaultInjection
 metadata:
-  name: test-file-storage-throttle
+  name: test-flight-control-throttle
   namespace: kong-air-production
+  labels:
+    kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Dataplane
     labels:
-      app: file-storage-svc
-  from:
-    - targetRef:
-        kind: Mesh
+      app: flight-control
+  rules:
+    - matches:
+        - spiffeID:
+            type: Prefix
+            value: spiffe://kong-air-mesh.mesh.local
       default:
         http:
           - responseRateLimit:
@@ -206,19 +223,21 @@ spec:
               percentage: 100
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (Zone CP)" %}
 ```yaml
 type: MeshFaultInjection
-name: test-file-storage-throttle
+name: test-flight-control-throttle
 mesh: kong-air-mesh
 spec:
   targetRef:
     kind: Dataplane
     labels:
-      app: file-storage-svc
-  from:
-    - targetRef:
-        kind: Mesh
+      app: flight-control
+  rules:
+    - matches:
+        - spiffeID:
+            type: Prefix
+            value: spiffe://kong-air-mesh.mesh.local
       default:
         http:
           - responseRateLimit:

@@ -5,32 +5,32 @@ layout: reference
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
-description: A beginner-friendly introduction to {{site.mesh_product_name}}, detailing its value for developers, operators, and security teams through powerful Mesh policies.
+description: A beginner-friendly introduction to {{site.mesh_product_name}}, detailing its value for developers, operators, and security teams through Mesh policies.
 products:
   - mesh
 next_steps:
   - text: "Architecture Overview"
     url: "/mesh/scenarios/architecture-overview/"
 ---
-{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Unlike traditional meshes that require complex, platform-specific configurations, {{site.mesh_product_name}} offers a simplified, policy-driven approach that works identically regardless of your underlying infrastructure.
+{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Its policy-driven model works the same regardless of the underlying infrastructure, a deliberate focus on **day-2 operations**: running, upgrading, and troubleshooting the mesh in production, across regions and mixed infrastructure, not just standing it up on day 1. The [Architecture Overview](/mesh/scenarios/architecture-overview/) unpacks what that means in practice, including [how it compares to Istio-style meshes](/mesh/scenarios/architecture-overview/#day-2-operations-how-this-compares-to-istio-style-meshes).
 
 ## Meet Kong Air
 
 Throughout these scenarios, we follow the journey of **Kong Air**, a global airline modernizing its flight-critical infrastructure. Their applications span Kubernetes (passenger-facing services), VMs (legacy booking systems), and SaaS dependencies (weather feeds and external certificate authorities). The platform team is migrating this fragmented landscape into a single, multi-zone {{site.mesh_product_name}} deployment.
 
-The Kong Air mesh is named **`kong-air-mesh`**. We chose a non-default name on purpose: {{site.mesh_product_name}} ships with a `default` mesh out of the box, but in production you'll typically run a named mesh per environment or business unit. Every YAML example in these scenarios targets `kong-air-mesh` explicitly — the pattern you'll need in any real deployment.
+The Kong Air mesh is named **`kong-air-mesh`**. We chose a non-default name on purpose: {{site.mesh_product_name}} ships with a `default` mesh out of the box, but in production you'll typically run a named mesh per environment or business unit. Every YAML example in these scenarios targets `kong-air-mesh` explicitly, the pattern you'll need in any real deployment.
 
 ### The Kong Air service landscape
 
 {% mermaid %}
 graph LR
   BG["booking-gateway<br/>(Kong Gateway)"]
-  subgraph ZE["Zone East"]
+  subgraph ZE["zone1"]
     PP_E["passenger-portal"]
     CI_E["check-in-api"]
     FC_E["flight-control"]
   end
-  subgraph ZW["Zone West"]
+  subgraph ZW["zone2"]
     PP_W["passenger-portal"]
     CI_W["check-in-api"]
     FC_W["flight-control"]
@@ -48,11 +48,11 @@ graph LR
   CI_W --> FC_W
   CI_E -.-> WX
   CI_W -.-> WX
-  FC_E --> DB
-  FC_W --> DB
+  FC_E -.-> DB
+  FC_W -.-> DB
 {% endmermaid %}
 
-Solid arrows are intra-mesh traffic. Dashed arrows are traffic to external dependencies modelled as `MeshExternalService`. Vault is shown for context — it integrates with the control plane, not data-plane traffic.
+Solid arrows are intra-mesh traffic. Dashed arrows are traffic to external dependencies modelled as `MeshExternalService`. Vault is shown for context, it integrates with the control plane, not data-plane traffic.
 
 ### Who owns what
 
@@ -74,7 +74,7 @@ rows:
       `flight-control`, `flight-db`, `weather-api`.
   - persona: "**[Ollie the Operator](/mesh/scenarios/persona/operator/)**"
     owns: |
-      Mesh control plane, zone ingress and egress, observability stack, `booking-gateway`, `flight-control`, and the `kong-air-mesh` resource itself.
+      Mesh control plane, zone ingress and egress, mesh-scoped zone proxies, observability stack, `booking-gateway`, the operational core service `flight-control` (which Devin's services *consume* but don't own), and the `kong-air-mesh` resource itself.
     consumes: |
       Operates the platform Devin and Sarah build on.
   - persona: "**[Sarah the Security Architect](/mesh/scenarios/persona/security/)**"
@@ -89,7 +89,7 @@ rows:
       Reached from inside the mesh through `MeshExternalService`.
 {% endtable %}
 
-By delivering these capabilities as a standardized, built-in management layer, {{site.mesh_product_name}} eliminates the operational overhead of manually implementing complex networking features. This lets Kong Air focus on traveler experience rather than network plumbing.
+Delivering these capabilities as a standardized, built-in layer means teams configure networking behavior through policies rather than implementing it in each service.
 
 ## Benefits by role
 
@@ -131,12 +131,37 @@ The Kong Air modernization is divided into four stages. We recommend following t
 
 ## Technical Foundation
 
-Before you dive into the hands-on scenarios, familiarize yourself with these three core components:
+Before starting the hands-on scenarios, familiarize yourself with these three core components:
 
 * **Dataplane (DP)**: The sidecar component that runs alongside your application workload to manage all incoming and outgoing traffic. It provides your service with a secure identity and enforces the networking rules defined by your policies.
 * **Control Plane (CP)**: The authoritative management layer responsible for discovering workloads and distributing configuration updates to every Dataplane in the mesh.
 * **Kuma Discovery Service (KDS)**: A generalization of Envoy's [xDS protocol](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol) used to synchronize policies and service state between a **Global CP** and its **Zone CPs**.
 
+### Key terms you'll see
+
+These acronyms appear throughout the scenarios, here's the short version:
+
+{% table %}
+columns:
+  - title: Term
+    key: term
+  - title: What it means
+    key: meaning
+rows:
+  - term: "**xDS**"
+    meaning: "The family of discovery APIs Envoy uses to receive its configuration (listeners, clusters, routes, secrets) from a control plane. The {{site.mesh_product_name}} Zone CP serves xDS to every sidecar."
+  - term: "**SPIFFE ID**"
+    meaning: "A workload's cryptographic identity, expressed as a URI like `spiffe://kong-air-mesh.mesh.local/ns/<namespace>/sa/<service-account>`. Issued via `MeshIdentity` and used by `MeshTrafficPermission` to authorize traffic."
+  - term: "**SNI**"
+    meaning: "*Server Name Indication*, the hostname a TLS client requests. {{site.mesh_product_name}} uses it to match traffic to a specific destination (notably `MeshExternalService`) at the zone egress."
+  - term: "**KRI**"
+    meaning: "*Kuma Resource Identifier*, the canonical `kri_...` name for a resource, seen in fields like a Dataplane's `issuedBackend` (for example `kri_mid_kong-air-mesh___kong-air-identity_`) and in 2.14 Envoy stat names."
+  - term: "**DataplaneInsight**"
+    meaning: "A read-only status resource the control plane maintains per dataplane. It reports live state such as the mTLS `issuedBackend` and certificate expiry, the go-to object for verifying identity is active."
+  - term: "**{{site.konnect_short_name}}**"
+    meaning: "Kong's hosted control-plane platform. In a {{site.konnect_short_name}}-managed mesh the **Global CP** runs in {{site.konnect_short_name}} and you apply global resources with `kumactl` or the {{site.konnect_short_name}} UI; Zone CPs still run in your own clusters."
+{% endtable %}
+
 {% tip %}
-**Getting Started**: Because {{site.mesh_product_name}} scales across clouds and data centers, understanding where to apply each resource is critical. We strongly recommend reading the [Understanding Resource Scoping](/mesh/scenarios/resource-scoping/) guide before applying your first policy.
+Because {{site.mesh_product_name}} scales across clouds and data centers, knowing *where* each resource is applied (Global vs Zone CP, system namespace) matters. The [Understanding Resource Scoping](/mesh/scenarios/resource-scoping/) guide covers this in depth; it comes right after your first hands-on policies in the learning path below.
 {% endtip %}

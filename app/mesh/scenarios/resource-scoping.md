@@ -11,7 +11,7 @@ products:
 tldr:
   q: How do I know where to apply my {{site.mesh_product_name}} resources?
   a: |
-    Resources follow a "Source of Truth" requirement. Global-scoped resources (like `Mesh`) must be applied to the Global CP. Policy resources can often be applied to either the Global or Zone CP. On Kubernetes, infrastructure-level identities must live in a dedicated system namespace.
+    Resources follow a "Source of Truth" requirement. Global-scoped resources (like `Mesh`) must be applied to the Global Control Plane (CP). Policy resources can often be applied to either the Global or Zone CP. On Kubernetes, infrastructure-level identities must live in a dedicated system namespace.
 faqs:
   - q: What happens if I apply a Mesh resource to a Zone CP?
     a: |
@@ -20,8 +20,8 @@ faqs:
     a: |
       `MeshIdentity` is a cluster-wide authority. Restricting it to the system namespace (e.g., `kong-mesh-system`) prevents application-level misconfigurations from affecting the entire mesh's security posture.
 next_steps:
-  - text: "Getting Started: Your First Policy"
-    url: "/mesh/scenarios/getting-started-policy/"
+  - text: "Traffic Splitting with MeshServices"
+    url: "/mesh/scenarios/traffic-splitting-meshservices/"
 ---
 {{site.mesh_product_name}} can be deployed in two main architectures:
 
@@ -58,17 +58,13 @@ Separating the **Global** and **Zone** tiers provides massive benefits for a gro
 - **Geographic Scale**: A Zone CP in `EU` doesn't need to talk to a Zone CP in `US` to handle local traffic. This keeps latency low and reliability high.
 - **Security Scoping**: You can grant your `EU` infrastructure team access only to their local Zone CP, while the core platform team manages the Global CP.
 
-**Because of this separation, we have to be specific about where we target our resources.** If we allowed every Zone CP to change the "Master" Mesh settings, we would quickly end up with conflicting configurations and a "split-brain" mesh.
+Because of this separation, you must be specific about where you target resources. If we allowed every Zone CP to change the "Main" Mesh settings, we would quickly end up with conflicting configurations and a "split-brain" mesh.
 
 ---
 
 ## Why This Matters: Who "Owns" Each Resource?
 
-Each resource type in {{site.mesh_product_name}} has a defined **owner**: the tier that is authorised to create, modify, and delete it.
-
-{% danger %}
-If you apply a **Global-only** resource to a Zone CP, the request is rejected by the API server (or the Admission Webhook, on Kubernetes) with a `403 Forbidden` error explaining that the resource can only be modified on the Global Control Plane.
-{% enddanger %}
+Each resource type in {{site.mesh_product_name}} has a defined **owner**: the tier that is authorized to create, modify, and delete it.
 
 ### Global CP Only: Mesh Infrastructure
 
@@ -80,7 +76,7 @@ These resources define the **structure** of your mesh. Kong Air's network operat
 | `MeshMultiZoneService` | Declares a service that spans multiple zones. The Global CP is the only entity with the full cross-zone topology picture. |
 
 {% warning %}
-**Always apply `Mesh` and `MeshMultiZoneService` to the Global Control Plane.** If your Global CP runs on Kubernetes, use `kubectl apply` against the Global CP kubeconfig and place the resource in the system namespace. If it is Universal, use `kumactl apply` pointed at the Global CP API.
+Always apply `Mesh` and `MeshMultiZoneService` to the Global Control Plane. If your Global CP runs on Kubernetes, use `kubectl apply` against the Global CP kubeconfig and place the resource in the system namespace. If it is Universal, use `kumactl apply` pointed at the Global CP API.
 {% endwarning %}
 
 ### Global or Zone CP: Identity & Policy Resources
@@ -98,7 +94,7 @@ These resources can be created at either tier and will be synced to the other vi
 
 ## The Kubernetes System Namespace Rule
 
-On Kubernetes, resources like **`MeshIdentity`** and **`MeshTrust`** must be created in the **system namespace** (typically `kong-mesh-system`). Here's why.
+On Kubernetes, resources like **`MeshIdentity`** and **`MeshTrust`** must be created in the **system namespace** (typically `kong-mesh-system`). 
 
 ### Why a system namespace?
 
@@ -107,8 +103,6 @@ On Kubernetes, resources like **`MeshIdentity`** and **`MeshTrust`** must be cre
 Placing it in the system namespace enforces two key properties:
 1. **Access control**: The system namespace is typically restricted to platform engineers, not application developers. This prevents a developer from accidentally (or intentionally) changing the CA for all services in the mesh.
 2. **Clear authority**: It signals to operators that this resource is at the "infrastructure" level, just like a `ClusterIssuer` in cert-manager belongs to the platform, not to a single app.
-
-If you `kubectl apply` a `MeshIdentity` into an application namespace (e.g., `kong-air-production`), the API will reject it with a validation error.
 
 ### Summary for Kubernetes Users
 
@@ -140,20 +134,19 @@ kumactl apply -f mesh-traffic-permission.yaml
 In Universal mode, you can verify which CP you're pointing at with `kumactl get control-planes`.
 {% endtip %}
 
-## Quick Reference Card
+## Quick Reference
 
 | Resource | Apply To | K8s Namespace |
 | :--- | :--- | :--- |
-| `Mesh` | ⚡ Global CP **only** | N/A (Global CP level) |
-| `MeshMultiZoneService` | ⚡ Global CP **only** | 🔒 System NS on K8s |
-| `MeshIdentity` | Global or Zone | 🔒 System NS only |
-| `MeshTrust` | Global or Zone | 🔒 System NS only |
-| `MeshTrafficPermission` | Global or Zone | ✅ Any namespace |
-| `MeshFaultInjection` | Global or Zone | ✅ Any namespace |
-| `MeshPassthrough` | Global or Zone | ✅ Any namespace |
-| `MeshTLS` | Global or Zone | ✅ Any namespace |
+| `Mesh` | Global CP **only** | System NS on K8s |
+| `MeshMultiZoneService` | Global CP **only** | System NS on K8s |
+| `MeshIdentity` | Global or Zone | System NS only |
+| `MeshTrust` | Global or Zone | System NS only |
+| `MeshTrafficPermission` | Global or Zone | Any namespace |
+| `MeshFaultInjection` | Global or Zone | Any namespace |
+| `MeshPassthrough` | Global or Zone | Any namespace |
+| `MeshTLS` | Global or Zone | Any namespace |
 
----
 
 ## How This Appears in the Documentation
 

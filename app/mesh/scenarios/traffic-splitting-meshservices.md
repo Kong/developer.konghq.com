@@ -22,15 +22,15 @@ prereqs:
         A {{site.mesh_product_name}} deployment with `meshServices.mode: Exclusive` enabled.
     - title: Workloads
       content: |
-        Multiple versions of a service (e.g., `booking-engine`) deployed with identifying labels.
+        Multiple versions of a service (e.g., `passenger-portal`) deployed with identifying labels.
 next_steps:
-  - text: "Understanding MeshSubsets"
+  - text: "Targeting Workloads and Services"
     url: "/mesh/scenarios/subsets-and-targeting/"
 ---
 
-The Kong Air engineering team is launching a new **Booking Engine v2**. To ensure a smooth transition, they want to route 90% of traffic to the stable `v1` and 10% to the new `v2` for a group of internal pilot users. 
+The Kong Air engineering team is launching a new **Passenger Portal v2**. To ensure a smooth transition, they want to route 90% of traffic to the stable `v1` and 10% to the new `v2` for a group of internal pilot users. 
 
-This guide demonstrates how to achieve this using **Explicit Subsetting**, the recommended pattern for modern service mesh architectures.
+This guide demonstrates how to achieve this using **explicit `MeshService` versions** routed by a `MeshHTTPRoute`. If you want a refresher on the `targetRef` model and where `MeshService` fits in `to[]`/`backendRefs`, see [How to use policies](/mesh/scenarios/using-policies/); the [Targeting Workloads and Services](/mesh/scenarios/subsets-and-targeting/) guide that follows goes deeper on label-based targeting.
 
 ## What this proves
 
@@ -55,29 +55,44 @@ rows:
 graph TD
     User([User Request]) --> Gateway["{{site.base_gateway}}"]
     Gateway --> Route{"MeshHTTPRoute"}
-    Route -->|"90% Weight"| Stable["booking-engine-v1 (MeshService)"]
-    Route -->|"10% Weight"| Canary["booking-engine-v2 (MeshService)"]
+    Route -->|"90% Weight"| Stable["passenger-portal-v1 (MeshService)"]
+    Route -->|"10% Weight"| Canary["passenger-portal-v2 (MeshService)"]
 {% endmermaid %}
 
 ## Configuration
 
 ### 1. Define Explicit MeshServices
 
-On current Kuma, the control plane can generate baseline `MeshService` resources automatically for workloads. For rollout patterns like canary and blue/green, though, you still want version-specific destinations that the route can name directly.
+{{site.mesh_product_name}} can generate baseline `MeshService` resources automatically for workloads. For rollout patterns like canary and blue/green, though, you still want version-specific destinations that the route can name directly.
 
-On **Kubernetes**, the validated 2.13 path is to create **versioned Services** (`booking-engine-v1`, `booking-engine-v2`) and let Kuma generate healthy `MeshService` resources from them. On **Universal**, you define the `MeshService` resources directly.
+On **Kubernetes**, create **versioned Services** (`passenger-portal-v1`, `passenger-portal-v2`) and let {{site.mesh_product_name}} generate the matching `MeshService` resources from them. On **Universal**, define the `MeshService` resources directly.
+
+{% tip %}
+For deployments using label-based `MeshService` matching, enable:
+
+```yaml
+experimental:
+  inboundTagsDisabled: true
+```
+
+Generated `MeshService` resources then move away from inbound-tag selection and instead match dataplanes by labels. That is the cleaner model for both Kubernetes and Universal, and it aligns better with the rest of the targeting story.
+{% endtip %}
+
+{% tip %}
+Why `appProtocol: http`? The Kubernetes `Service` examples below set `appProtocol: http` on the port. In `Exclusive` mode, {{site.mesh_product_name}} reads this field to set the protocol on the generated `MeshService`. Without it, the `MeshService` defaults to `tcp`, and HTTP-aware policies, `MeshHTTPRoute`, weighted splits, retries on `5xx`, silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
+{% endtip %}
 
 {% navtabs "meshservice-split" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: v1
 kind: Service
 metadata:
-  name: booking-engine-v1
+  name: passenger-portal-v1
   namespace: kong-air-production
 spec:
   selector:
-    app: booking-engine
+    app: passenger-portal
     version: v1
   ports:
     - port: 8080
@@ -87,11 +102,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: booking-engine-v2
+  name: passenger-portal-v2
   namespace: kong-air-production
 spec:
   selector:
-    app: booking-engine
+    app: passenger-portal
     version: v2
   ports:
     - port: 8080
@@ -99,10 +114,10 @@ spec:
       appProtocol: http' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (Zone CP)" %}
 ```bash
 echo 'type: MeshService
-name: booking-engine-v1
+name: passenger-portal-v1
 mesh: kong-air-mesh
 spec:
   ports:
@@ -110,10 +125,10 @@ spec:
       appProtocol: http
   selector:
     dataplaneTags:
-      app: booking-engine-v1
+      app: passenger-portal-v1
 ---
 type: MeshService
-name: booking-engine-v2
+name: passenger-portal-v2
 mesh: kong-air-mesh
 spec:
   ports:
@@ -121,21 +136,37 @@ spec:
       appProtocol: http
   selector:
     dataplaneTags:
-      app: booking-engine-v2' | kumactl apply -f -
+      app: passenger-portal-v2' | kumactl apply -f -
 ```
 {% endnavtab %}
 {% endnavtabs %}
 
-{% tip %}
-**Validated 2.13 Kubernetes behavior.** Hand-authored version-specific `MeshService` resources selected by dataplane tags stayed unhealthy in the test mesh. Creating versioned Kubernetes `Service` objects and letting Kuma generate `MeshService` resources from them produced healthy backends and a working split.
-{% endtip %}
+For example, a generated label-selected `MeshService` can look like:
+
+```yaml
+type: MeshService
+name: passenger-portal-v1
+mesh: kong-air-mesh
+spec:
+  selector:
+    dataplaneLabels:
+      matchLabels:
+        app: passenger-portal
+        version: v1
+        k8s.kuma.io/namespace: kong-air-production
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      appProtocol: http
+```
 
 ### 2. Configure the Weighted Route
 
-Now, create a `MeshHTTPRoute` that distributes traffic between these two resources. The best-practice source target is the calling **`Dataplane`** selected by labels; the destination remains the shared `MeshService` that represents the booking API entry point.
+Now, create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to **every client that calls `passenger-portal`**; the destination is the shared `MeshService`, and `backendRefs` weight traffic across the two versions. (To roll the split out to only some clients first, narrow the top level to `Dataplane` with a `labels:` selector.)
 
 {% navtabs "weighted-route" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshHTTPRoute
@@ -146,53 +177,49 @@ metadata:
     kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: Dataplane
-    labels:
-      app: passenger-portal # The workload making the booking requests
+    kind: Mesh # Applies to every client that calls passenger-portal
   to:
     - targetRef:
         kind: MeshService
-        name: booking-engine # The shared booking API entry point
+        name: passenger-portal # The shared booking API entry point
       rules:
         - matches:
             - path: { value: "/", type: PathPrefix }
           default:
             backendRefs:
               - kind: MeshService
-                name: booking-engine-v1
+                name: passenger-portal-v1
                 port: 8080
                 weight: 90 # 90% traffic to stable
               - kind: MeshService
-                name: booking-engine-v2
+                name: passenger-portal-v2
                 port: 8080
                 weight: 10 # 10% traffic to canary' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (Zone CP)" %}
 ```bash
 echo 'type: MeshHTTPRoute
 name: booking-traffic-split
 mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: Dataplane
-    labels:
-      app: passenger-portal
+    kind: Mesh
   to:
     - targetRef:
         kind: MeshService
-        name: booking-engine
+        name: passenger-portal
       rules:
         - matches:
             - path: { value: "/", type: PathPrefix }
           default:
             backendRefs:
               - kind: MeshService
-                name: booking-engine-v1
+                name: passenger-portal-v1
                 port: 8080
                 weight: 90
               - kind: MeshService
-                name: booking-engine-v2
+                name: passenger-portal-v2
                 port: 8080
                 weight: 10' | kumactl apply -f -
 ```
@@ -201,22 +228,25 @@ spec:
 
 ## Verification
 
-To verify the split, run a simple loop from the `passenger-portal` and count the responses:
+To verify the split, exec into any in-mesh pod (here `check-in-api` acts as a test client) and run a loop against `passenger-portal`, counting which version responds. **This body-matching check only works if your app echoes its version**, the Kong Air demo apps prefix responses with `v2:`; adapt the `case` matching to whatever your real versions return:
 
 ```bash
+kubectl exec -n kong-air-production deploy/check-in-api -c check-in-api -- sh -c '
 v1=0; v2=0
-for i in $(seq 1 100); do
-  out=$(curl -s http://booking-engine:8080/)
+for i in $(seq 1 50); do
+  out=$(wget -qO- --timeout=3 http://passenger-portal.kong-air-production.svc.cluster.local:8080/ 2>/dev/null)
   case "$out" in
-    *'"version":"v1"'*) v1=$((v1+1)) ;;
-    *'"version":"v2"'*) v2=$((v2+1)) ;;
+    v2:*) v2=$((v2+1)) ;;
+    *)    v1=$((v1+1)) ;;
   esac
 done
 echo "v1=$v1 v2=$v2"
+'
 ```
 
-You should see a distribution close to the configured weights. In the validated 2.13 test mesh, a `90/10` route produced `94/6` over 100 requests.
+You should see a distribution close to the configured weights, for a 90/10 split, expect roughly 44–46 v1 and 4–6 v2 from 50 requests.
+
 
 {% tip %}
-**Observability Bonus**: Because we used explicit `MeshService` resources, you can go to your Prometheus dashboard and see metrics broken down by `booking-engine-v1` and `booking-engine-v2` as separate entities, without needing to adjust your PromQL queries for complex tag filtering.
+Because we used explicit `MeshService` resources, you can go to your Prometheus dashboard and see metrics broken down by `passenger-portal-v1` and `passenger-portal-v2` as separate entities, without needing to adjust your PromQL queries for complex tag filtering.
 {% endtip %}

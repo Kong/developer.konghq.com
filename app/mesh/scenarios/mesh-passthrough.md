@@ -22,7 +22,7 @@ prereqs:
         A running {{site.mesh_product_name}} deployment.
     - title: Resources
       content: |
-        A client workload (e.g., `client-blu`) to test outbound connectivity.
+        A client workload (e.g., `check-in-api`) to test outbound connectivity.
 next_steps:
   - text: "First-Class Dependencies: MeshExternalService"
     url: "/mesh/scenarios/meshexternalservice/"
@@ -36,11 +36,11 @@ Sidecars allow all traffic to any external destination. This is handled by the E
 
 ### Secure Mesh (Zero-Trust)
 Using `MeshPassthrough`, you explicitly define which outbound destinations are allowed.
-*   **Benefit**: Cryptographic proof and policy-driven control over the mesh boundary.
-*   **Compliance**: Meets requirements for PCI, HIPAA, and SOC2 regarding outbound data flow.
+*   **Benefit**: Policy-driven control and an explicit allowlist for traffic leaving the mesh.
+*   **Auditability**: A single, declarative record of which external destinations workloads may reach, useful evidence for controls like PCI, HIPAA, or SOC 2.
 
 {% tip %}
-**Interaction with mesh-scoped ZoneEgress (2.14+).** If you've enabled the new mesh-scoped ZoneEgress (the `meshes:` Helm list — see [Multi-Zone Architecture](/mesh/scenarios/multi-zone-architecture/)), `MeshExternalService` traffic flowing through that listener is **deny-by-default** at the ZE itself, SNI-matched per external service. A `MeshTrafficPermission` `Allow` for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-MeshExternalService egress.
+Interaction with mesh-scoped ZoneEgress. If you've enabled mesh-scoped ZoneEgress (the `meshes:` Helm list, see [Multi-Zone Architecture](/mesh/scenarios/multi-zone-architecture/)), `MeshExternalService` traffic flowing through that listener is **deny-by-default** at the ZE itself, SNI-matched per external service. A `MeshTrafficPermission` `Allow` for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-`MeshExternalService` egress.
 {% endtip %}
 
 ## 2. Configuring MeshPassthrough
@@ -51,7 +51,7 @@ The `MeshPassthrough` policy defines how the proxy handles traffic that doesn't 
 By default, {{site.mesh_product_name}} acts as if this policy exists with `passthroughMode: All`.
 
 {% navtabs "passthrough-allow-all" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshPassthrough
@@ -65,7 +65,7 @@ spec:
     passthroughMode: All' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (Zone CP)" %}
 ```bash
 echo 'type: MeshPassthrough
 name: allow-all-passthrough
@@ -83,7 +83,7 @@ spec:
 To tighten security, change the mode to `None`. This blocks all traffic that isn't explicitly defined in your mesh.
 
 {% navtabs "passthrough-deny-all" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshPassthrough
@@ -97,7 +97,7 @@ spec:
     passthroughMode: None' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (Zone CP)" %}
 ```bash
 echo 'type: MeshPassthrough
 name: secure-perimeter
@@ -115,7 +115,7 @@ spec:
 You can allow traffic based on IP ranges (CIDR) or ports, even without defining a formal `MeshExternalService`.
 
 {% navtabs "passthrough-matched" %}
-{% navtab "Kubernetes" %}
+{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshPassthrough
@@ -129,7 +129,7 @@ spec:
     passthroughMode: Matched
     appendMatch:
       - type: IP
-        value: "1.2.3.4/32"
+        value: "1.2.3.4"
         port: 443
         protocol: tls
       - type: Domain
@@ -138,7 +138,7 @@ spec:
         protocol: http' | kubectl apply -f -
 ```
 {% endnavtab %}
-{% navtab "Universal" %}
+{% navtab "Universal (Zone CP)" %}
 ```bash
 echo 'type: MeshPassthrough
 name: selective-passthrough
@@ -150,7 +150,7 @@ spec:
     passthroughMode: Matched
     appendMatch:
       - type: IP
-        value: "1.2.3.4/32"
+        value: "1.2.3.4"
         port: 443
         protocol: tls
       - type: Domain
@@ -165,12 +165,16 @@ spec:
 `Domain`-type entries in `appendMatch` **must** include a `protocol` field (e.g., `http`, `tls`, `grpc`). The API will reject the resource without it.
 {% endtip %}
 
+{% tip %}
+`appendMatch` entries with `type: IP` match a **bare IP address**, not CIDR notation. Use `1.2.3.4`, not `1.2.3.4/32`, unless your target version explicitly documents CIDR support for that matcher.
+{% endtip %}
+
 ## 3. Interaction with Egress Gateways
 
 For maximum security, combine `MeshPassthrough` with a **ZoneEgress**.
 1.  **Direct Mode**: Sidecar tries to call the external service directly. `MeshPassthrough` logic happens in the sidecar.
-2.  **Egress Mode**: Sidecar is forced to route external traffic to the `ZoneEgress`. The `MeshPassthrough` policy can be applied at the `ZoneEgress` level to create a centralized "choke point" for the entire zone.
+2.  **Egress Mode**: Sidecar is forced to route external traffic to the `ZoneEgress`. Once the destination is a `MeshExternalService`, the mesh-scoped ZoneEgress listener is deny-by-default and needs a matching `MeshTrafficPermission` allow before `MeshPassthrough` ever evaluates.
 
 {% tip %}
-Use `MeshPassthrough` at the `Mesh` level to set a global security baseline, then use more specific `MeshService` targetRefs to grant exceptions to specific services that need broader internet access.
+Use `MeshPassthrough` at the `Mesh` level to set a global security baseline, then use more specific `Dataplane` selectors (by `labels:`) to grant exceptions to the workloads that need broader internet access.
 {% endtip %}

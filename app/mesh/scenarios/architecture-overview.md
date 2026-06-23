@@ -9,14 +9,10 @@ description: A detailed overview of the {{site.mesh_product_name}} architecture,
 products:
   - mesh
 next_steps:
-  - text: "Resource Scoping: Where to Apply Policies"
-    url: "/mesh/scenarios/resource-scoping/"
+  - text: "Getting Started: Your First Policy"
+    url: "/mesh/scenarios/getting-started-policy/"
 ---
 {{site.mesh_product_name}} separates the **Control Plane** (the brain) from the **Data Plane** (the muscle) and introduces a multi-zone model for distributed environments. For an organization like **Kong Air**, this architecture enables a unified management layer that spans from legacy booking systems to modern cloud-native APIs.
-
-{% tip %}
-**Version guide.** This overview mixes concepts that work in 2.13 with the newer resource model the team is rolling out in 2.14 and beyond. When a feature is 2.14-specific (for example `MeshIdentity`, mesh-scoped zone proxies, or KRI-oriented naming), the scenario docs call that out explicitly. If you're on 2.13, keep the high-level control-plane / data-plane model from this page, but expect some of the implementation details in later scenarios to have a "current in 2.13" path and a "recommended in 2.14+" path.
-{% endtip %}
 
 ## Core architecture pillars
 
@@ -52,33 +48,47 @@ rows:
   - pillar: Workload Identity
     role: "Issues and validates SPIFFE identities for every workload."
     components: |
-      * **MeshIdentity** (2.14+): The system of record for workload identity. Supports `Bundled`, `Spire`, and `Extension` providers. Replaces the older mesh-wide identity model.
-      * **MeshTrust** (2.14+): Declares trusted CA bundles per trust domain. By default, the control plane can generate a `MeshTrust` from a `MeshIdentity`, but operators can also manage it explicitly.
+      * **MeshIdentity**: The system of record for workload identity. Supports `Bundled`, `Spire`, and `Extension` providers.
+      * **MeshTrust**: Declares trusted CA bundles per trust domain. By default, the control plane can generate a `MeshTrust` from a `MeshIdentity`, but operators can also manage it explicitly.
 {% endtable %}
 
-## Why this architecture is simpler
+{% tip %}
+These scenarios set **`meshServices.mode: Exclusive`** on the `kong-air-mesh` `Mesh` resource:
 
-Traditional service meshes often require you to manage multiple disparate resources and API versions just to achieve basic connectivity. {{site.mesh_product_name}} simplifies this by introducing a **Unified Control Plane** model:
+```yaml
+spec:
+  meshServices:
+    mode: Exclusive
+```
+
+In Exclusive mode, the control plane generates a first-class `MeshService` resource for every workload, and policies address those `MeshService` objects directly instead of the older `kuma.io/service` tags. This is the modern model the rest of these scenarios assume, and it is a prerequisite for features like mesh-scoped zone proxies. You'll see it listed as a prerequisite in the hands-on guides that follow.
+{% endtip %}
+
+## Day-2 operations: how this compares to Istio-style meshes
+
+Many teams arrive at {{site.mesh_product_name}} from an **Istio-style mesh**, the model built around multiple traffic-management CRDs (`VirtualService`, `DestinationRule`, `ServiceEntry`) on a Kubernetes-first control plane. These are mature, capable meshes, and most of what these scenarios cover (mTLS, traffic routing, observability) works well in either. Standing a mesh up on **day 1** is a solved problem either way. The differences that matter show up on **day 2**: once the mesh is in production, spanning regions, and being operated, upgraded, and debugged by a team. {{site.mesh_product_name}}'s design choices are aimed at reducing the operational surface area you carry through that phase.
 
 {% table %}
 columns:
-  - title: Feature
-    key: feature
-  - title: Other meshes
-    key: traditional
-  - title: {{site.mesh_product_name}}
+  - title: Day-2 concern
+    key: concern
+  - title: Istio-style mesh
+    key: istio
+  - title: "{{site.mesh_product_name}}"
     key: mesh
 rows:
-  - feature: Management
-    traditional: "Disparate controllers for ingress, egress, and policy."
-    mesh: "Single, unified binary for all mesh operations."
-  - feature: Infrastructure
-    traditional: "Heavy Kubernetes focus; VMs are often second-class citizens."
-    mesh: "First-class support for K8s, VMs, and Bare Metal with the same API."
-  - feature: Configuration
-    traditional: "Fragmented resources (VirtualService, DestinationRule, Gateway)."
-    mesh: "Streamlined `targetRef` policies that consolidate intent."
+  - concern: Reasoning about a policy
+    istio: "A single behavior can span several resources, routing in `VirtualService`, load balancing and outlier detection in `DestinationRule`, external hosts in `ServiceEntry`. (Newer versions are adopting the Kubernetes Gateway API for routing.)"
+    mesh: "One policy per concern, all sharing the same `targetRef` structure, fewer interacting resource types to reason about when you're troubleshooting a production issue."
+  - concern: Running across regions
+    istio: "Multi-cluster is assembled from topologies you choose and maintain (multi-primary, primary-remote)."
+    mesh: "A built-in **Global / Zone** model with automatic KDS sync. Adding a region means adding a Zone CP, not redesigning a topology, and if the Global CP is offline, each Zone CP keeps serving its last-known config, so data-plane traffic is unaffected."
+  - concern: Hybrid estate (VMs + Kubernetes)
+    istio: "Kubernetes-native; VMs run through `WorkloadEntry` / `WorkloadGroup`."
+    mesh: "Kubernetes and **Universal** (VMs, bare metal) use the same resource model, so one team operates one mesh across both, no separate paradigm for the legacy estate."
 {% endtable %}
+
+It comes down to operational surface area: fewer resource types to reason about, multi-region as a deployment mode rather than a topology you build and maintain, and one model across Kubernetes and VMs. For a team that has to *run* the mesh, not just install it, that compounds over time.
 
 ---
 
@@ -100,8 +110,8 @@ The Global CP is the single source of truth for the mesh. Each zone runs its own
 flowchart TD
     GUI["Konnect / kumactl"]
     GCP["Global Control Plane"]
-    Z1CP["Zone CP<br/>(Kubernetes, US East)"]
-    Z2CP["Zone CP<br/>(Universal VM, US West)"]
+    Z1CP["Zone CP<br/>(Kubernetes, zone1)"]
+    Z2CP["Zone CP<br/>(Universal VM, zone2)"]
     DP1["Data planes<br/>(Envoy sidecars)"]
     DP2["Data planes<br/>(Envoy sidecars)"]
 
@@ -112,7 +122,7 @@ flowchart TD
     Z2CP -.->|xDS| DP2
 {% endmermaid %}
 
-Everything in this diagram is a **control-plane** channel — no application traffic crosses these links. If the Global CP goes offline, Zone CPs continue to serve their last-known config to local data planes; the mesh stays operational.
+Everything in this diagram is a **control-plane** channel, no application traffic crosses these links. If the Global CP goes offline, Zone CPs continue to serve their last-known config to local data planes; the mesh stays operational.
 
 ### 2. Zone-level: how a request flows
 
@@ -120,7 +130,7 @@ Inside a zone, every workload runs alongside an Envoy sidecar. Sidecars enforce 
 
 {% mermaid %}
 flowchart LR
-    subgraph ZoneEast["Zone East (Kubernetes)"]
+    subgraph ZoneEast["zone1 (Kubernetes)"]
         ZECP["Zone CP"]
         KG["Kong Gateway<br/>(booking-gateway)"]
         subgraph PPSvc["passenger-portal pod"]
@@ -133,7 +143,7 @@ flowchart LR
         end
         ZE_East["ZoneEgress"]
     end
-    subgraph ZoneWest["Zone West (VMs)"]
+    subgraph ZoneWest["zone2 (VMs)"]
         ZI_West["ZoneIngress"]
         subgraph FCSvc["flight-control VM"]
             FC_App["flight-control"]

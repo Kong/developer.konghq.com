@@ -143,19 +143,19 @@ sections:
       - path: /mesh/scenarios/architecture-overview/
       - path: /mesh/scenarios/getting-started-policy/
       - path: /mesh/scenarios/using-policies/
+      - path: /mesh/scenarios/resource-scoping/
+      - path: /mesh/scenarios/traffic-splitting-meshservices/
       - path: /mesh/scenarios/subsets-and-targeting/
       - path: /mesh/scenarios/observability-in-practice/
       - path: /mesh/scenarios/workload-identity/
       - path: /mesh/scenarios/external-ca-vault/
       - path: /mesh/scenarios/multi-zone-architecture/
-      - path: /mesh/scenarios/multi-tenancy-strategies/
+      - path: /mesh/scenarios/mesh-scoped-zone-proxies/
       - path: /mesh/scenarios/global-canary-releases/
+      - path: /mesh/scenarios/global-color-routing/
       - path: /mesh/scenarios/mesh-passthrough/
-      - path: /mesh/scenarios/ingress-mtls-bridge/
+      - path: /mesh/scenarios/meshexternalservice/
       - path: /mesh/scenarios/chaos-engineering/
-      - path: /mesh/scenarios/mesh-proxy-patch/
-      - path: /mesh/scenarios/kong-mesh-vs-ambient/
-      - path: /mesh/scenarios/istio-to-kong-mesh/
 
   - title: Persona Guides
     items:
