@@ -9,5 +9,5 @@ plugin_schema: true
 </div>
 
 <script>
-  window.schema = {{ page.schema | jsonify }}
+  window.schema = {{ page.schema.as_json | jsonify }}
 </script>

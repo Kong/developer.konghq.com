@@ -43,8 +43,10 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   subject(:policy) { described_class.new(folder:, slug:) }
 
   describe '#schema' do
-    it 'wraps the config properties from the api plugin schema' do
-      expect(policy.schema).to eq({ 'properties' => { 'config' => config_schema } })
+    it { expect(policy.schema).to be_a(Jekyll::Drops::Plugins::AIGWPolicySchema) }
+
+    it 'returns a Schema whose as_json wraps the config properties from the api plugin schema' do
+      expect(policy.schema.as_json).to eq({ 'properties' => { 'config' => config_schema } })
     end
   end
 
@@ -65,8 +67,9 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
       expect(metadata).not_to have_key('unlisted_key')
     end
 
-    it 'includes the schema' do
-      expect(metadata['schema']).to eq({ 'properties' => { 'config' => config_schema } })
+    it 'includes the schema as a Schema object whose as_json wraps the config properties' do
+      expect(metadata['schema']).to be_a(Jekyll::Drops::Plugins::AIGWPolicySchema)
+      expect(metadata['schema'].as_json).to eq({ 'properties' => { 'config' => config_schema } })
     end
 
     it 'merges frontmatter from index.md via super' do
