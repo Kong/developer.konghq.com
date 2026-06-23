@@ -23,7 +23,9 @@ module Jekyll
 
       # TODO: for now, until we have overviews and examples
       def generate_pages(policy)
-        generate_reference_page(policy)
+        reference = generate_reference_page(policy)
+
+        site.data[key][policy.slug] = reference
       end
     end
   end

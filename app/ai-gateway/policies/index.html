@@ -1,0 +1,70 @@
+---
+title: Kong AI Gateway Policies
+layout: default
+hub: true
+no_edit_link: true
+products:
+  - ai-gateway
+breadcrumbs:
+  - /ai-gateway/
+
+works_on:
+  - konnect
+
+description: An overview of policies that work with {{site.ai_gateway_name}}.
+---
+{%- assign categories = site.data.plugin_categories | sort: "text" -%}
+{%- assign policies = site.data.ai_gateway_policies | where_exp: "policy", "policy.published != false" -%}
+{%- assign third_party_premium = policies | where: "third_party", true | where: "premium_partner", true -%}
+{%- assign third_party_other = policies | where: "third_party", true | where_exp: "policy", "policy.premium_partner != true" -%}
+{%- assign third_party_policies = third_party_premium | concat: third_party_other -%}
+
+{% if page.output_format == 'markdown'%}
+{% for cat in categories %}
+{%- assign policies_for_category = policies | where_exp: "policy", "policy.categories contains cat.slug" | sort:
+"name" -%}
+{% if policies_for_category.size > 0 %}
+## {{ cat.text }}
+
+{% for policy in policies_for_category %}
+### {{policy.name | liquify}}
+Description: {{policy.description | liquify}}
+Documentation: {{policy.overview_url}}
+{% endfor %}{% endif %}{% endfor %}
+
+{% if third_party_policies.size > 0 %}
+## 3rd Party Policies
+
+{% for policy in third_party_policies %}
+### {{policy.name | liquify}}
+Description: {{policy.description | liquify}}
+Documentation: {{policy.overview_url}}
+{% endfor %}{% endif %}
+{% else %}
+<div class="flex flex-col gap-12 w-full">
+    <div class="flex justify-between gap-[60px]">
+        <div class="flex flex-col gap-6 py-24 self-center">
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-3">
+                    <h1 class="font-extrabold text-[40px] leading-[60px]">Kong AI Gateway Policies Hub</h1>{% include
+                    components/llm_dropdown.html url=page.url %}
+                </div>
+                <span class="leading-7">Extend Kong AI Gateway with powerful policies and easy integrations</span>
+            </div>
+        </div>
+        <div class="hidden lg:flex pt-9 pr-9 ">
+            <span class="hidden dark:inline">{% include_svg '/assets/hero-images/plugins/dark.svg' %}</span>
+            <span class="inline dark:hidden">{% include_svg '/assets/hero-images/plugins/light.svg' %}</span>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
+        {% include policies/index/filters.html functionality=true support_by=true trusted_content=true %}
+        
+        <div class="searchbox-results-container">
+            {% include policies/index/search_input.html %}
+
+            {% include policies/index/plugin_cards.html categories=categories plugins=policies third_party_plugins=third_party_policies %}
+        </div>
+    </div>
+</div>
+{% endif %}
