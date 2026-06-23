@@ -84,17 +84,6 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/consumers
 {% endtable %}
 
-## Configure an AI Consumer
-
-When you create an AI Consumer, the configuration steps generally follow this order:
-
-1. Choose an authentication [`type`](#schema-aigateway-consumer-type): `api-key` for API key credentials, or `oauth` for OAuth 2.0 / OpenID Connect credentials.
-1. Optionally attach AI Policies to the AI Consumer for request-level plugin execution.
-1. Create credentials separately through the [AI Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/).
-1. Optionally assign the AI Consumer to one or more AI Consumer Groups by setting the `consumer_groups` array.
-
-For a concrete example, see [Set up a Consumer](#set-up-a-consumer).
-
 ## Authentication type
 
 The [`type`](#schema-aigateway-consumer-type) field declares which credential family the Consumer authenticates with. Supported values are:
@@ -110,11 +99,11 @@ A Consumer can belong to multiple Consumer Groups. Consumer Group membership is 
 
 ## Attach Policies
 
-Policies are how plugin configurations apply to a Consumer. Attach a Policy by adding its `name` or `id` to the Consumer's [`policies`](#schema-aigateway-consumer-policies) array. The underlying plugin runs in the request lifecycle when the Consumer is identified.
+Attach a Policy by adding its `name` or `id` to the Consumer's [`policies`](#schema-aigateway-consumer-policies) array. The policy runs in the request lifecycle when the Consumer is identified.
 
-You can attach multiple Policies to a single Consumer. Each Policy is an independent plugin instance.
+You can attach multiple Policies to a single Consumer. Each Policy runs independently.
 
-For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+For supported policy types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Set up an AI Consumer
 

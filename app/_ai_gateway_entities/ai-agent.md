@@ -233,13 +233,13 @@ The canonical method name is what appears in OpenTelemetry span attributes and l
 
 #### JSON-RPC binding
 
-Detected by the [`"jsonrpc"`](#schema-aigateway-agent-config-jsonrpc) field in the request body, combined with a recognized A2A method name or an `A2A-Version` request header. Recognized methods include `message/send`, `message/stream`, `tasks/get`, `tasks/list`, `tasks/cancel`, `tasks/resubscribe`, the `tasks/pushNotificationConfig/*` family, and `agent/getExtendedAgentCard`.
+Detected by the `"jsonrpc"` field in the request body, combined with a recognized A2A method name or an `A2A-Version` request header. Recognized methods include `message/send`, `message/stream`, `tasks/get`, `tasks/list`, `tasks/cancel`, `tasks/resubscribe`, the `tasks/pushNotificationConfig/*` family, and `agent/getExtendedAgentCard`.
 
-A request carrying an `A2A-Version` header is treated as JSON-RPC even if the method isn't in the recognized list. When an unknown method is accepted this way, the [`method`](#schema-aigateway-agent-config-method) field in log output is recorded as `"unknown"` to bound metric cardinality. The OpenTelemetry span's `kong.a2a.operation` attribute still receives the actual method name.
+A request carrying an `A2A-Version` header is treated as JSON-RPC even if the method isn't in the recognized list. When an unknown method is accepted this way, the `method` field in log output is recorded as `"unknown"` to bound metric cardinality. The OpenTelemetry span's `kong.a2a.operation` attribute still receives the actual method name.
 
 ### Agent-card URL rewriting
 
-When an upstream agent returns an agent card, the runtime rewrites the [`url`](#schema-aigateway-agent-config-url) field, and any [`additionalInterfaces[].url`](#schema-aigateway-agent-config-additional-interfaces-url) fields, to the {{site.ai_gateway}} address. A2A clients then discover the gateway as the canonical endpoint instead of contacting the upstream directly. The rewrite uses `X-Forwarded-*` headers to construct the correct scheme, host, and port when the gateway is deployed behind a load balancer or reverse proxy.
+When an upstream agent returns an agent card, the runtime rewrites the [`url`](#schema-aigateway-agent-config-url) field, and any `additionalInterfaces[].url` fields, to the {{site.ai_gateway}} address. A2A clients then discover the gateway as the canonical endpoint instead of contacting the upstream directly. The rewrite uses `X-Forwarded-*` headers to construct the correct scheme, host, and port when the gateway is deployed behind a load balancer or reverse proxy.
 
 ## Logging and observability
 
@@ -282,7 +282,7 @@ For per-request authentication and identity, attach an authentication AI Policy 
 
 ## Attach Policies
 
-AI Policies are how plugin configurations apply to an AI Agent. Attach them through the AI Agent's [`policies`](#schema-aigateway-agent-policies) field. Each entry is a string that references an AI Policy by name or ID. Multiple AI Policies can attach to one AI Agent; each runs as an independent plugin instance.
+Attach AI Policies through the AI Agent's [`policies`](#schema-aigateway-agent-policies) field. Each entry is a string that references an AI Policy by name or ID. Multiple AI Policies can attach to one AI Agent; each runs independently.
 
 For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 

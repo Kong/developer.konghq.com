@@ -109,18 +109,6 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/models
 {% endtable %}
 
-## Configure a Model
-
-When you create a Model in {{site.konnect_short_name}} or via the API, the configuration steps generally follow this order:
-
-1. Choose a type (`model` or `api`) and declare which capabilities the Model exposes.
-1. Add one or more target models, each pointing to a Provider with credentials.
-1. Select a request and response format (default is `openai`).
-1. If you have more than one target, configure load balancing in [`config.balancer`](#schema-aigateway-model-config-balancer).
-1. Optionally, attach Policies to add additional capabilities and set [`acls`](#schema-aigateway-model-acls) to control access.
-
-For a concrete example, see [Set up a Model](#set-up-a-model).
-
 ## How it works
 
 When you configure an AI Model, you define what capabilities it exposes, which upstream AI Providers it routes to, and how requests are load-balanced and logged. At request time, the AI Model mediates traffic between clients and upstream AI Provider APIs:
