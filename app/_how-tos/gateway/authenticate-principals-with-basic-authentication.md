@@ -21,7 +21,7 @@ works_on:
     - konnect
 
 min_version:
-  gateway: '3.4'
+  gateway: '3.15'
 
 entities: 
   - plugin
