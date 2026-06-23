@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../policies/base'
+require_relative '../../drops/plugins/aigw_policy_schema'
 
 module Jekyll
   module AIGatewayPolicyPages
@@ -9,9 +10,9 @@ module Jekyll
       include Policies::GeneratorBase
 
       def schema
-        # delegate to the plugin schema
-        @schema ||= { 'properties' => { 'config' => api_plugin.data['schema'].as_json.dig('properties',
-                                                                                          'config') } } || {}
+        @schema ||= Jekyll::Drops::Plugins::AIGWPolicySchema.new(
+          { 'properties' => { 'config' => api_plugin.data['schema'].as_json.dig('properties', 'config') } }
+        )
       end
 
       def examples
