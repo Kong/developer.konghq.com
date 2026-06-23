@@ -12,6 +12,8 @@ products:
 works_on:
     - konnect
 
+tools: []
+
 breadcrumbs:
   - /event-gateway/
 
@@ -87,13 +89,21 @@ The output lists the supply chain artifacts (signatures and attestations) that a
 
 ## Verify the image signature
 
-1. Read the manifest digest for the image with `regctl`:
+1. Read the manifest digest for the image with `regctl` and store it in a variable:
 
     ```sh
-    regctl manifest digest kong/kong-event-gateway:{{ egw_release.version }}
+    export IMAGE_DIGEST=$(regctl manifest digest kong/kong-event-gateway:{{ egw_release.version }})
+    echo $IMAGE_DIGEST
     ```
 
-    The command outputs a `SHA-256` digest (`sha256:...`). Pinning to a digest guarantees you verify exactly the image you're going to run.
+    This captures the image's `SHA-256` digest so you can reuse it in the commands below, and prints it:
+
+    ```sh
+    sha256:...
+    ```
+    {:.no-copy-code}
+
+    Pinning to a digest guarantees you verify exactly the image you're going to run, even if the tag is later repointed to a different image.
 
 1. Verify the signature with `cosign verify`:
 
@@ -104,13 +114,13 @@ The output lists the supply chain artifacts (signatures and attestations) that a
       -a workflow="CI" \
       --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
       --certificate-identity="https://github.com/kong-gateway/event-gateway/.github/workflows/ci.yaml@refs/tags/v{{ egw_release.version }}" \
-      kong/kong-event-gateway:{{ egw_release.version }}
+      kong/kong-event-gateway@${IMAGE_DIGEST}
     ```
 
     If verification is successful, the response contains a summary of the checks that were performed:
 
     ```
-    Verification for index.docker.io/kong/kong-event-gateway:{{ egw_release.version }} --
+    Verification for index.docker.io/kong/kong-event-gateway@sha256:... --
     The following checks were performed on each of these signatures:
       - The specified annotations were verified.
       - The cosign claims were validated
@@ -123,12 +133,28 @@ The output lists the supply chain artifacts (signatures and attestations) that a
 
 {{site.event_gateway}} images carry several signed attestations. The most commonly used predicate types are:
 
-| Attestation | Predicate type | `--type` value |
-|-------------|----------------|----------------|
-| SPDX SBOM | `https://spdx.dev/Document` | `spdxjson` |
-| CycloneDX SBOM | `https://cyclonedx.org/bom` | `cyclonedx` |
-| Vulnerability scan (SARIF) | `https://cosign.sigstore.dev/sarif/vuln/...` | `vuln` |
-| CIS Docker benchmark | `https://cisecurity.org/docker/...` | _(use the full URL)_ |
+{% table %}
+columns:
+  - title: Attestation
+    key: attestation
+  - title: Predicate type
+    key: predicate_type
+  - title: "`--type` value"
+    key: type_value
+rows:
+  - attestation: SPDX SBOM
+    predicate_type: "`https://spdx.dev/Document`"
+    type_value: "`spdxjson`"
+  - attestation: CycloneDX SBOM
+    predicate_type: "`https://cyclonedx.org/bom`"
+    type_value: "`cyclonedx`"
+  - attestation: Vulnerability scan (SARIF)
+    predicate_type: "`https://cosign.sigstore.dev/sarif/vuln/...`"
+    type_value: "`vuln`"
+  - attestation: CIS Docker benchmark
+    predicate_type: "`https://cisecurity.org/docker/...`"
+    type_value: "_(use the full URL)_"
+{% endtable %}
 
 {:.info}
 > The exact set of attestations can change between releases. Use [`cosign tree`](#list-the-artifacts-attached-to-an-image) to see the authoritative list for the image you're verifying.
@@ -140,7 +166,7 @@ cosign verify-attestation \
   --type="spdxjson" \
   --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
   --certificate-identity="https://github.com/kong-gateway/event-gateway/.github/workflows/ci.yaml@refs/tags/v{{ egw_release.version }}" \
-  kong/kong-event-gateway:{{ egw_release.version }}
+  kong/kong-event-gateway@${IMAGE_DIGEST}
 ```
 
 For predicate types that don't have a built-in alias, pass the full predicate type URL to `--type` instead, for example `--type="https://cisecurity.org/docker/amd64"`.
@@ -150,9 +176,20 @@ For predicate types that don't have a built-in alias, pass the full predicate ty
 To save the SPDX SBOM to a file, download the attestations and filter for the SBOM predicate type with `jq`:
 
 ```sh
-cosign download attestation kong/kong-event-gateway:{{ egw_release.version }} \
+cosign download attestation kong/kong-event-gateway@${IMAGE_DIGEST} \
   | jq -r 'select((.dsseEnvelope.payload // .payload | @base64d | fromjson | .predicateType) == "https://spdx.dev/Document") | (.dsseEnvelope.payload // .payload) | @base64d | fromjson | .predicate' \
   > sbom.spdx.json
 ```
 
 This writes the SBOM document to `sbom.spdx.json`, which you can then feed into your SBOM tooling. To extract the CycloneDX SBOM instead, replace the predicate type with `https://cyclonedx.org/bom`.
+
+## Validate the extracted SBOM
+
+Confirm that the extracted file is valid JSON and contains the expected SPDX fields:
+
+```sh
+jq -e '.spdxVersion and (.packages | length > 0)' sbom.spdx.json \
+  && echo "Valid SPDX SBOM with $(jq '.packages | length' sbom.spdx.json) packages"
+```
+
+If the file is a well-formed SPDX SBOM, the command prints `true` followed by the package count. If `jq` reports a parse error or the expression evaluates to `false`, the download or filter step didn't produce a valid document. Re-check the predicate type and confirm the previous commands completed successfully.
