@@ -245,17 +245,19 @@ rows:
     diagnosis: |
       Diagnose whether {{site.base_gateway}} routed the request, whether it reached the upstream, whether the upstream returned an error, or whether a plugin terminated the request before it reached the upstream.
   - symptom: Authentication failures
-    filter: "`http.response.status_code == 401`"
-    diagnosis: Diagnose whether the authentication plugin executed.
-  - symptom: Missing or unexpected request transformation
-    filter: "`http.route.name == \"your_route\"`"
-    diagnosis: Diagnose whether plugins executed in the expected order.
-  - symptom: Custom plugin failure
-    filter: "`http.route.name == \"your_route\"`"
+    filter: "`http.response.status_code == 401 || !(proxy.kong.upstream.status_code == 401)`"
     diagnosis: |
-      Diagnose plugin errors. Capture logs along with traces so you can correlate plugin errors with the spans where they occurred.
+      Look through the traces where the authentication plugin returned the 401 and not the upstream.
+  - symptom: Missing or unexpected request transformation
+    filter: |
+      Any of:<br>`proxy.kong.route.id == "<route-uuid>"`<br>`proxy.kong.service.id == "<service-uuid>"`<br>`http.path == "/v1/abc"`
+    diagnosis: Look at the summary view or spans view to diagnose whether plugins executed in the expected order.
+  - symptom: Custom plugin failure
+    filter: "`!(proxy.kong.upstream.status_code >= 100) && http.response.status_code == 500`"
+    diagnosis: |
+      Diagnose custom plugin errors where the request never reached the upstream because the plugin returned an error. Capture logs along with traces so you can correlate plugin errors with the spans where they occurred.
   - symptom: High API latency
-    filter: "`http.route.name == \"your_route\"`"
+    filter: "`proxy.kong.latency_total_ms >= 100`"
     diagnosis: |
       Diagnose which spans took the longest. Use this to rule out custom plugin performance issues, isolate whether the delay was at the upstream or in {{site.base_gateway}}, and spot network bottlenecks such as slow DNS lookups or TLS handshakes.
 {% endtable %}

@@ -93,7 +93,7 @@ GEM
     nio4r (2.7.5)
     nodo (1.8.2)
       logger
-    nokogiri (1.19.3)
+    nokogiri (1.19.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     nokolexbor (0.7.0)
