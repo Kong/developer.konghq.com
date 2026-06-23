@@ -18,8 +18,7 @@ module Jekyll
 
         def data
           super
-            .except('overview_url')
-            .merge('schema' => @policy.schema)
+            .merge('schema' => @policy.schema, 'has_overview?' => false)
         end
 
         def icon

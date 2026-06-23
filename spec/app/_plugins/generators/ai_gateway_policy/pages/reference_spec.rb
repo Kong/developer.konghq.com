@@ -48,13 +48,14 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
   describe '#data' do
     subject(:data) { page.data }
 
+    it { expect(data['has_overview?']).to be(false) }
     it { expect(data['reference_type']).to eq('base') }
     it { expect(data['content_type']).to eq('reference') }
     it { expect(data['reference?']).to be(true) }
     it { expect(data['toc']).to be(false) }
     it { expect(data['versioned']).to be(true) }
     it { expect(data['schema']).to eq({ 'properties' => { 'config' => {} } }) }
-    it { expect(data).not_to have_key('overview_url') }
+    it { expect(data['overview_url']).to eq('/ai-gateway/policies/my-policy/') }
     it { expect(data).not_to have_key('faqs') }
   end
 end
