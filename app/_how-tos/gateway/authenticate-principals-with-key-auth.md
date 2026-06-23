@@ -32,7 +32,7 @@ tags:
 tldr:
   q: How do I authenticate Principals with basic authentication?
   a: |
-    Create a Principal and enable the Basic Authentication plugin globally with `principals.enabled: true`. Set `principals.directory` to your directory ID, then authenticate with the base64-encoded Principal credentials.
+    Create a Principal and enable the Basic Authentication plugin globally with `principals.enabled: true`. Set `principals.directory` to your directory name, then authenticate with the base64-encoded Principal credentials.
 tools:
     - deck
 
