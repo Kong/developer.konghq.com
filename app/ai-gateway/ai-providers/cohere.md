@@ -22,7 +22,7 @@ tools:
   - konnect-api
 
 min_version:
-  ai-ateway: '2.0'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
