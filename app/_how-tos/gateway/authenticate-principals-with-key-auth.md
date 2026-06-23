@@ -59,7 +59,7 @@ cleanup:
 
 ## Create a Principal
 
-Create the Principal by sending a POST request to the `/v2/directories/{directoryId}/principals` [endpoint](/api/konnect/kong-identity/v2/#/operations/createPrincipal). This creates a Principal named `example-principal` and saves the returned ID as `$PRINCIPAL_ID`:
+Create the Principal by sending a POST request to the `/v2/directories/{directoryId}/principals` endpoint. This creates a Principal named `example-principal` and saves the returned ID as `$PRINCIPAL_ID`:
 
 <!--vale off-->
 {% konnect_api_request %}
