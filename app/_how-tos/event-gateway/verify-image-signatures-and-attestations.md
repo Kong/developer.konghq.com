@@ -60,7 +60,7 @@ tldr:
     a: |
       {{site.event_gateway}} images are published to `kong/kong-event-gateway` on Docker Hub and signed with [Cosign](https://github.com/sigstore/cosign) using GitHub's OIDC identity.
 
-      List every supply chain artifact attached to an image with `cosign tree kong/kong-event-gateway:<version>`, verify the image signature with `cosign verify`, and verify or extract individual attestations (SBOM, vulnerability scans) with `cosign verify-attestation`.
+      List every supply chain artifact attached to an image with `cosign tree kong/kong-event-gateway:VERSION`, verify the image signature with `cosign verify`, and verify or extract individual attestations (SBOM, vulnerability scans) with `cosign verify-attestation`.
 
 automated_tests: false
 ---
