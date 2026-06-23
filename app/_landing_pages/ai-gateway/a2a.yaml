@@ -87,7 +87,7 @@ rows:
         - Audit logs capture task IDs, JSON-RPC method calls, payloads, latencies, and errors.
         - OpenTelemetry spans record task state, context IDs, TTFB, SSE event counts, and response sizes.
         - Metrics track A2A-specific signals and performance indicators over time.
-    column_count: 3
+    column_count: 4
     columns:
       - blocks:
         - type: card
