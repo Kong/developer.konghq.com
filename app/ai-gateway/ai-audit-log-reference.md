@@ -78,18 +78,18 @@ rows:
       Includes prompt/completion tokens for text, and input/output tokens for non-text modalities.
   - property: "`ai.proxy.usage.input_tokens`"
     description: |
-       The total number of input tokens (text + image + audio).
+      The total number of input tokens (text + image + audio).
       Used for non-text requests (e.g., image or audio generation).
   - property: "`ai.proxy.usage.input_tokens_details`"
     description: |
-       A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
+      A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
   - property: "`ai.proxy.usage.output_tokens`"
     description: |
-       The total number of output tokens (text + audio).
+      The total number of output tokens (text + audio).
       Used for non-text responses (e.g., image or audio generation).
   - property: "`ai.proxy.usage.output_tokens_details`"
     description: |
-       A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
+      A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
   - property: "`ai.proxy.usage.cost`"
     description: The total cost of the request.
   - property: "`ai.proxy.usage.time_per_token`"
