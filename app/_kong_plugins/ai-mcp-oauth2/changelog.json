@@ -60,6 +60,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.7": [
+    {
+      "message": "Fixed an issue where token introspection crashed when `client_auth` was set to `private_key_jwt` and `client_jwk` was provided as a JSON string.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where MCP-like request was not authenticated.\n",
