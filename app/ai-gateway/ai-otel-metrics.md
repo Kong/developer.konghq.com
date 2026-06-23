@@ -17,8 +17,6 @@ tags:
 
 plugins:
   - opentelemetry
-  - ai-proxy
-  - ai-proxy-advanced
 
 min_version:
   ai-gateway: '2.0'
@@ -35,8 +33,6 @@ related_resources:
     url: /ai-gateway/monitor-ai-llm-metrics/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
   - text: OpenTelemetry plugin
     url: /plugins/opentelemetry/
   - text: Full OpenTelemetry metrics reference
@@ -61,7 +57,7 @@ You can use these metrics to:
 
 ## Prerequisites
 
-To collect AI OTel metrics, enable the following settings:
+To collect AI OTLP metrics, enable the following settings:
 
 <!-- vale off -->
 {% table %}
@@ -96,7 +92,7 @@ Some metrics have additional requirements:
 * `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry Policy](/plugins/opentelemetry/reference/).
 * The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry Policy](/plugins/opentelemetry/reference/).
 
-## Gen AI metrics (OTel semantic conventions)
+## Gen AI metrics (OTLP semantic conventions)
 
 These metrics follow the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/). They capture request duration, upstream latency, token usage, and streaming performance.
 
