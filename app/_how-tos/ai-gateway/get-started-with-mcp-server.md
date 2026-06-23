@@ -2,7 +2,7 @@
 title: Map the Deck of Cards API to an MCP Server
 content_type: how_to
 permalink: /ai-gateway/get-started-with-mcp-server/
-description: Learn how to create an MCP Server entity in {{site.konnect_product_name}} to expose Deck of Cards API operations as MCP tools
+description: Learn how to create an MCP Server entity in {{site.ai_gateway}} to expose Deck of Cards API operations as MCP tools
 products:
   - ai-gateway
 
