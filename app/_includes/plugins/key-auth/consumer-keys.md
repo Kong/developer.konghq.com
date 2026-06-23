@@ -1,4 +1,4 @@
-When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer) or a Principal [LINK] {% new_in 3.15 %}, you can specify a `key`.
+When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer) or a [Principal](/identity/principals/#configure-a-principal) {% new_in 3.15 %}, you can specify a `key`.
 
 {% navtabs "set a key" %}
 {% navtab "Consumers" %}
