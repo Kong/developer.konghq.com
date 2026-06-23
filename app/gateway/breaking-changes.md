@@ -63,17 +63,6 @@ In the [Prometheus](/plugins/prometheus/) and [OpenTelemetry](/plugins/opentelem
 This affects `kong_enterprise_license_features` in Prometheus and `kong.ee.license.features` in OpenTelemetry.
 Update any dashboards and alerts that reference the old values.
 
-#### Plugin execution error attribution
-
-The [Prometheus plugin's](/plugins/prometheus/) `source` label has a new value: `custom`.
-Previously, `source` was either `service` for upstream errors, or `kong` for all plugin errors.
-{{site.base_gateway}} now sets `source="custom"` for HTTP 500 errors from custom plugins and custom Lua code run by bundled plugins (for example, from `custom_fields_by_lua`).
-
-{:.warning}
-> **Caution**: Log-phase custom plugin errors aren't attributed to `custom` because the Prometheus plugin runs before other plugins in the log phase.
-
-Update any dashboards and alert rules that filter or aggregate on the `source` label to account for the new value.
-
 #### Conditional plugin execution language
 
 {% include_cached /gateway/expressions/migrate.md %}
