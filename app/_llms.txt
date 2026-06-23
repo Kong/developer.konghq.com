@@ -37,3 +37,10 @@ This file lists all available documentation pages as Markdown. Each link points 
 {% for p in plugin_pages -%}
 - [{{ p.llm_title | liquify }}]({{ site.links.web }}{{ p.url }}): {{ p.description | liquify | rstrip }}
 {% endfor %}
+
+
+## AI Gateway Policies
+
+{% for p in ai_gateway_policy_pages -%}
+- [{{ p.llm_title | liquify }}]({{ site.links.web }}{{ p.url }}): {{ p.description | liquify | rstrip }}
+{% endfor %}
