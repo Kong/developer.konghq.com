@@ -9,7 +9,7 @@ module Jekyll
             APIPage.new(page:, site:)
           elsif page.url.start_with?('/plugins/')
             Plugin.new(page:, site:)
-          elsif page.url.start_with?('/mesh/policies/') || page.url.start_with?('/event-gateway/policies/')
+          elsif page.url.start_with?('/mesh/policies/') || page.url.start_with?('/event-gateway/policies/') || page.url.start_with?('/ai-gateway/policies/')
             Policy.new(page:, site:)
           elsif page.data['content_type'] && page.data['content_type'] == 'reference'
             Reference.new(page:, site:)
