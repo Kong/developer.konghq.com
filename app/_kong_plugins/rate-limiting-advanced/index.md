@@ -172,7 +172,7 @@ Otherwise the field will be regenerated automatically with every update.
 
 ### Fallback from Redis
 
-{% include /ai-gateway/v2/redis-fallback.md %}
+{% include md/ai-gateway/v2/redis-fallback.md %}
 
 ## Limit by IP address
 

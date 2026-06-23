@@ -248,4 +248,4 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-{% include ai-gateway/v2/circuit-breaker.md %}
+{% include md/ai-gateway/v2/circuit-breaker.md %}
