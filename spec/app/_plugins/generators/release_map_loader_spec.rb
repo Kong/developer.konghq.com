@@ -12,7 +12,7 @@ RSpec.describe Jekyll::ReleaseMapLoader do
                                         'releases' => [{ 'release' => '2.0', 'latest' => true },
                                                        { 'release' => '1.0' }] } } }
   end
-  let(:site) { instance_double(Jekyll::Site, pages: pages, documents: documents, data:) }
+  let(:site) { instance_double(Jekyll::Site, pages: pages, documents: documents, data:, config: {}) }
   let(:pages) { [] }
   let(:documents) { [] }
 

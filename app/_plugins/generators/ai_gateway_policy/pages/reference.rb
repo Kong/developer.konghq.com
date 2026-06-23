@@ -19,7 +19,7 @@ module Jekyll
         end
 
         def data
-          super.merge('reference_type' => 'base')
+          super.merge('reference_type' => 'base', 'versioned' => false)
         end
       end
     end
