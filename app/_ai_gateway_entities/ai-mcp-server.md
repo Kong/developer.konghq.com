@@ -92,46 +92,6 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/mcp-servers
 {% endtable %}
 
-## Configure an AI MCP Server
-
-When you create an AI MCP Server, the configuration steps generally follow this order:
-
-1. Choose a server type: `passthrough-listener` to proxy an upstream MCP server, `conversion-listener` to convert a REST API into MCP tools, `conversion-only` to define a shared tool library, or `listener` to aggregate tools from `conversion-only` servers.
-1. Point the AI MCP Server at an upstream: supply the Service URL for conversion types, or the upstream MCP server address for `passthrough-listener`.
-1. For conversion types, define tools that map MCP tool names to upstream HTTP endpoints.
-1. Optionally, configure sessions for stateful interactions.
-1. Optionally, attach Policies for authentication, rate limiting, and observability.
-1. Optionally, configure ACLs to restrict which consumers can discover and invoke specific tools.
-
-For a concrete example, see [Set up an AI MCP Server](#set-up-an-ai-mcp-server).
-
-## Common Policies
-
-Attach plugins as [Policies](/ai-gateway/entities/ai-policy/) on the MCP Server to handle authentication, rate limiting, observability, and traffic control:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Use case
-    key: use_case
-  - title: Example
-    key: example
-rows:
-  - use_case: Authentication
-    example: |
-      Apply [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) for MCP-spec OAuth 2.0 flows, or [OpenID Connect](/plugins/openid-connect/) / [Key Auth](/plugins/key-auth/) for non-OAuth identity.
-  - use_case: Rate limiting
-    example: |
-      Use [Rate Limiting](/plugins/rate-limiting/) or [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) to control MCP request volume.
-  - use_case: Observability
-    example: |
-      Add [logging and tracing plugins](/plugins/?category=logging) for full request and response visibility. MCP metrics surface in [{{site.konnect_short_name}} analytics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics).
-  - use_case: Traffic control
-    example: |
-      Apply [request and response transformation plugins](/plugins/?category=transformations) or [ACL policies](/plugins/acl/).
-{% endtable %}
-<!-- vale on -->
-
 ## Server modes
 
 The [`type`](#schema-aigateway-mcpserver-type) field selects one of five modes. Each mode determines how the runtime handles MCP requests and whether it converts RESTful APIs into MCP tools.
@@ -482,7 +442,7 @@ sequenceDiagram
 
 ## Attach Policies
 
-Policies are how plugin configurations apply to an AI MCP Server. Authentication, rate limiting, request and response transformation, and OAuth gating (through [AI MCP OAuth2](/plugins/ai-mcp-oauth2/)) attach to the AI MCP Server through the [`policies`](#schema-aigateway-mcpserver-policies) field. Each entry is a string that references a Policy by name or ID. Multiple Policies can attach to one AI MCP Server; each runs as an independent plugin instance.
+Authentication, rate limiting, request and response transformation, and OAuth gating (through [AI MCP OAuth2](/plugins/ai-mcp-oauth2/)) attach to the AI MCP Server through the [`policies`](#schema-aigateway-mcpserver-policies) field. Each entry is a string that references a Policy by name or ID. Multiple Policies can attach to one AI MCP Server; each runs independently.
 
 For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
