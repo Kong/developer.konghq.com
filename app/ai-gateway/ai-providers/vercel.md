@@ -34,7 +34,7 @@ related_resources:
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Vercel" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Vercel" %}
 
 ## Configure a {{ provider.name }} provider
 
@@ -58,7 +58,8 @@ body:
   config:
     auth:
       type: basic
-      - name: Authorization
+      headers:
+        - name: Authorization
           value: Bearer $VERCEL_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
