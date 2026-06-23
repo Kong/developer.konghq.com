@@ -125,7 +125,7 @@ When [`config.upstream_health_metrics`](/plugins/prometheus/reference/#schema--c
 stream and HTTP listeners are enabled, targets' health will appear twice. Health metrics
 have a `subsystem` label to indicate which subsystem the metric refers to.
 
-{% include /ai-gateway/llm-metrics.md %}
+{% include ai-gateway/v2/llm-metrics.md %}
 
 ## Accessing the metrics
 

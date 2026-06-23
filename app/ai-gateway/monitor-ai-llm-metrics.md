@@ -45,7 +45,7 @@ AI metrics exported by the Prometheus plugin can be graphed in Grafana using [{{
 
 The following sections describe the AI metrics that are available.
 
-{% include /ai-gateway/v2/llm-metrics.md %}
+{% include ai-gateway/v2/llm-metrics.md %}
 
 ## Overview
 

@@ -67,7 +67,7 @@ AI metrics exported by the plugin can be graphed in Grafana using [{{site.ai_gat
 
 The following sections describe the AI metrics that are available.
 
-{% include /ai-gateway/llm-metrics.md %}
+{% include ai-gateway/v1/llm-metrics.md %}
 
 ## Overview
 
