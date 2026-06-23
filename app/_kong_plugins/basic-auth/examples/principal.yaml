@@ -1,0 +1,35 @@
+description: Authenticate Principals {% new_in 3.15 %} managed by Kong Identity by configuring the `principals` field in the Basic Auth plugin.
+extended_description: |
+  You can authenticate Principals managed by Kong Identity in {{site.konnect_short_name}} by configuring the `principals` field in the Baisc Auth plugin. Principals are grouped into regional directories.
+
+  For a full tutorial of this example, see [Authenticate Principals with the Key Authentication plugin](/how-to/authenticate-principals-with-basic-auth/).
+
+title: 'Authenticate Principals {% new_in 3.15 %}'
+
+requirements:
+  - |
+    You have a Kong Identity directory containing Principals in {{site.konnect_short_name}}.
+
+weight: 898
+
+min_version:
+  gateway: '3.15'
+
+variables:
+  directory_name:
+    value: $DIRECTORY_NAME
+    description: The name of the Kong Identity directory to look up Principals in.
+
+config:
+  key_names:
+    - apikey
+  identity_realms: []
+  principals:
+    enabled: true
+    directory: ${directory_name}
+
+tools:
+  - deck
+  - konnect-api
+  - kic
+  - terraform
