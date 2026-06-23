@@ -2,13 +2,16 @@
 title: Authenticate Principals with the Key Authentication plugin
 permalink: /how-to/authenticate-principals-with-key-auth/
 content_type: how_to
+breadcrumbs:
+  - /identity/
 related_resources:
   - text: Authentication
     url: /gateway/authentication/
 
-description: Use the Key Authentication plugin to allow Principals to authenticate with.
+description: Use the Key Authentication plugin to allow Principals to authenticate with an API key.
 products:
     - gateway
+    - identity
 
 plugins:
   - key-auth
@@ -17,8 +20,7 @@ works_on:
     - konnect
 
 min_version:
-  gateway: '3.4'
-
+  gateway: '3.15'
 entities: 
   - plugin
   - service
@@ -29,10 +31,9 @@ tags:
     - authentication
 
 tldr:
-  q: How do I authenticate Principals with basic authentication?
+  q: How do I authenticate Principals with key authentication?
   a: |
-    Create a Principal and enable the Basic Authentication plugin globally with `principals.enabled: true`. Set `principals.directory` to your directory name, then authenticate with the base64-encoded Principal credentials.
-tools:
+    Create a Principal, create an API key for it, then enable the Key Authentication plugin with `principals.enabled: true` and set `principals.directory` to your directory name. Authenticate by sending the API key in the `apikey` header.
     - deck
 
 prereqs:
@@ -82,9 +83,7 @@ capture:
 <!--vale on-->
 
 ## Get the directory name
-
-To configure the Key Auth plugin, you'll need the name of the directory you created. Store it as `DECK_DIRECTORY-NAME` with this script:
-
+To configure the Key Auth plugin, you'll need the name of the directory you created. Store it as `DECK_DIRECTORY_NAME` with this script:
 {% include /how-tos/steps/get-directory-name.md %}
 
 ## Configure the Key Auth plugin via decK
@@ -100,19 +99,17 @@ entities:
       identity_realms: []
       principals:
         enabled: true
-        directory: ${directory_id}
+        directory: ${directory_name}
 variables:
-  directory_id:
+  directory_name:
     value: $DIRECTORY_NAME
-formats:
   - deck
 {% endentity_examples %}
 
 This configuration:
 
 - Enables the plugin on `example-route`.
-- Set the authentication method with Principals in the `example-directory` Directory.
-
+- Sets Principal authentication by looking up API keys in the `kong-identity-directory` directory.
 ## Validate
 
 By default, the Key Auth plugin reads the key from the `apikey` header.

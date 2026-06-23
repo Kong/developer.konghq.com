@@ -48,7 +48,7 @@ min_version:
 ---
 
 The Key Authentication plugin lets you add API key authentication to a [Gateway Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/).
-[Consumers](/gateway/entities/consumer/) and Principals [LINK] {% new_in 3.15 %} then add their key either in a query string parameter, a header, or a request body to authenticate their requests.
+[Consumers](/gateway/entities/consumer/) and [Principals](/identity/principals/) {% new_in 3.15 %} then add their key either in a query string parameter, a header, or a request body to authenticate their requests.
 
 The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key-auth-enc/), provides the ability to encrypt keys. Keys are encrypted at rest in the {{site.base_gateway}} data store.
 
