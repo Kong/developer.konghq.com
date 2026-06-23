@@ -6,5 +6,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
-description: Configure {{site.ai_gateway_name}} to obtain an OAuth2 token to consumea n upstream API
+description: Configure {{site.ai_gateway_name}} to obtain an OAuth2 token to consume an upstream API
 ---
