@@ -23,7 +23,7 @@ module Jekyll
         @metadata ||= api_plugin
                       .data['plugin']
                       .metadata.slice(*policies_metadata.fetch('keep'))
-                      .merge('schema' => schema)
+                      .merge('schema' => schema, 'scopes' => scopes)
                       .merge(super)
       end
 
@@ -35,6 +35,12 @@ module Jekyll
 
       def policies_metadata
         @policies_metadata ||= site.config.dig('ai_gateway_policies', 'metadata')
+      end
+
+      def scopes
+        @scopes ||= site.data.dig('policies', 'ai-gateway', 'scopes')
+                        &.find { |entry| entry['name'] == @slug }
+                        &.fetch('scopes', []) || []
       end
     end
   end
