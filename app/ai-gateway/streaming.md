@@ -17,7 +17,7 @@ tags:
 min_version:
   ai-gateway: '2.0'
 
-description: This guide walks you through setting up Models with streaming.
+description: This guide walks you through setting up AI Models with streaming.
 ---
 
 ## What is request streaming?
@@ -113,7 +113,7 @@ It also estimates tokens for LLM services that decided to not stream back the to
 Keep the following limitations in mind when you configure streaming for the {{site.ai_gateway}}:
 
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
-* You can't add Policies that use the [Response Transformer](/plugins/response-transformer/) or otherwise trigger in the response phase when streaming is configured.
+* You can't add AI Policies that use the [Response Transformer](/plugins/response-transformer/) or otherwise trigger in the response phase when streaming is configured.
 * The [AI Request Transformer Policy](/plugins/ai-request-transformer/) **will** work, but the [AI Response Transformer Policy](/plugins/ai-response-transformer/) **will not**. This is because {{site.ai_gateway}} can't check every single response token against a separate system.
 * Streaming currently doesn't work with the HTTP/2 protocol. You must disable this in your [`proxy_listen`](/gateway/configuration/#proxy-listen) configuration.
 
@@ -178,7 +178,7 @@ for chunk in stream:
 
 ### Response streaming configuration parameters
 
-In the [Model](/ai-gateway/entities/ai-model/) configuration, you can set an optional field `config.response_streaming` to one of three values:
+In the [AI Model](/ai-gateway/entities/ai-model/) configuration, you can set an optional field `config.response_streaming` to one of three values:
 
 {% table %}
 columns:
