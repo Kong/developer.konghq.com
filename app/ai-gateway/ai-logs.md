@@ -238,7 +238,8 @@ rows:
       For semantic caching, the model used to generate the embeddings.
   - property: "`ai.$PLUGIN_NAME.cache.embeddings_latency`"
     description: |
-      For semantic caching, the time taken to generate the embeddings.{% endtable %}
+      For semantic caching, the time taken to generate the embeddings.
+{% endtable %}
 <!--vale on-->
 
 <!--
