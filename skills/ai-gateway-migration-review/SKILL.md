@@ -104,7 +104,13 @@ References to AI Gateway include files and data files must use `/v2/`. For examp
 - `ai-gateway/circuit-breaker` → `ai-gateway/v2/circuit-breaker`
 - `_includes/md/ai-gateway/circuit-breaker.md` → `_includes/md/ai-gateway/v2/circuit-breaker.md`
 
-Flag any `{% include /plugins/` tags — v2 AI Gateway pages must not pull in plugin includes. These should be removed or replaced with the appropriate AI Policy equivalent.
+Flag any `{% include /plugins/` tags — v2 AI Gateway pages must not pull in plugin includes. These should be removed or replaced with the appropriate AI Policy equivalent. For example:
+
+```
+{% include /plugins/ai-a2a-proxy/log-output-fields.md %}
+```
+
+This should be replaced with a corresponding AI Policy include (e.g. under `_includes/md/ai-gateway/v2/`) or removed if no equivalent exists.
 
 ### Code block style
 
@@ -138,10 +144,9 @@ Flag any references to these entities without the "AI" prefix (e.g., "model" ins
 
 ### Links to unmigrated how-to guides
 
-Not all v1 how-to guides have been migrated to v2. The only migrated v2 how-to is currently:
-- `get-started-with-ai-gateway`
+Not all v1 how-to guides have been migrated to v2. Before checking links, build a list of invalid v1 permalinks by reading every `.md` file under `app/_how-tos/ai-gateway/v1/` and extracting their `permalink:` frontmatter values.
 
-Any link in a v2 file that points to a how-to guide URL not directly in `app/_how-tos/ai-gateway/` should be flagged. Links to v1 how-tos (containing `/v1/`) should either be removed or flagged.
+Then, in the file being reviewed, flag any link whose URL appears in that list. These point to legacy v1 pages and should be removed or updated to point to the v2 equivalent if one exists.
 
 ### v1 release tracking (`app/_config/releases/ai-gateway/v1.yml`)
 
