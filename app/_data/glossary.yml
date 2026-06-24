@@ -62,8 +62,7 @@ definitions:
       A reference to how a principal is known in other systems. 
       Identities are used for lookup after authentication has already happened somewhere else (like a third-party IdP), or to link a principal to an entity in another Kong product, like a Consumer. 
     url: |
-      [[Principals and directories](/identity/principals/#identities)
-      
+      [Principals and directories](/identity/principals/#identities)
   - term: Insomnia plugin
     description: |
       Insomnia plugins can be used to extend the functionality of Insomnia with advanced features and customizable themes.
