@@ -10,7 +10,6 @@ works_on:
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
