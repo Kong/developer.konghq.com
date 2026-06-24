@@ -4,9 +4,7 @@ metadata:
   description: This page is an introduction to {{site.ai_gateway}}.
   products:
     - ai-gateway
-    - gateway
   works_on:
-    - on-prem
     - konnect
   tags:
     - ai
@@ -335,15 +333,15 @@ rows:
         For more information, see the full list of [Data Governance](/ai-gateway/ai-data-gov/) capabilities.
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-semantic-prompt-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-sanitizer
 
@@ -356,11 +354,11 @@ rows:
         {{site.ai_gateway}} supports policy-managed prompt capabilities that allow you to set defaults and manipulate prompts as they pass through [AI Model](/ai-gateway/entities/ai-model/) or [AI Agent](/ai-gateway/entities/ai-agent/) traffic.
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-template
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-decorator
 
@@ -373,32 +371,32 @@ rows:
     column_count: 3
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-azure-content-safety
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-aws-guardrails
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-gcp-model-armor
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-semantic-prompt-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-semantic-response-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-lakera-guard
             icon: ai-lakera.png
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-custom-guardrail
             icon: ai-custom-guardrail.png
@@ -413,11 +411,11 @@ rows:
         These policies can be configured independently of AI Proxy.
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-request-transformer
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-response-transformer
 
@@ -443,7 +441,7 @@ rows:
   - column_count: 2
     columns:
     - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-rag-injector
 
@@ -483,7 +481,7 @@ rows:
         For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-compressor
       - blocks:
@@ -495,15 +493,15 @@ rows:
             cta:
               url: /metering-and-billing/
               align: end
-      - blocks:
-        - type: card
-          config:
-            title: Save LLM usage costs with semantic load balancing
-            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
-            icon: /assets/icons/money.svg
-            cta:
-              url: /how-to/use-semantic-load-balancing
-              align: end
+      #- blocks:
+      #  - type: card
+      #    config:
+      #      title: Save LLM usage costs with semantic load balancing
+      #      description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
+      #      icon: /assets/icons/money.svg
+      #      cta:
+      #        url: /how-to/use-semantic-load-balancing
+      #        align: end
   - header:
       type: h2
       text: "Observability and metrics"
