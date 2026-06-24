@@ -1,4 +1,4 @@
-When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer) or a [Principal](/identity/principals/#configure-a-principal) {% new_in 3.15 %}, you can specify a `key`.
+When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer) or a [Principal identity](/identity/principals/#configure-a-principal) {% new_in 3.15 %}, you can specify a `key`.
 
 {% navtabs "set a key" %}
 {% navtab "Consumers" %}
@@ -10,13 +10,13 @@ When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer) or a
 {% navtab "Principals" %}
 
 - A POST request to the `/v2/directories/{directoryId}/principals/{principalId}/api-keys` endpoint
-- The Konnect UI
+- The {{site.konnect_short_name}} UI
 
 {% endnavtab %}
 {% endnavtabs %}
 
 
-When authenticating, Consumers and Principals must specify their key in either the query, body, or header:
+When authenticating, Consumers and principals must specify their key in either the query, body, or header:
 
 {% table %}
 columns:

@@ -113,7 +113,8 @@ format:
 This configuration:
 
 - Enables the plugin on `example-route`.
-- Sets Principal authentication by looking up API keys in the `kong-identity-directory` directory.
+- Sets principal authentication by looking up API keys in the `kong-identity-directory` directory.
+
 ## Validate
 
 By default, the Key Auth plugin reads the key from the `apikey` header.
@@ -126,7 +127,7 @@ url: /anything
 {% endvalidation %}
 <!--vale on-->
 
-Then, run the following command to test Principal authentication using the API key stored in `$KEY_SECRET`:
+Then, run the following command to test principal authentication using the API key stored in `$KEY_SECRET`:
 
 {% validation request-check %}
 url: '/anything'

@@ -1,14 +1,14 @@
-description: Authenticate Principals managed by Kong Identity by configuring the `principals` field in the Key Auth plugin.
+description: Authenticate principals managed by Kong Identity by configuring the `principals` field in the Key Auth plugin.
 extended_description: |
-  You can authenticate Principals managed by Kong Identity in {{site.konnect_short_name}} by configuring the `principals` field in the Key Auth plugin. Principals are grouped into regional directories.
+  You can authenticate principals managed by Kong Identity in {{site.konnect_short_name}} by configuring the `principals` field in the Key Auth plugin. Principals are grouped into regional directories.
 
   For a full tutorial of this example, see [Authenticate Principals with the Key Authentication plugin](/how-to/authenticate-principals-with-key-auth/).
 
-title: 'Authenticate Principals {% new_in 3.15 %}'
+title: 'Authenticate principals'
 
 requirements:
   - |
-    You have a Kong Identity directory containing Principals in {{site.konnect_short_name}}.
+    A Kong Identity directory that contains [principals](/identity/principals/) in {{site.konnect_short_name}}
 
 weight: 898
 
@@ -18,7 +18,7 @@ min_version:
 variables:
   directory_name:
     value: $DIRECTORY_NAME
-    description: The name of the Kong Identity directory to look up Principals in.
+    description: The name of the Kong Identity directory to look up principals in.
 
 config:
   key_names:
