@@ -29,6 +29,7 @@ definitions:
       Regional collection of principals. 
   Each {{site.konnect_short_name}} organization gets one directory per region.
     url: |
+      [Principals and directories](/identity/principals/)
 
   - term: Groups
     description: |
@@ -54,12 +55,14 @@ definitions:
       Represents an entity that authenticates to a Kong product. 
   The entity can be a human, a workload acting on behalf of a human, or a workload acting on behalf of itself (machine authentication).
     url: |
+      [Principals and directories](/identity/principals/)
 
   - term: Identity
     description: |
       A reference to how a principal is known in other systems. 
       Identities are used for lookup after authentication has already happened somewhere else (like a third-party IdP), or to link a principal to an entity in another Kong product, like a Consumer. 
     url: |
+      [[Principals and directories](/identity/principals/#identities)
       
   - term: Insomnia plugin
     description: |
