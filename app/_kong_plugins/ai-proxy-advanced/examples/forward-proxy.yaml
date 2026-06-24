@@ -38,8 +38,4 @@ variables:
     description: Password for the corporate forward proxy.
 
 tools:
-  - deck
-  - admin-api
   - konnect-api
-  - kic
-  - terraform
