@@ -218,4 +218,4 @@ The AI Prompt Compressor plugin applies structured compression to preserve essen
 
 ## Forward proxy support
 
-{% include ai-gateway/forward-proxy.md %}
+{% include md/ai-gateway/v2/forward-proxy.md %}

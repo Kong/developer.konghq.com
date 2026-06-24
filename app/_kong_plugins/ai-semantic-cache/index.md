@@ -185,4 +185,4 @@ The plugin respects cache control headers to determine if requests and responses
 
 ## Forward proxy support
 
-{% include ai-gateway/forward-proxy.md %}
+{% include md/ai-gateway/v2/forward-proxy.md %}

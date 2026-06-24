@@ -118,4 +118,4 @@ compose an Azure Content Safety text check by compiling all chat history, or jus
 
 ## Forward proxy support
 
-{% include ai-gateway/forward-proxy.md %}
+{% include md/ai-gateway/v2/forward-proxy.md %}

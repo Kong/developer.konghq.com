@@ -501,4 +501,4 @@ Use the [Admin API](/plugins/ai-rag-injector/api/) to ingest content with metada
 
 ## Forward proxy support
 
-{% include ai-gateway/forward-proxy.md %}
+{% include md/ai-gateway/v2/forward-proxy.md %}
