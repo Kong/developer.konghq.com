@@ -171,3 +171,7 @@ When a request is blocked, the log captures the violation reason, detector detai
   }
 }
 ```
+
+## Forward proxy support
+
+{% include ai-gateway/forward-proxy.md %}

@@ -131,3 +131,7 @@ The [`config.metrics`](./reference/#schema--config-metrics) field allows you to 
 * `masked`: Whether content was masked in the request or response.
 
 The values can be set to Lua expressions. You can also use the [`config.custom_metrics`](./reference/#schema--config-custom-metrics) field to define additional metrics.
+
+## Forward proxy support
+
+{% include ai-gateway/forward-proxy.md %}
