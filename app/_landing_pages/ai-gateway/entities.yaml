@@ -7,8 +7,9 @@ metadata:
   products:
     - ai-gateway
   works_on:
-    - on-prem
     - konnect
+  min_version:
+    ai-gateway: '2.0'
 
 rows:
   - header:
@@ -25,14 +26,14 @@ rows:
           - type: card
             config:
               title: "{{site.ai_gateway}}"
-              description: The top-level entity that owns Models, Providers, Policies, Agents, MCP Servers, and other AI-specific entities.
+              description: The top-level entity that owns AI Models, AI Providers, AI Policies, AI Agents, AI MCP Servers, and other AI-specific entities.
               cta:
                 text: "{{site.ai_gateway}} entity"
                 url: /ai-gateway/entities/ai-gateway/
       - blocks:
           - type: card
             config:
-              title: "{{site.ai_gateway}} Provider"
+              title: "AI Provider"
               description: Stores upstream provider credentials and connection configuration. Providers are reusable and are not model endpoints.
               cta:
                 text: AI Provider entity
@@ -40,10 +41,10 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Model
+              title: AI Model
               description: Defines a model endpoint and capability configuration used for model selection and policy targeting.
               cta:
-                text: Model entity
+                text: AI Model entity
                 url: /ai-gateway/entities/ai-model/
       - blocks:
           - type: card
@@ -65,7 +66,7 @@ rows:
           - type: card
             config:
               title: AI Policy
-              description: An AI Gateway plugin instance scoped globally or to a specific AI entity. Policy instances are independent.
+              description: A reusable policy configuration scoped globally or to a specific AI entity. Policy instances are independent.
               cta:
                 text: AI Policy entity
                 url: /ai-gateway/entities/ai-policy/
@@ -95,7 +96,7 @@ rows:
           - type: card
             config:
               title: AI Vault
-              description: Store and reference secrets used by AI Gateway entities and plugins.
+              description: Store and reference secrets used by AI Gateway entities.
               cta:
                 text: AI Vault entity
                 url: /ai-gateway/entities/ai-vault/
