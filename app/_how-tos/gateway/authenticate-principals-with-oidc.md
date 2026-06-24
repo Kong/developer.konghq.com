@@ -1,5 +1,5 @@
 ---
-title: Authenticate Principals with the OIDC plugin
+title: Authenticate Principals with the OpenID Connect plugin
 permalink: /how-to/authenticate-principals-with-oidc/
 content_type: how_to
 breadcrumbs:
@@ -8,7 +8,7 @@ related_resources:
   - text: Authentication
     url: /gateway/authentication/
 
-description: Use the OIDC plugin to allow Principals to authenticate.
+description: Use the OpenID Connect plugin to allow Principals to authenticate.
 products:
     - gateway
     - identity
@@ -34,7 +34,7 @@ tools:
     - deck
 
 tldr:
-  q: How do I authenticate Principals with OIDC?
+  q: How do I authenticate Principals with OpenID Connect?
   a: |
     SUMMARY HERE
 
