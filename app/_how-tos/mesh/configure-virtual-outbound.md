@@ -44,20 +44,18 @@ metadata:
   labels:
     kuma.io/sidecar-injection: enabled" | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ```sh
 kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n echo-example
 ```
-
-Wait for the pod to be ready:
-
-```sh
-kubectl wait --for=condition=Ready pod --all -n echo-example --timeout=300s
-```
+{: data-test-step="block" }
 
 {% validation kubernetes-wait-for %}
-kind: pod
-resource: echo-example
+kind: deployment
+resource: echo
+namespace: echo-example
+timeout: 120s
 {% endvalidation %}
 
 ## Configure a VirtualOutbound
@@ -87,6 +85,7 @@ spec:
       - name: svc
         tagKey: k8s.kuma.io/service-name" | kubectl apply -f -
 ```
+{: data-test-step="block" }
 {% endraw %}
 <!--vale on-->
 
@@ -102,18 +101,21 @@ Deploy a test container in the mesh to verify the VirtualOutbound is working:
 ```sh
 kubectl create deployment test-client --image nicolaka/netshoot -n echo-example -- /bin/bash -c "ping -i 60 localhost"
 ```
+{: data-test-step="block" }
 
-Wait for the test pod to be ready:
-
-```sh
-kubectl wait --for=condition=Available deployment test-client -n echo-example --timeout=300s
-```
+{% validation kubernetes-wait-for %}
+kind: deployment
+resource: test-client
+namespace: echo-example
+timeout: 120s
+{% endvalidation %}
 
 Send a request to the echo service using the virtual outbound hostname:
 
 ```sh
 kubectl exec -n echo-example deploy/test-client -- curl -s echo.mesh
 ```
+{: data-test-step="block" }
 
 You should see a response from the echo service, confirming that the VirtualOutbound DNS resolution is working:
 
