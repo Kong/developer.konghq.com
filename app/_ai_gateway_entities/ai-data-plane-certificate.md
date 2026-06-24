@@ -22,9 +22,9 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Provider entity
+  - text: AI Provider entity
     url: /ai-gateway/entities/ai-provider/
-  - text: Vault entity
+  - text: AI Vault entity
     url: /ai-gateway/entities/ai-vault/
 faqs:
   - q: Why is there no update operation?
