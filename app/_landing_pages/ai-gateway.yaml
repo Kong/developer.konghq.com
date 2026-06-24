@@ -248,7 +248,6 @@ rows:
       type: h2
       text: "Govern {{site.ai_gateway}} with entities and policies"
       description: |
-        Enforce authentication, rate limiting, guardrails, transformations, and governance by attaching AI Policies to your AI entities. Create Models, Providers, Agents, and MCP Servers to manage your AI traffic.
         Enforce authentication, rate limiting, guardrails, transformations, and governance by attaching AI Policies to your AI entities. Create AI Models, AI Providers, AI Agents, and AI MCP Servers to manage your AI traffic.
     column_count: 3
     columns:
