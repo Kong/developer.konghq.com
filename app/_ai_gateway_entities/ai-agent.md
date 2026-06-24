@@ -76,7 +76,7 @@ An AI Agent is a first-class {{site.ai_gateway}} entity that represents an upstr
 
 For `http` type AI Agents, requests are proxied without A2A-specific processing. For `a2a` type AI Agents, {{site.ai_gateway}} adds protocol-aware behavior on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry.
 
-AI Agents can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+AI Agents can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
 {% table %}
 columns:
@@ -243,9 +243,9 @@ When an upstream agent returns an agent card, the runtime rewrites the [`url`](#
 
 ## Logging and observability
 
-When Statistics logging is enabled, {{site.ai_gateway}} records structured A2A telemetry per request and exposes it in {{site.konnect_short_name}} analytics, attached log plugins, and OpenTelemetry when [{{site.base_gateway}} tracing](/gateway/tracing/) is configured. For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
+When Statistics logging is enabled, {{site.ai_gateway}} records structured A2A telemetry per request and exposes it in {{site.konnect_short_name}} analytics and attached log plugins. For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
 
-The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached logging plugins, and creates a `kong.a2a` child span when [{{site.base_gateway}} tracing](/gateway/tracing/) is configured.
+The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached logging Policies.
 
 {:.info}
 > When statistics logging is enabled, the runtime removes the `Accept-Encoding` request header
@@ -262,13 +262,13 @@ You can view A2A analytics in {{site.konnect_short_name}} Explorer and Dashboard
 
 ### Log output fields
 
-{% include /plugins/ai-a2a-proxy/log-output-fields.md %}
+{% include md/ai-gateway/v2/entities/log-output-fields.md %}
 
 ### OpenTelemetry span attributes
 
 When statistics logging is enabled and {{site.base_gateway}} tracing is configured, the runtime creates a `kong.a2a` child span with the following attributes:
 
-{% include /plugins/ai-a2a-proxy/otel-span-attributes.md %}
+{% include md/ai-gateway/v2/entities/otel-span-attributes.md %}
 
 ### Task states
 
