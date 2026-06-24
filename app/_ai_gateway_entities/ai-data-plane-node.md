@@ -24,12 +24,12 @@ related_resources:
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} entity"
     url: /ai-gateway/entities/ai-gateway/
-  - text: Data Plane Certificate entity
+  - text: AI Data Plane Certificate entity
     url: /ai-gateway/entities/ai-data-plane-certificate/
 faqs:
-  - q: How do I register a new Data Plane node?
+  - q: How do I register a new AI Data Plane node?
     a: |
-      Data Plane nodes register themselves when they start and establish a connection to the 
+      AI Data Plane nodes register themselves when they start and establish a connection to the 
       {{site.ai_gateway}} using a client certificate. Once registered, the node appears in 
       the Konnect {{site.ai_gateway}} UI and is accessible via the API.
 
