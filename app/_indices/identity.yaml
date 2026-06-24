@@ -12,3 +12,4 @@ sections:
       - path: /how-to/configure-kong-identity-oauth-introspection/
       - path: /how-to/configure-kong-identity-upstream-oauth/
       - path: /how-to/kong-identity-dcr/
+      - path: /how-to/authenticate-principals-with-basic-authentication/
