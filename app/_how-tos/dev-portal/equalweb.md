@@ -47,45 +47,46 @@ Before you configure the integration in {{site.konnect_short_name}}, you need yo
 1. In the {{site.konnect_short_name}} sidebar, expand **{{site.dev_portal}}**.
 1. Click **Portals**.
 1. Click your {{site.dev_portal}}.
-1. Copy your {{site.dev_portal}} domain. This is the URL you'll register in EqualWeb. You can use either the default {{site.konnect_short_name}}-generated domain or your custom domain if you've configured one.
+1. Copy your {{site.dev_portal}} domain. This is the URL you'll register in EqualWeb.
 1. In your EqualWeb account, click **Add new site**.
 1. In the **Insert your domain** field, enter your {{site.dev_portal}} domain.
 1. Click **Continue to customize design**.
 1. Configure the widget design settings as needed.
 1. Click **Continue to install widget**.
-1. Click **Collapse** for your widget code.
-1. Copy your site key from the `get sitekey (){ return "1234..."}` field. For example: `79ad2e1ec52e63565e254555077aaaec`.
+1. Click **Collapse** for your widget code. This will expand the widget configuration.
+1. Copy your site key from the `get sitekey (){ return "79ad2e1..."}` field. For example: `79ad2e1ec52e63565e254555077aaaec`.
 1. (Optional) If you configured the widget design, copy the configuration. For example:
    ```json
    "Position": "left",
-    "Menulang": "EN",
-    "draggable": true,
-    "btnStyle": {
-        "vPosition": [
-            "80%",
-            "80%"
-        ],
-        "margin": [
-            "0",
-            "0"
-        ],
-        "scale": [
-            "0.5",
-            "0.5"
-        ],
-        "color": {
-            "main": "#1c4bb6",
-            "second": "#ffffff"
-        },
-        "icon": {
-            "outline": false,
-            "outlineColor": "#ffffff",
-            "type":  1 ,
-            "shape": "circle"
-        }
-    }
+   "Menulang": "EN",
+   "draggable": true,
+   "btnStyle": {
+       "vPosition": [
+           "80%",
+           "80%"
+       ],
+       "margin": [
+           "0",
+           "0"
+       ],
+       "scale": [
+           "0.5",
+           "0.5"
+       ],
+       "color": {
+           "main": "#1c4bb6",
+           "second": "#ffffff"
+       },
+       "icon": {
+           "outline": false,
+           "outlineColor": "#ffffff",
+           "type": 1,
+           "shape": "circle"
+       }
+   }
    ```
    {:.collapsible}
+   This won't be valid JSON, but when you add it to the {{site.dev_portal}} integration configuration, you'll add `{}` to make it valid.
 
 ## Configure the EqualWeb integration
 
@@ -99,7 +100,7 @@ Configure the EqualWeb integration in your {{site.dev_portal}} settings.
 1. Click **EqualWeb**.
 1. Click the **Enabled** toggle.
 1. In the **Site key**, enter the site key from the EqualWeb widget you configured previously. For example: `79ad2e1ec52e63565e254555077aaaec`.
-1. (Optional) If you configured the widget design in EqualWeb, click **Advanced configurations** and enter the JSON configuration in the configuration field with opening and closing brackets. For example:
+1. (Optional) If you configured the widget design in EqualWeb, click **Advanced configurations** and enter the JSON configuration in the configuration field with opening and closing brackets (`{}`). For example:
    ```json
    {
     "Position": "left",
