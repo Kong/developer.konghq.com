@@ -1,4 +1,4 @@
-require 'nokogiri'
+require 'nokolexbor'
 
 module SectionWrapper
   class Base
@@ -22,69 +22,87 @@ module SectionWrapper
 
     private
 
+    # Build the output as a string instead of mutating the parsed doc.
+    # Cross-fragment node moves trigger a use-after-free in Nokolexbor; this
+    # avoids the issue entirely by only reading from the parsed tree.
+    #
+    # Boundaries: an h2 starts a new section; a pre-wrapped `.heading-section`
+    # element (e.g. an `{% entity_example %}` block) is emitted as-is and
+    # flushes any open section. Otherwise content accumulates into the
+    # current h2 section, or into the pre-h2 bucket if no h2 is open yet.
     def wrap_sections(content)
-      doc = Nokogiri::HTML::DocumentFragment.parse(content)
+      doc = Nokolexbor::DocumentFragment.parse(content)
+      return build_wrapper_string('', '', doc.inner_html) unless any_boundary?(doc.children)
 
-      first_h2 = doc.at_css('h2')
-
-      if first_h2
-        # Wrap content before the first h2
-        content = wrap_content(doc, doc.children.take_while { |node| node != first_h2 })
-
-        doc.children.first.add_previous_sibling(content) if content && content.children.any?
-
-        doc.css('h2').each do |h2|
-          next if h2.ancestors('.heading-section').any?
-
-          title = h2.content
-          slug = h2['id']
-
-          wrapper = build_wrapper(section_title(h2, slug, title), h2['data-deployment-topology'])
-
-          # Move content between this h2 and the next one into the wrapper
-          move_sibling_content_into_wrapper(h2, wrapper)
-
-          # Replace the original h2 with the wrapper
-          h2.replace(wrapper)
+      out, pre, h2, body = +'', [], nil, nil
+      doc.children.each do |node|
+        next if whitespace_only_text?(node)
+        if heading?(node, 'h2')
+          out << flush_pending(pre, h2, body); pre = []; h2 = node; body = []
+        elsif pre_wrapped_section?(node)
+          out << flush_pending(pre, h2, body); out << node.to_html
+          pre = []; h2 = nil; body = nil
+        elsif h2
+          body << node
+        else
+          pre << node
         end
-      else
-        wrapper = wrap_content(doc, doc.children)
-        doc.children = wrapper.children
       end
-
-      # Return the modified HTML as a string
-      doc.to_html
+      out << flush_pending(pre, h2, body)
+      out
     end
 
-    def wrap_content(doc, nodes)
-      return if nodes.empty?
-
-      wrapper = build_wrapper
-      nodes.each { |node| wrapper.at_css('.content').add_child(node) }
-      wrapper
+    def flush_pending(pre, h2, body)
+      return build_section_string(h2, body) if h2
+      return build_wrapper_string('', '', nodes_to_html(pre)) if pre.any?
+      ''
     end
 
-    def build_wrapper(section_title = '', _ = '')
-      Nokogiri::HTML::DocumentFragment.parse <<-HTML
+    def any_boundary?(nodes)
+      nodes.any? { |n| heading?(n, 'h2') || pre_wrapped_section?(n) }
+    end
+
+    def pre_wrapped_section?(node)
+      return false unless node.element?
+      (node['class'] || '').split(/\s+/).include?('heading-section')
+    end
+
+    def whitespace_only_text?(node)
+      return false if node.element?
+      node.to_html.strip.empty?
+    end
+
+    def heading?(node, tag)
+      node&.element? && node.name == tag
+    end
+
+    def build_section_string(h2, body_nodes)
+      build_wrapper_string(
+        section_title(h2, h2['id'], h2.content),
+        h2['data-deployment-topology'],
+        wrap_section_body(body_nodes)
+      )
+    end
+
+    def wrap_section_body(nodes)
+      nodes_to_html(nodes)
+    end
+
+    def nodes_to_html(nodes)
+      nodes.map(&:to_html).join
+    end
+
+    def section_title(h2, _slug, _title)
+      h2.to_html
+    end
+
+    def build_wrapper_string(title_html, _topology, body_html)
+      <<~HTML
         <div class="flex flex-col gap-4 heading-section">
-            #{section_title}
-            <div class="content"></div>
+          #{title_html}
+          <div class="content">#{body_html}</div>
         </div>
       HTML
-    end
-
-    def move_sibling_content_into_wrapper(h2, wrapper)
-      current_node = h2.next_element
-
-      while current_node && current_node.name != 'h2' && !current_node.matches?('.heading-section')
-        next_node = current_node.next_element
-        wrapper.at_css('.content').add_child(current_node)
-        current_node = next_node
-      end
-    end
-
-    def section_title(h2, slug, title)
-      h2.to_html
     end
   end
 end

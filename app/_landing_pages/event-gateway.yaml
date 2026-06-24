@@ -256,9 +256,9 @@ rows:
                     - outcome: |
                         Replace legacy auth methods with modern enterprise identity standards your team already uses
                       feature: |
-                        [OAuth](/kong-identity/)
+                        [OAuth](/identity/)
                       guide: |
-                        [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                        [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                     - outcome: |
                         Know exactly which teams and topics are driving cluster load, in real time, via in-platform dashboards or exported to your preferred tooling
                       feature: |
@@ -284,9 +284,9 @@ rows:
                     - outcome: |
                         Automatically enforce access rules based on identity metadata with no manual ACL management
                       feature: |
-                        [OAuth](/kong-identity/)
+                        [OAuth](/identity/)
                       guide: |
-                        [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                        [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                 - usecase: |
                     **Improve the developer experience** to increase adoption and achieve faster time-to-value
                   outcomes:
@@ -300,9 +300,9 @@ rows:
                     - outcome: |
                         Onboard apps using OAuth flows developers already know, with no Kafka expertise required
                       feature: |
-                        [OAuth](/kong-identity/)
+                        [OAuth](/identity/)
                       guide: |
-                        [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                        [Set up {{site.event_gateway_short}} with {{site.identity}} OAuth](/event-gateway/kong-identity-oauth/)
                     - outcome: |
                         Let any developer produce and consume Kafka events using standard REST - no Kafka client needed
                       feature: |

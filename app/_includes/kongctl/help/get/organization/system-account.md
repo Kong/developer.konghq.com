@@ -8,6 +8,7 @@ Aliases:
 
 Available Commands:
   roles       List organization system account role assignments
+  spat        List or get Konnect system account access tokens
   teams       List organization system account team memberships
 
 

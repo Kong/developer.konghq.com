@@ -758,6 +758,11 @@ As a result, the following are prohibited:
 * SSL version 3
 Additionally, compression is disabled.
 
+#### OpenResty header enforcement
+
+OpenResty was bumped from 1.21.4.2 to 1.25.3.1, picking up stricter header validation from Nginx.
+Starting from 1.23.2, Nginx strictly enforces [RFC 9112](https://datatracker.ietf.org/doc/html/rfc9112) and treats upstream responses that contain duplicate `Content-Length` headers, duplicate `Transfer-Encoding` headers, or both headers as invalid, returning a `502 Bad Gateway`.
+
 #### Kong Manager Enterprise
 
 As of {{site.base_gateway}} 3.6, Kong Manager uses the session management mechanism in the OpenID Connect plugin.

@@ -44,6 +44,29 @@ kongctl delete -f config.yaml
 > **Caution**: `delete` plans to delete all resources specified in the input
 > configuration. Always verify the changes before approving execution.
 
+kongctl also provides the following tools for directly deleting individual resources:
+
+{% table %}
+columns:
+  - title: Command
+    key: command
+  - title: Description
+    key: description
+rows:
+  - command: |
+      [kongctl delete konnect](/kongctl/delete/konnect/)
+    description: "Delete {{site.konnect_short_name}} tokens."
+  - command: |
+      [kongctl delete organization](/kongctl/delete/organization/)
+    description: "Manage {{site.konnect_short_name}} system account resources."
+  - command: |
+      [kongctl delete pat](/kongctl/delete/pat/)
+    description: "Delete a {{site.konnect_short_name}} personal access token."
+  - command: |
+      [kongctl delete spat](/kongctl/delete/spat/)
+    description: "Delete a {{site.konnect_short_name}} system account access token."
+{% endtable %}
+
 ## Command usage
 
 {% include_cached /kongctl/help/delete/index.md %}

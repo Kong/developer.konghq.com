@@ -24,14 +24,19 @@ related_resources:
 
 
 
-When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
-The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
+When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that are part of the request-response flow. 
+The following sections describe the spans available in {{site.konnect_short_name}} Debugger.
+
+On this page, the term "3p" or "3rd party" refers to any network interaction outside the main `client → Kong → upstream` request flow, such as DNS lookups or calls from Kong to external services like auth providers, Redis, or metadata APIs.
+
 <!--vale off-->
+
 ### kong
 
 The root span.
 
 This span has the following attributes:
+
 {% table %}
 columns:
   - title: Name
@@ -43,64 +48,105 @@ rows:
     description: Full url, without query parameters
   - name: "`client.address`"
     description: |
-        Remote address of the client making the request. This considers forwarded addresses in cases when a load balancer is in front of Kong. Note: this requires configuring the real_ip_header and trusted_ips global configuration options.
+        Remote address of the actual client making the request, including any client that is communicating through a proxy, if possible.
+        <br><br>
+
+        > **Note:** This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
   - name: "`client.port`"
     description: |
-        Remote port of the client making the request. This considers forwarded ports in cases when a load balancer is in front of Kong. Note: this requires configuring the real_ip_header and trusted_ips global configuration options.
+        Remote port of the client making the request, including any client that is communicating through a proxy, if possible.
+        <br><br>
+
+        > **Note:** This requires configuring [`trusted_ips`](/gateway/configuration/#trusted-ips) and may require configuring [`real_ip_header`](/gateway/configuration/#real_ip_header).
   - name: "`network.peer.address`"
-    description: IP of the component that is connecting to Kong
+    description: IP of the network peer that is connecting to Kong
   - name: "`network.peer.port`"
-    description: Port of the component that is connecting to Kong
+    description: Port of the network peer that is connecting to Kong
   - name: "`server.address`"
-    description: Kong's DNS name or IP used in client connection
+    description: |
+      {{site.base_gateway}} can listen on multiple IP addresses. This is the IP address at which Kong received the request.
   - name: "`server.port`"
-    description: Kong's public port
+    description: The port at which Kong received the request.
   - name: "`network.protocol.name`"
-    description: HTTP, gRPC, WS, Kafka, etc.
+    description: |
+      Name of the network protocol. Debugger only supports `http`.
   - name: "`http.request.method`"
     description: HTTP request method
-  - name: "`http.request.body.size`"
-    description: Request content length or equivalent in bytes
   - name: "`proxy.kong.request.id`"
-    description: Unique id for each request
+    description: |
+      Unique ID created by {{site.base_gateway}} for each request. [Useful for debugging](/gateway/debug-requests/#x-kong-request-id-header).
   - name: "`proxy.kong.request.time`"
-    description: Request time as measured by Nginx ($request_time)
+    description: Time taken to process this request as measured from reading the first byte from the client, to writing the last byte to the client. Logging handler time is not part of this calculation.
+  - name: "`proxy.kong.http.request.body.size`"
+    description: Request body length in bytes. Request header size is not included.
   - name: "`http.request.size`"
-    description: Request body size and request headers size in bytes
-  - name: "`http.response.body.size`"
-    description: Response content length or equivalent in bytes
+    description: Request body size and request headers size in bytes.
+  - name: "`proxy.kong.http.response.body.size`"
+    description: Response body length in bytes. Response header size is not included.
   - name: "`http.response.size`"
-    description: Response body size and response headers size in bytes
-  - name: "`kong.request.id`"
-    description: Unique ID for each request
+    description: Response body size and response headers size in bytes.
   - name: "`url.scheme`"
     description: Protocol identifier
   - name: "`network.protocol.version`"
-    description: Version of the HTTP protocol used in establishing connection [1.2, 2.0]
-  - name: "`tls.client.server_name`"
-    description: SNI
-  - name: "`http.request.header.host`"
-    description: Host header if present. This can be different from the SNI.
-  - name: "`proxy.kong.consumer_id`"
-    description: Authenticated Consumer ID if present
-  - name: "`proxy.kong.upstream_id`"
-    description: Resolved Upstream ID
-  - name: "`proxy.kong.upstream_status_code`"
-    description: status code returned by Upstream
+    description: |
+      Version of the HTTP protocol used in establishing connection [1.2, 2.0].
+  - name: "`proxy.kong.request.host`"
+    description: |
+      The value of `Host` as determined by {{site.base_gateway}} in the following order of precedence: 
+       1. Hostname from the request line.
+       1. Hostname from the `Host` request header field.
+       1. Server name matching a request.
+  - name: "`proxy.kong.consumer.id`"
+    description: Authenticated Consumer ID, if present.
+  - name: "`proxy.kong.upstream.id`"
+    description: Resolved Upstream ID.
+  - name: "`proxy.kong.upstream.status_code`"
+    description: |
+      Status code returned by the upstream to {{site.base_gateway}}.
   - name: "`http.response.status_code`"
-    description: Status code sent back by Kong
+    description: |
+      Status code sent back by {{site.base_gateway}} to client.
+  - name: "`proxy.kong.latency.3p.dns.total_io`"
+    description: |
+      Time spent performing synchronous DNS I/O operations.
+  - name: "`proxy.kong.latency.3p.http_client.total_io`"
+    description: |
+      Time spent on third party HTTP calls (for example, talking to an auth server or fetching metadata from a external HTTP API).
+  - name: "`proxy.kong.latency.3p.redis.total_io`"
+    description: Time spent on executing Redis operations and performing network I/O to redis
+  - name: "`proxy.kong.latency.3p.tcpsock.total_io`"
+    description: |
+      Time spent performing raw TCP socket I/O operations that are not using the internal instrumented DNS, HTTP or Redis clients.
+  - name: "`proxy.kong.latency.3p.total_io`"
+    description: Total time spent performing all third-party I/O operations (DNS + Redis + HTTP + Raw)
+  - name: "`proxy.kong.latency.client`"
+    description: |
+      Time spent waiting for the client to send or receive data. This attribute includes time spent waiting for client to finish TLS handshake (span `tls_handshake`), send all HTTP headers (span `read_client_http_headers`), send the request body (span `read_client_http_body`) and the time taken for the client to read the full response (span `wait_for_client_read`).
+  - name: "`proxy.kong.latency.upstream.read_headers_duration`"
+    description: Time spent reading response headers from the upstream.
+  - name: "`proxy.kong.latency.upstream.read_body_duration`"
+    description: Time spent reading the response body from the upstream.
   - name: "`proxy.kong.latency.upstream`"
-    description: Time between the connection to the upstream and the last byte of response
+    description: |
+      Time between the connection to the upstream and the last byte of the response. 
+      This factors in attempts to connect to a healthy upstream if multiple upstreams were configured.
+      See the span `upstream.selection` to see a breakdown of each failed attempt and the successful attempt.
   - name: "`proxy.kong.latency.total`"
     description: Time between the first byte into Kong and the last byte out of Kong
   - name: "`proxy.kong.latency.internal`"
-    description: Time taken by Kong to process the request. Excludes client and upstream read/write times, and i/o times.
-  - name: "`proxy.kong.latency.net_io_timings`"
-    description: Array containing `ip`, `connect_time`, and `rw_time`. I/o outside of the request context is not considered.
-  - name: "`proxy.kong.client_KA`"
-    description: Whether the downstream used a KeepAlive connection.
+    description: |
+      Time taken by {{site.base_gateway}} to process the request. Excludes client and upstream read/write times, and third party I/O. This is the actual contribution of {{site.base_gateway}} itself to the latency of the request.
+  - name: "`http.request.header.connection`"
+    description: |
+      The value of the `Connection` header if present. 
+      A value of `close` implies that the client does not want to use `KeepAlive`.
+  - name: "`proxy.kong.client.connection.request_count`"
+    description: |
+      The total number of HTTP requests sent by the client over the same reused underlying TCP connection.
   - name: "`tls.resumed`"
-    description: Whether the TLS session resumed.
+    description: |
+      Whether the TLS session was resumed.
+      A value of `true` implies that the client is reusing an existing TLS (and TCP) connection.
   - name: "`tls.client.subject`"
     description: x509 client DN (if mTLS).
   - name: "`tls.server.subject`"
@@ -111,7 +157,8 @@ rows:
 <!--vale on-->
 ### kong.phase.certificate
 
-A span capturing the execution of the `certificate` phase of request processing. Any plugins configured for running in this phase will show up as individual child spans.
+A span capturing the execution of the `certificate` phase of request processing. Any plugins configured for running in this phase will show up as individual child spans. 
+This phase runs before the TLS handshake. Plugins usually use this phase to set up the server certificate they want to present to clients.
 
 ### kong.certificate.plugin.plugin_name
 
@@ -126,8 +173,8 @@ columns:
   - title: Description
     key: description
 rows:
-  - name: "`proxy.kong.plugin.instance_id`"
-    description: Instance ID of the plugin configuration that ran
+  - name: "`proxy.kong.plugin.id`"
+    description: ID of the plugin configuration that ran.
   - name: |
       `proxy.kong.plugin.http.response.status_code` {% new_in 3.14 %}
     description: HTTP status code set by the plugin when exiting early via `kong.response.exit()`. Only present when the plugin terminates the request.
@@ -140,7 +187,7 @@ rows:
 {{instance_id}}
 
 ## kong.tls_handshake
-A span that captures the execution of the TLS handshake between the client and Kong. This span includes any I/O operations involved in the handshake, which may be prolonged due to slow client behavior.
+A span that captures the TLS handshake between the client and Kong. This span includes any I/O operations involved in the handshake. Long span times are almost always indicative of slow clients, clients that are many hops away or are connecting over high latency connections.
 
 ### kong.read_client_http_headers
 A span capturing the time taken to read HTTP headers from the client. 
@@ -172,14 +219,17 @@ A span capturing the execution of a plugin configured to run in the `rewrite` ph
 This span has the following attributes:
 {{instance_id}}
 
-### kong.io.function
+### kong.io.<network_transport>.<operation>
 A span capturing network i/o timing that occurs during plugin execution or other request processing. 
 
 Can be one of:
 * `kong.io.http.request`: Requests done by the internal http client during the flow
 * `kong.io.http.connect`: Connections done by the internal http client during the flow
-* `kong.io.redis.function`: Redis functions
-* `kong.io.socket.function`: Functions called on the internal nginx socket
+* `kong.io.redis.<function>`: Redis functions
+* `kong.io.socket.connect`: Connections on the internal Nginx socket
+* `kong.io.socket.sslhandshake`: SSL handshake operations on the internal Nginx socket
+* `kong.io.socket.send`: Send operations on the internal Nginx socket
+* `kong.io.socket.receive`: Receive operations on the internal Nginx socket
 
 Examples:
 * OIDC plugin making calls to IdP
@@ -250,7 +300,9 @@ columns:
   - title: Description
     key: description
 rows:
-  - name: "`proxy.kong.dns.entry`"
+  - name: "`proxy.kong.dns.domain`"
+    description: The domain name that was looked up
+  - name: "`proxy.kong.dns.tries`"
     description: A list of DNS attempts, responses and errors if any
 {% endtable %}
 
@@ -274,9 +326,9 @@ rows:
 {% endtable %}
 
 
-### kong.upstream.find_upstream
+### kong.find_upstream
 A span capturing the attempt to verify a specific upstream. 
-{{site.base_gateway}} attempts to open a TCP connection (if not `KeepAlive` cache is found), do a TLS handshake and send down the HTTP headers. 
+{{site.base_gateway}} attempts to open a TCP connection (if not `KeepAlive` cache is found), and performs a TLS handshake if the upstream is configured to use TLS. 
 If all of this succeeds, the upstream is healthy and Kong will finish sending the full request and wait for a response. 
 If any of the step fails, {{site.base_gateway}} will switch to the next target and try again.
 
@@ -354,3 +406,14 @@ This span has the following attributes:
 
 ### kong.wait_for_client_read
 A span that measures the time Kong spends finishing the response write to the client. This duration may be extended for slow-reading clients, resulting in a longer span.
+
+### kong.phase.log
+A span capturing the execution of the `log` phase. Any plugins configured for running in this phase will show up as individual child spans.
+
+### kong.analytics.log_request
+A span capturing the execution of analytics logging. 
+This span represents the time taken to prepare and serialize analytics data during each request's log phase. 
+That data will be later exported to {{site.konnect_short_name}} in batches, asynchronously.
+
+### kong.log.plugin.plugin_name
+A span capturing the execution of a plugin configured to run in the `log` phase. Multiple such spans can occur in a trace.

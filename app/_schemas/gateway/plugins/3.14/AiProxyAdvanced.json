@@ -1319,5 +1319,25 @@
   },
   "required": [
     "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "embeddings",
+      "paths": [
+        "config.embeddings"
+      ]
+    },
+    {
+      "name": "model",
+      "paths": [
+        "config.targets[]"
+      ]
+    },
+    {
+      "name": "vectordb",
+      "paths": [
+        "config.vectordb"
+      ]
+    }
   ]
 }

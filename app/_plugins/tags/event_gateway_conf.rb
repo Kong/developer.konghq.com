@@ -2,6 +2,7 @@
 
 require 'json'
 require_relative '../monkey_patch'
+require_relative '../utils/json_schema_deref'
 
 module Jekyll
   class EventGatewayConf < Liquid::Tag # rubocop:disable Style/Documentation
@@ -11,7 +12,8 @@ module Jekyll
       @page = context.environments.first['page']
 
       context.stack do
-        context['schema'] = @site.data.dig('event-gateway-bootstrap-schema', release(@site, @page).gsub('.', ''))
+        raw = @site.data.dig('event-gateway-bootstrap-schema', release(@site, @page).gsub('.', ''))
+        context['schema'] = Jekyll::Utils::JsonSchemaDeref.new(raw).resolve
         Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end

@@ -18,7 +18,7 @@ rows:
     columns:
       - header:
           type: h2
-          text: What is the decK?
+          text: What is decK?
         blocks:
         - type: text
           config: |

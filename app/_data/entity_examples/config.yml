@@ -108,6 +108,7 @@ formats:
       listener:        '/listeners'
       schema_registry: '/schema-registries'
       static_key:      '/static-keys'
+      tls_trust_bundle: '/tls-trust-bundles'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'

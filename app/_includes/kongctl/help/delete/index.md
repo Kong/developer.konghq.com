@@ -1,6 +1,7 @@
 ```ansi
 Usage:
   kongctl delete [flags]
+  kongctl delete [command]
 
 Aliases:
   delete, d, D, del, rm, DEL, RM
@@ -15,11 +16,17 @@ Examples:
   # Execute a reviewed delete plan without prompting
   kongctl delete --plan delete-plan.json --auto-approve
 
+Available Commands:
+  konnect      Delete Konnect tokens
+  organization Get current organization information
+  pat          Delete a Konnect personal access token
+  spat         Delete a Konnect system account access token
+
 
 Flags:
       --auto-approve                      Skip confirmation prompt
       --base-dir string                   Base directory boundary for !file resolution.
-                                          Defaults to each -f source root (file: its parent dir, dir: the directory itself). For stdin, defaults to CWD.
+                                          Defaults to each -f source root (file: its parent dir, dir: the directory itself). For stdin and URLs, defaults to CWD.
                                           - Config path: [ konnect.declarative.base-dir ]
       --base-url string                   Base URL for Konnect API requests.
                                           - Config path: [ konnect.base-url ]
@@ -32,7 +39,7 @@ Flags:
                                           - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --dry-run                           Preview deletions without executing them
       --execution-report-file string      Save execution report as JSON to file
-  -f, --filename strings                  Filename or directory to files to use to create the resource (can specify multiple)
+  -f, --filename strings                  File, directory, URL, or '-' to use to create the resource (can specify multiple)
       --force                             Force deletion even when related resources exist (not configurable)
   -h, --help                              help for delete
       --http-retry-backoff-factor float   Exponential backoff growth factor for retries (for example: 2.0).
@@ -69,6 +76,11 @@ Flags:
   -R, --recursive                         Process the directory used in -f, --filename recursively
       --region string                     Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                           - Config path: [ konnect.region ]
+      --remote-file-auth string           Authentication mode for remote -f URL sources (auto|none).
+                                          In auto mode, kongctl sends the current Konnect bearer token only to HTTPS Konnect hosts.
+                                          - Config path: [ konnect.declarative.remote-file-auth ] (default "auto")
+  -s, --remote-file-save-dir string       Save remote -f URL sources into this local directory before loading
+  -F, --remote-file-save-force            Overwrite existing files when saving remote -f URL sources with --remote-file-save-dir
       --require-any-namespace             Require explicit namespace on all resources (via kongctl.namespace or _defaults.kongctl.namespace).
                                           Cannot be used with --require-namespace.
                                           - Config path: [ konnect.declarative.require-any-namespace ]
@@ -79,5 +91,7 @@ Flags:
                                             --require-namespace=foo,bar                      # Allow 'foo' or 'bar' (comma-separated)
                                             --require-namespace=foo --require-namespace=bar  # Allow 'foo' or 'bar' (repeated flags)
                                           - Config path: [ konnect.declarative.require-namespace ]
+
+Use "kongctl delete [command] --help" for more information about a command.
 
 ```

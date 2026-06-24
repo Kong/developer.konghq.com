@@ -1,0 +1,34 @@
+---
+title: kongctl get catalog
+description: "Get API catalog details."
+content_type: reference
+layout: reference
+
+
+works_on:
+  - on-prem
+  - konnect
+
+tools:
+  - kongctl
+
+breadcrumbs:
+  - /kongctl/
+  - /kongctl/get/
+
+related_resources:
+  - text: kongctl get commands
+    url: /kongctl/get/
+---
+
+Get API catalog details.
+
+## Command usage
+
+{% include_cached /kongctl/help/get/catalog/index.md %}
+
+### kongctl get catalog service
+
+Get catalog service.
+
+{% include_cached /kongctl/help/get/catalog/service.md %}

@@ -196,7 +196,10 @@ While you are creating or editing an API document, you can also choose to publis
 To create a new API document, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
+1. Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. 
+1. Click the **Documentation** tab, and then click **New document** to create a new Markdown document. 
+
+If you want to upload an existing Markdown documentation file, use the API or Terraform.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-document):
@@ -265,12 +268,43 @@ To upload an API image, do the following:
 
 ## Allow developers to consume your API
 
-You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) to allow developers to create applications and generate credentials or API keys. This is available to data planes running {{site.base_gateway}} 3.6 or later.
+You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) {% new_in 3.6 %} or control plane {% new_in 3.13 %} to allow developers to create applications and generate credentials or API keys. 
 
-When you link a service with an API, {{site.konnect_short_name}} automatically adds the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin is responsible for applying authentication and authorization on the Service. The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate. While you can't directly modify the KAA plugin as it's managed by {{site.konnect_short_name}}, you can modify the plugin's behavior by adding JSON to the advanced configuration of your application auth strategy. 
+{% include /dev-portal/kaa-vs-ace.md %}
 
-The following diagram shows how the KAA plugin manages authorization and authentication on the linked Service:
+The following diagram shows how the plugins manage authorization and authentication on the linked Service or control plane:
+{% navtabs "auth-plugin" %}
+{% navtab "ACE" %}
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    actor Client
+    Client->>Kong: 
+    Kong->>Auth plugins: Send request
+    Auth plugins->>Auth plugins: Run configured auth plugins (like Key Auth)
 
+    note right of Auth plugins: ACE runs after all other auth plugins.<br/>If a prior plugin rejects the request, ACE does not run.
+
+    Auth plugins->>ACE plugin: Forward request
+
+    alt Request matches a defined operation
+        ACE plugin->>ACE plugin: Authenticate and authorize request<br/>using data pushed from Konnect
+        ACE plugin->>Upstream: Forward authorized request
+        Upstream-->>ACE plugin: Response
+        ACE plugin-->>Kong: 
+        Kong-->>Client: 
+    else `match_policy: if_present` (no match)
+        ACE plugin-->>Kong: Pass through untouched
+        Kong-->>Client: 
+        note right of ACE plugin: If anonymous is set, unauthenticated requests<br/>also pass through. Use Request Termination<br/>to block them if needed.
+    else `match_policy: required` (no match)
+        ACE plugin-->>Kong: Reject with 404
+        Kong-->>Client: 404
+    end
+{% endmermaid %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "KAA" %}
 <!--vale off-->
 {% mermaid %}
 sequenceDiagram
@@ -280,14 +314,14 @@ sequenceDiagram
     Konnect Application Auth->>Konnect Application Auth: Authenticate the request based on the auth strategy
 
     rect rgb(191, 223, 255)
-    note right of Konnect Application Auth: OIDC Strategy.
+    note right of Konnect Application Auth: OIDC Strategy
     Konnect Application Auth-->> OIDC Plugin: 
     OIDC Plugin->> IdP: Sends credentials request
     IdP ->> OIDC Plugin: return JWT token
     OIDC Plugin-->>Konnect Application Auth:
     end
     rect rgb(191, 223, 255)
-    note right of Konnect Application Auth: Key Auth Strategy.
+    note right of Konnect Application Auth: Key Auth Strategy
     Konnect Application Auth->>Konnect Application Auth: Authenticate Api Key
     end
 
@@ -296,13 +330,24 @@ sequenceDiagram
     Kong->>Client:
  {% endmermaid %}
  <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
-If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your {{site.dev_portal}}](/dev-portal/self-service/).
+If you want the Gateway Service or control plane to restrict access to the API, [configure developer and application registration for your {{site.dev_portal}}](/dev-portal/self-service/).
 
-To link your API to a Gateway Service, do one of the following:
+To link your API to a Gateway Service or control plane, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis), and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
+1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/catalog).
+1. From the Catalog sidebar, click **APIs**.
+1. Click your API. 
+1. Click the **Gateway** tab.
+1. Click **Link gateway**.
+1. From the **Control plane** dropdown menu, select your control plane.
+1. Select the Gateway link type:
+   1. To link to a single Service on the control plane and use the KAA plugin, click **Link to a single gateway service** and select the Service you want to link to from the **Gateway service** dropdown menu.
+   1. To link to the control plane and use the ACE plugin, click **Link to a control plane** and add the ACE plugin by clicking **Add plugin**.
+1. Click **Link gateway**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation):
@@ -317,6 +362,8 @@ body:
         id: $SERVICE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
+
+If you want to link to a control plane instead of a Gateway Service, specify `control_plane.control_plane_id` in the request body and configure the [ACE plugin](/plugins/ace/examples/).
 {% endnavtab %}
 {% navtab "Terraform" %}
 Use the [`konnect_api_implementation` resource](https://registry.terraform.io/providers/Kong/konnect/latest/docs/resources/api_implementation):
@@ -333,11 +380,9 @@ resource "konnect_api_implementation" "my_apiimplementation" {
 }
 ' >> main.tf
 ```
+If you want to link to a control plane instead of a Gateway Service, specify `control_plane.control_plane_id` in the request body and configure the [ACE plugin](/plugins/ace/examples/).
 {% endnavtab %}
 {% endnavtabs %}
-
-{:.info}
-> Currently, you APIs can only have a 1:1 mapping with a Gateway Service.
 
 ## Publish your API to {{site.dev_portal}}
 
@@ -438,7 +483,7 @@ Once published, the API appears in the selected {{site.dev_portal}}. If [user au
 
 ### Allow developers to try requests from the {{site.dev_portal}} spec renderer
 
-When you upload a spec for your API to {{site.dev_portal}}, you can use the **Try it!** feature to allow developers to try your API right from {{site.dev_portal}}. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in {{site.dev_portal}} and send the request with their configuration. 
+When you upload a spec for your API to {{site.dev_portal}}, you can use the **Try it!** feature to allow developers to try your API right from {{site.dev_portal}}. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in {{site.dev_portal}} and send the live request with their configuration.
 
 The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). 
 
@@ -493,6 +538,55 @@ components:
         clientCredentials:
           tokenUrl: 'https://example.com/oauth/token'
 ```
+
+#### Spec renderer feature support
+
+The following table describes additional supported features of the spec renderer in {{site.dev_portal}}:
+
+{% table %}
+columns:
+  - title: Feature
+    key: feature
+  - title: Details
+    key: details
+rows:
+  - feature: |
+      **Try it!** console
+    details: |
+      * Developers can click **Open in Insomnia** for any operation. This is enabled by default and can be separately hidden from the in-browser console.
+      * Supports multiple servers.
+      * Supports custom server URLs.
+  - feature: Code samples
+    details: |
+      * Autogenerates request snippets in eight languages: Shell (cURL), Python, Node, JavaScript, Go, Java, C#, and Ruby.
+      * Custom code examples aren't supported.
+  - feature: Endpoints and operations
+    details: |
+      * Per-operation deep links. You can copy link anchors to share a direct URL to an operation.
+      * Tag-based grouping of operations and tag/attribute filtering of APIs in the {{site.dev_portal}} sidebar.
+      * Specify internal endpoints (with `x-internal`) with an option to hide them from the rendered docs.
+      * Badges for deprecated endpoints with an option to hide deprecated operations.
+      * Multiple named request/response examples (renders the OpenAPI `examples` object).
+  - feature: Schema and model rendering
+    details: |
+      * Dedicated schemas/models section that can be hidden.
+      * Expandable nested schemas with a configurable default expansion depth.
+      * Constraint display: `enum` (shown as badges), `pattern`, min/max, lengths, `multipleOf`, `default`, `additionalProperties`, and array item types.
+      * Schema composition (for example, `allOf`).
+  - feature: Servers and security
+    details: |
+      * Developers can select servers from a list with support for server variables (templated server URLs).
+      * Security scheme rendering (for example, API key and OAuth2 flows).
+  - feature: AsyncAPI
+    details: |
+      * Supports channels, operations, and messages/payloads.
+      * Supports protocol bindings at the server, channel, operation, and message levels.
+      * Supports Avro/multi-format schema payloads.
+  - feature: Display and download
+    details: |
+      * Developers can download specs using a button that supports YAML or JSON output.
+      * Collapsible sections. You can choose either **previous** and **next** navigation buttons or continuous scrolling.
+{% endtable %}
 
 ### Filtering published APIs in {{site.dev_portal}}
 

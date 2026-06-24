@@ -53,6 +53,9 @@ Flags:
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
 
+Additional help topics:
+  kongctl list organization system-account spat Manage Konnect system account access tokens
+
 Use "kongctl list organization system-account [command] --help" for more information about a command.
 
 ```

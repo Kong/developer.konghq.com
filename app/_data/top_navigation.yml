@@ -2,8 +2,7 @@ platform:
   konnect:
     text: |
       Kong's SaaS API management platform designed to simplify managing and securing APIs.
-    icon_dark: '/assets/logos/Konnect-logo.svg'
-    icon_light: '/assets/logos/Konnect-logo-light.svg'
+    icon: '/assets/logos/Konnect-logo.svg'
     link:
       url: /konnect/
       text: Learn more &rarr;
@@ -23,7 +22,7 @@ platform:
       icon: /assets/icons/terraform.svg
     - text: Ingress controller
       url: /kubernetes-ingress-controller/
-      icon: /_assets/icons/products/kic.svg
+      icon: /assets/icons/kubernetes.svg
 
   sections:
     - title: Explore the platform
@@ -73,7 +72,7 @@ platform:
           url: /metering-and-billing/
           product: metering-and-billing
         - text: Kong Identity
-          url: /kong-identity/
+          url: /identity/
           product: identity
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
@@ -120,6 +119,9 @@ how_tos:
     - text: "Catalog"
       url: /how-to/?products=catalog
       product: catalog
+    - text: Kong Identity
+      url: /how-to/?products=identity
+      product: identity
 
 ai_tools:
   - text: Konnect MCP

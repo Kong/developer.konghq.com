@@ -37,8 +37,8 @@ async function processHeaders(config, container) {
   let headers = {};
   if (config.headers) {
     config.headers.forEach((header) => {
-      const [key, value] = header.split(":");
-      headers[key] = replaceEnvVars(value, env);
+      const [key, ...rest] = header.split(":");
+      headers[key.trim()] = replaceEnvVars(rest.join(":").trim(), env);
     });
   }
   return headers;
@@ -148,6 +148,12 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
 
     const url = replaceEnvVars(config.url, env);
 
+    if (config.debug) {
+      console.log(`[debug] request: ${options.method} ${url}`);
+      console.log(`[debug] request headers: ${JSON.stringify(headers)}`);
+      if (options.body) console.log(`[debug] request body: ${options.body}`);
+    }
+
     const response = await fetchWithOptionalJar(
       url,
       options,
@@ -162,6 +168,11 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
       } catch (e) {
         body = { message: text };
       }
+    }
+
+    if (config.debug) {
+      console.log(`[debug] response status: ${response.status}`);
+      console.log(`[debug] response body: ${JSON.stringify(body)}`);
     }
 
     // Extract headers and check if retry is needed
@@ -208,6 +219,9 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
         ) {
           shouldRetry = true;
         } else {
+          if (config.debug) {
+            console.log(`extracted body field ${field.name} into ${field.variable}: ${value}`);
+          }
           await setEnvVariable(container, field.variable, value);
         }
       }

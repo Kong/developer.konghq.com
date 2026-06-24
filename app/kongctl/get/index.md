@@ -67,6 +67,9 @@ rows:
       [kongctl get organization](/kongctl/get/organization/)
     description: "Get organization details."
   - command: |
+      [kongctl get pat](/kongctl/get/pat/)
+    description: "Get {{site.konnect_short_name}} personal access tokens."
+  - command: |
       [kongctl get portal](/kongctl/get/portal/)
     description: "Get Portal configuration."
   - command: |
@@ -75,6 +78,9 @@ rows:
   - command: |
       [kongctl get regions](/kongctl/get/regions/)
     description: "Get available regions."
+  - command: |
+      [kongctl get spat](/kongctl/get/spat/)
+    description: "Get {{site.konnect_short_name}} system account access tokens."
 {% endtable %}
 
 ## Command usage
