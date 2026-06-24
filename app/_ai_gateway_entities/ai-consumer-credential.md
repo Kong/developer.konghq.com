@@ -59,9 +59,9 @@ faqs:
       Issue a new Credential to keep the Consumer authenticating.
 ---
 
-## What is a Consumer Credential?
+## What is an AI Consumer Credential?
 
-A Consumer Credential is the {{site.ai_gateway}} entity that represents the secret material a [Consumer](/ai-gateway/entities/ai-consumer/) presents to authenticate to {{site.ai_gateway}}.
+An AI Consumer Credential is the {{site.ai_gateway}} entity that represents the secret material an [AI Consumer](/ai-gateway/entities/ai-consumer/) presents to authenticate to {{site.ai_gateway}}.
 
 Credentials are nested under their owning AI Consumer: each Credential belongs to exactly one AI Consumer, and removing the AI Consumer removes its Credentials.
 
@@ -83,7 +83,7 @@ rows:
 The [`type`](#schema-aigateway-consumer-credential-type) field on a Credential must match the parent Consumer's `type`:
 
 * **`api-key`**: the Credential carries an [`api_key`](#schema-aigateway-consumer-credential-api-key) value the client presents on each request. An optional [`ttl`](#schema-aigateway-consumer-credential-ttl) (seconds) bounds the validity period; once it elapses, the value no longer authenticates.
-* **`oauth`**: the Credential type for OAuth Consumers. The parent Consumer's `custom_id` field maps to an OAuth identity issued by an external provider. {{site.ai_gateway}} works with any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect plugin](/plugins/openid-connect/), or, for MCP traffic, the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/). The `custom_id` is typically the OIDC `sub` claim or the Client ID issued by the OAuth provider. The actual access token is issued and validated by the OAuth provider, not stored on the Credential.
+* **`oauth`**: the Credential type for OAuth Consumers. The parent Consumer's `custom_id` field maps to an OAuth identity issued by an external provider. {{site.ai_gateway}} works with any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect AI Policy](/ai-gateway/policies/openid-connect/), or, for MCP traffic, the [AI MCP OAuth2 AI Policy](/ai-gateway/policies/ai-mcp-oauth2/). The `custom_id` is typically the OIDC `sub` claim or the Client ID issued by the OAuth provider. The actual access token is issued and validated by the OAuth provider, not stored on the Credential.
 
 The [`api_key`](#schema-aigateway-consumer-credential-api-key) field is write-only and cannot be retrieved after creation. Treat creation responses as the only opportunity to capture the key value.
 
