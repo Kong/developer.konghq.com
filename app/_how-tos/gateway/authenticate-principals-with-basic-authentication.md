@@ -77,6 +77,9 @@ status_code: 201
 method: POST
 body:
   username: example-user
+capture:
+  - variable: BASIC_AUTH_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
