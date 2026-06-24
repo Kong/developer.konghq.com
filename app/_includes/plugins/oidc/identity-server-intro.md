@@ -1,0 +1,1 @@
+This example uses a {{ site.identity }} authorization server hosted on {{ site.konnect_short_name }}.

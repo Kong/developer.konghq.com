@@ -12,14 +12,16 @@ extended_description: |
   In this example, the OpenID Connect plugin will only accept bearer tokens sent in a header, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `query`, or any combination of these values.
 
-  For a complete example of authenticating with a token retrieved through Keycloak's user info endpoint, see the tutorial for [configuring OpenID Connect with user info](/how-to/configure-oidc-with-user-info-auth/).
+  {% include_cached plugins/oidc/identity-server-intro.md %}
+  To use an external authorization server like Keycloak,
+  see [configuring OpenID Connect with user info](/how-to/configure-oidc-with-user-info-auth/).
   
   {% include_cached plugins/oidc/client-auth.md %}
 
 weight: 892
 
 requirements:
-  - A configured identity provider (IdP)
+  - "{% include_cached plugins/oidc/idp-requirement.md %}"
 
 config:
   issuer: ${issuer}
@@ -33,19 +35,24 @@ config:
     - userinfo
   bearer_token_param_type:
     - header
+  principals:
+    enabled: true
+    directory: ${directory-name}
 
 variables:
   issuer:
     value: $ISSUER
     description: |
-      The issuer authentication URL for your IdP. 
-      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
+      The issuer authentication URL for your IdP. As this example uses Kong Identity as the IdP, the issuer URL should look like `https://xxx.<region>.identity.konghq.tech/auth`.
   client-id:
     value: $CLIENT_ID
     description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
   client-secret:
     value: $CLIENT_SECRET
     description: The client secret needed to connect to your IdP.
+  directory-name:
+    value: $DIRECTORY_NAME
+    description: The name of the {{ site.identity }} directory used for principals lookup.
 
 
 tools:
