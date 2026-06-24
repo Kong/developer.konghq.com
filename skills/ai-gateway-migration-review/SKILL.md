@@ -76,9 +76,9 @@ Plugins have been replaced by AI Policies in v2. The four plugins that do **not*
 
 For everything else:
 
-- **Rename in prose**: Replace "X plugin" with "X AI Policy". For example:
-  - "AI Request Transformer plugin" → "AI Request Transformer AI Policy"
-  - "AI Prompt Guard plugin" → "AI Prompt Guard AI Policy"
+- **Rename in prose**: Replace "X plugin" with "X Policy". For example:
+  - "AI Request Transformer plugin" → "AI Request Transformer Policy"
+  - "AI Prompt Guard plugin" → "AI Prompt Guard Policy"
 
 - **Links to plugins**: Replace `/plugins/` path with `/ai-gateway/policies/`. For example:
   - `/plugins/ai-prompt-guard/` → `/ai-gateway/policies/ai-prompt-guard/`
@@ -134,7 +134,7 @@ All AI Gateway entity names (from `app/_ai_gateway_entities/`) must be capitaliz
 - AI Provider
 - AI Vault
 
-Flag any references to these entities without the "AI" prefix (e.g., "model" instead of "AI Model", "provider" instead of "AI Provider", "policy" instead of "AI Policy").
+Flag any references to these entities without the "AI" prefix (e.g., "model" instead of "AI Model", "provider" instead of "AI Provider", "policy" instead of "AI Policy"). **Check the entire file including frontmatter** — FAQs, `related_resources` links, and all entity references in link text must use the full "AI" prefix (e.g., `[AI Policy entity]` not `[Policy entity]`).
 
 ### Links to unmigrated how-to guides
 
