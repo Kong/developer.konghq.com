@@ -18,7 +18,11 @@ module Jekyll
 
         def data
           super
-            .merge('schema' => @policy.schema, 'has_overview?' => false)
+            .merge(
+              'schema' => @policy.schema,
+              'has_overview?' => false,
+              'title' => "#{@policy.metadata['title']} Policy"
+            )
         end
 
         def icon

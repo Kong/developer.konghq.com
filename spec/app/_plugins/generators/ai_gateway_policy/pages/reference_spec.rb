@@ -7,7 +7,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
     instance_double(
       Jekyll::AIGatewayPolicyPages::Policy,
       slug: 'my-policy',
-      metadata: { 'title' => 'My Policy', 'faqs' => [], 'scopes' => %w[ai-model global] },
+      metadata: { 'title' => 'KONG', 'faqs' => [], 'scopes' => %w[ai-model global] },
       overview_page_class: Jekyll::AIGatewayPolicyPages::Pages::Overview,
       reference_page_class: described_class,
       examples: [],
@@ -48,6 +48,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
   describe '#data' do
     subject(:data) { page.data }
 
+    it { expect(data['title']).to eq('KONG Policy') }
     it { expect(data['has_overview?']).to be(false) }
     it { expect(data['reference_type']).to eq('base') }
     it { expect(data['content_type']).to eq('reference') }
