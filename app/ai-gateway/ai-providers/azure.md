@@ -10,36 +10,26 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/azure/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.6'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Azure OpenAI tutorials
     url: /how-to/?tags=azure&tags=ai
-  - text: "{{site.ai_gateway}} plugins"
+  - text: "{{site.ai_gateway}} Policies"
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
@@ -49,49 +39,42 @@ faqs:
     a: |
       {% include faqs/azure-identity.md %}
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - azure
-    description: true
-    view_more: false
 ---
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Azure" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Azure OpenAI" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Azure Production
+  name: my-azure-account
+  type: azure
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${azure_key}
-    model:
-      provider: azure
-      options:
-        azure_api_version: "2025-01-01-preview"
-        azure_instance: ${azure_instance}
-        azure_deployment_id: ${azure_deployment}
-variables:
-  azure_key:
-    value: "$AZURE_OPENAI_API_KEY"
-  azure_instance:
-    value: "$AZURE_INSTANCE_NAME"
-  azure_deployment:
-    value: "$AZURE_DEPLOYMENT_ID"
-{% endentity_example %}
+      type: basic
+      headers:
+        - name: Authorization
+          value: Bearer $AZURE_OPENAI_API_KEY
+{% endkonnect_api_request %}
+<!--vale on-->
 
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+## Authentication with Azure IAM
+
+You can also use {{ provider.name }} with Azure credentials by setting `auth` to `azure` and specifying:
+
+* **`use_managed_identity`**: Set to `true` to use Azure Managed Identity (recommended for deployments in Azure). When true, the system uses the identity of the current Azure resource (VM, container, function app, etc.).
+* **`client_id`** (optional): Entra ID (formerly AAD) application client ID. Required if using a user-assigned managed identity or service principal instead of system-assigned managed identity.
+* **`client_secret`** (optional): Client secret for the Entra ID application. Required if `client_id` is set.
+* **`tenant_id`** (optional): Azure tenant ID (directory ID). Required if using service principal credentials.
+* **`instance`** (optional): Azure cloud instance (e.g. `china`, `government`). Defaults to public cloud.

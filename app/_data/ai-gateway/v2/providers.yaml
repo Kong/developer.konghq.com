@@ -1,0 +1,1563 @@
+providers:
+  - name: Amazon Bedrock
+    url_patterns:
+      - 'https://bedrock-runtime.{region}.amazonaws.com'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: 'Uses the `Converse` and `ConverseStream` API'
+        model_example: '[Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.0'
+      completions:
+        supported: true
+        streaming: true
+        model_example: '[Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses the `InvokeModel` and `InvokeWithResponseStream` API'
+        model_example: '[Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.0'
+      batches:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses the `ModelInvocationJob` API'
+        model_example: 'n/a'
+        min_version: '2.0'
+        note:
+          content: 'Batches processing for Bedrock is supported in the native format from SDK only'
+      files:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/files`'
+        model_example: 'n/a'
+        min_version: '2.0'
+        note:
+          content: 'Amazon Bedrock does not have a dedicated files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+      image:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses the `InvokeModel` API'
+        model_example: '[Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.0'
+      video:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses the `StartAsyncInvoke` API'
+        model_example: '[Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.0'
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    native_formats:
+      - llm_format: 'bedrock'
+        supported_apis:
+          - '/model/{model_name}/converse'
+          - '/model/{model_name}/converse-stream'
+          - '/model/{model_name}/invoke'
+          - '/model/{model_name}/invoke-with-response-stream'
+          - '/model/{model_name}/retrieveAndGenerate'
+          - '/model/{model_name}/retrieveAndGenerateStream'
+          - '/model/{model_name}/rerank'
+          - '/model/{model_name}/async-invoke'
+          - '/model-invocations'
+    limitations:
+      provider_specific: []
+      statistics_logging:
+        - 'Statistics logging is not available for image generation or editing APIs for Amazon Bedrock'
+
+  - name: Anthropic
+    url_patterns:
+      - 'https://api.anthropic.com:443/{capability_path}'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/messages`'
+        model_example: 'claude-sonnet-4-20250514'
+        min_version: '2.0'
+      completions:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/complete`'
+        model_example: 'claude-sonnet-4-20250514'
+        min_version: '2.0'
+      batches:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/messages/batches`'
+        model_example: 'n/a'
+        min_version: '2.0'
+        note:
+          content: 'Batches processing for Anthropic is supported in the native format from SDK only'
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    native_formats:
+      - llm_format: 'anthropic'
+        supported_apis:
+          - '/v1/messages'
+          - '/v1/messages/batches'
+    limitations:
+      provider_specific:
+        - 'Does not support embeddings'
+      statistics_logging:
+        - 'No statistics logging for completions'
+
+  - name: Azure OpenAI
+    url_patterns:
+      - 'https://{azure_instance}.openai.azure.com:443/openai/deployments/{deployment_name}/{capability_path}'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/openai/deployments/{deployment_name}/chat/completions`'
+        model_example: 'gpt-4o'
+        min_version: '2.0'
+      completions:
+        supported: true
+        streaming: true
+        upstream_path: '`/openai/deployments/{deployment_name}/completions`'
+        model_example: 'gpt-4o-mini'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/deployments/{deployment_name}/embeddings`'
+        model_example: 'text-embedding-3-small'
+        min_version: '2.0'
+        note:
+          content: 'Use `text-embedding-3-small` or `text-embedding-3-large` for dynamic dimensions.'
+      files:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/files`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      batches:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/batches`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      agentic:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/assistants` and `/openai/v1/responses`'
+        model_example: 'n/a'
+        min_version: '2.0'
+        note:
+          content: 'Assistants API requires header `OpenAI-Beta: assistants=v2`. Responses API requires `config.azure_api_version` set to `"preview"`'
+      audio_speech:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/audio/speech`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      audio_transcription:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/audio/transcriptions`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      audio_translation:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/audio/translations`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      image:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/images/generations` and `/openai/images/edits`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      video:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/v1/video/generations/jobs`'
+        model_example: 'sora-2'
+        min_version: '2.0'
+      realtime:
+        supported: true
+        streaming: true
+        upstream_path: '`/openai/realtime`'
+        model_example: 'n/a'
+        min_version: '2.0'
+        note:
+          content: 'For requests to Azure OpenAI realtime API, include the header `OpenAI-Beta: realtime=v1`.'
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging:
+        - 'No statistics logging for assistants, batch, or audio APIs'
+
+  - name: Cerebras
+    url_patterns:
+      - 'https://api.cerebras.ai/{capability_path}'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'llama-3.3-70b'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Cohere
+    url_patterns:
+      - 'https://api.cohere.com:443/{capability_path}'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat`'
+        model_example: 'command-a-03-2025'
+        min_version: '2.0'
+      completions:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/generate`'
+        model_example: 'command-r-plus-08-2024'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/v2/embed`'
+        model_example: 'embed-english-v3.0'
+        min_version: '2.0'
+      rerank:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/rerank` or `/v2/rerank`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    native_formats:
+      - llm_format: 'cohere'
+        supported_apis:
+          - '/v1/rerank'
+          - '/v2/rerank'
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Dashscope
+    url_patterns:
+      - 'https://dashscope.aliyuncs.com'
+      - 'https://dashscope-intl.aliyuncs.com'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/compatible-mode/v1/chat/completions`'
+        model_example: 'qwen-plus'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/compatible-mode/v1/embeddings`'
+        model_example: 'text-embedding-v1'
+        min_version: '2.0'
+      image:
+        supported: true
+        streaming: false
+        upstream_path: '`/api/v1/services/aigc/multimodal-generation/generation` and `/api/v1/services/aigc/image2image/image-synthesis`'
+        model_example: 'qwen-image-plus'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Gemini
+    url_patterns:
+      - 'https://generativelanguage.googleapis.com'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: 'Uses `generateContent` API'
+        model_example: 'gemini-2.5-flash'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `batchEmbedContents` API'
+        model_example: 'text-embedding-004'
+        min_version: '2.0'
+      files:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `uploadFile` and `files` API'
+        model_example: 'n/a'
+        min_version: '2.0'
+        note:
+          content: 'Files processing for Gemini is supported in the native format from SDK only'
+      batches:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `batches` API'
+        model_example: 'n/a'
+        min_version: '2.0'
+        note:
+          content: 'Batches processing for Gemini is supported in the native format from SDK only'
+      image:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `generateContent` API'
+        model_example: 'gemini-2.5-flash-preview-image-generation'
+        min_version: '2.0'
+      realtime:
+        supported: true
+        streaming: true
+        upstream_path: 'Uses `BidiGenerateContent` API'
+        model_example: 'gemini-2.5-flash-preview-native-audio'
+        min_version: '2.0'
+        note:
+          content: 'Realtime processing for Gemini is supported in the native format from SDK only'
+      video:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `predictLongRunning` API'
+        model_example: 'veo-3.1-generate-001'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    native_formats:
+      - llm_format: 'gemini'
+        supported_apis:
+          - '/v1beta/models/{model_name}:generateContent'
+          - '/v1beta/models/{model_name}:streamGenerateContent'
+          - '/v1beta/models/{model_name}:embedContent'
+          - '/v1beta/models/{model_name}:batchEmbedContent'
+          - '/v1beta/batches'
+          - '/upload/{file_id}/files'
+          - '/v1beta/files'
+    limitations:
+      provider_specific:
+        - 'Gemini only supports `auth.allow_override = false`'
+      statistics_logging: []
+
+  - name: Gemini Vertex
+    url_patterns:
+      - 'https://aiplatform.googleapis.com/'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: 'Uses `generateContent` API'
+        model_example: 'gemini-2.5-flash'
+        min_version: '2.0'
+      completions:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `generateContent` API'
+        model_example: 'gemini-2.5-flash'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `generateContent` API'
+        model_example: 'text-embedding-004'
+        min_version: '2.0'
+      files:
+        supported: true
+        streaming: false
+        upstream_path: '`/openai/files`'
+        model_example: 'n/a'
+        min_version: '2.0'
+        note:
+          content: 'Gemini Vertex does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+      batches:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `batchPredictionJobs` API'
+        model_example: 'n/a'
+        min_version: '2.0'
+      image:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `generateContent` API'
+        model_example: 'gemini-2.5-flash-preview-image-generation'
+        min_version: '2.0'
+      video:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses `predictLongRunning` API'
+        model_example: 'veo-3.1-generate-001'
+        min_version: '2.0'
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    native_formats:
+      - llm_format: 'gemini'
+        supported_apis:
+          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:generateContent'
+          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:streamGenerateContent'
+          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:embedContent'
+          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:batchEmbedContent'
+          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:predictLongRunning'
+          - '/v1/projects/{project_id}/locations/{location}/rankingConfigs/{config_name}:rank'
+          - '/v1/projects/{project_id}/locations/{location}/batchPredictionJobs'
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Hugging Face
+    url_patterns:
+      - 'https://api-inference.huggingface.co'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: '[Use the model name for the specific LLM provider](https://huggingface.co/models?inference=warm&pipeline_tag=text-generation&sort=trending)'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/hf-inference/models/{model_name}/pipeline/feature-extraction`'
+        model_example: '[Use the embedding model name](https://huggingface.co/models?pipeline_tag=feature-extraction)'
+        min_version: '2.0'
+      audio_transcription:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/audio/transcriptions`'
+        model_example: '[Use the transcription model name](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition)'
+        min_version: '2.0'
+      image:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/images/generations`'
+        model_example: '[Use the image generation model name](https://huggingface.co/models?pipeline_tag=image-generation)'
+        min_version: '2.0'
+      video:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/videos`'
+        model_example: '[Use the video generation model name](https://huggingface.co/models?pipeline_tag=video-generation)'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    native_formats:
+      - llm_format: 'huggingface'
+        supported_apis:
+          - '/generate'
+          - '/generate_stream'
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Llama2
+    url_patterns:
+      - '$UPSTREAM_URL'
+    url_is_variable: true
+    min_version: '2.0'
+    formats: 'supports Llama2 and Llama3 models and raw, OLLAMA, and OpenAI formats'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`User-defined`'
+        model_example: 'User-defined'
+        min_version: '2.0'
+      completions:
+        supported: true
+        streaming: true
+        upstream_path: '`User-defined`'
+        model_example: 'User-defined'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`User-defined`'
+        model_example: 'User-defined'
+        min_version: '2.0'
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific:
+        - 'Raw format lacks support for embeddings'
+      statistics_logging: []
+
+  - name: Mistral
+    url_patterns:
+      - '$UPSTREAM_URL'
+    url_is_variable: true
+    min_version: '2.0'
+    formats: 'mistral.ai, OpenAI, raw, and OLLAMA formats'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions or user-defined`'
+        model_example: 'mistral-large-latest'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/embeddings or user-defined`'
+        model_example: 'mistral-embed'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Ollama
+    url_patterns:
+      - '$UPSTREAM_URL'
+    min_version: '2.0'
+    formats: 'Ollama, OpenAI, and Anthropic'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '/api/chat'
+        model_example: 'llama3.2:1b'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '/api/embed'
+        model_example: 'qwen3-embedding:8b'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+
+  - name: OpenAI
+    url_patterns:
+      - 'https://api.openai.com:443/{capability_path}'
+    min_version: '2.0'
+    formats: 'GPT-4o, GPT-4.1, and Multi-Modal'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'gpt-4o'
+        min_version: '2.0'
+      completions:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/completions`'
+        model_example: 'gpt-4o-mini'
+        min_version: '2.0'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/embeddings`'
+        model_example: 'text-embedding-3-small'
+        min_version: '2.0'
+        note:
+          content: 'Use `text-embedding-3-small` or `text-embedding-3-large` for dynamic dimensions.'
+      files:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/files`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      batches:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/batches`'
+        model_example: 'n/a'
+        min_version: '2.0'
+      agentic:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/assistants` and `/v1/responses`'
+        model_example: 'gpt-4o'
+        min_version: '2.0'
+        note:
+          content: 'Requires header `OpenAI-Beta: assistants=v2`'
+      audio_speech:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/audio/speech`'
+        model_example: 'tts-1'
+        min_version: '2.0'
+      audio_transcription:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/audio/transcriptions`'
+        model_example: 'whisper-1'
+        min_version: '2.0'
+      audio_translation:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/audio/translations`'
+        model_example: 'whisper-1'
+        min_version: '2.0'
+      image:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/images/generations` and `/v1/images/edits`'
+        model_example: 'gpt-image-1.5'
+        min_version: '2.0'
+      realtime:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/realtime`'
+        model_example: 'gpt-4o-realtime-preview'
+        min_version: '2.0'
+        note:
+          content: 'For requests to OpenAI realtime API, include the header `OpenAI-Beta: realtime=v1`.'
+      video:
+        supported: true
+        streaming: false
+        upstream_path: 'Use the LLM `/v1/images/generations` upstream path'
+        model_example: 'sora-2'
+        min_version: '2.0'
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging:
+        - 'No statistics logging for assistants, batch, or audio APIs'
+
+  - name: vLLM
+    url_patterns:
+      - '$UPSTREAM_URL'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'vllm-llama-3-8b'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific:
+        - '`upstream_url` must be set in `model.options` — vLLM has no fixed API endpoint'
+      statistics_logging: []
+
+  - name: xAI
+    url_patterns:
+      - 'https://api.x.ai:443/{capability_path}'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'grok-3'
+        min_version: '2.0'
+      image:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/images/generations`'
+        model_example: 'grok-2-image'
+        min_version: '2.0'
+      agentic:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/responses`'
+        model_example: 'grok-3'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Databricks
+    url_patterns:
+      - 'https://{databricks_instance}.cloud.databricks.com:443'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '/serving-endpoints/v1/chat/completions'
+        model_example: 'databricks-gpt-oss-20b'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+
+  - name: Kimi
+    url_patterns:
+      - 'https://api.moonshot.ai'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'kimi-k2.6'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Vercel
+    url_patterns:
+      - 'https://ai-gateway.vercel.sh'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'openai/gpt-5.5'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: DeepSeek
+    url_patterns:
+      - 'https://api.deepseek.com'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'deepseek-chat'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []

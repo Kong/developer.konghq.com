@@ -10,29 +10,19 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/llama/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.6'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -44,40 +34,33 @@ related_resources:
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - llama
-    description: true
-    view_more: false
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Llama2" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Llama2" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name:  llama2 Production
+  name: my- llama2-account
+  type:  llama2
   config:
-    route_type: llm/v1/chat
-    model:
-      provider: llama2
-      name: llama2
-      options:
-        llama2_format: ollama
-        upstream_url: http://llama2-server.local:11434/api/chat
-{% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+    auth:
+      type: basic
+      headers:
+        - name: Authorization
+          value: Bearer $LLAMA_API_KEY
+{% endkonnect_api_request %}
+<!--vale on-->

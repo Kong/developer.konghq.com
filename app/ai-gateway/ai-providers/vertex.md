@@ -10,29 +10,19 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/vertex/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.8'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -44,65 +34,43 @@ related_resources:
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - vertex-ai
-    description: true
-    view_more: false
 ---
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Gemini Vertex" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Gemini Vertex" %}
 
-{% include plugins/ai-proxy/providers/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Gemini Vertex" %}
+{% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="Gemini Vertex" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Vertex Production
+  name: my-vertex-account
+  type: vertex
   config:
-    route_type: llm/v1/chat
-    model:
-      provider: gemini
-      name: gemini-2.0-flash-exp
-      options:
-        gemini:
-          api_endpoint: Bearer ${gcp_api_endpoint}
-          project_id: Bearer ${gcp_project_id}
-          location_id: Bearer ${gcp_location_id}
+    project_id: $VERTEX_PROJECT
     auth:
-      gcp_use_service_account: true
-      gcp_service_account_json: Bearer ${gcp_service_account_json}
-variables:
-  gcp_project_id:
-    value: $GCP_PROJECT_ID
-  gcp_location_id:
-    value: $GCP_LOCATION_ID
-  gcp_service_account_json:
-    value: $GCP_SERVICE_ACCOUNT_JSON
-  gcp_api_endpoint:
-    value: $GCP_API_ENDPOINT
-{% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+      type: gcp
+      service_account_json: $GCP_ACCOUNT_JSON
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Authentication with GCP IAM
 
 Using {{ provider.name }} requires credentials from Google Cloud Platform (GCP).
 
 The authentication chain follows the same order of precedence as the `gcloud` tool:
-1. Service account JSON defined directly in the AI Proxy or AI Proxy Advanced plugin: `auth.gcp_service_account_json`.
+1. Service account JSON defined directly in the Provider: `auth.gcp_service_account_json`.
 1. Service account JSON defined in environment variable `GCP_SERVICE_ACCOUNT`.
 1. Workload IAM Role (for example, a GKE or Deployment Service Account).
 1. VM Instance defined IAM Role.

@@ -10,81 +10,56 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/cerebras/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.13'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Cerebras tutorials
     url: /how-to/?tags=cerebras
-  - text: "{{site.ai_gateway}} plugins"
+  - text: "{{site.ai_gateway}} Policies"
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - cerebras
-    description: true
-    view_more: false
 ---
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Cerebras" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Cerebras" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Cerebras Production
+  name: my-cerebras-account
+  type: cerebras
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${key}
-    model:
-      provider: cerebras
-      name: gpt-oss-120b
-      options:
-        max_tokens: 512
-        temperature: 1.0
-
-variables:
-  key:
-    value: $CEREBRAS_API_KEY
-    description: The API key to use to connect to Cerebras.
-{% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+      type: basic
+      headers:
+        - name: Authorization
+          value: Bearer $CEREBRAS_API_KEY
+{% endkonnect_api_request %}
+<!--vale on-->

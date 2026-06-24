@@ -360,56 +360,56 @@ app/ai-gateway/v1/ai-otel-metrics.md:
   status: pending
   canonical_url:
 app/ai-gateway/v1/ai-providers/anthropic.md:
-  status: pending
-  canonical_url:
+  #status: pending
+  canonical_url: /ai-gateway/ai-providers/anthropic/
 app/ai-gateway/v1/ai-providers/azure.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/azure/
 app/ai-gateway/v1/ai-providers/bedrock.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/bedrock/
 app/ai-gateway/v1/ai-providers/cerebras.md:
-  status: pending
-  canonical_url:
+  #status: pending
+  canonical_url: /ai-gateway/ai-providers/cerebras/
 app/ai-gateway/v1/ai-providers/cohere.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/cohere/
 app/ai-gateway/v1/ai-providers/dashscope.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/dashscope/
 app/ai-gateway/v1/ai-providers/databricks.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/databricks/
 app/ai-gateway/v1/ai-providers/deepseek.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/deepseek/
 app/ai-gateway/v1/ai-providers/gemini.md:
-  status: pending
-  canonical_url:
+  ## status: pending
+  canonical_url: /ai-gateway/ai-providers/gemini/
 app/ai-gateway/v1/ai-providers/huggingface.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/huggingface/
 app/ai-gateway/v1/ai-providers/llama.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/llama/
 app/ai-gateway/v1/ai-providers/mistral.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/mistral/
 app/ai-gateway/v1/ai-providers/ollama.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/ollama/
 app/ai-gateway/v1/ai-providers/openai.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/openai/
 app/ai-gateway/v1/ai-providers/vertex.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/vertex/
 app/ai-gateway/v1/ai-providers/vllm.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/vllm/
 app/ai-gateway/v1/ai-providers/xai.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/ai-providers/xai/
 app/ai-gateway/v1/llm-open-telemetry.md:
   status: pending
   canonical_url:
