@@ -36,7 +36,7 @@ tools:
 tldr:
   q: How do I authenticate Principals with key authentication?
   a: |
-    Create a Principal, create an API key for it, then enable the Key Authentication plugin with `principals.enabled: true` and set `principals.directory` to your directory name. Authenticate by sending the API key in the `apikey` header.
+    Create a principal, create an API key for it, then enable the Key Authentication plugin with `principals.enabled: true` and set `principals.directory` to your directory name. Authenticate by sending the API key in the `apikey` header.
 
 prereqs:
   entities:
