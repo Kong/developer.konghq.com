@@ -261,7 +261,7 @@ You can view A2A analytics in {{site.konnect_short_name}} Explorer and Dashboard
 
 ### OpenTelemetry span attributes
 
-When statistics logging is enabled and {{site.base_gateway}} tracing is configured, the runtime creates a `kong.a2a` child span with the following attributes:
+When statistics logging is enabled and {{site.ai}} tracing is configured, the runtime creates a `kong.a2a` child span with the following attributes:
 
 {% include md/ai-gateway/v2/entities/otel-span-attributes.md %}
 
