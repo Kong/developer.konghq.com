@@ -37,7 +37,6 @@ tldr:
   q: How do I authenticate Principals with key authentication?
   a: |
     Create a Principal, create an API key for it, then enable the Key Authentication plugin with `principals.enabled: true` and set `principals.directory` to your directory name. Authenticate by sending the API key in the `apikey` header.
-    - deck
 
 prereqs:
   entities:
@@ -66,7 +65,7 @@ cleanup:
 
 ## Add key auth
 
-Add an API key credential to the principal so clients can authenticate at {{site.base_gateway}} with key auth. 
+Add an API key credential to the principal so clients can authenticate with {{site.base_gateway}} using key auth. 
 
 The following example:
 - Sets a system-generated key (`v1`)
