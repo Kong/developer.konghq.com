@@ -1,0 +1,488 @@
+{
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "producer_request_acks": {
+          "type": "integer",
+          "enum": [
+            -1,
+            0,
+            1
+          ],
+          "description": "The number of acknowledgments the producer requires the leader to have received before considering a request complete. Allowed values: 0 for no acknowledgments; 1 for only the leader; and -1 for the full ISR (In-Sync Replica set).",
+          "default": 1
+        },
+        "producer_request_timeout": {
+          "type": "integer",
+          "description": "Time to wait for a Produce response in milliseconds.",
+          "default": 2000
+        },
+        "producer_request_limits_messages_per_request": {
+          "type": "integer",
+          "description": "Maximum number of messages to include into a single producer request.",
+          "default": 200
+        },
+        "producer_request_limits_bytes_per_request": {
+          "type": "integer",
+          "description": "Maximum size of a Produce request in bytes.",
+          "default": 1048576
+        },
+        "schema_registry": {
+          "type": "object",
+          "properties": {
+            "confluent": {
+              "type": "object",
+              "properties": {
+                "authentication": {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "basic",
+                        "none",
+                        "oauth2"
+                      ],
+                      "description": "Authentication mode to use with the schema registry.",
+                      "default": "none"
+                    },
+                    "basic": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string",
+                          "x-encrypted": true,
+                          "x-referenceable": true
+                        },
+                        "password": {
+                          "type": "string",
+                          "x-encrypted": true,
+                          "x-referenceable": true
+                        }
+                      },
+                      "required": [
+                        "password",
+                        "username"
+                      ]
+                    },
+                    "oauth2": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string",
+                          "description": "The username to use if `config.oauth.grant_type` is set to `password`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "token_post_args": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "x-referenceable": true
+                          },
+                          "description": "Extra post arguments to be passed in the token endpoint request."
+                        },
+                        "password": {
+                          "type": "string",
+                          "description": "The password to use if `config.oauth.grant_type` is set to `password`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "scopes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "List of scopes to request from the IdP when obtaining a new token.",
+                          "default": [
+                            "openid"
+                          ]
+                        },
+                        "audience": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "List of audiences passed to the IdP when obtaining a new token.",
+                          "default": []
+                        },
+                        "token_endpoint": {
+                          "type": "string",
+                          "description": "The token endpoint URI."
+                        },
+                        "token_headers": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "x-referenceable": true
+                          },
+                          "description": "Extra headers to be passed in the token endpoint request."
+                        },
+                        "grant_type": {
+                          "type": "string",
+                          "enum": [
+                            "client_credentials",
+                            "password"
+                          ],
+                          "description": "The OAuth grant type to be used.",
+                          "default": "client_credentials"
+                        },
+                        "client_id": {
+                          "type": "string",
+                          "description": "The client ID for the application registration in the IdP.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "client_secret": {
+                          "type": "string",
+                          "description": "The client secret for the application registration in the IdP.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        }
+                      },
+                      "required": [
+                        "token_endpoint"
+                      ]
+                    },
+                    "oauth2_client": {
+                      "type": "object",
+                      "properties": {
+                        "http_version": {
+                          "type": "number",
+                          "description": "The HTTP version used for requests made by this plugin. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0.",
+                          "default": 1.1
+                        },
+                        "http_proxy": {
+                          "type": "string",
+                          "description": "The proxy to use when making HTTP requests to the IdP."
+                        },
+                        "http_proxy_authorization": {
+                          "type": "string",
+                          "description": "The `Proxy-Authorization` header value to be used with `http_proxy`."
+                        },
+                        "client_secret_jwt_alg": {
+                          "type": "string",
+                          "enum": [
+                            "HS256",
+                            "HS512"
+                          ],
+                          "description": "The algorithm to use with JWT when using `client_secret_jwt` authentication.",
+                          "default": "HS512"
+                        },
+                        "https_proxy": {
+                          "type": "string",
+                          "description": "The proxy to use when making HTTPS requests to the IdP."
+                        },
+                        "https_proxy_authorization": {
+                          "type": "string",
+                          "description": "The `Proxy-Authorization` header value to be used with `https_proxy`."
+                        },
+                        "no_proxy": {
+                          "type": "string",
+                          "description": "A comma-separated list of hosts that should not be proxied."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "maximum": 2147483646,
+                          "minimum": 0,
+                          "description": "Network I/O timeout for requests to the IdP in milliseconds.",
+                          "default": 10000
+                        },
+                        "keep_alive": {
+                          "type": "boolean",
+                          "description": "Whether to use keepalive connections to the IdP.",
+                          "default": true
+                        },
+                        "ssl_verify": {
+                          "type": "boolean",
+                          "description": "Whether to verify the certificate presented by the IdP when using HTTPS.",
+                          "default": true
+                        },
+                        "auth_method": {
+                          "type": "string",
+                          "enum": [
+                            "client_secret_basic",
+                            "client_secret_jwt",
+                            "client_secret_post",
+                            "none"
+                          ],
+                          "description": "The authentication method used in client requests to the IdP. Supported values are: `client_secret_basic` to send `client_id` and `client_secret` in the `Authorization: Basic` header, `client_secret_post` to send `client_id` and `client_secret` as part of the request body, or `client_secret_jwt` to send a JWT signed with the `client_secret` using the client assertion as part of the body.",
+                          "default": "client_secret_post"
+                        }
+                      }
+                    }
+                  }
+                },
+                "value_schema": {
+                  "type": "object",
+                  "properties": {
+                    "subject_name": {
+                      "type": "string",
+                      "description": "The name of the subject"
+                    },
+                    "schema_version": {
+                      "type": "string",
+                      "description": "The schema version to use for serialization/deserialization. Use 'latest' to always fetch the most recent version."
+                    }
+                  }
+                },
+                "key_schema": {
+                  "type": "object",
+                  "properties": {
+                    "subject_name": {
+                      "type": "string",
+                      "description": "The name of the subject"
+                    },
+                    "schema_version": {
+                      "type": "string",
+                      "description": "The schema version to use for serialization/deserialization. Use 'latest' to always fetch the most recent version."
+                    }
+                  }
+                },
+                "url": {
+                  "type": "string",
+                  "description": "The URL of the schema registry."
+                },
+                "ttl": {
+                  "type": "number",
+                  "maximum": 3600,
+                  "minimum": 0,
+                  "description": "The TTL in seconds for the schema registry cache."
+                },
+                "ssl_verify": {
+                  "type": "boolean",
+                  "description": "Set to false to disable SSL certificate verification when connecting to the schema registry.",
+                  "default": true
+                }
+              }
+            }
+          },
+          "description": "The plugin-global schema registry configuration. This can be overwritten by the topic configuration."
+        },
+        "allowed_topics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of allowed topic names to which messages can be sent. The default topic configured in the `topic` field is always allowed, regardless of its inclusion in `allowed_topics`."
+        },
+        "topic": {
+          "type": "string",
+          "description": "The default Kafka topic to publish to if the query parameter defined in the `topics_query_arg` does not exist in the request"
+        },
+        "keepalive": {
+          "type": "integer",
+          "description": "Keepalive timeout in milliseconds.",
+          "default": 60000
+        },
+        "keepalive_enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "forward_method": {
+          "type": "boolean",
+          "description": "Include the request method in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": false
+        },
+        "producer_request_retries_backoff_timeout": {
+          "type": "integer",
+          "description": "Backoff interval between retry attempts in milliseconds.",
+          "default": 100
+        },
+        "producer_async": {
+          "type": "boolean",
+          "description": "Flag to enable asynchronous mode.",
+          "default": true
+        },
+        "topics_query_arg": {
+          "type": "string",
+          "description": "The request query parameter name that contains the topics to publish to"
+        },
+        "key_query_arg": {
+          "type": "string",
+          "description": "The request query parameter name that contains the Kafka message key. If specified, messages with the same key will be sent to the same Kafka partition, ensuring consistent ordering."
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Socket timeout in milliseconds.",
+          "default": 10000
+        },
+        "forward_uri": {
+          "type": "boolean",
+          "description": "Include the request URI and URI arguments (as in, query arguments) in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": false
+        },
+        "cluster_name": {
+          "type": "string",
+          "description": "An identifier for the Kafka cluster. By default, this field generates a random string. You can also set your own custom cluster identifier.  If more than one Kafka plugin is configured without a `cluster_name` (that is, if the default autogenerated value is removed), these plugins will use the same producer, and by extension, the same cluster. Logs will be sent to the leader of the cluster."
+        },
+        "producer_async_flush_timeout": {
+          "type": "integer",
+          "description": "Maximum time interval in milliseconds between buffer flushes in asynchronous mode.",
+          "default": 1000
+        },
+        "producer_async_buffering_limits_messages_in_memory": {
+          "type": "integer",
+          "description": "Maximum number of messages that can be buffered in memory in asynchronous mode.",
+          "default": 50000
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": [
+                "sasl"
+              ],
+              "description": "The authentication strategy for the plugin, the only option for the value is `sasl`."
+            },
+            "mechanism": {
+              "type": "string",
+              "enum": [
+                "PLAIN",
+                "SCRAM-SHA-256",
+                "SCRAM-SHA-512"
+              ],
+              "description": "The SASL authentication mechanism.  Supported options: `PLAIN`, `SCRAM-SHA-256`, or `SCRAM-SHA-512`."
+            },
+            "tokenauth": {
+              "type": "boolean",
+              "description": "Enable this to indicate `DelegationToken` authentication."
+            },
+            "user": {
+              "type": "string",
+              "description": "Username for SASL authentication.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "password": {
+              "type": "string",
+              "description": "Password for SASL authentication.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            }
+          }
+        },
+        "forward_body": {
+          "type": "boolean",
+          "description": "Include the request body in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": true
+        },
+        "producer_request_retries_max_attempts": {
+          "type": "integer",
+          "description": "Maximum number of retry attempts per single Produce request.",
+          "default": 10
+        },
+        "bootstrap_servers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string",
+                "description": "A string representing a host name, such as example.com."
+              },
+              "port": {
+                "type": "integer",
+                "maximum": 65535,
+                "minimum": 0,
+                "description": "An integer representing a port number between 0 and 65535, inclusive."
+              }
+            },
+            "required": [
+              "host",
+              "port"
+            ]
+          },
+          "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format."
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "ssl_verify": {
+              "type": "boolean",
+              "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+              "default": true
+            },
+            "certificate_id": {
+              "type": "string",
+              "description": "UUID of certificate entity for mTLS authentication."
+            },
+            "ssl": {
+              "type": "boolean",
+              "description": "Enables TLS."
+            }
+          }
+        },
+        "forward_headers": {
+          "type": "boolean",
+          "description": "Include the request headers in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": false
+        },
+        "message_by_lua_functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The Lua functions that manipulates the message being sent to the Kafka topic."
+        }
+      },
+      "required": [
+        "topic"
+      ]
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

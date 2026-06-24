@@ -1,0 +1,1327 @@
+{
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "branch"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "else": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "minLength": 1,
+                      "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`."
+                    },
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "description": "nodes to execute if the input condition is `false`"
+                  },
+                  "then": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "minLength": 1,
+                      "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`."
+                    },
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "description": "nodes to execute if the input condition is `true`"
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "branch node input"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "branch node output"
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "properties": {
+                      "else": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "node output"
+                      },
+                      "then": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "node output"
+                      }
+                    },
+                    "description": "branch node outputs"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  }
+                },
+                "title": "branch",
+                "description": "Execute different nodes based on some input condition"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "cache node input"
+                  },
+                  "inputs": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The data to be cached."
+                      },
+                      "key": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The cache key."
+                      },
+                      "ttl": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The TTL in seconds."
+                      }
+                    },
+                    "description": "cache node inputs"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "cache node output"
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The data that was cached."
+                      },
+                      "hit": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Signals a cache hit."
+                      },
+                      "miss": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Signals a cache miss."
+                      },
+                      "stored": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Signals whether data was stored in cache."
+                      }
+                    },
+                    "description": "cache node outputs"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "cache"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "bypass_on_error": {
+                    "type": "boolean"
+                  },
+                  "ttl": {
+                    "type": "integer"
+                  }
+                },
+                "title": "cache",
+                "description": "Fetch cached data"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "ssl_server_name": {
+                    "type": "string",
+                    "description": "A string representing an SNI (server name indication) value for TLS."
+                  },
+                  "ssl_verify": {
+                    "type": "boolean",
+                    "description": "Whether to verify the TLS certificate when making HTTPS requests.",
+                    "default": true
+                  },
+                  "timeout": {
+                    "type": "integer",
+                    "maximum": 2147483646,
+                    "minimum": 0,
+                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "call node input"
+                  },
+                  "inputs": {
+                    "type": "object",
+                    "properties": {
+                      "proxy_auth_password": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The password to authenticate with, if the forward proxy is protected by basic authentication."
+                      },
+                      "proxy_auth_username": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The username to authenticate with, if the forward proxy is protected by basic authentication."
+                      },
+                      "query": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP request query"
+                      },
+                      "url": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP request URL"
+                      },
+                      "body": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP request body"
+                      },
+                      "headers": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP request headers"
+                      },
+                      "http_proxy": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The HTTP proxy URL. This proxy server will be used for HTTP requests."
+                      },
+                      "https_proxy": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The HTTPS proxy URL. This proxy server will be used for HTTPS requests."
+                      }
+                    },
+                    "description": "call node inputs"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "call node output"
+                  },
+                  "method": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1,
+                    "description": "A string representing an HTTP method, such as GET, POST, PUT, or DELETE. The string must contain only uppercase letters.",
+                    "default": "GET"
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search."
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "properties": {
+                      "body": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP response body"
+                      },
+                      "headers": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP response headers"
+                      },
+                      "raw_body": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "The raw, non-decoded HTTP response body"
+                      },
+                      "status": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP response status code"
+                      }
+                    },
+                    "description": "call node outputs"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "call"
+                    ],
+                    "x-terraform-transform-const": true
+                  }
+                },
+                "title": "call",
+                "description": "Make an external HTTP request"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "exit"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "status": {
+                    "type": "integer",
+                    "maximum": 599,
+                    "minimum": 200,
+                    "description": "HTTP status code",
+                    "default": 200
+                  },
+                  "warn_headers_sent": {
+                    "type": "boolean"
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "exit node input"
+                  },
+                  "inputs": {
+                    "type": "object",
+                    "properties": {
+                      "headers": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP response headers"
+                      },
+                      "body": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP response body"
+                      }
+                    },
+                    "description": "exit node inputs"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  }
+                },
+                "title": "exit",
+                "description": "Terminate the request and send a response to the client"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "jq": {
+                    "type": "string",
+                    "maxLength": 10240,
+                    "minLength": 1,
+                    "description": "The jq filter text. Refer to https://jqlang.org/manual/ for full documentation."
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "filter input(s)"
+                  },
+                  "inputs": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "minLength": 1
+                    },
+                    "description": "filter input(s)"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "filter output(s)"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "jq"
+                    ],
+                    "x-terraform-transform-const": true
+                  }
+                },
+                "title": "jq",
+                "required": [
+                  "jq"
+                ],
+                "description": "Process data using `jq` syntax"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "attributes_block_name": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                  },
+                  "attributes_name_prefix": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                  },
+                  "text_block_name": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1,
+                    "description": "The name of the block to treat as XML text content.",
+                    "default": "#text"
+                  },
+                  "inputs": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "minLength": 1
+                    },
+                    "description": "JSON string or table"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "XML document converted from JSON"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "json_to_xml"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "root_element_name": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 1
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "JSON string or table"
+                  }
+                },
+                "title": "json_to_xml",
+                "description": "transform JSON or lua table to XML"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "JWT token (with or without Bearer prefix)"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_decode node output"
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "properties": {
+                      "header": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Decoded JWT header (alg, kid, typ)"
+                      },
+                      "payload": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Decoded JWT payload (claims)"
+                      },
+                      "signature": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Raw signature (base64url encoded)"
+                      }
+                    },
+                    "description": "jwt_decode node outputs"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "jwt_decode"
+                    ],
+                    "x-terraform-transform-const": true
+                  }
+                },
+                "title": "jwt_decode",
+                "description": "Decode JWT without signature verification"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kid": {
+                    "type": "string",
+                    "description": "Key ID for header"
+                  },
+                  "static_claims": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Static claims always included",
+                    "default": {}
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_sign node input"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_sign node output"
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "properties": {
+                      "claims": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Complete claims used"
+                      },
+                      "header": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "JWT header"
+                      },
+                      "token": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Signed JWT"
+                      }
+                    },
+                    "description": "jwt_sign node outputs"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "jwt_sign"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "algorithm": {
+                    "type": "string",
+                    "enum": [
+                      "ES256",
+                      "ES384",
+                      "ES512",
+                      "EdDSA",
+                      "HS256",
+                      "HS384",
+                      "HS512",
+                      "PS256",
+                      "PS384",
+                      "PS512",
+                      "RS256",
+                      "RS384",
+                      "RS512"
+                    ],
+                    "description": "Signing algorithm"
+                  },
+                  "expires_in": {
+                    "type": "integer",
+                    "description": "Seconds until token expires (for exp claim)",
+                    "default": 300
+                  },
+                  "not_before": {
+                    "type": "integer",
+                    "description": "Seconds until token becomes valid (for nbf claim)",
+                    "default": 0
+                  },
+                  "typ": {
+                    "type": "string",
+                    "description": "Token type for header",
+                    "default": "JWT"
+                  },
+                  "inputs": {
+                    "type": "object",
+                    "properties": {
+                      "claims": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Dynamic claims to include"
+                      },
+                      "key": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Signing key (PEM, JWK JSON string, or HMAC secret)"
+                      }
+                    },
+                    "description": "jwt_sign node inputs"
+                  }
+                },
+                "title": "jwt_sign",
+                "required": [
+                  "algorithm"
+                ],
+                "description": "Create and sign a JWT"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_verify node input"
+                  },
+                  "inputs": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Verification key: JWKS, JWK, PEM string, or HMAC secret"
+                      },
+                      "token": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "JWT token (with or without Bearer prefix)"
+                      }
+                    },
+                    "description": "jwt_verify node inputs"
+                  },
+                  "allowed_algorithms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "ES256",
+                        "ES384",
+                        "ES512",
+                        "EdDSA",
+                        "HS256",
+                        "HS384",
+                        "HS512",
+                        "PS256",
+                        "PS384",
+                        "PS512",
+                        "RS256",
+                        "RS384",
+                        "RS512"
+                      ]
+                    },
+                    "description": "Allowed signing algorithms (empty = any supported)",
+                    "default": []
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_verify node output"
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "properties": {
+                      "claims": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "JWT payload claims"
+                      },
+                      "header": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "JWT header"
+                      }
+                    },
+                    "description": "jwt_verify node outputs"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "jwt_verify"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "audiences": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Allowed audiences (empty = any)",
+                    "default": []
+                  },
+                  "issuers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Allowed issuers (empty = any)",
+                    "default": []
+                  },
+                  "leeway": {
+                    "type": "integer",
+                    "description": "Allowed clock skew in seconds for exp/nbf validation",
+                    "default": 0
+                  },
+                  "required_claims": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Claims that must be present",
+                    "default": []
+                  },
+                  "validate_exp": {
+                    "type": "boolean",
+                    "description": "Validate expiration claim",
+                    "default": true
+                  },
+                  "validate_nbf": {
+                    "type": "boolean",
+                    "description": "Validate not-before claim",
+                    "default": true
+                  }
+                },
+                "title": "jwt_verify",
+                "description": "Verify JWT signature and validate claims"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "Property input source. When connected, this node operates in SET mode and writes input data to the property. Otherwise, the node operates in GET mode and reads the property."
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "Property output. This can be connected regardless of whether the node is operating in GET mode or SET mode."
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "property"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "content_type": {
+                    "type": "string",
+                    "enum": [
+                      "application/json",
+                      "application/octet-stream",
+                      "text/plain"
+                    ],
+                    "description": "The expected mime type of the property value. When set to `application/json`, SET operations will JSON-encode input data before writing it, and GET operations will JSON-decode output data after reading it. Otherwise, this setting has no effect."
+                  },
+                  "property": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "The property name to get/set"
+                  }
+                },
+                "title": "property",
+                "required": [
+                  "property"
+                ],
+                "description": "Get or set a property"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "values": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "An object with string keys and freeform values",
+                    "x-speakeasy-type-override": "any"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "The entire `.values` map"
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "minLength": 1
+                    },
+                    "description": "Individual items from `.values`, referenced by key"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "static"
+                    ],
+                    "x-terraform-transform-const": true
+                  }
+                },
+                "title": "static",
+                "required": [
+                  "values"
+                ],
+                "description": "Produce reusable outputs from statically-configured values"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "recognize_type": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "text_as_property": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "XML document string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "xml_to_json"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "attributes_block_name": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                  },
+                  "text_block_name": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1,
+                    "default": "#text"
+                  },
+                  "xpath": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 1
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "a map object converted from XML document. If connected to `request.body` or `response.body`, the output will be a JSON object."
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "attributes_name_prefix": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                  }
+                },
+                "title": "xml_to_json",
+                "description": "convert XML to JSON"
+              }
+            ]
+          },
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "vault": {
+              "type": "object",
+              "maxLength": 64,
+              "minLength": 1,
+              "additionalProperties": {
+                "type": "string",
+                "maxLength": 4095,
+                "minLength": 1,
+                "x-lua-required": true,
+                "x-referenceable": true
+              }
+            },
+            "cache": {
+              "type": "object",
+              "properties": {
+                "strategy": {
+                  "type": "string",
+                  "enum": [
+                    "memory",
+                    "redis"
+                  ],
+                  "description": "The backing data store in which to hold cache entities. Accepted values are: `memory` and `redis`."
+                },
+                "memory": {
+                  "type": "object",
+                  "properties": {
+                    "dictionary_name": {
+                      "type": "string",
+                      "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
+                      "default": "kong_db_cache"
+                    }
+                  }
+                },
+                "redis": {
+                  "type": "object",
+                  "properties": {
+                    "host": {
+                      "type": "string",
+                      "description": "A string representing a host name, such as example.com.",
+                      "default": "127.0.0.1",
+                      "x-referenceable": true
+                    },
+                    "connect_timeout": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                      "default": 2000
+                    },
+                    "send_timeout": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                      "default": 2000
+                    },
+                    "read_timeout": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                      "default": 2000
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+                      "x-referenceable": true
+                    },
+                    "port": {
+                      "type": "integer",
+                      "maximum": 65535,
+                      "minimum": 0,
+                      "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                      "default": 6379,
+                      "x-referenceable": true
+                    },
+                    "password": {
+                      "type": "string",
+                      "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "sentinel_username": {
+                      "type": "string",
+                      "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
+                      "x-referenceable": true
+                    },
+                    "sentinel_password": {
+                      "type": "string",
+                      "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "database": {
+                      "type": "integer",
+                      "description": "Database to use for the Redis connection when using the `redis` strategy",
+                      "default": 0
+                    },
+                    "sentinel_master": {
+                      "type": "string",
+                      "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+                    },
+                    "cluster_nodes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ip": {
+                            "type": "string",
+                            "description": "A string representing a host name, such as example.com.",
+                            "default": "127.0.0.1"
+                          },
+                          "port": {
+                            "type": "integer",
+                            "maximum": 65535,
+                            "minimum": 0,
+                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                            "default": 6379
+                          }
+                        }
+                      },
+                      "minLength": 1,
+                      "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
+                    },
+                    "connection_is_proxied": {
+                      "type": "boolean",
+                      "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
+                      "default": false
+                    },
+                    "cloud_authentication": {
+                      "type": "object",
+                      "properties": {
+                        "azure_client_secret": {
+                          "type": "string",
+                          "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                          "x-encrypted": true,
+                          "x-referenceable": true
+                        },
+                        "auth_provider": {
+                          "type": "string",
+                          "enum": [
+                            "aws",
+                            "azure",
+                            "gcp"
+                          ],
+                          "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
+                          "x-referenceable": true
+                        },
+                        "aws_cache_name": {
+                          "type": "string",
+                          "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                          "x-referenceable": true
+                        },
+                        "aws_access_key_id": {
+                          "type": "string",
+                          "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "azure_client_id": {
+                          "type": "string",
+                          "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "azure_tenant_id": {
+                          "type": "string",
+                          "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "aws_region": {
+                          "type": "string",
+                          "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                          "x-referenceable": true
+                        },
+                        "aws_is_serverless": {
+                          "type": "boolean",
+                          "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                          "default": true
+                        },
+                        "aws_secret_access_key": {
+                          "type": "string",
+                          "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "aws_assume_role_arn": {
+                          "type": "string",
+                          "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "aws_role_session_name": {
+                          "type": "string",
+                          "description": "The session name for the temporary credentials when assuming the IAM role.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "gcp_service_account_json": {
+                          "type": "string",
+                          "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        }
+                      },
+                      "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
+                    },
+                    "keepalive_pool_size": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 1,
+                      "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
+                      "default": 256
+                    },
+                    "sentinel_role": {
+                      "type": "string",
+                      "enum": [
+                        "any",
+                        "master",
+                        "slave"
+                      ],
+                      "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
+                    },
+                    "ssl": {
+                      "type": "boolean",
+                      "description": "If set to true, uses SSL to connect to Redis.",
+                      "default": false
+                    },
+                    "ssl_verify": {
+                      "type": "boolean",
+                      "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
+                      "default": true
+                    },
+                    "server_name": {
+                      "type": "string",
+                      "description": "A string representing an SNI (server name indication) value for TLS.",
+                      "x-referenceable": true
+                    },
+                    "keepalive_backlog": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
+                    },
+                    "sentinel_nodes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "host": {
+                            "type": "string",
+                            "description": "A string representing a host name, such as example.com.",
+                            "default": "127.0.0.1"
+                          },
+                          "port": {
+                            "type": "integer",
+                            "maximum": 65535,
+                            "minimum": 0,
+                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                            "default": 6379
+                          }
+                        }
+                      },
+                      "minLength": 1,
+                      "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
+                    },
+                    "cluster_max_redirections": {
+                      "type": "integer",
+                      "description": "Maximum retry attempts for redirection.",
+                      "default": 5
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "debug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "nodes"
+      ]
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+    },
+    "consumer_group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups"
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+    }
+  },
+  "required": [
+    "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "redis-ee",
+      "paths": [
+        "config.resources.cache.redis"
+      ]
+    }
+  ]
+}

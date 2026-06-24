@@ -1,0 +1,399 @@
+{
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "description": "The rate limiting namespace to use for this plugin instance. This namespace is used to share rate limiting counters across different instances. If it is not provided, a random UUID is generated. NOTE: For the plugin instances sharing the same namespace, all the configurations that are required for synchronizing counters, e.g. `strategy`, `redis`, `sync_rate`, `window_size`, `dictionary_name`, need to be the same."
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "cluster",
+            "redis"
+          ],
+          "description": "The rate-limiting strategy to use for retrieving and incrementing the limits.",
+          "default": "cluster"
+        },
+        "dictionary_name": {
+          "type": "string",
+          "description": "The shared dictionary where counters will be stored until the next sync cycle.",
+          "default": "kong_rate_limiting_counters"
+        },
+        "cost_strategy": {
+          "type": "string",
+          "enum": [
+            "default",
+            "node_quantifier"
+          ],
+          "description": "Strategy to use to evaluate query costs. Either `default` or `node_quantifier`.",
+          "default": "default"
+        },
+        "identifier": {
+          "type": "string",
+          "enum": [
+            "consumer",
+            "credential",
+            "ip"
+          ],
+          "description": "How to define the rate limit key. Can be `ip`, `credential`, `consumer`.",
+          "default": "consumer"
+        },
+        "hide_client_headers": {
+          "type": "boolean",
+          "description": "Optionally hide informative response headers. Available options: `true` or `false`.",
+          "default": false
+        },
+        "score_factor": {
+          "type": "number",
+          "description": "A scoring factor to multiply (or divide) the cost. The `score_factor` must always be greater than 0.",
+          "default": 1
+        },
+        "max_cost": {
+          "type": "number",
+          "description": "A defined maximum cost per query. 0 means unlimited.",
+          "default": 0
+        },
+        "redis": {
+          "type": "object",
+          "properties": {
+            "database": {
+              "type": "integer",
+              "description": "Database to use for the Redis connection when using the `redis` strategy",
+              "default": 0
+            },
+            "keepalive_backlog": {
+              "type": "integer",
+              "maximum": 2147483646,
+              "minimum": 0,
+              "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
+            },
+            "sentinel_nodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "host": {
+                    "type": "string",
+                    "description": "A string representing a host name, such as example.com.",
+                    "default": "127.0.0.1"
+                  },
+                  "port": {
+                    "type": "integer",
+                    "maximum": 65535,
+                    "minimum": 0,
+                    "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                    "default": 6379
+                  }
+                }
+              },
+              "minLength": 1,
+              "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
+            },
+            "cluster_nodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ip": {
+                    "type": "string",
+                    "description": "A string representing a host name, such as example.com.",
+                    "default": "127.0.0.1"
+                  },
+                  "port": {
+                    "type": "integer",
+                    "maximum": 65535,
+                    "minimum": 0,
+                    "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                    "default": 6379
+                  }
+                }
+              },
+              "minLength": 1,
+              "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
+            },
+            "port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive.",
+              "default": 6379,
+              "x-referenceable": true
+            },
+            "username": {
+              "type": "string",
+              "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+              "x-referenceable": true
+            },
+            "sentinel_password": {
+              "type": "string",
+              "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.",
+              "x-encrypted": true,
+              "x-referenceable": true
+            },
+            "keepalive_pool_size": {
+              "type": "integer",
+              "maximum": 2147483646,
+              "minimum": 1,
+              "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
+              "default": 256
+            },
+            "server_name": {
+              "type": "string",
+              "description": "A string representing an SNI (server name indication) value for TLS.",
+              "x-referenceable": true
+            },
+            "sentinel_username": {
+              "type": "string",
+              "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
+              "x-referenceable": true
+            },
+            "connection_is_proxied": {
+              "type": "boolean",
+              "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
+              "default": false
+            },
+            "read_timeout": {
+              "type": "integer",
+              "maximum": 2147483646,
+              "minimum": 0,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "default": 2000
+            },
+            "password": {
+              "type": "string",
+              "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "sentinel_master": {
+              "type": "string",
+              "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+            },
+            "sentinel_role": {
+              "type": "string",
+              "enum": [
+                "any",
+                "master",
+                "slave"
+              ],
+              "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
+            },
+            "ssl": {
+              "type": "boolean",
+              "description": "If set to true, uses SSL to connect to Redis.",
+              "default": false
+            },
+            "ssl_verify": {
+              "type": "boolean",
+              "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
+              "default": true
+            },
+            "cluster_max_redirections": {
+              "type": "integer",
+              "description": "Maximum retry attempts for redirection.",
+              "default": 5
+            },
+            "host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com.",
+              "default": "127.0.0.1",
+              "x-referenceable": true
+            },
+            "connect_timeout": {
+              "type": "integer",
+              "maximum": 2147483646,
+              "minimum": 0,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "default": 2000
+            },
+            "send_timeout": {
+              "type": "integer",
+              "maximum": 2147483646,
+              "minimum": 0,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "default": 2000
+            },
+            "cloud_authentication": {
+              "type": "object",
+              "properties": {
+                "gcp_service_account_json": {
+                  "type": "string",
+                  "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "azure_client_secret": {
+                  "type": "string",
+                  "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "azure_tenant_id": {
+                  "type": "string",
+                  "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "auth_provider": {
+                  "type": "string",
+                  "enum": [
+                    "aws",
+                    "azure",
+                    "gcp"
+                  ],
+                  "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
+                  "x-referenceable": true
+                },
+                "aws_cache_name": {
+                  "type": "string",
+                  "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true
+                },
+                "aws_is_serverless": {
+                  "type": "boolean",
+                  "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                  "default": true
+                },
+                "aws_secret_access_key": {
+                  "type": "string",
+                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_assume_role_arn": {
+                  "type": "string",
+                  "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_role_session_name": {
+                  "type": "string",
+                  "description": "The session name for the temporary credentials when assuming the IAM role.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "azure_client_id": {
+                  "type": "string",
+                  "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_region": {
+                  "type": "string",
+                  "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true
+                },
+                "aws_access_key_id": {
+                  "type": "string",
+                  "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                }
+              },
+              "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
+            }
+          }
+        },
+        "pass_all_downstream_headers": {
+          "type": "boolean",
+          "description": "pass all downstream headers to the upstream graphql server in introspection request",
+          "default": false
+        },
+        "window_size": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "One or more window sizes to apply a limit to (defined in seconds)."
+        },
+        "window_type": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "sliding"
+          ],
+          "description": "Sets the time window to either `sliding` or `fixed`.",
+          "default": "sliding"
+        },
+        "limit": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "One or more requests-per-window limits to apply."
+        },
+        "sync_rate": {
+          "type": "number",
+          "description": "How often to sync counter data to the central data store. A value of 0 results in synchronous behavior; a value of -1 ignores sync behavior entirely and only stores counters in node memory. A value greater than 0 syncs the counters in that many number of seconds."
+        }
+      },
+      "required": [
+        "limit",
+        "sync_rate",
+        "window_size"
+      ]
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+    }
+  },
+  "required": [
+    "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "redis-ee",
+      "paths": [
+        "config.redis"
+      ]
+    }
+  ]
+}
