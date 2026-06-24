@@ -207,8 +207,6 @@ skills_repo_slug: kong/ai-marketplace
 skills_repo_path: app/.repos/ai-marketplace
 
 
-plugin_schemas_path: app/_schemas/gateway/plugins
-
 mesh_policy_schemas_path: app/.repos/kuma/app/assets/
 
 sitemap:

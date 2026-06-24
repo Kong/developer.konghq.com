@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 require 'json'
-require_relative '../../lib/site_accessor'
 
 module Jekyll
   module Drops
     module Plugins
       class AIGWPolicySchema < Liquid::Drop # rubocop:disable Style/Documentation
-        include Jekyll::SiteAccessor
+        SCHEMAS_DIR = File.expand_path('../../../_schemas/ai-gateway/policies', __dir__).freeze
+        FILE_INDEX = Dir.glob(File.join(SCHEMAS_DIR, '*.json'))
+                        .to_h { |f| [File.basename(f).downcase, f] }
+                        .freeze
 
         def initialize(slug:) # rubocop:disable Lint/MissingSuper
           @slug = slug
@@ -24,11 +26,8 @@ module Jekyll
         end
 
         def file_path
-          @file_path ||= File.join(site.source, '_schemas', 'ai-gateway', 'policies', filename)
-        end
-
-        def filename
-          "#{@slug.split('-').map(&:capitalize).join}.json"
+          @file_path ||= FILE_INDEX["#{@slug.delete('-')}.json"] ||
+                         raise(ArgumentError, "Schema file not found for policy `#{@slug}`")
         end
       end
     end
