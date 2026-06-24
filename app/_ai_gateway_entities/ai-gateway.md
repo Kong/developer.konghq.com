@@ -12,7 +12,7 @@ breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
 description: |
-  The top-level {{site.ai_gateway}} entity that owns Models, Providers, Policies, Agents, MCP Servers, and other AI-specific entities.
+  The top-level {{site.ai_gateway}} entity that owns AI Models, AI Providers, AI Policies, AI Agents, AI MCP Servers, and other AI-specific entities.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGateway
@@ -23,13 +23,13 @@ related_resources:
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
-  - text: Model entity
+  - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
-  - text: Provider entity
+  - text: AI Provider entity
     url: /ai-gateway/entities/ai-provider/
-  - text: Policy entity
+  - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
-  - text: Data Plane Certificate entity
+  - text: AI Data Plane Certificate entity
     url: /ai-gateway/entities/ai-data-plane-certificate/
 faqs:
   - q: How is an {{site.ai_gateway}} different from a {{site.konnect_short_name}} Gateway control plane?
@@ -100,7 +100,7 @@ When an {{site.ai_gateway}} is created, {{site.ai_gateway}} provisions two endpo
 1. **Configuration endpoint** (`endpoints.configuration`): the URL data plane nodes use to receive their configuration from the control plane.
 1. **Telemetry endpoint** (`endpoints.telemetry`): the URL data plane nodes use to ship analytics and runtime telemetry back to {{site.konnect_short_name}}.
 
-Both endpoints are read-only, assigned at creation time, and stable for the lifetime of the {{site.ai_gateway}}. Data plane nodes need both URLs, along with a [Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/), to register with the {{site.ai_gateway}}.
+Both endpoints are read-only, assigned at creation time, and stable for the lifetime of the {{site.ai_gateway}}. Data plane nodes need both URLs, along with an [AI Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/), to register with the {{site.ai_gateway}}.
 
 ## Control plane and data plane
 
