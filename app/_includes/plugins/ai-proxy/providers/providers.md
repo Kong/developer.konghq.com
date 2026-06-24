@@ -9,6 +9,8 @@ You can proxy requests to {{ provider.name }} AI models through {{site.ai_gatewa
 
 {{site.ai_gateway}} automatically routes requests to the appropriate {{ provider.name }} API endpoints. The following table shows the upstream paths used for each capability.
 
+<!--vale off-->
+
 {% table %}
 vertical_align: middle
 columns:
@@ -109,6 +111,8 @@ rows:
 {%- if provider.image.generations.supported or provider.image.edits.supported %}{% assign has_image = true %}{% endif -%}
 {%- if provider.video.generations.supported %}{% assign has_video = true %}{% endif -%}
 {%- if provider.realtime.supported %}{% assign has_realtime = true %}{% endif -%}
+
+<!--vale on-->
 
 ## Supported capabilities
 
