@@ -302,8 +302,18 @@ The load balancer includes a circuit breaker that improves reliability under sus
 
 A vector store holds numerical representations (embeddings) of requests and responses so the runtime can match new requests against stored vectors. It powers the [`semantic`](#schema-aigateway-model-config-balancer-algorithm) algorithm and any similarity-matching workflow on the Model. Configure storage through [`config.balancer.vectordb`](#schema-aigateway-model-config-balancer-vectordb) by selecting a `strategy`:
 
-* `redis`: connects to Redis with Vector Similarity Search (VSS), AWS MemoryDB for Redis, or Valkey. {{site.ai_gateway}} auto-detects Valkey from the server name field and uses the Valkey-specific driver.
-* `pgvector`: connects to PostgreSQL with the pgvector extension.
+{% table %}
+columns:
+  - title: Strategy
+    key: strategy
+  - title: Connection details
+    key: details
+rows:
+  - strategy: "`redis`"
+    details: "Connects to Redis with Vector Similarity Search (VSS), AWS MemoryDB for Redis, or Valkey. {{site.ai_gateway}} auto-detects Valkey from the server name field and uses the Valkey-specific driver."
+  - strategy: "`pgvector`"
+    details: "Connects to PostgreSQL with the pgvector extension."
+{% endtable %}
 
 For deeper background on vector storage and similarity matching, see [Embedding-based similarity matching](/ai-gateway/semantic-similarity/).
 
@@ -325,7 +335,7 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Access control
 
-An AI Model's [`acls`](#schema-aigateway-model-acls) field controls which identities are allowed to reach the AI Model. The field accepts `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. Access is enforced at the Service level of the generated primitives.
+An AI Model's [`acls`](#schema-aigateway-model-acls) field controls which identities are allowed to reach the AI Model. The field accepts `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. An **Authenticated Group** is a dynamic group representing all consumers that have authenticated via a specific OAuth2 scope or claim. Access is enforced at the Service level of the generated primitives.
 
 For per-request authentication and identity, configure the appropriate authentication AI Policy globally or attach it to the AI Model.
 

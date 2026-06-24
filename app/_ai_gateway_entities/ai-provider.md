@@ -106,47 +106,23 @@ rows:
 The [`config.auth`](#schema-aigateway-provider-config-auth) object declares how {{site.ai_gateway}} authenticates to the upstream provider. The shape of `auth` depends on the Provider's [`type`](#schema-aigateway-provider-type):
 
 * **`basic`**: header- or query-parameter-based auth. Used by most provider types.
-* **`aws`**: IAM access-key and assume-role auth. Used by `bedrock`.
-* **`azure`**: Microsoft Entra ID or managed-identity auth. Used by `azure`.
-* **`gcp`**: Google service-account auth. Used by `gemini` and `vertex`.
+* **`aws`**: IAM access-key and assume-role auth. Used by [Bedrock](/ai-gateway/ai-providers/bedrock/).
+* **`azure`**: Microsoft Entra ID or managed-identity auth. Used by [Azure OpenAI](/ai-gateway/ai-providers/azure/).
+* **`gcp`**: Google service-account auth. Used by [Gemini](/ai-gateway/ai-providers/gemini/) and [Vertex AI](/ai-gateway/ai-providers/vertex/).
 
-`bedrock`, `azure`, and `gemini` can also fall back to `basic` auth.
+[Bedrock](/ai-gateway/ai-providers/bedrock/), [Azure OpenAI](/ai-gateway/ai-providers/azure/), and [Gemini](/ai-gateway/ai-providers/gemini/) can also fall back to `basic` auth.
 
 ### AWS Bedrock authentication
 
-For the `bedrock` provider, use `aws` auth type with:
-
-* **`access_key_id`** (optional): AWS access key ID for static IAM user credentials. If omitted, the default AWS credentials provider chain is used (EC2 instance profiles, environment variables, etc.).
-* **`secret_access_key`** (optional): AWS secret access key paired with `access_key_id`. Required if `access_key_id` is set.
-* **`assume_role_arn`** (optional): IAM role ARN to assume for temporary credentials. Useful for cross-account access.
-* **`role_session_name`** (optional): Session name for the assumed role. Required if `assume_role_arn` is set.
-* **`sts_endpoint_url`** (optional): Custom STS endpoint for role assumption. Defaults to `https://sts.amazonaws.com`.
-* **`batch_role_arn`** (optional): Separate role ARN for Bedrock batch API calls.
-
-Fallback to `basic` auth is supported for API key-based authentication if your Bedrock setup requires it.
+The [Bedrock](/ai-gateway/ai-providers/bedrock/) provider uses `aws` auth type to authenticate via IAM. You can provide static credentials (access key and secret key), assume an IAM role for temporary credentials, or let {{site.ai_gateway}} auto-detect credentials from the environment (EC2 instance profiles, environment variables, or local AWS configuration). Assuming a role is recommended for production deployments. Cross-account access is supported via role assumption. Alternatively, [Bedrock](/ai-gateway/ai-providers/bedrock/) also accepts `basic` auth if you prefer API key authentication.
 
 ### Azure authentication
 
-For the `azure` provider, use `azure` auth type with:
-
-* **`use_managed_identity`**: Set to `true` to use Azure Managed Identity (recommended for deployments in Azure). When true, the system uses the identity of the current Azure resource (VM, container, function app, etc.).
-* **`client_id`** (optional): Entra ID (formerly AAD) application client ID. Required if using a user-assigned managed identity or service principal instead of system-assigned managed identity.
-* **`client_secret`** (optional): Client secret for the Entra ID application. Required if `client_id` is set.
-* **`tenant_id`** (optional): Azure tenant ID (directory ID). Required if using service principal credentials.
-* **`instance`** (optional): Azure cloud instance (e.g. `china`, `government`). Defaults to public cloud.
-
-Fallback to `basic` auth is supported for Azure API key authentication.
+The [Azure OpenAI](/ai-gateway/ai-providers/azure/) provider uses `azure` auth type to authenticate via Microsoft Entra ID. The recommended approach is to enable Managed Identity when running {{site.ai_gateway}} in Azure (VMs, containers, functions). For scenarios requiring explicit credentials, provide a client ID, secret, and tenant ID. Alternatively, [Azure OpenAI](/ai-gateway/ai-providers/azure/) also accepts `basic` auth for API key authentication.
 
 ### GCP authentication
 
-For the `gemini` and `vertex` providers, use `gcp` auth type with:
-
-* **`use_gcp_service_account`**: Set to `true` to use GCP service-account authentication. When true, the system retrieves credentials from the application default credentials chain (service account JSON file, Compute Engine metadata server, etc.).
-* **`service_account_json`** (optional): Full JSON string of the GCP service account. If omitted, application default credentials are used. Can be referenced from a Vault.
-* **`metadata_url`** (optional): Custom metadata server URL for GCP authentication. Useful in restricted network environments.
-* **`oauth_token_url`** (optional): Custom OAuth token endpoint for GCP. Overrides the default Google token server.
-
-Fallback to `basic` auth is supported for GCP API key authentication.
+The [Gemini](/ai-gateway/ai-providers/gemini/) and [Vertex AI](/ai-gateway/ai-providers/vertex/) providers use `gcp` auth type to authenticate via Google service accounts. The default approach is to let {{site.ai_gateway}} auto-detect credentials from the environment (service account JSON file or Compute Engine metadata server). For restricted network environments, you can provide custom metadata or OAuth token endpoints. Alternatively, [Gemini](/ai-gateway/ai-providers/gemini/) and [Vertex AI](/ai-gateway/ai-providers/vertex/) also accept `basic` auth for API key authentication.
 
 {:.warning}
 > Don't commit credential values to source control. Use a secret-management system to inject

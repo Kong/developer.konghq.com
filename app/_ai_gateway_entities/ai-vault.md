@@ -82,7 +82,7 @@ HashiCorp Vault additionally supports several authentication methods (token, App
 
 ## Choosing a backend for your AI Vault
 
-Pick a backend matching your infrastructure: cloud-native deployments use their platform's secret service, enterprises use Conjur or HashiCorp Vault, small deployments use `env` or `konnect`.
+Pick a backend matching your infrastructure and secret management strategy. Cloud-native deployments can use their platform's secret service (`aws`, `gcp`, `azure`), enterprises can use dedicated secret management systems (`conjur`, `hcv`), and smaller deployments can use `env` (environment variables) or `konnect` (built-in Config Store).
 
 <!-- vale off -->
 {% table %}
