@@ -10,9 +10,7 @@ module Jekyll
       include Policies::GeneratorBase
 
       def schema
-        @schema ||= Jekyll::Drops::Plugins::AIGWPolicySchema.new(
-          { 'properties' => { 'config' => api_plugin.data['schema'].as_json.dig('properties', 'config') } }
-        )
+        @schema ||= Jekyll::Drops::Plugins::AIGWPolicySchema.new(slug: @slug)
       end
 
       def examples
