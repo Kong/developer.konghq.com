@@ -1,7 +1,7 @@
 <!--vale off-->
 {%- assign provider = include.providers.providers | where: "name", include.provider_name | first -%}
 {% if provider %}
-You can proxy requests to BOB {{ provider.name }} AI models through {{site.ai_gateway}} by creating [AI Providers](/ai-gateway/entities/ai-provider/) and [AI Models](/ai-gateway/entities/ai-model/). This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
+You can proxy requests to {{ provider.name }} AI models through {{site.ai_gateway}} by creating [AI Providers](/ai-gateway/entities/ai-provider/) and [AI Models](/ai-gateway/entities/ai-model/). This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
 
 ## Upstream paths
 
