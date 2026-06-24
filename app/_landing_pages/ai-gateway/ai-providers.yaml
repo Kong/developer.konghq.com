@@ -188,7 +188,6 @@ rows:
             pages:
               - /ai-gateway/load-balancing/
               - /ai-gateway/resource-sizing-guidelines-ai/
-              - /how-to/?tags=ai
   - header:
       text: "Frequently Asked Questions"
       type: h2
@@ -198,32 +197,32 @@ rows:
           config:
             - q: Can I authenticate to Azure AI with Azure Identity?
               a: |
-                {% include faqs/azure-identity.md %}
+                {% include md/ai-gateway/v2/faqs/azure-identity.md %}
 
             - q: How can I set model generation parameters when calling Gemini?
               a: |
-                {% include faqs/gemini-model-params.md %}
+                {% include md/ai-gateway/v2/faqs/gemini-model-params.md %}
             - q: How do I use Gemini's `googleSearch` tool for real-time web searches?
               a: |
-                {% include faqs/gemini-search.md %}
+                {% include md/ai-gateway/v2/faqs/gemini-search.md %}
             - q: How do I control aspect ratio and resolution for Gemini image generation?
               a: |
-                {% include faqs/gemini-image.md %}
+                {% include md/ai-gateway/v2/faqs/gemini-image.md %}
             - q: How do I get reasoning traces from Gemini models?
               a: |
-                {% include faqs/gemini-thinking.md %}
+                {% include md/ai-gateway/v2/faqs/gemini-thinking.md %}
             - q: How do I specify model IDs for Amazon Bedrock cross-region inference profiles?
               a: |
-                {% include faqs/bedrock-models.md %}
+                {% include md/ai-gateway/v2/faqs/bedrock-models.md %}
             - q: How do I set the FPS parameter for video generation for Amazon Bedrock?
               a: |
-                {% include faqs/bedrock-fps.md %}
+                {% include md/ai-gateway/v2/faqs/bedrock-fps.md %}
             - q: How do I use Amazon Bedrock's Rerank API to improve RAG retrieval quality?
               a: |
-                {% include faqs/bedrock-rerank.md %}
+                {% include md/ai-gateway/v2/faqs/bedrock-rerank.md %}
             - q: How do I include guardrail configuration with Amazon Bedrock requests?
               a: |
-                {% include faqs/bedrock-guardrails.md %}
+                {% include md/ai-gateway/v2/faqs/bedrock-guardrails.md %}
             - q: How do I use Cohere's document-grounded chat for RAG pipelines?
               a: |
-                {% include faqs/cohere-rerank.md %}
+                {% include md/ai-gateway/v2/faqs/cohere-rerank.md %}
