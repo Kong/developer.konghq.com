@@ -63,11 +63,6 @@ faqs:
     a: |
       Set the [`acls`](#schema-aigateway-agent-acls) field on the AI Agent with allow or deny lists. Each entry is a string that
       references an AI Consumer, AI Consumer Group, or Authenticated Group by name.
-
-  - q: Can the same plugin run on an AI Agent that I'd attach to a route or service?
-    a: |
-      Plugin configuration that applies to the AI Agent goes through the [AI Policy entity](/ai-gateway/entities/ai-policy/).
-      Attach AI Policies to the AI Agent through its [`policies`](#schema-aigateway-agent-policies) field.
 ---
 
 ## What is an AI Agent?
