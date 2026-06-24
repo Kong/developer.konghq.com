@@ -26,9 +26,8 @@ definitions:
       [Dev Portal](/dev-portal/)
   - term: Directory
     description: |
-      Regional collection of principals. 
-      Each {{site.konnect_short_name}} organization gets one directory per region.
-    url: |
+      Regional collection of principals.
+      Each {{site.konnect_short_name}} organization can provision up to one directory per region by default.
       [Principals and directories](/identity/principals/)
 
   - term: Groups
