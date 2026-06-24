@@ -58,7 +58,7 @@ faqs:
       Set [`acl_attribute_type`](#schema-aigateway-mcpserver-acl-attribute-type) to `oauth_access_token` and provide [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) (a jq
       filter, for example `.user.email`). ACLs then evaluate against the claim value extracted from
       the OAuth access token instead of the resolved Consumer identity. The OAuth flow is supplied
-      by the [AI MCP OAuth2 Policy](/plugins/ai-mcp-oauth2/).
+      by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
 
   - q: What error code do denied requests return?
     a: |
@@ -66,10 +66,10 @@ faqs:
       `INVALID_PARAMS -32602`; from {{site.ai_gateway}} 3.14 onward, denials follow the
       [MCP 2025-11-25 authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#error-handling).
 
-  - q: Can I attach the same authentication or rate-limiting plugin that I'd attach to a Route?
+  - q: Can I attach the same authentication or rate-limiting policy that I'd attach to a Route?
     a: |
-      Plugin configuration that applies to the AI MCP Server goes through the
-      [Policy entity](/ai-gateway/entities/ai-policy/). Attach Policies to the AI MCP Server through its
+      Policy configuration that applies to the AI MCP Server goes through the
+      [AI Policy entity](/ai-gateway/entities/ai-policy/). Attach Policies to the AI MCP Server through its
       [`policies`](#schema-aigateway-mcpserver-policies) field.
 ---
 
@@ -79,7 +79,7 @@ An AI MCP Server is a first-class {{site.ai_gateway}} entity that exposes tools 
 
 Because the runtime executes inside {{site.ai_gateway}}, MCP endpoints are provisioned dynamically on demand. You don't host or scale them separately, and the same authentication, traffic control, and observability features available to traditional API traffic apply to MCP traffic at the same scale.
 
-AI MCP Servers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+AI MCP Servers can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
 {% table %}
 columns:
@@ -237,7 +237,7 @@ Two session strategies:
 1. **Client.** Session state is encrypted into the MCP session ID assigned to the client. Requires `secrets` which are encryption keys; the first entry is used for encryption, all entries are used for decryption to support key rotation.
 1. **Redis.** Session state is stored in Redis. Configure connection details and authentication in [`config.server.session.redis`](#schema-aigateway-mcpserver-config-server-session-redis).
 
-{% include_cached /plugins/redis/redis-cloud-auth.md tier='enterprise' %}
+{% include_cached /md/ai-gateway/v2/policies/redis-cloud-auth.md tier='enterprise' %}
 
 [`session_ttl`](#schema-aigateway-mcpserver-config-server-session-session-ttl) controls how long sessions live (default 24 hours). Set `managed: false` to disable managed sessions when the upstream maintains state externally.
 
@@ -275,7 +275,7 @@ rows:
 
 When exposing MCP servers through {{site.ai_gateway}}, you may need granular control over which authenticated API consumers can discover and invoke specific tools. The MCP Server's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions).
 
-This way, consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the MCP Server (such as [Key Auth](/plugins/key-auth/) or an OIDC flow), and the resulting Consumer identity is used for ACL checks.
+This way, consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the MCP Server (such as [Key Auth policy](/ai-gateway/policies/key-auth/) or an OIDC flow), and the resulting Consumer identity is used for ACL checks.
 
 {:.info}
 > **ACL in `listener` mode**
@@ -294,7 +294,7 @@ This way, consumers only interact with tools appropriate to their role, while ma
 For modes that support ACL configuration (`conversion-listener`, `conversion-only`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
 
 1. **`consumer`** (default). Evaluates against the resolved Consumer identity.
-1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/plugins/ai-mcp-oauth2/).
+1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
 
 ### Supported identifier types
 
@@ -442,9 +442,9 @@ sequenceDiagram
 
 ## Attach Policies
 
-Authentication, rate limiting, request and response transformation, and OAuth gating (through [AI MCP OAuth2](/plugins/ai-mcp-oauth2/)) attach to the AI MCP Server through the [`policies`](#schema-aigateway-mcpserver-policies) field. Each entry is a string that references a Policy by name or ID. Multiple Policies can attach to one AI MCP Server; each runs independently.
+Authentication, rate limiting, request and response transformation, and OAuth gating (through [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/)) attach to the AI MCP Server through the [`policies`](#schema-aigateway-mcpserver-policies) field. Each entry is a string that references a Policy by name or ID. Multiple Policies can attach to one AI MCP Server; each runs independently.
 
-For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+For details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Scope of support
 
