@@ -10,7 +10,7 @@ works_on:
   - konnect
 
 min_version:
-  ai-gateway: '2.0.0'
+  ai-gateway: '2.0'
 
 entities:
   - ai-mcp-server
@@ -35,8 +35,8 @@ related_resources:
 
 cleanup:
   inline:
-    - title: Clean up {{site.konnect_product_name}} environment
-      include_content: md/ai-gateway/v2/cleanup/konnect
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
 
 ---
 

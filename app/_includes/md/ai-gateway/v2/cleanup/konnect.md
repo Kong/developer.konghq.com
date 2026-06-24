@@ -1,1 +1,0 @@
-If you created a new control plane and want to conserve your free trial credits or avoid unnecessary charges, delete the new [ai-quickstart control plane](https://cloud.konghq.com/ai-manager/) used in this tutorial.
