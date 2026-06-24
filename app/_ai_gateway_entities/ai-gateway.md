@@ -67,7 +67,7 @@ faqs:
 
 ## What is an {{site.ai_gateway}}?
 
-An {{site.ai_gateway}} is the top-level {{site.ai_gateway}} entity. It's a dedicated control plane for AI traffic, separate from a regular {{site.konnect_short_name}} Gateway control plane, that owns the entities {{site.ai_gateway}} uses to serve LLM and agent workloads:
+An {{site.ai_gateway}} is the top-level {{site.ai_gateway}} entity. It represents a single {{site.ai_gateway}} deployment that can operate in two modes: a Control Plane mode (for configuration management and policy enforcement) and a Data Plane mode (for proxying LLM and agent traffic). These modes run within the same {{site.ai_gateway}} runtime, separated from {{site.konnect_short_name}}'s regular Gateway control plane. The {{site.ai_gateway}} entity owns all the child entities used to serve LLM and agent workloads:
 
 1. [AI Models](/ai-gateway/entities/ai-model/): AI model endpoints, capabilities, and load balancing.
 1. [AI Providers](/ai-gateway/entities/ai-provider/): upstream LLM service connections and credentials.
