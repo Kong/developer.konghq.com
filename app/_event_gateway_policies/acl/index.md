@@ -99,3 +99,11 @@ sequenceDiagram
 
 {% endmermaid %}
 <!--vale on-->
+
+## Security considerations
+
+When `resource_names` uses an expression that interpolates an identity into a glob pattern (for example `[context.auth.principal.name + "-*"]` or `[context.auth.token.claims.topic_prefix + "*"]`), the interpolated value is matched as a glob and is **not** escaped. If the value can contain glob metacharacters (`*`, `?`, `[`, `]`), they act as wildcards and can widen the set of matched resources beyond what you intend.
+
+For example, with `resource_names: '[context.auth.principal.name + "-*"]'`, a principal named `ali*` produces the pattern `ali*-*`, which matches topics such as `alibob-secrets` and `ali-data`, not just that principal's own topics.
+
+Only interpolate identity values into `resource_names` patterns when those values are guaranteed not to contain glob metacharacters.

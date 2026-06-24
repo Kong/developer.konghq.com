@@ -481,6 +481,8 @@ meshopa
 meshopas
 meshpassthrough
 meshpassthroughs
+metacharacter
+metacharacters
 metainfo
 metamethod
 metatable
