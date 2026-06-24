@@ -577,6 +577,7 @@ rows:
     details: |
       * Developers can select servers from a list with support for server variables (templated server URLs).
       * Security scheme rendering (for example, API key and OAuth2 flows).
+      * Sensitive data masking: auth credentials from `securitySchemes` are masked automatically in code samples and Try It response headers. Annotate body properties with `x-sensitive-data` for additional masking.
   - feature: AsyncAPI
     details: |
       * Supports channels, operations, and messages/payloads.
@@ -587,6 +588,71 @@ rows:
       * Developers can download specs using a button that supports YAML or JSON output.
       * Collapsible sections. You can choose either **previous** and **next** navigation buttons or continuous scrolling.
 {% endtable %}
+
+### Protect sensitive data in your API docs
+
+If your spec includes example values for fields like passwords, API keys, or email addresses, you can prevent those values from appearing in generated code samples, spec examples, and Try It responses.
+
+* **Automatic masking:** Authentication credentials from `securitySchemes` are masked automatically in code samples and Try It response headers. No annotation is needed.
+* **Opt-in masking with `x-sensitive-data`:** For request and response body properties that contain sensitive values, add `x-sensitive-data` to the schema property. This controls how the value is displayed in code sample examples and Try It response bodies.
+
+The following mask strategies are available:
+
+{% table %}
+columns:
+  - title: Strategy
+    key: strategy
+  - title: Displayed as
+    key: display
+  - title: When to use
+    key: use
+rows:
+  - strategy: "`full`"
+    display: "`••••••`"
+    use: Hide the value entirely
+  - strategy: "`remove`"
+    display: "*(field omitted)*"
+    use: Remove the field from examples
+  - strategy: "`hash`"
+    display: "`3d2a1f8c`"
+    use: Show that two values are equal without revealing either
+  - strategy: "`regex`"
+    display: "Partial mask (for example, `••••••@example.com`)"
+    use: Mask only part of the value, using a regex pattern
+{% endtable %}
+
+The following example shows how you can use `x-sensitive-data` in a schema:
+
+```yaml
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: alice
+        password:
+          type: string
+          x-sensitive-data:
+            mask: full          # displayed as ••••••
+        email:
+          type: string
+          x-sensitive-data:
+            mask: regex
+            pattern: ^[^@]+    # displayed as ••••••@example.com
+        apiToken:
+          type: string
+          x-sensitive-data:
+            mask: remove        # field omitted from examples entirely
+```
+
+{:.info}
+> Masking is display-only. Try It always sends the real credential values so API calls work correctly.
+
+#### Mask sensitive data toggle
+
+Any panel that contains masked data shows a **Mask sensitive data** toggle, which is on by default. Developers can turn it off to see the real values inline without leaving the page. The toggle is hidden when no masking is active for that panel.
 
 ### Filtering published APIs in {{site.dev_portal}}
 
