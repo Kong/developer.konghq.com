@@ -33,7 +33,7 @@ related_resources:
     url: /ai-gateway/monitor-ai-llm-metrics/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: OpenTelemetry plugin
+  - text: OpenTelemetry Policy
     url: /plugins/opentelemetry/
   - text: Full OpenTelemetry metrics reference
     url: /gateway/otel-metrics/

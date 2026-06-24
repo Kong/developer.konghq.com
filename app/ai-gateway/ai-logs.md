@@ -31,7 +31,6 @@ related_resources:
     url: /how-to/add-correlation-ids-to-gateway-logs/
 
 works_on:
-  - on-prem
   - konnect
 ---
 
