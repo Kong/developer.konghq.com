@@ -276,7 +276,7 @@ Task state values surfaced in logs and spans are normalized to lowercase A2A spe
 
 ## Access control
 
-The [`acls`](#schema-aigateway-agent-acls) field controls which identities are allowed to reach the AI Agent. The field accepts `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. Access is enforced before traffic reaches the upstream agent.
+The [`acls`](#schema-aigateway-agent-acls) field controls which identities are allowed to reach the AI Agent. The field accepts `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. An **Authenticated Group** is a dynamic group representing all consumers that have authenticated via a specific OAuth2 scope or claim. Access is enforced before traffic reaches the upstream agent.
 
 For per-request authentication and identity, attach an authentication AI Policy to the AI Agent.
 
