@@ -4,10 +4,10 @@ metadata:
   description: This page is an introduction to MCP Traffic Gateway capabilities in {{site.ai_gateway}}.
   products:
     - ai-gateway
-    - gateway
   works_on:
-    - on-prem
     - konnect
+  min_version:
+    ai-gateway: '2.0'
   breadcrumbs:
     - /ai-gateway/
   tags:
@@ -67,21 +67,21 @@ rows:
                   text: |
                     Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entities to apply security, governance, and observability controls across your MCP infrastructure.
 
-                    Use AI Policies and Kong Gateway plugins to:
-                    - Secure access with the MCP OAuth2 policy or other authentication methods
+                    Use AI Policies to:
+                    - Secure access with the MCP OAuth2 AI Policy or other authentication methods
                     - Monitor MCP traffic using AI metrics and AI audit logs
                     - Enforce access controls for MCP tool usage
-                    - Govern usage with rate limiting and traffic control plugins
+                    - Govern usage with rate limiting and traffic control
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Security and governance with Policies
+              title: Security and governance with AI Policies
               description: Secure MCP servers and govern traffic with AI Policies.
               ctas:
                 - text: MCP OAuth2 policy
                   url: "/ai-gateway/entities/ai-policy/"
                 - text: Rate Limiting
-                  url: "/plugins/rate-limiting/"
+                  url: "/ai-gateway/policies/rate-limiting/"
                 - text: Observability
                   url: "/ai-gateway/ai-audit-log-reference/#ai-mcp-logs"
 

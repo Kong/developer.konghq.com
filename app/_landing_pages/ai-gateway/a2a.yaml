@@ -4,10 +4,10 @@ metadata:
   description: Observe Agent-to-Agent (A2A) protocol traffic through {{site.ai_gateway}}.
   products:
     - ai-gateway
-    - gateway
   works_on:
-    - on-prem
     - konnect
+  min_version:
+    ai-gateway: '2.0'
   tags:
     - ai
     - a2a
@@ -69,15 +69,15 @@ rows:
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Secure and govern with Policies
-              description: Secure A2A agents and control access with Policies.
+              title: Secure and govern with AI Policies
+              description: Secure A2A agents and control access with AI Policies.
               ctas:
                 - text: OpenID Connect
-                  url: "/plugins/openid-connect/"
+                  url: "/ai-gateway/policies/openid-connect/"
                 - text: Rate Limiting
-                  url: "/plugins/?category=traffic-control"
-                - text: Authentication plugins
-                  url: "/plugins/?category=authentication"
+                  url: "/ai-gateway/policies/?category=traffic-control"
+                - text: Authentication policies
+                  url: "/ai-gateway/policies/?category=authentication"
 
   - header:
       type: h2
