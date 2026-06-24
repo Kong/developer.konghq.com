@@ -13,6 +13,6 @@ A vector database stores and compares vector embeddings—numerical representati
 
     For configuration details, see [Using cloud authentication with Redis](#using-cloud-authentication-with-redis).
 * Using `vectordb.strategy: pgvector` and parameters in `vectordb.pgvector`:
-  * **[PostgreSQL with pgvector](https://github.com/pgvector/pgvector)** {% new_in 2.0 %}
+  * **[PostgreSQL with pgvector](https://github.com/pgvector/pgvector)**
 
 Configure vector database settings in [AI Models](/ai-gateway/entities/ai-model/) and [AI Policies](/ai-gateway/entities/ai-policy/) to enable semantic similarity features.
