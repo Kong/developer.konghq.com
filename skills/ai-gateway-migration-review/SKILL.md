@@ -122,7 +122,7 @@ v2 AI Gateway is Konnect-only. Flag any references to on-premises deployments, s
 
 ### Kong Gateway → AI Gateway
 
-References to Kong Gateway or `{{site.base_gateway}}` should be replaced with `{{site.ai_gateway}}`.
+Most references to Kong Gateway or `{{site.base_gateway}}` should be replaced with `{{site.ai_gateway}}`. However, some are legitimate — when a sentence genuinely compares or contrasts AI Gateway with Kong Gateway (e.g. "When operating {{site.ai_gateway}} alongside {{site.base_gateway}}…"), the `{{site.base_gateway}}` reference may be intentional. Flag these for manual review rather than replacing them automatically.
 
 ### AI Gateway entity names
 
@@ -140,7 +140,15 @@ All AI Gateway entity names (from `app/_ai_gateway_entities/`) must be capitaliz
 - AI Provider
 - AI Vault
 
-Flag any references to these entities without the "AI" prefix (e.g., "model" instead of "AI Model", "provider" instead of "AI Provider", "policy" instead of "AI Policy"). **Check the entire file including frontmatter** — FAQs, `related_resources` links, and all entity references in link text must use the full "AI" prefix (e.g., `[AI Policy entity]` not `[Policy entity]`).
+Flag any references to these entities without the "AI" prefix, in both singular and plural forms. For example:
+- "model" or "models" → "AI Model" / "AI Models"
+- "provider" or "providers" → "AI Provider" / "AI Providers"
+- "policy" or "policies" → "AI Policy" / "AI Policies"
+- "agent" or "agents" → "AI Agent" / "AI Agents"
+- "consumer" or "consumers" → "AI Consumer" / "AI Consumers"
+- "vault" → "AI Vault"
+
+**Check the entire file including frontmatter** — FAQs, `related_resources` links, and all entity references in link text must use the full "AI" prefix (e.g., `[AI Policies](/ai-gateway/entities/ai-policy/)` not `[Policies](/ai-gateway/entities/ai-policy/)`).
 
 ### Links to unmigrated how-to guides
 
