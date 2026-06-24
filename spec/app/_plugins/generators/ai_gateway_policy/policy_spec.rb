@@ -12,10 +12,10 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   let(:plugin_drop) { double('PluginDrop', metadata: plugin_metadata) }
 
   let(:config_schema) { { 'type' => 'object', 'properties' => {} } }
-  let(:schema_obj) { double('Schema', as_json: { 'properties' => { 'config' => config_schema, 'consumer' => {} } }) }
+  let(:schema_json) { JSON.dump({ 'properties' => { 'config' => config_schema } }) }
 
   let(:api_plugin_page) do
-    instance_double(Jekyll::PluginPages::Pages::Overview, data: { 'plugin' => plugin_drop, 'schema' => schema_obj })
+    instance_double(Jekyll::PluginPages::Pages::Overview, data: { 'plugin' => plugin_drop })
   end
 
   let(:site_config) { { 'ai_gateway_policies' => { 'metadata' => { 'keep' => %w[title name description icon] } } } }
@@ -23,6 +23,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   let(:site) do
     instance_double(
       Jekyll::Site,
+      source: '/app',
       data: {
         'kong_plugins' => { slug => api_plugin_page },
         'policies' => { 'ai-gateway' => { 'scopes' => scopes_data } }
@@ -48,6 +49,8 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
     allow(File).to receive(:read).and_call_original
     allow(File).to receive(:read).with(File.join(folder, 'index.md'))
                                  .and_return("---\nproducts:\n  - ai-gateway\n---\n")
+    allow(File).to receive(:read).with('/app/_schemas/ai-gateway/policies/MyPolicy.json')
+                                 .and_return(schema_json)
   end
 
   subject(:policy) { described_class.new(folder:, slug:) }
@@ -55,7 +58,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   describe '#schema' do
     it { expect(policy.schema).to be_a(Jekyll::Drops::Plugins::AIGWPolicySchema) }
 
-    it 'returns a Schema whose as_json wraps the config properties from the api plugin schema' do
+    it 'returns a Schema whose as_json wraps the config properties from the schema file' do
       expect(policy.schema.as_json).to eq({ 'properties' => { 'config' => config_schema } })
     end
   end
@@ -77,7 +80,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
       expect(metadata).not_to have_key('unlisted_key')
     end
 
-    it 'includes the schema as a Schema object whose as_json wraps the config properties' do
+    it 'includes the schema as an AIGWPolicySchema object backed by the schema file' do
       expect(metadata['schema']).to be_a(Jekyll::Drops::Plugins::AIGWPolicySchema)
       expect(metadata['schema'].as_json).to eq({ 'properties' => { 'config' => config_schema } })
     end
