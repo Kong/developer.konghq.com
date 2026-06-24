@@ -126,7 +126,7 @@ The following tables show the AI capabilities supported by the {{ provider.name 
 ### Text generation
 
 Support for {{ provider.name }} basic text generation capabilities including chat, completions, and embeddings:
-
+<!--vale off-->
 {% table %}
 vertical_align: middle
 columns:
@@ -169,10 +169,13 @@ rows:
 {%- endif -%}
 {% if has_advanced_text %}
 
+<!--vale on-->
+
 ### Advanced text generation
 
 Support for {{ provider.name }} function calling to allow {{ provider.name }} models to use external tools and APIs:
 
+<!--vale off-->
 {% table %}
 vertical_align: middle
 columns:
@@ -196,10 +199,13 @@ rows:
 {%- endif -%}
 {% if has_processing %}
 
+<!--vale on-->
+
 ### Processing
 
 Support for {{ provider.name }} file operations, batch operations, assistants, and response handling:
 
+<!--vale off-->
 {% table %}
 vertical_align: middle
 columns:
@@ -248,10 +254,13 @@ rows:
 {%- endif -%}
 {% if has_audio %}
 
+<!--vale on-->
+
 ### Audio
 
 Support for {{ provider.name }} text-to-speech, transcription, and translation capabilities:
 
+<!--vale off-->
 {% table %}
 vertical_align: middle
 columns:
@@ -295,10 +304,13 @@ rows:
 {%- endif -%}
 {% if has_image %}
 
+<!--vale on-->
+
 ### Image
 
 Support for {{ provider.name }} image generation and editing capabilities:
 
+<!--vale off-->
 {% table %}
 vertical_align: middle
 columns:
@@ -335,10 +347,13 @@ rows:
 {%- endif -%}
 {% if has_video %}
 
+<!--vale on-->
+
 ### Video
 
 Support for {{ provider.name }} video generation capabilities:
 
+<!--vale off-->
 {% table %}
 vertical_align: middle
 columns:
@@ -366,6 +381,8 @@ rows:
 {%- endif -%}
 {% if has_realtime %}
 
+<!--vale on-->
+
 ### Realtime
 
 Support for {{ provider.name }}'s bidirectional streaming for realtime applications:
@@ -375,6 +392,7 @@ Support for {{ provider.name }}'s bidirectional streaming for realtime applicati
 >
 > To use the realtime route, you must configure the protocols `ws` and/or `wss` on both the Service and on the Route where the plugin is associated.
 
+<!--vale off-->
 {% table %}
 vertical_align: middle
 columns:
@@ -412,3 +430,5 @@ The base URL is `{{ provider.url_patterns.first }}`, where `{route_type_path}` i
 {% else %}
 Provider "{{ include.provider_name }}" not found.
 {% endif %}
+
+<!--vale on-->
