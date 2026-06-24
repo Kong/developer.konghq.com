@@ -223,7 +223,7 @@ rows:
     type: "`string`"
     description: "The normalized request path, without query parameters."
     example: |
-      `http.path.starts_with("/api/v2")`
+      `http.path.startsWith("/api/v2")`
   - field: "`http.path_segments`"
     type: "`list<string>`"
     description: |
@@ -500,9 +500,9 @@ rows:
     description: "Tests whether a value is a member of a list."
   - type: "`contains()`"
     description: "Returns `true` if the string contains the given substring."
-  - type: "`starts_with()`"
+  - type: "`startsWith()`"
     description: "Returns `true` if the string starts with the given prefix."
-  - type: "`ends_with()`"
+  - type: "`endsWith()`"
     description: "Returns `true` if the string ends with the given suffix."
   - type: "`matches()`"
     description: |
