@@ -150,7 +150,7 @@ rows:
             description: Expose and govern tools from external Model Context Protocol servers.
             icon: /assets/icons/mcp.svg
             cta:
-              url: /cookbooks/external-mcp-server/
+              url: /cookbooks/secure-external-mcp-gateway/
               align: end
 
   - header:
