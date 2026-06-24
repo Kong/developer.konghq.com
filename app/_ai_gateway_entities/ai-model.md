@@ -26,13 +26,13 @@ related_resources:
     url: /ai-gateway/ai-providers/
   - text: Load balancing
     url: /ai-gateway/load-balancing/
-  - text: Provider entity
+  - text: AI Provider entity
     url: /ai-gateway/entities/ai-provider/
-  - text: Policy entity
+  - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
-  - text: Consumer Group entity
+  - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
 faqs:
   - q: What's the difference between an AI Model entity and the `model` field in an AI Policy configuration?
@@ -41,19 +41,11 @@ faqs:
       It defines routing, capabilities, and load balancing. An AI Policy is a reusable configuration that adds behavior (like caching or guardrails) to an AI Model.
       You declare both separately and attach AI Policies to AI Models.
 
-  - q: Can I edit the Service or Routes that {{site.ai_gateway}} generates from a Model?
-    a: |
-      No. Generated primitives are protected from direct modification through the standard Admin API.
-      Update the Model entity instead, and {{site.ai_gateway}} recreates the underlying primitives within a single transaction.
 
   - q: What happens when I update an AI Model?
     a: |
       {{site.ai_gateway}} deletes the AI Model's derived primitives and recreates them from the updated entity state, all within a single database transaction.
       On failure, the transaction rolls back and no partial state is written.
-
-  - q: What happens when I delete an AI Model?
-    a: |
-      The AI Model and all its derived primitives (Service, Routes) are deleted within a single transaction.
 
   - q: Can I apply the same configuration to multiple AI Models?
     a: |
@@ -96,7 +88,7 @@ An AI Model is a first-class {{site.ai_gateway}} entity that represents an AI mo
 
 An AI Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream AI Provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates an AI Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services or Routes by hand.
 
-AI Models can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API:
+AI Models can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
 {% table %}
 columns:
@@ -351,15 +343,15 @@ Not every AI Policy type is valid as an AI Model attachment.
 
 AI Policies attached to an AI Model are not deleted when the AI Model is deleted; only the AI Model's reference is removed.
 
-For further information, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+For further information, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
-### Plugin priority and Policy execution order
+### AI Policy execution order
 
-A Policy attached to a Model runs on the Service of the Model's derived primitives. That Policy runs at the [priority](/gateway/entities/plugin/#plugin-priority) determined by its type, which affects when it executes relative to other Policies on the request.
+An AI Policy attached to a Model runs on the Service of the Model's derived primitives. That AI Policy runs at the [priority](/gateway/entities/plugin/#plugin-priority) determined by its type, which affects when it executes relative to other AI Policies on the request.
 
-Model routing executes at a specific point in the request pipeline. Policies have different priorities that determine when they run.  Higher priority Policies types may run before the Model routing is resolved. Authentication Policies (such as OpenID Connect) fall into this category. They gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available until after Model resolution.
+Model routing executes at a specific point in the request pipeline. AI Policies have different priorities that determine when they run.  Higher priority AI Policy types may run before the Model routing is resolved. Authentication AI Policies (such as OpenID Connect) fall into this category. They gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available until after Model resolution.
 
-For Policies whose behavior depends on the resolved Model identity, use Policy types that run at or after Model resolution, or use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to adjust execution order as needed.
+For AI Policies whose behavior depends on the resolved Model identity, use AI Policy types that run at or after Model resolution, or use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to adjust execution order as needed.
 
 ## Upstream proxy configuration
 
