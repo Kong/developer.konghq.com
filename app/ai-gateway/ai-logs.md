@@ -3,16 +3,15 @@ title: "{{site.ai_gateway}} logs"
 content_type: reference
 layout: reference
 breadcrumbs:
-  - /gateway/
+  - /ai-gateway/
 products:
-    - gateway
+  - ai-gateway
 
 tags:
   - logging
   - monitoring
 min_version:
-  gateway: '3.5'
-
+  ai-gateway: '2.0'
 description: See where {{site.ai_gateway}} logs are located, the different log levels, and how to configure logs and log levels.
 search_aliases:
   - logging
