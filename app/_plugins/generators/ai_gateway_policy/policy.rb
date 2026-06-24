@@ -40,7 +40,14 @@ module Jekyll
       def scopes
         @scopes ||= site.data.dig('policies', 'ai-gateway', 'scopes')
                         &.find { |entry| entry['name'] == @slug }
-                        &.fetch('scopes', []) || []
+                        &.fetch('scopes', [])
+                        &.map { |s| normalize_scope(s) } || []
+      end
+
+      def normalize_scope(scope)
+        return scope if scope == 'global'
+
+        "ai-#{scope.chomp('s')}"
       end
     end
   end

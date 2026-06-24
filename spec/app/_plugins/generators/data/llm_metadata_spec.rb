@@ -133,6 +133,17 @@ RSpec.describe Jekyll::Data::LlmMetadata do
       it { expect(parsed.keys).not_to include('works_on') }
     end
 
+    context 'when the page is an AI Gateway policy' do
+      let(:page_url) { '/ai-gateway/policies/my-policy/' }
+      let(:page_data) { base_page_data.merge('content_type' => 'policy', 'scopes' => %w[ai-model ai-consumer global]) }
+
+      it { expect(parsed['scopes']).to eq(%w[ai-model ai-consumer global]) }
+    end
+
+    context 'when scopes are absent' do
+      it { expect(parsed.keys).not_to include('scopes') }
+    end
+
     context 'when tiers are present' do
       let(:page_data) { base_page_data.merge('tiers' => { 'gateway' => 'enterprise' }) }
       it { expect(parsed['tiers']).to eq({ 'Kong Gateway' => 'Enterprise' }) }
