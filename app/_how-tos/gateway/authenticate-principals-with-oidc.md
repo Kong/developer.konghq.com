@@ -16,7 +16,6 @@ products:
 plugins:
   - key-auth
 works_on:
-    - on-prem
     - konnect
 
 min_version:
@@ -58,3 +57,38 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
+
+## Create an auth server in {{site.identity}}
+
+Before you can configure the OpenID Connect plugin, you must first create an auth server in {{site.identity}}. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+
+Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "example-auth-server"
+  description: "Example auth server"
+  audience: "orders-api"
+extract_body:
+  - name: 'id'
+    variable: AUTH_SERVER_ID
+  - name: 'issuer'
+    variable: ISSUER_URL
+capture:
+  - variable: AUTH_SERVER_ID
+    jq: ".id"
+  - variable: ISSUER_URL
+    jq: ".issuer"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Create a Principal
+
+{% include /how-tos/steps/principal.md %}
+
