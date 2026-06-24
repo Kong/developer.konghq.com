@@ -370,6 +370,10 @@
 /api/konnect/api-builder/v3/ /api/konnect/api-catalog/v3/   301
 /api/konnect/api-builder/ /api/konnect/api-catalog/   301
 
+
+# MCP landing page
+/mcp/ /ai-gateway/mcp/
+
 # ai-gateway previous-major wildcard — added by migration skill on 2026-06-15
 /ai-gateway/*  /ai-gateway/v1/:splat  301
 # ai-gateway previous-major how-to redirects — added by migration skill on 2026-06-15
@@ -479,4 +483,3 @@
 /mcp/secure-mcp-tools-with-oauth2-and-okta/  /ai-gateway/v1/mcp/secure-mcp-tools-with-oauth2-and-okta/  301
 /mcp/secure-mcp-traffic/  /ai-gateway/v1/mcp/secure-mcp-traffic/  301
 /mcp/use-access-controls-for-mcp-tools/  /ai-gateway/v1/mcp/use-access-controls-for-mcp-tools/  301
-

@@ -37,9 +37,9 @@ In {{site.ai_gateway}}, load balancing is configured on the [Model entity](/ai-g
 
 <!-- Commented out for future reference - Compatibility with existing configurations
 {:.info}
-> With {{site.ai_gateway}} 2.0, both configuration approaches can appear in existing deployments:
+> With {{site.ai_gateway}}, both configuration approaches can appear in existing deployments:
 > - Legacy plugin-based approach: configure load balancing directly on [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin instances.
-> - {{site.ai_gateway}} 2.0 approach: configure load balancing on the [Model entity](/ai-gateway/entities/ai-model/) with `config.balancer` and `target_models`.
+> - {{site.ai_gateway}} approach: configure load balancing on the [Model entity](/ai-gateway/entities/ai-model/) with `config.balancer` and `target_models`.
 >
 > For new {{site.ai_gateway}} deployments, use the Model entity workflow.
 -->

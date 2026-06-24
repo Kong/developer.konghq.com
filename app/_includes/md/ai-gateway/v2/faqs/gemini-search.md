@@ -1,0 +1,1 @@
+Configure an [AI Model](/ai-gateway/entities/ai-model/) that uses a Gemini [AI Provider](/ai-gateway/entities/ai-provider/), then declare the `googleSearch` tool in your requests. See [Use {{ site.gemini }}'s googleSearch tool with {{site.ai_gateway}}](/how-to/use-gemini-3-google-search/) for detailed instructions.
