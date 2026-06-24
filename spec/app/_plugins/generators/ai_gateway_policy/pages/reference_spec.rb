@@ -7,7 +7,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
     instance_double(
       Jekyll::AIGatewayPolicyPages::Policy,
       slug: 'my-policy',
-      metadata: { 'title' => 'My Policy', 'faqs' => [], 'scopes' => %w[models global] },
+      metadata: { 'title' => 'My Policy', 'faqs' => [], 'scopes' => %w[ai-model global] },
       overview_page_class: Jekyll::AIGatewayPolicyPages::Pages::Overview,
       reference_page_class: described_class,
       examples: [],
@@ -57,6 +57,6 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
     it { expect(data['schema']).to eq({ 'properties' => { 'config' => {} } }) }
     it { expect(data['overview_url']).to eq('/ai-gateway/policies/my-policy/') }
     it { expect(data).not_to have_key('faqs') }
-    it { expect(data['scopes']).to eq(%w[models global]) }
+    it { expect(data['scopes']).to eq(%w[ai-model global]) }
   end
 end

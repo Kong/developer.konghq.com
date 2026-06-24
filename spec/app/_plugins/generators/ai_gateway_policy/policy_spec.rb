@@ -19,7 +19,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   end
 
   let(:site_config) { { 'ai_gateway_policies' => { 'metadata' => { 'keep' => %w[title name description icon] } } } }
-  let(:scopes_data) { [{ 'name' => slug, 'scopes' => %w[models global] }] }
+  let(:scopes_data) { [{ 'name' => slug, 'scopes' => %w[models consumers global] }] }
   let(:site) do
     instance_double(
       Jekyll::Site,
@@ -87,11 +87,11 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
     end
 
     it 'includes the scopes for the matching slug' do
-      expect(metadata['scopes']).to eq(%w[models global])
+      expect(metadata['scopes']).to eq(%w[ai-model ai-consumer global])
     end
 
     context 'when no scopes entry matches the slug' do
-      let(:scopes_data) { [{ 'name' => 'other-policy', 'scopes' => %w[models] }] }
+      let(:scopes_data) { [{ 'name' => 'other-policy', 'scopes' => %w[ai-model] }] }
 
       it { expect(metadata['scopes']).to eq([]) }
     end

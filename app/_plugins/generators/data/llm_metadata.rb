@@ -48,6 +48,7 @@ module Jekyll
         data['tags'] = @page.data['tags'] if @page.data.fetch('tags', []).any?
         data['canonical'] = @page.data['canonical?'] unless @page.data['canonical?'].nil?
         data['works_on']  = @page.data['works_on'] if @page.data.fetch('works_on', []).any?
+        data['scopes']    = @page.data['scopes'] if @page.data.fetch('scopes', []).any?
 
         data.merge!(plugin_metadata) if plugin_metadata.any?
         data.merge!(skill_metadata) if skill_metadata.any?
