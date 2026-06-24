@@ -26,7 +26,8 @@ definitions:
       [Dev Portal](/dev-portal/)
   - term: Directory
     description: |
-      A unique set of Principals that a Gateway uses to authenticate credentials or to look up information about already-authenticated entities.
+      Regional collection of principals. 
+  Each {{site.konnect_short_name}} organization gets one directory per region.
     url: |
 
   - term: Groups
@@ -50,12 +51,14 @@ definitions:
       [RBAC entity](/gateway/entities/rbac/)
   - term: Principal
     description: |
-      An entity (user, service, or application) that authenticates to a Kong Gateway through one or more credential types, carrying group membership and metadata that determine how the Gateway handles the requests from the entity.
+      Represents an entity that authenticates to a Kong product. 
+  The entity can be a human, a workload acting on behalf of a human, or a workload acting on behalf of itself (machine authentication).
     url: |
 
   - term: Identity
     description: |
-      A reference to a Principal stored in an identity provider, that identifies the Principal but doesn't carry the credentials needed to authenticate it.
+      A reference to how a principal is known in other systems. 
+      Identities are used for lookup after authentication has already happened somewhere else (like a third-party IdP), or to link a principal to an entity in another Kong product, like a Consumer. 
     url: |
       
   - term: Insomnia plugin
