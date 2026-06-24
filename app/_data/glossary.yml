@@ -27,7 +27,7 @@ definitions:
   - term: Directory
     description: |
       Regional collection of principals. 
-  Each {{site.konnect_short_name}} organization gets one directory per region.
+      Each {{site.konnect_short_name}} organization gets one directory per region.
     url: |
       [Principals and directories](/identity/principals/)
 
@@ -53,7 +53,7 @@ definitions:
   - term: Principal
     description: |
       Represents an entity that authenticates to a Kong product. 
-  The entity can be a human, a workload acting on behalf of a human, or a workload acting on behalf of itself (machine authentication).
+      The entity can be a human, a workload acting on behalf of a human, or a workload acting on behalf of itself (machine authentication).
     url: |
       [Principals and directories](/identity/principals/)
 
