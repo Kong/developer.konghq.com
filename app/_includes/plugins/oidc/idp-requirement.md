@@ -1,0 +1,1 @@
+A {{ site.identity }} [authorization server](/identity/principals/)
