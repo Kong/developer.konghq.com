@@ -59,7 +59,7 @@ export default {
         return this.item.title;
       }
       if (this.item.content_type === 'plugin') {
-        if (this.item.products && (this.item.products.includes('mesh') || this.item.products.includes('event-gateway'))) {
+        if (this.item.products && (this.item.products.includes('mesh') || this.item.products.includes('event-gateway') || this.item.products.includes('ai-gateway'))) {
           return `${this.item.hierarchy.lvl1} Policy`;
         } else {
           return `${this.item.hierarchy.lvl1} Plugin`;
@@ -79,7 +79,7 @@ export default {
         .map(([key, value]) => value);
 
       if (this.item.content_type === 'plugin') {
-        if (this.item.products && (this.item.products.includes('mesh') || this.item.products.includes('event-gateway'))) {
+        if (this.item.products && (this.item.products.includes('mesh') || this.item.products.includes('event-gateway') || this.item.products.includes('ai-gateway'))) {
           levels.unshift('Policies')
         } else {
           levels.unshift('Plugins')
