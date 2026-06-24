@@ -1,0 +1,183 @@
+{
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "bla_max_amplification": {
+          "type": "number",
+          "minimum": 1,
+          "description": "Sets the maximum allowed amplification. This protects against the Billion Laughs Attack.",
+          "default": 100
+        },
+        "max_attributes": {
+          "type": "integer",
+          "description": "Maximum number of attributes allowed on a tag, including default ones. Note: If namespace-aware parsing is disabled, then the namespaces definitions are counted as attributes.",
+          "default": 100
+        },
+        "comment": {
+          "type": "integer",
+          "description": "Maximum size of comments.",
+          "default": 1024
+        },
+        "prefix": {
+          "type": "integer",
+          "description": "Maximum size of the prefix. This applies to tags and attributes. This value is required if parsing is namespace-aware.",
+          "default": 1024
+        },
+        "bla_threshold": {
+          "type": "integer",
+          "minimum": 1024,
+          "description": "Sets the threshold after which the protection starts. This protects against the Billion Laughs Attack.",
+          "default": 8388608
+        },
+        "allow_dtd": {
+          "type": "boolean",
+          "description": "Indicates whether an XML Document Type Definition (DTD) section is allowed.",
+          "default": false
+        },
+        "max_namespaces": {
+          "type": "integer",
+          "description": "Maximum number of namespaces defined on a tag. This value is required if parsing is namespace-aware.",
+          "default": 20
+        },
+        "buffer": {
+          "type": "integer",
+          "description": "Maximum size of the unparsed buffer (see below).",
+          "default": 1048576
+        },
+        "attribute": {
+          "type": "integer",
+          "description": "Maximum size of the attribute value.",
+          "default": 1048576
+        },
+        "pitarget": {
+          "type": "integer",
+          "description": "Maximum size of processing instruction targets.",
+          "default": 1024
+        },
+        "entityname": {
+          "type": "integer",
+          "description": "Maximum size of entity names in EntityDecl.",
+          "default": 1024
+        },
+        "entity": {
+          "type": "integer",
+          "description": "Maximum size of entity values in EntityDecl.",
+          "default": 1024
+        },
+        "allowed_content_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of Content-Type values with payloads that are allowed, but aren't validated.",
+          "default": []
+        },
+        "namespace_aware": {
+          "type": "boolean",
+          "description": "If not parsing namespace aware, all prefixes and namespace attributes will be counted as regular attributes and element names, and validated as such.",
+          "default": true
+        },
+        "text": {
+          "type": "integer",
+          "description": "Maximum text inside tags (counted over all adjacent text/CDATA elements combined).",
+          "default": 1048576
+        },
+        "pidata": {
+          "type": "integer",
+          "description": "Maximum size of processing instruction data.",
+          "default": 1024
+        },
+        "entityproperty": {
+          "type": "integer",
+          "description": "Maximum size of systemId, publicId, or notationName in EntityDecl.",
+          "default": 1024
+        },
+        "namespaceuri": {
+          "type": "integer",
+          "description": "Maximum size of the namespace URI. This value is required if parsing is namespace-aware.",
+          "default": 1024
+        },
+        "checked_content_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of Content-Type values with payloads that must be validated.",
+          "default": [
+            "application/xml"
+          ]
+        },
+        "max_depth": {
+          "type": "integer",
+          "description": "Maximum depth of tags. Child elements such as Text or Comments are not counted as another level.",
+          "default": 50
+        },
+        "max_children": {
+          "type": "integer",
+          "description": "Maximum number of children allowed (Element, Text, Comment, ProcessingInstruction, CDATASection). Note: Adjacent text and CDATA sections are counted as one. For example, text-cdata-text-cdata is one child.",
+          "default": 100
+        },
+        "document": {
+          "type": "integer",
+          "description": "Maximum size of the entire document.",
+          "default": 10485760
+        },
+        "localname": {
+          "type": "integer",
+          "description": "Maximum size of the localname. This applies to tags and attributes.",
+          "default": 1024
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+    }
+  }
+}
