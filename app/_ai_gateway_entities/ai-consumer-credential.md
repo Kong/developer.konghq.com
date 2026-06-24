@@ -29,19 +29,19 @@ related_resources:
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
 faqs:
-  - q: Why are credentials a separate entity instead of a field on the Consumer?
+  - q: Why are credentials a separate entity instead of a field on the AI Consumer?
     a: |
       Each credential has its own lifecycle, identifier, and (for API keys) TTL. Modeling them as
-      a sub-entity of the Consumer lets you list, rotate, and revoke individual credentials
-      independently of the Consumer record.
+      a sub-entity of the AI Consumer lets you list, rotate, and revoke individual credentials
+      independently of the AI Consumer record.
 
   - q: What credential types are supported?
     a: |
-      Two types: `api-key` and `oauth`. The [`type`](#schema-aigateway-consumer-credential-type) of the Credential must match the Consumer's
+      Two types: `api-key` and `oauth`. The [`type`](#schema-aigateway-consumer-credential-type) of the Credential must match the AI Consumer's
       `type`. An `api-key` credential carries the [`api_key`](#schema-aigateway-consumer-credential-api-key) value (and an optional [`ttl`](#schema-aigateway-consumer-credential-ttl)). An
-      `oauth` credential is paired with a Consumer that maps to an OAuth identity through the Consumer's `custom_id` field.
+      `oauth` credential is paired with an AI Consumer that maps to an OAuth identity through the AI Consumer's `custom_id` field.
 
-  - q: Can a Consumer have multiple credentials?
+  - q: Can an AI Consumer have multiple credentials?
     a: |
       Yes. Issue one Credential per environment, client, or rotation cycle, and revoke individual
       Credentials without affecting the others.
@@ -52,11 +52,11 @@ faqs:
       ([`name`](#schema-aigateway-consumer-credential-name), [`display_name`](#schema-aigateway-consumer-credential-display-name), [`ttl`](#schema-aigateway-consumer-credential-ttl), timestamps) but not the secret. Distribute the key value at
       creation time, and rotate by issuing a new Credential and revoking the old one.
 
-  - q: What's the relationship between `ttl` and the Consumer's lifecycle?
+  - q: What's the relationship between `ttl` and the AI Consumer's lifecycle?
     a: |
       [`ttl`](#schema-aigateway-consumer-credential-ttl) controls how long the API key value remains valid in seconds. When it elapses, the
-      Credential stops authenticating but the Credential record (and the parent Consumer) remain.
-      Issue a new Credential to keep the Consumer authenticating.
+      Credential stops authenticating but the Credential record (and the parent AI Consumer) remain.
+      Issue a new Credential to keep the AI Consumer authenticating.
 ---
 
 ## What is an AI Consumer Credential?

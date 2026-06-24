@@ -93,7 +93,7 @@ The [`type`](#schema-aigateway-consumer-type) field declares which credential fa
 
 The `type` of every Credential issued to the Consumer must match the Consumer's `type`. See the [AI Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/) reference for credential management.
 
-## Consumer Group membership
+## AI Consumer Group membership
 
 An AI Consumer can belong to multiple AI Consumer Groups. AI Consumer Group membership is managed through the AI Consumer Group entity. See the [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/) reference for how to assign AI Consumers to groups.
 

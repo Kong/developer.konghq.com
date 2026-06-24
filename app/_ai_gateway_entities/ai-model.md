@@ -128,7 +128,7 @@ Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against t
 {:.info}
 > **Why a transaction instead of an in-place update?**
 >
-> A Model's structure (which capabilities exist, which providers it routes to) determines how many Routes are needed. A delete-and-recreate cycle is the simplest way to keep the entity and its derived primitives consistent, especially when capabilities are added or removed.
+> An AI Model's structure (which capabilities exist, which providers it routes to) determines how many Routes are needed. A delete-and-recreate cycle is the simplest way to keep the entity and its derived primitives consistent, especially when capabilities are added or removed.
 
 ## Capabilities
 
@@ -236,7 +236,7 @@ When a native format is set, only the corresponding provider is supported with i
 
 ## Target models
 
-A Model is a virtual model: it exposes one route ([`config.route`](#schema-aigateway-model-config-route)) and one set of capabilities, and routes requests to one or more concrete upstream models declared in its [`target_models`](#schema-aigateway-model-target-models) array. Each entry represents a single upstream model instance with one URL.
+An AI Model is a virtual model: it exposes one route ([`config.route`](#schema-aigateway-model-config-route)) and one set of capabilities, and routes requests to one or more concrete upstream models declared in its [`target_models`](#schema-aigateway-model-target-models) array. Each entry represents a single upstream model instance with one URL.
 
 For each target, you provide the upstream model name (for example, `gpt-4o`) and reference the Provider to use by its `name`. Each target can also override settings such as [`temperature`](#schema-aigateway-model-target-models-config-temperature), [`max_tokens`](#schema-aigateway-model-target-models-config-max-tokens), [`input_cost`](#schema-aigateway-model-target-models-config-input-cost), and [`output_cost`](#schema-aigateway-model-target-models-config-output-cost).
 
@@ -244,9 +244,9 @@ There's no separate Target Model entity or endpoint. Target models are managed o
 
 ## Load balancing
 
-A Model routes to a single target by default. Add more than one target when you want redundancy, fallback between providers, or cost and latency optimization. When you have multiple targets, configure [`config.balancer`](#schema-aigateway-model-config-balancer) to distribute requests according to a load balancing algorithm.
+An AI Model routes to a single target by default. Add more than one target when you want redundancy, fallback between providers, or cost and latency optimization. When you have multiple targets, configure [`config.balancer`](#schema-aigateway-model-config-balancer) to distribute requests according to a load balancing algorithm.
 
-When a Model has more than one target, the [load balancer](#schema-aigateway-model-config-balancer) sits between the virtual model and its targets, distributing requests according to `config.balancer`. For algorithm details, selection guidance, and tuning, see [Load balancing](/ai-gateway/load-balancing/).
+When an AI Model has more than one target, the [load balancer](#schema-aigateway-model-config-balancer) sits between the virtual model and its targets, distributing requests according to `config.balancer`. For algorithm details, selection guidance, and tuning, see [Load balancing](/ai-gateway/load-balancing/).
 
 ### Algorithms
 
@@ -315,7 +315,7 @@ An embedding model converts request and response text into vector representation
 
 ## Templating
 
-The Model resolves runtime values from request data using placeholder substitution. This lets you select the target model dynamically per request, route to per-deployment Azure endpoints, or fan out to multiple providers from a single Model.
+The AI Model resolves runtime values from request data using placeholder substitution. This lets you select the target model dynamically per request, route to per-deployment Azure endpoints, or fan out to multiple providers from a single AI Model.
 
 Substitution applies to the [`name`](#schema-aigateway-model-target-models-name) of each target model and to any per-target [`config`](#schema-aigateway-model-target-models-config) option. Three placeholders are available:
 

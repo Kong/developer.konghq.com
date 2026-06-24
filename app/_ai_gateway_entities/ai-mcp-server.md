@@ -47,13 +47,13 @@ faqs:
       `conversion-only` MCP Servers into a single MCP endpoint. `upstream-server` registers a real
       MCP server into an aggregation pool, dynamically fetching its tools for a `listener` to aggregate.
 
-  - q: Can the same Consumer's identity gate access to specific tools?
+  - q: Can the same AI Consumer's identity gate access to specific tools?
     a: |
       Yes. Set [`default_tool_acls`](#schema-aigateway-mcpserver-default-tool-acls) on the AI MCP Server with `allow` and `deny` lists, and override per
       tool through [`tools[].acls`](#schema-aigateway-mcpserver-tools-acls). A per-tool ACL replaces the default for that tool, it doesn't
       merge.
 
-  - q: How do OAuth-based ACLs differ from Consumer-based ACLs?
+  - q: How do OAuth-based ACLs differ from AI Consumer-based ACLs?
     a: |
       Set [`acl_attribute_type`](#schema-aigateway-mcpserver-acl-attribute-type) to `oauth_access_token` and provide [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) (a jq
       filter, for example `.user.email`). ACLs then evaluate against the claim value extracted from
@@ -285,7 +285,7 @@ This way, consumers only interact with tools appropriate to their role, while ma
 > To use ACLs with `listener` mode:
 > 1. Configure `conversion-listener` or `conversion-only` AI MCP Servers with ACL rules and tags.
 > 1. Configure `listener` mode to aggregate tools by matching tags.
-> 1. Set [`include_consumer_groups`](#schema-aigateway-mcpserver-include-consumer-groups): true on the listener. Without this setting, the listener cannot pass Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
+> 1. Set [`include_consumer_groups`](#schema-aigateway-mcpserver-include-consumer-groups): true on the listener. Without this setting, the listener cannot pass AI Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
 >
 > See [Enforce ACLs on aggregated MCP servers](/mcp/enforce-acls-on-aggregated-mcp-servers/) for a complete example.
 
@@ -303,7 +303,7 @@ When `acl_attribute_type` is `consumer`, ACL rules can reference [AI Consumers](
 * `username`: Consumer username
 * `id`: Consumer UUID
 * `custom_id`: Custom Consumer identifier
-* `consumer_groups.name`: Consumer Group name
+* `consumer_groups.name`: AI Consumer Group name
 
 The authenticated Consumer identity is matched against these identifiers. If the [AI Consumer](/ai-gateway/entities/ai-consumer/) or any of their [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) match an ACL entry, the rule applies.
 
@@ -448,7 +448,7 @@ For details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) referen
 
 ## Scope of support
 
-The MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is supported and what is outside the current scope.
+The AI MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is supported and what is outside the current scope.
 
 <!-- vale off -->
 {% feature_table %}

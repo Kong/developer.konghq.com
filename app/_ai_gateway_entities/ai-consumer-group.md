@@ -42,21 +42,21 @@ faqs:
       No. The generated Kong Consumer Group is protected from direct modification through the
       standard `/consumer-groups` Admin API. Update the AI Consumer Group instead.
 
-  - q: How do I assign a Consumer to a Consumer Group?
+  - q: How do I assign an AI Consumer to an AI Consumer Group?
     a: |
-      You add a Consumer to a Consumer Group through the Consumer Group entity.
-      See the [Consumer entity](/ai-gateway/entities/ai-consumer/) and
-      [Consumer Group entity](/ai-gateway/entities/ai-consumer-group/) references.
+      You add an AI Consumer to an AI Consumer Group through the AI Consumer Group entity.
+      See the [AI Consumer entity](/ai-gateway/entities/ai-consumer/) and
+      [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/) references.
 
-  - q: Can a Consumer belong to multiple Consumer Groups?
+  - q: Can an AI Consumer belong to multiple AI Consumer Groups?
     a: |
-      Yes. The Consumer's `consumer_groups` array accepts one or more references.
+      Yes. The AI Consumer's `consumer_groups` array accepts one or more references.
 
-  - q: How do I attach Policies to a Consumer Group?
+  - q: How do I attach AI Policies to an AI Consumer Group?
     a: |
-      Add the Policy's `name` or `id` to the Consumer Group's [`policies`](#schema-aigateway-consumer-group-policies) array.
+      Add the AI Policy's `name` or `id` to the AI Consumer Group's [`policies`](#schema-aigateway-consumer-group-policies) array.
       The policy runs when a member of the group is identified during a request.
-      See the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+      See the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
   - q: How do I gate access to an AI Model, AI Agent, or AI MCP Server with an AI Consumer Group?
     a: |
@@ -71,7 +71,7 @@ An AI Consumer Group is the {{site.ai_gateway}} entity that represents a collect
 
 Use AI Consumer Groups to scope group-wide behavior, such as rate limits, prompt guards, or content moderation, without configuring each AI Consumer individually. AI Consumer Groups can appear in the `acls` field of AI Model, AI Agent, and AI MCP Server entities, where they gate access to those parent entities.
 
-AI Consumer Groups can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+AI Consumer Groups can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
 {% table %}
 columns:

@@ -39,7 +39,7 @@ faqs:
       Use `a2a` when the upstream speaks the A2A protocol and you want observability tied to A2A
       task and message semantics.
 
-  - q: Does the Agent entity modify request routing or aggregate responses?
+  - q: Does the AI Agent entity modify request routing or aggregate responses?
     a: |
       No. The runtime behind an Agent operates as a transparent proxy. It detects A2A requests,
       records telemetry, and rewrites agent-card URLs to the gateway address. It does not change
@@ -131,7 +131,7 @@ sequenceDiagram
         Gateway->>Client: Response (unchanged)
     end
 
-    Note over Gateway: Finish OTel span<br>Emit ai.a2a metrics to log plugins
+    Note over Gateway: Finish OTel span<br>Emit ai.a2a metrics to logs
 {% endmermaid %}
 <!-- vale on -->
 
@@ -238,7 +238,7 @@ When an upstream agent returns an agent card, the runtime rewrites the [`url`](#
 
 ## Logging and observability
 
-When Statistics logging is enabled, {{site.ai_gateway}} records structured A2A telemetry per request and exposes it in {{site.konnect_short_name}} analytics and attached log plugins. For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
+When Statistics logging is enabled, {{site.ai_gateway}} records structured A2A telemetry per request and exposes it in {{site.konnect_short_name}} analytics and attached logging policies. For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
 
 The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached logging Policies.
 
@@ -279,11 +279,11 @@ For per-request authentication and identity, attach an authentication AI Policy 
 
 Attach AI Policies through the AI Agent's [`policies`](#schema-aigateway-agent-policies) field. Each entry is a string that references an AI Policy by name or ID. Multiple AI Policies can attach to one AI Agent; each runs independently.
 
-For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+For details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
 
 ## Set up an Agent
 
-The following example creates an `a2a` Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with statistics logging enabled and access restricted to the `internal-teams` Consumer Group.
+The following example creates an `a2a` AI Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with statistics logging enabled and access restricted to the `internal-teams` AI Consumer Group.
 
 {% entity_example %}
 type: agent
