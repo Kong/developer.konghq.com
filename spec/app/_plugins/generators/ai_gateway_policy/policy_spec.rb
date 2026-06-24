@@ -23,7 +23,6 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   let(:site) do
     instance_double(
       Jekyll::Site,
-      source: '/app',
       data: {
         'kong_plugins' => { slug => api_plugin_page },
         'policies' => { 'ai-gateway' => { 'scopes' => scopes_data } }
@@ -44,13 +43,14 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   end
 
   before do
+    stub_const('Jekyll::Drops::Plugins::AIGWPolicySchema::FILE_INDEX',
+               { 'mypolicy.json' => '/fake/MyPolicy.json' })
     allow(Jekyll).to receive(:sites).and_return([site])
     allow(Jekyll::ReleaseInfo::Product).to receive(:new).and_return(release_info)
     allow(File).to receive(:read).and_call_original
     allow(File).to receive(:read).with(File.join(folder, 'index.md'))
                                  .and_return("---\nproducts:\n  - ai-gateway\n---\n")
-    allow(File).to receive(:read).with('/app/_schemas/ai-gateway/policies/MyPolicy.json')
-                                 .and_return(schema_json)
+    allow(File).to receive(:read).with('/fake/MyPolicy.json').and_return(schema_json)
   end
 
   subject(:policy) { described_class.new(folder:, slug:) }
