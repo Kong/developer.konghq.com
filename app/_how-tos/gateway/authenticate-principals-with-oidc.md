@@ -1,5 +1,5 @@
 ---
-title: Authenticate principals with the OpenID Connect plugin
+title: Authenticate OAuth clients with a Kong Identity authorization server
 permalink: /how-to/authenticate-principals-with-oidc/
 content_type: how_to
 breadcrumbs:
@@ -8,13 +8,13 @@ related_resources:
   - text: Authentication
     url: /gateway/authentication/
 
-description: Use the OpenID Connect plugin to allow Principals to authenticate.
+description: Use the OpenID Connect plugin to map authenticated OAuth clients to Kong Identity principals.
 products:
     - gateway
     - identity
 
 plugins:
-  - key-auth
+  - openid-connect
 works_on:
     - konnect
 
@@ -33,9 +33,9 @@ tools:
     - deck
 
 tldr:
-  q: How do I authenticate Principals with OpenID Connect?
+  q: How do I map OAuth clients to  principals with OpenID Connect?
   a: |
-    SUMMARY HERE
+    Create a {{site.identity}} authorization server and OAuth client, create a principal, and link the client to the principal with an `auth_server_client` identity. Configure the OpenID Connect plugin with `principals.enabled` set to `true` to use {{site.identity}} as your IdP , then send a request with the client credentials in an `Authorization: Basic` header to a protected Gateway Service.
 
 prereqs:
   entities:
@@ -58,11 +58,11 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## Create an auth server in {{site.identity}}
+## Create an authorization server in {{site.identity}}
 
-Before you can configure the OpenID Connect plugin, you must first create an auth server in {{site.identity}}. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+An authorization server in {{site.identity}} issues the OAuth tokens that clients present to authenticate to your service.
 
-Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
+Create an authorization server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -90,7 +90,7 @@ capture:
 
 ## Create a client
 
-The client is the machine-to-machine credential that the OpenID Connect plugin uses to authenticate. {{site.konnect_short_name}} autogenerates the client ID and secret.
+The client is the credential that the OpenID Connect plugin uses to authenticate. {{site.konnect_short_name}} autogenerates the client ID and secret.
 
 Create a client using the [`/v1/auth-servers/$AUTH_SERVER_ID/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient):
 
@@ -130,9 +130,9 @@ capture:
 
 {% include /how-tos/steps/principal.md %}
 
-## Link the auth server client to the principal
+## Link the client to the principal
 
-Link the {{site.identity}} auth server client to the principal so that {{site.identity}} can map the OAuth tokens it issues to this principal. Because {{site.identity}} issues the tokens, you reference the auth server and client you created earlier instead of an external issuer and claim.
+Link the {{site.identity}} authorization server client to the principal so that {{site.identity}} can map the OAuth tokens it issues to this principal. Because {{site.identity}} issues the tokens, you reference the authorization server and client you created earlier instead of an external issuer and claim.
 
 Add the identity using the `/v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities` endpoint:
 
