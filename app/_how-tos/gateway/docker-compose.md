@@ -77,12 +77,12 @@ services:
     image: postgres:latest           # Official Postgres image
     restart: on-failure              # Restart if the container fails
     volumes:
-      - kong_db_data:/var/lib/postgresql  # Mount the volume for persistent data
+      - kong_db_data:/var/lib/postgresql                      # Mount the volume for persistent data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql # Put the initialization SQL script in the current folder
     networks:
       - kong-ee-net                  # Connect to the shared Kong network
     environment:
-      POSTGRES_USER: kong            # Set DB user inside the container
-      POSTGRES_DB: kong              # Create this database on first run
+      POSTGRES_USER: postgres        # Set DB user inside the container
       POSTGRES_PASSWORD: kong        # Set the password for the DB user
     healthcheck:                     # Ensure the DB is ready before starting dependent services
       test: ["CMD", "pg_isready", "-U", "kong"]
@@ -128,6 +128,24 @@ services:
       - "8444:8444"  # Admin API HTTPS
       - "8002:8002"  # Kong Manager HTTP
       - "8445:8445"  # Kong Manager HTTPS
+EOF
+```
+<!-- vale on -->
+
+Following the least minimum privilege principle, 'kong' user will be created as a regular user db user.
+
+<!-- vale off -->
+```bash
+cat <<EOF > init-db.sql
+
+CREATE USER kong WITH NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD 'kong';
+CREATE DATABASE kong OWNER kong;
+\c kong
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO kong;
+REVOKE EXECUTE ON FUNCTION pg_ls_dir(text) FROM kong;
+REVOKE EXECUTE ON FUNCTION pg_read_file(text) FROM kong;
+
 EOF
 ```
 <!-- vale on -->
