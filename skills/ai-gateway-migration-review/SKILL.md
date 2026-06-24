@@ -143,6 +143,24 @@ Not all v1 how-to guides have been migrated to v2. The only migrated v2 how-to i
 
 Any link in a v2 file that points to a how-to guide URL not directly in `app/_how-tos/ai-gateway/` should be flagged. Links to v1 how-tos (containing `/v1/`) should either be removed or flagged.
 
+### v1 release tracking (`app/_config/releases/ai-gateway/v1.yml`)
+
+This file tracks every v1 page and whether a v2 equivalent has been written. Each entry looks like:
+
+```yaml
+app/_how-tos/ai-gateway/v1/some-guide.md:
+  status: pending       # still needs a v2 equivalent
+  canonical_url:        # should point to the v2 page once written
+```
+
+When a new v2 page is created, the corresponding v1 entry in this file must be updated:
+- Remove `status: pending`
+- Set `canonical_url` to the new v2 page's permalink
+
+When reviewing a newly created v2 file, check whether its v1 counterpart exists in `v1.yml` and still has `status: pending`. If so, flag it: the reviewer should remove `status: pending` and set `canonical_url` to the new page's permalink.
+
+When reviewing all files, read `app/_config/releases/ai-gateway/v1.yml` and report all entries that still have `status: pending` — these are v1 pages that have not yet been migrated.
+
 ---
 
 ## Reporting format
@@ -163,6 +181,9 @@ When producing a **report**, structure it like this for each file reviewed:
 
 **Unmigrated how-to links:**
 - <link> — not yet migrated, remove or update
+
+**v1 release tracking (`v1.yml`):**
+- <v1 file path> — still has `status: pending`, set `canonical_url` to <v2 permalink>
 
 **On-prem references:**
 - Line N: <quote> — flag for removal
