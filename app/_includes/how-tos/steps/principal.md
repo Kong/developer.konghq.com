@@ -14,7 +14,7 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-This command does the following:
+This script:
 
-1. Creates a principal named `example-principal`
-1. Saves the returned ID as `$PRINCIPAL_ID`
+- Creates a Principal named `example-principal`
+- Saves the returned ID as `$PRINCIPAL_ID`
