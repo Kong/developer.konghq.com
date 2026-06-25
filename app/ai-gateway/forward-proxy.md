@@ -176,9 +176,8 @@ Two validation rules apply to the record:
 
 ## Configuration
 
-The minimal configuration adds a `proxy_config` block to any supported plugin. The same block applies unchanged across plugins: configure it once per plugin instance that needs to reach external services through the proxy.
+The minimal configuration adds a `proxy_config` block to any supported Policy. The same block applies unchanged across Policies: configure it once per Policy instance that needs to reach external services through the proxy.
 
-For a complete local setup with a running forward proxy, full decK configuration, and validation steps, see [Route AI Proxy Advanced traffic through a forward proxy](/how-to/route-ai-proxy-advanced-traffic-through-forward-proxy/).
 
 {% entity_example %}
 type: plugin
