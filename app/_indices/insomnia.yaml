@@ -33,6 +33,7 @@ sections:
       - path: /how-to/write-http-status-tests/
       - path: /how-to/create-a-cloud-hosted-mock-server/
       - path: /how-to/automate-tests/
+      - path: /insomnia/konnect-integration/
 
   - title: Requests
     items:
@@ -68,6 +69,7 @@ sections:
       - path: /insomnia/enterprise-user-management/
       - path: /insomnia/sso/
       - path: /insomnia/scim/
+      - path: /insomnia/konnect-integration/
 
   - title: Data security
     items:

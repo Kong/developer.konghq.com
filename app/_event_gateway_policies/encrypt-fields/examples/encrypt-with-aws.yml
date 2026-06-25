@@ -5,7 +5,7 @@ description: Use an AWS Key Vault to encrypt fields of a message value.
 weight: 900
 
 requirements:
- - "An [AWS KMS key ARN](https://docs.aws.amazon.com/sdk-for-rust/latest/dg/credproviders.html#credproviders-default-credentials-provider-chain)."
+ - "An [AWS KMS key ARN](https://docs.aws.amazon.com/kms/latest/developerguide/find-cmk-id-arn.html)."
  - "A corresponding [field decryption policy](/event-gateway/policies/decrypt-fields/examples/decrypt-with-aws/)."
 
 variables:

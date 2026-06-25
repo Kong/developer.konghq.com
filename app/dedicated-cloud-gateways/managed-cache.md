@@ -94,12 +94,16 @@ columns:
   - title: Notes
     key: notes
 rows:
-  - profile: Small/Dev/Test
+  - profile: Small/Dev/Test/Low Performance Env
     entities: "≤100 × ≤100 × 1 window"
     rps: "≤1,000"
-    instance: "`cache.t3.small`"
+    instance: "`cache.t3.micro` or `cache.t3.small`"
     sync: "0.5"
-    notes: Micro fails at 10K RPS. Small handles 1K RPS baseline cleanly.
+    notes: |
+      Appropriate for development, testing, and other low-load or low-performance environments.
+      These are burstable instance types, so performance may vary.
+      Micro fails at 10,000 RPS.
+      Small handles a 1,000 RPS baseline cleanly.
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
@@ -291,7 +295,8 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 [Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
 
 {:.info}
-> You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
+> You can’t use the Redis partial configuration in [custom plugins](#use-a-dedicated-cloud-gateway-managed-cache-in-a-custom-plugin). Instead, use [env referenceable fields](/gateway/entities/vault/#store-secrets-as-environment-variables) directly.
+
 
 ## Resize a managed cache
 
@@ -323,3 +328,160 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+## Use a Dedicated Cloud Gateway managed cache in a custom plugin
+
+Managed cache relies on the native IAM authentication flow for different cloud service providers to connect and authenticate with provider-specific managed Redis (ElastiCache for AWS and Azure Managed Redis for Azure).
+If you want to use the Redis managed cache in a [custom plugin](/custom-plugins/), you'll need to implement the logic there as well.
+
+Custom plugins in {{site.konnect_short_name}} **do not** support Redis partials.
+
+Because of this, all the required fields like host and port need to be added in the [`schema.lua`](/custom-plugins/schema.lua/) itself:
+
+
+```lua
+local typedefs = require "kong.db.schema.typedefs"
+
+return {
+  name = "testplugin",
+  fields = {
+    { protocols = typedefs.protocols_http },
+    {
+      config = {
+        type = "record",
+        fields = {
+        { host = typedefs.host({ default = "127.0.0.1", referenceable = true }) },
+        { port = typedefs.port({ default = 6379, referenceable = true }) },
+        { username = { type = "string", referenceable = true } },
+        { ssl = { type = "boolean", default = false } },
+        { server_name = { type = "string", referenceable = true } },
+        { cloud_authentication = {
+            type = "record",
+            fields = {
+              { auth_provider = { type = "string", referenceable = true } },
+              { aws_region = { type = "string", referenceable = true } },
+              { aws_assume_role_arn = { type = "string", referenceable = true } },
+              { aws_cache_name = { type = "string", referenceable = true } },
+            }
+        }},
+        -- your specified fields here --
+      }
+      },
+    },
+  },
+```
+
+`referenceable = true` is important since {{site.base_gateway}} dereferences these fields from [environment vaults](/gateway/entities/vault/).
+
+The [`handler.lua`](/custom-plugins/handler.lua/) file is where the logic to connect and authenticate resides. 
+For example, if you're using an AWS managed cache, you'd configure the `handler.lua` file like the following:
+
+```lua
+local AWS = require "resty.aws"
+local redis = require "resty.redis"
+local aws_config = require "resty.aws.config"
+
+-- Constants
+local AWS_DEFAULT_ROLE_SESSION_NAME = "KongElasticacheSession"
+
+-- Initialize AWS global config state
+local AWS_global_config = aws_config.global
+local aws = AWS({ region = AWS_global_config.region })
+
+local function get_aws_auth_token(conf, cloud_auth)
+    local cachename = cloud_auth.aws_cache_name
+    local name = conf.username
+    local region = cloud_auth.aws_region
+    local assume_role_arn = cloud_auth.aws_assume_role_arn
+
+    local credentials = aws.config.credentials
+
+    -- Construct the request to the regional STS endpoint
+    local sts, err = aws:STS({
+      region = region,
+      credentials = credentials,
+      stsRegionalEndpoints = AWS_global_config.sts_regional_endpoints,
+    })
+
+    if not sts then
+      kong.log.err("error initializing sts: ", err)
+      return nil, err
+    end
+
+    -- Assume the role provided using the role present by default
+    local creds = aws:ChainableTemporaryCredentials {
+        params = {
+            RoleArn = assume_role_arn,
+            RoleSessionName = AWS_DEFAULT_ROLE_SESSION_NAME,
+        },
+        sts = sts,
+    }
+
+    local cache = aws:ElastiCache({
+        region = region,
+    })
+
+    local signer = cache:Signer {
+        cachename = cachename,
+        username = name,
+        is_serverless = false,
+        region = region,
+        credentials = creds,
+    }
+
+    -- Get Access Token
+    local auth_token, err = signer:getAuthToken()
+
+    if err then
+        kong.log.err("Failed to build auth token: ", err)
+        return nil, err
+    end
+
+    return auth_token
+end
+
+function get_auth_token(conf)
+    local cloud_auth = conf.cloud_authentication
+
+    -- Switch statement for cloud provider
+    local cloud_handlers = {
+        aws = function()
+            return get_aws_auth_token(conf, cloud_auth)
+        end,
+    }
+
+    local provider = cloud_auth.auth_provider
+    local handler = cloud_handlers[provider]
+
+    if handler then
+        return handler()
+    else
+        local err_msg = "Cloud provider '" .. provider .. "' not implemented"
+        kong.log.err(err_msg)
+        return nil, err_msg
+    end
+end
+
+function testplugin:access(conf)
+    local red = redis:new()
+
+    -- Establish a connection with the redis instance
+    local ok, err = red:connect(conf.host, conf.port, { ssl = conf.ssl })
+    if not ok then
+        kong.log.err("failed to connect: ", err)
+        return
+    end
+
+    local auth_token, _ = get_auth_token(conf)
+    if not auth_token then
+        return
+    end
+
+    local res, err = red:auth(conf.username, auth_token)
+    if not res then
+        kong.log.err("failed to authenticate: ", err)
+        return
+    end
+end
+```
+
+This configuration is an example and isn't directly executable. Adjust it as needed for your custom plugin.

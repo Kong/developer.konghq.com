@@ -69,6 +69,9 @@ rows:
   - use_case: "[Encrypt a message field using an AWS key source](/event-gateway/policies/encrypt-fields/examples/encrypt-with-aws/)"
     description: Encrypt a message field using an AWS key source.
 
+  - use_case: "[Encrypt a message field using a dynamic list of field paths](/event-gateway/policies/encrypt-fields/examples/encrypt-with-dynamic-paths/)"
+    description: Encrypt a message field using a dynamic list of field paths
+
 {% endtable %}
 <!--vale on-->
 

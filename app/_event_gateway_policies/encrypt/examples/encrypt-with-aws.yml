@@ -4,7 +4,7 @@ description: Use an AWS Key Vault to encrypt message values.
 
 requirements:
  - "A [Decrypt policy](/event-gateway/policies/decrypt/examples/decrypt-with-aws/) to pair with this Encrypt policy. The AWS ARN links the Encrypt and Decrypt policies."
- - "An [AWS KMS key ARN](https://docs.aws.amazon.com/sdk-for-rust/latest/dg/credproviders.html#credproviders-default-credentials-provider-chain)."
+ - "An [AWS KMS key ARN](https://docs.aws.amazon.com/kms/latest/developerguide/find-cmk-id-arn.html)."
 
 weight: 900
 

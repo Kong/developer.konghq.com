@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.5.0
+  version: 3.5.8
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@944dc99e5451ff1f02a4c85d90573bc01682e3f2
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/944dc99e5451ff1f02a4c85d90573bc01682e3f2'
+  x-oas-source: kong/platform-api@e98db4fce7398c9df4bb92338224acc15810e117
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e98db4fce7398c9df4bb92338224acc15810e117'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -6731,6 +6731,7 @@ components:
         auto_approve_applications: false
         auto_approve_developers: true
         canonical_domain: api.example.com
+        notifications_developer_pii_visibility_enabled: false
     UpdatePortalExampleRbacEnabled:
       value:
         authentication_enabled: true
@@ -8484,6 +8485,10 @@ components:
                 readOnly: true
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
+              notifications_developer_pii_visibility_enabled:
+                description: 'When enabled, portal registration notifications include the registering developer''s identifying information (such as name and email).'
+                type: boolean
+                default: false
             additionalProperties: false
             required:
               - name
@@ -8578,6 +8583,10 @@ components:
                 readOnly: true
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
+              notifications_developer_pii_visibility_enabled:
+                description: 'When enabled, portal registration notifications include the registering developer''s identifying information (such as name and email).'
+                type: boolean
+                default: false
             additionalProperties: false
             title: Portal
           examples:
@@ -9129,6 +9138,10 @@ components:
                       readOnly: true
                     labels:
                       $ref: '#/components/schemas/Labels'
+                    notifications_developer_pii_visibility_enabled:
+                      description: 'When enabled, portal registration notifications include the registering developer''s identifying information (such as name and email).'
+                      type: boolean
+                      default: false
                   required:
                     - id
                     - name
@@ -9235,6 +9248,10 @@ components:
                 readOnly: true
               labels:
                 $ref: '#/components/schemas/Labels'
+              notifications_developer_pii_visibility_enabled:
+                description: 'When enabled, portal registration notifications include the registering developer''s identifying information (such as name and email).'
+                type: boolean
+                default: false
             additionalProperties: false
             required:
               - id

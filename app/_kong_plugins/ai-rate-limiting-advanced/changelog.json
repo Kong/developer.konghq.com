@@ -26,6 +26,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.7": [
+    {
+      "message": "Emitted the documented `X-AI-RateLimit-*` headers on `429` responses from policies that partition by `provider` or `model`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed policy integration with `ai-proxy`\nfor single-target and multi-target AI proxy routes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to count cost for routes with dynamic AI models.\n",

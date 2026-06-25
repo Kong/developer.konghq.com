@@ -70,6 +70,10 @@ rows:
   - use_case: "[Example: Decrypt a field using an AWS key source](/event-gateway/policies/decrypt-fields/examples/decrypt-with-aws/)"
     description: Decrypt a message field using an AWS key source.
 
+  - use_case: "[Example: Decrypt a message field using a dynamic list of field paths](/event-gateway/policies/decrypt-fields/examples/decrypt-with-dynamic-paths/)"
+    description: Decrypt a message field using a dynamic list of field paths
+
+
 {% endtable %}
 <!--vale on-->
 

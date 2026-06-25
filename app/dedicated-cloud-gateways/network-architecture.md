@@ -156,33 +156,9 @@ For more information about all {{site.base_gateway}} WAF configurations and plug
 To ensure your Gateway traffic can continue uninterrupted in the event of a control plane or provider outage, you can deploy data planes in multiple Dedicated Cloud Gateway regions and cloud service providers.
 This setup allows Kong to automatically re-route traffic to the secondary region or cloud provider during an outage. 
 
-## Dedicated Cloud Gateway network CIDR range
+## Dedicated Cloud Gateway network CIDR size requirements {#dedicated-cloud-gateway-network-cidr-range}
 
-Before you create a Dedicated Cloud Gateway network, determine which CIDR range you want to use for your network.
-A CIDR block defines the range of IP addresses available for your Dedicated Cloud Gateway. 
-If you're configuring private network connectivity, this CIDR block **must not** overlap with CIDR blocks assigned in your own cloud service provider networks to prevent conflicts.
-Keep in mind that your Dedicated Cloud Gateway network CIDR block must be large enough to cover the Kong infrastructure Kong will provision inside it, such as the data plane nodes, the DNS proxy, internal load balancers, and any other components Kong manages. 
-
-Keep the following CIDR requirements in mind when you're deciding your network CIDR range:
-* **Prefix length:** The CIDR block must have a prefix length between `/16` and `/23`. `/23` blocks are only supported for up to 3 availability zones.
-* **Private IP Range:** The entire CIDR block must fall within one of these private IP ranges:
-  * 10.0.0.0/8
-  * 100.64.0.0/10
-  * 172.16.0.0/12
-  * 192.168.0.0/16
-  * 198.18.0.0/15
-* **No overlap with existing ranges:** Your CIDR block **must not** overlap with any IP ranges already in use by your organization. Overlapping ranges can prevent network peering from functioning correctly.
-* **No overlap with reserved CIDR blocks:** Your CIDR block must not overlap with these reserved ranges:
-  * 10.100.0.0/16
-  * 172.17.0.0/16
-
-{:.info}
-> **Acceptable CIDR examples:**
-> * 10.4.0.0/16
-> * 100.68.0.0/20
-> * 172.20.0.0/22
-> * 192.168.128.0/18
-> * 198.18.0.0/16
+{% include /konnect/cidr-minimum-requirements.md %}
 
 ## Configure a Dedicated Cloud Gateway network
 
