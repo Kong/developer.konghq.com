@@ -213,6 +213,8 @@ formats:
       - ai-policy
       - ai-consumer
       - ai-consumer-group
+      - ai-gateway
+      - ai-data-plane-certificate
       - admin
       - ca_certificate
       - certificate

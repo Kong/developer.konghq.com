@@ -77,6 +77,26 @@ The following creates a new AI MCP Server. Suggested values are shown in backtic
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
 1. Configure endpoint/auth settings and optional policies.
 1. Click **Create**.
+{% when 'ai_gateway' %}
+The following creates a new AI Gateway. Suggested values are shown in backticks:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. Click **New AI Gateway**.
+1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
+1. Optionally add a description (for example: `{{ include.presenter.data['description'] }}`).
+1. Optionally add labels for organization and tracking (for example: `{{ include.presenter.data['labels'] }}`).
+1. Click **Create**.
+{% when 'data_plane_certificate' %}
+The following adds a new data plane certificate. Suggested values are shown in backticks:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. Select an {{site.ai_gateway}}.
+1. Navigate to **Settings**.
+1. Select the **Certificates** tab.
+1. Click **New Certificate**.
+1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
+1. Upload or paste the certificate and private key.
+1. Click **Create**.
 {% else %}
 UI instructions are not yet available for this {{site.ai_gateway}} entity type.
 {% endcase %}
