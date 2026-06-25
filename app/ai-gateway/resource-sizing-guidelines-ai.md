@@ -4,14 +4,13 @@ content_type: reference
 layout: reference
 
 products:
-    - gateway
     - ai-gateway
 
 works_on:
-    - on-prem
+    - konnect
 
 min_version:
-    gateway: '2.0'
+    ai-gateway: '2.0'
 
 tags:
     - performance
