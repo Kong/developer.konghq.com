@@ -51,6 +51,8 @@ rows:
                 url: /plugins/basic-auth/examples/
               - text: Plugin reference
                 url: /plugins/basic-auth/
+              - text: Use principals
+                url: /how-to/authenticate-principals-with-basic-authentication/
       - blocks:
         - type: card
           config:
@@ -122,6 +124,8 @@ rows:
                   url: /plugins/key-auth/examples/
                 - text: Key Auth plugin reference
                   url: /plugins/key-auth/
+                - text: Use principals
+                  url: /how-to/authenticate-principals-with-key-auth/
                 - text: Get started with Key Auth Encrypted
                   url: /plugins/key-auth-enc/examples/
                 - text: Key Auth Encrypted plugin reference
@@ -144,6 +148,44 @@ rows:
                 - text: LDAP Auth Advanced plugin reference
                   url: /plugins/ldap-auth-advanced/
         
+
+  - header:
+      type: h2
+      text: "Authenticate clients with {{site.identity}}"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  [{{site.identity}}](/identity/) principals are a centralized, region-scoped identity for clients that authenticate to a {{site.base_gateway}} hosted in {{site.konnect_short_name}}.
+                  Use principals when you want to share a client identity across multiple gateways without manually syncing Consumers, or when you want to attach metadata to a client to drive plugin behavior.
+
+                  See [Principals and directories](/identity/principals/) for more information.
+
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Authenticate principals with basic authentication
+            description: |
+              Use the Basic Authentication plugin to authenticate principals with a username and password stored in a {{site.identity}} directory.
+            icon: /assets/icons/identity.svg
+            cta:
+              text: Get started
+              url: /how-to/authenticate-principals-with-basic-authentication/
+      - blocks:
+        - type: card
+          config:
+            title: Authenticate principals with key authentication
+            description: |
+              Use the Key Authentication plugin to authenticate principals with an API key stored in a {{site.identity}} directory.
+            icon: /assets/icons/identity.svg
+            cta:
+              text: Get started
+              url: /how-to/authenticate-principals-with-key-auth/
 
   - header:
       type: h2
