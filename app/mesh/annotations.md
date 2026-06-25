@@ -303,7 +303,7 @@ metadata:
 
 ### `kuma.io/builtindns`
 
-Tells the sidecar to use its builtin DNS server.
+Tells the sidecar to use its built-in DNS server.
 
 ```yaml
 apiVersion: v1
@@ -316,7 +316,7 @@ metadata:
 
 ### `kuma.io/builtindnsport`
 
-Port the builtin DNS server should listen on for DNS queries.
+Port the built-in DNS server should listen on for DNS queries.
 
 ```yaml
 apiVersion: v1

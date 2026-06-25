@@ -10,88 +10,73 @@ icon: policy.svg
 ---
 
 This policy enables {{site.mesh_product_name}} to configure the load balancing strategy for traffic between services in the mesh.
-When using this policy, the [localityAwareLoadBalancing](/docs/{{ page.release }}/policies/locality-aware) flag is ignored.
+When using this policy, the `localityAwareLoadBalancing` flag is ignored.
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
-{% tabs %}
-{% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshMultiZoneService`            |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)`            |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`, `MeshMultiZoneService`            |
-{% endif_version %}
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshMultiZoneService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endtab %}
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
-{% endif_version %}
-{% if_version lte:2.5.x %}
 
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ✅  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ✅  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-
-{% endif_version %}
-
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
 ## Configuration
 
-{% if_version lte:2.4.x %}
-### LocalityAwareness
-
-Locality-aware load balancing is enabled by default unlike its predecessor [localityAwareLoadBalancing](/docs/{{ page.release }}/policies/locality-aware).
-
-- **`disabled`** – (optional) allows to disable locality-aware load balancing. When disabled requests are distributed 
-across all endpoints regardless of locality.
-
-{% endif_version %}
-{% if_version gte:2.5.x %}
 ### LocalityAwareness
 Locality-aware load balancing provides robust and straightforward method for balancing traffic within and across zones. This not only allows you to route traffic across zones when the local zone service is unhealthy but also enables you to define traffic prioritization within the local zone and set cross-zone fallback priorities.
 
-#### Default behaviour
-Locality-aware load balancing is enabled by default, unlike its predecessor [localityAwareLoadBalancing](/docs/{{ page.release }}/policies/locality-aware). Requests are distributed across all endpoints within the local zone first unless there are not enough healthy endpoints.
+#### Default behavior
+Locality-aware load balancing is enabled by default, unlike its predecessor `localityAwareLoadBalancing`. Requests are distributed across all endpoints within the local zone first unless there are not enough healthy endpoints.
 
 #### Disabling locality aware routing
 If you do so, all endpoints regardless of their zone will be treated equally. To do this do:
@@ -101,10 +86,9 @@ localityAwareness:
   disabled: true
 ```
 
-#### Configuring LocalityAware Load Balancing for traffic within the same zone
-{% warning %}
-If `crossZone` and/or `localZone` is defined, they take precedence over `disabled` and apply more specific configuration.
-{% endwarning %}
+#### Configuring LocalityAware load balancing for traffic within the same zone
+{:.warning}
+> If `crossZone` and/or `localZone` is defined, they take precedence over `disabled` and apply more specific configuration.
 
 Local zone routing allows you to define traffic routing rules within a local zone, prioritizing data planes based on tags and their associated weights. This enables you to allocate specific traffic percentages to data planes with particular tags within the local zone. If there are no healthy endpoints within the highest priority group, the next priority group takes precedence. Locality awareness within the local zone relies on tags within inbounds, so it's crucial to ensure that the tags used in the policy are defined for the service (Dataplane object on Universal, PodTemplate labels on Kubernetes).
 
@@ -113,13 +97,12 @@ Local zone routing allows you to define traffic routing rules within a local zon
     - **`key`** - defines tag for which affinity is configured. The tag needs to be configured on the inbound of the service. In case of Kubernetes, pod needs to have a label. On Universal user needs to define it on the inbound of the service. If the tag is absent this entry is skipped.
     - **`weight`** - (optional) weight of the tag used for load balancing. The bigger the weight the higher number of requests is routed to dataplanes with specific tag. By default we will adjust them so that 90% traffic goes to first tag, 9% to next, and 1% to third and so on.
 
-#### Configuring LocalityAware Load Balancing for traffic across zones
-{% warning %}
-Remember that cross-zone traffic requires [mTLS to be enabled](/docs/{{ page.release }}/policies/mutual-tls).
-{% endwarning %}
+#### Configuring LocalityAware load balancing for traffic across zones
+{:.warning}
+> Remember that cross-zone traffic requires [mTLS to be enabled](/mesh/policies/mutual-tls/).
 Advanced locality-aware load balancing provides a powerful means of defining how your service should behave when there is no instances of your service available or they are in a degraded state in your local zone. With this feature, you have the flexibility to configure the fallback behavior of your service, specifying the order in which it should attempt fallback options and defining different behaviors for instances located in various zones.
 
-- **`crossZone`** - (optional) allows to define behaviour when there is no healthy instances of the service. When not defined, cross zone traffic is disabled.
+- **`crossZone`** - (optional) allows to define behavior when there is no healthy instances of the service. When not defined, cross zone traffic is disabled.
   - **`failover`** - defines a list of load balancing rules in order of priority. If a zone is not specified explicitly by name or implicitly using the type `Any`/`AnyExcept` it is excluded from receiving traffic. By default, the last rule is always `None` which means, that there is no traffic to other zones after specified rules.
     - **`from`** - (optional) defines the list of zones to which the rule applies. If not specified, rule is applied to all zones.
       - **`zones`** - list of zone names.
@@ -130,18 +113,15 @@ Advanced locality-aware load balancing provides a powerful means of defining how
         - **`AnyExcept`** - traffic will be load balanced to every available zone except those specified in zones list.
         - **`None`** - traffic will not be load balanced to any zone.
       - **`zones`** - list of zone names
-  - **`failoverThreshold.percentage`** - (optional) defines the percentage of live destination data plane proxies below which load balancing to the next priority starts. .e.g: If you have this set to 70 and you have 10 data plane proxies it will start load balancing to the next priority when the number of healthy destinations falls under 7. The value to be in (0.0 - 100.0] range (Default 50). If the value is a double number, put it in quotes.
+  - **`failoverThreshold.percentage`** - (optional) defines the percentage of live destination data plane proxies below which load balancing to the next priority starts. For example, If you have this set to 70 and you have 10 data plane proxies it will start load balancing to the next priority when the number of healthy destinations falls under 7. The value to be in (0.0 - 100.0] range (Default 50). If the value is a double number, put it in quotes.
 
 #### Zone Egress support
 
 Using Zone Egress Proxy in multi-zone deployment poses certain limitations for this feature. When configuring `MeshLoadbalancingStrategy` with Zone Egress you can only use `Mesh` as a top level targetRef. This is because we don't differentiate requests that come to Zone Egress from different clients, yet. 
 
-Moreover, Zone Egress is a simple proxy that uses long-lived L4 connection with each Zone Ingresses. Consequently, when a new `MeshLoadbalancingStrategy` with locality awareness is configured, connections won’t be refreshed, and locality awareness will apply only to new connections.
+Moreover, Zone Egress is a simple proxy that uses long-lived L4 connection with each Zone Ingresses. Consequently, when a new `MeshLoadbalancingStrategy` with locality awareness is configured, connections are not refreshed, and locality awareness applies only to new connections.
 
-Another thing you need to be aware of is how outbound traffic behaves when you use the `MeshCircuitBreaker`'s outlier detection to keep track of healthy endpoints. Normally, you would use `MeshCircuitBreaker` to act on failures and trigger traffic redirect to the next priority level if the number of healthy endpoints fall below `crossZone.failoverThreshold`. When you have a single instance of Zone Egress, all remote zones will be behind a single endpoint. Since `MeshCircuitBreaker` is configured on Data Plane Proxy, when one of the zones start responding with errors it will mark the whole Zone Egress as not healthy and won’t send traffic there even though there could be multiple zones with live endpoints. This will be changed in the future with overall improvements to the Zone Egress proxy.
-
-
-{% endif_version %}
+Another thing you need to be aware of is how outbound traffic behaves when you use the `MeshCircuitBreaker`'s outlier detection to keep track of healthy endpoints. Normally, you would use `MeshCircuitBreaker` to act on failures and trigger traffic redirect to the next priority level if the number of healthy endpoints fall below `crossZone.failoverThreshold`. When you have a single instance of Zone Egress, all remote zones will be behind a single endpoint. Since `MeshCircuitBreaker` is configured on data plane proxy, when one of the zones start responding with errors it marks the whole Zone Egress as not healthy and does not send traffic there, even if there are multiple zones with live endpoints. This is a known limitation that will be addressed with future Zone Egress proxy improvements.
 
 ### LoadBalancer
 

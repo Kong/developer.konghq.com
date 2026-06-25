@@ -15,99 +15,91 @@ related_resources:
     url: /mesh/meshopentelemetrybackend/
 ---
 
-{% warning %}
-This policy uses new policy matching algorithm.
-Do **not** combine with the deprecated TrafficTrace policy.
-{% endwarning %}
+{:.warning}
+> This policy uses new policy matching algorithm.
+> Do **not** combine with the deprecated TrafficTrace policy.
 
 This policy enables publishing traces to a third party tracing solution.
 
 Tracing is supported over HTTP, HTTP2, and gRPC protocols.
-You must [explicitly specify the protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma) for each service and data plane proxy you want to enable tracing for.
+You must explicitly specify the protocol for each service and data plane proxy you want to enable tracing for.
 
 {{site.mesh_product_name}} currently supports the following trace exposition formats:
 
 - `Zipkin` traces in this format can be sent to [many different tracing backends](https://github.com/openzipkin/openzipkin.github.io/issues/65)
 - `Datadog`
 
-{% warning %}
-Services still need to be instrumented to preserve the trace chain across requests made across different services.
-
-You can instrument with a language library of your choice ([for Zipkin](https://zipkin.io/pages/tracers_instrumentation) and [for Datadog](https://docs.datadoghq.com/tracing/setup_overview/setup/java/?tab=containers)).
-For HTTP you can also manually forward the following headers:
-
-- `x-request-id`
-- `x-b3-traceid`
-- `x-b3-parentspanid`
-- `x-b3-spanid`
-- `x-b3-sampled`
-- `x-b3-flags`
-{% endwarning %}
+{:.warning}
+> Services still need to be instrumented to preserve the trace chain across requests made across different services.
+>
+> You can instrument with a language library of your choice ([for Zipkin](https://zipkin.io/pages/tracers_instrumentation) and [for Datadog](https://docs.datadoghq.com/tracing/setup_overview/setup/java/?tab=containers)).
+> For HTTP you can also manually forward the following headers:
+>
+> - `x-request-id`
+> - `x-b3-traceid`
+> - `x-b3-parentspanid`
+> - `x-b3-spanid`
+> - `x-b3-sampled`
+> - `x-b3-flags`
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
-{% tabs %}
-{% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`           | Allowed kinds                                 |
-| --------------------- | --------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endif_version %}
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`      | Allowed kinds         |
-| ---------------- | --------------------- |
-| `targetRef.kind` | `Mesh`, `MeshGateway` |
-{% endtab %}
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-{% endif_version %}
-{% if_version gte:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-{% endif_version %}
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
-{% endif_version %}
-{% if_version lte:2.5.x %}
 
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ❌  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ❌  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-
-{% endif_version %}
-
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
 ## Configuration
 
 ### Sampling
 
-{% tip %}
-Most of the time setting only `overall` is sufficient. `random` and `client` are for advanced use cases.
-{% endtip %}
+{:.info}
+> Most of the time setting only `overall` is sufficient. `random` and `client` are for advanced use cases.
 
 You can configure sampling settings equivalent to Envoy's:
 

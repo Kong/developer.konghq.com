@@ -9,12 +9,9 @@ type: policy
 icon: meshhealthcheck.png
 ---
 
-
-
-{% warning %}
-This policy uses new policy matching algorithm. 
-Do **not** combine with the deprecated HealthCheck policy.
-{% endwarning %}
+{:.warning}
+> This policy uses new policy matching algorithm.
+> Do **not** combine with the deprecated HealthCheck policy.
 
 This policy enables {{site.mesh_product_name}} to keep track of the health of every data plane proxy,
 with the goal of minimizing the number of failed requests in case a data plane proxy is temporarily unhealthy.
@@ -27,72 +24,67 @@ When an unhealthy proxy returns to a healthy state,
 
 This policy provides **active** checks.
 If you want to configure **passive** checks,
-please use the [MeshCircuitBreaker](/docs/{{ page.release }}/policies/meshcircuitbreaker) policy.
+please use the [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) policy.
 Data plane proxies with **active** checks will explicitly send requests to other data plane proxies to determine if target proxies are healthy or not.
 This mode generates extra traffic to other proxies and services as described in the policy configuration.
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
-{% tabs %}
-{% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`           | Allowed kinds                                 |
-| --------------------- | --------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                         |
-{% endif_version %}
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endtab %}
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
-{% endif_version %}
-{% if_version lte:2.5.x %}
 
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ✅  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ✅  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-
-{% endif_version %}
-
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
 ## Configuration
 
@@ -100,10 +92,9 @@ The `MeshHealthCheck` policy supports both L4/TCP and L7/HTTP/gRPC checks.
 
 ### Protocol selection
 
-The health check protocol is selected by picking the most [specific protocol](/docs/{{ page.release }}/policies/protocol-support-in-kuma)
+The health check protocol is selected by picking the most specific protocol
 and falls back to more general protocol when specified protocol has `disabled=true` in policy definition.
 See [protocol fallback example](#protocol-fallback).
-
 
 ## Common configuration
 
@@ -117,14 +108,12 @@ See [protocol fallback example](#protocol-fallback).
 - **`intervalJitterPercent`** - (optional) if specified, during every interval Envoy will add `intervalJitter` *
   `intervalJitterPercent` / 100 to the wait time. If `intervalJitter` and
   `intervalJitterPercent` are both set, both of them will be used to increase the wait time.
-{% if_version lte:2.9.x %}
 - **`healthyPanicThreshold`** - (optional) allows to configure panic threshold for Envoy clusters. If not specified,
-  the default is 50%. To disable panic mode, set to 0%.
-{% endif_version %}
-{% if_version gte:2.10.x %}
-- **`healthyPanicThreshold`** - (optional) allows to configure panic threshold for Envoy clusters. If not specified,
-  the default is 50%. To disable panic mode, set to 0%. ⚠️This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/docs/{{ page.release }}/policies/meshcircuitbreaker).⚠️
-{% endif_version %}
+  the default is 50%. To disable panic mode, set to 0%. 
+  
+  {:.warning}
+  > This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).
+
 - **`failTrafficOnPanic`** - (optional) if set to true, Envoy will not consider any hosts when the cluster is in
   'panic mode'. Instead, the cluster will fail all requests as if all hosts are unhealthy.
   This can help avoid potentially overwhelming a failing service.
@@ -176,9 +165,9 @@ HTTP health checks are executed using HTTP2
   - when checking the response, “fuzzy” matching is performed such that
     each block must be found, and in the order specified, but not
     necessarily contiguous;
-  - if **`receive`** section won't be provided or will be empty, checks
-    will be performed as "connect only" and will be marked as successful
-    when TCP connection will be successfully established.
+  - if the **`receive`** section is not provided or is empty, checks
+    are performed as "connect only" and are marked as successful
+    when a TCP connection is established.
 
 ### gRPC
 

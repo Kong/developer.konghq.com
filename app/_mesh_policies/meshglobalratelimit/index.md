@@ -62,12 +62,12 @@ limits, deny response is returned.
 
 Besides the basic service configuration that is provided on startup, the ratelimit service needs a limits configuration. Limits configuration
 is loaded dynamically from the control plane. Ratelimit service uses xDS protocol for this, which is the same protocol that the data plane proxy
-uses for communicating with the control plane. The control plane will periodically compute any new limits configuration and send it to ratelimit service.
+uses for communicating with the control plane. The control plane periodically computes any new limits configuration and sends it to the ratelimit service.
 
 ### Rate limiting algorithm
 
 The ratelimit service uses a fixed window algorithm. It allocates a new counter for each time unit. Let's assume that we have configured limits to 
-10 requests per minute. At the beginning of each minute, ratelimit service will create a new counter. 
+10 requests per minute. At the beginning of each minute, ratelimit service creates a new counter. 
 
 <center>
   <img src="/assets/images/mesh/ratelimit-algorithm.png"/>
@@ -95,8 +95,8 @@ When it comes to multi-zone deployments, you should deploy the ratelimit service
 </center>
 > Figure 3: Diagram of multi-zone ratelimit setup with Redis per zone.
 
-The first option is to deploy Redis in every zone. In this setup, limits will be applied per zone. Since each zone will have its own counters cache, 
-requests will be faster, and it will be easier to distribute your system geographically.
+The first option is to deploy Redis in every zone. In this setup, limits apply per zone. Since each zone has its own counters cache,
+requests are faster, and it will be easier to distribute your system geographically.
 
 <center>
   <img src="/assets/images/mesh/ratelimit-service-multizone-single-redis.png"/>
@@ -114,36 +114,41 @@ TODO: document how to generate and use zone token on universal.-->
 
 ## TargetRef support matrix
 
-{% if_version gte:2.7.x %}
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                         |
-| ----------------------- | ------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`   |
-| `from[].targetRef.kind` | `Mesh`                                |
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`, `MeshService`"
+  - targetref: "`from[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`                                     |
-| `to[].targetRef.kind` | `Mesh`                                                    |
-{% endtab %}
-{% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| TargetRef type    | Top level | To  | From |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ❌  | ✅   |
-| MeshSubset        | ❌        | ❌  | ❌   |
-| MeshService       | ✅        | ❌  | ❌   |
-| MeshServiceSubset | ❌        | ❌  | ❌   |
-| MeshGatewayRoute  | ❌        | ❌  | ❌   |
-
-{% endif_version %}
-
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Configuration
 
@@ -348,11 +353,11 @@ spec:
 ### Combining MeshRateLimit with MeshGlobalRateLimit
 
 You can combine MeshRateLimit and MeshGlobalRateLimit policies. By doing this, you can specify a local limit that is more strict than the global rate limit.
-When the local rate limit is reached, the data plane proxy will stop sending requests to ratelimit service. 
+When the local rate limit is reached, the data plane proxy stops sending requests to the ratelimit service. 
 
 This could lower network traffic between the data plane proxy and the ratelimit service. Also, it can protect your ratelimit service from a DDoS "attack" by your services. 
 Moreover, this could be used to more evenly distribute traffic to the ratelimit service and mitigate the problem of depleting whole limit at the beginning of the counter window.
-This is described in the [previous section](/mesh/policies/meshglobalratelimit/#rate-limiting-algorithm).
+This is described in the previous section.
 
 {% navtabs "meshglobalratelimit-example" %}
 {% navtab "Kubernetes" %}
@@ -362,7 +367,7 @@ apiVersion: kuma.io/v1alpha1
 kind: MeshRateLimit
 metadata:
   name: demo-local-rate-limit
-  namespace: kuma-system
+  namespace: kong-mesh-system
 spec:
   targetRef:
     kind: MeshService
@@ -441,8 +446,6 @@ spec:
 
 {{site.mesh_product_name}} is using the Envoy Rate Limit service reference implementation. You can read the [source code and documentation](https://github.com/envoyproxy/ratelimit) from the Envoy Proxy GitHub repository.
 
-
-
 ## Ratelimit service
 
 {{site.mesh_product_name}} is using the Envoy Rate Limit service reference implementation. You can read the [source code and documentation](https://github.com/envoyproxy/ratelimit) from the Envoy Proxy GitHub repository.
@@ -469,7 +472,7 @@ The descriptor key will always be `kuma.io/service`, and the descriptor value wi
 Therefore, we can deduct that this configuration will apply to `demo-app_kuma-demo_svc_5000` service in the `default`
 mesh. For the second part of the configuration, we have information about the request limit and unit to which 
 this limit will be applied. Shadow mode specifies if request should be limited after reaching the configured limit. If `shadow_mode` is set 
-to `true`, the ratelimit service will not deny requests to your service, it will only update the ratelimit service metrics.
+to `true`, the ratelimit service does not deny requests to your service, it only updates the ratelimit service metrics.
 
 ### Performance improvements
 
@@ -486,7 +489,7 @@ You should refer to [ratelimit service documentation](https://github.com/envoypr
 
 ### Example
 
-The following example shows how to deploy and test a sample `MeshGlobalRateLimit` policy on Kubernetes, using the kuma-demo application.
+The following example shows how to deploy and test a sample `MeshGlobalRateLimit` policy on Kubernetes, using the kong-mesh-demo application.
 
 1. First, we need to deploy Redis in our Kubernetes cluster:
 
@@ -560,7 +563,7 @@ The following example shows how to deploy and test a sample `MeshGlobalRateLimit
 2. We are all set up. Now you can try making few requests to the external IP of your gateway and you will see an error after reaching limits. You can find the IP with command:
 
     ```bash
-    kubectl -n kuma-demo get service demo-app-gateway
+    kubectl -n kong-mesh-demo get service demo-app-gateway
     ```
 
     You can configure more with this demo, such as changing limits or trying out other examples from this documentation.

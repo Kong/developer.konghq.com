@@ -24,52 +24,36 @@ When the `MeshOPA` policy is applied, the control plane configures the following
 
 ## TargetRef support matrix
 
-{% if_version gte:2.11.x %}Add `commentMore` actions
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endtab %}
-
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`                                     |
-{% endtab %}
-{% endtabs %}
-{% endif_version %}
-{% if_version gte:2.6.x %}
-{% if_version lte:2.10.x %}
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-{% endtab %}
-
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                             |
-| ----------------------- | --------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`                                     |
-{% endtab %}
-{% endtabs %}
-
-{% endif_version %}
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ❌  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ❌  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-| MeshGatewayRoute  | ❌        | ❌  | ❌   |
-
-{% endif_version %}
-
-
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane` (new_in 2.11), `MeshSubset` (deprecated), `MeshService` (removed in 2.11), `MeshServiceSubset` (removed in 2.11)"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Configuration
 
@@ -261,14 +245,44 @@ Encoding the policy in a Secret provides some security for policies that contain
 
 The following environment variables are available:
 
-| Variable                   | Type      | What it configures     | Default value {:width=25%:}   |
-| -------------------------- | --------- | --------------------------------------| ------------------- |
-| KMESH_OPA_ADDR             | string    | Address OPA API server listens on     | `localhost:8181`    |
-| KMESH_OPA_CONFIG_PATH      | string    | Path to file of initial config        | N/A                 |
-| KMESH_OPA_DIAGNOSTIC_ADDR  | string    | Address of OPA diagnostics server     | `0.0.0.0:8282`      |
-| KMESH_OPA_ENABLED          | bool      | Whether `kuma-dp` starts embedded OPA | true                |
-| KMESH_OPA_EXT_AUTHZ_ADDR   | string    | Address of Envoy External AuthZ service | `localhost:9191`  |
-| KMESH_OPA_CONFIG_OVERRIDES | strings   | Overrides for OPA configuration, in addition to config file(*) | nil |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Variable
+    key: variable
+  - title: Type
+    key: type
+  - title: What it configures
+    key: what_it_configures
+  - title: Default value
+    key: default_value
+rows:
+  - variable: KMESH_OPA_ADDR
+    type: string
+    what_it_configures: Address OPA API server listens on
+    default_value: "`localhost:8181`"
+  - variable: KMESH_OPA_CONFIG_PATH
+    type: string
+    what_it_configures: Path to file of initial config
+    default_value: N/A
+  - variable: KMESH_OPA_DIAGNOSTIC_ADDR
+    type: string
+    what_it_configures: Address of OPA diagnostics server
+    default_value: "`0.0.0.0:8282`"
+  - variable: KMESH_OPA_ENABLED
+    type: bool
+    what_it_configures: "Whether `kuma-dp` starts embedded OPA"
+    default_value: "true"
+  - variable: KMESH_OPA_EXT_AUTHZ_ADDR
+    type: string
+    what_it_configures: Address of Envoy External AuthZ service
+    default_value: "`localhost:9191`"
+  - variable: KMESH_OPA_CONFIG_OVERRIDES
+    type: strings
+    what_it_configures: "Overrides for OPA configuration, in addition to config file(*)"
+    default_value: nil
+{% endtable %}
+<!-- vale on -->
 
 {% navtabs  "configuration" %}
 {% navtab "kumactl" %}
@@ -322,7 +336,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: example-app
-  namespace: kuma-example
+  namespace: kong-mesh-example
 spec:
   ...
   template:
@@ -336,7 +350,6 @@ spec:
 {% navtab "Universal" %}
 
 The `run` command on the data plane proxy accepts the following equivalent parameters if you prefer not to set environment variables:
-
 
 ```
 --opa-addr
@@ -401,9 +414,9 @@ spec:
 {% endnavtab %}
 {% endnavtabs %}
 
-By default, the body will not be sent to the agent.
+By default, the body is not sent to the agent.
 To send it, set `authConfig.requestBody.maxSize` to the maximum size of your body.
-If the request body is larger than this parameter, it will be truncated and the header `x-envoy-auth-partial-body` will be set to `true`.
+If the request body is larger than this parameter, it is truncated and the header `x-envoy-auth-partial-body` is set to `true`.
 
 ## Support for external API management servers
 
@@ -543,7 +556,7 @@ spec:
             }
 ```
 
-`appendPolicies` is a list you can append, therefore in the case of the data plane proxy `test-server_kuma-demo_svc_80` service, both policies will be applied.
+`appendPolicies` is a list you can append, therefore in the case of the data plane proxy `test-server_kuma-demo_svc_80` service, both policies are applied.
 
 {{site.mesh_product_name}} will autogenerate an additional OPA decision policy:
 ```rego
@@ -566,7 +579,7 @@ This way, the mesh operator can expose utility functions to service owner.
 
 ## Example
 
-The following example shows how to deploy and test a sample MeshOPA policy on Kubernetes, using the kuma-demo application.
+The following example shows how to deploy and test a sample MeshOPA policy on Kubernetes, using the kong-mesh-demo application.
 
 1.  Deploy the example application:
 
@@ -577,14 +590,14 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
 1.  Make a request from the frontend to the backend:
 
     ```sh
-    kubectl exec -i -t $(kubectl get pod -l "app=kuma-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kuma-demo) -n kuma-demo -c kuma-fe -- curl backend:3001 -v
+    kubectl exec -i -t $(kubectl get pod -l "app=kong-mesh-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kong-mesh-demo) -n kong-mesh-demo -c kong-mesh-fe -- curl backend:3001 -v
     ```
 
     The output looks like:
 
     ```
-    Defaulting container name to kuma-fe.
-    Use 'kubectl describe pod/kuma-demo-app-6787b4f7f5-m428c -n kuma-demo' to see all of the containers in this pod.
+    Defaulting container name to kong-mesh-fe.
+    Use 'kubectl describe pod/kong-mesh-demo-app-6787b4f7f5-m428c -n kong-mesh-demo' to see all of the containers in this pod.
     *   Trying 10.111.108.218:3001...
     * TCP_NODELAY set
     * Connected to backend (10.111.108.218) port 3001 (#0)
@@ -666,13 +679,13 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
 1.  Make an invalid request from the frontend to the backend:
 
     ```sh
-    kubectl exec -i -t $(kubectl get pod -l "app=kuma-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kuma-demo) -n kuma-demo -c kuma-fe -- curl backend:3001 -v
+    kubectl exec -i -t $(kubectl get pod -l "app=kong-mesh-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kong-mesh-demo) -n kong-mesh-demo -c kong-mesh-fe -- curl backend:3001 -v
     ```
     The output looks like:
 
     ```
-    Defaulting container name to kuma-fe.
-    Use 'kubectl describe pod/kuma-demo-app-6787b4f7f5-bwvnb -n kuma-demo' to see all of the containers in this pod.
+    Defaulting container name to kong-mesh-fe.
+    Use 'kubectl describe pod/kong-mesh-demo-app-6787b4f7f5-bwvnb -n kong-mesh-demo' to see all of the containers in this pod.
     *   Trying 10.105.146.164:3001...
     * TCP_NODELAY set
     * Connected to backend (10.105.146.164) port 3001 (#0)
@@ -704,14 +717,14 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
 
     Make the request:
     ```sh
-    kubectl exec -i -t $(kubectl get pod -l "app=kuma-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kuma-demo) -n kuma-demo -c kuma-fe -- curl -H "Authorization: Bearer $ADMIN_TOKEN" backend:3001
+    kubectl exec -i -t $(kubectl get pod -l "app=kong-mesh-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kong-mesh-demo) -n kong-mesh-demo -c kong-mesh-fe -- curl -H "Authorization: Bearer $ADMIN_TOKEN" backend:3001
     ```
 
     The output looks like:
 
     ```
-    Defaulting container name to kuma-fe.
-    Use 'kubectl describe pod/kuma-demo-app-6787b4f7f5-m428c -n kuma-demo' to see all of the containers in this pod.
+    Defaulting container name to kong-mesh-fe.
+    Use 'kubectl describe pod/kong-mesh-demo-app-6787b4f7f5-m428c -n kong-mesh-demo' to see all of the containers in this pod.
     *   Trying 10.111.108.218:3001...
     * TCP_NODELAY set
     * Connected to backend (10.111.108.218) port 3001 (#0)
@@ -743,6 +756,3 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
     ```
 
     The request is valid again because the token is signed with the `secret` private key, its payload includes the admin role, and it is not expired.
-
-<!-- links -->
-[protocols]: /mesh/policies/
