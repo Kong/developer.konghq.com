@@ -18,7 +18,7 @@ Changelog for supported {{site.event_gateway}} versions.
 
 **Release date**: TBA
 
-### **Deprecations & Behavior Changes**
+### Deprecations & Behavior Changes
 
 - **Per-policy `*.attempts` metrics deprecated**: `kong.keg.kafka.decrypt.attempts`, `kong.keg.kafka.encrypt.attempts`, `kong.keg.kafka.kscheme.attempts`, and `kong.keg.kafka.schema.validation.attempts` are deprecated. Use the unified `kong.keg.kafka.policy.invocations` metric instead.
 - **`kong/sverr-{part}` header deprecated**: The `schema_validation` policy's `kong/sverr-{part}` header is deprecated. Use `kong/policy-failure-{konnect_id}` instead, which carries the reason for the policy failure.
@@ -41,7 +41,7 @@ This lets you rename topics for clients without changing client configuration, o
 Use it together with the Encrypt Fields policy to enforce consistent encryption standards across clients.
   - [Decrypt Fields policy reference](/event-gateway/policies/decrypt-fields/)
   - [How-to: Encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/)
-- **Kong Identity principal metadata**: After a client authenticates, the gateway can fetch the principal's metadata from Kong Identity and expose it as auth.principal.id
+- **Kong Identity principal metadata**: After a client authenticates, the gateway can fetch the principal's metadata from Kong Identity and expose it as `auth.principal.id`.
 - **Schema metadata in the CEL context**: Schema metadata is now exposed in the parsed-record CEL context, enabling expressions that reason about a record's schema in addition to its contents.
 - **Unified policy failure modes**: Failure-mode handling is now consistent across all policies, including a new `mark` mode and a `passthrough` action for schema validation, giving you predictable control over what happens when a policy fails.
 - **Consumer group administration support**: ACL handling now supports consumer group heartbeat and describe operations, and consumer group names are rewritten consistently for namespaced virtual clusters.
@@ -49,7 +49,7 @@ Use it together with the Encrypt Fields policy to enforce consistent encryption 
 - **Analytics: error codes and queue visibility**: Analytics events now carry the request error code (reporting the lowest/most significant code), and the analytics pipeline logs when its queue fills and drains.
 - **`ca_bundle` no longer requires base64 encoding**: Backend cluster `ca_bundle` values can now be provided directly without base64 encoding.
 
-### Bug Fixes
+### Fixes
 
 - **Consumer group admin APIs were broken**: Admin calls returned empty members and the API 69 request timed out. Consumer group handling was reworked and unsupported APIs removed.
 - **Snappy records failed to decompress with an encryption policy applied**: The gateway now correctly decompresses Snappy-compressed records when an encryption policy is in effect.
