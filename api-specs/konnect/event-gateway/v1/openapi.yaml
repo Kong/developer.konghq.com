@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.0.0
+  version: 1.0.3
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9ed66dfc0b982c40fae52321ba4f585054ee9fbc
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9ed66dfc0b982c40fae52321ba4f585054ee9fbc'
+  x-oas-source: kong/platform-api@eabfe8b372e43b3e538444848492336dbb48b53a
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/eabfe8b372e43b3e538444848492336dbb48b53a'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -5804,7 +5804,7 @@ components:
           description: The namespace-visible topic name this alias resolves to.
           type: string
           minLength: 1
-        match:
+        condition:
           description: |
             CEL expression evaluated against the connection's auth context.
             If omitted or empty, the alias is active for all connections.
