@@ -33,6 +33,7 @@ module Jekyll
               'overview_url' => @policy.overview_page_class.url(@policy),
               'get_started_url' => @policy.examples.first&.url,
               'reference_url' => @policy.reference_page_class.url(@policy),
+              'has_overview?' => true,
               'plugin' => @policy,
               'plugin?' => true,
               'release' => @policy.latest_release_in_range,
