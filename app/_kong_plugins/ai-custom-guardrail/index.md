@@ -134,4 +134,4 @@ The values can be set to Lua expressions. You can also use the [`config.custom_m
 
 ## Forward proxy support
 
-{% include ai-gateway/forward-proxy.md %}
+{% include md/ai-gateway/v2/forward-proxy.md %}

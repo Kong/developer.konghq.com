@@ -104,4 +104,4 @@ To enforce these rules, the plugin:
 
 ## Forward proxy support
 
-{% include ai-gateway/forward-proxy.md %}
+{% include md/ai-gateway/v2/forward-proxy.md %}

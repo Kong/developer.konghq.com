@@ -202,4 +202,4 @@ For setup instructions, see [AI plugin Partials](/gateway/entities/partial/#ai-p
 
 ## Forward proxy support
 
-{% include ai-gateway/forward-proxy.md %}
+{% include md/ai-gateway/v2/forward-proxy.md %}

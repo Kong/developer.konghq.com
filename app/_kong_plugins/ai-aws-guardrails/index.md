@@ -96,4 +96,4 @@ To log the raw content of blocked requests and responses, enable [`config.log_bl
 
 ## Forward proxy support
 
-{% include ai-gateway/forward-proxy.md %}
+{% include md/ai-gateway/v2/forward-proxy.md %}
