@@ -1,6 +1,6 @@
 ---
 title: Authenticate OAuth clients with a Kong Identity authorization server
-permalink: /how-to/authenticate-principals-with-oidc/
+permalink: /how-to/authenticate-oauth-clients-with-kong-identity/
 content_type: how_to
 breadcrumbs:
   - /identity/
