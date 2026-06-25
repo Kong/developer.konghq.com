@@ -264,6 +264,19 @@
 * test(meshservice): universal e2e for label propagation [#16573](https://github.com/kumahq/kuma/pull/16573) @Automaat
 
 
+## 2.11.16
+> Released on 2026/06/23
+
+* chore(deps): bump github.com/containerd/containerd/v2 from 2.2.4 to 2.2.5 [#9985](https://github.com/Kong/kong-mesh/pull/9985) @renovate
+* chore(deps): bump kumahq/kuma from v2.11.15 to v2.11.16 [#9919](https://github.com/Kong/kong-mesh/pull/9919) [#9982](https://github.com/Kong/kong-mesh/pull/9982) [#9998](https://github.com/Kong/kong-mesh/pull/9998) @kong-mesh
+
+### Includes [kumahq/kuma@2.11.16](https://github.com/kumahq/kuma/releases/tag/2.11.16) changelog
+
+* chore(deps): bump envoy from 1.35.11 to 1.35.12 [#16934](https://github.com/kumahq/kuma/pull/16934) @kumahq
+* chore(deps): bump go version from 1.26.3 to 1.26.4 [#16880](https://github.com/kumahq/kuma/pull/16880) @renovate
+* fix(policy): match ignored inbounds for Dataplane [#16914](https://github.com/kumahq/kuma/pull/16914) @slonka
+
+
 ## 2.13.8
 > Released on 2026/06/05
 
