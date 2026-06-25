@@ -1,0 +1,20 @@
+<div class="flex flex-col gap-2 w-full">
+  <div class="flex items-center gap-1 text-primary font-medium">
+    <span>Scopes</span>
+  </div>
+  <div class="flex flex-col gap-1.5 flex-wrap">
+    {% for scope in include.scopes %}
+        <div class="flex gap-2 items-center">
+            {% if scope == 'global' %}
+                <span class="text-terciary">Global</span>
+            {% else %}
+              <div class="flex gap-2">
+                {% include mask_image.html image_url='/assets/icons/service-document.svg' css_classes="w-5 h-5 shrink-0 !bg-icon" %}
+                {% assign entity_page = site.ai_gateway_entities | where: "slug", scope | first %}
+                <a href="{{ entity_page.url }}">{{ entity_page.title }}</a>
+              </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+  </div>
+</div>

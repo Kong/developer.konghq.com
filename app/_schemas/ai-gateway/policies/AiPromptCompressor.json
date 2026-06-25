@@ -1,0 +1,193 @@
+{
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "log_text_data": {
+          "type": "boolean",
+          "description": "Log the text data",
+          "default": false
+        },
+        "message_type": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "assistant",
+              "system",
+              "user"
+            ]
+          },
+          "default": [
+            "user"
+          ]
+        },
+        "proxy_config": {
+          "type": "object",
+          "properties": {
+            "proxy_scheme": {
+              "type": "string",
+              "enum": [
+                "http"
+              ],
+              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+              "default": "http"
+            },
+            "auth_username": {
+              "type": "string",
+              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true
+            },
+            "auth_password": {
+              "type": "string",
+              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
+            },
+            "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "http_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "https_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            }
+          }
+        },
+        "compression_ranges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "min_tokens": {
+                "type": "integer"
+              },
+              "max_tokens": {
+                "type": "integer"
+              },
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "max_tokens",
+              "min_tokens",
+              "value"
+            ]
+          },
+          "description": "What value to be used to compress with. The 'value' is interpreted as rate or target_token depending on compressor_type."
+        },
+        "compressor_url": {
+          "type": "string",
+          "description": "The url of the compressor",
+          "default": "http://localhost:8080"
+        },
+        "compressor_type": {
+          "type": "string",
+          "enum": [
+            "rate",
+            "target_token"
+          ],
+          "description": "What compression type to use to compress with",
+          "default": "rate"
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Connection timeout with the compressor",
+          "default": 10000
+        },
+        "keepalive_timeout": {
+          "type": "number",
+          "description": "The keepalive timeout for the established http connnection",
+          "default": 60000
+        },
+        "stop_on_error": {
+          "type": "boolean",
+          "description": "Stop processing if an error occurs",
+          "default": true
+        }
+      },
+      "required": [
+        "compression_ranges"
+      ]
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+    },
+    "consumer_group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups"
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

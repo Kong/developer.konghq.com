@@ -4,10 +4,10 @@ metadata:
   description: This page is an introduction to {{site.ai_gateway}}.
   products:
     - ai-gateway
-    - gateway
   works_on:
-    - on-prem
     - konnect
+  min_version:
+    ai-gateway: '2.0'
   tags:
     - ai
 
@@ -132,7 +132,7 @@ rows:
             description: Secure Claude with single sign-on authentication through {{site.ai_gateway}}.
             icon: /assets/icons/security.svg
             cta:
-              url: /cookbooks/claude-sso/
+              url: /cookbooks/claude-code-sso/
               align: end
       - blocks:
         - type: card
@@ -180,8 +180,6 @@ rows:
                 - type: unordered_list
                   items:
                     - "[{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for {{site.ai_gateway}}."
-                    - "[Deployment topologies](/gateway/deployment-topologies/): Learn about the different ways to deploy {{ site.base_gateway }}."
-                    - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
 
   - header:
       type: h2
@@ -248,7 +246,7 @@ rows:
       type: h2
       text: "Govern {{site.ai_gateway}} with entities and policies"
       description: |
-        Enforce authentication, rate limiting, guardrails, transformations, and governance by attaching AI Policies to your AI entities. Create Models, Providers, Agents, and MCP Servers to manage your AI traffic.
+        Enforce authentication, rate limiting, guardrails, transformations, and governance by attaching AI Policies to your AI entities. Create AI Models, AI Providers, AI Agents, and AI MCP Servers to manage your AI traffic.
     column_count: 3
     columns:
       - blocks:
@@ -335,15 +333,15 @@ rows:
         For more information, see the full list of [Data Governance](/ai-gateway/ai-data-gov/) capabilities.
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-semantic-prompt-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-sanitizer
 
@@ -356,11 +354,11 @@ rows:
         {{site.ai_gateway}} supports policy-managed prompt capabilities that allow you to set defaults and manipulate prompts as they pass through [AI Model](/ai-gateway/entities/ai-model/) or [AI Agent](/ai-gateway/entities/ai-agent/) traffic.
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-template
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-decorator
 
@@ -373,32 +371,32 @@ rows:
     column_count: 3
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-azure-content-safety
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-aws-guardrails
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-gcp-model-armor
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-semantic-prompt-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-semantic-response-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-lakera-guard
             icon: ai-lakera.png
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-custom-guardrail
             icon: ai-custom-guardrail.png
@@ -410,14 +408,13 @@ rows:
         {{site.ai_gateway}} allows you to use AI technology to augment other API traffic.
         One example is routing API responses through an AI language translation prompt before returning it to the client.
         {{site.ai_gateway}} provides two policies that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing.
-        These policies can be configured independently of AI Proxy.
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-request-transformer
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-response-transformer
 
@@ -443,7 +440,7 @@ rows:
   - column_count: 2
     columns:
     - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-rag-injector
 
@@ -480,10 +477,9 @@ rows:
       description: |
         The {{site.ai_gateway}} helps reduce LLM usage costs by giving you control over how prompts are built and routed.
         You can compress and structure prompts efficiently using AI Compressor, RAG Injector, and AI Prompt Decorator policies.
-        For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-compressor
       - blocks:
@@ -495,15 +491,15 @@ rows:
             cta:
               url: /metering-and-billing/
               align: end
-      - blocks:
-        - type: card
-          config:
-            title: Save LLM usage costs with semantic load balancing
-            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
-            icon: /assets/icons/money.svg
-            cta:
-              url: /how-to/use-semantic-load-balancing
-              align: end
+      # - blocks:
+      #   - type: card
+      #     config:
+      #       title: Save LLM usage costs with semantic load balancing
+      #       description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
+      #       icon: /assets/icons/money.svg
+      #       cta:
+      #         url: /how-to/use-semantic-load-balancing
+      #         align: end
   - header:
       type: h2
       text: "Observability and metrics"
@@ -567,9 +563,9 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: Is {{site.ai_gateway}} available for all deployment modes?
+            - q: How do I deploy {{site.ai_gateway}}?
               a: |
-                {{site.ai_gateway}} capabilities (AI, MCP, and A2A traffic management) are available across [deployment modes](/gateway/deployment-topologies/), including {{site.konnect_short_name}}, self-hosted traditional, hybrid, and DB-less, and on Kubernetes via the [{{site.kic_product_name}}](/kubernetes-ingress-controller/).
+                {{site.ai_gateway}} is managed through {{site.konnect_short_name}}. Data plane nodes run in your environment (self-hosted, cloud, or Kubernetes) and connect to {{site.konnect_short_name}} for configuration and observability.
 
             - q: Why should I use {{site.ai_gateway}} instead of adding the LLM's API behind {{site.base_gateway}}?
               a: |
