@@ -6,6 +6,8 @@ metadata:
     - ai-gateway
   works_on:
     - konnect
+  min_version:
+    ai-gateway: '2.0'
   tags:
     - ai
     - a2a
@@ -67,8 +69,8 @@ rows:
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Secure and govern with Policies
-              description: Secure A2A agents and control access with Policies.
+              title: Secure and govern with AI Policies
+              description: Secure A2A agents and control access with AI Policies.
               ctas:
                 - text: OpenID Connect
                   url: "/ai-gateway/policies/openid-connect/"

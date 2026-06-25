@@ -16,9 +16,6 @@ tags:
   - monitoring
   - tracing
 
-plugins:
-  - opentelemetry
-
 min_version:
   ai-gateway: '2.0'
 
@@ -32,9 +29,9 @@ related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: OpenTelemetry Policy
-    url: /plugins/opentelemetry/
+    url: /ai-gateway/policies/opentelemetry/
   - text: Zipkin Policy
-    url: /plugins/zipkin/
+    url: /ai-gateway/policies/zipkin/
   - text: "{{site.base_gateway}} tracing guide"
     url: /gateway/tracing/
 
