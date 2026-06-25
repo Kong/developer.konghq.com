@@ -35,9 +35,9 @@ tools:
     - deck
 
 tldr:
-  q: How do I map OAuth clients to  principals with OpenID Connect?
+  q: How do I map OAuth clients to principals with OpenID Connect?
   a: |
-    Create a {{site.identity}} authorization server and OAuth client, create a principal, and link the client to the principal with an `auth_server_client` identity. Configure the OpenID Connect plugin with `principals.enabled` set to `true` to use {{site.identity}} as your IdP , then send a request with the client credentials in an `Authorization: Basic` header to a protected Gateway Service.
+    Create a {{site.identity}} authorization server and OAuth client, create a principal, and link the client to the principal with an `auth_server_client` identity. Configure the OpenID Connect plugin with `principals.enabled` set to `true` to use {{site.identity}} as your IdP, then send a request with the client credentials in an `Authorization: Basic` header to a protected Gateway Service.
 
 prereqs:
   entities:
