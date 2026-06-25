@@ -130,7 +130,7 @@ Updating an {{site.ai_gateway}} changes its `name`, `description`, or `labels`. 
 
 Deleting an {{site.ai_gateway}} removes the entity. Its child entities are scoped to the {{site.ai_gateway}} and can't be addressed without it.
 
-## Set up an AI Gateway
+## Set up an {{site.ai_gateway}} entity
 
 The following example creates an {{site.ai_gateway}} instance with labels for environment tracking.
 
