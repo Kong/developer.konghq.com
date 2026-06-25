@@ -180,7 +180,6 @@ rows:
                 - type: unordered_list
                   items:
                     - "[{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for {{site.ai_gateway}}."
-                    - "[Deployment topologies](/gateway/deployment-topologies/): Learn about the different ways to deploy {{ site.ai_gateway }}."
 
   - header:
       type: h2
