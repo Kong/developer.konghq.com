@@ -14,6 +14,50 @@ tags:
 
 Changelog for supported {{site.event_gateway}} versions.
 
+## 1.2.0
+
+**Release date**: TBA
+
+### Deprecations & Behavior Changes
+
+- **Per-policy `*.attempts` metrics deprecated**: `kong.keg.kafka.decrypt.attempts`, `kong.keg.kafka.encrypt.attempts`, `kong.keg.kafka.kscheme.attempts`, and `kong.keg.kafka.schema.validation.attempts` are deprecated. Use the unified `kong.keg.kafka.policy.invocations` metric instead.
+- **`kong/sverr-{part}` header deprecated**: The `schema_validation` policy's `kong/sverr-{part}` header is deprecated. Use `kong/policy-failure-{konnect_id}` instead, which carries the reason for the policy failure.
+- **`kong.keg.konnect.analytics.bytes.sent` deprecated**: Replaced by `kong.keg.konnect.analytics.sent`, since the standard unit `By` belongs in metric metadata rather than the metric name. The replacement counter is emitted alongside the deprecated one during the migration window.
+- **`kong.keg.result` now always reflects the real policy result**: Previously this label `kong.keg.kafka.policy.invocations` reported `success` even when a policy failed under the
+`mark`, `skip`, or `passthrough` failure modes. These invocations now report `kong.keg.result=fail`. Use the `kong.keg.failure_mode` label if you want to ignore failures handled by those modes.
+- **Missing fields in parsed-record CEL expressions are now absent rather than null**: Paths like `record.value.content[...]` that do not exist are no longer placed in the context map,
+while explicit `null` values remain present. Use `'<path>' in record.value.content` to check for a field before reading or comparing it.
+
+### Features
+
+- **Topic aliases**: Virtual clusters can now expose backend Kafka topics under different client-facing names.
+Clients see the alias while {{site.event_gateway_short}} transparently routes requests to the original backend topic.
+This lets you rename topics for clients without changing client configuration, or provide multiple names for the same backend topic.
+  - [Virtual cluster reference: Topic aliases](/event-gateway/entities/virtual-cluster/#topic-aliases)
+  - [How-to: Configure topic aliases](/event-gateway/configure-topic-aliases/)
+- **Encrypt Fields policy**: A new produce phase policy that encrypts fields of schema-validated Kafka messages using AES-256-GCM before they reach the backend cluster.
+  - [Encrypt Fields policy reference](/event-gateway/policies/encrypt-fields/)
+- **Decrypt Fields policy**: A new consume phase policy that decrypts fields of Kafka messages that were previously encrypted using a referenced key.
+Use it together with the Encrypt Fields policy to enforce consistent encryption standards across clients.
+  - [Decrypt Fields policy reference](/event-gateway/policies/decrypt-fields/)
+  - [How-to: Encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/)
+- **Kong Identity principal metadata**: After a client authenticates, the gateway can fetch the principal's metadata from Kong Identity and expose it as `auth.principal.id`.
+- **Schema metadata in the CEL context**: Schema metadata is now exposed in the parsed-record CEL context, enabling expressions that reason about a record's schema in addition to its contents.
+- **Unified policy failure modes**: Failure-mode handling is now consistent across all policies, including a new `mark` mode and a `passthrough` action for schema validation, giving you predictable control over what happens when a policy fails.
+- **Consumer group administration support**: ACL handling now supports consumer group heartbeat and describe operations, and consumer group names are rewritten consistently for namespaced virtual clusters.
+- **Observability aligned with OpenTelemetry conventions**: Signals, labels, and metric names were aligned with conventions. Adds virtual cluster authentication observability, additional authentication metrics, and a `result` label on policy invocations.
+- **Analytics: error codes and queue visibility**: Analytics events now carry the request error code (reporting the lowest/most significant code), and the analytics pipeline logs when its queue fills and drains.
+- **`ca_bundle` no longer requires base64 encoding**: Backend cluster `ca_bundle` values can now be provided directly without base64 encoding.
+
+### Fixes
+
+- **Consumer group admin APIs were broken**: Admin calls returned empty members and the API 69 request timed out. Consumer group handling was reworked and unsupported APIs removed.
+- **Snappy records failed to decompress with an encryption policy applied**: The gateway now correctly decompresses Snappy-compressed records when an encryption policy is in effect.
+- **`acl_mode` hot reload had no effect**: Switching the ACL mode at runtime is now applied without a restart.
+- **Schema Registry cache poisoned on transient failures**: A transient Schema Registry error could be cached and served indefinitely. Retriable errors are now evicted from the cache instead of being persisted.
+- **Clearer logging when a client disconnects before authenticating**: Connections that close before or during authentication now produce accurate, actionable log messages.
+
+
 ## 1.1.0
 
 **Release date**: 2026/03/25
@@ -25,23 +69,23 @@ See the [breaking changes entry for metrics naming](/event-gateway/breaking-chan
 - **Environment variable names changed**: Legacy Konnect bootstrap environment variables are no longer supported. The variables now have a `KONG_` prefix. The gateway now logs a clear message indicating which variables to migrate if old-style names are detected:
 
     ```
-    KONNECT_REGION -> KONG_KONNECT_REGION  
-    KONNECT_DOMAIN -> KONG_KONNECT_DOMAIN  
-    KONNECT_GATEWAY_CLUSTER_ID -> KONG_KONNECT_GATEWAY_CLUSTER_ID  
-    KONNECT_API_REQUEST_TIMEOUT -> KONG_KONNECT_API_REQUEST_TIMEOUT  
-    KONNECT_INSECURE_SKIP_VERIFY -> KONG_KONNECT_INSECURE_SKIP_VERIFY  
-    KONNECT_CLIENT_CERT -> KONG_KONNECT_CLIENT_CERT  
-    KONNECT_CLIENT_CERT_PATH -> KONG_KONNECT_CLIENT_CERT_PATH  
-    KONNECT_CLIENT_KEY -> KONG_KONNECT_CLIENT_KEY  
+    KONNECT_REGION -> KONG_KONNECT_REGION
+    KONNECT_DOMAIN -> KONG_KONNECT_DOMAIN
+    KONNECT_GATEWAY_CLUSTER_ID -> KONG_KONNECT_GATEWAY_CLUSTER_ID
+    KONNECT_API_REQUEST_TIMEOUT -> KONG_KONNECT_API_REQUEST_TIMEOUT
+    KONNECT_INSECURE_SKIP_VERIFY -> KONG_KONNECT_INSECURE_SKIP_VERIFY
+    KONNECT_CLIENT_CERT -> KONG_KONNECT_CLIENT_CERT
+    KONNECT_CLIENT_CERT_PATH -> KONG_KONNECT_CLIENT_CERT_PATH
+    KONNECT_CLIENT_KEY -> KONG_KONNECT_CLIENT_KEY
     KONNECT_CLIENT_KEY_PATH -> KONG_KONNECT_CLIENT_KEY_PATH
     ```
-  
+
     See the [{{site.event_gateway_short}} configuration reference](/event-gateway/configuration/) for all environment variable options.
 
 ### Features
 
 - **Minimum runtime version**: Event gateway control planes can now be configured to enforce a minimum version on connecting nodes. Some features are gated behind this setting because they depend on support in the data plane node.
-- **mTLS to backend Kafka clusters**: You can now configure mutual TLS authentication between the gateway and your backend Kafka clusters, enabling encrypted and authenticated connections to brokers. 
+- **mTLS to backend Kafka clusters**: You can now configure mutual TLS authentication between the gateway and your backend Kafka clusters, enabling encrypted and authenticated connections to brokers.
   - [How-to: Authenticate {{site.event_gateway}} connections to Kafka using mTLS](/event-gateway/configure-mtls-backend-cluster-auth/)
   - [Backend cluster reference](/event-gateway/entities/backend-cluster/)
 - **mTLS between clients and the gateway**: Clients can now authenticate to the gateway using TLS client certificates. Supports principal mapping to extract identity information from certificates for
