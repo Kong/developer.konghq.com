@@ -38,7 +38,7 @@ related_resources:
     url: /event-gateway/entities/static-key/
   - text: Encrypt and decrypt Kafka message fields with {{site.event_gateway}}
     url: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
-  - text: Encrypt and decrypt Kafka message fields dynamically {{site.event_gateway}}
+  - text: Encrypt and decrypt Kafka message fields dynamically with {{site.event_gateway}}
     url: /event-gateway/encrypt-kafka-message-fields-dynamic/
 
 min_version:
