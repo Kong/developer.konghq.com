@@ -19,8 +19,7 @@ description: Use this tutorial to dynamically generate a list of fields to encry
 tldr:
   q: How can I encrypt and decrypt Kafka specific fields depending on the connection context with {{site.event_gateway}}?
   a: |
-    TODO
-        Generate a key and create a [static key](/event-gateway/entities/static-key/) entity, then create [field encryption](/event-gateway/policies/encrypt-fields/) and [field decryption](/event-gateway/policies/decrypt-fields/) policies to enable message encryption and decryption.
+    Generate a key and create a [static key](/event-gateway/entities/static-key/) entity, then create [field encryption](/event-gateway/policies/encrypt-fields/) and [field decryption](/event-gateway/policies/decrypt-fields/) policies with path expressions to enable message encryption and decryption.
 
 tools:
     - konnect-api
