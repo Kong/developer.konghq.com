@@ -63,7 +63,7 @@ Semantic policies also use vector databases to perform similarity searches at re
 
 Each AI Policy applies similarity search slightly differently depending on its goal. These comparisons determine whether the AI Policy routes, blocks, reuses, or enriches a prompt based on meaning rather than syntax.
 
-The following table describes how each {{site.ai_gateway}} policy compares embeddings:
+The following table describes how each {{site.ai_gateway}} Policy compares embeddings:
 
 {% table %}
 columns:
