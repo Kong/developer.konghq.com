@@ -16,9 +16,6 @@ tags:
   - monitoring
   - tracing
 
-plugins:
-  - opentelemetry
-
 min_version:
   ai-gateway: '2.0'
 

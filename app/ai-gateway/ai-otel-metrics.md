@@ -116,6 +116,6 @@ These metrics provide observability into MCP (Model Context Protocol) server int
 
 ## A2A metrics
 
-These metrics provide observability into [A2A (Agent-to-Agent)](/plugins/ai-a2a-proxy/) traffic, including request volume, latency, response sizes, and task state transitions.
+These metrics provide observability into [A2A (Agent-to-Agent)](/ai-gateway/entities/ai-agent/) traffic, including request volume, latency, response sizes, and task state transitions.
 
 {% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="kong.gen_ai.a2a." %}
