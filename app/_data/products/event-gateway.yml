@@ -16,8 +16,8 @@ releases:
     name: "v1"
   - release: "1.2"
     latest: true
-    release_date: "TBA"
-    eol: "TBA"
-    sunset: "TBA"
+    release_date: "2026-06-25"
+    eol: "2027-06-25"
+    sunset: "2028-06-25"
     version: "1.2.0"
     name: "v1"
