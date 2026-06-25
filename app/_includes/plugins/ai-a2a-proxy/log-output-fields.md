@@ -1,4 +1,4 @@
-When `config.logging.log_statistics` is enabled, the plugin writes the following fields to the
+When `config.logging.log_statistics` is enabled, it writes the following fields to the
 `ai.a2a.rpc[]` array:
 
 {% table %}
