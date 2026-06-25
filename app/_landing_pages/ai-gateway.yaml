@@ -132,7 +132,7 @@ rows:
             description: Secure Claude with single sign-on authentication through {{site.ai_gateway}}.
             icon: /assets/icons/security.svg
             cta:
-              url: /cookbooks/claude-sso/
+              url: /cookbooks/claude-code-sso/
               align: end
       - blocks:
         - type: card
