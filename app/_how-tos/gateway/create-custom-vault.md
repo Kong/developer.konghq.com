@@ -92,10 +92,20 @@ faqs:
 
 A custom vault backend is a Lua module with two required functions:
 
-| Function | Description |
-|----------|-------------|
-| `init(conf)` | Called once at startup. Use it to validate config or open persistent connections. |
-| `get(conf, resource, version)` | Called to resolve a secret reference. Returns the secret value as a string, or `nil` if not found. `resource` is the key portion of the `{vault://prefix/key}` reference. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Function
+    key: function
+  - title: Description
+    key: description
+rows:
+  - function: "`init(conf)`"
+    description: Called once at startup. Use it to validate config or open persistent connections.
+  - function: "`get(conf, resource, version)`"
+    description: "Called to resolve a secret reference. Returns the secret value as a string, or `nil` if not found. `resource` is the key portion of the `{vault://prefix/key}` reference."
+{% endtable %}
+<!--vale on-->
 
 Create the directory structure:
 
@@ -110,7 +120,7 @@ echo '
 local http = require("resty.http")
 local cjson = require("cjson")
 
-local function init()
+local function init(conf)
 end
 
 local function get(conf, resource, version)
@@ -125,18 +135,18 @@ local function get(conf, resource, version)
   })
 
   if not res then
-    ngx.log(ngx.WARN, "http vault: request failed for '", resource, "': ", err)
+    ngx.log(ngx.WARN, "http vault: request failed for ", resource, ": ", err)
     return nil
   end
 
   if res.status ~= 200 then
-    ngx.log(ngx.WARN, "http vault: status ", res.status, " for '", resource, "'")
+    ngx.log(ngx.WARN, "http vault: status ", res.status, " for ", resource)
     return nil
   end
 
-  local data = cjson.decode(res.body)
-  if data == nil then
-    ngx.log(ngx.WARN, "http vault: failed to decode JSON for '", resource, "'")
+  local ok, data = pcall(cjson.decode, res.body)
+  if not ok or data == nil then
+    ngx.log(ngx.WARN, "http vault: failed to decode JSON for ", resource)
     return nil
   end
 
