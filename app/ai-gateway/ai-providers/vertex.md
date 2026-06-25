@@ -27,8 +27,6 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Vertex AI tutorials
-    url: /how-to/?tags=vertex-ai
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/policies/
   - text: AI Providers

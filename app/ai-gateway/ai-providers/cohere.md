@@ -27,8 +27,6 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Cohere tutorials
-    url: /how-to/?tags=cohere
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/policies/
   - text: AI Providers

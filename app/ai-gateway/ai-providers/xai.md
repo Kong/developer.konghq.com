@@ -27,8 +27,6 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: xAI tutorials
-    url: /how-to/?tags=xai
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/policies/
   - text: AI Providers

@@ -29,8 +29,6 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: vLLM tutorials
-    url: /how-to/?tags=vllm
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/policies/
   - text: AI Providers
