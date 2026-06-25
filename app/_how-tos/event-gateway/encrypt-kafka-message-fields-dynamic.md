@@ -7,11 +7,13 @@ breadcrumbs:
 
 products:
     - event-gateway
+    - identity
 
 works_on:
     - konnect
 
 tags:
+    - event-gateway
     - kafka
 
 description: Use this tutorial to dynamically generate a list of fields to encrypt and decrypt with {{site.event_gateway}}.
