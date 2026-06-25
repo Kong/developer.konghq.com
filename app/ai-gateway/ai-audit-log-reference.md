@@ -26,7 +26,7 @@ works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} emits structured analytics logs for [AI Policies](/plugins/?category=ai) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment. 
+{{site.ai_gateway}} emits structured analytics logs for [AI Policies](/plugins/?category=ai) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-ai-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment. 
 
 You can set the [global log level](/ai-gateway/ai-logs/#configure-log-levels) for {{site.ai_gateway}} via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
 

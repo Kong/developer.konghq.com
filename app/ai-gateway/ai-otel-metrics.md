@@ -77,7 +77,7 @@ rows:
     required_for: "All AI metrics (set to a valid OTLP-compatible metrics endpoint)"
   - setting: "`config.logging.log_statistics`: `true`"
     policy: "[AI Proxy](/plugins/ai-proxy/reference/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/)"
-    required_for: "[Gen AI metrics](#gen-ai-metrics-otel-semantic-conventions)"
+    required_for: "[Gen AI metrics](#gen-ai-metrics-otlp-semantic-conventions)"
   - setting: "`config.logging.log_statistics`: `true`"
     policy: "[AI MCP Proxy](/plugins/ai-mcp-proxy/reference/)"
     required_for: "[MCP metrics](#mcp-metrics)"
