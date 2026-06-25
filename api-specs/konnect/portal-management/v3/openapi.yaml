@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.5.8
+  version: 3.5.9
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@e98db4fce7398c9df4bb92338224acc15810e117
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e98db4fce7398c9df4bb92338224acc15810e117'
+  x-oas-source: kong/platform-api@b8d278f218336b3b7a0b760ac9eb9a00ba7e8643
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b8d278f218336b3b7a0b760ac9eb9a00ba7e8643'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -3102,12 +3102,6 @@ components:
       example: '# Welcome to My Page'
       maxLength: 1000000
       title: PageContent
-    SnippetName:
-      description: The unique name of a snippet in a portal.
-      type: string
-      example: my-snippet
-      maxLength: 512
-      title: SnippetName
     SnippetTitle:
       description: The display title of a snippet in a portal.
       type: string
@@ -5724,7 +5718,13 @@ components:
       required:
         - title
         - items
-    PortalCustomization:
+    SnippetName:
+      description: The unique name of a snippet in a portal.
+      type: string
+      example: my-snippet
+      maxLength: 512
+      title: SnippetName
+    PortalCustomizationV3:
       description: The custom settings of this portal
       type: object
       properties:
@@ -8628,7 +8628,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/PortalCustomization'
+            $ref: '#/components/schemas/PortalCustomizationV3'
     ReplacePortalIntegrations:
       content:
         application/json:
@@ -9303,7 +9303,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/PortalCustomization'
+            $ref: '#/components/schemas/PortalCustomizationV3'
     PortalIntegrationsResponse:
       description: The current integration configurations for a portal.
       content:
