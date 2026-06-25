@@ -84,12 +84,12 @@ An AI Policy's scope is determined by where it's referenced. Each AI Policy is a
 
 The available scopes are:
 
-* **Global**: an AI Policy with no parent entity reference runs for every {{site.ai_gateway}} route on the data plane. Non-AI traffic on the same data plane isn't affected.
-* **AI Model**: referenced from the `policies` array on an [AI Model entity](/ai-gateway/entities/ai-model/). The Policy runs at the Service of the AI Model's derived primitives.
-* **AI Agent**: referenced from the `policies` array on an [AI Agent entity](/ai-gateway/entities/ai-agent/). The Policy runs at the Service of the AI Agent's derived primitives.
-* **AI MCP Server**: referenced from the `policies` array on an [AI MCP Server entity](/ai-gateway/entities/ai-mcp-server/). The Policy runs at the Service of the AI MCP Server's derived primitives.
-* **AI Consumer**: referenced from the `policies` array on an [AI Consumer entity](/ai-gateway/entities/ai-consumer/). The Policy runs when the AI Consumer is identified during a request.
-* **AI Consumer Group**: referenced from the `policies` array on an [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/). The Policy runs when a member of the AI Consumer Group is identified during a request.
+* **Global**: an AI Policy with no parent entity reference applies to all {{site.ai_gateway}} traffic on the data plane. Non-AI traffic on the same data plane isn't affected.
+* **AI Model**: referenced from the `policies` array on an [AI Model entity](/ai-gateway/entities/ai-model/). The Policy applies to that AI Model.
+* **AI Agent**: referenced from the `policies` array on an [AI Agent entity](/ai-gateway/entities/ai-agent/). The Policy applies to that AI Agent.
+* **AI MCP Server**: referenced from the `policies` array on an [AI MCP Server entity](/ai-gateway/entities/ai-mcp-server/). The Policy applies to that AI MCP Server.
+* **AI Consumer**: referenced from the `policies` array on an [AI Consumer entity](/ai-gateway/entities/ai-consumer/). The Policy applies when the AI Consumer is identified during a request.
+* **AI Consumer Group**: referenced from the `policies` array on an [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/). The Policy applies when a member of the AI Consumer Group is identified during a request.
 
 ### Creating AI Policies
 
