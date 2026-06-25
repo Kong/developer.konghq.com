@@ -71,6 +71,8 @@ examples_groups:
     text: Native routes
   - slug: claude-code
     text: claude-code
+  - slug: network
+    text: Network configuration
 
 faqs:
   - q: Can I override `config.model.name` by specifying a different model name in the request?
@@ -197,3 +199,7 @@ For setup instructions, see [AI plugin Partials](/gateway/entities/partial/#ai-p
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
 {% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
+
+## Forward proxy support
+
+{% include ai-gateway/forward-proxy.md %}
