@@ -366,7 +366,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Setup `kafkactl` to use OAuth
+## Set up `kafkactl` to use OAuth
 
 {:.warning}
 > This step requires a `kafkactl` version >= 5.17.0. To check your version, run `kafkactl version`.
