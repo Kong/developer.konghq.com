@@ -10,7 +10,8 @@ products:
 
 works_on:
     - konnect
-
+tools:
+    - konnect-api
 entities: []
 automated_tests: false
 tags:
@@ -41,8 +42,17 @@ prereqs:
     - title: "{{site.konnect_product_name}} roles"
       include_content: prereqs/dev-portal-dcr-roles
       icon_url: /assets/icons/gateway.svg
-    - title: Dev Portal
-      include_content: prereqs/dev-portal-app-reg
+    - title: Configure a Dev Portal and an API
+      include_content: prereqs/dev-portal-and-api
+      icon_url: /assets/icons/dev-portal.svg
+    - title: Register a Dev Portal developer account
+      content: |
+        Register a test developer account with your Dev Portal by navigating to your Dev Portal and clicking **Sign up**:
+        ```sh
+        open https://$PORTAL_URL/
+        ```
+
+        For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations.
       icon_url: /assets/icons/dev-portal.svg
     - title: Azure AD
       content: |
@@ -93,47 +103,89 @@ In Azure, create the main application:
 
 7. Select **Certificates & secrets** and then create a client secret and save it in a secure location. You can only view the secret once.
 
-8. In the **Overview** view, make a note of your Directory (tenant) ID and Application (client) ID.
+8. In the **Overview** view, copy your Directory (tenant) ID and Application (client) ID, then export them:
+
+   ```sh
+   export TENANT_ID='YOUR-AZURE-TENANT-ID'
+   export CLIENT_ID='YOUR-AZURE-CLIENT-ID'
+   export CLIENT_SECRET='YOUR-AZURE-CLIENT-SECRET'
+   export ISSUER_URL="https://sts.windows.net/$TENANT_ID"
+   ```
 
 ## Configure the Dev Portal
 
-After configuring Azure, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two main steps: first, creating the DCR provider, and second, establishing the authentication strategy. DCR providers are designed to be reusable configurations. This means once you've configured the Auth0 DCR provider, it can be used across multiple authentication strategies without needing to be set up again.
+After configuring Azure, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two main steps: first, creating the DCR provider, and second, establishing the authentication strategy. DCR providers are designed to be reusable configurations. This means once you've configured the Azure DCR provider, it can be used across multiple authentication strategies without needing to be set up again.
 
-This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you can also use the [Application Registration API](/api/konnect/application-auth-strategies/v2/#/operations/).
+1. [Create a DCR provider](/api/konnect/application-auth-strategies/v2/#/operations/create-dcr-provider) using the `/v2/dcr-providers` endpoint:
 
-1. Log in to {{site.konnect_short_name}} and select [Dev Portal](https://cloud.konghq.com/portals/) from the menu.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/dcr-providers
+status_code: 201
+method: POST
+body:
+  name: "Azure DCR Provider"
+  provider_type: azureAd
+  issuer: "$ISSUER_URL"
+  dcr_config:
+    initial_client_id: "$CLIENT_ID"
+    initial_client_secret: "$CLIENT_SECRET"
+{% endkonnect_api_request %}
+<!--vale on-->
 
-2. Navigate to [**Application Auth**](https://cloud.konghq.com/portals/application-auth) to see the authentication strategies for your APIs.
+1. Export the DCR provider ID from the response:
 
-3. Click the **DCR Provider** tab to see all existing DCR providers.
+   ```sh
+   export DCR_PROVIDER_ID='YOUR-DCR-PROVIDER-ID'
+   ```
 
-4. Click [**New DCR Provider**](https://cloud.konghq.com/portals/application-auth/dcr-provider/create) to create a new Azure configuration:
-   1. Enter a name for internal reference within {{site.konnect_short_name}}. This name and the provider type won't be visible to developers on the Dev Portal.
-   1. Enter the **Issuer URL** of your Azure tenant, formatted as: `https://sts.windows.net/YOUR_TENANT_ID`. *Do not* include a trailing slash at the end of the URL.
-   1. Select Azure as the **Provider Type**. 
-   1. Enter your Application (Client) ID from Azure into the **Initial Client ID** field, and the client secret of the Azure admin application into the **Initial Client Secret** field.
-      
-      {:.info}  
-      > **Note:** The Initial Client Secret will be stored in isolated, encrypted storage and will not be accessible through any Konnect API.
-   1. Save your DCR provider. You should now see it in the list of DCR providers.
+1. [Create an authentication strategy](/api/konnect/application-auth-strategies/v2/#/operations/create-app-auth-strategy) using the `/v2/application-auth-strategies` endpoint:
 
-7. Navigate to the **Auth Strategy** tab, then click [**New Auth Strategy**](https://cloud.konghq.com/portals/application-auth/auth-strategy/create) to create an auth strategy that uses the DCR provider:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/application-auth-strategies
+status_code: 201
+method: POST
+body:
+  name: "Azure DCR Auth Strategy"
+  display_name: "Azure DCR Auth Strategy"
+  strategy_type: openid_connect
+  configs:
+    openid-connect:
+      issuer: "$ISSUER_URL"
+      credential_claim:
+        - appid
+      scopes:
+        - openid
+      auth_methods:
+        - client_credentials
+        - bearer
+        - session
+  dcr_provider_id: "$DCR_PROVIDER_ID"
+{% endkonnect_api_request %}
+<!--vale on-->
 
-   1. Provide a name for internal use within {{site.konnect_short_name}} and a display name for visibility on your Portal.
-   1. In the **Auth Type** dropdown menu select DCR. 
-   1. In the **DCR Provider** dropdown, select the name of the DCR provider config you just created. Your **Issuer URL** will be prepopulated with the Issuer URL you added to the DCR provider.
-   1. In the **Credential Claims** field, enter `appid`.
-   1. Select the relevant **Auth Methods** you need (`client_credentials`, `bearer`, `session`), and click **Save**.
+1. Export the auth strategy ID from the response:
+
+   ```sh
+   export AUTH_STRATEGY_ID='YOUR-AUTH-STRATEGY-ID'
+   ```
 
 ## Apply the Azure DCR auth strategy to an API
 
-Now that the application auth strategy is configured, you can apply it to an API.
+Now that the application auth strategy is configured, you can [apply it to an API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 
-1. Navigate to your Dev Portal in {{site.konnect_short_name}}, select the Dev Portal, and click the **Published APIs** tab.
-
-1. Select the API you want to publish, and select the Auth0 auth strategy for the **Authentication strategy**.
-
-1. Click **Publish API**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/publications/$PORTAL_ID
+status_code: 201
+method: PUT
+body:
+  visibility: public
+  auth_strategy_ids:
+    - $AUTH_STRATEGY_ID
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Validate
 
