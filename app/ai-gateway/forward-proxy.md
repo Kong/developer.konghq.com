@@ -9,36 +9,17 @@ breadcrumbs:
   - /ai-gateway/
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
 tools:
-  - deck
-  - admin-api
   - konnect-api
-  - kic
 
-TODO: confirm the minimum Gateway version with engineering before publishing.
+
 min_version:
   ai-gateway: '2.0'
-
-plugins:
-  - ai-proxy-advanced
-  - ai-semantic-cache
-  - ai-semantic-prompt-guard
-  - ai-semantic-response-guard
-  - ai-rag-injector
-  - ai-prompt-compressor
-  - ai-sanitizer
-  - ai-aws-guardrails
-  - ai-azure-content-safety
-  - ai-lakera-guard
-  - ai-gcp-model-armor
-  - ai-custom-guardrail
 
 tags:
   - ai
@@ -48,8 +29,6 @@ tags:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advanced/
 ---
 
 ## What is forward proxy support?
