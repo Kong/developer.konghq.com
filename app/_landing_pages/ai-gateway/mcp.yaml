@@ -6,6 +6,8 @@ metadata:
     - ai-gateway
   works_on:
     - konnect
+  min_version:
+    ai-gateway: '2.0'
   breadcrumbs:
     - /ai-gateway/
   tags:
@@ -66,18 +68,18 @@ rows:
                     Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entities to apply security, governance, and observability controls across your MCP infrastructure.
 
                     Use AI Policies to:
-                    - Secure access with the MCP OAuth2 policy or other authentication methods
+                    - Secure access with the MCP OAuth2 AI Policy or other authentication methods
                     - Monitor MCP traffic using AI metrics and AI audit logs
                     - Enforce access controls for MCP tool usage
-                    - Govern usage with rate limiting and traffic control policies
+                    - Govern usage with rate limiting and traffic control
           - type: card
             config:
               icon: /assets/icons/lock.svg
-              title: Security and governance with Policies
+              title: Security and governance with AI Policies
               description: Secure MCP servers and govern traffic with AI Policies.
               ctas:
                 - text: MCP OAuth2 policy
-                  url: "/ai-gateway/entities/ai-policy/"
+                  url: "/ai-gateway/policies/ai-mcp-oauth2/"
                 - text: Rate Limiting
                   url: "/ai-gateway/policies/rate-limiting/"
                 - text: Observability
