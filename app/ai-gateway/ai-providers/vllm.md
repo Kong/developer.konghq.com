@@ -31,9 +31,9 @@ related_resources:
     url: /ai-gateway/
   - text: vLLM tutorials
     url: /how-to/?tags=vllm
-  - text: "{{site.ai_gateway}} plugins"
+  - text: "{{site.ai_gateway}} Policies"
     url: /plugins/?category=ai
-  - text: AI providers
+  - text: AI Providers
     url: /ai-gateway/ai-providers/
 
 ---

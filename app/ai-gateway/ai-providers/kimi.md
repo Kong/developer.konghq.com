@@ -44,7 +44,7 @@ related_resources:
 
 ## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/) as follows:
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Provider](/ai-gateway/entities/ai-provider/) as follows:
 
 <!--vale off-->
 {% konnect_api_request %}

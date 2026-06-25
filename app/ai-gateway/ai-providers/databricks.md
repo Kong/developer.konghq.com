@@ -16,11 +16,7 @@ products:
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
 
 tags:
   - ai
@@ -31,7 +27,7 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "{{site.ai_gateway}} plugins"
+  - text: "{{site.ai_gateway}} Policies"
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
