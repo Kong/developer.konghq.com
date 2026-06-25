@@ -77,7 +77,7 @@ rows:
   - feature: "AI Model semantic load balancing"
     incoming: "Incoming prompts"
     stored: "Stored embeddings of each target model's semantic description"
-  - feature: "AI Semantic Cache policy"
+  - feature: "AI Semantic Cache Policy"
     incoming: "Incoming prompts"
     stored: "Cached prompt keys"
   - feature: "AI RAG Injector policy"
