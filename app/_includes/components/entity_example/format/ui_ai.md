@@ -78,10 +78,10 @@ The following creates a new AI MCP Server. Suggested values are shown in backtic
 1. Configure endpoint/auth settings and optional policies.
 1. Click **Create**.
 {% when 'ai_gateway' %}
-The following creates a new AI Gateway. Suggested values are shown in backticks:
+The following creates a new {{site.ai_gateway}}. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
-1. Click **New AI Gateway**.
+1. Click **New {{site.ai_gateway}}**.
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
 1. Optionally add a description (for example: `{{ include.presenter.data['description'] }}`).
 1. Optionally add labels for organization and tracking (for example: `{{ include.presenter.data['labels'] }}`).
