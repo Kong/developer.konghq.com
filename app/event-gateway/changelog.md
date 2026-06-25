@@ -55,10 +55,6 @@ Use it together with the Encrypt Fields policy to enforce consistent encryption 
 - **Snappy records failed to decompress with an encryption policy applied**: The gateway now correctly decompresses Snappy-compressed records when an encryption policy is in effect.
 - **`acl_mode` hot reload had no effect**: Switching the ACL mode at runtime is now applied without a restart.
 - **Schema Registry cache poisoned on transient failures**: A transient Schema Registry error could be cached and served indefinitely. Retriable errors are now evicted from the cache instead of being persisted.
-- **Secrets and static keys were logged**: Static keys and other secret material are no longer written to logs.
-- **KScheme failures were logged once per record**: Noisy per-record logging was fixed, and KScheme panics are now caught instead of taking down request handling.
-- **Principal metadata was logged**: The gateway no longer logs principal metadata or JWT claims.
-- **Misleading errors when fetching a principal**: Invalid or failed principal fetches now return a clear, correct error.
 - **Clearer logging when a client disconnects before authenticating**: Connections that close before or during authentication now produce accurate, actionable log messages.
 
 
