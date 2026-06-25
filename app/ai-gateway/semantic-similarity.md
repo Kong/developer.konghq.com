@@ -24,7 +24,7 @@ related_resources:
     url: /ai-gateway/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
-  - text: "{{site.ai_gateway}} Model entity"
+  - text: "AI Model entity"
     url: /ai-gateway/entities/ai-model/
   - text: Semantic processing and vector similarity search with Kong and Redis
     url: https://konghq.com/blog/engineering/semantic-processing-and-vector-similarity-search-with-kong-and-redis
@@ -48,7 +48,7 @@ For example, in the figure 1, “king” and “emperor” are semantically more
 Based on meaning rather than exact matches, {{site.ai_gateway}} can perform intelligent request routing, caching, and content filtering using semantic similarity queries. An [AI Model](/ai-gateway/entities/ai-model/) can leverage semantic similarity in two ways:
 
 1. **Semantic load balancing**: Route requests to upstream providers based on how semantically similar the prompt is to each provider's capabilities, using the `semantic` load balancing algorithm.
-2. **Semantic Policies**: Attach AI Policies like AI Semantic Cache or AI Semantic Prompt Guard to add similarity-based caching, retrieval-augmented generation (RAG), and guardrails.
+2. **Semantic Policies**: Attach AI Policies like [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/) or [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) to add similarity-based caching, retrieval-augmented generation (RAG), and guardrails.
 
 ### Vector databases
 
@@ -74,7 +74,7 @@ columns:
   - title: Compared against
     key: stored
 rows:
-  - feature: "Model semantic load balancing"
+  - feature: "AI Model semantic load balancing"
     incoming: "Incoming prompts"
     stored: "Stored embeddings of each target model's semantic description"
   - feature: "AI Semantic Cache policy"
@@ -92,7 +92,7 @@ rows:
 
 Semantic similarity is used differently depending on the feature:
 
-**Model semantic load balancing** (`semantic` algorithm):
+**AI Model semantic load balancing** (`semantic` algorithm):
 - Generates embeddings for each target model's semantic description at configuration time and stores them in the vector database.
 - At request time, embeds the incoming prompt using the same embedding model and compares it against the stored target embeddings.
 - Routes requests to the target whose description is most semantically similar to the prompt, using the distance metric (cosine or Euclidean) configured for the Model.
@@ -100,9 +100,9 @@ Semantic similarity is used differently depending on the feature:
 
 **Semantic Policies**:
 - Each semantic Policy uses similarity search slightly differently based on its goal.
-- AI Semantic Cache compares prompts against cached prompt keys to find reusable responses.
-- AI RAG Injector compares prompts against vectorized document chunks to retrieve relevant context.
-- AI Semantic Prompt Guard and AI Semantic Response Guard compare content against vectorised allow and deny lists to detect misuse patterns semantically.
+- [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/) compares prompts against cached prompt keys to find reusable responses.
+- [AI RAG Injector](/ai-gateway/policies/ai-rag-injector/) compares prompts against vectorized document chunks to retrieve relevant context.
+- [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) and [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/) compare content against vectorized allow and deny lists to detect misuse patterns semantically.
 
 ## Dimensionality
 
