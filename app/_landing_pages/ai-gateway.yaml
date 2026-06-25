@@ -33,17 +33,12 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to get started with {{site.ai_gateway}}.
-
-                    Or, launch a local demo instance of {{site.ai_gateway}} with a single command:
+                    [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to get started with {{site.ai_gateway}} or launch a local demo instance of {{site.ai_gateway}} with a single command:
                     ```sh
                     curl -Ls https://get.konghq.com/ai | bash
                     ```
 
-                    Or, choose your starting point using one of our quickstart guides:
-                    - Proxy an LLM
-                    - Expose tools via MCP
-                    - Route agents through {{site.ai_gateway}}
+                    Or, proxy your first model through {{site.ai_gateway}} with the [LLM quickstart guide](/ai-gateway/get-started/).
 
       - blocks:
           - type: image
@@ -51,41 +46,11 @@ rows:
               url: /assets/images/gateway/ai-gateway-overview.svg
               alt_text: Overview of AI gateway
 
-
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: LLM quickstart
-            description: Proxy your first model through {{site.ai_gateway}} with a guided setup.
-            icon: /assets/icons/llm-quickstart.svg
-            cta:
-              url: /ai-gateway/get-started/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: MCP quickstart
-            description: Expose and observe your first tool server over Model Context Protocol.
-            icon: /assets/icons/mcp-quickstart.svg
-            cta:
-              url: /ai-gateway/mcp/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: A2A quickstart
-            description: Route and secure agent-to-agent traffic with protocol-aware observability.
-            icon: /assets/icons/a2a-quickstart.svg
-            cta:
-              url: /ai-gateway/a2a/
-              align: end
-
   - header:
       type: h2
       text: "{{site.ai_gateway}} providers"
       description: |
-        {{site.ai_gateway}} routes AI requests through [provider-agnostic APIs](./#universal-api) by combining AI Providers and AI Models.
+        {{site.ai_gateway}} routes AI requests through provider-agnostic APIs by combining AI Providers and AI Models.
         AI Providers store upstream connectivity and credentials, while AI Models reference Providers to expose stable client-facing endpoints and routing behavior.
     column_count: 4
     columns:
@@ -155,38 +120,6 @@ rows:
 
   - header:
       type: h2
-      text: "Deploy {{site.ai_gateway}}"
-    columns:
-      - header:
-          type: h3
-          text: "Tools to manage {{site.ai_gateway}}"
-        blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: unordered_list
-                  items:
-                    - "[{{site.konnect_product_name}} {{site.ai_gateway}} editor](https://cloud.konghq.com/ai-gateway): GUI for managing all your {{site.ai_gateway}} resources in one place."
-                    # - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
-                    - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.ai_gateway}} resources within {{site.konnect_short_name}} Control Planes via an API."
-                    - "[kongctl](/kongctl/): Use Kong's swiss-army knife command line tool for managing and interacting with {{site.ai_gateway}} resources and configurations within {{site.konnect_short_name}}."
-      - header:
-          type: h3
-          text: Deployment checklist
-        blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: unordered_list
-                  items:
-                    - "[{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for {{site.ai_gateway}}."
-
-  - header:
-      type: h2
-      text: "Overview of {{site.ai_gateway}}"
-
-  - header:
-      type: h2
       text: Three traffic types, unified control
     columns:
       - blocks:
@@ -195,84 +128,22 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Define a single endpoint for any traffic type: LLM, MCP, or A2A. Use unified entity resources by configuring [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/) once, then reuse across consumers and policies.
+                  Define a single endpoint for any traffic type: LLM, MCP, or A2A. Use unified entity resources by configuring [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/) once, then reuse across AI Consumers and AI Policies.
+                  Each entity includes built-in authentication, policy enforcement, and observability.
 
-                  Govern, secure, and observe all AI traffic through dedicated AI Gateway entities. Each includes built-in authentication, policy enforcement, and observability.
+                  {{site.konnect_short_name}} provides a [unified control plane](https://cloud.konghq.com/ai-manager) to create, manage, and monitor LLMs
+                  using the {{site.konnect_short_name}} platform.
 
-                  - [**Easy to manage**](/ai-gateway/entities/ai-model/): Define your endpoint once and expose a stable interface to clients.
-
-                  - [**Load balancing**](/ai-gateway/load-balancing/): Distribute requests across target services for performance and cost efficiency.
-
-                  - [**Retry and fallback**](/ai-gateway/load-balancing/#retry-and-fallback): Route based on performance, cost, or availability.
-
-                  - [**Policy integration**](/ai-gateway/entities/ai-policy/): Attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, guardrails, transformations, and governance.
-      - blocks:
+                    Key features include:
+                    * [Routing and load balancing](/ai-gateway/load-balancing/): Configure AI Models and `target_models` routing across [AI Providers](/ai-gateway/entities/ai-provider/).
+                    * [Streaming and authentication](/ai-gateway/streaming/): Enable streaming responses on AI Models, AI Agents, and AI MCP Servers; enforce auth through [AI Policies](/ai-gateway/entities/ai-policy/).
+                    * Access control: Use [AI Consumers](/ai-gateway/entities/ai-consumer/) and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), plus ACL fields on AI Models, AI Agents, and AI MCP Servers.
+                    * [Usage analytics](/ai-gateway/monitor-ai-llm-metrics/): Monitor request and token volumes, track error rates, and measure average latency with historical comparisons.
+      - blocks: 
         - type: image
           config:
             url: /assets/images/gateway/universal-api.svg
             alt_text: Overview of AI gateway
-
-  - column_count: 3
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: LLM traffic
-            description: Route LLM requests through a provider-agnostic Universal API. Load-balance across providers, transform requests and responses, enforce policies, and collect usage analytics.
-            icon: /assets/icons/plugins/universal-api.svg
-            cta:
-              url: /ai-gateway/entities/ai-model/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: MCP traffic
-            description: Expose and govern tool traffic over Model Context Protocol. Control which agents access which tools, enforce rate limits, authenticate callers, and observe all tool invocations.
-            icon: /assets/icons/mcp.svg
-            cta:
-              url: /ai-gateway/mcp/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: A2A traffic
-            description: Route Agent-to-Agent traffic with protocol-aware security and observability. Rewrite agent cards, extract task state, stream events, and emit structured telemetry.
-            icon: /assets/icons/plugins/ai-a2a-proxy.png
-            cta:
-              url: /ai-gateway/a2a/
-              align: end
-
-  - header:
-      type: h2
-      text: "Govern {{site.ai_gateway}} with entities and policies"
-      description: |
-        Enforce authentication, rate limiting, guardrails, transformations, and governance by attaching AI Policies to your AI entities. Create AI Models, AI Providers, AI Agents, and AI MCP Servers to manage your AI traffic.
-    column_count: 3
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Policies
-            description: Attach governance behavior for authentication, guardrails, transformations, and more.
-            cta:
-              url: /ai-gateway/entities/ai-policy/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: AI Entities
-            description: Learn about AI Models, AI Providers, AI Agents, AI MCP Servers, and AI Consumers.
-            cta:
-              url: /ai-gateway/entities/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Learn more
-            description: Explore all AI Gateway capabilities and detailed entity documentation.
-            cta:
-              url: /ai-gateway/
-              align: end
 
   # - columns:
   #     - blocks:
@@ -294,41 +165,46 @@ rows:
   #             url: /ai-gateway/entities/ai-provider/
   #             align: end
 
-  - columns:
-      - blocks:
+  - header:
+      type: h2
+      text: "Deploy {{site.ai_gateway}}"
+    columns:
+      - header:
+          type: h3
+          text: "Tools to manage {{site.ai_gateway}}"
+        blocks:
           - type: structured_text
             config:
-              header:
-                text: "{{site.ai_gateway}} in {{site.konnect_short_name}}"
               blocks:
-                - type: text
-                  text: |
-                    {{site.konnect_short_name}} provides a [unified control plane](https://cloud.konghq.com/ai-manager) to create, manage, and monitor LLMs
-                    using the {{site.konnect_short_name}} platform.
-
-                    Key features include:
-                    * [Routing and load balancing](/ai-gateway/load-balancing/): Configure [AI Models](/ai-gateway/entities/ai-model/) and `target_models` routing across [AI Providers](/ai-gateway/entities/ai-provider/).
-                    * [Streaming and authentication](/ai-gateway/entities/ai-model/): Enable streaming responses on [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/); enforce auth through [AI Policies](/ai-gateway/entities/ai-policy/).
-                    * [Access control](/ai-gateway/entities/ai-consumer/): Use [AI Consumers](/ai-gateway/entities/ai-consumer/) and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), plus ACL fields on [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
-                    * [Usage analytics](/observability/explorer/): Monitor request and token volumes, track error rates, and measure average latency with historical comparisons.
-                    * [Visual traffic maps](/observability/explorer/): Explore interactive maps that show how requests flow between clients, entities, and upstreams in real time.
-
-      - blocks:
-          - type: image
+                - type: unordered_list
+                  items:
+                    - "[{{site.konnect_product_name}} {{site.ai_gateway}} editor](https://cloud.konghq.com/ai-manager): GUI for managing all your {{site.ai_gateway}} resources in one place."
+                    # - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
+                    - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.ai_gateway}} resources within {{site.konnect_short_name}} Control Planes via an API."
+                    - "[kongctl](/kongctl/): Use Kong's swiss-army knife command line tool for managing and interacting with {{site.ai_gateway}} resources and configurations within {{site.konnect_short_name}}."
+      - header:
+          type: h3
+          text: Deployment checklist
+        blocks:
+          - type: structured_text
             config:
-              url: /assets/images/konnect/ai-manager.png
-              alt_text: "{{site.ai_gateway}} Dashboard in Konnect"
-
+              blocks:
+                - type: unordered_list
+                  items:
+                    - "[{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for {{site.ai_gateway}}."
+  
   - header:
       type: h2
       text: "Governance"
       description: |
-        {{site.ai_gateway}} provides policy-managed governance capabilities attached to [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), [AI Consumers](/ai-gateway/entities/ai-consumer/), and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/). Control how sensitive data flows to AI providers, enforce content safety, transform prompts, and manage how requests are processed.
+        {{site.ai_gateway}} provides policy-managed governance capabilities attached to AI Models, AI Agents, AI MCP Servers, AI Consumers, and AI Consumer Groups. 
+        Control how sensitive data flows to AI providers, enforce content safety, transform prompts, and manage how requests are processed.
   - header:
       type: h3
       text: "Data governance"
       description: |
-        {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20 categories and 9 languages. Running privately and self-hosted for full control and compliance, {{site.ai_gateway}} ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
+        {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20 categories and 9 languages. 
+        You can run {{site.ai_gateway}} privately and self-hosted for full control and compliance, ensuring consistent protection without burdening developers to simplify AI adoption at scale.
 
         For more information, see the full list of [Data Governance](/ai-gateway/ai-data-gov/) capabilities.
     columns:
@@ -351,7 +227,7 @@ rows:
       description: |
         AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies.
         Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system.
-        {{site.ai_gateway}} supports policy-managed prompt capabilities that allow you to set defaults and manipulate prompts as they pass through [AI Model](/ai-gateway/entities/ai-model/) or [AI Agent](/ai-gateway/entities/ai-agent/) traffic.
+        {{site.ai_gateway}} supports policy-managed prompt capabilities that allow you to set defaults and manipulate prompts as they pass through AI Model or AI Agent traffic.
     columns:
       - blocks:
         - type: aigw_policy
@@ -366,7 +242,7 @@ rows:
       type: h3
       text: "Guardrails and content safety"
       description: |
-        As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic.
+        Platform owners may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic.
         {{site.ai_gateway}} provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
     column_count: 3
     columns:
@@ -506,8 +382,8 @@ rows:
       description: |
         {{site.ai_gateway}} provides multiple approaches to monitor LLM traffic and operations.
         Track token usage, latency, and costs through audit logs and metrics exporters.
-        Instrument request flows with OpenTelemetry to trace [AI Model](/ai-gateway/entities/ai-model/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), and [AI Agent](/ai-gateway/entities/ai-agent/) traffic across your infrastructure.
-        Use {{site.konnect_short_name}} Advanced Analytics for pre-built dashboards, or integrate with your existing observability stack.
+        Instrument request flows with OpenTelemetry to trace AI Model, AI MCP Server, and AI Agent traffic across your infrastructure.
+        Use {{site.konnect_short_name}} {{site.observability}} for pre-built dashboards, or integrate with your existing observability stack.
     column_count: 3
     columns:
       - blocks:
@@ -557,6 +433,28 @@ rows:
               align: end
 
   - header:
+      type: h2
+      text: "Core concepts in {{site.ai_gateway}}"
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Policies
+            description: Attach governance behavior for authentication, guardrails, transformations, and more.
+            cta:
+              url: /ai-gateway/entities/ai-policy/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI Entities
+            description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Providers, AI Agents, AI MCP Servers, and AI Consumers.
+            cta:
+              url: /ai-gateway/entities/
+              align: end
+
+  - header:
       text: "Frequently Asked Questions"
       type: h2
     columns:
@@ -565,7 +463,7 @@ rows:
           config:
             - q: How do I deploy {{site.ai_gateway}}?
               a: |
-                {{site.ai_gateway}} is managed through {{site.konnect_short_name}}. Data plane nodes run in your environment (self-hosted, cloud, or Kubernetes) and connect to {{site.konnect_short_name}} for configuration and observability.
+                {{site.ai_gateway}} is managed through {{site.konnect_short_name}}. Data plane nodes run in your environment (self-hosted, [cloud](/dedicated-cloud-gateways/), or Kubernetes) and connect to {{site.konnect_short_name}} for configuration and observability.
 
             - q: Why should I use {{site.ai_gateway}} instead of adding the LLM's API behind {{site.base_gateway}}?
               a: |
