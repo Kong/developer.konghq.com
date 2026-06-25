@@ -28,7 +28,7 @@ related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} Policies"
-    url: /plugins/?category=ai
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 ---

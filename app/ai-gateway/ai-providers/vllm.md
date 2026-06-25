@@ -32,7 +32,7 @@ related_resources:
   - text: vLLM tutorials
     url: /how-to/?tags=vllm
   - text: "{{site.ai_gateway}} Policies"
-    url: /plugins/?category=ai
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 

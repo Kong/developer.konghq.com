@@ -30,7 +30,7 @@ related_resources:
   - text: Cohere tutorials
     url: /how-to/?tags=cohere
   - text: "{{site.ai_gateway}} Policies"
-    url: /plugins/?category=ai
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 

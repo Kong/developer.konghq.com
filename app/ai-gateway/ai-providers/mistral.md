@@ -30,7 +30,7 @@ related_resources:
   - text: Mistral tutorials
     url: /how-to/?tags=mistral
   - text: "{{site.ai_gateway}} Policies"
-    url: /plugins/?category=ai
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 

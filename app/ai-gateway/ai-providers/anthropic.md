@@ -30,7 +30,7 @@ related_resources:
   - text: Anthropic tutorials
     url: /how-to/?tags=anthropic
   - text: "{{site.ai_gateway}} Policies"
-    url: /plugins/?category=ai
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 
