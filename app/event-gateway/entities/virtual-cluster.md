@@ -184,7 +184,7 @@ This metadata is available at `context.auth.principal.metadata` and can be used 
 For example, setting a header based on which team a client belongs to, or skipping records that a client isn’t entitled to see.
 
 To enable this, add a `fetch_kong_identity_principal` block to the `authentication` config. 
-For SASL/PLAIN connections, specify a `fetch_by.key` matching the identity type (for example, `sasl_username`). 
+For SASL/PLAIN connections, specify a `fetch_by.key` matching the identity key (for example, `sasl_username`).
 For OAuth Bearer connections, the lookup uses the JWT’s `iss` and `sub` claims automatically.
 
 See the following how-to guides for end-to-end examples:
