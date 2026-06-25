@@ -82,6 +82,7 @@ For everything else:
 
 - **Links to plugins**: Replace `/plugins/` path with `/ai-gateway/policies/`. For example:
   - `/plugins/ai-prompt-guard/` → `/ai-gateway/policies/ai-prompt-guard/`
+  - `/plugins/?category=ai` → `/ai-gateway/policies/`
 
 - **Exception — flag these**: Any reference to AI A2A Proxy, AI MCP Proxy, AI Proxy, or AI Proxy Advanced as plugins should be flagged for manual review (these don't have policy equivalents).
 
