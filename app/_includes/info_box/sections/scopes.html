@@ -6,10 +6,13 @@
     {% for scope in include.scopes %}
         <div class="flex gap-2 items-center">
             {% if scope == 'global' %}
-                <span>Global</span>
+                <span class="text-terciary">Global</span>
             {% else %}
+              <div class="flex gap-2">
+                {% include mask_image.html image_url='/assets/icons/service-document.svg' css_classes="w-5 h-5 shrink-0 !bg-icon" %}
                 {% assign entity_page = site.ai_gateway_entities | where: "slug", scope | first %}
                 <a href="{{ entity_page.url }}">{{ entity_page.title }}</a>
+              </div>
             {% endif %}
         </div>
     {% endfor %}
