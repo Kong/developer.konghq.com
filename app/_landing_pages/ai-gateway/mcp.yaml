@@ -79,7 +79,7 @@ rows:
               description: Secure MCP servers and govern traffic with AI Policies.
               ctas:
                 - text: MCP OAuth2 policy
-                  url: "/ai-gateway/entities/ai-policy/"
+                  url: "/ai-gateway/policies/ai-mcp-oauth2/"
                 - text: Rate Limiting
                   url: "/ai-gateway/policies/rate-limiting/"
                 - text: Observability
