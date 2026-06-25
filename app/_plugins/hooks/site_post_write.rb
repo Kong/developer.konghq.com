@@ -83,6 +83,7 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
     @site.site_payload.merge(
       'api_pages' => api_pages,
       'plugin_pages' => plugin_pages,
+      'ai_gateway_policy_pages' => ai_gateway_policy_pages,
       'how_to_pages' => how_to_pages,
       'cookbook_pages' => cookbook_pages,
       'docs' => docs
@@ -98,16 +99,14 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
   end
 
   def doc_pages
-    @doc_pages ||= pages - api_pages - plugin_pages - how_to_pages - cookbook_pages
+    @doc_pages ||= pages - api_pages - plugin_pages - how_to_pages - cookbook_pages - ai_gateway_policy_pages
   end
 
   def docs
     @docs ||= begin
       grouped = doc_pages.group_by do |p|
         products = Array(p.data['products'])
-        if products.include?('ai-gateway')
-          'ai-gateway'
-        elsif products.any?
+        if products.any?
           products.first
         else
           Array(p.data['tools']).first
@@ -130,6 +129,10 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
 
   def plugin_pages
     @plugin_pages ||= pages.select { |p| p.data['plugin?'] && p.data['products'].include?('gateway') }
+  end
+
+  def ai_gateway_policy_pages
+    @ai_gateway_policy_pages ||= pages.select { |p| p.data['plugin?'] && p.data['products'] == ['ai-gateway'] }
   end
 
   def api_pages

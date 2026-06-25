@@ -13,7 +13,7 @@ To complete this tutorial, make sure you have {{ site.ollama }} installed and ru
    ollama run {{include.model}}
    ```
 
-1. To set up an {{ site.ollama }} [Provider](/ai-gateway/entities/ai-provider/), you'll need the upstream URL of your local Llama instance. In this example, we're running locally in a Docker container, so the host is `host.docker.internal`:
+1. To set up the AI Proxy or AI Proxy Advanced plugin, you'll need the upstream URL of your local Llama instance. In this example, we're running {{site.base_gateway}} locally in a Docker container, so the host is `host.docker.internal`:
 
    {% capture var %}
    {% env_variables %}
