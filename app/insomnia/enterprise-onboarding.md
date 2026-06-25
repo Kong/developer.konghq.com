@@ -32,6 +32,8 @@ next_steps:
     url: /insomnia/mock-servers/
   - text: Scripts
     url: /insomnia/scripts/
+  - text: "{{site.konnect_short_name}} integration"
+    url: /insomnia/konnect-integration/
 
 faqs:
   - q: What happens when my trial ends?

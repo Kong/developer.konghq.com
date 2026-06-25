@@ -77,6 +77,8 @@ aws route53 create-vpc-association-authorization \
   --vpc VPCRegion=us-east-2,VPCId=$AWS_VPC_ID
 ```
 
+{:.warning}
+> If the VPC and the private hosted zone belong to different AWS accounts, the account that owns the hosted zone must first submit a `CreateVPCAssociationAuthorization` request. Then, the account that owns the VPC must submit an [`AssociateVPCWithHostedZone`](https://docs.aws.amazon.com/Route53/latest/APIReference/API_AssociateVPCWithHostedZone.html) request.
 
 ## Create the Private DNS config
 

@@ -57,6 +57,17 @@ Use it together with the Encrypt Fields policy to enforce consistent encryption 
 - **Schema Registry cache poisoned on transient failures**: A transient Schema Registry error could be cached and served indefinitely. Retriable errors are now evicted from the cache instead of being persisted.
 - **Clearer logging when a client disconnects before authenticating**: Connections that close before or during authentication now produce accurate, actionable log messages.
 
+## 1.1.1
+
+**Release date**: 2026/06/16
+
+### Fixes
+
+- **Updated vulnerable dependencies and container base images**: Refreshed the runtime distroless base (patched OpenSSL/glibc) and removed the legacy `rustls/rustls-webpki` stack, clearing the outstanding advisories.
+- **Bumped `aws-lc-sys` / `aws-lc-rs`**: Pulled in the fixed AWS-LC bindings (RUSTSEC-2026-0044, -0048).
+- **Namespacing: consumer group rewrite**: Corrects how consumer group identifiers are rewritten when proxying, so group operations resolve to the right backend.
+- **ACLs: drop unsupported APIs**: Removes Kafka APIs that aren't supported under ACL handling, avoiding incorrect authorization behavior.
+- **Snappy decompression under encryption policies**: In some rare cases, raw (non-xerial-framed) Snappy records caused the gateway to fail with a `snappy: corrupt input` error when an encryption policy was applied on the produce chain and the producer's compression was set to Snappy.
 
 ## 1.1.0
 
