@@ -34,7 +34,7 @@ related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: OpenTelemetry Policy
-    url: /plugins/opentelemetry/
+    url: /ai-gateway/policies/opentelemetry/
   - text: Full OpenTelemetry metrics reference
     url: /gateway/otel-metrics/
   - text: "{{site.base_gateway}} tracing guide"
@@ -44,7 +44,7 @@ works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic through an [OpenTelemetry AI Policy](/plugins/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
+{{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic through an [OpenTelemetry AI Policy](/ai-gateway/policies/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
 
 You can use these metrics to:
 
@@ -70,10 +70,10 @@ columns:
     key: required_for
 rows:
   - setting: "`config.metrics.enable_ai_metrics`: `true`"
-    policy: "[OpenTelemetry](/plugins/opentelemetry/reference/)"
+    policy: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/)"
     required_for: "All AI metrics"
   - setting: "`config.metrics.endpoint`"
-    policy: "[OpenTelemetry](/plugins/opentelemetry/reference/)"
+    policy: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/)"
     required_for: "All AI metrics (set to a valid OTLP-compatible metrics endpoint)"
   - setting: "`config.logging.log_statistics`: `true`"
     policy: "[AI Proxy](/plugins/ai-proxy/reference/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/)"
@@ -89,8 +89,8 @@ rows:
 
 Some metrics have additional requirements:
 
-* `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry AI Policy](/plugins/opentelemetry/reference/).
-* The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry AI Policy](/plugins/opentelemetry/reference/).
+* `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry AI Policy](/ai-gateway/policies/opentelemetry/reference/).
+* The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry AI Policy](/ai-gateway/policies/opentelemetry/reference/).
 
 ## Gen AI metrics (OTLP semantic conventions)
 
