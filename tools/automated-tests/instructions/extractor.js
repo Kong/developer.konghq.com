@@ -186,10 +186,10 @@ function deriveProduct(setup, products) {
     if (products.includes("ai-gateway") && products.includes("gateway")) {
       return "gateway";
     } else if (products.includes("ai-gateway")) {
-        return "ai-gateway";
+      return "ai-gateway";
     } else if (products.includes("event-gateway")) {
-        return "event-gateway";
-      }
+      return "event-gateway";
+    }
     return "gateway";
   }
   // e.g., "operator"
