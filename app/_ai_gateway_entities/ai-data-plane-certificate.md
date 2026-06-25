@@ -118,6 +118,22 @@ To rotate a certificate without downtime:
 
 Deleting a Data Plane Certificate immediately invalidates the trust for any data plane still using it. Existing connections are dropped and reconnect attempts using the deleted certificate are rejected.
 
+## Set up a Data Plane Certificate
+
+The following example registers a public X.509 certificate as a trusted client identity for an {{site.ai_gateway}}.
+
+{% entity_example %}
+type: data_plane_certificate
+data:
+  title: My AI Gateway Data Plane Certificate
+  description: Certificate for data plane nodes in production
+  cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIDXTCCAkWgAwIBAgIJAJC1/iNAZwqDMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
+    ...
+    -----END CERTIFICATE-----
+{% endentity_example %}
+
 ## Schema
 
 {% entity_schema %}
