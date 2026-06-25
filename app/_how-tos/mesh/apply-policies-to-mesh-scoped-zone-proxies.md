@@ -19,10 +19,12 @@ min_version:
 products:
   - mesh
 
+works_on:
+  - on-prem
+
 series:
   id: mesh-scoped-zone-proxy
   position: 2
-
 tldr:
   q: How do I target mesh-scoped zone proxies with {{site.mesh_product_name}} policies?
   a: |

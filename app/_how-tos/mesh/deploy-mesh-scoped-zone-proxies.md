@@ -15,10 +15,12 @@ min_version:
 products:
   - mesh
 
+works_on:
+  - on-prem
+
 series:
   id: mesh-scoped-zone-proxy
   position: 1
-
 tldr:
   q: How do I deploy mesh-scoped zone ingress and zone egress with per-mesh Helm values?
   a: |
