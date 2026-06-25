@@ -594,7 +594,7 @@ rows:
 If your spec includes example values for fields like passwords, API keys, or email addresses, you can prevent those values from appearing in generated code samples, spec examples, and Try It responses.
 
 * **Automatic masking:** Authentication credentials from `securitySchemes` are masked automatically in code samples and Try It response headers. No annotation is needed.
-* **Opt-in masking with `x-sensitive-data`:** For request and response body properties that contain sensitive values, add `x-sensitive-data` to the schema property. This controls how the value is displayed in code sample examples and Try It response bodies.
+* **Opt-in masking with `x-sensitive-data`:** For request and response body properties that contain sensitive values, add `x-sensitive-data` to the schema property. This controls how the value is displayed in code samples and Try It response bodies.
 
 The following mask strategies are available:
 
@@ -648,7 +648,7 @@ components:
 ```
 
 {:.info}
-> Masking is display-only. Try It always sends the real credential values so API calls work correctly.
+> Masking is display-only: Try It sends the underlying (unmasked) values so API calls work correctly. Do not include real secrets in your spec examples.
 
 #### Mask sensitive data toggle
 
