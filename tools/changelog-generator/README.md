@@ -1,19 +1,21 @@
 # changelog-generator
 
-Generate Gateway's changelog based on the entries defined in `kong-ee` repo and extra entries defined in `./missing_entries`.
+Generate changelogs for Gateway and AI Gateway based on entries defined in their respective repos.
+
+Supported products: `gateway` (default), `ai-gateway`.
 
 ## How it works
 
 There are three stages to the process:
 
-1. Generate temp files for new versions.
-2. Set the release date for the release in `app/_data/products/gateway.yml`.
-3. Merge the existing changelog file (`app/_data/changelog/gateway.json`) with the temp files generated in the previous step.
+1. Generate YAML entry files from the product's Markdown changelog (`md-to-yml.js`).
+2. Merge those YAML files into a per-version JSON temp file (`run.js`).
+3. Merge the temp files into the final changelog JSON (`changelog.js`).
 
 ## How to run it
 
-`changelog-generator` requires `kong-ee` to be available locally.
-From the root of your clone of the dev site repo run the following commands to install the dependencies:
+Requires the `kong-ee` repo to be available locally.
+From the root of your clone of the dev site repo, install dependencies:
 
 ```bash
 cd tools/changelog-generator
@@ -22,71 +24,98 @@ npm ci
 
 Make sure that the `./tmp` folder is empty before you run any of the commands.
 
-### Generate yml entries from the changelog file
+## Gateway
 
-To generate temp entries from a Changelog.md for a specific version run:
+### 1. Generate yml entries from the changelog file
 
 ```bash
-cd tools/changelog-generator
 node md-to-yml.js --path='../../../kong-ee' --version='3.10.0.2'
+# or explicitly:
+node md-to-yml.js --path='../../../kong-ee' --version='3.10.0.2' --product=gateway
 ```
 
-where:
+Reads `<kong-ee>/changelog/3.10.0.2/3.10.0.2.md`, writes YAML files to `./tmp/gateway/changelog/3.10.0.2/<component>/`.
 
-* `path`: is the relative path to the `kong-ee` repo.
-* `version`: the version for which to generate the temp changelog file.
-
-### Generate temp files for specific versions
-
-To generate a temp file for a specific version run from the entries:
+### 2. Generate temp files for specific versions
 
 ```bash
-cd tools/changelog-generator
-node run.js --path='./tmp' --version='3.10.0.2'
+node run.js --path='./tmp/gateway' --version='3.10.0.2'
+# or explicitly:
+node run.js --path='./tmp/gateway' --version='3.10.0.2' --product=gateway
 ```
 
-where:
+Creates `./tmp/gateway/3.10.0.2.json`. Omit `--version` to process all versions found under `./tmp/gateway/changelog/`.
 
-* `path`: is the relative path to the `tmp` folder with the entries created in the previous step.
-* `version`: the version for which to generate the temp changelog file.
-
-This creates a `./tmp/3.10.0.2.json` file containing all the changelog entries for that version.
-Note: the `./tmp` folder was added to `gitignore`.
-
-### Set the release date
+### 3. Set the release date
 
 Open `app/_data/products/gateway.yml` and add a new entry in `release_dates`:
 
-```
+```yaml
 release_dates:
   '3.10.0.2': 2025/05/20
 ```
 
-### Generate/update the changelog
-
-There are 3 folders and one file involved in the process:
-
-* `missing_changelogs`: contains changelog files for versions that don't have entries in `kong-ee`. These versions were generated before the new changelog process was created, so we don't have files for these entries.
-* `missing_entries`:  entries that don't exist in `kong-ee` that we used to manually add to the changelog, e.g. `Known issues`.
-* `tmp`: contanins changelog files generated from entries defined in `kong-ee`
-* `app/_changelogs/gateway.json`: the actual changelog file generated from all of the above.
-
-To generate the changelog file run:
+### 4. Generate/update the changelog
 
 ```bash
 node changelog.js
+# or explicitly:
+node changelog.js --product=gateway
 ```
 
-This script will load the existing `app/_changelogs/gateway.json` and:
+Reads `./tmp/gateway/*`, `./missing_changelogs/*`, and `./missing_entries/`, writes to `app/_changelogs/gateway.json`.
 
-* read `missing_changelogs` and update the existing changelog file with the missing versions.
-* read `missing_entries` and update the existing changelog file with the missing entries.
-* remove any duplicate entries by comparing their `message`.
+- `missing_changelogs`: changelog files for versions that predate the YAML-entry process.
+- `missing_entries`: manual entries (e.g. known issues) not present in `kong-ee`.
 
-### Updating the changelog when there's a new release
+### Full flow for a new Gateway release
 
-1. Make sure that your local copy of `kong-ee` is up to date and in the right branch (if it's a patch release).
-1. Run `node md-to-yml.js --path='../../../kong-ee' --version='<version>'` to generate the entries.
-1. Run `node run.js --path='./tmp' --version='<version>'` to generate the temp file.
-1. Update `app/_data/products/gateway.yml` with the new release version and release date.
-1. Run `node changelog.js` to update the changelog.
+1. Make sure your local `kong-ee` is up to date and on the right branch.
+1. `node md-to-yml.js --path='../../../kong-ee' --version='<version>'`
+1. `node run.js --path='./tmp/gateway' --version='<version>'`
+1. Update `app/_data/products/gateway.yml` with the new version and release date.
+1. `node changelog.js`
+
+
+## AI Gateway
+
+### 1. Generate yml entries from the changelog file
+
+```bash
+node md-to-yml.js --path='../../../ai-gateway' --version='1.2.3' --product=ai-gateway
+```
+
+Reads `<ai-gateway>/changelog/aigw-1.2.3/aigw-1.2.3.md`, writes YAML files to `./tmp/ai-gateway/changelog/1.2.3/<component>/`.
+
+### 2. Generate temp files for specific versions
+
+```bash
+node run.js --path='./tmp/ai-gateway' --version='1.2.3' --product=ai-gateway
+```
+
+Creates `./tmp/ai-gateway/1.2.3.json`. Omit `--version` to process all versions found under `./tmp/ai-gateway/changelog/`.
+
+### 3. Set the release date
+
+Open `app/_data/products/ai-gateway.yml` and add a new entry in `release_dates`:
+
+```yaml
+release_dates:
+  '1.2.3': 2025/05/20
+```
+
+### 4. Generate/update the changelog
+
+```bash
+node changelog.js --product=ai-gateway
+```
+
+Reads `./tmp/ai-gateway/*`, writes to `app/_changelogs/ai-gateway.json`.
+
+### Full flow for a new AI Gateway release
+
+1. Make sure your local `ai-gateway` repo is up to date and on the right branch.
+1. `node md-to-yml.js --path='../../../ai-gateway' --version='<version>' --product=ai-gateway`
+1. `node run.js --path='./tmp/ai-gateway' --version='<version>' --product=ai-gateway`
+1. Update `app/_data/products/ai-gateway.yml` with the new version and release date.
+1. `node changelog.js --product=ai-gateway`
