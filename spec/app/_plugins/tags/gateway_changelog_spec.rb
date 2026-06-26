@@ -52,6 +52,45 @@ RSpec.describe Jekyll::RenderGatewayChangelog do
     end
   end
 
+  context 'when page products is ai-gateway' do
+    let(:page) { { 'output_format' => format, 'products' => ['ai-gateway'] } }
+
+    describe 'rendering (markdown output)' do
+      let(:format) { 'markdown' }
+
+      it 'renders ai-gateway versions' do
+        expect(subject).to include('## 2.0.0')
+        expect(subject).to include('## 1.0.0')
+      end
+
+      it 'orders versions newest-first' do
+        expect(subject.index('2.0.0')).to be < subject.index('1.0.0')
+      end
+
+      it 'includes ai-gateway release dates' do
+        expect(subject).to include('2025/01/15')
+      end
+
+      it 'does not include gateway versions' do
+        expect(subject).not_to include('3.9.0.0')
+      end
+    end
+
+    describe 'rendering (html output)' do
+      let(:format) { 'html' }
+      let(:html) { Capybara::Node::Simple.new(subject) }
+
+      it 'renders ai-gateway versions as h2 elements' do
+        expect(html).to have_css('h2', text: '2.0.0')
+        expect(html).to have_css('h2', text: '1.0.0')
+      end
+
+      it 'does not render gateway versions' do
+        expect(html).not_to have_css('h2', text: '3.9.0.0')
+      end
+    end
+  end
+
   describe 'rendering (html output)' do
     let(:format) { 'html' }
     let(:html) { Capybara::Node::Simple.new(subject) }

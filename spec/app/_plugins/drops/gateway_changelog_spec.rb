@@ -76,6 +76,67 @@ RSpec.describe Jekyll::Drops::GatewayChangelog do
     end
   end
 
+  context 'when product is ai-gateway' do
+    let(:aigw_changelog_data) do
+      {
+        '2.0.0' => {
+          'kong-aigw' => [
+            { 'message' => 'Added semantic routing', 'type' => 'feature', 'scope' => 'Core' },
+            { 'message' => 'Fixed inference timeout', 'type' => 'bugfix', 'scope' => 'Core' }
+          ],
+          'kong-manager-ee' => [{ 'message' => 'UI update', 'type' => 'feature' }]
+        }
+      }
+    end
+    let(:aigw_site_data) do
+      {
+        'products' => { 'ai-gateway' => { 'release_dates' => { '2.0.0' => '2025/01/15' } } },
+        'kong_plugins' => {}
+      }
+    end
+    let(:aigw_site) { instance_double(Jekyll::Site, data: aigw_site_data, source: '/fake/source') }
+
+    before do
+      allow(Jekyll).to receive(:sites).and_return([aigw_site])
+      allow(File).to receive(:read).and_call_original
+      allow(File).to receive(:read)
+        .with('/fake/source/_changelogs/ai-gateway.json')
+        .and_return(JSON.generate(aigw_changelog_data))
+      allow(File).to receive(:read)
+        .with('/fake/source/_changelogs/config.yaml')
+        .and_return({ 'order' => order }.to_yaml)
+    end
+
+    subject(:changelog) { described_class.new(site: aigw_site, product: 'ai-gateway') }
+
+    describe '#versions' do
+      it { expect(changelog.versions.map(&:number)).to eq(['2.0.0']) }
+      it { expect(changelog.versions).to all(be_a(Jekyll::Drops::GatewayChangelog::Version)) }
+    end
+
+    describe '#entries_by_version' do
+      subject(:by_version) { changelog.entries_by_version }
+
+      it 'keeps 3-part version keys as-is' do
+        expect(by_version.keys).to contain_exactly('2.0.0')
+      end
+
+      it 'does not remap kong-manager-ee scope' do
+        entry = by_version['2.0.0'].find { |e| e['message'] == 'UI update' }
+        expect(entry['scope']).to be_nil
+      end
+
+      it 'flattens all section arrays into one list' do
+        expect(by_version['2.0.0'].size).to eq(3)
+      end
+    end
+
+    describe '#version_to_key' do
+      it { expect(changelog.send(:version_to_key, '2.0.0')).to eq('2.0.0') }
+      it { expect(changelog.send(:version_to_key, '2.1.0')).to eq('2.1.0') }
+    end
+  end
+
   describe Jekyll::Drops::GatewayChangelog::Version do
     let(:order) { %w[feature bugfix] }
     let(:release_dates) { { '3.9.0.0' => '2024/09/18' } }
@@ -144,6 +205,24 @@ RSpec.describe Jekyll::Drops::GatewayChangelog do
       end
     end
 
+    context 'when product is ai-gateway' do
+      let(:aigw_site_data) do
+        {
+          'products' => { 'ai-gateway' => { 'release_dates' => { '2.0.0' => '2025/01/15' } } },
+          'kong_plugins' => {}
+        }
+      end
+      let(:aigw_site) { instance_double(Jekyll::Site, data: aigw_site_data, source: '/fake/source') }
+
+      before { allow(Jekyll).to receive(:sites).and_return([aigw_site]) }
+
+      subject(:version) { described_class.new(number: '2.0.0', entries: [], product: 'ai-gateway') }
+
+      describe '#release_date' do
+        it { expect(version.release_date).to eq('2025/01/15') }
+      end
+    end
+
     describe 'plugin name substitution' do
       let(:entry) { { 'message' => +'**Rate Limiting**: Fixed a bug', 'type' => 'bugfix', 'scope' => 'Plugin' } }
       let(:entries) { [entry] }
@@ -187,6 +266,40 @@ RSpec.describe Jekyll::Drops::GatewayChangelog do
         it 'does not modify the message' do
           version
           expect(entry['message']).to eq('[rate-limiting](/plugins/rate-limiting/): Fixed a bug')
+        end
+      end
+    end
+
+    describe 'policy name substitution (ai-gateway)' do
+      let(:entry) { { 'message' => +'**AI Proxy**: Fixed routing', 'type' => 'bugfix', 'scope' => 'Plugin' } }
+      let(:entries) { [entry] }
+      let(:site_data) do
+        {
+          'products' => { 'ai-gateway' => { 'release_dates' => {} } },
+          'ai_gateway_policies' => {}
+        }
+      end
+
+      subject(:version) { described_class.new(number: '2.0.0', entries:, product: 'ai-gateway') }
+
+      context 'when the policy is found by name' do
+        let(:policy_page) do
+          instance_double(Jekyll::Page,
+                          data: { 'name' => 'AI Proxy', 'slug' => 'ai-proxy',
+                                  'overview_url' => '/ai-gateway/policies/ai-proxy/' })
+        end
+        let(:site_data) { super().merge('ai_gateway_policies' => { 'ai-proxy' => policy_page }) }
+
+        it 'replaces the bold name with a link to overview_url' do
+          version
+          expect(entry['message']).to match(%r{\[ai-proxy\]\(/ai-gateway/policies/ai-proxy/\)})
+        end
+      end
+
+      context 'when the policy is not found' do
+        it 'leaves the message unchanged' do
+          version
+          expect(entry['message']).to eq('**AI Proxy**: Fixed routing')
         end
       end
     end
