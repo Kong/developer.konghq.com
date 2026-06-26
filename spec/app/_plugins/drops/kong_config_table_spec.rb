@@ -10,7 +10,7 @@ RSpec.describe Jekyll::Drops::KongConfigTable do
     }
   end
 
-  before { stub_const('Jekyll::Drops::KongConfigTable::KONG_CONF_CACHE', { '3.8' => kong_conf_data }) }
+  before { stub_const('Jekyll::Drops::KongConfigTable::KONG_CONF_CACHE', { 'gateway/3.8' => kong_conf_data }) }
 
   let(:config) do
     {
@@ -85,6 +85,43 @@ RSpec.describe Jekyll::Drops::KongConfigTable do
 
     it 'prefixes param names with KONG_' do
       expect(table.params.map(&:name)).to contain_exactly('KONG_LOG_LEVEL', 'KONG_PROXY_LISTEN')
+    end
+  end
+
+  describe 'product support' do
+    context 'when product defaults to gateway' do
+      it 'uses the gateway cache key' do
+        table
+        expect(Jekyll::Drops::KongConfigTable::KONG_CONF_CACHE).to have_key('gateway/3.8')
+      end
+    end
+
+    context 'when product is ai-gateway' do
+      let(:ai_gateway_conf_data) do
+        {
+          'params' => {
+            'ai_proxy_url' => { 'defaultValue' => 'https://api.openai.com', 'description' => 'AI proxy URL' }
+          }
+        }
+      end
+
+      before do
+        stub_const('Jekyll::Drops::KongConfigTable::KONG_CONF_CACHE', { 'ai-gateway/2.0' => ai_gateway_conf_data })
+      end
+
+      let(:config) { { 'config' => [{ 'name' => 'ai_proxy_url' }] } }
+      let(:release_number) { '2.0' }
+
+      subject(:table) { described_class.new(config, release_number, mode, 'ai-gateway') }
+
+      it 'loads params from the ai-gateway conf' do
+        expect(table.params.map(&:name)).to contain_exactly('ai_proxy_url')
+      end
+
+      it 'uses the ai-gateway cache key' do
+        table
+        expect(Jekyll::Drops::KongConfigTable::KONG_CONF_CACHE).to have_key('ai-gateway/2.0')
+      end
     end
   end
 
