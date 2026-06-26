@@ -172,7 +172,3 @@ To log the raw content of blocked requests and responses, enable [`config.log_bl
 * Inspects one chat message or one response body at a time. Combining multiple messages reduces accuracy.
 * For SSE streaming, unsafe content may appear briefly before termination with `"stop_reason: blocked by content safety"`.
 * Only one `template_id` can be configured per plugin instance.
-
-## Forward proxy support
-
-{% include md/ai-gateway/v2/forward-proxy.md %}

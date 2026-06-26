@@ -294,6 +294,10 @@ The load balancer supports configurable retries, timeouts, and failover to diffe
 > [`failover_criteria`](#schema-aigateway-model-config-balancer-failover-criteria) to include HTTP codes
 > like `http_429` or `http_502`, and `non_idempotent` for POST requests.
 
+### Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}
+
 ### Health check and circuit breaker
 
 The load balancer includes a circuit breaker that improves reliability under sustained failures. When a target reaches the failure threshold set by [`max_fails`](#schema-aigateway-model-config-balancer-max-fails), the load balancer stops routing requests to it until the [`fail_timeout`](#schema-aigateway-model-config-balancer-fail-timeout) period elapses. For behavior examples and tuning, see [Circuit breaker](/ai-gateway/load-balancing/#health-check-and-circuit-breaker).

@@ -215,7 +215,3 @@ sequenceDiagram
 <!-- vale on -->
 
 The AI Prompt Compressor plugin applies structured compression to preserve essential context of prompts sent by users, rather than trimming prompts arbitrarily or risking token overflows. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
-
-## Forward proxy support
-
-{% include md/ai-gateway/v2/forward-proxy.md %}
