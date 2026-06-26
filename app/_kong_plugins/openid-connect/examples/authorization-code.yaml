@@ -15,35 +15,10 @@ extended_description: |
 
   {% include_cached plugins/oidc/client-auth.md %}
 
-  {% entity_example %}
-  type: plugin
-  data:
-    name: openid-connect
-    config:
-      issuer: ${issuer}
-      client_id:
-        - ${client-id}
-      client_secret:
-        - ${client-secret}
-      client_auth:
-        - client_secret_post
-      auth_methods:
-        - authorization_code
-        - session
-      response_mode: form_post
-      preserve_query_args: true
-      login_action: redirect
-      login_tokens: null
-      principals:
-        enabled: true
-        directory: ${directory-name}
-  {% endentity_example %}
-
 weight: 900
 
 requirements:
   - "{% include_cached plugins/oidc/idp-requirement.md %}"
-  - "A {{site.identity}} principal [configured with an OIDC identity](/identity/principals/#openid-connect)"
 
 config:
   issuer: ${issuer}
