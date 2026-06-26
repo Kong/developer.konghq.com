@@ -17,7 +17,7 @@ module Jekyll
 
       contents = super
       config = YAML.load(contents)
-      drop = Drops::KongConfigTable.new(config, release(@site, @page), @mode)
+      drop = Drops::KongConfigTable.new(config, release(@site, @page), @mode, product)
 
       context.stack do
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
@@ -51,8 +51,13 @@ module Jekyll
       @latest_release ||= releases(site).detect { |r| r['latest'] }['release']
     end
 
+    def product
+      products = @page['products'] || []
+      products.include?('ai-gateway') ? 'ai-gateway' : 'gateway'
+    end
+
     def releases(site)
-      @releases ||= site.data.dig('products', 'gateway', 'releases')
+      @releases ||= site.data.dig('products', product, 'releases')
     end
 
     def template

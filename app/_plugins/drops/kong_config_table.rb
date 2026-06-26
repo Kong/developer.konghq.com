@@ -40,10 +40,11 @@ module Jekyll
 
       KONG_CONF_CACHE = {}
 
-      def initialize(config, release_number, mode) # rubocop:disable Lint/MissingSuper
+      def initialize(config, release_number, mode, product = 'gateway') # rubocop:disable Lint/MissingSuper
         @config = config
         @release_number = release_number
         @mode = mode
+        @product = product
 
         validate_config!
       end
@@ -67,8 +68,8 @@ module Jekyll
       private
 
       def kong_conf
-        KONG_CONF_CACHE[@release_number] ||= JSON.parse(
-          File.read(File.expand_path("../../_kong-conf/gateway/#{@release_number}.json", __dir__))
+        KONG_CONF_CACHE["#{@product}/#{@release_number}"] ||= JSON.parse(
+          File.read(File.expand_path("../../_kong-conf/#{@product}/#{@release_number}.json", __dir__))
         )
       end
 
