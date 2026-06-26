@@ -72,7 +72,7 @@ function generateIndexFile(product) {
       onlyInNewParams.forEach((param) => {
         reference.params[param] = {
           ...newConfJson.params[param],
-          min_version: { gateway: version },
+          min_version: { [product]: version },
         };
       });
 
@@ -85,13 +85,13 @@ function generateIndexFile(product) {
         // portal and vitals are still valid even though they were removed
         if (!/portal|vitals_?.*/.test(param)) {
           if (reference.params[param]["removed_in"] === undefined) {
-            reference.params[param]["removed_in"] = { gateway: version };
+            reference.params[param]["removed_in"] = { [product]: version };
           }
         }
       });
       // everything that is in prev AND next goes in
       intersection.forEach((param) => {
-        reference.params[param] = reference.params[param] = {
+        reference.params[param] = {
           ...newConfJson.params[param],
           min_version: reference.params[param].min_version,
         };
@@ -109,8 +109,9 @@ function generateIndexFile(product) {
 }
 
 (function main() {
-  const args = minimist(process.argv.slice(2), { string: ["product"] });
+  const args = minimist(process.argv.slice(2), { string: ["product", "set-min-version"] });
   const product = args.product || "gateway";
+  const setMinVersion = args["set-min-version"] || null;
 
   if (!["gateway", "ai-gateway"].includes(product)) {
     console.error(`Invalid --product "${product}". Must be "gateway" or "ai-gateway".`);
@@ -118,6 +119,13 @@ function generateIndexFile(product) {
   }
 
   const indexFile = generateIndexFile(product);
+
+  if (setMinVersion) {
+    Object.keys(indexFile.params).forEach((param) => {
+      indexFile.params[param].min_version = { [product]: setMinVersion };
+    });
+  }
+
   const destinationPath = `../../app/_kong-conf/${product}/index.json`;
 
   fs.writeFileSync(destinationPath, JSON.stringify(indexFile, null, 2), "utf8");
