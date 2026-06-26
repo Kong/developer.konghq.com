@@ -43,6 +43,7 @@ weight: 900
 
 requirements:
   - "{% include_cached plugins/oidc/idp-requirement.md %}"
+  - "A {{site.identity}} principal [configured with an OIDC identity](/identity/principals/#openid-connect)"
 
 config:
   issuer: ${issuer}
@@ -68,7 +69,7 @@ variables:
   issuer:
     value: $ISSUER
     description: |
-      The issuer authentication URL for your IdP. As this example uses Kong Identity as the IdP, the issuer URL should look like `https://xxx.<region>.identity.konghq.tech/auth`.
+      The issuer authentication URL for your IdP. Since this example uses {{site.identity}} as the IdP, the auth server issuer URL should look like `https://xxx.<region>.identity.konghq.tech/auth`.
   client-id:
     value: $CLIENT_ID
     description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
