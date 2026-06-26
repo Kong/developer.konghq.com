@@ -218,6 +218,10 @@ sequenceDiagram
 > Pings from MCP clients are included in the total request count for an {{site.ai_gateway}}
 > instance, in addition to requests made to the MCP server itself.
 
+### Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}
+
 ## Tools
 
 A [tool](#schema-aigateway-mcpserver-tools) maps an MCP tool name to an upstream HTTP endpoint. Each tool needs at minimum a description and an HTTP method. The runtime extracts the host, path, headers, and query from the route configuration, so most tool entries don't need to specify them. Override these on the tool entry only when the route doesn't match the upstream endpoint exactly.
