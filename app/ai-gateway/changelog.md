@@ -1,8 +1,7 @@
 ---
 title: "{{site.ai_gateway_name}} changelog"
 
-description: |
-  Changelog for supported {{site.ai_gateway_name}} versions.
+description: "Changelog for supported {{site.ai_gateway_name}} versions."
 content_type: reference
 breadcrumbs:
   - /ai-gateway/
