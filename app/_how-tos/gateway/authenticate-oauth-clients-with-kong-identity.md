@@ -7,6 +7,10 @@ breadcrumbs:
 related_resources:
   - text: Authentication
     url: /gateway/authentication/
+  - text: "{{site.identity}}"
+    url: /identity/
+  - text: "{{site.identity}} principals and directories"
+    url: /identity/principals
 
 description: Use the OpenID Connect plugin to map authenticated OAuth clients to Kong Identity principals.
 products:
@@ -92,7 +96,7 @@ capture:
 
 ## Create a client
 
-The client is the credential that the OpenID Connect plugin uses to authenticate. {{site.konnect_short_name}} autogenerates the client ID and secret.
+The client is the credential that the OpenID Connect plugin uses to authenticate. {{site.identity}} autogenerates the client ID and secret.
 
 Create a client using the [`/v1/auth-servers/$AUTH_SERVER_ID/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient):
 
@@ -173,7 +177,7 @@ export DECK_CLIENT_ID=$CLIENT_ID
 export DECK_CLIENT_SECRET=$CLIENT_SECRET
 ```
 
-Configure the [OpenID Connect plugin](/plugins/openid-connect/) to use {{site.identity}} as the identity provider and look up principals in your directory. Setting `principals.enabled` to `true` maps the authenticated token to a principal in the directory. This example applies the plugin to the `example-service` you created in the prerequisites.
+Configure the [OpenID Connect plugin](/plugins/openid-connect/) to use {{site.identity}} as the identity provider and map the client credentials. Setting `principals.enabled` to `true` maps the authenticated token to a directory. This example applies the plugin to the `example-service` you created in the prerequisites.
 
 {% entity_examples %}
 entities:
