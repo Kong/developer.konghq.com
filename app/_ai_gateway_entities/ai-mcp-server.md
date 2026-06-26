@@ -275,7 +275,7 @@ rows:
 
 When exposing MCP servers through {{site.ai_gateway}}, you may need granular control over which authenticated API consumers can discover and invoke specific tools. The MCP Server's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions).
 
-This way, consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the MCP Server (such as [Key Auth policy](/ai-gateway/policies/key-auth/) or an OIDC flow), and the resulting Consumer identity is used for ACL checks.
+This way, consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the MCP Server (such as [Key Auth Policy](/ai-gateway/policies/key-auth/) or an OIDC flow), and the resulting Consumer identity is used for ACL checks.
 
 {:.info}
 > **ACL in `listener` mode**

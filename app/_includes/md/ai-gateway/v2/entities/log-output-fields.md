@@ -27,7 +27,7 @@ rows:
     description: Task ID extracted from the response
   - field: "`ai.a2a.rpc[].task_state`"
     type: string
-    description: "Normalized task state (see [task states](/plugins/ai-a2a-proxy/#task-states))"
+    description: "Normalized task state (see [task states](ai-gateway/policies/ai-a2a-proxy/#task-states))"
   - field: "`ai.a2a.rpc[].context_id`"
     type: string
     description: A2A context ID extracted from the response

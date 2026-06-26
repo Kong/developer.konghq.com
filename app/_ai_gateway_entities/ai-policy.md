@@ -59,7 +59,7 @@ faqs:
 
 An AI Policy is a reusable configuration that can be attached to {{site.ai_gateway}} entities to enforce security, transformation, and traffic-control behavior.
 
-Each AI Policy specifies a `type` field (such as `ai-sanitizer` or `ai-rate-limiting-advanced`) that identifies the behavior, and a `config` block that provides that behavior's configuration. {{site.ai_gateway}} attaches the configured policy at the scope you select: globally, or to a specific AI Model, AI Agent, or AI MCP Server.
+Each AI Policy includes a `type` field (such as `ai-sanitizer` or `ai-rate-limiting-advanced`) that sets the type of behavior, and a `config` block that specifies the requirments of the behavior. {{site.ai_gateway}} attaches the configured policy at the scope you select: globally, or to a specific AI Model, AI Agent, or AI MCP Server.
 
 For the complete set of behaviors available as an AI Policy `type`, see the [AI policies hub](/ai-gateway/policies/).
 
@@ -105,7 +105,7 @@ The `config` field is passed through to the policy without translation.
 > **Policy config schemas live with the policy docs**
 >
 > {{site.ai_gateway}} does not define policy configuration schemas under the AI Policy entity.
-> For each policy you intend to use as an AI Policy `type`, look up that policy's reference page for its `config` shape.
+> For each policy you intend to use as an AI Policy `type`, look up that Policy's reference page for its `config` shape.
 
 ## Set up a global AI Policy
 
