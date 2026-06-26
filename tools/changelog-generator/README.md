@@ -69,7 +69,7 @@ There are 3 folders and one file involved in the process:
 * `missing_changelogs`: contains changelog files for versions that don't have entries in `kong-ee`. These versions were generated before the new changelog process was created, so we don't have files for these entries.
 * `missing_entries`:  entries that don't exist in `kong-ee` that we used to manually add to the changelog, e.g. `Known issues`.
 * `tmp`: contanins changelog files generated from entries defined in `kong-ee`
-* `app/_data/changelogs/gateway.json`: the actual changelog file generated from all of the above.
+* `app/_changelogs/gateway.json`: the actual changelog file generated from all of the above.
 
 To generate the changelog file run:
 
@@ -77,7 +77,7 @@ To generate the changelog file run:
 node changelog.js
 ```
 
-This script will load the existing `app/_data/changelogs/gateway.json` and:
+This script will load the existing `app/_changelogs/gateway.json` and:
 
 * read `missing_changelogs` and update the existing changelog file with the missing versions.
 * read `missing_entries` and update the existing changelog file with the missing entries.

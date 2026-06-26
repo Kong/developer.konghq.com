@@ -13,7 +13,7 @@ function customMerge(objValue, srcValue) {
 
 function generateChangelog() {
   try {
-    const changelogFilePath = `../../app/_data/changelogs/gateway.json`;
+    const changelogFilePath = `../../app/_changelogs/gateway.json`;
     let changelog = {};
     if (fs.existsSync(changelogFilePath)) {
       changelog = JSON.parse(fs.readFileSync(changelogFilePath, "utf-8"));
