@@ -1,4 +1,5 @@
 import fs from "fs";
+import minimist from "minimist";
 import { globSync } from "tinyglobby";
 
 function mergeSections(obj1, obj2) {
@@ -18,11 +19,11 @@ function mergeSections(obj1, obj2) {
   return Array.from(mergedMap.values());
 }
 
-function generateIndexFile() {
+function generateIndexFile(product) {
   let reference = {};
   let previousVersion;
-  let files = globSync("../../app/_kong-conf/*", {
-    ignore: ["../../app/_kong-conf/index.json"],
+  let files = globSync(`../../app/_kong-conf/${product}/*`, {
+    ignore: [`../../app/_kong-conf/${product}/index.json`],
   });
 
   files = files.sort((a, b) => {
@@ -108,8 +109,16 @@ function generateIndexFile() {
 }
 
 (function main() {
-  const indexFile = generateIndexFile();
-  const destinationPath = "../../app/_kong-conf/index.json";
+  const args = minimist(process.argv.slice(2), { string: ["product"] });
+  const product = args.product || "gateway";
+
+  if (!["gateway", "ai-gateway"].includes(product)) {
+    console.error(`Invalid --product "${product}". Must be "gateway" or "ai-gateway".`);
+    process.exit(1);
+  }
+
+  const indexFile = generateIndexFile(product);
+  const destinationPath = `../../app/_kong-conf/${product}/index.json`;
 
   fs.writeFileSync(destinationPath, JSON.stringify(indexFile, null, 2), "utf8");
   console.log(
