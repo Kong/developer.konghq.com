@@ -88,8 +88,6 @@ rows:
 
 Membership is managed through the [AI Consumer entity](/ai-gateway/entities/ai-consumer/). Add an AI Consumer to one or more AI Consumer Groups by setting the `consumer_groups` array on the AI Consumer. A single AI Consumer can belong to multiple AI Consumer Groups.
 
-For AI Consumer configuration details, see the [AI Consumer entity](/ai-gateway/entities/ai-consumer/) reference.
-
 ## Attach AI Policies
 
 AI Policies attached to an AI Consumer Group run when a member of that group is identified during a request. To attach an AI Policy, add its `name` or `id` to the AI Consumer Group's [`policies`](#schema-aigateway-consumer-group-policies) array.

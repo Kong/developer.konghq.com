@@ -63,7 +63,7 @@ A Data Plane Certificate is an {{site.ai_gateway}} entity that registers a publi
 
 Each Data Plane Certificate belongs to exactly one {{site.ai_gateway}}. An {{site.ai_gateway}} can have multiple registered certificates so that you can issue one per data plane fleet, rotate keys without downtime, or revoke trust for a subset of data planes independently.
 
-Data Plane Certificates are managed through the {{site.konnect_short_name}} {{site.ai_gateway}} API, the {{site.konnect_short_name}} UI, or Terraform:
+Data Plane Certificates are managed through the {{site.konnect_short_name}} UI or {{site.ai_gateway}} API.
 
 {% table %}
 columns:
@@ -78,8 +78,6 @@ rows:
     cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/data-plane-certificates
 {% endtable %}
-
-<!-- There is no on-prem equivalent for this entity. Self-managed {{site.base_gateway}} deployments use the existing [`/certificates`](/gateway/entities/certificate/) entity and [hybrid mode node configuration](/gateway/hybrid-mode/) instead. -->
 
 ## Trust model
 

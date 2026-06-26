@@ -75,9 +75,9 @@ faqs:
 
 ## What is an AI MCP Server?
 
-An AI MCP Server is a first-class {{site.ai_gateway}} entity that exposes tools to MCP-compatible clients (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LM Studio](https://lmstudio.ai/)) over the [Model Context Protocol](https://modelcontextprotocol.io/). The runtime acts as a protocol bridge, translating between MCP and HTTP so MCP clients can either call existing APIs through {{site.ai_gateway}} or interact with upstream MCP servers.
+Create an AI MCP Server to extend AI applications such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [Insomnia](https://konghq.com/products/kong-insomnia) with access to your APIs and tools over the standardized [Model Context Protocol](https://modelcontextprotocol.io/). Instead of building custom integrations for each AI client, use MCP to expose your APIs as discoverable tools. AI clients can then query databases, update records, execute workflows, or gather real-time information by calling these tools.
 
-Because the runtime executes inside {{site.ai_gateway}}, MCP endpoints are provisioned dynamically on demand. You don't host or scale them separately, and the same authentication, traffic control, and observability features available to traditional API traffic apply to MCP traffic at the same scale.
+{{site.ai_gateway}} acts as the MCP server, eliminating the need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability you apply to traditional API traffic automatically covers MCP traffic. You can convert existing REST APIs into MCP tools, proxy requests to upstream MCP servers, or aggregate tools from multiple sources into a single MCP endpoint.
 
 AI MCP Servers can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
@@ -286,8 +286,6 @@ This way, consumers only interact with tools appropriate to their role, while ma
 > 1. Configure `conversion-listener` or `conversion-only` AI MCP Servers with ACL rules and tags.
 > 1. Configure `listener` mode to aggregate tools by matching tags.
 > 1. Set [`include_consumer_groups`](#schema-aigateway-mcpserver-include-consumer-groups): true on the listener. Without this setting, the listener cannot pass AI Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
->
-> See [Enforce ACLs on aggregated MCP servers](/mcp/enforce-acls-on-aggregated-mcp-servers/) for a complete example.
 
 ### Attribute types
 

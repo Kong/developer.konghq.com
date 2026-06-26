@@ -93,7 +93,10 @@ Each Credential has its own UUID and supports independent list, get, and delete 
 
 Deleting a Credential immediately stops it from authenticating. Deleting the parent AI Consumer removes all of its Credentials.
 
-## Set up an API key Credential
+## Set up a Credential
+
+{% navtabs "credential type" %}
+{% navtab "API key" %}
 
 The following example issues a 24-hour API key credential to an existing Consumer named `mobile-app-production`.
 
@@ -111,7 +114,8 @@ data:
 > Don't commit `api_key` values to source control. Inject them at creation time from a
 > secret-management system, and treat any value checked into a configuration file as compromised.
 
-## Set up an OAuth Credential
+{% endnavtab %}
+{% navtab "OAuth" %}
 
 The following example issues an OAuth credential that maps an external OIDC client ID to an AI Consumer.
 
@@ -123,6 +127,9 @@ data:
   type: oauth
   custom_id: 0oatibf4t2PlDxqgR1d7
 {% endentity_example %}
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Schema
 

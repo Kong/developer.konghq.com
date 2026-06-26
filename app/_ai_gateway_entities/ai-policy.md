@@ -57,13 +57,11 @@ faqs:
 
 ## What is an AI Policy?
 
-An AI Policy is a reusable configuration that can be attached to {{site.ai_gateway}} entities to enforce security, transformation, and traffic-control behavior.
+Create an AI Policy when you want to add governance, security, transformation, or observability to {{site.ai_gateway}} traffic. For example, attach [AI Sanitizer](/ai-gateway/policies/ai-sanitizer/) to redact sensitive data, [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) to manage request volume, [AI Prompt Guard](/ai-gateway/policies/prompt-guard/) to validate prompts, or use logging policies for observability.
 
-Each AI Policy includes a `type` field (such as `ai-sanitizer` or `ai-rate-limiting-advanced`) that sets the type of behavior, and a `config` block that specifies the requirments of the behavior. {{site.ai_gateway}} attaches the configured policy at the scope you select: globally, or to a specific AI Model, AI Agent, or AI MCP Server.
+**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate policies for each one. This ensures that deleting an entity deletes only its own policies—not configurations shared with other parts of your gateway.
 
-For the complete set of behaviors available as an AI Policy `type`, see the [AI policies hub](/ai-gateway/policies/).
-
-**AI Policies are not shared.** Each AI Policy is an independent configuration tied to its parent entity's lifecycle. To apply identical configuration to two AI Models, create two separate AI Policies with matching `config`. This design ensures that deleting an AI Model deletes only its own AI Policies, not configurations used by other entities.
+For the complete set of available policy types and configurations, see the [AI policies hub](/ai-gateway/policies/).
 
 AI Policies are managed through the {{site.ai_gateway}} entity surface:
 
@@ -80,34 +78,20 @@ rows:
 
 ## AI Policy scopes
 
-An AI Policy's scope is determined by where it's referenced. Each AI Policy is an independent configuration that applies at exactly one scope: globally, or to a specific entity (AI Model, AI Agent, AI MCP Server, AI Consumer, or AI Consumer Group). To apply identical configuration in multiple places, create one AI Policy per location.
+An AI Policy's scope is determined by where it's referenced. Each AI Policy is an independent configuration that applies at exactly one scope: globally, or to a specific entity (AI Model, AI Agent, AI MCP Server, AI Consumer, or AI Consumer Group). To apply identical configuration in multiple places, create one AI Policy per target.
 
 The available scopes are:
 
-* **Global**: an AI Policy with no parent entity reference applies to all {{site.ai_gateway}} traffic on the data plane. Non-AI traffic on the same data plane isn't affected.
-* **AI Model**: referenced from the `policies` array on an [AI Model entity](/ai-gateway/entities/ai-model/). The Policy applies to that AI Model.
-* **AI Agent**: referenced from the `policies` array on an [AI Agent entity](/ai-gateway/entities/ai-agent/). The Policy applies to that AI Agent.
-* **AI MCP Server**: referenced from the `policies` array on an [AI MCP Server entity](/ai-gateway/entities/ai-mcp-server/). The Policy applies to that AI MCP Server.
-* **AI Consumer**: referenced from the `policies` array on an [AI Consumer entity](/ai-gateway/entities/ai-consumer/). The Policy applies when the AI Consumer is identified during a request.
-* **AI Consumer Group**: referenced from the `policies` array on an [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/). The Policy applies when a member of the AI Consumer Group is identified during a request.
+* **Global**: An AI Policy with no parent entity reference applies to all {{site.ai_gateway}} traffic on the data plane. Non-AI traffic on the same data plane isn't affected.
 
-### Creating AI Policies
-
-All AI Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is determined entirely by which entity references the AI Policy: add the AI Policy's `name` or `id` to the parent entity's `policies` array, or omit the reference for global scope.
-
-## Lifecycle
-
-An AI Policy maps to exactly one Policy entry in the underlying runtime. Creating, updating, or deleting an AI Policy creates, updates, or deletes that Policy entry respectively. All scopes support standard CRUD operations through the AI Policy API endpoint.
-
-The `config` field is passed through to the policy without translation.
+* **Entity-scoped**: Reference the policy from the `policies` array on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), [AI Consumer](/ai-gateway/entities/ai-consumer/), or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity. The policy applies at that entity's scope.
 
 {:.info}
-> **Policy config schemas live with the policy docs**
->
-> {{site.ai_gateway}} does not define policy configuration schemas under the AI Policy entity.
-> For each policy you intend to use as an AI Policy `type`, look up that Policy's reference page for its `config` shape.
+> For each policy type, find its configuration schema and required fields on that policy's reference page in the [AI policies hub](/ai-gateway/policies/). Configuration is specific to each policy type.
 
 ## Set up a global AI Policy
+
+An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced) and a `config` block that configures that behavior. {{site.ai_gateway}} applies the policy at the scope you choose: globally across all traffic, or scoped to a specific AI Model, AI Agent, AI MCP Server, AI Consumer, or AI Consumer Group.
 
 The following example creates a global PII sanitizer AI Policy that runs for every {{site.ai_gateway}} route.
 
