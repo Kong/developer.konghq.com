@@ -1,7 +1,9 @@
 # kong-conf-to-json
 
-Parse kong.conf and stores a json representation in `app/_data/kong-conf/<version>.json`.
-Generate a json representation of kong.conf in `app/_data/kong-conf/index.json` with the version information of each field.
+Parse kong.conf and stores a json representation in `app/_data/kong-conf/<product>/<version>.json`.
+Generate a json representation of kong.conf in `app/_data/kong-conf/<product>/index.json` with the version information of each field.
+
+Supported products: `gateway` (default), `ai-gateway`.
 
 ## How it works
 
@@ -17,15 +19,15 @@ npm ci
 
 Transform a `kong.conf` file to `json` format by passing the relative path to the `kong.conf` file and its `version`, e.g.
 
-`node run --file=../../../kong.conf.default --version=3.9`
+`node run --file=../../../kong-ee/kong.conf.default --version=3.9  --product=gateway`
 
-will parse the file and write it to `app/_data/kong-conf/3.9.json`.
+will parse the file and write it to `app/_data/kong-conf/gateway/3.9.json`.
 
 
 ### Index file generation
 
 After generating the fields for each version in the previous step, the `index.json` file can be generated.
 
-`node index-file`
+`node index-file --product=gateway`
 
-will generate a json file containing the version information for each param and store it in `app/_data/kong-conf/index.json`.
+will generate a json file containing the version information for each param and store it in `app/_data/kong-conf/gateway/index.json`.
