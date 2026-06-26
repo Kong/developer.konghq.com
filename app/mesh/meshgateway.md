@@ -16,6 +16,10 @@ related_resources:
     url: /mesh/built-in-gateway/
   - text: Configuring built-in routes
     url: /mesh/gateway-routes/
+  - text: Cross-mesh communication
+    url: /mesh/mesh-to-mesh/
+  - text: Enable cross-mesh communication
+    url: /how-to/enable-cross-mesh-communication/configure-meshes/
 
 min_version:
   mesh: '2.7'

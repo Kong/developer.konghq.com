@@ -41,3 +41,6 @@ mcp-acls:
 mesh-get-started-universal:
   title: Get started with {{site.mesh_product_name}} on Universal
   url: /mesh/get-started/universal/install/
+cross-mesh-communication:
+  title: Enable cross-mesh communication with MeshGateway
+  url: /how-to/enable-cross-mesh-communication/configure-meshes/

@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/meshgateway/
   - text: Configuring built-in routes
     url: /mesh/gateway-routes/
+  - text: Cross-mesh communication
+    url: /mesh/mesh-to-mesh/
   - text: Delegated gateways
     url: /mesh/delegated-gateways/
   - text: Kubernetes Gateway API

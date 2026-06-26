@@ -16,6 +16,8 @@ related_resources:
     url: '/mesh/built-in-gateway/'
   - text: Delegated gateways
     url: '/mesh/delegated-gateways/'
+  - text: Cross-mesh communication
+    url: /mesh/mesh-to-mesh/
   - text: Data plane proxy
     url: '/mesh/data-plane-proxy/'
   - text: Multi-zone deployment
@@ -31,7 +33,7 @@ Both use a gateway proxy that sits between external clients and your services in
 
 {:.warning}
 > Gateways exist within a mesh.
-> If you have multiple meshes, each mesh requires its own gateway. You can connect your meshes together using [cross-mesh gateways](/mesh/meshgateway/#cross-mesh).
+> If you have multiple meshes, each mesh requires its own gateway. You can connect your meshes together using [cross-mesh gateways](/mesh/mesh-to-mesh/).
 
 The following diagrams show the difference between built-in and delegated gateway deployments. Solid lines represent traffic not managed by {{site.mesh_product_name}}; dashed lines represent mesh-managed traffic between data plane proxies.
 
