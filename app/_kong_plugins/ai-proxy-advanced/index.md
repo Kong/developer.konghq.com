@@ -71,8 +71,6 @@ examples_groups:
     text: Native routes
   - slug: claude-code
     text: claude-code
-  - slug: network
-    text: Network configuration
 
 faqs:
   - q: Can I override `config.model.name` by specifying a different model name in the request?
