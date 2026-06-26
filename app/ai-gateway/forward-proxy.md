@@ -77,7 +77,7 @@ When `proxy` is set on an entity, every outbound request that entity issues goes
 
 The Forward Proxy Advanced plugin takes over the request before the balancer phase runs, which works for standard Kong Services but not with behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
 
-For any Service that serves traffic through a {{site.ai_gateway}} Policy you should use `proxy_config` instead, so the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy_config`. 
+For any Service that serves traffic through an AI Model or MCP Server you should use `proxy` instead, so the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy`.
 
 ## Proxy configuration fields
 
@@ -113,7 +113,7 @@ rows:
     description: "Username for proxy authentication. Optional. Referenceable from a [Vault](/gateway/entities/vault/)."
   - field: "`auth_password`"
     type: "string"
-    description: "Password for proxy authentication. Optional. Encrypted at rest and referenceable from a [Vault](/gateway/entities/vault/)."
+    description: "Password for proxy authentication. Optional. Encrypted at rest and referenceable from an [AI Vault](/gateway/entities/vault/)."
   - field: "`no_proxy`"
     type: "list"
     description: "Comma-separated list of hosts that should not be proxied."
@@ -139,7 +139,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
 ### AI Model
 
-1. Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
+1. Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
 
   <!-- vale off -->
   {% konnect_api_request %}
@@ -162,7 +162,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
   {% endkonnect_api_request %}
   <!-- vale on -->
 
-1. Create a [Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
+1. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
 
   <!-- vale off -->
   {% konnect_api_request %}
@@ -220,7 +220,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
 ### AI MCP Server
 
-1. Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool:
+1. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool:
 
   <!-- vale off -->
   {% konnect_api_request %}
@@ -338,4 +338,4 @@ rows:
 ## Limitations
 
 - Connections to vector databases (such as pgvector, Redis Vector, or Pinecone) use native database protocols rather than HTTP and are not routed through the forward proxy. If these connections must traverse a forward proxy, you should handle it at the network layer.
-- The [AI Request Transformer](ai-gateway/policies/ai-request-transformer/), [AI Response Transformer](ai-gateway/policies/ai-response-transformer/), and [AI LLM as a Judge](ai-gateway/policies/ai-llm-as-judge/) Policies keep their existing flat proxy fields (`http_proxy_host`, `http_proxy_port`, `https_proxy_host`, `https_proxy_port`) and do not accept a `proxy` record. They do not expose `auth_username`, `auth_password`, `proxy_scheme`, or `https_verify`, so proxy authentication and HTTPS-scheme proxies are unavailable for their traffic.
+- The [AI Request Transformer](/ai-gateway/policies/ai-request-transformer/), [AI Response Transformer](/ai-gateway/policies/ai-response-transformer/), and [AI LLM as a Judge](/ai-gateway/policies/ai-llm-as-judge/) Policies keep their existing flat proxy fields (`http_proxy_host`, `http_proxy_port`, `https_proxy_host`, `https_proxy_port`) and do not accept a `proxy` record. They do not expose `auth_username`, `auth_password`, `proxy_scheme`, or `https_verify`, so proxy authentication and HTTPS-scheme proxies are unavailable for their traffic.
