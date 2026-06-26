@@ -46,6 +46,7 @@ sections:
       - path: /event-gateway/validate-avro-messages-with-schema-registry/
       - path: /event-gateway/configure-topic-aliases/
       - path: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
+      - path: /event-gateway/encrypt-kafka-message-fields-dynamic/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification
