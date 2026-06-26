@@ -62,9 +62,9 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, application/problem+json'
 body:
-  display_name: OpenAI Production
-  name: my-openai-account
   type: openai
+  display_name: generic-openai
+  name: generic-openai
   config:
     auth:
       type: basic
@@ -73,12 +73,6 @@ body:
           value: Bearer $OPENAI_API_KEY
 {% endkonnect_api_request %}
 <!-- vale on -->
-
-Save the Provider ID from the response for cleanup:
-
-```bash
-export PROVIDER_ID=ai-provider-id
-```
 
 ## Create a Model entity
 
@@ -93,29 +87,29 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, application/problem+json'
 body:
-  display_name: GPT-4o
+  display_name: my-gpt-4o
   name: my-gpt-4o
   type: model
-  enabled: true
-  capabilities:
-    - generate
   formats:
     - type: openai
   config:
     route:
       paths:
         - /v1
-  target_models:
+    model: {}
+    logging:
+      payloads: false
+      statistics: true
+  targets:
     - name: gpt-4o
-      provider: openai-provider
+      provider: generic-openai
+      config:
+        type: openai
+  policies: []
+  capabilities:
+    - generate
 {% endkonnect_api_request %}
 <!-- vale on -->
-
-Save the Model ID from the response for cleanup:
-
-```bash
-export MODEL_ID=ai-model-id
-```
 
 {:.info}
 > The `generate` capability creates a `/chat/completions` route. The `paths: ["/v1"]` setting defines the base path, so the final route becomes `/v1/chat/completions`.
@@ -134,7 +128,6 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
-  model: my-gpt-4o
   messages:
   - role: "user"
     content: "Say this is a test!"
