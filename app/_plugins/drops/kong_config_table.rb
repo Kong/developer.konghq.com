@@ -68,7 +68,7 @@ module Jekyll
 
       def kong_conf
         KONG_CONF_CACHE[@release_number] ||= JSON.parse(
-          File.read(File.expand_path("../../_kong-conf/#{@release_number}.json", __dir__))
+          File.read(File.expand_path("../../_kong-conf/gateway/#{@release_number}.json", __dir__))
         )
       end
 

@@ -26,18 +26,29 @@ module Jekyll
         end
       end
 
-      KONG_CONF_INDEX = JSON.parse(File.read(File.expand_path('../../_kong-conf/index.json', __dir__)))
+      KONG_CONF_INDICES = %w[gateway ai-gateway].each_with_object({}) do |product, h|
+        path = File.expand_path("../../_kong-conf/#{product}/index.json", __dir__)
+        h[product] = JSON.parse(File.read(path)) if File.exist?(path)
+      end.freeze
+
+      def initialize(product = 'gateway') # rubocop:disable Lint/MissingSuper
+        @product = product
+      end
 
       def sections
-        @sections ||= KONG_CONF_INDEX.fetch('sections', []).map do |section|
+        @sections ||= index.fetch('sections', []).map do |section|
           Section.new(section:, params: section_params(section))
         end
       end
 
       private
 
+      def index
+        KONG_CONF_INDICES.fetch(@product, {})
+      end
+
       def section_params(section)
-        KONG_CONF_INDEX.fetch('params', {}).select do |_k, v|
+        index.fetch('params', {}).select do |_k, v|
           v['sectionTitle'] == section['title']
         end
       end
