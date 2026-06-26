@@ -8,16 +8,16 @@ RSpec.describe Jekyll::Drops::KongConf do
         { 'title' => 'Nginx', 'description' => 'Nginx settings' }
       ],
       'params' => {
-        'log_level'    => { 'sectionTitle' => 'General', 'defaultValue' => 'notice' },
+        'log_level' => { 'sectionTitle' => 'General', 'defaultValue' => 'notice' },
         'admin_listen' => { 'sectionTitle' => 'General', 'defaultValue' => '127.0.0.1:8001' },
         'proxy_listen' => { 'sectionTitle' => 'Nginx',   'defaultValue' => '0.0.0.0:8000' }
       }
     }
   end
 
-  before { stub_const('Jekyll::Drops::KongConf::KONG_CONF_INDEX', kong_conf_index) }
+  before { stub_const('Jekyll::Drops::KongConf::KONG_CONF_INDICES', { 'gateway' => kong_conf_index }) }
 
-  subject(:drop) { described_class.new }
+  subject(:drop) { described_class.new('gateway') }
 
   describe '#sections' do
     it 'returns a Section for each section in the index' do
@@ -55,11 +55,45 @@ RSpec.describe Jekyll::Drops::KongConf do
     end
   end
 
+  context 'with ai-gateway product' do
+    let(:ai_gateway_index) do
+      {
+        'sections' => [{ 'title' => 'AI', 'description' => 'AI settings' }],
+        'params' => { 'model' => { 'sectionTitle' => 'AI', 'defaultValue' => 'gpt-4' } }
+      }
+    end
+
+    before do
+      stub_const('Jekyll::Drops::KongConf::KONG_CONF_INDICES',
+                 { 'gateway' => kong_conf_index, 'ai-gateway' => ai_gateway_index })
+    end
+
+    subject(:drop) { described_class.new('ai-gateway') }
+
+    it { expect(drop.sections.map(&:title)).to eq(['AI']) }
+
+    it 'assigns params to the correct section' do
+      expect(drop.sections.first.parameters.map { |p| p['name'] }).to contain_exactly('model')
+    end
+  end
+
+  context 'when product has no index entry' do
+    subject(:drop) { described_class.new('unknown') }
+
+    it { expect(drop.sections).to be_empty }
+  end
+
+  context 'when no product is given (defaults to gateway)' do
+    subject(:drop) { described_class.new }
+
+    it { expect(drop.sections.size).to eq(2) }
+  end
+
   describe Jekyll::Drops::KongConf::Section do
     let(:section_data) { { 'title' => 'General', 'description' => 'General settings' } }
     let(:params) do
       {
-        'log_level'    => { 'sectionTitle' => 'General', 'defaultValue' => 'notice' },
+        'log_level' => { 'sectionTitle' => 'General', 'defaultValue' => 'notice' },
         'admin_listen' => { 'sectionTitle' => 'General', 'defaultValue' => '127.0.0.1:8001' }
       }
     end
