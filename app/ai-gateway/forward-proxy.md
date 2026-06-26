@@ -135,36 +135,12 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
 ### Gateway
 
-This is a Konnect tutorial and requires a Konnect personal access token.
-
-1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-1. Export your token to an environment variable:
-
-   ```bash
-   export KONNECT_TOKEN='YOUR_KONNECT_PAT'
-   ```
-1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/quickstart/ai) to automatically provision a Control Plane and Data Plane in {{site.konnect_product_name}}, and configure your environment:
-
-   ```bash
-   curl -Ls https://get.konghq.com/quickstart/ai | bash -s -- -k $KONNECT_TOKEN
-   ```
-
-This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
-
-```bash
-export AI_GATEWAY_ID=your-gateway-id
-export DECK_KONNECT_TOKEN=$KONNECT_TOKEN
-export DECK_KONNECT_CONTROL_PLANE_NAME=quickstart
-export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
-export KONNECT_PROXY_URL='http://localhost:8000'
-```
-
-Copy and paste these into your terminal to configure your session.
-
+{% include md/ai-gateway/v2/konnect-aigw-setup.md %}
 
 ### AI Model
 
 1. Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
+
   <!-- vale off -->
   {% konnect_api_request %}
   url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
@@ -185,7 +161,9 @@ Copy and paste these into your terminal to configure your session.
             value: Bearer $OPENAI_API_KEY
   {% endkonnect_api_request %}
   <!-- vale on -->
+
 1. Create a [Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
+
   <!-- vale off -->
   {% konnect_api_request %}
   url: /v1/ai-gateways/$AI_GATEWAY_ID/models
@@ -219,8 +197,26 @@ Copy and paste these into your terminal to configure your session.
       - generate
   {% endkonnect_api_request %}
   <!-- vale on -->
-1. Send a request
-1. Examine the Squid logs to verify your requests
+
+1. Send a chat request, this will be forwarded to your proxy service and return an error:
+
+  <!-- vale off -->
+  {% validation request-check %}
+  url: /v1/chat/completions
+  status_code: 200
+  method: POST
+  headers:
+      - 'Accept: application/json'
+      - 'Content-Type: application/json'
+      - 'Authorization: Bearer $OPENAI_API_KEY'
+  body:
+    messages:
+    - role: "user"
+      content: "Say this is a test!"
+  {% endvalidation %}
+  <!-- vale on -->
+
+1. Examine the Squid logs to verify your requests.
 
 ### AI MCP Server
 
@@ -262,7 +258,7 @@ body:
     server:
       timeout: 60000
     proxy:
-      http_proxy_host: secure.mycompany/mcp
+      http_proxy_host: secure.mycompany/weather
       http_proxy_port: 8080
       proxy_scheme: http
   tools:
@@ -272,7 +268,7 @@ body:
       path: /weather
       query:
         key:
-          - $DECK_WEATHERAPI_API_KEY
+          - $WEATHERAPI_API_KEY
       parameters:
         - name: q
           in: query
