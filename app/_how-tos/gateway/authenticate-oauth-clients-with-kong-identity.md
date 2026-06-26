@@ -10,7 +10,7 @@ related_resources:
   - text: "{{site.identity}}"
     url: /identity/
   - text: "{{site.identity}} principals and directories"
-    url: /identity/principals
+    url: /identity/principals/
 
 description: Use the OpenID Connect plugin to map authenticated OAuth clients to Kong Identity principals.
 products:
