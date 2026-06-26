@@ -26,6 +26,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.7": [
+    {
+      "message": "Fixed an issue where responses with unsupported content types could be returned with an incorrect gzip header.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the Azure managed identity token was cached\nindefinitely and never refreshed, causing requests to fail with 401 after the\ntoken expired (roughly one hour).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",

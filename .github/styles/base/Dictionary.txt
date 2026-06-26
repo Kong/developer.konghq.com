@@ -17,6 +17,7 @@ allow_terminated
 allowlist
 allowlisting
 allowlisted
+allowlists
 Amal
 amberflo
 andAll
@@ -198,6 +199,7 @@ dict
 dicts
 digitalocean
 discovery_support
+distroless
 dlp
 DN
 dns
@@ -238,6 +240,7 @@ eventTime
 evaluable
 example_service
 exfiltrate
+exfiltration
 extra_body
 failover
 fapi

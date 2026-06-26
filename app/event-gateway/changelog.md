@@ -26,6 +26,18 @@ related_resources:
 
 Changelog for supported {{site.event_gateway}} versions.
 
+## 1.1.1
+
+**Release date**: 2026/06/16
+
+### Fixes
+
+- **Updated vulnerable dependencies and container base images**: Refreshed the runtime distroless base (patched OpenSSL/glibc) and removed the legacy `rustls/rustls-webpki` stack, clearing the outstanding advisories.
+- **Bumped `aws-lc-sys` / `aws-lc-rs`**: Pulled in the fixed AWS-LC bindings (RUSTSEC-2026-0044, -0048).
+- **Namespacing: consumer group rewrite**: Corrects how consumer group identifiers are rewritten when proxying, so group operations resolve to the right backend.
+- **ACLs: drop unsupported APIs**: Removes Kafka APIs that aren't supported under ACL handling, avoiding incorrect authorization behavior.
+- **Snappy decompression under encryption policies**: In some rare cases, raw (non-xerial-framed) Snappy records caused the gateway to fail with a `snappy: corrupt input` error when an encryption policy was applied on the produce chain and the producer's compression was set to Snappy.
+
 ## 1.1.0
 
 **Release date**: 2026/03/25
