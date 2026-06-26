@@ -41,6 +41,8 @@ module Jekyll
         end
       end
 
+      attr_reader :product
+
       private
 
       def index
