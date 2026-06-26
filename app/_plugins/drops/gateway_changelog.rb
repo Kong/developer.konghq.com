@@ -104,7 +104,8 @@ module Jekyll
         end
 
         def order
-          @order ||= site.data.dig('changelogs', 'config', 'order') || []
+          @order ||= YAML.safe_load(File.read(File.join(site.source, '_changelogs', 'config.yaml')))
+                         .fetch('order', [])
         end
       end
 
@@ -135,7 +136,7 @@ module Jekyll
       end
 
       def json_changelog
-        @json_changelog ||= @site.data.dig('changelogs', 'gateway')
+        @json_changelog ||= JSON.parse(File.read(File.join(@site.source, '_changelogs', 'gateway.json')))
       end
     end
   end

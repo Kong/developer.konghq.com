@@ -1,28 +1,36 @@
 RSpec.describe Jekyll::Drops::GatewayChangelog do
   let(:order) { %w[feature bugfix performance] }
+  let(:changelog_data) do
+    {
+      '3.9.0.0' => {
+        'kong' => [{ 'message' => 'New routing capability', 'type' => 'feature', 'scope' => 'Core' }]
+      },
+      '3.8' => {
+        'kong' => [{ 'message' => 'Fixed a bug', 'type' => 'bugfix', 'scope' => 'Core' }],
+        'kong-manager-ee' => [{ 'message' => 'Updated UI', 'type' => 'feature' }]
+      }
+    }
+  end
   let(:site_data) do
     {
-      'changelogs' => {
-        'gateway' => {
-          '3.9.0.0' => {
-            'kong' => [{ 'message' => 'New routing capability', 'type' => 'feature', 'scope' => 'Core' }]
-          },
-          '3.8' => {
-            'kong' => [{ 'message' => 'Fixed a bug', 'type' => 'bugfix', 'scope' => 'Core' }],
-            'kong-manager-ee' => [{ 'message' => 'Updated UI', 'type' => 'feature' }]
-          }
-        },
-        'config' => { 'order' => order }
-      },
       'products' => {
         'gateway' => { 'release_dates' => { '3.9.0.0' => '2024/09/18', '3.8.0.0' => '2024/06/19' } }
       },
       'kong_plugins' => {}
     }
   end
-  let(:site) { instance_double(Jekyll::Site, data: site_data) }
+  let(:site) { instance_double(Jekyll::Site, data: site_data, source: '/fake/source') }
 
-  before { allow(Jekyll).to receive(:sites).and_return([site]) }
+  before do
+    allow(Jekyll).to receive(:sites).and_return([site])
+    allow(File).to receive(:read).and_call_original
+    allow(File).to receive(:read)
+      .with('/fake/source/_changelogs/gateway.json')
+      .and_return(JSON.generate(changelog_data))
+    allow(File).to receive(:read)
+      .with('/fake/source/_changelogs/config.yaml')
+      .and_return({ 'order' => order }.to_yaml)
+  end
 
   subject(:changelog) { described_class.new(site:) }
 
@@ -73,14 +81,18 @@ RSpec.describe Jekyll::Drops::GatewayChangelog do
     let(:release_dates) { { '3.9.0.0' => '2024/09/18' } }
     let(:site_data) do
       {
-        'changelogs' => { 'config' => { 'order' => order } },
         'products' => { 'gateway' => { 'release_dates' => release_dates } },
         'kong_plugins' => {}
       }
     end
-    let(:site) { instance_double(Jekyll::Site, data: site_data) }
+    let(:site) { instance_double(Jekyll::Site, data: site_data, source: '/fake/source') }
 
-    before { allow(Jekyll).to receive(:sites).and_return([site]) }
+    before do
+      allow(Jekyll).to receive(:sites).and_return([site])
+      allow(File).to receive(:read)
+        .with('/fake/source/_changelogs/config.yaml')
+        .and_return({ 'order' => order }.to_yaml)
+    end
 
     let(:entries) do
       [
