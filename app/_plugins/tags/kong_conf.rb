@@ -6,9 +6,10 @@ module Jekyll
   class RenderKongConf < Liquid::Tag # rubocop:disable Style/Documentation
     def render(context)
       @page = context.environments.first['page']
+      product = @page['products']&.first || 'gateway'
 
       context.stack do
-        context['config'] = Drops::KongConf.new
+        context['config'] = Drops::KongConf.new(product)
         Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
