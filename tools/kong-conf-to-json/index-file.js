@@ -21,8 +21,8 @@ function mergeSections(obj1, obj2) {
 function generateIndexFile() {
   let reference = {};
   let previousVersion;
-  let files = globSync("../../app/_data/kong-conf/*", {
-    ignore: ["../../app/_data/kong-conf/index.json"],
+  let files = globSync("../../app/_kong-conf/*", {
+    ignore: ["../../app/_kong-conf/index.json"],
   });
 
   files = files.sort((a, b) => {
@@ -109,7 +109,7 @@ function generateIndexFile() {
 
 (function main() {
   const indexFile = generateIndexFile();
-  const destinationPath = "../../app/_data/kong-conf/index.json";
+  const destinationPath = "../../app/_kong-conf/index.json";
 
   fs.writeFileSync(destinationPath, JSON.stringify(indexFile, null, 2), "utf8");
   console.log(
