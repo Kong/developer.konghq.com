@@ -177,6 +177,20 @@ Choose the mode based on your security requirements and backend cluster configur
 * Terminate (`terminate`): Checks whether the client’s connection is authorized based on their credential, and then terminates the authentication. Then, a new authentication session starts with the backend cluster. 
 * Validate and forward (`validate_forward`): The client’s OAuth token is first validated by the proxy, and then sent to the backend as-is. This will “fail fast” if the token is invalid before sending it to the backend.
 
+### Enrich connections with caller metadata
+
+After a client authenticates, you can configure the virtual cluster to look up the client in a {{site.identity}} directory and attach its metadata to the connection context. 
+This metadata is available at `context.auth.principal.metadata` and can be used to drive policies automatically. 
+For example, setting a header based on which team a client belongs to, or skipping records that a client isn’t entitled to see.
+
+To enable this, add a `fetch_kong_identity_principal` block to the `authentication` config. 
+For SASL/PLAIN connections, specify a `fetch_by.key` matching the identity key (for example, `sasl_username`).
+For OAuth Bearer connections, the lookup uses the JWT’s `iss` and `sub` claims automatically.
+
+See the following how-to guides for end-to-end examples:
+- [Enrich SASL PLAIN connections with principal metadata](/event-gateway/kong-identity-metadata-integration/)
+- [Enrich OAuth connections with principal metadata](/event-gateway/kong-identity-jwt-metadata-integration/)
+
 ## Namespaces
 
 With namespaces, you can preserve any naming systems that you have in place, and ensure they remain consistent.
