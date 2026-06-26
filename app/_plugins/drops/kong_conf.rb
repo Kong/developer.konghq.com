@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'yaml'
-
-require_relative '../lib/site_accessor'
+require 'json'
 
 module Jekyll
   module Drops
@@ -28,22 +26,18 @@ module Jekyll
         end
       end
 
-      include Jekyll::SiteAccessor
+      KONG_CONF_INDEX = JSON.parse(File.read(File.expand_path('../../_kong-conf/index.json', __dir__)))
 
       def sections
-        @sections ||= kong_conf_index.fetch('sections', []).map do |section|
+        @sections ||= KONG_CONF_INDEX.fetch('sections', []).map do |section|
           Section.new(section:, params: section_params(section))
         end
       end
 
       private
 
-      def kong_conf_index
-        @kong_conf_index ||= site.data.dig('kong-conf', 'index')
-      end
-
       def section_params(section)
-        kong_conf_index.fetch('params', {}).select do |_k, v|
+        KONG_CONF_INDEX.fetch('params', {}).select do |_k, v|
           v['sectionTitle'] == section['title']
         end
       end
