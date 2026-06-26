@@ -124,7 +124,7 @@ function parseSections(filePath) {
     const version = args.version;
     const sections = parseSections(configFilePath);
     const jsonConfig = parseConfigFile(configFilePath, sections);
-    const destinationPath = `../../app/_data/kong-conf/${version}.json`;
+    const destinationPath = `../../app/_kong-conf/${version}.json`;
 
     fs.writeFileSync(
       destinationPath,
