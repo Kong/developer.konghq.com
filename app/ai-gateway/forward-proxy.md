@@ -133,66 +133,94 @@ You can use [Squid](https://www.squid-cache.org/) to create a simple forward pro
 
 In the following examples `secure.mycompany` is used as the `visible_hostname` for the forward proxy.
 
+### Gateway
+
+This is a Konnect tutorial and requires a Konnect personal access token.
+
+1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+1. Export your token to an environment variable:
+
+   ```bash
+   export KONNECT_TOKEN='YOUR_KONNECT_PAT'
+   ```
+1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/quickstart/ai) to automatically provision a Control Plane and Data Plane in {{site.konnect_product_name}}, and configure your environment:
+
+   ```bash
+   curl -Ls https://get.konghq.com/quickstart/ai | bash -s -- -k $KONNECT_TOKEN
+   ```
+
+This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
+
+```bash
+export AI_GATEWAY_ID=your-gateway-id
+export DECK_KONNECT_TOKEN=$KONNECT_TOKEN
+export DECK_KONNECT_CONTROL_PLANE_NAME=quickstart
+export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
+export KONNECT_PROXY_URL='http://localhost:8000'
+```
+
+Copy and paste these into your terminal to configure your session.
+
+
 ### AI Model
 
-Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
-
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  type: openai
-  display_name: generic-openai
-  name: generic-openai
-  config:
-    auth:
-      type: basic
-      headers:
-        - name: Authorization
-          value: Bearer $OPENAI_API_KEY
-{% endkonnect_api_request %}
-<!-- vale on -->
-
-Create a [Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
-
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/models
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  display_name: my-gpt-4o
-  name: my-gpt-4o
-  type: model
-  formats:
-    - type: openai
-  config:
-    route:
-      paths:
-        - /v1
-    model: {}
-    proxy:
-      http_proxy_host: secure.mycompany/v1
-      http_proxy_port: 443
-      proxy_scheme: http
-  targets:
-    - name: gpt-4o
-      provider: generic-openai
-      config:
-        type: openai
-  policies: []
-  capabilities:
-    - generate
-{% endkonnect_api_request %}
-<!-- vale on -->
+1. Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
+  <!-- vale off -->
+  {% konnect_api_request %}
+  url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+  status_code: 201
+  method: POST
+  headers:
+    - 'Content-Type: application/json'
+    - 'Accept: application/json, application/problem+json'
+  body:
+    type: openai
+    display_name: generic-openai
+    name: generic-openai
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: Bearer $OPENAI_API_KEY
+  {% endkonnect_api_request %}
+  <!-- vale on -->
+1. Create a [Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
+  <!-- vale off -->
+  {% konnect_api_request %}
+  url: /v1/ai-gateways/$AI_GATEWAY_ID/models
+  status_code: 201
+  method: POST
+  headers:
+    - 'Content-Type: application/json'
+    - 'Accept: application/json, application/problem+json'
+  body:
+    display_name: my-gpt-4o
+    name: my-gpt-4o
+    type: model
+    formats:
+      - type: openai
+    config:
+      route:
+        paths:
+          - /v1
+      model: {}
+      proxy:
+        http_proxy_host: secure.mycompany/v1
+        http_proxy_port: 443
+        proxy_scheme: http
+    targets:
+      - name: gpt-4o
+        provider: generic-openai
+        config:
+          type: openai
+    policies: []
+    capabilities:
+      - generate
+  {% endkonnect_api_request %}
+  <!-- vale on -->
+1. Send a request
+1. Examine the Squid logs to verify your requests
 
 ### AI MCP Server
 
