@@ -21,7 +21,6 @@ plugins:
   - openid-connect
 works_on:
     - konnect
-    - on-prem
     
 
 min_version:
