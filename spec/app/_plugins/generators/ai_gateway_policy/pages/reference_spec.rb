@@ -61,13 +61,13 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
     it { expect(data['scopes']).to eq(%w[ai-model global]) }
 
     context 'when the policy has overview content' do
-      it { expect(data['has_overview?']).to be(false) }
+      it { expect(data['has_overview?']).to be(true) }
     end
 
     context 'when the policy has no overview content' do
       before { allow(policy).to receive(:overview_content).and_return('') }
 
-      it { expect(data['has_overview?']).to be(true) }
+      it { expect(data['has_overview?']).to be(false) }
     end
   end
 end
