@@ -47,7 +47,7 @@ faqs:
       How do I resolve the error `The following workspace(s) have names that conflict with admin API URL prefixes in this version of Kong`?
     a: |
       As of {{site.base_gateway}} 3.15.0.0, Workspace names that match a top-level Admin API route segment are no longer allowed.
-      You can use the `kong workspace` utility to identify and rename all conflicting Workspaces.
+      You can use the [`kong workspace`](/gateway/cli/reference/#kong-workspace) utility to identify and rename all conflicting Workspaces.
       See [Resolve Workspace name conflicts](#resolve-workspace-name-conflicts) for more information.
 
 api_specs:
@@ -209,7 +209,7 @@ Starting in {{site.base_gateway}} 3.15.0.0, Workspace names that match a top-lev
 {{site.base_gateway}} enforces this check at startup and before running migrations.
 If it detects a conflict, {{site.base_gateway}} exits with an error and won't start until all conflicting Workspaces are renamed.
 
-If you are running 3.15 or later and have Workspaces with conflicting names, update your configuration using the following steps:
+If you're running 3.15 or later and have Workspaces with conflicting names, update your configuration using the following steps:
 
 1. Using the [`kong workspace`](/gateway/cli/reference/#kong-workspace) utility, run the following command to list all Workspaces with conflicting names:
 
