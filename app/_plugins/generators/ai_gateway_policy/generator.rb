@@ -23,9 +23,11 @@ module Jekyll
 
       # TODO: for now, until we have overviews and examples
       def generate_pages(policy)
+        generate_overview_page(policy) unless policy.overview_content.empty?
+
         reference = generate_reference_page(policy)
 
-        site.data[key][policy.slug] = reference
+        site.data[key][policy.slug] ||= reference
       end
     end
   end
