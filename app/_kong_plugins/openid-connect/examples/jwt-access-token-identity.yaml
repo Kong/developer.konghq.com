@@ -1,0 +1,64 @@
+title: JWT access token authentication
+description: |
+  Configure the OpenID Connect plugin with JWT access token authentication.
+extended_description: |
+  Configure the OpenID Connect plugin with JWT access token authentication.
+
+  Here's how JWT access token auth works:
+
+  {% include_cached plugins/oidc/diagrams/jwt-access-token.md %}
+
+  In this example, the plugin will only accept a bearer token sent in a query string, 
+  but you can also set the `bearer_token_param_type` parameter to `body`, `header`, or any combination of these values.
+  
+  {% include_cached plugins/oidc/identity-server-intro.md %}
+  To use an external authorization server like Keycloak,
+  see [configuring OpenID Connect with JWT authentication](/how-to/configure-oidc-with-jwt-auth/).
+  
+  {% include_cached plugins/oidc/client-auth.md %}
+
+weight: 897
+
+requirements:
+  - "{% include_cached plugins/oidc/idp-requirement.md %}"
+
+config:
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  client_auth:
+    - client_secret_post
+  auth_methods:
+    - bearer
+  bearer_token_param_type:
+    - query
+  principals:
+    enabled: true
+    directory: ${directory-name}
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. As this example uses Kong Identity as the IdP, the issuer URL should look like `https://xxx.<region>.identity.konghq.tech/auth`.
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
+  directory-name:
+    value: $DIRECTORY_NAME
+    description: The name of the {{ site.identity }} directory used for principals lookup.
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: authentication

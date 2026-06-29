@@ -1,0 +1,66 @@
+title: Refresh token grant
+description: |
+  Configure the OpenID Connect plugin to use the refresh token grant.
+
+extended_description: |
+  Configure the OpenID Connect plugin to use the refresh token grant.
+
+  Here's how refresh token grant auth works:
+
+  {% include_cached plugins/oidc/diagrams/refresh-token.md %}
+
+  In this example, the OpenID Connect plugin will only accept refresh tokens sent in a header, 
+  but you can also set the `refresh_token_param_type` parameter to `body`, `query`, or any combination of these values.
+
+  {% include_cached plugins/oidc/identity-server-intro.md %}
+  To use an external authorization server like Keycloak,
+  see [configuring OpenID Connect with the refresh token grant](/how-to/configure-oidc-with-refresh-token/).
+  
+  {% include_cached plugins/oidc/client-auth.md %}
+
+weight: 894
+
+requirements:
+  - "{% include_cached plugins/oidc/idp-requirement.md %}"
+
+config:
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  client_auth:
+    - client_secret_post
+  auth_methods:
+    - refresh_token
+  refresh_token_param_type:
+    - header
+  refresh_token_param_name: refresh_token
+  upstream_refresh_token_header: refresh_token
+  principals:
+    enabled: true
+    directory: ${directory-name}
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. As this example uses Kong Identity as the IdP, the issuer URL should look like `https://xxx.<region>.identity.konghq.tech/auth`.
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
+  directory-name:
+    value: $DIRECTORY_NAME
+    description: The name of the {{ site.identity }} directory used for principals lookup.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: authentication
