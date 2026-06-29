@@ -33,7 +33,7 @@ rows:
     - blocks:
       - type: icon_card
         config:
-          title: Traceable.ai
+          title: Harness WAAP
           icon: /assets/icons/plugins/traceableai.svg
           cta:
             url: "#traceable-ai"
@@ -107,7 +107,7 @@ rows:
 
   - header:
       type: h2
-      text: "Traceable.ai"
+      text: "Harness WAAP"
     columns:
       - blocks:
           - type: structured_text
@@ -130,10 +130,10 @@ rows:
           blocks:
             - type: text
               text: | 
-                **Traceable's Kong plugin** lets Traceable capture a copy of the API traffic that is flowing through {{site.base_gateway}}. 
-                Using this data, Traceable is able to create a security posture profile of APIs hosted on Kong. 
+                The {{site.base_gateway}} plugin for Harness Web Application & API Protection (WAAP) by Traceable lets Harness WAAP capture a copy of the API traffic that is flowing through {{site.base_gateway}}. 
+                Using this data, Harness WAAP is able to create a security posture profile of APIs hosted on Kong. 
 
-                Based on its findings, the Traceable plugin can also block traffic coming from malicious actors and IPs into {{site.base_gateway}}.
+                Based on its findings, the Harness WAAP plugin can also block traffic coming from malicious actors and IPs into {{site.base_gateway}}.
     - blocks: 
       - type: plugin
         config:
