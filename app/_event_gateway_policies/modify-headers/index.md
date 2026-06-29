@@ -37,6 +37,9 @@ icon: graph.svg
 
 The Modify Headers policy can set or remove headers on requests.
 
+{:.warning}
+> Headers prefixed with `kong/` are reserved for {{site.event_gateway_short}} internal use. The Modify Headers policy doesn't prevent you from reading, writing, or modifying them, but doing so isn't recommended and can interfere with {{site.event_gateway_short}} behavior. For the full list of reserved headers, see the [{{site.event_gateway}} headers reference](/event-gateway/headers/).
+
 ## Use cases
 
 Common use cases for the Modify Headers policy:

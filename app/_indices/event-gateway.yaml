@@ -17,7 +17,7 @@ sections:
     items:
       - title: Get started with Event Gateway
         description: |
-          Get started with {{site.event_gateway}} by setting up a demo {{site.konnect_short_name}} control plane and data plane, 
+          Get started with {{site.event_gateway}} by setting up a demo {{site.konnect_short_name}} control plane and data plane,
           then configuring a backend cluster, virtual cluster, listener, and policies with the {{site.event_gateway}} API.
         url: /event-gateway/get-started/
   - title: "Event Gateway Entities"
@@ -45,6 +45,9 @@ sections:
       - path: /event-gateway/configure-mtls-backend-cluster-auth/
       - path: /event-gateway/validate-avro-messages-with-schema-registry/
       - path: /event-gateway/verify-image-signatures-and-attestations/
+      - path: /event-gateway/configure-topic-aliases/
+      - path: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
+      - path: /event-gateway/encrypt-kafka-message-fields-dynamic/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification
@@ -53,4 +56,5 @@ sections:
       - path: /event-gateway/configuration/
       - path: /event-gateway/expressions/
       - path: /event-gateway/metrics/
+      - path: /event-gateway/headers/
       - path: /event-gateway/known-limitations/

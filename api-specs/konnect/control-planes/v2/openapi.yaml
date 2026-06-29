@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6b54f0275ce27b487a7dea78af272c831c628b57
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6b54f0275ce27b487a7dea78af272c831c628b57'
+  x-oas-source: kong/platform-api@f6932e30e5dd1b0d4e720438d3313ed35fb0dbba
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f6932e30e5dd1b0d4e720438d3313ed35fb0dbba'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -849,14 +849,20 @@ components:
       type: object
       properties:
         number:
-          type: number
+          type: integer
+          format: int32
           example: 1
+          x-go-type: int32
         size:
-          type: number
+          type: integer
+          format: int32
           example: 10
+          x-go-type: int32
         total:
-          type: number
+          type: integer
+          format: int32
           example: 100
+          x-go-type: int32
       required:
         - number
         - size
