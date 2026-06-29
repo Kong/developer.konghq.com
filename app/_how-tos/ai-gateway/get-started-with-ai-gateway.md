@@ -21,10 +21,9 @@ tldr:
   q: How do I proxy LLM traffic with {{site.ai_gateway}} entities?
   a: |
     {{site.ai_gateway}} provides first-class entities for managing LLM providers and models in {{site.konnect_product_name}}.
-    Create a Provider entity to connect to an LLM service like OpenAI, then create Model entities
-    to specify which models are available for requests.
+    Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to connect and authenticate to an LLM service like OpenAI, then create a [Model](/ai-gateway/entities/ai-model/) entity to specify which model is available for requests.
 
-    This tutorial shows you how to set up a Provider and Model in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API.
+    This tutorial shows you how to set up an AI Provider and AI Model for OpenAI in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API and how to proxy your first request to OpenAI.
 
 tools:
   - konnect-api
@@ -49,9 +48,9 @@ min_version:
 
 ---
 
-## Create a Provider entity
+## Create an AI Provider entity
 
-Create a [Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
+Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to OpenAI and store your authentication credentials:
 
 <!-- vale off -->
 {% konnect_api_request %}
@@ -74,9 +73,15 @@ body:
 {% endkonnect_api_request %}
 <!-- vale on -->
 
-## Create a Model entity
+In this example, we're setting up the AI Provider with:
 
-Create a [Model](/ai-gateway/entities/ai-model/) entity to specify which LLM models are available and declare their capabilities. Each capability generates a route on the service:
+* `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
+* `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
+* `config.auth`: Stores your OpenAI API key. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+
+## Create an AI Model entity
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
 
 <!-- vale off -->
 {% konnect_api_request %}
@@ -111,8 +116,15 @@ body:
 {% endkonnect_api_request %}
 <!-- vale on -->
 
-{:.info}
-> The `generate` capability creates a `/chat/completions` route. The `paths: ["/v1"]` setting defines the base path, so the final route becomes `/v1/chat/completions`.
+In this example, we're setting up the AI Model with:
+
+* `type: model`: Specifies this is a synchronous model for request/response workloads.
+* `name: my-gpt-4o`: A unique identifier for this model.
+* `formats: [type: openai]`: Declares that this model accepts requests in OpenAI-compatible format.
+* `config.route.paths: [/v1]`: Configures the custom base path where this model's routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific routes.
+* `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
+* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider you created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
+* `config.logging`: Configures what gets logged. With `statistics: true`, usage metrics (tokens, latency, cost) are logged for monitoring and billing. With `payloads: false`, full request/response bodies are not logged for privacy.
 
 ## Validate
 
