@@ -15,30 +15,6 @@ extended_description: |
 
   {% include_cached plugins/oidc/client-auth.md %}
 
-  {% entity_example %}
-  type: plugin
-  data:
-    name: openid-connect
-    config:
-      issuer: ${issuer}
-      client_id:
-        - ${client-id}
-      client_secret:
-        - ${client-secret}
-      client_auth:
-        - client_secret_post
-      auth_methods:
-        - authorization_code
-        - session
-      response_mode: form_post
-      preserve_query_args: true
-      login_action: redirect
-      login_tokens: null
-      principals:
-        enabled: true
-        directory: ${directory-name}
-  {% endentity_example %}
-
 weight: 900
 
 requirements:
@@ -68,7 +44,7 @@ variables:
   issuer:
     value: $ISSUER
     description: |
-      The issuer authentication URL for your IdP. As this example uses Kong Identity as the IdP, the issuer URL should look like `https://xxx.<region>.identity.konghq.tech/auth`.
+      The issuer authentication URL for your IdP. Since this example uses {{site.identity}} as the IdP, the auth server issuer URL should look like `https://xxx.<region>.identity.konghq.tech/auth`.
   client-id:
     value: $CLIENT_ID
     description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
