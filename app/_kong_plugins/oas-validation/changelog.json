@@ -1,4 +1,21 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added opt-in structured validation errors via the new\n`structured_errors` field, which provides structured error details. Use the\n`max_structured_errors` field (must be greater than 0) to cap the number of\nreturned errors in structured format; when unset, all errors are returned.\nWhen `structured_errors` is disabled, the plugin preserves the original\nnon-structured error format.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the OAS specification cache failed to distinguish between different values of `api_spec_encoded` for the same specification content.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where path parameters were extracted from the wrong URI segment when `custom_base_path` was used with bare `/{param}` paths.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",

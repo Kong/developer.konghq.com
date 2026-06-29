@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed an issue where the plugin handled requests from unix socket incorrectly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where blocking an IP over TCP would log error: \"function cannot be called in preread phase\" (#14749)\n",
