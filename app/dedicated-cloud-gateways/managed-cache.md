@@ -176,6 +176,9 @@ Managed caches are either created at the control plane or control plane group-le
 
 {% include /gateway/dcgw-cpg-note.md %}
 
+{:.warning}
+> **Data plane required to use a managed cache**: Before you create a managed cache, make sure you've created a [Dedicated Cloud Gateway network](/dedicated-cloud-gateways/network-architecture/#configure-a-dedicated-cloud-gateway-network), control plane, and at least one data plane. If you create a managed cache before you've set up a data plane, the managed cache will display as `Ready` but you won't be able to use it until a data plane is created.
+
 To create a managed cache at the control plane level, do the following:
 
 {% navtabs "managed-cache" %}
@@ -287,6 +290,16 @@ region: global
    terraform apply
    ```
 
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. In the API Gateways sidebar, click **Gateways**.
+1. Select your Dedicated Cloud Gateway.
+1. Click the **Redis** tab.
+1. Click **New Redis**.
+1. Click **Konnect-managed Redis**.
+1. In the **Name** field, enter a name for your managed cache.
+1. Click **Save**.
 {% endnavtab %}
 {% endnavtabs %}
 
