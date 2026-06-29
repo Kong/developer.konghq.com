@@ -20,7 +20,7 @@ module Jekyll
           super
             .merge(
               'schema' => @policy.schema,
-              'has_overview?' => !!@policy.overview_content.empty?,
+              'has_overview?' => !@policy.overview_content.empty?,
               'title' => "#{@policy.metadata['title']} Policy"
             )
         end
