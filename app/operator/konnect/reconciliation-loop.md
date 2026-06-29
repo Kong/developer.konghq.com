@@ -13,6 +13,10 @@ breadcrumbs:
     group: Konnect
     section: Key Concepts
 
+related_resources:
+  - text: "{{site.operator_product_name}} architecture"
+    url: /operator/reference/architecture/
+
 faqs:
   - q: How often does the reconcile loop run?
     a: |

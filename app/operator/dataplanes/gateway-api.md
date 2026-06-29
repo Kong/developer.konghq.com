@@ -13,6 +13,13 @@ breadcrumbs:
     group: Gateway Deployment
     section: Key Concepts
 
+related_resources:
+  - text: "{{site.operator_product_name}} architecture"
+    url: /operator/reference/architecture/
+  - text: "Managed Gateways"
+    url: /operator/dataplanes/managed-gateways/
+  - text: "Gateway configuration"
+    url: /operator/dataplanes/gateway-configuration/
 ---
 
 Both {{ site.operator_product_name }} and [{{ site.kic_product_name }}](/kubernetes-ingress-controller/) can be configured using the [Kubernetes Gateway API](https://github.com/kubernetes-sigs/gateway-api). Configure your vendor-independent `GatewayClass` and `Gateway` objects, and {{ site.operator_product_name }} translates those requirements into Kong specific configuration.
