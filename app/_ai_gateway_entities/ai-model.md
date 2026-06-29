@@ -237,6 +237,9 @@ When an AI Model has more than one target, the [load balancer](#schema-aigateway
 
 The [`algorithm`](#schema-aigateway-model-config-balancer-algorithm) field lets you choose how to distribute requests across target models based on your priorities. Select a strategy to optimize for cost, latency, even distribution, intelligent routing, or failover behavior.
 
+{:.info}
+> For detailed behavior, tuning guidance, and examples for each algorithm, see [Load balancing](/ai-gateway/load-balancing/).
+
 <!-- vale off -->
 {% table %}
 columns:
