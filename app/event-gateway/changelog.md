@@ -16,7 +16,7 @@ Changelog for supported {{site.event_gateway}} versions.
 
 ## 1.2.0
 
-**Release date**: TBA
+**Release date**: 2026/06/29
 
 ### Deprecations & Behavior Changes
 
