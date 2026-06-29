@@ -83,7 +83,7 @@ This policy runs during the [consume phase](/event-gateway/entities/policy/#phas
 
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
-{% include_cached /knep/how-encrypt-works.md %}
+{% include_cached /knep/how-encrypt-fields-works.md %}
 
 ### Key sources
 
