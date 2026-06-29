@@ -9,8 +9,7 @@ extended_description: |
 
   {% include_cached plugins/oidc/diagrams/auth-code.md %}
 
-  {% include_cached plugins/oidc/identity-server-intro.md %}
-  To use an external authorization server like Keycloak,
+  For a full example that shows you how to set up the authorization code flow with Keycloak, 
   see [Configure OpenID Connect with the auth code flow](/how-to/configure-oidc-with-auth-code-flow/).
 
   {% include_cached plugins/oidc/client-auth.md %}
@@ -18,7 +17,7 @@ extended_description: |
 weight: 900
 
 requirements:
-  - "{% include_cached plugins/oidc/idp-requirement.md %}"
+  - A configured identity provider (IdP)
 
 config:
   issuer: ${issuer}
@@ -31,29 +30,23 @@ config:
   auth_methods:
     - authorization_code
     - session
-  
   response_mode: form_post
   preserve_query_args: true
   login_action: redirect
   login_tokens: null
-  principals:
-    enabled: true
-    directory: ${directory-name}
 
 variables:
   issuer:
     value: $ISSUER
     description: |
-      The issuer authentication URL for your IdP. Since this example uses {{site.identity}} as the IdP, the auth server issuer URL should look like `https://xxx.<region>.identity.konghq.tech/auth`.
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
   client-id:
     value: $CLIENT_ID
     description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
   client-secret:
     value: $CLIENT_SECRET
     description: The client secret needed to connect to your IdP.
-  directory-name:
-    value: $DIRECTORY_NAME
-    description: The name of the {{ site.identity }} directory used for principals lookup.
 
 tools:
   - deck
