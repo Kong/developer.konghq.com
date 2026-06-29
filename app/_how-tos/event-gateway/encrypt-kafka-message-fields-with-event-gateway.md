@@ -1,6 +1,6 @@
 ---
-title: Encrypt and decrypt Kafka messages with {{site.event_gateway}}
-permalink: /event-gateway/encrypt-kafka-messages-with-event-gateway/
+title: Encrypt and decrypt Kafka fields in message values with {{site.event_gateway}}
+permalink: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
@@ -14,12 +14,12 @@ works_on:
 tags:
     - kafka
 
-description: Use this tutorial to encrypt and decrypt Kafka messages with {{site.event_gateway}} using a static key.
+description: Use this tutorial to encrypt and decrypt Kafka fields in Kafka message values with {{site.event_gateway}} using a static key.
 
-tldr: 
-  q: How can I encrypt and decrypt Kafka messages with {{site.event_gateway}}?
-  a: | 
-    Generate a key and create a [static key](/event-gateway/entities/static-key/) entity, then create [Encrypt](/event-gateway/policies/encrypt/) and [Decrypt](/event-gateway/policies/decrypt/) policies to enable message encryption and decryption.
+tldr:
+  q: How can I encrypt and decrypt Kafka specific fields of message values with {{site.event_gateway}}?
+  a: |
+    Generate a key and create a [static key](/event-gateway/entities/static-key/) entity, then create [field encryption](/event-gateway/policies/encrypt-fields/) and [field decryption](/event-gateway/policies/decrypt-fields/) policies to enable message encryption and decryption.
 
 tools:
     - konnect-api
@@ -29,7 +29,7 @@ prereqs:
     - title: Install kafkactl
       position: before
       content: |
-        Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
+        Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters.
 
     - title: Start a local Kafka cluster
       position: before
@@ -48,17 +48,17 @@ related_resources:
     url: /event-gateway/
   - text: Static keys
     url: /event-gateway/entities/static-key/
-  - text: Encrypt policy
-    url: /event-gateway/policies/encrypt/
-  - text: Decrypt policy
-    url: /event-gateway/policies/decrypt/
-  - text: Encrypt and decrypt Kafka message fields
-    url: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
+  - text: Encrypt Fields policy
+    url: /event-gateway/policies/encrypt-fields/
+  - text: Decrypt Fields policy
+    url: /event-gateway/policies/decrypt-fields/
+  - text: Encrypt and decrypt Kafka messages
+    url: /event-gateway/encrypt-kafka-messages-with-event-gateway/
 ---
 
 {:.info}
-> If you need to encrypt and decrypt Kafka message fields instead of entire messages, use the Decrypt Fields and Encrypt Fields policies. 
-See [Encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/) for a complete how-to guide.
+> If you need to encrypt and decrypt whole Kafka messages instead of specific fields, use the Decrypt and Encrypt policies. 
+See [Encrypt and decrypt Kafka messages](/event-gateway/encrypt-kafka-messages-with-event-gateway/) for a complete how-to guide.
 
 ## Configure a Kafka cluster
 
@@ -169,7 +169,7 @@ capture:
 ## Add a listener policy
 
 The listener needs a policy to tell it how to process requests and what to do with them.
-In this example, we're going to use the [Forward to Virtual Cluster](/event-gateway/policies/forward-to-virtual-cluster/) policy, 
+In this example, we're going to use the [Forward to Virtual Cluster](/event-gateway/policies/forward-to-virtual-cluster/) policy,
 which will forward requests based on a defined mapping to our virtual cluster.
 
 Run the following command to add the listener policy:
@@ -185,12 +185,12 @@ body:
   config:
     type: port_mapping
     advertised_host: localhost
-    destination: 
+    destination:
       id: $VIRTUAL_CLUSTER_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
-For demo purposes, we're using port mapping, which assigns each Kafka broker to a dedicated port on the {{site.event_gateway_short}}. 
+For demo purposes, we're using port mapping, which assigns each Kafka broker to a dedicated port on the {{site.event_gateway_short}}.
 In production, we recommend using [SNI routing](/event-gateway/architecture/#hostname-mapping) instead.
 
 ## Generate a key
@@ -217,9 +217,9 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Add an Encrypt policy
+## Create a Schema Validation produce policy
 
-Use the following command to create an [Encrypt policy](/event-gateway/policies/encrypt/) to enable encryption of messages:
+Create a [Schema Validation policy](/event-gateway/policies/schema-validation-produce/) that validates that all produced values are JSON encoded.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -227,23 +227,51 @@ url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/p
 status_code: 201
 method: POST
 body:
-  name: encrypt-static-key
-  type: encrypt
+  type: schema_validation
+  name: produce_validate_json
   config:
-    failure_mode: passthrough
-    part_of_record:
-        - value
-    encryption_key:
-        type: static
-        key:
+    type: json
+    value_validation_action: reject
+extract_body:
+  - name: id
+    variable: PRODUCE_SCHEMA_VALIDATION_ID
+capture:
+  - variable: PRODUCE_SCHEMA_VALIDATION_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The `value_validation_action: reject` setting ensures that the entire batch containing an invalid message is rejected, and the producer receives an error. 
+Alternatively, you can use `mark`, which passes the message to the broker but adds a `kong/sverr-value` header to flag it as invalid.
+
+## Add a field encryption policy
+
+Use the following command to create a [field encryption policy](/event-gateway/policies/encrypt-fields/) to enable encryption of one field in the JSON value:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/produce-policies
+status_code: 201
+method: POST
+body:
+  name: encrypt-fields-static-key
+  parent_policy_id: $PRODUCE_SCHEMA_VALIDATION_ID
+  type: encrypt_fields
+  config:
+    failure_mode: reject
+    encrypt_fields:
+      - paths:
+        - match: "personal.ssn"
+        encryption_key:
+          type: static
+          key:
             name: my-key
 {% endkonnect_api_request %}
 <!--vale on-->
 
+## Create a Schema Validation consume policy
 
-## Add a Decrypt policy
-
-Use the following command to create a [Decrypt policy](/event-gateway/policies/decrypt/) to enable decryption of messages:
+Create a [Schema Validation policy](/event-gateway/policies/schema-validation-consume/) that validates that all consumed values are JSON encoded.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -251,18 +279,46 @@ url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/c
 status_code: 201
 method: POST
 body:
-  name: decrypt-static-key
-  type: decrypt
+  type: schema_validation
+  name: consume_validate_json
   config:
-    failure_mode: passthrough
-    part_of_record:
-        - value
-    key_sources:
-        - type: static
+    type: json
+    value_validation_action: mark
+extract_body:
+  - name: id
+    variable: CONSUME_SCHEMA_VALIDATION_ID
+capture:
+  - variable: CONSUME_SCHEMA_VALIDATION_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Validate 
+The `value_validation_action: mark` passes the message to the broker but adds a `kong/sverr-value` header to flag it as invalid.
+
+## Add a field decryption policy
+
+Use the following command to create a [field decryption policy](/event-gateway/policies/decrypt-fields/) to enable decryption of one field in the JSON value:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/consume-policies
+status_code: 201
+method: POST
+body:
+  name: decrypt-fields-static-key
+  parent_policy_id: $CONSUME_SCHEMA_VALIDATION_ID
+  type: decrypt_fields
+  config:
+    failure_mode: error
+    key_sources:
+      - type: static
+    decrypt_fields:
+      paths:
+        - match: "personal.ssn"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Validate
 
 Let's check that the encryption/decryption works.
 First, create a topic using the `direct` context, which is a direct connection to our Kafka cluster:
@@ -279,7 +335,7 @@ render_output: false
 Produce a message using the `vc` context which should encrypt the message:
 {% validation custom-command %}
 command: |
-  kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="Hello World"
+  kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value='{"personal": {"ssn": "100-00-00001"}}'
 expected:
   message: "message produced (partition=0	offset=0)"
   return_code: 0
@@ -293,46 +349,47 @@ message produced (partition=0	offset=0)
 ```
 {:.no-copy-code}
 
-Now let's verify that the message was encrypted, by consuming the message directly.
+Now let's verify that the message was encrypted by consuming the message directly:
 
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context direct consume my-test-topic --exit --output json --from-beginning --print-headers
 expected:
-  message: '"kong/enc": "\u0000\u0001\u0000-static://'
+  message: '"kong/enc": "\u0000\u0004\u0000-static://'
   return_code: 0
 render_output: false
 {% endvalidation %}
 
 You should see the following response:
-```shell
+```json
 {
 	"Partition": 0,
 	"Offset": 0,
 	"Headers": {
-		"kong/enc": "\u0000\u0001\u0000-static://<static-key-id>"
+		"kong/enc": "\u0000\u0004\u0000-static://<static-key-id>"
 	},
-	"Value": "deJ415liQWUEP8j33Yrb/7knuwRzHrHNRDQkkePePZ18MShhlY9A++ZFH/9uaHRb+Q=="
+	"Value": "{\"personal\":{\"ssn\":\"AHry69Jl4oJzafOlu/xOjVa37hpfYTAVXoAolj94NoBQSKz7dkEF/gg=\"}}"
 }
 ```
 {:.no-copy-code}
 
-The Encrypt policy appends a `kong/enc` header to each message. This header identifies the encryption key by its ID.
+The field encryption policy appends a `kong/enc` header to each message. This header identifies the encryption key by its ID.
 
-Now let's verify that the Decrypt policy works by consuming the message through the virtual cluster.
+Now let's verify that the field decryption policy works by consuming the message through the virtual cluster:
 
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context vc consume my-test-topic --from-beginning  --exit
 expected:
-  message: "Hello World"
+  message: '{"personal": {"ssn": "100-00-00001"}}'
   return_code: 0
 render_output: false
 {% endvalidation %}
 
-The output should contain your new header:
-```shell
-Hello World
+The output should look like this, with the value decrypted:
+
+```json
+{"personal": {"ssn": "100-00-00001"}}
 ```
 {:.no-copy-code}
 

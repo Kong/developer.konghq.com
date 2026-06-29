@@ -321,7 +321,7 @@ body:
 
 This ACL policy grants full access to all topics with the prefix in the `topic_prefix` claim.
 
-## Setup `kafkactl` to use OAuth
+## Set up `kafkactl` to use OAuth
 
 {:.warning}
 > This step requires a `kafkactl` version >= 5.17.0. To check your version, run `kafkactl version`.
