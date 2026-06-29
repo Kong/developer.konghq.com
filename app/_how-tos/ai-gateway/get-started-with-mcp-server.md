@@ -21,8 +21,12 @@ tags:
   - mcp
 
 tldr:
-  q: How do I expose a REST API as MCP tools in {{site.ai_gateway}}?
-  a: Create an MCP Server entity that exposes REST endpoints as MCP tools. Each tool definition includes method, path, and parameter mappings to route requests to the upstream API.
+  q: How do I expose REST APIs as MCP tools in {{site.ai_gateway}}?
+  a: |
+    {{site.ai_gateway}} provides first-class MCP Server entities in {{site.konnect_product_name}} that expose REST APIs as tools for MCP-compatible clients.
+    Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity configured as a `conversion-listener` to convert REST endpoints into MCP tools that clients can call directly, without managing API credentials.
+
+    This tutorial shows you how to set up an AI MCP Server to expose the [WeatherAPI](https://openweathermap.org/api/one-call-4?collection=one_call_api) in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API and how to proxy your first MCP request.
 
 tools:
   - konnect-api
@@ -53,9 +57,7 @@ cleanup:
 
 ## Create an MCP Server entity
 
-Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool:
-
-- `get-current-weather`
+Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool called `get-current-weather`.
 
 This tool maps to the WeatherAPI `/v1/current.json` endpoint and accepts a location query parameter.
 
@@ -107,6 +109,16 @@ body:
           description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
 {% endkonnect_api_request %}
 <!-- vale on -->
+
+In this example, we're setting up the MCP Server with:
+
+* `type: conversion-listener`: Exposes a RESTful API as MCP tools. The runtime converts the WeatherAPI into MCP-compatible tools that MCP clients can call directly.
+* `name: weather-mcp`: A unique identifier for this MCP Server.
+* `config.url`: The upstream API endpoint that this MCP Server proxies to.
+* `config.route.paths: [/weather]`: The path where MCP clients access this server over HTTP.
+* `tools`: Defines the MCP tools available. Each tool maps to an upstream API operation. Here, `get-current-weather` is exposed from the WeatherAPI `/v1/current.json` endpoint. The `query.key` field injects your WeatherAPI credentials automatically—this is how {{site.ai_gateway}} exposes the REST API and converts it into an MCP tool that clients can call without needing to manage the API key.
+* `config.logging`: With `statistics: true`, usage metrics are logged. With `payloads: false`, request/response bodies are not logged for privacy.
+* `acls`: Configures who can access the MCP Server. Since this setup has no AI Consumer entities, the `__never_match__` rule effectively allows unrestricted access.
 
 ## Validate the MCP Server
 
