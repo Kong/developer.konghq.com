@@ -16,6 +16,28 @@ breadcrumbs:
 
 description: "Learn how {{site.identity}} principals and directories represent authenticating entities and centralize identity, credentials, and metadata across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}}."
 
+faqs:
+  - q: What principal data is stored in, or sent to {{site.konnect_short_name}}?
+    a: |
+      Principal data, including identities, credentials, and metadata, is stored in {{site.konnect_short_name}}. Principals are stored in a specific {{site.konnect_short_name}} region and are accessed by gateways whose control planes are also managed by {{site.konnect_short_name}} in the same region.
+
+      {{site.konnect_short_name}} does not directly store credentials, such as API keys or usernames and passwords, associated with principals. 
+      Instead, it stores one-way, salted hashes of this data. 
+      This means {{site.konnect_short_name}} cannot retrieve passwords after they have been created; it can only verify if a password matches one supplied in a request.
+  - q: What data is sent to {{site.konnect_short_name}} from a gateway to perform authentication?
+    a: |
+      When a gateway needs to identify the principal associated with a particular request or event, it must make an authentication or identification (lookup) transmission from a data plane of that gateway to the {{site.konnect_short_name}} API, which is subject to the Kong Service Level Agreement.
+
+      All such transmissions are securely encrypted using mutual transport layer security (mTLS) in transit, using the same certificates and keys that are used to authenticate to {{site.konnect_short_name}} to retrieve information from the {{site.konnect_short_name}} control plane.
+      Depending on which authentication method you use, the decoded username and password, API key, or decoded identifiers are sent, encrypted via mTLS, to {{site.konnect_short_name}} to authenticate and identify the principal.
+  - q: What data is sent from {{site.konnect_short_name}} to a gateway following authentication?
+    a: |
+      Following an authentication handshake, the following information is returned over the same connection from {{site.konnect_short_name}} back to the data plane:
+
+      * The UUID of the authenticated/identified principal
+      * The display name of the authenticated/identified principal
+      * Metadata keys and values associated with the authenticated/identified principal
+
 related_resources:
   - text: "{{site.identity}}"
     url: /kong-identity/

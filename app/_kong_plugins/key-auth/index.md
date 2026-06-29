@@ -52,6 +52,10 @@ The Key Authentication plugin lets you add API key authentication to a [Gateway 
 
 The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key-auth-enc/), provides the ability to encrypt keys. Keys are encrypted at rest in the {{site.base_gateway}} data store.
 
+## Authentication methods
+
+{% include_cached /plugins/consumers-vs-principals.md name=page.name %}
+
 ## Request behavior matrix
 
 {% include_cached /plugins/key-auth/request-behavior.md %}
