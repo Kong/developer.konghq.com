@@ -234,7 +234,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
           - /v1
       model: {}
       proxy:
-        http_proxy_host: secure.mycompany/v1
+        http_proxy_host: secure.mycompany
         http_proxy_port: 443
         proxy_scheme: http
     targets:
@@ -307,7 +307,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
       server:
         timeout: 60000
       proxy:
-        http_proxy_host: secure.mycompany/weather
+        http_proxy_host: secure.mycompany
         http_proxy_port: 8080
         proxy_scheme: http
     tools:
