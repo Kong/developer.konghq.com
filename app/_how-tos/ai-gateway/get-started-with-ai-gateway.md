@@ -24,7 +24,7 @@ tldr:
     Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to connect and authenticate to an LLM service like OpenAI, then create an [AI
     Model](/ai-gateway/entities/ai-model/) entity to specify which model is available for requests.
 
-    This tutorial shows you how to set up an AI Provider and AI Model for OpenAI in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API and how to proxy your first request to OpenAI.
+    This tutorial shows you how to set up an AI Provider and AI Model for OpenAI in {{site.konnect_product_name}} using the {{site.konnect_short_name}} API and how to proxy your first request to OpenAI.
 
 tools:
   - konnect-api
@@ -122,9 +122,9 @@ In this example, we're setting up the AI Model with:
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-gpt-4o`: A unique identifier for this model.
 * `formats: [type: openai]`: Declares that this model accepts requests in OpenAI-compatible format.
-* `config.route.paths: [/v1]`: Configures the custom base path where this model's routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific routes.
+* `config.route.paths: [/v1]`: Configures the custom base path where this model's Routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific Routes.
 * `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
-* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider you created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
+* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
 * `config.logging`: Configures what gets logged. With `statistics: true`, usage metrics (tokens, latency, cost) are logged for monitoring and billing. With `payloads: false`, full request/response bodies are not logged for privacy.
 
 ## Validate
@@ -139,7 +139,6 @@ method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
   - role: "user"

@@ -1,9 +1,9 @@
 {% assign summary='{{site.ai_gateway}} running' %}
 {% capture details_content %}
 
-This is a Konnect tutorial and requires a Konnect personal access token.
+This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_short_name}} personal access token.
 
-1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
 
 1. Export your token to an environment variable:
 
@@ -11,7 +11,7 @@ This is a Konnect tutorial and requires a Konnect personal access token.
    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
    ```
 
-1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/quickstart/ai) to automatically provision a Control Plane and Data Plane in {{site.konnect_product_name}}, and configure your environment:
+1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/quickstart/ai) to automatically provision a control plane and data plane in {{site.konnect_product_name}}, and configure your environment:
 
    ```bash
    curl -Ls https://get.konghq.com/quickstart/ai | bash -s -- -k $KONNECT_TOKEN
