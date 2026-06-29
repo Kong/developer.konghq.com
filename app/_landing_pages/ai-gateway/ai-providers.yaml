@@ -5,7 +5,6 @@ metadata:
   products:
     - ai-gateway
   works_on:
-    - on-prem
     - konnect
   breadcrumbs:
     - /ai-gateway/
@@ -23,7 +22,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The core of [{{site.ai_gateway}}](/ai-gateway/) is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
+                    The core of [{{site.ai_gateway}}](/ai-gateway/) is the ability to serve AI [Models](/ai-gateway/entities/ai-model/) from various [Providers](/ai-gateway/entities/ai-provider/) via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
 
                 - type: unordered_list
                   items:
@@ -31,7 +30,7 @@ rows:
                     - Centralized AI provider credential management
                     - The {{site.ai_gateway}} gives developers and organizations a central point of governance and observability over AI data and usage
                     - Request routing can be dynamic, allowing AI usage to be optimized based on various metrics
-                    - AI services can be used by other {{site.base_gateway}} plugins to augment non-AI API traffic
+                    - AI services can be used by {{site.base_gateway}} to augment non-AI API traffic
   - column_count: 3
     columns:
       - blocks:
@@ -66,9 +65,16 @@ rows:
         - type: icon_card
           config:
             title: Vertex AI
-            icon: /assets/icons/Vertex.svg
+            icon: /assets/icons/vertex.svg
             cta:
               url: /ai-gateway/ai-providers/vertex/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Vercel
+            icon: /assets/icons/vercel.svg
+            cta:
+              url: /ai-gateway/ai-providers/vercel/
       - blocks:
         - type: icon_card
           config:
@@ -121,6 +127,13 @@ rows:
       - blocks:
         - type: icon_card
           config:
+            title: Kimi
+            icon: /assets/icons/kimi.svg
+            cta:
+              url: /ai-gateway/ai-providers/kimi/
+      - blocks:
+        - type: icon_card
+          config:
             title: Cerebras
             icon: /assets/icons/cerebras.svg
             cta:
@@ -161,7 +174,7 @@ rows:
                 - type: text
                   text: |
                     {:.info}
-                    > Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types.
+                    > Note that some providers may not be available or require different configuration steps depending on your {{site.base_gateway}} version, and some providers don't support all route types.
                     > See the specific provider documentation for more details.
 
   - header:
@@ -172,11 +185,8 @@ rows:
         - type: reference_list
           config:
             pages:
-              - /plugins/ai-proxy/
-              - /plugins/ai-proxy-advanced/
               - /ai-gateway/load-balancing/
               - /ai-gateway/resource-sizing-guidelines-ai/
-              - /how-to/?tags=ai
   - header:
       text: "Frequently Asked Questions"
       type: h2
@@ -186,32 +196,32 @@ rows:
           config:
             - q: Can I authenticate to Azure AI with Azure Identity?
               a: |
-                {% include faqs/azure-identity.md %}
+                {% include md/ai-gateway/v2/faqs/azure-identity.md %}
 
             - q: How can I set model generation parameters when calling Gemini?
               a: |
-                {% include faqs/gemini-model-params.md %}
+                {% include md/ai-gateway/v2/faqs/gemini-model-params.md %}
             - q: How do I use Gemini's `googleSearch` tool for real-time web searches?
               a: |
-                {% include faqs/gemini-search.md %}
+                {% include md/ai-gateway/v2/faqs/gemini-search.md %}
             - q: How do I control aspect ratio and resolution for Gemini image generation?
               a: |
-                {% include faqs/gemini-image.md %}
+                {% include md/ai-gateway/v2/faqs/gemini-image.md %}
             - q: How do I get reasoning traces from Gemini models?
               a: |
-                {% include faqs/gemini-thinking.md %}
+                {% include md/ai-gateway/v2/faqs/gemini-thinking.md %}
             - q: How do I specify model IDs for Amazon Bedrock cross-region inference profiles?
               a: |
-                {% include faqs/bedrock-models.md %}
+                {% include md/ai-gateway/v2/faqs/bedrock-models.md %}
             - q: How do I set the FPS parameter for video generation for Amazon Bedrock?
               a: |
-                {% include faqs/bedrock-fps.md %}
+                {% include md/ai-gateway/v2/faqs/bedrock-fps.md %}
             - q: How do I use Amazon Bedrock's Rerank API to improve RAG retrieval quality?
               a: |
-                {% include faqs/bedrock-rerank.md %}
+                {% include md/ai-gateway/v2/faqs/bedrock-rerank.md %}
             - q: How do I include guardrail configuration with Amazon Bedrock requests?
               a: |
-                {% include faqs/bedrock-guardrails.md %}
+                {% include md/ai-gateway/v2/faqs/bedrock-guardrails.md %}
             - q: How do I use Cohere's document-grounded chat for RAG pipelines?
               a: |
-                {% include faqs/cohere-rerank.md %}
+                {% include md/ai-gateway/v2/faqs/cohere-rerank.md %}

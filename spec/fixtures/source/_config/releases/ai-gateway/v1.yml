@@ -1,0 +1,11 @@
+app/_how-tos/ai-gateway/v1/valid-page.md:
+  canonical_url: /ai-gateway/valid-page/
+app/_how-tos/ai-gateway/v1/self-canonical.md:
+  canonical_url: /ai-gateway/v1/self-canonical/
+app/_how-tos/ai-gateway/v1/pending-page.md:
+  status: pending
+  canonical_url:
+app/_how-tos/ai-gateway/v1/blank-url-page.md:
+  canonical_url:
+app/_how-tos/ai-gateway/v1/bad-url-page.md:
+  canonical_url: /ai-gateway/nonexistent/

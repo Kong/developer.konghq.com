@@ -11,7 +11,7 @@ works_on:
     - on-prem
 
 min_version:
-    gateway: '3.12'
+    gateway: '2.0'
 
 tags:
     - performance

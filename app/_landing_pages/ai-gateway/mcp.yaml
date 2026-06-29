@@ -1,0 +1,135 @@
+metadata:
+  title: "MCP Traffic Gateway"
+  content_type: landing_page
+  description: This page is an introduction to MCP Traffic Gateway capabilities in {{site.ai_gateway}}.
+  products:
+    - ai-gateway
+  works_on:
+    - konnect
+  min_version:
+    ai-gateway: '2.0'
+  breadcrumbs:
+    - /ai-gateway/
+  tags:
+    - ai
+    - mcp
+
+
+rows:
+  - header:
+      type: h1
+      text: "A trust and control layer for proxying traffic to MCP servers"
+      sub_text: Gain control and visibility over AI agent infrastructure with {{site.ai_gateway}}-driven MCP capabilities
+
+  - header:
+      type: h2
+      text: Bring MCP servers to production securely with {{site.ai_gateway}}
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
+
+              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability. Configure MCP traffic using [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/gateway/mcp-architecture.svg
+              alt_text: Overview of AI gateway
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h2
+                text: "Generate MCP servers from API specs"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.ai_gateway}} {% new_in 2.0 %} manages MCP traffic through the entity model. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to expose MCP tools and services, then attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+          - type: card
+            config:
+              icon: /assets/icons/linked-services.svg
+              title: AI MCP Server entity
+              description: Generate an AI MCP Server from an API spec to expose tools and services over MCP in {{site.ai_gateway}}.
+              cta:
+                text: AI MCP Server reference
+                url: "/ai-gateway/entities/ai-mcp-server/"
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h2
+                text: "Secure and govern MCP servers"
+              blocks:
+                - type: text
+                  text: |
+                    Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entities to apply security, governance, and observability controls across your MCP infrastructure.
+
+                    Use AI Policies to:
+                    - Secure access with the MCP OAuth2 AI Policy or other authentication methods
+                    - Monitor MCP traffic using AI metrics and AI audit logs
+                    - Enforce access controls for MCP tool usage
+                    - Govern usage with rate limiting and traffic control
+          - type: card
+            config:
+              icon: /assets/icons/lock.svg
+              title: Security and governance with AI Policies
+              description: Secure MCP servers and govern traffic with AI Policies.
+              ctas:
+                - text: MCP OAuth2 policy
+                  url: "/ai-gateway/policies/ai-mcp-oauth2/"
+                - text: Rate Limiting
+                  url: "/ai-gateway/policies/rate-limiting/"
+                - text: Observability
+                  url: "/ai-gateway/ai-audit-log-reference/#ai-mcp-logs"
+
+  - header:
+      type: h2
+      text: "Observe MCP traffic"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.ai_gateway}} records detailed Model Context Protocol (MCP) traffic data so you can analyze how requests are processed and resolved.
+                    - Logs capture session IDs, JSON-RPC method calls, payloads, latencies, and errors.
+                    - Metrics track latency, response sizes, and error counts over time, giving you a complete view of MCP server performance and behavior.
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic audit log
+            description: Learn about {{site.ai_gateway}} logging capabilities for MCP traffic.
+            cta:
+              url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic metrics
+            description: Expose and visualize MCP metrics for traffic observability.
+            cta:
+              url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
+              align: end
+
+  - header:
+      type: h2
+      text: "MCP Registry (tech preview)"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}.
+                    This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
+          - type: button
+            config:
+              text: "Enable MCP Registry in {{site.konnect_short_name}} Labs"
+              url: /catalog/mcp-registry/
+

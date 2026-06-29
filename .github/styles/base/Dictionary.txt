@@ -11,6 +11,7 @@ ai_rate_limiting_policy
 agentic
 Agno
 Agno's
+AIGateway
 Alertmanager
 Alibaba
 allow_terminated
@@ -410,6 +411,8 @@ kiali
 Kibana
 kibibytes
 kic
+kimi
+Kimi
 knative
 Knative's
 Knatives
@@ -471,6 +474,7 @@ M_Account
 M_Link
 M_Resource
 maglev
+major_version
 matchers
 max_args
 max_headers
@@ -888,6 +892,8 @@ validators
 Valkey
 vararg
 vc
+vercel
+Vercel
 viewport
 viewports
 vllm

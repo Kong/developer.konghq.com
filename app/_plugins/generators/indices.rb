@@ -91,7 +91,7 @@ module Jekyll
           }.merge(section)
         end
 
-        all = [].concat(site.pages, site.documents)
+        all = [].concat(site.pages, site.documents).reject { |page| page.data['published'] == false }
         all.each do |page|
           next if page.data['skip_index'] || page_is_versioned(page)
 

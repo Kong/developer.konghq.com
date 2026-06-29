@@ -34,6 +34,8 @@ include:
 
 # Collections
 collections:
+  ai_gateway_entities:
+    output: true
   gateway_entities:
     output: true
   how-tos:
@@ -54,6 +56,16 @@ defaults:
       permalink: "/how-to/:path/"
       breadcrumbs:
         - "/how-to/"
+  - scope:
+      path: "_ai_gateway_entities"
+      type: "ai_gateway_entities"
+    values:
+      layout: "gateway_entity"
+      permalink: "/ai-gateway/entities/:path/"
+      products:
+        - ai-gateway
+      breadcrumbs:
+        - "/ai-gateway/"
   - scope:
       path: "_gateway_entities"
       type: "gateway_entities"
@@ -118,6 +130,21 @@ reference_metadata:
         - on-prem
         - konnect
 
+ai_gateway_policies:
+  metadata:
+    keep:
+      - title
+      - name
+      - description
+      - tags
+      - icon
+      - categories
+      - search_aliases
+      - publisher
+      - third_party
+      - premium_partner
+      - support_url
+
 insomnia_run: https://insomnia.rest/run/
 
 # product name vars
@@ -157,11 +184,14 @@ grok: Grok
 cerebras: Cerebras
 ollama: Ollama
 deepseek: DeepSeek
+vercel: Vercel
+kimi: Kimi
 # Product names
 google_cloud: Google Cloud
 google_analytics: Google Analytics
 claude: Claude
 claude_code: Claude Code
+kimi_code: Kimi Code
 gtm: Google Tag Manager
 
 
@@ -176,8 +206,6 @@ skills_repo_branch: main
 skills_repo_slug: kong/ai-marketplace
 skills_repo_path: app/.repos/ai-marketplace
 
-
-plugin_schemas_path: app/_schemas/gateway/plugins
 
 mesh_policy_schemas_path: app/.repos/kuma/app/assets/
 
