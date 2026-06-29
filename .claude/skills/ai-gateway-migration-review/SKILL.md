@@ -84,6 +84,12 @@ For everything else:
   - `/plugins/ai-prompt-guard/` → `/ai-gateway/policies/ai-prompt-guard/`
   - `/plugins/?category=ai` → `/ai-gateway/policies/`
 
+- **Links to the Plugin entity**: When a link points at the Gateway Plugin entity page `/gateway/entities/plugin/` *but refers to an AI Policy*, replace it with the AI Policy entity page `/ai-gateway/entities/ai-policy/`. For example:
+  - `[AI Policy](/gateway/entities/plugin/)` → `[AI Policy](/ai-gateway/entities/ai-policy/)`
+  - `[AI Prompt Guard Policy](/gateway/entities/plugin/)` → `[AI Prompt Guard Policy](/ai-gateway/entities/ai-policy/)`
+
+  Be careful: `/gateway/entities/plugin/` can also be a legitimate reference to the generic Gateway Plugin entity — for instance when a page contrasts AI Policies with how {{site.base_gateway}} plugins work. Only rewrite when the link is genuinely about an AI Policy. **Flag ambiguous cases for manual review** rather than rewriting automatically.
+
 - **Exception — flag these**: Any reference to AI A2A Proxy, AI MCP Proxy, AI Proxy, or AI Proxy Advanced as plugins should be flagged for manual review (these don't have policy equivalents).
 
 - **Landing page plugin blocks**: In YAML landing pages (`.yaml` files under `_landing_pages/`), replace `type: plugin` blocks with `type: aigw_policy`. Example:
