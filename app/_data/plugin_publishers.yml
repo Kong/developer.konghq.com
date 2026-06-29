@@ -4,8 +4,8 @@ kong-inc:
 optum:
   name: Optum
 
-traceable-ai:
-  name: Traceable.ai
+harness:
+  name: Harness WAAP
 
 the-lego-group:
   name: The LEGO Group
