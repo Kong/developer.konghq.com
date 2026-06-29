@@ -123,7 +123,7 @@ rows:
                     This applies across permission types in Konnect, including control plane permissions, API permissions, and Portal permissions. For example, a user with access to a specific control plane will see analytics data for that control plane only.
 
                     Keep the following in mind when you are determining access and permissions to {{site.observability}}:
-                    * Explorer and Debugger are available to all {{site.observability}} users without extra role assignments.
+                    * Analytics tools (Requests, Explorer, and Debugger) are available to all {{site.observability}} users without extra role assignments.
                     Users only see traffic and metrics for the control planes within their permissions scope.
                     * Organization Admins and users in the Analytics Admin or Analytics Viewer prebuilt teams have access to {{site.observability}} data across the entire organization.
                     * Access to Dashboards and Reports requires additional role assignments, such as Dashboard Viewer or Report Viewer. 
