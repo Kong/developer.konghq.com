@@ -1,4 +1,16 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added support for forwarding HTTP request\nheaders as native Kafka record headers.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added SASL OAUTHBEARER authentication support.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "The option `security.ssl_verify`, which controls the verification\nof the certificate presented by the server, is now enabled by default.\n",

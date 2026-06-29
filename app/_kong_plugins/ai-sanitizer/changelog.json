@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed an issue where the AI Sanitizer plugin could not parse the request body correctly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "fixed an issue where the sanitizer plugin always sanitize the entire request body, which was fixed with latest message only.\n",

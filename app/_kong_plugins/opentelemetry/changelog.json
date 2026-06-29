@@ -1,4 +1,31 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added support for the `OTEL_RESOURCE_ATTRIBUTES` environment variable. You can now set custom resource attributes for OpenTelemetry instrumentation as secondary resource attributes to the `resource_attributes` configuration.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where request-scoped `resource_attributes` could leak across concurrent queued `traces`, `logs`, and access log exports when the plugin was configured globally.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where template `resource_attributes` in plugin configuration didn't work as expected for metrics.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin crashed when DNS or balancer failures occurred during upstream retries.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Reduced the OTel trace-pipeline CPU overhead.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
