@@ -84,7 +84,7 @@ faqs:
 
 ## What is an AI Model?
 
-Create an AI Model when you want to expose an AI model endpoint through {{site.ai_gateway}} for clients to call. For example, expose multiple LLM providers under a single model name, load-balance traffic across them, add observability to model traffic, or attach policies for security and transformation.
+The AI Model entity lets you expose LLM endpoints through {{site.ai_gateway}} for clients to call. Use AI Models to expose multiple LLM providers under a single endpoint, load-balance traffic across them, add observability to model traffic, or attach policies for security and transformation.
 
 An AI Model declares which capabilities it exposes (like `chat` or `embeddings`), which upstream AI Provider models it routes to, and how requests are distributed and logged. {{site.ai_gateway}} handles the routing and translation, so clients interact with a single unified endpoint.
 
@@ -122,19 +122,12 @@ An AI Model is a managed entity—{{site.ai_gateway}} owns its runtime configura
 
 ## Capabilities
 
-The [`capabilities`](#schema-aigateway-model-capabilities) field tells {{site.ai_gateway}} which AI workflows the Model exposes. Each capability becomes one Route on the generated Service. A Model must declare at least one capability.
+When you expose an AI Model, you choose which AI capabilities it provides through the [`capabilities`](#schema-aigateway-model-capabilities) field. The [`type`](#schema-aigateway-model-type) you select determines which capabilities are available:
 
-Model [`type`](#schema-aigateway-model-type) controls which capability set applies:
-
-* `model`: synchronous request/response workloads. Supported capabilities are `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, and `rerank`.
-* `api`: asynchronous workloads. Supported capabilities are `batches` and `files`.
+* **`model` type**: for synchronous request/response workloads. Available capabilities: `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, `rerank`.
+* **`api` type**: for asynchronous batch processing. Available capabilities: `batches`, `files`.
 
 Not every AI Provider supports every capability. The set of capabilities you can declare on an AI Model depends on what the AI Provider in [`targets`](#schema-aigateway-model-targets) exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
-
-{:.info}
-> **OpenAI-compatible format**
->
-> By default, AI Models expose endpoints using OpenAI-compatible format at `/{model-name}/chat/completions`. Customize the endpoint paths through [`config.route.paths`](#schema-aigateway-model-config-route-paths) if needed.
 
 <!-- vale off -->
 {% table %}
@@ -187,9 +180,11 @@ rows:
 
 ## Request and response formats
 
-The [`formats`](#schema-aigateway-model-formats) array declares the request and response shapes the Model accepts. Each entry has a `type` that selects the format. The default `openai` format flattens upstream provider responses into the OpenAI shape, so clients can use a single request and response format across providers.
+By default, AI Models expose all endpoints using OpenAI-compatible format. {{site.ai_gateway}} provides a single, standardized interface across all providers, so you can swap providers (OpenAI, Anthropic, self-hosted, etc.) without changing client code or integration logic.
 
-To preserve a provider's native request and response format instead, set [`formats[].type`](#schema-aigateway-model-formats-type) to a non-OpenAI value. The Model passes requests upstream without conversion, while {{site.ai_gateway}} continues to provide analytics, logging, and cost calculation.
+The [`formats`](#schema-aigateway-model-formats) array lets you control the request and response format. Each entry has a `type` that selects the format. The default `openai` format translates upstream provider responses into the OpenAI shape, so clients use one API format regardless of provider.
+
+If you need the provider's native format instead, set [`formats[].type`](#schema-aigateway-model-formats-type) to a non-OpenAI value. The Model passes requests upstream without conversion, while {{site.ai_gateway}} continues to provide analytics, logging, and cost calculation. You can also customize the endpoint paths through [`config.route.paths`](#schema-aigateway-model-config-route-paths) if needed.
 
 <!-- vale off -->
 {% table %}
@@ -240,7 +235,7 @@ When an AI Model has more than one target, the [load balancer](#schema-aigateway
 
 ### Algorithms
 
-The [`algorithm`](#schema-aigateway-model-config-balancer-algorithm) field selects one of seven load balancing strategies for distributing requests across target models.
+The [`algorithm`](#schema-aigateway-model-config-balancer-algorithm) field lets you choose how to distribute requests across target models based on your priorities. Select a strategy to optimize for cost, latency, even distribution, intelligent routing, or failover behavior.
 
 <!-- vale off -->
 {% table %}
@@ -269,7 +264,7 @@ rows:
 
 ### Retry and fallback
 
-The load balancer supports configurable retries, timeouts, and failover to different targets when one is unavailable. Fallback works across targets with any supported format, so you can mix providers freely (for example, OpenAI and Mistral). For configuration details, see [Retry and fallback configuration](/ai-gateway/load-balancing/#retry-and-fallback).
+To add redundancy and failover, the load balancer supports configurable retries, timeouts, and failover to different targets when one is unavailable. Fallback works across targets with any supported format, so you can mix providers freely (for example, OpenAI and Mistral). For configuration details, see [Retry and fallback configuration](/ai-gateway/load-balancing/#retry-and-fallback).
 
 {:.info}
 > Client errors don't trigger failover. To fail over on additional error types, set
@@ -278,7 +273,7 @@ The load balancer supports configurable retries, timeouts, and failover to diffe
 
 ### Health check and circuit breaker
 
-The load balancer includes a circuit breaker that improves reliability under sustained failures. When a target reaches the failure threshold set by [`max_fails`](#schema-aigateway-model-config-balancer-max-fails), the load balancer stops routing requests to it until the [`fail_timeout`](#schema-aigateway-model-config-balancer-fail-timeout) period elapses. For behavior examples and tuning, see [Circuit breaker](/ai-gateway/load-balancing/#health-check-and-circuit-breaker).
+To improve reliability under sustained failures, the load balancer includes a circuit breaker that When a target reaches the failure threshold set by [`max_fails`](#schema-aigateway-model-config-balancer-max-fails), the load balancer stops routing requests to it until the [`fail_timeout`](#schema-aigateway-model-config-balancer-fail-timeout) period elapses. For behavior examples and tuning, see [Circuit breaker](/ai-gateway/load-balancing/#health-check-and-circuit-breaker).
 
 ### Vector store
 
@@ -303,7 +298,9 @@ For deeper background on vector storage and similarity matching, see [Embedding-
 
 ### Embeddings
 
-An embedding model converts request and response text into vector representations for the vector store. Set [`config.balancer.embeddings`](#schema-aigateway-model-config-balancer-embeddings) to reference a Provider and an embedding model name. Supported provider types are `azure`, `bedrock`, `gemini`, and `huggingface`. The same embedding model also powers the `lowest-usage` algorithm when usage is calculated against semantic content.
+Configure an embedding model to enable semantic routing. This lets {{site.ai_gateway}} route requests based on meaning and content similarity rather than just cost or latency. For example, route domain-specific queries to specialized providers or keep similar requests on the same provider for consistency.
+
+Set [`config.balancer.embeddings`](#schema-aigateway-model-config-balancer-embeddings) to reference a Provider and embedding model name. Supported provider types: `azure`, `bedrock`, `gemini`, `huggingface`. The embedding model also powers the `semantic` load balancing algorithm.
 
 ## Templating
 
@@ -319,33 +316,23 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Model aliasing
 
-By default, clients must specify the actual upstream model name (like `gpt-4o`) in the request `model` field. If you want to expose a different name to clients—for abstraction, stability, or to hide implementation details—set [`config.model.alias`](#schema-aigateway-model-config-model-alias).
+By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name—for abstraction, stability, or to hide implementation details—set [`config.model.alias`](#schema-aigateway-model-config-model-alias).
 
 When an alias is set, clients can send that alias in the request `model` field instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
 ## Access control
 
-An AI Model's [`acls`](#schema-aigateway-model-acls) field controls which identities are allowed to reach the AI Model. The field accepts `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. An **Authenticated Group** is a dynamic group representing all consumers that have authenticated via a specific OAuth2 scope or claim. Access is enforced at the Service level of the generated primitives.
-
-For per-request authentication and identity, configure the appropriate authentication AI Policy globally or attach it to the AI Model.
+When you need to limit which teams or applications can call an AI Model—for example, restricting an expensive model to your internal team or blocking access to sensitive models—use the [`acls`](#schema-aigateway-model-acls) field to set either an allow list or a deny list (choose one). Reference [AI Consumers](/ai-gateway/entities/ai-consumer/) (individual applications), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (teams), or Authenticated Groups (all consumers authenticated via a specific OAuth2 scope or claim) by name. To control *how* consumers authenticate (API keys, OAuth2, etc.) rather than *who* can access, attach an authentication AI Policy to the model.
 
 ## Attach Policies
 
 Attach an AI Policy to an AI Model to add security, observability, governance, rate limiting, and cost optimization to all requests through that model. For example, you can add guardrails ([AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)), enable [logging and metrics](/ai-gateway/policies/?category=logging), audit and [compliance controls](/ai-gateway/policies/ai-sanitizer/), cache responses, or [rate-limit](/ai-gateway/policies/ai-rate-limiting-advanced/) LLM traffic.
 
-An AI Model declares the AI Policies it uses through its [`policies`](#schema-aigateway-model-policies) field. Each entry is a string that references an AI Policy by name or ID. {{site.konnect_short_name}} resolves these references against AI Policies created at `/v1/ai-gateways/{aiGatewayId}/policies`. An AI Policy attached to an AI Model runs at the Service level of the AI Model's generated primitives, so it applies to every request routed through any of the AI Model's capabilities.
-
-You can attach multiple AI Policies to a single AI Model. Each AI Policy is applied independently, so attaching the same AI Policy type twice with different configurations creates two separate instances.
-
-Not every AI Policy type is valid as an AI Model attachment.
-
-AI Policies attached to an AI Model are not deleted when the AI Model is deleted; only the AI Model's reference is removed.
-
-For further information, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
+Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations. Not every AI Policy type supports Model attachment. AI Policies are not deleted when the Model is deleted—only the Model's reference is removed. For more details, see [AI Policy entity](/ai-gateway/entities/ai-policy/).
 
 ### AI Policy execution order
 
-An AI Policy attached to a Model runs on the Service of the Model's derived primitives. That AI Policy runs at the [priority](/gateway/entities/plugin/#plugin-priority) determined by its type, which affects when it executes relative to other AI Policies on the request.
+An AI Policy attached to an AI Model runs on the service of the Model's derived primitives. That AI Policy runs at the [priority](/gateway/entities/plugin/#plugin-priority) determined by its type, which affects when it executes relative to other AI Policies on the request.
 
 Model routing executes at a specific point in the request pipeline. AI Policies have different priorities that determine when they run.  Higher priority AI Policy types may run before the Model routing is resolved. Authentication AI Policies (such as OpenID Connect) fall into this category. They gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available until after Model resolution.
 
