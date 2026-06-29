@@ -156,6 +156,79 @@ rows:
       * `condition` field in Produce and Consume policies used as children of Schema Validation
     example: |
       `record.value.validated == true`
+  - variable: |
+      `record.value.schema.id` {% new_in 1.2 %}
+    type: "`uint`"
+    description: |
+      Registry-assigned schema ID. Populated when the record value is validated by a Confluent schema registry.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.id == 42`
+  - variable: |
+      `record.value.schema.version` {% new_in 1.2 %}
+    type: "`uint`"
+    description: |
+      Registry-assigned schema version, when returned by the registry.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.version == 3`
+  - variable: |
+      `record.value.schema.format` {% new_in 1.2 %}
+    type: "`string`"
+    description: |
+      `"avro"` or `"json"`.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.format == 'avro'`
+  - variable: |
+      `record.value.schema.avro.name` {% new_in 1.2 %}
+    type: "`string`"
+    description: |
+      Avro record name (Avro only).
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.avro.name == 'User'`
+  - variable: |
+      `record.value.schema.avro.namespace` {% new_in 1.2 %}
+    type: "`string`"
+    description: |
+      Avro record namespace (Avro only, when declared on the schema).
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.avro.namespace == 'com.example'`
+  - variable: |
+      `record.value.schema.json.title` {% new_in 1.2 %}
+    type: "`string`"
+    description: |
+      JSON Schema `title` (JSON only, when declared on the schema).
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.json.title == 'Order'`
+  - variable: |
+      `record.value.schema.json.id` {% new_in 1.2 %}
+    type: "`string`"
+    description: |
+      JSON Schema `$id` (JSON only, when declared on the schema).
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.json.id == 'https://example.com/schemas/order.json'`
+  - variable: |
+      `record.key.schema.*` {% new_in 1.2 %}
+    type: |
+      same as `record.value.schema.*`
+    description: |
+      Same shape as `record.value.schema.*`, populated when the record key has `schema_validation` configured. Sub-fields are absent when not applicable; use `has()` to test presence.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.key.schema.format == 'json' && record.key.schema.json.title == 'UserKey'`
 {% endtable %}
 
 ### Example expressions
