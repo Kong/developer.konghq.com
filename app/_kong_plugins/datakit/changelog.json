@@ -1,4 +1,21 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added a `non_nil` config attribute to the `property` node. When set to `true`, GET operations fail with an error if the property is unset, and SET operations fail with an error if the input is nil/null.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added Konnect Debugger support for DataKit execution, including per-node spans, sanitized trace content capture with vault-aware redaction, and local debug trace responses using the same tracing event model with inline values.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added Lua control plane compatibility checks to prevent unsupported Datakit configurations from being pushed to older data planes in hybrid mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added more implicit node outputs:\n    * `request.path`\n    * `request.raw_path`\n    * `request.port`\n    * `request.method`\n    * `request.scheme`\n    * `request.version`\n    * `service_response.status`\n    * service_response.raw_body\n    * call.raw_body\n",

@@ -1,4 +1,21 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed a crash (HTTP 500) when `azure_use_managed_identity` is enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where the plugin returned HTTP 500 when the LLM response content was empty. Empty content now skips the content-safety check and passes through.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed response guard sending the entire JSON response body to Azure Content Safety instead of just the assistant message content, which caused false positives when response metadata fields matched blocklist entries.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "the `ssl_verify` option to verify the certificate\npresented by the Azure Content Safety service when using HTTPS is now enabled\nby default.\n",

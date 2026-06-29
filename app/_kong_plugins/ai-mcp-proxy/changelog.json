@@ -1,4 +1,41 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed an issue where raw non-200 upstream responses triggered misleading MCP body parse warnings.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where WWW-Authenticate: Bearer error=\"insufficient_scope\" header was not emitted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where internal unix-socket subrequests lost the original client IP address, causing IP-aware plugins like ip-restriction to reject legitimate requests.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where, since 3.14, call tools converted from API could fail when Kong used a self-signed certificate.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where tool id might be repeated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where empty JSON arrays in MCP server\nresponses were rewritten to empty objects when the plugin re-encoded the\nbody for ACL list filtering.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed stale tools cache after full-sync reconfigure (e.g. `deck sync`), causing `tools/list` to return empty results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added support for ACL with OAuth claim.\n",

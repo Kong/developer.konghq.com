@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added support for OAuth2 client credentials authentication. Configured with `CLIENT_CREDENTIALS` scheme, tokens are cached and renewed automatically.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "allowed basic auth credentials to be passed from downstream clients.\n",

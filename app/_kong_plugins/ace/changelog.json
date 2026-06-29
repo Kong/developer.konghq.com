@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "**ace** Added Kong Identity principal fetch after authentication, enabling consumer and consumer group mapping from the Konnect identity service.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Enabled at-rest keyring encryption for sensitive fields in ACE plugin.",

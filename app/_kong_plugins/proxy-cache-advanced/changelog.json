@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed an issue where cache management Admin API did not work when the `redis` strategy configuration was provided via a partial.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.1.1": [
     {
       "message": "Fixed an issue where the `kong.plugins.proxy-cache-advanced.migrations` module was not being loaded when upgrading to `3.8.x.y`.\nThis issue was introduced in `3.8.0.0` and Kong refuses to start if `redis.timeout` and `redis.connect_timeout` are set to different values.\n",

@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added support for authentication via the Kong Identity service with caching, consumer compatibility and basic analytics.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Uses SHA256 by default even in non-FIPS mode instead of SHA1.\n",

@@ -22748,5 +22748,881 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.15.0.0": {
+    "kong-ee": [
+      {
+        "message": "Added error attribution for plugin execution errors (HTTP 500). Kong classifies errors as\n`kong` (bundled plugins) or `custom` (custom plugins), and Prometheus exposes this via\nthe `source` label to separate custom-plugin failures from Kong-internal errors.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
+        "message": "**Conditional Plugin Execution**: The plugin `condition` field now uses\na new standardized expression language with broader operator and type\nsupport, aligned across UI, Control Plane, and Data Plane.  Refer to\nthe official documentation for the full syntax, supported variables,\noperators, and types.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
+        "message": "Without a configured license, the Admin API is now read-only, the same way\nit already behaves once a license has expired past its grace period. The\nproxy data plane keeps serving previously configured traffic. A small set\nof endpoints stays writable so the gateway can recover: `/licenses` to\nupload a new license, and `/keyring/recover`, `/keyring/import`,\n`/keyring/import/raw` so a keyring-encrypted license can be decrypted\nacross restarts before the licensing subsystem comes up. Uploading a valid\nlicense restores full read-write access to the Admin API.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
+        "message": "Workspace names that shadow existing top-level admin API routes are no longer allowed. If you have an existing workspace name that conflicts with a admin route, it may be impacted. Check `GET /endpoints` to review the reserved first-level segments.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped avro-c from 1.21.0 to 1.21.1.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped brotli from 1.1.0 to 1.2.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped ca-certificates (debug tool) from 2025-12-02 to 2026-03-19.",
+        "type": "dependency",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "Bumped jansson from 2.14.1 to 2.15.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-gql from 0.2.3 to 0.2.4 to fix the null value issue in the GraphQL query syntax that causes a parsed AST error in degraphql plugin.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-lua-resty-ljsonschema from 1.3.1 to 1.3.3.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-pgmoon from 2.3.3.0 to 2.3.4.0, which adds SHA-384 support\nfor SCRAM channel binding during PostgreSQL SSL authentication.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-redis-cluster from 1.5.7 to 1.6.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped libexpat from 2.8.0 to 2.8.1.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped libxml2 from 2.15.1 to 2.15.3.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped libxslt from 1.1.43 to 1.1.45.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-gcp from 0.0.19 to 0.0.20 to add support for proxy options.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-mail from 1.1.0 to 1.2.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-openssl from 1.7.0 to 1.7.1.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-websocket from version 0.4.0.2 to 0.5.0 to solve an issue when handling protocol upgrade failure.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped LuaRocks from 3.12.2 to 3.13.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped multipart from 0.5.11 to 0.5.12.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenResty from 1.27.1.2 to 1.29.2.5.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.4.3 to 3.5.7.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped penlight from 1.14.0 to 1.15.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Removed bundled cURL debug binary (curl, nghttp2, ca-certs) from Kong packages.",
+        "type": "dependency",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "Updated libpasswdqc from 2.0.3 to 2.1.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ace** Added Kong Identity principal fetch after authentication, enabling consumer and consumer group mapping from the Konnect identity service.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Added a file system vault (fs).",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a safeguard to prevent the CP or DP from sending payloads larger than the configured `cluster_max_payload` size to each other, which could avoid the frequent disconnections and reconnection attempts and improve performance. Emitted a log entry telling the config payload size and the configured `cluster_max_payload` size when this happens.",
+        "type": "feature",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Added `kong.request.get_raw_headers()` to return request headers parsed from raw request headers for HTTP/1.x requests.",
+        "type": "feature",
+        "scope": "PDK"
+      },
+      {
+        "message": "Added support for `kong.router.get_route` and `kong.router.get_service` in the strict sandbox environment.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Added the ability to reference the 'cert' field of CA certificates.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**analytics**: Add workspace information to analytics payload.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**aws-lambda**: Added `preserve_lambda_api_error_code` config field to return the same HTTP status code received from AWS Lambda when there's an error invoking the function.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**basic-auth**: Added support for authentication via the Kong Identity service with caching, consumer compatibility and basic analytics.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**datakit**: Added a `non_nil` config attribute to the `property` node. When set to `true`, GET operations fail with an error if the property is unset, and SET operations fail with an error if the input is nil/null.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**datakit**: Added Konnect Debugger support for DataKit execution, including per-node spans, sanitized trace content capture with vault-aware redaction, and local debug trace responses using the same tracing event model with inline values.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**forward-proxy**: Added `ca_certificates` option for per-plugin TLS verification.\nIt allowed certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**http-log**: Added opt-in outbound mTLS support via a new `client_certificate` config field.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-consume, confluent-consume**: Added `consumer_group` configuration to allow explicit control over the Kafka consumer group ID.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **confluent**: Added support for forwarding HTTP request\nheaders as native Kafka record headers.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream, kafka-consume, confluent, confluent-consume**: Added `error_handling.return_error_message` configuration option to surface Kafka client error messages in HTTP error responses. When enabled, the full error detail (such as authentication failures) is returned to the client instead of a generic message, aiding development and debugging. Defaults to `false` to preserve existing secure behavior.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **kafka-consume**, **confluent**, **confluent-consume**: Added SASL OAUTHBEARER authentication support.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**key-auth**: Added support for authentication via the Kong Identity service with caching, consumer compatibility and basic analytics.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Added opt-in structured validation errors via the new\n`structured_errors` field, which provides structured error details. Use the\n`max_structured_errors` field (must be greater than 0) to cap the number of\nreturned errors in structured format; when unset, all errors are returned.\nWhen `structured_errors` is disabled, the plugin preserves the original\nnon-structured error format.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added `cluster_cache_items` config that controls which items are stored in the cluster cache backend configured via `cluster_cache_strategy`. Token material is AES-encrypted before being written to the cache.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added `proof_of_possession_mtls_from_header` for mTLS PoP validation via HTTP header when TLS is pre-terminated by downstream.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added support for Kong Identity principal lookup after token verification, enabling consumer and consumer group mapping from Kong Identity with caching and miss-behavior control.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added support for reading bearer tokens from a custom header.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added `verify_signature` and `jwks_uri` fields to `token_exchange.subject_token_issuers` for verifying incoming subject token signatures before exchange.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Added support for the `OTEL_RESOURCE_ATTRIBUTES` environment variable. You can now set custom resource attributes for OpenTelemetry instrumentation as secondary resource attributes to the `resource_attributes` configuration.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting-advanced**: Added the `counter_key` field to let you choose which consumer attribute is now used as the rate-limiting counter identifier. Supported values are `consumer.id`, `consumer.username`, and `consumer.custom_id`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**solace-upstream**, **solace-log**, **solace-consume**: Added support for OAuth2 client credentials authentication. Configured with `CLIENT_CREDENTIALS` scheme, tokens are cached and renewed automatically.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Supported plugin cloning. You can now clone existing bundled plugins, give them a new name and optionally specify a priority. This is useful when you want to have multiple instances of a plugin with different configurations running in the same request. Currently, the cloneable plugins are: `openid-connect`, `acl`, `pre-function`, `post-function`, `request-transformer-advanced`, `request-transformer`, `response-transformer-advanced`, `response-transformer`, `key-auth`, `file-log`, `http-log`, `tcp-log`, `ip-restriction`, `route-by-header`, `opa`, `datakit`.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Supported plugin streaming. You can now stream custom plugins dynamically. Refer to the documentation for more details on how to use this feature.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**vault**: Added a new `azure-certs` vault type for storing TLS certificates in Azure Key Vault.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**acl**: Fixed an issue where anonymous consumers with valid legacy ACL group credentials were rejected with 403 when `include_consumer_groups` was enabled and no enterprise consumer groups were assigned.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Added the missing PDK functions to sandbox environments.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-a2a-proxy**: Reassembled SSE `data:` events that span multiple `body_filter`\nchunks and dropped oversized events safely, preventing `sse_last_event` type\nerrors that crashed the request on large agent responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-advanced-proxy**: Fixed an issue where we never stored response model in streaming path. It always fallback to the request model",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-azure-content-safety**: Fixed a crash (HTTP 500) when `azure_use_managed_identity` is enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-azure-content-safety**: Fixed a bug where the plugin returned HTTP 500 when the LLM response content was empty. Empty content now skips the content-safety check and passes through.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-azure-content-safety**: Fixed response guard sending the entire JSON response body to Azure Content Safety instead of just the assistant message content, which caused false positives when response metadata fields matched blocklist entries.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-guardrail**: Fixed an issue where latency metrics were missing in the Prometheus output.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-guardrails**: Fixed an issue where multiple guardrail plugins can not function together.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token introspection crashed when `client_auth` was set to `private_key_jwt` and `client_jwk` was provided as a JSON string.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where downstream scope-based ACL evaluation used claims from the inbound token instead of the exchanged token when token exchange was enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token exchange actor tokens were not sourced correctly from `token_exchange.request`, ensuring correct forwarding of actor tokens configured in headers or plugin config.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where `token_exchange.cache.enabled = false` was ignored and exchanged tokens were still cached because the cache toggle incorrectly read `token_exchange.cache.ttl` instead of `token_exchange.cache.enabled`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where raw non-200 upstream responses triggered misleading MCP body parse warnings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where WWW-Authenticate: Bearer error=\"insufficient_scope\" header was not emitted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where internal unix-socket subrequests lost the original client IP address, causing IP-aware plugins like ip-restriction to reject legitimate requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where, since 3.14, call tools converted from API could fail when Kong used a self-signed certificate.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where tool id might be repeated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where empty JSON arrays in MCP server\nresponses were rewritten to empty objects when the plugin re-encoded the\nbody for ACL list filtering.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed stale tools cache after full-sync reconfigure (e.g. `deck sync`), causing `tools/list` to return empty results.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-decorator**: Fixed an issue where the plugin corrupted native-format\nrequests (gemini, anthropic, bedrock, cohere, huggingface) by forwarding an\nOpenAI-shaped body upstream instead of the original native body shape.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't support Azure GA version of Realtime API.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI-format chat reasoning requests were not mapped consistently across Anthropic, Gemini, Bedrock and more providers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where system prompt of Claude Code was truncated when doing non-passthrough proxy.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't support anthropic format for databricks provider.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't use the huggingface's token usage if available.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't collect the model name in OpenAI streaming response from Azure.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't correctly ungzip streaming response.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where dashscope replied 500 to inference request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where GenAI spans were not finished sometimes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where observability errors occurred when `gpt-image-1.5` returned image token usage details.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Azure OpenAI authentication failed during load balancer failover due to token refresh attempts in `balancer_by_lua`. Tokens are now pre-fetched in the `access` phase.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where concurrent worker processes could race to initialize the semantic routing vectorDB index, causing \"Index already exists\" errors on startup or config reload.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we treated plaintext Anthropic response as gzipped.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `output_config` was rejected by Vertex AI in Anthropic-native requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where configured model name may never be used for Azure provider.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Claude Code (or CLI) statistics were missing when using an Anthropic model via the Bedrock provider.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed Gemini driver dropping Gemini-native fields (e.g. `cachedContent`, `safetySettings`) and Vertex AI-only fields (e.g. `labels`) during OpenAI-to-Gemini request transformation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where `options.upstream_url` was not respected in native mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Emitted the documented `X-AI-RateLimit-*` headers on `429` responses from policies that partition by `provider` or `model`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where `model` or `provider` matchers without `partition_by` were skipped, causing rate limits to be missed.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed policy integration with `ai-proxy`\nfor single-target and multi-target AI proxy routes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed token counters being decremented on ai-semantic-cache hits.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where the AI sanitizer plugin could not parse the request body correctly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-prompt-guard**, **ai-semantic-response-guard**: Fixed an issue where full-sync reconfigure rebuilt semantic vectorDB indexes even when the plugin configuration was unchanged.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-response-guard**: Fixed an issue where the plugin failed to populate Redis with rule documents due to using worker ID gating instead of worker mutex for vectordb operations.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-transformers**: Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-40460, CVE-2026-42934, CVE-2026-42946, CVE-2026-42945, and CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for limiting the number of maximum headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**aws-lambda**: Fixed an issue where empty JSON array bodies (`[]`) were incorrectly converted to objects (`{}`) when using `is_proxy_integration=true` and `empty_arrays_mode=correct` alongside the exit-transformer plugin.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**aws-lambda**: Fixed an issue where a 500 error occurred when `is_proxy_integration` was enabled and the Lambda function returned `null` values in `headers` or `multiValueHeaders`. Null values are now converted to empty strings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**datakit**: Added Lua control plane compatibility checks to prevent unsupported Datakit configurations from being pushed to older data planes in hybrid mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**debugger**: Fixed an issue where debugger would not set the status code of connections that were closed by the client.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**debugger**: Fixed an issue where response body content capture consumed streaming response chunks.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the default key name `apikey` of the `key-auth` and `key-auth-enc` plugins was not redacted when captured by the Debugger. This has been resolved by adding `apikey` to the list of default redacted headers.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Do not allow use a license referenced by vault applied via the admin API.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**exit-transformer**: Fixed an issue where a response body that was a JSON primitive (e.g. `false`) caused a 500 internal error.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed a bug where tables in `strict` and `lax` `untrusted_lua` modes were not properly protected against modification.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed AI Proxy Advanced Gemini failover handling when a target sets `upstream_url` to `ngx.null`, avoiding an empty trailing query string in the computed upstream URI.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a config backup exported by a data plane could not be re-imported if it contained non-workspaceable entities such as `ca_certificates` or `oic_issuers`. The export incorrectly included a `ws_id` field for those entities, which the declarative config schema rejects as an unknown field.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where a Data Plane failed to load config updates when a CA certificate expired. The Data Plane now accepts the config and logs a warning.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where anonymous reports omitted model usage when one provider used multiple models.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where DP may spawn multiple sync timers when downgrading sync protocol to v1, which may cause excessive load on CP and lead to performance degradation.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where DP syncing failed with large configs. Added yielding to prevent CPU stall, and set Konnect mode RPC timeout to 30 seconds for successful full-sync.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where hybrid data planes retried unrecoverable CP connection failures and ignored Retry-After delays on 429/503 responses, preventing avoidable reconnect storms.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where incremental DP (sync v2) would not export config to fallback storage when the control plane uses periodic polling instead of notify_new_version.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where Kong Manager users authenticated through IDPs such as OIDC or LDAP could retain stale RBAC groups or IDP-sourced roles after claim changes, or end up with inconsistent mappings during concurrent authentication requests.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `kong.service.request.clear_query_arg()` would destructively rewrite unrelated query arguments by normalizing `+` to `%20` and stripping the `=` from empty-valued arguments. The remaining query arguments are now preserved verbatim.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where `kong.service.set_tls_cert_key` did not update the upstream keepalive pool name. Now includes a cert fingerprint for proper connection isolation.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where paginated full sync could keep stale pending foreign-key references across a failed resume, causing spurious validation failures.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where `$remote_addr` was not replaced with the proxy protocol source address for early nginx error responses (501, 505) when `proxy_protocol` is enabled on the proxy listener. Also added proper error body messages for 501 and 505 status codes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the array log entries could not be customized by array indices, like `kong.upstream.try[1].balancer_latency_ns: 'return 140545'` or `x.y.foo[2]: \"return [[how are you?]]\"`. Only Positive integers are supported as array indices.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where the KONG_ANALYTICS_FLUSH_INTERVAL environment variable was not correctly applied to the analytics flush interval.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the `kong.request.get_body()` function incorrectly parsed Content-Disposition name parameter if it is not double quoted.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where the `kong restart` command did not respect the command `prefix` argument.",
+        "type": "bugfix",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the request context could inherit metatables from previous TLS connections, leading to cross-request context leakage and increased memory usage.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed CVE-2026-6338.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed Kafka broker returning failed connections to the keepalive pool, added SSL handshake retry, and improved error propagation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ip-restriction**: Fixed an issue where the plugin handled requests from unix socket incorrectly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**JWT**: Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**jwt-signer**: Fixed an issue where the plugin failed to load configuration and errored when `null` or `nil` values were passed to `access_token_keyset` or `channel_token_keyset`.",
+        "type": "bugfix",
+        "scope": "Default"
+      },
+      {
+        "message": "**kafka-log**: Fixed an issue where cached producers could cause memory leaks.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream, kafka-log, kafka-consume, confluent, confluent-consume**: Fixed Kafka keepalive pools leaking connections across different SASL credentials and TLS verification settings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**key-auth**: Fixed an issue where a null value was accidentally blocked on identity_realms.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**mocking**: Fixed an issue where `$ref` dereferencing failed with `invalid ref: <code>` when bare-numeric keys were used under `components.responses`. Now supports numeric-key fallback.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where the OAS specification cache failed to distinguish between different values of `api_spec_encoded` for the same specification content.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where path parameters were extracted from the wrong URI segment when `custom_base_path` was used with bare `/{param}` paths.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an inconsistency where `credential_claim` resolved the same claim name to a different value than `upstream_headers_claims` because it consulted the id_token before the access_token, while the upstream headers resolver consulted the access_token first. With IdPs (e.g. Okta) that set distinct `sub` values in the two tokens, `authenticated_entity.id` did not match the upstream header the plugin set on the same request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where nested claim paths were not resolved correctly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where token cluster cache entries were not written when the `cluster_cache_strategy` was updated using incremental sync.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where request-scoped `resource_attributes` could leak across concurrent queued `traces`, `logs`, and access log exports when the plugin was configured globally.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where template 'resource_attributes' in configuration of the plugin could not work as expected for metrics.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the plugin crashed when DNS or balancer failures occurred during upstream retries.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Fixed an issue where cache management Admin API did not work when the `redis` strategy configuration was provided via a partial.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting**: Fixed an issue where the sync timer did not use updated configuration.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**RBAC**: Fixed an issue where `PATCH /rbac/roles/{name_or_id}/entities/{entity_id}` returned a misleading `404` response instead of the correct error (e.g. a `400` schema violation) when the update failed.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**request-transformer**: Fixed a regression where `remove.body` entries in `key:value` format (e.g. `scope:USER`) failed to remove the field from the request body. The value part is now correctly ignored during removal, restoring the behavior from 3.11.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-validator**: Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**router**: Fixed an issue where WebSocket routes (`ws`/`wss`) returned HTTP 404 when using `router_flavor=expressions` due to incorrect protocol matching expressions being generated.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**sandbox**: Fixed an issue where the `-1` error level was incorrectly passed to `error()`. The error level is now `0`, ensuring sandbox error messages are reported consistently regardless of traceback depth.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**solace-upstream**: Fixed an issue where requests under high concurrency could fail with connection timeouts despite a sufficient `connect_timeout` being configured.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**websocket**: Fixed an issue where the response body from an upstream was silently dropped when the upstream rejected the WebSocket handshake with a non-101 HTTP status code (e.g. 400, 401, 403). The body is now read from the TCP socket before it is closed and forwarded to the client, supporting both `Content-Length` and `Transfer-Encoding: chunked` framing.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Improved performance of analytics data collection by introducing a shared payload pool and reducing the default local buffer size.",
+        "type": "performance",
+        "scope": "Core"
+      },
+      {
+        "message": "**otel**: reduced otel trace-pipeline CPU overhead.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Migrated some plugin configuration forms, including custom plugins, to the new FreeForm renderer.",
+        "type": "feature",
+        "scope": "Default"
+      },
+      {
+        "message": "Fixed an issue where default workspace roles failed to be created on workspace creation.",
+        "type": "bugfix",
+        "scope": "Default"
+      },
+      {
+        "message": "Fixed workspace navigation for workspace names containing non-ASCII characters.",
+        "type": "bugfix",
+        "scope": "Default"
+      }
+    ]
   }
 }

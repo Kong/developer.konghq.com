@@ -1,4 +1,16 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added support for OAuth2 client credentials authentication. Configured with `CLIENT_CREDENTIALS` scheme, tokens are cached and renewed automatically.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where requests under high concurrency could fail with connection timeouts despite a sufficient `connect_timeout` being configured.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added `content_type` / `content_encoding` (with request-header fallback) and `forward_body_raw_only` for raw payload passthrough; headers can be forwarded into Solace user properties.\n",

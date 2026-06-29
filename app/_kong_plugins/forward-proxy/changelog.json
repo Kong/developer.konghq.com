@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added `ca_certificates` option for per-plugin TLS verification.\nIt allowed certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "the `https_verify` option to validate the `https_proxy_host`\nserver certificate is now enabled by default.\n",
