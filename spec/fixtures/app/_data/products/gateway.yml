@@ -3,3 +3,6 @@ releases:
   - release: "3.10"
     latest: true
   - release: "3.9"
+release_dates:
+  '3.9.0.0': 2024/09/18
+  '3.8.0.0': 2024/06/19

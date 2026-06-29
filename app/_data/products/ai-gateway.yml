@@ -9,3 +9,6 @@ releases:
     version: "2.0.0"
     name: "v2"
   - release: "1.0"
+
+release_dates:
+  '2.0.0': 2026/07/10
