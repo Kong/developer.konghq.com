@@ -1708,7 +1708,7 @@ releases:
   - release: "3.15"
     latest: true
     ee-version: "3.15.0.0"
-    eol: TBA
+    eol: 2027-06-30
     distributions:
       - amazonlinux2023:
           package: true
