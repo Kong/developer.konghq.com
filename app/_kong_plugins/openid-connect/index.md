@@ -48,6 +48,8 @@ related_resources:
     url: /how-to/?query=openid-connect
 
 examples_groups:
+  - slug: identity
+    text: Using Kong Identity
   - slug: authentication
     text: Authentication flows and grants
   - slug: client-auth
