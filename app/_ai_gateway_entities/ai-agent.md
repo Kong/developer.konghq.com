@@ -106,6 +106,7 @@ rows:
 
 Common use cases for exposing agents through {{site.ai_gateway}}:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Use case
@@ -124,6 +125,7 @@ rows:
   - use_case: "Centralized discovery"
     description: "Provide A2A clients with a single, stable gateway endpoint (via agent-card URL rewriting) instead of having them discover and connect directly to agent instances."
 {% endtable %}
+<!-- vale on -->
 
 ## How A2A traffic flows
 
