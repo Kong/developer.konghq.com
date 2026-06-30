@@ -1,1 +1,1 @@
-Configure an [AI Model](/ai-gateway/entities/ai-model/) with a Bedrock [AI Provider](/ai-gateway/entities/ai-provider/) and set up AWS authentication using IAM credentials or assumed roles. See [Use AWS Bedrock rerank API with {{site.ai_gateway}}](/how-to/use-bedrock-rerank-api/) for detailed instructions.
+Configure an [AI Model](/ai-gateway/entities/ai-model/) with a Bedrock [AI Provider](/ai-gateway/entities/ai-provider/) and set up AWS authentication using IAM credentials or assumed roles.
