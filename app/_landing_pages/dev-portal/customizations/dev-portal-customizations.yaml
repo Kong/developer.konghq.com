@@ -55,14 +55,15 @@ rows:
                     They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. 
                     You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status. 
                     
-                    To configure pages and content, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click **Portal Editor** in the sidebar. 
+                    To configure pages and content, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click **Portal Editor** in the sidebar.
                     In the Portal Editor sidebar, click the folder icon.
+                    You can also manage pages and content using the [{{site.konnect_product_name}} MCP Server](/konnect-platform/konnect-mcp/).
       - blocks:
           - type: image
             config:
               url: /assets/images/dev-portal/dev-portal-editor.png
               alt_text: "KongAir Dev Portal"
-  - column_count: 4
+  - column_count: 3
     columns:
       - blocks: 
           - type: card
@@ -91,17 +92,26 @@ rows:
                 icon: /assets/icons/dev-portal.svg
                 cta:
                   url: /dev-portal/portal-settings/
-      - blocks: 
+      - blocks:
           - type: card
             config:
               title: VS Code extension
               description: |
-                Edit and view your {{site.dev_portal}} pages in real-time in Visual Studio Code. 
+                Edit and view your {{site.dev_portal}} pages in real-time in Visual Studio Code.
                 Integrates with the {{site.konnect_short_name}} API and kongctl to securely manage {{site.dev_portal}} content.
               icon: /assets/icons/vscode.png
               cta:
                 url: https://marketplace.visualstudio.com/items?itemName=konghq.vscode-konnect-dev-portal-toolkit
-  
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.konnect_product_name}} MCP Server"
+              description: |
+                Manage {{site.dev_portal}} pages, snippets, and [Markdown Components (MDC)](https://portaldocs.konghq.com/) from your AI assistant or IDE using the {{site.konnect_product_name}} MCP Server.
+              icon: /assets/icons/mcp.svg
+              cta:
+                url: /konnect-platform/konnect-mcp/
+
   - header:
       type: h2
       text: "Appearance"
