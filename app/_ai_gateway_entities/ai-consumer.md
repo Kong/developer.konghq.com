@@ -132,9 +132,9 @@ Manage AI Consumer Group membership through the [AI Consumer Group entity](/ai-g
 
 To enforce governance, security, or observability controls at the AI Consumer level, attach AI Policies. When an AI Consumer makes a request, {{site.ai_gateway}} applies any AI Policies attached to that Consumer before routing the request.
 
-Attach an AI Policy by adding its `name` or `id` to the AI Consumer's [`policies`](#schema-aigateway-consumer-policies) array. You can attach multiple Policies to a single Consumer — each Policy runs independently, allowing you to layer controls for rate limiting, request validation, PII redaction, and other governance needs.
+Attach an AI Policy by adding its `name` or `id` to the AI Consumer's [`policies`](#schema-aigateway-consumer-policies) array. You can attach multiple AI Policies to a single Consumer — each AI Policy runs independently, allowing you to layer controls for rate limiting, request validation, PII redaction, and other governance needs.
 
-For supported policy types and how AI Policies attach to other entities, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference or browse all available policies in the [AI policies hub](/ai-gateway/policies/).
+For supported policy types and how AI Policies attach to other entities, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference or browse all available AI Policies in the [AI policies hub](/ai-gateway/policies/).
 
 ## Set up an AI Consumer
 
