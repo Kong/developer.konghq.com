@@ -116,7 +116,10 @@ In this example, we're setting up the MCP Server with:
 * `name: weather-mcp`: A unique identifier for this MCP Server.
 * `config.url`: The upstream API endpoint that this MCP Server proxies to.
 * `config.route.paths: [/weather]`: The path where MCP clients access this server over HTTP.
-* `tools`: Defines the MCP tools available. Each tool maps to an upstream API operation. Here, `get-current-weather` is exposed from the WeatherAPI `/v1/current.json` endpoint. The `query.key` field injects your WeatherAPI credentials automatically—this is how {{site.ai_gateway}} exposes the REST API and converts it into an MCP tool that clients can call without needing to manage the API key.
+* `tools`: Defines the MCP tools available. Each tool maps to an upstream API operation. Here, the WeatherAPI `/v1/current.json` endpoint `exposes get-current-weather`. The `query.key` field injects your WeatherAPI credentials automatically—this is how {{site.ai_gateway}}:
+  
+  1. Exposes the REST API
+  2. Converts it into an MCP tool that clients can call without needing to manage the API key.
 * `config.logging`: With `statistics: true`, usage metrics are logged. With `payloads: false`, request/response bodies are not logged for privacy.
 * `acls`: Configures who can access the MCP Server. Since this setup has no AI Consumer entities, the `__never_match__` rule effectively allows unrestricted access.
 
