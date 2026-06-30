@@ -85,8 +85,10 @@ Before you configure the integration in {{site.konnect_short_name}}, you need yo
        }
    }
    ```
-   {:.collapsible}
-   This won't be valid JSON, but when you add it to the {{site.dev_portal}} integration configuration, you'll add `{}` to make it valid.
+   {:.collapsible .no-copy-code}
+  
+   {:.info}
+   > The configuration you copy won't be valid JSON. When you add it to the {{site.dev_portal}} integration configuration, you'll add `{}` to make it valid.
 
 ## Configure the EqualWeb integration
 
@@ -132,11 +134,11 @@ Configure the EqualWeb integration in your {{site.dev_portal}} settings.
     }
    }
    ```
-   {:.collapsible}
+   {:.collapsible .no-copy-code}
 1. Click **Save**.
 
 
-You can also configure the EqualWeb integration using the {{site.konnect_short_name}} API by sending a `PUT` request to the `/portals/{portalId}/integrations` endpoint.
+You can also configure the EqualWeb integration using the {{site.konnect_short_name}} API by sending a `PUT` request to the [`/portals/{portalId}/integrations` endpoint](/api/konnect/portal-management/v3/#/operations/upsert-portal-integrations).
 
 ## Validate
 
