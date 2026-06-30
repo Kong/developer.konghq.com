@@ -51,4 +51,4 @@ When calling a template, replace the content of `messages` (`llm/v1/chat`) or `p
 }
 ```
 
-By default, requests that don't use a template are still be passed to the LLM. However, this can be configured using the [`config.allow_untemplated_requests`](/ai-gateway-policies/ai-prompt-template/reference/#schema--config-allow-untemplated-requests) parameter. If this parameter is set to `false`, requests that don't use a template will return a `400 Bad Request` response.
+By default, requests that don't use a template are still be passed to the LLM. However, this can be configured using the [`config.allow_untemplated_requests`](/ai-gateway/policies/ai-prompt-template/reference/#schema--config-allow-untemplated-requests) parameter. If this parameter is set to `false`, requests that don't use a template will return a `400 Bad Request` response.
