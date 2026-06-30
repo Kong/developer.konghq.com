@@ -12,7 +12,7 @@ RSpec.describe Jekyll::ReleaseMapLoader do
                                         'releases' => [{ 'release' => '2.0', 'latest' => true },
                                                        { 'release' => '1.0' }] } } }
   end
-  let(:site) { instance_double(Jekyll::Site, pages: pages, documents: documents, data:) }
+  let(:site) { instance_double(Jekyll::Site, pages: pages, documents: documents, data:, config: {}) }
   let(:pages) { [] }
   let(:documents) { [] }
 
@@ -48,9 +48,18 @@ RSpec.describe Jekyll::ReleaseMapLoader do
 
   describe '#generate' do
     context 'with a release-map entry pointing at a live current-major page' do
-      let(:pages) { [prev_major_page, current_major_page] }
+      let(:prev_major_page2) do
+        instance_double(Jekyll::Page,
+                        data: { 'major_version' => { 'ai-gateway' => 1 } },
+                        url: '/ai-gateway/v1/valid-page2/',
+                        relative_path: '_how-tos/ai-gateway/v1/valid-page2.md')
+      end
+      let(:pages) { [prev_major_page, prev_major_page2, current_major_page] }
       let(:release_map) do
-        { 'app/_how-tos/ai-gateway/v1/valid-page.md' => { 'canonical_url' => '/ai-gateway/valid-page/' } }
+        {
+          'app/_how-tos/ai-gateway/v1/valid-page.md' => { 'canonical_url' => '/ai-gateway/valid-page/' },
+          'app/_how-tos/ai-gateway/v1/valid-page2.md' => { 'canonical_url' => '/ai-gateway/valid-page/' }
+        }
       end
 
       it 'attaches canonical_url to the page' do
@@ -64,7 +73,7 @@ RSpec.describe Jekyll::ReleaseMapLoader do
         generator.generate(site)
 
         expect(current_major_page.data['previous_major_urls'])
-          .to eq({ 'v1' => '/ai-gateway/v1/valid-page/' })
+          .to eq({ 'v1' => ['/ai-gateway/v1/valid-page/', '/ai-gateway/v1/valid-page2/'] })
       end
     end
 

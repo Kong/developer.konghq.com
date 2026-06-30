@@ -5,7 +5,7 @@ import minimist from "minimist";
 import yaml from "js-yaml";
 import { compareVersions } from "./compare-versions.js";
 
-function generateChangelogsByVersion(folderPath, version) {
+function generateChangelogsByVersion(folderPath, version, product) {
   console.log(`Generating changelog files for version: ${version}.`);
   const foldersToIgnore = fs.readFileSync(
     "./config/ignored_folders.json",
@@ -54,8 +54,8 @@ function generateChangelogsByVersion(folderPath, version) {
     });
   });
 
-  const destinationPath = `./tmp/${version}.json`;
-  fs.mkdirSync("./tmp", { recursive: true });
+  const destinationPath = `./tmp/${product}/${version}.json`;
+  fs.mkdirSync(`./tmp/${product}`, { recursive: true });
   fs.writeFileSync(destinationPath, JSON.stringify(changelog, null, 2), "utf8");
   console.log(`Changelog file written to ${destinationPath}.`);
 }
@@ -69,21 +69,26 @@ function fetchVersions(path) {
 }
 
 (function main() {
-  const args = minimist(process.argv.slice(2), { string: ["version"] });
+  const args = minimist(process.argv.slice(2), { string: ["version", "product"] });
+  const product = args.product || "gateway";
 
   try {
+    if (!['gateway', 'ai-gateway'].includes(product)) {
+      console.error(`Unknown --product "${product}": must be "gateway" or "ai-gateway"`);
+      process.exit(1);
+    }
+
     if (!args.path) {
-      console.error(
-        "Missing argument --path, relative path to the kong-ee repo."
-      );
+      console.error("Missing argument --path, relative path to the tmp changelog folder.");
+      process.exit(1);
     }
 
     if (args.version) {
-      generateChangelogsByVersion(args.path, args.version);
+      generateChangelogsByVersion(args.path, args.version, product);
     } else {
       const versions = fetchVersions(args.path);
       versions.forEach((version) => {
-        generateChangelogsByVersion(args.path, version);
+        generateChangelogsByVersion(args.path, version, product);
       });
     }
   } catch (error) {
