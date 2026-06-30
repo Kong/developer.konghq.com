@@ -7,7 +7,7 @@ If you're configuring private network connectivity, this CIDR block **must not**
 The CIDR block must also be large enough to accommodate all Kong-managed infrastructure provisioned inside the network such as the data plane nodes, the DNS proxy, internal load balancers, and other components.
 
 Keep the following requirements in mind when choosing your network CIDR range:
-* **Prefix length:** The CIDR block must have a prefix length between `/16` and `/23`. `/23` blocks support a maximum of 3 availability zones.
+* **Prefix length:** The CIDR block must have a prefix length between `/16` and `/23`. `/23` blocks support a maximum of 2 availability zones.
 * **Private IP Range:** The entire CIDR block must fall within one of these private IP ranges:
   * 10.0.0.0/8
   * 100.64.0.0/10
@@ -27,13 +27,11 @@ Keep the following requirements in mind when choosing your network CIDR range:
 > * 192.168.128.0/18
 > * 198.18.0.0/16
 
-
 The number of availability zones (AZs) you plan to use determines the minimum CIDR range for your Dedicated Cloud Gateway network.
 Keep the following in mind:
 * Cloud service providers enforce a minimum subnet mask of /28 (16 IPs) and a maximum of /16 (65,536 IPs) for any subnet.
 * The following table reflects the minimum recommended CIDR sizes for Dedicated Cloud Gateway deployments to ensure sufficient IP address space for the required infrastructure.
 * Selecting a larger CIDR block provides more flexibility for future growth and expansion.
-
 
 The following table details the minimum CIDR sizes by AZ count:
 
@@ -54,181 +52,6 @@ rows:
     cidr: "/22 (1,024 IPs)"
   - az_count: 5
     cidr: "/21 (2,048 IPs)"
-{% endtable %}
-<!--vale on-->
-
-How many IPs are usable depends on whether you're using a public or private subnet, your network's CIDR range, and AZ count.
-* **Public subnets:** Kong reserves about 50 IPs in total (used by Kong's internal services and cloud provider reserves).
-* **Private subnets:** The cloud provider your Dedicated Cloud Gateway is deployed on reserves 5 IPs. It cannot use subnets that have fewer than 8 IPs, so Kong reserves about 15 IPs per AZ.
-
-The following table describes how many IPs are usable depending on your CIDR range and AZ count. 
-The recommended data plane count examples assume a maximum of 15 data planes per AZ and each data plane group needs one public IP in one AZ.
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: CIDR range
-    key: cidr_range
-  - title: AZ count
-    key: az_count
-  - title: Usable IPs per AZ in public subnet
-    key: usable_public
-  - title: Usable IPs per AZ in private subnet
-    key: usable_private
-  - title: Recommended data plane count
-    key: recommended_dpg
-
-rows:
-  - cidr_range: "/16"
-    az_count: 2
-    usable_public: 8175
-    usable_private: 16357
-    recommended_dpg: 1-960
-  - cidr_range: "/16"
-    az_count: 3
-    usable_public: 2031
-    usable_private: 8173
-    recommended_dpg: 1-480
-  - cidr_range: "/16"
-    az_count: 4
-    usable_public: 2031
-    usable_private: 8177
-    recommended_dpg: 1-480
-  - cidr_range: "/16"
-    az_count: 5
-    usable_public: 1007
-    usable_private: 8180
-    recommended_dpg: 1-480
-  - cidr_range: "/17"
-    az_count: 2
-    usable_public: 4079
-    usable_private: 8165
-    recommended_dpg: 1-480
-  - cidr_range: "/17"
-    az_count: 3
-    usable_public: 1007
-    usable_private: 4077
-    recommended_dpg: 1-240
-  - cidr_range: "/17"
-    az_count: 4
-    usable_public: 1007
-    usable_private: 4081
-    recommended_dpg: 1-240
-  - cidr_range: "/17"
-    az_count: 5
-    usable_public: 495
-    usable_private: 4084
-    recommended_dpg: 1-240
-  - cidr_range: "/18"
-    az_count: 2
-    usable_public: 2031
-    usable_private: 4069
-    recommended_dpg: 1-240
-  - cidr_range: "/18"
-    az_count: 3
-    usable_public: 495
-    usable_private: 2029
-    recommended_dpg: 1-120
-  - cidr_range: "/18"
-    az_count: 4
-    usable_public: 495
-    usable_private: 2033
-    recommended_dpg: 1-120
-  - cidr_range: "/18"
-    az_count: 5
-    usable_public: 239
-    usable_private: 2036
-    recommended_dpg: 1-120
-  - cidr_range: "/19"
-    az_count: 2
-    usable_public: 1007
-    usable_private: 2021
-    recommended_dpg: 1-120
-  - cidr_range: "/19"
-    az_count: 3
-    usable_public: 239
-    usable_private: 1005
-    recommended_dpg: 1-60
-  - cidr_range: "/19"
-    az_count: 4
-    usable_public: 239
-    usable_private: 1009
-    recommended_dpg: 1-60
-  - cidr_range: "/19"
-    az_count: 5
-    usable_public: 111
-    usable_private: 1012
-    recommended_dpg: 1-60
-  - cidr_range: "/20"
-    az_count: 2
-    usable_public: 495
-    usable_private: 997
-    recommended_dpg: 1-50
-  - cidr_range: "/20"
-    az_count: 3
-    usable_public: 111
-    usable_private: 493
-    recommended_dpg: 1-30
-  - cidr_range: "/20"
-    az_count: 4
-    usable_public: 111
-    usable_private: 497
-    recommended_dpg: 1-30
-  - cidr_range: "/20"
-    az_count: 5
-    usable_public: 47
-    usable_private: 500
-    recommended_dpg: 1-30
-  - cidr_range: "/21"
-    az_count: 2
-    usable_public: 239
-    usable_private: 485
-    recommended_dpg: 1-30
-  - cidr_range: "/21"
-    az_count: 3
-    usable_public: 47
-    usable_private: 237
-    recommended_dpg: 1-20
-  - cidr_range: "/21"
-    az_count: 4
-    usable_public: 47
-    usable_private: 241
-    recommended_dpg: 1-15
-  - cidr_range: "/21"
-    az_count: 5
-    usable_public: 15
-    usable_private: 244
-    recommended_dpg: 1-10
-  - cidr_range: "/22"
-    az_count: 2
-    usable_public: 111
-    usable_private: 229
-    recommended_dpg: 1-10
-  - cidr_range: "/22"
-    az_count: 3
-    usable_public: 15
-    usable_private: 109
-    recommended_dpg: 1-8
-  - cidr_range: "/22"
-    az_count: 4
-    usable_public: 15
-    usable_private: 113
-    recommended_dpg: 1-3
-  - cidr_range: "/22"
-    az_count: 5
-    usable_public: Not supported
-    usable_private: Not supported
-    recommended_dpg: Not supported
-  - cidr_range: "/23"
-    az_count: 2
-    usable_public: 47
-    usable_private: 101
-    recommended_dpg: 1-3
-  - cidr_range: "/23"
-    az_count: 3
-    usable_public: 1
-    usable_private: 45
-    recommended_dpg: Not recommended
 {% endtable %}
 <!--vale on-->
 
