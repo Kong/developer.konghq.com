@@ -52,10 +52,10 @@ Common cases:
 The flow:
 
 1. Create a credit grant for the customer.
-2. Use the promotional funding method.
-3. Set the amount, currency, priority, and optional expiration date.
-4. Read the customer's balance to confirm the credit was added.
-5. List transaction history to see the `funded` movement.
+1. Use the promotional funding method.
+1. Set the amount, currency, priority, and optional expiration date.
+1. Read the customer's balance to confirm the credit was added.
+1. List transaction history to see the `funded` movement.
 
 Promotional credits are immediately usable after they are created.
 
@@ -66,11 +66,11 @@ Use invoice-funded credits when the customer buys credits through {{site.meterin
 The flow:
 
 1. Create a credit grant for the customer.
-2. Use the invoice funding method.
-3. Set the granted credit amount and currency.
-4. Set purchase terms, including the purchase currency and per-unit cost.
-5. Let the invoice lifecycle handle payment authorization and settlement.
-6. Show the customer their credit grant and credit balance.
+1. Use the invoice funding method.
+1. Set the granted credit amount and currency.
+1. Set purchase terms, including the purchase currency and per-unit cost.
+1. Let the invoice lifecycle handle payment authorization and settlement.
+1. Show the customer their credit grant and credit balance.
 
 The credit amount and the invoice amount are different values.
 A customer might receive 1,000 credits but pay a negotiated amount based on the per-unit cost.
@@ -82,10 +82,10 @@ Use externally funded credits when invoicing and payment happen outside {{site.m
 The flow:
 
 1. Create a credit grant for the customer.
-2. Use the external funding method.
-3. Set purchase terms.
-4. Update the external settlement state as your external system changes.
-5. Use balance and history to confirm credit availability and movement.
+1. Use the external funding method.
+1. Set purchase terms.
+1. Update the external settlement state as your external system changes.
+1. Use balance and history to confirm credit availability and movement.
 
 This flow is useful when {{site.metering_and_billing}} tracks the credit balance, but your own invoicing system handles the commercial invoice and payment.
 
@@ -96,10 +96,10 @@ Use balance reads when you need to show credit availability or decide whether a 
 The flow:
 
 1. Resolve the customer.
-2. Query the customer's credit balance.
-3. Filter by currency if the product surface is currency-specific.
-4. Use the settled balance for committed historical value.
-5. Use the pending balance for conservative operational decisions.
+1. Query the customer's credit balance.
+1. Filter by currency if the product surface is currency-specific.
+1. Use the settled balance for committed historical value.
+1. Use the pending balance for conservative operational decisions.
 
 The pending balance can differ from the settled balance because open charges may still consume credits.
 See [Credit balance model](/metering-and-billing/credits/balance-model/) for details.
@@ -111,10 +111,10 @@ Credit consumption happens through billing charges and rate card settlement mode
 The flow:
 
 1. Configure the relevant rate card with a credit settlement mode.
-2. Create or run charges for the customer.
-3. {{site.metering_and_billing}} applies credits according to the settlement mode.
-4. Read transaction history to inspect consumed credits.
-5. Read balance to inspect the remaining customer credit.
+1. Create or run charges for the customer.
+1. {{site.metering_and_billing}} applies credits according to the settlement mode.
+1. Read transaction history to inspect consumed credits.
+1. Read balance to inspect the remaining customer credit.
 
 For `credit_then_invoice`, credits reduce the amount to invoice.
 For `credit_only`, credits are the settlement mechanism for the charge.
@@ -126,10 +126,10 @@ Use transaction history when a customer or operator asks why a balance changed.
 The flow:
 
 1. List credit transactions for the customer.
-2. Filter by currency when needed.
-3. Filter by movement type when investigating a specific change.
-4. Display signed amount and balance before and after each movement.
-5. Use pagination cursors to move through older or newer history.
+1. Filter by currency when needed.
+1. Filter by movement type when investigating a specific change.
+1. Display signed amount and balance before and after each movement.
+1. Use pagination cursors to move through older or newer history.
 
 Good support tooling shows transaction history next to grants and charges:
 * The history explains balance movement

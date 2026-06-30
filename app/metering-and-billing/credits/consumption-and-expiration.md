@@ -85,8 +85,8 @@ stable movement order asc
 This means:
 
 1. Grants with lower priority values are consumed first.
-2. For equal priority, credits that expire earlier are consumed first.
-3. If both are equal, {{site.metering_and_billing}} uses stable movement order.
+1. For equal priority, credits that expire earlier are consumed first.
+1. If both are equal, {{site.metering_and_billing}} uses stable movement order.
 
 This order makes the result predictable and prevents avoidable expiration: if two grants have the same priority, the one expiring sooner is used first.
 

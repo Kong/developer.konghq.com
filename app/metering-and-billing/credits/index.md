@@ -182,6 +182,6 @@ rows:
 
 The customer's credit balance, the charge's settlement mode, and the grant's expiration and priority rules together determine how much credit is consumed.
 
-For details on draw-down order and expiration behavior, see [Credit consumption and expiration](/metering-and-billing/credits/consumption-and-expiration/).
+For details on draw-down order and expiration behavior, see [credit consumption and expiration](/metering-and-billing/credits/consumption-and-expiration/).
 
 For details on how {{site.metering_and_billing}} keeps credit balances correct through a double-entry ledger, immutable movements, and deterministic consumption order, see [Correctness guarantees](/metering-and-billing/credits/correctness-guarantee/).

@@ -51,7 +51,7 @@ This matters for customers and operators because the same rules explain every ba
 Every credit movement is backed by balanced ledger entries. 
 When credits move into or out of a customer balance, {{site.metering_and_billing}} records the matching side of the movement in another account.
 
-At a high level, the credit ledger has customer accounts and business accounts:
+At a high level, the credit ledger contains customer accounts and business accounts:
 
 {% mermaid %}
 flowchart LR

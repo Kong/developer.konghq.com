@@ -36,12 +36,11 @@ next_steps:
     url: /how-to/get-started-with-prepaid-credits/
 ---
 
-A credit balance answers the question: "how much credit does this customer have in this currency?"
 
-There are two balance concepts to keep separate:
+There are two concepts to a credit balance:
 
 * **Settled balance** is the balance from committed ledger movements. It is the durable record of what has happened.
-* **Pending balance** is a pessimistic live view that starts from the settled balance and accounts for open charges that may still consume credits.
+* **Pending balance** is a live view that starts from the settled balance and accounts for open charges that may still consume credits.
 
 ## Settled balance
 
@@ -55,8 +54,7 @@ Settled balance comes from committed credit movements. If a customer receives 10
 ```
 {:.no-copy-code}
 
-Settled balance is point-in-time. 
-If you query a balance at a timestamp, {{site.metering_and_billing}} includes movements visible at or before that timestamp. 
+If you query a balance at a timestamp, {{site.metering_and_billing}} includes movements visible at or before that timestamp, because a settled balance references a point in time.
 Future movements, including future expiration, don't affect an earlier balance.
 
 Example:
