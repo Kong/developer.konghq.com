@@ -54,7 +54,6 @@ The following Admin API endpoints can still be used with an expired license:
 
 [Upload a valid license](/gateway/entities/license/#deploy-a-license) to restore full read-write access to the Admin API.
 
-
 #### Workspace names
 
 Workspace names that match a top-level Admin API route segment are no longer allowed.
@@ -65,6 +64,59 @@ If it detects a conflict, {{site.base_gateway}} exits with an error listing the 
 
 Existing Workspaces created before this check was introduced must be renamed manually.
 To find reserved segments, call `GET /endpoints` and review the first path component of each route.
+
+#### Known issues in 3.15.0.0
+
+The following is a list of known issues in 3.15.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: |
+      On-prem cloned plugins block priority updates once configured
+    description: |
+      When a [cloned plugin](/gateway/entities/plugin/#cloning-plugins) is already configured on an entity, self-managed {{site.base_gateway}} rejects updates to its priority field.
+      <br><br>
+      **Workaround:** To change the priority of a configured cloned plugin, remove the dependent plugin instance, then update the priority.
+    status: Not fixed.
+  - issue: |
+      Distroless image fails to start with {{site.kic_product_name}}
+    description: |
+      When you deploy {{site.kic_product_name}} (KIC) with the distroless image on Kubernetes via the standard Kong Helm chart, the Kong pods never become `Ready`. 
+      Running `kubectl get pods` shows the pod stuck in `Init:Error`/`CrashLoopBackOff` state with errors that look like this:
+      <br><br>
+      ```
+      Error: failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "rm": executable file not found in $PATH
+      ```
+      <br>
+      **Workaround:** Disable the affected helper containers in the Helm `values.yaml` file you pass to the chart (supplied via `helm install/upgrade -f values.yaml`, or the equivalent `--set` flags), then re-deploy.
+      <br><br>
+      To disable the containers, add the following configuration snippet to the `values.yaml` file:
+      <br><br>
+      ```yaml
+      deployment:
+        initContainers:
+          clearStalePid:
+            enabled: false   
+      waitImage:
+        enabled: false 
+      ```
+
+    status: Not fixed.
+  - issue: |
+      Workspace names that conflict with Admin API routes block control plane startup
+    description: |
+      The schema validator rejects any Workspace names that conflict with Admin API router on create and update.
+      <br><br>
+      **Workaround:** Identify the conflicting Workspace names and manually rename them.
+    status: Not fixed.
+{% endtable %}
 
 ## 3.14.x breaking changes
 
