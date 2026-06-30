@@ -42,25 +42,21 @@ faqs:
 
 ## What is an AI Provider?
 
-The AI Provider entity lets you securely store and manage credentials for connecting to upstream LLM services. Use AI Providers to: 
+The AI Provider entity lets you securely store and manage credentials for connecting to upstream LLM services. Use AI Providers to:
 * Store API keys for OpenAI, Azure, Bedrock, or any other LLM provider
 * Centrally manage and rotate credentials across multiple AI Models
 * Enforce consistent authentication across your deployments
 
 Each AI Provider has a [`type`](#schema-aigateway-provider-type) that selects the upstream LLM service and configures provider-specific options. See the [schema](#schema) below for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
 
-AI Providers can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
+## Manage AI Providers
 
-{% table %}
-columns:
-  - title: Control Plane
-    key: cp
-  - title: Endpoint
-    key: endpoint
-rows:
-  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
-    endpoint: /v1/ai-gateways/{aiGatewayId}/providers
-{% endtable %}
+AI Providers can be created and managed through:
+
+* {{site.konnect_short_name}} UI
+* {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/providers`
+
+For configuration examples and step-by-step setup instructions, see [Set up an AI Provider](#set-up-an-ai-provider) below.
 
 ### Relationship to AI Models
 
