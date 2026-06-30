@@ -58,16 +58,16 @@ faqs:
 ## What is an AI Policy?
 
 Create an AI Policy when you want to add governance, security, transformation, or observability to {{site.ai_gateway}} traffic:
-- Attach [AI Sanitizer](/ai-gateway/policies/ai-sanitizer/) to redact sensitive data
+- Attach [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) to redact sensitive data
 - Attach [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) to manage request volume
-- Attach [AI Prompt Guard](/ai-gateway/policies/prompt-guard/) or [other guardrail Policies](/ai-gateway/#guardrails-and-content-safety) to validate prompts
-- Attach [logging policies](/ai-gateway/policies/?category=logging) to track requests and responses for observability
+- Attach [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) or [other guardrail Policies](/ai-gateway/#guardrails-and-content-safety) to validate prompts
+- Attach [logging Policies](/ai-gateway/policies/?category=logging) to track requests and responses for observability
 - Attach authentication policies like [OpenID Connect](/ai-gateway/policies/openid-connect/) to control access and verify identity
 
-**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate policies for each one. This ensures that deleting an entity deletes only its own policies—not configurations shared with other parts of your gateway.
+**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies—not configurations shared with other parts of your gateway.
 
 {:.info}
-> For the complete set of available policy types and configurations, see the [AI policies hub](/ai-gateway/policies/).
+> For the complete set of available policy types and configurations, see the [AI Policies hub](/ai-gateway/policies/).
 
 ## Manage AI Policies
 
@@ -80,7 +80,7 @@ For configuration examples and step-by-step setup instructions, see [Set up a gl
 
 ## AI Policy scopes
 
-An AI Policy's scope is determined by where it's referenced. Each AI Policy is an independent configuration that applies at exactly one scope: globally, or to a specific entity (AI Model, AI Agent, AI MCP Server, AI Consumer, or AI Consumer Group). To apply identical configuration in multiple places, create one AI Policy per target.
+An AI Policy's scope is determined by where it's referenced. Each AI Policy is an independent configuration that applies at exactly one scope. To apply identical configuration in multiple places, create one AI Policy per target.
 
 The available scopes are:
 
@@ -89,13 +89,13 @@ The available scopes are:
 * **Entity-scoped**: Reference the policy from the `policies` array on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), [AI Consumer](/ai-gateway/entities/ai-consumer/), or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity. The policy applies at that entity's scope.
 
 {:.info}
-> For each policy type, find its configuration schema and required fields on that policy's reference page in the [AI policies hub](/ai-gateway/policies/). Configuration is specific to each policy type.
+> For each policy type, find its configuration schema and required fields on that policy's reference page in the [AI Policies hub](/ai-gateway/policies/). Configuration is specific to each policy type.
 
 ## Set up a global AI Policy
 
-An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced) and a `config` block that configures that behavior. {{site.ai_gateway}} applies the policy at the scope you choose: globally across all traffic, or scoped to a specific AI Model, AI Agent, AI MCP Server, AI Consumer, or AI Consumer Group.
+An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced) and a `config` block that configures that behavior. {{site.ai_gateway}} applies the policy at the scope you choose: globally across all traffic, or scoped to a specific entity.
 
-The following example creates a global PII sanitizer AI Policy that runs for every {{site.ai_gateway}} route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
+The following example creates a global AI PII Sanitizer Policy that runs for every {{site.ai_gateway}} Route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
 
 {% entity_example %}
 type: policy
