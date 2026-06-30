@@ -42,17 +42,25 @@ This reference covers the common workflows for managing prepaid credits.
 
 Use promotional credits when you want to add value without a payment workflow.
 
-Common cases:
+Common use cases:
 
 - Give a new customer onboarding credit.
 - Compensate a customer.
 - Migrate an existing balance from another system.
 - Manually grant trial credit.
 
-The flow:
+The flow looks like this:
 
-1. Create a credit grant for the customer.
-1. Use the promotional funding method.
+{% mermaid %}
+flowchart LR
+    A["Create credit grant\n(promotional)"] --> B["Set amount, currency,\npriority, expiration"]
+    B --> C["Credit available\nimmediately"]
+    C --> D["Confirm: read\ncustomer balance"]
+    D --> E["Verify: funded\nmovement in history"]
+{% endmermaid %}
+
+Where:
+1. Create a credit grant for the customer with the promotional funding method.
 1. Set the amount, currency, priority, and optional expiration date.
 1. Read the customer's balance to confirm the credit was added.
 1. List transaction history to see the `funded` movement.
@@ -63,10 +71,17 @@ Promotional credits are immediately usable after they are created.
 
 Use invoice-funded credits when the customer buys credits through {{site.metering_and_billing}} billing.
 
-The flow:
+The flow looks like this:
 
-1. Create a credit grant for the customer.
-1. Use the invoice funding method.
+{% mermaid %}
+flowchart LR
+    A["Create credit grant\n(invoice)"] --> B["Set credit amount,\npurchase terms"]
+    B --> C["Invoice lifecycle:\nauthorize & settle payment"]
+    C --> D["Credits available\nafter settlement"]
+    D --> E["Show customer\ngrant & balance"]
+{% endmermaid %}
+
+1. Create a credit grant for the customer with the invoice funding method.
 1. Set the granted credit amount and currency.
 1. Set purchase terms, including the purchase currency and per-unit cost.
 1. Let the invoice lifecycle handle payment authorization and settlement.
@@ -79,10 +94,17 @@ A customer might receive 1,000 credits but pay a negotiated amount based on the 
 
 Use externally funded credits when invoicing and payment happen outside {{site.metering_and_billing}} through custom invoicing.
 
-The flow:
+The flow looks like this:
 
-1. Create a credit grant for the customer.
-1. Use the external funding method.
+{% mermaid %}
+flowchart LR
+    A["Create credit grant\n(external funding)"] --> B["Set purchase terms"]
+    B --> C["External system:\nhandles invoice & payment"]
+    C --> D["Update external\nsettlement state"]
+    D --> E["Confirm via\nbalance & history"]
+{% endmermaid %}
+
+1. Create a credit grant for the customer with the external funding method.
 1. Set purchase terms.
 1. Update the external settlement state as your external system changes.
 1. Use balance and history to confirm credit availability and movement.
@@ -93,7 +115,17 @@ This flow is useful when {{site.metering_and_billing}} tracks the credit balance
 
 Use balance reads when you need to show credit availability or decide whether a customer can continue using a credit-backed feature.
 
-The flow:
+The flow looks like this:
+
+{% mermaid %}
+flowchart LR
+    A["Resolve customer"] --> B["Query credit balance"]
+    B --> C{"Currency-specific?"}
+    C -->|Yes| D["Filter by currency"]
+    C -->|No| E["Use full balance"]
+    D & E --> F["Settled balance:\ncommitted value"]
+    D & E --> G["Pending balance:\nconservative value"]
+{% endmermaid %}
 
 1. Resolve the customer.
 1. Query the customer's credit balance.
@@ -108,7 +140,17 @@ See [Credit balance model](/metering-and-billing/credits/balance-model/) for det
 
 Credit consumption happens through billing charges and rate card settlement modes.
 
-The flow:
+The flow looks like this:
+
+{% mermaid %}
+flowchart LR
+    A["Configure rate card\nwith credit settlement mode"] --> B["Charge is created\nfor customer"]
+    B --> C{"Settlement mode"}
+    C -->|credit_only| D["Credits settle\nthe full charge"]
+    C -->|credit_then_invoice| E["Credits reduce\ninvoiced amount"]
+    D & E --> F["consumed movement\nin transaction history"]
+    F --> G["Updated balance\nreflects remaining credits"]
+{% endmermaid %}
 
 1. Configure the relevant rate card with a credit settlement mode.
 1. Create or run charges for the customer.
@@ -123,7 +165,17 @@ For `credit_only`, credits are the settlement mechanism for the charge.
 
 Use transaction history when a customer or operator asks why a balance changed.
 
-The flow:
+The flow looks like this:
+
+{% mermaid %}
+flowchart LR
+    A["List credit transactions\nfor customer"] --> B["Apply filters:\ncurrency, movement type"]
+    B --> C["Display each movement:\nsigned amount, balance before/after"]
+    C --> D{"More history?"}
+    D -->|Yes| E["Use pagination\ncursor"]
+    E --> C
+    D -->|No| F["Done"]
+{% endmermaid %}
 
 1. List credit transactions for the customer.
 1. Filter by currency when needed.
