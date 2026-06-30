@@ -604,7 +604,7 @@ columns:
     key: strategy
   - title: Displayed as
     key: display
-  - title: When to use
+  - title: "Use when you want to..."
     key: use
 rows:
   - strategy: "`full`"
