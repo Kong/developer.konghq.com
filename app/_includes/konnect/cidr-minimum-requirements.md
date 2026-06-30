@@ -55,7 +55,3 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-How many IPs are usable depends on whether you're using a public or private subnet, your network's CIDR range, and AZ count.
-* **Public subnets:** Kong reserves about 50 IPs in total (used by Kong's internal services and cloud provider reserves).
-* **Private subnets:** The cloud provider your Dedicated Cloud Gateway is deployed on reserves 5 IPs. It cannot use subnets that have fewer than 8 IPs, so Kong reserves about 15 IPs per AZ.
-
