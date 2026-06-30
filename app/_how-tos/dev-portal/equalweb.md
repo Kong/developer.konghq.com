@@ -56,6 +56,7 @@ Before you configure the integration in {{site.konnect_short_name}}, you need yo
 1. Click **Collapse** for your widget code. This will expand the widget configuration.
 1. Copy your site key from the `get sitekey (){ return "79ad2e1..."}` field. For example: `79ad2e1ec52e63565e254555077aaaec`.
 1. (Optional) If you configured the widget design, copy the configuration. For example:
+
    ```json
    "Position": "left",
    "Menulang": "EN",
@@ -103,6 +104,7 @@ Configure the EqualWeb integration in your {{site.dev_portal}} settings.
 1. Click the **Enabled** toggle.
 1. In the **Site key**, enter the site key from the EqualWeb widget you configured previously. For example: `79ad2e1ec52e63565e254555077aaaec`.
 1. (Optional) If you configured the widget design in EqualWeb, click **Advanced configurations** and enter the JSON configuration in the configuration field with opening and closing brackets (`{}`). For example:
+
    ```json
    {
     "Position": "left",
@@ -111,7 +113,7 @@ Configure the EqualWeb integration in your {{site.dev_portal}} settings.
     ...
    } 
    ```
-   {:.collapsible .no-copy-code}
+   {:.no-copy-code}
 1. Click **Save**.
 
 
