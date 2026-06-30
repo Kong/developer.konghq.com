@@ -47,7 +47,8 @@ module Jekyll
       product = product_data(site, major_version)
 
       canonical_page.data['previous_major_urls'] ||= {}
-      canonical_page.data['previous_major_urls'][product.major_version] = page.url
+      canonical_page.data['previous_major_urls'][product.major_version] ||= []
+      canonical_page.data['previous_major_urls'][product.major_version] << page.url
     end
 
     def find_page_by_path!(relative_path, site)

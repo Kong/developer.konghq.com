@@ -339,8 +339,7 @@ app/_landing_pages/ai-gateway/v1.yaml:
   status: pending
   canonical_url:
 app/_landing_pages/ai-gateway/v1/a2a.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /ai-gateway/a2a/
 app/_landing_pages/ai-gateway/v1/ai-clis.yaml:
   status: pending
   canonical_url:

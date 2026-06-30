@@ -14,7 +14,8 @@ module Jekyll
       @context = context
       @page = @context.environments.first['page']
       site = context.registers[:site]
-      changelog = Drops::GatewayChangelog.new(site:)
+      product = @page['products']&.first || 'gateway'
+      changelog = Drops::GatewayChangelog.new(site:, product:)
 
       context.stack do
         context['changelog'] = changelog

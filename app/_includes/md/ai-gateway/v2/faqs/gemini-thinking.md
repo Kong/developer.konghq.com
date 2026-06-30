@@ -1,1 +1,1 @@
-Pass `thinkingConfig` parameters via `extra_body` in your requests to enable detailed reasoning traces. See [Use {{ site.gemini }}'s thinkingConfig with {{site.ai_gateway}}](/how-to/use-gemini-3-thinking-config/) for detailed instructions.
+Pass `thinkingConfig` parameters via `extra_body` in your requests to enable detailed reasoning traces.
