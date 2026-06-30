@@ -85,25 +85,21 @@ faqs:
 ## What is an AI Model?
 
 The AI Model entity lets you expose LLM endpoints through {{site.ai_gateway}} for clients to call. Use AI Models to: 
-* Expose multiple LLM providers under a single endpoint
-* Load-balance traffic across them
-* Add observability to model traffic
-* Attach policies for security and transformation
+* [Expose multiple LLM providers](#targets) under a single endpoint
+* [Load-balance traffic](#load-balancing) across them
+* [Add observability](#logging-and-observability) to model traffic
+* [Attach policies](#attach-ai-policies) for security and transformation
 
 An AI Model declares which capabilities it exposes (like `chat` or `embeddings`), which upstream AI Provider models it routes to, and how requests are distributed and logged. {{site.ai_gateway}} handles the routing and translation, so clients interact with a single unified endpoint.
 
-AI Models can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
+## Manage AI Models
 
-{% table %}
-columns:
-  - title: Control Plane
-    key: cp
-  - title: Endpoint
-    key: endpoint
-rows:
-  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
-    endpoint: /v1/ai-gateways/{aiGatewayId}/models
-{% endtable %}
+AI Models can be created and managed through:
+
+* {{site.konnect_short_name}} UI
+* {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/models`
+
+For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model) below.
 
 ## How it works
 
