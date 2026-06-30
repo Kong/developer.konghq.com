@@ -35,7 +35,7 @@ related_resources:
 faqs:
   - q: Can I authenticate to Azure AI with Azure Identity?
     a: |
-      {% include faqs/azure-identity.md %}
+      {% include md/ai-gateway/v2/faqs/azure-identity.md %}
 
 ---
 

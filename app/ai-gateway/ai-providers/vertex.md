@@ -2,7 +2,7 @@
 title: "Vertex AI provider"
 layout: reference
 content_type: reference
-description: Reference for supported capabilities for Azure OpenAI provider
+description: Reference for supported capabilities for Vertex AI provider
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/

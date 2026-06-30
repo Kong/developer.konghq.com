@@ -35,7 +35,7 @@ related_resources:
 faqs:
   - q: How do I use Cohere's document-grounded chat for RAG pipelines?
     a: |
-      {% include faqs/cohere-rerank.md %}
+      {% include md/ai-gateway/v2/faqs/cohere-rerank.md %}
 
 ---
 
