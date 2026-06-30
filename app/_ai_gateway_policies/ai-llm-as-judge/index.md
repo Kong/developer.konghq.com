@@ -40,7 +40,7 @@ rows:
 
 ## How it works
 
-1. The Policy sends the user prompt and response to the configured LLM as a judge.
+1. AI Gateway sends the user prompt and response to the configured LLM as a judge.
 2. The LLM evaluates the response and returns a numeric score between `1` (ideal) and `100` (wrong or irrelevant).
 3. This score can be used in downstream workflows, such as automated grading, feedback systems, or learning pipelines.
 
@@ -49,19 +49,19 @@ The following sequence diagram illustrates this simplified flow:
 {% mermaid %}
 sequenceDiagram
     actor Client
-    participant ME as Model Entity
+    participant AIGW as AI Gateway
     participant LLM as LLM Model (A or B)
     participant Judge as AI LLM as Judge
     participant JudgeLLM as Judge LLM
 
-    Client->>ME: Send prompt
-    ME->>LLM: Forward prompt (balancer selects model)
-    LLM-->>ME: Response
-    ME->>Judge: Prompt + response
+    Client->>AIGW: Send prompt
+    AIGW->>LLM: Forward prompt (balancer selects model)
+    LLM-->>AIGW: Response
+    AIGW ->>Judge: Prompt + response
     Judge->>JudgeLLM: Evaluate response
     JudgeLLM-->>Judge: Score (1–100)
-    Judge-->>ME: Evaluation result
-    ME-->>Client: Response
+    Judge-->>AIGW: Evaluation result
+    AIGW-->>Client: Response
 {% endmermaid %}
 
 ## Recommended LLM settings
