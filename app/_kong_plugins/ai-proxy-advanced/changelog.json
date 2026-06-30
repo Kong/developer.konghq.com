@@ -372,6 +372,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed an issue where observability errors occurred when `gpt-image-1.5` returned image token usage details.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added latency and cost observability to realtime API.",

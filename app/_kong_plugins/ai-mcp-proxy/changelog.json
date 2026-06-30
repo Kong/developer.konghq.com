@@ -212,6 +212,13 @@
       "type": "bugfix"
     }
   ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed stale tools cache after full-sync reconfigure (e.g. `deck sync`), causing `tools/list` to return empty results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "The plugin now forwards client headers when calling the tool.\n",
