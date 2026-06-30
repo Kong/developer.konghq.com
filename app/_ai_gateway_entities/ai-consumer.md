@@ -75,6 +75,7 @@ AI Consumers are essential for controlling access to your AI APIs, tracking usag
 
 Common use cases for enforcing controls at the AI Consumer level:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Use case
@@ -93,6 +94,7 @@ rows:
   - use_case: Audit and compliance
     description: Track which clients are using which AI Models, monitor for policy violations, and maintain audit logs for compliance and analytics.
 {% endtable %}
+<!-- vale on -->
 
 ## Manage AI Consumers
 
