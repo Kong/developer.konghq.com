@@ -63,7 +63,7 @@ rows:
 
 ## Default organization tax codes
 
-Defaul organization tax codes act as a safety net, guaranteeing that every taxable item has a tax code even when there's no specific setting configured.
+Default organization tax codes act as a safety net, guaranteeing that every taxable item has a tax code even when there's no specific setting configured.
 Tax code defaults are defined once per organization and apply across all billing profiles, customers, plans, and invoices.
 
 {{site.metering_and_billing}} sets two defaults when your organization is created:
