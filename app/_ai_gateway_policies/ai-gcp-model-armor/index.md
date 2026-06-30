@@ -10,8 +10,6 @@ products:
   - ai-gateway
 content_type: plugin
 
-tier: ai_gateway_enterprise
-
 publisher: kong-inc
 description: 'Audit and validate LLM prompts with Google Cloud Model Armor before forwarding them to an upstream LLM.'
 
@@ -53,7 +51,7 @@ It leverages GCP SaaS APIs to inspect prompts and model outputs, preventing unsa
 
 ## Features
 
-The plugin provides the following content safety capabilities:
+The AI GCP Model Armor Policy provides the following content safety capabilities:
 
 <!-- vale off -->
 {% table %}
@@ -78,7 +76,7 @@ rows:
 
 ## How it works
 
-The plugin inspects requests and responses using GCP Model Armor:
+The AI GCP Model Armor Policy inspects requests and responses using GCP Model Armor:
 
 * **Request inspection**: Chat prompts are intercepted, and the relevant content (by default, the last chat message) is sent to the [sanitizeUserPrompt](https://cloud.google.com/security-command-center/docs/sanitize-prompts-responses#text-prompts) API.
 * **Response inspection:** Chat responses are buffered (supporting gzip and streaming) and sent to the [sanitizeModelResponse](https://cloud.google.com/security-command-center/docs/sanitize-prompts-responses#sanitize-model) API. SSE streaming is supported with chunk buffering.
@@ -86,19 +84,19 @@ The plugin inspects requests and responses using GCP Model Armor:
 ### Request guarding flow
 
 1. An incoming request to an LLM (for example, a chat completion) is intercepted by the AI GCP Model Armor Policy.
-2. The plugin extracts the relevant content, usually the last user message in the conversation.
+2. The AI Policy extracts the relevant content, usually the last user message in the conversation.
 3. The content is submitted to GCP Model Armor’s `sanitizeUserPrompt` endpoint for analysis.
 
 ### Response guarding flow
 
-1. The plugin buffers the upstream response body (including gzipped responses).
+1. The AI Policy buffers the upstream response body (including gzipped responses).
 2. It extracts the model’s response content.
 3. The content is sent to GCP Model Armor’s `sanitizeModelResponse` endpoint for validation.
 
 ### Sanitization and action
 
 1. GCP Model Armor evaluates the provided content against the configured `template_id`.
-2. The plugin interprets the `sanitizationResult` from GCP.
+2. The AI Policy interprets the `sanitizationResult` from GCP.
 3. If a violation is detected (for example, hatred, sexually explicit content, harassment, or jailbreak attempts), the request or response is blocked.
 4. Blocked traffic results in a `400 Bad Request` response with the configured `request_failure_message` or `response_failure_message`.
 5. If `reveal_failure_categories` is enabled, the response also lists the categories that triggered blocking.
@@ -136,12 +134,12 @@ rows:
 {% endtable %}
 
 {:.warning}
-> **Caution**: Do **not** set the Model Armor Floor Setting directly in GCP, as it will cause conflicts with this Policy.
+> **Caution**: Do **not** set the Model Armor Floor Setting directly in GCP, as it will cause conflicts with this AI Policy.
 See the [FAQ entry for this error](#what-do-i-do-if-i-see-the-error-blocked-by-model-armor-floor-setting) for more information.
 
 ## Unrecognized filters
 
-The AI GCP Model Armor Policy now blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. Previously, unrecognized filter types were silently ignored. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the Policy supports.
+The AI GCP Model Armor Policy now blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. Previously, unrecognized filter types were silently ignored. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the AI Policy supports.
 
 ## Logging
 
@@ -154,4 +152,4 @@ To log the raw content of blocked requests and responses, enable [`config.log_bl
 * Only chat prompts and chat responses are inspected; embeddings and other modalities are not checked.
 * Inspects one chat message or one response body at a time. Combining multiple messages reduces accuracy.
 * For SSE streaming, unsafe content may appear briefly before termination with `"stop_reason: blocked by content safety"`.
-* Only one `template_id` can be configured per plugin instance.
+* Only one `template_id` can be configured per AI Policy.
