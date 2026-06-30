@@ -22,9 +22,9 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Provider entity
+  - text: AI Provider entity
     url: /ai-gateway/entities/ai-provider/
-  - text: Model entity
+  - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
   - text: "{{site.base_gateway}} Vault entity"
     url: /gateway/entities/vault/
@@ -61,7 +61,7 @@ An AI Vault is a first-class {{site.ai_gateway}} entity that registers a secret-
 
 An AI Vault entity stores the connection configuration and credentials needed to reach the backend. {{site.ai_gateway}} resolves vault references against the registered AI Vaults at request time.
 
-AI Vaults can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+AI Vaults can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
 {% table %}
 columns:

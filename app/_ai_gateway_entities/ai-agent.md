@@ -39,7 +39,7 @@ faqs:
       Use `a2a` when the upstream speaks the A2A protocol and you want observability tied to A2A
       task and message semantics.
 
-  - q: Does the Agent entity modify request routing or aggregate responses?
+  - q: Does the AI Agent entity modify request routing or aggregate responses?
     a: |
       No. The runtime behind an Agent operates as a transparent proxy. It detects A2A requests,
       records telemetry, and rewrites agent-card URLs to the gateway address. It does not change
@@ -63,20 +63,19 @@ faqs:
     a: |
       Set the [`acls`](#schema-aigateway-agent-acls) field on the AI Agent with allow or deny lists. Each entry is a string that
       references an AI Consumer, AI Consumer Group, or Authenticated Group by name.
-
-  - q: Can the same plugin run on an AI Agent that I'd attach to a route or service?
-    a: |
-      Plugin configuration that applies to the AI Agent goes through the [AI Policy entity](/ai-gateway/entities/ai-policy/).
-      Attach AI Policies to the AI Agent through its [`policies`](#schema-aigateway-agent-policies) field.
 ---
 
 ## What is an AI Agent?
 
-An AI Agent is a first-class {{site.ai_gateway}} entity that represents an upstream agent endpoint exposed through {{site.ai_gateway}}. An AI Agent has a type, either `a2a` for [Agent-to-Agent protocol](https://a2aproject.github.io/A2A/) traffic or `http` for generic HTTP agent routing, and a configuration that points {{site.ai_gateway}} at the upstream and shapes how requests flow.
+An AI Agent is a first-class {{site.ai_gateway}} entity that represents an upstream agent endpoint exposed through {{site.ai_gateway}}. Create an AI Agent when you want to route requests through {{site.ai_gateway}} to gain visibility, control access, apply policies, or add protocol awareness to agent-to-agent communication.
 
-For `http` type AI Agents, requests are proxied without A2A-specific processing. For `a2a` type AI Agents, {{site.ai_gateway}} adds protocol-aware behavior on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry.
+An AI Agent has a type that determines how requests are processed: `a2a` for [Agent-to-Agent protocol](https://a2aproject.github.io/A2A/) traffic with protocol awareness and observability, or `http` for generic HTTP agent routing without protocol-specific processing. The configuration points {{site.ai_gateway}} at the upstream and shapes how requests flow.
 
-AI Agents can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+**For `http` type AI Agents**, requests are proxied without A2A-specific processing. Use this when the upstream doesn't implement A2A or when you need a simple forward proxy.
+
+**For `a2a` type AI Agents**, {{site.ai_gateway}} adds protocol-aware behavior on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry. Use this when the upstream speaks the A2A protocol and you want full observability tied to A2A semantics (tasks, messages, agent cards).
+
+AI Agents can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
 {% table %}
 columns:
@@ -89,14 +88,6 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/agents
 {% endtable %}
 
-## AI Agent types
-
-An AI Agent's [`type`](#schema-aigateway-agent-type) controls how requests are processed:
-
-**`a2a` (Agent-to-Agent):** Applies A2A protocol awareness to proxied traffic. The runtime detects A2A requests (JSON-RPC and REST bindings), rewrites agent-card URLs to the gateway address, emits structured A2A telemetry, and extracts task metadata for analytics. Use this when the upstream speaks the A2A protocol and you want full observability tied to A2A semantics.
-
-**`http`:** Generic HTTP proxy without A2A-specific processing. Requests pass through transparently. Use this for upstream agents that don't implement A2A or when you need a simple forward proxy without protocol-aware behavior.
-
 ## How A2A traffic flows
 
 When an Agent has type `a2a`, proxied traffic is processed in four phases:
@@ -107,10 +98,6 @@ When an Agent has type `a2a`, proxied traffic is processed in four phases:
 1. **Log**. Finalizes the OpenTelemetry span with task state, task ID, and any error information.
 
 Non-A2A traffic, and traffic to `http` Agents, is proxied without these steps.
-
-## Routing configuration
-
-Beyond the [`url`](#schema-aigateway-agent-config-url) field, AI Agents can define HTTP routing rules through [`config.route`](#schema-aigateway-agent-config-route). This allows you to match requests by method, path, host, and other HTTP patterns. Use [`route`](#schema-aigateway-agent-config-route) when you need fine-grained control over which traffic reaches the AI Agent. If only a URL is needed, the [`url`](#schema-aigateway-agent-config-url) field is simpler.
 
 <!-- vale off -->
 {% mermaid %}
@@ -136,7 +123,7 @@ sequenceDiagram
         Gateway->>Client: Response (unchanged)
     end
 
-    Note over Gateway: Finish OTel span<br>Emit ai.a2a metrics to log plugins
+    Note over Gateway: Finish OTel span<br>Emit ai.a2a metrics to logs
 {% endmermaid %}
 <!-- vale on -->
 
@@ -170,13 +157,11 @@ rows:
     purpose: Carries the concrete output of a task in a structured, retrievable form.
 {% endtable %}
 
-### Protocol detection
+### A2A protocol detection
 
-A2A traffic is auto-detected per request and non-A2A traffic passes through without overhead.
+The AI Agent entity auto-detects A2A traffic without requiring explicit configuration per route. It inspects each request and applies A2A processing only when a match is found; non-A2A traffic passes through without overhead. Detection works across two protocol bindings:
 
-#### REST binding
-
-Detection anchors to the end of the request path, so any prefix added by the route is ignored. For example, both `/v1/message:send` and `/api/agents/v1/message:send` match `SendMessage`:
+**REST binding.** The entity detects A2A endpoints by path suffix and HTTP method. The match anchors to the end of the request path, so any prefix added by the Kong Route is ignored. For example, both `/v1/message:send` and `/api/agents/v1/message:send` match `SendMessage`:
 
 <!-- vale off -->
 {% table %}
@@ -243,9 +228,9 @@ When an upstream agent returns an agent card, the runtime rewrites the [`url`](#
 
 ## Logging and observability
 
-When Statistics logging is enabled, {{site.ai_gateway}} records structured A2A telemetry per request and exposes it in {{site.konnect_short_name}} analytics, attached log plugins, and OpenTelemetry when [{{site.base_gateway}} tracing](/gateway/tracing/) is configured. For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
+When statistics logging is enabled, {{site.ai_gateway}} records structured A2A telemetry per request and exposes it in {{site.konnect_short_name}} analytics and attached logging policies. For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
 
-The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached logging plugins, and creates a `kong.a2a` child span when [{{site.base_gateway}} tracing](/gateway/tracing/) is configured.
+The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached logging Policies.
 
 {:.info}
 > When statistics logging is enabled, the runtime removes the `Accept-Encoding` request header
@@ -262,33 +247,36 @@ You can view A2A analytics in {{site.konnect_short_name}} Explorer and Dashboard
 
 ### Log output fields
 
-{% include /plugins/ai-a2a-proxy/log-output-fields.md %}
+{% include md/ai-gateway/v2/entities/log-output-fields.md %}
 
 ### OpenTelemetry span attributes
 
-When statistics logging is enabled and {{site.base_gateway}} tracing is configured, the runtime creates a `kong.a2a` child span with the following attributes:
+When statistics logging is enabled and {{site.ai}} tracing is configured, the runtime creates a `kong.a2a` child span with the following attributes:
 
-{% include /plugins/ai-a2a-proxy/otel-span-attributes.md %}
+{% include md/ai-gateway/v2/entities/otel-span-attributes.md %}
 
-### Task states
+### Request body size
 
-Task state values surfaced in logs and spans are normalized to lowercase A2A spec format, regardless of the upstream SDK version: `submitted`, `working`, `input-required`, `completed`, `canceled`, `failed`, `rejected`, `auth-required`, `unknown`.
+The plugin reads the request body to detect JSON-RPC A2A requests. Use
+[`config.max_request_body_size`](#schema-aigateway-agent-config-max-request-body-size) to control the maximum body size parsed for detection (default 1 MB). Set to `0` for no limit. REST requests are detected by path and HTTP method without reading the body, so this setting applies to JSON-RPC detection only.
+
+If a request body exceeds the limit, the plugin logs a warning and skips A2A detection for that request; the request is still proxied upstream.
 
 ## Access control
 
-The [`acls`](#schema-aigateway-agent-acls) field controls which identities are allowed to reach the AI Agent. The field accepts `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. An **Authenticated Group** is a dynamic group representing all consumers that have authenticated via a specific OAuth2 scope or claim. Access is enforced before traffic reaches the upstream agent.
+To restrict which identities can reach an AI Agent, use the [`acls`](#schema-aigateway-agent-acls) field to define `allow` and `deny` lists. Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name. An **Authenticated Group** is a dynamic group representing all consumers that have authenticated via a specific OAuth2 scope or claim. Access is enforced before traffic reaches the upstream agent.
 
-For per-request authentication and identity, attach an authentication AI Policy to the AI Agent.
+For per-request authentication beyond static access lists, attach an [authentication AI Policy](/ai-gateway/policies/?category=authentication) to the AI Agent.
 
 ## Attach Policies
 
-Attach AI Policies through the AI Agent's [`policies`](#schema-aigateway-agent-policies) field. Each entry is a string that references an AI Policy by name or ID. Multiple AI Policies can attach to one AI Agent; each runs independently.
+To add security, transformation, or observability to agent traffic, attach AI Policies to the AI Agent. For example, attach AI Sanitizer to redact sensitive data, AI Rate Limiting Advanced to control request volume, Prompt Guard to validate prompts, or Request Transformer to modify payloads. Add policy names or IDs to the AI Agent's [`policies`](#schema-aigateway-agent-policies) field; multiple policies run independently on each request.
 
-For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+For the complete list of available policies, see the [AI policies hub](/ai-gateway/policies/).
 
 ## Set up an Agent
 
-The following example creates an `a2a` Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with statistics logging enabled and access restricted to the `internal-teams` Consumer Group.
+The following example creates an `a2a` AI Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with statistics logging enabled and access restricted to the `internal-teams` AI Consumer Group.
 
 {% entity_example %}
 type: agent

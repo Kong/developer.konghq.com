@@ -22,9 +22,9 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Provider entity
+  - text: AI Provider entity
     url: /ai-gateway/entities/ai-provider/
-  - text: Vault entity
+  - text: AI Vault entity
     url: /ai-gateway/entities/ai-vault/
 faqs:
   - q: Why is there no update operation?
@@ -63,7 +63,7 @@ A Data Plane Certificate is an {{site.ai_gateway}} entity that registers a publi
 
 Each Data Plane Certificate belongs to exactly one {{site.ai_gateway}}. An {{site.ai_gateway}} can have multiple registered certificates so that you can issue one per data plane fleet, rotate keys without downtime, or revoke trust for a subset of data planes independently.
 
-Data Plane Certificates are managed through the {{site.konnect_short_name}} {{site.ai_gateway}} API, the {{site.konnect_short_name}} UI, or Terraform:
+Data Plane Certificates are managed through the {{site.konnect_short_name}} UI or {{site.ai_gateway}} API.
 
 {% table %}
 columns:
@@ -78,8 +78,6 @@ rows:
     cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
     endpoint: /v1/ai-gateways/{aiGatewayId}/data-plane-certificates
 {% endtable %}
-
-<!-- There is no on-prem equivalent for this entity. Self-managed {{site.base_gateway}} deployments use the existing [`/certificates`](/gateway/entities/certificate/) entity and [hybrid mode node configuration](/gateway/hybrid-mode/) instead. -->
 
 ## Trust model
 
@@ -117,6 +115,22 @@ To rotate a certificate without downtime:
 1. Delete the old Data Plane Certificate.
 
 Deleting a Data Plane Certificate immediately invalidates the trust for any data plane still using it. Existing connections are dropped and reconnect attempts using the deleted certificate are rejected.
+
+## Set up a Data Plane Certificate
+
+The following example registers a public X.509 certificate as a trusted client identity for an {{site.ai_gateway}}.
+
+{% entity_example %}
+type: data_plane_certificate
+data:
+  title: My AI Gateway Data Plane Certificate
+  description: Certificate for data plane nodes in production
+  cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIDXTCCAkWgAwIBAgIJAJC1/iNAZwqDMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
+    ...
+    -----END CERTIFICATE-----
+{% endentity_example %}
 
 ## Schema
 

@@ -29,10 +29,10 @@ related_resources:
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
 faqs:
-  - q: What happens when I update a Provider's credentials?
+  - q: What happens when I update an AI Provider's credentials?
     a: |
-      {{site.ai_gateway}} propagates the credential change to every Model that references the
-      Provider (by `name` or `id`). The next request through any of those Models uses the updated
+      {{site.ai_gateway}} propagates the credential change to every AI Model that references the
+      AI Provider (by `name` or `id`). The next request through any of those AI Models uses the updated
       credentials.
 
   - q: How does an AI Model reference an AI Provider?
@@ -44,12 +44,6 @@ faqs:
       No. An AI Provider entity is a write-time template. Credentials and configuration only enter
       the runtime when an AI Model references the AI Provider; at that point, the AI Provider's values are
       materialized into the underlying primitives generated for the AI Model.
-
-  # - q: How do I configure providers in on-prem deployments?
-  #   a: |
-  #     {{site.ai_gateway}} entities are available only in {{site.konnect_short_name}}.
-  #     For on-prem deployments, configure provider credentials and endpoints using {{site.base_gateway}} plugins directly (for example, the AI Proxy plugin).
-  #     See the [{{site.base_gateway}} plugin catalog](/gateway/plugins/) for available AI-related plugins.
 ---
 
 ## What is an AI Provider?
@@ -64,7 +58,7 @@ An AI Provider stores how to reach and authenticate to an upstream LLM service. 
 
 AI Providers don't expose model endpoints on their own. They become routable only through an AI Model that references them.
 
-AI Providers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+AI Providers can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
 {% table %}
 columns:
@@ -79,7 +73,7 @@ rows:
 
 ## Supported providers
 
-{{site.ai_gateway}} supports the following upstream providers. The Provider's [`type`](#schema-aigateway-provider-type) field selects one of these connections. Per-provider pages document supported capabilities, configuration requirements, and provider-specific limitations.
+{{site.ai_gateway}} supports the following upstream providers. The AI Provider's [`type`](#schema-aigateway-provider-type) field selects one of these connections. Per-provider pages document supported capabilities, configuration requirements, and provider-specific limitations.
 
 {% html_tag type="div" css_classes="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" %}
 {% icon_card icon="openai.svg" title="OpenAI" cta_url="/ai-gateway/ai-providers/openai/" %}
@@ -103,7 +97,7 @@ rows:
 
 ## Authentication
 
-The [`config.auth`](#schema-aigateway-provider-config-auth) object declares how {{site.ai_gateway}} authenticates to the upstream provider. The shape of `auth` depends on the Provider's [`type`](#schema-aigateway-provider-type):
+The [`config.auth`](#schema-aigateway-provider-config-auth) object declares how {{site.ai_gateway}} authenticates to the upstream provider. The shape of `auth` depends on the AI Provider's [`type`](#schema-aigateway-provider-type):
 
 * **`basic`**: header- or query-parameter-based auth. Used by most provider types.
 * **`aws`**: IAM access-key and assume-role auth. Used by [Bedrock](/ai-gateway/ai-providers/bedrock/).
@@ -131,9 +125,9 @@ The [Gemini](/ai-gateway/ai-providers/gemini/) and [Vertex AI](/ai-gateway/ai-pr
 
 ## Provider references
 
-[AI Models](/ai-gateway/entities/ai-model/) reference a Provider through the [`target_models[].provider`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-provider) field. The same reference shape is used elsewhere in the schema (such as the embeddings model under a Model's load balancer config). Provider references in {{site.ai_gateway}} entities accept either the Provider [`name`](#schema-aigateway-provider-name) or `id`.
+[AI Models](/ai-gateway/entities/ai-model/) reference an AI Provider through the [`target_models[].provider`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-provider) field. The same reference shape is used elsewhere in the schema (such as the embeddings model under an AI Model's load balancer config). AI Provider references in {{site.ai_gateway}} entities accept either the AI Provider [`name`](#schema-aigateway-provider-name) or `id`.
 
-If references use [`name`](#schema-aigateway-provider-name), the `name` field acts as a stable human-readable handle. Renaming a Provider (changing `name`) breaks any Model references that point at the old name.
+If references use [`name`](#schema-aigateway-provider-name), the `name` field acts as a stable human-readable handle. Renaming an AI Provider (changing `name`) breaks any AI Model references that point at the old name.
 
 ## Lifecycle
 

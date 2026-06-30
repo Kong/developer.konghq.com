@@ -29,19 +29,19 @@ related_resources:
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
 faqs:
-  - q: Why are credentials a separate entity instead of a field on the Consumer?
+  - q: Why are credentials a separate entity instead of a field on the AI Consumer?
     a: |
       Each credential has its own lifecycle, identifier, and (for API keys) TTL. Modeling them as
-      a sub-entity of the Consumer lets you list, rotate, and revoke individual credentials
-      independently of the Consumer record.
+      a sub-entity of the AI Consumer lets you list, rotate, and revoke individual credentials
+      independently of the AI Consumer record.
 
   - q: What credential types are supported?
     a: |
-      Two types: `api-key` and `oauth`. The [`type`](#schema-aigateway-consumer-credential-type) of the Credential must match the Consumer's
+      Two types: `api-key` and `oauth`. The [`type`](#schema-aigateway-consumer-credential-type) of the Credential must match the AI Consumer's
       `type`. An `api-key` credential carries the [`api_key`](#schema-aigateway-consumer-credential-api-key) value (and an optional [`ttl`](#schema-aigateway-consumer-credential-ttl)). An
-      `oauth` credential is paired with a Consumer that maps to an OAuth identity through the Consumer's `custom_id` field.
+      `oauth` credential is paired with an AI Consumer that maps to an OAuth identity through the AI Consumer's `custom_id` field.
 
-  - q: Can a Consumer have multiple credentials?
+  - q: Can an AI Consumer have multiple credentials?
     a: |
       Yes. Issue one Credential per environment, client, or rotation cycle, and revoke individual
       Credentials without affecting the others.
@@ -52,16 +52,16 @@ faqs:
       ([`name`](#schema-aigateway-consumer-credential-name), [`display_name`](#schema-aigateway-consumer-credential-display-name), [`ttl`](#schema-aigateway-consumer-credential-ttl), timestamps) but not the secret. Distribute the key value at
       creation time, and rotate by issuing a new Credential and revoking the old one.
 
-  - q: What's the relationship between `ttl` and the Consumer's lifecycle?
+  - q: What's the relationship between `ttl` and the AI Consumer's lifecycle?
     a: |
       [`ttl`](#schema-aigateway-consumer-credential-ttl) controls how long the API key value remains valid in seconds. When it elapses, the
-      Credential stops authenticating but the Credential record (and the parent Consumer) remain.
-      Issue a new Credential to keep the Consumer authenticating.
+      Credential stops authenticating but the Credential record (and the parent AI Consumer) remain.
+      Issue a new Credential to keep the AI Consumer authenticating.
 ---
 
-## What is a Consumer Credential?
+## What is an AI Consumer Credential?
 
-A Consumer Credential is the {{site.ai_gateway}} entity that represents the secret material a [Consumer](/ai-gateway/entities/ai-consumer/) presents to authenticate to {{site.ai_gateway}}.
+An AI Consumer Credential is the {{site.ai_gateway}} entity that represents the secret material an [AI Consumer](/ai-gateway/entities/ai-consumer/) presents to authenticate to {{site.ai_gateway}}.
 
 Credentials are nested under their owning AI Consumer: each Credential belongs to exactly one AI Consumer, and removing the AI Consumer removes its Credentials.
 
@@ -83,7 +83,7 @@ rows:
 The [`type`](#schema-aigateway-consumer-credential-type) field on a Credential must match the parent Consumer's `type`:
 
 * **`api-key`**: the Credential carries an [`api_key`](#schema-aigateway-consumer-credential-api-key) value the client presents on each request. An optional [`ttl`](#schema-aigateway-consumer-credential-ttl) (seconds) bounds the validity period; once it elapses, the value no longer authenticates.
-* **`oauth`**: the Credential type for OAuth Consumers. The parent Consumer's `custom_id` field maps to an OAuth identity issued by an external provider. {{site.ai_gateway}} works with any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect plugin](/plugins/openid-connect/), or, for MCP traffic, the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/). The `custom_id` is typically the OIDC `sub` claim or the Client ID issued by the OAuth provider. The actual access token is issued and validated by the OAuth provider, not stored on the Credential.
+* **`oauth`**: the Credential type for OAuth Consumers. The parent Consumer's `custom_id` field maps to an OAuth identity issued by an external provider. {{site.ai_gateway}} works with any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect AI Policy](/ai-gateway/policies/openid-connect/), or, for MCP traffic, the [AI MCP OAuth2 AI Policy](/ai-gateway/policies/ai-mcp-oauth2/). The `custom_id` is typically the OIDC `sub` claim or the Client ID issued by the OAuth provider. The actual access token is issued and validated by the OAuth provider, not stored on the Credential.
 
 The [`api_key`](#schema-aigateway-consumer-credential-api-key) field is write-only and cannot be retrieved after creation. Treat creation responses as the only opportunity to capture the key value.
 
@@ -93,7 +93,10 @@ Each Credential has its own UUID and supports independent list, get, and delete 
 
 Deleting a Credential immediately stops it from authenticating. Deleting the parent AI Consumer removes all of its Credentials.
 
-## Set up an API key Credential
+## Set up a Credential
+
+{% navtabs "credential type" %}
+{% navtab "API key" %}
 
 The following example issues a 24-hour API key credential to an existing Consumer named `mobile-app-production`.
 
@@ -111,7 +114,8 @@ data:
 > Don't commit `api_key` values to source control. Inject them at creation time from a
 > secret-management system, and treat any value checked into a configuration file as compromised.
 
-## Set up an OAuth Credential
+{% endnavtab %}
+{% navtab "OAuth" %}
 
 The following example issues an OAuth credential that maps an external OIDC client ID to an AI Consumer.
 
@@ -123,6 +127,9 @@ data:
   type: oauth
   custom_id: 0oatibf4t2PlDxqgR1d7
 {% endentity_example %}
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Schema
 

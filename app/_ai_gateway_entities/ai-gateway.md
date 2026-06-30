@@ -12,24 +12,26 @@ breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
 description: |
-  The top-level {{site.ai_gateway}} entity that owns Models, Providers, Policies, Agents, MCP Servers, and other AI-specific entities.
+  The top-level {{site.ai_gateway}} entity that owns AI Models, AI Providers, AI Policies, AI Agents, AI MCP Servers, and other AI-specific entities.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGateway
 works_on:
   - konnect
+tools:
+  - konnect-api
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
-  - text: Model entity
+  - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
-  - text: Provider entity
+  - text: AI Provider entity
     url: /ai-gateway/entities/ai-provider/
-  - text: Policy entity
+  - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
-  - text: Data Plane Certificate entity
+  - text: AI Data Plane Certificate entity
     url: /ai-gateway/entities/ai-data-plane-certificate/
 faqs:
   - q: How is an {{site.ai_gateway}} different from a {{site.konnect_short_name}} Gateway control plane?
@@ -69,14 +71,14 @@ faqs:
 
 An {{site.ai_gateway}} is the top-level {{site.ai_gateway}} entity. It represents a single {{site.ai_gateway}} deployment that can operate in two modes: a Control Plane mode (for configuration management and policy enforcement) and a Data Plane mode (for proxying LLM and agent traffic). These modes run within the same {{site.ai_gateway}} runtime, separated from {{site.konnect_short_name}}'s regular Gateway control plane. The {{site.ai_gateway}} entity owns all the child entities used to serve LLM and agent workloads:
 
-1. [AI Models](/ai-gateway/entities/ai-model/): AI model endpoints, capabilities, and load balancing.
-1. [AI Providers](/ai-gateway/entities/ai-provider/): upstream LLM service connections and credentials.
-1. [AI Policies](/ai-gateway/entities/ai-policy/): security, rate limiting, and guardrail behavior attached to other entities.
-1. [AI Agents](/ai-gateway/entities/ai-agent/): A2A and HTTP agent routing.
-1. [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/): MCP tool exposure and session handling.
-1. [AI Vaults](/ai-gateway/entities/ai-vault/): secret storage referenced from other entities.
-1. [AI Consumers](/ai-gateway/entities/ai-consumer/), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), [AI Consumer Credentials](/ai-gateway/entities/ai-consumer-credential/): identities used in access control.
-1. [AI Data Plane Certificates](/ai-gateway/entities/ai-data-plane-certificate/): certificates that authorize data plane nodes to connect.
+- [AI Models](/ai-gateway/entities/ai-model/): AI model endpoints, capabilities, and load balancing.
+- [AI Providers](/ai-gateway/entities/ai-provider/): upstream LLM service connections and credentials.
+- [AI Policies](/ai-gateway/entities/ai-policy/): security, rate limiting, and guardrail behavior attached to other entities.
+- [AI Agents](/ai-gateway/entities/ai-agent/): A2A and HTTP agent routing.
+- [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/): MCP tool exposure and session handling.
+- [AI Vaults](/ai-gateway/entities/ai-vault/): secret storage referenced from other entities.
+- [AI Consumers](/ai-gateway/entities/ai-consumer/), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), [AI Consumer Credentials](/ai-gateway/entities/ai-consumer-credential/): identities used in access control.
+- [AI Data Plane Certificates](/ai-gateway/entities/ai-data-plane-certificate/): certificates that authorize data plane nodes to connect.
 
 Every other {{site.ai_gateway}} entity is created under an {{site.ai_gateway}} and addressed through its ID:
 
@@ -97,10 +99,10 @@ rows:
 
 When an {{site.ai_gateway}} is created, {{site.ai_gateway}} provisions two endpoints that data planes connect to:
 
-1. **Configuration endpoint** (`endpoints.configuration`): the URL data plane nodes use to receive their configuration from the control plane.
-1. **Telemetry endpoint** (`endpoints.telemetry`): the URL data plane nodes use to ship analytics and runtime telemetry back to {{site.konnect_short_name}}.
+1. **Configuration endpoint** ([`endpoints.configuration`](#schema-aigateway-endpoints-configuration)): the URL data plane nodes use to receive their configuration from the control plane.
+1. **Telemetry endpoint** ([`endpoints.telemetry`](#schema-aigateway-endpoints-telemetry)): the URL data plane nodes use to ship analytics and runtime telemetry back to {{site.konnect_short_name}}.
 
-Both endpoints are read-only, assigned at creation time, and stable for the lifetime of the {{site.ai_gateway}}. Data plane nodes need both URLs, along with a [Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/), to register with the {{site.ai_gateway}}.
+Both endpoints are read-only, assigned at creation time, and stable for the lifetime of the {{site.ai_gateway}}. Data plane nodes need both URLs, along with an [AI Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/), to register with the {{site.ai_gateway}}.
 
 ## Control plane and data plane
 
@@ -120,13 +122,26 @@ Use `config_hash` to verify rollout: after a configuration change, watch the nod
 
 ## Lifecycle
 
-{{site.ai_gateway}}s can be created and managed through the {{site.konnect_short_name}} UI or the {{site.ai_gateway}} API. Once an {{site.ai_gateway}} exists, its child entities (AI Models, AI Providers, AI Policies, and so on) are managed through the {{site.ai_gateway}} API or decK as documented on each entity page.
+{{site.ai_gateway}}s can be created and managed through the {{site.konnect_short_name}} UI or the {{site.ai_gateway}} API. Once an {{site.ai_gateway}} exists, its child entities (AI Models, AI Providers, AI Policies, and so on) are managed through the {{site.ai_gateway}} API as documented on each entity page.
 
 Creating an {{site.ai_gateway}} provisions the configuration and telemetry endpoints and gives you the parent ID needed to create child entities. The {{site.ai_gateway}} has no runtime traffic of its own. Traffic flows once at least one AI Model, AI Agent, or AI MCP Server is configured under it and a data plane node is connected.
 
 Updating an {{site.ai_gateway}} changes its `name`, `description`, or `labels`. Endpoints and `config_hash` are managed by {{site.ai_gateway}} and can't be set directly.
 
 Deleting an {{site.ai_gateway}} removes the entity. Its child entities are scoped to the {{site.ai_gateway}} and can't be addressed without it.
+
+## Set up an {{site.ai_gateway}} entity
+
+The following example creates an {{site.ai_gateway}} instance with labels for environment tracking.
+
+{% entity_example %}
+type: ai_gateway
+data:
+  display_name: My AI Gateway
+  description: An AI Gateway for my organization.
+  labels:
+    env: production
+{% endentity_example %}
 
 ## Schema
 
