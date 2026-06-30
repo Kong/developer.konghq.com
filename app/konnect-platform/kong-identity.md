@@ -1,5 +1,5 @@
 ---
-title: "{{site.identity}}"
+title: "{{site.identity}} authorization servers, claims, scopes, and clients"
 content_type: reference
 layout: reference
 
@@ -43,31 +43,48 @@ description: |
 > * [Configure the OAuth 2.0 Introspection plugin with {{site.identity}}](/how-to/configure-kong-identity-oauth-introspection/)
 > * [Automatically create Dev Portal applications in {{site.identity}} with Dynamic Client Registration](/how-to/kong-identity-dcr/)
 
-{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
-Specifically, {{site.identity}} can be used for machine-to-machine authentication. 
-
-You can use {{site.identity}} to:
+{{site.identity}} authentication servers enable you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
+Specifically, {{site.identity}} auth servers can be used for machine-to-machine authentication and to do the following:
 * Create authorization servers per region
 * Issue and validate access tokens
 * Integrate secure authentication into your {{site.base_gateway}} APIs 
+
+An {{site.identity}} authorization server is made up of clients, scopes, and claims:
+* **Auth server:** Issues OAuth 2.0 and OpenID Connect tokens that you can use to authenticate a client (machine) with your Gateway Services. Each auth server is unique to your organization and [{{site.konnect_short_name}} region](/konnect-platform/geos/). We recommend creating different auth servers for different environments or subsidiaries.
+* **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
+* **Scopes:** Define what those clients are allowed to access.
+* **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services. 
 
 {{site.identity}} implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. {{site.identity}} can be used with the following Kong plugins:
 * [OpenID Connect plugin](/plugins/openid-connect/)
 * [OAuth2.0 Introspection plugin](/plugins/oauth2-introspection/)
 * [Upstream OAuth plugin](/plugins/upstream-oauth/)
 
-## How {{site.identity}} works
+To use {{site.identity}} for authentication, you must configure one of the supported plugins (OpenID Connect, OAuth2.0 Introspection, or Upstream OAuth). 
+These plugins determine how tokens are validated, introspected, or passed along to upstream services.
 
-{{site.identity}} allows you to create auth servers, claims, scopes, clients, and principals in {{site.konnect_short_name}} using the [{{site.konnect_short_name}} API](/api/konnect/kong-identity/v1/#/). Each of these components plays a specific role in how access is managed:
-* **Auth server:** Issue OAuth 2.0 and OpenID Connect tokens that you can use to authenticate a client (machine) with your Gateway Services. Each auth server is unique to your organization and [{{site.konnect_short_name}} region](/konnect-platform/geos/). We recommend creating different auth servers for different environments or subsidiaries.
-* **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
-* **Scopes:** Define what those clients are allowed to access. 
-* **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services.
-* **Principals:** Represent external clients, workloads, or humans authenticating to a {{site.base_gateway}} (not a {{site.konnect_short_name}} user or {{site.dev_portal}} developer).
-* **Directories:** Regional collection of principals. 
-  Each {{site.konnect_short_name}} organization can provision up to one directory per region by default.
+## Use cases
 
-To use {{site.identity}} for authentication, you must configure one of the supported plugins (OpenID Connect, OAuth2.0 Introspection, or Upstream OAuth). These plugins determine how tokens are validated, introspected, or passed along to upstream services.
+The following table describes when you'd want to use {{site.identity}} authorization servers:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: Description
+    key: description
+rows:
+  - usecase: "Issue OAuth 2.0 access tokens for machine clients"
+    description: "Use a {{site.konnect_short_name}}-hosted authorization server to issue OAuth 2.0 and OpenID Connect tokens that authenticate machine clients to your {{site.base_gateway}} APIs."
+  - usecase: "Inject custom or dynamic claims into JWTs"
+    description: "Define static or dynamic claims on an auth server so tokens carry the metadata your upstream services and plugins need."
+  - usecase: "Centralize OAuth client registration"
+    description: "Manage OAuth clients in one place and reuse them across multiple {{site.base_gateway}} control planes in the same region."
+  - usecase: "Integrate with {{site.dev_portal}} applications"
+    description: "Register {{site.dev_portal}} applications as {{site.identity}} clients automatically using Dynamic Client Registration."
+{% endtable %}
+<!--vale on-->
 
 ## {{site.identity}} client credential authentication flow
 
@@ -142,6 +159,7 @@ rows:
     example: A "department" claim used to organize clients internally. It's saved in the auth server but never sent to APIs.
 {% endtable %}
 <!--vale on-->
+
 ### API parameters
 
 Configure the claim by sending a `POST` request to the [`/auth-servers/{authServerId}/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim).
@@ -528,7 +546,10 @@ rows:
 
 For more information, see the [Principals reference](/identity/principals/).
 
-## Configure {{site.identity}}
+## Create an auth server, claim, and client in {{site.identity}}
+
+{:.warning}
+> You are limited to 50 auth servers per {{site.konnect_short_name}} region.
 
 To configure {{site.identity}}, do the following:
 
@@ -576,9 +597,6 @@ body:
 {% endcapture %}
 {{ auth-server | indent: 3 }}
 <!--vale on-->
-
-   {:.warning}
-   > You are limited to 50 auth servers.
 1. Export the auth server ID and issuer URL:
    ```sh
    export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
