@@ -8,7 +8,7 @@ products:
 content_type: policy
 ---
 
-The **AI LLM as Judge** [**AI Policy**](/ai-gateway/policies/) enables automated evaluation of prompt-response pairs using a dedicated LLM. The Policy assigns a numerical score to LLM responses from 1 to 100, where:
+The AI LLM as Judge Policy enables automated evaluation of prompt-response pairs using a dedicated LLM. The Policy assigns a numerical score to LLM responses from 1 to 100, where:
 
 * `1`: Completely incorrect or irrelevant response
 * `100`: Perfect or ideal response
