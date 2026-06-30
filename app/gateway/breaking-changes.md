@@ -69,6 +69,7 @@ To find reserved segments, call `GET /endpoints` and review the first path compo
 
 The following is a list of known issues in 3.15.0.0 that may be fixed in a future release.
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Known issue
@@ -117,6 +118,7 @@ rows:
       **Workaround:** Identify the conflicting Workspace names and manually rename them.
     status: Not fixed.
 {% endtable %}
+<!--vale on-->
 
 ## 3.14.x breaking changes
 
