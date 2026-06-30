@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@e252ef5bc5c7f0f50dc75c8d9288469c007b6082
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e252ef5bc5c7f0f50dc75c8d9288469c007b6082'
+  x-oas-source: kong/platform-api@e7d652d9639a319c73650f130fbce9bb5be2439b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e7d652d9639a319c73650f130fbce9bb5be2439b'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -622,12 +622,23 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientSecret'
       additionalProperties: false
       title: DcrConfigCurityInRequest
+    DcrConfigKongIdentityInResponse:
+      description: A DCR provider configuration for Kong Identity
+      type: object
+      properties: {}
+      additionalProperties: false
+      title: DcrConfigKongIdentityInResponse
     DcrConfigOktaInResponse:
       description: A DCR provider configuration for Okta
       type: object
       properties: {}
       additionalProperties: false
       title: DcrConfigOktaInResponse
+    CreateDcrConfigKongIdentityInRequest:
+      description: Payload to create a Kong Identity DCR provider.
+      type: object
+      additionalProperties: false
+      title: CreateDcrConfigKongIdentityInRequest
     CreateDcrConfigOktaInRequest:
       description: Payload to create an Okta DCR provider.
       type: object
@@ -781,6 +792,20 @@ components:
         - provider_type
         - dcr_config
       title: DCR provider - Curity
+    DcrProviderKongIdentity:
+      description: A DCR provider for Kong Identity -- only properties not included in DcrProviderBase
+      type: object
+      properties:
+        provider_type:
+          type: string
+          enum:
+            - kongIdentity
+        dcr_config:
+          $ref: '#/components/schemas/DcrConfigKongIdentityInResponse'
+      required:
+        - provider_type
+        - dcr_config
+      title: DCR provider - Kong Identity
     DcrProviderOkta:
       description: A DCR provider for Okta -- only properties not included in DcrProviderBase
       type: object
@@ -821,6 +846,7 @@ components:
               azureAd: '#/components/schemas/DcrProviderAzureAd'
               curity: '#/components/schemas/DcrProviderCurity'
               okta: '#/components/schemas/DcrProviderOkta'
+              kongIdentity: '#/components/schemas/DcrProviderKongIdentity'
               http: '#/components/schemas/DcrProviderHttp'
           type: object
           oneOf:
@@ -828,6 +854,7 @@ components:
             - $ref: '#/components/schemas/DcrProviderAzureAd'
             - $ref: '#/components/schemas/DcrProviderCurity'
             - $ref: '#/components/schemas/DcrProviderOkta'
+            - $ref: '#/components/schemas/DcrProviderKongIdentity'
             - $ref: '#/components/schemas/DcrProviderHttp'
     DcrProviderResponse:
       description: A response containing a single DCR provider object. Sensitive fields will be removed from the response.
@@ -841,6 +868,7 @@ components:
               azureAd: '#/components/schemas/DcrProviderAzureAd'
               curity: '#/components/schemas/DcrProviderCurity'
               okta: '#/components/schemas/DcrProviderOkta'
+              kongIdentity: '#/components/schemas/DcrProviderKongIdentity'
               http: '#/components/schemas/DcrProviderHttp'
           type: object
           oneOf:
@@ -848,6 +876,7 @@ components:
             - $ref: '#/components/schemas/DcrProviderAzureAd'
             - $ref: '#/components/schemas/DcrProviderCurity'
             - $ref: '#/components/schemas/DcrProviderOkta'
+            - $ref: '#/components/schemas/DcrProviderKongIdentity'
             - $ref: '#/components/schemas/DcrProviderHttp'
     CreateDcrProviderRequestAuth0:
       description: Request body for creating an Auth0 DCR provider.
@@ -953,6 +982,31 @@ components:
         - name
         - issuer
       title: CreateDcrProviderRequestOkta
+    CreateDcrProviderRequestKongIdentity:
+      description: Request body for creating a Kong Identity DCR provider.
+      type: object
+      properties:
+        provider_type:
+          type: string
+          enum:
+            - kongIdentity
+        dcr_config:
+          $ref: '#/components/schemas/CreateDcrConfigKongIdentityInRequest'
+        name:
+          $ref: '#/components/schemas/DcrProviderName'
+        display_name:
+          $ref: '#/components/schemas/DcrProviderDisplayName'
+        issuer:
+          type: string
+          format: url
+          maxLength: 256
+        labels:
+          $ref: '#/components/schemas/Labels'
+      required:
+        - provider_type
+        - name
+        - issuer
+      title: CreateDcrProviderRequestKongIdentity
     CreateDcrProviderRequestHttp:
       description: Request body for creating an HTTP DCR provider.
       type: object
@@ -990,12 +1044,14 @@ components:
           curity: '#/components/schemas/CreateDcrProviderRequestCurity'
           okta: '#/components/schemas/CreateDcrProviderRequestOkta'
           http: '#/components/schemas/CreateDcrProviderRequestHttp'
+          kongIdentity: '#/components/schemas/CreateDcrProviderRequestKongIdentity'
       oneOf:
         - $ref: '#/components/schemas/CreateDcrProviderRequestAuth0'
         - $ref: '#/components/schemas/CreateDcrProviderRequestAzureAd'
         - $ref: '#/components/schemas/CreateDcrProviderRequestCurity'
         - $ref: '#/components/schemas/CreateDcrProviderRequestOkta'
         - $ref: '#/components/schemas/CreateDcrProviderRequestHttp'
+        - $ref: '#/components/schemas/CreateDcrProviderRequestKongIdentity'
       title: CreateDcrProviderRequest
     UpdateDcrProviderRequest:
       description: A set of updates to a DCR provider. The provider_type cannot be updated after creation.
@@ -1264,6 +1320,7 @@ components:
                 - curity
                 - okta
                 - http
+                - kongIdentity
           required:
             - id
             - name
@@ -1374,6 +1431,7 @@ components:
                 - curity
                 - okta
                 - http
+                - kongIdentity
           required:
             - id
             - name
@@ -1969,6 +2027,12 @@ components:
             detail:
               example: Conflict
   examples:
+    DcrProviderKongIdentityCreateRequest:
+      summary: DCR provider Kong Identity Create Request
+      value:
+        name: DCR Kong Identity 1 - Segment A
+        provider_type: kongIdentity
+        issuer: 'https://sliver.identity.us.konghq.com/'
     DcrProviderOktaCreateRequest:
       summary: DCR provider Okta Create Request
       value:
@@ -2080,6 +2144,17 @@ components:
         name: DCR Okta 1 - Segment A
         provider_type: okta
         issuer: 'https://my-issuer.okta.com/default'
+        active: true
+        dcr_config: {}
+        created_at: '2023-01-01T00:00:00.000Z'
+        updated_at: '2023-01-01T00:00:00.000Z'
+    DcrProviderKongIdentityResponse:
+      summary: DCR provider Response for Kong Identity
+      value:
+        id: 93f8380e-7798-4566-99e3-2edf2b57d289
+        name: DCR Kong Identity 1 - Segment A
+        provider_type: kongIdentity
+        issuer: 'https://sliver.identity.us.konghq.com/'
         active: true
         dcr_config: {}
         created_at: '2023-01-01T00:00:00.000Z'
@@ -2265,6 +2340,8 @@ components:
           examples:
             DcrProviderOktaCreateRequest:
               $ref: '#/components/examples/DcrProviderOktaCreateRequest'
+            DcrProviderKongIdentityCreateRequest:
+              $ref: '#/components/examples/DcrProviderKongIdentityCreateRequest'
             DcrProviderAuth0CreateRequest:
               $ref: '#/components/examples/DcrProviderAuth0CreateRequest'
             DcrProviderAzureAdCreateRequest:
@@ -2316,6 +2393,8 @@ components:
           examples:
             DcrProviderOkta:
               $ref: '#/components/examples/DcrProviderOktaResponse'
+            DcrProviderKongIdentity:
+              $ref: '#/components/examples/DcrProviderKongIdentityResponse'
             DcrProviderAuth0:
               $ref: '#/components/examples/DcrProviderAuth0Response'
             DcrProviderAzureAd:
