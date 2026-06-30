@@ -252,7 +252,16 @@ rows:
               icon:  /assets/icons/third-party/google-tag-manager.svg
               cta:
                 url: "/dev-portal/google-tag-manager/"
-  
+      - blocks:
+          - type: card
+            config:
+              title: EqualWeb
+              description: |
+                Learn how to add the EqualWeb accessibility widget to your {{site.dev_portal}}.
+              icon: /assets/icons/third-party/equalwebicon.png
+              cta:
+                url: "/dev-portal/equalweb/"
+
   - header:
       type: h2
       text: "References"

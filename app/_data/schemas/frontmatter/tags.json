@@ -4,6 +4,7 @@
   "enum": [
     "1password",
     "a2a",
+    "accessibility",
     "access-control",
     "account-management",
     "after-response-scripts",
