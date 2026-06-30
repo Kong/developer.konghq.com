@@ -244,7 +244,7 @@ Match the traffic by SNI.
        - matches:
            - sni:
                type: Exact
-               value: sni.msvc.default.zone-2.kong-mesh-demo.demo-app.http
+               value: sni.msvc.default.zone-2.kong-mesh-demo.demo-app.5000
          default:
            backends:
              - type: File
@@ -273,6 +273,6 @@ Match the traffic by SNI.
    The output should contain:
 
    ```text
-   zone-ingress-sni=sni.msvc.default.zone-2.kong-mesh-demo.demo-app.http
+   zone-ingress-sni=sni.msvc.default.zone-2.kong-mesh-demo.demo-app.5000
    ```
    {:.no-copy-code}
