@@ -49,10 +49,14 @@ For an end-to-end tutorial on setting up prepaid credits, see [Get started with 
 
 The credit system works as follows:
 
-* Credit grants add credits to a customer: A grant can be promotional, funded through a {{site.metering_and_billing}} invoice, or funded externally.
-* Balances show how much credit the customer has. There is a settled balance from committed ledger movements, and a pending balance that pessimistically accounts for open charges.
-* Charges consume credits: The settlement mode on the rate card decides whether credits are used before invoicing, or whether the charge must be paid entirely from credits.
-* History explains balance changes: Credit transaction history shows customer-facing movements such as funded, consumed, and expired credits.
+* **Credit grants** add credits to a customer balance.
+A grant can be promotional, funded through a {{site.metering_and_billing}} invoice, or funded externally.
+* **Balances** show how much credit the customer has.
+There is a settled balance from committed ledger movements, and a pending balance that accounts for open charges.
+* **Charges** consume credits.
+The settlement mode on the rate card controls whether credits are applied before invoicing or whether the full charge must be covered by credits.
+* **Transaction history** explains balance changes.
+Credit transaction history shows customer-facing movements: funded, consumed, and expired.
 
 ## Core concepts
 

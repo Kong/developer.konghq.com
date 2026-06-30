@@ -56,7 +56,8 @@ invoice remainder:    60 USD
 ```
 {:.no-copy-code}
 
-This is the common prepaid-plus-overage model. Customers can use prepaid credits, but usage is not blocked if credits run out.
+This is the common prepaid-plus-overage model.
+Customers can use prepaid credits, but usage is not blocked if credits run out.
 
 ### Credit only
 
@@ -172,7 +173,7 @@ T10:  -70 expired
 ```
 {:.no-copy-code}
 
-The customer used 30 credits, so those 30 credits don't expire. 
+The customer used 30 credits, so those 30 credits don't expire.
 The remaining 70 credits expire at T10.
 
 ### Why expiration follows consumption order

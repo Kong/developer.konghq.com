@@ -65,7 +65,7 @@ rows:
 
 Amounts are expressed from the customer's perspective.
 * A `funded` movement of +100 USD means the customer gained 100 USD in credit.
-* A `consumed` movement of -30 USD means 30 USD was applied to reduce a charge.
+* A `consumed` movement of -30 USD means 30 USD of credits were applied to reduce a charge.
 
 ## Movement fields
 
@@ -101,7 +101,7 @@ rows:
 ## Ordering and pagination
 
 Movements are returned in stable insertion order.
-The API uses a cursor-based pagination scheme to ensure consistent results even when new movements are added while you are paginating.
+The API uses cursor-based pagination to ensure consistent results even when new movements are added while you're paginating.
 
 Pass the cursor from the previous response's `next` field to fetch the next page.
 Restarting pagination from the beginning always gives results in the same stable order.

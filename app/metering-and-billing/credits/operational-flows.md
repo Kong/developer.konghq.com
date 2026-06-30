@@ -42,12 +42,11 @@ This reference covers the common workflows for managing prepaid credits.
 
 Use promotional credits when you want to add value without a payment workflow.
 
-Common use cases:
-
-- Give a new customer onboarding credit.
-- Compensate a customer.
-- Migrate an existing balance from another system.
-- Manually grant trial credit.
+Common use case include:
+* Giving a new customer onboarding credit.
+* Compensating a customer.
+* Migrating an existing balance from another system.
+* Manually granting trial credit.
 
 The flow looks like this:
 
@@ -59,7 +58,6 @@ flowchart LR
     D --> E["Verify: funded\nmovement in history"]
 {% endmermaid %}
 
-Where:
 1. Create a credit grant for the customer with the promotional funding method.
 1. Set the amount, currency, priority, and optional expiration date.
 1. Read the customer's balance to confirm the credit was added.
@@ -129,7 +127,7 @@ flowchart LR
 
 1. Resolve the customer.
 1. Query the customer's credit balance.
-1. Filter by currency if the product surface is currency-specific.
+1. If the product surface is currency-specific, then filter by currency 
 1. Use the settled balance for committed historical value.
 1. Use the pending balance for conservative operational decisions.
 
@@ -158,8 +156,8 @@ flowchart LR
 1. Read transaction history to inspect consumed credits.
 1. Read balance to inspect the remaining customer credit.
 
-For `credit_then_invoice`, credits reduce the amount to invoice.
-For `credit_only`, credits are the settlement mechanism for the charge.
+For `credit_then_invoice`, credits reduce the invoiced amount.
+For `credit_only`, credits are the sole settlement mechanism for the charge.
 
 ## Review credit history
 

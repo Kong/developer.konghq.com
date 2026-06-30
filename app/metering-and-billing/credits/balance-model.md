@@ -37,7 +37,7 @@ next_steps:
 ---
 
 
-There are two concepts to a credit balance:
+The credit balance model has two balance types:
 
 * **Settled balance** is the balance from committed ledger movements. It is the durable record of what has happened.
 * **Pending balance** is a live view that starts from the settled balance and accounts for open charges that may still consume credits.
@@ -112,8 +112,8 @@ This distinction matters when you display balances:
 Credit balances are currency-specific. 
 For example, a USD grant increases the customer's USD credit balance, while a EUR charge consumes from the customer's EUR credit balance.
 
-**Do not** merge currencies in user-facing balance displays unless your product explicitly converts them. 
-Treat each credit balance as one balance per currency.
+**Do not** merge currencies in user-facing balance displays unless your product explicitly converts them.
+Treat each currency as a separate balance.
 
 ## Expiration and balance reads
 

@@ -40,7 +40,7 @@ A credit grant adds credits to a customer balance.
 Grants are the main way to create prepaid or promotional credit.
 
 Every grant has an amount and a currency.
-A grant can also define how it is funded, when unused credits expire, and how {{site.metering_and_billing}} prioritizes it against other grants during consumption.
+A grant can also define how it's funded, when unused credits expire, and how {{site.metering_and_billing}} prioritizes it against other grants during consumption.
 
 ## Funding methods
 
@@ -84,7 +84,7 @@ Priority controls which credits are consumed first when a customer has multiple 
 
 Lower priority values are consumed first.
 If two grants have the same priority, credits that expire earlier are consumed first.
-If priority and expiration are the same, {{site.metering_and_billing}} uses stable movement order.
+If priority and expiration are equal, {{site.metering_and_billing}} uses stable movement order.
 
 Example:
 
@@ -139,5 +139,5 @@ expired:     -60
 Purchase terms describe how the credits are funded.
 They define the purchase currency and the per-unit cost used to calculate the purchase amount.
 
-Tax configuration is relevant for revenue recognition on the usage charges that consume credits.
+Tax configuration is relevant for revenue recognition on usage charges that consume credits.
 Set tax configuration on all usage charges that need to be classified correctly for revenue recognition.
