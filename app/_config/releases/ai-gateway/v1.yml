@@ -344,8 +344,7 @@ app/_landing_pages/ai-gateway/v1/ai-clis.yaml:
   status: pending
   canonical_url:
 app/_landing_pages/ai-gateway/v1/ai-data-gov.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /ai-gateway/ai-data-gov/
 app/_landing_pages/ai-gateway/v1/ai-providers.yaml:
   status: pending
   canonical_url:
