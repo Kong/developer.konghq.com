@@ -27,7 +27,6 @@ import "@/javascripts/clipboard_copy";
 import "@/javascripts/llm_dropdown";
 import "@/javascripts/collapsible_code";
 import "@/javascripts/tooltip";
-import "@/javascripts/konami";
 import "@github/clipboard-copy-element";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -60,7 +59,7 @@ mermaid.initialize({
   theme: "base",
   themeVariables: {
     primaryColor: "#fff",
-    primaryBorderColor: "#4a86e8",
+    primaryBorderColor: "rgb(var(--color-icon-primary))",
     primaryTextColor: "#495c64",
     secondaryColor: "#fff",
     secondaryTextColor: "#5096f2",

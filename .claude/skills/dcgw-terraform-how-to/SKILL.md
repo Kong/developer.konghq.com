@@ -1,0 +1,171 @@
+---
+name: dcgw-terraform-how-to
+description: >
+  Write or revise Terraform-based Dedicated Cloud Gateways (DCGW) how-to guides for
+  developer.konghq.com. Use this skill any time someone asks to draft, write, create,
+  update, or revise a Dedicated Cloud Gateways how-to that provisions resources with
+  Terraform, including Azure VNet peering, Azure Virtual WAN, AWS VPC peering or Transit
+  Gateway, GCP VPC peering, managed cache, custom domains, private DNS, or any new DCGW
+  Terraform integration. Always use this skill before writing any DCGW Terraform how-to
+  content, even if the request seems straightforward. Also use it when an engineer or PM
+  shares raw HCL, a Konnect API request, or cloud provider configs and asks for help
+  turning them into a DCGW Terraform how-to.
+---
+
+Read `references/dcgw-terraform-patterns.md` before doing anything else. It contains the frontmatter schema, the canonical Terraform workflow pattern, the verified cloud-gateway Terraform resource map, attachment kinds, shared includes, and summaries of the existing DCGW how-tos. You need this context to draft correctly.
+
+## Overview
+
+This skill produces how-to guide files (`.md`) under `app/_how-tos/dedicated-cloud-gateways/` that provision Dedicated Cloud Gateways resources using Terraform and follow the conventions on `developer.konghq.com`. It works for new how-tos and revisions.
+
+Two things make this skill necessary. First, no existing DCGW how-to uses Terraform yet, they all use `{% konnect_api_request %}` blocks, cloud provider CLIs, and UI steps. So you are combining the DCGW how-to structure with the repo's established Terraform how-to pattern. Second, the Konnect cloud-gateway Terraform resources have specific argument names and the transit gateway attachment config differs per cloud provider.
+
+The most important rule: **do not invent Terraform resource argument names, attachment `kind` values, provider account regions, `availability_zones`, or `cidr_block` values**. A guessed field name produces HCL that won't `terraform apply`. Env var placeholders like `$KONNECT_NETWORK_ID` or `$CONTROL_PLANE_ID` are fine when that value is exported or captured in an earlier step of the same how-to. When you are unsure what a resource argument is called, consult the cloud-gateways OpenAPI spec at `api-specs/konnect/cloud-gateways/v2/openapi.yaml` and the Konnect Terraform provider registry (`registry.terraform.io/providers/Kong/konnect/latest/docs`) rather than guessing. `references/dcgw-terraform-patterns.md` lists the verified resource names and the Azure attachment fields.
+
+---
+
+## Step 1: Determine mode
+
+Ask the user: are they writing a new how-to, or revising an existing one?
+
+- **New**: run the full interview below before drafting anything.
+- **Revision**: ask what needs to change. If the change touches any HCL value (a resource argument, an attachment field, a region, a CIDR block, a request body), require the exact value before making the edit. The same no-guessing rule applies. Read the existing file first.
+
+---
+
+## Step 2: Identify the provider and feature
+
+Determine which cloud provider and which DCGW feature the how-to covers. This selects the prereq includes, the transit gateway attachment `kind`, the tags, and the validation approach:
+
+- **Azure**: VNet peering, Virtual WAN (vHub), private DNS, outbound DNS resolver. **Note:** VNet peering, VWAN, and likely other Azure DCGW private networking features cannot be fully Terraformed. The Entra admin consent step (approving the Konnect app in the reader's Azure tenant) requires the Konnect UI and has no Terraform or API equivalent. Do not draft a fully Terraform-driven how-to for these features.
+- **AWS**: VPC peering, Transit Gateway, resource endpoints, managed cache
+- **GCP**: VPC peering, private DNS
+- **Cross-cloud**: managed cache, custom domains, private hosted zones
+
+If it's a combination not covered by an existing how-to, treat it as new and lean on the OpenAPI spec for the exact resource and attachment fields. See `references/dcgw-terraform-patterns.md` for the resource map and the per-provider attachment kinds.
+
+---
+
+## Step 3: Interview (do not skip, do not draft until complete)
+
+Work through these in order. Wait for answers before moving on. Skip anything a previous answer rules out.
+
+### 3a. Prerequisites vs. provisioned resources
+
+Each cloud provider should have a dedicated prereq include that provisions a DCGW network and a cloud-enabled control plane for readers who don't already have them. For Azure this is `prereqs/dcgw-azure-network-cp`. Use the relevant provider's include as a prereq item in the how-to. Do not re-explain the network or control plane setup inline — the include handles it.
+
+The include walks the reader through: retrieving the provider account ID from the Konnect API, listing supported regions/AZs/CIDRs from the availability endpoint, appending the HCL to `main.tf` with a hardcoded provider account ID the reader substitutes, and running `terraform apply`. See `references/dcgw-terraform-patterns.md` for the full description of what the include does.
+
+### 3b. The feature the how-to provisions
+
+Collect the exact config for whatever the guide is actually about. Never guess field names, get them from the user or the OpenAPI spec:
+
+- **Transit gateway / peering** (`konnect_cloud_gateway_transit_gateway`): the `name`, the `cidr_blocks`, and the attachment config, which is provider-specific. Get the attachment `kind` and its fields:
+  - Azure VNet: `kind = "azure-vnet-peering-attachment"`, plus `tenant_id`, `subscription_id`, `resource_group_name`, `vnet_name`
+  - Azure Virtual WAN: `kind = "azure-vhub-peering-attachment"`, plus `tenant_id`, `subscription_id`, `resource_group_name`, `vhub_name`
+  - AWS VPC: `kind = "aws-vpc-peering-attachment"`, plus the peer account / VPC / region fields
+  - GCP VPC: `kind = "gcp-vpc-peering-attachment"`, plus `peer_project_id`, `peer_vpc_name`
+- **Add-ons** like managed cache (`konnect_cloud_gateway_addon`): the exact `config` block and the owner control plane reference.
+- **Private DNS** (`konnect_cloud_gateway_private_dns`) or **custom domains** (`konnect_cloud_gateway_custom_domain`): the exact arguments.
+
+### 3c. Cloud provider side steps
+
+Most DCGW guides require steps on the cloud provider side that Terraform doesn't do. Ask for the exact CLI commands or UI steps:
+- **Azure**: creating the peering role and assigning it to the Kong service principal (Azure CLI), accepting/configuring the peering
+- **AWS**: accepting the peering request and updating the route table
+- **GCP**: creating the matching VPC peering resource (gcloud)
+
+These are often already captured in shared includes. Check `references/dcgw-terraform-patterns.md` before writing them inline.
+
+**`TF_VAR_*` exports go in the prereq block, not the body.** Whatever cloud resource values the reader must supply (subscription IDs, resource group names, VNet/VPC names, etc.) should be exported as `TF_VAR_*` env vars in the prereq item for that cloud resource. This applies regardless of provider.
+
+### 3d. Validation
+
+Ask how the reader confirms it worked, or infer it from the feature. The default for Terraform how-tos is to extract an ID from the Terraform state and confirm the resource exists via the Konnect API. See the validation pattern in `references/dcgw-terraform-patterns.md`.
+
+### 3e. Pre-draft confirmation
+
+Before drafting, summarize what you collected and flag anything missing:
+
+```
+Here's what I have:
+- ✅ Provider + feature: [e.g. Azure VNet peering]
+- ✅ Network + control plane: [prereqs / provisioned with these values]
+- ✅ Feature config: [resource(s) + attachment kind + key fields]
+- ✅ Cloud provider side steps: [include name / inline CLI / UI steps]
+- ✅ Validation: [terraform show + konnect_api_request / UI Ready check]
+- ⚠️ Still missing: [anything you don't have]
+```
+
+Only proceed to drafting when the user confirms everything is present.
+
+---
+
+## Step 4: Draft the how-to
+
+### Structure
+
+Follow this order (see `references/dcgw-terraform-patterns.md` for the full frontmatter template and HCL examples):
+
+```
+[frontmatter]  (tools: [terraform], works_on: [konnect], DCGW permalink + breadcrumbs, tags)
+
+[prereqs block]
+  - Terraform / Konnect provider: include prereqs/products/konnect-terraform
+  - Provider CLI + account: e.g. prereqs/azure-cli, prereqs/entra-tenant (Azure)
+  - An existing Ready DCGW network + cloud-enabled control plane (unless the guide provisions them)
+  - The cloud provider resource the reader brings (VNet, VPC), with exported env vars
+
+[body]
+  - Configure the provider (auth.tf)
+  - Define the resource(s) for the feature (main.tf)
+  - terraform init
+  - terraform apply -auto-approve
+  - Cloud provider side steps (Azure role assignment, AWS accept peering, etc.)
+  - Validate
+```
+
+### Terraform workflow convention
+
+Follow the repo's established pattern (see `app/_how-tos/gateway/terraform-gateway-authentication.md`):
+- Build the config with `echo '...' > auth.tf` for the provider block and `echo '...' >> main.tf` for resources, each in an ```hcl fenced block.
+- Provider auth uses the `KONNECT_TOKEN` env var automatically; note that `server_url` changes by region.
+- `terraform init`, then `terraform apply -auto-approve`. Show the expected `Apply complete!` output in a ```text block with `{:.no-copy-code}` under it.
+
+**Passing inputs (this matters, get it right):** never interpolate shell env vars into the echoed HCL (e.g. `name = "'$FOO'"`). Once the text lands in `main.tf`, Terraform has no concept of your shell vars, so this is fragile and usually wrong. Instead:
+- **External, reader-supplied values** (cloud account IDs, region names, VNet/VPC names): declare `variable` blocks and reference `var.<name>`. Have the reader `export TF_VAR_<name>=...`; Terraform reads `TF_VAR_*` automatically. This is the production-idiomatic way and it's the behavior readers expect from "export and it works".
+- **Values Terraform manages** (a network created earlier in the same config): reference the resource attribute, like `network_id = konnect_cloud_gateway_network.my_network.id`. This also creates an implicit dependency so the network provisions before the dependent resource.
+- **Validation inputs**: extract IDs from `terraform show -json` (see below), don't ask the reader to paste them.
+
+### Validation section
+
+Default Terraform validation: extract the resource ID from state and confirm it via the Konnect API.
+
+```bash
+TRANSIT_GATEWAY_ID=$(terraform show -json | jq -r '.values.root_module.resources[] | select(.address == "konnect_cloud_gateway_transit_gateway.my_tgw") | .values.id')
+```
+
+Then a `{% konnect_api_request %}` GET against the cloud-gateways endpoint expecting `200`, or, where the result is only visible in the UI, a "scroll until you see `Ready`" check like the existing DCGW how-tos. Wrap API blocks in `<!--vale off-->` / `<!--vale on-->`.
+
+### Style rules to enforce (don't explain to the user, just apply them)
+
+- Sentence case for all headings (capitalize only the first word and proper nouns)
+- Export env vars for any value referenced in a later step
+- Active voice
+- No em dashes, use a comma, parentheses, or a period instead
+- `{:.no-copy-code}` directly under any expected-output code block
+- No screenshots of third-party (Azure, AWS, GCP) UIs
+- Link text should describe the destination, not say "click here"
+- Wrap blocks that contain resource field names or values that Vale will flag in `<!--vale off-->` / `<!--vale on-->`
+
+---
+
+## For revisions
+
+When revising an existing how-to:
+
+1. Read the existing file before suggesting any changes.
+2. Ask what specifically needs to change.
+3. If the change involves an HCL value (resource argument, attachment field, region, CIDR, request body), require the exact value before editing.
+4. If the change is structural (adding a section, reordering steps, updating prose), you can proceed without additional configs, but still follow the style rules above.
+5. Preserve any `include` calls and shared block patterns that already exist in the file.

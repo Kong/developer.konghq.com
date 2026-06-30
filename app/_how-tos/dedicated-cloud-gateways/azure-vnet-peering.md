@@ -56,6 +56,31 @@ faqs:
   - q: "When I try to create the VNET peering role and assign the role to the service principal, I get the following errors: `(RoleDefinitionWithSameNameExists) A custom role with the same name already exists in this directory.` and `Role 'Kong Cloud Gateway Peering Creator - Kong' doesn't exist.`. How do I fix this?"
     a: |
       {% include faqs/azure-vnet-same-tenant-multi-subscription.md %}
+  - q: "How do I manage my Azure VNET peering with Terraform?"
+    a: |
+      Because configuring VNET peering requires approving the {{site.konnect_short_name}} app in Microsoft Entra (a step that generates a link only available in the {{site.konnect_short_name}} UI), you must complete the initial setup using the UI before managing the resource in Terraform.
+
+      After the peering is `Ready`, you can import or reference the `konnect_cloud_gateway_transit_gateway` resource in Terraform. The following example shows what the resource block looks like:
+
+      <!--vale off-->
+      ```hcl
+      resource "konnect_cloud_gateway_transit_gateway" "my_vnet_peering" {
+        network_id = var.network_id
+
+        azure_transit_gateway = {
+          name = "azure vnet peering"
+
+          transit_gateway_attachment_config = {
+            kind                = "azure-vnet-peering-attachment"
+            tenant_id           = var.tenant_id
+            subscription_id     = var.subscription_id
+            resource_group_name = var.resource_group_name
+            vnet_name           = var.vnet_name
+          }
+        }
+      }
+      ```
+      <!--vale on-->
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/

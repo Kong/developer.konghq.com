@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.3": [
+    {
+      "message": "Fixed an issue where the AI sanitizer plugin could not parse the request body correctly.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added a `skip_logging_sanitized_items` option to control whether to log the sanitized items, which may contain sensitive data.\n",

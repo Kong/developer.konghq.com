@@ -1317,5 +1317,13 @@
   },
   "required": [
     "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "redis-ee",
+      "paths": [
+        "config.resources.cache.redis"
+      ]
+    }
   ]
 }

@@ -37,6 +37,9 @@ icon: graph.svg
 
 The Modify Headers policy can set or remove headers on requests.
 
+{:.warning}
+> Headers prefixed with `kong/` are reserved for {{site.event_gateway_short}} internal use. The Modify Headers policy doesn't prevent you from reading, writing, or modifying them, but doing so isn't recommended and can interfere with {{site.event_gateway_short}} behavior. For the full list of reserved headers, see the [{{site.event_gateway}} headers reference](/event-gateway/headers/).
+
 ## Use cases
 
 Common use cases for the Modify Headers policy:
@@ -55,6 +58,10 @@ rows:
     description: If a record fits a specific condition, add a custom header of your choice.
   - use_case: "[Tutorial: Filter Kafka records by classification headers](/event-gateway/filter-records-by-classification/)"
     description: Use a [Schema Validation policy](/event-gateway/policies/schema-validation-produce/) to parse JSON records, and use a nested Modify Headers policy to add a header to specific records.
+  - use_case: "[Tutorial: Enrich Kafka SASL PLAIN connections with Kong Identity principal metadata](/event-gateway/kong-identity-metadata-integration/)"
+    description: Look up the SASL-authenticated principal in a Kong Identity directory, and add a header to records based on the principal's metadata.
+  - use_case: "[Tutorial: Enrich Kafka OAuth connections with Kong Identity principal metadata](/event-gateway/kong-identity-jwt-metadata-integration/)"
+    description: Look up the JWT-authenticated principal in a Kong Identity directory by `iss` and `sub`, and add a header to records based on the principal's metadata.
 {% endtable %}
 <!--vale on-->
 

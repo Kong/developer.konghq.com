@@ -1,13 +1,31 @@
 openapi: 3.0.3
 info:
-  description: Konnect API for managing cloud-gateways infrastructure.
+  description: |
+    Kong Konnect Cloud Gateways API provisions and manages Kong Gateway data plane infrastructure
+    across both Dedicated and Serverless deployment models. Use this API to:
+
+    - **Deploy Dedicated Cloud Gateways** — provision Kong Gateway data planes in your own cloud
+      provider account (AWS, Azure, or GCP), deployed across a single region or multiple regions
+      using your own VPC network stack
+    - **Deploy Serverless Cloud Gateways** — provision lightweight, fully-managed Kong Gateway
+      instances without managing networks or underlying infrastructure
+    - **Manage networks** — create and configure VPC-backed networks on AWS, Azure, or GCP
+    - **Connect private infrastructure** — attach transit gateways and configure private DNS resolution
+    - **Add capabilities** — enable managed cache add-ons for your data planes
+    - **Customize domains** — register bring-your-own hostnames with automatic TLS provisioning
+
+    All write operations that provision cloud infrastructure are asynchronous; resources transition
+    through lifecycle states (e.g. `initializing → ready`) which can be polled via GET.
+
+    Authenticate with a Konnect personal access token or system account token. The base URL is
+    `https://global.api.konghq.com/v2` for all regions.
   version: 2.0.0
   title: Konnect Cloud Gateways
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@607200db66bef872df448c5f5e89bff9ef0cb415
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/607200db66bef872df448c5f5e89bff9ef0cb415'
+  x-oas-source: kong/platform-api@d12778a36ed68c0f3ce42c0fc129f77736ad1d56
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d12778a36ed68c0f3ce42c0fc129f77736ad1d56'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -16,9 +34,7 @@ paths:
     get:
       operationId: get-availability-json
       summary: Get Resource Availability JSON
-      description: |
-        Get Cloud Gateways Availability JSON document for describing cloud provider and region availability, pricing,
-        gateway version availability, and instance type information.
+      description: 'Returns a public JSON document describing the supported cloud providers, regions, gateway versions, and instance types available for Kong Cloud Gateways. Authentication isn''t required — query this endpoint to discover valid inputs for network and configuration requests.'
       responses:
         '200':
           $ref: '#/components/responses/RetrieveCloudGatewaysAvailabilityDocumentResponse'
@@ -30,8 +46,8 @@ paths:
       operationId: list-configurations
       summary: List Configurations
       description: |
-        Returns a paginated collection of configurations across control-planes for an organization (restricted by
-        permitted control-plane reads).
+        Returns a paginated collection of Cloud Gateway configurations visible to the caller.
+        Results are scoped to control planes the caller has permission to read.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
@@ -51,18 +67,27 @@ paths:
       operationId: create-configuration
       summary: Create Configuration
       description: |
-        Creates a new configuration for a control-plane (restricted by permitted control-plane permissions for
-        configurations). This request will replace any existing configuration for the requested control_plane_id and
-        control_plane_geo by performing a diff. From this diff, new resources detected in the requested configuration
-        will be added, resources not found in the request configuration but in the previous will be deleted, and
-        resources found in both will be updated to the requested configuration. Networks referenced in this request that
-        are in an offline state will automatically initialize (i.e. move to an initializing state).
+        Creates or replaces the Cloud Gateway configuration for a control plane and geo. The request fully describes
+        the desired state — Kong diffs it against the current configuration, then adds, removes, or updates data plane
+        groups to match. Any network referenced in the request that is currently `offline` automatically transitions
+        to `initializing`.
+
+        Use `kind: dedicated.v0` (default) for dedicated Cloud Gateways — `version`, `cloud_gateway_network_id`, and
+        `autoscale` are required. Use `kind: serverless.v1` for serverless Cloud Gateways — those three fields must
+        be omitted.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateConfigurationRequest'
+            examples:
+              DedicatedSingleRegionConfigurationExample:
+                $ref: '#/components/examples/DedicatedSingleRegionConfigurationExample'
+              DedicatedMultiRegionConfigurationExample:
+                $ref: '#/components/examples/DedicatedMultiRegionConfigurationExample'
+              ServerlessConfigurationExample:
+                $ref: '#/components/examples/ServerlessConfigurationExample'
       responses:
         '200':
           $ref: '#/components/responses/CreateConfigurationResponse'
@@ -82,7 +107,9 @@ paths:
     get:
       operationId: get-configuration
       summary: Get Configuration
-      description: Retrieves a configuration by ID (restricted by permitted control-plane read).
+      description: |
+        Retrieves a single Cloud Gateway configuration by ID, including the current state of each deployed
+        data plane group. Access is restricted to control planes the caller has permission to read.
       parameters:
         - $ref: '#/components/parameters/ConfigurationId'
       responses:
@@ -100,7 +127,10 @@ paths:
     get:
       operationId: list-networks
       summary: List Networks
-      description: Returns a paginated list of networks.
+      description: |
+        Returns a paginated list of Cloud Gateway networks visible to the caller. Filter by
+        `state` to narrow results — for example, poll for `state=ready` to find networks
+        available for data plane group configurations.
       parameters:
         - $ref: '#/components/parameters/NetworksFilter'
         - $ref: '#/components/parameters/PageSize'
@@ -119,13 +149,20 @@ paths:
     post:
       operationId: create-network
       summary: Create Network
-      description: Creates a new network for a given provider account.
+      description: |
+        Creates a new Cloud Gateway network in the specified provider account and region. Network creation is
+        asynchronous — the network starts in `initializing` state and transitions to `ready` once provisioned.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateNetworkRequest'
+            examples:
+              CreateAwsNetworkExample:
+                $ref: '#/components/examples/CreateAwsNetworkExample'
+              CreateAzureNetworkExample:
+                $ref: '#/components/examples/CreateAzureNetworkExample'
       responses:
         '201':
           $ref: '#/components/responses/CreateNetworkResponse'
@@ -143,7 +180,7 @@ paths:
     get:
       operationId: get-network
       summary: Get Network
-      description: Retrieves a network by ID.
+      description: 'Retrieves a Cloud Gateway network by ID, including its current state and provider metadata.'
       parameters:
         - $ref: '#/components/parameters/NetworkId'
       responses:
@@ -160,7 +197,7 @@ paths:
     patch:
       operationId: update-network
       summary: Update Network
-      description: Updates a network by ID.
+      description: Updates a Cloud Gateway network by ID. You can also rename the network.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
       requestBody:
@@ -169,6 +206,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PatchNetworkRequest'
+            examples:
+              RenameNetworkExample:
+                $ref: '#/components/examples/RenameNetworkExample'
       responses:
         '200':
           $ref: '#/components/responses/PatchNetworkResponse'
@@ -187,7 +227,7 @@ paths:
     delete:
       operationId: delete-network
       summary: Delete Network
-      description: Deletes a network by ID.
+      description: Deletes a Cloud Gateway network by ID. The network cannot be referenced by any active configuration before it can be deleted.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
       responses:
@@ -207,7 +247,7 @@ paths:
     get:
       operationId: list-transit-gateways
       summary: List Transit Gateways
-      description: Returns a paginated collection of transit gateways for a given network.
+      description: Returns a paginated collection of transit gateways attached to a given network.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/TransitGatewaysFilter'
@@ -229,7 +269,12 @@ paths:
     post:
       operationId: create-transit-gateway
       summary: Create Transit Gateway
-      description: Creates a new transit gateway for a given network.
+      description: |
+        Creates a new transit gateway attachment for a given network. The attachment type is determined by the
+        `transit_gateway_attachment_config.kind` field. Supported types: `aws-transit-gateway-attachment`,
+        `aws-vpc-peering-attachment`, `aws-resource-endpoint-attachment`, `azure-vnet-peering-attachment`,
+        `azure-vhub-peering-attachment`, and `gcp-vpc-peering-attachment`. Creation is asynchronous —
+        the transit gateway starts in `initializing` state and transitions to `ready` once provisioned.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
       requestBody:
@@ -238,6 +283,19 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateTransitGatewayRequest'
+            examples:
+              CreateAwsTransitGatewayExample:
+                $ref: '#/components/examples/CreateAwsTransitGatewayExample'
+              CreateAwsVpcPeeringGatewayExample:
+                $ref: '#/components/examples/CreateAwsVpcPeeringGatewayExample'
+              CreateAwsResourceEndpointGatewayExample:
+                $ref: '#/components/examples/CreateAwsResourceEndpointGatewayExample'
+              CreateAzureVNetPeeringGatewayExample:
+                $ref: '#/components/examples/CreateAzureVNetPeeringGatewayExample'
+              CreateAzureVHubPeeringGatewayExample:
+                $ref: '#/components/examples/CreateAzureVHubPeeringGatewayExample'
+              CreateGCPVPCPeeringGatewayExample:
+                $ref: '#/components/examples/CreateGCPVPCPeeringGatewayExample'
       responses:
         '201':
           $ref: '#/components/responses/CreateTransitGatewayResponse'
@@ -257,7 +315,7 @@ paths:
     get:
       operationId: get-transit-gateway
       summary: Get Transit Gateway
-      description: Retrieves a transit gateway by ID for a given network.
+      description: 'Retrieves a transit gateway by ID, including its current state and attachment configuration.'
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/TransitGatewayId'
@@ -275,7 +333,9 @@ paths:
     patch:
       operationId: update-transit-gateway
       summary: Update Transit Gateway
-      description: Updates a transit gateway by ID for a given network.
+      description: |
+        Updates a transit gateway by ID. Supports updating CIDR blocks on an AWS Transit Gateway, or updating
+        the resource endpoint configuration on an AWS Resource Endpoint gateway.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/TransitGatewayId'
@@ -285,6 +345,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PatchTransitGatewayRequest'
+            examples:
+              PatchAwsTransitGatewayExample:
+                $ref: '#/components/examples/PatchAwsTransitGatewayExample'
+              PatchAwsResourceEndpointGatewayExample:
+                $ref: '#/components/examples/PatchAwsResourceEndpointGatewayExample'
       responses:
         '200':
           $ref: '#/components/responses/PatchTransitGatewayResponse'
@@ -303,7 +368,7 @@ paths:
     delete:
       operationId: delete-transit-gateway
       summary: Delete Transit Gateway
-      description: Deletes a transit gateway by ID for a given network.
+      description: Deletes a transit gateway by ID. The transit gateway must be in a non-transitional state before deletion.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/TransitGatewayId'
@@ -324,7 +389,7 @@ paths:
     get:
       operationId: list-private-dns
       summary: List Private DNS
-      description: Returns a paginated collection of Private DNS for a given network.
+      description: Returns a paginated collection of private DNS attachments for a given network.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/PrivateDnsFilter'
@@ -346,7 +411,11 @@ paths:
     post:
       operationId: create-private-dns
       summary: Create Private DNS
-      description: Creates a new Private DNS for a given network.
+      description: |
+        Creates a new private DNS attachment for a given network. The attachment type is determined by
+        `private_dns_attachment_config.kind`. Supported types: `aws-private-hosted-zone-attachment`,
+        `aws-outbound-resolver`, `gcp-private-hosted-zone-attachment`, `azure-private-hosted-zone-attachment`,
+        and `azure-outbound-resolver`.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
       requestBody:
@@ -355,6 +424,17 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreatePrivateDnsRequest'
+            examples:
+              CreateAwsPrivateHostedZoneExample:
+                $ref: '#/components/examples/CreateAwsPrivateHostedZoneExample'
+              CreateAwsPrivateDnsResolverExample:
+                $ref: '#/components/examples/CreateAwsPrivateDnsResolverExample'
+              CreateGcpPrivateHostedZoneExample:
+                $ref: '#/components/examples/CreateGcpPrivateHostedZoneExample'
+              CreateAzurePrivateHostedZoneExample:
+                $ref: '#/components/examples/CreateAzurePrivateHostedZoneExample'
+              CreateAzurePrivateDnsResolverExample:
+                $ref: '#/components/examples/CreateAzurePrivateDnsResolverExample'
       responses:
         '201':
           $ref: '#/components/responses/CreatePrivateDnsResponse'
@@ -374,7 +454,7 @@ paths:
     get:
       operationId: get-private-dns
       summary: Get Private DNS
-      description: Retrieves a Private DNS by ID for a given network.
+      description: 'Retrieves a private DNS attachment by ID, including its current state and attachment configuration.'
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/PrivateDnsId'
@@ -392,7 +472,9 @@ paths:
     patch:
       operationId: update-private-dns
       summary: Update Private DNS
-      description: Updates a Private DNS by ID for a given network.
+      description: |
+        Updates a private DNS attachment by ID. Supports updating the name or DNS resolver configuration
+        for AWS Outbound Resolver and Azure Outbound Resolver attachment types.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/PrivateDnsId'
@@ -402,6 +484,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PatchPrivateDnsRequest'
+            examples:
+              PatchAwsPrivateDnsResolverExample:
+                $ref: '#/components/examples/PatchAwsPrivateDnsResolverExample'
+              PatchAzurePrivateDnsResolverExample:
+                $ref: '#/components/examples/PatchAzurePrivateDnsResolverExample'
       responses:
         '200':
           $ref: '#/components/responses/PatchPrivateDnsResponse'
@@ -420,7 +507,10 @@ paths:
     delete:
       operationId: delete-private-dns
       summary: Delete Private DNS
-      description: Deletes a Private DNS by ID for a given network.
+      description: |
+        Deletes a Private DNS attachment by ID. The attachment must be in a stable state (`ready`
+        or `error`) before deletion — requests against attachments in a transitional state
+        (`initializing`, `terminating`) will be rejected.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/PrivateDnsId'
@@ -442,7 +532,8 @@ paths:
       operationId: list-network-configurations
       summary: List Network Configuration References
       description: |
-        Returns a paginated collection of configurations that reference a network.
+        Returns a paginated list of data plane group configurations that reference a given network.
+        Use this to determine which control planes are using a network before renaming or deleting it.
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/PageSize'
@@ -464,7 +555,7 @@ paths:
     get:
       operationId: list-provider-accounts
       summary: List Provider Accounts
-      description: Returns a a paginated collection of provider accounts for an organization.
+      description: Returns a paginated list of provider accounts linked to the organization. Filter by cloud provider to see accounts for a specific CSP.
       parameters:
         - $ref: '#/components/parameters/ProviderAccountsFilter'
         - $ref: '#/components/parameters/PageSize'
@@ -484,7 +575,7 @@ paths:
     get:
       operationId: get-provider-account
       summary: Get Provider Account
-      description: Retrieves a provider account by ID.
+      description: 'Retrieves a single provider account by ID, including the associated cloud provider and cloud account ID.'
       parameters:
         - $ref: '#/components/parameters/ProviderAccountId'
       responses:
@@ -503,8 +594,8 @@ paths:
       operationId: list-custom-domains
       summary: List Custom Domains
       description: |
-        Returns a paginated collection of custom domains across control-planes for an organization (restricted by
-        permitted control-plane reads).
+        Returns a paginated list of custom domains across all control planes in the organization,
+        scoped to control planes you have read access to.
       parameters:
         - $ref: '#/components/parameters/CustomDomainsFilter'
         - $ref: '#/components/parameters/PageSize'
@@ -526,14 +617,21 @@ paths:
       operationId: create-custom-domains
       summary: Create Custom Domain
       description: |
-        Creates a new custom domain for a control-plane (restricted by permitted control-plane associate-custom-domain
-        action).
+        Registers a custom domain for a control plane. After creation, Konnect provisions a TLS
+        certificate and configures SNI routing, transitioning the domain through
+        `initializing → ready`. To complete setup, configure two CNAME records at your DNS
+        registrar: one pointing your domain to the Konnect gateway hostname, and one pointing
+        `_acme-challenge.<your-domain>` to the ACME challenge hostname provided by Konnect.
+        Use the online-status endpoint to verify both records are correctly configured.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateCustomDomainRequest'
+            examples:
+              CreateCustomDomainExample:
+                $ref: '#/components/examples/CreateCustomDomainExample'
       responses:
         '201':
           $ref: '#/components/responses/CreateCustomDomainResponse'
@@ -553,7 +651,7 @@ paths:
     get:
       operationId: get-custom-domain
       summary: Get Custom Domain
-      description: Retrieves a custom domain by ID (restricted by permitted control-plane reads).
+      description: 'Retrieves a single custom domain by ID, including its current lifecycle state and any error metadata.'
       parameters:
         - $ref: '#/components/parameters/CustomDomainId'
       responses:
@@ -570,7 +668,7 @@ paths:
     delete:
       operationId: delete-custom-domain
       summary: Delete Custom Domain
-      description: Deletes a custom domain by ID (restricted by permitted control-plane reads).
+      description: 'Deletes a custom domain by ID, removing the associated TLS certificate and SNI configuration from the control plane''s data planes.'
       parameters:
         - $ref: '#/components/parameters/CustomDomainId'
       responses:
@@ -590,7 +688,7 @@ paths:
     get:
       operationId: get-custom-domain-online-status
       summary: Get Custom Domain Online Status
-      description: Retrieves the CNAME and SSL status of a custom domain.
+      description: Checks whether the primary domain CNAME and ACME challenge CNAME records are correctly configured at your DNS registrar. Returns `verified` or `unverified` for each.
       parameters:
         - $ref: '#/components/parameters/CustomDomainId'
       responses:
@@ -609,8 +707,8 @@ paths:
       operationId: list-default-resource-quotas
       summary: List Default Resource Quotas
       description: |
-        Returns a paginated collection of default resource quotas for cloud-gateways, along with
-        organizationally-defined overrides for those resource quotas.
+        Returns the platform-default resource quotas for Cloud Gateways, along with any
+        organization-level overrides. Use this to view the effective limits for your organization.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
@@ -630,7 +728,10 @@ paths:
       operationId: list-resource-quotas
       summary: List Resource Quotas
       description: |
-        Returns a paginated collection of resource quotas for an organization.
+        Returns organization-specific resource quota overrides that take precedence over platform
+        defaults. Each quota enforces a count limit on a specific Cloud Gateway resource type —
+        including active networks, data planes, serverless data planes, data plane groups, and
+        provider accounts per cloud provider.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
@@ -649,7 +750,7 @@ paths:
     get:
       operationId: get-resource-quota
       summary: Get Resource Quota
-      description: Retrieves a resource quota by ID.
+      description: Retrieves a single organization-level resource quota override by ID.
       parameters:
         - $ref: '#/components/parameters/ResourceQuotaId'
       responses:
@@ -668,10 +769,10 @@ paths:
       operationId: list-default-resource-configurations
       summary: List Default Resource Configurations
       description: |
-        Returns a paginated collection of default resource configurations for cloud-gateways, along with
-        organizationally-defined overrides for those resource configurations.
-        Resource configurations are settings that are applied to all cloud gateway resources in an organization.
-        For example, the "data-plane-group-idle-timeout-minutes" resource configuration sets the idle timeout for all data plane groups in an organization.
+        Returns the platform-default resource configurations for Cloud Gateways, along with any
+        organization-level overrides. Resource configurations are behavioral settings applied to
+        Cloud Gateway resources — for example, the idle timeout for data plane groups.
+        Use this to view the effective settings for your organization.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
@@ -691,9 +792,10 @@ paths:
       operationId: list-resource-configurations
       summary: List Resource Configurations
       description: |
-        Returns a paginated collection of resource configurations for an organization.
-        Resource configurations are settings that are applied to all cloud gateway resources in an organization.
-        For example, the "data-plane-group-idle-timeout-minutes" resource configuration sets the idle timeout for all data plane groups in an organization.
+        Returns organization-specific resource configuration overrides that take precedence over
+        platform defaults. Each configuration controls a behavioral setting for a specific Cloud
+        Gateway resource type — for example, `data-plane-group-idle-timeout-minutes` sets how long
+        a data plane group can remain idle before it scales to zero instances.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
@@ -712,7 +814,7 @@ paths:
     get:
       operationId: get-resource-configuration
       summary: Get Resource Configuration
-      description: Retrieves a resource configuration by ID.
+      description: 'Retrieves a single organization-level resource configuration override by ID. Returns the qualifier, override value, and description for the configuration setting.'
       parameters:
         - $ref: '#/components/parameters/ResourceConfigurationId'
       responses:
@@ -731,8 +833,10 @@ paths:
       operationId: create-add-on
       summary: Create Add-On
       description: |
-        Creates a new add-on. Specific add-on types (e.g., managed cache)
-        are defined by the sub-kind configuration.
+        Creates a new add-on for a control plane or control plane group. The add-on type is
+        determined by the `config.kind` field — currently only `managed-cache.v0` is supported,
+        which provisions a Redis-compatible cache co-located with your data planes. After it's created,
+        the add-on transitions through `initializing → ready` as it deploys across data plane groups.
       requestBody:
         required: true
         content:
@@ -808,7 +912,8 @@ paths:
       operationId: list-add-ons
       summary: List Add-Ons
       description: |
-        Returns a paginated collection of add-ons for an organization.
+        Returns a paginated list of add-ons for the organization. Use filter parameters to narrow
+        results by owner (control plane or control plane group), lifecycle state, or config kind.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
@@ -855,7 +960,7 @@ paths:
     get:
       operationId: get-add-on
       summary: Get Add-On
-      description: Retrieves an add-on by ID.
+      description: 'Retrieves a single add-on by ID, including its current lifecycle state and per data plane group deployment status.'
       parameters:
         - $ref: '#/components/parameters/AddOnId'
       responses:
@@ -894,7 +999,8 @@ paths:
       operationId: delete-add-on
       summary: Delete Add-On
       description: |
-        Deletes an add-on by ID. The request will be rejected if the managed cache partial is still in use by some plugins.
+        Deletes an add-on by ID. The request is rejected if any Kong plugins are still referencing
+        the managed cache add-on — remove those plugin references before deleting.
       parameters:
         - $ref: '#/components/parameters/AddOnId'
       responses:
@@ -941,7 +1047,9 @@ paths:
     patch:
       operationId: update-add-on
       summary: Update Add-On
-      description: Updates the configuration of an existing add-on.
+      description: |
+        Updates the configuration of an existing add-on, such as changing the managed cache
+        capacity tier. Tier upgrades are supported; downgrades are not.
       parameters:
         - $ref: '#/components/parameters/AddOnId'
       requestBody:
@@ -1139,6 +1247,7 @@ components:
       style: deepObject
   schemas:
     ControlPlaneId:
+      description: ID of the Konnect control plane. Can be retrieved from the Control Planes API or the Konnect UI.
       type: string
       format: uuid
       example: 0949471e-b759-45ba-87ab-ee63fb781388
@@ -1198,7 +1307,14 @@ components:
       example: cc504063-f3bb-4e09-8e32-bbcdbc5cd618
       readOnly: true
     ControlPlaneGeo:
-      description: Set of control-plane geos supported for deploying cloud-gateways configurations.
+      description: |
+        Geographic region of the control plane. Supported values:
+        - `us` — United States
+        - `eu` — Europe
+        - `au` — Australia
+        - `me` — Middle East
+        - `in` — India
+        - `sg` — Singapore
       type: string
       enum:
         - us
@@ -1211,7 +1327,7 @@ components:
     GatewayVersion:
       description: 'Supported gateway version. For serverless.v1 kind of cloud gateways, this field should be omitted.'
       type: string
-      example: '3.2'
+      example: '3.10'
       title: Gateway Version
     VersionList:
       description: List of supported gateway versions for cloud gateways.
@@ -1228,7 +1344,11 @@ components:
         - medium
         - large
     ApiAccess:
-      description: Type of API access data-plane groups will support for a configuration.
+      description: |
+        Controls how data planes in a configuration are exposed. Supported values:
+        - `private` — data planes are accessible only within the VPC network; no public internet exposure
+        - `public` — data planes are accessible from the public internet
+        - `private+public` — equivalent to `public`; data planes are accessible from the public internet (default)
       type: string
       example: private+public
       default: private+public
@@ -1466,7 +1586,8 @@ components:
         base_rps:
           description: Base number of requests per second that the deployment target should support.
           type: integer
-          example: 1
+          example: 100
+          minimum: 1
         max_rps:
           description: 'Max number of requests per second that the deployment target should support. If not set, this defaults to 10x base_rps. This field is deprecated and shouldn''t be used in new configurations as it will be removed in a future version. max_rps is now calculated as 10x base_rps.'
           type: integer
@@ -1499,7 +1620,7 @@ components:
           description: Value assigned to the environment variable field for the data-plane group.
           type: string
           example: info
-          maxLength: 120
+          maxLength: 2048
           minLength: 1
       required:
         - name
@@ -1749,7 +1870,14 @@ components:
         - offline
       title: Network Create State
     NetworkState:
-      description: State of the network.
+      description: |
+        The current state of the network. Possible values:
+        - `created`: The network was created, but provisioning hasn't started yet.
+        - `initializing`: The network is being provisioned in the cloud provider.
+        - `offline`: The network was created but isn't provisioned; no data planes can be deployed.
+        - `ready`: The network is fully provisioned and available for data plane groups.
+        - `terminating`: The network is being deleted and is no longer accepting new resources.
+        - `terminated`: The network has been fully deleted and is no longer available.
       enum:
         - created
         - initializing
@@ -1795,12 +1923,12 @@ components:
     NetworkName:
       description: Human-readable name of the network.
       type: string
-      example: us-east-2 network
+      example: us-east-2-network
       title: Network Name
     NetworkCIDRBlock:
-      description: CIDR block configuration for the network.
+      description: CIDR block for the network. Must not overlap with reserved blocks for the target region. Query the Resource Availability endpoint for valid CIDR ranges per region and provider.
       type: string
-      example: 10.0.0.0/8
+      example: 10.0.0.0/16
       title: Network CIDR Block
     NetworkAvailabilityZones:
       description: List of availability zones that the network is attached to.
@@ -2009,11 +2137,17 @@ components:
             - aws-vpc-peering-attachment
           title: AWS VPC Peering Attachment Config
         peer_account_id:
+          description: AWS account ID of the peer VPC owner.
           type: string
+          example: '123456789012'
         peer_vpc_id:
+          description: ID of the peer VPC to establish the peering connection with.
           type: string
+          example: vpc-0a1b2c3d4e5f67890
         peer_vpc_region:
+          description: AWS region where the peer VPC is located.
           type: string
+          example: us-east-2
       additionalProperties: false
       required:
         - kind
@@ -2029,13 +2163,21 @@ components:
             - aws-vpc-peering-attachment
           title: AWS VPC Peering Attachment Config
         peer_account_id:
+          description: AWS account ID of the peer VPC owner.
           type: string
+          example: '123456789012'
         peer_vpc_id:
+          description: ID of the peer VPC to establish the peering connection with.
           type: string
+          example: vpc-0a1b2c3d4e5f67890
         peer_vpc_region:
+          description: AWS region where the peer VPC is located.
           type: string
+          example: us-east-2
         peering_connection_id:
+          description: 'ID of the AWS VPC peering connection, assigned after the peering request is accepted.'
           type: string
+          example: pcx-0a1b2c3d4e5f67890
       additionalProperties: false
       required:
         - kind
@@ -2652,12 +2794,12 @@ components:
       example:
         kind: azure-outbound-resolver
         dns_config:
-          global.api.konghq.com:
+          internal.example.com:
             remote_dns_server_ip_addresses:
-              - 10.0.0.2
-          us.api.konghq.dev:
+              - 10.0.1.100
+          db.corp.internal:
             remote_dns_server_ip_addresses:
-              - 10.0.0.8
+              - 10.0.2.100
       additionalProperties: false
       required:
         - kind
@@ -2668,12 +2810,12 @@ components:
         Object that contains mappings from proxied internal domains to remote DNS server IP address for a Private DNS Resolver.
       type: object
       example:
-        global.api.konghq.com:
+        internal.example.com:
           remote_dns_server_ip_addresses:
-            - 10.0.0.2
-        us.api.konghq.dev:
+            - 10.0.1.100
+        db.corp.internal:
           remote_dns_server_ip_addresses:
-            - 10.0.0.8
+            - 10.0.2.100
       additionalProperties:
         $ref: '#/components/schemas/PrivateDnsResolverConfigObject'
       title: Private DNS Resolver Config Item
@@ -2692,7 +2834,7 @@ components:
     PrivateDnsName:
       description: Human-readable name of the Private DNS.
       type: string
-      example: us-east-2 private dns
+      example: us-east-2-private-dns
       title: Private DNS Name
     PrivateDnsState:
       description: |
@@ -3251,7 +3393,14 @@ components:
         - $ref: '#/components/schemas/PatchAwsTransitGateway'
       title: PatchTransitGatewayRequest
     CustomDomainState:
-      description: State of the custom domain.
+      description: |
+        The current state of the custom domain. Possible values:
+        - `created` — The domain has been registered but TLS provisioning has not yet started.
+        - `initializing` — Konnect is provisioning the TLS certificate and configuring SNI routing.
+        - `ready` — The domain is fully provisioned and serving traffic.
+        - `terminating` — The domain is being deleted and its TLS certificate is being removed.
+        - `terminated` — The domain has been fully deleted and is no longer available.
+        - `error` — Provisioning failed; check `state_metadata` for details.
       type: string
       enum:
         - created
@@ -3371,7 +3520,10 @@ components:
       title: Custom Domain Online Status
     CreateConfigurationRequest:
       description: |
-        Request schema for creating a configuration.
+        Describes the desired state of a control plane's Cloud Gateway deployment. Submitting
+        this request replaces the current configuration; Kong reconciles running data plane groups
+        to match. Use `kind: dedicated.v0` for Dedicated Cloud Gateways or `kind: serverless.v1`
+        for Serverless — the required fields differ by kind.
       type: object
       properties:
         control_plane_id:
@@ -4775,6 +4927,221 @@ components:
         example-2:
           eq: some-value
   examples:
+    DedicatedSingleRegionConfigurationExample:
+      summary: Dedicated Cloud Gateway — single region with autopilot autoscaling
+      value:
+        control_plane_id: 0949471e-b759-45ba-87ab-ee63fb781388
+        control_plane_geo: us
+        version: '3.10'
+        kind: dedicated.v0
+        api_access: private+public
+        dataplane_groups:
+          - provider: aws
+            region: us-east-2
+            cloud_gateway_network_id: 36ae63d3-efd1-4bec-b246-62aa5d3f5695
+            autoscale:
+              kind: autopilot
+              base_rps: 100
+    DedicatedMultiRegionConfigurationExample:
+      summary: Dedicated Cloud Gateway — multi-region spanning US and EU
+      value:
+        control_plane_id: 0949471e-b759-45ba-87ab-ee63fb781388
+        control_plane_geo: us
+        version: '3.10'
+        kind: dedicated.v0
+        api_access: private+public
+        dataplane_groups:
+          - provider: aws
+            region: us-east-2
+            cloud_gateway_network_id: 36ae63d3-efd1-4bec-b246-62aa5d3f5695
+            autoscale:
+              kind: autopilot
+              base_rps: 100
+          - provider: aws
+            region: eu-west-1
+            cloud_gateway_network_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+            autoscale:
+              kind: autopilot
+              base_rps: 100
+    ServerlessConfigurationExample:
+      summary: Serverless Cloud Gateway
+      value:
+        control_plane_id: 0949471e-b759-45ba-87ab-ee63fb781388
+        control_plane_geo: us
+        kind: serverless.v1
+        dataplane_groups:
+          - provider: aws
+            region: us
+    CreateAwsNetworkExample:
+      summary: Create an AWS network in us-east-2
+      value:
+        name: us-east-2-network
+        cloud_gateway_provider_account_id: 929b2449-c69f-44c4-b6ad-9ecec6f811ae
+        region: us-east-2
+        availability_zones:
+          - use2-az1
+          - use2-az2
+          - use2-az3
+        cidr_block: 10.0.0.0/16
+    CreateAzureNetworkExample:
+      summary: Create an Azure network in eastus2
+      value:
+        name: eastus2-network
+        cloud_gateway_provider_account_id: 929b2449-c69f-44c4-b6ad-9ecec6f811ae
+        region: eastus2
+        availability_zones:
+          - eastus2-az2
+          - eastus2-az3
+        cidr_block: 10.0.0.0/16
+    RenameNetworkExample:
+      summary: Rename a network
+      value:
+        name: us-east-2-network-updated
+    CreateAwsTransitGatewayExample:
+      summary: AWS Transit Gateway attachment
+      value:
+        name: aws-tgw-attachment
+        cidr_blocks:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+        transit_gateway_attachment_config:
+          kind: aws-transit-gateway-attachment
+          transit_gateway_id: tgw-0123456789abcdef0
+          ram_share_arn: 'arn:aws:ram:us-east-2:123456789012:resource-share/4b7e2c8a-1234-5678-abcd-ef1234567890'
+    CreateAwsVpcPeeringGatewayExample:
+      summary: AWS VPC Peering attachment
+      value:
+        name: aws-vpc-peering-attachment
+        cidr_blocks:
+          - 10.0.1.0/24
+          - 10.0.2.0/24
+        transit_gateway_attachment_config:
+          kind: aws-vpc-peering-attachment
+          peer_account_id: '123456789012'
+          peer_vpc_id: vpc-0123456789abcdef0
+          peer_vpc_region: us-east-2
+    CreateAwsResourceEndpointGatewayExample:
+      summary: AWS Resource Endpoint (PrivateLink) attachment
+      value:
+        name: aws-resource-endpoint-attachment
+        transit_gateway_attachment_config:
+          kind: aws-resource-endpoint-attachment
+          ram_share_arn: 'arn:aws:ram:us-east-2:123456789012:resource-share/4b7e2c8a-1234-5678-abcd-ef1234567890'
+          resource_config:
+            - resource_config_id: rc-0123456789abcdef0
+              domain_name: my-service.us-east-2.vpce.amazonaws.com
+    CreateAzureVNetPeeringGatewayExample:
+      summary: Azure VNet Peering attachment
+      value:
+        name: azure-vnet-peering-attachment
+        transit_gateway_attachment_config:
+          kind: azure-vnet-peering-attachment
+          tenant_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          subscription_id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+          resource_group_name: my-resource-group
+          vnet_name: my-vnet
+    CreateAzureVHubPeeringGatewayExample:
+      summary: Azure Virtual Hub Peering attachment
+      value:
+        name: azure-vhub-peering-attachment
+        transit_gateway_attachment_config:
+          kind: azure-vhub-peering-attachment
+          tenant_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          subscription_id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+          resource_group_name: my-resource-group
+          vhub_name: my-vhub
+    CreateGCPVPCPeeringGatewayExample:
+      summary: GCP VPC Peering attachment
+      value:
+        name: gcp-vpc-peering-attachment
+        transit_gateway_attachment_config:
+          kind: gcp-vpc-peering-attachment
+          peer_project_id: my-gcp-project-123456
+          peer_vpc_name: my-vpc-network
+    PatchAwsTransitGatewayExample:
+      summary: Update AWS Transit Gateway CIDR blocks
+      value:
+        cidr_blocks:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+    CreateAwsPrivateHostedZoneExample:
+      summary: AWS Private Hosted Zone attachment
+      value:
+        name: us-east-2-private-dns
+        private_dns_attachment_config:
+          kind: aws-private-hosted-zone-attachment
+          hosted_zone_id: Z1D633PJN98FT9
+    CreateAwsPrivateDnsResolverExample:
+      summary: AWS Outbound Resolver attachment
+      value:
+        name: us-east-2-outbound-resolver
+        private_dns_attachment_config:
+          kind: aws-outbound-resolver
+          dns_config:
+            internal.example.com:
+              remote_dns_server_ip_addresses:
+                - 10.0.1.100
+    CreateGcpPrivateHostedZoneExample:
+      summary: GCP Private Hosted Zone attachment
+      value:
+        name: gcp-private-hosted-zone
+        private_dns_attachment_config:
+          kind: gcp-private-hosted-zone-attachment
+          domain_name: internal.example.com
+          peer_project_id: my-gcp-project-123456
+          peer_vpc_name: my-vpc-network
+    CreateAzurePrivateHostedZoneExample:
+      summary: Azure Private Hosted Zone attachment
+      value:
+        name: azure-private-hosted-zone
+        private_dns_attachment_config:
+          kind: azure-private-hosted-zone-attachment
+          domain_name: internal.example.com
+          peer_tenant_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          peer_subscription_id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+          peer_resource_group_id: my-resource-group
+          peer_vnet_link_name: my-vnet-link
+    CreateAzurePrivateDnsResolverExample:
+      summary: Azure Outbound Resolver attachment
+      value:
+        name: azure-outbound-resolver
+        private_dns_attachment_config:
+          kind: azure-outbound-resolver
+          dns_config:
+            internal.example.com:
+              remote_dns_server_ip_addresses:
+                - 10.0.1.100
+    PatchAwsPrivateDnsResolverExample:
+      summary: Update AWS Outbound Resolver DNS config
+      value:
+        name: us-east-2-outbound-resolver-updated
+        private_dns_attachment_config:
+          kind: aws-outbound-resolver
+          dns_config:
+            internal.example.com:
+              remote_dns_server_ip_addresses:
+                - 10.0.1.100
+                - 10.0.2.100
+    PatchAzurePrivateDnsResolverExample:
+      summary: Update Azure Outbound Resolver DNS config
+      value:
+        name: azure-outbound-resolver-updated
+        private_dns_attachment_config:
+          kind: azure-outbound-resolver
+          dns_config:
+            internal.example.com:
+              remote_dns_server_ip_addresses:
+                - 10.0.1.100
+                - 10.0.2.100
+    PatchAwsResourceEndpointGatewayExample:
+      summary: Update AWS Resource Endpoint resource configuration
+      value:
+        transit_gateway_attachment_config:
+          kind: aws-resource-endpoint-attachment
+          resource_config:
+            - resource_config_id: rc-0123456789abcdef0
+              domain_name: my-updated-service.us-east-2.vpce.amazonaws.com
     PermissionDeniedExample:
       value:
         status: 403
@@ -5046,6 +5413,12 @@ components:
         title: Forbidden
         instance: 'kong:trace:2909730654778726250'
         detail: You do not have permission to perform this action.
+    CreateCustomDomainExample:
+      summary: Register a custom domain for a control plane
+      value:
+        control_plane_id: 5f4e3d2c-1b0a-4e6f-8c7d-9e0f1a2b3c4d
+        control_plane_geo: us
+        domain: api.example.com
     UpdateAddOnManagedCacheTierExample:
       summary: Update managed cache add-on tier
       value:
@@ -5537,15 +5910,43 @@ components:
         `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
 tags:
   - name: Data-Plane Group Configurations
+    description: |
+      A Cloud Gateway configuration declares the desired state of a control plane's data plane groups — where they run,
+      how many instances, the gateway version, and the autoscaling strategy. Apply a configuration with PUT, and Kong
+      reconciles the running data planes to match.
   - name: Networks
+    description: |
+      Networks are provider-backed VPC or VNet resources that host dedicated Cloud Gateway data plane groups.
+      Each network is tied to a specific cloud provider account, region, and CIDR block. A network must reach
+      the `ready` state before it can be referenced in a configuration.
   - name: Transit Gateways
+    description: |
+      Transit gateways connect a Cloud Gateway network to your cloud infrastructure. Supported attachment types
+      span all three major cloud providers: AWS Transit Gateway, AWS VPC Peering, AWS Resource Endpoint (PrivateLink),
+      Azure VNet Peering, Azure Virtual Hub Peering, and GCP VPC Peering.
   - name: Private DNS
+    description: |
+      Private DNS attachments enable a Cloud Gateway network to resolve private DNS zones hosted in your cloud
+      provider — AWS Private Hosted Zones, AWS Outbound Resolvers, Azure Private Hosted Zones, Azure Outbound
+      Resolvers, and GCP Private Hosted Zones.
   - name: Add-Ons
+    description: |
+      Optional services that extend the capabilities of a Cloud Gateway data plane group. The currently supported add-on type is managed cache (`managed-cache.v0`), which provisions a Redis-compatible in-memory cache co-located with your data planes. Each add-on is scoped to a control plane or control plane group, and is automatically deployed across all data plane groups that belong to that owner.
   - name: Provider Accounts
+    description: |
+      Provider Accounts link your Konnect organization to a cloud provider account (AWS, Azure, or GCP) so that Cloud Gateway networks can be provisioned in the dedicated cloud provider account. Each provider account maps a Konnect organization to a cloud provider account ID, which Konnect uses when creating network peering and hub-and-spoke attachments.
   - name: Custom Domains
+    description: |
+      Custom Domains let you assign bring-your-own hostnames to a Cloud Gateway control plane. After creation the domain moves through `initializing → ready` as Konnect provisions TLS certificates and configures SNI routing on the data planes. Use the online-status endpoint to confirm CNAME and SSL readiness before routing traffic.
   - name: Cloud Gateways Resource Quotas
+    description: |
+      Resource Quotas define organization-level limits on the number of Cloud Gateway resources — active networks, data planes, serverless data planes, data plane groups, and provider accounts per cloud provider. Use these endpoints to view the default platform limits and any overrides applied to your organization.
   - name: Resource Configurations
+    description: |
+      Resource Configurations define organization-wide behavioral settings for Cloud Gateway resources. Use these endpoints to view platform defaults — such as the data plane group idle timeout — and any overrides applied to your organization.
   - name: Resource Availability
+    description: |
+      Resource Availability is a public, unauthenticated endpoint that describes what Kong Cloud Gateway infrastructure is available to provision. Use it to discover supported cloud providers, regions, gateway versions, and instance type details — all the building blocks you need before creating networks or configuring data plane groups.
 security:
   - konnectAccessToken: []
   - personalAccessToken: []

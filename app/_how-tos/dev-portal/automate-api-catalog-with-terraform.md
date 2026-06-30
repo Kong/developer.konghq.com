@@ -107,9 +107,9 @@ faqs:
       * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
       * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
 
-  - q: How does {{site.konnect_short_name}} manage authentication and authorization on Gateway Services that are linked to my APIs?
+  - q: How does {{site.konnect_short_name}} manage authentication and authorization on Gateway Services or control planes that are linked to my APIs?
     a: |
-      When a Gateway Service is linked to an API, {{site.konnect_short_name}} automatically adds the [{{site.konnect_short_name}} Application Auth (KAA) plugin](/catalog/apis/#allow-developers-to-consume-your-api) to your Service. The KAA plugin applies authentication and authorization to the Service. This is a {{site.konnect_short_name}}-managed plugin that you can't directly modify, you can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/). 
+      {% include /dev-portal/kaa-vs-ace.md %}
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
@@ -121,7 +121,7 @@ automated_tests: false
 
 ## Create an API
 
-In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/) along with a document and spec, associating it with a Gateway Service, and finally publishing it to a [Dev Portal](/dev-portal/). 
+In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/) along with a document and spec, associating it with a control plane, and finally publishing it to a [Dev Portal](/dev-portal/). 
 
 First, create an API:
 
@@ -194,28 +194,50 @@ resource "konnect_api_document" "my_apidocument" {
 ' >> main.tf
 ```
 
-## Associate the API with a Gateway Service
+## Associate the API with a control plane
 
-[Gateway Services](/gateway/entities/service/) represent the upstream services in your system. By associating a Service with an API, this allows developers to generate credentials or API keys for your API. 
+By associating an API with a control plane, this allows developers to generate credentials or API keys for your API.
 
-Associate the API with a Service:
+Associate the API with a control plane:
 
 ```hcl
 echo '
 resource "konnect_api_implementation" "my_api_implementation" {
   api_id = konnect_api.my_api.id
-  service_reference = {
-    service = {
-      control_plane_id = konnect_gateway_control_plane.my_cp.id
-      id               = konnect_gateway_service.httpbin.id
+  control_plane_reference = {
+    control_plane = {
+      id = konnect_gateway_control_plane.my_cp.id
     }
   }
   depends_on = [
     konnect_api.my_api,
     konnect_api_version.my_api_spec,
     konnect_gateway_control_plane.my_cp,
-    konnect_gateway_service.httpbin
+    konnect_gateway_plugin_ace.my_ace
   ]
+}
+' >> main.tf
+```
+
+## Apply the ACE plugin
+
+The [Access Control Enforcement plugin](/plugins/ace/) manages developer access control for APIs published in Dev Portal. 
+ACE applies at the control plane level rather than to a single Gateway Service, so it covers all traffic on the control plane.
+The ACE plugin is recommended for declarative configuration.
+
+The `match_policy` setting controls how ACE handles requests that don't match a defined API operation. 
+This example uses `required`, which rejects any request that doesn't match a published operation with a 404. 
+If you have existing traffic on the control plane that isn't published through Dev Portal, use `if_present` instead. See the [ACE plugin examples](/plugins/ace/examples/) for all available configurations.
+
+```hcl
+echo '
+resource "konnect_gateway_plugin_ace" "my_ace" {
+  enabled = true
+  config = {
+    match_policy = "required"
+  }
+  tags = []
+  control_plane_id = konnect_gateway_control_plane.my_cp.id
 }
 ' >> main.tf
 ```

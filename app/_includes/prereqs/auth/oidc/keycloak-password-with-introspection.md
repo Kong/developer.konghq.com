@@ -1,0 +1,1 @@
+{% include prereqs/auth/oidc/keycloak-password.md with_introspection=true %}

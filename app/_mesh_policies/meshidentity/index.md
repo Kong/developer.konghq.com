@@ -24,13 +24,14 @@ related_resources:
     url: /mesh/meshservice/
   - text: MeshTLS
     url: /mesh/policies/meshtls/
-  - text: MeshTrafficPermission
-    url: /mesh/policies/meshtrafficpermission/
+  - text: MeshTrafficPermission with SPIFFE ID matchers
+    url: /mesh/policies/meshtrafficpermission_experimental/
 ---
 
 {:.warning}
 > This resource is experimental.
-> It works only on Kubernetes and requires [MeshService](/mesh/meshservice/) to be enabled.
+> It requires [MeshService](/mesh/meshservice/) to be enabled.
+> It works on Kubernetes since version 2.12, and on Universal since version 2.13.
 
 `MeshIdentity` is a resource that defines how workloads in a mesh obtain their cryptographic identity.
 It separates the responsibility of issuing identities from establishing trust,
@@ -45,7 +46,35 @@ With `MeshIdentity`, users can:
 
 The following example shows the full structure:
 
-{% policy_yaml tools=kubernetes %}
+{% navtabs "meshidentity-structure" %}
+{% navtab "Kubernetes" %}
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshIdentity
+metadata:
+  name: identity
+  namespace: {{site.mesh_namespace}}
+  labels:
+    kuma.io/mesh: default
+spec:
+  selector:
+    dataplane:
+      matchLabels: {}
+  spiffeID:
+    trustDomain: "{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}"
+    path: "{% raw %}/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}{% endraw %}"
+  provider:
+    type: Bundled
+    bundled:
+      meshTrustCreation: Enabled
+      insecureAllowSelfSigned: true
+      certificateParameters:
+        expiry: 24h
+      autogenerate:
+        enabled: true
+```
+{% endnavtab %}
+{% navtab "Universal (2.13+)" %}
 {% raw %}
 ```yaml
 type: MeshIdentity
@@ -57,7 +86,7 @@ spec:
       matchLabels: {}
   spiffeID:
     trustDomain: "{{ .Mesh }}.{{ .Zone }}.mesh.local"
-    path: "/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}"
+    path: "/workload/{{ .Workload }}"
   provider:
     type: Bundled
     bundled:
@@ -69,11 +98,12 @@ spec:
         enabled: true
 ```
 {% endraw %}
-{% endpolicy_yaml %}
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Configuration
 
-`MeshIdentity` is a namespaced resource for system namespaces that controls how data plane proxies receive identity certificates.
+`MeshIdentity` controls how data plane proxies receive identity certificates.
 The following key fields define how identities are issued and applied:
 
 * [`selector`](#selector): Which data plane proxies this identity applies to.
@@ -83,7 +113,7 @@ The following key fields define how identities are issued and applied:
 ### Selector
 
 The selector field controls which data plane proxies a `MeshIdentity` applies to.
-It uses a Kubernetes-style label selector on data plane proxy tags.
+It uses `matchLabels` selectors on data plane proxy tags.
 You can scope an identity to all workloads, a subset of workloads, or none at all.
 
 When multiple `MeshIdentity` resources apply to the same data plane proxy,
@@ -132,6 +162,10 @@ rows:
 The `spiffeID` field lets you override how SPIFFE IDs are constructed for the data plane proxies selected by this `MeshIdentity`.
 By default, {{site.mesh_product_name}} generates a SPIFFE ID based on the mesh and zone.
 With `spiffeID`, you can customize the `trustDomain` and the `path` template.
+The default `path` template depends on the environment:
+
+{% navtabs "spiffeid-default-path" %}
+{% navtab "Kubernetes" %}
 
 {% raw %}
 
@@ -144,6 +178,23 @@ spec:
 
 {% endraw %}
 
+{% endnavtab %}
+{% navtab "Universal (2.13+)" %}
+
+{% raw %}
+
+```yaml
+spec:
+  spiffeID:
+    trustDomain: "{{ .Mesh }}.{{ .Zone }}.mesh.local"
+    path: "/workload/{{ .Workload }}"
+```
+
+{% endraw %}
+
+{% endnavtab %}
+{% endnavtabs %}
+
 Supported variables in the `trustDomain` field are:
 
 * `.Mesh`
@@ -151,8 +202,9 @@ Supported variables in the `trustDomain` field are:
 
 Supported variables in the `path` field are:
 
-* `.Namespace`
-* `.ServiceAccount`
+* `.Namespace` - The Kubernetes namespace
+* `.ServiceAccount` - The Kubernetes service account
+* `.Workload` - The workload identifier
 
 You can also use resource `labels` in both `trustDomain` and `path`, for example:
 
@@ -169,14 +221,14 @@ spec:
 
 #### Workload label requirement {% new_in 2.13 %}
 
-When using {% raw %}`{{ label "kuma.io/workload" }}`{% endraw %} in the `path` template, data plane proxies selected by this `MeshIdentity` must have the `kuma.io/workload` label. This label can be provided either:
+When using {% raw %}`{{ label "kuma.io/workload" }}`{% endraw %} or {% raw %}`{{ .Workload }}`{% endraw %} in the `path` template, data plane proxies selected by this `MeshIdentity` must have the `kuma.io/workload` label. This label can be provided either:
 
 * Via a [data plane proxy token](/mesh/data-plane-proxy-authentication/#workload-label-in-tokens) generated with the `--workload` parameter
 * Directly on the data plane proxy resource
 
 Connections from data plane proxies lacking the required label will be rejected.
 
-Here's an example using a workload label in the path:
+Here's an example using the workload identifier in the path:
 
 {% raw %}
 
@@ -197,4 +249,3 @@ This field is required and must specify one of the supported provider types:
 
 * `Bundled`: Certificates are issued by {{site.mesh_product_name}}'s control plane, either autogenerated or supplied by the user.
 * `Spire`: Certificates are issued directly by a SPIRE Agent through SDS.
-

@@ -27,6 +27,18 @@ To create a Key Set, call the Konnect [control plane config API's `/key-sets` en
 To create a Partial, call the Konnect [control plane config API's `/partials` endpoint](/api/konnect/control-planes-config/#/operations/create-partial). 
 {% when 'plugin' %}
 Make the following request:
+{% when 'backend_cluster' %}
+To create a backend cluster, call the Event Gateway API's [`/backend-clusters`](/api/konnect/event-gateway/#/operations/create-event-gateway-backend-cluster) endpoint.
+{% when 'virtual_cluster' %}
+To create a virtual cluster, call the Event Gateway API's [`/virtual-clusters`](/api/konnect/event-gateway/#/operations/create-event-gateway-virtual-cluster) endpoint.
+{% when 'listener' %}
+To create a listener, call the Event Gateway API's [`/listeners`](/api/konnect/event-gateway/#/operations/create-event-gateway-listener) endpoint.
+{% when 'schema_registry' %}
+To create a schema registry, call the Event Gateway API's [`/schema-registries`](/api/konnect/event-gateway/#/operations/create-event-gateway-schema-registry) endpoint.
+{% when 'static_key' %}
+To create a static key, call the Event Gateway API's [`/static-keys`](/api/konnect/event-gateway/v1/#/operations/create-event-gateway-static-key) endpoint.
+{% when 'tls_trust_bundle' %}
+To create a TLS trust bundle, call the Event Gateway API's [`/tls-trust-bundles`](/api/konnect/event-gateway/v1/#/operations/create-event-gateway-tls-trust-bundle) endpoint.
 {% else %}
 {% endcase %}
 

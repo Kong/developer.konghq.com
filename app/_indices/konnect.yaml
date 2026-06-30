@@ -58,9 +58,9 @@ sections:
       - title: Access logs
         description: Access logs include information about create, update, and delete requests to the Konnect API.
         url: /konnect-platform/audit-logs/#access-logs
-  - title: Kong Identity
+  - title: "{{site.identity}}"
     items: 
-      - path: /konnect-platform/kong-identity/
+      - path: /identity/
       - path: /how-to/configure-kong-identity-oauth-introspection/
       - path: /how-to/configure-kong-identity-upstream-oauth/
       - path: /how-to/configure-kong-identity-oidc/

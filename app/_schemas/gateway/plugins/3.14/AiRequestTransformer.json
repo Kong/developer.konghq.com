@@ -497,5 +497,13 @@
   },
   "required": [
     "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "model",
+      "paths": [
+        "config.llm"
+      ]
+    }
   ]
 }

@@ -12,7 +12,12 @@ products:
         - docker run -d --name automated-tests-keycloak -p 127.0.0.1:8080:8080 --network kong-quickstart-net -e KC_DB_USERNAME=keycloak -e KC_DB_PASSWORD=password -e KC_DB_DATABASE=keycloak -v $REALM_PATH:/opt/keycloak/data/import quay.io/keycloak/keycloak  start-dev --import-realm
         - docker run -d --name redis-stack-server -p 6379:6379  --network kong-quickstart-net redis/redis-stack-server:latest
         - docker run -d --name vault -p 8200:8200 --network kong-quickstart-net -e SKIP_SETCAP=1 -e VAULT_DEV_ROOT_TOKEN_ID=root -e SKIP_CHOWN=1 --cap-add=IPC_LOCK hashicorp/vault
-        - sleep 10
+        - |-
+          timeout 120 bash -c '
+            until curl -fsS http://localhost:8080/realms/master/.well-known/openid-configuration >/dev/null 2>&1; do
+              sleep 2
+            done
+          '
 
     after: &gateway-after
       commands:

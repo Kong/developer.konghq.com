@@ -85,7 +85,7 @@
     </script>
     {% endif %}
 
-    {% if jekyll.environment == "production" and page.url != '/search/' %}
+    {% if jekyll.environment == "production" and page.url != '/search/' and page.url != '/support/' %}
     <!-- Disable Segment on /search/ for now -->
     <!-- Segment start for konghq.com -->
      {% assign category = "'" | append: page.content_type | append: "'" %}
@@ -139,12 +139,12 @@
           style.textContent = `
             code.mantine-Code-root {
               color: rgb(var(--color-text-primary));
-              border: 1px solid rgb(var(--color-brand-saturated), 0.4);
+              border: 1px solid rgb(var(--color-border-primary), var(--opacity-border-primary));
             }
             #kapa-widget-root[data-mantine-color-scheme="light"] {
-              --mantine-color-default-border: rgb(var(--color-border-primary), 0.05);
+              --mantine-color-default-border: rgb(var(--color-border-primary), var(--opacity-border-primary));
               --mantine-color-body: rgb(var(--color-bg-secondary));
-              --mantine-color-gray-3: rgb(var(--color-border-primary), 0.05);
+              --mantine-color-gray-3: rgb(var(--color-border-primary), var(--opacity-border-primary));
               --mantine-color-default-hover: rgb(var(--color-bg-hover-component));
             }
           `;
@@ -178,7 +178,7 @@
       data-modal-inner-flex-direction="column"
       data-modal-inner-justify-content="end"
       data-modal-border-radius="0"
-      data-border-color="rgb(var(--color-border-primary), 0.05)"
+      data-border-color="rgb(var(--color-border-primary), var(--opacity-border-primary))"
       data-modal-inner-border-radius="0"
       data-modal-y-offset="0"
       data-modal-body-background-color="rgb(var(--color-bg-secondary))"
@@ -186,20 +186,20 @@
       data-text-color="rgb(var(--color-text-secondary))"
       data-anchor-color="rgb(var(--color-text-primary))"
       data-surface-hover-color="rgb(var(--color-bg-hover-component))"
-      data-surface-elevated-color="rgb(var(--color-brand-saturated), 0.4)"
+      data-surface-elevated-color="rgb(var(--color-brand-saturated), var(--opacity-brand-saturated))"
       data-example-question-button-hover-background-color="rgb(var(--color-bg-hover-component))"
       data-example-question-button-color="rgb(var(--color-text-primary))"
       data-example-question-button-hover-color="rgb(var(--color-text-primary))"
-      data-example-question-button-border-color="rgb(var(--color-border-primary), 0.05)"
+      data-example-question-button-border-color="rgb(var(--color-border-primary), var(--opacity-border-primary))"
       data-submit-button-background-color="rgb(var(--color-brand))"
       data-submit-button-hover-background-color="rgb(var(--color-brand))"
-      data-submit-button-border-color="rgb(var(--color-border-primary), 0.05)"
+      data-submit-button-border-color="rgb(var(--color-border-primary), var(--opacity-border-primary))"
       data-deep-thinking-button-background-color="rgb(var(--color-brand))"
       data-deep-thinking-button-hover-background-color="rgb(var(--color-brand))"
-      data-deep-thinking-button-color="#fff"
-      data-deep-thinking-button-hover-color="#fff"
-      data-deep-thinking-button-border-color="rgb(var(--color-border-primary), 0.05)"
-      data-conversation-button-background-color="rgb(var(--color-brand-saturated), 0.4)"
+      data-deep-thinking-button-color="rgb(var(--color-text-button))"
+      data-deep-thinking-button-hover-color="rgb(var(--color-text-button))"
+      data-deep-thinking-button-border-color="rgb(var(--color-border-primary), var(--opacity-border-primary))"
+      data-conversation-button-background-color="rgb(var(--color-brand-saturated), var(--opacity-brand-saturated))"
       data-conversation-button-color="rgb(var(--color-text-primary))"
       data-conversation-button-hover-color="rgb(var(--color-text-primary))"
       data-conversation-button-hover-background-color="rgb(var(--color-bg-hover-component))"
@@ -272,7 +272,7 @@
     {% endif %}
 
     {% include_cached footer.html %}
-    <div id="tooltip" class="fixed hidden bg-terciary text-white text-sm rounded p-2 border border-brand-saturated/40 max-w-64 z-50"></div>
+    <div id="tooltip" class="fixed hidden bg-terciary text-primary text-sm rounded p-2 border border-primary max-w-64 z-50"></div>
   </div>
   <script>
     window.searchFilters = {{site.data.searchFilters | jsonify }}

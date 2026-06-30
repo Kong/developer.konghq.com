@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes
-  version: 2.0.0
+  version: 2.0.2
   description: The API for Kong Konnect Control Planes.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@ad0b97c09341fa1f1a05e6c348a3b028ad36a503
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ad0b97c09341fa1f1a05e6c348a3b028ad36a503'
+  x-oas-source: kong/platform-api@f6932e30e5dd1b0d4e720438d3313ed35fb0dbba
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f6932e30e5dd1b0d4e720438d3313ed35fb0dbba'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -412,10 +412,13 @@ components:
           description: The name of the control plane.
           type: string
           example: Test Control Plane
+          maxLength: 256
+          minLength: 2
         description:
           description: The description of the control plane in Konnect.
           type: string
           example: A test control plane for exploration.
+          maxLength: 2048
           nullable: false
         cluster_type:
           description: The ClusterType value of the cluster associated with the Control Plane.
@@ -456,10 +459,13 @@ components:
           description: The name of the control plane.
           type: string
           example: Test Control Plane
+          maxLength: 256
+          minLength: 2
         description:
           description: The description of the control plane in Konnect.
           type: string
           example: A test control plane for exploration.
+          maxLength: 2048
           nullable: false
         auth_type:
           description: The auth type value of the cluster associated with the Runtime Group.
@@ -691,12 +697,17 @@ components:
         host:
           description: Hostname of the proxy URL.
           type: string
+          maxLength: 120
+          minLength: 1
         port:
           description: Port of the proxy URL.
           type: integer
+          minimum: 1
         protocol:
           description: Protocol of the proxy URL.
           type: string
+          maxLength: 32
+          minLength: 1
       example:
         host: example.com
         port: 443
@@ -717,6 +728,7 @@ components:
         - host: example.com
           port: 443
           protocol: https
+      maxItems: 5
       title: ProxyURLs
     ControlPlaneFilterParameters:
       type: object
@@ -837,14 +849,20 @@ components:
       type: object
       properties:
         number:
-          type: number
+          type: integer
+          format: int32
           example: 1
+          x-go-type: int32
         size:
-          type: number
+          type: integer
+          format: int32
           example: 10
+          x-go-type: int32
         total:
-          type: number
+          type: integer
+          format: int32
           example: 100
+          x-go-type: int32
       required:
         - number
         - size

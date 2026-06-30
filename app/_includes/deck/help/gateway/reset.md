@@ -13,6 +13,7 @@ Flags:
                                       When this setting has multiple tag values, entities must match every tag.
       --skip-ca-certificates          do not reset CA certificates.
       --skip-consumers                do not reset consumers, consumer-groups or any plugins associated with consumers.
+      --skip-plugin-definitions       do not reset plugin definitions.
   -w, --workspace string              reset configuration of a specific workspace(Kong Enterprise only).
 
 ```

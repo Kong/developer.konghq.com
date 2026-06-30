@@ -1,7 +1,12 @@
-The Access Control Enforcement (ACE) plugin manages developer access control to APIs published with Dev Portal.
+The Access Control Enforcement (ACE) plugin manages developer access control to APIs published with {{site.dev_portal}}.
 
-Previously, when you created an API catalog in Dev Portal and linked the APIs to a Gateway Service, {{site.konnect_short_name}} would automatically apply the {{site.konnect_short_name}} application auth (KAA) plugin. 
-API packages use the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create operations for Gateway Services.
+You can use the ACE plugin as an alternative to the {{site.konnect_short_name}} application auth (KAA) plugin to link APIs to a Gateway instead of linking APIs to a Gateway Service. 
+Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create API package operations for Gateway Services.
+API packages use the ACE plugin to manage developer access control to APIs. 
+
+If you [apply a plugin to a {{site.dev_portal}} application](/dev-portal/self-service/#apply-plugins-to-applications), the ACE plugin looks up the application's principal to resolve the mapped Consumer at runtime, so any Consumer or principal-scoped plugins apply to the application's traffic. 
+Principal lookups are cached, so additional lookups aren't required until the cache is evicted. 
+Cache eviction is controlled at the principal and {{site.base_gateway}}-level.
 
 The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. 
 For example, if you have [Key Authentication](/plugins/key-auth/) configured and it rejects a request, the ACE plugin *will not* run. 

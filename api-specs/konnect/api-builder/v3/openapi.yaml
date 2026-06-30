@@ -2,12 +2,12 @@ openapi: 3.0.3
 info:
   title: Konnect API Catalog
   version: 3.2.0
-  description: 'The management API for creating, managing APIs in the Konnect API Catalog, and publishing APIs in Dev Portals.'
+  description: 'Konnect API Catalog is the API for creating and managing APIs in the Konnect Catalog and publishing APIs to Developer Portals. Use this API to create API entities, attach versioned specs, manage relationships with catalog services, and publish APIs to Developer Portals. This supersedes API Products v2 for new integrations.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@430c99c0a3d0bf5cd9985c217a725753789c084e
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/430c99c0a3d0bf5cd9985c217a725753789c084e'
+  x-oas-source: kong/platform-api@eb1c36538ed71b892eb93a7ca7f00a791fff84f8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/eb1c36538ed71b892eb93a7ca7f00a791fff84f8'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region

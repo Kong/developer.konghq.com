@@ -32,7 +32,7 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
-  - text: "How-to: Set up Kong Event Gateway with Kong Identity OAuth"
+  - text: "How-to: Set up Kong Event Gateway with {{site.identity}} OAuth"
     url: /how-to/event-gateway/kong-identity-oauth/
   - text: "How-to: Productize Kafka topics with namespaces and ACLs"
     url: /event-gateway/productize-kafka-topics/
@@ -63,9 +63,9 @@ rows:
   - use_case: "[How-to: Productize Kafka topics with namespaces and ACLs](/event-gateway/productize-kafka-topics/)"
     description: |
       If your Kafka topics follow a naming convention with prefixes, you can easily organize them into categories with {{site.event_gateway}} by using a combination of namespaces, forwarding policies, and ACL policies.
-  - use_case: "[How-to: Secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity and ACLs](/how-to/event-gateway/kong-identity-oauth/)"
+  - use_case: "[How-to: Secure Kafka traffic in {{site.event_gateway_short}} with {{site.identity}} and ACLs](/how-to/event-gateway/kong-identity-oauth/)"
     description: |
-      Using [Kong Identity](/kong-identity/reference/) as an auth server, verify client OAuth tokens through a virtual cluster, and apply an ACL policy to restrict access to a specific client.
+      Using [{{site.identity}}](/identity/) as an auth server, verify client OAuth tokens through a virtual cluster, and apply an ACL policy to restrict access to a specific client.
 {% endtable %}
 <!--vale on-->
 
@@ -99,3 +99,11 @@ sequenceDiagram
 
 {% endmermaid %}
 <!--vale on-->
+
+## Security considerations
+
+When `resource_names` uses an expression that interpolates an identity into a glob pattern (for example `[context.auth.principal.name + "-*"]` or `[context.auth.token.claims.topic_prefix + "*"]`), the interpolated value is matched as a glob and is **not** escaped. If the value can contain glob metacharacters (`*`, `?`, `[`, `]`), they act as wildcards and can widen the set of matched resources beyond what you intend.
+
+For example, with `resource_names: '[context.auth.principal.name + "-*"]'`, a principal named `ali*` produces the pattern `ali*-*`, which matches topics such as `alibob-secrets` and `ali-data`, not just that principal's own topics.
+
+Only interpolate identity values into `resource_names` patterns when those values are guaranteed not to contain glob metacharacters.
