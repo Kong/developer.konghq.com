@@ -40,16 +40,17 @@ rows:
 
 ## How it works
 
-1. AI Gateway sends the user prompt and response to the configured LLM as a judge.
+1. {{site.ai_gateway}} sends the user prompt and response to the configured LLM as a judge.
 2. The LLM evaluates the response and returns a numeric score between `1` (ideal) and `100` (wrong or irrelevant).
 3. This score can be used in downstream workflows, such as automated grading, feedback systems, or learning pipelines.
 
 The following sequence diagram illustrates this simplified flow:
 
+<!-- vale off -->
 {% mermaid %}
 sequenceDiagram
     actor Client
-    participant AIGW as AI Gateway
+    participant AIGW as {{site.ai_gateway}}
     participant LLM as LLM Model (A or B)
     participant Judge as AI LLM as Judge
     participant JudgeLLM as Judge LLM
@@ -63,7 +64,7 @@ sequenceDiagram
     Judge-->>AIGW: Evaluation result
     AIGW-->>Client: Response
 {% endmermaid %}
-
+<!-- vale on -->
 ## Recommended LLM settings
 
 To ensure concise, consistent scoring, configure the LLM that acts as the judge with these values:
