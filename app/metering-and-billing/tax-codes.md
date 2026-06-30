@@ -32,7 +32,7 @@ Each tax code has:
 * An optional description.
 * One or more app mappings, which are the provider-specific code strings for each connected payment app.
 
-For Stripe, app mapping values follow Stripe's tax code format: `txcd_XXXXXXXX` (for example, `txcd_10000000`).
+If you've [integrated Stripe](/metering-and-billing/stripe-integration/) with {{site.metering_and_billing}}, app mapping values follow Stripe's tax code format: `txcd_XXXXXXXX` (for example, `txcd_10000000`).
 You can browse available codes in the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes).
 
 {:.info}
@@ -84,7 +84,7 @@ columns:
 rows:
   - default: Invoicing default
     applies_to: Flat-fee charges and usage-based charges
-    used_when: The charge has no tax code from any more specific layer.
+    used_when: The charge doesn't have a tax code from a more specific layer.
     name: Provider default
     value: No app mappings. Falls back to the provider's default behavior.
   - default: Credit grant default
@@ -95,9 +95,14 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+To view your default and user-created tax codes, navigate to **Metering & Billing** > **Settings** and click the **Tax Codes** tab.
+
+To apply tax codes other than the default, navigate to the rate card on any plan, add-on, or customer subscription, and expand the advanced settings for the pricing model. 
+For a complete tutorial, see [Create and apply {{site.metering_and_billing}} tax codes](/how-to/configure-metering-and-billing-tax-codes/).
+
 ## Fallback chain
 
-{{site.metering_and_billing}} uses a fallback chain when determining which tax code to apply, in the following order of priority:
+{{site.metering_and_billing}} uses a fallback chain to determine which tax code to apply, in the following order of priority:
 
 1. **Rate card tax code**: Set on the rate card or add-on.
 1. **Organization default**: The invoicing or credit grant default for the org.

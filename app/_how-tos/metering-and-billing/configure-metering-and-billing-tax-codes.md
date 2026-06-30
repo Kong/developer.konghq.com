@@ -19,6 +19,11 @@ tags:
 
 prereqs:
   skip_product: true
+  show_works_on: false
+  inline:
+    - title: "{{site.konnect_product_name}}"
+      include_content: prereqs/products/konnect-account-only
+      icon_url: /assets/icons/gateway.svg
   inline:
     - title: "{{site.konnect_short_name}} roles"
       content: |
@@ -85,10 +90,10 @@ If none of the system-managed codes match your product category, you can create 
 1. Click the **Tax Codes** tab.
 1. Click **Create tax code**.
 1. Enter a name, key, and optional description.
-1. Add one or more app mappings.
+1. (Optional) Add one or more app mappings.
    For Stripe, the value must follow the `txcd_XXXXXXXX` format.
    You can browse available values in the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes).
-1. Optionally, set the code as the **Invoicing Default** or **Credit Grant Default**.
+1. (Optional) Set the code as the **Invoicing Default** or **Credit Grant Default**.
 1. Click **Save**.
 
 {:.info}
@@ -105,11 +110,11 @@ You can apply a tax code at two levels within your product catalog.
 This sets the tax code for a specific product or fee, overriding the organization default.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing** > **Product Catalog**.
-1. Click **Plans** or **Add-ons** and select a plan or add-on.
+1. Click the **Plans** or **Add-ons** tab and select a plan or add-on.
 1. Open or create a rate card.
 1. In the **Pricing Model** configuration, expand **Advanced Settings**.
-1. Select the **Tax Behavior**.
-1. Set the **Tax Code** to your custom code.
+1. In the **Tax Behavior** dropdown, select the behavior you want to apply.
+1. In the **Tax Code** dropdown, select your custom code.
 1. Save the rate card.
 
 ### Apply a tax code on a subscription rate card
@@ -122,8 +127,8 @@ This overrides the tax code for a specific customer's subscription, without chan
 1. Click **Manage** and expand **Advanced Settings**.
 1. Enable **Advanced Customization**.
 1. Click **Next**.
-1. Open or create a rate card.
+1. Edit or create a rate card.
 1. In the **Pricing Model** configuration, expand **Advanced Settings**.
-1. Select the **Tax Behavior**.
-1. Set the **Tax Code** to your custom code.
+1. In the **Tax Behavior** dropdown, select the behavior you want to apply.
+1. In the **Tax Code** dropdown, select your custom code.
 1. Save the rate card.
