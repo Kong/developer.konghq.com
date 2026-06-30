@@ -107,6 +107,7 @@ For configuration examples and step-by-step setup instructions, see [Set up an A
 
 Choose an authentication method based on your deployment needs. Set the [`type`](#schema-aigateway-consumer-type) field to declare which credential family AI Consumers will use:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Type
@@ -119,6 +120,7 @@ rows:
   - type: "`oauth`"
     use_case: Federated identity with an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect policy](/ai-gateway/policies/openid-connect/), or for MCP traffic through the [AI MCP OAuth2 policy](/ai-gateway/policies/ai-mcp-oauth2/). The AI Consumer Credential carries a `custom_id` that maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
 {% endtable %}
+<!-- vale on -->
 
 The `type` of every Credential issued to the Consumer must match the Consumer's `type`. See the [AI Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/) reference for credential management.
 
