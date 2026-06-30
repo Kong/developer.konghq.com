@@ -43,18 +43,27 @@ description: |
 > * [Configure the OAuth 2.0 Introspection plugin with {{site.identity}}](/how-to/configure-kong-identity-oauth-introspection/)
 > * [Automatically create Dev Portal applications in {{site.identity}} with Dynamic Client Registration](/how-to/kong-identity-dcr/)
 
-{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
-Specifically, {{site.identity}} can be used for machine-to-machine authentication. 
-
-You can use {{site.identity}} to:
+{{site.identity}} authentication servers enable you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
+Specifically, {{site.identity}} auth servers can be used for machine-to-machine authentication and to do the following:
 * Create authorization servers per region
 * Issue and validate access tokens
 * Integrate secure authentication into your {{site.base_gateway}} APIs 
+
+An {{site.identity}} authorization server is made up of clients, scopes, and claims:
+* **Auth server:** Issues OAuth 2.0 and OpenID Connect tokens that you can use to authenticate a client (machine) with your Gateway Services. Each auth server is unique to your organization and [{{site.konnect_short_name}} region](/konnect-platform/geos/). We recommend creating different auth servers for different environments or subsidiaries.
+* **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
+* **Scopes:** Define what those clients are allowed to access.
+* **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services. 
 
 {{site.identity}} implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. {{site.identity}} can be used with the following Kong plugins:
 * [OpenID Connect plugin](/plugins/openid-connect/)
 * [OAuth2.0 Introspection plugin](/plugins/oauth2-introspection/)
 * [Upstream OAuth plugin](/plugins/upstream-oauth/)
+
+To use {{site.identity}} for authentication, you must configure one of the supported plugins (OpenID Connect, OAuth2.0 Introspection, or Upstream OAuth). 
+These plugins determine how tokens are validated, introspected, or passed along to upstream services.
+
+## Use cases
 
 The following table describes when you'd want to use {{site.identity}} authorization servers:
 
@@ -76,14 +85,6 @@ rows:
     description: "Register {{site.dev_portal}} applications as {{site.identity}} clients automatically using Dynamic Client Registration."
 {% endtable %}
 <!--vale on-->
-
-An {{site.identity}} authorization server is made up of clients, scopes, and claims. You can create and manage them in {{site.konnect_short_name}} using the [{{site.konnect_short_name}} API](/api/konnect/kong-identity/v1/#/):
-* **Auth server:** Issues OAuth 2.0 and OpenID Connect tokens that you can use to authenticate a client (machine) with your Gateway Services. Each auth server is unique to your organization and [{{site.konnect_short_name}} region](/konnect-platform/geos/). We recommend creating different auth servers for different environments or subsidiaries.
-* **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
-* **Scopes:** Define what those clients are allowed to access.
-* **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services.
-
-To use {{site.identity}} for authentication, you must configure one of the supported plugins (OpenID Connect, OAuth2.0 Introspection, or Upstream OAuth). These plugins determine how tokens are validated, introspected, or passed along to upstream services.
 
 ## {{site.identity}} client credential authentication flow
 
@@ -158,6 +159,7 @@ rows:
     example: A "department" claim used to organize clients internally. It's saved in the auth server but never sent to APIs.
 {% endtable %}
 <!--vale on-->
+
 ### API parameters
 
 Configure the claim by sending a `POST` request to the [`/auth-servers/{authServerId}/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim).
