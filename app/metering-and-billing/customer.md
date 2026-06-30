@@ -18,6 +18,8 @@ related_resources:
     url: /metering-and-billing/subscriptions/
   - text: Integrate Stripe with {{site.metering_and_billing}}
     url: /metering-and-billing/stripe-integration/
+  - text: "Prepaid credits"
+    url: /metering-and-billing/credits/
 faqs:
   - q: Why don't I see any events in my customer's invoice?
     a: |
