@@ -530,7 +530,7 @@ rows:
 
 ### AI MCP logs
 
-If you create an [AI MCP Entity](/ai-gateway/entitites/mcp-server), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
+If you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
 
 {:.info}
 > **Note:** Unlike other available AI Policies, the AI MCP Policy is not invoked as part of an AI request.
@@ -596,9 +596,9 @@ rows:
 
 ### AI A2A Proxy logs 
 
-If you create an [AI Agent Entity](/ai-gateway/entities/ai-agent), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when [`config.logging.log_statistics`](/plugins/ai-a2a-proxy/reference/#schema--config-logging-log-statistics) is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
+If you create an [AI Agent](/ai-gateway/entities/ai-agent/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when `log_statistics` is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
 
-{% include /md/ai-gateway/log-output-fields.md %}
+{% include /md/ai-gateway/v2/log-output-fields.md %}
 
 ## Example log entries
 
