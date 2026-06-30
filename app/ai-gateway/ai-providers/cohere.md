@@ -31,6 +31,10 @@ related_resources:
     url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Provider entity
+    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 faqs:
   - q: How do I use Cohere's document-grounded chat for RAG pipelines?
