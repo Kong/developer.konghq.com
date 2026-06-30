@@ -24,7 +24,6 @@ prereqs:
     - title: "{{site.konnect_product_name}}"
       include_content: prereqs/products/konnect-account-only
       icon_url: /assets/icons/gateway.svg
-  inline:
     - title: "{{site.konnect_short_name}} roles"
       content: |
         You need the [{{site.metering_and_billing}} Admin role](/konnect-platform/teams-and-roles/#metering-billing) in {{site.konnect_short_name}} to configure {{site.metering_and_billing}}.
