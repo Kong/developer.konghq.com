@@ -1,4 +1,4 @@
-Yes, if {{site.base_gateway}} is running on Azure, you can configure an [AI Provider](/ai-gateway/entities/ai-provider/) to detect the designated Managed Identity or User-Assigned Identity of that Azure Compute resource and use it for authentication.
+Yes, if {{site.ai_gateway}} is running on Azure, you can configure an [AI Provider](/ai-gateway/entities/ai-provider/) to detect the designated Managed Identity or User-Assigned Identity of that Azure Compute resource and use it for authentication.
 
 In your [AI Provider](/ai-gateway/entities/ai-provider/) configuration:
 * Set `auth.azure_use_managed_identity` to `true` to use an Azure-Assigned Managed Identity.
