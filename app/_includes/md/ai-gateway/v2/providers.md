@@ -95,37 +95,37 @@ rows:
 
 {%- assign note_counter = 0 -%}
 {%- assign generate_note_num = 0 %}{% if provider.capabilities.generate.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign generate_note_num = note_counter %}{% endif -%}
-{%- assign agentic_note_num = 0 %}{% if provider.capabilities.agentic.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign agentic_note_num = note_counter %}{% endif -%}
-{%- assign realtime_note_num = 0 %}{% if provider.capabilities.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign realtime_note_num = note_counter %}{% endif -%}
 {%- assign embeddings_note_num = 0 %}{% if provider.capabilities.embeddings.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign embeddings_note_num = note_counter %}{% endif -%}
-{%- assign image_note_num = 0 %}{% if provider.capabilities.image.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign image_note_num = note_counter %}{% endif -%}
+{%- assign agentic_note_num = 0 %}{% if provider.capabilities.agentic.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign agentic_note_num = note_counter %}{% endif -%}
 {%- assign audio_speech_note_num = 0 %}{% if provider.capabilities.audio_speech.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign audio_speech_note_num = note_counter %}{% endif -%}
 {%- assign audio_transcription_note_num = 0 %}{% if provider.capabilities.audio_transcription.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign audio_transcription_note_num = note_counter %}{% endif -%}
 {%- assign audio_translation_note_num = 0 %}{% if provider.capabilities.audio_translation.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign audio_translation_note_num = note_counter %}{% endif -%}
+{%- assign image_note_num = 0 %}{% if provider.capabilities.image.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign image_note_num = note_counter %}{% endif -%}
 {%- assign video_note_num = 0 %}{% if provider.capabilities.video.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign video_note_num = note_counter %}{% endif -%}
-{%- assign rerank_note_num = 0 %}{% if provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign rerank_note_num = note_counter %}{% endif -%}
+{%- assign realtime_note_num = 0 %}{% if provider.capabilities.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign realtime_note_num = note_counter %}{% endif -%}
 {%- assign batches_note_num = 0 %}{% if provider.capabilities.batches.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign batches_note_num = note_counter %}{% endif -%}
 {%- assign files_note_num = 0 %}{% if provider.capabilities.files.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign files_note_num = note_counter %}{% endif -%}
+{%- assign rerank_note_num = 0 %}{% if provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign rerank_note_num = note_counter %}{% endif -%}
 {%- assign has_text = false -%}
-{%- assign has_agentic = false -%}
-{%- assign has_realtime = false -%}
 {%- assign has_embeddings = false -%}
-{%- assign has_image = false -%}
+{%- assign has_agentic = false -%}
 {%- assign has_audio = false -%}
+{%- assign has_image = false -%}
 {%- assign has_video = false -%}
-{%- assign has_rerank = false -%}
+{%- assign has_realtime = false -%}
 {%- assign has_batches = false -%}
 {%- assign has_files = false -%}
+{%- assign has_rerank = false -%}
 {%- if provider.capabilities.generate.supported %}{% assign has_text = true %}{% endif -%}
-{%- if provider.capabilities.agentic.supported %}{% assign has_agentic = true %}{% endif -%}
-{%- if provider.capabilities.realtime.supported %}{% assign has_realtime = true %}{% endif -%}
 {%- if provider.capabilities.embeddings.supported %}{% assign has_embeddings = true %}{% endif -%}
-{%- if provider.capabilities.image.supported %}{% assign has_image = true %}{% endif -%}
+{%- if provider.capabilities.agentic.supported %}{% assign has_agentic = true %}{% endif -%}
 {%- if provider.capabilities.audio_speech.supported or provider.capabilities.audio_transcription.supported or provider.capabilities.audio_translation.supported %}{% assign has_audio = true %}{% endif -%}
+{%- if provider.capabilities.image.supported %}{% assign has_image = true %}{% endif -%}
 {%- if provider.capabilities.video.supported %}{% assign has_video = true %}{% endif -%}
-{%- if provider.capabilities.rerank.supported %}{% assign has_rerank = true %}{% endif -%}
+{%- if provider.capabilities.realtime.supported %}{% assign has_realtime = true %}{% endif -%}
 {%- if provider.capabilities.batches.supported %}{% assign has_batches = true %}{% endif -%}
 {%- if provider.capabilities.files.supported %}{% assign has_files = true %}{% endif -%}
+{%- if provider.capabilities.rerank.supported %}{% assign has_rerank = true %}{% endif -%}
 
 ## Supported capabilities
 
