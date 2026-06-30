@@ -28,7 +28,7 @@ Tax codes classify goods and services for tax purposes.
 A tax code is a named, reusable object in your organization that maps a product category to provider-specific identifiers.
 Each tax code has:
 
-* A human-readable key and name (for example, key: `saas-software`, name: `SaaS Software`).
+* A human-readable key and name (for example, key: `saas_software`, name: `SaaS Software`).
 * An optional description.
 * One or more app mappings, which are the provider-specific code strings for each connected payment app.
 
