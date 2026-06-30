@@ -226,7 +226,7 @@ providers:
         model_example: 'n/a'
         min_version: '2.0'
         note:
-          content: 'Assistants API requires header `OpenAI-Beta: assistants=v2`. Responses API requires `config.azure_api_version` set to `"preview"`'
+          content: 'Assistants API requires header `OpenAI-Beta: assistants=v2`. Responses API requires `config.azure_api_version` set to `"preview"`.'
       audio_speech:
         supported: true
         streaming: false
@@ -606,7 +606,7 @@ providers:
           - '/v1beta/files'
     limitations:
       provider_specific:
-        - 'Gemini only supports `auth.allow_override = false`'
+        - 'Gemini only supports `auth.allow_override = false`.'
       statistics_logging: []
 
   - name: Gemini Vertex
