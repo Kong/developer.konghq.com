@@ -244,6 +244,16 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/credits/
+      - blocks:
+          - type: card
+            config:
+              title: Tax calculations
+              description: |
+                Manage tax codes and configure tax behavior for invoices.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/billing-invoicing/#tax-calculations
 
   - header:
       type: h2
