@@ -1559,14 +1559,6 @@ releases:
           docker_support:
             arm: true
           default: true
-      - distroless:
-          package: false
-          docker: true
-          docker_support:
-            arm: true
-            fips: true
-            graviton: true
-          default: true
       - rhel8:
           package: true
           package_support:
@@ -1747,6 +1739,14 @@ releases:
           docker: true
           docker_support:
             arm: true
+          default: true
+      - distroless:
+          package: false
+          docker: true
+          docker_support:
+            arm: true
+            fips: true
+            graviton: true
           default: true
       - rhel8:
           package: true
