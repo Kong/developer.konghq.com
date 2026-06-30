@@ -1,0 +1,137 @@
+title: "{{site.ai_gateway}} V1 Documentation"
+canonical_url: /index/ai-gateway/
+major_version:
+  ai-gateway: '1.0'
+description: Index containing all documentation for {{site.ai_gateway}}.
+sections:
+  - title: Overview
+    items:
+      - title: "{{site.ai_gateway}} Overview"
+        description: Overview of AI gateway capabilities
+        url: /ai-gateway/v1/
+      - title: Quickstart
+        description: Get started quickly with {{site.ai_gateway}} setup and usage.
+        url: /ai-gateway/v1/#quickstart
+      - title: "{{site.ai_gateway}} Capabilities"
+        description: Learn about the core capabilities of {{site.ai_gateway}}.
+        url: /ai-gateway/v1/#ai-gateway-capabilities
+      - title: AI providers
+        description: Learn about the various providers supported by {{site.ai_gateway}}.
+        url: /ai-gateway/v1/ai-providers/
+      - title: AI Usage Governance
+        description: Understand how to manage and govern AI usage effectively.
+        url: /ai-gateway/v1/#ai-usage-governance
+      - title: Data Governance
+        description: Explore how {{site.ai_gateway}} helps enforce data governance policies.
+        url: /ai-gateway/v1/#data-governance
+      - title: "{{site.ai_gateway}} Data Governance."
+        description: This page provides an overview of {{site.ai_gateway}} safety, security and compliance features.
+        url: /ai-gateway/v1/ai-data-gov/
+      - title: Prompt Engineering
+        description: Best practices and tools for designing effective prompts.
+        url: /ai-gateway/v1/#prompt-engineering
+      - title: Guardrails and Content Safety
+        description: Implement safeguards to ensure safe and compliant AI outputs.
+        url: /ai-gateway/v1/#guardrails-and-content-safety
+      - title: Request Transformations
+        description: Customize and transform AI requests with Gateway features.
+        url: /ai-gateway/v1/#request-transformations
+      - title: Streaming
+        description: Learn how AI Proxy streaming works.
+        url: /ai-gateway/v1/streaming/
+      - title: Audit log
+        description: Learn about {{site.ai_gateway}} logging capabilities.
+        url: /ai-gateway/v1/ai-audit-log-reference/
+      - title: Monitor AI LLM Metrics
+        description: Explore how to monitor AI LLM metrics in {{site.ai_gateway}}.
+        url: /ai-gateway/v1/monitor-ai-llm-metrics/
+      - title: Observability
+        description: Access advanced analytics features in {{site.ai_gateway}}.
+        url: /ai-gateway/v1/observability/
+      - title: "{{site.ai_gateway}} resource sizing guidelines"
+        description: Review {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns.
+        url: /ai-gateway/v1/resource-sizing-guidelines-ai/
+      - title: "Proxy AI CLI tools through {{site.ai_gateway}}"
+        description: onfigure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
+        url: /ai-gateway/v1/ai-clis/
+      - title: Gen AI OpenTelemetry attributes reference
+        description: Reference for OpenTelemetry span attributes emitted by {{site.ai_gateway}} for generative AI requests, including model parameters, token usage, and tool-call metadata.
+        url: /ai-gateway/v1/llm-open-telemetry/
+  - title: "{{site.ai_gateway}} plugins"
+    items:
+      - path: /plugins/?category=ai
+      - path: /plugins/ai-azure-content-safety/
+      - path: /plugins/ai-prompt-decorator/
+      - path: /plugins/ai-prompt-guard/
+      - path: /plugins/ai-prompt-template/
+      - path: /plugins/ai-proxy/
+      - path: /plugins/ai-proxy-advanced/
+      - path: /plugins/ai-rag-injector/
+      - path: /plugins/ai-rate-limiting-advanced/
+      - path: /plugins/ai-request-transformer/
+      - path: /plugins/ai-response-transformer/
+      - path: /plugins/ai-semantic-prompt-guard/
+      - path: /plugins/ai-sanitizer/
+      - path: /plugins/ai-prompt-compressor/
+      - path: /plugins/ai-aws-guardrails/
+      - path: /plugins/ai-mcp-proxy/
+      - path: /plugins/ai-llm-as-judge/
+  - title: "{{site.ai_gateway}} providers"
+    items:
+      - path: /ai-gateway/ai-providers/**/*
+  - title: MCP traffic gateway
+    items:
+      - path: /ai-gateway/mcp/
+      - title: Secure MCP traffic
+        description: Secure GitHub MCP Server traffic with Kong Gateway and {{site.ai_gateway}}
+        url: /ai-gateway/v1/mcp/secure-mcp-traffic/
+      - title: Govern MCP traffic
+        description: Use {{site.ai_gateway}} to govern GitHub MCP traffic
+        url: /ai-gateway/v1/mcp/govern-mcp-traffic
+      - title: Observe MCP traffic
+        description: Observe GitHub MCP traffic with {{site.ai_gateway}}
+        url: /ai-gateway/v1/mcp/observe-mcp-traffic
+      - title: MCP logs
+        description: Learn about logs available for MCP traffic via {{site.ai_gateway}}
+        url: /ai-gateway/v1/ai-audit-log-reference/#ai-mcp-logs
+      - title: MCP traffic metrics
+        description: Learn about metrics available for MCP traffic via {{site.ai_gateway}}
+        url: /ai-gateway/v1/monitor-ai-llm-metrics/#mcp-traffic-metrics
+  - title: A2A traffic gateway
+    items:
+    - title: A2A traffic gateway
+      description: Learn how {{site.ai_gateway}} provides observability and control for agent-to-agent (A2A) traffic.
+      url: /ai-gateway/v1/a2a/
+    - type: how-to
+      products:
+        - ai-gateway
+      tags:
+        - a2a
+  - title: AI load balancing
+    items:
+      - title: Load balancing with AI Proxy Advanced
+        description: Overview of load balancing and retry and fallback strategies in the AI Proxy Advanced plugin.
+        url: /ai-gateway/v1/load-balancing/
+      - title: Consistent Hashing - AI Proxy Advanced
+        description: Set up consistent hashing for load balancing.
+        url: /plugins/ai-proxy-advanced/examples/consistent-hashing/
+      - title: Lowest Latency - AI Proxy Advanced
+        description: Configure load balancing based on the lowest latency.
+        url: /plugins/ai-proxy-advanced/examples/lowest-latency/
+      - title: Lowest Usage - AI Proxy Advanced
+        description: Set up load balancing based on the lowest usage.
+        url: /plugins/ai-proxy-advanced/examples/lowest-usage/
+      - title: Priority - AI Proxy Advanced
+        description: Configure priority-based load balancing.
+        url: /plugins/ai-proxy-advanced/examples/priority/
+      - title: Round Robin - AI Proxy Advanced
+        description: Set up round-robin load balancing.
+        url: /plugins/ai-proxy-advanced/examples/round-robin/
+      - title: Semantic - AI Proxy Advanced
+        description: Set up semantic load balancing.
+        url: /plugins/ai-proxy-advanced/examples/semantic/
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - ai-gateway

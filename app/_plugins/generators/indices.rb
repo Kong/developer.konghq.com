@@ -18,29 +18,30 @@ module Jekyll
 
         page = build_page(site, file, index)
         site.pages << page
-        slug = File.basename(file, File.extname(file))
-        site.data['indices'][slug] = page
+        site.data['indices'][page_slug(site, file)] = page
       end
     end
 
     def build_page(site, file, index)
       filename = File.basename(file).gsub('.yaml', '.html')
       filename = 'kubernetes-ingress-controller.html' if filename == 'kic.html'
-      page = PageWithoutAFile.new(site, __dir__, 'index', filename)
-      page.data['title'] = index['title']
-      page.data['layout'] = 'indices'
-      page.data['toc_depth'] = 3
-      page.data['toc_skip_page_title'] = true
-      page.data['description'] = index['description']
-      page.data['llm'] = false
-      page.data['slug'] = File.basename(file, File.extname(file))
-
-      # Needed for edit link and site regeneration
-      page.instance_variable_set(:@relative_path, "_indices/#{filename.gsub('.html', '.yaml')}")
-
-      grouped_pages = config_to_grouped_pages(site, index)
-      page.content = render(index, grouped_pages, site)
+      page = PageWithoutAFile.new(site, __dir__, index_dir(site, file), filename)
+      set_page_data(page, file, index, site)
+      page.content = render(index, config_to_grouped_pages(site, index), site)
       page
+    end
+
+    def set_page_data(page, file, index, site)
+      page.data.merge!(base_page_data(file, index, site))
+      page.instance_variable_set(:@relative_path, "_indices/#{indices_relative(site, file)}")
+    end
+
+    def base_page_data(file, index, site)
+      { 'title' => index['title'], 'layout' => 'indices', 'toc_depth' => 3,
+        'toc_skip_page_title' => true, 'description' => index['description'],
+        'llm' => false, 'slug' => page_slug(site, file),
+        'canonical_url' => index['canonical_url'],
+        'major_version' => index['major_version'] }.compact
     end
 
     def normalize_paths(index)
@@ -83,6 +84,7 @@ module Jekyll
 
       index['groups'].map do |group|
         @sections = {}
+        @current_index = index
         seen = {}
 
         group['sections'].each do |section|
@@ -93,7 +95,7 @@ module Jekyll
 
         all = [].concat(site.pages, site.documents).reject { |page| page.data['published'] == false }
         all.each do |page|
-          next if page.data['skip_index'] || page_is_versioned(page)
+          next if page.data['skip_index'] || !page_visible_in_index?(page, index)
 
           group['sections'].each do |section|
             section['items'].each_with_index do |match, i|
@@ -187,7 +189,7 @@ module Jekyll
 
     def fetch_how_tos(site, match)
       site.collections['how-tos'].docs.select do |t|
-        match_criteria(t.data, match)
+        match_criteria(t.data, match) && page_visible_in_index?(t, @current_index)
       end
     end
 
@@ -207,6 +209,34 @@ module Jekyll
     end
 
     private
+
+    def page_visible_in_index?(page, index)
+      return !page_is_versioned(page) && page.data['major_version'].nil? unless index['major_version']
+
+      page_matches_major_version?(page, index['major_version'])
+    end
+
+    def page_matches_major_version?(page, index_major_version)
+      page_mv = page.data['major_version']
+      return false unless page_mv
+
+      index_major_version.all? do |product, version|
+        page_mv[product] == version.to_s.split('.').first.to_i
+      end
+    end
+
+    def index_dir(site, file)
+      subdir = File.dirname(indices_relative(site, file))
+      subdir == '.' ? 'index' : "index/#{subdir}"
+    end
+
+    def page_slug(site, file)
+      indices_relative(site, file).delete_suffix('.yaml')
+    end
+
+    def indices_relative(site, file)
+      file.delete_prefix("#{File.join(site.source, '_indices')}/")
+    end
 
     def match_criteria(data, match)
       %w[tags products tools plugins].all? do |key|
