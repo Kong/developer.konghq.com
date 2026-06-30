@@ -487,6 +487,8 @@ meshopa
 meshopas
 meshpassthrough
 meshpassthroughs
+metacharacter
+metacharacters
 metainfo
 metamethod
 metatable
@@ -665,6 +667,7 @@ resourceVersion
 response_format
 resty
 Resync
+Retriable
 retryOn
 reusability
 rockspec
@@ -816,6 +819,7 @@ udpingress
 udpingresses
 UDPRoute
 UDPRoutes
+uint
 uid
 UIs
 ulimit

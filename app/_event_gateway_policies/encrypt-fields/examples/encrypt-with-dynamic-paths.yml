@@ -1,0 +1,37 @@
+title: Encrypt fields with a dynamic list of fields
+
+description: Use a dynamic expression to encrypt fields of a message value.
+
+weight: 900
+
+requirements:
+  - "An [AWS KMS key ARN](https://docs.aws.amazon.com/kms/latest/developerguide/find-cmk-id-arn.html)."
+  - "A corresponding [field decryption policy](/event-gateway/policies/decrypt-fields/examples/decrypt-with-dynamic-paths/)."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+  key_id:
+    description: |
+      The KMS key ARN in this format: `arn:aws:kms:REGION:ACCOUNT_ID:key/KEY_ID`
+    value: "$AWS_KEY_ARN"
+
+type: encrypt_fields
+name: encrypt-using-dynamic-paths
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: reject
+  encrypt_fields:
+    - paths: '${ context.topic.name.startsWith("public_") ? ["personal.ssn", "personal.name"] : [] }'
+      encryption_key:
+        type: aws
+        arn: ${key_id}
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: "1.2"

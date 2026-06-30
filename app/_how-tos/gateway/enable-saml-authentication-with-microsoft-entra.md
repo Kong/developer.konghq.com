@@ -76,7 +76,7 @@ prereqs:
             indent: 3
             {% endenv_variables %}
 
-        {:.warning}
+        {:.danger}
         > Do not include the `BEGIN CERTIFICATE` and `END CERTIFICATE` lines in the certificate variable. Add only the certificate contents.
 
       icon_url: /assets/icons/azure.svg
@@ -106,6 +106,11 @@ entities:
 Enable the [SAML plugin](/plugins/saml/) and provide the information to connect to your SAML application.
 We also need to provide a value for [`config.session_secret`](/plugins/saml/reference/#schema--config-session-secret), which should be a random 32-character string.
 
+{:.danger}
+> This example keeps [`validate_assertion_signature`](/plugins/saml/reference/#schema--config-validate-assertion-signature) set to its default value of `true`, which requires a valid `idp_certificate`.
+> If you only want to test the authentication flow without configuring a signing certificate, you can manually set `validate_assertion_signature` to `false`.
+> Disabling signature validation is **not secure**. **Do not disable signature validation in production.**
+
 {% entity_examples %}
 entities:
     plugins:
@@ -115,7 +120,7 @@ entities:
             issuer: ${identifier}
             idp_sso_url: ${url}
             assertion_consumer_path: /consume
-            validate_assertion_signature: false
+            validate_assertion_signature: true
             session_secret: uwcLGoTJCWnHWZdVpbLYKlztNOyoGJ07
             idp_certificate: ${certificate}
 

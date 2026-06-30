@@ -27,6 +27,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where some of ai metrics was missed in analytics",

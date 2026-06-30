@@ -1,0 +1,26 @@
+title: Decrypt fields with a dynamic list of fields
+
+description: Use a dynamic expression to decrypt fields of a message value.
+
+weight: 900
+
+requirements:
+ - "A corresponding [Encrypt fields policy](/event-gateway/policies/encrypt-fields/examples/encrypt-with-dynamic-paths/).
+   {{site.event_gateway_short}} uses the AWS ARN from the Encrypt fields policy to find the key for the Decrypt fields policy."
+
+name: decrypt-using-dynamic-paths
+type: decrypt_fields
+config:
+  failure_mode: mark
+  key_sources:
+    - type: aws
+  decrypt_fields:
+    paths: '${ context.auth.token.claims["role"] == "admin" ? [] : ["personal.ssn", "personal.name"] }'
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.2'

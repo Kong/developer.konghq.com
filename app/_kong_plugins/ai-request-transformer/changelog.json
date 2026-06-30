@@ -39,6 +39,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.1": [
     {
       "message": "Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",

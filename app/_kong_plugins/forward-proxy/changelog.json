@@ -27,6 +27,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.7": [
+    {
+      "message": "Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Marked the `auth_password` in the `forward_proxy` plugin as an `encrypted` field.\n",

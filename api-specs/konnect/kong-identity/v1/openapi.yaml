@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 1.0.0
-  x-oas-source: kong/platform-api@0a7c8af2ee8423925291a2338845bfc717854446
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0a7c8af2ee8423925291a2338845bfc717854446'
+  version: 1.0.2
+  x-oas-source: kong/platform-api@abe599a511a14705103c41ca4112d9164ed56ddc
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/abe599a511a14705103c41ca4112d9164ed56ddc'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -900,6 +900,11 @@ components:
           description: The URI of the metadata document for the auth server
           type: string
           format: uri
+        jwks_uri:
+          description: The URI of the JWKS endpoint for the auth server
+          type: string
+          format: uri
+          readOnly: true
         labels:
           $ref: '#/components/schemas/Labels'
         created_at:
@@ -1199,43 +1204,6 @@ components:
       required:
         - data
         - meta
-    SortQuery:
-      description: |
-        The `asc` suffix is optional as the default sort order is ascending.
-        The `desc` suffix is used to specify a descending order.
-        Multiple sort attributes may be provided via a comma separated list.
-        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
-      type: string
-      example: created_at desc
-      title: SortQuery
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      properties:
-        eq:
-          type: string
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-    LegacyStringFieldFilter:
-      description: 'Filter using **one** of the following operators: `eq`, `contains`'
-      type: object
-      properties:
-        eq:
-          description: The field exactly matches the provided value.
-          type: string
-          example: '?filter[field_name_here][eq]=foo'
-        contains:
-          description: The field contains the provided value.
-          type: string
-          example: '?filter[field_name_here][contains]=foo'
-      additionalProperties: false
-      x-examples:
-        example-1:
-          contains: some-value
-        example-2:
-          eq: some-value
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -1263,32 +1231,6 @@ components:
       format: date-time
       example: '2022-11-04T20:10:06.927Z'
       readOnly: true
-    PageMeta:
-      description: Contains pagination query parameters and the total number of objects returned.
-      type: object
-      properties:
-        number:
-          type: number
-          example: 1
-        size:
-          type: number
-          example: 10
-        total:
-          type: number
-          example: 100
-      required:
-        - number
-        - size
-        - total
-    PaginatedMeta:
-      description: returns the pagination information
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/PageMeta'
-      required:
-        - page
-      title: PaginatedMeta
     BaseError:
       description: standard error
       type: object
@@ -1536,21 +1478,6 @@ components:
           properties:
             invalid_parameters:
               $ref: '#/components/schemas/InvalidParameters'
-    ConflictError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 409
-            title:
-              example: Conflict
-            type:
-              example: 'https://httpstatuses.com/409'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Conflict
     NotFoundError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -1566,6 +1493,84 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not found
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      properties:
+        eq:
+          type: string
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
+      additionalProperties: false
+      x-examples:
+        example-1:
+          contains: some-value
+        example-2:
+          eq: some-value
+    PageMeta:
+      description: Contains pagination query parameters and the total number of objects returned.
+      type: object
+      properties:
+        number:
+          type: number
+          example: 1
+        size:
+          type: number
+          example: 10
+        total:
+          type: number
+          example: 100
+      required:
+        - number
+        - size
+        - total
+    PaginatedMeta:
+      description: returns the pagination information
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMeta'
+      required:
+        - page
+      title: PaginatedMeta
     LabelsUpdate:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -1657,6 +1662,7 @@ components:
             signing_algorithm: RS256
             issuer: 'https://auth-server-1.com'
             metadata_uri: 'https://auth-server-1.com/auth/.well-known/openid-configuration'
+            jwks_uri: 'https://auth-server-1.com/auth/.well-known/jwks'
             labels:
               env: production
             created_at: '2023-03-20T09:29:14.52Z'
@@ -1668,6 +1674,7 @@ components:
             signing_algorithm: RS256
             issuer: 'https://auth-server-2.com'
             metadata_uri: 'https://auth-server-2.com/auth/.well-known/openid-configuration'
+            jwks_uri: 'https://auth-server-2.com/auth/.well-known/jwks'
             labels:
               env: production
             created_at: '2023-03-20T09:29:14.52Z'
@@ -1686,6 +1693,7 @@ components:
         signing_algorithm: RS256
         issuer: 'https://auth-server-1.com'
         metadata_uri: 'https://auth-server-1.com/auth/.well-known/openid-configuration'
+        jwks_uri: 'https://auth-server-1.com/auth/.well-known/jwks'
         labels:
           env: production
         created_at: '2023-03-20T09:29:14.52Z'
@@ -2371,12 +2379,6 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/BadRequestError'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ConflictError'
     NotFound:
       description: Not Found
       content:
@@ -2386,6 +2388,12 @@ components:
           examples:
             NotFoundExample:
               $ref: '#/components/examples/NotFoundExample'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
     Forbidden:
       description: Forbidden
       content:
