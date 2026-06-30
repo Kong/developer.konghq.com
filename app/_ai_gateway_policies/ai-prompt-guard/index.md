@@ -23,7 +23,7 @@ You can use a combination of `allow` and `deny` rules to preserve integrity and 
 
 ## How it works
 
-The Policy matches lists of regular expressions to requests routed through the {{site.ai_gateway}}.
+This Policy matches lists of regular expressions to requests routed through the {{site.ai_gateway}}.
 
 The matching behavior is as follows:
 * If any `deny` expressions are set, and the request matches any regex pattern in the `deny` list, the caller receives a 400 Bad Request response.
