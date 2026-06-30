@@ -48,7 +48,7 @@ faqs:
       We recommend disabling the GCP Model Armor Floor in GCP, as this setting fails in some modes (for example, streaming response mode), and blocks all analytics.
 ---
 
-The **GCP Model Armor** plugin integrates {{site.ai_gateway}} with [{{ site.google_cloud }}’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
+The **GCP Model Armor** Policy integrates {{site.ai_gateway}} with [{{ site.google_cloud }}’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
 It leverages GCP SaaS APIs to inspect prompts and model outputs, preventing unsafe content from being processed or returned to users.
 
 ## Features
@@ -85,7 +85,7 @@ The plugin inspects requests and responses using GCP Model Armor:
 
 ### Request guarding flow
 
-1. An incoming request to an LLM (for example, a chat completion) is intercepted by the plugin.
+1. An incoming request to an LLM (for example, a chat completion) is intercepted by the AI GCP Model Armor Policy.
 2. The plugin extracts the relevant content, usually the last user message in the conversation.
 3. The content is submitted to GCP Model Armor’s `sanitizeUserPrompt` endpoint for analysis.
 
@@ -104,7 +104,7 @@ The plugin inspects requests and responses using GCP Model Armor:
 5. If `reveal_failure_categories` is enabled, the response also lists the categories that triggered blocking.
 
 {:.info}
-> When configuring `template_id` in the AI GCP Model Armor plugin, ensure that it aligns with the content safety policies and categories defined in your GCP Model Armor service.
+> When configuring `template_id` in the AI GCP Model Armor Policy, ensure that it aligns with the content safety policies and categories defined in your GCP Model Armor service.
 >
 > Review whether your organization requires custom categories or additional policy definitions, and integrate them into the selected template to match compliance and safety requirements.
 
@@ -136,18 +136,18 @@ rows:
 {% endtable %}
 
 {:.warning}
-> **Caution**: Do **not** set the Model Armor Floor Setting directly in GCP, as it will cause conflicts with this plugin.
+> **Caution**: Do **not** set the Model Armor Floor Setting directly in GCP, as it will cause conflicts with this Policy.
 See the [FAQ entry for this error](#what-do-i-do-if-i-see-the-error-blocked-by-model-armor-floor-setting) for more information.
 
-## Unrecognized filters {% new_in 3.14 %}
+## Unrecognized filters
 
-The plugin now blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. Previously, unrecognized filter types were silently ignored. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the plugin supports.
+The AI GCP Model Armor Policy now blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. Previously, unrecognized filter types were silently ignored. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the Policy supports.
 
 ## Logging
 
-The AI GCP Model Armor plugin emits structured log data for every inspected request and response. For the full list of log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/#ai-gcp-model-armor-logs).
+The AI GCP Model Armor Policy emits structured log data for every inspected request and response. For the full list of log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/#ai-gcp-model-armor-logs).
 
-To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/plugins/ai-gcp-model-armor/reference/#schema--config-log-blocked-content). {% new_in 3.14 %} When enabled, the blocked prompt or response body appears under `ai.proxy.gcp-model-armor.input_faulty_prompt` and `ai.proxy.gcp-model-armor.output_faulty_response` in the log entry.
+To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-log-blocked-content). When enabled, the blocked prompt or response body appears under `ai.proxy.gcp-model-armor.input_faulty_prompt` and `ai.proxy.gcp-model-armor.output_faulty_response` in the log entry.
 
 ## Limitations
 
