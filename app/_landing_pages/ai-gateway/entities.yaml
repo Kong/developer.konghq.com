@@ -40,7 +40,7 @@ rows:
           - type: card
             config:
               title: AI Agent
-              description: Expose, observe and secure autonomous agents through the {{site.ai_gateway}} for tool-calling and decision-making workflows.
+              description: Expose, observe, and secure autonomous agents through {{site.ai_gateway}} for tool-calling and decision-making workflows.
               cta:
                 text: AI Agent entity
                 url: /ai-gateway/entities/ai-agent/
@@ -48,7 +48,7 @@ rows:
           - type: card
             config:
               title: AI MCP Server
-              description: Proxy MCP servers to secure govern and observe tool-calling workflows.
+              description: Proxy MCP servers to secure, govern, and observe tool-calling workflows.
               cta:
                 text: AI MCP Server entity
                 url: /ai-gateway/entities/ai-mcp-server/
@@ -56,7 +56,7 @@ rows:
           - type: card
             config:
               title: AI Policy
-              description: Control security, rate-limiting, and guardrails across Models, Agents, and Consumers.
+              description: Control security, rate-limiting, and guardrails across AI Models, AI Agents, and AI Consumers.
               cta:
                 text: AI Policy entity
                 url: /ai-gateway/entities/ai-policy/
