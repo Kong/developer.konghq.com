@@ -108,31 +108,8 @@ Configure the EqualWeb integration in your {{site.dev_portal}} settings.
     "Position": "left",
     "Menulang": "EN",
     "draggable": true,
-    "btnStyle": {
-        "vPosition": [
-            "80%",
-            "80%"
-        ],
-        "margin": [
-            "0",
-            "0"
-        ],
-        "scale": [
-            "0.5",
-            "0.5"
-        ],
-        "color": {
-            "main": "#1c4bb6",
-            "second": "#ffffff"
-        },
-        "icon": {
-            "outline": false,
-            "outlineColor": "#ffffff",
-            "type":  1 ,
-            "shape": "circle"
-        }
-    }
-   }
+    ...
+   } 
    ```
    {:.collapsible .no-copy-code}
 1. Click **Save**.
