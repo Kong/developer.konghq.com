@@ -235,11 +235,6 @@ rows:
 
   - header:
       type: h2
-      text: "Governance"
-      description: |
-        Attach policies to AI Models, AI Agents, AI MCP Servers, and AI Consumers to control how data flows to providers, enforce content safety, and transform prompts.
-  - header:
-      type: h3
       text: "Data governance"
       description: |
         Enforce allow/deny lists and built-in PII sanitization across 20 categories and 9 languages, with the option to run self-hosted for full compliance. See all [Data Governance](/ai-gateway/ai-data-gov/) capabilities.
@@ -258,7 +253,7 @@ rows:
             slug: ai-sanitizer
 
   - header:
-      type: h3
+      type: h2
       text: "Prompt engineering"
       description: |
         Set defaults and manipulate prompts as they pass through AI Model or AI Agent traffic.
@@ -273,7 +268,7 @@ rows:
             slug: ai-prompt-decorator
 
   - header:
-      type: h3
+      type: h2
       text: "Guardrails and content safety"
       description: |
         Moderate request content against trusted services to enforce compliance and protect users across AI-powered applications.
@@ -311,7 +306,7 @@ rows:
             icon: ai-custom-guardrail.png
 
   - header:
-      type: h3
+      type: h2
       text: "Request transformations"
       description: |
         Use AI to augment other API traffic, such as routing responses through a translation prompt before returning them to the client.
