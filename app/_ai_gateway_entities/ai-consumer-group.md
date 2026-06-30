@@ -73,6 +73,7 @@ By grouping AI Consumers together, you eliminate the need to manage AI Policies 
 
 For example, you could define three groups (Bronze, Gold, and Enterprise) and attach an AI Rate Limiting Advanced AI Policy to each with different token quotas and cost budgets. Without Consumer Groups, you would attach a separate AI Rate Limiting Advanced AI Policy to each individual consumer — in production, that could be thousands of individual AI Policy attachments instead of three group-level ones.
 
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
     A((AI Consumers 1-5))
@@ -95,6 +96,7 @@ flowchart LR
 
     F --> H
 {% endmermaid %}
+<!-- vale on -->
 
 ## Manage AI Consumer Groups
 
@@ -109,6 +111,7 @@ For configuration examples and step-by-step setup instructions, see [Set up an A
 
 Common use cases for AI Consumer Groups:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Use case
@@ -127,6 +130,7 @@ rows:
   - use_case: "Centralized AI Policy management"
     description: "Attach AI Policies once at the group level rather than managing them on every individual consumer. Simplifies configuration and ensures consistency across all group members."
 {% endtable %}
+<!-- vale on -->
 
 ## Membership
 
