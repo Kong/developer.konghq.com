@@ -89,6 +89,7 @@ For configuration examples and step-by-step setup instructions, see [Set up an A
 
 Choose an AI Agent type based on your upstream and observability needs. The [`type`](#schema-aigateway-agent-type) controls how requests are processed:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Type
@@ -101,6 +102,7 @@ rows:
   - type: "`http`"
     use_case: "Standard HTTP agent endpoints. Requests pass through transparently as a generic HTTP proxy without A2A-specific processing. Use for upstream agents that don't implement A2A or when you need simple transparent proxying without protocol-aware behavior."
 {% endtable %}
+<!-- vale on -->
 
 ## Use cases for AI Agents
 
