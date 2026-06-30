@@ -38,19 +38,16 @@ faqs:
   - q: How does an AI Model reference an AI Provider?
     a: |
       Set the `provider` field in each item of the [`targets`](/ai-gateway/entities/ai-model/#schema-aigateway-model-targets) array on the AI Model to the AI Provider's `name` or `id`.
-
-  - q: Do AI Providers generate any runtime primitives on their own?
-    a: |
-      No. An AI Provider entity is a write-time template. Credentials and configuration only enter
-      the runtime when an AI Model references the AI Provider; at that point, the AI Provider's values are
-      materialized into the underlying primitives generated for the AI Model.
 ---
 
 ## What is an AI Provider?
 
-The AI Provider entity lets you securely store and manage credentials for connecting to upstream LLM services. Use AI Providers to store API keys for OpenAI, Azure, Bedrock, or any other LLM provider; centrally manage and rotate credentials across multiple AI Models; and enforce consistent authentication across your deployments.
+The AI Provider entity lets you securely store and manage credentials for connecting to upstream LLM services. Use AI Providers to: 
+* Store API keys for OpenAI, Azure, Bedrock, or any other LLM provider
+* Centrally manage and rotate credentials across multiple AI Models
+* Enforce consistent authentication across your deployments
 
-Each AI Provider has a [`type`](#schema-aigateway-provider-type) that selects the upstream LLM service and configures provider-specific options. See the schema below for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
+Each AI Provider has a [`type`](#schema-aigateway-provider-type) that selects the upstream LLM service and configures provider-specific options. See the [schema](#schema) below for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
 
 AI Providers can be created and managed through the {{site.konnect_short_name}} UI and the {{site.ai_gateway}} API:
 
@@ -142,7 +139,7 @@ Updating an AI Provider re-materializes credentials into every AI Model that ref
 
 ## AI Policies and AI Providers
 
-You cannot attach AI Policies directly to an AI Provider entity instance. Policies attach to [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI Consumers](/ai-gateway/entities/ai-consumer/), or [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) to control security, rate limiting, guardrails, and observability.
+You can't attach [AI Policies](/ai-gateway/entities/ai-policy/) directly to an AI Provider entity instance. AI Policies attach to [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI Consumers](/ai-gateway/entities/ai-consumer/), or [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) to control security, rate limiting, guardrails, and observability.
 
 To apply an AI Policy across requests using a particular AI Provider, you can:
 1. Set the policy to `global: true` to apply it to all resources in the gateway
@@ -151,7 +148,7 @@ To apply an AI Policy across requests using a particular AI Provider, you can:
 
 ## Set up an AI Provider
 
-The following example creates an OpenAI Provider that authenticates with a single bearer-token header. A Model can then route to this Provider by setting the `provider` field in a `targets` array item to `my-openai-account` (or the Provider `id`).
+The following example creates an OpenAI Provider that authenticates with a single bearer-token header. An AI Model can then route to this AI Provider by setting the `provider` field in a `targets` array item to `my-openai-account` (or the AI Provider `id`).
 
 {% entity_example %}
 type: provider
