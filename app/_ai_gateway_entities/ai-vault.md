@@ -88,7 +88,7 @@ The connection details vary per backend; the {{site.konnect_short_name}} UI surf
 
 ## Which fields support AI Vault references?
 
-AI Vault references can be used in sensitive fields across your AI Gateway entities:
+AI Vault references can be used in sensitive fields across your {{site.ai_gateway}} entities:
 
 {% table %}
 columns:
