@@ -25,6 +25,10 @@ module Jekyll
                       .merge(super)
       end
 
+      def overview_content
+        @overview_content ||= Jekyll::Utils::MarkdownParser.new(index_file).content.strip
+      end
+
       private
 
       def api_plugin
