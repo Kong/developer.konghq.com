@@ -84,7 +84,7 @@ faqs:
 
 ## What is an AI Model?
 
-The AI Model entity lets you expose LLM endpoints through {{site.ai_gateway}} for clients to call. Use AI Models to: 
+The AI Model entity lets you expose LLM endpoints through {{site.ai_gateway}} for clients to call. Use AI Models to:
 * [Expose multiple LLM providers](#targets) under a single endpoint
 * [Load-balance traffic](#load-balancing) across them
 * [Add observability](#logging-and-observability) to model traffic
@@ -333,11 +333,7 @@ Reference AI Policies through the [`policies`](#schema-aigateway-model-policies)
 
 ### AI Policy execution order
 
-An AI Policy attached to an AI Model runs on the service of the AI Model's derived primitives. That AI Policy runs at the [priority](/gateway/entities/plugin/#plugin-priority) determined by its type, which affects when it executes relative to other AI Policies on the request.
-
-AI Model routing executes at a specific point in the request pipeline. AI Policies have different priorities that determine when they run.  Higher priority AI Policy types may run before the AI Model routing is resolved. Authentication AI Policies (such as OpenID Connect) fall into this category. They gate access correctly because routing to the AI Model's generated Service already occurred, but model-level identity details (provider and target model) are not available until after AI Model resolution.
-
-For AI Policies whose behavior depends on the resolved AI Model identity, use AI Policy types that run at or after AI Model resolution, or use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to adjust execution order as needed.
+AI Policies attach to AI Models and execute in a defined order based on policy type. Authentication policies run early to verify access. Other policies run after routing is resolved. If execution order matters for your use case, refer to the [{{site.baze_gateway}} priority documentation](/gateway/entities/plugin/#plugin-priority).
 
 ## Upstream proxy configuration
 
