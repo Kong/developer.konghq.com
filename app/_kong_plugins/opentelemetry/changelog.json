@@ -116,6 +116,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed an issue where template 'resource_attributes' in configuration of the plugin could not work as expected for metrics.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin crashed when DNS or balancer failures occurred during upstream retries.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added the `peer.service` attribute to the balancer span to link multiple services together. This allows for better tracing of requests that span multiple services.",
