@@ -20,4 +20,7 @@ search_aliases:
 
 Changelog for supported {{site.ai_gateway_name}} versions.
 
+{:.warning}
+> This is the changelog for the on-prem {{site.ai_gateway_name}} runtime. policies are the control-plane concept. in the runtime they’re implemented as plugins, which is the terminology you’ll see in the runtime changelog.
+
 {% gateway_changelog %}
