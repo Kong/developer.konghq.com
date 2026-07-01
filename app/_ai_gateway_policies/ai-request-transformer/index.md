@@ -18,9 +18,9 @@ The AI Request Transformer Policy runs **before** all of the [AI prompt](/ai-gat
 AI Model entity, allowing it to also transform requests before sending them to a different LLM.
 
 {:.warning}
-> **Known failure mode: Chaining AI Request Transformer with the AI Model entity**
+> **Known failure mode: Chaining AI Request Transformer with the {{site.ai_gateway}}**
 >
-> Chaining AI Request Transformer with the AI Model entity may fail for some providers, even though the same setup works with others.
+> Chaining AI Request Transformer with the {{site.ai_gateway}} may fail for some providers, even though the same setup works with others.
 >
 > The reason is that the AI Request Transformer Policy forwards raw model output, and if the model does not produce strict JSON, the proxy chain cannot function correctly. This is not a bug in {{site.ai_gateway}} but a limitation of LLM behavior.
 
