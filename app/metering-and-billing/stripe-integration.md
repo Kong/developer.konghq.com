@@ -102,7 +102,7 @@ Stripe calculates tax based on:
 * Product tax code (global default or per [rate card](/metering-and-billing/product-catalog/#rate-cards))
 
   {:.info}
-  > **Defining tax codes:** To define tax codes for rate cards, you can set default tax codes in the [billing settings in {{site.konnect_short_name}}](https://cloud.konghq.com/us/metering-billing/billing-profiles). You can also specify tax codes per rate card by editing the product catalog when creating a plan.
+  > **Defining tax codes:** To define tax codes for rate cards, you can set default tax codes in [{{site.metering_and_billing}} tax code settings](/metering-and-billing/tax-codes/). You can also specify tax codes per rate card by editing the product catalog when creating a plan.
 
 To enable automatic tax calculation in Stripe, make sure you:
 
