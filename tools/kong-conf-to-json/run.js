@@ -103,7 +103,7 @@ function parseSections(filePath) {
 }
 
 (function main() {
-  const args = minimist(process.argv.slice(2), { string: ["version"] });
+  const args = minimist(process.argv.slice(2), { string: ["version", "product"] });
 
   try {
     if (!args.file) {
@@ -122,9 +122,18 @@ function parseSections(filePath) {
 
     const configFilePath = args.file;
     const version = args.version;
+    const product = args.product || "gateway";
+
+    if (!["gateway", "ai-gateway"].includes(product)) {
+      console.error(`Invalid --product "${product}". Must be "gateway" or "ai-gateway".`);
+      process.exit(1);
+    }
+
     const sections = parseSections(configFilePath);
     const jsonConfig = parseConfigFile(configFilePath, sections);
-    const destinationPath = `../../app/_data/kong-conf/${version}.json`;
+    const destinationDir = `../../app/_kong-conf/${product}`;
+    const destinationPath = `${destinationDir}/${version}.json`;
+    fs.mkdirSync(destinationDir, { recursive: true });
 
     fs.writeFileSync(
       destinationPath,
