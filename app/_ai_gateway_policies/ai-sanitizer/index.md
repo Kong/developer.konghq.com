@@ -19,7 +19,7 @@ tags:
   - dlp
 ---
 
-The AI PII Sanitizer Policy for {{site.ai_gateway}} helps protect sensitive information in client request bodies before they reach upstream providers or tools.
+The AI PII Sanitizer Policy for {{site.ai_gateway}} helps protect sensitive information in client request bodies before they reach upstream AI providers or tools.
 
 By integrating with an external PII service, this Policy ensures compliance with data privacy regulations while preserving the usability of request data.
 
@@ -27,7 +27,7 @@ The AI PII Sanitizer supports multiple sanitization modes, including replacing s
 
 Additionally, AI PII Sanitizer offers an optional restoration feature, allowing the original request data to be reinstated in responses when needed.
 
-The AI PII Sanitizer Policy uses the AI PII Anonymizer Service, which can run in a Docker container, to detect and sanitize sensitive data. See the [tutorial on configuring the AI PII Sanitizer Policy](/how-to/protect-sensitive-information-with-ai/) for more information on how to configure the Policy with the AI PII Anonymizer Service.
+The AI PII Sanitizer Policy uses the AI PII Anonymizer Service, which can run in a Docker container, to detect and sanitize sensitive data.
 
 ## How it works
 
@@ -88,7 +88,7 @@ Kong provides several AI PII Anonymizer service Docker images in a private repos
 * `POST /llm/v1/sanitize`: Sanitize specified types of PII information, including credentials, and custom patterns
 * `POST /llm/v1/sanitize_credentials`: Only for sanitizing credentials
 
-See the [AI PII Sanitizer OpenAPI specification](/plugins/ai-sanitizer/api/) for complete details.
+See the [AI PII Sanitizer OpenAPI specification](/ai-gateway/policies/ai-sanitizer/api/) for complete details.
 
 ### Available anonymization modes
 
