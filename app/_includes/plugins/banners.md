@@ -1,5 +1,8 @@
 {% if page.overview? -%}
-{%- if page.premium_partner and page.third_party %}
+{%- if page.ai_gateway_url %}
+{:.warning.-my-4}
+> Looking for {{site.ai_gateway}} 2.0? [See the policy for the current version]({{page.ai_gateway_url}}).
+{% endif %}{%- if page.premium_partner and page.third_party %}
 
 {:.decorative.w-full.-my-4}
 > **Premium Partner:** This plugin is developed, tested, and maintained by [{{site.data.plugin_publishers[page.publisher].name}}]({{page.support_url}}).
