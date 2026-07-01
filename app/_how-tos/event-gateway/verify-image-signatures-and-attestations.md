@@ -12,6 +12,8 @@ products:
 works_on:
     - konnect
 
+min_version:
+  event-gateway: '1.1.1'
 tools: []
 
 breadcrumbs:
@@ -96,7 +98,7 @@ The output lists the supply chain artifacts (signatures and attestations) that a
     echo $IMAGE_DIGEST
     ```
 
-    This captures the image's `SHA-256` digest so you can reuse it in the commands below, and prints it:
+    This captures the image's SHA-256 digest so you can reuse it in the commands below, and prints it:
 
     ```sh
     sha256:...
@@ -117,7 +119,7 @@ The output lists the supply chain artifacts (signatures and attestations) that a
       kong/kong-event-gateway@${IMAGE_DIGEST}
     ```
 
-    If verification is successful, the response contains a summary of the checks that were performed:
+    If verification succeeds, the response contains a summary of the checks that were performed:
 
     ```
     Verification for index.docker.io/kong/kong-event-gateway@sha256:... --
@@ -159,7 +161,7 @@ rows:
 {:.info}
 > The exact set of attestations can change between releases. Use [`cosign tree`](#list-the-artifacts-attached-to-an-image) to see the authoritative list for the image you're verifying.
 
-To verify an attestation's signature and print its contents, use `cosign verify-attestation` with the matching `--type`. For example, to verify the SPDX SBOM:
+To verify an attestation's signature and print its contents, use `cosign verify-attestation` with the matching `--type`. For example, to verify the SPDX SBOM, run:
 
 ```sh
 cosign verify-attestation \
@@ -169,7 +171,7 @@ cosign verify-attestation \
   kong/kong-event-gateway@${IMAGE_DIGEST}
 ```
 
-For predicate types that don't have a built-in alias, pass the full predicate type URL to `--type` instead, for example `--type="https://cisecurity.org/docker/amd64"`.
+For predicate types that don't have a built-in alias, pass the full predicate type URL to `--type` instead. For example: `--type="https://cisecurity.org/docker/amd64"`.
 
 ## Extract the SBOM
 
