@@ -90,36 +90,36 @@ rows:
     column_count: 2
     columns:
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-prompt-guard
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-azure-content-safety
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-aws-guardrails
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-gcp-model-armor
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-semantic-prompt-guard
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-semantic-response-guard
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-lakera-guard
             icon: ai-lakera.png
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-custom-guardrail
             icon: ai-custom-guardrail.png
@@ -127,10 +127,10 @@ rows:
         - type: card
           config:
             title: Amazon Bedrock guardrails
-            description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
+            description: Include your Amazon Bedrock guardrails configuration in AI Model requests
             icon: /assets/icons/bedrock.svg
             cta:
-              url: /plugins/ai-proxy/#supported-native-llm-formats
+              url: /ai-gateway/entities/ai-model/#attach-ai-policies
               align: end
   - header:
       type: h2
@@ -139,7 +139,7 @@ rows:
     column_count: 1
     columns:
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-sanitizer
             icon: ai-sanitizer.png
@@ -151,7 +151,7 @@ rows:
     column_count: 1
     columns:
       - blocks:
-        - type: plugin
+        - type: policy
           config:
             slug: ai-rag-injector
 
