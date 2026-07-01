@@ -46,7 +46,7 @@ faqs:
       We recommend disabling the GCP Model Armor Floor in GCP, as this setting fails in some modes (for example, streaming response mode), and blocks all analytics.
 ---
 
-The **GCP Model Armor** Policy integrates {{site.ai_gateway}} with [{{ site.google_cloud }}’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
+The GCP Model Armor Policy integrates {{site.ai_gateway}} with [{{ site.google_cloud }}’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
 It leverages GCP SaaS APIs to inspect prompts and model outputs, preventing unsafe content from being processed or returned to users.
 
 ## Features
@@ -84,19 +84,19 @@ The AI GCP Model Armor Policy inspects requests and responses using GCP Model Ar
 ### Request guarding flow
 
 1. An incoming request to an LLM (for example, a chat completion) is intercepted by the AI GCP Model Armor Policy.
-2. The AI Policy extracts the relevant content, usually the last user message in the conversation.
+2. The AI GCP Model Armor Policy extracts the relevant content, usually the last user message in the conversation.
 3. The content is submitted to GCP Model Armor’s `sanitizeUserPrompt` endpoint for analysis.
 
 ### Response guarding flow
 
-1. The AI Policy buffers the upstream response body (including gzipped responses).
+1. The AI GCP Model Armor Policy buffers the upstream response body (including gzipped responses).
 2. It extracts the model’s response content.
 3. The content is sent to GCP Model Armor’s `sanitizeModelResponse` endpoint for validation.
 
 ### Sanitization and action
 
 1. GCP Model Armor evaluates the provided content against the configured `template_id`.
-2. The AI Policy interprets the `sanitizationResult` from GCP.
+2. The AI GCP Model Armor Policy interprets the `sanitizationResult` from GCP.
 3. If a violation is detected (for example, hatred, sexually explicit content, harassment, or jailbreak attempts), the request or response is blocked.
 4. Blocked traffic results in a `400 Bad Request` response with the configured `request_failure_message` or `response_failure_message`.
 5. If `reveal_failure_categories` is enabled, the response also lists the categories that triggered blocking.
@@ -134,7 +134,7 @@ rows:
 {% endtable %}
 
 {:.warning}
-> **Caution**: Do **not** set the Model Armor Floor Setting directly in GCP, as it will cause conflicts with this AI Policy.
+> **Caution**: Do **not** set the Model Armor Floor Setting directly in GCP, as it will cause conflicts with the AI GCP Model Armor Policy.
 See the [FAQ entry for this error](#what-do-i-do-if-i-see-the-error-blocked-by-model-armor-floor-setting) for more information.
 
 ## Unrecognized filters
