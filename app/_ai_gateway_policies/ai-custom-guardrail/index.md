@@ -53,7 +53,7 @@ sequenceDiagram
 
 ## Configuration
 
-To configure the AI Custom Guardrail Policy to work with your guardrail service, you must define your Service's required parameters under [`config.params`](./reference/#schema--config-params). They key will be the parameter name, and the value can be a string or a Lua expression.
+To configure the AI Custom Guardrail Policy to work with your guardrail service, you must define your guardrail vendor API's required parameters under [`config.params`](./reference/#schema--config-params). They key will be the parameter name, and the value can be a string or a Lua expression.
 
 Additionally, the following built-in variables are available in Lua expression. They can be used as arguments in functions, but not in the function body:
 * `$(source)`: The current phase on which the Policy is running. The value is `INPUT` if the Policy is currently inspecting the request, and `OUTPUT` if it's inspecting the response.
