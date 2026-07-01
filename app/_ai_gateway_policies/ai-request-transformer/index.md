@@ -14,8 +14,7 @@ This Policy supports the same `llm/v1/chat` requests and providers as the [AI Mo
 
 It also uses the same configuration and tuning parameters as the AI Model entity, under the [`config.llm`](/ai-gateway/policies/ai-request-transformer/reference/#schema--config-llm) block.
 
-The AI Request Transformer Policy runs **before** all of the [AI prompt](/ai-gateway/policies/?terms=ai%2520prompt) Policies and the
-AI Model entity, allowing it to also transform requests before sending them to a different LLM.
+The AI Request Transformer Policy runs **before** all of the [AI prompt](/ai-gateway/policies/?terms=ai%2520prompt) Policies, allowing it to also transform requests before sending them to a different LLM.
 
 {:.warning}
 > **Known failure mode: Chaining AI Request Transformer with the {{site.ai_gateway}}**
