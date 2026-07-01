@@ -274,12 +274,12 @@ sequenceDiagram
 
 Configure token exchange:
 
-* Set [`config.token_exchange.enabled`](./reference/#schema--config-token-exchange) to `true` to activate token exchange.
-* Use [`client_auth`](./reference/#schema--config-token-exchange-client-auth) to control authentication with the token exchange endpoint. Accepted values: `client_secret_basic`, `client_secret_post`, `none`, `inherit`. Use `inherit` to reuse credentials from the introspection endpoint.
-* Set [`config.token_exchange.request.actor_token_source`](./reference/#schema--config-token-exchange-request) to `header` to extract the actor token from a request header, or `config` to use a static token value.
+* Set [`config.token_exchange.enabled`](./reference/#schema--config-token-exchange) to `true` and set [`config.token_exchange.token_endpoint`](./reference/#schema--config-token-exchange-token-endpoint) to the token exchange endpoint URL.
+* Set [`config.token_exchange.client_auth`](./reference/#schema--config-token-exchange-client-auth) to control authentication with the token exchange endpoint. Accepted values: `client_secret_basic`, `client_secret_post`, `none`, `inherit`. Use `inherit` to reuse credentials from the introspection endpoint.
+* Set [`config.token_exchange.request.actor_token_source`](./reference/#schema--config-token-exchange-request) to `header` (also set `config.token_exchange.request.actor_token_header`) or `config` (also set `config.token_exchange.request.actor_token`).
 * Exchanged tokens are cached by default. Set [`config.token_exchange.cache.enabled`](./reference/#schema--config-token-exchange-cache) to `false` to disable caching. TTL defaults to `3600` seconds.
 
-The following example creates an AI MCP Oauth2 Policy that validates client tokens with one authorization server and exchanges them for tokens from a different server before forwarding to the upstream MCP server:
+The following example creates an AI MCP OAuth2 Policy that validates client tokens with one authorization server and exchanges them for tokens from a token exchange endpoint before forwarding to the upstream MCP server:
 
 {% entity_example %}
 type: policy
@@ -299,10 +299,11 @@ data:
     consumer_optional: false
     token_exchange:
       enabled: true
-      endpoint: https://auth.example.com/oauth/token
+      token_endpoint: https://auth.example.com/oauth/token
       client_auth: client_secret_basic
       request:
         actor_token_source: header
+        actor_token_header: X-Actor-Token
       cache:
         enabled: true
         ttl: 3600
