@@ -87,9 +87,9 @@ rows:
 
 Settled balance is the right model for audit and history: the same timestamp always reflects the same visible ledger state.
 
-## Pending balance
+## Live balance
 
-Pending balance is a pessimistic operational view. 
+Live balance is a pessimistic operational view. 
 It accounts for open charges that may still consume credits, even before those charge movements are finalized into the settled balance.
 
 For example, assume a customer has 100 USD settled credits and an open charge is expected to consume 25 USD. 
@@ -105,8 +105,10 @@ pending balance:          75
 This distinction matters when you display balances:
 
 * Use settled balance when the user needs an audit-style view of committed movements.
-* Use pending balance when the user needs a conservative "can this customer spend more?" view.
+* Use live balance when the user needs a conservative "can this customer spend more?" view.
+## Pending grants
 
+Pending grants describes credits that have been granted but are not yet written to the ledger, or are written to the ledger with a future booked time.
 ## Currency
 
 Credit balances are currency-specific. 
