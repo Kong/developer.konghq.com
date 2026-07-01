@@ -117,12 +117,6 @@ body:
 {% endkonnect_api_request %}
 <!-- vale on -->
 
-Save the agent ID from the response:
-
-```bash
-export AGENT_ID='your-agent-id-from-response'
-```
-
 The agent is now accessible at the `/a2a` route and proxies A2A JSON-RPC requests to the upstream agent running at `http://a2a-agent:10000`.
 
 ## Retrieve the Agent Card
