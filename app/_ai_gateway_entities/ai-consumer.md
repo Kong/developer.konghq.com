@@ -146,10 +146,56 @@ data:
   display_name: Mobile App - Production
   name: mobile-app-production
   type: api-key
-  consumer_groups:
-    - internal-teams
   policies: []
 {% endentity_example %}
+
+## Create Consumer Credentials
+
+After creating an AI Consumer, create credentials for authentication. Credentials are managed through a separate endpoint.
+
+{% navtabs "credential_type" %}
+{% navtab "api-key" %}
+
+Create an API key credential for an AI Consumer with `type: api-key`:
+
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: Mobile App Key 1
+  name: mobile-app-key-1
+  type: api-key
+{% endkonnect_api_request %}
+
+The response includes the generated `api_key` value. Store this securely — it cannot be retrieved later.
+
+{% endnavtab %}
+{% navtab "oauth" %}
+
+Create an OAuth credential for an AI Consumer with `type: oauth`:
+
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: OAuth User 1
+  name: oauth-user-1
+  type: oauth
+  custom_id: user-id-from-oidc-provider
+{% endkonnect_api_request %}
+
+The `custom_id` must match the user identifier from your OAuth provider (for example, the `sub` claim from an OIDC token).
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Schema
 
