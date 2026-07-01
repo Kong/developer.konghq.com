@@ -4,6 +4,7 @@ metadata:
   description: "Unified machine-to-machine authentication platform within Kong Konnect."
   permalink: /identity/
   products:
+    - identity
     - konnect
   works_on:
     - konnect
