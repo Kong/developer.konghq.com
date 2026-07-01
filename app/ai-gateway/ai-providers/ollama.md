@@ -58,5 +58,18 @@ body:
   display_name: Ollama Production
   name: local-ollama
   type: ollama
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  display_name: Ollama Production
+  name: local-ollama
+  type: ollama
+  config:
+    auth:
+      type: basic
 {% endkonnect_api_request %}
 <!--vale on-->

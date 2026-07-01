@@ -80,7 +80,8 @@ body:
       type: aws
       allow_override: false
       aws_access_key_id: $AWS_ACCESS_KEY_ID
-      aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+access_key_id: $AWS_ACCESS_KEY_ID
+secret_access_key: $AWS_SECRET_ACCESS_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
 

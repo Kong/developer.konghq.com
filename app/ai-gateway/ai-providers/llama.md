@@ -56,7 +56,7 @@ headers:
   - 'Content-Type: application/json'
 body:
   display_name:  llama2 Production
-  name: my- llama2-account
+  name: my-llama2-account
   type:  llama2
   config:
     auth:
