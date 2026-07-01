@@ -1,1 +1,1 @@
-Pass `imageConfig` parameters via `generationConfig` in your image generation requests. See [Use {{ site.gemini }}'s imageConfig with {{site.ai_gateway}}](/how-to/use-gemini-3-image-config/) for detailed instructions.
+Pass `imageConfig` parameters via `generationConfig` in your image generation requests.

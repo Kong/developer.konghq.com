@@ -66,6 +66,13 @@ Flag any deviation:
 - `tools` containing `deck`, `admin-api`, or anything other than `konnect-api`
 - Missing or wrong `min_version` (must be `ai-gateway: '2.0'`)
 
+#### `content_type` on AI Policy pages
+
+Pages under `app/_ai_gateway_policies/` are auto-generated as stubs with the default `content_type: plugin`. When you author real overview content for one of these pages (i.e. the file has hand-written body prose, not just frontmatter), set `content_type: policy`.
+
+- If you are adding or editing overview prose on an `_ai_gateway_policies/` page, change `content_type: plugin` → `content_type: policy`.
+- Leave untouched stubs alone — do **not** flip `content_type` on pages that still have an empty body. The stub default stays `plugin` until the page gets real content.
+
 ### Plugin → AI Policy migration
 
 Plugins have been replaced by AI Policies in v2. The four plugins that do **not** exist as policies are exceptions:
