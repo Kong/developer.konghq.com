@@ -77,7 +77,7 @@ faqs:
     a: Yes. Create an AI Policy like [OpenID Connect](/ai-gateway/policies/openid-connect/) for authentication and attach it to the agent. The AI Agent entity handles A2A protocol concerns independently of authentication.
 
   - q: How do I enable request/response logging?
-    a: Set `logging.payloads` to `true` and `logging.statistics` to `true` in the agent config to log A2A request and response bodies along with metrics.
+    a: Set `config.logging.payloads` to `true` and `config.logging.statistics` to `true` in the agent config to log A2A request and response bodies along with metrics.
 
 ---
 
