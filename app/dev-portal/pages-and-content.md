@@ -88,9 +88,14 @@ related_resources:
     url: /dev-portal/custom-domains/
   - text: About Dev Portal customizations
     url: /dev-portal/customizations/dev-portal-customizations/
-  - text: Dev Portal VS Code extension (tech preview)
+  - text: Dev Portal VS Code extension
     url: https://marketplace.visualstudio.com/items?itemName=konghq.vscode-konnect-dev-portal-toolkit
+  - text: Konnect MCP Server
+    url: /konnect-platform/konnect-mcp/
 ---
+
+{:.success}
+> **Get started with the {{site.konnect_short_name}} MCP Server**: Use the [{{site.konnect_short_name}} MCP Server](/konnect-platform/konnect-mcp/) to create and edit {{site.dev_portal}} pages, snippets, and [Markdown Components (MDC)](https://portaldocs.konghq.com/) directly from your AI assistant or IDE.
 
 In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status.
 
