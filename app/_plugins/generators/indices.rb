@@ -36,6 +36,7 @@ module Jekyll
     def set_page_data(page, file, index, site)
       page.data.merge!(base_page_data(file, index, site))
       page.instance_variable_set(:@relative_path, "_indices/#{indices_relative(site, file)}")
+      set_cross_major_banner_info(site, page)
     end
 
     def base_page_data(file, index, site)
@@ -43,7 +44,8 @@ module Jekyll
         'toc_skip_page_title' => true, 'description' => index['description'],
         'llm' => false, 'slug' => page_slug(site, file),
         'canonical_url' => index['canonical_url'],
-        'major_version' => index['major_version'] }.compact
+        'major_version' => index['major_version'],
+        'products' => index['products'] }.compact
     end
 
     def normalize_paths(index)
@@ -229,6 +231,19 @@ module Jekyll
       index_major_version.all? do |product, version|
         page_mv[product] == version.to_s.split('.').first.to_i
       end
+    end
+
+    def set_cross_major_banner_info(site, page)
+      major_version = page.data['major_version']&.first
+      return unless major_version
+
+      product_name, version = major_version
+      data = site.data.dig('products', product_name)
+      major = version.to_s.split('.').first.to_i
+      page.data['cross_major_banner_info'] = {
+        'product' => data['name'],
+        'major_version' => MajorVersionResolver.process(product_data: data, major: major)
+      }
     end
 
     def link_major_version_indices(site)

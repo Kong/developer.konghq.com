@@ -460,26 +460,58 @@ RSpec.describe Jekyll::IndexGenerator do
     let(:site) { instance_double(Jekyll::Site, source: '/repo') }
     let(:file) { '/repo/_indices/ai-gateway/v1.yaml' }
 
-    context 'when canonical_url and major_version are present' do
+    context 'when canonical_url, major_version and products are present' do
       let(:index) do
         { 'title' => 'V1 Docs', 'description' => 'desc',
-          'canonical_url' => '/index/ai-gateway/', 'major_version' => { 'ai-gateway' => '1.0' } }
+          'canonical_url' => '/index/ai-gateway/', 'major_version' => { 'ai-gateway' => '1.0' },
+          'products' => ['ai-gateway'] }
       end
 
       subject(:data) { generator.send(:base_page_data, file, index, site) }
 
       it { expect(data['canonical_url']).to eq('/index/ai-gateway/') }
       it { expect(data['major_version']).to eq({ 'ai-gateway' => '1.0' }) }
+      it { expect(data['products']).to eq(['ai-gateway']) }
       it { expect(data['slug']).to eq('ai-gateway/v1') }
     end
 
-    context 'when canonical_url and major_version are absent' do
+    context 'when canonical_url, major_version and products are absent' do
       let(:index) { { 'title' => 'Docs', 'description' => 'desc' } }
 
       subject(:data) { generator.send(:base_page_data, file, index, site) }
 
       it { expect(data).not_to have_key('canonical_url') }
       it { expect(data).not_to have_key('major_version') }
+      it { expect(data).not_to have_key('products') }
+    end
+  end
+
+  describe '#set_cross_major_banner_info (private)' do
+    let(:aigw_product_data) { { 'name' => 'AI Gateway', 'previous_major_url_segment' => 'v<major>' } }
+    let(:site) { instance_double(Jekyll::Site, data: { 'products' => { 'ai-gateway' => aigw_product_data } }) }
+
+    context 'when the page has major_version set' do
+      let(:page_data) { { 'major_version' => { 'ai-gateway' => '1.0' } } }
+      let(:page) { instance_double(Jekyll::Page, data: page_data) }
+
+      before { generator.send(:set_cross_major_banner_info, site, page) }
+
+      it 'sets cross_major_banner_info with the product name' do
+        expect(page_data['cross_major_banner_info']['product']).to eq('AI Gateway')
+      end
+
+      it 'sets cross_major_banner_info with the MajorVersionResolver label' do
+        expect(page_data['cross_major_banner_info']['major_version']).to eq('v1')
+      end
+    end
+
+    context 'when the page has no major_version' do
+      let(:page) { instance_double(Jekyll::Page, data: {}) }
+
+      it 'does not set cross_major_banner_info' do
+        generator.send(:set_cross_major_banner_info, site, page)
+        expect(page.data).not_to have_key('cross_major_banner_info')
+      end
     end
   end
 
