@@ -262,6 +262,8 @@ rows:
 {:.info}
 > For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
 >
+> For requests with large payloads, consider increasing [`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on your [AI Model](/ai-gateway/entities/ai-model/) entity to three times the raw binary size.
+>
 > Supported audio formats, voices, and parameters vary by model. Refer to your provider's documentation for available options.
 
 {% if provider.capabilities.audio_speech.note.content %}<sup>{{ audio_speech_note_num }}</sup> {{ provider.capabilities.audio_speech.note.content }}{% endif %}
@@ -298,6 +300,8 @@ rows:
 {:.info}
 > For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
 >
+> For requests with large payloads, consider increasing [`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on your [AI Model](/ai-gateway/entities/ai-model/) entity to three times the raw binary size.
+>
 > Supported image sizes and formats vary by model. Refer to your provider's documentation for allowed dimensions and requirements.
 
 {% if provider.capabilities.image.note.content %}<sup>{{ image_note_num }}</sup> {{ provider.capabilities.image.note.content }}{% endif %}
@@ -330,7 +334,7 @@ rows:
 {% endtable %}
 
 {:.info}
-> For requests with large payloads (video generation), consider increasing `config.max_request_body_size` to three times the raw binary size.
+> For requests with large payloads (video generation), consider increasing [`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on your [AI Model](/ai-gateway/entities/ai-model/) entity to three times the raw binary size.
 
 {% if provider.capabilities.video.note.content %}<sup>{{ video_note_num }}</sup> {{ provider.capabilities.video.note.content }}{% endif %}
 {%- endif -%}
@@ -342,7 +346,7 @@ rows:
 Support for {{ provider.name }}'s bidirectional streaming for realtime applications:
 
 {:.info}
-> Realtime processing uses WebSocket protocol (ws/wss). The protocols are configured automatically when the Service and Route are created.
+> Realtime processing uses WebSocket protocol (ws/wss). This protocol is automatically enabled when you configure your [AI Model](/ai-gateway/entities/ai-model/) with the [realtime capability](/ai-gateway/entities/ai-model/#capabilities).
 
 {% table %}
 vertical_align: middle
@@ -392,6 +396,9 @@ rows:
 {% endif %}
 {% endtable %}
 {% if provider.capabilities.batches.note.content %}<sup>{{ batches_note_num }}</sup> {{ provider.capabilities.batches.note.content }}{% endif %}
+{:.warning}
+> Batches are configured on a separate AI Model with `type: "api"`, distinct from regular models that handle synchronous capabilities like generate and embeddings.
+> Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
 {%- endif -%}
 
 {% if has_files %}
@@ -420,6 +427,10 @@ rows:
 {% endif %}
 {% endtable %}
 {% if provider.capabilities.files.note.content %}<sup>{{ files_note_num }}</sup> {{ provider.capabilities.files.note.content }}{% endif %}
+
+{:.warning}
+> Batches are configured on a separate AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), distinct from regular models that handle synchronous capabilities like generate and embeddings.
+> Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
 {%- endif -%}
 
 {% if has_rerank %}
