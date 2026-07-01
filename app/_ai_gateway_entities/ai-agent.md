@@ -72,9 +72,14 @@ faqs:
 
 ## What is an AI Agent?
 
-When you want to centrally manage agent routing, control access, and gain observability over agent traffic, use the AI Agent entity to expose upstream agents through {{site.ai_gateway}}. {{site.ai_gateway}} acts as a central point of contact for A2A clients, rewrites agent-card URLs so clients route through the gateway (not directly to agents), enforces access controls via ACLs, and emits structured telemetry tied to agent operations.
+When you want to centrally manage agent routing, control access, and gain observability over agent traffic, use the AI Agent entity to expose upstream agents through {{site.ai_gateway}}. {{site.ai_gateway}}:
 
-The AI Agent entity supports two types: `a2a` for AI Agents that speak the [Agent-to-Agent protocol](https://a2aproject.github.io/A2A/), and `http` for standard HTTP AI Agents. See the [AI Agent types](#ai-agent-types) section below for protocol-specific behavior and configuration guidance.
+- Acts as a central point of contact for A2A clients
+- Rewrites agent-card URLs so clients route through the gateway (not directly to agents)
+- Enforces access controls via Access Control Lists (ACLs)
+- Emits structured telemetry tied to agent operations.
+
+The AI Agent entity supports two types: `a2a` for AI Agents that speak the [Agent-to-Agent protocol](https://a2aproject.github.io/A2A/), and `http` for standard HTTP AI Agents. See the [AI Agent types](#ai-agent-types) section for protocol-specific behavior and configuration guidance.
 
 ## Manage AI Agents
 
@@ -83,7 +88,7 @@ AI Agents can be created and managed through:
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/agents`
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Agent](#set-up-an-ai-agent) below.
+For configuration examples and step-by-step setup instructions, see the following [Set up an AI Agent](#set-up-an-ai-agent) section.
 
 ## AI Agent types
 
@@ -277,7 +282,7 @@ When an upstream agent returns an agent card, the runtime rewrites the [`url`](#
 
 To track agent performance, debug issues, and monitor A2A traffic patterns, enable statistics logging. {{site.ai_gateway}} emits structured A2A telemetry that flows to {{site.konnect_short_name}} analytics, logging plugins, and OpenTelemetry for full visibility into agent operations.
 
-The telemetry data is emitted into the `ai.a2a` namespace (consumed by {{site.konnect_short_name}} analytics and logging plugins) and creates a `kong.a2a` child span when [{{site.base_gateway}} tracing](/gateway/tracing/) is configured. For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
+The telemetry data is emitted into the `ai.a2a` namespace (consumed by {{site.konnect_short_name}} analytics and logging plugins) and creates a `kong.a2a` child span when you've configured [{{site.base_gateway}} tracing](/gateway/tracing/). For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
 
 {:.info}
 > When statistics logging is enabled, the runtime removes the `Accept-Encoding` request header
@@ -331,6 +336,25 @@ data:
   policies: []
   config:
     url: https://booking-agent.internal.kongair.com
+    logging:
+      statistics: true
+      payloads: false
+      max_payload_size: 1048576
+{% entity_example %}
+type: agent
+data:
+  display_name: KongAir Flight Booking Agent
+  name: kongair-flight-booking-agent
+  type: a2a
+  acls:
+    allow:
+      - internal-teams
+  policies: []
+  config:
+    url: https://booking-agent.internal.kongair.com
+    route:
+      paths:
+        - /kongair-flight-booking
     logging:
       statistics: true
       payloads: false
