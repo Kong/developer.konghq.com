@@ -1,34 +1,11 @@
 ---
-title: 'AI GCP Model Armor'
-name: 'AI GCP Model Armor'
-
 min_version:
   ai-gateway: '2.0'
 works_on:
   - konnect
 products:
   - ai-gateway
-content_type: plugin
-
-publisher: kong-inc
-description: 'Audit and validate LLM prompts with Google Cloud Model Armor before forwarding them to an upstream LLM.'
-
-categories:
-  - ai
-
-icon: ai-gcp-model-armor.png
-
-tags:
-   - ai
-   - safety
-
-search_aliases:
-  - ai
-  - llm
-  - artificial
-  - intelligence
-  - language
-  - model
+content_type: policy
 
 faqs:
   - q: What do I do if I see the error `Blocked by Model Armor Floor Setting`?
