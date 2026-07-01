@@ -220,7 +220,7 @@ If you use the [AI Azure Content Safety Policy](/ai-gateway/policies/ai-azure-co
 
 The first path records per-category severity data from the Azure Content Safety API. Each entry represents a category that breached its configured rejection threshold. Multiple entries can appear per request depending on which categories were configured and what was detected.
 
-For information on categories and severity levels, see [Harm categories in Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
+For information on categories and severity levels, see [Harm categories in Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/foundry-classic/openai/concepts/content-filter-severity-levels).
 
 {% table %}
 columns:
