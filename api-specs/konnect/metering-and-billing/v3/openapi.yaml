@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Konnect Metering & Billing
-  version: 0.0.1
+  version: 1.0.0
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@3d1f59233252eb8ffbfbdbf3a6f25536b62948a4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3d1f59233252eb8ffbfbdbf3a6f25536b62948a4'
+  x-oas-source: kong/platform-api@d19fbc68a572545f3c2771956530676465c01d1f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d19fbc68a572545f3c2771956530676465c01d1f'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -24,7 +24,7 @@ servers:
 paths:
   /openmeter/addons:
     get:
-      operationId: list-openmeter-addons
+      operationId: list-product-catalog-addons
       summary: List add-ons
       description: |-
         **Pre-release Endpoint**
@@ -74,7 +74,7 @@ paths:
       tags:
         - OpenMeter Product Catalog
     post:
-      operationId: create-openmeter-addon
+      operationId: create-product-catalog-addon
       summary: Create add-on
       description: |-
         **Pre-release Endpoint**
@@ -104,7 +104,7 @@ paths:
         - OpenMeter Product Catalog
   '/openmeter/addons/{addonId}':
     put:
-      operationId: update-openmeter-addon
+      operationId: update-product-catalog-addon
       summary: Update add-on
       description: |-
         **Pre-release Endpoint**
@@ -143,7 +143,7 @@ paths:
       tags:
         - OpenMeter Product Catalog
     get:
-      operationId: get-openmeter-addon
+      operationId: get-product-catalog-addon
       summary: Get add-on
       description: |-
         **Pre-release Endpoint**
@@ -176,7 +176,7 @@ paths:
       tags:
         - OpenMeter Product Catalog
     delete:
-      operationId: delete-openmeter-addon
+      operationId: delete-product-catalog-addon
       summary: Soft delete add-on
       description: |-
         **Pre-release Endpoint**
@@ -204,7 +204,7 @@ paths:
         - OpenMeter Product Catalog
   '/openmeter/addons/{addonId}/archive':
     post:
-      operationId: archive-openmeter-addon
+      operationId: archive-product-catalog-addon
       summary: Archive add-on version
       description: |-
         **Pre-release Endpoint**
@@ -236,7 +236,7 @@ paths:
         - OpenMeter Product Catalog
   '/openmeter/addons/{addonId}/publish':
     post:
-      operationId: publish-addon
+      operationId: publish-product-catalog-addon
       summary: Publish add-on version
       description: |-
         **Pre-release Endpoint**
@@ -1201,8 +1201,8 @@ paths:
             - `key`
             - `name`
             - `aggregation`
-            - `createdAt` (default)
-            - `updatedAt`
+            - `created_at` (default)
+            - `updated_at`
 
             The `asc` suffix is optional as the default sort order is ascending. The `desc`
             suffix is used to specify a descending order.
@@ -1833,7 +1833,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
       tags:
-        - OpenMeter Billing
+        - OpenMeter Billing Settings
     post:
       operationId: create-billing-profile
       summary: Create a new billing profile
@@ -1864,7 +1864,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
       tags:
-        - OpenMeter Billing
+        - OpenMeter Billing Settings
   '/openmeter/profiles/{id}':
     get:
       operationId: get-billing-profile
@@ -1892,7 +1892,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - OpenMeter Billing
+        - OpenMeter Billing Settings
     put:
       operationId: update-billing-profile
       summary: Update a billing profile
@@ -1925,7 +1925,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - OpenMeter Billing
+        - OpenMeter Billing Settings
     delete:
       operationId: delete-billing-profile
       summary: Delete a billing profile
@@ -1955,7 +1955,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - OpenMeter Billing
+        - OpenMeter Billing Settings
   /openmeter/subscriptions:
     post:
       operationId: create-subscription
@@ -2065,7 +2065,7 @@ paths:
         **Pre-release Endpoint**
         This endpoint is currently in beta and is subject to change.
 
-        List the addons of a subscription.
+        List the add-ons of a subscription.
       parameters:
         - name: subscriptionId
           in: path
@@ -2075,6 +2075,16 @@ paths:
         - $ref: '#/components/parameters/PagePaginationQuery'
         - name: sort
           in: query
+          description: |-
+            Sort subscription addons returned in the response. Supported sort attributes
+            are:
+
+            - `id`
+            - `created_at` (default)
+            - `updated_at`
+
+            The `asc` suffix is optional as the default sort order is ascending. The `desc`
+            suffix is used to specify a descending order.
           required: false
           schema:
             $ref: '#/components/schemas/SortQuery'
@@ -3812,6 +3822,22 @@ components:
             $ref: '#/components/schemas/BillingPlanPhase'
           minItems: 1
           title: Plan phases
+        settlement_mode:
+          description: |-
+            Settlement mode for plan.
+
+            Values:
+
+            - `credit_then_invoice`: Credits are applied first, then any remainder is
+            invoiced.
+            - `credit_only`: Usage is settled exclusively against credits.
+          type: string
+          default: credit_then_invoice
+          enum:
+            - credit_then_invoice
+            - credit_only
+          readOnly: true
+          title: Settlement Mode
         validation_errors:
           description: |-
             List of validation errors in `draft` state that prevent the plan from being
@@ -4230,6 +4256,13 @@ components:
                   description: Should progressive billing be allowed for this workflow?
                   type: boolean
                   default: true
+                subscription_end_proration_mode:
+                  description: Controls how subscription-ending shortened service periods are billed.
+                  type: string
+                  default: bill_actual_period
+                  enum:
+                    - bill_full_period
+                    - bill_actual_period
               title: Workflow invoice settings
             payment:
               description: The payment settings for this workflow
@@ -4262,7 +4295,13 @@ components:
                   type: boolean
                   default: false
                 default_tax_config:
-                  description: Default tax configuration to apply to the invoices for line items.
+                  description: |-
+                    Default tax configuration to apply to the invoices for line items.
+
+                    Setting a tax code (`stripe.code` / `taxCodeId`) on a profile's default tax
+                    config is deprecated and can no longer be added or changed: the organization
+                    default tax code is used instead. Existing tax-code values may still be removed,
+                    and `behavior` remains fully supported.
                   type: object
                   additionalProperties: false
                   properties:
@@ -4464,6 +4503,72 @@ components:
             - $ref: '#/components/schemas/BillingPriceGraduated'
             - $ref: '#/components/schemas/BillingPriceVolume'
           title: Price
+        unit_config:
+          description: |-
+            Unit conversion configuration for the rate card.
+
+            Synthesized on read for plans authored with v1 dynamic or package prices:
+            dynamic prices map to a unit price with a multiply unit config, and package
+            prices map to a unit price with a divide unit config.
+
+            Accepted on create and update only when the UnitConfig feature is enabled on the
+            deployment; otherwise rejected.
+          type: object
+          additionalProperties: false
+          properties:
+            operation:
+              description: The arithmetic operation to apply to the raw metered quantity.
+              type: string
+              enum:
+                - divide
+                - multiply
+              title: Conversion operation
+            conversion_factor:
+              description: |-
+                The factor used in the conversion operation.
+
+                - For `divide`: `converted = raw / conversionFactor`.
+                - For `multiply`: `converted = raw × conversionFactor`.
+
+                Must be a positive non-zero value.
+              type: string
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              title: Conversion factor
+            rounding:
+              description: |-
+                The rounding mode applied to the converted quantity for invoicing.
+
+                Defaults to none (no rounding). Entitlement checks always use the precise
+                (unrounded) value.
+              type: string
+              default: none
+              enum:
+                - ceiling
+                - floor
+                - half_up
+                - none
+              title: Rounding mode
+            precision:
+              description: |-
+                The number of decimal places to retain after rounding.
+
+                Only meaningful when rounding is not "none". Defaults to 0 (round to whole
+                numbers).
+              type: integer
+              default: 0
+              title: Rounding precision (decimal places)
+            display_unit:
+              description: |-
+                A human-readable label for the converted unit shown on invoices and in the
+                customer portal (e.g., "GB", "hours", "M tokens").
+
+                Optional. When omitted, no unit label is rendered.
+              type: string
+              title: Display unit label
+          required:
+            - operation
+            - conversion_factor
+          title: Unit config
         payment_term:
           description: |-
             The payment term of the rate card. In advance payment term can only be used for
@@ -4518,15 +4623,103 @@ components:
             behavior:
               $ref: '#/components/schemas/BillingTaxBehavior'
             code:
-              $ref: '#/components/schemas/TaxCodeReferenceItem'
+              $ref: '#/components/schemas/TaxCodeReference'
           required:
             - code
           title: Tax config
+        entitlement:
+          description: |-
+            The entitlement template granted to subscribers of a plan or addon containing
+            this rate card. Requires `feature` to be set.
+          type: object
+          discriminator:
+            propertyName: type
+            mapping:
+              metered: '#/components/schemas/BillingRateCardMeteredEntitlement'
+              static: '#/components/schemas/BillingRateCardStaticEntitlement'
+              boolean: '#/components/schemas/BillingRateCardBooleanEntitlement'
+          oneOf:
+            - $ref: '#/components/schemas/BillingRateCardMeteredEntitlement'
+            - $ref: '#/components/schemas/BillingRateCardStaticEntitlement'
+            - $ref: '#/components/schemas/BillingRateCardBooleanEntitlement'
+          title: Entitlement template
       additionalProperties: false
       required:
         - name
         - key
         - price
+    BillingRateCardBooleanEntitlement:
+      description: The entitlement template of a boolean entitlement.
+      type: object
+      properties:
+        type:
+          description: The type of the entitlement template.
+          type: string
+          enum:
+            - boolean
+          title: Type
+      additionalProperties: false
+      required:
+        - type
+    BillingRateCardMeteredEntitlement:
+      description: The entitlement template of a metered entitlement.
+      type: object
+      properties:
+        type:
+          description: The type of the entitlement template.
+          type: string
+          enum:
+            - metered
+          title: Type
+        is_soft_limit:
+          description: |-
+            If soft limit is true, the subject can use the feature even if the entitlement
+            is exhausted; access remains granted.
+          type: boolean
+          default: false
+          title: Soft limit
+        limit:
+          description: |-
+            The amount of usage granted each usage period, in the feature's unit. Usage is
+            counted against this allowance and the balance resets every usage period. When
+            `is_soft_limit` is true the subject keeps access after the limit is reached;
+            otherwise access is denied once the allowance is exhausted.
+          type: number
+          format: double
+          minimum: 0
+          title: Usage limit
+        usage_period:
+          description: |-
+            The reset interval of the metered entitlement in ISO8601 format. Defaults to the
+            billing cadence of the rate card.
+          type: string
+          format: ISO8601
+          example: P1Y
+          pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+          title: Usage period
+      additionalProperties: false
+      required:
+        - type
+    BillingRateCardStaticEntitlement:
+      description: The entitlement template of a static entitlement.
+      type: object
+      properties:
+        type:
+          description: The type of the entitlement template.
+          type: string
+          enum:
+            - static
+          title: Type
+        config:
+          description: |-
+            The entitlement config as a JSON object. Returned when checking entitlement
+            access; useful for configuring fine-grained access settings implemented in your
+            own system.
+          title: Config
+      additionalProperties: false
+      required:
+        - type
+        - config
     BillingSubscription:
       description: Subscription.
       type: object
@@ -4599,6 +4792,20 @@ components:
             - scheduled
           readOnly: true
           title: Status
+        settlement_mode:
+          description: |-
+            Settlement mode for billing.
+
+            Values:
+
+            - `credit_then_invoice`: Credits are applied first, then any remainder is
+            invoiced.
+            - `credit_only`: Usage is settled exclusively against credits.
+          type: string
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement Mode
       additionalProperties: false
       required:
         - id
@@ -4625,6 +4832,20 @@ components:
       properties:
         labels:
           $ref: '#/components/schemas/Labels'
+        settlement_mode:
+          description: |-
+            Settlement mode for billing.
+
+            Values:
+
+            - `credit_then_invoice`: Credits are applied first, then any remainder is
+            invoiced.
+            - `credit_only`: Usage is settled exclusively against credits.
+          type: string
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement Mode
         customer:
           description: The customer to create the subscription for.
           type: object
@@ -4792,6 +5013,20 @@ components:
                 - scheduled
               readOnly: true
               title: Status
+            settlement_mode:
+              description: |-
+                Settlement mode for billing.
+
+                Values:
+
+                - `credit_then_invoice`: Credits are applied first, then any remainder is
+                invoiced.
+                - `credit_only`: Usage is settled exclusively against credits.
+              type: string
+              enum:
+                - credit_then_invoice
+                - credit_only
+              title: Settlement Mode
           required:
             - id
             - created_at
@@ -4872,6 +5107,20 @@ components:
                 - scheduled
               readOnly: true
               title: Status
+            settlement_mode:
+              description: |-
+                Settlement mode for billing.
+
+                Values:
+
+                - `credit_then_invoice`: Credits are applied first, then any remainder is
+                invoiced.
+                - `credit_only`: Usage is settled exclusively against credits.
+              type: string
+              enum:
+                - credit_then_invoice
+                - credit_only
+              title: Settlement Mode
           required:
             - id
             - created_at
@@ -4889,6 +5138,20 @@ components:
       properties:
         labels:
           $ref: '#/components/schemas/Labels'
+        settlement_mode:
+          description: |-
+            Settlement mode for billing.
+
+            Values:
+
+            - `credit_then_invoice`: Credits are applied first, then any remainder is
+            invoiced.
+            - `credit_only`: Usage is settled exclusively against credits.
+          type: string
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement Mode
         customer:
           description: The customer to create the subscription for.
           type: object
@@ -5288,6 +5551,13 @@ components:
                   description: Should progressive billing be allowed for this workflow?
                   type: boolean
                   default: true
+                subscription_end_proration_mode:
+                  description: Controls how subscription-ending shortened service periods are billed.
+                  type: string
+                  default: bill_actual_period
+                  enum:
+                    - bill_full_period
+                    - bill_actual_period
               title: Workflow invoice settings
             payment:
               description: The payment settings for this workflow
@@ -5320,7 +5590,13 @@ components:
                   type: boolean
                   default: false
                 default_tax_config:
-                  description: Default tax configuration to apply to the invoices for line items.
+                  description: |-
+                    Default tax configuration to apply to the invoices for line items.
+
+                    Setting a tax code (`stripe.code` / `taxCodeId`) on a profile's default tax
+                    config is deprecated and can no longer be added or changed: the organization
+                    default tax code is used instead. Existing tax-code values may still be removed,
+                    and `behavior` remains fully supported.
                   type: object
                   additionalProperties: false
                   properties:
@@ -7818,21 +8094,6 @@ components:
           pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
           readOnly: true
           title: ULID
-        name:
-          description: |-
-            Display name of the resource.
-
-            Between 1 and 256 characters.
-          type: string
-          maxLength: 256
-          minLength: 1
-        description:
-          description: |-
-            Optional description of the resource.
-
-            Maximum 1024 characters.
-          type: string
-          maxLength: 1024
         labels:
           $ref: '#/components/schemas/Labels'
         created_at:
@@ -7856,6 +8117,23 @@ components:
           example: '2023-01-01T01:01:01.001Z'
           readOnly: true
           title: RFC3339 Date-Time
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+          readOnly: true
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+          readOnly: true
         addon:
           description: The add-on associated with the subscription.
           type: object
@@ -7894,16 +8172,41 @@ components:
           example: '2023-01-01T01:01:01.001Z'
           readOnly: true
           title: RFC3339 Date-Time
+        timeline:
+          description: The timeline of the add-on. The returned periods are sorted and continuous.
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAddonTimelineSegment'
+          example:
+            - quantity: 1
+              active_from: '2025-01-01T00:00:00Z'
+              active_to: '2025-01-02T00:00:00Z'
+            - quantity: 0
+              active_from: '2025-01-02T00:00:00Z'
+              active_to: '2025-01-03T00:00:00Z'
+            - quantity: 1
+              active_from: '2025-01-03T00:00:00Z'
+          readOnly: true
+          title: Timeline
+        rate_cards:
+          description: The rate cards of the add-on.
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAddonRateCard'
+          readOnly: true
+          title: Rate cards
       additionalProperties: false
       required:
         - id
-        - name
         - created_at
         - updated_at
+        - name
         - addon
         - quantity
         - quantity_at
         - active_from
+        - timeline
+        - rate_cards
     SubscriptionAddonPagePaginatedResponse:
       description: Page paginated response.
       type: object
@@ -7918,6 +8221,256 @@ components:
       required:
         - data
         - meta
+    SubscriptionAddonRateCard:
+      description: A rate card for a subscription add-on.
+      type: object
+      properties:
+        rate_card:
+          description: The rate card.
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              description: |-
+                Display name of the resource.
+
+                Between 1 and 256 characters.
+              type: string
+              maxLength: 256
+              minLength: 1
+            description:
+              description: |-
+                Optional description of the resource.
+
+                Maximum 1024 characters.
+              type: string
+              maxLength: 1024
+            labels:
+              $ref: '#/components/schemas/Labels'
+            key:
+              $ref: '#/components/schemas/ResourceKey'
+            feature:
+              description: The feature associated with the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+              title: Feature reference
+            billing_cadence:
+              description: |-
+                The billing cadence of the rate card. When null, the charge is one-time
+                (non-recurring). Only valid for flat prices.
+              type: string
+              format: ISO8601
+              example: P1Y
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Billing cadence
+            price:
+              description: The price of the rate card.
+              type: object
+              discriminator:
+                propertyName: type
+                mapping:
+                  free: '#/components/schemas/BillingPriceFree'
+                  flat: '#/components/schemas/BillingPriceFlat'
+                  unit: '#/components/schemas/BillingPriceUnit'
+                  graduated: '#/components/schemas/BillingPriceGraduated'
+                  volume: '#/components/schemas/BillingPriceVolume'
+              oneOf:
+                - $ref: '#/components/schemas/BillingPriceFree'
+                - $ref: '#/components/schemas/BillingPriceFlat'
+                - $ref: '#/components/schemas/BillingPriceUnit'
+                - $ref: '#/components/schemas/BillingPriceGraduated'
+                - $ref: '#/components/schemas/BillingPriceVolume'
+              title: Price
+            unit_config:
+              description: |-
+                Unit conversion configuration for the rate card.
+
+                Synthesized on read for plans authored with v1 dynamic or package prices:
+                dynamic prices map to a unit price with a multiply unit config, and package
+                prices map to a unit price with a divide unit config.
+
+                Accepted on create and update only when the UnitConfig feature is enabled on the
+                deployment; otherwise rejected.
+              type: object
+              additionalProperties: false
+              properties:
+                operation:
+                  description: The arithmetic operation to apply to the raw metered quantity.
+                  type: string
+                  enum:
+                    - divide
+                    - multiply
+                  title: Conversion operation
+                conversion_factor:
+                  description: |-
+                    The factor used in the conversion operation.
+
+                    - For `divide`: `converted = raw / conversionFactor`.
+                    - For `multiply`: `converted = raw × conversionFactor`.
+
+                    Must be a positive non-zero value.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Conversion factor
+                rounding:
+                  description: |-
+                    The rounding mode applied to the converted quantity for invoicing.
+
+                    Defaults to none (no rounding). Entitlement checks always use the precise
+                    (unrounded) value.
+                  type: string
+                  default: none
+                  enum:
+                    - ceiling
+                    - floor
+                    - half_up
+                    - none
+                  title: Rounding mode
+                precision:
+                  description: |-
+                    The number of decimal places to retain after rounding.
+
+                    Only meaningful when rounding is not "none". Defaults to 0 (round to whole
+                    numbers).
+                  type: integer
+                  default: 0
+                  title: Rounding precision (decimal places)
+                display_unit:
+                  description: |-
+                    A human-readable label for the converted unit shown on invoices and in the
+                    customer portal (e.g., "GB", "hours", "M tokens").
+
+                    Optional. When omitted, no unit label is rendered.
+                  type: string
+                  title: Display unit label
+              required:
+                - operation
+                - conversion_factor
+              title: Unit config
+            payment_term:
+              description: |-
+                The payment term of the rate card. In advance payment term can only be used for
+                flat prices.
+              type: string
+              default: in_arrears
+              enum:
+                - in_advance
+                - in_arrears
+              title: Payment term
+            commitments:
+              description: |-
+                Spend commitments for this rate card. Only applicable to usage-based prices
+                (unit, graduated, volume).
+              type: object
+              additionalProperties: false
+              properties:
+                minimum_amount:
+                  description: The customer is committed to spend at least the amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Minimum amount
+                maximum_amount:
+                  description: The customer is limited to spend at most the amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Maximum amount
+              title: Commitments
+            discounts:
+              description: The discounts of the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                percentage:
+                  description: Percentage discount applied to the price (0–100).
+                  type: number
+                  maximum: 100
+                  minimum: 0
+                usage:
+                  description: |-
+                    Number of usage units granted free before billing starts. Only applies to
+                    usage-based lines (not flat fees). Usage is treated as zero until this amount is
+                    exhausted.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              title: Discounts
+            tax_config:
+              description: The tax config of the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                behavior:
+                  $ref: '#/components/schemas/BillingTaxBehavior'
+                code:
+                  $ref: '#/components/schemas/TaxCodeReference'
+              required:
+                - code
+              title: Tax config
+            entitlement:
+              description: |-
+                The entitlement template granted to subscribers of a plan or addon containing
+                this rate card. Requires `feature` to be set.
+              type: object
+              discriminator:
+                propertyName: type
+                mapping:
+                  metered: '#/components/schemas/BillingRateCardMeteredEntitlement'
+                  static: '#/components/schemas/BillingRateCardStaticEntitlement'
+                  boolean: '#/components/schemas/BillingRateCardBooleanEntitlement'
+              oneOf:
+                - $ref: '#/components/schemas/BillingRateCardMeteredEntitlement'
+                - $ref: '#/components/schemas/BillingRateCardStaticEntitlement'
+                - $ref: '#/components/schemas/BillingRateCardBooleanEntitlement'
+              title: Entitlement template
+          required:
+            - name
+            - key
+            - price
+          title: Rate card
+        affected_subscription_item_ids:
+          description: The IDs of the subscription items that this rate card belongs to.
+          type: array
+          items:
+            $ref: '#/components/schemas/ULID'
+          readOnly: true
+          title: Affected subscription item IDs
+      additionalProperties: false
+      required:
+        - rate_card
+        - affected_subscription_item_ids
+    SubscriptionAddonTimelineSegment:
+      description: A subscription add-on event.
+      type: object
+      properties:
+        active_from:
+          description: An ISO-8601 timestamp representation of the cadence start of the resource.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        active_to:
+          description: An ISO-8601 timestamp representation of the cadence end of the resource.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        quantity:
+          description: The quantity of the add-on for the given period.
+          type: integer
+          example: 1
+          minimum: 0
+          readOnly: true
+          title: Quantity
+      additionalProperties: false
+      required:
+        - active_from
+        - quantity
     SubscriptionPagePaginatedResponse:
       description: Page paginated response.
       type: object
@@ -7932,7 +8485,7 @@ components:
       required:
         - data
         - meta
-    TaxCodeReferenceItem:
+    TaxCodeReference:
       description: TaxCode reference.
       type: object
       properties:
@@ -8280,6 +8833,13 @@ components:
                   description: Should progressive billing be allowed for this workflow?
                   type: boolean
                   default: true
+                subscription_end_proration_mode:
+                  description: Controls how subscription-ending shortened service periods are billed.
+                  type: string
+                  default: bill_actual_period
+                  enum:
+                    - bill_full_period
+                    - bill_actual_period
               title: Workflow invoice settings
             payment:
               description: The payment settings for this workflow
@@ -8312,7 +8872,13 @@ components:
                   type: boolean
                   default: false
                 default_tax_config:
-                  description: Default tax configuration to apply to the invoices for line items.
+                  description: |-
+                    Default tax configuration to apply to the invoices for line items.
+
+                    Setting a tax code (`stripe.code` / `taxCodeId`) on a profile's default tax
+                    config is deprecated and can no longer be added or changed: the organization
+                    default tax code is used instead. Existing tax-code values may still be removed,
+                    and `behavior` remains fully supported.
                   type: object
                   additionalProperties: false
                   properties:
@@ -8996,6 +9562,21 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Gone
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
     CursorMetaPage:
       type: object
       properties:
@@ -9033,21 +9614,6 @@ components:
           $ref: '#/components/schemas/CursorMetaPage'
       required:
         - page
-    ConflictError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 409
-            title:
-              example: Conflict
-            type:
-              example: 'https://httpstatuses.com/409'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Conflict
   examples:
     UnauthorizedExample:
       value:
@@ -9145,8 +9711,8 @@ tags:
     description: LLM cost database providing normalized pricing data for language models across providers. Prices are synced from multiple external sources and auto-confirmed when they agree.
   - name: OpenMeter Features
     description: 'Features represent product capabilities backed by meters, with optional per-unit cost configuration.'
-  - name: OpenMeter Billing
-    description: 'Billing manages the billing profiles, currencies, cost bases, and invoices for customers.'
+  - name: OpenMeter Billing Settings
+    description: Billing settings manages the billing profiles and invoices for customers.
   - name: OpenMeter Apps
     description: 'Apps enable you to extend and customize billing and usage workflows by integrating with external systems and services. Apps can automate and enhance your billing ecosystem by supporting capabilities such as synchronizing usage data with third-party platforms, calculating taxes, generating and delivering invoices, handling payment collection, and other billing-related tasks.'
   - name: OpenMeter Entitlements
