@@ -47,18 +47,18 @@ faqs:
       `conversion-only` MCP Servers into a single MCP endpoint. `upstream-server` registers a real
       MCP server into an aggregation pool, dynamically fetching its tools for a `listener` to aggregate.
 
-  - q: Can the same Consumer's identity gate access to specific tools?
+  - q: Can the same AI Consumer's identity gate access to specific tools?
     a: |
       Yes. Set [`default_tool_acls`](#schema-aigateway-mcpserver-default-tool-acls) on the AI MCP Server with `allow` and `deny` lists, and override per
       tool through [`tools[].acls`](#schema-aigateway-mcpserver-tools-acls). A per-tool ACL replaces the default for that tool, it doesn't
       merge.
 
-  - q: How do OAuth-based ACLs differ from Consumer-based ACLs?
+  - q: How do OAuth-based ACLs differ from AI Consumer-based ACLs?
     a: |
       Set [`acl_attribute_type`](#schema-aigateway-mcpserver-acl-attribute-type) to `oauth_access_token` and provide [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) (a jq
       filter, for example `.user.email`). ACLs then evaluate against the claim value extracted from
       the OAuth access token instead of the resolved Consumer identity. The OAuth flow is supplied
-      by the [AI MCP OAuth2 Policy](/plugins/ai-mcp-oauth2/).
+      by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
 
   - q: What error code do denied requests return?
     a: |
@@ -66,35 +66,54 @@ faqs:
       `INVALID_PARAMS -32602`; from {{site.ai_gateway}} 3.14 onward, denials follow the
       [MCP 2025-11-25 authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#error-handling).
 
-  - q: Can I attach the same authentication or rate-limiting plugin that I'd attach to a Route?
+  - q: Can I attach the same authentication or rate-limiting policy that I'd attach to a Route?
     a: |
-      Plugin configuration that applies to the AI MCP Server goes through the
-      [Policy entity](/ai-gateway/entities/ai-policy/). Attach Policies to the AI MCP Server through its
+      Policy configuration that applies to the AI MCP Server goes through the
+      [AI Policy entity](/ai-gateway/entities/ai-policy/). Attach Policies to the AI MCP Server through its
       [`policies`](#schema-aigateway-mcpserver-policies) field.
 ---
 
 ## What is an AI MCP Server?
 
-An AI MCP Server is a first-class {{site.ai_gateway}} entity that exposes tools to MCP-compatible clients (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LM Studio](https://lmstudio.ai/)) over the [Model Context Protocol](https://modelcontextprotocol.io/). The runtime acts as a protocol bridge, translating between MCP and HTTP so MCP clients can either call existing APIs through {{site.ai_gateway}} or interact with upstream MCP servers.
+Create an AI MCP Server to connect AI applications such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [Insomnia](https://konghq.com/products/kong-insomnia) to your APIs and tools through the standardized [Model Context Protocol](https://modelcontextprotocol.io/). An AI MCP Server acts as a bridge between MCP-compatible clients and your backend systems, allowing you to expose existing APIs as discoverable tools without building custom integrations for each AI client.
 
-Because the runtime executes inside {{site.ai_gateway}}, MCP endpoints are provisioned dynamically on demand. You don't host or scale them separately, and the same authentication, traffic control, and observability features available to traditional API traffic apply to MCP traffic at the same scale.
+Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability you apply to traditional API traffic automatically covers MCP traffic, giving you consistent governance across both HTTP and MCP clients.
 
-AI MCP Servers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+## Manage AI MCP Servers
 
+AI MCP Servers can be created and managed through:
+
+* {{site.konnect_short_name}} UI
+* {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/mcp-servers`
+
+For configuration examples and step-by-step setup instructions, see [Set up an AI MCP Server](#set-up-an-ai-mcp-server) below.
+
+## Use cases
+
+Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your AI MCP Server for common governance scenarios:
+
+<!-- vale off -->
 {% table %}
 columns:
-  - title: Control Plane
-    key: cp
-  - title: Endpoint
-    key: endpoint
+  - title: Use case
+    key: use_case
+  - title: Example
+    key: example
 rows:
-  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
-    endpoint: /v1/ai-gateways/{aiGatewayId}/mcp-servers
+  - use_case: "Authentication"
+    example: "Attach [AI Key Auth](/ai-gateway/policies/ai-key-auth/) or [AI OpenID Connect](/ai-gateway/policies/ai-openid-connect/) Policy to secure MCP endpoints with credentials or OAuth tokens."
+  - use_case: "Rate limiting"
+    example: "Use [AI Rate Limiting](/ai-gateway/policies/ai-rate-limiting/) or [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or Consumer Group."
+  - use_case: "Observability"
+    example: "Enable request and response logging through [AI Policies](/ai-gateway/policies/?category=logging) and audit trails to track all MCP traffic and ACL decisions."
+  - use_case: "Traffic control"
+    example: "Apply [AI Request Transformer](/ai-gateway/policies/ai-request-transformer/) or [AI Response Transformer](/ai-gateway/policies/ai-response-transformer/) Policy to modify MCP payloads, or use [ACLs](#acl-tool-control) for fine-grained tool access."
 {% endtable %}
+<!-- vale on -->
 
 ## Server modes
 
-The [`type`](#schema-aigateway-mcpserver-type) field selects one of five modes. Each mode determines how the runtime handles MCP requests and whether it converts RESTful APIs into MCP tools.
+{{site.ai_gateway}} supports five server modes for different integration patterns: exposing REST APIs as discoverable MCP tools, proxying requests to existing MCP servers with added authentication and observability, or aggregating tools from multiple sources into a single endpoint. Select the mode that fits your use case using the [`type`](#schema-aigateway-mcpserver-type) field.
 
 <!-- vale off -->
 {% table %}
@@ -152,7 +171,7 @@ rows:
 
 ## Tool aggregation with upstream-server
 
-When using `listener` with `upstream-server` MCP Servers, the runtime aggregates tools from all upstreams that share the listener's tag. This pattern centralizes tool discovery and management for agents while keeping upstream services decoupled.
+You can use a `listener` to pull tools from multiple `upstream-server` MCP Servers and expose them through a single endpoint. The listener discovers and aggregates tools based on matching tags, so clients see one unified tool catalog while your services remain independent.
 
 ### How aggregation works
 
@@ -168,16 +187,16 @@ When using `listener` with `upstream-server` MCP Servers, the runtime aggregates
 
 ### Upstream authentication
 
-By default, the listener connects to upstreams without credentials. If an upstream MCP server requires authentication:
+By default, the AI MCP Server in `listener` mode connects to upstreams without credentials. If an upstream MCP server requires authentication:
 
 - Set [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) on the `upstream-server` type with OAuth2 client-credentials configuration
-- Kong fetches a token from your identity provider when first needed, caches it, and refreshes it when it expires
+- {{site.ai_gateway}} fetches a token from your identity provider when first needed, caches it, and refreshes it when it expires
 - The token is used only when fetching the upstream's tool list; it's separate from agent authentication
-- Different upstreams can use different credentials, managed centrally by Kong
+- Different upstreams can use different credentials, managed centrally by {{site.ai_gateway}}
 
 ### Header forwarding
 
-When the listener routes tool calls to an upstream, it can forward request headers from the original MCP client. Set [`config.server.forward_client_headers`](#schema-aigateway-mcpserver-config-server-forward-client-headers): true on the `listener` or `upstream-server` to pass through headers like authentication or context information. This allows upstreams to see the client's original request context.
+When your upstream services need to enforce their own access controls or apply client-specific logic based on identity, enable [`config.server.forward_client_headers`](#schema-aigateway-mcpserver-config-server-forward-client-headers) on the `listener` or `upstream-server`. This setting passes the original client's headers (authentication tokens, context) so upstreams see the actual client, not just the listener.
 
 ## How MCP traffic flows
 
@@ -230,52 +249,25 @@ Tools can also carry MCP-spec [`annotations`](#schema-aigateway-mcpserver-tools-
 
 ## Sessions
 
-`listener` and `conversion-listener` AI MCP Servers support managed sessions for stateful interactions. Configure session storage through [`config.server.session`](#schema-aigateway-mcpserver-config-server-session). The `passthrough-listener` mode doesn't use managed sessions because session state lives on the upstream MCP server.
+Some MCP clients need to maintain state across multiple tool calls such as authentication tokens, conversation context, or request IDs. {{site.ai_gateway}} can manage session state for you in `listener` and `conversion-listener` modes, storing it either encrypted on the client or in Redis. Configure session storage through [`config.server.session`](#schema-aigateway-mcpserver-config-server-session). The `passthrough-listener` mode doesn't manage sessions because state lives entirely on the upstream MCP server.
 
 Two session strategies:
 
 1. **Client.** Session state is encrypted into the MCP session ID assigned to the client. Requires `secrets` which are encryption keys; the first entry is used for encryption, all entries are used for decryption to support key rotation.
 1. **Redis.** Session state is stored in Redis. Configure connection details and authentication in [`config.server.session.redis`](#schema-aigateway-mcpserver-config-server-session-redis).
 
-{% include_cached /plugins/redis/redis-cloud-auth.md tier='enterprise' %}
+{% include_cached /md/ai-gateway/v2/policies/redis-cloud-auth.md tier='enterprise' %}
 
-[`session_ttl`](#schema-aigateway-mcpserver-config-server-session-session-ttl) controls how long sessions live (default 24 hours). Set `managed: false` to disable managed sessions when the upstream maintains state externally.
+Configure how long sessions persist using [`session_ttl`](#schema-aigateway-mcpserver-config-server-session-session-ttl) (default 24 hours) to match your application's needs. If your upstream server already manages state internally, disable {{site.ai_gateway}}'s session management by setting `managed: false`.
 
-Secrets used in session encryption can be referenced from an [AI Vault](/ai-gateway/entities/ai-vault/).
-
-## Server configuration
-
-The `config.server` block carries runtime settings that apply across all tools on the MCP Server:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Field
-    key: field
-  - title: Default
-    key: default
-  - title: Description
-    key: description
-rows:
-  - field: "[`forward_client_headers`](#schema-aigateway-mcpserver-config-server-forward-client-headers)"
-    default: "`true`"
-    description: Whether to forward client request headers to the upstream when calling tools.
-  - field: "[`tag`](#schema-aigateway-mcpserver-config-server-tag)"
-    default: (none)
-    description: A single tag used by `listener` MCP Servers to filter which `conversion-only` tools to expose.
-  - field: "[`timeout`](#schema-aigateway-mcpserver-config-server-timeout)"
-    default: 10 seconds
-    description: Maximum time to wait for an upstream tool call.
-{% endtable %}
-<!-- vale on -->
-
-[`config.max_request_body_size`](#schema-aigateway-mcpserver-config-max-request-body-size) controls the maximum incoming request body size accepted by the MCP Server (default 1 MB).
+{:.note}
+> Secrets used in session encryption can be referenced from an [AI Vault](/ai-gateway/entities/ai-vault/).
 
 ## ACL tool control
 
-When exposing MCP servers through {{site.ai_gateway}}, you may need granular control over which authenticated API consumers can discover and invoke specific tools. The MCP Server's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions).
+When exposing MCP servers through {{site.ai_gateway}}, you may need granular control over which authenticated AI Consumers can discover and invoke specific tools. The MCP Server's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions).
 
-This way, consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the MCP Server (such as [Key Auth](/plugins/key-auth/) or an OIDC flow), and the resulting Consumer identity is used for ACL checks.
+This way, AI Consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the MCP Server (such as [Key Auth Policy](/ai-gateway/policies/key-auth/) or an OIDC flow), and the resulting Consumer identity is used for ACL checks.
 
 {:.info}
 > **ACL in `listener` mode**
@@ -285,27 +277,18 @@ This way, consumers only interact with tools appropriate to their role, while ma
 > To use ACLs with `listener` mode:
 > 1. Configure `conversion-listener` or `conversion-only` AI MCP Servers with ACL rules and tags.
 > 1. Configure `listener` mode to aggregate tools by matching tags.
-> 1. Set [`include_consumer_groups`](#schema-aigateway-mcpserver-include-consumer-groups): true on the listener. Without this setting, the listener cannot pass Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
->
-> See [Enforce ACLs on aggregated MCP servers](/mcp/enforce-acls-on-aggregated-mcp-servers/) for a complete example.
+> 1. Set [`include_consumer_groups`](#schema-aigateway-mcpserver-include-consumer-groups): true on the listener. Without this setting, the listener cannot pass AI Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
 
 ### Attribute types
 
 For modes that support ACL configuration (`conversion-listener`, `conversion-only`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
 
 1. **`consumer`** (default). Evaluates against the resolved Consumer identity.
-1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/plugins/ai-mcp-oauth2/).
+1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
 
-### Supported identifier types
+### Using AI Consumers and Groups in ACLs
 
-When `acl_attribute_type` is `consumer`, ACL rules can reference [AI Consumers](/ai-gateway/entities/ai-consumer/) and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) using these identifier types in `allow` and `deny` lists:
-
-* `username`: Consumer username
-* `id`: Consumer UUID
-* `custom_id`: Custom Consumer identifier
-* `consumer_groups.name`: Consumer Group name
-
-The authenticated Consumer identity is matched against these identifiers. If the [AI Consumer](/ai-gateway/entities/ai-consumer/) or any of their [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) match an ACL entry, the rule applies.
+When `acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated consumer's identity and group memberships against your `allow` and `deny` lists.
 
 ### How default and per-tool ACLs work
 
@@ -398,7 +381,7 @@ sequenceDiagram
   participant Client as MCP Client
   participant Gateway as {{site.ai_gateway}}
   participant Auth as AuthN Policy
-  participant ACL as MCP Server (ACL/Audit)
+  participant ACL as AI MCP Server (ACL/Audit)
   participant Up as Upstream MCP Server
   participant Log as Audit Sink
 
@@ -438,17 +421,17 @@ sequenceDiagram
 
 ## Logging and audits
 
-[`config.logging`](#schema-aigateway-mcpserver-config-logging) captures three layers of MCP traffic: per-request statistics for telemetry, request and response payloads for full visibility, and [audit entries](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs) for every ACL decision. Payload logging may expose sensitive data; enable it with care. AI MCP Server analytics surface in [{{site.konnect_short_name}} Explorer and Dashboards](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) alongside other {{site.ai_gateway}} traffic, and export through [OpenTelemetry](/ai-gateway/ai-otel-metrics/#mcp-metrics).
+To monitor and troubleshoot MCP traffic, enable logging and audit trails through [`config.logging`](#schema-aigateway-mcpserver-config-logging). You can capture per-request statistics for metrics, full request and response payloads for debugging, and [audit entries](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs) for every ACL decision. Note that payload logging may expose sensitive data. Enable it only when debugging and be careful with retention. AI MCP Server analytics appear in [{{site.konnect_short_name}} Explorer and Dashboards](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) alongside other {{site.ai_gateway}} traffic, and export through [OpenTelemetry](/ai-gateway/ai-otel-metrics/#mcp-metrics).
 
 ## Attach Policies
 
-Authentication, rate limiting, request and response transformation, and OAuth gating (through [AI MCP OAuth2](/plugins/ai-mcp-oauth2/)) attach to the AI MCP Server through the [`policies`](#schema-aigateway-mcpserver-policies) field. Each entry is a string that references a Policy by name or ID. Multiple Policies can attach to one AI MCP Server; each runs independently.
+Just like HTTP Routes, AI MCP Servers benefit from security and governance AI Policies. Attach [AI Policies](/ai-gateway/entities/ai-policy/) to enforce authentication, rate limits, request/response transformation, and OAuth gating. Add them to the [`policies`](#schema-aigateway-mcpserver-policies) field by name or ID. AI Policies run on all MCP traffic through the server, before tool invocation and after ACL checks. Multiple AI Policies can attach to one AI MCP Server, and each runs independently in the request lifecycle.
 
-For details, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+You can also attach AI Policies at the [AI Consumer](/ai-gateway/entities/ai-consumer/) level for per-client enforcement. See [Use cases](#use-cases) for practical AI Policy combinations, and the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference for all supported policy types and how they work.
 
 ## Scope of support
 
-The MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is supported and what is outside the current scope.
+The AI MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is supported and what is outside the current scope.
 
 <!-- vale off -->
 {% feature_table %}
@@ -492,49 +475,51 @@ features:
 
 ## Set up an AI MCP Server
 
-The following example creates a `conversion-listener` AI MCP Server that converts a flight-booking REST API into a single `searchFlights` MCP tool, restricts access to the `internal-teams` Consumer Group, and stores managed sessions in client-side encrypted form.
+The following example creates a `conversion-listener` AI MCP Server that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single `get-current-weather` MCP tool.
+
+{:.note}
+> You need your WeatherAPI API key set as an environment variable (`DECK_WEATHERAPI_API_KEY`) before using this example.
 
 {% entity_example %}
 type: mcp_server
 data:
-  display_name: KongAir Flights
-  name: kongair-flights
+  display_name: Weather API
+  name: weather-mcp
   type: conversion-listener
+  enabled: true
+  policies: []
   acl_attribute_type: consumer
   acls:
     allow:
-      - internal-teams
-    deny: []
+      - __never_match__
   default_tool_acls:
-    allow:
-      - internal-teams
-    deny: []
-  policies: []
+    deny:
+      - __never_match__
   config:
+    url: https://api.weatherapi.com/v1/current.json
+    route:
+      paths:
+        - /weather
     logging:
-      statistics: true
       payloads: false
-      audits: true
-    max_request_body_size: 1048576
+      statistics: true
     server:
-      forward_client_headers: true
-      timeout: 10000
-      session:
-        managed: true
-        strategy: client
-        session_ttl: 86400
-        client:
-          secrets:
-            - "{vault://my-vault/session-secret}"
+      timeout: 60000
   tools:
-    - name: searchFlights
-      description: Search for available flights between two airports.
+    - name: get-current-weather
+      description: Get current weather for a location
       method: GET
-      path: /flights
-      annotations:
-        title: Search flights
-        read_only_hint: true
-        idempotent_hint: true
+      path: /weather
+      query:
+        key:
+          - $DECK_WEATHERAPI_API_KEY
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
 {% endentity_example %}
 
 ## Schema
