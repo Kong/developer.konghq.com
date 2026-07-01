@@ -109,6 +109,9 @@ groups:
         items:
             - path: /kongctl/ps/
             - path: /kongctl/ps/*/**
+      - title: Roar
+        items:
+            - path: /kongctl/roar/
       - title: Scaffold Configuration
         items:
             - path: /kongctl/scaffold/
