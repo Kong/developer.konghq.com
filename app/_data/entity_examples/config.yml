@@ -140,8 +140,8 @@ formats:
       agent:           '/agents'
       mcp_server:      '/mcp-servers'
       provider:        '/providers'
-      consumer:       '/consumers/'
-      consumer_group: '/consumer-groups/'
+      consumer:       '/consumers'
+      consumer_group: '/consumer-groups'
       vault:          '/vaults/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'

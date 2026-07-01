@@ -149,15 +149,14 @@ AI Consumer Group membership is resolved after the request is authenticated and 
 
 ## Set up an AI Consumer Group
 
-The following example creates an AI Consumer Group with one attached AI Policy that applies a shared rate limit to its members.
+The following example creates an AI Consumer Group. You can attach AI Policies through the {{site.konnect_short_name}} UI or by adding their `name` or `id` to the `policies` array.
 
 {% entity_example %}
 type: consumer_group
 data:
   display_name: Internal Teams
   name: internal-teams
-  policies:
-    - ai-rate-limiting-advanced
+  policies: []
 {% endentity_example %}
 
 ## Schema
