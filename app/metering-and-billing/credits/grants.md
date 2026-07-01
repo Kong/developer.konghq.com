@@ -140,4 +140,4 @@ Purchase terms describe how the credits are funded.
 They define the purchase currency and the per-unit cost used to calculate the purchase amount.
 
 Tax configuration is relevant for revenue recognition on usage charges that consume credits.
-Set tax configuration on all usage charges that need to be classified correctly for revenue recognition.
+Set [tax configuration](/metering-and-billing/tax-codes/) on all usage charges that need to be classified correctly for revenue recognition.

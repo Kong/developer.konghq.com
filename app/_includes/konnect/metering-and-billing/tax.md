@@ -4,7 +4,7 @@
 
 * Inclusive: The listed price already includes tax. A 10% inclusive tax on a $500 item still results in a $500 invoice.
 * Exclusive: Tax is added on top of the listed price. A 10% exclusive tax on a $500 item raises the invoice total to $550.
-* Tax codes: Apply a tax code to a feature. Some payment providers, like Stripe, apply their own default [tax code](https://docs.stripe.com/tax/tax-codes). In those cases, you can leave {{site.metering_and_billing}}'s tax settings blank.
+* [Tax codes](/metering-and-billing/tax-codes/): Apply a tax code to a feature.
 
 You can enable tax collection from a [Rate Card](/metering-and-billing/product-catalog/) or the [billing profile settings](https://cloud.konghq.com/metering-billing/billing-profiles).
 

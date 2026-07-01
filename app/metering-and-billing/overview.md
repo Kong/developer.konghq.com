@@ -95,7 +95,7 @@ rows:
     support: "{{site.metering_and_billing}}"
   - capability: "[**Invoice generation** (billing periods, lines)](/metering-and-billing/billing-invoicing/#invoicing)"
     support: "{{site.metering_and_billing}}"
-  - capability: "**Sales tax calculations** (based on geo and tax code)"
+  - capability: "**Sales tax calculations** (based on geo and [tax code](/metering-and-billing/tax-codes/))"
     support: |
       Third-party integrations:
       * [Stripe Tax](/metering-and-billing/stripe-integration/#optional-automatic-tax-calculation)

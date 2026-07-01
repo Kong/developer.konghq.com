@@ -67,7 +67,7 @@ rows:
 
       See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
-    description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
+    description: Select a [tax code](/metering-and-billing/tax-codes/). For Stripe, see the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes) for available values.
 {% endtable %}
 
 ## Usage based
@@ -112,7 +112,7 @@ rows:
 
       See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
-    description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
+    description: Select a [tax code](/metering-and-billing/tax-codes/). For Stripe, see the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes) for available values.
 {% endtable %}
 
 ## Tiered
@@ -198,7 +198,7 @@ rows:
 
       See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
-    description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
+    description: Select a [tax code](/metering-and-billing/tax-codes/). For Stripe, see the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes) for available values.
 {% endtable %}
 
 ### Volume pricing
@@ -275,7 +275,7 @@ rows:
 
       See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
-    description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
+    description: Select a [tax code](/metering-and-billing/tax-codes/). For Stripe, see the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes) for available values.
 {% endtable %}
 
 ### Flat prices in tiers
@@ -449,7 +449,7 @@ rows:
 
       See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
-    description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
+    description: Select a [tax code](/metering-and-billing/tax-codes/). For Stripe, see the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes) for available values.
 {% endtable %}
 
 ## Dynamic
@@ -500,7 +500,7 @@ rows:
 
       See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
-    description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
+    description: Select a [tax code](/metering-and-billing/tax-codes/). For Stripe, see the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes) for available values.
 {% endtable %}
 
 ### Tracking cost with meters

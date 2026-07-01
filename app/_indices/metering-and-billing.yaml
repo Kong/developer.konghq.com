@@ -69,18 +69,18 @@ sections:
       - title: Invoicing
         description: Learn how to set up invoicing in {{site.konnect_short_name}} {{site.metering_and_billing}}.
         url: /metering-and-billing/billing-invoicing/#invoicing
+      - title: Tax calculations
+        description: Manage tax codes and configure tax behavior for invoices.
+        url: /metering-and-billing/billing-invoicing/#tax-calculations
+      - path: /metering-and-billing/tax-codes/
       - path: /metering-and-billing/stripe-integration/
-  - title: How tos 
+  - title: How-tos
     items:
       - title: Get started with generic metering
         description: Meter any billable usage, like compute, storage, or application layer. Learn how to ingest usage events.
         url: /how-to/get-started-with-metering-and-billing-generic-meters/
-      - title: API gateway metering
-        description: Real-time usage metering for {{site.base_gateway}} API requests. Monetize API traffic with flexible pricing models.
-        url: /metering-and-billing/get-started/
-      - title: LLM token metering
-        description: Learn how to meter and bill AI Gateway LLM tokens.
-        url: /how-to/meter-llm-traffic/
-      - title: Meter and bill active users
-        url: /how-to/meter-and-bill-active-users/
+      - path: /metering-and-billing/get-started/
+      - path: /how-to/meter-llm-traffic/
+      - path: /how-to/meter-and-bill-active-users/
+      - path: /how-to/configure-metering-and-billing-tax-codes/
       - path: /how-to/get-started-with-prepaid-credits/
