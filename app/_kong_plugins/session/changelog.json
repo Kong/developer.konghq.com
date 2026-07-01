@@ -20,6 +20,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.14": [
+    {
+      "message": "Fixed an issue that occurs when Postgres strategy is used for session storage, concurrent authentication requests could result in race condition and session creation collisions.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added two boolean configuration fields `hash_subject` (default `false`) and `store_metadata` (default `false`) to store the session's metadata in the database.\n",
