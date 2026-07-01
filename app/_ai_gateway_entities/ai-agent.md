@@ -332,23 +332,6 @@ data:
   acls:
     allow:
       - internal-teams
-    deny: []
-  policies: []
-  config:
-    url: https://booking-agent.internal.kongair.com
-    logging:
-      statistics: true
-      payloads: false
-      max_payload_size: 1048576
-{% entity_example %}
-type: agent
-data:
-  display_name: KongAir Flight Booking Agent
-  name: kongair-flight-booking-agent
-  type: a2a
-  acls:
-    allow:
-      - internal-teams
   policies: []
   config:
     url: https://booking-agent.internal.kongair.com
