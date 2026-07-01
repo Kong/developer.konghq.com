@@ -215,7 +215,11 @@ module Jekyll
     def page_visible_in_index?(page, index)
       return !page_is_versioned(page) && page.data['major_version'].nil? unless index['major_version']
 
-      page_matches_major_version?(page, index['major_version'])
+      page_matches_major_version?(page, index['major_version']) || plugin_page?(page)
+    end
+
+    def plugin_page?(page)
+      page.url.start_with?('/plugins/')
     end
 
     def page_matches_major_version?(page, index_major_version)

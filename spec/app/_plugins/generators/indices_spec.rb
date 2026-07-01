@@ -378,10 +378,12 @@ RSpec.describe Jekyll::IndexGenerator do
   describe '#fetch_how_tos' do
     let(:how_to_a) do
       instance_double(Jekyll::Document,
+                      url: '/how-to/gateway-guide/',
                       data: { 'products' => ['gateway'], 'tags' => ['routing'], 'major_version' => nil })
     end
     let(:how_to_b) do
       instance_double(Jekyll::Document,
+                      url: '/how-to/ai-gateway-guide/',
                       data: { 'products' => ['ai-gateway'], 'tags' => ['llm'], 'major_version' => nil })
     end
     let(:collection) { instance_double(Jekyll::Collection, docs: [how_to_a, how_to_b]) }
@@ -412,10 +414,12 @@ RSpec.describe Jekyll::IndexGenerator do
       let(:current_index) { { 'major_version' => { 'ai-gateway' => '1.0' } } }
       let(:v1_how_to) do
         instance_double(Jekyll::Document,
+                        url: '/how-to/v1-guide/',
                         data: { 'products' => ['ai-gateway'], 'major_version' => { 'ai-gateway' => 1 } })
       end
       let(:v2_how_to) do
         instance_double(Jekyll::Document,
+                        url: '/how-to/v2-guide/',
                         data: { 'products' => ['ai-gateway'], 'major_version' => { 'ai-gateway' => 2 } })
       end
 
@@ -507,6 +511,12 @@ RSpec.describe Jekyll::IndexGenerator do
     end
   end
 
+  describe '#plugin_page? (private)' do
+    it { expect(generator.send(:plugin_page?, instance_double(Jekyll::Page, url: '/plugins/ai-proxy/'))).to be(true) }
+    it { expect(generator.send(:plugin_page?, instance_double(Jekyll::Page, url: '/ai-gateway/page/'))).to be(false) }
+    it { expect(generator.send(:plugin_page?, instance_double(Jekyll::Page, url: '/plugins/'))).to be(true) }
+  end
+
   describe '#page_matches_major_version? (private)' do
     let(:index_major_version) { { 'ai-gateway' => '1.0' } }
 
@@ -571,13 +581,18 @@ RSpec.describe Jekyll::IndexGenerator do
       end
 
       it 'excludes pages whose major_version does not match' do
-        page = instance_double(Jekyll::Page, data: { 'major_version' => { 'ai-gateway' => 2 } })
+        page = instance_double(Jekyll::Page, url: '/ai-gateway/v2/page/', data: { 'major_version' => { 'ai-gateway' => 2 } })
         expect(generator.send(:page_visible_in_index?, page, index)).to be(false)
       end
 
-      it 'excludes pages with no major_version at all' do
-        page = instance_double(Jekyll::Page, data: { 'releases' => nil })
+      it 'excludes non-plugin pages with no major_version at all' do
+        page = instance_double(Jekyll::Page, url: '/ai-gateway/page/', data: { 'releases' => nil })
         expect(generator.send(:page_visible_in_index?, page, index)).to be(false)
+      end
+
+      it 'includes plugin pages even when they have no major_version' do
+        page = instance_double(Jekyll::Page, url: '/plugins/ai-proxy/', data: { 'major_version' => nil })
+        expect(generator.send(:page_visible_in_index?, page, index)).to be(true)
       end
     end
   end
@@ -751,6 +766,28 @@ RSpec.describe Jekyll::IndexGenerator do
       it 'excludes canonical pages that have no major_version set' do
         result = generator.config_to_grouped_pages(site, index)
         expect(result[0]['sections'][0]['pages']).not_to include(canonical_page)
+      end
+    end
+
+    context 'when index has major_version and a plugin page is path-matched' do
+      let(:plugin_page) do
+        instance_double(Jekyll::Page,
+                        url: '/plugins/ai-proxy/',
+                        data: { 'published' => true, 'skip_index' => false, 'major_version' => nil })
+      end
+      let(:pages) { [plugin_page] }
+      let(:index) do
+        {
+          'major_version' => { 'ai-gateway' => '1.0' },
+          'groups' => [
+            { 'sections' => [{ 'title' => 'Plugins', 'items' => [{ 'path' => '/plugins/ai-proxy/' }] }] }
+          ]
+        }
+      end
+
+      it 'includes the plugin page despite it having no major_version' do
+        result = generator.config_to_grouped_pages(site, index)
+        expect(result[0]['sections'][0]['pages']).to include(plugin_page)
       end
     end
 
