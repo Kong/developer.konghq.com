@@ -31,6 +31,10 @@ related_resources:
     url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Provider entity
+    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 ---
 
@@ -54,16 +58,14 @@ headers:
   - 'Content-Type: application/json'
 body:
   display_name: Anthropic Production
-  name: my-anthropic-account
+  name: anthropic-provider
   type: anthropic
   config:
     auth:
       type: basic
       headers:
-        - name: Authorization
-          value: Bearer $ANTHROPIC_API_KEY
-        - name: "anthropic-version"
-          value: "2023-06-01"
+        - name: x-api-key
+          value: $ANTHROPIC_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
  
