@@ -149,6 +149,8 @@ kong.client.set_token
 kong.client.get_token
 kong.client.get_jwt_token_header
 kong.client.get_jwt_token_payload
+kong.client.get_identity_realm_source
+kong.client.set_identity_realm_source
 ```
 
 #### Kong Cluster PDK
@@ -223,6 +225,8 @@ kong.request.get_raw_query
 kong.request.get_scheme
 kong.request.get_start_time
 kong.request.get_uri_captures
+kong.request.get_id
+kong.request.get_raw_forwarded_path
 ```
 
 #### Kong Response PDK
@@ -271,7 +275,7 @@ kong.service.response.get_status
 
 #### Kong Table PDK
 ```
-kong.table.clear  kong.table.merge
+kong.table.clear  kong.table.merge  kong.table.new
 ```
 
 #### Kong Telemetry PDK
