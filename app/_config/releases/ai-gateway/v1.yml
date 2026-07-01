@@ -410,8 +410,8 @@ app/ai-gateway/v1/ai-providers/xai.md:
   # status: pending
   canonical_url: /ai-gateway/ai-providers/xai/
 app/ai-gateway/v1/llm-open-telemetry.md:
-  status: pending
-  canonical_url:
+  # status: pending
+  canonical_url: /ai-gateway/llm-open-telemetry/
 app/ai-gateway/v1/load-balancing.md:
   status: pending
   canonical_url:
