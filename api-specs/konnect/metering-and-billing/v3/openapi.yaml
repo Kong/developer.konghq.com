@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Konnect Metering & Billing
-  version: 1.0.0
+  version: 1.1.0
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@d19fbc68a572545f3c2771956530676465c01d1f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d19fbc68a572545f3c2771956530676465c01d1f'
+  x-oas-source: kong/platform-api@e9463953dc0786a69f4b0f8b663eb37ee622067f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e9463953dc0786a69f4b0f8b663eb37ee622067f'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -655,6 +655,417 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - OpenMeter Customers
+  '/openmeter/customers/{customerId}/charges':
+    get:
+      operationId: list-customer-charges
+      summary: List customer charges
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        List customer charges.
+
+        Returns the customer's charges that are represented as either flat fee or
+        usage-based charges.
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+        - name: sort
+          in: query
+          description: |-
+            Sort charges returned in the response.
+
+            Supported sort attributes are:
+
+            - `id`
+            - `created_at`
+            - `service_period.from`
+            - `billing_period.from`
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+          explode: false
+          style: form
+        - name: filter
+          in: query
+          description: |-
+            Filter charges.
+
+            To filter charges by status add the following query param:
+            `filter[status][oeq]=created,active`
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListChargesParamsFilter'
+          style: deepObject
+        - name: expand
+          in: query
+          description: |-
+            Expand full objects for referenced entities.
+
+            Supported values are:
+
+            - `real_time_usage`: Expand the charge's real-time usage.
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BillingChargesExpand'
+          style: form
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargePagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+    post:
+      operationId: create-customer-charges
+      summary: Create customer charge
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Create customer charge.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChargeRequest'
+      responses:
+        '201':
+          description: Charge created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCharge'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/credits/adjustments':
+    post:
+      operationId: create-credit-adjustment
+      summary: Create a credit adjustment
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        A credit adjustment can be used to make manual adjustments to a customer's
+        credit balance.
+
+        Supported use-cases:
+
+        - Usage correction
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCreditAdjustmentRequest'
+      responses:
+        '201':
+          description: CreditAdjustment created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCreditAdjustment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/credits/balance':
+    get:
+      operationId: get-customer-credit-balance
+      summary: Get a customer's credit balance
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Get a credit balance.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+        - name: timestamp
+          in: query
+          description: |-
+            Return the credit balance as of this timestamp.
+
+            Defaults to the current time.
+          required: false
+          schema:
+            $ref: '#/components/schemas/DateTime'
+          explode: false
+          style: form
+        - name: filter
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/GetCreditBalanceParamsFilter'
+          style: deepObject
+      responses:
+        '200':
+          description: CreditBalances response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCreditBalances'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/credits/grants':
+    post:
+      operationId: create-credit-grant
+      summary: Create a new credit grant
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Create a new credit grant. A credit grant represents an allocation of prepaid
+        credits to a customer.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCreditGrantRequest'
+      responses:
+        '201':
+          description: CreditGrant created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCreditGrant'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - OpenMeter Customers
+    get:
+      operationId: list-credit-grants
+      summary: List credit grants
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        List credit grants.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+        - $ref: '#/components/parameters/PagePaginationQuery'
+        - name: filter
+          in: query
+          description: Filter credit grants returned in the response.
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListCreditGrantsParamsFilter'
+          style: deepObject
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditGrantPagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/credits/grants/{creditGrantId}':
+    get:
+      operationId: get-credit-grant
+      summary: Get a credit grant
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Get a credit grant.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+        - name: creditGrantId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: CreditGrant response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCreditGrant'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/credits/grants/{creditGrantId}/settlement/external':
+    post:
+      operationId: update-credit-grant-external-settlement
+      summary: Update credit grant external settlement status
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Update the payment settlement status of an externally funded credit grant.
+
+        Use this endpoint to synchronize the payment state of an external payment with
+        the system so that revenue recognition and credit availability work as expected.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+        - name: creditGrantId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCreditGrantExternalSettlementRequest'
+      responses:
+        '200':
+          description: CreditGrant updated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCreditGrant'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/credits/transactions':
+    get:
+      operationId: list-credit-transactions
+      summary: List credit transactions
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        List credit transactions for a customer.
+
+        Returns an immutable, chronological record of credit movements: funded credits
+        and consumed credits. Transactions are returned in reverse chronological order
+        by default.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+        - $ref: '#/components/parameters/CursorPaginationQuery'
+        - name: filter
+          in: query
+          description: Filter credit transactions returned in the response.
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListCreditTransactionsParamsFilter'
+          style: deepObject
+      responses:
+        '200':
+          description: Cursor paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditTransactionPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
   '/openmeter/customers/{customerId}/entitlement-access':
     get:
       operationId: list-customer-entitlement-access
@@ -682,6 +1093,59 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - OpenMeter Entitlements
+  /openmeter/defaults/tax-codes:
+    get:
+      operationId: get-organization-default-tax-codes
+      summary: Get organization default tax codes
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+      responses:
+        '200':
+          description: OrganizationDefaultTaxCodes response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationDefaultTaxCodes'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Defaults
+    put:
+      operationId: update-organization-default-tax-codes
+      summary: Update organization default tax codes
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationDefaultTaxCodesRequest'
+      responses:
+        '200':
+          description: OrganizationDefaultTaxCodes upsert response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationDefaultTaxCodes'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Defaults
   /openmeter/events:
     get:
       operationId: list-metering-events
@@ -2250,6 +2714,157 @@ paths:
           $ref: '#/components/responses/Conflict'
       tags:
         - OpenMeter Subscriptions
+  /openmeter/tax-codes:
+    post:
+      operationId: create-tax-code
+      summary: Create tax code
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaxCodeRequest'
+      responses:
+        '201':
+          description: TaxCode created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingTaxCode'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Tax
+    get:
+      operationId: list-tax-codes
+      summary: List tax codes
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+        - name: include_deleted
+          in: query
+          description: Include deleted tax codes in the response.
+          required: false
+          schema:
+            type: boolean
+          explode: false
+          style: form
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxCodePagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Tax
+  '/openmeter/tax-codes/{taxCodeId}':
+    get:
+      operationId: get-tax-code
+      summary: Get tax code
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+      parameters:
+        - name: taxCodeId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: TaxCode response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingTaxCode'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Tax
+    put:
+      operationId: upsert-tax-code
+      summary: Upsert tax code
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+      parameters:
+        - name: taxCodeId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertTaxCodeRequest'
+      responses:
+        '200':
+          description: TaxCode upsert response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingTaxCode'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Tax
+    delete:
+      operationId: delete-tax-code
+      summary: Delete tax code
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+      parameters:
+        - name: taxCodeId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '204':
+          description: Deleted response.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Tax
 components:
   parameters:
     CursorPaginationQuery:
@@ -3040,6 +3655,1374 @@ components:
         - return_url
         - locale
         - url
+    BillingCharge:
+      description: Customer charge.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          flat_fee: '#/components/schemas/BillingChargeFlatFee'
+          usage_based: '#/components/schemas/BillingChargeUsageBased'
+      oneOf:
+        - $ref: '#/components/schemas/BillingChargeFlatFee'
+        - $ref: '#/components/schemas/BillingChargeUsageBased'
+      title: Customer charge
+    BillingChargeFlatFee:
+      description: A flat fee charge for a customer.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The type of the charge.
+          type: string
+          enum:
+            - flat_fee
+          title: Type
+        customer:
+          description: The customer owning the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The ID of the customer.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: ULID
+          readOnly: true
+          required:
+            - id
+          title: Customer
+        lifecycle_controller:
+          description: |-
+            Indicates whether the charge lifecycle is controlled by OpenMeter or manually
+            overridden by the API user.
+          type: string
+          enum:
+            - system
+            - manual
+          readOnly: true
+          title: Lifecycle controller
+        subscription:
+          description: |-
+            The subscription that originated the charge, when the charge was created from a
+            subscription item.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The ID of the subscription.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: Subscription ID
+            phase:
+              description: The phase of the subscription.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  description: The ID of the phase.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  readOnly: true
+                  title: Phase ID
+                item:
+                  description: The item of the phase.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    id:
+                      description: The ID of the item.
+                      type: string
+                      example: 01G65Z755AFWAKHE12NY0CQ9FH
+                      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                      readOnly: true
+                      title: Item ID
+                  readOnly: true
+                  required:
+                    - id
+                  title: Item ID
+              readOnly: true
+              required:
+                - id
+                - item
+              title: Phase ID
+          readOnly: true
+          required:
+            - id
+            - phase
+          title: Subscription
+        currency:
+          description: The currency of the charge.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          title: Currency
+        status:
+          description: The lifecycle status of the charge.
+          type: string
+          enum:
+            - created
+            - active
+            - final
+            - deleted
+          readOnly: true
+          title: Status
+        invoice_at:
+          description: The timestamp when the charge is intended to be invoiced.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: Invoice at
+        service_period:
+          description: The effective service period covered by the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          required:
+            - from
+            - to
+          title: Service period
+        full_service_period:
+          description: 'The full, unprorated service period of the charge.'
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          readOnly: true
+          required:
+            - from
+            - to
+          title: Full service period
+        billing_period:
+          description: The billing period the charge belongs to.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          readOnly: true
+          required:
+            - from
+            - to
+          title: Billing period
+        advance_after:
+          description: |-
+            The earliest time when the charge should be advanced again by background
+            processing.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Advance after
+        unique_reference_id:
+          description: Unique reference ID of the charge.
+          type: string
+          title: Unique reference ID
+        settlement_mode:
+          description: Settlement mode of the charge.
+          type: string
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement mode
+        tax_config:
+          description: Tax configuration of the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            behavior:
+              description: |-
+                Tax behavior.
+
+                If not specified the billing profile is used to determine the tax behavior. If
+                not specified in the billing profile, the provider's default behavior is used.
+              type: string
+              enum:
+                - inclusive
+                - exclusive
+              title: Tax behavior
+            stripe:
+              description: Stripe tax config.
+              type: object
+              additionalProperties: false
+              deprecated: true
+              properties:
+                code:
+                  description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                  type: string
+                  example: txcd_10000000
+                  pattern: '^txcd_\d{8}$'
+                  title: Tax code
+              required:
+                - code
+              title: Stripe tax config
+            external_invoicing:
+              description: External invoicing tax config.
+              type: object
+              additionalProperties: false
+              deprecated: true
+              properties:
+                code:
+                  description: The tax code should be interpreted by the external invoicing provider.
+                  type: string
+                  maxLength: 64
+                  title: Tax code
+              required:
+                - code
+              title: External invoicing tax config
+            tax_code_id:
+              description: Tax code ID.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              deprecated: true
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: Tax code ID
+            tax_code:
+              description: |-
+                Tax code reference.
+
+                When both `tax_code` and `tax_code_id` are provided, `tax_code` takes
+                precedence. When `stripe.code` is also provided, `tax_code` still wins and
+                `stripe.code` is ignored.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+              title: Tax code
+          title: Tax configuration
+        payment_term:
+          description: Payment term of the flat fee charge.
+          type: string
+          enum:
+            - in_advance
+            - in_arrears
+          title: Payment term
+        discounts:
+          description: The discounts applied to the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            percentage:
+              description: Percentage discount applied to the price (0–100).
+              type: number
+              maximum: 100
+              minimum: 0
+          title: Discounts
+        feature_key:
+          description: 'The feature associated with the charge, when applicable.'
+          type: string
+          title: Feature key
+        proration_configuration:
+          description: The proration configuration of the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            mode:
+              description: The proration mode of the rate card.
+              type: string
+              enum:
+                - no_proration
+                - prorate_prices
+              title: Proration mode
+          required:
+            - mode
+          title: Proration configuration
+        amount_after_proration:
+          description: The amount after proration of the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            amount:
+              $ref: '#/components/schemas/Numeric'
+            currency:
+              $ref: '#/components/schemas/CurrencyCode'
+          readOnly: true
+          required:
+            - amount
+            - currency
+          title: Amount after proration
+        price:
+          description: The price of the charge.
+          type: object
+          discriminator:
+            propertyName: type
+            mapping:
+              free: '#/components/schemas/BillingPriceFree'
+              flat: '#/components/schemas/BillingPriceFlat'
+              unit: '#/components/schemas/BillingPriceUnit'
+              graduated: '#/components/schemas/BillingPriceGraduated'
+              volume: '#/components/schemas/BillingPriceVolume'
+          oneOf:
+            - $ref: '#/components/schemas/BillingPriceFree'
+            - $ref: '#/components/schemas/BillingPriceFlat'
+            - $ref: '#/components/schemas/BillingPriceUnit'
+            - $ref: '#/components/schemas/BillingPriceGraduated'
+            - $ref: '#/components/schemas/BillingPriceVolume'
+          readOnly: true
+          title: Price
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+        - type
+        - customer
+        - lifecycle_controller
+        - currency
+        - status
+        - invoice_at
+        - service_period
+        - full_service_period
+        - billing_period
+        - settlement_mode
+        - payment_term
+        - proration_configuration
+        - amount_after_proration
+        - price
+      title: Flat fee charge
+    BillingChargeUsageBased:
+      description: A usage-based charge for a customer.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The type of the charge.
+          type: string
+          enum:
+            - usage_based
+          title: Type
+        customer:
+          description: The customer owning the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The ID of the customer.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: ULID
+          readOnly: true
+          required:
+            - id
+          title: Customer
+        lifecycle_controller:
+          description: |-
+            Indicates whether the charge lifecycle is controlled by OpenMeter or manually
+            overridden by the API user.
+          type: string
+          enum:
+            - system
+            - manual
+          readOnly: true
+          title: Lifecycle controller
+        subscription:
+          description: |-
+            The subscription that originated the charge, when the charge was created from a
+            subscription item.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The ID of the subscription.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: Subscription ID
+            phase:
+              description: The phase of the subscription.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  description: The ID of the phase.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  readOnly: true
+                  title: Phase ID
+                item:
+                  description: The item of the phase.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    id:
+                      description: The ID of the item.
+                      type: string
+                      example: 01G65Z755AFWAKHE12NY0CQ9FH
+                      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                      readOnly: true
+                      title: Item ID
+                  readOnly: true
+                  required:
+                    - id
+                  title: Item ID
+              readOnly: true
+              required:
+                - id
+                - item
+              title: Phase ID
+          readOnly: true
+          required:
+            - id
+            - phase
+          title: Subscription
+        currency:
+          description: The currency of the charge.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          title: Currency
+        status:
+          description: The lifecycle status of the charge.
+          type: string
+          enum:
+            - created
+            - active
+            - final
+            - deleted
+          readOnly: true
+          title: Status
+        invoice_at:
+          description: The timestamp when the charge is intended to be invoiced.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: Invoice at
+        service_period:
+          description: The effective service period covered by the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          required:
+            - from
+            - to
+          title: Service period
+        full_service_period:
+          description: 'The full, unprorated service period of the charge.'
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          readOnly: true
+          required:
+            - from
+            - to
+          title: Full service period
+        billing_period:
+          description: The billing period the charge belongs to.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          readOnly: true
+          required:
+            - from
+            - to
+          title: Billing period
+        advance_after:
+          description: |-
+            The earliest time when the charge should be advanced again by background
+            processing.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Advance after
+        unique_reference_id:
+          description: Unique reference ID of the charge.
+          type: string
+          title: Unique reference ID
+        settlement_mode:
+          description: Settlement mode of the charge.
+          type: string
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement mode
+        tax_config:
+          description: Tax configuration of the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            behavior:
+              description: |-
+                Tax behavior.
+
+                If not specified the billing profile is used to determine the tax behavior. If
+                not specified in the billing profile, the provider's default behavior is used.
+              type: string
+              enum:
+                - inclusive
+                - exclusive
+              title: Tax behavior
+            stripe:
+              description: Stripe tax config.
+              type: object
+              additionalProperties: false
+              deprecated: true
+              properties:
+                code:
+                  description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                  type: string
+                  example: txcd_10000000
+                  pattern: '^txcd_\d{8}$'
+                  title: Tax code
+              required:
+                - code
+              title: Stripe tax config
+            external_invoicing:
+              description: External invoicing tax config.
+              type: object
+              additionalProperties: false
+              deprecated: true
+              properties:
+                code:
+                  description: The tax code should be interpreted by the external invoicing provider.
+                  type: string
+                  maxLength: 64
+                  title: Tax code
+              required:
+                - code
+              title: External invoicing tax config
+            tax_code_id:
+              description: Tax code ID.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              deprecated: true
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: Tax code ID
+            tax_code:
+              description: |-
+                Tax code reference.
+
+                When both `tax_code` and `tax_code_id` are provided, `tax_code` takes
+                precedence. When `stripe.code` is also provided, `tax_code` still wins and
+                `stripe.code` is ignored.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+              title: Tax code
+          title: Tax configuration
+        discounts:
+          description: Discounts applied to the usage-based charge.
+          type: object
+          additionalProperties: false
+          properties:
+            percentage:
+              description: Percentage discount applied to the price (0–100).
+              type: number
+              maximum: 100
+              minimum: 0
+            usage:
+              description: |-
+                Number of usage units granted free before billing starts. Only applies to
+                usage-based lines (not flat fees). Usage is treated as zero until this amount is
+                exhausted.
+              type: string
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+          title: Discounts
+        feature_key:
+          description: The feature associated with the charge.
+          type: string
+          title: Feature key
+        totals:
+          description: Aggregated booked and realtime totals for the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            booked:
+              description: The amount of the charge already booked to the internal accounting system.
+              type: object
+              additionalProperties: false
+              properties:
+                amount:
+                  description: 'The total value of the resource before taxes, discounts and commitments.'
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Amount
+                taxes_total:
+                  description: The total tax amount applied to the resource.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Taxes total
+                taxes_inclusive_total:
+                  description: The total tax amount already included in the resource amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Inclusive taxes total
+                taxes_exclusive_total:
+                  description: The total tax amount added on top of the resource amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Exclusive taxes total
+                charges_total:
+                  description: The total amount contributed by additional charges.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Charges total
+                discounts_total:
+                  description: The total amount deducted through discounts.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Discounts total
+                credits_total:
+                  description: The total amount deducted through credits before taxes are applied.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Credits total
+                total:
+                  description: 'The final total value of the resource after taxes, discounts and commitments.'
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Total
+              readOnly: true
+              required:
+                - amount
+                - taxes_total
+                - taxes_inclusive_total
+                - taxes_exclusive_total
+                - charges_total
+                - discounts_total
+                - credits_total
+                - total
+              title: Booked
+            realtime:
+              description: |-
+                The realtime amount of the charge.
+
+                Requires the `realtime_usage` expand.
+              type: object
+              additionalProperties: false
+              properties:
+                amount:
+                  description: 'The total value of the resource before taxes, discounts and commitments.'
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Amount
+                taxes_total:
+                  description: The total tax amount applied to the resource.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Taxes total
+                taxes_inclusive_total:
+                  description: The total tax amount already included in the resource amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Inclusive taxes total
+                taxes_exclusive_total:
+                  description: The total tax amount added on top of the resource amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Exclusive taxes total
+                charges_total:
+                  description: The total amount contributed by additional charges.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Charges total
+                discounts_total:
+                  description: The total amount deducted through discounts.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Discounts total
+                credits_total:
+                  description: The total amount deducted through credits before taxes are applied.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Credits total
+                total:
+                  description: 'The final total value of the resource after taxes, discounts and commitments.'
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                  title: Total
+              readOnly: true
+              required:
+                - amount
+                - taxes_total
+                - taxes_inclusive_total
+                - taxes_exclusive_total
+                - charges_total
+                - discounts_total
+                - credits_total
+                - total
+              title: Realtime totals
+          readOnly: true
+          required:
+            - booked
+          title: Totals for the charge
+        price:
+          description: The price of the charge.
+          type: object
+          discriminator:
+            propertyName: type
+            mapping:
+              free: '#/components/schemas/BillingPriceFree'
+              flat: '#/components/schemas/BillingPriceFlat'
+              unit: '#/components/schemas/BillingPriceUnit'
+              graduated: '#/components/schemas/BillingPriceGraduated'
+              volume: '#/components/schemas/BillingPriceVolume'
+          oneOf:
+            - $ref: '#/components/schemas/BillingPriceFree'
+            - $ref: '#/components/schemas/BillingPriceFlat'
+            - $ref: '#/components/schemas/BillingPriceUnit'
+            - $ref: '#/components/schemas/BillingPriceGraduated'
+            - $ref: '#/components/schemas/BillingPriceVolume'
+          title: Price
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+        - type
+        - customer
+        - lifecycle_controller
+        - currency
+        - status
+        - invoice_at
+        - service_period
+        - full_service_period
+        - billing_period
+        - settlement_mode
+        - feature_key
+        - totals
+        - price
+      title: Usage-based charge
+    BillingChargesExpand:
+      description: |-
+        Expands for customer charges.
+
+        Values:
+
+        - `real_time_usage`: The charge's real-time usage.
+      type: string
+      enum:
+        - real_time_usage
+      title: Customer charge expands
+    BillingCreditAdjustment:
+      description: |-
+        A credit adjustment can be used to make manual adjustments to a customer's
+        credit balance.
+
+        Supported use-cases:
+
+        - Usage correction
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+      additionalProperties: false
+      required:
+        - name
+      title: Credit adjustment
+    BillingCreditBalances:
+      description: The balances of the credits of a customer.
+      type: object
+      properties:
+        retrieved_at:
+          description: The timestamp of the balance retrieval.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        balances:
+          description: The balances by currencies.
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditBalance'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - retrieved_at
+        - balances
+      title: Credit balances
+    BillingCreditGrant:
+      description: |-
+        A credit grant allocates credits to a customer.
+
+        Credits are drawn down against charges according to the settlement mode
+        configured on the rate card.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        funding_method:
+          description: Funding method of the grant.
+          type: string
+          enum:
+            - none
+            - invoice
+            - external
+          title: Credit funding method
+        currency:
+          description: Fiat or custom currency code.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        amount:
+          description: Granted credit amount.
+          type: string
+          pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+        purchase:
+          description: Present when a funding workflow applies (funding_method is not `none`).
+          type: object
+          additionalProperties: false
+          properties:
+            currency:
+              description: Currency of the purchase amount.
+              type: string
+              example: USD
+              maxLength: 3
+              minLength: 3
+              pattern: '^[A-Z]{3}$'
+            per_unit_cost_basis:
+              description: |-
+                Cost basis per credit unit used to calculate the purchase amount.
+
+                If `per_unit_cost_basis` is 0.50 and credit amount is $100.00, the total charge
+                is $50.00. The value must be greater than 0. If the cost basis is 0, use
+                `funding_method=none` instead.
+
+                Defaults to 1.0.
+              type: string
+              default: '1.0'
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+            amount:
+              description: The purchase amount. Calculated from `per_unit_cost_basis` and credit `amount`.
+              type: string
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              readOnly: true
+            availability_policy:
+              description: |-
+                Controls when credits become available for consumption.
+
+                Defaults to `on_creation`.
+              type: string
+              default: on_creation
+              enum:
+                - on_creation
+              title: Credit availability policy
+            settlement_status:
+              description: Current payment settlement status.
+              type: string
+              enum:
+                - pending
+                - authorized
+                - settled
+              readOnly: true
+              title: Credit purchase payment settlement status
+          required:
+            - currency
+            - amount
+        tax_config:
+          description: |-
+            Tax configuration for the grant.
+
+            For `invoice` and `external` funding methods, tax configuration should be
+            provided to ensure correct revenue recognition. When not provided, the default
+            credit grant tax code is applied, if that's not set the global default taxcode
+            is used.
+          type: object
+          additionalProperties: false
+          properties:
+            behavior:
+              description: Tax behavior applied to the invoice line item.
+              type: string
+              enum:
+                - inclusive
+                - exclusive
+            tax_code:
+              description: Tax code applied to the invoice line item.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+          title: Tax configuration for a credit grant
+        invoice:
+          description: Available when `funding_method` is `invoice`.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: Identifier of the invoice associated with the grant.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: ULID
+            line:
+              description: Identifier of the invoice line associated with the grant.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              readOnly: true
+              required:
+                - id
+          readOnly: true
+        filters:
+          $ref: '#/components/schemas/BillingCreditGrantFilters'
+        priority:
+          description: Draw-down priority of the grant. Lower values have higher priority.
+          type: integer
+          format: int16
+          default: 10
+          maximum: 1000
+          minimum: 1
+        effective_at:
+          description: |-
+            The timestamp when the credit grant becomes effective.
+
+            Defaults to the current date and time.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        key:
+          description: |-
+            Idempotency key for the credit grant creation request.
+
+            When provided, reusing the same key returns an HTTP 409 Conflict instead of
+            creating a duplicate grant, which makes create requests safe to retry.
+          type: string
+          example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+          maxLength: 256
+          minLength: 1
+          title: External Resource Key
+        expires_at:
+          description: |-
+            The timestamp when the credit grant expires.
+
+            Calculated from the grant effective time and `expires_after` if provided.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        voided_at:
+          description: Timestamp when the grant was voided.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        status:
+          description: Current lifecycle status of the grant.
+          type: string
+          enum:
+            - pending
+            - active
+            - expired
+            - voided
+          readOnly: true
+          title: Credit grant lifecycle status
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+        - funding_method
+        - currency
+        - amount
+        - status
+      title: Credit grant
+    BillingCreditGrantFilters:
+      description: Filters for the credit grant.
+      type: object
+      properties:
+        features:
+          description: |-
+            Limit the credit grant to specific features. If no features are specified, the
+            credit grant can be used for any feature.
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceKey'
+          example:
+            - input_tokens
+            - output_tokens
+      additionalProperties: false
+    BillingCreditTransaction:
+      description: |-
+        A credit transaction represents a single credit movement on the customer's
+        balance.
+
+        Credit transactions are immutable.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        booked_at:
+          description: The date and time the transaction was booked.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The type of credit transaction.
+          type: string
+          enum:
+            - funded
+            - consumed
+            - expired
+          readOnly: true
+        currency:
+          description: Fiat or custom currency code.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        amount:
+          description: |-
+            Signed amount of the credit movement. Positive values add balance, negative
+            values reduce balance.
+          type: string
+          pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+          readOnly: true
+        available_balance:
+          description: The available balance before and after the transaction.
+          type: object
+          additionalProperties: false
+          properties:
+            before:
+              $ref: '#/components/schemas/Numeric'
+            after:
+              $ref: '#/components/schemas/Numeric'
+          readOnly: true
+          required:
+            - before
+            - after
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - booked_at
+        - type
+        - currency
+        - amount
+        - available_balance
+      title: Credit transaction
     BillingCustomer:
       description: |-
         Customers can be individuals or organizations that can subscribe to plans and
@@ -5251,6 +7234,91 @@ components:
       enum:
         - inclusive
         - exclusive
+    BillingTaxCode:
+      description: Tax codes by provider.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        key:
+          $ref: '#/components/schemas/ResourceKey'
+        app_mappings:
+          description: Mapping of app types to tax codes.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingTaxCodeAppMapping'
+          title: App type to tax code mappings
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+        - key
+        - app_mappings
+    BillingTaxCodeAppMapping:
+      description: Mapping of app types to tax codes.
+      type: object
+      properties:
+        app_type:
+          description: The app type that the tax code is associated with.
+          type: string
+          enum:
+            - sandbox
+            - stripe
+            - external_invoicing
+          title: App type
+        tax_code:
+          description: Tax code.
+          type: string
+          title: Tax code
+      additionalProperties: false
+      required:
+        - app_type
+        - tax_code
     BillingWorkflowCollectionAlignmentAnchored:
       description: |-
         BillingWorkflowCollectionAlignmentAnchored specifies the alignment for
@@ -5337,6 +7405,20 @@ components:
       additionalProperties: false
       required:
         - collection_method
+    ChargePagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingCharge'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
     CreateAddonRequest:
       description: Addon create request.
       type: object
@@ -5721,6 +7803,731 @@ components:
         - workflow
         - apps
         - default
+    CreateChargeFlatFeeRequest:
+      description: Flat fee charge create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        type:
+          description: The type of the charge.
+          type: string
+          enum:
+            - flat_fee
+          title: Type
+        currency:
+          description: The currency of the charge.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          title: Currency
+        invoice_at:
+          description: The timestamp when the charge is intended to be invoiced.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: Invoice at
+        service_period:
+          description: The effective service period covered by the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          required:
+            - from
+            - to
+          title: Service period
+        unique_reference_id:
+          description: Unique reference ID of the charge.
+          type: string
+          title: Unique reference ID
+        settlement_mode:
+          description: Settlement mode of the charge.
+          type: string
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement mode
+        tax_config:
+          description: Tax configuration of the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            behavior:
+              description: |-
+                Tax behavior.
+
+                If not specified the billing profile is used to determine the tax behavior. If
+                not specified in the billing profile, the provider's default behavior is used.
+              type: string
+              enum:
+                - inclusive
+                - exclusive
+              title: Tax behavior
+            stripe:
+              description: Stripe tax config.
+              type: object
+              additionalProperties: false
+              deprecated: true
+              properties:
+                code:
+                  description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                  type: string
+                  example: txcd_10000000
+                  pattern: '^txcd_\d{8}$'
+                  title: Tax code
+              required:
+                - code
+              title: Stripe tax config
+            external_invoicing:
+              description: External invoicing tax config.
+              type: object
+              additionalProperties: false
+              deprecated: true
+              properties:
+                code:
+                  description: The tax code should be interpreted by the external invoicing provider.
+                  type: string
+                  maxLength: 64
+                  title: Tax code
+              required:
+                - code
+              title: External invoicing tax config
+            tax_code_id:
+              description: Tax code ID.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              deprecated: true
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: Tax code ID
+            tax_code:
+              description: |-
+                Tax code reference.
+
+                When both `tax_code` and `tax_code_id` are provided, `tax_code` takes
+                precedence. When `stripe.code` is also provided, `tax_code` still wins and
+                `stripe.code` is ignored.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+              title: Tax code
+          title: Tax configuration
+        payment_term:
+          description: Payment term of the flat fee charge.
+          type: string
+          enum:
+            - in_advance
+            - in_arrears
+          title: Payment term
+        discounts:
+          description: The discounts applied to the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            percentage:
+              description: Percentage discount applied to the price (0–100).
+              type: number
+              maximum: 100
+              minimum: 0
+          title: Discounts
+        feature_key:
+          description: 'The feature associated with the charge, when applicable.'
+          type: string
+          title: Feature key
+        proration_configuration:
+          description: The proration configuration of the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            mode:
+              description: The proration mode of the rate card.
+              type: string
+              enum:
+                - no_proration
+                - prorate_prices
+              title: Proration mode
+          required:
+            - mode
+          title: Proration configuration
+        amount_before_proration:
+          description: The amount before proration of the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            amount:
+              $ref: '#/components/schemas/Numeric'
+            currency:
+              $ref: '#/components/schemas/CurrencyCode'
+          required:
+            - amount
+            - currency
+          title: Amount before proration
+        full_service_period:
+          description: 'The full, unprorated service period of the charge.'
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          required:
+            - from
+            - to
+          title: Full service period
+        billing_period:
+          description: The billing period the charge belongs to.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          required:
+            - from
+            - to
+          title: Billing period
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - currency
+        - invoice_at
+        - service_period
+        - settlement_mode
+        - payment_term
+        - proration_configuration
+        - amount_before_proration
+    CreateChargeRequest:
+      description: Customer charge.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          flat_fee: '#/components/schemas/CreateChargeFlatFeeRequest'
+          usage_based: '#/components/schemas/CreateChargeUsageBasedRequest'
+      oneOf:
+        - $ref: '#/components/schemas/CreateChargeFlatFeeRequest'
+        - $ref: '#/components/schemas/CreateChargeUsageBasedRequest'
+      title: Customer charge create request.
+    CreateChargeUsageBasedRequest:
+      description: Usage-based charge create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        type:
+          description: The type of the charge.
+          type: string
+          enum:
+            - usage_based
+          title: Type
+        currency:
+          description: The currency of the charge.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          title: Currency
+        invoice_at:
+          description: The timestamp when the charge is intended to be invoiced.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: Invoice at
+        service_period:
+          description: The effective service period covered by the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          required:
+            - from
+            - to
+          title: Service period
+        unique_reference_id:
+          description: Unique reference ID of the charge.
+          type: string
+          title: Unique reference ID
+        settlement_mode:
+          description: Settlement mode of the charge.
+          type: string
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement mode
+        tax_config:
+          description: Tax configuration of the charge.
+          type: object
+          additionalProperties: false
+          properties:
+            behavior:
+              description: |-
+                Tax behavior.
+
+                If not specified the billing profile is used to determine the tax behavior. If
+                not specified in the billing profile, the provider's default behavior is used.
+              type: string
+              enum:
+                - inclusive
+                - exclusive
+              title: Tax behavior
+            stripe:
+              description: Stripe tax config.
+              type: object
+              additionalProperties: false
+              deprecated: true
+              properties:
+                code:
+                  description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                  type: string
+                  example: txcd_10000000
+                  pattern: '^txcd_\d{8}$'
+                  title: Tax code
+              required:
+                - code
+              title: Stripe tax config
+            external_invoicing:
+              description: External invoicing tax config.
+              type: object
+              additionalProperties: false
+              deprecated: true
+              properties:
+                code:
+                  description: The tax code should be interpreted by the external invoicing provider.
+                  type: string
+                  maxLength: 64
+                  title: Tax code
+              required:
+                - code
+              title: External invoicing tax config
+            tax_code_id:
+              description: Tax code ID.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              deprecated: true
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: Tax code ID
+            tax_code:
+              description: |-
+                Tax code reference.
+
+                When both `tax_code` and `tax_code_id` are provided, `tax_code` takes
+                precedence. When `stripe.code` is also provided, `tax_code` still wins and
+                `stripe.code` is ignored.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+              title: Tax code
+          title: Tax configuration
+        discounts:
+          description: Discounts applied to the usage-based charge.
+          type: object
+          additionalProperties: false
+          properties:
+            percentage:
+              description: Percentage discount applied to the price (0–100).
+              type: number
+              maximum: 100
+              minimum: 0
+            usage:
+              description: |-
+                Number of usage units granted free before billing starts. Only applies to
+                usage-based lines (not flat fees). Usage is treated as zero until this amount is
+                exhausted.
+              type: string
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+          title: Discounts
+        feature_key:
+          description: The feature associated with the charge.
+          type: string
+          title: Feature key
+        price:
+          description: The price of the charge.
+          type: object
+          discriminator:
+            propertyName: type
+            mapping:
+              free: '#/components/schemas/BillingPriceFree'
+              flat: '#/components/schemas/BillingPriceFlat'
+              unit: '#/components/schemas/BillingPriceUnit'
+              graduated: '#/components/schemas/BillingPriceGraduated'
+              volume: '#/components/schemas/BillingPriceVolume'
+          oneOf:
+            - $ref: '#/components/schemas/BillingPriceFree'
+            - $ref: '#/components/schemas/BillingPriceFlat'
+            - $ref: '#/components/schemas/BillingPriceUnit'
+            - $ref: '#/components/schemas/BillingPriceGraduated'
+            - $ref: '#/components/schemas/BillingPriceVolume'
+          title: Price
+        full_service_period:
+          description: 'The full, unprorated service period of the charge.'
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          required:
+            - from
+            - to
+          title: Full service period
+        billing_period:
+          description: The billing period the charge belongs to.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          required:
+            - from
+            - to
+          title: Billing period
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - currency
+        - invoice_at
+        - service_period
+        - settlement_mode
+        - feature_key
+        - price
+    CreateCreditAdjustmentRequest:
+      description: CreditAdjustment create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        currency:
+          description: The currency of the granted credits.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        amount:
+          description: Granted credit amount.
+          type: string
+          pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+      additionalProperties: false
+      required:
+        - name
+        - currency
+        - amount
+    CreateCreditGrantFilters:
+      description: Filters for the credit grant.
+      type: object
+      properties:
+        features:
+          description: |-
+            Limit the credit grant to specific features. If no features are specified, the
+            credit grant can be used for any feature.
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceKey'
+          example:
+            - input_tokens
+            - output_tokens
+      additionalProperties: false
+    CreateCreditGrantRequest:
+      description: CreditGrant create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        funding_method:
+          description: Funding method of the grant.
+          type: string
+          enum:
+            - none
+            - invoice
+            - external
+          title: Credit funding method
+        currency:
+          description: Fiat or custom currency code.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        amount:
+          description: Granted credit amount.
+          type: string
+          pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+        purchase:
+          description: Present when a funding workflow applies (funding_method is not `none`).
+          type: object
+          additionalProperties: false
+          properties:
+            currency:
+              description: Currency of the purchase amount.
+              type: string
+              example: USD
+              maxLength: 3
+              minLength: 3
+              pattern: '^[A-Z]{3}$'
+            per_unit_cost_basis:
+              description: |-
+                Cost basis per credit unit used to calculate the purchase amount.
+
+                If `per_unit_cost_basis` is 0.50 and credit amount is $100.00, the total charge
+                is $50.00. The value must be greater than 0. If the cost basis is 0, use
+                `funding_method=none` instead.
+
+                Defaults to 1.0.
+              type: string
+              default: '1.0'
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+            availability_policy:
+              description: |-
+                Controls when credits become available for consumption.
+
+                Defaults to `on_creation`.
+              type: string
+              default: on_creation
+              enum:
+                - on_creation
+              title: Credit availability policy
+          required:
+            - currency
+        tax_config:
+          description: |-
+            Tax configuration for the grant.
+
+            For `invoice` and `external` funding methods, tax configuration should be
+            provided to ensure correct revenue recognition. When not provided, the default
+            credit grant tax code is applied, if that's not set the global default taxcode
+            is used.
+          type: object
+          additionalProperties: false
+          properties:
+            behavior:
+              description: Tax behavior applied to the invoice line item.
+              type: string
+              enum:
+                - inclusive
+                - exclusive
+            tax_code:
+              description: Tax code applied to the invoice line item.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+          title: Tax configuration for a credit grant
+        filters:
+          $ref: '#/components/schemas/CreateCreditGrantFilters'
+        priority:
+          description: Draw-down priority of the grant. Lower values have higher priority.
+          type: integer
+          format: int16
+          default: 10
+          maximum: 1000
+          minimum: 1
+        effective_at:
+          description: |-
+            The timestamp when the credit grant becomes effective.
+
+            Defaults to the current date and time.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        expires_after:
+          description: |-
+            The duration after which the credit grant expires.
+
+            Defaults to never expiring.
+          type: string
+          format: ISO8601
+          example: P1Y
+          pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+          title: ISO 8601 Duration
+        key:
+          description: |-
+            Idempotency key for the credit grant creation request.
+
+            When provided, reusing the same key returns an HTTP 409 Conflict instead of
+            creating a duplicate grant, which makes create requests safe to retry.
+          type: string
+          example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+          maxLength: 256
+          minLength: 1
+          title: External Resource Key
+      additionalProperties: false
+      required:
+        - name
+        - funding_method
+        - currency
+        - amount
     CreateCustomerRequest:
       description: Customer create request.
       type: object
@@ -6078,6 +8885,117 @@ components:
         - currency
         - billing_cadence
         - phases
+    CreateTaxCodeRequest:
+      description: TaxCode create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        key:
+          $ref: '#/components/schemas/ResourceKey'
+        app_mappings:
+          description: Mapping of app types to tax codes.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingTaxCodeAppMapping'
+          title: App type to tax code mappings
+      additionalProperties: false
+      required:
+        - name
+        - key
+        - app_mappings
+    CreditBalance:
+      description: The credit balance by currency.
+      type: object
+      properties:
+        currency:
+          description: Fiat or custom currency code.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          readOnly: true
+        live:
+          description: Credits available after applying currently live charge impacts.
+          type: string
+          example: '200.00'
+          pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+          readOnly: true
+        settled:
+          description: Credits that have been booked on the ledger as of the balance timestamp.
+          type: string
+          example: '150.00'
+          pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+          readOnly: true
+        pending:
+          description: |-
+            Credits that have been granted but are not yet written to the ledger, or are
+            written to the ledger with a future booked time.
+          type: string
+          example: '50.00'
+          pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - currency
+        - live
+        - settled
+        - pending
+      title: Credit balance
+    CreditGrantPagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingCreditGrant'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+    CreditTransactionPaginatedResponse:
+      description: Cursor paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingCreditTransaction'
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+    CurrencyCode:
+      description: |-
+        Three-letter [ISO4217](https://www.iso.org/iso-4217-currency-codes.html)
+        currency code. Custom three-letter currency codes are also supported for
+        convenience.
+      type: string
+      example: USD
+      maxLength: 3
+      minLength: 3
+      pattern: '^[A-Z]{3}$'
     CursorPaginationQueryPage:
       description: Determines which page of the collection to retrieve.
       type: object
@@ -6311,6 +9229,67 @@ components:
       required:
         - data
         - meta
+    GetCreditBalanceParamsFilter:
+      description: Filter options for getting a credit balance.
+      type: object
+      properties:
+        currency:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+        feature_key:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+      additionalProperties: false
     IngestedEventPaginatedResponse:
       description: Cursor paginated response.
       type: object
@@ -6535,6 +9514,140 @@ components:
           $ref: '#/components/schemas/StringFieldFilterExact'
         currency:
           $ref: '#/components/schemas/StringFieldFilterExact'
+      additionalProperties: false
+    ListChargesParamsFilter:
+      description: Filter options for listing charges.
+      type: object
+      properties:
+        status:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+      additionalProperties: false
+    ListCreditGrantsParamsFilter:
+      description: Filter options for listing credit grants.
+      type: object
+      properties:
+        status:
+          description: Filter credit grants by status.
+          type: string
+          enum:
+            - pending
+            - active
+            - expired
+            - voided
+          title: Credit grant lifecycle status
+        currency:
+          description: Filter credit grants by currency.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        key:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+      additionalProperties: false
+    ListCreditTransactionsParamsFilter:
+      description: Filter options for listing credit transactions.
+      type: object
+      properties:
+        type:
+          description: Filter credit transactions by type.
+          type: string
+          enum:
+            - funded
+            - consumed
+            - expired
+        currency:
+          description: Filter credit transactions by currency.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        feature_key:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
       additionalProperties: false
     ListCustomerEntitlementAccessResponseData:
       description: List customer entitlement access response data.
@@ -7749,6 +10862,58 @@ components:
       required:
         - code
         - message
+    Numeric:
+      description: Numeric represents an arbitrary precision number.
+      type: string
+      pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+    OrganizationDefaultTaxCodes:
+      description: |-
+        Organization-level default tax code references.
+
+        Stores the default tax codes applied to specific billing contexts for this
+        organization. Provisioned automatically when the organization is created.
+      type: object
+      properties:
+        invoicing_tax_code:
+          description: Default tax code for invoicing.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/ULID'
+          required:
+            - id
+          title: Invoicing tax code
+        credit_grant_tax_code:
+          description: Default tax code for credit grants.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/ULID'
+          required:
+            - id
+          title: Credit grant tax code
+        created_at:
+          description: Timestamp of creation.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: Timestamp of last update.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+      additionalProperties: false
+      required:
+        - invoicing_tax_code
+        - credit_grant_tax_code
+        - created_at
+        - updated_at
     PlanAddon:
       description: |-
         PlanAddon represents an association between a plan and an add-on, controlling
@@ -8485,6 +11650,20 @@ components:
       required:
         - data
         - meta
+    TaxCodePagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingTaxCode'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
     TaxCodeReference:
       description: TaxCode reference.
       type: object
@@ -8533,6 +11712,23 @@ components:
       x-go-type: filters.FilterULID
       x-go-type-import:
         path: github.com/openmeterio/openmeter/api/v3/filters
+    UpdateCreditGrantExternalSettlementRequest:
+      description: |-
+        Request body for updating the external payment settlement status of a credit
+        grant.
+      type: object
+      properties:
+        status:
+          description: The new payment settlement status.
+          type: string
+          enum:
+            - pending
+            - authorized
+            - settled
+          title: Credit purchase payment settlement status
+      additionalProperties: false
+      required:
+        - status
     UpdateFeatureRequest:
       description: |-
         Request body for updating a feature. Currently only the unit_cost field can be
@@ -8588,6 +11784,31 @@ components:
             type: $.type
           additionalProperties:
             type: string
+      additionalProperties: false
+    UpdateOrganizationDefaultTaxCodesRequest:
+      description: OrganizationDefaultTaxCodes update request.
+      type: object
+      properties:
+        invoicing_tax_code:
+          description: Default tax code for invoicing.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/ULID'
+          required:
+            - id
+          title: Invoicing tax code
+        credit_grant_tax_code:
+          description: Default tax code for credit grants.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/ULID'
+          required:
+            - id
+          title: Credit grant tax code
       additionalProperties: false
     UpsertAddonRequest:
       description: Addon upsert request.
@@ -9201,6 +12422,37 @@ components:
       required:
         - name
         - phases
+    UpsertTaxCodeRequest:
+      description: TaxCode upsert request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        app_mappings:
+          description: Mapping of app types to tax codes.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingTaxCodeAppMapping'
+          title: App type to tax code mappings
+      additionalProperties: false
+      required:
+        - name
+        - app_mappings
     UsageAttributionSubjectKey:
       description: Subject key.
       type: string
@@ -9705,12 +12957,16 @@ components:
       description: |
         The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
 tags:
+  - name: OpenMeter Defaults
+    description: Organization-level default configuration.
   - name: OpenMeter Product Catalog
     description: 'Product catalog manages plans, add-ons, and their associations for subscription-based billing.'
   - name: OpenMeter LLM Cost
     description: LLM cost database providing normalized pricing data for language models across providers. Prices are synced from multiple external sources and auto-confirmed when they agree.
   - name: OpenMeter Features
     description: 'Features represent product capabilities backed by meters, with optional per-unit cost configuration.'
+  - name: OpenMeter Tax
+    description: Tax codes are used to calculate taxes for customers.
   - name: OpenMeter Billing Settings
     description: Billing settings manages the billing profiles and invoices for customers.
   - name: OpenMeter Apps
