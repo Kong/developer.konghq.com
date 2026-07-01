@@ -9,6 +9,7 @@ description: 'Integrate {{site.base_gateway}} with a third-party OpenID Connect 
 
 products:
     - gateway
+    - identity
 
 works_on:
     - on-prem
@@ -47,6 +48,8 @@ related_resources:
     url: /how-to/?query=openid-connect
 
 examples_groups:
+  - slug: identity
+    text: Using Kong Identity
   - slug: authentication
     text: Authentication flows and grants
   - slug: client-auth
@@ -116,7 +119,7 @@ This plugin can be used to implement {{site.base_gateway}} as a proxying [OAuth 
 
 OpenID Connect provides a way to form a **federation** with **identity providers (IdPs)**. 
 Identity providers are third parties that store account credentials. 
-If an identity provider authenticates a user to an application, the application trusts that provider and allows access to the user. This shifts the responsibility of authentication from the application to the identity provider. 
+If an identity provider authenticates a user to an application, the application trusts that provider and allows access to the user. This shifts the responsibility of authentication from the application to the identity provider. {{site.konnect_short_name}} provides [{{site.identity}}](/identity/), a managed {{site.base_gateway}} native IdP provider.
 
 Besides delegating responsibility to an identity provider, OpenID Connect also makes single sign-on possible without storing any credentials on a user’s local machine.
 
@@ -716,6 +719,7 @@ If one of these other applications is causing issues, looking into using the fol
 
 The plugin has been tested with several OpenID Connect providers:
 
+- [Kong Identity](/identity/)
 - [Auth0](https://auth0.com/docs/protocols/openid-connect-protocol)
 - [{{ site.amazon }} AWS Cognito](https://aws.amazon.com/cognito/dev-resources/)
 - [Connect2id](https://connect2id.com/products/server)

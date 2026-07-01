@@ -14,3 +14,4 @@ sections:
       - path: /how-to/kong-identity-dcr/
       - path: /how-to/authenticate-principals-with-key-auth/
       - path: /how-to/authenticate-principals-with-basic-authentication/
+      - path: /how-to/authenticate-oauth-clients-with-kong-identity/
