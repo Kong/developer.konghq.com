@@ -341,8 +341,8 @@ rows:
 
 Support for {{ provider.name }}'s bidirectional streaming for realtime applications:
 
-{:.warning}
-> Realtime processing uses WebSocket protocol (ws/wss). Configure the protocols on both the Service and Route where the AI model is associated.
+{:.info}
+> Realtime processing uses WebSocket protocol (ws/wss). The protocols are configured automatically when the Service and Route are created.
 
 {% table %}
 vertical_align: middle
