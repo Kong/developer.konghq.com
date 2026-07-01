@@ -8,7 +8,7 @@ products:
 content_type: policy
 ---
 
-The AI Lakera Guard Policy evaluates requests and responses that pass through {{site.ai_gateway}} to Large Language Models (LLMs). It uses the Lakera Guard SaaS service to detect safety policy violations and block unsafe content before it reaches upstream LLMs or returns to clients. The AI Lakera Guard Policy supports multiple inspection modes and guards both inbound prompts and outbound model outputs.
+The AI Lakera Guard Policy evaluates requests and responses that pass through {{site.ai_gateway}} to Large Language Models (LLMs). It uses the [Lakera Guard SaaS service](https://www.lakera.ai/) to detect safety policy violations and block unsafe content before it reaches upstream LLMs or returns to clients. The AI Lakera Guard Policy supports multiple inspection modes and guards both inbound prompts and outbound model outputs.
 
 ## How it works
 
@@ -18,7 +18,7 @@ The AI Lakera Guard Policy inspects model traffic at three points in the LLM req
 * **Response phase (buffered)**: Inspection occurs **before** any byte is transmitted back toward the client. The AI Lakera Guard Policy buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before {{site.ai_gateway}} sends any part of the response back to the client.
 * **Response phase (per-frame)**: The AI Lakera Guard Policy runs during streaming responses like Server-Sent Events. {{site.ai_gateway}} processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the AI Lakera Guard Policy inspects that segment with Lakera Guard before forwarding the frame to the client.
 
-The AI Lakera Guard Policy inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on response types that are not text responses based on Lakera Guard's current product limitations.
+The AI Lakera Guard Policy inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on non-text response types, which Lakera Guard does not currently support.
 
 ## Inspected content
 
@@ -69,7 +69,7 @@ The AI Lakera Guard Policy provides detailed logging and controls over how viola
 
 By default, the AI Lakera Guard Policy doesn't tell clients why their request was blocked. However, this information is always logged to {{site.ai_gateway}} logs for administrators.
 
-To change this behavior, use `reveal_failure_categories: true`. If activated, you'll receive a JSON response including a breakdown array that details the specific `detector_type` that caused the failure.
+To change this behavior, use `reveal_failure_categories: true`. If activated, the client receives a JSON response including a breakdown array that details the specific `detector_type` that caused the failure.
 
 To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-log-blocked-content). When enabled, the blocked prompt or response body appears under `ai.proxy.lakera-guard.input_faulty_prompt` and `ai.proxy.lakera-guard.output_faulty_response` in the log entry.
 
@@ -92,7 +92,7 @@ When a request passes all guardrails, the log includes processing latency and th
 
 ### Violations log example
 
-When a request is blocked, the log captures the violation reason, detector details, and the blocking AI Policy name, AI Consumer ID, and a running trigger counter:
+When the guardrails block a request, the log captures the violation reason, detector details, and the blocking AI Policy name, AI Consumer ID, and a running trigger counter:
 
 ```json
 "ai": {
