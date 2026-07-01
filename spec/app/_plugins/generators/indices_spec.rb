@@ -787,6 +787,99 @@ RSpec.describe Jekyll::IndexGenerator do
     end
   end
 
+  describe '#major_version_label (private)' do
+    let(:aigw_product_data) { { 'previous_major_url_segment' => 'v<major>' } }
+    let(:site) { instance_double(Jekyll::Site, data: { 'products' => { 'ai-gateway' => aigw_product_data } }) }
+
+    it 'delegates to MajorVersionResolver with the correct product data and major integer' do
+      expect(generator.send(:major_version_label, site, { 'ai-gateway' => '1.0' })).to eq('v1')
+    end
+
+    it 'handles an integer version value' do
+      expect(generator.send(:major_version_label, site, { 'ai-gateway' => 1 })).to eq('v1')
+    end
+
+    it 'uses the first product in the hash' do
+      gw_product_data = { 'previous_major_url_segment' => 'v<major>' }
+      gw_site = instance_double(Jekyll::Site, data: { 'products' => { 'gateway' => gw_product_data } })
+      expect(generator.send(:major_version_label, gw_site, { 'gateway' => '3.0' })).to eq('v3')
+    end
+  end
+
+  describe '#link_major_version_indices (private)' do
+    let(:aigw_product_data) { { 'previous_major_url_segment' => 'v<major>' } }
+    let(:products_data) { { 'ai-gateway' => aigw_product_data } }
+
+    let(:canonical_data) { { 'slug' => 'ai-gateway' } }
+    let(:canonical_page) { instance_double(Jekyll::Page, url: '/index/ai-gateway/', data: canonical_data) }
+
+    let(:v1_data) do
+      { 'canonical_url' => '/index/ai-gateway/', 'major_version' => { 'ai-gateway' => '1.0' } }
+    end
+    let(:v1_page) { instance_double(Jekyll::Page, url: '/index/ai-gateway/v1/', data: v1_data) }
+
+    let(:site) do
+      instance_double(Jekyll::Site, data: { 'indices' => { 'ai-gateway' => canonical_page,
+                                                           'ai-gateway/v1' => v1_page },
+                                            'products' => products_data })
+    end
+
+    before { generator.send(:link_major_version_indices, site) }
+
+    it 'sets previous_major_urls on the canonical index using MajorVersionResolver key' do
+      expect(canonical_data['previous_major_urls']).to eq({ 'v1' => ['/index/ai-gateway/v1/'] })
+    end
+
+    it 'does not set previous_major_urls on the versioned index itself' do
+      expect(v1_data['previous_major_urls']).to be_nil
+    end
+
+    context 'when no canonical index page exists for the given canonical_url' do
+      let(:site) do
+        instance_double(Jekyll::Site, data: { 'indices' => { 'ai-gateway/v1' => v1_page },
+                                              'products' => products_data })
+      end
+
+      it 'skips without raising' do
+        expect { generator.send(:link_major_version_indices, site) }.not_to raise_error
+      end
+    end
+
+    context 'when an index has no canonical_url' do
+      let(:plain_data) { { 'slug' => 'gateway' } }
+      let(:plain_page) { instance_double(Jekyll::Page, url: '/index/gateway/', data: plain_data) }
+      let(:site) do
+        instance_double(Jekyll::Site, data: { 'indices' => { 'gateway' => plain_page },
+                                              'products' => products_data })
+      end
+
+      it 'skips the page' do
+        generator.send(:link_major_version_indices, site)
+        expect(plain_data['previous_major_urls']).to be_nil
+      end
+    end
+
+    context 'with multiple versioned indices pointing to the same canonical' do
+      let(:v2_data) do
+        { 'canonical_url' => '/index/ai-gateway/', 'major_version' => { 'ai-gateway' => '2.0' } }
+      end
+      let(:v2_page) { instance_double(Jekyll::Page, url: '/index/ai-gateway/v2/', data: v2_data) }
+      let(:site) do
+        instance_double(Jekyll::Site, data: { 'indices' => { 'ai-gateway' => canonical_page,
+                                                             'ai-gateway/v1' => v1_page,
+                                                             'ai-gateway/v2' => v2_page },
+                                              'products' => products_data })
+      end
+
+      it 'accumulates all versioned index URLs under their respective labels' do
+        expect(canonical_data['previous_major_urls']).to eq({
+                                                              'v1' => ['/index/ai-gateway/v1/'],
+                                                              'v2' => ['/index/ai-gateway/v2/']
+                                                            })
+      end
+    end
+  end
+
   describe '#indices_relative (private)' do
     let(:site) { instance_double(Jekyll::Site, source: '/repo') }
 

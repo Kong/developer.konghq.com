@@ -20,6 +20,8 @@ module Jekyll
         site.pages << page
         site.data['indices'][page_slug(site, file)] = page
       end
+
+      link_major_version_indices(site)
     end
 
     def build_page(site, file, index)
@@ -223,6 +225,28 @@ module Jekyll
       index_major_version.all? do |product, version|
         page_mv[product] == version.to_s.split('.').first.to_i
       end
+    end
+
+    def link_major_version_indices(site)
+      indices = site.data['indices'].values
+      indices.each do |index_page|
+        next unless index_page.data['canonical_url'] && index_page.data['major_version']
+
+        canonical = indices.find { |p| p.url == index_page.data['canonical_url'] }
+        next unless canonical
+
+        label = major_version_label(site, index_page.data['major_version'])
+        canonical.data['previous_major_urls'] ||= {}
+        canonical.data['previous_major_urls'][label] ||= []
+        canonical.data['previous_major_urls'][label] << index_page.url
+      end
+    end
+
+    def major_version_label(site, major_version)
+      product_name, version = major_version.first
+      product_data = site.data.dig('products', product_name)
+      major = version.to_s.split('.').first.to_i
+      MajorVersionResolver.process(product_data: product_data, major: major)
     end
 
     def index_dir(site, file)
