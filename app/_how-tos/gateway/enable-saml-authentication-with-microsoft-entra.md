@@ -107,7 +107,9 @@ Enable the [SAML plugin](/plugins/saml/) and provide the information to connect 
 We also need to provide a value for [`config.session_secret`](/plugins/saml/reference/#schema--config-session-secret), which should be a random 32-character string.
 
 {:.danger}
-> This example sets [`validate_assertion_signature`](/plugins/saml/reference/#schema--config-validate-assertion-signature) to `false` for testing purposes. Disabling signature validation is **not secure** and allows the plugin to accept unsigned or tampered SAML assertions, exposing your application to authentication bypass and assertion forgery attacks. **Do not disable signature validation in production.**
+> This example keeps [`validate_assertion_signature`](/plugins/saml/reference/#schema--config-validate-assertion-signature) set to its default value of `true`, which requires a valid `idp_certificate`.
+> If you only want to test the authentication flow without configuring a signing certificate, you can manually set `validate_assertion_signature` to `false`.
+> Disabling signature validation is **not secure**. **Do not disable signature validation in production.**
 
 {% entity_examples %}
 entities:
@@ -118,7 +120,7 @@ entities:
             issuer: ${identifier}
             idp_sso_url: ${url}
             assertion_consumer_path: /consume
-            validate_assertion_signature: false
+            validate_assertion_signature: true
             session_secret: uwcLGoTJCWnHWZdVpbLYKlztNOyoGJ07
             idp_certificate: ${certificate}
 
