@@ -34,19 +34,6 @@ tools:
 
 prereqs:
   inline:
-    - title: Konnect personal access token
-      content: |
-        1. Open the [Konnect token page](https://cloud.konghq.com/global/account/tokens) and select **Generate Token**.
-        1. Export your token:
-           ```bash
-           export KONNECT_TOKEN='YOUR_KONNECT_PAT'
-           ```
-        1. Export your control plane name and API host:
-           ```bash
-           export KONNECT_CONTROL_PLANE_NAME=default
-           export KONNECT_API_HOST=https://us.api.konghq.com
-           ```
-
     - title: OpenAI API key
       content: |
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
