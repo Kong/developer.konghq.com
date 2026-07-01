@@ -77,6 +77,9 @@ There is no need to restart your Pods when updating a license.
 
 An alternative option is to use a static license Secret that will be used to populate {{ site.base_gateway }}'s `KONG_LICENSE_DATA` environment variable. This option allows you to store the license in Kubernetes secrets, but requires a Pod restart when the value of the secret changes.
 
+{:.info}
+> If a `KongLicense` resource also exists, it takes precedence over the static `KONG_LICENSE_DATA` license, because {{ site.kic_product_name }} sends it in the `POST /config` configuration payload. Deleting the `KongLicense` resource doesn't roll back to the environment variable—the gateway keeps the last pushed license until the Pod restarts.
+
 1. Create a file named `license.json` containing your {{site.base_gateway}} license and store it in a Kubernetes secret:
 
    ```bash
