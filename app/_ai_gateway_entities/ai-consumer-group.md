@@ -66,11 +66,11 @@ faqs:
 
 ## What is an AI Consumer Group?
 
-An AI Consumer Group is the {{site.ai_gateway}} entity that represents a collection of AI Consumers grouped for the purpose of applying shared AI Policies and access controls.
+An AI Consumer Group is the {{site.ai_gateway}} entity that represents a collection of AI Consumers grouped for the purpose of applying shared [AI Policies](/ai-gateway/entities/ai-policy/) and access controls.
 
 By grouping AI Consumers together, you eliminate the need to manage AI Policies and access controls individually, providing a scalable, efficient approach to AI governance. With AI Consumer Groups, you can scope AI Policies to specifically defined groups, making configurations and customizations more flexible.
 
-For example, you could define three groups (Bronze, Gold, and Enterprise) and attach an AI Rate Limiting Advanced AI Policy to each with different token quotas and cost budgets. Without AI Consumer Groups, you would attach a separate AI Rate Limiting Advanced AI Policy to each individual AI Consumer — in production, that could be thousands of individual AI Policy attachments instead of three group-level ones.
+For example, you could define three groups (Bronze, Gold, and Enterprise) and attach an [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) policy to each with different token quotas and cost budgets. Without AI Consumer Groups, you would attach a separate AI Rate Limiting Advanced policy to each individual AI Consumer — in production, that could be thousands of individual policy attachments instead of three group-level ones.
 
 <!-- vale off -->
 {% mermaid %}
