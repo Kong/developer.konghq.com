@@ -45,8 +45,7 @@ faqs:
   - q: How do I assign an AI Consumer to an AI Consumer Group?
     a: |
       You add an AI Consumer to an AI Consumer Group through the AI Consumer Group entity.
-      See the [AI Consumer entity](/ai-gateway/entities/ai-consumer/) and
-      [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/) references.
+      See the [AI Consumer entity](/ai-gateway/entities/ai-consumer/) reference.
 
   - q: Can an AI Consumer belong to multiple AI Consumer Groups?
     a: |
@@ -71,16 +70,16 @@ An AI Consumer Group is the {{site.ai_gateway}} entity that represents a collect
 
 By grouping AI Consumers together, you eliminate the need to manage AI Policies and access controls individually, providing a scalable, efficient approach to AI governance. With AI Consumer Groups, you can scope AI Policies to specifically defined groups, making configurations and customizations more flexible.
 
-For example, you could define three groups (Bronze, Gold, and Enterprise) and attach an AI Rate Limiting Advanced AI Policy to each with different token quotas and cost budgets. Without Consumer Groups, you would attach a separate AI Rate Limiting Advanced AI Policy to each individual consumer — in production, that could be thousands of individual AI Policy attachments instead of three group-level ones.
+For example, you could define three groups (Bronze, Gold, and Enterprise) and attach an AI Rate Limiting Advanced AI Policy to each with different token quotas and cost budgets. Without AI Consumer Groups, you would attach a separate AI Rate Limiting Advanced AI Policy to each individual AI Consumer — in production, that could be thousands of individual AI Policy attachments instead of three group-level ones.
 
 <!-- vale off -->
 {% mermaid %}
 flowchart LR
     A((AI Consumers 1-5))
 
-    B("<b>Consumer Group Gold</b><br/>Consumer 1, Consumer 2, Consumer 5")
+    B("<b>AI Consumer Group Gold</b><br/>AI Consumer 1, AI Consumer 2, AI Consumer 5")
 
-    C("<b>Consumer Group Bronze</b><br/>Consumer 3, Consumer 4")
+    C("<b>AI Consumer Group Bronze</b><br/>AI Consumer 3, AI Consumer 4")
 
     D["AI Rate Limiting Advanced<br/>1M tokens/hour<br/>AND<br/>$100/hour budget"]
     E["AI Rate Limiting Advanced<br/>100K tokens/hour<br/>AND<br/>$10/hour budget"]
@@ -120,7 +119,7 @@ columns:
     key: description
 rows:
   - use_case: "Subscription tier management"
-    description: "Create Consumer Groups for different subscription tiers (for example, Bronze, Gold, Enterprise). Assign different rate limits, model access restrictions, and token quotas to each tier without configuring individual consumers."
+    description: "Create AI Consumer Groups for different subscription tiers (for example, Bronze, Gold, Enterprise). Assign different rate limits, model access restrictions, and token quotas to each tier without configuring individual AI Consumers."
   - use_case: "Team-based access control"
     description: "Organize AI Consumers by team or department. Gate access to specific [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), or [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) at the group level, so teams only access the resources they need."
   - use_case: "AI safety and governance AI Policies"
@@ -128,7 +127,7 @@ rows:
   - use_case: "Cost and quota management"
     description: "Enforce per-group token limits, rate limits, and usage quotas. Track spending and resource usage by AI Consumer Group to manage AI API costs at scale."
   - use_case: "Centralized AI Policy management"
-    description: "Attach AI Policies once at the group level rather than managing them on every individual consumer. Simplifies configuration and ensures consistency across all group members."
+    description: "Attach AI Policies once at the group level rather than managing them on every individual AI Consumer. Simplifies configuration and ensures consistency across all group members."
 {% endtable %}
 <!-- vale on -->
 
@@ -144,7 +143,7 @@ You can attach multiple AI Policies to a single AI Consumer Group with different
 
 ## Use in parent entity ACLs
 
-To restrict access to specific [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), or [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) by consumer group (for example, allowing only Gold tier consumers to access premium models), use ACLs. The `acls` field on these entities accepts AI Consumer Group names alongside AI Consumer and Authenticated Group names. Add an AI Consumer Group to a parent entity's `acls.allow` list to permit its members access, or to `acls.deny` to block them.
+To restrict access to specific [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), or [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) by AI Consumer Group (for example, allowing only Gold tier AI Consumers to access premium models), use ACLs. The `acls` field on these entities accepts AI Consumer Group names alongside AI Consumer and Authenticated Group names. Add an AI Consumer Group to a parent entity's `acls.allow` list to permit its members access, or to `acls.deny` to block them.
 
 AI Consumer Group membership is resolved after the request is authenticated and the AI Consumer is identified.
 
