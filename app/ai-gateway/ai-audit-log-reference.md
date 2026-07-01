@@ -26,7 +26,7 @@ works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} emits structured analytics logs for [AI Policies](/ai-gateway/policies/) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-ai-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment. 
+{{site.ai_gateway}} emits structured analytics logs for [AI Policies](/ai-gateway/policies/) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-ai-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running a Data Plane in a containerized environment. 
 
 You can set the [global log level](/ai-gateway/ai-logs/#configure-log-levels) for {{site.ai_gateway}} via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
 
@@ -36,13 +36,11 @@ You can also use [logging Policies](/ai-gateway/policies/) to route these logs t
 
 ## Log details
 
-Each {{site.ai_gateway}} policy returns a set of tokens. Log entries include the following details:
+Each {{site.ai_gateway}} Policy returns a set of tokens. Log entries include the following details:
 
 ### Core logs
 
 {{site.ai_gateway}} logs capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. They provide a comprehensive view of each AI interaction.
-
-The core proxy functionality is provided by the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) which is reflected in the property names.
 
 {:.warning}
 > Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) are not currently supported.
@@ -116,7 +114,7 @@ rows:
 
 ### AI AWS Guardrails logs
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI AWS Guardrails Policy](/ai-gateway/policies/ai-aws-guardrails/), {{site.ai_gateway}} logs include fields under the `ai.proxy.aws-guardrails` object. These fields capture processing latency, the guardrails configuration applied, block reasons, and masking behavior.
+If you use the [AI AWS Guardrails Policy](/ai-gateway/policies/ai-aws-guardrails/), {{site.ai_gateway}} logs include fields under the `ai.proxy.aws-guardrails` object. These fields capture processing latency, the guardrails configuration applied, block reasons, and masking behavior.
 
 {% table %}
 columns:
@@ -171,7 +169,7 @@ rows:
 
 ### AI GCP Model Armor logs
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI GCP Model Armor Policy](/ai-gateway/policies/ai-gcp-model-armor/), {{site.ai_gateway}} logs include fields under the `ai.proxy.gcp-model-armor` object. These fields capture the template applied, processing latency, and reasons for blocking when content is flagged.
+If you use the [AI GCP Model Armor Policy](/ai-gateway/policies/ai-gcp-model-armor/), {{site.ai_gateway}} logs include fields under the `ai.proxy.gcp-model-armor` object. These fields capture the template applied, processing latency, and reasons for blocking when content is flagged.
 
 {% table %}
 columns:
@@ -218,11 +216,11 @@ rows:
 
 ### AI Azure Content Safety logs
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI Azure Content Safety Policy](/ai-gateway/policies/ai-azure-content-safety/), {{site.ai_gateway}} writes to two separate log paths.
+If you use the [AI Azure Content Safety Policy](/ai-gateway/policies/ai-azure-content-safety/), {{site.ai_gateway}} writes to two separate log paths.
 
 The first path records per-category severity data from the Azure Content Safety API. Each entry represents a category that breached its configured rejection threshold. Multiple entries can appear per request depending on which categories were configured and what was detected.
 
-For information on categories and severity levels, see [Harm categories in Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
+For information on categories and severity levels, see [Harm categories in Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/foundry-classic/openai/concepts/content-filter-severity-levels).
 
 {% table %}
 columns:
@@ -288,7 +286,7 @@ rows:
 
 ### AI Lakera Guard logs
 
-If you create an [ AI Policy](/ai-gateway/entities/ai-policy/) using the [AI Lakera Guard Policy](/ai-gateway/policies/ai-lakera-guard/), {{site.ai_gateway}} logs include additional fields under the `ai.proxy.lakera-guard` object. These fields capture processing latency, Lakera-assigned request UUIDs, block reasons, and violation details when requests or responses are blocked.
+If you use the [AI Lakera Guard Policy](/ai-gateway/policies/ai-lakera-guard/), {{site.ai_gateway}} logs include additional fields under the `ai.proxy.lakera-guard` object. These fields capture processing latency, Lakera-assigned request UUIDs, block reasons, and violation details when requests or responses are blocked.
 
 {% table %}
 columns:
@@ -345,7 +343,7 @@ rows:
 
 ### AI Custom Guardrail logs 
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI Custom Guardrail Policy](/ai-gateway/policies/ai-custom-guardrail/), {{site.ai_gateway}} logs include additional fields under the `custom-guardrail` object. These fields record guardrail processing latency, block reasons, and the source and consumer identity associated with any triggered guards.
+If you use the [AI Custom Guardrail Policy](/ai-gateway/policies/ai-custom-guardrail/), {{site.ai_gateway}} logs include additional fields under the `custom-guardrail` object. These fields record guardrail processing latency, block reasons, and the source and consumer identity associated with any triggered guards.
 
 The following fields appear in structured AI logs when the AI Custom Guardrail Policy is enabled:
 
@@ -385,7 +383,7 @@ rows:
 
 ### AI PII Sanitizer logs
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/), {{site.ai_gateway}} logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item, including the original value, redacted value, and detected entity type.
+If you use the [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/), {{site.ai_gateway}} logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item, including the original value, redacted value, and detected entity type.
 
 {% table %}
 columns:
@@ -450,7 +448,7 @@ rows:
 
 ### AI RAG Injector logs
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the embedding provider and model used.
+If you use the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the embedding provider and model used.
 
 {% table %}
 columns:
@@ -478,7 +476,7 @@ rows:
 {% endtable %}
 
 ### AI Semantic Cache logs
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI Semantic Cache Policy](/ai-gateway/policies/ai-semantic-cache/), {{site.ai_gateway}} logs include additional fields under the cache object for each Policy entry. These fields provide insight into cache behavior, such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
+If you use the [AI Semantic Cache Policy](/ai-gateway/policies/ai-semantic-cache/), {{site.ai_gateway}} logs include additional fields under the cache object for each Policy entry. These fields provide insight into cache behavior, such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
 
 {% table %}
 columns:
@@ -506,7 +504,7 @@ rows:
 
 ### AI LLM as Judge logs
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI LLM as Judge Policy](/ai-gateway/policies/ai-llm-as-judge/), {{site.ai_gateway}} logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior, such as which models were scored, latency, and the numeric accuracy assigned by the judge.
+If you use the [AI LLM as Judge Policy](/ai-gateway/policies/ai-llm-as-judge/), {{site.ai_gateway}} logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior, such as which models were scored, latency, and the numeric accuracy assigned by the judge.
 
 {% table %}
 columns:
@@ -532,7 +530,7 @@ rows:
 
 ### AI MCP logs
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI MCP Policy](/plugins/ai-mcp-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
+If you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
 
 {:.info}
 > **Note:** Unlike other available AI Policies, the AI MCP Policy is not invoked as part of an AI request.
@@ -598,9 +596,9 @@ rows:
 
 ### AI A2A Proxy logs 
 
-If you create an [AI Policy](/ai-gateway/entities/ai-policy/) using the [AI A2A Proxy Policy](/plugins/ai-a2a-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when [`config.logging.log_statistics`](/plugins/ai-a2a-proxy/reference/#schema--config-logging-log-statistics) is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
+If you create an [AI Agent](/ai-gateway/entities/ai-agent/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when `log_statistics` is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
 
-{% include /plugins/ai-a2a-proxy/log-output-fields.md %}
+{% include /md/ai-gateway/v2/log-output-fields.md %}
 
 ## Example log entries
 
