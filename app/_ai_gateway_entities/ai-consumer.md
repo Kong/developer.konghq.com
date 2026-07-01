@@ -22,8 +22,6 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Consumer Credential entity
-    url: /ai-gateway/entities/ai-consumer-credential/
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
   - text: AI Model entity
@@ -42,9 +40,8 @@ faqs:
 
   - q: How do I add credentials to an AI Consumer?
     a: |
-      Credentials are a separate sub-entity, not a field on the AI Consumer. Create them under the
-      Consumer's nested credentials endpoint. See the
-      [AI Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/) reference.
+      Credentials are managed through a separate credentials endpoint, not as a field on the Consumer.
+      Create them via POST to `/consumers/{id}/credentials` with the credential type and details.
 
   - q: "What's the difference between `type: api-key` and `type: oauth`?"
     a: |
@@ -119,11 +116,11 @@ rows:
   - type: "`api-key`"
     use_case: Simple, stateless authentication for internal services or mobile apps using a shared secret.
   - type: "`oauth`"
-    use_case: Federated identity with an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect Policy](/ai-gateway/policies/openid-connect/), or for MCP traffic through the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/). The AI Consumer Credential carries a `custom_id` that maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
+    use_case: Federated identity with an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect Policy](/ai-gateway/policies/openid-connect/), or for MCP traffic through the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/). The credential's `custom_id` field maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
 {% endtable %}
 <!-- vale on -->
 
-The `type` of every Credential issued to the AI Consumer must match the AI Consumer's `type`. See the [AI Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/) reference for credential management.
+The `type` of every Credential configured on the AI Consumer must match the AI Consumer's `type`.
 
 ## AI Consumer Group membership
 
