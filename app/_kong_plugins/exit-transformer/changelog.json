@@ -27,6 +27,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.14": [
+    {
+      "message": "Fixed an issue where a response body that was a JSON primitive (e.g. `false`) caused a 500 internal error.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where the exit-transformer could not take effect on invalid non-admin requests.",
