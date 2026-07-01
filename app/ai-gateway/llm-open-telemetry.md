@@ -39,13 +39,13 @@ works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When an OpenTelemetry (OTEL) Policy is enabled in {{site.ai_gateway}}, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes provide insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool or agent interactions. 
+{{site.ai_gateway}} supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When an [OpenTelemetry (OTEL) Policy](/ai-gateway/policies/opentelemetry/) is enabled in {{site.ai_gateway}}, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes provide insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool or agent interactions. 
 
 You can also capture [A2A agent traffic](#a2a-span-attributes) by enabling statistics logging on [AI Agents](/ai-gateway/entities/ai-agent/#logging-and-observability).
 
 You can export these attributes via a supported backend to:
 
-* Inspect which model or provider handled a request
+* Inspect which AI Model or AI Provider handled a request
 * Track conversation/session identifiers across requests
 * Analyze prompt structure (system vs. user vs. tool messages)
 * Evaluate model parameters (such as temperature, top-k)
