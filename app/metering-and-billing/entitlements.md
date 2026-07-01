@@ -21,10 +21,14 @@ related_resources:
     url: /metering-and-billing/subscriptions/
   - text: Notifications
     url: /metering-and-billing/notifications/
+  - text: "Prepaid credits"
+    url: /metering-and-billing/credits/
+  - text: "Credit grants"
+    url: /metering-and-billing/credits/grants/
 
 ---
 
-Entitlements let you control customer access to features defined on a [rate card](/metering-and-billing/product-catalog/#rate-cards), making it possible to implement complex pricing scenarios such as monthly quotas, prepaid billing, and per-customer pricing.
+Entitlements let you control customer access to features defined on a [rate card](/metering-and-billing/product-catalog/#rate-cards), making it possible to implement complex pricing scenarios such as monthly quotas, [prepaid billing](/metering-and-billing/credits/), and per-customer pricing.
 
 Entitlements are an attribute of rate cards. You must configure entitlements when configuring a rate card.
 
