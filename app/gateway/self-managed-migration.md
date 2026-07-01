@@ -17,7 +17,7 @@ related_resources:
     url: /konnect/
   - text: Hybrid mode
     url: /gateway/hybrid-mode/
-  - text: Control Plane and Data Plane communication
+  - text: Control plane and Data Plane communication
     url: /gateway/cp-dp-communication/
 ---
 
@@ -66,7 +66,7 @@ D --> G[<a href="https://cloud.konghq.com/gateway-manager/create-gateway">Link y
 {% endmermaid %}
 <!--vale on-->
 
-> _**Figure 1**: For traditional and hybrid deployments, you can migrate directly to {{site.konnect_short_name}}. DB-less deployments must migrate to hybrid first. For {{site.kic_product_name}} deployments, migrate to a {{site.kic_product_name}}-based Control Plane._
+> _**Figure 1**: For traditional and hybrid deployments, you can migrate directly to {{site.konnect_short_name}}. DB-less deployments must migrate to hybrid first. For {{site.kic_product_name}} deployments, migrate to a {{site.kic_product_name}}-based control plane._
 
 ## Role Based Access Controls (RBAC) migration
 
@@ -90,51 +90,65 @@ The following are the general steps for setting up IAM in {{site.konnect_short_n
 5. Use the {{site.konnect_short_name}} IdP Team Mappings feature to
   [map the {{site.konnect_short_name}} teams to your IdP provider groups](/konnect-platform/sso/#team-mapping-configuration).
 
-## Migrating from Workspaces to Control Planes
+## Migrating from self-managed Workspaces to {{site.konnect_short_name}}
 
 {{site.base_gateway}} supports configuration isolation using
 [Workspaces](/gateway/entities/workspace/).
-{{site.konnect_short_name}}'s model is more advanced and uses
-[Control Planes](/gateway/cp-dp-communication/) which are managed, virtual, and lightweight
-components used to isolate configuration.
-
-When migrating to {{site.konnect_short_name}}, you will create a Control Plane design that
-best fits your goals, which may or may not mirror the number of Workspaces you
-use in your self-managed deployment. Here's an example Workspace to Control Plane mapping strategy:
-* **Single Workspace:** Create a matching Control Plane with the same name as your Workspace. Alternatively,
-you can re-organize your single Workspace configuration
-into multiple Control Planes if there is a clear separation of concerns in your gateway configuration.
-* **Multiple Workspaces:** The most straightforward approach is to create a Control Plane for each Workspace, but you may choose to reorganize your design during the migration.
+{{site.konnect_short_name}} also supports Workspaces within a control plane, so you can
+preserve your existing Workspace structure when migrating.
 
 ### Example Workspace migration
 
-The following provides an example set of steps for migrating a small multi-Workspace setup to
-{{site.konnect_short_name}}. Instructions on this page are not step-by-step guides. They are meant to illustrate the general steps
-you can perform to migrate Workspaces. The examples use [decK](/deck/) and some well-known command line tools for
+The following provides an example of migrating a multi-Workspace self-managed setup to
+{{site.konnect_short_name}}. These steps illustrate the general approach rather than a complete
+step-by-step guide. The examples use [decK](/deck/) and well-known CLI tools for
 querying APIs and manipulating text output. See the [jq](https://jqlang.github.io/jq/) and [yq](https://github.com/mikefarah/yq)
 tool pages for more information.
 
 1. Query the [Admin API](/api/gateway/admin-ee/) of your self-managed installation to get
-a list of Workspaces for a particular {{site.base_gateway}} deployment by using the [`/workspace` endpoint](/api/gateway/admin-ee/#/operations/list-workspace):
-   You will receive a response with a name for each Workspace in the `name` field.
+   a list of Workspaces using the [`/workspaces` endpoint](/api/gateway/admin-ee/#/operations/list-workspace).
+   The response includes a `name` field for each Workspace.
 
    {:.info}
-   > **Note**: {{site.base_gateway}} provides a `default` Workspace, and similarly {{site.konnect_short_name}} provides a `default` Control Plane. Neither of these can be deleted, so migrating the `default` Workspace to the `default` Control Plane is a logical choice.
+   > The `default` Workspace in your self-managed deployment maps to the `default` Workspace in your {{site.konnect_short_name}} control plane. Neither can be deleted.
 
-1. Create a new Control Plane for each non-default Workspace using the {{site.konnect_short_name}} Control Plane API [`/control-planes` endpoint](/api/konnect/control-planes/#/operations/create-control-plane).
-   To use the {{site.konnect_short_name}} APIs, you must create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+1. Dump your self-managed configuration into per-Workspace files:
 
-1. Log in into the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate the new Control Planes.
+   ```sh
+   deck gateway dump --all-workspaces
+   ```
+
+   This produces one YAML file per Workspace, each with a `_workspace:` header.
+
+1. Set your decK environment variables:
+
+   ```sh
+   export DECK_KONNECT_TOKEN="kpat_..."
+   export DECK_KONNECT_ADDR="https://us.api.konghq.com"
+   ```
+
+1. Sync each file to your {{site.konnect_short_name}} control plane. If a Workspace doesn't exist yet,
+   decK creates it automatically:
+
+   ```sh
+   deck gateway sync default.yaml \
+     --konnect-control-plane-name my-control-plane \
+     --workspace default
+   ```
+
+   Repeat for each Workspace.
+
+1. Log in to the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate that your Workspaces and entities migrated correctly.
 
 ## Multi-tenancy
 
 {{site.base_gateway}} Workspaces provide a way to share runtime infrastructure across isolated configurations.
 With {{site.konnect_short_name}}, this is achieved using
-[Control Plane groups](/gateway/control-plane-groups/). Control Planes can be added to
-and removed from Control Plane groups, and you can set them up to mirror your existing multi-tenant Workspace configuration.
+[control plane groups](/gateway/control-plane-groups/). control planes can be added to
+and removed from control plane groups, and you can set them up to mirror your existing multi-tenant Workspace configuration.
 
-With Control Plane groups set up, you can connect Data Plane instances to each group, creating
-a shared Data Plane infrastructure among the constituent Control Planes.
+With control plane groups set up, you can connect Data Plane instances to each group, creating
+a shared Data Plane infrastructure among the constituent control planes.
 
 ## Plugin migration
 
@@ -156,9 +170,9 @@ and can't provide custom Admin API endpoints. See the {{site.konnect_short_name}
 on [custom plugin support](/gateway/entities/plugin/#custom-plugins) requirements.
 
 Migrating custom plugins to {{site.konnect_short_name}} requires uploading and associating your custom plugin's `schema.lua` file to
-the desired Control Plane. This can be done using the
+the desired control plane. This can be done using the
 {{site.konnect_short_name}} UI or the
-[{{site.konnect_short_name}} Control Planes Config API](/api/konnect/control-planes-config/#/operations/list-plugin-schemas).
+[{{site.konnect_short_name}} control planes Config API](/api/konnect/control-planes-config/#/operations/list-plugin-schemas).
 
 Just like in self-managed deployments, the custom plugin code must be distributed to the Data Plane instances.
 
@@ -175,7 +189,7 @@ configurations.
 
 The general process for migrating the configuration involves "dumping" your existing  self-managed configuration
 to a local file, modifying the configuration slightly to remove any Workspace-specific metadata,
-and then synchronizing the configuration to your desired Control Plane in {{site.konnect_short_name}}.
+and then synchronizing the configuration to your desired control plane in {{site.konnect_short_name}}.
 
 For example, if you have three Workspaces (`default`, `inventory`, and `sales`), use decK to dump the configuration of each Workspace to a local file:
 
@@ -195,8 +209,8 @@ yq -i 'del(._workspace)' inventory.yaml
 yq -i 'del(._workspace)' sales.yaml
 ```
 
-Synchronize the configuration to the Control Planes using decK configured with the
-proper Control Plane name and the {{site.konnect_short_name}} access token:
+Synchronize the configuration to the control planes using decK configured with the
+proper control plane name and the {{site.konnect_short_name}} access token:
 
 ```sh
 deck gateway sync --konnect-token "$KONNECT_PAT" --konnect-control-plane-name default default.yaml
@@ -209,13 +223,13 @@ In this example, replace `$KONNECT_PAT` with your {{site.konnect_short_name}} PA
 In addition to decK, {{site.konnect_short_name}} provides
 other tools that could be used for migrating your configuration. Each tool requires a different process. See their documentation for more information:
 
-* [Konnect Control Planes Config API](/api/konnect/control-planes-config/)
+* [Konnect control planes Config API](/api/konnect/control-planes-config/)
 * [{{site.konnect_short_name}} Terraform Provider](/terraform/)
 
 ## Migrating Data Planes
 
 The recommended approach for migrating your Data Plane instances to {{site.konnect_short_name}} is to
-create new Data Plane instances connected to your Control Plane, validate their configuration and connectivity,
+create new Data Plane instances connected to your control plane, validate their configuration and connectivity,
 and then decommission the self-managed Data Plane instances.
 
 See the [Data Plane hosting options](/gateway/topology-hosting-options/) for more information. 
