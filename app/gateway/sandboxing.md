@@ -194,6 +194,11 @@ kong.nginx.get_subsystem
 kong.node.get_hostname  kong.node.get_id
 ```
 
+#### Kong Router PDK
+```
+kong.router.get_route  kong.router.get_service
+```
+
 #### Kong Plugin PDK
 ```
 kong.plugin.get_id
@@ -618,11 +623,6 @@ kong.nginx.get_statistics
 #### Kong Node PDK
 ```
 kong.node.get_memory_stats
-```
-
-#### Kong Router PDK
-```
-kong.router.get_route  kong.router.get_service
 ```
 
 #### Kong Service PDK
