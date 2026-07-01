@@ -64,8 +64,8 @@ You can use the [logging capabilities](/ai-gateway/ai-audit-log-reference/) of t
 The AI Lakera Guard Policy provides detailed logging and controls over how violations are reported:
 * **SaaS platform logging**: All inspected requests, responses, and chats are made available on the Lakera SaaS platform.
 * **{{site.ai_gateway}} logging**: {{site.ai_gateway}} logs all request and response **Lakera request UUIDs** to the standard logging subsystem.
-* **Unsupported logging outputs**: [Prometheus](/ai-gateway/policies/prometheus/), [Splunk](/ai-gateway/policies/kong-splunk-log/), or [OpenTelemetry](/ai-gateway/policies/opentelemetry/).
-* **Logging outputs**: [HTTP-Log](/ai-gateway/policies/http-log/), [File-Log](/ai-gateway/policies/file-log/), and [TCP-Log](/ai-gateway/policies/tcp-log/).
+* **Unsupported logging outputs**: [Prometheus](/ai-gateway/policies/prometheus/), or [OpenTelemetry](/ai-gateway/policies/opentelemetry/).
+* **Logging outputs**: [HTTP Log](/ai-gateway/policies/http-log/), [File Log](/ai-gateway/policies/file-log/), and [TCP Log](/ai-gateway/policies/tcp-log/).
 
 By default, the AI Lakera Guard Policy doesn't tell clients why their request was blocked. However, this information is always logged to {{site.ai_gateway}} logs for administrators.
 
