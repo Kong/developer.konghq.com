@@ -43,7 +43,7 @@ A License entity allows you configure a License in your self-managed {{site.base
 
 You receive a license file when you sign up for a {{site.ee_product_name}} subscription. If you purchased a subscription but haven’t received a license file, contact your sales representative.
 
-{{site.base_gateway}} checks for a license in the following order:
+In hybrid and traditional modes, {{site.base_gateway}} checks for a license in the following order and loads the license at startup:
 
 1. The contents of the environmental variable `KONG_LICENSE_DATA`.
 2. The default location `/etc/kong/license.json`.
@@ -51,6 +51,8 @@ You receive a license file when you sign up for a {{site.ee_product_name}} subsc
 4. A License directly deployed with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/create-licenses).
 
 Each node independently checks for the license file when the {{site.base_gateway}} process starts. Network connectivity isn't required for license validation.
+
+In DB-less deployments (for example, when applying declarative configuration via `POST /config`), a license in the declarative configuration overrides `KONG_LICENSE_DATA`, because the environment variable is only read at startup. When a [`KongLicense` resource](/kubernetes-ingress-controller/license/) exists, {{ site.kic_product_name }} sends it in the configuration payload and it takes precedence.
 
 ## Deployment methods
 
@@ -255,4 +257,3 @@ rows:
       The data in the `license_expiration_date` field is incorrectly formatted. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
 {% endtable %}
 <!--vale on-->
-
