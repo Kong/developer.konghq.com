@@ -59,9 +59,6 @@ Flags:
                              - Config path: [ telemetry.enabled ]
                              - Env var    : [ KONGCTL_NO_TELEMETRY ]
                              - Default    : [ false ]
-  -o, --output string        Configures the format of data written to STDOUT.
-                             - Config path: [ output ]
-                             - Allowed    : [ json|yaml|text ] (default "text")
   -p, --profile string       Specify the profile to use for this command. (default "default")
 
 Use "kongctl dump [command] --help" for more information about a command.

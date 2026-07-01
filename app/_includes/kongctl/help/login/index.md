@@ -33,6 +33,8 @@ Flags:
       --log-level string       Configures the logging level. Execution logs are written to STDERR.
                                - Config path: [ log-level ]
                                - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-animate             Print a static login banner instead of animating when the terminal supports animation.
+      --no-image               Show only login text without animation or static image output.
       --no-telemetry           Disable telemetry for this command invocation. Overrides config and env.
                                - Config path: [ telemetry.enabled ]
                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
