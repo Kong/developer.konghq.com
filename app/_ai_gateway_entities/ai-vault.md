@@ -61,7 +61,10 @@ faqs:
 
 You need to store secrets like API keys and authentication tokens somewhere secure instead of embedding them directly in your configurations. An AI Vault entity lets you register an external secret backend (AWS Secrets Manager, HashiCorp Vault, environment variables, or others) so that [AI Providers](/ai-gateway/entities/ai-provider/), [AI Models](/ai-gateway/entities/ai-model/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) can reference secrets instead of storing them as literal values.
 
-An AI Vault entity stores the connection configuration and credentials needed to reach your secret backend. When other entities reference a secret, {{site.ai_gateway}} looks up the vault at request time, retrieves the actual secret value, and uses it for authentication or configuration.
+An AI Vault entity stores the connection configuration and credentials needed to reach your secret backend. When other entities reference a secret, {{site.ai_gateway}}:
+1. Looks up the vault at request time
+1. Retrieves the actual secret value
+1. Uses it for authentication or configuration.
 
 ## Manage AI Vaults
 
@@ -70,7 +73,7 @@ AI Vaults can be created and managed through:
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/vaults`
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Vault](#set-up-an-ai-vault) below.
+For configuration examples and step-by-step setup instructions, see [Set up an AI Vault](#set-up-an-ai-vault).
 
 ## Backends
 
