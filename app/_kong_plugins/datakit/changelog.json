@@ -36,6 +36,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.7": [
+    {
+      "message": "Added Lua control plane compatibility checks to prevent unsupported Datakit configurations from being pushed to older data planes in hybrid mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added json_to_xml node to support converting JSON or lua table to XML data.",
@@ -81,6 +88,13 @@
   "3.13.0.1": [
     {
       "message": "Fixed xml_to_json node to recognize `text/xml` content-type in addition to `application/xml` for XML request body processing, ensuring RFC 7303 compliance.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.7": [
+    {
+      "message": "Added Lua control plane compatibility checks to prevent unsupported Datakit configurations from being pushed to older data planes in hybrid mode.",
       "type": "bugfix",
       "scope": "Plugin"
     }

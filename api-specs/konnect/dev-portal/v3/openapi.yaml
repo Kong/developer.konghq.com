@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.3.4
+  version: 3.3.8
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b8494be2aa734a2e79a9a0edd283ece163565d7a
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b8494be2aa734a2e79a9a0edd283ece163565d7a'
+  x-oas-source: kong/platform-api@b8d278f218336b3b7a0b760ac9eb9a00ba7e8643
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b8d278f218336b3b7a0b760ac9eb9a00ba7e8643'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -3977,92 +3977,6 @@ components:
         - name
         - canonical_domain
       title: PortalContext
-    PortalCustomization:
-      description: The custom settings of this portal
-      type: object
-      properties:
-        theme:
-          type: object
-          additionalProperties: false
-          properties:
-            name:
-              type: string
-              nullable: false
-            mode:
-              type: string
-              enum:
-                - light
-                - dark
-                - system
-            colors:
-              type: object
-              additionalProperties: false
-              properties:
-                primary:
-                  type: string
-                  example: '#000000'
-                  nullable: false
-                  pattern: '^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'
-                  x-validation-message: must be a valid hex color value
-        layout:
-          type: string
-          nullable: false
-        css:
-          type: string
-          nullable: true
-        menu:
-          type: object
-          additionalProperties: false
-          properties:
-            main:
-              type: array
-              items:
-                $ref: '#/components/schemas/PortalMenuItem'
-            footer_sections:
-              type: array
-              items:
-                $ref: '#/components/schemas/PortalFooterMenuSection'
-            footer_bottom:
-              type: array
-              items:
-                $ref: '#/components/schemas/PortalMenuItem'
-        spec_renderer:
-          type: object
-          additionalProperties: false
-          properties:
-            try_it_ui:
-              description: Enable in-browser testing for your APIs. All linked gateways must have the CORS plugin configured.
-              type: boolean
-              default: true
-            try_it_insomnia:
-              description: Enables users to open API specifications in Insomnia to explore and send requests with the native client. Only public API specifications are supported.
-              type: boolean
-              default: true
-            infinite_scroll:
-              description: 'Display the full spec on a single, scrollable page. If disabled, documentation, endpoints, and schemas appear on separate pages.'
-              type: boolean
-              default: true
-            show_schemas:
-              description: 'Control whether schemas are visible in your API specs. When enabled, schemas appear in the side navigation below the endpoints.'
-              type: boolean
-              default: true
-            hide_internal:
-              description: Manage visibility of internal endpoints and models.
-              type: boolean
-              default: false
-            hide_deprecated:
-              description: Manage visibility of deprecated endpoints and models.
-              type: boolean
-              default: false
-            allow_custom_server_urls:
-              description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client-side only and is not saved.
-              type: boolean
-              default: true
-        robots:
-          type: string
-          nullable: true
-      additionalProperties: false
-      title: PortalCustomization
     PortalIntegrations:
       description: Configuration data for Dev Portal integrations
       type: object
@@ -4123,11 +4037,6 @@ components:
       type: string
       example: '# Welcome to the Developer Portal'
       title: SnippetContent
-    SnippetName:
-      description: The name of the snippet (no leading slash)
-      type: string
-      example: my-snippet
-      title: SnippetName
     ListPortalPages:
       description: Tree of pages for the portal (nested `children`). Not paginated.
       type: object
@@ -4291,6 +4200,12 @@ components:
         - created_at
         - updated_at
       title: PortalSnippet
+    SnippetName:
+      description: The unique name of a snippet in a portal.
+      type: string
+      example: my-snippet
+      maxLength: 512
+      title: SnippetName
     PortalMenuItem:
       type: object
       properties:
@@ -4334,6 +4249,92 @@ components:
       required:
         - title
         - items
+    PortalCustomizationV3:
+      description: The custom settings of this portal
+      type: object
+      properties:
+        theme:
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+              nullable: false
+            mode:
+              type: string
+              enum:
+                - light
+                - dark
+                - system
+            colors:
+              type: object
+              additionalProperties: false
+              properties:
+                primary:
+                  type: string
+                  example: '#000000'
+                  nullable: false
+                  pattern: '^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'
+                  x-validation-message: must be a valid hex color value
+        layout:
+          type: string
+          nullable: false
+        css:
+          type: string
+          nullable: true
+        menu:
+          type: object
+          additionalProperties: false
+          properties:
+            main:
+              type: array
+              items:
+                $ref: '#/components/schemas/PortalMenuItem'
+            footer_sections:
+              type: array
+              items:
+                $ref: '#/components/schemas/PortalFooterMenuSection'
+            footer_bottom:
+              type: array
+              items:
+                $ref: '#/components/schemas/PortalMenuItem'
+        spec_renderer:
+          type: object
+          additionalProperties: false
+          properties:
+            try_it_ui:
+              description: Enable in-browser testing for your APIs. All linked gateways must have the CORS plugin configured.
+              type: boolean
+              default: true
+            try_it_insomnia:
+              description: Enables users to open API specifications in Insomnia to explore and send requests with the native client. Only public API specifications are supported.
+              type: boolean
+              default: true
+            infinite_scroll:
+              description: 'Display the full spec on a single, scrollable page. If disabled, documentation, endpoints, and schemas appear on separate pages.'
+              type: boolean
+              default: true
+            show_schemas:
+              description: 'Control whether schemas are visible in your API specs. When enabled, schemas appear in the side navigation below the endpoints.'
+              type: boolean
+              default: true
+            hide_internal:
+              description: Manage visibility of internal endpoints and models.
+              type: boolean
+              default: false
+            hide_deprecated:
+              description: Manage visibility of deprecated endpoints and models.
+              type: boolean
+              default: false
+            allow_custom_server_urls:
+              description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client-side only and is not saved.
+              type: boolean
+              default: true
+        robots:
+          type: string
+          nullable: true
+      additionalProperties: false
+      title: PortalCustomization
     GoogleTagManagerIntegration:
       description: Google Tag Manager integration configuration
       type: object
@@ -5779,7 +5780,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/PortalCustomization'
+            $ref: '#/components/schemas/PortalCustomizationV3'
     PortalIntegrationsResponse:
       description: Response for portal integration configurations
       content:

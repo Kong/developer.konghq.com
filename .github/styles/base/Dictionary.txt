@@ -17,6 +17,7 @@ allow_terminated
 allowlist
 allowlisting
 allowlisted
+allowlists
 Amal
 amberflo
 andAll
@@ -184,6 +185,7 @@ degraphql_routes
 denylist
 deployer
 dereference
+dereferences
 dereferenced
 dereferencing
 deserialization
@@ -197,6 +199,7 @@ dict
 dicts
 digitalocean
 discovery_support
+distroless
 dlp
 DN
 dns
@@ -237,6 +240,7 @@ eventTime
 evaluable
 example_service
 exfiltrate
+exfiltration
 extra_body
 failover
 fapi
@@ -481,6 +485,8 @@ meshopa
 meshopas
 meshpassthrough
 meshpassthroughs
+metacharacter
+metacharacters
 metainfo
 metamethod
 metatable
@@ -659,6 +665,7 @@ resourceVersion
 response_format
 resty
 Resync
+Retriable
 retryOn
 reusability
 rockspec
@@ -810,6 +817,7 @@ udpingress
 udpingresses
 UDPRoute
 UDPRoutes
+uint
 uid
 UIs
 ulimit

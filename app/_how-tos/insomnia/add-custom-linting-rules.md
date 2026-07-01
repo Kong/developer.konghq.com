@@ -93,7 +93,7 @@ Override the linting rules and use another ruleset, by using either Inso CLI or 
 {% navtabs "custom linting" %}
 {% navtab "Inso CLI" %}
 
-Use the [Inso CLI(/inso-cli/reference/lint_spec/) with the `--ruleset` or `-r` flag and the path to your custom ruleset. Run `inso lint spec --ruleset <path-to-custom-ruleset>`. This overrides the default OpenAPI specifications (OAS) ruleset in {{ site.data.products.insomnia.name }} , and any ruleset in the API Spec folder.
+Use the [Inso CLI](/inso-cli/reference/lint_spec/) with the `--ruleset` or `-r` flag and the path to your custom ruleset. Run `inso lint spec --ruleset <path-to-custom-ruleset>`. This overrides the default OpenAPI specifications (OAS) ruleset in {{ site.data.products.insomnia.name }}, and any ruleset in the API Spec folder.
 
 If the `--ruleset` flag isn't specified, {{ site.data.products.insomnia.name }}  uses one of the following, in order:
 

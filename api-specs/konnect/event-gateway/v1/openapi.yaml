@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.0.0
+  version: 1.0.6
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -17,12 +17,14 @@ info:
 
     `x-min-runtime-version` indicates the minimum Event Gateway runtime version required to use a certain policy or
     policy feature. The runtime version can be configured at the Event Gateway entity level. It must be a string
-    containing a semantic version in the `MAJOR.MINOR` format, e.g., `"1.1"`.
+    containing a semantic version in the `MAJOR.MINOR` format, e.g., `"1.1"`. info.[x-latest-public-runtime-version]
+    indicates the latest public runtime version of Event Gateway. When
+    `x-min-runtime-version > x-latest-public-runtime-version`, the property or schema will only appear in dev schemas.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@1d10a1973e6bd490a6d2a07505bd124c87f2608c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1d10a1973e6bd490a6d2a07505bd124c87f2608c'
+  x-oas-source: kong/platform-api@d480c75c55e247663293ef1477db6416d9ad138f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d480c75c55e247663293ef1477db6416d9ad138f'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2090,9 +2092,6 @@ components:
           $ref: '#/components/schemas/VirtualClusterNamespace'
         topic_aliases:
           description: |-
-            **Pre-release Feature**
-            This feature is currently in beta and is subject to change.
-
             Topic aliases allow exposing backend topics under additional names.
             An alias creates a new entry point to the same physical data.
             The alias `topic` field references namespace-visible names (if namespace is configured).
@@ -2228,6 +2227,8 @@ components:
           enum:
             - client_certificate
           x-terraform-transform-const: true
+        fetch_kong_identity_principal:
+          $ref: '#/components/schemas/FetchKongIdentityPrincipal'
       example:
         type: client_certificate
       additionalProperties: false
@@ -2346,6 +2347,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VirtualClusterAuthenticationPrincipalSensitiveDataAware'
+        fetch_kong_identity_principal:
+          $ref: '#/components/schemas/FetchKongIdentityPrincipal'
       additionalProperties: false
       required:
         - type
@@ -2372,6 +2375,8 @@ components:
           items:
             $ref: '#/components/schemas/VirtualClusterAuthenticationPrincipal'
           minItems: 1
+        fetch_kong_identity_principal:
+          $ref: '#/components/schemas/FetchKongIdentityPrincipal'
       additionalProperties: false
       required:
         - type
@@ -2443,6 +2448,8 @@ components:
           enum:
             - sha256
             - sha512
+        fetch_kong_identity_principal:
+          $ref: '#/components/schemas/FetchKongIdentityPrincipal'
       additionalProperties: false
       required:
         - type
@@ -2477,6 +2484,8 @@ components:
           $ref: '#/components/schemas/VirtualClusterAuthenticationJWKS'
         validate:
           $ref: '#/components/schemas/VirtualClusterAuthenticationValidate'
+        fetch_kong_identity_principal:
+          $ref: '#/components/schemas/FetchKongIdentityPrincipalOauthBearer'
       additionalProperties: false
       required:
         - type
@@ -2503,6 +2512,74 @@ components:
           minLength: 1
       required:
         - name
+    FetchKongIdentityPrincipal:
+      description: |-
+        Fetches principal metadata from Kong Identity after successful authentication.
+        The principal is looked up by a custom key matched against the authenticated identity.
+
+        **Requires a minimum runtime version of `1.2`**.
+      type: object
+      properties:
+        directory:
+          description: Kong Identity directory to use for principal lookup.
+          type: string
+          minLength: 1
+        fetch_by:
+          $ref: '#/components/schemas/FetchKongIdentityPrincipalFetchBy'
+        failure_mode:
+          $ref: '#/components/schemas/FetchKongIdentityPrincipalFailureMode'
+      required:
+        - directory
+        - fetch_by
+        - failure_mode
+      x-min-runtime-version: '1.2'
+    FetchKongIdentityPrincipalOauthBearer:
+      description: |-
+        Fetches principal metadata from Kong Identity after successful OAUTHBEARER authentication.
+        The principal is looked up by the iss and sub claims from the JWT token.
+
+        **Requires a minimum runtime version of `1.2`**.
+      type: object
+      properties:
+        directory:
+          description: Kong Identity directory to use for principal lookup.
+          type: string
+          minLength: 1
+        failure_mode:
+          $ref: '#/components/schemas/FetchKongIdentityPrincipalFailureMode'
+      required:
+        - directory
+        - failure_mode
+      x-min-runtime-version: '1.2'
+    FetchKongIdentityPrincipalFetchBy:
+      description: |-
+        Defines how to look up the principal in Kong Identity.
+
+        **Requires a minimum runtime version of `1.2`**.
+      type: object
+      properties:
+        key:
+          description: |
+            The metadata key in Kong Identity to match the authenticated identity against.
+            Value for the lookup is a `username` in case of `sasl_plain` or `sasl_scram`.
+            In case of `client_certificate` it's a principal mapped by the listener TLSServer policy.
+          type: string
+          minLength: 1
+      required:
+        - key
+      x-min-runtime-version: '1.2'
+    FetchKongIdentityPrincipalFailureMode:
+      description: |-
+        Behavior when the Kong Identity principal lookup fails.
+        * `error` - fail the authentication if the principal lookup fails.
+        * `ignore` - proceed without principal metadata if the lookup fails.
+
+        **Requires a minimum runtime version of `1.2`**.
+      type: string
+      enum:
+        - error
+        - ignore
+      x-min-runtime-version: '1.2'
     VirtualClusterDNSLabel:
       description: |-
         The DNS label used in the bootstrap server URL to identify the virtual cluster when using SNI routing.
@@ -3019,15 +3096,6 @@ components:
           minLength: 1
       required:
         - name
-    SchemaValidationType:
-      description: |
-        How to validate the schema and parse the record.
-        * confluent_schema_registry - validates against confluent schema registry.
-        * json - simple JSON parsing without the schema.
-      type: string
-      enum:
-        - confluent_schema_registry
-        - json
     SchemaRegistryCreate:
       description: The typed schema of the schema registry to create it.
       discriminator:
@@ -4141,9 +4209,6 @@ components:
           - name: record.headers
             type: object
             description: An associative array of header key value pairs.
-          - name: record.value.content
-            type: object
-            description: The content of the record value.
     EventGatewayDecryptPolicy:
       description: Decrypts Kafka records or keys using AES_256_GCM. Keys are therefore 256 bits long.
       type: object
@@ -4972,35 +5037,9 @@ components:
         labels:
           $ref: '#/components/schemas/Labels'
         config:
-          description: The configuration of the schema validation policy.
+          description: The configuration of the policy.
           type: object
-          properties:
-            type:
-              $ref: '#/components/schemas/SchemaValidationType'
-            schema_registry:
-              $ref: '#/components/schemas/SchemaRegistryReference'
-            failure_mode:
-              $ref: '#/components/schemas/ConsumeFailureMode'
-            validate_key:
-              description: |-
-                If true, validate the record key.
-
-                **Requires a minimum runtime version of `1.2`**.
-              type: boolean
-              x-min-runtime-version: '1.2'
-            validate_value:
-              description: |-
-                If true, validate the record value.
-
-                **Requires a minimum runtime version of `1.2`**.
-              type: boolean
-              x-min-runtime-version: '1.2'
-            key_validation_action:
-              $ref: '#/components/schemas/ConsumeKeyValidationAction'
-            value_validation_action:
-              $ref: '#/components/schemas/ConsumeValueValidationAction'
-          required:
-            - type
+          $ref: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicyConfig'
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
@@ -5041,6 +5080,82 @@ components:
         - type
         - config
       title: Schema Validation
+    EventGatewayConsumeSchemaValidationPolicyConfig:
+      description: The configuration of the consume schema validation policy.
+      discriminator:
+        propertyName: type
+        mapping:
+          confluent_schema_registry: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig'
+          json: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicyJsonConfig'
+      oneOf:
+        - $ref: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig'
+        - $ref: '#/components/schemas/EventGatewayConsumeSchemaValidationPolicyJsonConfig'
+    EventGatewayConsumeSchemaValidationPolicyJsonConfig:
+      description: The configuration of the consume schema validation policy when using JSON parsing without schema.
+      type: object
+      properties:
+        schema_registry:
+          $ref: '#/components/schemas/SchemaRegistryReference'
+        failure_mode:
+          $ref: '#/components/schemas/ConsumeFailureMode'
+        validate_key:
+          description: |-
+            If true, validate the record key.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        validate_value:
+          description: |-
+            If true, validate the record value.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        key_validation_action:
+          $ref: '#/components/schemas/ConsumeKeyValidationAction'
+        value_validation_action:
+          $ref: '#/components/schemas/ConsumeValueValidationAction'
+        type:
+          type: string
+          enum:
+            - json
+          x-terraform-transform-const: true
+      required:
+        - type
+    EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig:
+      description: The configuration of the consume schema validation policy when using a schema registry.
+      type: object
+      properties:
+        schema_registry:
+          $ref: '#/components/schemas/SchemaRegistryReference'
+        failure_mode:
+          $ref: '#/components/schemas/ConsumeFailureMode'
+        validate_key:
+          description: |-
+            If true, validate the record key.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        validate_value:
+          description: |-
+            If true, validate the record value.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: boolean
+          x-min-runtime-version: '1.2'
+        key_validation_action:
+          $ref: '#/components/schemas/ConsumeKeyValidationAction'
+        value_validation_action:
+          $ref: '#/components/schemas/ConsumeValueValidationAction'
+        type:
+          type: string
+          enum:
+            - confluent_schema_registry
+          x-terraform-transform-const: true
+      required:
+        - type
     EventGatewayProduceSchemaValidationPolicy:
       description: A policy that validates produce messages against a schema registry.
       type: object
@@ -5748,9 +5863,6 @@ components:
             $ref: '#/components/schemas/VirtualClusterNamespaceIdSelector'
     VirtualClusterTopicAlias:
       description: |-
-        **Pre-release Feature**
-        This feature is currently in beta and is subject to change.
-
         A topic alias maps an alias name to a namespace-visible topic name.
         Clients can produce to, consume from, and discover the topic under the alias name.
         The original topic name remains accessible.
@@ -5766,7 +5878,7 @@ components:
           description: The namespace-visible topic name this alias resolves to.
           type: string
           minLength: 1
-        match:
+        condition:
           description: |
             CEL expression evaluated against the connection's auth context.
             If omitted or empty, the alias is active for all connections.
@@ -6662,9 +6774,6 @@ components:
                 $ref: '#/components/schemas/VirtualClusterNamespace'
               topic_aliases:
                 description: |-
-                  **Pre-release Feature**
-                  This feature is currently in beta and is subject to change.
-
                   Topic aliases allow exposing backend topics under additional names.
                   An alias creates a new entry point to the same physical data.
                   The alias `topic` field references namespace-visible names (if namespace is configured).
@@ -6710,9 +6819,6 @@ components:
                 $ref: '#/components/schemas/VirtualClusterNamespace'
               topic_aliases:
                 description: |-
-                  **Pre-release Feature**
-                  This feature is currently in beta and is subject to change.
-
                   Topic aliases allow exposing backend topics under additional names.
                   An alias creates a new entry point to the same physical data.
                   The alias `topic` field references namespace-visible names (if namespace is configured).

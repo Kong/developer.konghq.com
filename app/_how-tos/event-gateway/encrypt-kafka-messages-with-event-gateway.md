@@ -52,8 +52,13 @@ related_resources:
     url: /event-gateway/policies/encrypt/
   - text: Decrypt policy
     url: /event-gateway/policies/decrypt/
+  - text: Encrypt and decrypt Kafka message fields
+    url: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
 ---
 
+{:.info}
+> If you need to encrypt and decrypt Kafka message fields instead of entire messages, use the Decrypt Fields and Encrypt Fields policies. 
+See [Encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/) for a complete how-to guide.
 
 ## Configure a Kafka cluster
 

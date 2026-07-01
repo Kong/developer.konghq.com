@@ -9,6 +9,8 @@ Flags:
                                               Warning: do not mix with consumer-group scoped plugins
       --format string                         output file format: json or yaml. (default "yaml")
   -h, --help                                  help for dump
+      --include-plugin-definitions            allow deck to dump plugin definitions.
+                                              Plugin definitions work with Konnect and Gateway versions >= 3.15.
   -o, --output-file -                         file to which to write Kong's configuration.Use - to write to stdout. (default "-")
       --rbac-resources-only                   export only the RBAC resources (Kong Enterprise only).
       --sanitize                              dumps a sanitized version of the gateway configuration.

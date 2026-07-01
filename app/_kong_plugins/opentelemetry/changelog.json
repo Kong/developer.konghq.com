@@ -63,6 +63,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.7": [
+    {
+      "message": "Fixed an issue where request-scoped `resource_attributes` could leak across concurrent queued `traces`, `logs`, and access log exports when the plugin was configured globally.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin crashed when DNS or balancer failures occurred during upstream retries.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for exporting OpenTelemetry metrics via OTLP/HTTP protocol to an observability backend (e.g. OpenTelemetry Collector). Please enable this feature by configuring the `metrics.endpoint` parameter in the OpenTelemetry plugin.",
@@ -100,6 +112,18 @@
   "3.13.0.3": [
     {
       "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed an issue where template 'resource_attributes' in configuration of the plugin could not work as expected for metrics.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin crashed when DNS or balancer failures occurred during upstream retries.",
       "type": "bugfix",
       "scope": "Plugin"
     }
