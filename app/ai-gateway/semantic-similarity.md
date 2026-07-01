@@ -59,7 +59,7 @@ Semantic policies also use vector databases to perform similarity searches at re
 
 {% include md/ai-gateway/v2/ai-vector-db.md %}
 
-### What is compared for similarity?
+### What data is compared for similarity?
 
 Each AI Policy applies similarity search slightly differently depending on its goal. These comparisons determine whether the AI Policy routes, blocks, reuses, or enriches a prompt based on meaning rather than syntax.
 
@@ -80,10 +80,10 @@ rows:
   - feature: "AI Semantic Cache Policy"
     incoming: "Incoming prompts"
     stored: "Cached prompt keys"
-  - feature: "AI RAG Injector policy"
+  - feature: "AI RAG Injector Policy"
     incoming: "Incoming prompts"
     stored: "Vectorized document chunks"
-  - feature: "AI Semantic Prompt Guard / Response Guard policies"
+  - feature: "AI Semantic Prompt Guard / Response Guard Policies"
     incoming: "Request content or responses"
     stored: "Vectorized allow/deny lists"
 {% endtable %}
@@ -202,7 +202,7 @@ rows:
 
 ### Cosine and Euclidean similarity
 
-{{site.ai_gateway}} supports both cosine similarity and Euclidean distance for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using the `config.vectordb.distance_metric` setting in the respective policy.
+{{site.ai_gateway}} supports both cosine similarity and Euclidean distance for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using the `config.vectordb.distance_metric` setting in the respective AI Policy.
 
 * Use `cosine` for nuanced semantic similarity (for example, document comparison, text clustering), especially when content length varies or dataset diversity is high.
 * Use `euclidean` when magnitude matters (for example, images, sensor data) or you're working with dense, well-aligned feature sets.
@@ -262,7 +262,7 @@ The `config.vectordb.threshold` parameter controls how strictly the vector datab
 
 The threshold defines how permissive the matching is. **Higher threshold values allow looser matches, while lower values enforce stricter matching.** The threshold range is 0 to 1.
 
-* With **cosine similarity**, Kong uses cosine distance (1 - cosine similarity) as the comparison metric. The threshold sets the maximum allowable distance between embeddings. A value of `0` requires exact matches only (zero distance). A value of `1` allows matches with any similarity level (up to maximum distance). Typical configurations use `0.1–0.2` for strict matching and `0.5–0.8` for broader matching.
+* With **cosine similarity**, {{site.ai_gateway}} uses cosine distance (1 - cosine similarity) as the comparison metric. The threshold sets the maximum allowable distance between embeddings. A value of `0` requires exact matches only (zero distance). A value of `1` allows matches with any similarity level (up to maximum distance). Typical configurations use `0.1–0.2` for strict matching and `0.5–0.8` for broader matching.
 
 * For **Euclidean distance**, the threshold is normalized to a 0–1 range and sets the maximum allowable distance between embedding vectors. A value of `0` requires exact matches (zero distance). A value of `1` permits the broadest possible matches. Typical configurations use `0.1–0.2` for strict matching and `0.5–0.8` for broader matching.
 
@@ -271,11 +271,11 @@ In both cases, if the [{{site.ai_gateway}} logs](/ai-gateway/ai-logs/) indicate 
 The optimal threshold depends on the selected distance metric, the embedding model's dimensionality, and the variation in your data. Tuning may be required for best results.
 
 {:.info}
-> In {{site.ai_gateway}} semantic policies, this threshold is **not** post-processed or filtered by the policy itself. The policy sends it directly to the vector database, which uses it to determine matching documents based on the configured **distance metric**.
+> In {{site.ai_gateway}} semantic AI Policies, this threshold is **not** post-processed or filtered by the AI Policy itself. The AI Policy sends it directly to the vector database, which uses it to determine matching documents based on the configured **distance metric**.
 
 ### Threshold sensitivity and cache hit effectiveness
 
-The closer your similarity threshold is to `1`, the more likely you are to get **cache misses** when using the **AI Semantic Cache** policy. This is because a higher threshold makes the similarity filter more strict, so only embeddings that are nearly identical to the query will qualify as a match. In practice, this means even small variations in phrasing, structure, or context can cause the system to miss otherwise semantically similar entries and fall back to calling the LLM again.
+The closer your similarity threshold is to `1`, the more likely you are to get **cache misses** when using the **AI Semantic Cache** Policy. This is because a higher threshold makes the similarity filter more strict, so only embeddings that are nearly identical to the query will qualify as a match. In practice, this means even small variations in phrasing, structure, or context can cause the system to miss otherwise semantically similar entries and fall back to calling the LLM again.
 
 This happens because vector embeddings are not perfectly robust to minor semantic shifts, especially for short or ambiguous prompts. Raising the threshold narrows the match window, so you're effectively demanding a near-exact match in a complex vector space, which is rare unless the input is repeated verbatim.
 

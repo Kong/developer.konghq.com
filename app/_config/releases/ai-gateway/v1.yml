@@ -422,8 +422,7 @@ app/ai-gateway/v1/resource-sizing-guidelines-ai.md:
   status: pending
   canonical_url:
 app/ai-gateway/v1/semantic-similarity.md:
-  status: pending
-  canonical_url:
+  canonical_url: /ai-gateway/semantic-similarity/
 app/ai-gateway/v1/streaming.md:
   # status: pending
   canonical_url: /ai-gateway/streaming/
