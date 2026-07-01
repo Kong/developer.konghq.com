@@ -20,7 +20,7 @@ Before using the AI AWS Guardrails Policy, you must define your guardrail polici
 
 ## Overview
 
-The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many tokens from the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the the AI AWS Guardrails Policy will collect 50 tokens from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as tokens stream in.
+The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many tokens from the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the AI AWS Guardrails Policy will collect 50 tokens from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as tokens stream in.
 
 {:.info}
 > A smaller buffer size allows faster policy evaluation and quicker response rejection but may increase the number of guardrail calls. Larger sizes reduce API calls but may delay policy enforcement.
@@ -29,13 +29,13 @@ For response and request inspection, the Policy by default guards input only. Yo
 
 ## Format
 
-This Policy works with all of the AI Model entity's `route_type` settings (excluding the `preserve` mode).
+This Policy works with all of the AI Model entity's [`model.capabilities` settings](/ai-gateway/entities/ai-model/#capabilities).
 
 ## AWS IAM roles
 
 The AI AWS Guardrails Policy supports AWS Identity and Access Management (IAM) roles. This allows the AWS Bedrock Guardrails service to be accessed using role assumption instead of static credentials.
 
-To use AWS IAM roles with the Policy, set the [`config.aws_assume_role_arn`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-aws-assume-role-arn), [`config.aws_role_session_name`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-aws-role-session-name), and `config.aws_role_session_name`.
+To use AWS IAM roles with the Policy, set the [`config.aws_assume_role_arn`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-aws-assume-role-arn), and [`config.aws_role_session_name`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-aws-role-session-name).
 
 {:.info}
 > **Note:** These fields can be used with or without static AWS credentials (`config.aws_access_key_id` and `config.aws_secret_access_key`).
