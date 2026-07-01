@@ -1,0 +1,195 @@
+metadata:
+  title: "Kong Identity"
+  content_type: landing_page
+  description: "Unified machine-to-machine authentication platform within Kong Konnect."
+  permalink: /identity/
+  products:
+    - identity
+    - konnect
+  works_on:
+    - konnect
+rows:
+  - header:
+      type: h1
+      text: "{{site.identity}}"
+      sub_text: "The unified machine-to-machine authentication platform"
+
+  - header:
+      type: h2
+      text: "Introducing {{site.identity}}"
+    columns:
+      - blocks:
+          - type: text
+            config: |
+                {{site.identity}} centralizes machine-to-machine authentication in {{site.konnect_short_name}}. It implements OAuth 2.0 with OpenID Connect, and provides principals and directories as a shared identity layer for clients that authenticate to your Kong products.
+
+                Use {{site.identity}} to:
+                * Issue and validate OAuth 2.0 and OIDC tokens from regional authorization servers
+                * Manage authenticating entities across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} in one place with principals
+                * Drive plugin and policy behavior with metadata attached to principals
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/konnect-dashboard.png
+              alt_text: Image of the {{site.konnect_short_name}} dashboard
+
+  - header:
+      type: h2
+      text: "Authenticate across Kong products"
+      description: |
+        Set up authentication for {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} with {{site.identity}}.
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.base_gateway}}"
+            description: |
+              Authenticate API clients and look up principal metadata to drive plugin behavior.
+            icon: /assets/icons/gateway.svg
+            ctas:
+              - text: Configure the OIDC plugin with {{site.identity}}
+                url: /how-to/configure-kong-identity-oidc/
+              - text: Configure the OAuth 2.0 Introspection plugin with {{site.identity}}
+                url: /how-to/configure-kong-identity-oauth-introspection/
+              - text: Configure the Upstream OAuth plugin with {{site.identity}}
+                url: /how-to/configure-kong-identity-upstream-oauth/
+              - text: Authenticate principals with basic authentication
+                url: /how-to/authenticate-principals-with-basic-authentication/
+              - text: Authenticate principals with key authentication
+                url: /how-to/authenticate-principals-with-key-auth/
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.event_gateway_short}}"
+            description: |
+              Authenticate Kafka clients and enrich connections with principal metadata for policy decisions.
+            icon: /assets/icons/event.svg
+            ctas:
+              - text: Set up {{site.event_gateway_short}} with {{site.identity}} OAuth
+                url: /event-gateway/kong-identity-oauth/
+              - text: Enrich SASL PLAIN connections with principal metadata
+                url: /event-gateway/kong-identity-metadata-integration/
+              - text: Enrich OAuth connections with principal metadata
+                url: /event-gateway/kong-identity-jwt-metadata-integration/
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.dev_portal}}"
+            description: |
+              Register applications dynamically and apply {{site.base_gateway}} plugins to application traffic.
+            icon: /assets/icons/dev-portal.svg
+            ctas:
+              - text: Dynamic Client Registration with {{site.identity}}
+                url: /how-to/kong-identity-dcr/
+              - text: Apply plugins to {{site.dev_portal}} applications
+                url: /dev-portal/self-service/#apply-plugins-to-applications
+
+  - header:
+      type: h2
+      text: "Core concepts"
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Authorization servers
+            description: |
+              Issue OAuth 2.0 and OpenID Connect tokens from a regional server unique to your organization.
+            icon: /assets/icons/security.svg
+            cta:
+              text: Learn about authorization servers
+              url: /identity/auth-servers/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Clients
+            description: |
+              Machines that request tokens, such as microservices, mobile apps, or automation scripts.
+            icon: /assets/icons/linked-services.svg
+            cta:
+              text: Learn about clients
+              url: /identity/auth-servers/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Scopes
+            description: |
+              Define what clients are allowed to access through the auth server.
+            icon: /assets/icons/data-object.svg
+            cta:
+              text: Learn about scopes
+              url: /identity/auth-servers/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Claims
+            description: |
+              Static or dynamic metadata included in tokens and forwarded to upstream services.
+            icon: /assets/icons/service-document.svg
+            cta:
+              text: Learn about claims
+              url: /identity/auth-servers/#claim-configuration
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Principals
+            description: |
+              External clients or workloads that authenticate to a Kong product, with credentials, identities, and metadata.
+            icon: /assets/icons/identity.svg
+            cta:
+              text: Learn about principals
+              url: /identity/principals/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Directories
+            description: |
+              Regional collection of principals. One directory per {{site.konnect_short_name}} region by default.
+            icon: /assets/icons/document.svg
+            cta:
+              text: Learn about directories
+              url: /identity/principals/
+              align: end
+
+  - header:
+      type: h2
+      text: "Supported authentication plugins"
+      description: |
+        Use {{site.identity}} with the following plugins.
+    columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: openid-connect
+      - blocks:
+        - type: plugin
+          config:
+            slug: oauth2-introspection
+      - blocks:
+        - type: plugin
+          config:
+            slug: upstream-oauth
+      - blocks:
+        - type: plugin
+          config:
+            slug: key-auth
+      - blocks:
+        - type: plugin
+          config:
+            slug: basic-auth
+
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              product:
+                  - identity
+              quantity: 7

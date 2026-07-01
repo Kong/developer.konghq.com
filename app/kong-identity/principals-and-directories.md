@@ -17,8 +17,8 @@ breadcrumbs:
 description: "Learn how {{site.identity}} principals and directories represent authenticating entities and centralize identity, credentials, and metadata across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}}."
 
 related_resources:
-  - text: "{{site.identity}}"
-    url: /kong-identity/
+  - text: "{{site.identity}} auth servers"
+    url: /identity/auth-servers/
   - text: "{{site.konnect_short_name}} control plane resource limits"
     url: /gateway/control-plane-resource-limits/
 ---
