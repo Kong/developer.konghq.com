@@ -79,6 +79,9 @@ Create an AI MCP Server to connect AI applications such as [Claude](https://clau
 
 Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability you apply to traditional API traffic automatically covers MCP traffic, giving you consistent governance across both HTTP and MCP clients.
 
+{:.warning}
+> **Note:** AI MCP Servers handle MCP request flows, not LLM request flows. [AI Policies](/ai-gateway/entities/ai-policy/) attached to an AI MCP Server apply only to MCP traffic. Policies designed for LLM model requests won't apply here.
+
 ## Manage AI MCP Servers
 
 AI MCP Servers can be created and managed through:
@@ -260,7 +263,7 @@ Two session strategies:
 
 Configure how long sessions persist using [`session_ttl`](#schema-aigateway-mcpserver-config-server-session-session-ttl) (default 24 hours) to match your application's needs. If your upstream server already manages state internally, disable {{site.ai_gateway}}'s session management by setting `managed: false`.
 
-{:.note}
+{:.info}
 > Secrets used in session encryption can be referenced from an [AI Vault](/ai-gateway/entities/ai-vault/).
 
 ## ACL tool control
@@ -477,7 +480,7 @@ features:
 
 The following example creates a `conversion-listener` AI MCP Server that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single `get-current-weather` MCP tool.
 
-{:.note}
+{:.info}
 > You need your WeatherAPI API key set as an environment variable (`DECK_WEATHERAPI_API_KEY`) before using this example.
 
 {% entity_example %}
