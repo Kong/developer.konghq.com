@@ -15,9 +15,6 @@ tags:
   - metrics
   - tracing
 
-plugins:
-  - opentelemetry
-
 min_version:
   ai-gateway: '2.0'
 
@@ -35,7 +32,7 @@ related_resources:
     url: /ai-gateway/
   - text: OpenTelemetry Policy
     url: /ai-gateway/policies/opentelemetry/
-  - text: Full OpenTelemetry metrics reference
+  - text: "{{site.base_gateway}} OpenTelemetry metrics reference"
     url: /gateway/otel-metrics/
   - text: "{{site.base_gateway}} tracing guide"
     url: /gateway/tracing/
@@ -49,7 +46,7 @@ works_on:
 You can use these metrics to:
 
 * Track LLM request latency and upstream provider processing time
-* Monitor token consumption across providers, models, and consumers
+* Monitor token consumption across AI Providers, AI Models, and AI Consumers
 * Measure time-to-first-token (TTFT) and inter-token latency (TPOT) for streaming responses
 * Calculate AI request costs
 * Observe MCP tool-call latency, error rates, and ACL decisions
@@ -64,25 +61,25 @@ To collect AI OTLP metrics, enable the following settings:
 columns:
   - title: Setting
     key: setting
-  - title: Policy
-    key: policy
+  - title: Source
+    key: source
   - title: Required for
     key: required_for
 rows:
   - setting: "`config.metrics.enable_ai_metrics`: `true`"
-    policy: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/)"
+    source: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/)"
     required_for: "All AI metrics"
   - setting: "`config.metrics.endpoint`"
-    policy: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/)"
+    source: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/)"
     required_for: "All AI metrics (set to a valid OTLP-compatible metrics endpoint)"
-  - setting: "`config.logging.log_statistics`: `true`"
-    policy: "[AI Proxy](/plugins/ai-proxy/reference/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/)"
+  - setting: "`config.logging.statistics`: `true`"
+    source: "[AI Model](/ai-gateway/entities/ai-model/)"
     required_for: "[Gen AI metrics](#gen-ai-metrics-otlp-semantic-conventions)"
-  - setting: "`config.logging.log_statistics`: `true`"
-    policy: "[AI MCP Proxy](/plugins/ai-mcp-proxy/reference/)"
+  - setting: "`config.logging.statistics`: `true`"
+    source: "[AI MCP Server](/ai-gateway/entities/ai-mcp-server/)"
     required_for: "[MCP metrics](#mcp-metrics)"
-  - setting: "`config.logging.log_statistics`: `true`"
-    policy: "[AI A2A Proxy](/plugins/ai-a2a-proxy/reference/)"
+  - setting: "`config.logging.statistics`: `true`"
+    source: "[AI Agent](/ai-gateway/entities/ai-agent/)"
     required_for: "[A2A metrics](#a2a-metrics)"
 {% endtable %}
 <!-- vale on -->
@@ -104,7 +101,7 @@ These metrics follow the [OpenTelemetry Gen AI semantic conventions](https://ope
 
 These metrics use the `kong.gen_ai.*` namespace and capture Kong-specific AI observability data, including cost tracking, cache and RAG latency, and AWS Guardrails processing time.
 
-To populate `kong.gen_ai.llm.cost`, define `model.options.input_cost` and `model.options.output_cost` in your model configuration.
+To populate `kong.gen_ai.llm.cost`, define `model.options.input_cost` and `model.options.output_cost` in your AI Model configuration.
 
 {% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="kong.gen_ai." %}
 
