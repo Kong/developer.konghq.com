@@ -158,6 +158,7 @@ After creating an AI Consumer, create credentials for authentication. Credential
 
 Create an API key credential for an AI Consumer with `type: api-key`:
 
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials
 status_code: 201
@@ -170,6 +171,7 @@ body:
   name: mobile-app-key-1
   type: api-key
 {% endkonnect_api_request %}
+<!-- vale on -->
 
 The response includes the generated `api_key` value. Store this securely — it cannot be retrieved later.
 
@@ -178,6 +180,7 @@ The response includes the generated `api_key` value. Store this securely — it 
 
 Create an OAuth credential for an AI Consumer with `type: oauth`:
 
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials
 status_code: 201
@@ -191,6 +194,7 @@ body:
   type: oauth
   custom_id: user-id-from-oidc-provider
 {% endkonnect_api_request %}
+<!-- vale on -->
 
 The `custom_id` must match the user identifier from your OAuth provider (for example, the `sub` claim from an OIDC token).
 
