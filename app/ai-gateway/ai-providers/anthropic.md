@@ -58,24 +58,6 @@ headers:
   - 'Content-Type: application/json'
 body:
   display_name: Anthropic Production
-  name: my-anthropic-account
-  type: anthropic
-  config:
-    auth:
-      type: basic
-      headers:
-        - name: Authorization
-          value: Bearer $ANTHROPIC_API_KEY
-        - name: "anthropic-version"
-          value: "2023-06-01"
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  display_name: Anthropic Production
   name: anthropic-provider
   type: anthropic
   config:

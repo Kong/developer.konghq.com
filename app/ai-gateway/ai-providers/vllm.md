@@ -59,16 +59,6 @@ body:
   display_name: vllm Production
   name: my-vllm-account
   type: vllm
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  display_name: vllm Production
-  name: my-vllm-account
-  type: vllm
   config:
     auth:
       type: basic
