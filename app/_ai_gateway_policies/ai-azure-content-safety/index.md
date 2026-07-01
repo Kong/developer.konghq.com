@@ -14,7 +14,7 @@ for all requests and responses handled by the [AI Model](/ai-gateway/entities/ai
 This Policy enables configurable thresholds for the different moderation categories 
 and you can specify an array set of pre-configured blocklist IDs from your Azure Content Safety instance.
 
-You can observe and report on audit failures using the {{site.base_gateway}} logging plugins.
+You can observe and report on audit failures using the [AI logging Policies](/ai-gateway/policies/?category=logging).
 
 ## How it works
 
@@ -71,5 +71,5 @@ To log the raw content of blocked requests and responses, enable [`config.log_bl
 
 ## Format
 
-This Policy works with all of the AI Proxy plugin's `route_type` settings (excluding the `preserve` mode), and is able to
+This Policy works with all of the AI Model entity's [`model.capabilities` settings](/ai-gateway/entities/ai-model/#capabilities), and is able to
 compose an Azure Content Safety text check by compiling all chat history, or just the `'user'` content.
