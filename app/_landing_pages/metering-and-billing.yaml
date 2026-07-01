@@ -76,6 +76,7 @@ rows:
       type: h2
       text: "Usage metering"
       sub_text: "Learn how to meter AI, API, and external usage."
+    column_count: 3
     columns:
       - blocks:
           - type: card
@@ -181,6 +182,7 @@ rows:
       type: h2
       text: "Billing"
       sub_text: "Manage your customers, subscriptions, and invoicing."
+    column_count: 3
     columns:
       - blocks:
           - type: card
@@ -232,6 +234,16 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/notifications/
+      - blocks:
+          - type: card
+            config:
+              title: Prepaid credits
+              description: |
+                Issue promotional, invoice-funded, or externally funded credits to customers. Credits are consumed automatically when charges are raised.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/credits/
 
   - header:
       type: h2

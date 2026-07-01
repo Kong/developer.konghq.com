@@ -20,6 +20,8 @@ related_resources:
     url: /metering-and-billing/entitlements/
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: "Prepaid credits"
+    url: /metering-and-billing/credits/
 ---
 
 Subscriptions in {{site.metering_and_billing}} create relationships between [customers](/metering-and-billing/customer/) and their [pricing model](/metering-and-billing/pricing-models/).. They are the bridge between your customers, their usage data, and how that usage translates into billable amounts.

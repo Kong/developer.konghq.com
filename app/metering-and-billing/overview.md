@@ -18,6 +18,8 @@ related_resources:
     url: /metering-and-billing/billing-invoicing/
   - text: "Subscriptions"
     url: /metering-and-billing/subscriptions/
+  - text: "Prepaid credits"
+    url: /metering-and-billing/credits/
 
 next_steps:
   - text: Get started with {{site.metering_and_billing}}
@@ -40,28 +42,30 @@ columns:
   - title: Description
     key: description
 rows:
-  - feature: "**Usage metering**"
+  - feature: "[**Usage metering**](/metering-and-billing/metering/)"
     description: "Collect real-time usage metering from AI and compute to outcomes."
-  - feature: "**Usage-based billing**"
+  - feature: "[**Usage-based billing**](/metering-and-billing/billing-invoicing/)"
     description: "Invoice after usage is metered and automate your revenue collection."
-  - feature: "**Usage quotas**"
+  - feature: "[**Usage quotas**](/metering-and-billing/entitlements/)"
     description: "Enforce usage quotas in real time per feature."
-  - feature: "**Entitlements**"
+  - feature: "[**Entitlements**](/metering-and-billing/entitlements/)"
     description: "Metered, boolean, and static entitlements."
-  - feature: "**Product catalog**"
+  - feature: "[**Product catalog**](/metering-and-billing/product-catalog/)"
     description: "Define plans, add-ons, features, and rate cards."
-  - feature: "**Subscriptions**"
+  - feature: "[**Subscriptions**](/metering-and-billing/subscriptions/)"
     description: "Manage subscriptions with mid-cycle changes, prorating, and alignment."
-  - feature: "**Notifications**"
+  - feature: "[**Notifications**](/metering-and-billing/notifications/)"
     description: "Webhook-based alerts with configurable rules and channels for usage thresholds and billing events."
-  - feature: "**Cost analytics**"
+  - feature: "[**Cost analytics**](/metering-and-billing/cost-analytics/)"
     description: "First-class support for metering AI token usage and computing LLM model costs."
+  - feature: "[**Prepaid credits**](/metering-and-billing/credits/)"
+    description: "Support paid or promotional credit grants with priority-based burn-down and expiration."
 {% endtable %}
 <!--vale on-->
 
 ## Billing pipeline
 
-The following diagram shows how {{site.konnect_short_name}} {{site.metering_and_billing}} turns raw usage events into a finalized invoice. Events flow through metering and unit conversion, are rated against your product catalog's rate cards, and then credits and discounts are applied before an invoice is generated. From there, the invoice is handed off to downstream systems for tax calculation, delivery, and payment collection.
+The following diagram shows how {{site.konnect_short_name}} {{site.metering_and_billing}} turns raw usage events into a finalized invoice. Events flow through metering and unit conversion, are rated against your product catalog's rate cards, and then [credits](/metering-and-billing/credits/) and discounts are applied before an invoice is generated. From there, the invoice is handed off to downstream systems for tax calculation, delivery, and payment collection.
 
 ![Usage to invoice pipeline](/assets/images/konnect/usage-to-invoice-pipeline.svg)
 {:.no-image-expand}

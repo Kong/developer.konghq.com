@@ -46,6 +46,15 @@ sections:
   - title: Collectors
     items:
       - path: /metering-and-billing/collectors/**/*
+  - title: Credits
+    items:
+      - path: /metering-and-billing/credits/
+      - path: /metering-and-billing/credits/grants/
+      - path: /metering-and-billing/credits/balance-model/
+      - path: /metering-and-billing/credits/consumption-and-expiration/
+      - path: /metering-and-billing/credits/transaction-history/
+      - path: /metering-and-billing/credits/operational-flows/
+      - path: /metering-and-billing/credits/correctness-guarantee/
   - title: Billing
     items:
       - title: Customers
@@ -74,3 +83,4 @@ sections:
         url: /how-to/meter-llm-traffic/
       - title: Meter and bill active users
         url: /how-to/meter-and-bill-active-users/
+      - path: /how-to/get-started-with-prepaid-credits/
