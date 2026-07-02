@@ -21,7 +21,6 @@ cost for a given time window and provider or policy.
 You can also create a generic prompt rate limit using the [request prompt provider](#request-prompt-function).
 
 Kong also provides multiple specialized rate limiting Policies, including rate limiting for service protection and on GraphQL queries.
-See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose the AI Policy that is most useful in your use case.
 
 ## Strategies
 
