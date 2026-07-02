@@ -3,7 +3,7 @@ A vector database stores and compares vector embeddings—numerical representati
 {{site.ai_gateway}} semantic features support the following vector databases:
 
 * Using `vectordb.strategy: redis` and parameters in `vectordb.redis`:
-  * **[Redis](https://redis.io/docs/latest/develop/ai/search-and-query/vectors/)** with Redis Search
+  * **[Redis](https://redis.io/docs/latest/develop/ai/search-and-query/vectors/)** with Redis Vector Search
   * **[Redis Cloud](https://redis.io/cloud/)**
   * **[Valkey](https://valkey.io/topics/search/)**: When you configure `vectordb.strategy: redis`, {{site.base_gateway}} queries the server and checks the server name field. If it detects Valkey request, it automatically uses the Valkey-specific driver.
   * Managed Redis with cloud authentication:
