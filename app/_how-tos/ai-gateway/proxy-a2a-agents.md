@@ -49,8 +49,10 @@ related_resources:
 prereqs:
   entities:
     services:
+      - openai
       - a2a-kongair-agent
     routes:
+      - openai-route
       - a2a-kongair-route
   gateway:
     - name: KONG_TRACING_INSTRUMENTATIONS
