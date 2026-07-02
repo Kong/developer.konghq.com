@@ -19,10 +19,14 @@ description: "Review {{site.event_gateway_short}} version breaking changes befor
 related_resources:
   - text: Upgrading {{site.event_gateway_short}}
     url: /event-gateway/upgrade/
+  - text: "{{site.event_gateway_short}} known limitations"
+    url: /event-gateway/known-limitations/
   - text: "{{site.event_gateway_short}} version support"
     url: /event-gateway/version-support-policy/
   - text: "{{site.event_gateway_short}} changelog"
     url: /event-gateway/changelog/
+  - text: "Verify {{site.event_gateway_short}} image signatures and attestations"
+    url: /event-gateway/verify-image-signatures-and-attestations/
 ---
 
 Before upgrading, review any configuration or breaking changes in the version you're upgrading to and prior versions that

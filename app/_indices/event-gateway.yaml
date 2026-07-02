@@ -44,6 +44,7 @@ sections:
       - path: /event-gateway/configure-sasl-plain-backend-cluster-auth/
       - path: /event-gateway/configure-mtls-backend-cluster-auth/
       - path: /event-gateway/validate-avro-messages-with-schema-registry/
+      - path: /event-gateway/verify-image-signatures-and-attestations/
       - path: /event-gateway/configure-topic-aliases/
       - path: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
       - path: /event-gateway/encrypt-kafka-message-fields-dynamic/
