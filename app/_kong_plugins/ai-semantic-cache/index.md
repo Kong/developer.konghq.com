@@ -32,7 +32,6 @@ topologies:
 icon: ai-semantic-cache.png
 tags:
   - ai
-  - safety
 categories:
   - ai
 
