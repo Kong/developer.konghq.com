@@ -1,0 +1,2 @@
+{:.info}
+> This AI Policy extends the capabilities of [AI Models](/ai-gateway/entities/ai-model/). To get started with {{site.ai_gateway}}, see [Get started with {{site.ai_gateway}}](/ai-gateway/get-started/).
