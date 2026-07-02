@@ -10,7 +10,7 @@ content_type: policy
 
 The AI Rate Limiting Advanced Policy provides rate limiting for any AI Policies. The
 AI Rate Limiting Advanced Policy extends the
-[Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin.
+[Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy.
 
 This Policy uses the token data returned by the LLM provider to calculate the costs of queries.
 The same HTTP request can vary greatly in cost depending on the calculation of the
@@ -20,12 +20,12 @@ A common pattern to protect your AI API is to analyze and assign costs to incomi
 cost for a given time window and provider or policy.
 You can also create a generic prompt rate limit using the [request prompt provider](#request-prompt-function).
 
-Kong also provides multiple specialized rate limiting plugins, including rate limiting for service protection and on GraphQL queries.
-See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose the plugin that is most useful in your use case.
+Kong also provides multiple specialized rate limiting Policies, including rate limiting for service protection and on GraphQL queries.
+See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose the AI Policy that is most useful in your use case.
 
 ## Strategies
 
-{% include md/ai-gateway/v2/policies/rate-limiting-strategies.md %}
+{% include md/ai-gateway/v2/policies/rate-limiting-strategies.md name="AI Rate Limiting Advanced" %}
 
 ### Using cloud authentication with Redis
 
@@ -42,7 +42,7 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 {:.info}
 > The [`config.llm_providers`](./reference/#schema--config-llm-providers) field is deprecated, but existing configurations will still work.
 
-The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the [Consumer](./examples/consumer-rate-limiting), [Consumer Group](./examples/consumer-group-rate-limiting), [IP address](./examples/ip-rate-limiting), [header](./examples/header-rate-limiting), [path](./examples/path-rate-limiting), [model](./examples/llm-model-rate-limiting), and [provider](./examples/llm-provider-policy-based-rate-limiting) level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up [multi-dimensional rate limiting](./examples/rate-limiting-multiple-conditions). For example, you can set different rate limiting policies for a specific Consumer and model:
+The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the [AI Consumer](./examples/consumer-rate-limiting), [AI Consumer Group](./examples/consumer-group-rate-limiting), [IP address](./examples/ip-rate-limiting), [header](./examples/header-rate-limiting), [path](./examples/path-rate-limiting), [model](./examples/llm-model-rate-limiting), and [provider](./examples/llm-provider-policy-based-rate-limiting) level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up [multi-dimensional rate limiting](./examples/rate-limiting-multiple-conditions). For example, you can set different rate limiting policies for a specific Consumer and model:
 
 {% entity_example %}
 type: policy
@@ -68,7 +68,7 @@ formats:
   - konnect-api
 {% endentity_example %}
 
-In this example, the limits will apply only to requests made by the specified Consumer to the `gpt-4o` model.
+In this example, the limits will apply only to requests made by the specified AI Consumer to the `gpt-4o` model.
 
 Policies without match conditions act as fallback and match all requests.
 
@@ -77,7 +77,6 @@ Policies without match conditions act as fallback and match all requests.
 
 ### Known issues
 
-* Policy-based rate limiting currently only works with AI Proxy Advanced. AI Proxy support will be added in a later patch.
 * When defining a policy matching a model and/or a provider, you must set the [`config.policies.match.partition_by`](./reference/#schema--config-policies-match-patition-by) field to `true`, otherwise the policy is not enforced.
 
 
@@ -163,7 +162,7 @@ rows:
       <br><br>
 
       {:.warning}
-      > This strategy requires `input_cost` and `output_cost` values in the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin configuration, under `model.options`.
+      > This strategy requires `input_cost` and `output_cost` values in the [AI Model](/ai-gateway/entities/ai-model/) target configuration, under `config`.
 {% endtable %}
 
 ### Request prompt function
@@ -177,9 +176,9 @@ See the following [example configuration](./examples/request-prompt-count-functi
 
 ## Known limitations of AI Rate Limiting Advanced
 
-The cost for the AI Proxy or AI Proxy Advanced is only reflected during the next request.
+The cost is only reflected during the next request.
 
-For example, if a request is made and the AI Proxy plugin returns a token cost of `100` for the `OpenAI` provider:
+For example, if a request is made and returns a token cost of `100` for the `OpenAI` provider:
 * The request is made to the OpenAI provider and the response is returned to the user
 * If the rate limit is reached, the next request will be blocked
 
