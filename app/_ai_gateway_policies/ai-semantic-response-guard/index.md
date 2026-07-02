@@ -74,8 +74,6 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the AI Policy returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.
 
-{% include_cached md/ai-gateway/v2/vectordb-embeddings.md %}
-
 ## Vector databases
 
 {% include_cached md/ai-gateway/v2/ai-vector-db.md name=page.name %}
