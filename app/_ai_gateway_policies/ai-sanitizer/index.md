@@ -6,17 +6,6 @@ works_on:
 products:
   - ai-gateway
 content_type: policy
-toc_depth: 3
-icon: ai-sanitizer.png
-
-categories:
-  - ai
-
-tags:
-  - ai
-  - safety
-  - security
-  - dlp
 ---
 
 The AI PII Sanitizer Policy for {{site.ai_gateway}} helps protect sensitive information in client request bodies before they reach upstream AI providers or tools.
