@@ -19,6 +19,8 @@ works_on:
 min_version:
     gateway: '3.8'
 
+ai_gateway_url: "/ai-gateway/policies/ai-semantic-cache/"
+
 topologies:
   on_prem:
     - hybrid

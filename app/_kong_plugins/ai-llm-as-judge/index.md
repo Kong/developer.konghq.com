@@ -18,6 +18,8 @@ works_on:
 min_version:
     gateway: '3.12'
 
+ai_gateway_url: "/ai-gateway/policies/ai-llm-as-judge/"
+
 topologies:
   on_prem:
     - hybrid

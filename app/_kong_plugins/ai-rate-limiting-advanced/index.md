@@ -13,6 +13,8 @@ works_on:
     - on-prem
     - konnect
 
+ai_gateway_url: "/ai-gateway/policies/ai-rate-limiting-advanced/"
+
 topologies:
   on_prem:
     - hybrid
