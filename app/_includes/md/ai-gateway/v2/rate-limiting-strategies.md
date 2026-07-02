@@ -17,7 +17,7 @@ rows:
     pros: Minimal performance impact.
     cons: Less accurate. Unless there's a consistent-hashing load balancer in front of {{site.ai_gateway}}, it diverges when scaling the number of nodes.
   - strategy: "`cluster`"
-    description: Counters are stored in the {{site.base_gateway}} data store and shared across nodes.
+    description: Counters are stored in the {{site.ai_gateway}} data store and shared across nodes.
     pros: Accurate<sup>1</sup>, no extra components to support.
     cons: Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in DB-less mode, hybrid mode, or {{site.konnect_short_name}} deployments.
   - strategy: "`redis`"
@@ -93,7 +93,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-If you choose to switch strategies, note that you can't port the existing usage metrics from the {{site.base_gateway}} data store to Redis.
+If you choose to switch strategies, note that you can't port the existing usage metrics from the {{site.ai_gateway}} data store to Redis.
 This might not be a problem with short-lived metrics (for example, seconds or minutes)
 but if you use metrics with a longer time frame (for example, months), plan your switch carefully.
 
