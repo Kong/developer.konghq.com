@@ -104,7 +104,7 @@ columns:
     key: example
 rows:
   - use_case: "Authentication"
-    example: "Attach [AI Key Auth](/ai-gateway/policies/ai-key-auth/) or [AI OpenID Connect](/ai-gateway/policies/ai-openid-connect/) Policy to secure MCP endpoints with credentials or OAuth tokens."
+    example: "[AI Key Auth](/ai-gateway/policies/ai-key-auth/reference/) or [AI OpenID Connect](/ai-gateway/policies/ai-openid-connect/reference/) Policy"
   - use_case: "Rate limiting"
     example: "Use [AI Rate Limiting](/ai-gateway/policies/ai-rate-limiting/) or [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or Consumer Group."
   - use_case: "Observability"
