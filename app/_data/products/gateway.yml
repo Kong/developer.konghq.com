@@ -1745,7 +1745,7 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips: false
             graviton: true
           default: true
       - rhel8:
