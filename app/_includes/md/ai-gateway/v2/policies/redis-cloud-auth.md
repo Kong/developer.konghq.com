@@ -5,7 +5,3 @@ The following providers are supported:
 * AWS ElastiCache
 * Azure Managed Redis
 * {{ site.google_cloud }} Memorystore (with or without Valkey)
-
-{% if include.tier == 'enterprise' %}
-Each provider also supports an instance and cluster configuration.
-{% endif %}
