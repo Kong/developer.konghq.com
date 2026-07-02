@@ -4,7 +4,7 @@ runs:
   using: "composite"
   steps:
     - name: Publish Test Report
-      uses: ctrf-io/github-test-reporter@0f299074936c32ccaab5be5230511f6b2b9080aa # v1
+      uses: ctrf-io/github-test-reporter@e500b992f936420eb633c91644cf10d4d71df700 # v1
       with:
         report-path: './tools/automated-tests/testReport.json'
         summary-report: true
