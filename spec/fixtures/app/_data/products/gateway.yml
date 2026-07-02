@@ -1,0 +1,5 @@
+name: Kong Gateway
+releases:
+  - release: "3.10"
+    latest: true
+  - release: "3.9"

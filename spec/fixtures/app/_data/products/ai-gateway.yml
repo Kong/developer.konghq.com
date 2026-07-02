@@ -1,0 +1,10 @@
+name: AI Gateway
+icon: /_assets/icons/products/ai-gateway.svg
+previous_major_url_segment: v<major>
+
+releases:
+  - release: "2.1"
+    latest: true
+  - release: "2.0"
+  - release: "1.1"
+  - release: "1.0"

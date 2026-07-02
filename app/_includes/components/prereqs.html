@@ -46,7 +46,7 @@
     {% endif %}
   {% else %}
     {% if page.products and prereqs.render_works_on? %}
-      {% if page.products contains 'gateway' or page.products contains 'ai-gateway' %}
+      {% if prereqs.render_gateway_prereq? %}
         {% if page.works_on contains 'konnect' %}
         <div class="flex flex-col gap-1.5 border-b border-primary accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
           {% assign variables = prereqs.konnect %}
@@ -68,8 +68,7 @@
         </div>
       {% endif %}
 
-      {% for product in prereqs.products %}
-        {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
+      {% for product_map in prereqs.product_includes_map %}{% assign product = product_map[0] %}{% assign product_include = product_map[1] %}
         {% if page.works_on  and product != 'operator' %}
          {% if page.works_on contains 'konnect' %}
           <div class="flex flex-col gap-1.5 border-b border-primary accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
@@ -125,8 +124,7 @@
 
   {% if prereqs.entities? %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-      {% assign prereq_path = "prereqs/entities/" | append: prereqs.entities_product | append: ".md" %}
-      {% include {{ prereq_path }} data=prereqs.data %}
+      {% include {{ prereqs.entities_product_include }} data=prereqs.data %}
     </div>
   {% endif %}
 

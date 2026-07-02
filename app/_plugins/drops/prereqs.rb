@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative './prereqs/product_entities_prereqs'
+require_relative './prereqs/product_include_prereqs'
+require_relative './prereqs/entity_examples_data'
 
 module Jekyll
   module Drops
@@ -76,25 +79,20 @@ module Jekyll
         end
       end
 
+      def entities_product_include
+        @entities_product_include ||= ProductEntitiesPrereqs.new(
+          product: entities_product,
+          major: @page.data.dig('major_version', entities_product),
+          product_data: @site.data.dig('products', entities_product)
+        ).versioned_include
+      end
+
       def data
         product = entities_product
 
         yaml = {}
         yaml = { '_format_version' => '3.0' } if product == 'gateway'
-
-        prereqs.fetch('entities', []).each do |k, files|
-          entities = files.map do |f|
-            example = @site.data.dig('entity_examples', product, k, f)
-
-            unless example
-              raise ArgumentError,
-                    "Missing entity_example file in app/_data/entity_examples/#{product}/#{k}/#{f}.{yml,yaml}"
-            end
-
-            example
-          end
-          yaml.merge!(k => entities) if entities
-        end
+        yaml.merge!(entity_examples_data(product))
 
         if product == 'gateway'
           Jekyll::Utils::HashToYAML.new(yaml).convert.gsub("'3.0'", '"3.0"')
@@ -103,10 +101,21 @@ module Jekyll
         end
       end
 
-      def products
-        @products ||= @page.data.fetch('products', [])
-                           .reject { |p| %w[gateway ai-gateway].include?(p) }
-                           .select { |p| File.exist?(product_include_file_path(p)) }
+      def product_includes_map
+        @product_includes_map ||= ProductIncludePrereqs.new(
+          products: @page.data.fetch('products', []),
+          major_version: @page.data.fetch('major_version', {}),
+          products_data: @site.data.fetch('products', {})
+        ).products_include_map
+      end
+
+      def render_gateway_prereq?
+        _products = @page.data.fetch('products', [])
+        return false unless _products.include?('gateway')
+        return true unless _products.include?('ai-gateway')
+
+        major_version = @page.data.dig('major_version', 'ai-gateway')
+        major_version && major_version == 1
       end
 
       def tools
@@ -123,12 +132,18 @@ module Jekyll
 
       private
 
-      def prereqs
-        @prereqs ||= fetch_or_fail(@page, 'prereqs', {})
+      def entity_examples_data(product)
+        EntityExamplesData.new(
+          product: product,
+          entities: prereqs.fetch('entities', []),
+          entity_examples: @site.data.fetch('entity_examples', {}),
+          major: @page.data.dig('major_version', product),
+          product_data: @site.data.dig('products', product)
+        ).to_h
       end
 
-      def product_include_file_path(product)
-        File.join(@site.source, '_includes', 'prereqs', 'products', "#{product}.md")
+      def prereqs
+        @prereqs ||= fetch_or_fail(@page, 'prereqs', {})
       end
 
       def fetch_or_fail(page, key, default)

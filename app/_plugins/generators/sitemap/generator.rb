@@ -37,6 +37,9 @@ module Jekyll
       end
 
       def skip?(page)
+        # skip pages with a major_version, safegard against including previous major version pages in the sitemap
+        return true if page.data['major_version']
+
         page.url.end_with?('.md') || page.url.start_with?('/.well-known/')
       end
     end
