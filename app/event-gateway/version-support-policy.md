@@ -15,12 +15,22 @@ description: |
 related_resources:
   - text: "{{site.event_gateway}}"
     url: /event-gateway/
+  - text: "Upgrading {{site.event_gateway_short}}"
+    url: /event-gateway/upgrade/
+  - text: "{{site.event_gateway_short}} breaking changes and known issues"
+    url: /event-gateway/breaking-changes/
+  - text: "{{site.event_gateway_short}} known limitations"
+    url: /event-gateway/known-limitations/
+  - text: "{{site.event_gateway_short}} changelog"
+    url: /event-gateway/changelog/
   - text: "{{site.base_gateway}} version support policy"
     url: /gateway/version-support-policy/
   - text: "{{site.konnect_short_name}} compatibility and support policy"
     url: /konnect-platform/compatibility/
   - text: "Kong vulnerability patching process"
     url: /gateway/vulnerabilities/
+  - text: "Verify {{site.event_gateway_short}} image signatures and attestations"
+    url: /event-gateway/verify-image-signatures-and-attestations/
 
 works_on:
   - konnect
