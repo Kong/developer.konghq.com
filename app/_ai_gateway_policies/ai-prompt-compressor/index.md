@@ -8,11 +8,11 @@ products:
 content_type: policy
 ---
 
-The **AI Prompt Compressor** Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The AI Prompt Compressor Policy supports:
+The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The AI Prompt Compressor Policy supports:
 
-* **Ratio-based or target token compression** — for example, reduce a message to 80% of the original length or compress to 150 tokens.
-* **Configurable compression ranges** — for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
-* **Selective compression** using `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
+* **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
+* **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
+* **Selective compression**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
 
 ## Why use prompt compression
 
@@ -54,7 +54,7 @@ Kong provides a Docker image for the AI Prompt Compressor service, which compres
 
 ### Image configuration options
 
-You can configure the Kong Compressor Service using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
+You can configure the Kong AI Prompt Compressor Service using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
 
 <!-- vale off -->
 {% table %}
@@ -84,7 +84,7 @@ rows:
 
 ### Compression endpoints
 
-The compressor service exposes both REST and JSON-RPC endpoints. You can use these interfaces to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy and other upstream services.
+The AI Prompt Compressor Service exposes both REST and JSON-RPC endpoints. You can use these interfaces to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy and other upstream services.
 
 * **POST `/llm/v1/compressPrompt`**: Compresses a prompt using either a compression ratio or a target token count. Supports selective compression via `<LLMLINGUA>` tags.
 
@@ -122,12 +122,12 @@ rows:
 ## How it works
 
 1. The user sends the final prompt to the AI Prompt Compressor Policy.
-1. The Policy checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
+1. The AI Prompt Compressor Policy checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
     - If tags are found, only the tagged sections are sent to LLMLingua 2 for compression.
     - If no tags are found, the entire prompt is sent to LLMLingua 2 for compression.
 1. Compression is applied based on configured rules—by ratio, target token count, or conditional length-based rules.
-1. The compressed prompt is returned to the Policy.
-1. The Policy sends the compressed prompt to the Large Language Model (LLM).
+1. The compressed prompt is returned to the AI Prompt Compressor Policy.
+1. The AI Prompt Compressor Policy sends the compressed prompt to the Large Language Model (LLM).
 1. The LLM processes the prompt and returns the response to the user.
 
 The diagram below illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts based on tagging and configured rules.
