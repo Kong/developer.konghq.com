@@ -19,6 +19,10 @@ module Jekyll
         "#{namespace}::Pages::Example".constantize
       end
 
+      def api_reference_page_class
+        "#{namespace}::Pages::ApiReference".constantize
+      end
+
       def namespace
         self.class.name.deconstantize
       end

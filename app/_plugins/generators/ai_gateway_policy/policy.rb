@@ -17,6 +17,14 @@ module Jekyll
         @examples ||= []
       end
 
+      def api_spec_exists?
+        File.exist?(api_spec_file_path)
+      end
+
+      def api_spec_file_path
+        @api_spec_file_path ||= File.join('api-specs', 'ai-gateway', 'policies', slug, 'openapi.yaml')
+      end
+
       def metadata
         @metadata ||= api_plugin
                       .data['plugin']

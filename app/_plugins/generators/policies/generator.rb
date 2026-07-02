@@ -34,7 +34,10 @@ module Jekyll
 
         generate_reference_page(policy)
         generate_example_pages(policy)
+        generate_api_reference_page(policy)
       end
+
+      def generate_api_reference_page(_policy); end
 
       def generate_overview_page(policy)
         overview = overview_page_class
