@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.2": [
     {
       "message": "Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.\n",

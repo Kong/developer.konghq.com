@@ -1,0 +1,47 @@
+description: 'Forward all HTTP request headers as Kafka record headers, except those on an exclusion list.'
+extended_description: |
+  Use blocklist mode (`forward_all_by_default: true`) to forward every incoming HTTP header as a Kafka record header,
+  except for headers listed in `exclude_headers`.
+  This is useful for stripping sensitive headers like `authorization` or `cookie` while preserving all others.
+
+title: 'Forward HTTP headers as Kafka record headers (blocklist mode)'
+
+weight: 889
+
+min_version:
+  gateway: '3.15'
+
+requirements:
+- "[Create a Kafka cluster in Confluent Cloud](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud)"
+- "[Create a Kafka topic in the cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic)"
+- "Create an API key and secret in the cluster"
+
+variables:
+  topic:
+    description: The name of your Kafka topic.
+    value: $KAFKA_TOPIC
+  cluster_api_key:
+    value: $CONFLUENT_CLUSTER_API_KEY
+    description: Your Confluent cluster API key.
+  cluster_api_secret:
+    value: $CONFLUENT_CLUSTER_API_SECRET
+    description: Your Confluent cluster API secret.
+
+config:
+  topic: ${topic}
+  cluster_api_key: ${cluster_api_key}
+  cluster_api_secret: ${cluster_api_secret}
+  headers:
+    forward_http_headers_as_record_headers: true
+    forward_all_by_default: true
+    exclude_headers:
+      - authorization
+      - cookie
+    repeated_headers_behavior: retain_duplicates
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

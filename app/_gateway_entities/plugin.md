@@ -224,15 +224,12 @@ In some cases, this might be compensated for when you run rate limiting before a
 {:.info}
 > **Note**: In {{site.base_gateway}} 3.13 and earlier, Consumer and Consumer Group scoping was not compatible with dynamic plugin ordering. If you had [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, dynamic plugin ordering would cause those plugins **not to trigger**. This limitation was resolved in {{site.base_gateway}} 3.14.
 
-## Conditional plugin execution {% new_in 3.14 %}
+## Conditional plugin execution {% new_in 3.15 %}
 
-{:.warning}
-> This feature is currently in [beta](/stages-of-software-availability/#beta) and should not be used in a production environment.
+Plugins have a `condition` field that determines whether the plugin executes for a given request.
+By writing conditions using CEL (Common Expression Language) expressions, you can access dynamic configuration from the execution context.
 
-Plugins have a condition field that determines whether the plugin executes or not. 
-By writing conditions using expressions, you can access dynamic configuration from the execution context.
-
-When a request comes in, {{site.base_gateway}} evaluates the condition. 
+When a request comes in, {{site.base_gateway}} evaluates the condition.
 If the condition matches, the plugin runs normally; if it doesn't match, the plugin is skipped entirely for that request.
 By conditionally executing plugins only when there's a match, you can reduce performance costs.
 
@@ -245,6 +242,93 @@ condition: 'http.headers.x_block == "true"'
 For more information, see:
 * [Plugin expressions reference](/gateway/plugins/expressions/)
 * [How to: Configure conditional plugin execution in {{site.base_gateway}}](/gateway/configure-conditional-plugin-execution/)
+
+## Cloning plugins {% new_in 3.15 %}
+
+You can run multiple instances of a plugin by cloning it.
+Cloning a plugin creates a custom instance of an existing plugin, letting you apply different configurations to your preferred scopes.
+A cloned plugin shares its code and logic with the source plugin, but is treated as a separate plugin instance.
+
+The priority of the cloned plugin can also be changed.
+
+Cloned plugins are useful in many situations. For example:
+
+* Running the same plugin on different attributes of a request. For example, you may want to validate two different JWTs in two separate headers.
+* Allowing different teams who want to use the same plugin logic to apply different business rules. 
+For example, a platform team may want to add a global IP deny list to a Gateway to enforce a global security policy, while an engineering team may also want to block IPs from a particular problematic customer on a single Route.
+* Running multiple instances of the [Datakit](/plugins/datakit/) plugin where different teams want to independently manage their own distinct flows on the same Gateway.
+* In conjunction with [conditional plugins](/gateway/plugins/expressions/), running different configurations of the plugin based on different environmental conditions.
+
+### Permissions required
+
+To create cloned plugins, you must have the following permissions:
+* {{site.konnect_short_name}}: One of the following [control plane roles](/konnect-platform/teams-and-roles/#control-planes): `ServiceAdmin`, `RouteAdmin`, `PluginAdmin`, `CPAdmin`, or `Deployer`.
+* Self-managed {{site.base_gateway}}: `super-admin` or `admin` role.
+
+### Supported plugins
+
+The following plugins support cloning:
+
+* [ACL](/plugins/acl/)
+* [Datakit](/plugins/datakit/)
+* [File Log](/plugins/file-log/)
+* [HTTP Log](/plugins/http-log/)
+* [IP Restriction](/plugins/ip-restriction/)
+* [Key Authentication](/plugins/key-auth/)
+* [OPA](/plugins/opa/)
+* [OpenID Connect](/plugins/openid-connect/)
+* [Pre-function](/plugins/pre-function/)
+* [Post-function](/plugins/post-function/)
+* [Request Transformer Advanced](/plugins/request-transformer-advanced/)
+* [Request Transformer](/plugins/request-transformer/)
+* [Response Transformer Advanced](/plugins/response-transformer-advanced/)
+* [Response Transformer](/plugins/response-transformer/)
+* [Route by Header](/plugins/route-by-header/)
+* [TCP Log](/plugins/tcp-log/)
+
+### Example of cloned plugin
+
+To create a plugin clone, use the `cloned_plugins` key to define a new plugin, then configure the clone the same as any other plugin through `plugins`:
+
+```yaml
+cloned_plugins:
+# Create a clone of request transformer to use for global configuration
+ - name: request-transformer-global
+   ref: request-transformer
+   priority: 999
+
+# Define an entry for the new plugin under the global plugins key
+plugins:
+  - name: request-transformer-global
+    config:
+      add:
+        headers:
+          - "X-Global-Header:isSetGlobally"
+```
+
+* `cloned_plugins.name`: The name of your new plugin. This must be a unique name that doesn't conflict with an existing plugin.
+  We recommend making this name distinct so that it doesn't conflict with future plugins. For example, `acme-request-transformer-global`.
+* `cloned_plugins.ref`: The source plugin that this clone is based on.
+* `cloned_plugins.priority`: The order in which the plugin runs relative to other plugins (see [plugins priorities](#plugin-priority)). This is an optional setting.
+  If not set, the plugin inherits the priority of the source plugin. 
+  For plugins with the same priority, the order depends on their names in reverse alphabetical order: plugins with alphabetically greater names run earlier (for example, `my-plugin-b` runs before `my-plugin-a`).
+
+{:.info}
+> **Note:** Each plugin ref (for example, `ref: request-transformer`) can have a maximum of five clones.
+
+For more information, see the guide on [Cloning a {{site.base_gateway}} plugin](/how-to/clone-gateway-plugin/).
+
+### Deleting or updating cloned plugins
+
+To delete a cloned plugin, remove all configurations that reference it first, then delete its entry under `cloned_plugins`. 
+
+If you need to make any changes to the configuration of the cloned plugin (for example, with a new name or priority, or to point to a different ref), we recommend the following approach for safe migration:
+
+1. Start a migration/maintenance window.
+1. Create a new cloned plugin.
+1. Update the configuration for all the plugin instances of the old cloned plugin to comply with the new cloned plugin.
+1. Remove the cloned plugin.
+1. Stop the migration/maintenance window.
 
 ## Protocols
 

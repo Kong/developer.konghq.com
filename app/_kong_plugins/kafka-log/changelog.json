@@ -1,4 +1,16 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added SASL OAUTHBEARER authentication support.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where cached producers could cause memory leaks.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "The options `security.ssl_verify` which control SSL certificate\nverification for Kafka endpoints, are now enabled by default.\n",
