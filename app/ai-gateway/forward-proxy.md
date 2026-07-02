@@ -109,7 +109,7 @@ rows:
     description: "Scheme used to connect to the forward proxy itself. One of `http` or `https`. Defaults to `http`."
   - field: "`auth_username`"
     type: "string"
-    description: "Username for proxy authentication. Optional. Referenceable from a [AI Vault](/ai-gateway/entities/ai-vault/)."
+    description: "Username for proxy authentication. Optional. Referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/)."
   - field: "`auth_password`"
     type: "string"
     description: "Password for proxy authentication. Optional. Encrypted at rest and referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/)."
