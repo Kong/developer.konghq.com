@@ -89,6 +89,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.8": [
+    {
+      "message": "Fixed an issue where token-related 401 responses omitted the protected resource metadata URL when a token was provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where MCP-like request was not authenticated.\n",

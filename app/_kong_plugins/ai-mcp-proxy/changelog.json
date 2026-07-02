@@ -136,6 +136,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.8": [
+    {
+      "message": "Fixed an issue where non-managed MCP listeners advertised unsupported SSE streams.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for MCP ACL control.\n",
