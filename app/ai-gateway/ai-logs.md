@@ -16,10 +16,6 @@ description: See where {{site.ai_gateway}} logs are located, the different log l
 search_aliases:
   - logging
 related_resources:
-  - text: "Secure {{site.ai_gateway}}"
-    url: /gateway/security/
-  - text: "{{site.ai_gateway}} audit logs"
-    url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"
     url: /dedicated-cloud-gateways/konnect-logs/
   - text: "{{site.konnect_short_name}} platform audit logs"
@@ -35,11 +31,11 @@ works_on:
 
 Logging in {{site.ai_gateway}} allows you to see information, warnings, and errors about requests that are proxied by {{site.ai_gateway}}.
 
-The information in this reference doc helps you understand and modify {{site.ai_gateway}} logs. You can also set Policies with [logging Policies](/ai-gateway/policies/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
+The information in this reference doc helps you understand and modify {{site.ai_gateway}} logs. You can also set [logging Policies](/ai-gateway/policies/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
 
 ## Where are {{site.ai_gateway}} logs located?
 
-By default, you can view {{site.ai_gateway}} logs at `/usr/local/kong/logs/error.log`. If you are running {{site.ai_gateway}} in Docker, you can also view them from your Docker container.
+By default, you can view {{site.ai_gateway}} logs at `/usr/local/kong/logs/error.log`. If you are running a {{site.ai_gateway}} DAta Plane in Docker, you can also view them from your Docker container.
 
 ## Log levels
 

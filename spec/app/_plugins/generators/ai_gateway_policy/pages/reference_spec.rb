@@ -16,7 +16,8 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
       schema: { 'properties' => { 'config' => {} } },
       icon: nil,
       unreleased?: false,
-      min_release: nil
+      min_release: nil,
+      overview_content: 'Some content'
     )
   end
 
@@ -49,7 +50,6 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
     subject(:data) { page.data }
 
     it { expect(data['title']).to eq('KONG Policy') }
-    it { expect(data['has_overview?']).to be(false) }
     it { expect(data['reference_type']).to eq('base') }
     it { expect(data['content_type']).to eq('reference') }
     it { expect(data['reference?']).to be(true) }
@@ -59,5 +59,15 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
     it { expect(data['overview_url']).to eq('/ai-gateway/policies/my-policy/') }
     it { expect(data).not_to have_key('faqs') }
     it { expect(data['scopes']).to eq(%w[ai-model global]) }
+
+    context 'when the policy has overview content' do
+      it { expect(data['has_overview?']).to be(true) }
+    end
+
+    context 'when the policy has no overview content' do
+      before { allow(policy).to receive(:overview_content).and_return('') }
+
+      it { expect(data['has_overview?']).to be(false) }
+    end
   end
 end

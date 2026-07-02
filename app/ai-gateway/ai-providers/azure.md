@@ -31,11 +31,15 @@ related_resources:
     url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Provider entity
+    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 faqs:
   - q: Can I authenticate to Azure AI with Azure Identity?
     a: |
-      {% include faqs/azure-identity.md %}
+      {% include md/ai-gateway/v2/faqs/azure-identity.md %}
 
 ---
 

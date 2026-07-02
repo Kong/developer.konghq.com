@@ -2,6 +2,13 @@
 layout: default
 ---
 
+{% if page.previous_major_urls %}
+{% assign product = page.products[0] %}
+{% contentfor info_box %}
+{% include_cached info_box/sections/previous_versions.html previous_major_urls=page.previous_major_urls  product=product %}
+{% endcontentfor %}
+{% endif %}
+
 <div class="flex gap-16 w-full">
     {% include layouts/main.html class="md:basis-3/4 grow-0 min-w-0" %}
 

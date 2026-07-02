@@ -2,7 +2,7 @@
 title: "Gemini provider"
 layout: reference
 content_type: reference
-description: Reference for supported capabilities for Azure OpenAI provider
+description: Reference for supported capabilities for Gemini provider
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/
@@ -31,20 +31,24 @@ related_resources:
     url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Provider entity
+    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 faqs:
   - q: How can I set model generation parameters when calling Gemini?
     a: |
-      {% include faqs/gemini-model-params.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-model-params.md %}
   - q: How do I use Gemini's `googleSearch` tool for real-time web searches?
     a: |
-      {% include faqs/gemini-search.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-search.md %}
   - q: How do I control aspect ratio and resolution for Gemini image generation?
     a: |
-      {% include faqs/gemini-image.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-image.md %}
   - q: How do I get reasoning traces from Gemini models?
     a: |
-      {% include faqs/gemini-thinking.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-thinking.md %}
 
 ---
 

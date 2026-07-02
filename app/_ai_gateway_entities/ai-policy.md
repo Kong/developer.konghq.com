@@ -28,34 +28,26 @@ related_resources:
     url: /ai-gateway/entities/ai-agent/
   - text: AI MCP Server entity
     url: /ai-gateway/entities/ai-mcp-server/
-  - text: Plugin entity
-    url: /gateway/entities/plugin/
+
 faqs:
   - q: Are AI Policies shared across multiple entities?
     a: |
-      No. Each AI Policy is an independent instance. To apply the same plugin
+      No. Each AI Policy is an independent configuration. To apply the same
       configuration to two AI Models, create two AI Policies with matching `config`,
       one per AI Model.
 
   - q: How is an AI Policy different from a plugin?
     a: |
-      An AI Policy is a plugin instance configured through the {{site.ai_gateway}} entity surface
-      instead of the classic `/plugins` endpoint. The runtime effect is the same: a plugin attached
+      An AI Policy is a policy configuration created through the {{site.ai_gateway}} entity surface
+      instead of the classic `/plugins` endpoint. The runtime effect is the same: a policy attached
       at the appropriate scope. {{site.ai_gateway}} manages the AI Policy's lifecycle alongside the
       entity it's attached to.
 
   - q: Can an AI Policy be scoped to an AI Consumer or AI Consumer Group?
     a: |
       Yes. Add the AI Policy's `name` or `id` to the AI Consumer's or AI Consumer Group's `policies` array.
-      The plugin runs when the AI Consumer is identified during a request, or when a member of the
+      The Policy runs when the AI Consumer is identified during a request, or when a member of the
       AI Consumer Group is identified.
-
-  - q: What plugin types can an AI Policy use?
-    a: |
-      Set the plugin name in the AI Policy's `type` field and provide the plugin's configuration
-      in the `config` field. Examples include `ai-sanitizer`, `ai-prompt-guard`,
-      `ai-prompt-decorator`, `ai-rate-limiting-advanced`, and `openid-connect`. The supported set
-      isn't enumerated on this page, refer to the {{site.ai_gateway}} plugin reference for the full list.
 
   - q: What happens to an AI Policy when its parent entity is deleted?
     a: |
@@ -65,59 +57,45 @@ faqs:
 
 ## What is an AI Policy?
 
-An AI Policy is an {{site.ai_gateway}} entity that represents an action, taken by a plugin, that can be attached to an {{site.ai_gateway}} entity.
+Create an AI Policy when you want to add governance, security, transformation, or observability to {{site.ai_gateway}} traffic:
+- Attach [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) to redact sensitive data
+- Attach [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) to manage request volume
+- Attach [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) or [other guardrail Policies](/ai-gateway/#guardrails-and-content-safety) to validate prompts
+- Attach [logging Policies](/ai-gateway/policies/?category=logging) to track requests and responses for observability
+- Attach authentication policies like [OpenID Connect](/ai-gateway/policies/openid-connect/) to control access and verify identity
 
-Each AI Policy declares a `type` (which is a plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. {{site.ai_gateway}} attaches the configured plugin at the scope you select: globally, or to a specific AI Model, AI Agent, or AI MCP Server.
+**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies—not configurations shared with other parts of your gateway.
 
-For the set of plugin types you can use as an AI Policy `type`, see the [AI plugin reference](/plugins/?category=ai).
+{:.info}
+> For the complete set of available policy types and configurations, see the [AI Policies hub](/ai-gateway/policies/).
 
-**AI Policies are not shared.** Each AI Policy is an independent plugin instance tied to its parent entity's lifecycle. To apply identical configuration to two AI Models, create two separate AI Policies with matching `config`. This design ensures that deleting an AI Model deletes only its own AI Policies, not configurations used by other entities.
+## Manage AI Policies
 
-AI Policies are managed through the {{site.ai_gateway}} entity surface:
+AI Policies are managed through:
 
-{% table %}
-columns:
-  - title: Control Plane
-    key: cp
-  - title: Endpoint
-    key: endpoint
-rows:
-  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
-    endpoint: /v1/ai-gateways/{aiGatewayId}/policies
-{% endtable %}
+* {{site.konnect_short_name}} UI
+* {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/policies`
+
+For configuration examples and step-by-step setup instructions, see [Set up a global AI Policy](#set-up-a-global-ai-policy) below.
 
 ## AI Policy scopes
 
-An AI Policy is scoped by where it's referenced from. Each AI Policy is an independent plugin instance attached at exactly one scope. To apply the same configuration in multiple places, create one AI Policy per place.
+An AI Policy's scope is determined by where it's referenced. Each AI Policy is an independent configuration that applies at exactly one scope. To apply identical configuration in multiple places, create one AI Policy per target.
 
 The available scopes are:
 
-* **Global**: an AI Policy that no parent entity references runs for every {{site.ai_gateway}} route on the data plane. Non-AI traffic on the same data plane isn't affected.
-* **AI Model**: referenced from the `policies` array on an [AI Model entity](/ai-gateway/entities/ai-model/). The plugin runs at the Service of the AI Model's derived primitives.
-* **AI Agent**: referenced from the `policies` array on an [AI Agent entity](/ai-gateway/entities/ai-agent/). The plugin runs at the Service of the AI Agent's derived primitives.
-* **AI MCP Server**: referenced from the `policies` array on an [AI MCP Server entity](/ai-gateway/entities/ai-mcp-server/). The plugin runs at the Service of the AI MCP Server's derived primitives.
-* **AI Consumer**: referenced from the `policies` array on an [AI Consumer entity](/ai-gateway/entities/ai-consumer/). The plugin runs when the AI Consumer is identified during a request.
-* **AI Consumer Group**: referenced from the `policies` array on an [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/). The plugin runs when a member of the AI Consumer Group is identified during a request.
+* **Global**: An AI Policy with no parent entity reference applies to all {{site.ai_gateway}} traffic on the data plane. Non-AI traffic on the same data plane isn't affected.
 
-### Creating AI Policies
-
-All AI Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is set entirely through the reference-array mechanism above: add the AI Policy's `name` or `id` to the parent entity's `policies` array, or omit the reference for global scope.
-
-## Lifecycle
-
-Creating an AI Policy creates exactly one plugin entry in the underlying runtime. Updating an AI Policy updates that plugin entry. Deleting an AI Policy deletes that plugin entry. All scopes support standard CRUD operations through the matching path.
-
-The `config` field is passed through to the plugin without translation.
+* **Entity-scoped**: Reference the policy from the `policies` array on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), [AI Consumer](/ai-gateway/entities/ai-consumer/), or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity. The policy applies at that entity's scope.
 
 {:.info}
-> **Plugin config schemas live with the plugin docs**
->
-> {{site.ai_gateway}} does not define plugin configuration schemas under the AI Policy entity.
-> For each plugin you intend to use as an AI Policy `type`, look up that plugin's reference page for its `config` shape.
+> For each policy type, find its configuration schema and required fields on that policy's reference page in the [AI Policies hub](/ai-gateway/policies/). Configuration is specific to each policy type.
 
 ## Set up a global AI Policy
 
-The following example creates a global PII sanitizer AI Policy that runs for every {{site.ai_gateway}} route.
+An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced) and a `config` block that configures that behavior. {{site.ai_gateway}} applies the policy at the scope you choose: globally across all traffic, or scoped to a specific entity.
+
+The following example creates a global AI PII Sanitizer Policy that runs for every {{site.ai_gateway}} Route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
 
 {% entity_example %}
 type: policy
@@ -126,11 +104,26 @@ data:
   name: pii-sanitizer-global
   type: ai-sanitizer
   enabled: true
+  global: true
   config:
     anonymize:
+      - email
       - phone
+      - ssn
       - creditcard
+      - custom
+    custom_patterns:
+      - name: aws_api_key
+        regex: AKIA[0-9A-Z]{16}
+        score: 0.95
+      - name: github_token
+        regex: ghp_[A-Za-z0-9]{36}
+        score: 0.9
+    host: sanitizer-service.internal
+    port: 8080
+    redact_type: placeholder
     stop_on_error: true
+    recover_redacted: false
 {% endentity_example %}
 
 ## Schema

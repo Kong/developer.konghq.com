@@ -1,0 +1,13 @@
+{
+  "2.0.0": {
+    "kong-aigw": [
+      { "message": "Added semantic routing", "type": "feature", "scope": "Core" },
+      { "message": "Fixed inference timeout", "type": "bugfix", "scope": "Core" }
+    ]
+  },
+  "1.0.0": {
+    "kong-aigw": [
+      { "message": "Initial AI Gateway release", "type": "feature", "scope": "Core" }
+    ]
+  }
+}

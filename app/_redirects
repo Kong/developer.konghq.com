@@ -377,8 +377,6 @@
 # AIGW policies overview -> reference for now
 /ai-gateway/policies/:slug/  /ai-gateway/policies/:slug/reference 301
 
-# ai-gateway previous-major wildcard — added by migration skill on 2026-06-15
-/ai-gateway/*  /ai-gateway/v1/:splat  301
 # ai-gateway previous-major how-to redirects — added by migration skill on 2026-06-15
 /how-to/authenticate-openai-sdk-clients-with-key-auth/  /ai-gateway/v1/how-to/authenticate-openai-sdk-clients-with-key-auth/  301
 /how-to/azure-batches/  /ai-gateway/v1/how-to/azure-batches/  301
