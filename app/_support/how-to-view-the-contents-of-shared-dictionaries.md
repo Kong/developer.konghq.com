@@ -72,4 +72,4 @@ The result in the Kong log:
 2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669470|1|172.18.0.1|sync, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:11 [pre-function] PRE FUNCTION ENDED, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}

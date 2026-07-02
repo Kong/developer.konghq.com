@@ -14,7 +14,7 @@ tldr:
     planes. Increase the size by raising `lmdb_map_size` (for example, `KONG_LMDB_MAP_SIZE=256m`,
     or `lmdb_map_size: "256m"` on Kubernetes, along with a larger `prefixDir` `sizeLimit`).
 related_resources:
-  - text: "`lmdb_map_size`"
+  - text: "lmdb_map_size"
     url: /gateway/configuration/#lmdb-map-size
 ---
 
@@ -25,7 +25,7 @@ The following LMDB error is returned when pushing configuration to data planes:
 ```
 time="2023-01-31T11:12:33Z" level=error msg="could not update kong admin" error="posting new config to /config: HTTP status 413 (message: \"Configuration does not fit in LMDB database, consider raising the \\\"lmdb_map_size\\\" config for Kong\")" subsystem=dataplane-synchronizer
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 
 ## Solution
