@@ -40,7 +40,7 @@ related_resources:
     url: /ai-gateway/entities/ai-policy/
 ---
 
-The AI MCP OAuth2 Policy secures Model Context Protocol (MCP) traffic on {{site.ai_gateway}} using [OAuth 2.0 specification for MCP servers](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization). It ensures only authorized MCP clients can access protected MCP servers proxied via an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, and acts as a crucial security layer for MCP traffic.
+The AI MCP OAuth2 Policy secures Model Context Protocol (MCP) traffic on {{site.ai_gateway}} using the [OAuth 2.0 specification for MCP servers](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization). It ensures only authorized MCP clients can access protected MCP servers proxied via an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, and acts as a crucial security layer for MCP traffic.
 
 ## Purpose and core functionality
 
@@ -48,7 +48,7 @@ The AI MCP OAuth2 Policy provides OAuth 2.0 authentication for MCP traffic, allo
 
 The Policy performs three core functions:
 
-* Validates incoming MCP requests by verifying access tokens from an external Authorization Server.
+* Validates incoming MCP requests by verifying access tokens from an external authorization server.
 * Extracts claims from validated tokens and forwards them to upstream MCP services via headers.
 * Ensures compliance with MCP authorization requirements based on OAuth 2.1.
 
@@ -108,14 +108,14 @@ The AI MCP OAuth2 Policy is designed to secure MCP traffic as early as possible 
 > **Note:** The AI MCP OAuth2 Policy is not invoked as part of an LLM request flow.
 >
 > Instead, it targets API traffic (MCP traffic specifically), allowing it to capture MCP requests independently of LLM request flow.
-> LLM-specific policies will not be applied to MCP traffic. Use this Policy with API-traffic policies like Rate Limiting Advanced, and other API-level policies as needed.
+> LLM-specific policies will not be applied to MCP traffic. Use this Policy with API-traffic policies like [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/reference/), and other API-level policies as needed.
 
 ## Token validation methods
 
 The Policy supports two token validation methods. When introspection is configured, it is always used. JWKS is only used when no introspection endpoint is configured.
 
 * **Introspection**: Set [`config.introspection_endpoint`](./reference/#schema--config-introspection-endpoint) to have the Policy call the authorization server to validate opaque tokens. Requires `config.client_id` when `config.client_auth` is `client_secret_basic` or `client_secret_post`.
-* **JWKS**: Set [`config.jwks_endpoint`](./reference/#schema--config-jwks-endpoint) to validate signed JWTs locally using the authorization server's public keys. If not set, the Policy attempts to discover the JWKS URI from the authorization server metadata.
+* **JWKS**: Set [`config.jwks_endpoint`](./reference/#schema--config-jwks-endpoint) to validate signed JWTs locally using the authorization server's public keys. If this isn't set, the Policy attempts to discover the JWKS URI from the authorization server metadata.
 
 ## Claim forwarding
 
@@ -233,7 +233,7 @@ formats:
 
 ### Virtual credentials
 
-When consumer mapping is not used, set [`config.credential_claim`](./reference/#schema--config-credential-claim) to derive a virtual credential from the token. This credential is used by other policies to track usage. Defaults to `["sub"]`.
+When AI Consumer mapping isn't used, set [`config.credential_claim`](./reference/#schema--config-credential-claim) to derive a virtual credential from the token. This credential is used by other policies to track usage. Defaults to `["sub"]`.
 
 ## Token exchange
 
@@ -242,7 +242,7 @@ Token exchange lets the Policy swap the client's access token for a different to
 {:.info}
 > Token exchange requires [`config.passthrough_credentials`](./reference/#schema--config-passthrough-credentials) to be set to `true`.
 
-When `config.token_exchange.enabled` is `true`, the Policy performs the following after validating the incoming token:
+When [`config.token_exchange.enabled`](./reference/#schema--config-token-exchange) is `true`, the Policy performs the following after validating the incoming token:
 
 <!-- vale off -->
 {% mermaid %}
@@ -288,6 +288,7 @@ data:
   display_name: MCP OAuth2 Token Exchange
   type: ai-mcp-oauth2
   config:
+    resource: https://your-resource-server.example.com
     passthrough_credentials: true
     authorization_servers:
       - https://auth.example.com
@@ -301,6 +302,8 @@ data:
       enabled: true
       token_endpoint: https://auth.example.com/oauth/token
       client_auth: client_secret_basic
+      client_id: your-client-id
+      client_secret: your-client-secret
       request:
         actor_token_source: header
         actor_token_header: X-Actor-Token
