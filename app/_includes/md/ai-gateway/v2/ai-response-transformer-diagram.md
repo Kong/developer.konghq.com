@@ -11,7 +11,7 @@ sequenceDiagram
     client->>kong: Sends a prompt
     deactivate client
     activate backend
-    kong->>backend: Forwards the request unchanged
+    kong->>backend: Forwards the prompt
     backend->>kong: Returns the response to {{site.ai_gateway}}
     deactivate backend
     activate ai
