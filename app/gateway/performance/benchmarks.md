@@ -69,6 +69,64 @@ The following table lists all Gateway versions that have been tested using Kong'
 
 {% navtabs "gateway-version" %}
 
+{% navtab "3.15" %}
+
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 135319.9
+    p99: 5.70
+    p95: 3.55
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 133140.2
+    p99: 5.93
+    p95: 3.21
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 113803.1
+    p99: 7.84
+    p95: 3.65
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 111321.3
+    p99: 7.90
+    p95: 3.76
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 100305.2
+    p99: 9.19
+    p95: 4.40
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 96259.7
+    p99: 9.75
+    p95: 4.73
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 96306.3
+    p99: 9.38
+    p95: 4.67
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 92041.2
+    p99: 9.72
+    p95: 4.89
+{% endtable %}
+{% endnavtab %}
+
 {% navtab "3.14" %}
 
 {% table %}

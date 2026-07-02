@@ -127,7 +127,7 @@ metrics:
   - name: kong.ee.license.features
     description: |
       Indicates whether the data plane can read or write entities under the current license. 
-      Each capability (`ee_entity_read` and `ee_entity_write`) is reported as its own metric, where 1 means allowed and 0 means not allowed.
+      Each capability (`entity_read` and `entity_write`) is reported as its own metric, where 1 means allowed and 0 means not allowed.
     unit: "1"
     type: Gauge
     attributes:
@@ -608,8 +608,11 @@ attributes:
   kong.dp.node.version: Version of the data plane node.
   kong.ee.license.feature: |
     Enterprise feature. Possible values:
-      - `ee_entity_read`
-      - `ee_entity_write`
+      - `entity_read`
+      - `entity_write`
+    <br><br>
+
+    **Note**: In {{site.base_gateway}} versions prior to 3.15, the values were `ee_entity_read` and `ee_entity_write`.
   client.address: IP address of the client.
   url.query: Query in the request URL.
   url.full: Full URL ued in the request.

@@ -215,12 +215,24 @@ rows:
                     - Enable the `debug` option to expose node execution errors in responses.
                     - Add the `X-DataKit-Debug-Trace` header to get a full node execution trace, including timing, dependencies, and failures.
                     - Trace reports include node status (`NODE_ERROR`, `NODE_COMPLETE`, etc.) and dependency chains for in-depth analysis.
+
+                    For production tracing, you can also use the {{site.konnect_short_name}} Debugger to capture Datakit node spans and I/O values without exposing data in client responses.
+
       - blocks:
           - type: card
             config:
-              title: Debugging
+              title: Built-in configuration debugging
               description: Learn more about Datakit's debug and tracing modes.
               icon: /assets/icons/monitor.svg
               cta:
                 text: See debugging section
                 url: /plugins/datakit/#debugging
+      - blocks:
+          - type: card
+            config:
+              title: Datakit tracing in Debugger
+              description: Use the {{site.konnect_short_name}} Debugger to inspect Datakit node spans, trace I/O values per lifecycle event, and understand sanitization behavior.
+              icon: /assets/icons/monitor.svg
+              cta:
+                text: See reference
+                url: /observability/datakit-debugger/

@@ -1,4 +1,16 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added support for authentication via the Kong Identity service with caching, consumer compatibility, and basic analytics.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a null value was accidentally blocked on identity_realms.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where the consumer authentication cache was not isolated by realm.\n",

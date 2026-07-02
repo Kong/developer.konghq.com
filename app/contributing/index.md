@@ -327,6 +327,16 @@ features:
 
 Renders a list of `kong.conf` parameters into a table.
 
+You can pass `env` to the block (`{% raw %}{% kong_config_table env %}{% endraw %}`) to render the parameters as environment variables, which prefixes each name with `KONG_`. To render an environment variable without the `KONG_` prefix (for example, a standard variable like `OTEL_RESOURCE_ATTRIBUTES`), set `prefix: false` on that entry:
+
+```
+{% raw %}{% kong_config_table env %}
+config:
+  - name: otel_resource_attributes
+    prefix: false
+{% endkong_config_table %}{% endraw %}
+```
+
 {% navtabs "configuration table" %}
 {% navtab "Code example" %}
 <!--vale off-->

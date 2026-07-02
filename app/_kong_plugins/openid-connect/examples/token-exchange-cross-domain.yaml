@@ -33,6 +33,7 @@ config:
   token_exchange:
     subject_token_issuers:
       - issuer: ${subject-token-issuer}
+        verify_signature: true
         conditions:
           missing_audience: null
           has_audience: null
@@ -69,3 +70,6 @@ tools:
   - terraform
 
 group: other
+
+min_version:
+  gateway: '3.15'

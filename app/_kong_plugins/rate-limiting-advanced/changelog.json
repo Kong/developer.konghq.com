@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added the `counter_key` field to let you choose which consumer attribute is now used as the rate-limiting counter identifier. Supported values are `consumer.id`, `consumer.username`, and `consumer.custom_id`.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added `route` support to fields `identifier` and `compound_identifier`.\n",

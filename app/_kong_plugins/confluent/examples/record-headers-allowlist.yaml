@@ -1,0 +1,53 @@
+description: 'Forward selected HTTP request headers as Kafka record headers.'
+extended_description: |
+  Use `config.headers` to copy HTTP request headers onto the produced Kafka record as native record headers.
+  This makes routing, tracing, and tenancy context available to consumers without parsing the message payload.
+
+  In allowlist mode (`forward_all_by_default: false`), only headers listed in `include_headers` are forwarded.
+  Use `name_mappings` to rename an HTTP header to a different record header key, for example renaming `x-request-id` to `trace-id`.
+
+title: 'Forward HTTP headers as Kafka record headers (allowlist mode)'
+
+weight: 890
+
+min_version:
+  gateway: '3.15'
+
+requirements:
+- "[Create a Kafka cluster in Confluent Cloud](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud)"
+- "[Create a Kafka topic in the cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic)"
+- "Create an API key and secret in the cluster"
+
+variables:
+  topic:
+    description: The name of your Kafka topic.
+    value: $KAFKA_TOPIC
+  cluster_api_key:
+    value: $CONFLUENT_CLUSTER_API_KEY
+    description: Your Confluent cluster API key.
+  cluster_api_secret:
+    value: $CONFLUENT_CLUSTER_API_SECRET
+    description: Your Confluent cluster API secret.
+
+config:
+  topic: ${topic}
+  cluster_api_key: ${cluster_api_key}
+  cluster_api_secret: ${cluster_api_secret}
+  headers:
+    forward_http_headers_as_record_headers: true
+    forward_all_by_default: false
+    include_headers:
+      - x-request-id
+      - x-tenant-id
+      - x-correlation-id
+    name_mappings:
+      x-request-id: trace-id
+      x-tenant-id: tenant
+    repeated_headers_behavior: concatenate_by_comma
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

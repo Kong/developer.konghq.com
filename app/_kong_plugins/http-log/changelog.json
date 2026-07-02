@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added opt-in outbound mTLS support via a new `client_certificate` config field.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "the `ssl_verify` option to validate the `http_endpoint` server\ncertificate is now enabled by default.\n",

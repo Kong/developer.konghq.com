@@ -1,4 +1,21 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added a `preserve_lambda_api_error_code` config field. When enabled, Kong returns the same HTTP status code the Lambda API returned (4xx or 5xx), with a sanitized body.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where empty JSON array bodies (`[]`) were incorrectly converted to objects (`{}`) when using `is_proxy_integration=true` and `empty_arrays_mode=correct` alongside the Exit Transformer plugin.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a 500 error occurred when `is_proxy_integration` was enabled and the Lambda function returned `null` values in `headers` or `multiValueHeaders`. Null values are now converted to empty strings.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added `ssl_verify` config field to control SSL certificate verification when connecting to AWS APIs.\n",

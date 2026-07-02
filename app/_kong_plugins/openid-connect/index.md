@@ -504,14 +504,27 @@ rows:
       [Set up certificate-bound access tokens](/plugins/openid-connect/examples/cert-bound-access-tokens/)
   - spec: "Demonstrating proof-of-possession (DPoP)"
     description: |
-      Demonstrating Proof of Possession (DPoP) is an application-level mechanism for proving the sender's ownership of OAuth access and refresh tokens. 
-      With DPoP, a client can prove the possession of a public/private key pair associated with a token by using a header. 
+      Demonstrating Proof of Possession (DPoP) is an application-level mechanism for proving the sender's ownership of OAuth access and refresh tokens.
+      With DPoP, a client can prove the possession of a public/private key pair associated with a token by using a header.
       The header contains a signed JWT that includes a reference to the associated access token.
       <br><br>
       When DPoP is enabled, {{site.base_gateway}} validates the DPoP header in the request to ensure that the sender is authorized to use the access token.
       <br><br>
       Set [`config.proof_of_possession_dpop`](./reference/#schema--config-proof-of-possession-dpop) to `strict` to enable DPoP.
     example: "[Demonstrating Proof-of-Possession](/plugins/openid-connect/examples/dpop/)"
+  - spec: | 
+      mTLS Proof-of-Possession via HTTP header {% new_in 3.15 %}
+    description: |
+      In enterprise deployments where TLS is terminated at a WAF or load balancer before {{site.base_gateway}},
+      the downstream connection carries no client certificate.
+      <br><br>
+      {{site.base_gateway}} can read the certificate from an HTTP header injected by the WAF or proxy and validate its thumbprint against the `cnf.x5t#S256` claim bound in the access token.
+      <br><br>
+      Set [`config.proof_of_possession_mtls`](./reference/#schema--config-proof-of-possession-mtls) to `strict` and configure [`config.proof_of_possession_mtls_from_header`](./reference/#schema--config-proof-of-possession-mtls-from-header) with the header name and a trusted CA certificate.
+    example: |
+      [mTLS PoP via header example](/plugins/openid-connect/examples/mtls-pop-from-header/)
+      <br><br>
+      [How-to: Configure OpenID Connect with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/)
 {% endtable %}
 
 ### Certificate-bound access tokens
@@ -538,6 +551,21 @@ To enable certificate-bound access for OpenID Connect:
 * Use the [`proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) configuration option to ensure that the supplied access token belongs to the client by verifying its binding with the client certificate provided in the request.
 
 See the [cert-bound configuration example](/plugins/openid-connect/examples/cert-bound-access-tokens/) for more detail and [Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/) for a complete tutorial.
+
+### mTLS Proof-of-Possession via HTTP header {% new_in 3.15 %}
+
+Many enterprise deployments terminate TLS at a WAF or Layer-7 proxy before traffic reaches {{site.base_gateway}}.
+In these environments, the TLS connection between the proxy and {{site.base_gateway}} carries no client certificate, which prevents the standard mTLS PoP flow from working.
+
+You can enable the OIDC plugin to validate mTLS Proof-of-Possession (PoP) via a header.
+When configured, the plugin reads the client certificate from an HTTP header injected by the WAF or proxy, validates it against a trusted CA, and verifies that its thumbprint matches the `cnf.x5t#S256` claim bound in the access token.
+
+To enable mTLS PoP via header:
+* Configure your IdP to generate OAuth 2.0 mTLS certificate-bound access tokens.
+* Configure your WAF or L7 proxy to inject the client certificate into a known HTTP header.
+* Set [`config.proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) to `strict` and configure [`config.proof_of_possession_mtls_from_header`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls-from-header) with the header name, expected certificate format, and a trusted CA certificate.
+
+See the [mTLS PoP via header example](/plugins/openid-connect/examples/mtls-pop-from-header/) and [Configure OpenID Connect with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/) for a complete tutorial.
 
 ### Demonstrating Proof-of-Possession (DPoP)
 
@@ -618,8 +646,9 @@ The OpenID Connect plugin performs the following checks on the incoming token be
   * The issuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
   * The token is not expired (`exp` claim).
   * The token is not used before its time (`nbf` claim).
-1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered. 
-1. If the `subject_token_issuer`and `target_issuer` are the same, then the configured conditions are evaluated to determine token exchange.
+  * {% new_in 3.15 %} If [`verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{site.base_gateway}} cryptographically verifies the token signature before sending the exchange request to the IdP.
+1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered.
+1. If the `subject_token_issuer` and `target_issuer` are the same, the configured conditions are evaluated to determine whether to trigger token exchange.
 1. {{site.base_gateway}} uses its client credentials to trigger the exchange.
 
 Afterwards, the rest of the OpenID Connect plugin flow continues on the exchanged token.
@@ -640,6 +669,23 @@ The token exchange flow uses the following terms:
 * **Target issuer**: The authorization server protecting the resources (APIs/services).
 * **Conditions**: Conditions under which to trigger token exchange. 
 Conditions look for the presence or absence of two claims: `scopes` and `audience`. 
+
+### Subject token signature verification {% new_in 3.15 %}
+
+By default, {{site.base_gateway}} validates the `iss`, `exp`, and `nbf` claims of an incoming subject token but doesn't verify its cryptographic signature before sending the exchange request to the IdP.
+The IdP performs its own signature check, so validation happens eventually.
+
+Enabling signature verification in {{site.base_gateway}} adds an earlier check that rejects tokens with invalid signatures before they reach the IdP.
+This reduces unnecessary round-trips to the IdP and keeps {{site.base_gateway}}'s security posture consistent with other authentication flows.
+
+You can configure this setting per issuer on each entry in [`config.token_exchange.subject_token_issuers`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers):
+
+* [`config.token_exchange.subject_token_issuers[].verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature): Set to `true` to enable signature verification for that issuer.
+Defaults to `false` for backward compatibility.
+We recommend enabling this for all subject token issuers to prevent tokens with invalid signatures from consuming IdP resources.
+* [`config.token_exchange.subject_token_issuers[].jwks_uri`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-jwks-uri): An optional explicit JWKS endpoint for fetching the signing keys for this issuer.
+If not set, {{site.base_gateway}} resolves the JWKS URI from OIDC discovery using the issuer URL.
+Set this when the issuer doesn't publish a discovery document or when you want to pin to a specific key endpoint.
 
 ## Multiple clients
 
