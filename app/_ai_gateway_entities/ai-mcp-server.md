@@ -426,7 +426,6 @@ sequenceDiagram
 
 To monitor and troubleshoot MCP traffic, enable logging and audit trails through [`config.logging`](#schema-aigateway-mcpserver-config-logging). You can capture per-request statistics for metrics, full request and response payloads for debugging, and [audit entries](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs) for every ACL decision. Note that payload logging may expose sensitive data. Enable it only when debugging and be careful with retention. AI MCP Server analytics appear in [{{site.konnect_short_name}} Explorer and Dashboards](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) alongside other {{site.ai_gateway}} traffic, and export through [OpenTelemetry](/ai-gateway/ai-otel-metrics/#mcp-metrics).
 
-## Attach Policies
 
 Just like HTTP Routes, AI MCP Servers benefit from security and governance AI Policies. Attach [AI Policies](/ai-gateway/entities/ai-policy/) to enforce authentication, rate limits, request/response transformation, and OAuth gating. Add them to the [`policies`](#schema-aigateway-mcpserver-policies) field by name or ID. AI Policies run on all MCP traffic through the server, before tool invocation and after ACL checks. Multiple AI Policies can attach to one AI MCP Server, and each runs independently in the request lifecycle.
 
