@@ -68,10 +68,6 @@ faqs:
 
       This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} policy instances.
-
-next_steps:
-  - text: Use AI Semantic Prompt Guard Policy to govern your LLM traffic
-    url: /how-to/use-ai-semantic-prompt-guard-plugin/
 ---
 
 The AI Semantic Prompt Guard Policy enforces prompt governance using semantic similarity matching. It compares incoming requests against your configured allow and deny lists, preventing misuse of text completion requests.
