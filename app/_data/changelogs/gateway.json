@@ -24076,5 +24076,79 @@
         "scope": "Default"
       }
     ]
+  },
+  "3.14.0.8": {
+    "kong-ee": [
+      {
+        "message": "**acl**: Fixed an issue where the ACL plugin ignored a consumer's ACL groups when `include_consumer_groups` was enabled and the consumer belonged to an enterprise consumer group, causing incorrect `403` denials (with `allow`) or incorrect access (with `deny`) for authenticated and anonymous consumers. The plugin now falls back to the consumer's ACL groups when no third-party authenticated groups are present.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token-related 401 responses omitted the protected resource metadata URL when a token was provided.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where non-managed MCP listeners advertised unsupported SSE streams.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini service-account authentication probed `metadata.google.internal` when a service account JSON was configured.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `cache_control` was lost in Bedrock Anthropic format requests using ARN model IDs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Bedrock native ConverseStream requests using ARN model IDs could fail when handling streamed responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where balancer retries could continue using the last selected targetafter all priority peers were exhausted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `cache_creation_input_tokens` and `cache_read_input_tokens` were excluded from prompt token counts, causing undercounting when Anthropic prompt caching was active.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed intermittent upstream 401s caused by reused expired Azure managed-identity tokens.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**datakit**: Fixed an issue where configuration parsing failed in packaged builds due to a missing jq parser file.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where data planes retried unrecoverable TLS certificate setup failures instead of loading their backup configuration.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where pushing a configuration with a datakit plugin whose node `inputs` contained a null value to an older data plane could crash the control plane's config compatibility checker with \"attempt to index local 'value' (a userdata value)\".",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where token endpoint responses with `expires_in <= 0` were cached indefinitely when proactive expiry re-check was disabled, causing the plugin to silently forward already-expired tokens to the upstream until a worker/process restart.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**router**: Fixed an issue where WebSocket routes (`ws`/`wss`) returned HTTP 404 when using `router_flavor=expressions` due to incorrect protocol matching expressions being generated.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
   }
 }

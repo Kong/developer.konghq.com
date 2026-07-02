@@ -316,6 +316,38 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.8": [
+    {
+      "message": "Fixed an issue where Gemini service-account authentication probed `metadata.google.internal` when a service account JSON was configured.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `cache_control` was lost in Bedrock Anthropic format requests using ARN model IDs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Bedrock native ConverseStream requests using ARN model IDs could fail when handling streamed responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where balancer retries could continue using the last selected targetafter all priority peers were exhausted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `cache_creation_input_tokens` and `cache_read_input_tokens` were excluded from prompt token counts, causing undercounting when Anthropic prompt caching was active.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed intermittent upstream 401s caused by reused expired Azure managed-identity tokens.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Supported health checks and circuit breaker for the load balancer. Added two new fields `max_fails` and `fail_timeout`.",
