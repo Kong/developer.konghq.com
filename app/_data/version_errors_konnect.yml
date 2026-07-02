@@ -3824,6 +3824,17 @@ messages:
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
       [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - ID: D500
+    Severity: warning
+    Description: |
+      Bedrock provider targets do not support auth.allow_override=true in Gateway
+      versions before 3.13.0.0. The value has been updated to false in order to
+      preserve compatibility with older dataplane versions. The AI Proxy Advanced
+      Plugin might not work as expected as a result.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D502
     Severity: warning
     Description: |
@@ -4494,6 +4505,385 @@ messages:
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
       [AI Semantic Prompt Guard plugin](/plugins/ai-semantic-prompt-guard/)
+  - ID: D571
+    Severity: warning
+    Description: |
+      For the `konnect-application-auth` plugin, the deprecated shorthand field
+      `config.v2_strategies.openid_connect[].config.consumer_claim` is not supported
+      in nested openid-connect strategies and has been removed from the payload.
+    Resolution: |
+      Use `consumer_claims` instead of the deprecated `consumer_claim` shorthand
+      field.
+    DocumentationURL: |
+      [Konnect Application Auth plugin](/plugins/konnect-application-auth/)
+  - ID: D572
+    Severity: error
+    Description: |
+      For the `kafka-upstream` plugin, one or more of the following `config` fields
+      are set: `headers` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields and have been removed. Plugin features that rely on these fields are not
+      working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
+  - ID: D573
+    Severity: error
+    Description: |
+      For the `confluent` plugin, one or more of the following `config` fields are
+      set: `headers` but Kong Gateway versions < 3.15.0.0 do not support these fields
+      and have been removed. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Confluent plugin](/plugins/confluent/)
+  - ID: D574
+    Severity: error
+    Description: |
+      For the `openid-connect` plugin, one or more of the following `config` fields
+      are set: `bearer_token_header_name` but Kong Gateway versions < 3.15.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [OpenID Connect plugin](/plugins/openid-connect/)
+  - ID: D575
+    Severity: warning
+    Description: |
+      For the `confluent-consume` plugin, one or more of the following `config` fields
+      are set: `error_handling` but Kong Gateway versions < 3.15.0.0 do not support
+
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Confluent Consume plugin](/plugins/confluent-consume/)
+  - ID: D576
+    Severity: warning
+    Description: |
+      For the `kafka-consume` plugin, one or more of the following `config` fields are
+      set: `error_handling` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Kafka Consume plugin](/plugins/kafka-consume/)
+  - ID: D577
+    Severity: warning
+    Description: |
+      For the `confluent` plugin, one or more of the following `config` fields are
+      set: `error_handling` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Confluent plugin](/plugins/confluent/)
+  - ID: D578
+    Severity: warning
+    Description: |
+      For the `kafka-upstream` plugin, one or more of the following `config` fields
+      are set: `error_handling` but Kong Gateway versions < 3.15.0.0 do not support
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
+  - ID: D579
+    Severity: warning
+    Description: |
+      For the `confluent-consume` plugin, one or more of the following `config` fields
+      are set: `consumer_group` but Kong Gateway versions < 3.15.0.0 do not support
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Confluent Consume plugin](/plugins/confluent-consume/)
+  - ID: D580
+    Severity: warning
+    Description: |
+      For the `kafka-consume` plugin, one or more of the following `config` fields are
+      set: `consumer_group` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Kafka Consume plugin](/plugins/kafka-consume/)
+  - ID: D581
+    Severity: warning
+    Description: |
+      For the `rate-limiting-advanced` plugin, one or more of the following `config`
+      fields are set: `counter_key` but Kong Gateway versions < 3.15.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/)
+  - ID: D582
+    Severity: warning
+    Description: |
+      The `vault(fs)` entity is being used, but Kong Gateway versions < 3.15.0.0 do
+      not support this entity.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Vaults entity](/gateway/entities/vault/)
+  - ID: D583
+    Severity: warning
+    Description: |
+      For the `openid-connect` plugin, one or more of the following `config` fields
+      are set: `token_exchange.subject_token_issuers[].verify_signature`,
+      `token_exchange.subject_token_issuers[].jwks_uri` but Kong Gateway versions <
+      3.15.0.0 do not support these fields. Plugin features that rely on these fields
+      are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [OpenID Connect plugin](/plugins/openid-connect/)
+  - ID: D584
+    Severity: warning
+    Description: |
+      For the `datakit` plugin, one or more of the following `config` fields are set:
+      `nodes[].non_nil` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Datakit plugin](/plugins/datakit/)
+  - ID: D585
+    Severity: warning
+    Description: |
+      For the `openid-connect` plugin, one or more of the following `config` fields
+      are set: `principals` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [OpenID Connect plugin](/plugins/openid-connect/)
+  - ID: D586
+    Severity: warning
+    Description: |
+      For the `openid-connect` plugin, one or more of the following `config` fields
+      are set: `cluster_cache_items` but Kong Gateway versions < 3.15.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [OpenID Connect plugin](/plugins/openid-connect/)
+  - ID: D587
+    Severity: warning
+    Description: |
+      For the `forward-proxy` plugin, the `config.ca_certificates` field is not
+      supported by this version of Kong Gateway. The field has been removed. The
+      plugin will fall back to using the global `lua_ssl_trusted_certificate` for
+      upstream TLS verification. Upgrade to Kong Gateway 3.11.0.10+ (3.11), 3.12.0.9+
+      (3.12), 3.13.0.7+ (3.13), 3.14.0.5+ (3.14), or 3.15.0.0+ to use per-plugin CA
+      certificates.
+    Resolution: |
+      Upgrade Kong Gateway to 3.11.0.10+ (3.11), 3.12.0.9+ (3.12), 3.13.0.7+ (3.13),
+      3.14.0.5+ (3.14), or 3.15.0.0+.
+    DocumentationURL: |
+      [Forward Proxy plugin](/plugins/forward-proxy/)
+  - ID: D588
+    Severity: warning
+    Description: |
+      For the `oas-validation` plugin, one or more of the following `config` fields
+      are set: `structured_errors`, `max_structured_errors` but Kong Gateway versions
+      < 3.15.0.0 do not support these fields. Plugin features that rely on these
+      fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [OAS Validation plugin](/plugins/oas-validation/)
+  - ID: D589
+    Severity: error
+    Description: |
+      For the `openid-connect` plugin, one or more of the following `config` fields
+      are set: `proof_of_possession_mtls_from_header` but Kong Gateway versions <
+      3.15.0.0 do not support these fields. Plugin features that rely on these fields
+      are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [OpenID Connect plugin](/plugins/openid-connect/)
+  - ID: D596
+    Severity: warning
+    Description: |
+      For the `solace-upstream` plugin, one or more instances are configured with
+      `session.authentication.scheme` field set to: `CLIENT_CREDENTIALS` but Kong
+      Gateway versions < 3.15.0.0 do not support this value. The impacted plugin has
+      been removed from the configuration. Because of this, features that rely on
+      these plugins are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Solace Upstream plugin](/plugins/solace-upstream/)
+  - ID: D597
+    Severity: warning
+    Description: |
+      For the `solace-log` plugin, one or more instances are configured with
+      `session.authentication.scheme` field set to: `CLIENT_CREDENTIALS` but Kong
+      Gateway versions < 3.15.0.0 do not support this value. The impacted plugin has
+      been removed from the configuration. Because of this, features that rely on
+      these plugins are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Solace Log plugin](/plugins/solace-log/)
+  - ID: D598
+    Severity: warning
+    Description: |
+      For the `solace-consume` plugin, one or more instances are configured with
+      `session.authentication.scheme` field set to: `CLIENT_CREDENTIALS` but Kong
+      Gateway versions < 3.15.0.0 do not support this value. The impacted plugin has
+      been removed from the configuration. Because of this, features that rely on
+      these plugins are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Solace Consume plugin](/plugins/solace-consume/)
+  - ID: D599
+    Severity: warning
+    Description: |
+      For the `konnect-application-auth` plugin, one or more of the following `config`
+      fields are set: `v2_strategies.key_auth[].principals`,
+      `v2_strategies.openid_connect[].principals` but Kong Gateway versions < 3.15.0.0
+      do not support these fields. Plugin features that rely on these fields are not
+      working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Konnect Application Auth plugin](/plugins/konnect-application-auth/)
+  - ID: D600
+    Severity: warning
+    Description: |
+      For the `Plugin` entity, the `condition` field has been set. The Condition
+      Plugin feature will be deprecated for Kong Gateway 3.14 starting September 1,
+      2026.
+    Resolution: |
+      Either upgrade the expressions to be 3.15 compatible and upgrade Kong Gateway to
+      version 3.15 or above, or remove conditional expressions from the configuration.
+    DocumentationURL: |
+      [Condition Plugin](/gateway/api/admin-ee/latest/#/Plugin)
+  - ID: D601
+    Severity: warning
+    Description: |
+      For the `confluent` plugin, one or more of the following `config` fields are
+      set: `oauthbearer` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Confluent plugin](/plugins/confluent/)
+  - ID: D602
+    Severity: warning
+    Description: |
+      For the `confluent-consume` plugin, one or more of the following `config` fields
+      are set: `oauthbearer` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Confluent Consume plugin](/plugins/confluent-consume/)
+  - ID: D603
+    Severity: warning
+    Description: |
+      For the `kafka-log` plugin, one or more of the following `config` fields are
+      set: `authentication.oauthbearer` but Kong Gateway versions < 3.15.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Kafka Log plugin](/plugins/kafka-log/)
+  - ID: D604
+    Severity: warning
+    Description: |
+      For the `kafka-upstream` plugin, one or more of the following `config` fields
+      are set: `authentication.oauthbearer` but Kong Gateway versions < 3.15.0.0 do
+      not support these fields. Plugin features that rely on these fields are not
+      working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
+  - ID: D605
+    Severity: warning
+    Description: |
+      For the `kafka-consume` plugin, one or more of the following `config` fields are
+      set: `authentication.oauthbearer` but Kong Gateway versions < 3.15.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Kafka Consume plugin](/plugins/kafka-consume/)
+  - ID: D606
+    Severity: warning
+    Description: |
+      For the `request-validator` plugin, the config field `array_length_compat` has
+      been used. This is only supported in Kong Gateway 3.15.0.0 and newer, and in the
+      backport releases 3.4.3.26, 3.10.0.11, and 3.14.0.5.
+    Resolution: |
+      Please upgrade Kong Gateway to a version that supports this field.
+    DocumentationURL: |
+      [Request Validator plugin](/plugins/request-validator/)
+  - ID: D607
+    Severity: warning
+    Description: |
+      ACE auth strategies has been configured with the
+      `config.ace_auth_strategies.principals` field. This is not supported in Kong
+      Gateway versions < 3.15.0.0. The field has been removed from the configuration.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [ACE Auth plugin](/plugins/ace-auth/)
+  - ID: D608
+    Severity: warning
+    Description: |
+      The `vault(azure-certs)` entity is being used, but Kong Gateway versions <
+      3.15.0.0 do not support this entity.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Vaults entity](/gateway/entities/vault/)
+  - ID: D609
+    Severity: error
+    Description: |
+      The `cloned_plugins` entities have been removed because Kong Gateway versions <
+      3.15.0.0 do not support this feature. Any related plugin instances and ordering
+      have been left unchanged.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Cloned Plugins entity](/gateway/entities/cloned-plugins/)
+  - ID: D610
+    Severity: warning
+    Description: |
+      The `cert` field of one or more CA certificates has been set to a vault
+      reference. Referencing the `cert` field of a CA certificate is only supported in
+      Kong Gateway versions >= 3.15.0.0. Data planes running an older version cannot
+      resolve the reference and will fail to load the CA certificate.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+  - ID: D611
+    Severity: warning
+    Description: |
+      For the `konnect-application-auth` plugin, nested openid-connect strategies now
+      require config.principals. The KAA strategy-level principals configuration has
+      been mirrored into config.principals so the payload remains compatible with
+      newer Data Plane nodes.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
   - ID: EOL100
     Severity: error
     Description: |
@@ -7692,6 +8082,59 @@ messages:
       Please upgrade Kong Gateway to version `3.14.0.0` or above.
     DocumentationURL: |
       [Basic Auth plugin](/plugins/basic-auth/)
+  - ID: P414
+    Severity: warning
+    Description: |
+      For the `http-log` plugin, one or more of the following `config` fields are set:
+      `client_certificate` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [HTTP Log plugin](/plugins/http-log/)
+  - ID: P415
+    Severity: error
+    Description: |
+      For the `aws-lambda` plugin, one or more of the following `config` fields are
+      set: `preserve_lambda_api_error_code` but Kong Gateway versions < 3.15.0.0 do
+      not support these fields. Plugin features that rely on these fields are not
+      working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [AWS Lambda plugin](/plugins/aws-lambda/)
+  - ID: P416
+    Severity: error
+    Description: |
+      One or more streaming custom plugin entities have been configured, but streaming
+      custom plugins are not supported for Serverless Gateways. Streaming custom
+      plugins have been removed from the config and the data plane may be inoperable.
+    Resolution: |
+      Streaming custom plugins are only supported with Dedicated Cloud Gateways.
+      Migrate to a Dedicated Cloud Gateway or remove custom-plugin entities from the
+      config.
+    DocumentationURL: |
+      [Custom Plugins](/plugins/custom-plugins/)
+  - ID: P417
+    Severity: warning
+    Description: |
+      For the `basic-auth` plugin, one or more of the following `config` fields are
+      set: `principals` but Kong Gateway versions < 3.15.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Basic Auth plugin](/plugins/basic-auth/)
+  - ID: P418
+    Severity: warning
+    Description: |
+      For the `key-auth` plugin, one or more of the following `config` fields are set:
+      `principals` but Kong Gateway versions < 3.15.0.0 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.15.0.0` or above.
+    DocumentationURL: |
+      [Key Auth plugin](/plugins/key-auth/)
   - ID: P999
     Severity: warning
     Description: |
