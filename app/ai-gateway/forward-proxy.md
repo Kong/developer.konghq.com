@@ -17,7 +17,6 @@ works_on:
 tools:
   - konnect-api
 
-
 min_version:
   ai-gateway: '2.0'
 
@@ -43,7 +42,7 @@ A `proxy` record can be added to the `config` that names the proxy host, port, s
 
 The three request categories are:
 
-- **Inference**: requests from clients to LLM providers, proxied by an [AI Model](/ai-gateway/entities/ai-model/) through the native {{site.base_gateway}} upstream path. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when forward proxy support is active. Upstream keepalive is disabled while the forward proxy is active, so inference connections are not reused across requests targeting different upstream peers.
+- **Inference**: requests from clients to LLM providers, proxied by an [AI Model](/ai-gateway/entities/ai-model/) through the {{site.ai_gateway}}. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when forward proxy support is active. Upstream keepalive is disabled while the forward proxy is active, so inference connections are not reused across requests targeting different upstream peers.
 - **Identity auth**: cloud identity authentication issued by provider SDKs. AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition, when targets require managed identity.
 - **Auxiliary calls**: direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor Policies to their external services. For example, an embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint.
 
@@ -110,10 +109,10 @@ rows:
     description: "Scheme used to connect to the forward proxy itself. One of `http` or `https`. Defaults to `http`."
   - field: "`auth_username`"
     type: "string"
-    description: "Username for proxy authentication. Optional. Referenceable from a [Vault](/gateway/entities/vault/)."
+    description: "Username for proxy authentication. Optional. Referenceable from a [AI Vault](/ai-gateway/entities/ai-vault/)."
   - field: "`auth_password`"
     type: "string"
-    description: "Password for proxy authentication. Optional. Encrypted at rest and referenceable from an [AI Vault](/gateway/entities/vault/)."
+    description: "Password for proxy authentication. Optional. Encrypted at rest and referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/)."
   - field: "`no_proxy`"
     type: "list"
     description: "Comma-separated list of hosts that should not be proxied."
@@ -378,23 +377,23 @@ columns:
 rows:
   - traffic: "Embeddings and semantic operations"
     policies: |
-      - [AI Semantic Cache](ai-gateway/policies/ai-semantic-cache/)
-      - [AI Semantic Prompt Guard](ai-gateway/policies/ai-semantic-prompt-guard/)
-      - [AI Semantic Response Guard](ai-gateway/policies/ai-semantic-response-guard/)
-      - [AI RAG Injector](ai-gateway/policies/ai-rag-injector/)
+      - [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/)
+      - [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/)
+      - [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/)
+      - [AI RAG Injector](/ai-gateway/policies/ai-rag-injector/)
     service: "The configured embeddings service"
   - traffic: "Prompt compression and sanitization"
     policies: |
-      - [AI Prompt Compressor](ai-gateway/policies/ai-prompt-compressor/)
-      - [AI Sanitizer](ai-gateway/policies/ai-sanitizer/)
+      - [AI Prompt Compressor](/ai-gateway/policies/ai-prompt-compressor/)
+      - [AI Sanitizer](/ai-gateway/policies/ai-sanitizer/)
     service: "The configured `compressor_url` or `sanitizer_url`"
   - traffic: "Guardrail services"
     policies: |
-      - [AI AWS Guardrails](ai-gateway/policies/ai-aws-guardrails/)
-      - [AI Azure Content Safety](ai-gateway/policies/ai-azure-content-safety/)
-      - [AI Lakera Guard](ai-gateway/policies/ai-lakera-guard/)
-      - [AI GCP Model Armor](ai-gateway/policies/ai-gcp-model-armor/)
-      - [AI Custom Guardrail](ai-gateway/policies/ai-custom-guardrail/)
+      - [AI AWS Guardrails](/ai-gateway/policies/ai-aws-guardrails/)
+      - [AI Azure Content Safety](/ai-gateway/policies/ai-azure-content-safety/)
+      - [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)
+      - [AI GCP Model Armor](/ai-gateway/policies/ai-gcp-model-armor/)
+      - [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/)
     service: "Managed or custom guardrail service"
 {% endtable %}
 <!--vale on-->
