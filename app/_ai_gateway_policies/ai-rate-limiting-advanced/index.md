@@ -29,9 +29,9 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 ### Using cloud authentication with Redis
 
-{% include md/ai-gateway/v2/redis-cloud-auth.md %}
+{% include_cached md/ai-gateway/v2/redis-cloud-auth.md %}
 
-{% include md/ai-gateway/v2/redis-cloud-auth-tabs.md %}
+{% include_cached /md/ai-gateway/v2/redis-cloud-providers.md name=page.name heading_level=3 %}
 
 ### Fallback from Redis
 
