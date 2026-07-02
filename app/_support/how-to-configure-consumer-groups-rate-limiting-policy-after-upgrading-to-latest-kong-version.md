@@ -1,64 +1,64 @@
 ---
-title: How do I configure rate limiting on consumer groups
+title: How do I configure rate limiting on Consumer Groups?
 content_type: support
-description: "After upgrading {{site.base_gateway}} to latest version, the method for configuring the Rate Limiting Policy / Rate limiting plugin for Consumer Groups has changed."
+description: "After upgrading {{site.base_gateway}}, use the recommended method for configuring rate limiting on Consumer Groups: scope the Rate Limiting plugin directly to the Consumer Group."
 products:
   - gateway
 works_on:
   - on-prem
   - konnect
-published: false
 tldr:
-  q: How do I configure rate limiting on consumer groups after upgrading to the latest Kong version?
+  q: How do I configure rate limiting on Consumer Groups after upgrading?
   a: |
-    After upgrading (for example, from `3.4.3.13` to `3.10.0.x`), the Consumer Group policy is
-    deprecated and policies are now applied through the Plugins tab instead of the Policy tab. Use
-    the Admin API endpoint `/consumer_groups/{group_name_or_id}/overrides/plugins/rate-limiting-advanced`
-    to configure the policy, then create a Rate Limiting plugin instance with the
-    `enforce_consumer_groups` option enabled and add your Consumer Group to the list. Note that if
-    Dynamic Ordering is configured anywhere in the workspace, consumer/consumer group scoped Rate
-    Limiting plugins may not work.
+    The `overrides` endpoint and `enforce_consumer_groups` option were deprecated in 3.4.
+    The recommended approach is to scope the Rate Limiting plugin directly to the Consumer Group
+    using the `/consumer_groups/{id}/plugins` endpoint.
 related_resources:
+  - text: Rate Limiting plugin examples
+    url: /plugins/rate-limiting/examples/
+  - text: Consumer Groups entity
+    url: /gateway/entities/consumer-group/
   - text: Known limitations of dynamic plugin ordering
     url: /gateway/entities/plugin/#known-limitations-of-dynamic-plugin-ordering
-  - text: Kong Admin API documentation
-    url: /api/gateway/admin-ee/#/operations/put-consumer_groups-group_name_or_id-overrides-plugins-rate-limiting-advanced
 ---
 
-## Overview
+## Problem
 
-How to configure rate limiting on consumer groups after upgrading from Kong version 3.4.3.13 to 3.10.0.x or in latest version where consumer group policy is deprecated.
+Before 3.4, the recommended way to configure rate limiting on Consumer Groups was to use the
+`/consumer_groups/{id}/overrides/plugins/rate-limiting-advanced` endpoint, combined with the
+`enforce_consumer_groups` option on a global plugin instance.
+Both were deprecated in 3.4.
 
-## Steps
+If you're upgrading and used this approach, switch to scoping the Rate Limiting plugin directly
+to the Consumer Group instead.
 
-After upgrading Kong gateway to latest version, the method for configuring the Rate Limiting Policy / Rate limiting plugin for Consumer Groups has changed. Previously, the policy could be configured directly in the Consumer Group's policy section. However, in latest versions, the configuration process has been updated, and policies now need to be applied through the Plugins tab.
+{:.info}
+> **Note:** If dynamic ordering is configured anywhere in the Workspace, there are limitations with executing the Rate Limiting plugin at the Consumer or Consumer Group level. Plugins may not work if they are Consumer/Consumer Group scoped.
+This has been fixed in 3.14.
 
-Also, it's important to note that if Dynamic Ordering is configured anywhere in the workspace, there are limitations with executing the Rate Limiting plugin at the Consumer or Consumer Group level and the plugins may not work if they are consumer/consumer group scoped.  There is an improvement to support Dynamic Plugin Ordering for Consumer/Consumer Group scoped plugins.
+## Solution
 
-Consumer groups -> Policy tab in older versions:
-
-Consumer Groups --> Policy Tab is disabled
-
-Consumer Groups --> Configure Plugins directly
-
-NOTE: The consumer groups policy configuration still works in latest versions. It is not removed as we hope customers will organically move to new model over the time.
-
-To correctly configure the Rate Limiting Advanced plugin for a Consumer Group in latest Kong version, follow these steps:
-
-1. Use the Admin API to configure the policy for your newly created Consumer Groups (In above example, I have created "free-150tps" consumer group and we can see that there is no option to configure policy in latest version.
-
-   The relevant API endpoint is `/consumer_groups/{group_name_or_id}/overrides/plugins/rate-limiting-advanced`.
-
-   For detailed API documentation, refer to the Kong Admin API documentation.
-
-   Example:
+1. Create a Consumer Group if you haven't already, for example `free-tier`:
 
    ```bash
-   curl -X PUT https://adminapi:8001/consumer_groups/<consumer_group_id/name>/overrides/plugins/rate-limiting-advanced \
-   -H 'content-type: application/json' \
-   -d '{"config":{"limit": [10], "window_size":[10], "window_type":"sliding"}}'
+   curl -X POST http://localhost:8001/consumer_groups \
+     --data name=free-tier
    ```
 
-2. Create a Rate Limiting plugin instance and enable the `enforce_consumer_groups` option. Add the name of your Consumer Group "free-150tps" to the list.
+2. Add Consumers to the group:
 
-3. Confirm that the Rate Limiting works as per the policy configured. This setup should now correctly enforce the specified TPS (Transactions Per Second) limit for any consumer added to this Consumer Group "free-150tps".
+   ```bash
+   curl -X POST http://localhost:8001/consumer_groups/free-tier/consumers \
+     --data consumer.username=my-consumer
+   ```
+
+3. Scope the Rate Limiting plugin to the Consumer Group. For example, to allow 10 requests per minute using the local policy:
+
+   ```bash
+   curl -X POST http://localhost:8001/consumer_groups/free-tier/plugins \
+     --data name=rate-limiting \
+     --data config.minute=10 \
+     --data config.policy=local
+   ```
+
+The plugin now enforces the rate limit for all Consumers in the `free-tier` group.

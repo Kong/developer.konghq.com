@@ -1,41 +1,40 @@
 ---
 title: Auditing Route configuration changes using the Kong audit log API
 content_type: support
-description: Use the {{site.ee_product_name}} audit log APIs to trace who changed a Route and to detect Routes created with empty or missing paths.
+description: Use the {{site.base_gateway}} audit log APIs to trace who changed a Route and to detect Routes created with empty or missing paths.
 products:
   - gateway
 works_on:
   - on-prem
-  - konnect
 tldr:
   q: How do I audit Route configuration changes using the Kong Audit Log APIs?
   a: |
-    {{site.ee_product_name}} provides two audit log endpoints: `/audit/requests` (captures who did what,
+    {{site.base_gateway}} provides two audit log endpoints: `/audit/requests` (captures who did what,
     including HTTP method, user, and payload) and `/audit/objects` (captures the data entity that
     was created or updated, with full snapshots). Ensure audit logging is enabled with
     `KONG_AUDIT_LOG=on`, then use the provided `kong-audit-query.sh` script to identify the RBAC
-    user who created a specific route, or to detect routes with empty or missing `paths` that can
+    user who created a specific Route, or to detect Routes with empty or missing `paths` that can
     cause 409 Conflict collisions.
 related_resources: []
 ---
 
-## Overview
-
-In environments where multiple teams or pipelines interact with {{site.base_gateway}}, it is vital to trace configuration changes, especially for objects like Routes. {{site.ee_product_name}} provides two audit log endpoints:
-
+In environments where multiple teams or pipelines interact with {{site.base_gateway}}, it is vital to trace configuration changes, especially for objects like Routes. {{site.base_gateway}} provides two audit log endpoints:
 
 1. `/audit/requests`: captures who did what, including HTTP method, user, and payload.
-2. `/audit/objects`: captures what data entity was created/updated, with full snapshots.
+2. `/audit/objects`: captures which data entity was created/updated, with full snapshots.
 
 The script below was built to:
 
-- Help customers identify the RBAC user who made a route change.
-- Pinpoint changes to a specific route.
+- Help customers identify the RBAC user who made a Route change.
+- Pinpoint changes to a specific Route.
 - Enable SRE or Platform teams to perform accountable debugging based on audit trails.
 
-### Script
+## Script
 
-This script helps identify who created a specific route, or detect routes with empty/missing paths (which can cause conflicts). Output includes the RBAC user, method, workspace, and full route payload.
+This script helps identify who created a specific Route, or detect Routes with empty/missing paths (which can cause conflicts). The output includes the RBAC user, method, workspace, and full Route payload.
+
+{:.info} 
+> Replace the `BASE` and `TOKEN` in the script with the Admin API endpoint and the RBAC password/token.
 
 ```bash
 #!/bin/bash
@@ -135,10 +134,7 @@ main() {
 main
 ```
 
-{:.info} 
-> Replace the `BASE` and `TOKEN` in the script with the Admin API endpoint and the RBAC password/token.
-
-### Setup instructions
+## Setup instructions
 
 1. Save the script as `kong-audit-query.sh`.
 
@@ -148,24 +144,24 @@ main
    chmod +x kong-audit-query.sh
    ```
 
-1. Ensure Kong audit logging is enabled in your Kong configuration:
+1. Ensure {{site.base_gateway}} audit logging is enabled in your Kong configuration:
 
    ```bash
    KONG_AUDIT_LOG=on
    ```
 
-   Without this, Kong will not emit any audit log events, and the script will return empty results.
+   Without this, {{site.base_gateway}} won't emit any audit log events, and the script will return empty results.
 
-### Usage
+## Usage
 
-- To check who created a specific route:
+Check who created a specific Route:
 
-  ```bash
-  ./kong-audit-query.sh <route-name>
-  ```
+```bash
+./kong-audit-query.sh <route-name>
+```
 
-- To scan all routes with missing/empty paths:
+Scan all Routes with missing/empty paths:
 
-  ```bash
-  ./kong-audit-query.sh
-  ```
+```bash
+./kong-audit-query.sh
+```

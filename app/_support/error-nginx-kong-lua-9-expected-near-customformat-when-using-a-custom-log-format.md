@@ -1,7 +1,7 @@
 ---
-title: "Error: `nginx_kong.lua:9: '=' expected near 'customformat'` when using a custom `log_format`"
+title: "Error: nginx_kong.lua:9: '=' expected near 'customformat' when using a custom log_format"
 content_type: support
-description: This can occur when attempting to use `log_format` outside the http context.
+description: This can occur when attempting to use `log_format` outside the HTTP context.
 products:
   - gateway
 works_on:
@@ -21,7 +21,6 @@ tldr:
 When attempting to use a custom `log_format` in an nginx template, for example when using the Correlation ID plugin to log IDs, the following error appears on startup or reload:
 
 ```
-
 ERROR: /usr/local/share/lua/5.1/luarocks/loader.lua:104: error loading module 'kong.templates.nginx_kong' from file '/usr/local/share/lua/5.1/kong/templates/nginx_kong.lua':
         /usr/local/share/lua/5.1/kong/templates/nginx_kong.lua:9: '=' expected near 'customformat'
 stack traceback:
@@ -48,8 +47,7 @@ This can occur when attempting to use `log_format` outside the `http` context. T
 
 When using a custom template be sure to follow the instructions as documented, properly adding the contents of the `nginx_kong.lua` within `http {}`, for example:
 
-```bash
-
+```lua
 worker_processes ${{NGINX_WORKER_PROCESSES}};
 daemon ${{NGINX_DAEMON}};       
 pid pids/nginx.pid; 
