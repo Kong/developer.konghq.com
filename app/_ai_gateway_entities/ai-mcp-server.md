@@ -93,7 +93,7 @@ For configuration examples and step-by-step setup instructions, see [Set up an A
 
 ## MCP server governance
 
-Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your AI MCP Server for common governance scenarios:
+Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your AI MCP Server to govern them:
 
 <!-- vale off -->
 {% table %}
