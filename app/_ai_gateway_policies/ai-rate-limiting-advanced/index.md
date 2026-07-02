@@ -25,22 +25,19 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 ## Strategies
 
-{% include md/ai-gateway/v2/policies/rate-limiting-strategies.md name="AI Rate Limiting Advanced" %}
+{% include md/ai-gateway/v2/rate-limiting-strategies.md name="AI Rate Limiting Advanced" %}
 
 ### Using cloud authentication with Redis
 
-{% include md/ai-gateway/v2/policies/redis-cloud-auth.md %}
+{% include md/ai-gateway/v2/redis-cloud-auth.md %}
 
-{% include md/ai-gateway/v2/policies/redis-cloud-auth-tabs.md %}
+{% include md/ai-gateway/v2/redis-cloud-auth-tabs.md %}
 
 ### Fallback from Redis
 
 {% include md/ai-gateway/v2/redis-fallback.md %}
 
 ## Policy-based rate limiting
-
-{:.info}
-> The [`config.llm_providers`](./reference/#schema--config-llm-providers) field is deprecated, but existing configurations will still work.
 
 The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the [AI Consumer](./examples/consumer-rate-limiting), [AI Consumer Group](./examples/consumer-group-rate-limiting), [IP address](./examples/ip-rate-limiting), [header](./examples/header-rate-limiting), [path](./examples/path-rate-limiting), [model](./examples/llm-model-rate-limiting), and [provider](./examples/llm-provider-policy-based-rate-limiting) level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up [multi-dimensional rate limiting](./examples/rate-limiting-multiple-conditions). For example, you can set different rate limiting policies for a specific Consumer and model:
 
@@ -77,7 +74,7 @@ Policies without match conditions act as fallback and match all requests.
 
 ### Known issues
 
-* When defining a policy matching a model and/or a provider, you must set the [`config.policies.match.partition_by`](./reference/#schema--config-policies-match-patition-by) field to `true`, otherwise the policy is not enforced.
+* When defining a policy matching a model and/or a provider, you must set the [`config.policies.match.partition_by`](./reference/#schema--config-policies-match-partition-by) field to `true`, otherwise the policy is not enforced.
 
 
 ## Headers sent to the client
@@ -168,7 +165,7 @@ rows:
 ### Request prompt function
 
 You can decide to use a custom function to count the tokens for a requests.
-To configure it, you must set the [`config.llm_providers.name`](./reference/#schema--config-llm-providers-name) to `requestPrompt` and specify the function in [`config.request_prompt_count_function`](./reference/#schema--config-request-prompt-count-function).
+To configure it, specify the function in [`config.request_prompt_count_function`](./reference/#schema--config-request-prompt-count-function).
 
 When using the request prompt provider, it will call the function to get the token count at the request level and implement a limit.
 
