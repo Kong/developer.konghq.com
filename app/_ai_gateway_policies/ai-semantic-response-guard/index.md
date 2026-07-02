@@ -34,8 +34,6 @@ related_resources:
     url: /plugins/ai-proxy/
   - text: AI Semantic Cache
     url: /ai-gateway/policies/ai-semantic-cache/
-  - text: Use AI Semantic Response Guard to govern your LLM traffic
-    url: /how-to/use-ai-semantic-response-guard-plugin/
   - text: Embedding-based similarity matching in {{site.ai_gateway}} AI Policies
     url: /ai-gateway/semantic-similarity/
 
@@ -47,14 +45,6 @@ tags:
  - ai
  - safety
  - dlp
-
-next_steps:
-  - text: Use AI Semantic Prompt Guard AI Policy to govern your LLM traffic
-    url: /how-to/use-ai-semantic-prompt-guard-plugin/
-  - text: Use AI Prompt Response AI Policy to govern your LLM traffic
-    url: /how-to/use-ai-prompt-response-plugin/
-  - text: Use AI Prompt Guard AI Policy to govern your LLM traffic
-    url: /how-to/use-ai-prompt-guard-plugin/
 ---
 
 The AI Semantic Response Guard AI Policy filters LLM responses based on semantic similarity to predefined rules, helping prevent unwanted or unsafe responses when serving `llm/v1/chat`, `llm/v1/completions`, or `llm/v1/embeddings` requests through {{site.ai_gateway}}.
@@ -72,17 +62,17 @@ The AI Policy analyzes the semantic content of the full LLM response before it i
 
 ## Response processing
 
-To enforce these rules, the plugin:
+To enforce these rules, the AI Semantic Response Guard Policy:
 
 1. Disables streaming (`stream=false`) to ensure the full response body is buffered before analysis.
-2. Intercepts the response body using the `guard-response` filter.
+2. Intercepts the response body using the `guard-buffered-response` filter.
 3. Extracts response text, supporting JSON parsing of multiple LLM formats and gzipped content.
 4. Generates embeddings for the extracted text.
 5. Searches the vector database (Redis, Pgvector, or other) against configured `allow_responses` or `deny_responses`.
 6. Applies the decision rules described above.
 
 {:.info}
-> If a response is blocked or if a system error occurs during evaluation, the plugin returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.
+> If a response is blocked or if a system error occurs during evaluation, the AI Policy returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.
 
 {% include_cached md/ai-gateway/v2/vectordb-embeddings.md %}
 
