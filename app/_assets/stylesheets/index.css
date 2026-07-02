@@ -822,12 +822,8 @@
   }
 
   .custom-code-block.wrap {
-    [data-code-snippet] {
-      @apply overflow-visible;
-    }
-
     pre {
-      @apply whitespace-pre-wrap overflow-visible;
+      @apply whitespace-pre-wrap overflow-auto;
     }
   }
 
