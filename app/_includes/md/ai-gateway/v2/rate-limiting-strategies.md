@@ -1,4 +1,4 @@
-The {{ include.name }} Policy supports two rate limiting strategies: `local` and `redis`.
+The {{ include.name }} Policy supports three rate limiting strategies: `local`, `cluster`, and `redis`.
 This is controlled by the [`config.strategy`](./reference/#schema--config-strategy) parameter.
 
 {% table %}
@@ -16,14 +16,21 @@ rows:
     description: Counters are stored in-memory on the node.
     pros: Minimal performance impact.
     cons: Less accurate. Unless there's a consistent-hashing load balancer in front of {{site.ai_gateway}}, it diverges when scaling the number of nodes.
+  - strategy: "`cluster`"
+    description: Counters are stored in the {{site.base_gateway}} data store and shared across nodes.
+    pros: Accurate<sup>1</sup>, no extra components to support.
+    cons: Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in DB-less mode, hybrid mode, or {{site.konnect_short_name}} deployments.
   - strategy: "`redis`"
     description: Counters are stored on a Redis server and shared across nodes.
-    pros: Accurate<sup>1</sup>, and works consistently across all {{site.ai_gateway}} nodes.
+    pros: Accurate<sup>1</sup>, less performance impact than a `cluster` strategy.
     cons: Needs a Redis installation. Bigger performance impact than a `local` strategy.
 {% endtable %}
 
 {:.info}
 > **\[1\]**: Only when [`config.sync_rate`](./reference/#schema--config-sync-rate) option is set to `0` (synchronous behavior).
+
+{:.info}
+> On Serverless deployments, only the `local` strategy is supported.
 
 Two common use cases for rate limiting are:
 
@@ -33,9 +40,12 @@ The requirement is only to protect backend services from overloading that's caus
 
 ### Every transaction counts
 
-In this scenario, because accuracy is important, the `local` strategy is not an option. Use the `redis` strategy instead.
+In this scenario, because accuracy is important, the `local` strategy is not an option.
+Consider the support effort you might need for Redis, and then choose either `cluster` or `redis`.
 
-If using a very high sync frequency, be aware that this can affect performance at scale.
+You could start with the `cluster` strategy, and move to `redis` if performance reduces drastically.
+
+If using a very high sync frequency, use `redis`. Very high sync frequencies with `cluster` mode are **not scalable and not recommended**.
 The sync frequency becomes higher when the `sync_rate` setting is a lower number. For example, a `sync_rate` of 0.1 is a much higher sync frequency (10 counter syncs per second) than a `sync_rate` of 1 (1 counter sync per second).
 
 You can calculate what is considered a very high sync rate in your environment based on your topology, number of AI Policies, their sync rates, and tolerance for loose rate limits.
@@ -54,10 +64,10 @@ columns:
     key: value
 rows:
   - property: "Window size in seconds"
-    formula_or_config: "Value set in `config.window_size`"
+    formula_or_config: "Value set in `config.policies[].limits[].window_size`"
     value: "5"
   - property: "Limit (in window)"
-    formula_or_config: "Value set in `config.limit`"
+    formula_or_config: "Value set in `config.policies[].limits[].limit`"
     value: "1000"
   - property: "Sync rate (interval)"
     formula_or_config: "Value set in `config.sync_rate`"
@@ -82,6 +92,10 @@ rows:
     value: "1000 + 100 = 1100"
 {% endtable %}
 <!--vale on-->
+
+If you choose to switch strategies, note that you can't port the existing usage metrics from the {{site.base_gateway}} data store to Redis.
+This might not be a problem with short-lived metrics (for example, seconds or minutes)
+but if you use metrics with a longer time frame (for example, months), plan your switch carefully.
 
 ### Backend protection
 
