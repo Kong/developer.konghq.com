@@ -77,7 +77,7 @@ When `proxy` is set on an entity, every outbound request that entity issues goes
 
 The Forward Proxy Advanced plugin takes over the request before the balancer phase runs, which works for standard Kong Services but not with behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
 
-For any Service that serves traffic through an AI Model or MCP Server you should use `proxy` instead, so the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy`.
+For any Service that serves traffic through an AI Model or MCP Server you should use the native `proxy` configuration instead, this ensures the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy`.
 
 ## Proxy configuration fields
 
@@ -134,54 +134,61 @@ You can use [Squid](https://www.squid-cache.org/) to create a simple forward pro
 In the following examples `secure.mycompany` is used as the `visible_hostname` for the forward proxy.
 
 1. Create minimal config file for Squid:
-  ```
-  echo '
-  # Allow your local machine
-  acl localnet src 172.0.0.0/8     # Docker bridge network range
 
-  acl SSL_ports port 443
-  acl Safe_ports port 80 443
+```
+echo '
+# Allow your local machine
+acl localnet src 172.0.0.0/8     # Docker bridge network range
 
-  http_access deny !Safe_ports
-  http_access allow localnet
-  http_access allow localhost
-  http_access deny all
+acl SSL_ports port 443
+acl Safe_ports port 80 443
 
-  http_port 3128
+http_access deny !Safe_ports
+http_access allow localnet
+http_access allow localhost
+http_access deny all
 
-  access_log /var/log/squid/access.log combined
-  cache_log /var/log/squid/cache.log
-  ' > squid.conf
-  ```
+http_port 3128
+
+access_log /var/log/squid/access.log combined
+cache_log /var/log/squid/cache.log
+' > squid.conf
+```
+
 1. Create a docker compose file:
-  ```
-  echo '
-  services:
-  squid:
-    image: ubuntu/squid
-    container_name: squid
-    ports:
-      - "3128:3128"
-    volumes:
-      - ./squid.conf:/etc/squid/squid.conf:ro
-    networks:
-      proxy-net:
-        aliases:
-          - secure.mycompany   # ← the named host
 
+```
+echo '
+services:
+squid:
+  image: ubuntu/squid
+  container_name: squid
+  ports:
+    - "3128:3128"
+  volumes:
+    - ./squid.conf:/etc/squid/squid.conf:ro
   networks:
     proxy-net:
-      driver: bridge
-  ' > docker-compose.yml
-  ```
+      aliases:
+        - secure.mycompany   # ← the named host
+
+networks:
+  proxy-net:
+    driver: bridge
+' > docker-compose.yml
+```
+
 1. Add the  proxy to your hosts:
-  ```
-  echo "127.0.0.1   secure.mycompany" | sudo tee -a /etc/hosts
-  ```
+
+```
+echo "127.0.0.1   secure.mycompany" | sudo tee -a /etc/hosts
+```
+
 1. Run Squid using docker:
-  ```
-  docker compose up -d
-  ```
+
+```
+docker compose up -d
+```
 
 ### Gateway
 
@@ -235,7 +242,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
       model: {}
       proxy:
         http_proxy_host: secure.mycompany
-        http_proxy_port: 443
+        http_proxy_port: 3128
         proxy_scheme: http
     targets:
       - name: gpt-4o
@@ -308,7 +315,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
         timeout: 60000
       proxy:
         http_proxy_host: secure.mycompany
-        http_proxy_port: 8080
+        http_proxy_port: 3128
         proxy_scheme: http
     tools:
       - name: get-current-weather
