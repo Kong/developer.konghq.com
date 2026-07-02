@@ -23339,6 +23339,11 @@
         "scope": "Plugin"
       },
       {
+        "message": "Added a Distroless Docker image variant for Kong API Gateway. The Distroless image ships only the Kong binary and its runtime dependencies, with no package managers, no shells or any other programs you would expect to find in a standard Linux distribution.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
         "message": "Added a file system vault (`fs`).",
         "type": "feature",
         "scope": "Core"
