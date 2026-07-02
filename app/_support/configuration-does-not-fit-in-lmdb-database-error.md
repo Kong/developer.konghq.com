@@ -25,7 +25,7 @@ The following LMDB error is returned when pushing configuration to data planes:
 ```
 time="2023-01-31T11:12:33Z" level=error msg="could not update kong admin" error="posting new config to /config: HTTP status 413 (message: \"Configuration does not fit in LMDB database, consider raising the \\\"lmdb_map_size\\\" config for Kong\")" subsystem=dataplane-synchronizer
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 
 ## Solution
