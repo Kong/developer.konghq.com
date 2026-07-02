@@ -30,6 +30,7 @@ This returns the following error:
 ```json
 {"code":10,"name":"invalid unique name","message":"must not be one of: workspaces, consumers, certificates, services, routes, snis, upstreams, targets, consumer_groups, plugins, tags, ca_certificates, clustering_data_planes, parameters, vaults, key_sets, keys, filter_chains, files, legacy_files, workspace_entity_counters, consumer_reset_secrets, credentials, audit_requests, audit_objects, rbac_users, rbac_roles, rbac_user_roles, rbac_role_entities, rbac_role_endpoints, admins, developers, document_objects, applications, application_instances, groups, group_rbac_roles, login_attempts, keyring_meta, keyring_keys, event_hooks, licenses, consumer_group_plugins, consumer_group_consumers, rbac_user_groups"}
 ```
+{:.no-copy-code.wrap}
 
 ## Cause
 

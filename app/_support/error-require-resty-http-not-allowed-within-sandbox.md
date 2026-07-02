@@ -13,9 +13,9 @@ tldr:
     The plugin runs in a sandbox that blocks `require` of certain modules.
     Add the module to `untrusted_lua_sandbox_requires` (preferred), or set `untrusted_lua` to `on` to disable the sandbox entirely (use with caution).
 related_resources:
-  - text: "`untrusted_lua_sandbox_requires`"
+  - text: "untrusted_lua_sandbox_requires"
     url: /gateway/configuration/#untrusted-lua-sandbox-requires
-  - text: "`untrusted_lua`"
+  - text: "untrusted_lua"
     url: /gateway/configuration/#untrusted-lua
 ---
 

@@ -13,9 +13,9 @@ tldr:
     {{site.base_gateway}} is connecting without SSL, but the PostgreSQL server requires it.
     Set `pg_ssl` to `on` (and `pg_ssl_version` if needed) to connect with SSL.
 related_resources:
-  - text: "`pg_ssl_version`"
+  - text: "pg_ssl_version"
     url: /gateway/configuration/#pg-ssl-version
-  - text: "`pg_ssl`"
+  - text: "pg_ssl"
     url: /gateway/configuration/#pg-ssl
 ---
 
@@ -26,14 +26,14 @@ You see this error when trying to connect {{site.base_gateway}} to your PostgreS
 ```text
 Error: [PostgreSQL error] failed to retrieve PostgreSQL server_version_num: FATAL: no pg_hba.conf entry for host "<IP/Hostname>", user "<user>", database "kong", SSL off
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 Another variation of the error looks like this:
 
 ```text
 Error: [PostgreSQL error] failed to retrieve PostgreSQL server_version_num: FATAL: no pg_hba.conf entry for host "<IP/Hostname>", user "<user>", database "kong", no encryption"
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 ## Cause
 
