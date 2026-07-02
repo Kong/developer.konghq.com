@@ -95,37 +95,37 @@ rows:
 
 {%- assign note_counter = 0 -%}
 {%- assign generate_note_num = 0 %}{% if provider.capabilities.generate.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign generate_note_num = note_counter %}{% endif -%}
-{%- assign agentic_note_num = 0 %}{% if provider.capabilities.agentic.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign agentic_note_num = note_counter %}{% endif -%}
-{%- assign realtime_note_num = 0 %}{% if provider.capabilities.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign realtime_note_num = note_counter %}{% endif -%}
 {%- assign embeddings_note_num = 0 %}{% if provider.capabilities.embeddings.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign embeddings_note_num = note_counter %}{% endif -%}
-{%- assign image_note_num = 0 %}{% if provider.capabilities.image.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign image_note_num = note_counter %}{% endif -%}
+{%- assign agentic_note_num = 0 %}{% if provider.capabilities.agentic.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign agentic_note_num = note_counter %}{% endif -%}
 {%- assign audio_speech_note_num = 0 %}{% if provider.capabilities.audio_speech.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign audio_speech_note_num = note_counter %}{% endif -%}
 {%- assign audio_transcription_note_num = 0 %}{% if provider.capabilities.audio_transcription.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign audio_transcription_note_num = note_counter %}{% endif -%}
 {%- assign audio_translation_note_num = 0 %}{% if provider.capabilities.audio_translation.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign audio_translation_note_num = note_counter %}{% endif -%}
+{%- assign image_note_num = 0 %}{% if provider.capabilities.image.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign image_note_num = note_counter %}{% endif -%}
 {%- assign video_note_num = 0 %}{% if provider.capabilities.video.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign video_note_num = note_counter %}{% endif -%}
-{%- assign rerank_note_num = 0 %}{% if provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign rerank_note_num = note_counter %}{% endif -%}
+{%- assign realtime_note_num = 0 %}{% if provider.capabilities.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign realtime_note_num = note_counter %}{% endif -%}
 {%- assign batches_note_num = 0 %}{% if provider.capabilities.batches.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign batches_note_num = note_counter %}{% endif -%}
 {%- assign files_note_num = 0 %}{% if provider.capabilities.files.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign files_note_num = note_counter %}{% endif -%}
+{%- assign rerank_note_num = 0 %}{% if provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign rerank_note_num = note_counter %}{% endif -%}
 {%- assign has_text = false -%}
-{%- assign has_agentic = false -%}
-{%- assign has_realtime = false -%}
 {%- assign has_embeddings = false -%}
-{%- assign has_image = false -%}
+{%- assign has_agentic = false -%}
 {%- assign has_audio = false -%}
+{%- assign has_image = false -%}
 {%- assign has_video = false -%}
-{%- assign has_rerank = false -%}
+{%- assign has_realtime = false -%}
 {%- assign has_batches = false -%}
 {%- assign has_files = false -%}
+{%- assign has_rerank = false -%}
 {%- if provider.capabilities.generate.supported %}{% assign has_text = true %}{% endif -%}
-{%- if provider.capabilities.agentic.supported %}{% assign has_agentic = true %}{% endif -%}
-{%- if provider.capabilities.realtime.supported %}{% assign has_realtime = true %}{% endif -%}
 {%- if provider.capabilities.embeddings.supported %}{% assign has_embeddings = true %}{% endif -%}
-{%- if provider.capabilities.image.supported %}{% assign has_image = true %}{% endif -%}
+{%- if provider.capabilities.agentic.supported %}{% assign has_agentic = true %}{% endif -%}
 {%- if provider.capabilities.audio_speech.supported or provider.capabilities.audio_transcription.supported or provider.capabilities.audio_translation.supported %}{% assign has_audio = true %}{% endif -%}
+{%- if provider.capabilities.image.supported %}{% assign has_image = true %}{% endif -%}
 {%- if provider.capabilities.video.supported %}{% assign has_video = true %}{% endif -%}
-{%- if provider.capabilities.rerank.supported %}{% assign has_rerank = true %}{% endif -%}
+{%- if provider.capabilities.realtime.supported %}{% assign has_realtime = true %}{% endif -%}
 {%- if provider.capabilities.batches.supported %}{% assign has_batches = true %}{% endif -%}
 {%- if provider.capabilities.files.supported %}{% assign has_files = true %}{% endif -%}
+{%- if provider.capabilities.rerank.supported %}{% assign has_rerank = true %}{% endif -%}
 
 ## Supported capabilities
 
@@ -262,6 +262,8 @@ rows:
 {:.info}
 > For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
 >
+> For requests with large payloads, consider increasing [`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on your [AI Model](/ai-gateway/entities/ai-model/) entity to three times the raw binary size.
+>
 > Supported audio formats, voices, and parameters vary by model. Refer to your provider's documentation for available options.
 
 {% if provider.capabilities.audio_speech.note.content %}<sup>{{ audio_speech_note_num }}</sup> {{ provider.capabilities.audio_speech.note.content }}{% endif %}
@@ -298,6 +300,8 @@ rows:
 {:.info}
 > For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
 >
+> For requests with large payloads, consider increasing [`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on your [AI Model](/ai-gateway/entities/ai-model/) entity to three times the raw binary size.
+>
 > Supported image sizes and formats vary by model. Refer to your provider's documentation for allowed dimensions and requirements.
 
 {% if provider.capabilities.image.note.content %}<sup>{{ image_note_num }}</sup> {{ provider.capabilities.image.note.content }}{% endif %}
@@ -330,7 +334,7 @@ rows:
 {% endtable %}
 
 {:.info}
-> For requests with large payloads (video generation), consider increasing `config.max_request_body_size` to three times the raw binary size.
+> For requests with large payloads (video generation), consider increasing [`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on your [AI Model](/ai-gateway/entities/ai-model/) entity to three times the raw binary size.
 
 {% if provider.capabilities.video.note.content %}<sup>{{ video_note_num }}</sup> {{ provider.capabilities.video.note.content }}{% endif %}
 {%- endif -%}
@@ -341,8 +345,8 @@ rows:
 
 Support for {{ provider.name }}'s bidirectional streaming for realtime applications:
 
-{:.warning}
-> Realtime processing uses WebSocket protocol (ws/wss). Configure the protocols on both the Service and Route where the AI model is associated.
+{:.info}
+> Realtime processing uses WebSocket protocol (ws/wss). This protocol is automatically enabled when you configure your [AI Model](/ai-gateway/entities/ai-model/) with the [realtime capability](/ai-gateway/entities/ai-model/#capabilities).
 
 {% table %}
 vertical_align: middle
@@ -392,6 +396,9 @@ rows:
 {% endif %}
 {% endtable %}
 {% if provider.capabilities.batches.note.content %}<sup>{{ batches_note_num }}</sup> {{ provider.capabilities.batches.note.content }}{% endif %}
+{:.warning}
+> Batches are configured on a separate AI Model with `type: "api"`, distinct from regular models that handle synchronous capabilities like generate and embeddings.
+> Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
 {%- endif -%}
 
 {% if has_files %}
@@ -420,6 +427,10 @@ rows:
 {% endif %}
 {% endtable %}
 {% if provider.capabilities.files.note.content %}<sup>{{ files_note_num }}</sup> {{ provider.capabilities.files.note.content }}{% endif %}
+
+{:.warning}
+> Batches are configured on a separate AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), distinct from regular models that handle synchronous capabilities like generate and embeddings.
+> Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
 {%- endif -%}
 
 {% if has_rerank %}

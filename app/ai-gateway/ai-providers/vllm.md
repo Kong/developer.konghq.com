@@ -29,12 +29,14 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: vLLM tutorials
-    url: /how-to/?tags=vllm
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
-  - text: AI providers
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/policies/
+  - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Provider entity
+    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 ---
 
@@ -57,5 +59,8 @@ body:
   display_name: vllm Production
   name: my-vllm-account
   type: vllm
+  config:
+    auth:
+      type: basic
 {% endkonnect_api_request %}
 <!--vale on-->

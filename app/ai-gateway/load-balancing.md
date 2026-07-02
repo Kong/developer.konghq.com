@@ -26,28 +26,19 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Model entity
+  - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
 ---
 
 {{site.ai_gateway}} provides load balancing capabilities to distribute requests across multiple LLM models. You can use these features to improve fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-In {{site.ai_gateway}}, load balancing is configured on the [Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `target_models`.
-
-<!-- Commented out for future reference - Compatibility with existing configurations
-{:.info}
-> With {{site.ai_gateway}}, both configuration approaches can appear in existing deployments:
-> - Legacy plugin-based approach: configure load balancing directly on [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin instances.
-> - {{site.ai_gateway}} approach: configure load balancing on the [Model entity](/ai-gateway/entities/ai-model/) with `config.balancer` and `target_models`.
->
-> For new {{site.ai_gateway}} deployments, use the Model entity workflow.
--->
+In {{site.ai_gateway}}, load balancing is configured on the [AI Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `target_models`.
 
 ### Load balancing algorithms
 
 {{site.ai_gateway}} supports multiple load balancing strategies for distributing traffic across AI models. Each algorithm addresses different goals: balancing load, improving cache-hit ratios, reducing latency, or providing [failover reliability](#retry-and-fallback).
 
-The following table describes the available algorithms for [Model entities](/ai-gateway/entities/ai-model/) and considerations for selecting one.
+The following table describes the available algorithms for [AI Model entities](/ai-gateway/entities/ai-model/) and considerations for selecting one.
 
 <!--vale off-->
 {% table %}
@@ -114,7 +105,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai-model/#algorithm-examples) in the [Model entity](/ai-gateway/entities/ai-model/) reference.
+For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai-model/#algorithm-examples) in the [AI Model entity](/ai-gateway/entities/ai-model/) reference.
 
 ### Request routing by model alias
 
@@ -228,7 +219,7 @@ rows:
 
 ### Health check and circuit breaker
 
-For Model entities, circuit breaker behavior is controlled through the balancer configuration on the Model. Use these settings to fail fast when a target model is unhealthy and to retry or fall back to another target instead of waiting for repeated slow responses.
+For AI Model entity, circuit breaker behavior is controlled through the balancer configuration on the AI Model. Use these settings to fail fast when a target model is unhealthy and to retry or fall back to another target instead of waiting for repeated slow responses.
 
 <!--vale off-->
 {% table %}
@@ -239,11 +230,11 @@ columns:
     key: use
 rows:
   - setting: "[`connect_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-connect-timeout), [`read_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-read-timeout), [`write_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-write-timeout)"
-    use: "Reduce how long {{site.base_gateway}} waits before treating a target model as unavailable."
+    use: "Reduce how long {{site.ai_gateway}} waits before treating a target model as unavailable."
   - setting: "[`max_fails`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-max-fails)"
-    use: "Set the number of failed attempts allowed before {{site.base_gateway}} marks a target model unhealthy."
+    use: "Set the number of failed attempts allowed before {{site.ai_gateway}} marks a target model unhealthy."
   - setting: "[`fail_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-fail-timeout)"
-    use: "Set how long {{site.base_gateway}} keeps a target model in a failed state before trying it again."
+    use: "Set how long {{site.ai_gateway}} keeps a target model in a failed state before trying it again."
 {% endtable %}
 <!--vale on-->
 

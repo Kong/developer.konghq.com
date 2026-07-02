@@ -2,7 +2,7 @@
 title: "Gemini provider"
 layout: reference
 content_type: reference
-description: Reference for supported capabilities for Azure OpenAI provider
+description: Reference for supported capabilities for Gemini provider
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/
@@ -27,26 +27,28 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Gemini tutorials
-    url: /how-to/?tags=gemini
   - text: "{{site.ai_gateway}} Policies"
-    url: /plugins/?category=ai
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Provider entity
+    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 faqs:
   - q: How can I set model generation parameters when calling Gemini?
     a: |
-      {% include faqs/gemini-model-params.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-model-params.md %}
   - q: How do I use Gemini's `googleSearch` tool for real-time web searches?
     a: |
-      {% include faqs/gemini-search.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-search.md %}
   - q: How do I control aspect ratio and resolution for Gemini image generation?
     a: |
-      {% include faqs/gemini-image.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-image.md %}
   - q: How do I get reasoning traces from Gemini models?
     a: |
-      {% include faqs/gemini-thinking.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-thinking.md %}
 
 ---
 
@@ -56,7 +58,7 @@ faqs:
 
 ## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Provider](/ai-gateway/entities/ai-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 

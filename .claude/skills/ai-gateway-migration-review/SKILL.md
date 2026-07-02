@@ -66,6 +66,13 @@ Flag any deviation:
 - `tools` containing `deck`, `admin-api`, or anything other than `konnect-api`
 - Missing or wrong `min_version` (must be `ai-gateway: '2.0'`)
 
+#### `content_type` on AI Policy pages
+
+Pages under `app/_ai_gateway_policies/` are auto-generated as stubs with the default `content_type: plugin`. When you author real overview content for one of these pages (i.e. the file has hand-written body prose, not just frontmatter), set `content_type: policy`.
+
+- If you are adding or editing overview prose on an `_ai_gateway_policies/` page, change `content_type: plugin` → `content_type: policy`.
+- Leave untouched stubs alone — do **not** flip `content_type` on pages that still have an empty body. The stub default stays `plugin` until the page gets real content.
+
 ### Plugin → AI Policy migration
 
 Plugins have been replaced by AI Policies in v2. The four plugins that do **not** exist as policies are exceptions:
@@ -82,6 +89,13 @@ For everything else:
 
 - **Links to plugins**: Replace `/plugins/` path with `/ai-gateway/policies/`. For example:
   - `/plugins/ai-prompt-guard/` → `/ai-gateway/policies/ai-prompt-guard/`
+  - `/plugins/?category=ai` → `/ai-gateway/policies/`
+
+- **Links to the Plugin entity**: When a link points at the Gateway Plugin entity page `/gateway/entities/plugin/` *but refers to an AI Policy*, replace it with the AI Policy entity page `/ai-gateway/entities/ai-policy/`. For example:
+  - `[AI Policy](/gateway/entities/plugin/)` → `[AI Policy](/ai-gateway/entities/ai-policy/)`
+  - `[AI Prompt Guard Policy](/gateway/entities/plugin/)` → `[AI Prompt Guard Policy](/ai-gateway/entities/ai-policy/)`
+
+  Be careful: `/gateway/entities/plugin/` can also be a legitimate reference to the generic Gateway Plugin entity — for instance when a page contrasts AI Policies with how {{site.base_gateway}} plugins work. Only rewrite when the link is genuinely about an AI Policy. **Flag ambiguous cases for manual review** rather than rewriting automatically.
 
 - **Exception — flag these**: Any reference to AI A2A Proxy, AI MCP Proxy, AI Proxy, or AI Proxy Advanced as plugins should be flagged for manual review (these don't have policy equivalents).
 

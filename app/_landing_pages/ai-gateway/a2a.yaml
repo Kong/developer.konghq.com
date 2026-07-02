@@ -6,6 +6,8 @@ metadata:
     - ai-gateway
   works_on:
     - konnect
+  min_version:
+    ai-gateway: '2.0'
   tags:
     - ai
     - a2a
@@ -25,7 +27,9 @@ rows:
             config: |
               The [Agent-to-Agent (A2A)](https://a2aproject.github.io/A2A/) protocol defines how AI agents communicate with each other over HTTP using JSON-RPC and REST bindings. As agent-to-agent communication moves into production, teams need visibility into A2A traffic and control over how it flows.
 
-              {{site.ai_gateway}} acts as a control and observability layer for A2A traffic, enabling you to route agent-to-agent requests, extract task metadata, rewrite agent card URLs, and feed structured metrics into the Konnect analytics pipeline. Configure A2A traffic using [AI Agents](/ai-gateway/entities/ai-agent/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+              {{site.ai_gateway}} acts as a control and observability layer for A2A traffic, enabling you to route agent-to-agent requests, extract task metadata, and rewrite agent card URLs so clients route through the Gateway. 
+              This gives you a single point of control over how agents discover and call each other, with structured metrics fed into the {{site.konnect_short_name}} analytics pipeline. 
+              Configure A2A traffic using [AI Agents](/ai-gateway/entities/ai-agent/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
 
       - blocks:
           - type: image
@@ -33,49 +37,40 @@ rows:
               url: /assets/images/ai-gateway/a2a.svg
               alt_text: Overview of A2A traffic flowing through AI Gateway
 
-  - columns:
+  - header:
+      type: h2
+      text: "Secure and govern A2A traffic"
+      description: |
+        Secure access to your A2A agents by attaching [AI Policies](/ai-gateway/entities/ai-policy/) to your AI Agent entities. Enforce who can reach each agent, rate limit agent-to-agent calls, and apply consistent auth across your A2A traffic without changing the agents themselves.
+    column_count: 3
+    columns:
       - blocks:
-          - type: structured_text
-            config:
-              header:
-                type: h2
-                text: "Proxy A2A traffic via {{site.ai_gateway}}"
-              blocks:
-                - type: text
-                  text: |
-                    Create [AI Agent](/ai-gateway/entities/ai-agent/) entities to proxy your A2A endpoints through {{site.ai_gateway}} to unlock observability into agent communication.
-          - type: card
-            config:
-              icon: /assets/icons/linked-services.svg
-              title: AI Agent entity
-              description: Proxy A2A traffic using the AI Agent in {{site.ai_gateway}}.
-              ctas:
-                - text: AI Agent reference
-                  url: "/ai-gateway/entities/ai-agent/"
-                - text: AI Policy reference
-                  url: "/ai-gateway/entities/ai-policy/"
+        - type: card
+          config:
+            title: OpenID Connect
+            icon: /assets/icons/lock.svg
+            description: Authenticate A2A clients with OIDC before they reach your agents.
+            cta:
+              url: /ai-gateway/policies/openid-connect/
+              align: end
       - blocks:
-          - type: structured_text
-            config:
-              header:
-                type: h2
-                text: "Secure and govern A2A traffic"
-              blocks:
-                - type: text
-                  text: |
-                    Secure access to your A2A agents by attaching [AI Policies](/ai-gateway/entities/ai-policy/) to your [AI Agent](/ai-gateway/entities/ai-agent/) entities for authentication and traffic control.
-          - type: card
-            config:
-              icon: /assets/icons/lock.svg
-              title: Secure and govern with Policies
-              description: Secure A2A agents and control access with Policies.
-              ctas:
-                - text: OpenID Connect
-                  url: "/ai-gateway/policies/openid-connect/"
-                - text: Rate Limiting
-                  url: "/ai-gateway/policies/?category=traffic-control"
-                - text: Authentication policies
-                  url: "/ai-gateway/policies/?category=authentication"
+        - type: card
+          config:
+            title: Rate Limiting
+            icon: /assets/icons/clock.svg
+            description: Throttle agent-to-agent calls to protect downstream agents.
+            cta:
+              url: /ai-gateway/policies/rate-limiting-advanced/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Authentication policies
+            icon: /assets/icons/security.svg
+            description: Browse all authentication options for A2A traffic.
+            cta:
+              url: /ai-gateway/policies/?category=authentication
+              align: end
 
   - header:
       type: h2
