@@ -45,6 +45,7 @@ k8s-master-node   Ready    control-plane   116d   v1.24.3   kubernetes.io/hostna
 k8s-worker-1      Ready    <none>          116d   v1.24.3   kubernetes.io/hostname=k8s-worker-1,zone=1
 k8s-worker-2      Ready    <none>          116d   v1.24.3   kubernetes.io/hostname=k8s-worker-2,zone=2
 ```
+{:.no-copy-code.wrap}
 
 The key parameters are:
 
@@ -76,6 +77,7 @@ Each pod is scheduled on a separate node:
 kong-enterprise-kong-785c5d5db8-bqqfx  | k8s-master-node |
 kong-enterprise-kong-785c5d5db8-pn9z5  | k8s-worker-1    |
 ```
+{:.no-copy-code.wrap}
 
 ### Example 2: 3 pods across 3 nodes
 
@@ -87,6 +89,7 @@ kong-enterprise-kong-785c5d5db8-bqqfx | k8s-master-node |
 kong-enterprise-kong-785c5d5db8-pn9z5 | k8s-worker-1    |
 kong-enterprise-kong-785c5d5db8-8gq6s | k8s-worker-2    |
 ```
+{:.no-copy-code.wrap}
 
 ### Example 3: 3 pods across 2 nodes using a zone label
 
@@ -108,5 +111,6 @@ kong-enterprise-kong-579f9678bd-mm5mj  | k8s-worker-2    |
 kong-enterprise-kong-579f9678bd-p788t  | k8s-worker-1    |
 kong-enterprise-kong-579f9678bd-whqrg  | k8s-worker-2    |
 ```
+{:.no-copy-code.wrap}
 
 This is a fairly simple load balancing scenario, but `topologySpreadConstraints` offers greater flexibility than affinity rules.

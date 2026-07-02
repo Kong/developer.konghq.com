@@ -36,6 +36,7 @@ stack traceback:
         [C]: in function 'xpcall'
         init_worker_by_lua:53: in function <init_worker_by_lua:51>
 ```
+{:.no-copy-code.wrap}
 
 Where `customformat` is the name you've given to the `log_format`.
 

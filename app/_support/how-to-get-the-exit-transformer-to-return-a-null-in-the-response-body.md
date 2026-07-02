@@ -10,7 +10,7 @@ works_on:
 related_resources:
   - text: Exit Transformer plugin
     url: /plugins/exit-transformer/
-  - text: "`untrusted_lua`"
+  - text: "untrusted_lua"
     url: /gateway/configuration/#untrusted-lua
 tldr:
   q: How do I configure the Exit Transformer plugin to return a field with a null value in the response body?

@@ -14,7 +14,7 @@ tldr:
     planes. Increase the size by raising `lmdb_map_size` (for example, `KONG_LMDB_MAP_SIZE=256m`,
     or `lmdb_map_size: "256m"` on Kubernetes, along with a larger `prefixDir` `sizeLimit`).
 related_resources:
-  - text: "`lmdb_map_size`"
+  - text: "lmdb_map_size"
     url: /gateway/configuration/#lmdb-map-size
 ---
 

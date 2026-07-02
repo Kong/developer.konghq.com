@@ -21,7 +21,7 @@ When trying to log into Kong Manager, you receive the following error:
 ```
 [error] 2142#0: *3867 [lua] kong.lua:429: fn(): kong[auth][postgres] schema violation (config.client_secret: {"length must be at least 1"}), client: 123.123.123.1, server: kong_admin, request: "GET /auth?Kong-Admin-User=sample@email.com HTTP/1.1", host:"localhost:8001", referrer: "http://localhost:8002/"
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 ## Cause
 

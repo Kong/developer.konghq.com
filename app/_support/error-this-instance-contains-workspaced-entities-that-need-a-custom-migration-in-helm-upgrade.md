@@ -28,7 +28,7 @@ please use the provided helpers to migrate them:
 kong migrations upgrade-workspace-table vaults_beta
 Error: nginx not running in prefix: /tmp/tmp.okiPjN Run with --v (verbose) or --vv (debug) for more details
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 ## Solution
 
