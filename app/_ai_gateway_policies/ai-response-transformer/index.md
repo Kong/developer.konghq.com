@@ -46,13 +46,14 @@ related_resources:
 ---
 
 The AI Response Transformer Policy uses a configured LLM service to transform the upstream's HTTP(S) response before returning it to the client.
+
 It can also terminate or otherwise nullify the response if it fails a compliance or formatting check from the configured LLM service, for example.
 
-This Policy supports `llm/v1/chat` requests for the same LLM providers as the [AI Proxy plugin](/plugins/ai-proxy/).
+This Policy supports `llm/v1/chat` requests for the same [LLM providers](/ai-gateway/ai-providers/) that {{site.ai_gateway}} supports.
 
-It also uses the same configuration and tuning parameters as the AI Proxy plugin, in the [`config.llm`](/ai-gateway/policies/ai-request-transformer/reference/#schema--config-llm) block.
+It also uses the same LLM configuration and tuning parameters as an [AI Model](/ai-gateway/entities/ai-model/), in the [`config.llm`](/ai-gateway/policies/ai-request-transformer/reference/#schema--config-llm) block.
 
-The AI Response Transformer Policy runs **after** the AI Proxy plugin, and **after** proxying to the upstream service, allowing it to also transform responses coming from a different LLM.
+The AI Response Transformer Policy runs **after** {{site.ai_gateway}} proxies to the upstream LLM service through an [AI Model](/ai-gateway/entities/ai-model/), allowing it to transform responses from any upstream LLM.
 
 ## How it works
 
