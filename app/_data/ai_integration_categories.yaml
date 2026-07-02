@@ -1,0 +1,9 @@
+- text: Libraries
+  slug: libraries
+  icon: "/assets/icons/code.svg"
+- text: Frameworks
+  slug: frameworks
+  icon: "/assets/icons/brain.svg"
+- text: Agents
+  slug: agents
+  icon: "/assets/icons/sparkle.svg"

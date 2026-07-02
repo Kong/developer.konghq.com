@@ -130,6 +130,9 @@ ai_tools:
   - text: AI Cookbooks
     url: /cookbooks/
     icon: /assets/icons/book.svg
+  - text: AI Integrations
+    url: /ai-integrations/
+    icon: /assets/icons/code.svg
   - text: Skills Hub
     url: /skills/
     icon: /assets/icons/brain.svg
