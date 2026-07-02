@@ -23,12 +23,24 @@ module Jekyll
               'has_overview?' => !@policy.overview_content.empty?,
               'title' => "#{@policy.metadata['title']} Policy"
             )
+            .merge(api_reference_data)
         end
 
         def icon
           return unless @policy.icon
 
           "/assets/icons/plugins/#{@policy.icon}"
+        end
+
+        private
+
+        def api_reference_data
+          return {} unless @policy.api_spec_exists?
+
+          {
+            'api_spec_exists?' => true,
+            'api_reference_url' => ApiReference.url(@policy)
+          }
         end
       end
     end

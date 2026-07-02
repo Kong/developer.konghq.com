@@ -26,8 +26,19 @@ module Jekyll
         generate_overview_page(policy) unless policy.overview_content.empty?
 
         reference = generate_reference_page(policy)
+        generate_api_reference_page(policy)
 
         site.data[key][policy.slug] ||= reference
+      end
+
+      def generate_api_reference_page(policy)
+        return unless policy.api_spec_exists?
+
+        api_reference = api_reference_page_class
+                        .new(policy:, file: policy.api_spec_file_path)
+                        .to_jekyll_page
+
+        site.pages << api_reference
       end
     end
   end

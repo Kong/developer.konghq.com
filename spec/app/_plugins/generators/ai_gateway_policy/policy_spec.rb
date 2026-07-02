@@ -67,6 +67,24 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
     it { expect(policy.examples).to eq([]) }
   end
 
+  describe '#api_spec_file_path' do
+    it { expect(policy.api_spec_file_path).to eq("api-specs/ai-gateway/policies/#{slug}/openapi.yaml") }
+  end
+
+  describe '#api_spec_exists?' do
+    context 'when the spec file exists' do
+      before { allow(File).to receive(:exist?).with(policy.api_spec_file_path).and_return(true) }
+
+      it { expect(policy.api_spec_exists?).to be(true) }
+    end
+
+    context 'when the spec file does not exist' do
+      before { allow(File).to receive(:exist?).with(policy.api_spec_file_path).and_return(false) }
+
+      it { expect(policy.api_spec_exists?).to be(false) }
+    end
+  end
+
   describe '#metadata' do
     subject(:metadata) { policy.metadata }
 

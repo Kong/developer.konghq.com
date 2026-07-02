@@ -6,8 +6,12 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Base do
   let(:policy) do
     instance_double(
       Jekyll::AIGatewayPolicyPages::Policy,
+      slug: 'my-policy',
       schema: { 'properties' => { 'config' => {} } },
-      icon: 'my-policy.png'
+      icon: 'my-policy.png',
+      unreleased?: false,
+      min_release: nil,
+      api_spec_exists?: false
     )
   end
 
@@ -30,6 +34,21 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Base do
       before { allow(policy).to receive(:icon).and_return(nil) }
 
       it { expect(page.icon).to be_nil }
+    end
+  end
+
+  describe '#api_reference_data (via #data)' do
+    subject(:data) { page.send(:api_reference_data) }
+
+    context 'when the policy has no api spec' do
+      it { expect(data).to eq({}) }
+    end
+
+    context 'when the policy has an api spec' do
+      before { allow(policy).to receive(:api_spec_exists?).and_return(true) }
+
+      it { expect(data['api_spec_exists?']).to be(true) }
+      it { expect(data['api_reference_url']).to eq('/ai-gateway/policies/my-policy/api/') }
     end
   end
 end
