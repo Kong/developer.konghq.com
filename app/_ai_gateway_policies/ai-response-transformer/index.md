@@ -57,7 +57,7 @@ The AI Response Transformer Policy runs **after** {{site.ai_gateway}} proxies to
 
 ## How it works
 
-{% include md/ai-gateway/v2/ai-transformer-diagram.md %}
+{% include md/ai-gateway/v2/ai-response-transformer-diagram.md %}
 
 1. The {{site.ai_gateway}} admin sets up an [`llm` configuration block](/ai-gateway/policies/ai-request-transformer/reference/#schema--config-llm).
 1. The {{site.ai_gateway}} admin sets up a `prompt`. 
