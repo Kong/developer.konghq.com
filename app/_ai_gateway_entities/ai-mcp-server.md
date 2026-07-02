@@ -100,7 +100,7 @@ Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your AI MCP Server to g
 columns:
   - title: Use case
     key: use_case
-  - title: Example
+  - title: Policy
     key: example
 rows:
   - use_case: "Secure MCP endpoints with credentials or OAuth tokens"
