@@ -3,7 +3,6 @@ title: 'AI Semantic Response Guard'
 name: 'AI Semantic Response Guard'
 
 content_type: policy
-tier: ai_gateway_enterprise
 
 publisher: kong-inc
 description: 'Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of llm/v1/chat or llm/v1/completions requests'
