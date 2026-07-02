@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
 The AI Request Transformer Policy uses a configured LLM service to transform a client request body before proxying the request upstream.

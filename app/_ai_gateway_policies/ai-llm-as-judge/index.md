@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
 The AI LLM as Judge Policy enables automated evaluation of prompt-response pairs using a dedicated LLM. The Policy assigns a numerical score to LLM responses from 1 to 100, where:

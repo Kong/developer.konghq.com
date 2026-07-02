@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 related_resources:
   - text: AI Request Transformer Policy
     url: /ai-gateway/policies/ai-request-transformer/

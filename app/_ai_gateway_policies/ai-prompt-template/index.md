@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
 The AI Prompt Template Policy lets you provide tuned AI prompts to users.
