@@ -37,23 +37,25 @@ Here's how it works if you apply it to both requests and responses:
 sequenceDiagram
     autonumber
     participant Client
-    participant Plugin as AI Azure Content Safety Policy
+    participant Gateway as {{site.ai_gateway}}
+    participant Policy as AI Azure Content Safety Policy
     participant Safety as Azure AI Content Safety service
-    participant Proxy as AI Proxy/Advanced
     participant AI as Upstream AI Service
-    
-    Client->>Plugin: Send request
-    Plugin->>Safety: Intercept & send request body
+
+    Client->>Gateway: Send request
+    Gateway->>Policy: Route request
+    Policy->>Safety: Intercept & send request body
     Safety->>Safety: Check against moderation <br>categories and blocklists
-    Safety->>Plugin: Allow or block request
-    Plugin->>Proxy: Forward allowed request
-    Proxy->>AI: Process allowed request
-    AI->>Proxy: Return AI response
-    Proxy->>Plugin: Forward response
-    Plugin->>Safety: Intercept & send response body
+    Safety->>Policy: Allow or block request
+    Policy->>Gateway: Forward allowed request
+    Gateway->>AI: Process allowed request
+    AI->>Gateway: Return AI response
+    Gateway->>Policy: Forward response
+    Policy->>Safety: Intercept & send response body
     Safety->>Safety: Check against moderation <br>categories and blocklists
-    Safety->>Plugin: Allow or block response
-    Plugin->>Client: Forward allowed response
+    Safety->>Policy: Allow or block response
+    Policy->>Gateway: Forward allowed response
+    Gateway->>Client: Forward allowed response to client
 {% endmermaid %}
 <!--vale on-->
 
