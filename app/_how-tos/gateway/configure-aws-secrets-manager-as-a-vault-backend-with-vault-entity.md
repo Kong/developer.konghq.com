@@ -114,4 +114,14 @@ value: 'secret'
 
 If the vault was configured correctly, this command should return the value of the secret. Then, you can use `{vault://aws-vault/my-aws-secret/token}` to reference the secret in any referenceable field.
 
+{:.info}
+> **Reference plaintext and key/value secrets**
+>
+> AWS secrets can be stored as **plaintext** and **key/value (JSON)**. How you reference a secret depends on its type:
+>
+> * If your secret is a **key/value (JSON)** secret, reference it by the secret name and the field key: `{vault://aws-vault/my-aws-secret/token}`
+> * If your secret is a **plaintext** secret, reference it by the secret name only: `{vault://aws-vault/my-aws-secret}`
+>
+> For key/value secrets, the secret must be a flat JSON object whose values are strings. Nested objects and non-string values aren't supported.
+
 For more information about supported secret types, see [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 
