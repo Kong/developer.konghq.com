@@ -17,7 +17,8 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Overview do
       icon: nil,
       unreleased?: false,
       min_release: nil,
-      overview_content: 'Some content'
+      overview_content: 'Some content',
+      api_spec_exists?: false
     )
   end
 
