@@ -1,7 +1,7 @@
 ---
 title: File Log plugin output mixed with {{site.base_gateway}} log entries
 content_type: support
-description: "When the File Lof plugin writes to /dev/stdout in a containerized environment, log entries can interleave because the Linux kernel can't guarantee atomicity for writes larger than the PIPE_BUF limit (4096 bytes)."
+description: "When the File Log plugin writes to /dev/stdout in a containerized environment, log entries can interleave because the Linux kernel can't guarantee atomicity for writes larger than the PIPE_BUF limit (4096 bytes)."
 products:
   - gateway
 works_on:
