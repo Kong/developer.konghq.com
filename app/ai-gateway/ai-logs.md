@@ -16,16 +16,12 @@ description: See where {{site.ai_gateway}} logs are located, the different log l
 search_aliases:
   - logging
 related_resources:
-  - text: "Secure {{site.ai_gateway}}"
-    url: /gateway/security/
-  - text: "{{site.ai_gateway}} audit logs"
-    url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"
     url: /dedicated-cloud-gateways/konnect-logs/
   - text: "{{site.konnect_short_name}} platform audit logs"
     url: /konnect-platform/audit-logs/
   - text: Logging Policies
-    url: /plugins/?category=logging
+    url: /ai-gateway/policies/?category=logging
   - text: Add Correlation IDs to {{site.ai_gateway}} logs
     url: /how-to/add-correlation-ids-to-gateway-logs/
 
@@ -35,11 +31,11 @@ works_on:
 
 Logging in {{site.ai_gateway}} allows you to see information, warnings, and errors about requests that are proxied by {{site.ai_gateway}}.
 
-The information in this reference doc helps you understand and modify {{site.ai_gateway}} logs. You can also set Policies with [logging Policies](/plugins/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
+The information in this reference doc helps you understand and modify {{site.ai_gateway}} logs. You can also set [logging Policies](/ai-gateway/policies/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
 
 ## Where are {{site.ai_gateway}} logs located?
 
-By default, you can view {{site.ai_gateway}} logs at `/usr/local/kong/logs/error.log`. If you are running {{site.ai_gateway}} in Docker, you can also view them from your Docker container.
+By default, you can view {{site.ai_gateway}} logs at `/usr/local/kong/logs/error.log`. If you are running a {{site.ai_gateway}} DAta Plane in Docker, you can also view them from your Docker container.
 
 ## Log levels
 
@@ -119,7 +115,7 @@ You may need to customize what {{site.ai_gateway}} logs. For instance, you may w
 * Comply with GDPR or other data protection regulations
 * Remove instances of a specific piece of data from your logs, such as an email address
 
-These changes can be made to {{site.ai_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.ai_gateway}}'s [logging Policies](/plugins/?category=logging).
+These changes can be made to {{site.ai_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.ai_gateway}}'s [logging Policies](/ai-gateway/policies/?category=logging).
 
 Let's look at an example where you want to remove any instances of an email address from your {{site.ai_gateway}} logs. The email addresses may come through in different formats, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template.
 
@@ -186,7 +182,7 @@ Now, any request made with an email address in it will no longer be logged.
 
 ## {{site.ai_gateway}} logs
 
-{{site.ai_gateway}} collects logs for the [{{site.ai_gateway}} Policies](/plugins/?category=ai). This allows you to aggregate AI usage analytics across various providers.
+{{site.ai_gateway}} collects logs for the [{{site.ai_gateway}} Policies](/ai-gateway/policies/). This allows you to aggregate AI usage analytics across various providers.
 
 Each log entry includes the following details:
 
@@ -198,45 +194,45 @@ columns:
   - title: Description
     key: description
 rows:
-  - property: "`ai.$PLUGIN_NAME.payload.request`"
+  - property: "`ai.$POLICY_NAME.payload.request`"
     description: The request payload.
-  - property: "`ai.$PLUGIN_NAME.payload.response`"
+  - property: "`ai.$POLICY_NAME.payload.response`"
     description: The response payload.
-  - property: "`ai.$PLUGIN_NAME.usage.prompt_token`"
+  - property: "`ai.$POLICY_NAME.usage.prompt_token`"
     description: The number of tokens used for prompting.
-  - property: "`ai.$PLUGIN_NAME.usage.completion_token`"
+  - property: "`ai.$POLICY_NAME.usage.completion_token`"
     description: The number of tokens used for completion.
-  - property: "`ai.$PLUGIN_NAME.usage.total_tokens`"
+  - property: "`ai.$POLICY_NAME.usage.total_tokens`"
     description: The total number of tokens used.
-  - property: "`ai.$PLUGIN_NAME.usage.cost`"
+  - property: "`ai.$POLICY_NAME.usage.cost`"
     description: The total cost of the request (input and output cost).
-  - property: "`ai.$PLUGIN_NAME.usage.time_per_token`"
+  - property: "`ai.$POLICY_NAME.usage.time_per_token`"
     description: |
       The average time to generate an output token, in milliseconds.
-  - property: "`ai.$PLUGIN_NAME.meta.request_model`"
+  - property: "`ai.$POLICY_NAME.meta.request_model`"
     description:  The model used for the AI request.
-  - property: "`ai.$PLUGIN_NAME.meta.provider_name`"
+  - property: "`ai.$POLICY_NAME.meta.provider_name`"
     description:  The name of the AI service provider.
-  - property: "`ai.$PLUGIN_NAME.meta.response_model`"
+  - property: "`ai.$POLICY_NAME.meta.response_model`"
     description:  The model used for the AI response.
-  - property: "`ai.$PLUGIN_NAME.meta.plugin_id`"
+  - property: "`ai.$POLICY_NAME.meta.plugin_id`"
     description:  The unique identifier of the Policy.
-  - property: "`ai.$PLUGIN_NAME.meta.llm_latency`"
+  - property: "`ai.$POLICY_NAME.meta.llm_latency`"
     description: |
       The time, in milliseconds, it took the LLM provider to generate the full response.
-  - property: "`ai.$PLUGIN_NAME.cache.cache_status`"
+  - property: "`ai.$POLICY_NAME.cache.cache_status`"
     description: |
       The cache status. This can be `Hit`, `Miss`, `Bypass` or `Refresh`.
-  - property: "`ai.$PLUGIN_NAME.cache.fetch_latency`"
+  - property: "`ai.$POLICY_NAME.cache.fetch_latency`"
     description: |
       The time, in milliseconds, it took to return a cache response.
-  - property: "`ai.$PLUGIN_NAME.cache.embeddings_provider`"
+  - property: "`ai.$POLICY_NAME.cache.embeddings_provider`"
     description: |
       For semantic caching, the provider used to generate the embeddings.
-  - property: "`ai.$PLUGIN_NAME.cache.embeddings_model`"
+  - property: "`ai.$POLICY_NAME.cache.embeddings_model`"
     description: |
       For semantic caching, the model used to generate the embeddings.
-  - property: "`ai.$PLUGIN_NAME.cache.embeddings_latency`"
+  - property: "`ai.$POLICY_NAME.cache.embeddings_latency`"
     description: |
       For semantic caching, the time taken to generate the embeddings.
 {% endtable %}

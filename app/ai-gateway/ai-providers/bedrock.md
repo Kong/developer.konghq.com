@@ -27,27 +27,29 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Amazon Bedrock tutorials
-    url: /how-to/?tags=bedrock
   - text: "{{site.ai_gateway}} Policies"
-    url: /plugins/?category=ai
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Provider entity
+    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 
 faqs:
   - q: How do I specify model IDs for Amazon Bedrock cross-region inference profiles?
     a: |
-      {% include faqs/bedrock-models.md %}
+      {% include md/ai-gateway/v2/faqs/bedrock-models.md %}
   - q: How do I set the FPS parameter for video generation for Amazon Bedrock?
     a: |
-      {% include faqs/bedrock-fps.md %}
+      {% include md/ai-gateway/v2/faqs/bedrock-fps.md %}
   - q: How do I include guardrail configuration with Amazon Bedrock requests?
     a: |
-      {% include faqs/bedrock-guardrails.md %}
+      {% include md/ai-gateway/v2/faqs/bedrock-guardrails.md %}
   - q: How do I use Amazon Bedrock's Rerank API to improve RAG retrieval quality?
     a: |
-      {% include faqs/bedrock-rerank.md %}
+      {% include md/ai-gateway/v2/faqs/bedrock-rerank.md %}
 
 ---
 
@@ -58,7 +60,7 @@ faqs:
 
 ## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [Provider](/ai-gateway/entities/ai-provider/). You can then access supported [Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Provider](/ai-gateway/entities/ai-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
@@ -78,7 +80,8 @@ body:
       type: aws
       allow_override: false
       aws_access_key_id: $AWS_ACCESS_KEY_ID
-      aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+      access_key_id: $AWS_ACCESS_KEY_ID
+      secret_access_key: $AWS_SECRET_ACCESS_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
 

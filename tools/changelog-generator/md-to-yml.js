@@ -3,7 +3,7 @@
  * one YAML entry per bullet under <path>/<version>/<component>/<slug>.yml.
  *
  * Usage:
- *   node md-to-yml.mjs --path <kong-ee-dir> --version <ver> [-o outputDir] [--dry-run]
+ *   node md-to-yml.js --path <kong-ee-dir> --version <ver> [--product <gateway|ai-gateway>] [-o outputDir] [--dry-run]
  *
  *   <kong-ee-dir>    Path to the kong-ee repo folder. Resolved
  *                    RELATIVE TO THE SCRIPT'S LOCATION (not the caller's
@@ -11,11 +11,14 @@
  *                    a co-located changelog folder via a stable relative
  *                    path like "../kong-ee/changelog".
  *
- *   <ver>            Release version, e.g. "3.14.0.0". The markdown is
- *                    read from <changelog-dir>/<ver>/<ver>.md.
+ *   <ver>            Release version.
+ *                    gateway:    "3.14.0.0" — reads <changelog-dir>/<ver>/<ver>.md
+ *                    ai-gateway: "1.2.3"    — reads <changelog-dir>/aigw-<ver>/aigw-<ver>.md
+ *
+ *   --product        "gateway" (default) or "ai-gateway"
  *
  *   -o <outDir>      Output directory (also resolved relative to the
- *                    script). Defaults to <script-dir>/tmp/changelog/<ver>.
+ *                    script). Defaults to <script-dir>/tmp/<product>/changelog/<ver>.
  *
  * Mapping:
  *   ## section            -> component directory
@@ -23,6 +26,7 @@
  *     "Kong-Enterprise"               -> kong-ee
  *     "Kong-Manager" / "Kong-Manager-Enterprise" -> kong-manager-ee
  *     "Kong-Portal"  / "Kong-Portal-Enterprise"  -> kong-portal-ee
+ *     "Kong-AI-Gateway"               -> kong-aigw
  *
  *   ### subsection        -> type
  *     "Features"          -> feature
@@ -35,67 +39,89 @@
  *   #### sub-subsection   -> scope (verbatim: Core, Plugin, PDK, ...)
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const TYPE_BY_SECTION = {
-  'Features': 'feature',
-  'Fixes': 'bugfix',
-  'Performance': 'performance',
-  'Breaking Changes': 'breaking_change',
-  'Deprecations': 'deprecation',
-  'Dependencies': 'dependency',
+  Features: "feature",
+  Fixes: "bugfix",
+  Performance: "performance",
+  "Breaking Changes": "breaking_change",
+  Deprecations: "deprecation",
+  Dependencies: "dependency",
 };
 
 const COMPONENT_BY_SECTION = {
-  'Kong': 'kong',
-  'Kong-Enterprise': 'kong-ee',
-  'Kong-Manager': 'kong-manager-ee',
-  'Kong-Manager-Enterprise': 'kong-manager-ee',
-  'Kong-Portal': 'kong-portal-ee',
-  'Kong-Portal-Enterprise': 'kong-portal-ee',
+  Kong: "kong",
+  "Kong-Enterprise": "kong-ee",
+  "Kong-Manager": "kong-manager-ee",
+  "Kong-Manager-Enterprise": "kong-manager-ee",
+  "Kong-Portal": "kong-portal-ee",
+  "Kong-Portal-Enterprise": "kong-portal-ee",
+  "Kong-AI-Gateway": "kong-aigw",
 };
 
 const FILENAME_PREFIX_BY_TYPE = {
-  feature: 'feat',
-  bugfix: 'fix',
-  performance: 'perf',
-  breaking_change: 'break',
-  deprecation: 'deprecate',
-  dependency: 'bump',
+  feature: "feat",
+  bugfix: "fix",
+  performance: "perf",
+  breaking_change: "break",
+  deprecation: "deprecate",
+  dependency: "bump",
 };
 
 function parseArgs(argv) {
-  const args = { kongeeDir: null, version: null, outDir: null, dryRun: false };
+  const args = {
+    kongeeDir: null,
+    version: null,
+    product: "gateway",
+    outDir: null,
+    dryRun: false,
+  };
   for (let i = 2; i < argv.length; i++) {
     const [flag, eqVal] = argv[i].split(/=(.+)/);
-    const nextVal = () => eqVal !== undefined ? eqVal : argv[++i];
-    if (flag === '--path' || flag === '-p') args.kongeeDir = nextVal();
-    else if (flag === '--version' || flag === '-v') args.version = nextVal();
-    else if (flag === '-o' || flag === '--out') args.outDir = nextVal();
-    else if (flag === '--dry-run') args.dryRun = true;
-    else if (flag === '-h' || flag === '--help') {
+    const nextVal = () => (eqVal !== undefined ? eqVal : argv[++i]);
+    if (flag === "--path" || flag === "-p") args.kongeeDir = nextVal();
+    else if (flag === "--version" || flag === "-v") args.version = nextVal();
+    else if (flag === "--product") args.product = nextVal();
+    else if (flag === "-o" || flag === "--out") args.outDir = nextVal();
+    else if (flag === "--dry-run") args.dryRun = true;
+    else if (flag === "-h" || flag === "--help") {
       process.stdout.write(
-        'Usage: node md-to-yml.js --path <kong-ee-dir> --version <ver> [-o outDir] [--dry-run]\n' +
-        '  <kong-ee-dir> and <outDir> are resolved relative to the script.\n' +
-        '  Reads <kong-ee-dir>/changelog/<ver>/<ver>.md, writes to <outDir>/<component>/.\n'
+        "Usage: node md-to-yml.js --path <kong-ee-dir> --version <ver> [--product <gateway|ai-gateway>] [-o outDir] [--dry-run]\n" +
+          "  <kong-ee-dir> and <outDir> are resolved relative to the script.\n" +
+          "  gateway:    reads <kong-ee-dir>/changelog/<ver>/<ver>.md\n" +
+          "  ai-gateway: reads <kong-ee-dir>/changelog/aigw-<ver>/aigw-<ver>.md\n",
       );
       process.exit(0);
     } else throw new Error(`Unexpected argument: ${argv[i]}`);
   }
-  if (!args.kongeeDir) throw new Error('Missing --path <kong-ee-dir>');
-  if (!args.version) throw new Error('Missing --version <ver>');
+  if (!args.kongeeDir) throw new Error("Missing --path <kong-ee-dir>");
+  if (!args.version) throw new Error("Missing --version <ver>");
+  if (!["gateway", "ai-gateway"].includes(args.product)) {
+    throw new Error(
+      `Unknown --product "${args.product}": must be "gateway" or "ai-gateway"`,
+    );
+  }
 
-  // Resolve relative to the script's location so the script can live
-  // anywhere and find the changelog via a stable relative path.
   const resolveRel = (p) => path.resolve(__dirname, p);
   const kongeeDir = resolveRel(args.kongeeDir);
-  const releaseDir = path.join(kongeeDir, 'changelog', args.version);
-  const inputMd = path.join(releaseDir, `${args.version}.md`);
+
+  let releaseSubdir, mdFilename;
+  if (args.product === "ai-gateway") {
+    releaseSubdir = `aigw-${args.version}`;
+    mdFilename = `aigw-${args.version}.md`;
+  } else {
+    releaseSubdir = args.version;
+    mdFilename = `${args.version}.md`;
+  }
+
+  const releaseDir = path.join(kongeeDir, "changelog", releaseSubdir);
+  const inputMd = path.join(releaseDir, mdFilename);
 
   if (!fs.existsSync(inputMd)) {
     throw new Error(`Markdown not found: ${inputMd}`);
@@ -104,13 +130,13 @@ function parseArgs(argv) {
   args.inputMd = inputMd;
   args.outDir = args.outDir
     ? resolveRel(args.outDir)
-    : path.join(__dirname, 'tmp', 'changelog', args.version);
+    : path.join(__dirname, "tmp", args.product, "changelog", args.version);
   return args;
 }
 
 // Trailing inline " [#123](url) [KAG-1](url) ..." chain on a bullet line.
 function stripInlineRefs(text) {
-  return text.replace(/(\s+\[[^\]]+\]\([^)]+\))+\s*$/, '');
+  return text.replace(/(\s+\[[^\]]+\]\([^)]+\))+\s*$/, "");
 }
 
 // A reference-link continuation line, e.g. " [#15138](https://...)".
@@ -128,20 +154,25 @@ function parseChangelog(md) {
 
   const flush = () => {
     if (!current) return;
-    let text = current.lines.join('\n').replace(/\s+$/, '');
+    let text = current.lines.join("\n").replace(/\s+$/, "");
     text = stripInlineRefs(text);
     if (text && component && type) {
-      entries.push({ component, type, scope, message: text.replace(/[\r\n]+$/, '') });
+      entries.push({
+        component,
+        type,
+        scope,
+        message: text.replace(/[\r\n]+$/, ""),
+      });
     }
     current = null;
   };
 
   for (const raw of lines) {
-    const line = raw.replace(/\s+$/, '');
+    const line = raw.replace(/\s+$/, "");
 
     if (/^##\s+/.test(line) && !/^###/.test(line)) {
       flush();
-      const name = line.replace(/^##\s+/, '').trim();
+      const name = line.replace(/^##\s+/, "").trim();
       component = COMPONENT_BY_SECTION[name] || null;
       type = null;
       scope = null;
@@ -149,25 +180,28 @@ function parseChangelog(md) {
     }
     if (/^###\s+/.test(line) && !/^####/.test(line)) {
       flush();
-      const name = line.replace(/^###\s+/, '').trim();
+      const name = line.replace(/^###\s+/, "").trim();
       type = TYPE_BY_SECTION[name] || null;
       scope = null;
       continue;
     }
     if (/^####\s+/.test(line)) {
       flush();
-      scope = line.replace(/^####\s+/, '').trim() || null;
+      scope = line.replace(/^####\s+/, "").trim() || null;
       continue;
     }
 
     if (/^-\s+/.test(line)) {
       flush();
-      current = { lines: [line.replace(/^-\s+/, '')] };
+      current = { lines: [line.replace(/^-\s+/, "")] };
       continue;
     }
 
     if (!current) continue;
-    if (line === '') { flush(); continue; }
+    if (line === "") {
+      flush();
+      continue;
+    }
     if (isRefLine(line)) continue;
     current.lines.push(line);
   }
@@ -178,17 +212,17 @@ function parseChangelog(md) {
 function slugify(message) {
   // Keep the **prefix** marker (plugin name etc.) and code-span contents —
   // they're the most recognizable parts of a filename.
-  let s = message.replace(/\*\*([^*]+)\*\*/g, '$1');
-  s = s.replace(/`([^`]*)`/g, '$1');
+  let s = message.replace(/\*\*([^*]+)\*\*/g, "$1");
+  s = s.replace(/`([^`]*)`/g, "$1");
   s = s.toLowerCase();
-  s = s.replace(/[^a-z0-9]+/g, '-');
-  s = s.replace(/^-+|-+$/g, '');
-  const words = s.split('-').filter(Boolean).slice(0, 6);
-  return words.join('-') || 'entry';
+  s = s.replace(/[^a-z0-9]+/g, "-");
+  s = s.replace(/^-+|-+$/g, "");
+  const words = s.split("-").filter(Boolean).slice(0, 6);
+  return words.join("-") || "entry";
 }
 
 function filenameFor(entry, used) {
-  const prefix = FILENAME_PREFIX_BY_TYPE[entry.type] || 'entry';
+  const prefix = FILENAME_PREFIX_BY_TYPE[entry.type] || "entry";
   const base = `${prefix}-${slugify(entry.message)}`;
   let name = `${base}.yml`;
   let n = 2;
@@ -199,24 +233,25 @@ function filenameFor(entry, used) {
 
 function toYaml(entry) {
   const indented = entry.message
-    .split('\n')
-    .map((l) => '  ' + l)
-    .join('\n');
-  const parts = ['message: |', indented, `type: ${entry.type}`];
+    .split("\n")
+    .map((l) => "  " + l)
+    .join("\n");
+  const parts = ["message: |", indented, `type: ${entry.type}`];
   if (entry.scope) parts.push(`scope: ${entry.scope}`);
-  return parts.join('\n') + '\n';
+  return parts.join("\n") + "\n";
 }
 
 function main() {
   const args = parseArgs(process.argv);
-  const md = fs.readFileSync(args.inputMd, 'utf8');
+  const md = fs.readFileSync(args.inputMd, "utf8");
   const entries = parseChangelog(md);
 
   const usedByComponent = new Map();
   const byComponent = new Map();
 
   for (const e of entries) {
-    if (!usedByComponent.has(e.component)) usedByComponent.set(e.component, new Set());
+    if (!usedByComponent.has(e.component))
+      usedByComponent.set(e.component, new Set());
     const name = filenameFor(e, usedByComponent.get(e.component));
     if (!byComponent.has(e.component)) byComponent.set(e.component, []);
     byComponent.get(e.component).push({ name, yaml: toYaml(e) });
@@ -235,8 +270,8 @@ function main() {
   }
 
   process.stderr.write(
-    `${args.dryRun ? '[dry-run] would write' : 'wrote'} ${total} yml ` +
-    `file(s) across ${byComponent.size} component(s)\n`
+    `${args.dryRun ? "[dry-run] would write" : "wrote"} ${total} yml ` +
+      `file(s) across ${byComponent.size} component(s)\n`,
   );
 }
 

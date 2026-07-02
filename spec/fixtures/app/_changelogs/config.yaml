@@ -1,0 +1,8 @@
+order:
+  - "Breaking Change"
+  - "deprecation"
+  - "feature"
+  - "bugfix"
+  - "dependency"
+  - "performance"
+  - "known-issue"

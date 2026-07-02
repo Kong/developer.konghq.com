@@ -27,10 +27,14 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Provider entity
+    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 ---
 
@@ -54,5 +58,8 @@ body:
   display_name: Ollama Production
   name: local-ollama
   type: ollama
+  config:
+    auth:
+      type: basic
 {% endkonnect_api_request %}
 <!--vale on-->
