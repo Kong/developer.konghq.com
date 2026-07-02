@@ -61,6 +61,9 @@ aws_iam
 Adyen
 AZs
 Backblaze
+backendless
+backendRef
+backendRefs
 backfilled
 backfilling
 backoff
@@ -129,6 +132,8 @@ config
 config_hash
 configMap
 configMaps
+configmap
+configmaps
 configs
 configurability
 Conjur
@@ -137,6 +142,7 @@ conntrack
 consumer_group
 consumer_id
 content_safety_url
+controlplane
 cors
 cosmiconfig
 cosocket
@@ -150,6 +156,7 @@ CRMs
 cron
 cronjob
 CrowdStrike
+CRs
 cryptocurrency
 curity
 cutover
@@ -324,10 +331,13 @@ href
 http
 httproute
 httpbin
+HTTPGet
 HTTPie
 HTTPRoutes
 https
 huggingface
+hybridgateway
+Hybridgateway
 idempotency
 IdPs
 if_version
@@ -471,11 +481,14 @@ M_Account
 M_Link
 M_Resource
 maglev
+managedfields
 matchers
 max_args
 max_headers
+maxLength
 mbps
 mcp
+MCPServer
 md
 mebibytes
 Memcached
@@ -536,6 +549,7 @@ NLBs
 no_version
 node_quantifier
 Node.js
+nodeport
 Nullsoft
 nunjucks
 Noname
@@ -655,6 +669,7 @@ reportingComponent
 reportingInstance
 requery
 requeue
+requeuing
 request_counts
 requestable
 RequestResponse
@@ -664,6 +679,7 @@ reranking
 resourceVersion
 response_format
 resty
+resync
 Resync
 Retriable
 retryOn
@@ -703,6 +719,7 @@ serializer
 serverless
 serviceaccounts
 serviceless
+serviceRef
 service_name
 shm
 show_in_api
@@ -890,6 +907,7 @@ Valero
 validator
 validators
 Valkey
+vendored
 vararg
 vc
 viewport
