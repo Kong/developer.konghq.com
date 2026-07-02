@@ -23,7 +23,7 @@ You need:
   }
   ```
 
-To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
+To configure cloud authentication with Redis, add the following parameters to your AI Policy configuration:
 
 ```yaml
 config:
@@ -73,7 +73,7 @@ You need:
   }
   ```
 
-To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
+To configure cloud authentication with Redis, add the following parameters to your AI Policy configuration:
 
 ```yaml
 config:
@@ -107,7 +107,7 @@ You need:
 * A running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
 * Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
 
-To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
+To configure cloud authentication with Redis, add the following parameters to your AI Policy configuration:
 
 ```yaml
 config:
@@ -137,7 +137,7 @@ You need:
 * A running Redis instance on an [Azure Managed Redis cluster](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
 * Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
 
-To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
+To configure cloud authentication with Redis, add the following parameters to your AI Policy configuration:
 
 ```yaml
 config:
@@ -171,7 +171,7 @@ You need:
     * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
     * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
-To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
+To configure cloud authentication with Redis, add the following parameters to your AI Policy configuration:
 
 ```yaml
 config:
@@ -196,7 +196,7 @@ You need:
     * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
     * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
-To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
+To configure cloud authentication with Redis, add the following parameters to your AI Policy configuration:
 
 ```yaml
 config:

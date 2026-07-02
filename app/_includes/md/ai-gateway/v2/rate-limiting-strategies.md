@@ -1,4 +1,4 @@
-The AI Rate Limiting Advanced Policy supports two rate limiting strategies: `local` and `redis`.
+The {{ include.name }} Policy supports two rate limiting strategies: `local` and `redis`.
 This is controlled by the [`config.strategy`](./reference/#schema--config-strategy) parameter.
 
 {% table %}
@@ -36,11 +36,11 @@ The requirement is only to protect backend services from overloading that's caus
 In this scenario, because accuracy is important, the `local` strategy is not an option. Use the `redis` strategy instead.
 
 If using a very high sync frequency, be aware that this can affect performance at scale.
-The sync frequency becomes higher when the `sync_rate` setting is a lower number - for example, a `sync_rate` of 0.1 is a much higher sync frequency (10 counter syncs per second) than a `sync_rate` of 1 (1 counter sync per second).
+The sync frequency becomes higher when the `sync_rate` setting is a lower number. For example, a `sync_rate` of 0.1 is a much higher sync frequency (10 counter syncs per second) than a `sync_rate` of 1 (1 counter sync per second).
 
-You can calculate what is considered a very high sync rate in your environment based on your topology, number of Policies, their sync rates, and tolerance for loose rate limits.
+You can calculate what is considered a very high sync rate in your environment based on your topology, number of AI Policies, their sync rates, and tolerance for loose rate limits.
 
-Together, the interaction between sync rate and window size affects how accurately the AI Rate Limiting Advanced Policy can determine traffic across all nodes.
+Together, the interaction between sync rate and window size affects how accurately the {{ include.name }} Policy can determine traffic across all nodes.
 For example, the following table represents the worst-case scenario where a full sync interval's worth of data hasn't yet propagated across nodes:
 
 <!--vale off-->
@@ -94,5 +94,5 @@ Make sure to adjust your rate limits when scaling.
 For example, if a user can make 100 requests every second, and you have an equally balanced 5-node {{site.ai_gateway}} deployment, you can set the `local` limit to 30 requests every second.
 If you see too many false negatives, increase the limit.
 
-To minimize inaccuracies, consider using a [consistent-hashing load balancer](/gateway/entities/upstream/#consistent-hashing) in front of {{site.ai_gateway}}.
+To minimize inaccuracies, consider using a consistent-hashing load balancer in front of {{site.ai_gateway}}.
 The load balancer ensures that a user is always directed to the same {{site.ai_gateway}} node, which reduces inaccuracies and prevents scaling problems.
