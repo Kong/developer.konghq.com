@@ -84,7 +84,7 @@ Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to hos
 
 ## Manage AI MCP Servers
 
-AI MCP Servers can be created and managed through:
+AI MCP Servers can be created and managed through the:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/mcp-servers`
