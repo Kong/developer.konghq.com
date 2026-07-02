@@ -6,7 +6,10 @@
     {% for scope in include.scopes %}
         <div class="flex gap-2 items-center">
             {% if scope == 'global' %}
-                <span class="text-terciary">Global</span>
+              <div class="flex gap-2">
+                {% include mask_image.html image_url='/assets/icons/world.svg' css_classes="w-5 h-5 shrink-0 !bg-icon" %}
+                <a href="/ai-gateway/entities/ai-policy/#ai-policy-scopes">Global</a>
+              </div>
             {% else %}
               <div class="flex gap-2">
                 {% include mask_image.html image_url='/assets/icons/service-document.svg' css_classes="w-5 h-5 shrink-0 !bg-icon" %}
