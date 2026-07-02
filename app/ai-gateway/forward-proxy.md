@@ -133,62 +133,62 @@ You can use [Squid](https://www.squid-cache.org/) to create a simple forward pro
 
 In the following examples `secure.mycompany` is used as the `visible_hostname` for the forward proxy.
 
+{:.warning}
+> In a production deployment your forward proxy should authenticate users, including {{site.ai_gateway}}.
+
 1. Create minimal config file for Squid:
 
-```
-echo '
-# Allow your local machine
-acl localnet src 172.0.0.0/8     # Docker bridge network range
+    ```
+    echo '
+    # Allow your local machine
+    acl localnet src 172.0.0.0/8     # Docker bridge network range
 
-acl SSL_ports port 443
-acl Safe_ports port 80 443
+    acl SSL_ports port 443
+    acl Safe_ports port 80 443
 
-http_access deny !Safe_ports
-http_access allow localnet
-http_access allow localhost
-http_access deny all
+    http_access deny !Safe_ports
+    http_access allow localnet
+    http_access allow localhost
+    http_access deny all
 
-http_port 3128
+    http_port 3128
 
-access_log /var/log/squid/access.log combined
-cache_log /var/log/squid/cache.log
-' > squid.conf
-```
-
+    access_log /var/log/squid/access.log combined
+    cache_log /var/log/squid/cache.log
+    ' > squid.conf
+    ```
 1. Create a docker compose file:
 
-```
-echo '
-services:
-squid:
-  image: ubuntu/squid
-  container_name: squid
-  ports:
-    - "3128:3128"
-  volumes:
-    - ./squid.conf:/etc/squid/squid.conf:ro
-  networks:
-    proxy-net:
-      aliases:
-        - secure.mycompany   # ← the named host
+    ```
+    echo '
+    services:
+    squid:
+      image: ubuntu/squid
+      container_name: squid
+      ports:
+        - "3128:3128"
+      volumes:
+        - ./squid.conf:/etc/squid/squid.conf:ro
+      networks:
+        proxy-net:
+          aliases:
+            - secure.mycompany   # ← the named host
 
-networks:
-  proxy-net:
-    driver: bridge
-' > docker-compose.yml
-```
-
+    networks:
+      proxy-net:
+        driver: bridge
+    ' > docker-compose.yml
+    ```
 1. Add the  proxy to your hosts:
 
-```
-echo "127.0.0.1   secure.mycompany" | sudo tee -a /etc/hosts
-```
-
+    ```
+    echo "127.0.0.1   secure.mycompany" | sudo tee -a /etc/hosts
+    ```
 1. Run Squid using docker:
 
-```
-docker compose up -d
-```
+    ```
+    docker compose up -d
+    ```
 
 ### Gateway
 
@@ -219,7 +219,7 @@ docker compose up -d
   {% endkonnect_api_request %}
   <!-- vale on -->
 
-1. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
+2. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
 
   <!-- vale off -->
   {% konnect_api_request %}
@@ -255,7 +255,7 @@ docker compose up -d
   {% endkonnect_api_request %}
   <!-- vale on -->
 
-1. Send a chat request, this will be forwarded to your proxy service and return an error:
+3. Send a chat request, this will be forwarded to your proxy service and return an error:
 
   <!-- vale off -->
   {% validation request-check %}
@@ -273,10 +273,11 @@ docker compose up -d
   {% endvalidation %}
   <!-- vale on -->
 
-1. Examine the Squid logs to verify your requests:
-  ```
-  docker exec -it squid tail -f /var/log/squid/access.log
-  ```
+4. Examine the Squid logs to verify your requests:
+
+    ```
+    docker exec -it squid tail -f /var/log/squid/access.log
+    ```
 
 ### AI MCP Server
 
@@ -335,29 +336,29 @@ docker compose up -d
   {% endkonnect_api_request %}
   <!-- vale on -->
 
-1. Call `get-current-weather`, this will be forwarded to your proxy service and return an error:
+2. Call `get-current-weather`, this will be forwarded to your proxy service and return an error:
 
-  ```sh
-  curl -i -X POST http://localhost:8000/weather \
-    -H 'Content-Type: application/json' \
-    -H 'Accept: application/json, text/event-stream' \
-    --data '{
-      "jsonrpc":"2.0",
-      "id":1,
-      "method":"tools/call",
-      "params":{
-        "name":"get-current-weather",
-        "arguments":{
-          "query_q":"London"
+    ```sh
+    curl -i -X POST http://localhost:8000/weather \
+      -H 'Content-Type: application/json' \
+      -H 'Accept: application/json, text/event-stream' \
+      --data '{
+        "jsonrpc":"2.0",
+        "id":1,
+        "method":"tools/call",
+        "params":{
+          "name":"get-current-weather",
+          "arguments":{
+            "query_q":"London"
+          }
         }
-      }
-    }'
-  ```
+      }'
+    ```
+3. Examine the Squid logs to verify your requests:
 
-1. Examine the Squid logs to verify your requests:
-  ```
-  docker exec -it squid tail -f /var/log/squid/access.log
-  ```
+    ```
+    docker exec -it squid tail -f /var/log/squid/access.log
+    ```
 
 ## Supported Policies
 
