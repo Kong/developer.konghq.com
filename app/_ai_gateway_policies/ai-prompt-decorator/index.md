@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
 The AI Prompt Decorator Policy adds an array of `llm/v1/chat` messages to either the start or end of an LLM consumer's chat history.

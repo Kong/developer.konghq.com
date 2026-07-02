@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
 The AI Lakera Guard Policy evaluates requests and responses that pass through {{site.ai_gateway}} to Large Language Models (LLMs). It uses the [Lakera Guard SaaS service](https://www.lakera.ai/) to detect safety policy violations and block unsafe content before it reaches upstream LLMs or returns to clients. The AI Lakera Guard Policy supports multiple inspection modes and guards both inbound prompts and outbound model outputs.

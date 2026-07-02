@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 related_resources:
   - text: Embedding-based similarity matching in Kong AI gateway plugins
     url: /ai-gateway/semantic-similarity/
