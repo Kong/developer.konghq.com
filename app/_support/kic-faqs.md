@@ -28,7 +28,8 @@ By default, the {{site.kic_product_name}} exposes a `/metrics` endpoint over por
    curl http://localhost:10255/metrics
    ```
 
-This lists all available metrics along with an explanation of their meanings. To export these metrics to Prometheus, see the [Prometheus and Grafana documentation](/kubernetes-ingress-controller/observability/prometheus/).
+The output lists all available metrics with an explanation of their meanings.
+To export these metrics to Prometheus, see the [Prometheus and Grafana documentation](/kubernetes-ingress-controller/observability/prometheus/).
 
 ## Helm chart
 

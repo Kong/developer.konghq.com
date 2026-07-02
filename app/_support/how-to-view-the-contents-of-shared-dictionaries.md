@@ -10,15 +10,16 @@ works_on:
 tldr:
   q: How do I view the contents of the shared dictionaries in Kong?
   a: |
-    Use a `pre-function` plugin to report the contents of the SHM LRU dictionaries. The Lua code calls
-    `ngx.shared["kong_rate_limiting_counters"]:get_keys(2000)` to fetch the first 2000 keys from the dictionary
-    and logs each key with `kong.log.err`. The retrieved keys then appear in the Kong error log.
-related_resources: []
+    Use a Pre-Function plugin with Lua code that calls `ngx.shared["kong_rate_limiting_counters"]:get_keys(2000)` and logs each key with `kong.log.err`.
+    The keys appear in the {{site.base_gateway}} error log.
+related_resources:
+  - text: Pre-Function plugin
+    url: /plugins/pre-function/
 ---
 
-Use a `pre-function` plugin to report the contents of the SHM LRU dictionaries in Kong.
+## Steps
 
-The following examples show `pre-function` plugin code that inspects the `kong_rate_limiting_counters` dictionary for the first 2000 keys.
+The following examples show Pre-Function plugin code that inspects the `kong_rate_limiting_counters` dictionary for the first 2000 keys.
 
 The Lua code:
 
@@ -71,3 +72,4 @@ The result in the Kong log:
 2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:8 [pre-function] jLcEZU3Fr004xsxam1jELW07UfLf8D7p|1675669470|1|172.18.0.1|sync, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 2023/02/06 07:44:30 [error] 2207#0: *990 [kong] [string "kong.log.err("PRE FUNCTION EXECUTED")..."]:11 [pre-function] PRE FUNCTION ENDED, client: 172.18.0.1, server: kong, request: "GET /bin HTTP/1.1", host: "localhost:8000"
 ```
+{:.no-copy-code}

@@ -12,11 +12,8 @@ published: false
 tldr:
   q: How do I use topologySpreadConstraints to distribute Kong pods evenly across my Kubernetes cluster nodes?
   a: |
-    `topologySpreadConstraints` is supported in the Kong Helm charts from version `2.0.0`. Add a
-    `topologySpreadConstraints` block to your Helm values, setting `topologyKey` to a node label shared by
-    all target nodes (for example `kubernetes.io/hostname` or a custom `zone` label) and `labelSelector.matchLabels`
-    to match the Kong pods (for example `app.kubernetes.io/instance: kong-enterprise`). The `maxSkew` and
-    `whenUnsatisfiable` parameters control how rigidly the pods must be spread.
+    Add a `topologySpreadConstraints` block to your Helm values (supported from chart version 2.0.0), setting `topologyKey` to a node label and `labelSelector.matchLabels` to match Kong pods.
+    Use `maxSkew` and `whenUnsatisfiable` to control how strictly the spread is enforced.
 related_resources:
   - text: "topologySpreadConstraints support in the Kong Helm charts (CHANGELOG 2.0.0)"
     url: https://github.com/Kong/charts/blob/7fb11b7658f48de14d04a6d8155f1b2e1c8dbba8/charts/kong/CHANGELOG.md#200
@@ -24,13 +21,9 @@ related_resources:
     url: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
 ---
 
-## Overview
-
-How do I use `topologySpreadConstraints` to load balance my pods over my Kubernetes cluster nodes?
-
 ## Steps
 
-We added support for `topologySpreadConstraints` to our Helm charts from version 2.0.0.
+`topologySpreadConstraints` is supported in the Kong Helm charts from version 2.0.0.
 
 The following commands are useful when working with `topologySpreadConstraints`:
 
@@ -43,9 +36,8 @@ kubectl get nodes --show-labels
 kubectl label nodes k8s-worker-2 zone=2
 ```
 
-Cluster node details:
-
-The labels are used by `topologySpreadConstraints` to determine where various pods should go.
+Node labels determine where `topologySpreadConstraints` schedules pods.
+The examples below use the following cluster:
 
 ```text
 NAME              STATUS   ROLES           AGE    VERSION   LABELS
@@ -54,9 +46,18 @@ k8s-worker-1      Ready    <none>          116d   v1.24.3   kubernetes.io/hostna
 k8s-worker-2      Ready    <none>          116d   v1.24.3   kubernetes.io/hostname=k8s-worker-2,zone=2
 ```
 
-Example 1:
+The key parameters are:
 
-Distribute 2 pods over 3 nodes by applying the following in your Helm values.
+`topologyKey`: the node label used to select hosts for distribution.
+To spread across all nodes, set this to a label present on every node, such as `kubernetes.io/hostname`.
+
+`labelSelector.matchLabels`: selects the pods to balance.
+Kong pods have the `app.kubernetes.io/instance: kong-enterprise` label.
+
+`maxSkew` and `whenUnsatisfiable`: control how strictly the spread is enforced.
+See the [Kubernetes topology spread constraints documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) for details.
+
+### Example 1: 2 pods across 3 nodes
 
 ```yaml
 replicaCount: 2
@@ -69,32 +70,17 @@ topologySpreadConstraints:
         app.kubernetes.io/instance: kong-enterprise
 ```
 
-For a more detailed explanation of what each config option does, review the Kubernetes documentation.
-
-The important parameters are:
-
-`topologyKey`: Denotes the pod label used to select underlying hosts for distribution. To use all nodes, set this to a label that all nodes contain, such as `kubernetes.io/hostname`.
-
-`labelSelector.matchLabels`: Finds matching pods. To balance Kong pods, all the pods have the `app.kubernetes.io/instance: kong-enterprise` label.
-
-The `maxSkew` and `whenUnsatisfiable` parameters control how rigidly the rules are applied and how evenly the pods must be spread.
-
-Results:
-
-Pod and resident node:
+Each pod is scheduled on a separate node:
 
 ```text
 kong-enterprise-kong-785c5d5db8-bqqfx  | k8s-master-node |
 kong-enterprise-kong-785c5d5db8-pn9z5  | k8s-worker-1    |
 ```
 
-Example 2:
+### Example 2: 3 pods across 3 nodes
 
-Distribute 3 pods over 3 nodes by changing `replicaCount` to 3 and upgrading the Helm deployment.
-
-Results:
-
-Pod and resident node:
+Change `replicaCount` to `3` and upgrade the Helm deployment.
+One pod is scheduled per node:
 
 ```text
 kong-enterprise-kong-785c5d5db8-bqqfx | k8s-master-node |
@@ -102,9 +88,7 @@ kong-enterprise-kong-785c5d5db8-pn9z5 | k8s-worker-1    |
 kong-enterprise-kong-785c5d5db8-8gq6s | k8s-worker-2    |
 ```
 
-Example 3:
-
-Distribute 3 pods over 2 nodes using the zone label.
+### Example 3: 3 pods across 2 nodes using a zone label
 
 ```yaml
 replicaCount: 3
@@ -117,9 +101,7 @@ topologySpreadConstraints:
         app.kubernetes.io/instance: kong-enterprise
 ```
 
-Results:
-
-Pod and resident node:
+Pods are distributed across the two zone-labeled worker nodes, with one node receiving two pods to satisfy `maxSkew: 1`:
 
 ```text
 kong-enterprise-kong-579f9678bd-mm5mj  | k8s-worker-2    |
@@ -127,6 +109,4 @@ kong-enterprise-kong-579f9678bd-p788t  | k8s-worker-1    |
 kong-enterprise-kong-579f9678bd-whqrg  | k8s-worker-2    |
 ```
 
-Conclusion:
-
-This is a fairly simple load balancing scenario, however `topologySpreadConstraints` have greater flexibility than the previous affinity rules allowed.
+This is a fairly simple load balancing scenario, but `topologySpreadConstraints` offers greater flexibility than affinity rules.

@@ -14,8 +14,6 @@ tldr:
     Add the required `Content-Type: application/json` header so that {{site.base_gateway}} can correctly interpret the payload format.
 ---
 
-## Sending the correct Content-Type header
-
 This error occurs when sending an incorrect content-type header to {{site.base_gateway}}. Some utilities, such as `curl`, default to using `Content-Type: application/x-www-form-urlencoded`. To address the issue, ensure you are sending the header as `Content-Type: application/json`.
 
 ```bash

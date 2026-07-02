@@ -10,25 +10,16 @@ works_on:
   - konnect
 
 related_resources:
-  - text: "{{site.base_gateway}} configuration reference - `pg_max_concurrent_queries`"
+  - text: "`pg_max_concurrent_queries`"
     url: /gateway/configuration/#pg-max-concurrent-queries
-  - text: "{{site.base_gateway}} configuration reference - `nginx_worker_processes`"
+  - text: "`nginx_worker_processes`"
     url: /gateway/configuration/#nginx-worker-processes
 
 tldr:
-  q: Why does my PostgreSQL connection count exceed the limit I set with pg_max_concurrent_queries?
+  q: Why does my PostgreSQL connection count exceed the limit I set with `pg_max_concurrent_queries`?
   a: |
-    `pg_max_concurrent_queries` is applied **per nginx worker process**, so the actual maximum
-    number of concurrent database connections is:
-
-    ```
-    pg_max_concurrent_queries × nginx_worker_processes × number of Kong nodes
-    ```
-
-    To bring the total under your database connection limit, explicitly set
-    `nginx_worker_processes` to a fixed integer value rather than relying on the
-    default `auto` setting, which bases the count on the host's vCPUs and can
-    produce more workers than expected in Kubernetes.
+    `pg_max_concurrent_queries` is per Nginx worker process, not per node.
+    Set `nginx_worker_processes` to a fixed integer so the total connection count stays within your database limit.
 
 ---
 
@@ -41,12 +32,13 @@ nodes deployed in Kubernetes.
 
 ## Cause
 
-The `pg_max_concurrent_queries` setting is scoped **per nginx worker process**, not
-per Kong node. The actual maximum number of concurrent database connections is therefore:
+The `pg_max_concurrent_queries` setting is scoped **per Nginx worker process**, not
+per {{site.base_gateway}} node. The actual maximum number of concurrent database connections is therefore:
 
 ```
 pg_max_concurrent_queries × nginx_worker_processes × number of Kong nodes
 ```
+{:.no-copy-code}
 
 The `nginx_worker_processes` parameter defaults to `auto`, which sets the number of
 worker processes equal to the number of available vCPUs. In a Kubernetes environment,
@@ -56,14 +48,14 @@ than expected.
 
 ## Solution
 
-1. Determine the current number of nginx worker processes on a running Kong node:
+1. Determine the current number of Nginx worker processes on a running {{site.base_gateway}} node:
 
    ```bash
    ps aux | grep "[n]ginx: worker process" | wc -l
    ```
 
 2. Calculate the maximum connection count you need to stay within your database limit.
-   For example, if your database allows 200 connections, you have 4 Kong nodes, and
+   For example, if your database allows 200 connections, you have 4 {{site.base_gateway}} nodes, and
    you want `pg_max_concurrent_queries` set to 10:
 
    ```
@@ -108,3 +100,4 @@ The count should remain at or below:
 ```
 pg_max_concurrent_queries × nginx_worker_processes × number of Kong nodes
 ```
+{:.no-copy-code}

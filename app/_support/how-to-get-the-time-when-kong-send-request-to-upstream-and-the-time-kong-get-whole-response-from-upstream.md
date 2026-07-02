@@ -1,55 +1,49 @@
 ---
-title: How to get the time when Kong sends a request to upstream and the time Kong gets the whole response from upstream
+title: How to get the time when {{site.base_gateway}} sends a request to upstream and receives a response
 content_type: support
-description: Use the pre-function and post-function plugins to log the time Kong sends a request to upstream and the time Kong receives the whole response.
+description: Use the Pre-Function and Post-Function plugins to log the time {{site.base_gateway}} sends a request to upstream and the time {{site.base_gateway}} receives the whole response.
 products:
   - gateway
 works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I get the time when Kong sends a request to upstream and the time Kong gets the whole response from upstream?
+  q: How do I get the time when {{site.base_gateway}} sends a request to upstream and the time {{site.base_gateway}} gets the whole response from upstream?
   a: |
-    Use the `post-function` and `pre-function` plugins. The time Kong sends a request to upstream can be
-    obtained at the end of the access phase with `post-function` (which runs after all other plugins), and
-    the time Kong gets the whole response can be obtained at the beginning of the log phase with `pre-function`
-    (which runs before all other plugins). First set `untrusted_lua_sandbox_requires = socket` (or the env var
-    `KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES = socket` in a container) so the plugins can use the socket package,
-    then enable the plugins on the target route/service to call `socket.gettime()*1000` and log the times,
-    which appear in the Kong error log.
+    Use the Post-Function plugin (end of the access phase) to log the send time, and the Pre-Function plugin (start of the log phase) to log the receive time.
+    Set `untrusted_lua_sandbox_requires = socket` first so the plugins can call `socket.gettime()`.
 related_resources:
-  - text: plugin execution order
+  - text: Plugin execution order
     url: /gateway/entities/plugin/#dynamic-plugin-ordering
-  - text: pre-function plugin configuration
+  - text: Pre-Function plugin configuration
     url: /plugins/pre-function/
-  - text: post-function plugin configuration
+  - text: Post-Function plugin configuration
     url: /plugins/post-function/
 ---
 
 
 ## Steps
 
-The above is the flow of how Kong handles requests. (1) could be obtained at the end of the access phase, (2) could be obtained at the beginning of the log phase.
+Kong handles requests in phases: the access phase ends just before the request is sent to upstream, and the log phase begins just after the full response is received.
 
-The `post-function` plugin runs after all the other plugins, so we could use it to get (1) in the access phase.
+* **Send time**: Obtainable at the end of the access phase. The Post-Function plugin runs after all other plugins, so it can capture this timestamp.
+* **Receive time**: Obtainable at the beginning of the log phase. The Pre-Function plugin runs before all other plugins in the log phase, so it can capture this timestamp.
 
-The `pre-function` plugin runs before all the other plugins, so we could use it to get (2) in the log phase.
+To implement this:
 
-We could implement it by following the steps below:
-
-1. Set the parameter below for Kong to use the socket package in the `pre-function`/`post-function` plugins:
+1. Set the following parameter for {{site.base_gateway}} to use the socket package in the Pre-Function/Post-Function plugins:
 
    ```bash
    untrusted_lua_sandbox_requires = socket
    ```
 
-   If you run Kong with a container, set the env var below instead:
+   If you run Kong in a container, set the following env var instead:
 
    ```bash
    KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES = socket
    ```
 
-2. Enable the `post-function` plugin below on the target route/service object to log (1):
+2. Enable the Post-Function plugin on the target Route/Service object to log the send time:
 
    ```yaml
    plugins:
@@ -63,7 +57,7 @@ We could implement it by following the steps below:
      enabled: true
    ```
 
-3. Enable the `pre-function` plugin below on the target route/service object to log (2):
+3. Enable the Pre-Function plugin on the target Route/Service object to log receive time:
 
    ```yaml
    plugins:
@@ -77,8 +71,7 @@ We could implement it by following the steps below:
      enabled: true
    ```
 
-4. Send a request to Kong again, then you will be able to get the times below (ms) from the Kong error log:
+4. Send a request to {{site.base_gateway}} again, and you will see the following times (ms) in the {{site.base_gateway}} error log:
 
-   (1) The time when Kong sends a request to upstream
-
-   (2) The time Kong gets the whole response from upstream
+* The time when {{site.base_gateway}} sends a request to upstream
+* The time {{site.base_gateway}} gets the whole response from upstream

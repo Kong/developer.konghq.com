@@ -1,20 +1,17 @@
 ---
-title: File-log plugin output mixed with Kong log entries
+title: File Log plugin output mixed with {{site.base_gateway}} log entries
 content_type: support
-description: In containerized environments, the Docker or Kubernetes host node collects logs via a PIPE that every container outputs to /dev/stdout.
+description: "When the File Lof plugin writes to /dev/stdout in a containerized environment, log entries can interleave because the Linux kernel can't guarantee atomicity for writes larger than the PIPE_BUF limit (4096 bytes)."
 products:
   - gateway
 works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why does the output of the file-log plugin get mixed with Kong log entries?
+  q: Why does the output of the File Log plugin get mixed with {{site.base_gateway}} log entries?
   a: |
-    In containerized environments, the host node collects logs via a PIPE that every container outputs to
-    `/dev/stdout`. When writing data larger than the PIPE buffer (usually 4096 bytes), the Linux kernel can't
-    ensure the atomicity of the `write()` syscall, which explains the interleaving for logs bigger than 4kB.
-    The `PIPE_BUF` limit is hard-coded in the kernel and can't be increased via config. As a workaround,
-    remove any unneeded response headers or data from the file-log output using the `custom_fields_by_lua` field.
+    Logs interleave because the Linux kernel can't guarantee atomicity for `write()` calls larger than the `PIPE_BUF` limit (4096 bytes), and this limit can't be changed.
+    Use `custom_fields_by_lua` to remove unneeded fields from the File Log output and keep entries under the limit.
 related_resources:
   - text: file-log
     url: /plugins/file-log/
@@ -30,18 +27,18 @@ related_resources:
     url: https://github.com/torvalds/linux/blob/v5.15/include/uapi/linux/limits.h#L14
 ---
 
-## Why does the output of the file-log plugin get mixed with Kong log entries?
-
-When running in Kubernetes, some of Kong's logs are directed to `/dev/stdout`.
-
-If we also use a file-log plugin to write to `/dev/stdout`, why does the output of the file-log plugin get mixed with Kong log entries?
+When running in Kubernetes, some of {{site.base_gateway}}’s logs are directed to `/dev/stdout`.
+When the File Log plugin is also configured to write to `/dev/stdout`, the output can get mixed with {{site.base_gateway}} log entries.
 
 In containerized environments, the Docker or Kubernetes host node collects logs via a PIPE that every container outputs to `/dev/stdout`.
 
-When writing data through a PIPE, the size of the data has to fit into a PIPE buffer, which is usually 4096 Bytes. In other words, when writing data larger than 4kB through a PIPE, the Linux kernel can’t ensure the atomicity of the syscall `write()`.
+When writing data through a PIPE, the data must fit within the PIPE buffer, which is usually 4096 bytes.
+When writing data larger than 4 KB through a PIPE, the Linux kernel can’t ensure the atomicity of the `write()` syscall.
 
-This could explain why the interleaving occurs for logs whose size is bigger than 4kB. Unfortunately, there’s no config setting to increase the `PIPE_BUF` directly as it is hard-coded in the kernel.
+This explains why the interleaving occurs for logs larger than 4 KB.
+There’s no config setting to increase `PIPE_BUF` directly, as it’s hard-coded in the kernel.
 
-The file-log plugin uses `write()` directly to output to a file. This is already a blocking I/O operation, which could affect performance, and there is no locking mechanism in `/dev/stdout`.
+The File Log plugin uses `write()` directly to output to a file.
+This is a blocking I/O operation, which can affect performance, and there’s no locking mechanism in `/dev/stdout`.
 
-As a workaround, we recommend removing any unneeded response headers or any data that isn't required from the file-log by using the `custom_fields_by_lua` field.
+As a workaround, we recommend removing any unneeded response headers or data from the File Log output using the `custom_fields_by_lua` field.

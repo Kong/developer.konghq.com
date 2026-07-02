@@ -1,5 +1,5 @@
 ---
-title: "Why is no Access-Control-Allow-Origin header present on the response even though I configured the CORS plugin?"
+title: "Missing Access-Control-Allow-Origin header with CORS plugin"
 content_type: support
 description: "The CORS plugin omits the Access-Control-Allow-Origin header when config.origins contains an invalid character or when the request origin does not match a configured origin."
 products:
@@ -10,32 +10,33 @@ works_on:
 tldr:
   q: Why is no Access-Control-Allow-Origin header present on the response even though I configured the CORS plugin?
   a: |
-    The CORS plugin omits the `Access-Control-Allow-Origin` header for two main reasons. First,
-    `config.origins` may contain an invalid character such as a leading or trailing space, quotes, or
-    brackets; the field takes a simple comma-separated list and does not require brackets. Second, when
-    multiple origins are configured, the plugin only returns the ACAO header if the request's Origin
-    matches one of them. Review `config.origins`, remove invalid characters, and confirm the request's
-    Origin matches a configured value.
+    Check `config.origins` for invalid characters (leading or trailing spaces, quotes, or brackets) and confirm the request's Origin matches one of the configured values.
 related_resources: []
 ---
 
 ## Problem
 
-When using the CORS plugin we see proxy requests being denied. When viewing the error in the browser developer tools an error similar to the below is found in the console:
+The CORS plugin is configured, but proxy requests are being denied.
+The browser developer console shows an error like:
 
 ```
 Access to XMLHttpRequest at 'https://proxy/echo' from origin 'https://konghq.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ```
 
-A value has been added to `config.origins` in the CORS plugin, but the header is not present on the response.
+A value has been added to `config.origins` in the CORS plugin, but the `Access-Control-Allow-Origin` header is missing from the response.
 
 ## Cause
 
-This can occur for a couple of reasons:
+This can happen for two reasons:
 
-1. The `config.origins` contains an invalid character. These can be as simple as a leading or trailing space character or adding quotes or brackets. As the field accepts a string array it is common to assume you need to use brackets, however the field does not require them and instead a simple comma separated list can be used.
-2. You have configured several origins. When you specify more than one origin the plugin will only return the ACAO header if a match is found. For example, if you configured it as `config.origins=https://konghq.com,https://kuma.io`, generating a cross site request from an Origin of `https://mockbin.org` would return this error. If the same request was issued from `https://kuma.io` the header would be added as it matches one of the defined origins.
+1. `config.origins` contains an invalid character. Common examples are a leading or trailing space, quotes, or brackets.
+The field accepts a simple comma-separated list and doesn't require brackets, even though the field type is a string array.
+1. Multiple origins are configured, but the request's `Origin` header doesn't match any of them.
+The plugin only adds the `Access-Control-Allow-Origin` header when the request origin matches a configured value.
+For example, if `config.origins` is set to `https://konghq.com,https://kuma.io`, a request from `https://mockbin.org` returns this error, but a request from `https://kuma.io` succeeds.
 
 ## Solution
 
-Review the value of `config.origins` and remove any invalid characters such as leading or trailing spaces, quotes, or brackets, using a simple comma separated list. When configuring several origins, confirm that the request's Origin matches one of the configured values, since the plugin only returns the ACAO header on a match.
+Review `config.origins` and remove any invalid characters like leading or trailing spaces, quotes, or brackets.
+Use a plain comma-separated list of origins.
+When multiple origins are configured, confirm that the request's `Origin` header matches one of the configured values.

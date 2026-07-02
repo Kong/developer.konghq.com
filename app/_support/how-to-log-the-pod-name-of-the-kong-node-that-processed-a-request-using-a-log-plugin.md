@@ -1,64 +1,65 @@
 ---
-title: How to log the pod name of the Kong node that processed a request when using a Kong log plugin
+title: How to log the pod name of the {{site.base_gateway}} node that processed a request
 content_type: support
-description: Add the data plane pod name to Kong log plugin output by exposing the container HOSTNAME variable through the config.custom_fields_by_lua property.
+description: Add the data plane pod name to {{site.base_gateway}} logging plugin output by exposing the container HOSTNAME variable through the config.custom_fields_by_lua property.
 products:
   - kic
 works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I add the data plane pod name to the log produced by a Kong log plugin to identify which Kong pod processed the request?
+  q: How do I add the data plane pod name to the log produced by a {{site.base_gateway}} logging plugin to identify which {{site.base_gateway}} pod processed the request?
   a: |
     In a Kubernetes environment, the container exposes a `HOSTNAME` variable set to the pod the
-    container runs on. Using the Environment Variables Vault Secret Management Backend, add this
+    container runs on. Using the environment variable Vault secret management backend, add this
     variable to the log plugin output by adding a new field to the plugin's
-    `config.custom_fields_by_lua` property, for example
-    `x-pod-name: return kong.vault.get("{vault://env/hostname}")`. This can be set via Kong
-    Manager, an Admin API call, or declarative config.
-related_resources: []
+    `config.custom_fields_by_lua` property.
+related_resources:
+  - text: Logging plugins
+    url: /plugins/?category=logging
+  - text: Environment variable Vault
+    url: /gateway/entities/vault/#vault-provider-specific-configuration-parameters
 ---
 
 
 ## Steps
 
-In a kubernetes environment a container should have a `HOSTNAME` variable which is set to the pod the container is deployed on.
+In a Kubernetes environment, a container has a `HOSTNAME` variable set to the name of the pod it runs on.
+Using the environment variable Vault secret management backend, you can expose this variable in log plugin output by adding a field to the plugin's `config.custom_fields_by_lua` property.
 
-With the Environment Variables Vault Secret Management Backend it is easy to add this `HOSTNAME` variable to the log plugin output by adding a new field to the `config.custom_fields_by_lua` property of your log plugin as in these examples:
+The following examples use the File Log plugin.
 
-A). via Kong Manager:
-
-B). Via an admin API call using the file-log plugin as an example:
+{% navtabs "config-method" %}
+{% navtab "Admin API" %}
 
 ```bash
-curl -H "kong-admin-token: <adminapitoken>" -X POST <adminapiendpoint>/<workspace>/plugins \
--H 'content-type: application/json' \
--d @payload.json
-```
-
-where `payload.json` has the following content:
-
-```json
-{
-   "name":"file-log",
-   "config":{
-      "custom_fields_by_lua":{
-         "x-pod-name":"return kong.vault.get(\"{vault://env/hostname}\")"
+curl -X POST http://localhost:8001/WORKSPACE/plugins \
+  -H "Kong-Admin-Token: $KONG_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "file-log",
+    "config": {
+      "custom_fields_by_lua": {
+        "x-pod-name": "return kong.vault.get(\"{vault://env/hostname}\")"
       },
-      "path":"/tmp/file.log"
-   }
-}
+      "path": "/tmp/file.log"
+    }
+  }'
 ```
 
-C). Via declarative config:
+{% endnavtab %}
+{% navtab "Declarative config" %}
 
 ```yaml
 plugins:
-- config:
+- name: file-log
+  enabled: true
+  config:
     custom_fields_by_lua:
       x-pod-name: return kong.vault.get("{vault://env/hostname}")
     path: /tmp/file.log
     reopen: false
-  enabled: true
-  name: file-log
 ```
+
+{% endnavtab %}
+{% endnavtabs %}

@@ -10,12 +10,8 @@ works_on:
 tldr:
   q: "Why do I get \"require 'resty.http' not allowed within sandbox\" when using a plugin that runs Lua code?"
   a: |
-    Plugins that execute arbitrary Lua code (such as serverless plugins or the Exit Transformer)
-    run in a sandbox with restricted access to the global environment, so they cannot `require`
-    certain modules like `resty.http`. To resolve it, either set `untrusted_lua_sandbox_requires`
-    to include the allowed modules (the preferred option, e.g. `untrusted_lua_sandbox_requires = resty.http`),
-    or turn off the sandbox by setting `untrusted_lua` to `on`. Allowing modules or disabling the
-    sandbox can create opportunities to escape it, so proceed with caution.
+    The plugin runs in a sandbox that blocks `require` of certain modules.
+    Add the module to `untrusted_lua_sandbox_requires` (preferred), or set `untrusted_lua` to `on` to disable the sandbox entirely (use with caution).
 related_resources:
   - text: "`untrusted_lua_sandbox_requires`"
     url: /gateway/configuration/#untrusted-lua-sandbox-requires

@@ -10,10 +10,8 @@ works_on:
 tldr:
   q: "Why do I get a Code 10 \"invalid unique name\" error when creating an entity named auth?"
   a: |
-    This error is returned because of a pre-existing Admin API endpoint named `auth`. Route
-    matching prefers the existing Admin API endpoint over a newly created entity, so entity
-    names that collide with reserved endpoints (such as `auth`, `services`, `routes`, `consumers`,
-    and others listed in the error) must be avoided when creating new entities.
+    The entity name conflicts with a reserved Admin API endpoint.
+    Avoid names like `auth`, `services`, `routes`, or `consumers` (see the error message for the full list).
 related_resources:
   - text: Get list of Admin API endpoints
     url: /api/gateway/admin-ee/#/operations/get-endpoints

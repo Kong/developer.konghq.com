@@ -8,19 +8,17 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: Exit transformer plugin
+  - text: Exit Transformer plugin
     url: /plugins/exit-transformer/
+  - text: "`untrusted_lua`"
+    url: /gateway/configuration/#untrusted-lua
 tldr:
   q: How do I configure the Exit Transformer plugin to return a field with a null value in the response body?
   a: |
-    Update the untrusted Lua environment variables to allow `cjson`:
-    set `KONG_UNTRUSTED_LUA: "sandbox"` and `KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES: "cjson"`
-    (review the `untrusted_lua` configuration reference first). Then, in your `exit-transformer`
-    function, assign the field using `(require "cjson").null` instead of a bare `null`. When the
-    plugin runs, the field is returned with a `null` value in the response body.
+    Set `KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES: "cjson"`, then use `(require "cjson").null` in your Exit Transformer function instead of a bare `null`.
 ---
 
-## Overview
+## Problem
 
 When using the Exit Transformer plugin, you may want to return a field with a `null` value in the response body. However, if you try to assign a field a value of `null` directly in your Lua code, you will encounter an error because `null` is not defined in Lua.
 
@@ -38,20 +36,21 @@ end
 
 In the above code, `null` is not defined, so you will get an error in your logs. 
 
-## Steps
+## Solution
 
-To accomplish this we need to make a few updates to the environment variables and then change the Lua slightly to require `cjson`.
+To avoid this error and return a field with a null value in the response body, we need to make a few updates to the environment variables and then change the Lua slightly to require `cjson`.
 
-First, let's update the environment variables below:
+First, set the following environment variables:
 
 ```yaml
 KONG_UNTRUSTED_LUA: "sandbox"
 KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES: "cjson"
 ```
 
-Please review the untrusted Lua configuration reference before updating this on your environment.
+Review the [untrusted Lua configuration reference](/gateway/configuration/#untrusted-lua) before updating this in your environment.
 
-Next, let's add the following to our exit transformer (to do this I saved this to a file called `bodyNull.lua`):
+Next, let's add the following to our Exit Transformer. 
+Saved this to a file called `bodyNull.lua`:
 
 ```lua
 return function(status, body, headers) 
@@ -63,16 +62,16 @@ return function(status, body, headers)
 end
 ```
 
-Then we need to create the exit transformer plugin:
+Then we need to create the Exit Transformer plugin:
 
 ```bash
-curl --location --request POST 'http://localhost:8001/plugins' \
+curl -X POST 'http://localhost:8001/plugins' \
 --header 'Kong-Admin-Token: <token>' \
 --form 'config.functions=@"/<pathtofile>/bodyNull.lua"' \
 --form 'name="exit-transformer"'
 ```
 
-For this specific test I created a `request-termination` plugin set to a status of 400 to trigger the Lua from the exit transformer.
+For this specific test I created a `request-termination` plugin set to a status of 400 to trigger the Lua from the Exit Transformer.
 
 ```bash
 curl -X POST http://localhost:8001/plugins \
@@ -81,10 +80,11 @@ curl -X POST http://localhost:8001/plugins \
     --data "config.status_code=400" \
 ```
 
-Now if we run a request we can see that the field `hello` is returned with a null value.
+Now if we run a request we can see that the field `hello` is returned with a null value:
 
 ```json
 {
 	"hello": null
 }
 ```
+{:.no-copy-code}

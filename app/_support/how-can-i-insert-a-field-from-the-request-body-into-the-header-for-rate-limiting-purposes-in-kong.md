@@ -10,11 +10,8 @@ works_on:
 tldr:
   q: How can I insert a field from the request body into the header for rate limiting purposes?
   a: |
-    Use the `pre-function` plugin together with the Kong Plugin Development Kit (PDK) to manipulate
-    the request before it reaches the upstream service. Add a Lua script to the plugin's
-    `config.access` parameter that uses `kong.request.get_body()` to extract the desired field and
-    `kong.service.request.add_header()` to insert it into a request header (for example,
-    `x-contact-number`). You can then configure rate limiting based on that header.
+    Use the Pre-Function plugin to extract a field from the request body with `kong.request.get_body()` and insert it as a header with `kong.service.request.add_header()`.
+    You can then configure rate limiting based on that header.
 related_resources:
   - text: Pre-Function plugin
     url: /plugins/pre-function/
