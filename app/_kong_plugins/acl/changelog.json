@@ -25,6 +25,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.8": [
+    {
+      "message": "Fixed an issue where the ACL plugin ignored a consumer's ACL groups when `include_consumer_groups` was enabled and the consumer belonged to an enterprise consumer group, causing incorrect `403` denials (with `allow`) or incorrect access (with `deny`) for authenticated and anonymous consumers. The plugin now falls back to the consumer's ACL groups when no third-party authenticated groups are present.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where the cache was not being invalidated for incremental sync in certain scenarios, leading to stale data being served.",

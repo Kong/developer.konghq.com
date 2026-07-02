@@ -141,6 +141,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.8": [
+    {
+      "message": "Fixed an issue where token endpoint responses with `expires_in <= 0` were cached indefinitely when proactive expiry re-check was disabled, causing the plugin to silently forward already-expired tokens to the upstream until a worker/process restart.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to the `tls_certificate_verify`\nglobal option. When this option is enabled the plugin's flags\n`ssl_verify`, `tls_client_auth_ssl_verify`, and `session_memcached_ssl_verify`\ncannot be disabled.\n",
