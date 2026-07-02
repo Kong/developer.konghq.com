@@ -91,7 +91,7 @@ AI MCP Servers can be created and managed through the:
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI MCP Server](#set-up-an-ai-mcp-server).
 
-## Use cases
+## MCP server governance
 
 Attach [AI Policies](/ai-gateway/entities/ai-policy/) to your AI MCP Server for common governance scenarios:
 
