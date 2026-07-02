@@ -107,7 +107,7 @@ rows:
             config:
               title: "{{site.konnect_product_name}} MCP Server"
               description: |
-                Manage {{site.dev_portal}} pages, snippets, and [Markdown Components (MDC)](https://portaldocs.konghq.com/) from your AI assistant or IDE using the {{site.konnect_product_name}} MCP Server.
+                Manage {{site.dev_portal}} pages, snippets, and Markdown Components (MDC) from your AI assistant or IDE using the {{site.konnect_product_name}} MCP Server.
               icon: /assets/icons/mcp.svg
               cta:
                 url: /konnect-platform/konnect-mcp/
