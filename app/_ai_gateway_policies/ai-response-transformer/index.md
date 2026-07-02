@@ -1,45 +1,11 @@
 ---
-title: 'AI Response Transformer'
-name: 'AI Response Transformer'
-
-content_type: policy
-
-publisher: kong-inc
-description: 'Use an LLM service to transform the upstream HTTP(S) prior to forwarding it to the client'
-
-
-products:
-    - ai-gateway
-
-works_on:
-    - konnect
-
 min_version:
   ai-gateway: '2.0'
-
-topologies:
-  konnect_deployments:
-    - hybrid
-    - cloud-gateways
-    - serverless
-
-icon: ai-response-transformer.png
-
-categories:
-  - ai
-
-tags:
-  - ai
-  - safety
-
-search_aliases:
-  - ai
-  - llm
-  - artificial
-  - intelligence
-  - language
-  - model
-
+works_on:
+  - konnect
+products:
+  - ai-gateway
+content_type: policy
 related_resources:
   - text: AI Request Transformer Policy
     url: /ai-gateway/policies/ai-request-transformer/
@@ -67,7 +33,7 @@ instructions to the LLM for the returning upstream response body.
 1. After proxying the client's request to the backend, {{site.ai_gateway}} sets the entire response body as the 
 `user` message in the LLM chat request, then sends it to the configured LLM service.
 1. The LLM service returns a response `assistant` message, which is subsequently set as the upstream response body.
-1. The Policy returns early (`kong.response.exit`) and can handle gzip or chunked requests, similar to the [Forward Proxy](/plugins/forward-proxy/) plugin.
+1. The Policy returns early (`kong.response.exit`) and can handle gzip or chunked requests, similar to the [Forward Proxy](/ai-gateway/policies/forward-proxy/) policy.
 
 ### Adjusting response headers, status codes, and body
 
