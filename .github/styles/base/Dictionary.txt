@@ -707,6 +707,7 @@ service_name
 shm
 show_in_api
 Sigstore
+sign_in
 slas
 Slowloris
 slsa

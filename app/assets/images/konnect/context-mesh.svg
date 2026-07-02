@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620" font-family="&#39;Funnel Sans&#39;, Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" role="img" aria-label="Context Mesh — the mediation layer between agents and enterprise context">
+  <title>Context Mesh — the mediation layer between agents and enterprise context</title>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#6E7A65"></path>
+    </marker>
+    <marker id="arrLime" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#7A9300"></path>
+    </marker>
+  </defs>
+
+
+  <g font-size="10" font-weight="700" letter-spacing="2" fill="#6E7A65" text-anchor="start">
+    <text x="0" y="65">CALLER</text>
+    <text x="0" y="265">CONTROL</text>
+    <text x="0" y="444">MEDIATION</text>
+    <text x="0" y="581">SOURCES</text>
+  </g>
+
+  <g transform="translate(108, 0)">
+
+
+    <path d="M 412 94 L 412 218" stroke="#6E7A65" stroke-width="1.4" fill="none" marker-end="url(#arr)"></path>
+    <path d="M 160 261 L 268 261" stroke="#7A9300" stroke-width="1.6" fill="none" stroke-dasharray="3 5" marker-start="url(#arrLime)" marker-end="url(#arrLime)"></path>
+    <path d="M 412 304 L 412 388" stroke="#7A9300" stroke-width="2" fill="none" marker-end="url(#arrLime)"></path>
+
+
+    <path d="M 412 492 L 412 510 L 66  510 L 66  548" stroke="#6E7A65" stroke-width="1.4" fill="none" marker-end="url(#arr)"></path>
+    <path d="M 412 492 L 412 510 L 296 510 L 296 548" stroke="#6E7A65" stroke-width="1.4" fill="none" marker-end="url(#arr)"></path>
+    <path d="M 412 492 L 412 510 L 528 510 L 528 548" stroke="#6E7A65" stroke-width="1.4" fill="none" marker-end="url(#arr)"></path>
+    <path d="M 412 492 L 412 510 L 758 510 L 758 548" stroke="#6E7A65" stroke-width="1.4" fill="none" marker-end="url(#arr)"></path>
+
+
+    <g transform="translate(300, 28)">
+      <rect width="224" height="66" rx="2" ry="2" fill="#001408" stroke="#6E7A65" stroke-width="1"></rect>
+      <text x="112" y="42" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">AI agents</text>
+    </g>
+
+
+    <g transform="translate(16, 228)">
+      <rect width="144" height="66" rx="2" ry="2" fill="#001408" stroke="#CCFF00" stroke-width="1.5"></rect>
+      <text x="72" y="42" text-anchor="middle" font-size="18" font-weight="700" fill="#CCFF00">LLMs</text>
+    </g>
+
+
+    <g transform="translate(268, 218)">
+      <rect width="288" height="86" rx="2" ry="2" fill="#001408" stroke="#CCFF00" stroke-width="1.5"></rect>
+      <text x="144" y="42" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">AI Gateway</text>
+      <text x="144" y="64" text-anchor="middle" font-size="11" font-weight="500" letter-spacing="1.2" fill="#AEB5A7" font-family="&#39;Roboto Mono&#39;, ui-monospace, Menlo, monospace">CONTROL LAYER</text>
+    </g>
+
+
+    <g transform="translate(168, 388)">
+      <rect x="-6" y="-6" width="500" height="116" rx="2" ry="2" fill="#CCFF00" fill-opacity="0.18"></rect>
+      <rect width="488" height="104" rx="2" ry="2" fill="#CCFF00" stroke="#001408" stroke-width="1"></rect>
+      <text x="244" y="56" text-anchor="middle" font-size="26" font-weight="700" letter-spacing="-0.4" fill="#001408">Context Mesh</text>
+      <text x="244" y="82" text-anchor="middle" font-size="11" font-weight="500" letter-spacing="1.2" fill="rgba(0,20,8,0.7)" font-family="&#39;Roboto Mono&#39;, ui-monospace, Menlo, monospace">MEDIATION LAYER</text>
+    </g>
+
+
+    <g transform="translate(0, 548)" font-size="18" font-weight="700" fill="#FFFFFF">
+      <g transform="translate(-4, 0)">
+        <rect width="140" height="58" rx="2" ry="2" fill="#001408" stroke="#6E7A65" stroke-width="1"></rect>
+        <text x="70" y="36" text-anchor="middle">APIs</text>
+      </g>
+      <g transform="translate(226, 0)">
+        <rect width="140" height="58" rx="2" ry="2" fill="#001408" stroke="#6E7A65" stroke-width="1"></rect>
+        <text x="70" y="36" text-anchor="middle">Data</text>
+      </g>
+      <g transform="translate(458, 0)">
+        <rect width="140" height="58" rx="2" ry="2" fill="#001408" stroke="#6E7A65" stroke-width="1"></rect>
+        <text x="70" y="36" text-anchor="middle">Docs</text>
+      </g>
+      <g transform="translate(688, 0)">
+        <rect width="140" height="58" rx="2" ry="2" fill="#001408" stroke="#6E7A65" stroke-width="1"></rect>
+        <text x="70" y="36" text-anchor="middle">Code</text>
+      </g>
+    </g>
+
+  </g>
+</svg>

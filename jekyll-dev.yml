@@ -2,6 +2,10 @@ links:
   share: http://localhost:4000
   web: http://localhost:4000
 
+# Site variables
+context_mesh: Context Mesh
+context_mesh_product_name: Kong Context Mesh
+
 # skip generators to speed up dev builds, the name matches the generator's name
 skip:
   plugins: true # skip plugins generation, except for overviews
