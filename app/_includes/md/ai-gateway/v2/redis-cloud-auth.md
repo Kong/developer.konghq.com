@@ -1,0 +1,1 @@
+ If your AI Policy uses a Redis datastore, you can authenticate to it with a cloud Redis provider. This allows you to rotate credentials without relying on static passwords.
