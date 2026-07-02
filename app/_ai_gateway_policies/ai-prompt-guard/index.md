@@ -7,7 +7,7 @@ products:
   - ai-gateway
 content_type: policy
 related_resources:
-  - text: AI Semantic Prompt Guard plugin
+  - text: AI Semantic Prompt Guard Policy
     url: /ai-gateway/policies/ai-semantic-prompt-guard/
 ---
 

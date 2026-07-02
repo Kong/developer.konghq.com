@@ -6,6 +6,7 @@ works_on:
 products:
   - ai-gateway
 content_type: policy
+tech_preview: true
 related_resources:
   - text: OAuth 2.0 specification for MCP
     url: https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization
