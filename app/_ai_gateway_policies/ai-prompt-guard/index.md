@@ -6,6 +6,9 @@ works_on:
 products:
   - ai-gateway
 content_type: policy
+related_resources:
+  - text: AI Semantic Prompt Guard plugin
+    url: /ai-gateway/policies/ai-semantic-prompt-guard/
 ---
 
 The AI Prompt Guard Policy lets you configure a series of [PCRE-compatible](https://www.pcre.org/) regular expressions as allow or deny lists,
