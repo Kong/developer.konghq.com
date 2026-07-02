@@ -334,3 +334,15 @@ rows:
 Some common use cases for `Empty` include:
 * Identifying the number of API calls that don't match a Route.
 * Identifying API calls without an associated Consumer to keep track of any security holes.
+
+## View platform usage metrics by environment, team, and region
+
+Filtering platform usage metrics in Explorer by environment, teams, and regions will show you information such as how many control planes are in each region or how many Gateway Services belong to each team. 
+This uses the following [labels](/konnect-platform/konnect-labels/) and tags to map an entity to a dimension:
+* `env`
+* `team`
+* `region`
+
+For example, if you label your control plane with `env:production`, it will display when you select "Environment" from the dimensions filter.
+
+To filter metrics by environment, team, and region, navigate to **{{site.observability}} > Explorer** in the sidebar. Filter by an entity and in the dimension filter, select if you want to filter by environment, team, or region. 
