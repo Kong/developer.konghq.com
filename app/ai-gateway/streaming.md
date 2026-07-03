@@ -22,9 +22,9 @@ description: This guide walks you through setting up AI Models with streaming.
 
 ## What is request streaming?
 
-In an LLM (Large Language Model) inference request, {{site.ai_gateway}} uses the upstream provider's REST API to generate the next chat message from the caller.
+In an LLM (Large Language Model) inference request, {{site.ai_gateway}} uses the upstream AI Provider's REST API to generate the next chat message from the caller.
 
-Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.ai_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the `max_tokens`, other request parameters, and the complexity of the request sent to the LLM model.
+Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.ai_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the [`max_tokens`](/ai-gateway/entities/ai-model/#targets), other request parameters, and the complexity of the request sent to the LLM model. Request streaming in {{site.ai_gateway}} uses the [AI Model entity](/ai-gateway/entities/ai-model/). 
 
 To avoid making the user wait for their chat response with a loading animation, most models can stream each word (or sets of words and tokens) back to the client. This allows the chat response to be rendered in real time.
 
@@ -113,13 +113,12 @@ It also estimates tokens for LLM services that decided to not stream back the to
 Keep the following limitations in mind when you configure streaming for the {{site.ai_gateway}}:
 
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
-* You can't add AI Policies that use the [Response Transformer](/plugins/response-transformer/) or otherwise trigger in the response phase when streaming is configured.
-* The [AI Request Transformer Policy](/plugins/ai-request-transformer/) **will** work, but the [AI Response Transformer Policy](/plugins/ai-response-transformer/) **will not**. This is because {{site.ai_gateway}} can't check every single response token against a separate system.
-* Streaming currently doesn't work with the HTTP/2 protocol. You must disable this in your [`proxy_listen`](/gateway/configuration/#proxy-listen) configuration.
+* You can't add AI Policies that use the [Response Transformer](/ai-gateway/policies/response-transformer/) Policy or otherwise trigger in the response phase when streaming is configured.
+* The [AI Request Transformer Policy](/ai-gateway/policies/ai-request-transformer/) **will** work, but the [AI Response Transformer Policy](/ai-gateway/policies/ai-response-transformer/) **will not**. This is because {{site.ai_gateway}} can't check every single response token against a separate system.
 
 ## Configuration
 
-{{site.ai_gateway}} already supports request streaming; all you have to do is add streaming to your request.
+Streaming is already enabled on {{site.ai_gateway}}; all you have to do is add streaming to your request.
 
 The following is an example `llm/v1/completions` route streaming request:
 
@@ -172,7 +171,7 @@ for chunk in stream:
 ```
 
 {:.info}
-> This feature works with any provider and model when `llm_format` is set to `openai` mode.
+> This feature works with any AI Provider and AI Model when [`formats`](/ai-gateway/entities/ai-model/#request-and-response-formats) is set to `openai` mode.
 >
 > See the [OpenAI API Documentation](https://platform.openai.com/docs/api-reference/chat/create#chat_create-stream_options) for more information on stream options.
 

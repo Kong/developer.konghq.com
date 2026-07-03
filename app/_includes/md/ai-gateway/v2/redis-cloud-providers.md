@@ -1,5 +1,5 @@
 {% comment %}
-Used in 'AI Proxy Advanced'  'AI RAG Injector'  'AI Semantic Cache' 'AI Semantic Prompt Guard' 'AI Semantic Response Guard' 
+Used in  'AI RAG Injector'  'AI Semantic Cache' 'AI Semantic Prompt Guard' 'AI Semantic Response Guard'
 {% endcomment %}
 
 {% navtabs "providers" %}
@@ -51,7 +51,7 @@ Replace the following with your actual values:
 * `$INSTANCE_USERNAME`: The ElastiCache username with [IAM Auth mode configured](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup).
 * `$AWS_CACHE_NAME`: Name of your AWS ElastiCache instance.
 * `$AWS_REGION`: Your AWS ElastiCache instance region.
-* `$AWS_ACCESS_KEY_ID`: (Optional) Your AWS access key ID. 
+* `$AWS_ACCESS_KEY_ID`: (Optional) Your AWS access key ID.
 * `$AWS_ACCESS_SECRET_KEY`: (Optional) Your AWS secret access key.
 {% endnavtab %}
 {% navtab "AWS cluster" %}
@@ -94,9 +94,9 @@ config:
         auth_provider: aws
         aws_cache_name: $AWS_CACHE_NAME
         aws_is_serverless: false
-        aws_region: $AWS_REGION 
+        aws_region: $AWS_REGION
         aws_access_key_id: $AWS_ACCESS_KEY_ID
-        aws_secret_access_key: $AWS_ACCESS_SECRET_KEY 
+        aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
 
 Replace the following with your actual values:
@@ -104,7 +104,7 @@ Replace the following with your actual values:
 * `$CLUSTER_USERNAME`: The ElastiCache username with [IAM Auth mode configured](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup).
 * `$AWS_CACHE_NAME`: Name of your AWS ElastiCache cluster.
 * `$AWS_REGION`: Your AWS ElastiCache cluster region.
-* `$AWS_ACCESS_KEY_ID`: (Optional) Your AWS access key ID. 
+* `$AWS_ACCESS_KEY_ID`: (Optional) Your AWS access key ID.
 * `$AWS_ACCESS_SECRET_KEY`: (Optional) Your AWS secret access key.
 {% endnavtab %}
 {% navtab "Azure instance" %}
@@ -134,7 +134,7 @@ Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The Azure Managed Redis instance address.
 * `$INSTANCE_USERNAME`: The object (principal) ID of the Principal/Identity with essential access.
 * `$AZURE_CLIENT_ID`: The client ID of the Principal/Identity.
-* `$AZURE_CLIENT_SECRET`: (Optional) The client secret of the Principal/Identity. 
+* `$AZURE_CLIENT_SECRET`: (Optional) The client secret of the Principal/Identity.
 * `$AZURE_TENANT_ID`: (Optional) The tenant ID of the Principal/Identity.
 
 {% endnavtab %}
@@ -167,7 +167,7 @@ Replace the following with your actual values:
 * `$CLUSTER_ADDRESS`: The Azure Managed Redis cluster address.
 * `$CLUSTER_USERNAME`: The object (principal) ID of the Principal/Identity with essential access.
 * `$AZURE_CLIENT_ID`: The client ID of the Principal/Identity.
-* `$AZURE_CLIENT_SECRET`: (Optional) The client secret of the Principal/Identity. 
+* `$AZURE_CLIENT_SECRET`: (Optional) The client secret of the Principal/Identity.
 * `$AZURE_TENANT_ID`: (Optional) The tenant ID of the Principal/Identity.
 
 {% endnavtab %}
@@ -175,7 +175,7 @@ Replace the following with your actual values:
 
 You need:
 * A running Redis instance on an [{{ site.google_cloud }} Memorystore instance](https://docs.cloud.google.com/memorystore/docs/cluster/memorystore-for-redis-cluster-overview)
-* Assign the principal to the corresponding role: 
+* Assign the principal to the corresponding role:
     * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
     * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
@@ -201,7 +201,7 @@ Replace the following with your actual values:
 
 You need:
 * A running Redis instance on an [{{ site.google_cloud }} Memorystore cluster](https://docs.cloud.google.com/memorystore/docs/cluster/memorystore-for-redis-cluster-overview)
-* Assign the principal to the corresponding role: 
+* Assign the principal to the corresponding role:
     * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
     * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
@@ -214,7 +214,7 @@ config:
     redis:
       cluster_nodes:
       - ip: $CLUSTER_ADDRESS
-        port: 6379 
+        port: 6379
       port: 6379
       cloud_authentication:
         auth_provider: gcp
