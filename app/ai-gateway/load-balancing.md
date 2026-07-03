@@ -13,7 +13,6 @@ products:
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
 
 tags:
@@ -32,7 +31,7 @@ related_resources:
 
 {{site.ai_gateway}} provides load balancing capabilities to distribute requests across multiple LLM models. You can use these features to improve fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-In {{site.ai_gateway}}, load balancing is configured on the [AI Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `target_models`.
+In {{site.ai_gateway}}, load balancing is configured on the [AI Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `targets`.
 
 ### Load balancing algorithms
 
@@ -52,7 +51,7 @@ columns:
 rows:
   - algorithm: "Round-robin (weighted)"
     description: |
-      Distributes requests across models based on their assigned weights. For example, if models `gpt-4`, `gpt-4o-mini`, and `gpt-3` have weights of `70`, `25`, and `5`, they receive approximately 70%, 25%, and 5% of traffic respectively. Requests are distributed proportionally, independent of usage or latency metrics.
+      Distributes requests across models based on their assigned weights. For example, if models `model-a`, `model-b`, and `model-c` have weights of `70`, `25`, and `5`, they receive approximately 70%, 25%, and 5% of traffic respectively. Requests are distributed proportionally, independent of usage or latency metrics.
     considerations: |
       * Traffic is routed proportionally based on weights.
       * Requests follow a circular sequence adjusted by weight.
@@ -66,7 +65,7 @@ rows:
       * Useful for session persistence and cache-hit optimization.
   - algorithm: "Least-connections"
     description: |
-      Tracks the number of in-flight requests for each backend and routes new requests to the backend with the highest spare capacity. The [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-weight) parameter is used to calculate connection capacity.
+      Tracks the number of in-flight requests for each backend and routes new requests to the backend with the highest spare capacity. The [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-targets-weight) parameter is used to calculate connection capacity.
     considerations: |
       * Dynamically adapts to backend response times.
       * Routes away from slower backends as they accumulate open connections.
@@ -88,7 +87,7 @@ rows:
       * Less suitable for long-lived connections like WebSockets.
   - algorithm: "Semantic"
     description: |
-      Routes requests based on semantic similarity between the prompt and model descriptions. Embeddings are generated using a specified model (for example, `text-embedding-3-small`), and similarity is calculated using vector search.
+      Routes requests based on semantic similarity between the prompt and model descriptions. Embeddings are generated using a specified embeddings model, and similarity is calculated using vector search.
       <br><br>
       Multiple targets can share identical descriptions. When they do, the balancer performs round-robin fallback among them if the primary target fails. Weights affect fallback order.
     considerations: |
@@ -97,7 +96,7 @@ rows:
       * Best for routing prompts to domain-specialized models.
   - algorithm: "Priority"
     description: |
-      Routes requests to models based on assigned priority groups. The balancer always selects from the highest-priority group first. If all targets in that group are unavailable, it falls back to the next group. Within each group, the [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-weight) parameter controls traffic distribution.
+      Routes requests to models based on assigned priority groups. The balancer always selects from the highest-priority group first. If all targets in that group are unavailable, it falls back to the next group. Within each group, the [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-targets-weight) parameter controls traffic distribution.
     considerations: |
       * Higher-priority groups receive all traffic until they fail.
       * Lower-priority groups serve as fallback only.
@@ -111,7 +110,7 @@ For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai
 
 Model aliases allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
 
-Each target in a Model entity can have an optional [`model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
+Each target in an AI Model entity can have an optional [`model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-targets-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
 
 ### Retry and fallback
 
@@ -149,7 +148,7 @@ flowchart LR
 
 #### Retry and fallback configuration
 
-The {{site.ai_gateway}} load balancer supports fine-grained control over failover behavior on the [Model entity](/ai-gateway/entities/ai-model/). Use [`failover_criteria`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-failover-criteria) to define when a request should retry on the next target model. By default, retries occur on `error` and `timeout`. An `error` means a failure occurred while connecting to the server, forwarding the request, or reading the response header. A `timeout` indicates that any of those stages exceeded the allowed time.
+The {{site.ai_gateway}} load balancer supports fine-grained control over failover behavior on the [AI Model entity](/ai-gateway/entities/ai-model/). Use [`failover_criteria`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-failover-criteria) to define when a request should retry on the next target model. By default, retries occur on `error` and `timeout`. An `error` means a failure occurred while connecting to the server, forwarding the request, or reading the response header. A `timeout` indicates that any of those stages exceeded the allowed time.
 
 You can add more criteria to adjust retry behavior as needed:
 
@@ -219,7 +218,7 @@ rows:
 
 ### Health check and circuit breaker
 
-For AI Model entity, circuit breaker behavior is controlled through the balancer configuration on the AI Model. Use these settings to fail fast when a target model is unhealthy and to retry or fall back to another target instead of waiting for repeated slow responses.
+For the AI Model entity, circuit breaker behavior is controlled through the balancer configuration on the AI Model entity. Use these settings to fail fast when a target model is unhealthy and to retry or fall back to another target instead of waiting for repeated slow responses.
 
 <!--vale off-->
 {% table %}
