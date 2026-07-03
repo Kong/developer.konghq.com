@@ -137,7 +137,7 @@ capture:
 
 ## Link the client to the principal
 
-Link the {{site.identity}} authorization server client to the principal so that {{site.identity}} can map the OAuth tokens it issues to this principal. Because {{site.identity}} issues the tokens, you reference the authorization server and client you created earlier instead of an external issuer and claim.
+Link the {{site.identity}} authorization server client to the [principal]((/identity/principals/) (used to unify authentication across Kong products) so that {{site.identity}} can map the OAuth tokens it issues to this principal. Because {{site.identity}} issues the tokens, you reference the authorization server and client you created earlier instead of an external issuer and claim.
 
 Add the identity using the `/v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/identities` endpoint:
 
