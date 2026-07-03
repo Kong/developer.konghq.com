@@ -40,6 +40,8 @@ related_resources:
     url: /custom-plugins/deployment-options/
   - text: Installation and distribution
     url: /custom-plugins/installation-and-distribution/
+  - text: Streaming custom plugins
+    url: /custom-plugins/streaming-plugins/
 ---
 
 Kong allows you to develop and deploy custom plugins.

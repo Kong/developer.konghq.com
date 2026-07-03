@@ -134,3 +134,50 @@ If validation fails, the webhook URL receives a response with JSON payload, whic
 
 See the [Event Hooks](/gateway/entities/event-hook/) reference for details on how to configure an Event Hook.
 
+
+## Error handling
+
+By default, when the OAS Validation plugin reports schema violations, it embeds all errors into a single string inside the `message` field.
+This makes it difficult for client applications to parse, display, or log validation failures in a structured way.
+
+The following settings control how validation errors are reported:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: param
+  - title: Default
+    key: default
+  - title: Description
+    key: description
+rows:
+  - param: |
+      [`structured_errors`](/plugins/oas-validation/reference/#schema--config-structured-errors) {% new_in 3.15 %}
+    default: "`false`"
+    description: |
+      Enable `structured_errors` to receive validation errors as an `errors` array instead of a flat string, following [JSON Schema draft 2020-12 Output Structure](https://json-schema.org/draft/2020-12/json-schema-core#name-output-structure). Each error includes `instanceLocation` (the path in the request or response body where the violation occurred), `keywordLocation` (the path in the schema that triggered the error), and `error`.
+      <br><br>
+      Requires `verbose_response` to be set to `true`.
+      <br><br>
+      When disabled, the plugin preserves the original non-structured error format.
+  - param: |
+      [`max_structured_errors`](/plugins/oas-validation/reference/#schema--config-max-structured-errors) {% new_in 3.15 %}
+    default: "unset (all errors returned)"
+    description: |
+      Caps the number of structured validation errors returned in the response. Must be greater than 0. `structured_errors` must also be enabled. Any extra errors over the cap are discarded. 
+  - param: "[`collect_all_errors`](/plugins/oas-validation/reference/#schema--config-collect-all-errors)"
+    default: "`false`"
+    description: |
+      Collects all validation errors instead of stopping at the first error.
+      Only takes effect when `structured_errors` is disabled.
+      <br><br>
+      
+      {:.info}
+      > **Note:** Be careful when enabling this option, as it does affect performance.
+  - param: "[`verbose_response`](/plugins/oas-validation/reference/#schema--config-verbose-response)"
+    default: "`false`"
+    description: |
+      If set to `true`, returns a detailed error message for invalid requests and responses. Useful while testing.
+{% endtable %}
+<!--vale on-->

@@ -24,6 +24,10 @@ module Jekyll
         @template ||= File.expand_path('app/_includes/components/entity_examples.html')
       end
 
+      def deck_flags
+        @deck_flags ||= @config.fetch('deck_flags', [])
+      end
+
       def variables
         @variables ||= @config.fetch('variables', {})
       end

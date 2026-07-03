@@ -1,0 +1,48 @@
+description: "Use a fixed, operator-chosen consumer group ID to work with ACL-enforced Kafka clusters."
+
+extended_description: |
+  Use a fixed, operator-chosen consumer group ID to work with ACL-enforced Kafka clusters.
+  This is required on Kafka clusters that enforce ACLs on consumer groups, where the default random group ID can't be pre-allowlisted.
+  
+  Because the group ID is stable, the plugin commits offsets under the same identity every time, so consumption picks up where it left off.
+
+title: 'Fixed consumer group ID'
+
+weight: 800
+
+min_version:
+  gateway: '3.15'
+
+requirements:
+  - You have a [Kafka cluster](https://kafka.apache.org/documentation/#quickstart)
+  - You have a [Kafka topic](https://kafka.apache.org/documentation/#quickstart_createtopic) in the cluster
+  - The consumer group name is allowlisted in your broker ACLs
+
+variables:
+  host:
+    description: The bootstrap server host
+    value: $BOOTSTRAP_SERVER_HOST
+  topic:
+    description: The name of the Kafka topic to consume from
+    value: $KAFKA_TOPIC
+  group_id:
+    description: The fixed consumer group ID, pre-allowlisted in your broker ACLs
+    value: $CONSUMER_GROUP_ID
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topics:
+  - name: ${topic}
+  mode: http-get
+  consumer_group:
+    mode: manual
+    consumer_group_id: ${group_id}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -12,10 +12,14 @@ products:
 related_resources:
   - text: "{{site.event_gateway_short}} breaking changes and known issues"
     url: /event-gateway/breaking-changes/
+  - text: "{{site.event_gateway_short}} known limitations"
+    url: /event-gateway/known-limitations/
   - text: "{{site.event_gateway_short}} version support"
     url: /event-gateway/version-support-policy/
   - text: "{{site.event_gateway_short}} changelog"
     url: /event-gateway/changelog/
+  - text: "Verify {{site.event_gateway_short}} image signatures and attestations"
+    url: /event-gateway/verify-image-signatures-and-attestations/
 
 breadcrumbs:
   - /event-gateway/

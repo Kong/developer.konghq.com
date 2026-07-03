@@ -66,9 +66,32 @@ When encoding request bodies, several things happen:
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
 
+## Kafka record headers {% new_in 3.15 %}
+
+{% include_cached /plugins/confluent-kafka-consume/record-headers.md name=page.name %}
+
+## Debugging {% new_in 3.15 %}
+
+By default, when producing a message fails, the plugin returns a generic error to the HTTP client and logs the real cause in the {{site.base_gateway}} logs:
+
+```json
+{"message": "Bad Gateway", "error": "could not send message to topic"}
+```
+
+To include the detailed Kafka client error in the response instead, set [`config.error_handling.return_error_message`](/plugins/kafka-upstream/reference/#schema--config-error-handling-return-error-message) to `true` (`false` by default).
+This lets you see the exact broker rejection (for example, `TopicAuthorizationFailed`) without checking the {{site.base_gateway}} logs.
+
+{:.warning}
+> **Warning**: Do not enable this in production.
+> The detailed error may expose internal details like topic names and ACL denials.
+
 ## Known issues and limitations
 
 Known limitations:
 
 1. Message compression is not supported.
 1. In {{site.base_gateway}} 3.9 or earlier, the message format is not customizable.
+
+## Authentication
+
+{% include_cached /plugins/kafka/auth.md slug=page.slug name=page.name %}

@@ -39,6 +39,9 @@ debian12:
 debian-stable:
   os: Debian
   version: stable
+distroless:
+  os: Distroless
+  version: N/A
 rhel7:
   os: RHEL
   version: 7.x

@@ -10,6 +10,18 @@ breadcrumbs:
 
 tags:
   - changelog
+
+related_resources:
+  - text: "Upgrading {{site.event_gateway_short}}"
+    url: /event-gateway/upgrade/
+  - text: "{{site.event_gateway_short}} breaking changes and known issues"
+    url: /event-gateway/breaking-changes/
+  - text: "{{site.event_gateway_short}} known limitations"
+    url: /event-gateway/known-limitations/
+  - text: "{{site.event_gateway_short}} version support"
+    url: /event-gateway/version-support-policy/
+  - text: "Verify {{site.event_gateway_short}} image signatures and attestations"
+    url: /event-gateway/verify-image-signatures-and-attestations/
 ---
 
 Changelog for supported {{site.event_gateway}} versions.

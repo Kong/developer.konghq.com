@@ -1,0 +1,38 @@
+description: 'Forward all HTTP request headers as Kafka record headers, except those on an exclusion list.'
+extended_description: |
+  Use blocklist mode (`forward_all_by_default: true`) to forward every incoming HTTP header as a Kafka record header,
+  except for headers listed in `exclude_headers`.
+  This is useful for stripping sensitive headers like `authorization` or `cookie` while preserving all others.
+
+title: 'Forward HTTP headers as Kafka record headers (blocklist mode)'
+
+weight: 889
+
+min_version:
+  gateway: '3.15'
+
+requirements:
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+
+variables:
+  topic:
+    description: The name of your Kafka topic.
+    value: $KAFKA_TOPIC
+
+config:
+  topic: ${topic}
+  headers:
+    forward_http_headers_as_record_headers: true
+    forward_all_by_default: true
+    exclude_headers:
+      - authorization
+      - cookie
+    repeated_headers_behavior: retain_duplicates
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

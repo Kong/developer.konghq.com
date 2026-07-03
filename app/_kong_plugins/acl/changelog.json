@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed an issue where anonymous consumers with valid legacy ACL group credentials were rejected with a 403 error when `include_consumer_groups` was enabled and no Enterprise consumer groups were assigned.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added WebSocket protocol support (`ws`/`wss`). The plugin now enforces allow/deny group rules during the WebSocket handshake phase.",
@@ -14,6 +21,13 @@
   "3.14.0.2": [
     {
       "message": "Fixed an issue where anonymous consumers with valid legacy ACL group credentials were rejected with 403 when `include_consumer_groups` was enabled and no enterprise consumer groups were assigned.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.8": [
+    {
+      "message": "Fixed an issue where the ACL plugin ignored a consumer's ACL groups when `include_consumer_groups` was enabled and the consumer belonged to an enterprise consumer group, causing incorrect `403` denials (with `allow`) or incorrect access (with `deny`) for authenticated and anonymous consumers. The plugin now falls back to the consumer's ACL groups when no third-party authenticated groups are present.",
       "type": "bugfix",
       "scope": "Plugin"
     }

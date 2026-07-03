@@ -1,6 +1,6 @@
 ---
 name: kongctl-new-command
-description: "Syncs kongctl reference docs after a release: creates pages for new commands, removes pages for dropped commands, and updates navigation indexes and redirects. Trigger when the user runs '/kongctl-new-command', shares a 'Sync kongctl Releases' PR, or asks to update pages under app/kongctl/."
+description: "Syncs kongctl reference docs after a release: creates pages for new commands, removes pages for dropped commands, and updates navigation indexes and redirects. Trigger when the user runs '/kongctl-new-command', shares a 'Sync kongctl Releases' PR, asks to update pages under app/kongctl/, or asks to add, create, or document a new kongctl command (e.g. 'add docs for kongctl roar', 'create a page for the new kongctl command', 'update app/kongctl with the new command')."
 ---
 
 # kongctl command docs skill
@@ -111,7 +111,40 @@ For a removed 2-level command that previously had a resource group (e.g. `get/ev
 
 The structure depends on command depth:
 
-**2-level commands** (e.g. `get/dcr-provider`) become standalone `.md` files at `app/kongctl/get/dcr-provider.md`. Before creating, look at neighboring files in the same directory for the established pattern — particularly `works_on` and `breadcrumbs`.
+**Top-level commands** (e.g. `roar`) become standalone `index.md` files at `app/kongctl/roar/index.md`:
+
+```yaml
+---
+title: kongctl <command>
+description: "<First sentence from --help output>"
+
+content_type: reference
+layout: reference
+
+works_on:
+  - konnect
+
+tools:
+  - kongctl
+
+breadcrumbs:
+  - /kongctl/
+
+related_resources:
+  - text: Declarative configuration with kongctl
+    url: /kongctl/declarative/
+  - text: Get started with kongctl
+    url: /kongctl/get-started/
+---
+
+<Full opening paragraph from --help output>
+
+## Command usage
+
+{% include_cached /kongctl/help/<command>/index.md %}
+```
+
+**2-level commands** (e.g. `get/dcr-provider`) become standalone `.md` files at `app/kongctl/get/dcr-provider.md`.
 
 ```yaml
 ---

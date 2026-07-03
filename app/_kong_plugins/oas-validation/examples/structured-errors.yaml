@@ -1,0 +1,31 @@
+title: 'Enable structured validation errors'
+
+description: |
+  Return validation errors as a structured list instead of a flat string.
+
+extended_description: |
+  By default, validation errors are returned as a single flat string.
+  Enable `structured_errors` to receive errors in [JSON Schema draft 2020-12 Output Structure](https://json-schema.org/draft/2020-12/json-schema-core#name-output-structure),
+  with `instanceLocation` and `keywordLocation` fields for each error.
+
+  Use `max_structured_errors` to cap the number of errors returned.
+  Any errors over the cap are discarded.
+
+min_version:
+  gateway: '3.15'
+
+weight: 850
+
+config:
+  api_spec: |-
+    contents of entire API spec go here
+  structured_errors: true
+  max_structured_errors: 10
+  verbose_response: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
