@@ -30,7 +30,8 @@ topologies:
     - serverless
 
 icon: ai-semantic-cache.png
-
+tags:
+  - ai
 categories:
   - ai
 
