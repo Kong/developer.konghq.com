@@ -124,6 +124,44 @@ Two validation rules apply to the record:
 - `http_proxy_host` and `http_proxy_port` must both be set or both be absent.
 - `https_proxy_host` and `https_proxy_port` must both be set or both be absent.
 
+### Supported Policies
+
+You can also configure AI Policies to use your forward proxy by setting the same `proxy` records at the top level of their `config` block.
+
+The following AI Policies are supported:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Traffic
+    key: traffic
+  - title: Policies
+    key: policies
+  - title: Proxied destination
+    key: service
+rows:
+  - traffic: "Embeddings and semantic operations"
+    policies: |
+      - [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/)
+      - [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/)
+      - [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/)
+    service: "The configured embeddings service"
+  - traffic: "Prompt compression and sanitization"
+    policies: |
+      - [AI Prompt Compressor](/ai-gateway/policies/ai-prompt-compressor/)
+      - [AI Sanitizer](/ai-gateway/policies/ai-sanitizer/)
+    service: "The configured `compressor_url` or `sanitizer_url`"
+  - traffic: "Guardrail services"
+    policies: |
+      - [AI AWS Guardrails](/ai-gateway/policies/ai-aws-guardrails/)
+      - [AI Azure Content Safety](/ai-gateway/policies/ai-azure-content-safety/)
+      - [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)
+      - [AI GCP Model Armor](/ai-gateway/policies/ai-gcp-model-armor/)
+      - [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/)
+    service: "Managed or custom guardrail service"
+{% endtable %}
+<!--vale on-->
+
 ## Configuration
 
 ### Set up a forward proxy
@@ -358,44 +396,6 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
     ```
     docker exec -it squid tail -f /var/log/squid/access.log
     ```
-
-## Supported Policies
-
-When forward proxy support is enabled on AI Models and MCP Servers, this effects Policies applied to that entity.
-
-The following Policies are supported:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Traffic
-    key: traffic
-  - title: Policies
-    key: policies
-  - title: Proxied destination
-    key: service
-rows:
-  - traffic: "Embeddings and semantic operations"
-    policies: |
-      - [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/)
-      - [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/)
-      - [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/)
-    service: "The configured embeddings service"
-  - traffic: "Prompt compression and sanitization"
-    policies: |
-      - [AI Prompt Compressor](/ai-gateway/policies/ai-prompt-compressor/)
-      - [AI Sanitizer](/ai-gateway/policies/ai-sanitizer/)
-    service: "The configured `compressor_url` or `sanitizer_url`"
-  - traffic: "Guardrail services"
-    policies: |
-      - [AI AWS Guardrails](/ai-gateway/policies/ai-aws-guardrails/)
-      - [AI Azure Content Safety](/ai-gateway/policies/ai-azure-content-safety/)
-      - [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)
-      - [AI GCP Model Armor](/ai-gateway/policies/ai-gcp-model-armor/)
-      - [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/)
-    service: "Managed or custom guardrail service"
-{% endtable %}
-<!--vale on-->
 
 ## Limitations
 
