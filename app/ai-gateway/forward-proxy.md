@@ -34,7 +34,7 @@ related_resources:
 
 In network-isolated deployments, {{site.ai_gateway}} cannot open direct outbound connections to LLM providers or auxiliary services. Forward proxy support lets you route outbound requests from [AI Models](/ai-gateway/entities/ai-model/) and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) through a controlled HTTP forward proxy so that inference traffic, semantic operations, and guardrail checks continue to work behind a strict egress policy.
 
-A `proxy` record can be added to the `config` that names the proxy host, port, scheme, excluded hosts, and optional credentials. When configured, all outbound requests issued by that AI Model or MCP Server are sent through the specified proxy host. Existing capabilities such as [load balancing](/ai-gateway/load-balancing/), health checking, [streaming](/ai-gateway/streaming/), WebSocket, and HTTP/2 continue to work.
+Outbound requests issued by an AI Model or MCP Server can be sent through the specified proxy host by setting a `proxy` record in their `config` that names the proxy host, port, scheme, excluded hosts, and optionally credentials. Existing capabilities such as [load balancing](/ai-gateway/load-balancing/), health checking, [streaming](/ai-gateway/streaming/), WebSocket, and HTTP/2 continue to work.
 
 ## How forward proxy support works
 
@@ -68,7 +68,7 @@ flowchart LR
 > _Figure 1: Outbound traffic from {{site.ai_gateway}} Policies routed through a forward proxy._
 <!--vale on-->
 
-When `proxy` is set on an entity, every outbound request that entity issues goes through the configured proxy.
+When `proxy` is set on an AI Model or MCP Server entity, every outbound request that entity issues goes through the configured proxy.
 
 ## Relationship to the Forward Proxy Advanced plugin
 
@@ -76,7 +76,7 @@ When `proxy` is set on an entity, every outbound request that entity issues goes
 
 The Forward Proxy Advanced plugin takes over the request before the balancer phase runs, which works for standard Gateway Services but not with behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
 
-For any Service that serves traffic through an AI Model or MCP Server you should use the native `proxy` configuration instead, this ensures the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy`.
+For {{site.ai_gateway}} traffic through an AI Model or MCP Server entity you should use the native `proxy` configuration instead, this ensures the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy`.
 
 ## Proxy configuration fields
 
@@ -380,7 +380,6 @@ rows:
       - [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/)
       - [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/)
       - [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/)
-      - [AI RAG Injector](/ai-gateway/policies/ai-rag-injector/)
     service: "The configured embeddings service"
   - traffic: "Prompt compression and sanitization"
     policies: |
