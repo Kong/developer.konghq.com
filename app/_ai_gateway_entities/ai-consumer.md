@@ -22,8 +22,6 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Consumer Credential entity
-    url: /ai-gateway/entities/ai-consumer-credential/
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
   - text: AI Model entity
@@ -37,20 +35,18 @@ faqs:
     a: |
       The runtime entity is a regular Kong Consumer. The {{site.ai_gateway}} surface uses the
       {{site.ai_gateway}} entity convention ([`display_name`](#schema-aigateway-consumer-display-name), [`name`](#schema-aigateway-consumer-name), [`labels`](#schema-aigateway-consumer-labels)), requires an
-      authentication [`type`](#schema-aigateway-consumer-type) field, accepts inline Consumer Group assignment, and lets you
-      reference Policies. Credentials are managed as a separate sub-entity rather than embedded
-      on the Consumer.
+      authentication [`type`](#schema-aigateway-consumer-type) field, accepts inline AI Consumer Group assignment, and lets you
+      reference AI Policies.
 
   - q: How do I add credentials to an AI Consumer?
     a: |
-      Credentials are a separate sub-entity, not a field on the Consumer. Create them under the
-      Consumer's nested credentials endpoint. See the
-      [Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/) reference.
+      Credentials are managed through a separate credentials endpoint, not as a field on the Consumer.
+      Create them via POST to `/consumers/{id}/credentials` with the credential type and details.
 
   - q: "What's the difference between `type: api-key` and `type: oauth`?"
     a: |
-      The `type` declares which credential family the Consumer authenticates with. An `api-key`
-      Consumer holds one or more `api-key` Credentials. An `oauth` Consumer holds one or more
+      The `type` declares which credential family the AI Consumer authenticates with. An `api-key`
+      AI Consumer holds one or more `api-key` Credentials. An `oauth` AI Consumer holds one or more
       `oauth` Credentials whose `custom_id` maps to the OAuth provider's identifier. The
       Credential's `type` must match the Consumer's `type`.
 
@@ -61,53 +57,88 @@ faqs:
 
   - q: How do I attach AI Policies to an AI Consumer?
     a: |
-      Add the Policy's `name` or `id` to the Consumer's [`policies`](#schema-aigateway-consumer-policies) array.
-      See the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+      Add the Policy's `name` or `id` to the AI Consumer's [`policies`](#schema-aigateway-consumer-policies) array.
+      See the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference.
 ---
 
 ## What is an AI Consumer?
 
-An AI Consumer is the {{site.ai_gateway}} entity that represents a downstream client of the AI APIs you publish through {{site.ai_gateway}}.
+An AI Consumer is the {{site.ai_gateway}} entity that identifies an external client consuming or using the AI APIs you publish through {{site.ai_gateway}}. Consumers can represent applications, services, or users who interact with your AI Models, AI Agents, and AI MCP Servers.
 
-You can use AI Consumers and AI Consumer Groups to authenticate clients, attach AI Policies, and gate access to AI Models, AI Agents, and AI MCP Servers through those parent entities' `acls` field.
+AI Consumers are essential for controlling access to your AI APIs, tracking usage, and ensuring security. They are identified through authentication credentials (API keys or OAuth), allowing {{site.ai_gateway}} to authenticate requests and apply Consumer-specific controls. By creating AI Consumers and organizing them into AI Consumer Groups, you can manage access controls at scale, attach AI Policies for governance and security, and monitor token usage per Consumer.
 
-AI Consumers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, or decK:
+## Use cases for AI Consumers
 
+Common use cases for enforcing controls at the AI Consumer level:
+
+<!-- vale off -->
 {% table %}
 columns:
-  - title: Control Plane
-    key: cp
-  - title: Endpoint
-    key: endpoint
+  - title: Use case
+    key: use_case
+  - title: Description
+    key: description
 rows:
-  - cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
-    endpoint: /v1/ai-gateways/{aiGatewayId}/consumers
+  - use_case: Model access control
+    description: Control which clients can access which AI Models, restricting access by team, application tier, or use case.
+  - use_case: AI safety and guardrails
+    description: Apply prompt validation, PII detection, and content filtering at the AI Consumer level using AI Policies.
+  - use_case: Token and cost control
+    description: Apply per-consumer rate limits and quotas to prevent token overages and control costs by AI Consumer tier.
+  - use_case: AI request transformation
+    description: Normalize or transform AI requests and responses per AI Consumer (for example, format prompts, inject system instructions, sanitize outputs).
+  - use_case: Audit and compliance
+    description: Track which clients are using which AI Models, monitor for policy violations, and maintain audit logs for compliance and analytics.
 {% endtable %}
+<!-- vale on -->
+
+## Manage AI Consumers
+
+AI Consumers can be created and managed through:
+
+* {{site.konnect_short_name}} UI
+* {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/consumers`
+
+For configuration examples and step-by-step setup instructions, see [Set up an AI Consumer](#set-up-an-ai-consumer) below.
 
 ## Authentication type
 
-The [`type`](#schema-aigateway-consumer-type) field declares which credential family the Consumer authenticates with. Supported values are:
+Choose an authentication method based on your deployment needs. Set the [`type`](#schema-aigateway-consumer-type) field to declare which credential family AI Consumers will use:
 
-* `api-key`: the Consumer authenticates with one or more API key Credentials.
-* `oauth`: the Consumer authenticates through an OAuth identity issued by an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect plugin](/plugins/openid-connect/), or, for MCP traffic, through the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/). The Consumer Credential carries a `custom_id` that maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Use case
+    key: use_case
+rows:
+  - type: "`api-key`"
+    use_case: Simple, stateless authentication for internal services or mobile apps using a shared secret.
+  - type: "`oauth`"
+    use_case: Federated identity with an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect Policy](/ai-gateway/policies/openid-connect/), or for MCP traffic through the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/). The credential's `custom_id` field maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
+{% endtable %}
+<!-- vale on -->
 
-The `type` of every Credential issued to the Consumer must match the Consumer's `type`. See the [Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/) reference for credential management.
+The `type` of every Credential configured on the AI Consumer must match the AI Consumer's `type`.
 
-## Consumer Group membership
+## AI Consumer Group membership
 
-A Consumer can belong to multiple Consumer Groups. Consumer Group membership is managed through the Consumer Group entity. See the [Consumer Group entity](/ai-gateway/entities/ai-consumer-group/) reference for how to assign Consumers to groups.
+To apply AI Policies and access controls to multiple AI Consumers at once, organize them into AI Consumer Groups. An AI Consumer can belong to multiple AI Consumer Groups, letting you manage access controls by team, application, or environment without duplicating configurations.
+
+Manage AI Consumer Group membership through the [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/).
 
 ## Attach Policies
 
-Attach a Policy by adding its `name` or `id` to the Consumer's [`policies`](#schema-aigateway-consumer-policies) array. The policy runs in the request lifecycle when the Consumer is identified.
+To enforce governance, security, or observability controls at the AI Consumer level, attach AI Policies. When an AI Consumer makes a request, {{site.ai_gateway}} applies any AI Policies attached to that AI Consumer before routing the request.
 
-You can attach multiple Policies to a single Consumer. Each Policy runs independently.
+Attach an AI Policy by adding its `name` or `id` to the AI Consumer's [`policies`](#schema-aigateway-consumer-policies) array. You can attach multiple AI Policies to a single AI Consumer — each AI Policy runs independently, allowing you to layer controls for rate limiting, request validation, PII redaction, and other governance needs.
 
-For supported policy types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/ai-policy/) reference.
+For supported policy types and how AI Policies attach to other entities, see the [AI Policy entity](/ai-gateway/entities/ai-policy/) reference or browse all available AI Policies in the [AI policies hub](/ai-gateway/policies/).
 
 ## Set up an AI Consumer
 
-The following example creates an AI Consumer assigned to a single AI Consumer Group. Credentials are issued separately through the [Consumer Credential entity](/ai-gateway/entities/ai-consumer-credential/).
+The following example creates an AI Consumer assigned to a single AI Consumer Group.
 
 {% entity_example %}
 type: consumer
@@ -115,10 +146,60 @@ data:
   display_name: Mobile App - Production
   name: mobile-app-production
   type: api-key
-  consumer_groups:
-    - internal-teams
   policies: []
 {% endentity_example %}
+
+## Create Consumer Credentials
+
+After creating an AI Consumer, create credentials for authentication. Credentials are managed through a separate endpoint.
+
+{% navtabs "credential_type" %}
+{% navtab "api-key" %}
+
+Create an API key credential for an AI Consumer with `type: api-key`:
+
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: Mobile App Key 1
+  name: mobile-app-key-1
+  type: api-key
+{% endkonnect_api_request %}
+<!-- vale on -->
+
+The response includes the generated `api_key` value. Store this securely — it cannot be retrieved later.
+
+{% endnavtab %}
+{% navtab "oauth" %}
+
+Create an OAuth credential for an AI Consumer with `type: oauth`:
+
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: OAuth User 1
+  name: oauth-user-1
+  type: oauth
+  custom_id: user-id-from-oidc-provider
+{% endkonnect_api_request %}
+<!-- vale on -->
+
+The `custom_id` must match the user identifier from your OAuth provider (for example, the `sub` claim from an OIDC token).
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Schema
 
