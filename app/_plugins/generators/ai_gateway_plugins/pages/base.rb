@@ -45,7 +45,7 @@ module Jekyll
           {
             'slug' => @plugin.slug,
             'layout' => layout,
-            'breadcrumbs' => ['/ai-gateway/', '/ai-gateway/on-prem/plugins/'],
+            'breadcrumbs' => ['/ai-gateway/'],
             'plugin' => @plugin,
             'plugin?' => true,
             'schema' => @plugin.schema,
