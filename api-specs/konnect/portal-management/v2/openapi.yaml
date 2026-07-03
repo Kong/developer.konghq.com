@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@69e9a8d66dfea38ba87bf596fce0e514001c7a4e
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/69e9a8d66dfea38ba87bf596fce0e514001c7a4e'
+  x-oas-source: kong/platform-api@557050b5fc631c64559a156e7cd4d8ea34ed1721
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/557050b5fc631c64559a156e7cd4d8ea34ed1721'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -1152,7 +1152,14 @@ paths:
         - Portal Teams
   '/portals/{portalId}/teams/{teamId}':
     parameters:
-      - $ref: '#/components/parameters/TeamId'
+      - name: teamId
+        in: path
+        description: ID of the team.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
       - $ref: '#/components/parameters/PortalId'
     get:
       operationId: get-portal-team
