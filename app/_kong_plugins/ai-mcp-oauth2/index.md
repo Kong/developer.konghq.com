@@ -19,6 +19,8 @@ works_on:
 min_version:
     gateway: '3.12'
 
+ai_gateway_url: "/ai-gateway/policies/ai-mcp-oauth2/"
+
 topologies:
   on_prem:
     - hybrid

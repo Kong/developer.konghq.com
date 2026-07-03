@@ -23,6 +23,8 @@ works_on:
 min_version:
     gateway: '3.13'
 
+ai_gateway_url: "/ai-gateway/policies/ai-lakera-guard/"
+
 topologies:
   on_prem:
     - hybrid

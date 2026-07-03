@@ -19,6 +19,8 @@ works_on:
 min_version:
     gateway: '3.7'
 
+ai_gateway_url: "/ai-gateway/policies/ai-azure-content-safety/"
+
 topologies:
   on_prem:
     - hybrid
