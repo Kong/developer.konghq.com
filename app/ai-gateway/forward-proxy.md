@@ -32,7 +32,7 @@ related_resources:
 
 ## What is forward proxy support?
 
-In network-isolated deployments, {{site.ai_gateway}} cannot open direct outbound connections to LLM providers or auxiliary services. Forward proxy support lets you route outbound requests from AI Models and AI MCP Servers through a controlled HTTP forward proxy so that inference traffic, semantic operations, and guardrail checks continue to work behind a strict egress policy.
+In network-isolated deployments, {{site.ai_gateway}} cannot open direct outbound connections to LLM providers or auxiliary services. Forward proxy support lets you route outbound requests from [AI Models](/ai-gateway/entities/ai-model/) and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) through a controlled HTTP forward proxy so that inference traffic, semantic operations, and guardrail checks continue to work behind a strict egress policy.
 
 A `proxy` record can be added to the `config` that names the proxy host, port, scheme, excluded hosts, and optional credentials. When configured, all outbound requests issued by that AI Model or MCP Server are sent through the specified proxy host. Existing capabilities such as [load balancing](/ai-gateway/load-balancing/), health checking, [streaming](/ai-gateway/streaming/), WebSocket, and HTTP/2 continue to work.
 
@@ -42,9 +42,9 @@ A `proxy` record can be added to the `config` that names the proxy host, port, s
 
 The three request categories are:
 
-- **Inference**: requests from clients to LLM providers, proxied by an [AI Model](/ai-gateway/entities/ai-model/) through the {{site.ai_gateway}}. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when forward proxy support is active. Upstream keepalive is disabled while the forward proxy is active, so inference connections are not reused across requests targeting different upstream peers.
-- **Identity auth**: cloud identity authentication issued by provider SDKs. AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition, when targets require managed identity.
-- **Auxiliary calls**: direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor Policies to their external services. For example, an embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint.
+- **Inference**: Requests from clients to LLM providers, proxied by an [AI Model](/ai-gateway/entities/ai-model/) through the {{site.ai_gateway}}. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when forward proxy support is active. Upstream keepalive is disabled while the forward proxy is active, so inference connections are not reused across requests targeting different upstream peers.
+- **Identity auth**: Cloud identity authentication issued by provider SDKs. AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition, when targets require managed identity.
+- **Auxiliary calls**: Direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor Policies to their external services. For example, an embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint.
 
 <!--vale off-->
 {% mermaid %}
@@ -74,7 +74,7 @@ When `proxy` is set on an entity, every outbound request that entity issues goes
 
 {{site.base_gateway}} also provides the [Forward Proxy Advanced plugin](/plugins/forward-proxy/) for routing non-AI upstream traffic through an intermediary HTTP proxy. For non-AI services use the Forward Proxy Advanced plugin.
 
-The Forward Proxy Advanced plugin takes over the request before the balancer phase runs, which works for standard Kong Services but not with behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
+The Forward Proxy Advanced plugin takes over the request before the balancer phase runs, which works for standard Gateway Services but not with behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
 
 For any Service that serves traffic through an AI Model or MCP Server you should use the native `proxy` configuration instead, this ensures the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy`.
 
@@ -161,17 +161,17 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
     ```
     echo '
     services:
-    squid:
-      image: ubuntu/squid
-      container_name: squid
-      ports:
-        - "3128:3128"
-      volumes:
-        - ./squid.conf:/etc/squid/squid.conf:ro
-      networks:
-        proxy-net:
-          aliases:
-            - secure.mycompany   # ← the named host
+      squid:
+        image: ubuntu/squid
+        container_name: squid
+        ports:
+          - "3128:3128"
+        volumes:
+          - ./squid.conf:/etc/squid/squid.conf:ro
+        networks:
+          proxy-net:
+            aliases:
+              - secure.mycompany   # ← the named host
 
     networks:
       proxy-net:
@@ -189,7 +189,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
     docker compose up -d
     ```
 
-### Gateway
+### {{site.ai_gateway}}
 
 {% include md/ai-gateway/v2/konnect-aigw-setup.md %}
 
@@ -254,7 +254,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
   {% endkonnect_api_request %}
   <!-- vale on -->
 
-3. Send a chat request, this will be forwarded to your proxy service and return an error:
+3. Send a chat request. This will be forwarded to your proxy service and return an error:
 
   <!-- vale off -->
   {% validation request-check %}
@@ -361,7 +361,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
 ## Supported Policies
 
-When forward proxy support is enabled on AI Models and MCP Servers this effects Policies applied to that entity.
+When forward proxy support is enabled on AI Models and MCP Servers, this effects Policies applied to that entity.
 
 The following Policies are supported:
 
