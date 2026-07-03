@@ -193,3 +193,19 @@ rows:
               products:
                 - identity
               quantity: 7
+
+  - header:
+      type: h2
+      text: Key references
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: API reference
+            description: |
+              Explore the reference documentation for the {{site.identity}} API.
+            icon: /assets/icons/data-object.svg
+            ctas:
+              - text: "{{site.identity}} API reference"
+                url: /api/konnect/kong-identity/v1/#/
+                align: end
