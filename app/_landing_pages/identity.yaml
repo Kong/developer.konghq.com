@@ -27,8 +27,7 @@ rows:
                 * Issue and validate OAuth 2.0 and OIDC tokens from authorization servers
                 * Manage authenticating entities across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} in one place with principals
                 * Drive plugin and policy behavior with metadata attached to principals
-                * Set up an out-of-the box authorization server
-      - blocks:
+                * Set up an out-of-the-box authorization server
           - type: image
             config:
               url: /assets/images/konnect/kong-identity-hero.png
@@ -95,7 +94,7 @@ rows:
           config:
             title: Authorization servers
             description: |
-              Fully managed {{site.konnect_short_name}} authorization servers or issuing tokens and authenticating clients.
+              Fully managed {{site.konnect_short_name}} authorization servers for issuing tokens and authenticating clients.
             icon: /assets/icons/security.svg
             cta:
               text: Learn about authorization servers
@@ -191,6 +190,6 @@ rows:
       - blocks:
           - type: how_to_list
             config:
-              product:
-                  - identity
+              products:
+                - identity
               quantity: 7
