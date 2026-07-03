@@ -50,3 +50,6 @@ The AI AWS Guardrails Policy emits structured log data for every inspected reque
 
 To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-log-blocked-content). When enabled, the blocked prompt or response body appears under `ai.proxy.aws-guardrails.input_faulty_prompt` and `ai.proxy.aws-guardrails.output_faulty_response` in each log entry.
 
+## Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}

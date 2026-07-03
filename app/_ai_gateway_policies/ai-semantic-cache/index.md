@@ -130,6 +130,6 @@ This allows you to seamlessly rotate credentials without relying on static passw
 
 {% include_cached /md/ai-gateway/v2/redis-cloud-providers.md name=page.name heading_level=3 %}
 
-### Forward proxy support
+## Forward proxy support
 
 {% include md/ai-gateway/v2/forward-proxy.md %}

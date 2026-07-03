@@ -192,3 +192,7 @@ This service takes the following optional environment variables at startup:
 * `GUNICORN_WORKERS`: Specifies the number of Gunicorn processes to run
 * `PII_SERVICE_ENGINE_CONF`: Specifies the natural language processing (NLP) engine configuration file
 * `GUNICORN_LOG_LEVEL`: Specifies log level
+
+## Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}
