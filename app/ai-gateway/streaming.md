@@ -115,7 +115,6 @@ Keep the following limitations in mind when you configure streaming for the {{si
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
 * You can't add AI Policies that use the [Response Transformer](/ai-gateway/policies/response-transformer/) Policy or otherwise trigger in the response phase when streaming is configured.
 * The [AI Request Transformer Policy](/ai-gateway/policies/ai-request-transformer/) **will** work, but the [AI Response Transformer Policy](/ai-gateway/policies/ai-response-transformer/) **will not**. This is because {{site.ai_gateway}} can't check every single response token against a separate system.
-* Streaming currently doesn't work with the HTTP/2 protocol. You must disable this in your [`proxy_listen`](/gateway/configuration/#proxy-listen) configuration.
 
 ## Configuration
 
