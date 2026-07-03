@@ -18,6 +18,8 @@ works_on:
 min_version:
     gateway: '3.11'
 
+ai_gateway_url: "/ai-gateway/policies/ai-prompt-compressor/"
+
 topologies:
   on_prem:
     - hybrid
