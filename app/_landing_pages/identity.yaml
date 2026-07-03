@@ -1,7 +1,7 @@
 metadata:
   title: "Kong Identity"
   content_type: landing_page
-  description: "Unified machine-to-machine authentication platform within Kong Konnect."
+  description: "Unified authentication platform within Kong Konnect."
   permalink: /identity/
   products:
     - identity
@@ -12,7 +12,7 @@ rows:
   - header:
       type: h1
       text: "{{site.identity}}"
-      sub_text: "The unified machine-to-machine authentication platform"
+      sub_text: "The unified authentication platform"
 
   - header:
       type: h2
@@ -21,16 +21,17 @@ rows:
       - blocks:
           - type: text
             config: |
-                {{site.identity}} centralizes machine-to-machine authentication in {{site.konnect_short_name}}. It implements OAuth 2.0 with OpenID Connect, and provides principals and directories as a shared identity layer for clients that authenticate to your Kong products.
+                {{site.identity}} centralizes authentication in {{site.konnect_short_name}}. It provides principals and directories as a shared identity layer to authenticate across Kong products.
 
                 Use {{site.identity}} to:
-                * Issue and validate OAuth 2.0 and OIDC tokens from regional authorization servers
+                * Issue and validate OAuth 2.0 and OIDC tokens from authorization servers
                 * Manage authenticating entities across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} in one place with principals
                 * Drive plugin and policy behavior with metadata attached to principals
+                * Set up an out-of-the box authorization server
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/konnect-dashboard.png
+              url: /assets/images/konnect/kong-identity-hero.png
               alt_text: Image of the {{site.konnect_short_name}} dashboard
 
   - header:
@@ -94,7 +95,7 @@ rows:
           config:
             title: Authorization servers
             description: |
-              Issue OAuth 2.0 and OpenID Connect tokens from a regional server unique to your organization.
+              Fully managed {{site.konnect_short_name}} authorization servers or issuing tokens and authenticating clients.
             icon: /assets/icons/security.svg
             cta:
               text: Learn about authorization servers
