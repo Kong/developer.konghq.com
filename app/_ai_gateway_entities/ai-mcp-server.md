@@ -134,7 +134,7 @@ rows:
   - mode: "`passthrough-listener`"
     description: |
       Listens for incoming MCP requests and proxies them to an upstream MCP server without
-      converting tools. Generates MCP observability metrics.
+      converting tools.
     usecase: |
       You already operate an MCP server and want {{site.ai_gateway}} to act as an authenticated,
       observable entrypoint. Common for third-party or internally hosted MCP services exposed
@@ -175,7 +175,7 @@ rows:
 {% endtable %}
 ## Server modes
 
-The [`type`](#schema-aigateway-mcpserver-type) field selects one of five modes. Choose a mode based your use case and whether you're generating an MCP server from a REST API, connecting to an MCP server that already exists, or aggregating tools from multiple MCP Servers into a single endpoint.
+The [`type`](#schema-aigateway-mcpserver-type) field selects one of five modes. Choose a mode based on your use case and whether you're generating an MCP server from a REST API, connecting to an MCP server that already exists, or aggregating tools from multiple MCP Servers into a single endpoint. Regardless of mode, {{site.ai_gateway}} generates [MCP observability metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) for traffic through the server.
 
 <!-- vale off -->
 {% table %}
@@ -196,7 +196,7 @@ rows:
     pattern: Existing MCP server
     description: |
       Listens for incoming MCP requests and proxies them to an upstream MCP server without
-      converting tools. Generates MCP observability metrics.
+      converting tools.
     mode: "`passthrough-listener`"
   - usecase: |
       Make an existing REST API available to MCP clients directly through {{site.ai_gateway}}.
