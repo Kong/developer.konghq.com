@@ -5,7 +5,7 @@ name: 'AI Semantic Response Guard'
 content_type: policy
 
 publisher: kong-inc
-description: 'Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of llm/v1/chat or llm/v1/completions requests'
+description: 'Permit or block LLM responses based on semantic similarity to predefined rules for chat, completions, and embeddings requests'
 
 products:
     - ai-gateway
@@ -46,7 +46,7 @@ tags:
  - dlp
 ---
 
-The AI Semantic Response Guard AI Policy filters LLM responses based on semantic similarity to predefined rules, helping prevent unwanted or unsafe responses when serving `llm/v1/chat`, `llm/v1/completions`, or `llm/v1/embeddings` requests through {{site.ai_gateway}}.
+The AI Semantic Response Guard AI Policy filters LLM responses based on semantic similarity to predefined rules, helping prevent unwanted or unsafe responses when serving `/chat`, `/completions`, or `/embeddings` requests through {{site.ai_gateway}}.
 
 You can use a combination of `allow` and `deny` response rules to maintain integrity and compliance when returning responses from an LLM service.
 
