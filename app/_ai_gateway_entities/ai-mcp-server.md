@@ -76,7 +76,7 @@ faqs:
 
 Create an AI MCP Server to connect AI applications such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [Insomnia](/insomnia/) to your APIs and tools through the standardized [Model Context Protocol](https://modelcontextprotocol.io/). An AI MCP Server acts as a bridge between MCP-compatible clients and your backend systems, allowing you to expose existing APIs as discoverable tools without building custom integrations for each AI client.
 
-Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability you apply to traditional API traffic automatically covers MCP traffic, giving you consistent governance across both HTTP and MCP clients.
+Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability policies you apply to traditional API traffic automatically covers MCP traffic, giving you consistent governance across both HTTP and MCP clients.
 
 {:.warning}
 > **Note:** MCP traffic is API-level traffic, not LLM request/response flows. The [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/) provides MCP-specific OAuth2 validation. Standard API-level policies (authentication, rate limiting, logging) apply to MCP traffic. AI Policies that operate on LLM prompt/response flows (such as prompt guards or model routing) won't apply here.
@@ -203,7 +203,7 @@ rows:
       Common for services that both define and handle their own tools.
     pattern: Generate from REST API
     description: |
-      Converts RESTful API paths into MCP tools and accepts incoming MCP requests on the Route
+      Converts RESTful API paths into MCP tools and accepts incoming MCP requests on the route
       path. Tools are defined directly on the MCP Server and an optional server block applies.
       Supports session identifiers set by authentication services for cookie-based
       authentication.
@@ -218,7 +218,7 @@ rows:
     mode: "`conversion-only`"
   - usecase: |
       A single MCP endpoint that aggregates tools from multiple `conversion-only` or
-      `upstream-server` MCP Servers. Typical in multi-service or multi-team environments that
+      `upstream-server` MCP Servers. Typical used in multi-service or multi-team environments that
       expose a unified MCP interface.
     pattern: Aggregate
     description: |
