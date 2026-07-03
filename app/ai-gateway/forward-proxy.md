@@ -133,7 +133,7 @@ You can use [Squid](https://www.squid-cache.org/) to create a simple forward pro
 In the following examples `secure.mycompany` is used as the `visible_hostname` for the forward proxy.
 
 {:.warning}
-> In a production deployment your forward proxy should authenticate users, including {{site.ai_gateway}}.
+> In a production deployment your forward proxy should authenticate users, including {{site.ai_gateway}}.  To do this. set `auth_username` and `auth_password`. You can reference secrets from an [AI Vault](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets).
 
 1. Create minimal config file for Squid:
 
