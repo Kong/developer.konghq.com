@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.5.9
+  version: 3.5.11
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@b8d278f218336b3b7a0b760ac9eb9a00ba7e8643
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b8d278f218336b3b7a0b760ac9eb9a00ba7e8643'
+  x-oas-source: kong/platform-api@557050b5fc631c64559a156e7cd4d8ea34ed1721
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/557050b5fc631c64559a156e7cd4d8ea34ed1721'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1355,7 +1355,14 @@ paths:
         - Portal Teams
   '/portals/{portalId}/teams/{teamId}':
     parameters:
-      - $ref: '#/components/parameters/TeamId'
+      - name: teamId
+        in: path
+        description: ID of the team.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
       - $ref: '#/components/parameters/PortalId'
     get:
       operationId: get-portal-team
@@ -1549,7 +1556,14 @@ paths:
         - Portal Team Roles
   '/portals/{portalId}/teams/{teamId}/assigned-roles/{roleId}':
     parameters:
-      - $ref: '#/components/parameters/RoleId'
+      - name: roleId
+        in: path
+        description: ID of the assigned role.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 8350205f-a305-4e39-abe9-bc082a80091a
       - $ref: '#/components/parameters/PortalId'
       - $ref: '#/components/parameters/TeamId'
     delete:
@@ -2684,14 +2698,6 @@ components:
       schema:
         type: string
         format: uuid
-    RoleId:
-      schema:
-        type: string
-        format: uuid
-        example: 8350205f-a305-4e39-abe9-bc082a80091a
-      name: roleId
-      in: path
-      required: true
     SnippetId:
       schema:
         type: string
