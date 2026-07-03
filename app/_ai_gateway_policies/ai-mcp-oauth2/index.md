@@ -1,36 +1,12 @@
 ---
-title: 'AI MCP OAuth2'
-name: 'AI MCP OAuth2'
-
-content_type: policy
-publisher: kong-inc
-description: 'Secure MCP server access with OAuth2 authentication'
-
-tech_preview: true
-products:
-    - ai-gateway
-
-works_on:
-    - konnect
-
 min_version:
-    ai-gateway: '2.0'
-
-tags:
-  - ai
-  - mcp
-  - security
-
-search_aliases:
-  - ai-mcp-oauth2
-  - OAuth2
-  - MCP
-
-
-icon: ai-mcp-oauth2.png
-
-categories:
-   - ai
+  ai-gateway: '2.0'
+works_on:
+  - konnect
+products:
+  - ai-gateway
+content_type: policy
+tech_preview: true
 related_resources:
   - text: OAuth 2.0 specification for MCP
     url: https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization

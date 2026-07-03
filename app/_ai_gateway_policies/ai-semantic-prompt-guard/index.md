@@ -1,47 +1,11 @@
 ---
-title: 'AI Semantic Prompt Guard'
-name: 'AI Semantic Prompt Guard'
-
-content_type: policy
-
-publisher: kong-inc
-description: 'Semantically and intelligently create allow and deny lists of topics that can be requested across every LLM.'
-
-
-products:
-    - ai-gateway
-
-works_on:
-    - konnect
-
 min_version:
-    ai-gateway: '2.0'
-
-topologies:
-  konnect_deployments:
-    - hybrid
-    - cloud-gateways
-    - serverless
-
-icon: ai-semantic-prompt-guard.png
-
-categories:
-  - ai
-
-tags:
-  - ai
-  - safety
-  - dlp
-
-search_aliases:
-  - ai
-  - llm
-  - artificial
-  - intelligence
-  - language
-  - model
-  - semantic
-
+  ai-gateway: '2.0'
+works_on:
+  - konnect
+products:
+  - ai-gateway
+content_type: policy
 related_resources:
   - text: Get started with {{site.ai_gateway}}
     url: /ai-gateway/get-started/
