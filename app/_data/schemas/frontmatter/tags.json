@@ -102,6 +102,7 @@
     "grafana",
     "graphql",
     "grpc",
+    "harness",
     "hashicorp-vault",
     "headers",
     "helm",

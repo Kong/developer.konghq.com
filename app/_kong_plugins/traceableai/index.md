@@ -23,7 +23,7 @@ premium_partner: true
 
 support_url: https://www.harness.io/support
 
-icon: traceableai.svg
+icon: harness.svg
 
 search_aliases:
   - traceable ai
@@ -44,7 +44,7 @@ Based on its findings, the {{page.name}} plugin can also block traffic coming fr
 ### Prerequisites
 
 The {{page.name}} plugin requires a [Traceable Platform Agent (TPA)](https://docs.traceable.ai/docs/tpa) to be deployed in your environment.
-For complete agent deployment instructions, visit the [Harness docs site](https://docs.traceable.ai/docs/k8s).
+For complete agent deployment instructions, visit the [Traceable by Harness docs site](https://docs.traceable.ai/docs/tpa).
 
 ### Install
 
