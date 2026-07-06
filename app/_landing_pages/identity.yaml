@@ -24,14 +24,15 @@ rows:
                 {{site.identity}} centralizes authentication in {{site.konnect_short_name}}. It provides principals and directories as a shared identity layer to authenticate across Kong products.
 
                 Use {{site.identity}} to:
-                * Issue and validate OAuth 2.0 and OIDC tokens from authorization servers
-                * Manage authenticating entities across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} in one place with principals
-                * Drive plugin and policy behavior with metadata attached to principals
-                * Set up an out-of-the-box authorization server
+                * Manage authenticating entities across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} in one place with principals.
+                  One principal can support multiple authentication types (multiple OAuth servers, API keys, and username/passwords)
+                * Drive complex gateway behavior with metadata attached to principals
+                * Act as an OAuth 2.0 compatible authorization server to allow complete OAuth protection to API endpoints and MCP servers
+                * Authenticate to APIs and {{site.event_gateway_short}}s via OIDC, API keys and username/passwords
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/kong-identity-hero.png
+              url: /assets/images/konnect/identity.svg
               alt_text: Image of the {{site.konnect_short_name}} dashboard
 
   - header:
