@@ -155,6 +155,7 @@ export async function runInstructions(instructions, runtimeConfig, container) {
 
     if (!check) {
       result["status"] = "skipped";
+      result["assertions"] = [];
       return result;
     }
 
