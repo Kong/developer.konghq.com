@@ -118,7 +118,7 @@ body:
 {% endkonnect_api_request %}
 <!-- vale on -->
 
-The agent is now accessible at the `/a2a` route and proxies A2A JSON-RPC requests to the upstream agent running at `http://a2a-agent:10000`.
+The agent is now accessible at the `/a2a` route and proxies A2A JSON-RPC requests to the upstream agent running at `http://host.docker.internal:10000`.
 
 ## Retrieve the Agent Card
 
