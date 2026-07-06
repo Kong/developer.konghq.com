@@ -83,8 +83,6 @@ rows:
             ctas:
               - text: Dynamic Client Registration with {{site.identity}}
                 url: /how-to/kong-identity-dcr/
-              - text: Apply plugins to {{site.dev_portal}} applications
-                url: /dev-portal/self-service/#apply-plugins-to-applications
 
   - header:
       type: h2
