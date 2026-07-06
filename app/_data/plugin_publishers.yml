@@ -5,7 +5,7 @@ optum:
   name: Optum
 
 harness:
-  name: Harness WAAP
+  name: Harness
 
 the-lego-group:
   name: The LEGO Group

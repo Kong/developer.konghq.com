@@ -142,7 +142,7 @@ rows:
     - blocks: 
       - type: plugin
         config:
-          slug: traceableai
+          slug: harness-waap
   - columns:
     - blocks:
       - type: structured_text

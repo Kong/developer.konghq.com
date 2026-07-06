@@ -6,7 +6,7 @@ weight: 900
 
 requirements:
 - "[The Traceable Platform Agent is deployed in your environment](https://docs.traceable.ai/docs/tpa)"
-- "[The Harness WAAP plugin is installed](/plugins/traceableai/)"
+- "[The Harness WAAP plugin is installed](/plugins/harness-waap/)"
 
 variables:
   ext_cap_endpoint:
