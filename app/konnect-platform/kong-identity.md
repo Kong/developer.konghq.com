@@ -105,6 +105,21 @@ In the authorization code flow:
 6. The client uses the access token to call protected APIs.
 {% endcomment %}
 
+## Kong Consumer Group claim authorization flow
+
+To apply plugins to OIDC clients, the Gateway must map the incoming token to a **Consumer** entity. This is handled by the [OIDC plugin](/plugins/openid-connect/) at request time:
+
+1. Ensure the Consumer's `username` or `custom_id` matches a unique claim in the OIDC token. The `sub` claim is included in Kong Identity tokens by default.
+1. Configure the following fields in the OIDC plugin to link requests to a Consumer:
+    * [`config.consumer_claim`](/plugins/openid-connect/reference/#schema--config-consumer-claim): The token field to identify the client (for example, `["sub"]` or `["client_id"]`).
+    * [`config.consumer_by`](/plugins/openid-connect/reference/#schema--config-consumer-by): The Consumer field to match against (for example, `["username"]` or `["custom_id"]`).
+* **Apply scoped plugins**:
+    * **Consumer-scoped**: Apply plugins directly to the individual Consumer entity.
+    * **Consumer Group-scoped**: Assign mapped Consumers to a [Consumer Group](/gateway/entities/consumer-group/) to inherit shared policies across multiple clients.
+
+{:.info}
+> You don't need to migrate or create client credentials (like API keys) for these Consumers. The OIDC token serves as the authenticated credential for the mapped Consumer.
+
 ## Claim configuration
 
 You can [configure each claim](#configure-kong-identity) to be included or not in the JWT token issued by the authorization server, based on the scopes the client requests. 
