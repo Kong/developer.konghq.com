@@ -99,7 +99,7 @@ body:
   type: a2a
   enabled: true
   config:
-    url: http://a2a-agent:10000
+    url: http://host.docker.internal:10000
     route:
       paths:
         - /a2a
