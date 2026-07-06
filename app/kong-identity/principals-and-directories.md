@@ -111,8 +111,11 @@ A single principal can have multiple identities, including multiple of the same 
 Principals centralize the concept of an authenticating entity across Kong products. 
 Each product has its own representation of who is authenticating: {{site.base_gateway}} has Consumers and {{site.dev_portal}} has applications:
 
-* **Consumers**: Attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. When an authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. This allows existing Consumer-scoped plugins to function while you migrate to principals.
-* **Consumer Groups**: Map a principal to one or more Consumer Groups by setting the reserved `consumer_groups` key in the principal's [metadata](#metadata) to a list of Consumer Group UUIDs. Consumer Groups have a many-to-many relationship with principals: the same group can map to many principals, and one principal can map to many groups. If the principal is also mapped to a Consumer and that Consumer belongs to its own Consumer Groups, the gateway loads the union of both sets into the request context. Consumer Groups must be defined in the same {{site.base_gateway}} control plane and workspace as the plugin.
+* **Consumers**: Attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. When a {{site.identity}}-compatible authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. This allows existing Consumer-scoped plugins to function while you migrate to principals.
+* **Consumer Groups**: Map a principal to one or more Consumer Groups by setting the reserved `consumer_groups` key in the principal's [metadata](#metadata) to a list of Consumer Group UUIDs. Consumer Groups have a many-to-many relationship with principals:
+- The same group can map to many principals
+- One principal can map to many groups.
+  If the principal is also mapped to a Consumer and that Consumer belongs to its own Consumer Groups, the gateway loads the union of both sets into the request context. Only Consumer Groups that are defined in the same {{site.base_gateway}} as the control plane will be loaded into the request context.
 * **Applications**: You can map a {{site.dev_portal}} application to a {{site.base_gateway}} Consumer through a principal, creating a 1:1:1 relationship between the application, the principal, and the Consumer. This is how you apply Consumer-scoped plugins (including ACE and KAA) to traffic from a {{site.dev_portal}} application: configure the plugin on the mapped Consumer, and it runs for any request authenticated as the application. Consumer-dimension analytics also include the application's activity once the mapping is in place. A Portal Admin maps an existing application to an existing Consumer; {{site.identity}} creates or updates the principal of type `application` behind the scenes.
 
 #### When to use principals instead of Consumers
@@ -434,6 +437,8 @@ body:
 ### Link a principal to a Consumer
 
 Map a principal to a Consumer in a specific {{site.base_gateway}} control plane. 
+At most, you can map one Consumer per control plane to a principal. 
+You can map multiple Consumers if they are in different control planes.
 
 {% navtabs "consumer-identity" %}
 {% navtab "API" %}
@@ -539,3 +544,4 @@ The following are default limits for principals and directories:
 * Custom identity name and value combinations must be unique within a directory
 * OIDC identity issuer and claim combinations must be unique within a directory
 * Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
+* At most, you can map one Consumer per control plane to a principal. You can map multiple Consumers if they are in different control planes.
