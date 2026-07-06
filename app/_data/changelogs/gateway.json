@@ -23200,12 +23200,12 @@
     "kong-ee": [
       {
         "message": "Added error attribution for plugin execution errors (HTTP 500). Kong classifies errors as\n`kong` (bundled plugins) or `custom` (custom plugins), and Prometheus exposes this via\nthe `source` label to separate custom plugin failures from internal Kong errors.",
-        "type": "Breaking Change",
+        "type": "feature",
         "scope": "Core"
       },
       {
         "message": "**Conditional Plugin Execution**: The plugin `condition` field now uses\nCommon Expression Language (CEL) with broader operator and type\nsupport, aligned across UI, Control Plane, and Data Plane.  Refer to\nthe official documentation for the full syntax, supported variables,\noperators, and types.",
-        "type": "Breaking Change",
+        "type": "feature",
         "scope": "Core"
       },
       {
