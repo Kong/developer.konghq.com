@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added SASL OAUTHBEARER authentication support.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "the `ssl_verify` option to validate the server\ncertificate is now enabled by default.\n",

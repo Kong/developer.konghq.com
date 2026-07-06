@@ -1,4 +1,56 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Added `proof_of_possession_mtls_from_header` for mTLS PoP validation via HTTP header when TLS is pre-terminated by downstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for Kong Identity principal lookup after token verification, enabling consumer and consumer group mapping from Kong Identity with caching and miss-behavior control.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for reading bearer tokens from a custom header.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `cluster_cache_items` configuration option. This option controls which items are stored in the cluster cache backend configured via `cluster_cache_strategy`. Token material is AES-encrypted before being written to the cache.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added `verify_signature` and `jwks_uri` fields to `token_exchange.subject_token_issuers` for verifying incoming subject token signatures before exchange.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an inconsistency where `credential_claim` resolved the same claim name to a different value than `upstream_headers_claims` because it consulted the `id_token` before the `access_token`, while the upstream headers resolver consulted the `access_token` first. With IdPs (e.g. Okta) that set distinct `sub` values in the two tokens, `authenticated_entity.id` did not match the upstream header the plugin set on the same request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where nested claim paths were not resolved correctly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where token cluster cache entries were not written when the `cluster_cache_strategy` was updated using incremental sync.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added `consumer_claims` to support mapping consumers from multiple claim paths, while retaining and supporting the existing `consumer_claim` as a shorthand configuration.\n",
@@ -89,6 +141,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.8": [
+    {
+      "message": "Fixed an issue where token endpoint responses with `expires_in <= 0` were cached indefinitely when proactive expiry re-check was disabled, causing the plugin to silently forward already-expired tokens to the upstream until a worker/process restart.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to the `tls_certificate_verify`\nglobal option. When this option is enabled the plugin's flags\n`ssl_verify`, `tls_client_auth_ssl_verify`, and `session_memcached_ssl_verify`\ncannot be disabled.\n",
@@ -139,6 +198,18 @@
     },
     {
       "message": "Fixed an issue where the `username` and `password` were used for Redis Sentinel and no authentication supported for Redis, causing `NOAUTH Authentication Required` errors.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed an inconsistency where `credential_claim` resolved the same claim name to a different value than `upstream_headers_claims` because it consulted the id_token before the access_token, while the upstream headers resolver consulted the access_token first. With IdPs (e.g. Okta) that set distinct `sub` values in the two tokens, `authenticated_entity.id` did not match the upstream header the plugin set on the same request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -239,6 +310,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.14": [
+    {
+      "message": "Fixed an inconsistency where `credential_claim` resolved the same claim name to a different value than `upstream_headers_claims` because it consulted the id_token before the access_token, while the upstream headers resolver consulted the access_token first. With IdPs (e.g. Okta) that set distinct `sub` values in the two tokens, `authenticated_entity.id` did not match the upstream header the plugin set on the same request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where forbidden requests were redirected to `unauthorized_redirect_uri` if configured. After the fix, forbidden requests will be redirected to `forbidden_redirect_uri` if configured.\n",
@@ -297,6 +380,13 @@
   "3.10.0.11": [
     {
       "message": "Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.15": [
+    {
+      "message": "Fixed an inconsistency where `credential_claim` resolved the same claim name to a different value than `upstream_headers_claims` because it consulted the `id_token` before the `access_token`, while the upstream headers resolver consulted the `access_token` first. With IdPs (e.g. Okta) that set distinct `sub` values in the two tokens, `authenticated_entity.id` did not match the upstream header the plugin set on the same request.",
       "type": "bugfix",
       "scope": "Plugin"
     }

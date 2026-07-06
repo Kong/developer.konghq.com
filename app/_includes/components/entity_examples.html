@@ -2,6 +2,6 @@
 echo '
 _format_version: "3.0"
 {{ entity_examples.data }}
-' | deck gateway apply -
+' | deck gateway apply{% if entity_examples.deck_flags != empty %} {{ entity_examples.deck_flags | join: " " }}{%- endif %} -
 ```
 {:  data-test-step="block" }

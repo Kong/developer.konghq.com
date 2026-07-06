@@ -29,9 +29,6 @@ Flags:
                                    - Config path: [ telemetry.enabled ]
                                    - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                    - Default    : [ false ]
-  -o, --output string              Configures the format of data written to STDOUT.
-                                   - Config path: [ output ]
-                                   - Allowed    : [ json|yaml|text ] (default "text")
       --output-file string         File to write the output to. If not specified, output is written to stdout.
       --page-size int              Max number of results to include per response page.
                                    - Config path: [ konnect.page-size ] (default 10)

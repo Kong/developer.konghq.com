@@ -1,1 +1,9 @@
-{}
+{
+  "3.15.0.0": [
+    {
+      "message": "Reassembled SSE `data:` events that span multiple `body_filter`\nchunks and dropped oversized events safely, preventing `sse_last_event` type\nerrors that crashed the request on large agent responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

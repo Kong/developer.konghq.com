@@ -1,0 +1,55 @@
+description: "Set the Kafka consumer group ID from the authenticated {{site.base_gateway}} Consumer's username."
+
+extended_description: |
+  Set the Kafka consumer group ID from the authenticated {{site.base_gateway}} Consumer's username.
+  Each {{site.base_gateway}} Consumer gets its own Kafka consumer group and independent offset tracking.
+  Because group names match {{site.base_gateway}} Consumer usernames, operators can pre-allowlist them in Confluent Cloud ACLs.
+  
+  If no Consumer is authenticated, the plugin falls back to random mode and logs a warning.
+
+title: 'Consumer group ID per {{site.base_gateway}} Consumer'
+
+weight: 790
+
+min_version:
+  gateway: '3.15'
+
+requirements:
+  - You have a [Kafka cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud) in Confluent Cloud
+  - You have a [Kafka topic](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic) in the cluster
+  - You have a [{{site.base_gateway}} Consumer](/gateway/entities/consumer/) with a username configured
+  - The {{site.base_gateway}} Consumer's username is allowlisted in your Confluent Cloud ACLs
+  - You have an [authentication plugin](/plugins/?category=authentication) configured (for example, `key-auth`)
+
+variables:
+  host:
+    description: The bootstrap server host
+    value: $BOOTSTRAP_SERVER_HOST
+  key:
+    description: The API key to use for authentication
+    value: $API_KEY
+  secret:
+    description: The API secret to use for authentication
+    value: $API_SECRET
+  topic:
+    description: The name of the Kafka topic to consume from
+    value: $KAFKA_TOPIC
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topics:
+  - name: ${topic}
+  mode: http-get
+  cluster_api_key: ${key}
+  cluster_api_secret: ${secret}
+  consumer_group:
+    mode: kong_consumer
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

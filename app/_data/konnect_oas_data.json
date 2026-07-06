@@ -66,12 +66,12 @@
     "id": "937dcdd7-4485-47dc-af5f-b805d562552f",
     "title": "Gateway Admin - EE",
     "latestVersion": {
-      "name": "3.14.0.0",
-      "id": "8ebc8730-b989-49ef-86f5-dfd2a4449909"
+      "name": "3.15.0.0",
+      "id": "aad7d299-60ff-445c-836a-4a4a1107627b"
     },
     "description": "Kong Gateway (EE) comes with an internal RESTful API for administration purposes.",
     "documentCount": 2,
-    "versionCount": 12,
+    "versionCount": 13,
     "versions": [
       {
         "id": "be79b812-46d5-4cc1-b757-b5270bf4fa60",
@@ -166,6 +166,14 @@
         "created_at": "2026-04-07T15:21:30.449Z",
         "updated_at": "2026-04-07T15:22:12.464Z",
         "name": "3.14.0.0",
+        "deprecated": false,
+        "registration_configs": []
+      },
+      {
+        "id": "aad7d299-60ff-445c-836a-4a4a1107627b",
+        "created_at": "2026-07-02T16:46:33.422Z",
+        "updated_at": "2026-07-02T16:47:10.255Z",
+        "name": "3.15.0.0",
         "deprecated": false,
         "registration_configs": []
       }
@@ -368,12 +376,12 @@
   },
   {
     "id": "d420333f-01b0-464e-a87a-97acc92c2026",
-    "title": "Konnect API Products",
+    "title": "Konnect API Products (Legacy)",
     "latestVersion": {
       "name": "v2",
       "id": "941af975-8cfa-40f7-afea-e82d248489a0"
     },
-    "description": "API Products can be used to manage API versions, documentation, and analytics.",
+    "description": "Legacy API for managing API Products on the classic Dev Portal (v2). For new integrations, see API Builder v3.",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [

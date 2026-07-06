@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@f2a3c32e62e5ef96b2a27f8eb6c3ecce75538c2c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f2a3c32e62e5ef96b2a27f8eb6c3ecce75538c2c'
+  x-oas-source: kong/platform-api@a123e05cf23d78f7383146d13ad0c09b386e6d6f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a123e05cf23d78f7383146d13ad0c09b386e6d6f'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -2693,6 +2693,24 @@ components:
       required:
         - type
       title: Bar chart
+    TopNChart:
+      description: |
+        A chart that ranks dimension values by a metric and renders them as a table, showing
+        the top results.  This type of chart supports up to 3 dimensions.
+      type: object
+      properties:
+        chart_title:
+          description: 'The title of the chart, which is displayed in the tile''s header.'
+          type: string
+          nullable: false
+        type:
+          type: string
+          enum:
+            - top_n
+      additionalProperties: false
+      required:
+        - type
+      title: Top N chart
     SingleValueChart:
       description: A chart that can render a single number.  This chart works with a single metric and no dimensions.
       type: object
@@ -2741,12 +2759,14 @@ components:
           timeseries_bar: '#/components/schemas/TimeseriesChart'
           horizontal_bar: '#/components/schemas/BarChart'
           vertical_bar: '#/components/schemas/BarChart'
+          top_n: '#/components/schemas/TopNChart'
           single_value: '#/components/schemas/SingleValueChart'
           choropleth_map: '#/components/schemas/ChoroplethMapChart'
       oneOf:
         - $ref: '#/components/schemas/DonutChart'
         - $ref: '#/components/schemas/TimeseriesChart'
         - $ref: '#/components/schemas/BarChart'
+        - $ref: '#/components/schemas/TopNChart'
         - $ref: '#/components/schemas/SingleValueChart'
         - $ref: '#/components/schemas/ChoroplethMapChart'
     AllFilterItems:

@@ -13,59 +13,6 @@ The `kong-mesh-control-plane-kmesh` Role now includes the `list` verb for `cert-
 
 **Action required:** If you manage RBAC outside of Helm, add `list` to the verbs for `cert-manager.io/certificaterequests` in the Role bound to the Kong Mesh system namespace.
 
-## Upgrade to `2.13.7`
-
-{:.info}
-> The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
-
-Patch releases normally do not require upgrade instructions. The entry below is included because the underlying change is a security fix that alters TLS verification behavior in a way some deployments may notice.
-
-### Insecure TLS fallback removed when no CA cert is provided
-
-Previously, when no CA certificate was configured:
-
-- `kuma-dp` connecting to `kuma-cp` over HTTPS silently set `InsecureSkipVerify=true` and only printed a warning.
-- `kumactl` connecting to the API server silently set `InsecureSkipVerify=true`.
-
-These clients now use the host system's trust store (Go's default) and verify the server certificate. Skipping verification is opt-in.
-
-**Impact**
-
-Connections to a control plane whose certificate cannot be verified against the system trust store (typically self-signed or signed by a private CA that is not installed on the host) will now fail instead of silently succeeding without verification. The inter-CP `grpcs` client returns an error if called without a TLS config.
-
-Deployments that already provide a CA via `--ca-cert-file` / `KUMA_CONTROL_PLANE_CA_CERT` / `KUMA_CONTROL_PLANE_CA_CERT_FILE`, or that use a publicly trusted certificate, or that run the default Helm-installed setup, are not affected.
-
-**Action required**
-
-If your control plane uses a self-signed certificate or a private CA, provide that CA explicitly.
-
-For `kuma-dp`:
-
-```sh
-kuma-dp run --ca-cert-file=/path/to/ca.pem ...
-# or
-KUMA_CONTROL_PLANE_CA_CERT_FILE=/path/to/ca.pem kuma-dp run ...
-# or pass the PEM directly
-KUMA_CONTROL_PLANE_CA_CERT="$(cat /path/to/ca.pem)" kuma-dp run ...
-```
-
-For `kumactl`:
-
-```sh
-kumactl config control-planes add --ca-cert-file=/path/to/ca.pem ...
-```
-
-**Opt-out (insecure, development/testing only)**
-
-A new explicit flag preserves the previous insecure behavior:
-
-- `kuma-dp run --skip-verify` (env var `KUMA_CONTROL_PLANE_TLS_SKIP_VERIFY=true`)
-- `kumactl config control-planes add --skip-verify`
-
-Do not use this in production.
-
-## Upgrade to `2.14.x`
-
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
@@ -452,6 +399,57 @@ rules:
 
 Along with the corresponding ServiceAccount and RoleBinding in the same namespace.
 
+## Upgrade to `2.13.7`
+
+{:.info}
+> The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+Patch releases normally do not require upgrade instructions. The entry below is included because the underlying change is a security fix that alters TLS verification behavior in a way some deployments may notice.
+
+### Insecure TLS fallback removed when no CA cert is provided
+
+Previously, when no CA certificate was configured:
+
+- `kuma-dp` connecting to `kuma-cp` over HTTPS silently set `InsecureSkipVerify=true` and only printed a warning.
+- `kumactl` connecting to the API server silently set `InsecureSkipVerify=true`.
+
+These clients now use the host system's trust store (Go's default) and verify the server certificate. Skipping verification is opt-in.
+
+**Impact**
+
+Connections to a control plane whose certificate cannot be verified against the system trust store (typically self-signed or signed by a private CA that is not installed on the host) will now fail instead of silently succeeding without verification. The inter-CP `grpcs` client returns an error if called without a TLS config.
+
+Deployments that already provide a CA via `--ca-cert-file` / `KUMA_CONTROL_PLANE_CA_CERT` / `KUMA_CONTROL_PLANE_CA_CERT_FILE`, or that use a publicly trusted certificate, or that run the default Helm-installed setup, are not affected.
+
+**Action required**
+
+If your control plane uses a self-signed certificate or a private CA, provide that CA explicitly.
+
+For `kuma-dp`:
+
+```sh
+kuma-dp run --ca-cert-file=/path/to/ca.pem ...
+# or
+KUMA_CONTROL_PLANE_CA_CERT_FILE=/path/to/ca.pem kuma-dp run ...
+# or pass the PEM directly
+KUMA_CONTROL_PLANE_CA_CERT="$(cat /path/to/ca.pem)" kuma-dp run ...
+```
+
+For `kumactl`:
+
+```sh
+kumactl config control-planes add --ca-cert-file=/path/to/ca.pem ...
+```
+
+**Opt-out (insecure, development/testing only)**
+
+A new explicit flag preserves the previous insecure behavior:
+
+- `kuma-dp run --skip-verify` (env var `KUMA_CONTROL_PLANE_TLS_SKIP_VERIFY=true`)
+- `kumactl config control-planes add --skip-verify`
+
+Do not use this in production.
+
 ## Upgrade to `2.13.x`
 
 ### AWS IAM workload label validation for MeshIdentity
@@ -703,6 +701,13 @@ status:
   origin: MeshIdentity  # automatically populated
 ```
 
+## Upgrade to `2.12.11`
+
+{:.info}
+> The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+See [Insecure TLS fallback removed when no CA cert is provided](#insecure-tls-fallback-removed-when-no-ca-cert-is-provided).
+
 ## Upgrade to `2.12.x`
 
 {:.info}
@@ -735,6 +740,13 @@ These endpoints were deprecated, and are now removed. You can achieve the same f
 > **Note:** This deprecation was reversed in `2.14.x`. The readiness reporter is now TCP-only and the Unix socket has been removed. See the `2.14.x` notes above.
 
 It is no longer possible to disable the readiness reporter, which means TCP port 0 is not allowed to be used.
+
+## Upgrade to `2.11.14`
+
+{:.info}
+> The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+See [Insecure TLS fallback removed when no CA cert is provided](#insecure-tls-fallback-removed-when-no-ca-cert-is-provided).
 
 ## Upgrade to `2.11.x`
 
@@ -1029,6 +1041,13 @@ The `healthyPanicThreshold` field in the `MeshHealthCheck` policy is deprecated 
 
 Authentication between the control plane and dataplanes is now only checked at connection start. This means if a token expires or is revoked after the dataplane connects, the connection won't stop. The recommended action on token revocation is to restart either the control plane or the concerned dataplanes.
 
+## Upgrade to `2.9.16`
+
+{:.info}
+> The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+See [Insecure TLS fallback removed when no CA cert is provided](#insecure-tls-fallback-removed-when-no-ca-cert-is-provided).
+
 ## Upgrade to `2.9.x`
 
 {:.info}
@@ -1313,6 +1332,13 @@ If you observe following log in control-plane logs, please rotate your tokens be
 * [User token](https://kuma.io/docs/2.7.x/production/secure-deployment/api-server-auth/)
 * [Dataplane token](https://kuma.io/docs/2.7.x/production/secure-deployment/dp-auth/)
 * [Zone token](https://kuma.io/docs/2.7.x/production/cp-deployment/zoneproxy-auth/#zone-token)
+
+## Upgrade to `2.7.26`
+
+{:.info}
+> The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+See [Insecure TLS fallback removed when no CA cert is provided](#insecure-tls-fallback-removed-when-no-ca-cert-is-provided).
 
 ## Upgrade to `2.7.x`
 

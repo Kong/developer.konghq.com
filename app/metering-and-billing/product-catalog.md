@@ -20,6 +20,8 @@ related_resources:
     url: /metering-and-billing/subjects/
   - text: "Pricing models"
     url: /metering-and-billing/pricing-models/
+  - text: "Prepaid credits"
+    url: /metering-and-billing/credits/
 
 toc_depth: 4
 ---
@@ -308,7 +310,7 @@ Entitlements can help you implement various monetization strategies:
 * Enforce usage limits, like monthly token allowances.
 * Sell plans with various feature sets.
 * Offer custom quotes and per-customer pricing.
-* Adopt prepaid billing and grant usage, and handle top-ups.
+* Adopt [prepaid billing](/metering-and-billing/credits/) and grant usage, and handle top-ups.
 * Define and track pre-purchase commitments.
 
 Entitlements are available in three types: metered, static, and boolean. See the [Entitlements reference](/metering-and-billing/entitlements/) to learn more.
@@ -319,6 +321,8 @@ Entitlements are available in three types: metered, static, and boolean. See the
 #### Grants
 
 A grant is a record of usage allowance issued to a specific customer via a metered entitlement. Grants determine how much of a feature a customer is allowed to consume. A metered entitlement tracks a running balance. When usage is reported, it is deducted from the grants issued for that entitlement.
+
+For prepaid credit grants, see [Credit grants](/metering-and-billing/credits/grants/).
 
 #### Billing cadence
 

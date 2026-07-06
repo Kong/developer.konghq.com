@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed a regression where `remove.body` entries in `key:value` format (e.g. `scope:USER`) failed to remove the field from the request body. The value part is now correctly ignored during removal, restoring the behavior from 3.11.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed an issue where the `add.headers` operation lowercased the header name, causing the configured letter case to be lost when adding new headers to the request.\n",

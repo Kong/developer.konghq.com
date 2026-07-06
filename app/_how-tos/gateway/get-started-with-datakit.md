@@ -52,7 +52,10 @@ min_version:
 related_resources:
   - text: Datakit plugin
     url: /plugins/datakit/
-
+  - text: Datakit in {{site.base_gateway}}
+    url: /gateway/datakit/
+  - text: Using Debugger for Datakit
+    url: /observability/datakit-debugger/
 ---
 
 ## Enable Datakit

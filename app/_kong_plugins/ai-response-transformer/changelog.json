@@ -1,4 +1,11 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.2": [
     {
       "message": "Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.\n",
@@ -17,6 +24,13 @@
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `https_verify` setting cannot be disabled.",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],

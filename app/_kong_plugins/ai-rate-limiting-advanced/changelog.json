@@ -1,4 +1,26 @@
 {
+  "3.15.0.0": [
+    {
+      "message": "Emitted the documented `X-AI-RateLimit-*` headers on `429` responses from policies that partition by `provider` or `model`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue with token counters being decremented on AI Semantic Cache hits.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `model` or `provider` matchers without `partition_by` were skipped, causing rate limits to be missed.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed policy integration with `ai-proxy`\nfor single-target and multi-target AI proxy routes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added a policy-based rate limiting mode with\nmulti-dimensional match conditions and request counting strategy.\n",

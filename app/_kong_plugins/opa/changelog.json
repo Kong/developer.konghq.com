@@ -20,6 +20,20 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.7": [
+    {
+      "message": "Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.14": [
+    {
+      "message": "Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.11": [
     {
       "message": "Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",
