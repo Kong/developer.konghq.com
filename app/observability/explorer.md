@@ -68,6 +68,14 @@ faqs:
       {% include faqs/metrics-endpoint.md section='question' %}
     a: |
       {% include faqs/metrics-endpoint.md section='answer' %}
+  - q: |
+      When I filter platform usage metrics by dimension, why is environment, team, or region always empty?
+    a: |
+      You must [label](/konnect-platform/konnect-labels/) and [tag](/gateway/tags/) entities with `env`, `team`, or `region` for these to display. 
+      For example, if you label your control plane with `env:production`, it will display when you select "Environment" from the dimensions filter. 
+
+      Keep in mind that you must label sub-entities, they do not inherit labels. 
+      For example, labeling your control plane with `region:us` **will not** label your Gateway Services and Routes with `region:us`, they must be labeled individually. 
 
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.observability}}"
