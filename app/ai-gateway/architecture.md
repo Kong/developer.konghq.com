@@ -192,7 +192,7 @@ An {{site.ai_gateway}} has its own entity namespace, data plane pool, credential
 
 ## Deployment topologies
 
-{{site.ai_gateway}} runs in a single deployment mode: **hybrid**, with a {{site.konnect_short_name}}-managed control plane and self-managed data plane nodes. It is Konnect-first: there is no self-managed traditional (database-backed) or standalone DB-less deployment, and data plane nodes are not offered as Kong-hosted (dedicated or serverless) gateways. They always run in your own infrastructure and are configured from {{site.konnect_short_name}}.
+{{site.ai_gateway}} runs in a single deployment mode: **hybrid**, with a {{site.konnect_short_name}}-managed control plane and self-managed data plane nodes. It is Konnect-first: configuration always originates in the {{site.konnect_short_name}} control plane, so there is no self-managed traditional (database-backed) or standalone DB-less deployment. Data plane nodes run in your own infrastructure and are configured from {{site.konnect_short_name}}.
 
 {% table %}
 columns:
