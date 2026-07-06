@@ -48,7 +48,7 @@ The available balance includes the following types of credits:
 A feature balance includes both restricted credits for that feature and unrestricted shared credits, because both are available to spend on it.
 Not all credit in a feature balance view is restricted to that feature.
 
-You can query only one feature key at a time.
+You can apply only one operator to `filter[feature_key]` per request.
 
 ## Restricting grants to features
 
@@ -75,7 +75,7 @@ rows:
 
 ## Querying by feature
 
-Use `filter[feature_key]` to scope a query to a specific feature.
+Use `filter[feature_key]` to scope a query to one or more features.
 The filter syntax is the same for the balance and transaction endpoints.
 
 <!--vale off-->
@@ -93,7 +93,7 @@ rows:
     returns: "All credits or transactions, regardless of feature."
   - operator: "`eq`"
     syntax: "`filter[feature_key][eq]=input_tokens`"
-    returns: "Credits or transactions for exactly `input_tokens`."
+    returns: "Credits or transactions relevant to `input_tokens`, including shared unrestricted credits."
   - operator: "`oeq`"
     syntax: "`filter[feature_key][oeq]=input_tokens,output_tokens`"
     returns: "Credits or transactions for any of the listed features."
