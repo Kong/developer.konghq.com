@@ -28,6 +28,7 @@ rows:
                 * Manage authenticating entities across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} in one place with principals
                 * Drive plugin and policy behavior with metadata attached to principals
                 * Set up an out-of-the-box authorization server
+      - blocks:
           - type: image
             config:
               url: /assets/images/konnect/kong-identity-hero.png
