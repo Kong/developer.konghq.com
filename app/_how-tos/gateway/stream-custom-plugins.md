@@ -119,6 +119,7 @@ custom_plugins:
       return WordReplacerHandler
 EOF
 ```
+{:data-test-step='block'}
 
 Where:
 * `custom_plugins.name`: A unique name for the plugin.
@@ -157,6 +158,7 @@ custom_plugins:
       return ReflectorHandler
 EOF
 ```
+{:data-test-step='block'}
 
 ## Configure the plugins
 

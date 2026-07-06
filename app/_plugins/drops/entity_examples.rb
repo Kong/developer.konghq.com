@@ -15,7 +15,7 @@ module Jekyll
 
       def data
         @data ||= EntityExample::Utils::VariableReplacer::DeckData.run(
-          data: Jekyll::Utils::HashToYAML.new(entities).convert,
+          data: requote_conditions(Jekyll::Utils::HashToYAML.new(entities).convert),
           variables: variables
         )
       end
@@ -30,6 +30,16 @@ module Jekyll
 
       def variables
         @variables ||= @config.fetch('variables', {})
+      end
+
+      private
+
+      def requote_conditions(yaml)
+        yaml.gsub(/^(\s+condition:\s+)'((?:[^']|'')*)'/) do
+          prefix = $1
+          inner = $2.gsub("''", "'").gsub('\\', '\\\\').gsub('"', '\\"')
+          "#{prefix}\"#{inner}\""
+        end
       end
     end
   end
