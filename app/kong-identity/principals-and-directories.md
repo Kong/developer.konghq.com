@@ -138,11 +138,13 @@ A single principal can have multiple identities, including multiple of the same 
 
 Principals centralize the concept of an authenticating entity across Kong products. 
 Each product has its own representation of who is authenticating.
-For example, {{site.base_gateway}} has Consumers.
+For example, {{site.base_gateway}} has Consumers and Consumer Groups:
+* **Consumers**: Attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. When a {{site.identity}}-compatible authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. This allows existing Consumer-scoped plugins to function while you migrate to principals.
+* **Consumer Groups**: Map a principal to one or more Consumer Groups by setting the reserved `consumer_groups` key in the principal's [metadata](#metadata) to a list of Consumer Group UUIDs. Consumer Groups have a many-to-many relationship with principals:
+  - The same group can map to many principals
+  - One principal can map to many groups.
 
-You can attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. 
-When an authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. 
-This allows existing Consumer-scoped plugins to function while you migrate to principals.
+  If the principal is also mapped to a Consumer and that Consumer belongs to its own Consumer Groups, the gateway loads the union of both sets into the request context. Only Consumer Groups that are defined in the same {{site.base_gateway}} as the control plane will be loaded into the request context.
 
 {% comment %}
 Each product has its own representation of who is authenticating: {{site.base_gateway}} has Consumers and {{site.dev_portal}} has applications:
