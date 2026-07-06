@@ -23,6 +23,8 @@ related_resources:
     url: /metering-and-billing/credits/consumption-and-expiration/
   - text: "Credit transaction history"
     url: /metering-and-billing/credits/transaction-history/
+  - text: "Feature filters"
+    url: /metering-and-billing/credits/feature-filters/
   - text: "Operational flows"
     url: /metering-and-billing/credits/operational-flows/
   - text: "Correctness guarantees"
@@ -116,6 +118,13 @@ For example, a USD grant increases the customer's USD credit balance, while a EU
 
 **Do not** merge currencies in user-facing balance displays unless your product explicitly converts them.
 Treat each currency as a separate balance.
+
+## Feature balance queries
+
+You can query a customer's credit balance for a specific product feature using `filter[feature_key]`.
+A feature balance includes unrestricted shared credits as well as any credits restricted to that feature.
+
+For the full reference on balance filters and how feature restrictions affect balance views, see [Feature filters](/metering-and-billing/credits/feature-filters/).
 
 ## Expiration and balance reads
 
