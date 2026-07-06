@@ -13,7 +13,7 @@ services:
       - OPENAI_API_KEY=${DECK_OPENAI_API_KEY}
       - OPENAI_MODEL=gpt-5-mini
       
-      # Route OpenAI calls through {{site.base_gateway}}
+      # Route OpenAI calls through {{site.ai_gateway}}
       - OPENAI_BASE_URL=http://host.docker.internal:8000/openai
       - HTTP_HEADERS={"Authorization": "Bearer ${DECK_OAUTH_TOKEN}"}
       
