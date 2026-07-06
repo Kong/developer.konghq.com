@@ -10,7 +10,7 @@ permalink: /ai-gateway/architecture/
 breadcrumbs:
   - /ai-gateway/
 description: |
-  Understand how {{site.ai_gateway}} distributes configuration from a {{site.konnect_short_name}} control plane to data plane nodes, and how AI-native concepts become actionable runtime configuration.
+  Understand the architecture of {{site.ai_gateway}}, including its control plane and data plane, how AI entities map to {{site.base_gateway}} configuration, and its deployment and multi-tenancy topologies.
 tools:
   - konnect-api
 ---
@@ -19,11 +19,9 @@ tools:
 
 {{site.ai_gateway}} uses a hybrid deployment model, separating the control plane from the data plane.
 
-* **Control plane ({{site.konnect_short_name}})**: Fully managed by Kong in {{site.konnect_short_name}}, the control plane provides a centralized UI and API to configure AI Models, AI Providers, AI Agents, AI MCP Servers, AI Policies, and AI Consumers. The control plane generates data plane certificates and distributes configuration to registered nodes. It does not process or see the actual LLM, MCP, or A2A message payloads flowing through the data plane.
+* **Control plane (fully managed by {{site.konnect_short_name}}, Kong's cloud platform)**: provides a centralized UI and API to configure AI entities (AI Providers, AI Models, AI Agents, AI MCP Servers, AI Policies, AI Consumers, and more), and distributes that configuration — along with the mutual TLS (mTLS) certificates data plane nodes use to authenticate — to registered nodes. As in {{site.base_gateway}} hybrid mode, the control plane is never in the data path: by default it doesn't see the LLM, Model Context Protocol (MCP), or Agent-to-Agent (A2A) request/response payloads flowing through the data plane. See [Node registration and synchronization](#node-registration-and-synchronization) for the opt-in settings that can forward payload content to {{site.konnect_short_name}}.
 
-* **Data plane (self-managed)**: Proxy nodes running in your infrastructure that intercept AI traffic (LLM requests, MCP protocol traffic, and Agent-to-Agent communication), evaluate it against policies from the control plane, and proxy allowed traffic to upstream services. Nodes maintain a persistent connection to the control plane.
-
-Data plane nodes periodically pull configuration updates from the control plane and report their `config_hash` to verify synchronization. Nodes stream telemetry (analytics, logs, health) back to {{site.konnect_short_name}}.
+* **Data plane (self-managed)**: proxy nodes running in your own infrastructure that intercept AI traffic (LLM requests, MCP traffic, and A2A communication), evaluate it against policies distributed from the control plane, and proxy allowed traffic to upstream services.
 
 The following diagram illustrates the high-level architecture:
 
@@ -44,7 +42,7 @@ subgraph Customer["Self-managed<br/>(on-prem or cloud)"]
   DP["{{site.ai_gateway}}<br/>data plane node(s)"]
 end
 
-DP -->|LLM request| Provider["AI Provider<br/>OpenAI, Anthropic, Bedrock"]
+DP -->|LLM request| Provider["AI Provider"]
 DP -->|MCP request| MCPs["Upstream MCP server"]
 DP -->|A2A request| Agent["Upstream AI agent"]
 
@@ -57,11 +55,15 @@ style Customer stroke-dasharray:3
 {% endmermaid %}
 <!--vale on-->
 
-_**Figure 1**: The control plane is fully managed in {{site.konnect_short_name}}; the self-managed data plane pulls configuration and certificates from it and streams telemetry (analytics, logs, health) back to it. The data plane proxies three traffic types (LLM, MCP, and Agent-to-Agent) to their respective upstreams. The control plane never sees request payloads._
+**Figure 1**: **Solid arrows** are **user data traffic** — LLM, MCP, and A2A requests flowing through the data plane to upstream services. **Dashed arrows** are **control-plane** traffic — configuration and certificates pulled from {{site.konnect_short_name}}, and telemetry streamed back to it. The control plane never sits in the path of user data traffic.
+
+### AI Gateway and Data Plane Node
+
+An **{{site.ai_gateway}} instance** is the top-level resource you create in {{site.konnect_short_name}} to hold a set of AI entities. Each proxy running in the data plane is a data plane node: a {{site.base_gateway}} (Kong's general-purpose API gateway) runtime instance running in AI Gateway mode, registered to exactly one {{site.ai_gateway}} instance to receive its configuration (see [Multi-tenancy and isolation](#multi-tenancy-and-isolation)). See [Node registration and synchronization](#node-registration-and-synchronization) for how nodes authenticate, stay in sync, and report telemetry.
 
 ## {{site.ai_gateway}} entities
 
-The {{site.ai_gateway}} control plane is organized around a set of entities, each with a specific role. All entities are scoped to a single {{site.ai_gateway}} instance, which stores configuration metadata and endpoints for data plane nodes to connect to. An organization can run multiple {{site.ai_gateway}} instances for per-team, per-environment, or per-region isolation.
+The {{site.ai_gateway}} control plane is organized around a set of entities, each with a specific role. All entities are scoped to a single {{site.ai_gateway}} instance, which stores configuration metadata and endpoints for data plane nodes to connect to. An organization can run multiple {{site.ai_gateway}} instances for per-team, per-environment, or per-region isolation. The {{site.ai_gateway}} instance itself and its data plane nodes — introduced above — describe deployment topology rather than a configurable resource, so they aren't listed as rows below. AI Vault and AI Data Plane Certificate expose {{site.base_gateway}}'s existing vault-reference and hybrid-mode client-certificate mechanisms, scoped to an {{site.ai_gateway}} instance, rather than new underlying credential types.
 
 {% table %}
 columns:
@@ -79,7 +81,7 @@ rows:
       TBA
   - entity: "[AI Model](/ai-gateway/entities/ai-model/)"
     description: |
-      Declares which upstream AI Providers to route to and which capabilities to expose (generate, embeddings, agentic, etc.). Handles load balancing, retry logic, format conversion, and logging. The primary entry point for LLM traffic.
+      Declares which upstream AI Providers to route to and which capabilities to expose — chat completions, embeddings, image, audio, video, and realtime. Handles load balancing, retry logic, and format conversion, and emits the usage and cost telemetry that attached AI Policy logging plugins consume. The primary entry point for AI traffic.
     references: |
       TBA
   - entity: "[AI Agent](/ai-gateway/entities/ai-agent/)"
@@ -89,7 +91,7 @@ rows:
       TBA
   - entity: "[AI MCP Server](/ai-gateway/entities/ai-mcp-server/)"
     description: |
-      Converts REST APIs into MCP tools, proxies upstream MCP traffic, or aggregates tools from multiple sources.
+      Depending on how it's configured, converts REST APIs into MCP tools, proxies an upstream MCP server's full protocol (including sessions and streaming), or aggregates tools from multiple REST and MCP sources into a single MCP endpoint. Each AI MCP Server operates in one mode at a time.
     references: |
       TBA
   - entity: "[AI Policy](/ai-gateway/entities/ai-policy/)"
@@ -99,7 +101,9 @@ rows:
       TBA
   - entity: "[AI Consumer](/ai-gateway/entities/ai-consumer/)"
     description: |
-      Represents a downstream client identity for authentication and access control. Holds credentials (API key or OAuth) and can be assigned to AI Consumer Groups and have policies attached.
+      Represents a downstream client identity for authentication and access control. Holds credentials (API key) and can be assigned to AI Consumer Groups and have policies attached.
+
+      [⚠️ UNVERIFIED: the entity schema also accepts an OAuth credential type, but it isn't converted into working data-plane configuration as of 2.0.0 — confirm status before publishing]
     references: |
       TBA
   - entity: "[AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)"
@@ -123,41 +127,31 @@ rows:
 
 {{site.ai_gateway}} proxies three distinct types of traffic:
 
-- **LLM traffic**: Client requests to AI Models (chat completions, embeddings, etc.) routed to upstream AI Providers (OpenAI, Anthropic, Bedrock, etc.). Handles format conversion, credential injection, load balancing, and cost/token tracking.
+- **LLM traffic**: Client requests to AI Models — chat completions and other text generation, embeddings, and additional modalities such as image generation, audio (speech and transcription), video generation, and realtime streaming — routed to upstream AI Providers (OpenAI, Anthropic, Bedrock, etc.). Handles format conversion, credential injection, load balancing, and cost/token tracking.
 
-- **MCP traffic**: Model Context Protocol requests from MCP clients. AI MCP Servers act as MCP endpoints, converting REST APIs into tools or proxying upstream MCP servers. Supports session management, tool filtering, and aggregation.
+- **MCP traffic**: Model Context Protocol requests from MCP clients. AI MCP Servers act as MCP endpoints — proxying an upstream MCP server's full protocol, converting REST APIs into MCP tools, or aggregating tools from multiple sources into one endpoint — with session management and tool-level access control.
 
 - **A2A traffic**: Agent-to-Agent protocol traffic between AI Agents. AI Agents act as proxies with optional A2A protocol awareness, emitting structured telemetry tied to A2A semantics (tasks, messages, agents).
 
 All three traffic types flow through the same data plane infrastructure and benefit from the same authentication, observability, and policy systems.
 
-<!-- THIS SECTION IS TBD: CAN WE FRAME IT ANYHOW TO MAKE 100% CLEAR WE ARE KONNECT-FIRST
-
 ## Configuration materialization
 
-When you create an AI entity in {{site.konnect_short_name}}, the control plane materializes it into Kong runtime primitives (Routes, Services, Plugins, Consumers) that the data plane executes.
-
-[**PLACEHOLDER**: Description of how AI Models expand into Services + Routes + Plugins, how AI Policies materialize as scoped plugins, how AI Providers inject credentials, and how AI Consumers and AI Consumer Groups map to Kong Consumer primitives] -->
+When you create an AI entity in {{site.konnect_short_name}}, the control plane translates it into standard {{site.base_gateway}} primitives — Routes, Services, and Plugins (such as `ai-proxy-advanced`, `ai-mcp-proxy`, and `ai-a2a-proxy`) — and Consumers, before distributing the configuration to data planes. Data planes execute AI traffic through this same Route/Service/Plugin model used for all {{site.base_gateway}} traffic; there's no separate AI-native runtime engine on the data plane.
 
 ## Endpoint mapping and routing
 
-[**PLACEHOLDER**: How {{site.ai_gateway}} routes requests to models and upstream providers. Address:
-- How AI Model paths are exposed on the data plane
-- How upstream provider endpoints are resolved and authenticated
-- Hostname/port mapping for multi-provider scenarios
-- Path rewriting and format conversion
-- Load balancing target selection and health checks
-- Connection pooling and keep-alive behavior]
+AI Model endpoints are exposed as ordinary {{site.base_gateway}} Routes with the AI Proxy Advanced plugin attached, which translates the incoming request into the target provider's format and back. Each configured target carries its own provider credentials — static API keys, AWS IAM/SigV4, Azure managed identity, or a GCP service account — which the data plane injects or signs automatically on the upstream call. When multiple targets are configured for a model, the data plane distributes traffic using a configurable load-balancing strategy — familiar strategies such as round-robin, least-connections, and consistent hashing, plus AI-specific strategies (weighted priority/failover, latency- or cost-based, and semantic routing) — and automatically routes around failing targets using a passive circuit breaker (configurable failure-count and timeout thresholds) rather than active health probes. Connections to upstream providers are reused by default for efficiency, with reuse disabled only when traffic is routed through a configured forward proxy.
+
+[⚠️ UNVERIFIED: exact connection-pool sizing and timeout behavior — governed by the underlying OpenResty socket pool, not a documented tunable]
 
 ## Node registration and synchronization
 
-Data plane nodes authenticate to the control plane using **AI Data Plane Certificates** (X.509 credentials). When a node starts, it presents its certificate, registers itself, and pulls the latest configuration.
+Data plane nodes authenticate to the control plane using **AI Data Plane Certificates** — the same mTLS client-certificate mechanism used by {{site.base_gateway}} hybrid-mode data planes. When a node starts, it presents its certificate, registers itself, and pulls the latest configuration.
 
-Each node stores the `config_hash` reported by the control plane. When the hash changes (because an entity was created, updated, or deleted), nodes download the updated configuration. Nodes compare their local `config_hash` to the {{site.ai_gateway}}'s `config_hash` to verify they're in sync.
+Configuration changes are push-triggered: the control plane notifies connected nodes as soon as a change is available, and each node pulls the resulting delta (identified by a `config_hash`). Nodes and the control plane also exchange the same 30-second keepalive ping used by {{site.base_gateway}} hybrid mode, confirming the connection is alive. If the control plane doesn't hear from a node for 45 seconds (1.5× the ping interval), it marks the node disconnected; on connection loss, a node retries with a randomized 5-10 second backoff. {{site.ai_gateway}} doesn't currently support gradual or canary configuration rollout — nodes apply a configuration change as soon as they receive it.
 
-Data plane nodes also stream telemetry (analytics, logs, health) back to the control plane's telemetry endpoint, powering {{site.konnect_short_name}} Explorer, Dashboards, and attached logging policies.
-
-[**PLACEHOLDER**: Polling interval, gradual rollout strategy, handling of stale nodes, connection loss recovery]
+Data plane nodes also stream telemetry (analytics, logs, health) back to {{site.konnect_short_name}}, powering Explorer, Dashboards, and attached logging policies. By default, this telemetry doesn't include LLM, MCP, or A2A request/response bodies — only usage, cost, and latency metadata. Two opt-in settings change that: `log_payloads` on the AI Proxy Advanced, AI MCP Proxy, and AI A2A Proxy plugins forwards full request/response bodies to the log serializer that attached logging policies (including {{site.konnect_short_name}}-bound ones) read; `log_blocked_content` on AI Policy guardrails forwards only the specific content that triggered a block. Both are off by default.
 
 ## Multi-tenancy and isolation
 
@@ -172,27 +166,31 @@ columns:
 rows:
   - aspect: Entity scope
     behavior: |
-      AI Models, AI Providers, AI Policies created under one AI Gateway are not visible to another.
+      AI Models, AI Providers, AI Policies created under one {{site.ai_gateway}} instance are not visible to another.
   - aspect: Audit trails
     behavior: |
-      Each AI Gateway tracks its own change history.
-  - aspect: Telemetry endpoints
+      Each {{site.ai_gateway}} instance tracks its own change history.
+
+      [⚠️ UNVERIFIED: no audit-log mechanism found in koko-private source during this review — likely a separate Konnect platform service; confirm before publishing]
+  - aspect: Telemetry
     behavior: |
-      Each AI Gateway receives analytics and logs from its own data plane nodes.
+      Analytics and logs from an {{site.ai_gateway}} instance's data plane nodes are attributed to that instance through a shared {{site.konnect_short_name}} ingestion pipeline, scoped by the connecting node's identity — not a dedicated endpoint per instance.
   - aspect: Data plane pools
     behavior: |
-      Data planes register under a single AI Gateway and pull configuration from only that AI Gateway.
+      Data plane nodes register under a single {{site.ai_gateway}} instance and pull configuration from only that instance.
 {% endtable %}
 
 This enables per-team, per-environment, or per-region isolation without complex RBAC.
 
 ## Isolation from {{site.base_gateway}}
 
-An {{site.ai_gateway}} has its own entity namespace, data plane pool, credentials, and analytics. It does not share configuration with {{site.base_gateway}} nodes or classic Kong Gateway consumers and plugins. {{site.ai_gateway}} and {{site.base_gateway}} can run in the same {{site.konnect_short_name}} workspace without interference.
+An {{site.ai_gateway}} instance has its own entity namespace, data plane pool, credentials, and analytics. It does not share configuration with {{site.base_gateway}} nodes or classic {{site.base_gateway}} consumers and plugins. {{site.ai_gateway}} and {{site.base_gateway}} can run in the same {{site.konnect_short_name}} organization without interference.
+
+[⚠️ UNVERIFIED: whether they can share a single {{site.konnect_short_name}} Workspace — koko-private's Workspace resource appears to explicitly exclude AI Gateway–typed clusters, suggesting isolation happens above or outside the Workspace construct; confirm exact scoping with the Konnect platform team before publishing]
 
 ## Deployment topologies
 
-{{site.ai_gateway}} runs in a single deployment mode: **hybrid**, with a {{site.konnect_short_name}}-managed control plane and self-managed data plane nodes. It is Konnect-first: configuration always originates in the {{site.konnect_short_name}} control plane, so there is no self-managed traditional (database-backed) or standalone DB-less deployment. Data plane nodes run in your own infrastructure and are configured from {{site.konnect_short_name}}.
+{{site.ai_gateway}} runs in a single deployment mode: **hybrid**, with a {{site.konnect_short_name}}-managed control plane and self-managed data plane nodes. It is Konnect-first: configuration always originates in the {{site.konnect_short_name}} control plane, so self-managed traditional (database-backed) or standalone DB-less deployment isn't currently supported. Data plane nodes run in your own infrastructure and are configured from {{site.konnect_short_name}}, which they must be able to reach — there's no offline or fully self-hosted control plane option.
 
 {% table %}
 columns:
@@ -220,8 +218,8 @@ rows:
 Within hybrid mode, size the data plane to your traffic and availability needs:
 
 - **Single node**: one data plane node per environment. Suitable for development, testing, or low-volume workloads.
-- **Multi-node pool**: multiple stateless data plane nodes behind a load balancer, all pulling the same configuration from one {{site.ai_gateway}}. Nodes run active-active with no leader, so you scale out and handle failover by adding or removing nodes. Run pools across availability zones or regions for locality and resilience.
+- **Multi-node pool**: multiple stateless data plane nodes behind a load balancer, all pulling the same configuration from one {{site.ai_gateway}} instance. Nodes run active-active with no leader, so you scale out and handle failover by adding or removing nodes. Run pools across availability zones or regions for locality and resilience.
 
-Each {{site.ai_gateway}} has its own data plane pool (see [Multi-tenancy and isolation](#multi-tenancy-and-isolation)): a node registers with a single {{site.ai_gateway}} and pulls configuration from only that {{site.ai_gateway}}.
+Each {{site.ai_gateway}} instance has its own data plane pool (see [Multi-tenancy and isolation](#multi-tenancy-and-isolation)): a node registers with a single {{site.ai_gateway}} instance and pulls configuration from only that instance.
 
 For the underlying hybrid-mode mechanics, certificate management, and disaster-recovery guidance shared with {{site.base_gateway}}, see [Kong Gateway deployment topologies](/gateway/deployment-topologies/).
