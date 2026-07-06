@@ -77,6 +77,8 @@ rows:
                 url: /gateway/openid-connect/
               - text: Plugin reference
                 url: /plugins/openid-connect/
+              - text: Use principals
+                url: /how-to/authenticate-oauth-clients-with-kong-identity/
       - blocks:
         - type: card
           config:
@@ -186,6 +188,16 @@ rows:
             cta:
               text: Get started
               url: /how-to/authenticate-principals-with-key-auth/
+      - blocks:
+        - type: card
+          config:
+            title: Authenticate principals with OIDC authentication
+            description: |
+              Use the OpenID Connect plugin to map authenticated OAuth clients to {{site.identity}} principals.
+            icon: /assets/icons/identity.svg
+            cta:
+              text: Get started
+              url: /how-to/authenticate-oauth-clients-with-kong-identity/
 
   - header:
       type: h2
