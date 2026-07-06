@@ -23200,7 +23200,7 @@
     "kong-ee": [
       {
         "message": "**Conditional Plugin Execution**: The plugin `condition` field now uses\nCommon Expression Language (CEL) with broader operator and type\nsupport, aligned across UI, Control Plane, and Data Plane.  Refer to\nthe official documentation for the full syntax, supported variables,\noperators, and types.",
-        "type": "Breaking Change",
+        "type": "feature",
         "scope": "Core"
       },
       {
