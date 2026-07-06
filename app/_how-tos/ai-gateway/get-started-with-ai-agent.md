@@ -104,6 +104,7 @@ body:
       paths:
         - /a2a
       methods:
+        - GET
         - POST
       protocols:
         - http
