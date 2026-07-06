@@ -37,7 +37,10 @@ faqs:
       * The UUID of the authenticated/identified principal
       * The display name of the authenticated/identified principal
       * Metadata keys and values associated with the authenticated/identified principal
-
+  - q: Can using principals to authenticate introduce additional latency over Consumers?
+     a: |
+       Yes. Because the credentials and metadata for principals are stored in {{site.konnect_short_name}}, The first time a data plane receives a request with a particular credential or lookup key, it authenticates to {{site.konnect_short_name}} to retrieve it. This request always goes to the {{site.konnect_short_name}} region where you host the control plane. This first lookup adds latency that varies with network conditions. Kong caches principals and credentials locally for the next lookups.
+  
 related_resources:
   - text: "{{site.identity}}"
     url: /kong-identity/
