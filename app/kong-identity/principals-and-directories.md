@@ -169,7 +169,7 @@ Each product has its own representation of who is authenticating: {{site.base_ga
 
 ### Metadata
 
-Metadata is a set of key-value pairs associated with a principal. {site.identity}} authenticates or looks up a principal, then makes the metadata available in the request context of a {{site.base_gateway}} or {{site.event_gateway_short}}.
+Metadata is a set of key-value pairs associated with a principal. {{site.identity}} authenticates or looks up a principal, then makes the metadata available in the request context of a {{site.base_gateway}} or {{site.event_gateway_short}}.
 
 You can use metadata to configure how a gateway behaves when that principal is authenticated to it.
 For example, a Request Termination plugin can block access only when `principal.metadata.business_unit == "payments"`.
