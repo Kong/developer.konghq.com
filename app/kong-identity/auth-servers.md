@@ -7,7 +7,7 @@ products:
     - identity
     - konnect
 
-permalink: /identity/
+permalink: /identity/auth-servers/
 works_on:
     - konnect
 search_aliases:
