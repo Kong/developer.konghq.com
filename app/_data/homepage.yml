@@ -1,177 +1,201 @@
 title: Kong Developer
 description: "Discover Kong's tools, APIs, and tutorials to help you build, secure, and scale your services."
 
-sections:
-  - title: Applications
-    items:
-      - title: Dev Portal
-        icon: /assets/icons/dev-portal.svg
-        icon_alt: Dev Portal icon
-        description: Empower API consumers with self-service API documentation and developer tools
-        links:
-          - text: Overview
-            url: /dev-portal/
-          - text: All documentation
-            url: /index/dev-portal/
+hero:
+  eyebrow: "Kong Developer · Documentation"
+  title_italic: "accomplish?"
+  chips:
+    - "Set up rate limiting"
+    - "Publish an API to Dev Portal"
+    - "Configure OIDC auth"
+    - "Deploy with Kubernetes"
+    - "Connect an AI model"
+    - "Trace API requests"
 
-      - title: Observability
-        icon: /assets/icons/analytics.svg
-        icon_alt: Analytics icon
-        description: "Gain visibility into API performance and usage patterns with {{site.konnect_short_name}}'s {{site.observability}}"
-        links:
-          - text: Overview
-            url: /observability/
-          - text: All documentation
-            url: /index/observability/
+agents_section:
+  eyebrow: "01 · For agents & the CLI"
+  title: "First-class tools for builders and agents."
+  title_italic: "tools"
+  cli_cards:
+    - tool: decK
+      icon: /assets/icons/terminal.svg
+      description: "Manage Kong Gateway configuration as code. Diff, sync, dump, validate."
+      install: "brew install kong/deck/deck"
+      command: "deck gateway sync kong.yaml"
+      docs_url: /deck/
+    - tool: kongctl
+      icon: /assets/icons/terminal.svg
+      description: "Control Konnect from the terminal. Manage orgs, control planes, and plugins."
+      install: "brew install kong/tap/kongctl"
+      command: "kongctl get control-planes"
+      docs_url: /kongctl/
+    - tool: Inso CLI
+      icon: /assets/icons/terminal.svg
+      description: "Run API tests, lint OpenAPI specs, and generate config — straight from CI."
+      install: "npm install -g insomnia-inso"
+      command: "inso lint spec petstore.yaml"
+      docs_url: /inso-cli/
+  featured_cards:
+    - id: mcp
+      title: "Konnect MCP server"
+      badge: "Featured"
+      description: "Give Claude, Cursor, and ChatGPT live, scoped access to your Konnect APIs, control planes, and analytics."
+      endpoint: "https://mcp.konghq.com/sse"
+      cta_text: "Connect Konnect MCP"
+      cta_url: /konnect-platform/konnect-mcp/
+      icon: /assets/icons/mcp.svg
+      wide: true
+    - id: skills
+      title: "Skill Hub"
+      description: "Curated, copy-pasteable agent skills for common Kong workflows. Built on the Model Context Protocol."
+      cta_url: /skills/
+      icon: /assets/icons/brain.svg
+      wide: false
+    - id: cookbooks
+      title: "AI Cookbooks"
+      description: "End-to-end recipes for agents on top of Kong AI Gateway and Konnect."
+      cta_url: /ai-gateway/
+      icon: /assets/icons/book.svg
+      wide: false
 
-      - title: Catalog
-        icon: /assets/icons/service-hub.svg
-        icon_alt: Service Hub icon
-        description: Manage and discover services within the Kong ecosystem effortlessly
-        links:
-          - text: Overview
-            url: /catalog/
-          - text: All documentation
-            url: /index/catalog/
+products_section:
+  eyebrow: "02 · The platform"
+  title: "From edge to agent."
+  title_italic: "agent."
+  categories:
+    - name: Connectivity
+      items:
+        - title: Kong Gateway
+          icon: /assets/icons/gateway.svg
+          description: "A lightweight, fast, and flexible cloud-native API gateway."
+          links:
+            - text: Overview
+              url: /gateway/
+            - text: Install
+              url: /gateway/install/
+            - text: How-to guides
+              url: /how-to/?products=gateway
+            - text: All documentation
+              url: /index/gateway/
+        - title: AI Gateway
+          icon: /assets/icons/ai.svg
+          description: "Connectivity and governance layer for modern AI-native applications built on top of Kong Gateway."
+          links:
+            - text: Overview
+              url: /ai-gateway/
+            - text: Install
+              url: /ai-gateway/get-started/
+            - text: How-to guides
+              url: /how-to/?products=ai-gateway
+            - text: All documentation
+              url: /index/ai-gateway/
+        - title: Event Gateway
+          icon: /assets/icons/event.svg
+          description: "A Kafka-native gateway built for governance, security, and cost-efficient use of Kafka."
+          links:
+            - text: Overview
+              url: /event-gateway/
+            - text: Install
+              url: /event-gateway/get-started/
+            - text: How-to guides
+              url: /how-to/?products=event-gateway
+            - text: All documentation
+              url: /index/event-gateway/
+        - title: Kong Mesh
+          icon: /assets/icons/mesh.svg
+          description: "Modern service mesh built on top of Kuma and Envoy, designed for simplicity, scalability, and security."
+          links:
+            - text: Overview
+              url: /mesh/
+            - text: Install
+              url: /mesh/#install-kong-mesh
+            - text: How-to guides
+              url: /how-to/?products=mesh
+            - text: All documentation
+              url: /index/mesh/
+        - title: Ingress Controller
+          icon: /assets/icons/kubernetes.svg
+          description: "Kubernetes-native ingress, declarative APIs."
+          links:
+            - text: Overview
+              url: /kubernetes-ingress-controller/
+            - text: How-to guides
+              url: /how-to/?products=kubernetes-ingress-controller
+            - text: All documentation
+              url: /index/kubernetes-ingress-controller/
+        - title: Operator
+          icon: /assets/icons/kubernetes.svg
+          description: "Deploy and manage Kong on Kubernetes using Kubernetes resources."
+          links:
+            - text: Overview
+              url: /operator/
+            - text: Install
+              url: /operator/get-started/gateway-api/install/
+            - text: How-to guides
+              url: /how-to/?products=operator
+            - text: All documentation
+              url: /index/operator/
+    - name: Applications
+      items:
+        - title: Dev Portal
+          icon: /assets/icons/dev-portal.svg
+          description: "Empower API consumers with self-service API documentation and developer tools."
+          links:
+            - text: Overview
+              url: /dev-portal/
+            - text: All documentation
+              url: /index/dev-portal/
+        - title: Observability
+          icon: /assets/icons/analytics.svg
+          description: "Gain visibility into API performance and usage patterns with real-time analytics."
+          links:
+            - text: Overview
+              url: /observability/
+            - text: All documentation
+              url: /index/observability/
+        - title: Catalog
+          icon: /assets/icons/service-hub.svg
+          description: "Manage and discover services within the Kong ecosystem effortlessly."
+          links:
+            - text: Overview
+              url: /catalog/
+            - text: All documentation
+              url: /index/catalog/
+        - title: Insomnia
+          icon: /assets/icons/insomnia/insomnia.svg
+          description: "Design, debug, test, and mock APIs locally, on Git, or cloud."
+          links:
+            - text: Overview
+              url: /insomnia/
+            - text: How-to guides
+              url: /how-to/?products=insomnia
+            - text: All documentation
+              url: /index/insomnia
+        - title: "Metering & Billing"
+          icon: /assets/icons/metering-and-billing.svg
+          description: "Meter and monetize the entire API and AI connectivity data path with usage-based billing and entitlements."
+          links:
+            - text: "Metering & Billing overview"
+              url: /metering-and-billing/
+            - text: All documentation
+              url: /index/metering-and-billing/
+        - title: "{{site.identity}}"
+          icon: /assets/icons/identity.svg
+          description: "{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access."
+          links:
+            - text: "{{site.identity}} overview"
+              url: /identity/
+            - text: All documentation
+              url: /index/identity/
 
-      - title: Insomnia
-        icon: /assets/icons/insomnia/insomnia.svg
-        icon_alt: Insomnia icon
-        description: "Design, debug, test, and mock APIs locally, on Git, or cloud"
-        links:
-          - text: Overview
-            url: /insomnia/
-          - text: How-to guides
-            url: /how-to/?products=insomnia
-          - text: All documentation
-            url: /index/insomnia
-
-      - title: "Metering & Billing"
-        icon: /assets/icons/analytics.svg
-        icon_alt: Metering icon
-        description: Meter and monetize the entire API and AI connectivity data path with usage-based billing and entitlements.
-        links:
-          - text: "Metering & Billing overview"
-            url: /metering-and-billing/
-          - text: All documentation
-            url: /index/metering-and-billing/
-      
-      - title: "{{site.identity}}"
-        icon: /assets/icons/identity.svg
-        icon_alt: Kong Identity icon
-        description: "{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access."
-        links:
-          - text: "{{site.identity}} overview"
-            url: /identity/
-          - text: All documentation
-            url: /index/identity/
-
-  - title: Connectivity
-    items:
-      - title: Kong Gateway
-        icon: /assets/icons/gateway.svg
-        icon_alt: Kong Gateway icon
-        description: "A lightweight, fast, and flexible cloud-native API gateway"
-        links:
-          - text: Overview
-            url: /gateway/
-          - text: Install
-            url: /gateway/install/
-          - text: How-to guides
-            url: /how-to/?products=gateway
-          - text: All documentation
-            url: /index/gateway/
-
-      - title: AI Gateway
-        icon: /assets/icons/ai.svg
-        icon_alt: Kong AI Gateway icon
-        description: Connectivity and governance layer for modern AI-native applications built on top of Kong Gateway
-        links:
-          - text: Overview
-            url: /ai-gateway/
-          - text: Install
-            url: /ai-gateway/get-started/
-          - text: How-to guides
-            url: /how-to/?products=ai-gateway
-          - text: All documentation
-            url: /index/ai-gateway/
-
-      - title: Kong Mesh
-        icon: /assets/icons/mesh.svg
-        icon_alt: Kong Mesh icon
-        description: "Modern service mesh built on top of Kuma and Envoy, designed for simplicity, scalability, and security"
-        links:
-          - text: Overview
-            url: /mesh/
-          - text: Install
-            url: /mesh/#install-kong-mesh
-          - text: How-to guides
-            url: /how-to/?products=mesh
-          - text: All documentation
-            url: /index/mesh/
-
-      - title: Operator
-        icon: /assets/icons/kubernetes.svg
-        icon_alt: Kong Operator icon
-        description: Deploy and manage Kong on Kubernetes using Kubernetes resources
-        links:
-          - text: Overview
-            url: /operator/
-          - text: Install
-            url: /operator/get-started/gateway-api/install/
-          - text: How-to guides
-            url: /how-to/?products=operator
-          - text: All documentation
-            url: /index/operator/
-
-      - title: Event Gateway
-        icon: /assets/icons/event.svg
-        icon_alt: Kong Native Event Proxy icon
-        description: "A Kafka-native Gateway built for governance, security, and cost-efficient use of Kafka"
-        links:
-          - text: Overview
-            url: /event-gateway/
-          - text: Install
-            url: /event-gateway/get-started/
-          - text: How-to guides
-            url: /how-to/?products=event-gateway
-          - text: All documentation
-            url: /index/event-gateway/
-
-  - title: Konnect Platform
-    items:
-      - title: Platform auth
-        icon: /assets/icons/security.svg
-        icon_alt: Platform auth icon
-        description: Secure the Konnect Platform using single sign-on with any SAML and OIDC provider or use built-in authentication
-        links:
-          - text: Konnect platform authentication
-            url: /konnect-platform/authentication/
-          - text: Konnect SSO
-            url: /konnect-platform/sso/
-          - text: Teams and roles
-            url: /konnect-platform/teams-and-roles/
-
-      - title: Org management
-        icon: /assets/icons/organization.svg
-        icon_alt: Organization icon
-        description: Streamline and govern organization-wide API access and operations
-        links:
-          - text: Account management
-            url: /konnect-platform/account/
-          - text: Geographic regions
-            url: /konnect-platform/geos/
-          - text: All org management references
-            url: /index/konnect-platform/#org-management
-
-      - title: Audit logs
-        icon: /assets/icons/edit.svg
-        icon_alt: Audit logs icon
-        description: Detect and respond to potential security incidents when they occur
-        links:
-          - text: Collect audit logs for Konnect
-            url: /how-to/collect-audit-logs/
-          - text: Collect audit logs for Dev Portal
-            url: /how-to/collect-dev-portal-audit-logs/
-          - text: Konnect audit logs reference
-            url: /konnect-platform/audit-logs/
+specs_section:
+  eyebrow: "03 · API specifications"
+  title: "API specifications for every use case."
+  title_italic: "API specifications"
+  featured_apis:
+    - "Konnect Control Planes"
+    - "Konnect Event Gateway"
+    - "Gateway Admin - EE"
+    - "Konnect Developer Portal"
+    - "Kong Identity"
+    - "Metering & Billing"

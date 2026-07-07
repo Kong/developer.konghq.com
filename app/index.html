@@ -6,76 +6,179 @@ llm: false
 edit_and_issue_links: false
 ---
 
-<div class="flex flex-col gap-12 w-full pb-36">
+{%- assign hp = site.data.homepage -%}
+
+<div class="flex flex-col gap-20 w-full pb-36 landing-page">
+
+    <!-- HERO -->
     <div class="flex justify-between gap-[60px] flex-col md:flex-row">
         <div class="flex flex-col gap-8 pt-24">
+            <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ hp.hero.eyebrow }}</p>
             <div class="flex flex-col gap-2">
                 <h1 class="font-extrabold text-[40px] leading-[60px] [contain:layout:style]">
-                {{ site.data.homepage.title | liquify }}
+                    What do you want to <em class="text-brand not-italic">{{ hp.hero.title_italic }}</em>
                 </h1>
-                <span class="leading-7">{{ site.data.homepage.description | liquify }}</span>
+                <span class="leading-7">{{ hp.description | liquify }}</span>
             </div>
-            <div class="flex flex-col gap-2">
-                <div class="flex gap-2 bg-secondary rounded-md border border-primary py-2 px-4 items-center lg:w-3/5 cursor-pointer ask-ai-button">
+            <div class="flex flex-col gap-3">
+                <div class="flex gap-2 bg-secondary rounded-md border border-primary py-2 px-4 items-center cursor-pointer ask-ai-button">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 12.0884V12.4355C15.7128 12.4355 14.5598 16.2296 14.5598 19.3252H14.2229C14.2229 16.2296 12.8732 12.4355 8.78272 12.4355V12.0884C13.497 12.0884 14.2229 8.29432 14.2229 5.19878H14.5598C14.5598 8.29432 15.2977 12.0884 20 12.0884ZM7.28629 11.0361C7.28629 9.27503 7.94267 7.11656 10.3813 7.11656V6.91952C7.70577 6.91952 7.28629 4.76104 7.28629 3H7.09502C7.09502 4.76104 6.68206 6.91952 4 6.91952V7.11656C6.32779 7.11656 7.09502 9.27503 7.09502 11.0361H7.28629ZM9.21089 14.1529H9.04788C9.04788 15.6531 8.69578 17.4925 6.41038 17.4925V17.6604C8.39367 17.6604 9.04788 19.4998 9.04788 21H9.21089C9.21089 19.4998 9.76948 17.6604 11.8484 17.6604V17.4925C9.56843 17.4925 9.21089 15.6531 9.21089 14.1529Z" fill="rgb(var(--color-text-secondary)"/>
                     </svg>
                     <span class="text-sm">Ask AI for concepts, guides, and tutorials</span>
                 </div>
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="text-xs text-terciary font-mono">Try</span>
+                    {%- for chip in hp.hero.chips -%}
+                    <button class="ask-ai-button text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer">{{ chip }}</button>
+                    {%- endfor -%}
+                </div>
                 <span class="text-sm"><a href="/sitemap/">View all Kong documentation</a></span>
             </div>
         </div>
-        <div class="flex md:pt-[70px] md:pr-[68px] relative justify-center md:justify-normal">
-            <div class="absolute bottom-0 md:right-11 flex flex-col gap-3 w-full md:max-w-80 z-10">
-                <div class="shadow-primary border rounded-md border-primary h-fit">
-                    <a href="/konnect-platform/konnect-mcp/" class="flex gap-5 px-6 py-5 rounded-md bg-primary hover:no-underline no-icon">
-                        <div class="flex flex-col gap-1">
-                            <span class="text-sm text-primary font-semibold">Konnect MCP</span>
-                            <span class="text-sm text-secondary">Connect AI agents to your Konnect APIs.</span>
-                        </div>
-                        <div>
-                            <span class="text-secondary">&rarr;</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="shadow-primary border rounded-md border-primary h-fit">
-                    <a href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=homepage" class="flex gap-5 px-6 py-5 rounded-md bg-primary hover:no-underline no-icon">
-                        <div class="flex flex-col gap-1">
-                            <span class="text-sm text-primary font-semibold">Get hands-on with Konnect</span>
-                            <span class="text-sm text-secondary">One platform to secure, manage, and share your APIs.</span>
-                        </div>
-                        <div>
-                            <span class="text-secondary">&rarr;</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
+        <div class="flex md:pt-[70px] md:pr-[68px] relative justify-center md:justify-normal">   
             <span class="hidden dark:inline">{% include_svg '/assets/hero-images/home/kong-dark.svg' %}</span>
             <span class="inline dark:hidden">{% include_svg '/assets/hero-images/home/kong.svg' %}</span>
         </div>
     </div>
-{%- for section in site.data.homepage.sections %}
 
-    <div class="flex flex-col gap-3 flex-grow">
-        <h2>{{ section.title | liquify }}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {%- for item in section.items %}
-            <div class="card flex-col gap-5 p-6 pb-4">
-                {% include_svg item.icon class="card__icon" aria-label=item.icon_alt %}
-                <div class="flex flex-col gap-3 flex-grow">
-                    <h3>{{ item.title | liquify }}</h3>
-                    <p class="text-sm text-secondary">{{ item.description | liquify }}</p>
+    <!-- SECTION 01: FOR AGENTS & THE CLI -->
+    {%- assign agents = hp.agents_section -%}
+    <div class="flex flex-col gap-10">
+
+        <div class="flex flex-col gap-3">
+            <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ agents.eyebrow }}</p>
+            {%- assign agent_parts = agents.title | split: agents.title_italic -%}
+            <h2>{{ agent_parts[0] }}<em class="text-brand not-italic font-bold">{{ agents.title_italic }}</em>{{ agent_parts[1] }}</h2>
+        </div>
+
+        <!-- CLI terminal cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {%- for cli in agents.cli_cards -%}
+            {%- assign cli_id = "hp-cli-" | append: forloop.index -%}
+            <div class="card flex-col gap-0 overflow-hidden">
+                <div class="flex items-center gap-2 px-4 py-2.5 bg-code-block-header border-b border-primary">
+                    <div class="flex gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-red-primary opacity-70"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-yellow-primary opacity-70"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-green-primary opacity-70"></span>
+                    </div>
+                    <span class="ml-1 text-xs text-terciary font-mono">{{ cli.tool }}</span>
+                    <div class="ml-auto flex items-center gap-1 relative">
+                        <div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+                        <clipboard-copy for="{{ cli_id }}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+                            <svg width="14" height="14" viewBox="0 0 24 24" class="flex group-[.success]:hidden" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M5 22C4.45 22 3.97917 21.8042 3.5875 21.4125C3.19583 21.0208 3 20.55 3 20V6H5V20H16V22H5ZM9 18C8.45 18 7.97917 17.8042 7.5875 17.4125C7.19583 17.0208 7 16.55 7 16V4C7 3.45 7.19583 2.97917 7.5875 2.5875C7.97917 2.19583 8.45 2 9 2H18C18.55 2 19.0208 2.19583 19.4125 2.5875C19.8042 2.97917 20 3.45 20 4V16C20 16.55 19.8042 17.0208 19.4125 17.4125C19.0208 17.8042 18.55 18 18 18H9ZM9 16H18V4H9V16Z" fill="currentColor"/>
+                            </svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" class="hidden group-[.success]:flex" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="rgb(var(--color-semantic-green-primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M20 6 9 17l-5-5"></path>
+                            </svg>
+                        </clipboard-copy>
+                    </div>
                 </div>
-                <div class="flex flex-col w-full text-primary text-sm">
-                {%- for link in item.links %}
-                    <a class="flex justify-between py-3 text-primary {% unless forloop.last %} border-b border-primary{% endunless %}  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ link.url }}">{{ link.text | liquify }}<span class="card__arrow">&rarr;</span></a>
-                {%- endfor %}
+                <pre class="bg-code-block m-0 px-4 py-4 text-sm leading-relaxed overflow-x-auto border-0 rounded-none"><code><span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.install }}
+<span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only">{{ cli.install }}
+{{ cli.command }}</span></code></pre>
+                <div class="px-5 pb-5 pt-4 flex flex-col gap-2 border-t border-primary flex-1">
+                    <p class="text-sm text-secondary">{{ cli.description }}</p>
+                    <a href="{{ cli.docs_url }}" class="text-sm text-links no-icon mt-auto">View docs &rarr;</a>
                 </div>
             </div>
-        {%- endfor %}
+            {%- endfor -%}
         </div>
+
+        <!-- Featured cards: MCP + Skill Hub + Cookbooks -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {%- for fcard in agents.featured_cards -%}
+            <div class="card flex-col gap-5 p-6 pb-4">
+                {% include_svg fcard.icon class="card__icon" aria-label=fcard.title %}
+                <div class="flex flex-col gap-2 flex-grow">
+                    <h3>{{ fcard.title }}</h3>
+                    <p class="text-sm text-secondary">{{ fcard.description }}</p>
+                    {%- if fcard.endpoint -%}
+                    {%- assign ep_id = "hp-ep-" | append: forloop.index -%}
+                    <div class="flex items-center gap-2 bg-code-block rounded-md border border-primary mt-1 px-3 py-2">
+                        <code id="{{ ep_id }}" class="text-xs text-secondary font-mono flex-1 min-w-0 truncate">{{ fcard.endpoint }}</code>
+                        <div class="relative flex items-center gap-1 shrink-0">
+                            <div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+                            <clipboard-copy for="{{ ep_id }}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+                                <svg width="14" height="14" viewBox="0 0 24 24" class="flex group-[.success]:hidden" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M5 22C4.45 22 3.97917 21.8042 3.5875 21.4125C3.19583 21.0208 3 20.55 3 20V6H5V20H16V22H5ZM9 18C8.45 18 7.97917 17.8042 7.5875 17.4125C7.19583 17.0208 7 16.55 7 16V4C7 3.45 7.19583 2.97917 7.5875 2.5875C7.97917 2.19583 8.45 2 9 2H18C18.55 2 19.0208 2.19583 19.4125 2.5875C19.8042 2.97917 20 3.45 20 4V16C20 16.55 19.8042 17.0208 19.4125 17.4125C19.0208 17.8042 18.55 18 18 18H9ZM9 16H18V4H9V16Z" fill="currentColor"/>
+                                </svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" class="hidden group-[.success]:flex" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="rgb(var(--color-semantic-green-primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M20 6 9 17l-5-5"></path>
+                                </svg>
+                            </clipboard-copy>
+                        </div>
+                    </div>
+                    {%- endif -%}
+                </div>
+                <div class="flex flex-col w-full text-sm">
+                    <a class="flex justify-between py-3 text-primary hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline no-icon" href="{{ fcard.cta_url }}">{{ fcard.cta_text }}<span class="card__arrow">&rarr;</span></a>
+                </div>
+            </div>
+            {%- endfor -%}
+        </div>
+
     </div>
-{%- endfor %}
+
+    <!-- SECTION 02: THE PLATFORM -->
+    {%- assign prods = hp.products_section -%}
+    <div class="flex flex-col gap-10">
+
+        <div class="flex flex-col gap-3">
+            <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ prods.eyebrow }}</p>
+            {%- assign prod_parts = prods.title | split: prods.title_italic -%}
+            <h2>{{ prod_parts[0] }}<em class="text-brand not-italic font-bold">{{ prods.title_italic }}</em>{{ prod_parts[1] }}</h2>
+        </div>
+
+        {%- for cat in prods.categories -%}
+        <div class="flex flex-col gap-4">
+            <h3 class="text-sm font-semibold uppercase tracking-widest text-terciary border-b border-primary pb-2">{{ cat.name }}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {%- for item in cat.items -%}
+                <div class="card flex-col gap-5 p-6 pb-4">
+                    {% include_svg item.icon class="card__icon" aria-hidden="true" %}
+                    <div class="flex flex-col gap-3 flex-grow">
+                        <h3>{{ item.title | liquify }}</h3>
+                        <p class="text-sm text-secondary">{{ item.description | liquify }}</p>
+                    </div>
+                    <div class="flex flex-col w-full text-primary text-sm">
+                        {%- for link in item.links -%}
+                        <a class="flex justify-between py-3 text-primary {% unless forloop.last %}border-b border-primary{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ link.url }}">{{ link.text | liquify }}<span class="card__arrow">&rarr;</span></a>
+                        {%- endfor -%}
+                    </div>
+                </div>
+                {%- endfor -%}
+            </div>
+        </div>
+        {%- endfor -%}
+
+    </div>
+
+    <!-- SECTION 03: API SPECIFICATIONS -->
+    {%- assign specs = hp.specs_section -%}
+    {%- assign all_api_pages = site.data.ssg_api_pages | where_exp: "api_page", "api_page.api_spec.deprecated? == false" -%}
+
+    <div class="flex flex-col gap-10">
+
+        <div class="flex flex-col gap-3">
+            <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ specs.eyebrow }}</p>
+            {%- assign spec_parts = specs.title | split: specs.title_italic -%}
+            <h2>{{ spec_parts[0] }}<em class="text-brand not-italic font-bold">{{ specs.title_italic }}</em>{{ spec_parts[1] }}</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {%- for api_title in specs.featured_apis -%}
+            {%- assign api_page = all_api_pages | where: "title", api_title | first -%}
+            {%- if api_page -%}
+            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=api_page.title version=api_page.version description=api_page.description spec_url=api_page.url insomnia_link=api_page.insomnia_link %}
+            {%- endif -%}
+            {%- endfor -%}
+        </div>
+
+        <a href="/api/" class="button button--secondary w-fit no-icon">See all API specs &rarr;</a>
+
+    </div>
+
 </div>
