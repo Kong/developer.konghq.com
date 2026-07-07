@@ -15,7 +15,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-8 pt-24">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ hp.hero.eyebrow }}</p>
             <div class="flex flex-col gap-2">
-                <h1 class="font-extrabold text-[40px] leading-[60px] [contain:layout:style]">
+                <h1 class="font-extrabold text-[56px] leading-[68px] [contain:layout:style]">
                     What do you want to <em class="text-brand not-italic">{{ hp.hero.title_italic }}</em>
                 </h1>
                 <span class="leading-7">{{ hp.description | liquify }}</span>
@@ -49,7 +49,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ agents.eyebrow }}</p>
             {%- assign agent_parts = agents.title | split: agents.title_italic -%}
-            <h2>{{ agent_parts[0] }}<em class="text-brand not-italic font-bold">{{ agents.title_italic }}</em>{{ agent_parts[1] }}</h2>
+            <h2 class="text-[36px] leading-[44px]">{{ agent_parts[0] }}<em class="text-brand not-italic font-bold">{{ agents.title_italic }}</em>{{ agent_parts[1] }}</h2>
         </div>
 
         <!-- CLI terminal cards -->
@@ -81,24 +81,27 @@ edit_and_issue_links: false
 {{ cli.command }}</span></code></pre>
                 <div class="px-5 pb-5 pt-4 flex flex-col gap-2 border-t border-primary flex-1">
                     <p class="text-sm text-secondary">{{ cli.description }}</p>
-                    <a href="{{ cli.docs_url }}" class="text-sm text-links no-icon mt-auto">View docs &rarr;</a>
+                    <div class="mt-4">
+                        <a href="{{ cli.docs_url }}" class="text-sm text-links no-icon">View docs &rarr;</a>
+                    </div>
                 </div>
             </div>
             {%- endfor -%}
         </div>
 
-        <!-- Featured cards: MCP + Skill Hub + Cookbooks -->
+        <!-- Featured cards: MCP (wide, featured) + Skill Hub + Cookbooks -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {%- for fcard in agents.featured_cards -%}
-            <div class="card flex-col gap-5 p-6 pb-4">
+            {%- if fcard.endpoint -%}
+            <div class="card card__featured flex flex-col gap-5 p-6">
+                <div class="text-xs absolute transform rotate-45 bg-brand-saturated dark:bg-terciary text-center text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">Featured</div>
                 {% include_svg fcard.icon class="card__icon" aria-label=fcard.title %}
                 <div class="flex flex-col gap-2 flex-grow">
                     <h3>{{ fcard.title }}</h3>
                     <p class="text-sm text-secondary">{{ fcard.description }}</p>
-                    {%- if fcard.endpoint -%}
                     {%- assign ep_id = "hp-ep-" | append: forloop.index -%}
-                    <div class="flex items-center gap-2 bg-code-block rounded-md border border-primary mt-1 px-3 py-2">
-                        <code id="{{ ep_id }}" class="text-xs text-secondary font-mono flex-1 min-w-0 truncate">{{ fcard.endpoint }}</code>
+                    <div class="flex items-center gap-2 bg-code-block rounded-md mt-1 px-3 py-2">
+                        <code id="{{ ep_id }}" class="text-xs text-secondary font-mono flex-1 min-w-0 truncate bg-transparent border-0 p-0">{{ fcard.endpoint }}</code>
                         <div class="relative flex items-center gap-1 shrink-0">
                             <div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
                             <clipboard-copy for="{{ ep_id }}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
@@ -111,12 +114,66 @@ edit_and_issue_links: false
                             </clipboard-copy>
                         </div>
                     </div>
-                    {%- endif -%}
                 </div>
-                <div class="flex flex-col w-full text-sm">
-                    <a class="flex justify-between py-3 text-primary hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline no-icon" href="{{ fcard.cta_url }}">{{ fcard.cta_text }}<span class="card__arrow">&rarr;</span></a>
+                <div>
+                    <a href="{{ fcard.cta_url }}" class="button button--primary no-icon">{{ fcard.cta_text }}</a>
                 </div>
             </div>
+            {%- else -%}
+            <div class="card flex-col gap-0 overflow-hidden pb-4">
+                {%- assign fcard_id = "hp-fcard-" | append: forloop.index -%}
+                <!-- Card header: icon + title -->
+                <div class="flex items-center justify-between gap-2 px-5 py-4 border-b border-primary">
+                    {% include_svg fcard.icon class="card__icon" aria-label=fcard.title %}
+                    <span class="font-semibold text-sm flex-1 ml-2">{{ fcard.title }}</span>
+                    {%- if fcard.snippet_label -%}
+                    <div class="relative flex items-center gap-1 shrink-0">
+                        <div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+                        <clipboard-copy for="{{ fcard_id }}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+                            <svg width="14" height="14" viewBox="0 0 24 24" class="flex group-[.success]:hidden" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M5 22C4.45 22 3.97917 21.8042 3.5875 21.4125C3.19583 21.0208 3 20.55 3 20V6H5V20H16V22H5ZM9 18C8.45 18 7.97917 17.8042 7.5875 17.4125C7.19583 17.0208 7 16.55 7 16V4C7 3.45 7.19583 2.97917 7.5875 2.5875C7.97917 2.19583 8.45 2 9 2H18C18.55 2 19.0208 2.19583 19.4125 2.5875C19.8042 2.97917 20 3.45 20 4V16C20 16.55 19.8042 17.0208 19.4125 17.4125C19.0208 17.8042 18.55 18 18 18H9ZM9 16H18V4H9V16Z" fill="currentColor"/>
+                            </svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" class="hidden group-[.success]:flex" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="rgb(var(--color-semantic-green-primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M20 6 9 17l-5-5"></path>
+                            </svg>
+                        </clipboard-copy>
+                    </div>
+                    {%- endif -%}
+                </div>
+                {%- if fcard.snippet_label or fcard.snippet_lines -%}
+                <!-- Snippet area -->
+                <div class="bg-code-block border-b border-primary">
+                    {%- if fcard.snippet_label -%}
+                    <div class="flex items-center gap-2 px-5 py-2 border-b border-primary">
+                        {% include_svg '/assets/icons/third-party/claude.svg' class="w-4 h-4 shrink-0" aria-hidden="true" %}
+                        <span class="text-xs font-mono font-bold text-brand uppercase tracking-widest">{{ fcard.snippet_label }}</span>
+                    </div>
+                    {%- endif -%}
+                    <ul class="list-none m-0 px-5 py-3 flex flex-col gap-1">
+                        {%- for line in fcard.snippet_lines -%}
+                        <li class="text-xs font-mono text-secondary flex gap-2"><span class="text-terciary">&rsaquo;</span>{{ line }}</li>
+                        {%- endfor -%}
+                    </ul>
+                    <span id="{{ fcard_id }}" class="sr-only">{% for line in fcard.snippet_lines %}{{ line }}
+{% endfor %}</span>
+                </div>
+                {%- endif -%}
+                <!-- Body -->
+                <div class="flex flex-col gap-3 px-5 py-5 flex-grow">
+                    {%- if fcard.body_title -%}
+                    <h3 class="text-base font-bold">{{ fcard.body_title }}</h3>
+                    {%- endif -%}
+                    <p class="text-sm text-secondary">{{ fcard.description }}</p>
+                </div>
+                <!-- CTAs -->
+                <div class="flex flex-col w-full text-sm border-t border-primary">
+                    <a class="flex justify-between px-5 py-3 text-primary hover:bg-hover-component/100 hover:no-underline no-icon {% if fcard.cta_url_2 %}border-b border-primary{% endif %}" href="{{ fcard.cta_url }}">{{ fcard.cta_text }}<span class="card__arrow">&rarr;</span></a>
+                    {%- if fcard.cta_url_2 -%}
+                    <a class="flex justify-between px-5 py-3 text-primary hover:bg-hover-component/100 hover:no-underline no-icon" href="{{ fcard.cta_url_2 }}">{{ fcard.cta_text_2 }}<span class="card__arrow">&rarr;</span></a>
+                    {%- endif -%}
+                </div>
+            </div>
+            {%- endif -%}
             {%- endfor -%}
         </div>
 
@@ -129,7 +186,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ prods.eyebrow }}</p>
             {%- assign prod_parts = prods.title | split: prods.title_italic -%}
-            <h2>{{ prod_parts[0] }}<em class="text-brand not-italic font-bold">{{ prods.title_italic }}</em>{{ prod_parts[1] }}</h2>
+            <h2 class="text-[36px] leading-[44px]">{{ prod_parts[0] }}<em class="text-brand not-italic font-bold">{{ prods.title_italic }}</em>{{ prod_parts[1] }}</h2>
         </div>
 
         {%- for cat in prods.categories -%}
@@ -165,7 +222,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ specs.eyebrow }}</p>
             {%- assign spec_parts = specs.title | split: specs.title_italic -%}
-            <h2>{{ spec_parts[0] }}<em class="text-brand not-italic font-bold">{{ specs.title_italic }}</em>{{ spec_parts[1] }}</h2>
+            <h2 class="text-[36px] leading-[44px]">{{ spec_parts[0] }}<em class="text-brand not-italic font-bold">{{ specs.title_italic }}</em>{{ spec_parts[1] }}</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -177,7 +234,7 @@ edit_and_issue_links: false
             {%- endfor -%}
         </div>
 
-        <a href="/api/" class="button button--secondary w-fit no-icon">See all API specs &rarr;</a>
+        <a href="/api/" class="text-sm text-links no-icon">See all API specs &rarr;</a>
 
     </div>
 

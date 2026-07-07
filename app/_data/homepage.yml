@@ -5,7 +5,6 @@ hero:
   eyebrow: "Kong Developer · Documentation"
   title_italic: "accomplish?"
   chips:
-    - "Set up rate limiting"
     - "Publish an API to Dev Portal"
     - "Configure OIDC auth"
     - "Deploy with Kubernetes"
@@ -21,12 +20,12 @@ agents_section:
       icon: /assets/icons/terminal.svg
       description: "Manage Kong Gateway configuration as code. Diff, sync, dump, validate."
       install: "brew install kong/deck/deck"
-      command: "deck gateway sync kong.yaml"
+      command: "deck gateway diff kong.yaml"
       docs_url: /deck/
     - tool: kongctl
       icon: /assets/icons/terminal.svg
       description: "Control Konnect from the terminal. Manage orgs, control planes, and plugins."
-      install: "brew install kong/tap/kongctl"
+      install: "brew install --cask kong/kongctl/kongctl"
       command: "kongctl get control-planes"
       docs_url: /kongctl/
     - tool: Inso CLI
@@ -38,25 +37,35 @@ agents_section:
   featured_cards:
     - id: mcp
       title: "Konnect MCP server"
-      badge: "Featured"
       description: "Give Claude, Cursor, and ChatGPT live, scoped access to your Konnect APIs, control planes, and analytics."
       endpoint: "https://mcp.konghq.com/sse"
       cta_text: "Connect Konnect MCP"
       cta_url: /konnect-platform/konnect-mcp/
       icon: /assets/icons/mcp.svg
-      wide: true
+      featured: true
     - id: skills
-      title: "Skill Hub"
-      description: "Curated, copy-pasteable agent skills for common Kong workflows. Built on the Model Context Protocol."
+      title: "Skills Hub"
+      snippet_label: "RUN IN CLAUDE"
+      snippet_lines:
+        - "/plugin marketplace add kong/ai-marketplace"
+        - "/plugin install kong-konnect@ai-marketplace"
+        - "/reload-plugins"
+      description: "Copy-pasteable workflows for Konnect, AI Gateway, and decK — built on the Model Context Protocol. The fastest path is the three commands above, run inside Claude."
       cta_url: /skills/
+      cta_text: "Browse all skills"
       icon: /assets/icons/brain.svg
-      wide: false
     - id: cookbooks
       title: "AI Cookbooks"
+      snippet_lines:
+        - "model-based-routing/"
+        - "claude-code-sso/"
+        - "llm-cost-optimization/"
+        - "secure-external-mcp-gateway/"
+        - "..."
       description: "End-to-end recipes for agents on top of Kong AI Gateway and Konnect."
-      cta_url: /ai-gateway/
+      cta_url: /cookbooks/
+      cta_text: "Open cookbooks"
       icon: /assets/icons/book.svg
-      wide: false
 
 products_section:
   eyebrow: "02 · The platform"
