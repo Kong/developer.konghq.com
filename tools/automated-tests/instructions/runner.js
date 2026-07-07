@@ -39,6 +39,13 @@ function compareVersions(v1, v2) {
   return 0; // Versions are equal
 }
 
+function appendEnvFlags(command, env_variables) {
+  const flags = Object.entries(env_variables)
+    .map(([key, value]) => (value ? `-e ${key}=${value}` : `-e ${key}`))
+    .join(" ");
+  return `${command} ${flags}`;
+}
+
 async function runConfig(config, container) {
   try {
     if (config.commands) {
@@ -145,7 +152,7 @@ async function runSteps(steps, runtimeConfig, container) {
 
 export async function runInstructions(instructions, runtimeConfig, container) {
   let result = { name: instructions.name };
-  const { rbac, wasm } = await getSetupConfig(instructions.setup);
+  const { rbac, wasm, env_variables } = await getSetupConfig(instructions.setup);
   try {
     const check = await checkSetup(
       instructions.setup,
@@ -157,6 +164,16 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       result["status"] = "skipped";
       result["assertions"] = [];
       return result;
+    }
+
+    if (
+      Object.keys(env_variables).length > 0 &&
+      runtimeConfig.setup?.env_variables?.command
+    ) {
+      await executeCommand(
+        container,
+        appendEnvFlags(runtimeConfig.setup.env_variables.command, env_variables)
+      );
     }
 
     if (rbac && runtimeConfig.setup?.rbac?.commands) {
