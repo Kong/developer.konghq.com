@@ -24,12 +24,7 @@ module Jekyll
           EntityExampleBlock::Plugin.new(
             example: {
               'type' => 'plugin',
-              'data' => {
-                'name' => plugin_slug,
-                target => nil,
-                'config' => config,
-                'tags' => tags
-              },
+              'data' => build_data(target),
               'formats' => formats,
               'variables' => example.fetch('variables', {})
             },
@@ -56,6 +51,14 @@ module Jekyll
                  else
                    "/plugins/#{@plugin.slug}/examples/#{slug}/"
                  end
+      end
+
+      private
+
+      def build_data(target)
+        data = { 'name' => plugin_slug, target => nil, 'config' => config }
+        data['tags'] = tags unless tags.empty?
+        data
       end
     end
   end
