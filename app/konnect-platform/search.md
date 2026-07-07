@@ -85,7 +85,11 @@ The following {{site.konnect_short_name}} entity types are supported:
 - `dashboard`
 - `data_plane`  
 - `developer`  
-- `developer_team`    
+- `developer_team`  
+- `identity_auth_server`  
+- `identity_client`  
+- `identity_directory`  
+- `identity_principal`  
 - `key`  
 - `key_set`   
 - `mesh`  
