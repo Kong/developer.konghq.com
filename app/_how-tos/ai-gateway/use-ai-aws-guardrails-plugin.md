@@ -41,7 +41,7 @@ tldr:
 
 ---
 
-## Create an AI Provider entity
+## Create an AI Provider
 
 Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to OpenAI and store your authentication credentials:
 
@@ -73,7 +73,30 @@ In this example, we're setting up the AI Provider with:
 * `config.auth`: Stores your OpenAI API key. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
 
 
-## Configure an AI Model with an AI AWS Guardrails Policy
+## Create an AWS Guardrails AI Policy
+
+```
+curl --request POST \
+  --url https://us.api.konghq.com/v1/ai-gateways/$AI_GATEWAY_ID/policies \
+  --header 'Accept: application/json, application/problem+json' \
+  --header 'Authorization: Bearer ' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "display_name": "My AWS Guardrails Policy",
+  "name": "my-aws-guardrails-policy",
+  "type": "ai-aws-guardrails",
+  "config": {
+    guardrails_id: "${{ env "DECK_GUARDRAILS_ID" }}"
+    guardrails_version: "${{ env "DECK_GUARDRAILS_VERSION" }}"
+    aws_region: "${{ env "DECK_AWS_REGION" }}"
+    aws_access_key_id: "${{ env "DECK_AWS_ACCESS_KEY_ID" }}"
+    aws_secret_access_key: "${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}"
+  }
+}'
+```
+
+
+## Configure an AI Model with an AWS Guardrails AI Policy
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
 
@@ -104,7 +127,7 @@ body:
       provider: generic-openai
       config:
         type: openai
-  policies: []
+  policies: [my-aws-guardrails-policy]
   capabilities:
     - generate
 {% endkonnect_api_request %}
@@ -148,7 +171,7 @@ Use these prompts containing blocked `badwords` to test the guardrail:
 
 
 {% validation request-check %}
-url: /anything
+url: /v1/chat/completions
 method: POST
 status_code: 200
 headers:
@@ -165,7 +188,7 @@ body:
 {% navtab "Prompt 2" %}
 
 {% validation request-check %}
-url: /anything
+url: /v1/chat/completions
 method: POST
 status_code: 200
 headers:
@@ -191,7 +214,7 @@ Use these prompts to test the guardrail on the topic "quantum computing":
 {% navtab "Prompt 1" %}
 
 {% validation request-check %}
-url: /anything
+url: /v1/chat/completions
 method: POST
 status_code: 200
 headers:
@@ -208,7 +231,7 @@ body:
 {% navtab "Prompt 2" %}
 
 {% validation request-check %}
-url: /anything
+url: /v1/chat/completions
 method: POST
 status_code: 200
 headers:
@@ -234,7 +257,7 @@ Use these prompts to test the guardrail on blocked content categories:
 {% navtab "Violence" %}
 
 {% validation request-check %}
-url: /anything
+url: /v1/chat/completions
 method: POST
 status_code: 200
 headers:
@@ -251,7 +274,7 @@ body:
 {% navtab "Hateful content" %}
 
 {% validation request-check %}
-url: /anything
+url: /v1/chat/completions
 method: POST
 status_code: 200
 headers:
@@ -268,7 +291,7 @@ body:
 {% navtab "Explicit content" %}
 
 {% validation request-check %}
-url: /anything
+url: /v1/chat/completions
 method: POST
 status_code: 200
 headers:
@@ -285,7 +308,7 @@ body:
 {% navtab "Insults" %}
 
 {% validation request-check %}
-url: /anything
+url: /v1/chat/completions
 method: POST
 status_code: 200
 headers:
