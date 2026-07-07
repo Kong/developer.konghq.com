@@ -38,7 +38,7 @@ prereqs:
       include_content: knep/kafkactl
     - title: Kong Identity directory
       include_content: prereqs/kong-identity-directory
-      icon_url: /assets/icons/kong-identity.svg
+      icon_url: /assets/icons/identity.svg
 
 cleanup:
   inline:
