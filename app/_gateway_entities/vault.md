@@ -11,6 +11,8 @@ description: |
 related_resources:
   - text: Secrets Management
     url: /gateway/secrets-management/
+  - text: Create a custom vault backend
+    url: /how-to/create-custom-vault/
   - text: Workspaces
     url: /gateway/entities/workspace/
   - text: RBAC
@@ -290,6 +292,11 @@ features:
     supports_konnect: true
     how_to: |
       * [Basic setup](/how-to/configure-file-system-as-a-vault-backend/)
+  - title: Custom vault backend
+    url: /how-to/create-custom-vault/
+    oss: true
+    enterprise: true
+    supports_konnect: false
 {% endfeature_table %}
 
 ## How do I reference secrets stored in a Vault?
