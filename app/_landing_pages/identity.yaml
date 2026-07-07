@@ -197,6 +197,7 @@ rows:
   - header:
       type: h2
       text: Key references
+  - column_count: 3
     columns:
       - blocks:
         - type: card
