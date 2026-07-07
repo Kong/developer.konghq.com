@@ -1,5 +1,5 @@
 ---
-title: "Control Plane Groups"
+title: "Control plane groups"
 content_type: reference
 layout: reference
 breadcrumbs: 
@@ -17,59 +17,59 @@ tags:
   - control-plane
   - gateway-manager
 
-description: A Control Plane Group is a read-only Control Plane that combines configuration from its members, which are standard Control Planes.
+description: A control plane group is a read-only control plane that combines configuration from its members, which are standard control planes.
 
 faqs:
-  - q: How is a Control Plane Group different from a standard Control Plane?
-    a: In a standard Control Plane, each team manages its own Data Plane nodes. In a Control Plane Group, multiple Control Planes are combined, and their configurations are merged and applied to shared Data Plane nodes.
+  - q: How is a control plane group different from a standard control plane?
+    a: In a standard control plane, each team manages its own Data Plane nodes. In a control plane group, multiple control planes are combined, and their configurations are merged and applied to shared Data Plane nodes.
 
-  - q: Can teams still manage their own configurations in a Control Plane Group?
-    a: Yes. Each team continues to administer its own Control Plane, but configurations are merged and pushed to shared Data Plane nodes through the Control Plane Group.
+  - q: Can teams still manage their own configurations in a control plane group?
+    a: Yes. Each team continues to administer its own control plane, but configurations are merged and pushed to shared Data Plane nodes through the control plane group.
 
-  - q: How many Control Planes can be in a Control Plane Group?
-    a: A Control Plane Group can have up to 256 Control Planes, with a limit of 50 added or removed at a time.
+  - q: How many control planes can be in a control plane group?
+    a: A control plane group can have up to 256 control planes, with a limit of 50 added or removed at a time.
 
-  - q: Can a standard Control Plane be part of more than one Control Plane Group?
-    a: Yes, a standard Control Plane can belong to up to 5 Control Plane Groups.
+  - q: Can a standard control plane be part of more than one control plane group?
+    a: Yes, a standard control plane can belong to up to 5 control plane groups.
 
-  - q: Can members of a Control Plane Group have their own Data Plane nodes?
-    a: No. Only the Control Plane Group itself manages Data Plane nodes. Member Control Planes must not have any connected Data Plane nodes when added.
+  - q: Can members of a control plane group have their own Data Plane nodes?
+    a: No. Only the control plane group itself manages Data Plane nodes. Member control planes must not have any connected Data Plane nodes when added.
 
-  - q: What happens if multiple Control Planes have entities with the same name or ID?
-    a: This creates a conflict that must be resolved. All entities in a Control Plane Group must have unique names and IDs.
+  - q: What happens if multiple control planes have entities with the same name or ID?
+    a: This creates a conflict that must be resolved. All entities in a control plane group must have unique names and IDs.
 
-  - q: Are there any special behaviors for specific entities in a Control Plane Group?
-    a: Yes. For example, a Consumer's credentials become valid across the group, and Vaults from one Control Plane can be accessed by others in the group. Global plugins affect the entire group.
+  - q: Are there any special behaviors for specific entities in a control plane group?
+    a: Yes. For example, a Consumer's credentials become valid across the group, and Vaults from one control plane can be accessed by others in the group. Global plugins affect the entire group.
 
-  - q: How do entity associations work in a Control Plane Group?
-    a: Associations by ID are constrained to their originating Control Plane. Associations by string can span multiple member Control Planes.
+  - q: How do entity associations work in a control plane group?
+    a: Associations by ID are constrained to their originating control plane. Associations by string can span multiple member control planes.
 
-  - q: Can a Control Plane Group be configured directly?
-    a: No. Control Plane Groups are read-only. Configuration changes must be made through a member Control Plane. The only exceptions are generating or uploading Data Plane node certificates and connecting Data Plane nodes.
-  - q: How do I migrate a Control Plane configuration into a Control Plane Group?
+  - q: Can a control plane group be configured directly?
+    a: No. control plane groups are read-only. Configuration changes must be made through a member control plane. The only exceptions are generating or uploading Data Plane node certificates and connecting Data Plane nodes.
+  - q: How do I migrate a control plane configuration into a control plane group?
     a: |
-      Using [decK](/deck/), you can export the configuration of the Control Plane and sync it with the group: 
-      1. Export the configuration of the old Control Plane using `deck gateway dump`:
+      Using [decK](/deck/), you can export the configuration of the control plane and sync it with the group: 
+      1. Export the configuration of the old control plane using `deck gateway dump`:
         ```
          deck gateway dump \
             -o old-group.yaml \
             --konnect-token $KONNECT_TOKEN \
             --konnect-control-plane-name old-group
         ```
-      2. Sync the configuration to the Control Plane Group:
+      2. Sync the configuration to the control plane group:
         ```
          deck gateway sync old-group.yaml \
             --konnect-token $KONNECT_TOKEN \
             --konnect-control-plane-name CP1
         ```
-  - q: Can a Control Plane Group contain another Control Plane Group?
-    a: No. A Control Plane Group cannot be a member of another Control Plane Group.
+  - q: Can a control plane group contain another control plane group?
+    a: No. A control plane group cannot be a member of another control plane group.
 
-  - q: Can {{site.kic_product_name}} Control Planes join a Control Plane Group?
-    a: No. {{site.kic_product_name}} Control Planes cannot be part of a Control Plane Group.
+  - q: Can {{site.kic_product_name}} control planes join a control plane group?
+    a: No. {{site.kic_product_name}} control planes cannot be part of a control plane group.
 
-  - q: What happens if Control Plane configurations conflict in a group?
-    a: Even if configurations conflict and can’t be merged, the Control Plane Group is still created. Conflict detection only occurs after a Data Plane node is connected.
+  - q: What happens if control plane configurations conflict in a group?
+    a: Even if configurations conflict and can’t be merged, the control plane group is still created. Conflict detection only occurs after a Data Plane node is connected.
 
 related_resources:
   - text: "{{site.base_gateway}} logs"
@@ -78,23 +78,23 @@ related_resources:
 #    url: /gateway/debug/
 ---
 
-## What is a Control Plane Group?
+## What is a control plane group?
 
-A Control Plane Group is a read-only Control Plane that combines configuration from
-its members, which are standard Control Planes. All of the standard Control Planes within a 
-Control Plane Group share the same cluster of Data Plane nodes. 
+A control plane group is a read-only control plane that combines configuration from
+its members, which are standard control planes. All of the standard control planes within a 
+control plane group share the same cluster of Data Plane nodes. 
 
 
-The following diagram illustrates using a Control Plane Group for a federated platform administrator model:
+The following diagram illustrates using a control plane group for a federated platform administrator model:
 <!--vale off-->
 {% mermaid %}
 flowchart LR
   A(Team Blue)
   B(Team Green)
-  C(Control Plane Blue)
-  D(Control Plane Purple
+  C(Control plane Blue)
+  D(Control plane Purple
     global config)
-  E(Control Plane Green)
+  E(Control plane Green)
   F(Data Plane nodes)
   G(Data Plane nodes)
 
@@ -102,7 +102,7 @@ flowchart LR
   B -- deck gateway sync --> E
 
   subgraph id1 ["`**KONNECT ORG**`"]
-    subgraph id2 [<br>Control Plane Group Steel]
+    subgraph id2 [<br>control plane group Steel]
     C
     D
     E
@@ -110,7 +110,7 @@ flowchart LR
   end
 
   id2 -- Get config from 
-  Control Plane Group
+  control plane group
   Steel--> F & G
 
   subgraph id3 [Data centers]
@@ -121,13 +121,13 @@ flowchart LR
 <!--vale on-->
 
 In this diagram:
-* Team Blue configures Control Plane Blue, which is then combined with the configuration from Team Green.
-* The Control Plane Group also contains Control Plane Purple, which is managed by a central platform team.
-* The central platform team manages global plugin configuration in Control Plane Purple, which is added to any configuration that teams Blue and Green provide.
+* Team Blue configures control plane Blue, which is then combined with the configuration from Team Green.
+* The control plane group also contains control plane Purple, which is managed by a central platform team.
+* The central platform team manages global plugin configuration in control plane Purple, which is added to any configuration that teams Blue and Green provide.
 
-## How do I create a Control Plane Group?
+## How do I create a control plane group?
 
-In {{site.konnect_short_name}}, Control Plane Groups can be created using the [Control Planes API](/api/konnect/control-planes/).
+In {{site.konnect_short_name}}, control plane groups can be created using the [control planes API](/api/konnect/control-planes/).
 
 <!--vale off-->
 {% control_plane_request %}
@@ -143,9 +143,9 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-## How do I attach Control Planes to a Control Plane Group?
+## How do I attach control planes to a control plane group?
 
-Once you have a Control Plane Group, you can add Control Planes to the Group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/#/operations/post-control-planes-id-group-memberships-add).
+Once you have a control plane group, you can add control planes to the Group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/#/operations/post-control-planes-id-group-memberships-add).
 <!--vale off-->
 
 {% control_plane_request %}
@@ -163,16 +163,16 @@ body:
 
 ## Configuring Gateway entities
 
-There are some special cases and behaviors to note for [Gateway entities](/gateway/entities/) in a Control Plane Group.
+There are some special cases and behaviors to note for [Gateway entities](/gateway/entities/) in a control plane group.
 
-All entities in a Control Plane Group must have unique names and IDs. 
-For example, if two members of a Control Plane Group both have a Service named `example_service`, 
+All entities in a control plane group must have unique names and IDs. 
+For example, if two members of a control plane group both have a Service named `example_service`, 
 it will cause a [conflict](/gateway/control-plane-groups/#control-plane-conflicts/) which must be resolved to restore function.
 
 A number of {{site.base_gateway}} entities can be associated with each other.
-Based on the type of association, the behavior of these associated entities in a Control Plane Group follows one of these patterns:
-* If the entity relationship is referenced by ID, associations remain constrained to the behavior of the individual Control Plane.
-* If the entity relationship is referenced by a string, then associations across one or more member Control Planes are possible.
+Based on the type of association, the behavior of these associated entities in a control plane group follows one of these patterns:
+* If the entity relationship is referenced by ID, associations remain constrained to the behavior of the individual control plane.
+* If the entity relationship is referenced by a string, then associations across one or more member control planes are possible.
 
 {% table %}
 columns:
@@ -208,14 +208,14 @@ rows:
     associated: Service, Route, Consumer
     type: By ID
   - entity: Global plugin
-    associated: Control Plane
-    type: By Control Plane
+    associated: Control plane
+    type: By control plane
   - entity: Key
     associated: Key set
     type: By ID
   - entity: Vault
     associated: Control plane
-    type: By Control Plane
+    type: By control plane
   - entity: deGraphQL Route
     associated: Service
     type: By ID
@@ -224,7 +224,7 @@ rows:
     type: By ID
 {% endtable %}
 
-The {{site.base_gateway}} resource associated with an entity must be part of the same standard Control Plane as the entity.
+The {{site.base_gateway}} resource associated with an entity must be part of the same standard control plane as the entity.
 
 ### Entity-specific behavior exceptions
 
@@ -234,45 +234,54 @@ The following are exceptions to the entity behavior:
 columns:
   - title: Entity
     key: entity
-  - title: Behavior in Control Plane Groups
+  - title: Behavior in control plane groups
     key: behavior
 rows:
   - entity: Consumers
     behavior: >-
-      A Consumer from a standard Control Plane becomes a Consumer of the Control Plane Group once the Control Plane joins the group.<br><br>
-      The Consumer's authentication credentials also become valid for the Control Plane Group.<br><br>
+      A Consumer from a standard control plane becomes a Consumer of the control plane group once the control plane joins the group.<br><br>
+      The Consumer's authentication credentials also become valid for the control plane group.<br><br>
       However, a Consumer ID from one member cannot be used for authorization in another member.
   - entity: Consumer Groups
     behavior: >-
-      Only Consumers from the same Control Plane can be added to a Consumer Group.<br><br>
-      In the Rate Limiting Advanced plugin, the configuration field [`config.consumer_groups`](/plugins/rate-limiting-advanced/reference/#schema--config-consumer-groups) can reference Consumer Groups from other Control Plane Group members.
+      Only Consumers from the same control plane can be added to a Consumer Group.<br><br>
+      In the Rate Limiting Advanced plugin, the configuration field [`config.consumer_groups`](/plugins/rate-limiting-advanced/reference/#schema--config-consumer-groups) can reference Consumer Groups from other control plane group members.
   - entity: Vaults
     behavior: >-
       Vault prefixes must be unique.<br><br>
-      When a Vault from a standard Control Plane joins a Control Plane Group, it becomes available to the whole group.<br><br>
-      Entity fields can reference secrets in Vaults from other members of the Control Plane Group.
+      When a Vault from a standard control plane joins a control plane group, it becomes available to the whole group.<br><br>
+      Entity fields can reference secrets in Vaults from other members of the control plane group.
   - entity: Global plugins
     behavior: |
-      A globally scoped plugin in a standard Control Plane remains globally scoped within the Control Plane Group.<br><br>
-      It affects the entire group. For example, you cannot install two instances of the Rate Limiting plugin in the same Control Plane Group.<br><br>
+      A globally scoped plugin in a standard control plane remains globally scoped within the control plane group.<br><br>
+      It affects the entire group. For example, you cannot install two instances of the Rate Limiting plugin in the same control plane group.<br><br>
       
       {:.info}
-       > **Note:** If you want to limit which users can apply global plugins, add all global plugins into a single Control Plane, and then grant access to only your limited set of users. If any other member Control Planes add a global plugin to their configuration, a conflict will result and prevent the changed configuration from being applied.
+       > **Note:** If you want to limit which users can apply global plugins, add all global plugins into a single control plane, and then grant access to only your limited set of users. If any other member control planes add a global plugin to their configuration, a conflict will result and prevent the changed configuration from being applied.
 
 {% endtable %}
 
-## Control Plane conflicts
+## Limitation
 
-When combining configurations from individual Control Planes into a Control Plane Group you may receive conflict errors in {{site.konnect_short_name}}, for example: 
+If a Consumer is defined in one member control plane and the request it authorizes hits a Route or Gateway Service defined in a different member control plane of the same control plane group, {{site.observability}} can't resolve the Consumer across control planes. 
+In this case, the Consumer displays as `(deleted)` in Requests, Explorer, and Dashboards, even though it exists and successfully authorized the request. 
+This happens because {{site.observability}} assumes all the data for a request comes from a single control plane.
+
+To avoid this, use [centrally-managed Consumers](/gateway/entities/consumer/#centrally-managed-consumers) instead of concentrating shared Consumers in one member control plane. 
+Currently, centrally-managed Consumers only support Key Auth.
+
+## Control plane conflicts
+
+When combining configurations from individual control planes into a control plane group you may receive conflict errors in {{site.konnect_short_name}}, for example: 
 
 ```sh
-Conflicts have been detected between these Control Planes: 
+Conflicts have been detected between these control planes: 
 CONTROL-PLANE-EXAMPLE
 CONTROL-PLANE-ANOTHER-EXAMPLE
 ```
 {:.no-copy-code}
 
-The Control Plane won't update a Data Plane configuration until the conflict is resolved. 
+The control plane won't update a Data Plane configuration until the conflict is resolved. 
 Review the following table of common issues and potential fixes:
 
 {% table %}
@@ -284,26 +293,26 @@ columns:
   - title: Action
     key: action
 rows:
-  - conflict: Duplicate names across Control Plane Group members
-    description: Same entity name exists in multiple member Control Planes.
+  - conflict: Duplicate names across control plane group members
+    description: Same entity name exists in multiple member control planes.
     action: Remove or rename one of the conflicting entities.
-  - conflict: Shared credentials across Control Plane Group members
+  - conflict: Shared credentials across control plane group members
     description: Credentials from one member can authenticate across the group.
     action: Remove shared credentials if cross-access is not desired.
-  - conflict: ACL group names across Control Plane Group members
+  - conflict: ACL group names across control plane group members
     description: ACL group names are shared across members.
     action: Remove or rename duplicate ACL groups if isolation is needed.
-  - conflict: Consumers across Control Plane Group members
+  - conflict: Consumers across control plane group members
     description: Consumer names are shared across members.
     action: Remove or rename duplicates if isolation is needed.
-  - conflict: Consumer groups across Control Plane Group members
+  - conflict: Consumer groups across control plane group members
     description: Consumer group names are shared across members.
     action: Remove or rename duplicates if isolation is needed.
   - conflict: decK dump with duplicate names found
     description: "`deck gateway dump` fails on duplicate names."
     action: Remove or rename duplicate entities.
   - conflict: Reference by name vs reference by ID
-    description: ID-based references don’t work across Control Planes, string-based ones do.
+    description: ID-based references don’t work across control planes, string-based ones do.
     action: Use string references, or remove conflicting entities.
   - conflict: Multiple instances of the same global plugin
     description: Only one global plugin instance is allowed in the group.

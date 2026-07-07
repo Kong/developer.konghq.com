@@ -152,3 +152,9 @@ rows:
                   {% include faqs/metrics-endpoint.md section='question' %}
                 a: |
                   {% include faqs/metrics-endpoint.md section='answer' %}
+              - q: Why does a Consumer show as `(deleted)` in Requests or Explorer even though it's not deleted?
+                a: |
+                  This happens when the Consumer is defined in a control plane group, and it belongs to a different member control plane than the one that handled the request.
+                  {{site.observability}} can't resolve Consumer data across member control planes in this case, so it displays the Consumer as deleted, even though it exists and successfully authorized the request.
+                  To avoid this, use [centrally-managed Consumers](/gateway/entities/consumer/#centrally-managed-consumers) instead of concentrating shared Consumers in one member control plane. 
+                  Currently, centrally-managed Consumers only support Key Auth.
