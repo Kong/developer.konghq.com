@@ -40,6 +40,13 @@ rows:
                   MFA is recommended for all {{site.konnect_short_name}} organizations regardless of the organization tier as a security best practice.  
                   If you need to reset your MFA, reach out to [Kong Support](https://support.konghq.com).
 
+                  {:.warning}
+                  > **Password requirements:**
+                  > * Passwords cannot reuse any of the previous 13 passwords.
+                  > * Must have a length of at least 12 characters.
+                  > * Must contain at least one uppercase letter, one lowercase letter, one number, and one special character.
+                  > * Must not contain more than two identical characters in a row.
+
   - header:
       type: h2
       text: "Manage user access"
