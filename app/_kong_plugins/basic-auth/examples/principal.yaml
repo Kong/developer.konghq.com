@@ -1,6 +1,6 @@
 description: Authenticate principals managed by Kong Identity by configuring the `principals` field in the Basic Auth plugin.
 extended_description: |
-  You can authenticate Principals managed by Kong Identity in {{site.konnect_short_name}} by configuring the `principals` field in the Baisc Auth plugin. Principals are grouped into regional directories.
+  You can authenticate principals managed by Kong Identity in {{site.konnect_short_name}} by configuring the `principals` field in the Basic Auth plugin. Principals are grouped into regional directories.
 
 
 title: 'Authenticate principals'
