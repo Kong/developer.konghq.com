@@ -153,6 +153,7 @@ WAF inspection requires HTTP visibility, which means the WAF must sit at an HTTP
 * A cloud edge service
 
 Because the Kong-managed Dedicated Cloud Gateway data plane exposes a DNS hostname instead of an IP address, **you can't chain another public load balancer in front of it** (most load balancers' target groups don't support DNS-based targets).
+This is why the customer-managed ALB pattern used to front [private Dedicated Cloud Gateways](/dedicated-cloud-gateways/private-network/#aws-waf) doesn't carry over to public deployments: a private Dedicated Cloud Gateway exposes static private IP addresses that an ALB can target directly, but a public Dedicated Cloud Gateway doesn't.
 Instead, you must use a CDN because it natively supports DNS-based origins and can attach WAF policies at the distribution level.
 
 Examples of CDN or edge services that support this pattern:
@@ -224,6 +225,11 @@ To ensure all traffic passes through CloudFront, configure origin validation bet
    Requests arriving from IPs outside the CDN's published ranges are rejected at the Kong layer before any route matching occurs. 
    Some CDNs that publish static egress IP ranges include CloudFront, Cloudflare, Azure Front Door, and Fastly.
 1. Combine origin validation with [AWS WAF managed rules](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups.html) and [rate limiting](https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based-request-limiting.html) for layered protection.
+
+{:.warning}
+> **Note:** Origin validation and IP allowlisting only prevent origin-bypass attacks, where a client skips your CDN and hits the Dedicated Cloud Gateway's public FQDN directly.
+> They don't inspect request content, so SQL injection, cross-site scripting, bot traffic, and other L7 attacks that arrive through the CDN pass through untouched.
+> Don't treat this combination as a substitute for AWS WAF managed rules in production.
 
 ### Egress IP allowlisting
 
