@@ -90,6 +90,9 @@ faqs:
 
 ## Create the vault module
 
+You can build a custom vault backend when your secrets live in a store that isn't one of the provided  [{{site.base_gateway}} Vaults](/gateway/entities/vault/#supported-vault-backends). 
+For example, if your secrets live in an internal secrets service, a proprietary HTTP-based secret manager, or a legacy system that exposes secrets over an API only your organization uses.
+
 A custom vault backend is a Lua module with two required functions:
 
 <!--vale off-->
@@ -115,7 +118,7 @@ mkdir -p kong/vaults/http
 
 Create `kong/vaults/http.lua`:
 
-```lua
+```bash
 echo '
 local http = require("resty.http")
 local cjson = require("cjson")
@@ -167,7 +170,7 @@ The module fetches `<base_url>/<resource>` and returns the `value` field from th
 
 The schema declares the configuration fields exposed on the Vault entity. Create `kong/vaults/http/schema.lua`:
 
-```lua
+```bash
 echo 'return {
   name = "http",
   fields = {
@@ -202,7 +205,7 @@ Kong must be started with the custom vault registered. This requires setting `KO
 
 2. Create `docker-compose.yml`:
 
-   ```yaml
+```bash
    echo '
    services:
      secret-store:
@@ -278,8 +281,8 @@ Kong must be started with the custom vault registered. This requires setting `KO
    ```
 
    The two key environment variables for custom vaults are:
-   - `KONG_VAULTS: bundled,http` — registers the built-in vaults plus the custom `http` vault
-   - `KONG_LUA_PACKAGE_PATH: /custom-code/?.lua;;` — tells Kong where to find the Lua modules
+   - `KONG_VAULTS: bundled,http`: Registers the built-in Vaults plus the custom `http` vault
+   - `KONG_LUA_PACKAGE_PATH: /custom-code/?.lua;;`: Tells {{site.base_gateway}} where to find the Lua modules
 
 3. Start all services:
 
@@ -289,7 +292,7 @@ Kong must be started with the custom vault registered. This requires setting `KO
 
 ## Create the Vault entity
 
-Create a Vault entity that configures the `http` vault backend. The `prefix` value (`http-vault`) is used in secret references:
+Create a [Vault entity](/gateway/entities/vault/) that configures the `http` vault backend. The `prefix` value (`http-vault`) is used in secret references:
 
 {% entity_examples %}
 entities:
@@ -301,11 +304,11 @@ entities:
         base_url: http://secret-store:9876/sekretz
 {% endentity_examples %}
 
-The `base_url` uses the Docker Compose service name (`secret-store`) as the hostname, since Kong and the secret store run in the same Docker network.
+The `base_url` uses the Docker Compose service name (`secret-store`) as the hostname, since {{site.base_gateway}} and the secret store run in the same Docker network.
 
 ## Configure the plugin with a vault reference
 
-Create a service and route, then enable the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. The `add.headers` list accepts items in `header-name:value` format. Here the vault reference is used as the entire item — Kong resolves `{vault://http-vault/x-from-vault}` to `X-From-Vault:top-secret-value`, which the plugin then parses into header name `X-From-Vault` and value `top-secret-value`.
+Create a Gateway Service and Route, then enable the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. The `add.headers` list accepts items in `header-name:value` format. Here the vault reference is used as the entire item; {{site.base_gateway}} resolves `{vault://http-vault/x-from-vault}` to `X-From-Vault:top-secret-value`, which the plugin then parses into header name `X-From-Vault` and value `top-secret-value`.
 
 {% entity_examples %}
 entities:
@@ -337,7 +340,7 @@ status_code: 200
 {% endvalidation %}
 <!--vale on-->
 
-The [httpbin](https://httpbin.konghq.com) upstream echoes the full incoming request as a JSON response body. Check the `headers` object for `X-From-Vault`:
+The upstream echoes the full incoming request as a JSON response body. Check the `headers` object for `X-From-Vault`:
 
 ```json
 {
