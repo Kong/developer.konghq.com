@@ -7,8 +7,8 @@ breadcrumbs:
 permalink: /event-gateway/kong-identity-jwt-metadata-integration/
 
 products:
-    - event-gateway
-
+  - event-gateway
+  - identity
 works_on:
     - konnect
 

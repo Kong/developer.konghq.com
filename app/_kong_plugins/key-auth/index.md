@@ -76,7 +76,7 @@ The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key
 
 {% include_cached /plugins/upstream-headers.md %}
 
-## Consumers identity realms {% new_in 3.10 %}
+## Consumer identity realms {% new_in 3.10 %}
 
 You can authenticate [centrally-managed Consumers](/gateway/entities/consumer/#centrally-managed-consumers) in {{site.konnect_short_name}} by configuring the [`config.identity_realms`](./reference/#schema--config-identity-realms) field.
 See [Realms for external Consumers in {{site.konnect_short_name}}](/plugins/key-auth/examples/identity-realms/) for an example configuration.

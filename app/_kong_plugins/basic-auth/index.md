@@ -88,7 +88,7 @@ rows:
   - use_case: "Authenticate on the upstream service"
     description: "Configure the Basic Authentication plugin on a Route and then configure the Consumer or the principal credential in the `config.add.headers` property for the [Request Transformer](/plugins/request-transformer/) plugin."
   - use_case: "[Allow clients to choose their authentication method](/how-to/allow-multiple-authentication/)"
-    description: "Enable the Basic Authentication plugin and any other authentication plugins. Use the `config.anonymous` property on the plugins to determine if authentication is always performed or only when the Consumer or the principals wasn't already authenticated."
+    description: "Enable the Basic Authentication plugin and any other authentication plugins. Use the `config.anonymous` property on the plugins to determine if authentication is always performed or only when the Consumer or the principals weren't already authenticated."
   - use_case: "Check credentials per session"
     description: "When the [Session](/plugins/session/) plugin is enabled in conjunction with an authentication plugin, it runs before credential verification. If no session is found, then the authentication plugin runs again and credentials are checked normally. If the credential verification is successful, then the Session plugin creates a new session for usage with subsequent requests."
   - use_case: "Rate limit unauthenticated and authenticated users differently"

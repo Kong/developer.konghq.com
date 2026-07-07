@@ -105,7 +105,7 @@ entities:
 variables:
   directory_name:
     value: $DIRECTORY_NAME
-format:
+formats:
   - deck
 {% endentity_examples %}
 

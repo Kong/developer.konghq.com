@@ -11,8 +11,8 @@ related_resources:
 
 description: Use the Basic Authentication plugin to allow Principals to authenticate with a username and password.
 products:
-    - gateway
-
+  - gateway
+  - identity
 plugins:
   - basic-auth
 
@@ -35,7 +35,7 @@ tags:
 tldr:
   q: How do I authenticate Principals with basic authentication?
   a: |
-    Create a [Principal](/identity/principals/) and enable the Basic Authentication plugin globally with `principals.enabled: true`. Set `principals.directory` to your directory ID, then authenticate with the base64-encoded Principal credentials.
+    Create a [Principal](/identity/principals/) and enable the Basic Authentication plugin globally with `principals.enabled: true`. Set `principals.directory` to your directory name, then authenticate with the base64-encoded Principal credentials.
 tools:
     - deck
 
@@ -102,7 +102,7 @@ This sets the following credentials for the Principal:
 
 ## Get the directory name
 
-To configure the Basic Auth plugin, you'll need the name of the directory you created. Store it as `DECK_DIRECTORY-NAME` with this script:
+To configure the Basic Auth plugin, you'll need the name of the directory you created. Store it as `DECK_DIRECTORY_NAME` with this script:
 
 {% include /how-tos/steps/get-directory-name.md %}
 
