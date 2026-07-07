@@ -500,8 +500,6 @@ body:
 {% endnavtab %}
 {% navtab "UI" %}
 
-{:.info}
-> If you weren't using Consumers before using principals, you won't see the Consumer option available, since principals are meant to replace Consumers in {{site.konnect_short_name}}.
 
 1. In the principal wizard, click **Add authentication**.
 1. From the **Authentication type** dropdown menu, select "Consumer linking".
