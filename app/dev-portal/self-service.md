@@ -290,3 +290,4 @@ Keep the following in mind when you map applications to Consumers or principals:
 * Application registrations for APIs that are linked to the same Gateway Service will share the same effective Consumer mapping.
   Updating the mapping for one registration updates it for all registrations that resolve to the same Gateway context.
 * Applying plugins to applications is only available on v3 {{site.dev_portal}}s.
+* Since application to Consumer linking uses {{site.identity}} in the backend, there may be some [latency impact](/identity/principals/#can-using-principals-to-authenticate-introduce-additional-latency-over-consumers) to the first request.
