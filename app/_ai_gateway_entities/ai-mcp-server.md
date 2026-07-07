@@ -286,8 +286,6 @@ This way, consumers only interact with tools appropriate to their role, while ma
 > 1. Configure `conversion-listener` or `conversion-only` AI MCP Servers with ACL rules and tags.
 > 1. Configure `listener` mode to aggregate tools by matching tags.
 > 1. Set [`include_consumer_groups`](#schema-aigateway-mcpserver-include-consumer-groups): true on the listener. Without this setting, the listener cannot pass Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
->
-> See [Enforce ACLs on aggregated MCP servers](/mcp/enforce-acls-on-aggregated-mcp-servers/) for a complete example.
 
 ### Attribute types
 
