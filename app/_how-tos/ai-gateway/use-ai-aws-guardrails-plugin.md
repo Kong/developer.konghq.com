@@ -86,11 +86,11 @@ curl --request POST \
   "name": "my-aws-guardrails-policy",
   "type": "ai-aws-guardrails",
   "config": {
-    guardrails_id: "${{ env "DECK_GUARDRAILS_ID" }}"
-    guardrails_version: "${{ env "DECK_GUARDRAILS_VERSION" }}"
-    aws_region: "${{ env "DECK_AWS_REGION" }}"
-    aws_access_key_id: "${{ env "DECK_AWS_ACCESS_KEY_ID" }}"
-    aws_secret_access_key: "${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}"
+    guardrails_id: "$DECK_GUARDRAILS_ID"
+    guardrails_version: "$DECK_GUARDRAILS_VERSION"
+    aws_region: "$DECK_AWS_REGION"
+    aws_access_key_id: "$DECK_AWS_ACCESS_KEY_ID"
+    aws_secret_access_key: "$DECK_AWS_SECRET_ACCESS_KEY"
   }
 }'
 ```
