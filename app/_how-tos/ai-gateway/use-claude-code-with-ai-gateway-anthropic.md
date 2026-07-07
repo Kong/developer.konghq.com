@@ -1,5 +1,6 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
+content_type: how_to
 permalink: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
 
 related_resources:
