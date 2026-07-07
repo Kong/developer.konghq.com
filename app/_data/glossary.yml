@@ -15,9 +15,10 @@ definitions:
       [Consumer entity](/gateway/entities/consumer/)
   - term: Credential
     description: |
-      A unique string associated with a Consumer, for example, an API key.
+      A unique string associated with a Consumer or principal, for example, an API key.
     url: |
       [Consumer entity](/gateway/entities/consumer/#what-are-credentials-and-why-do-i-need-them)
+      [Principals](/identity/principals/)
   - term: Dev Portal
     description: |
       A web application that functions as a collection of APIs, specs, and documentation objects. 
@@ -28,6 +29,7 @@ definitions:
     description: |
       Regional collection of principals.
       Each {{site.konnect_short_name}} organization can provision up to one directory per region by default.
+    url: |
       [Principals and directories](/identity/principals/)
 
   - term: Groups

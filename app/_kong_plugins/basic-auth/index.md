@@ -56,11 +56,14 @@ The [Basic Authentication](https://datatracker.ietf.org/doc/html/rfc7617 ) plugi
 
 Basic authentication can be used with both HTTP and HTTPS requests and is an effective way to add simple password protection to web applications.
 
+
 ## How it works
 
 The Basic Authentication plugin requires at least one Consumer or a principal {% new_in 3.15 %} to work. When you create the Consumer or the [principal](/identity/principals/), you must specify a username and password, for example: `Ariel:Password`. The credentials must be base64-encoded when it's used in the Authentication header. For example, `Ariel:Password` would become `QXJpZWw6UGFzc3dvcmQ=`.
 
 Then, you can enable the plugin on a Gateway Service, Route, or globally. When either a Consumer or a principal {% new_in 3.15 %} makes a request to the associated Gateway Service or Route, the plugin checks for valid credentials in the `Proxy-Authorization` and `Authorization` headers (in that order). In {{site.base_gateway}} 3.13 or later, you can [protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection`. This will return an `429 Too Many Requests` error after the fourth failed login attempt.
+
+{% include_cached /plugins/consumers-vs-principals.md name=page.name %}
 
 ### Using multiple authentication plugins
 

@@ -1,5 +1,6 @@
-When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer) or a [Principal identity](/identity/principals/#configure-a-principal) {% new_in 3.15 %}, you can specify a `key`.
+When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer){% if include.slug == "key-auth" %} or a [Principal identity](/identity/principals/#configure-a-principal) {% new_in 3.15 %}{% endif %}, you can specify a `key`.
 
+{% if include.slug == "key-auth" %}
 {% navtabs "set a key" %}
 {% navtab "Consumers" %}
 
@@ -14,9 +15,14 @@ When you create [a Consumer](/gateway/entities/consumer/#set-up-a-consumer) or a
 
 {% endnavtab %}
 {% endnavtabs %}
+{% else %}
 
+- Declarative configuration with `keyauth_credentials`
+- The `/consumers/{usernameOrId}/{{include.slug}}` endpoint.
 
-When authenticating, Consumers and principals must specify their key in either the query, body, or header:
+{% endif %}
+
+When authenticating, Consumers{% if include.slug == "key-auth" %} and principals{% endif %} must specify their key in either the query, body, or header:
 
 {% table %}
 columns:
