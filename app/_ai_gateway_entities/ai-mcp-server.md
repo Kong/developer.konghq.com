@@ -41,9 +41,9 @@ faqs:
   - q: What's the difference between the server types?
     a: |
       `passthrough-listener` proxies MCP traffic to an upstream MCP server without converting tools.
-      `conversion-listener` converts a RESTful API into MCP tools and accepts MCP requests on one route path. `conversion-only` defines a tool library that other MCP Servers reference by tag
+      `conversion-listener` converts a RESTful API into MCP tools and accepts MCP requests on one route path. `conversion-only` defines a tool library that other AI MCP Servers reference by tag
       but doesn't accept incoming MCP traffic itself. `listener` aggregates tools from one or more
-      `conversion-only` MCP Servers into a single MCP endpoint. `upstream-server` registers a real
+      `conversion-only` AI MCP Servers into a single MCP endpoint. `upstream-server` registers a real
       MCP server into an aggregation pool, dynamically fetching its tools for a `listener` to aggregate.
 
   - q: Can the same AI Consumer's identity gate access to specific tools?
@@ -76,7 +76,7 @@ faqs:
 
 Create an AI MCP Server to connect AI applications such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [Insomnia](/insomnia/) to your APIs and tools through the standardized [Model Context Protocol](https://modelcontextprotocol.io/). An AI MCP Server acts as a bridge between MCP-compatible clients and your backend systems, allowing you to expose existing APIs as discoverable tools without building custom integrations for each AI client.
 
-Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability policies you apply to traditional API traffic automatically covers MCP traffic, giving you consistent governance across both HTTP and MCP clients.
+Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability policies you apply to traditional API traffic automatically cover MCP traffic, giving you consistent governance across both HTTP and MCP clients.
 
 {:.warning}
 > **Note:** MCP traffic is API-level traffic, not LLM request/response flows. The [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/) provides MCP-specific OAuth2 validation. Standard API-level policies (authentication, rate limiting, logging) apply to MCP traffic. AI Policies that operate on LLM prompt/response flows (such as prompt guards or model routing) won't apply here.
@@ -107,7 +107,7 @@ columns:
     key: example
 rows:
   - use_case: "Secure MCP endpoints with credentials or OAuth tokens"
-    example: "[Key Auth](/ai-gateway/policies/key-auth/reference/) or [AI MCP Oauth2](/ai-gateway/policies/openid-connect/reference/) Policy"
+    example: "[Key Auth Policy](/ai-gateway/policies/key-auth/) or [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/)"
   - use_case: "Rate limiting"
     example: "Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
   - use_case: "Track all MCP traffic and ACL decisions."
@@ -580,7 +580,7 @@ data:
           required: true
           schema:
             type: string
-          description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
+          description: Location query. Accepts US Zipcode, UK Postcode, Canada postal code, IP address, latitude/longitude, or city name.
 {% endentity_example %}
 
 ## Schema
