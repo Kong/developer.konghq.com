@@ -34,7 +34,7 @@ next_steps:
     url: /how-to/get-started-with-prepaid-credits/
 ---
 
-Feature filters let you restrict a credit grant to specific product features and query balances or transaction history scoped to a single feature.
+Feature filters let you restrict a [credit grant](/metering-and-billing/credits/grants/) to specific product features and query balances or transaction history scoped to a single feature.
 Use them when you need to track or display how much credit is available for a particular feature, such as `input_tokens` or `output_tokens`.
 
 ## How feature balances work
@@ -57,7 +57,7 @@ When you create a [credit grant](/metering-and-billing/credits/grants/), `filter
 <!--vale off-->
 {% table %}
 columns:
-  - title: "`filters.features` value"
+  - title: "`filters.features` example value"
     key: value
   - title: Meaning
     key: meaning
@@ -66,10 +66,10 @@ rows:
     meaning: "The credit is unrestricted and can be used for any feature."
   - value: |
       `["input_tokens"]`
-    meaning: "The credit can only be used for `input_tokens`."
+    meaning: "The credit can only be used for the specified feature, for example: `input_tokens`."
   - value: |
       `["input_tokens", "output_tokens"]`
-    meaning: "The credit can be used for either listed feature."
+    meaning: "The credit can be used for any of the listed features."
 {% endtable %}
 <!--vale on-->
 
@@ -99,7 +99,7 @@ rows:
     returns: "Credits or transactions for any of the listed features."
   - operator: "`neq`"
     syntax: "`filter[feature_key][neq]=input_tokens`"
-    returns: "Credits or transactions not matching `input_tokens`."
+    returns: "Credits or transactions not matching the specified feature, for example: `input_tokens`.."
   - operator: "`contains`"
     syntax: "`filter[feature_key][contains]=tokens`"
     returns: "Credits or transactions where the feature key contains the string."
