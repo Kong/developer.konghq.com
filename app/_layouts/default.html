@@ -48,6 +48,44 @@
     {% endif %}
 
     {% if jekyll.environment == "production" %}
+    <script>
+      function getDataGrailConsent() {
+        const cookie = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('datagrail_consent_preferences='))
+          ?.split('=')[1];
+
+        if (!cookie) return null;
+
+        return Object.fromEntries(
+          cookie.split('|').map(pair => {
+            const [key, val] = pair.split(':');
+            return [key, val === '1'];
+          })
+        );
+      }
+
+      function getSegmentConsentContext() {
+        const dg = getDataGrailConsent();
+        if (!dg) return {};
+
+        return {
+          context: {
+            consent: {
+              categoryPreferences: {
+                essential:   dg['dg-category-essential']   ?? true,
+                functional:  dg['dg-category-functional']  ?? false,
+                marketing: dg['dg-category-marketing']   ?? false,
+                performance:   dg['dg-category-performance'] ?? false,
+              }
+            }
+          }
+        };
+      }
+    </script>
+    {% endif %}
+
+    {% if jekyll.environment == "production" %}
       <!-- Google Tag Manager -->
       <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
