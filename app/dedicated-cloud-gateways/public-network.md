@@ -229,7 +229,7 @@ To ensure all traffic passes through CloudFront, configure origin validation bet
 {:.warning}
 > **Note:** Origin validation and IP allowlisting only prevent origin-bypass attacks, where a client skips your CDN and hits the Dedicated Cloud Gateway's public FQDN directly.
 > They don't inspect request content, so SQL injection, cross-site scripting, bot traffic, and other L7 attacks that arrive through the CDN pass through untouched.
-> Don't treat this combination as a substitute for AWS WAF managed rules in production.
+> Do not treat this combination as a substitute for AWS WAF managed rules in production.
 
 ### Egress IP allowlisting
 
