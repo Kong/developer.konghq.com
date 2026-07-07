@@ -19,13 +19,13 @@ info:
 
     Authenticate with a Konnect personal access token or system account token. The base URL is
     `https://global.api.konghq.com/v2` for all regions.
-  version: 2.0.0
+  version: 2.0.1
   title: Konnect Cloud Gateways
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@d12778a36ed68c0f3ce42c0fc129f77736ad1d56
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d12778a36ed68c0f3ce42c0fc129f77736ad1d56'
+  x-oas-source: kong/platform-api@3eb6f84fdf65d8e277e94f7b1b317ff24b284766
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3eb6f84fdf65d8e277e94f7b1b317ff24b284766'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -1706,6 +1706,11 @@ components:
             - 71.78.149.75
             - 91.149.112.244
             - 51.235.15.121
+        hostnames:
+          description: List of hostnames for proxying to the data-plane group.
+          type: array
+          items:
+            type: string
         created_at:
           description: An RFC-3339 timestamp representation of data-plane group creation date.
           type: string

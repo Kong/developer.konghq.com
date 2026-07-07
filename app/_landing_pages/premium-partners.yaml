@@ -12,6 +12,7 @@ metadata:
     - partnership
     - confluent
     - traceable
+    - harness
     - dynatrace
     - solace
 rows:
@@ -33,10 +34,10 @@ rows:
     - blocks:
       - type: icon_card
         config:
-          title: Traceable.ai
-          icon: /assets/icons/plugins/traceableai.svg
+          title: Harness
+          icon: /assets/icons/plugins/harness.svg
           cta:
-            url: "#traceable-ai"
+            url: "#harness"
     - blocks:
       - type: icon_card
         config:
@@ -107,20 +108,24 @@ rows:
 
   - header:
       type: h2
-      text: "Traceable.ai"
+      text: "Harness"
     columns:
       - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
-                  icon: /assets/icons/plugins/traceableai.svg
+                  icon: /assets/icons/plugins/harness.svg
                   text: |
-                    [Traceable](https://www.traceable.ai/) is the industry's leading API Security company that helps organizations achieve API protection in a cloud-first, 
+                    [Harness](https://www.harness.io/) is the leading end-to-end platform for complete software delivery. 
+                    It provides a simple, safe, and secure way for engineering and DevOps teams to release applications into production. 
+                    Harness uses machine learning to detect the quality of deployments and automatically roll back failed ones, saving time and reducing the need for custom scripting and manual oversight, giving engineers their weekends back.
+
+                    [Traceable by Harness](https://www.traceable.ai/) is the industry's leading API Security solution that helps organizations achieve API protection in a cloud-first, 
                     API-driven world. 
 
-                    Traceable is the only contextually-informed solution that powers complete API security— security posture management, 
-                    threat protection and threat management across the entire Software Development Lifecycle— enabling organizations to 
+                    Traceable is the only contextually-informed solution that powers complete API security — security posture management, 
+                    threat protection and threat management across the entire Software Development Lifecycle — enabling organizations to 
                     minimize risk and maximize the value that APIs bring to their customers. 
 
   - columns:
@@ -130,14 +135,14 @@ rows:
           blocks:
             - type: text
               text: | 
-                **Traceable's Kong plugin** lets Traceable capture a copy of the API traffic that is flowing through {{site.base_gateway}}. 
-                Using this data, Traceable is able to create a security posture profile of APIs hosted on Kong. 
+                The {{site.base_gateway}} plugin for Harness Web Application & API Protection (WAAP) by Traceable lets Harness WAAP capture a copy of the API traffic that is flowing through {{site.base_gateway}}. 
+                Using this data, Harness WAAP is able to create a security posture profile of APIs hosted on Kong. 
 
-                Based on its findings, the Traceable plugin can also block traffic coming from malicious actors and IPs into {{site.base_gateway}}.
+                Based on its findings, the Harness WAAP plugin can also block traffic coming from malicious actors and IPs into {{site.base_gateway}}.
     - blocks: 
       - type: plugin
         config:
-          slug: traceableai
+          slug: harness-waap
   - columns:
     - blocks:
       - type: structured_text
