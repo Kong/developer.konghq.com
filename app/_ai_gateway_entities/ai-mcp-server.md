@@ -90,7 +90,7 @@ AI MCP Servers can be created and managed through the:
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI MCP Server](#set-up-an-ai-mcp-server).
 
-## MCP server governance
+## AI MCP Server governance
 
 Attach [AI Policies](/ai-gateway/entities/ai-policy/) to AI MCP Servers to enforce authentication, rate limits, request/response transformation, and OAuth gating. Add them to the [`policies`](#schema-aigateway-mcpserver-policies) field by name or ID. AI Policies run on all MCP traffic through the server, before tool invocation and after ACL checks. Multiple AI Policies can attach to one AI MCP Server, and each runs independently in the request lifecycle.
 
@@ -246,7 +246,7 @@ You can use a `listener` to pull tools from multiple `upstream-server` MCP Serve
 {% mermaid %}
 sequenceDiagram
     participant Agent as AI Agent
-    participant Kong as Kong AI Gateway
+    participant Kong as {{site.ai_gateway}}
     participant Listener as AI MCP Server
     participant Upstreams as Upstreams<br/>(tag: my-tools)
 
@@ -334,7 +334,7 @@ Configure how long sessions persist using [`session_ttl`](#schema-aigateway-mcps
 
 When exposing MCP servers through {{site.ai_gateway}}, you may need granular control over which authenticated [AI Consumers](/ai-gateway/entities/ai-consumer/) can discover and invoke specific tools. The MCP Server's ACL feature lets you define access rules at both the default level (which applies to all tools) and per-tool level (for fine-grained exceptions).
 
-This way, AI Consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the MCP Server (such as [Key Auth Policy](/ai-gateway/policies/key-auth/) or an [OpenID Connect Policy](/ai-gateway/policies/openid-connect/)), and the AI Consumer identity is used for ACL checks.
+This way, AI Consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the AI MCP Server (such as [Key Auth Policy](/ai-gateway/policies/key-auth/) or an [OpenID Connect Policy](/ai-gateway/policies/openid-connect/)), and the AI Consumer identity is used for ACL checks.
 
 {:.info}
 > **ACL in `listener` mode**
@@ -355,7 +355,7 @@ For modes that support ACL configuration (`conversion-listener`, `conversion-onl
 
 ### Using AI Consumers and Groups in ACLs
 
-When `acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated consumer's identity and group memberships against your `allow` and `deny` lists.
+When `acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated AI Consumer's identity and group memberships against your `allow` and `deny` lists.
 
 ### How default and per-tool ACLs work
 
