@@ -144,6 +144,14 @@ This **does not** restrict who can access the {{site.dev_portal}} settings, conf
 
 This IP allow list applies to all {{site.dev_portal}} communication that goes through the Admin API.
 
+When configuring allowlists, choose IPv4, IPv6, or both based on expected client network behavior. 
+Access is evaluated against the exact client IP received at request time, which may be IPv4 or IPv6 depending on the client’s network path:
+* Use IPv4 only for controlled or IPv4-only environments (for example, static corporate/VPN egress).
+* Use IPv6 only for IPv6-only environments with known CIDRs.
+* Use both IPv4 and IPv6 (recommended) for public internet access or when client network paths aren't controlled.
+
+If only one IP family is configured, requests arriving over the other family will be denied.
+
 {:.warning}
 > **Important:** 
 > * Any IP addresses that aren't allow listed won't be able to access the {{site.dev_portal}}, including your own.
