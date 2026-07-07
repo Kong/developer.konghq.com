@@ -57,9 +57,9 @@ style Customer stroke-dasharray:3
 
 **Figure 1**: **Solid arrows** are **user data traffic** — LLM, MCP, and A2A requests flowing through the data plane to upstream services. **Dashed arrows** are **control-plane** traffic — configuration and certificates pulled from {{site.konnect_short_name}}, and telemetry streamed back to it. The control plane never sits in the path of user data traffic.
 
-### AI Gateway and Data Plane Node
+### {{site.ai_gateway}} and Data Plane Node
 
-An **{{site.ai_gateway}} instance** is the top-level resource you create in {{site.konnect_short_name}} to hold a set of AI entities. A **data plane node** is a single proxy: a {{site.base_gateway}} (Kong's general-purpose API gateway) instance running in AI Gateway mode. Each node registers to exactly one {{site.ai_gateway}} instance and receives its configuration from it (see [Multi-tenancy and isolation](#multi-tenancy-and-isolation)). For how nodes authenticate, stay in sync, and report telemetry, see [Node registration and synchronization](#node-registration-and-synchronization).
+An **{{site.ai_gateway}} instance** is the top-level resource you create in {{site.konnect_short_name}} to hold a set of AI entities. A **data plane node** is a single proxy: a {{site.base_gateway}} (Kong's general-purpose API gateway) instance running in {{site.ai_gateway}} mode. Each node registers to exactly one {{site.ai_gateway}} instance and receives its configuration from it (see [Multi-tenancy and isolation](#multi-tenancy-and-isolation)). For how nodes authenticate, stay in sync, and report telemetry, see [Node registration and synchronization](#node-registration-and-synchronization).
 
 ## {{site.ai_gateway}} entities
 
@@ -141,7 +141,7 @@ When you create an AI entity in {{site.konnect_short_name}}, the control plane t
 
 AI Model endpoints are exposed as ordinary {{site.base_gateway}} Routes with the AI Proxy Advanced plugin attached, which translates the incoming request into the target provider's format and back. A request reaches a provider through its AI Model's targets and load-balancing strategy; {{site.ai_gateway}} has no separate hostname- or port-based routing layer. Each configured target carries its own provider credentials — a static API key, AWS SigV4, Azure managed identity, or a GCP service account — which the data plane injects or signs automatically on the upstream call.
 
-When multiple targets are configured for a model, the data plane distributes traffic using one of seven load-balancing strategies: `round-robin` (the default), `consistent-hashing`, `least-connections`, `lowest-latency`, `lowest-usage` (by token count or cost), `semantic` (route by prompt similarity), and `priority` (weighted, ordered failover). On an upstream error or timeout, the data plane retries and fails over to another target by default; an optional passive circuit breaker (`max_fails` and `fail_timeout`, off by default) ejects a repeatedly failing target across requests. There are no active health probes. Connections to upstream providers are reused by default, with reuse disabled when traffic is routed through a configured forward proxy. See [Load balancing](/ai-gateway/load-balancing/) for strategy details and tunables.
+When multiple targets are configured for a model, the data plane distributes traffic using one of seven load-balancing strategies: `round-robin` (the default), `consistent-hashing`, `least-connections`, `lowest-latency`, `lowest-usage` (by token count or cost), `semantic` (route by prompt similarity), and `priority` (weighted, ordered failover). On an upstream error or timeout, the data plane retries and fails over to another target by default; an optional passive circuit breaker (`max_fails` and `fail_timeout`, off by default) ejects a repeatedly failing target across requests. There are no active health probes. Connections to upstream providers are reused by default, with reuse disabled when traffic is routed through a configured forward proxy. See [Load balancing](/ai-gateway/load-balancing/) for strategy details.
 
 ## Node registration and synchronization
 
@@ -218,4 +218,4 @@ Within hybrid mode, size the data plane to your traffic and availability needs:
 
 Each {{site.ai_gateway}} instance has its own data plane pool (see [Multi-tenancy and isolation](#multi-tenancy-and-isolation)): a node registers with a single {{site.ai_gateway}} instance and pulls configuration from only that instance.
 
-For the underlying hybrid-mode mechanics, certificate management, and disaster-recovery guidance shared with {{site.base_gateway}}, see [Kong Gateway deployment topologies](/gateway/deployment-topologies/).
+For the underlying hybrid-mode mechanics, certificate management, and disaster-recovery guidance shared with {{site.base_gateway}}, see [{{site.base_gateway}} deployment topologies](/gateway/deployment-topologies/).
