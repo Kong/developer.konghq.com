@@ -39,7 +39,7 @@ body:
 {:.warning}
 > **Logging in to {{site.dev_portal}}s:**
 > * **SSO:** If a developer is created in a {{site.dev_portal}} with SSO configured, they must be able to use SSO to log in if their email address is configured in the identity provider. 
->  After they log in, they will automatically be approved.
+>  After they log in, they will automatically be approved. Both OIDC and SAML SSO are supported.
 > * **Basic auth:** If a developer is created in a {{site.dev_portal}} with basic auth configured, they must be able to set their password. This can be done one of two ways:
 >   * `send_invitation_email: true`: Developers can use the link in the email to set their password.
 >   * Developers can click **Forgot password** in the {{site.dev_portal}} UI to set a password, regardless of whether `send_invitation_email` is `true` or `false`.
