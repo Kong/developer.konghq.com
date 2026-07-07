@@ -14,8 +14,36 @@ works_on:
 breadcrumbs:
   - /identity/
 
+min_version:
+  gateway: '3.15'
+
 description: "Learn how {{site.identity}} principals and directories represent authenticating entities and centralize identity, credentials, and metadata across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}}."
 
+faqs:
+  - q: What principal data is stored in, or sent to {{site.konnect_short_name}}?
+    a: |
+      Principal data, including identities, credentials, and metadata, is stored in {{site.konnect_short_name}}. Principals are stored in a specific {{site.konnect_short_name}} region and are accessed by gateways whose control planes are also managed by {{site.konnect_short_name}} in the same region.
+
+      {{site.konnect_short_name}} does not directly store credentials, such as API keys or usernames and passwords, associated with principals. 
+      Instead, it stores one-way, salted hashes of this data. 
+      This means {{site.konnect_short_name}} cannot retrieve passwords after they have been created; it can only verify if a password matches one supplied in a request.
+  - q: What data is sent to {{site.konnect_short_name}} from a gateway to perform authentication?
+    a: |
+      When a gateway needs to identify the principal associated with a particular request or event, it must make an authentication or identification (lookup) transmission from a data plane of that gateway to the {{site.konnect_short_name}} API, which is subject to the Kong Service Level Agreement.
+
+      All such transmissions are securely encrypted using mutual transport layer security (mTLS) in transit, using the same certificates and keys that are used to authenticate to {{site.konnect_short_name}} to retrieve information from the {{site.konnect_short_name}} control plane.
+      Depending on which authentication method you use, the decoded username and password, API key, or decoded identifiers are sent, encrypted via mTLS, to {{site.konnect_short_name}} to authenticate and identify the principal.
+  - q: What data is sent from {{site.konnect_short_name}} to a gateway following authentication?
+    a: |
+      Following an authentication handshake, the following information is returned over the same connection from {{site.konnect_short_name}} back to the data plane:
+
+      * The UUID of the authenticated/identified principal
+      * The display name of the authenticated/identified principal
+      * Metadata keys and values associated with the authenticated/identified principal
+  - q: Can using principals to authenticate introduce additional latency over Consumers?
+    a: |
+      Yes. Because the credentials and metadata for principals are stored in {{site.konnect_short_name}}, The first time a data plane receives a request with a particular credential or lookup key, it authenticates to {{site.konnect_short_name}} to retrieve it. This request always goes to the {{site.konnect_short_name}} region where you host the control plane. This first lookup adds latency that varies with network conditions. Kong caches principals and credentials locally for the next lookups.
+  
 related_resources:
   - text: "{{site.identity}} auth servers"
     url: /identity/auth-servers/
@@ -109,10 +137,26 @@ A single principal can have multiple identities, including multiple of the same 
 ### Principal entity mapping
 
 Principals centralize the concept of an authenticating entity across Kong products. 
+Each product has its own representation of who is authenticating.
+For example, {{site.base_gateway}} has Consumers and Consumer Groups:
+* **Consumers**: Attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. When a {{site.identity}}-compatible authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. This allows existing Consumer-scoped plugins to function while you migrate to principals.
+* **Consumer Groups**: Map a principal to one or more Consumer Groups by setting the reserved `consumer_groups` key in the principal's [metadata](#metadata) to a list of Consumer Group UUIDs. Consumer Groups have a many-to-many relationship with principals:
+  - The same group can map to many principals
+  - One principal can map to many groups.
+
+  If the principal is also mapped to a Consumer and that Consumer belongs to its own Consumer Groups, the gateway loads the union of both sets into the request context. Only Consumer Groups that are defined in the same {{site.base_gateway}} as the control plane will be loaded into the request context.
+
+{% comment %}
 Each product has its own representation of who is authenticating: {{site.base_gateway}} has Consumers and {{site.dev_portal}} has applications:
 
-* **Consumers**: Attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. When an authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. This allows existing Consumer-scoped plugins to function while you migrate to principals.
+* **Consumers**: Attach a `control_plane_consumer` [identity](#identities) to map a principal to a Consumer in a specific {{site.base_gateway}} control plane. When a {{site.identity}}-compatible authentication plugin authenticates the principal, the mapped Consumer loads into the request context just as if the Consumer had been authenticated directly. This allows existing Consumer-scoped plugins to function while you migrate to principals.
+* **Consumer Groups**: Map a principal to one or more Consumer Groups by setting the reserved `consumer_groups` key in the principal's [metadata](#metadata) to a list of Consumer Group UUIDs. Consumer Groups have a many-to-many relationship with principals:
+  - The same group can map to many principals
+  - One principal can map to many groups.
+  
+  If the principal is also mapped to a Consumer and that Consumer belongs to its own Consumer Groups, the gateway loads the union of both sets into the request context. Only Consumer Groups that are defined in the same {{site.base_gateway}} as the control plane will be loaded into the request context.
 * **Applications**: You can map a {{site.dev_portal}} application to a {{site.base_gateway}} Consumer through a principal, creating a 1:1:1 relationship between the application, the principal, and the Consumer. This is how you apply Consumer-scoped plugins (including ACE and KAA) to traffic from a {{site.dev_portal}} application: configure the plugin on the mapped Consumer, and it runs for any request authenticated as the application. Consumer-dimension analytics also include the application's activity once the mapping is in place. A Portal Admin maps an existing application to an existing Consumer; {{site.identity}} creates or updates the principal of type `application` behind the scenes.
+{% endcomment %}
 
 #### When to use principals instead of Consumers
 
@@ -433,6 +477,8 @@ body:
 ### Link a principal to a Consumer
 
 Map a principal to a Consumer in a specific {{site.base_gateway}} control plane. 
+At most, you can map one Consumer per control plane to a principal. 
+You can map multiple Consumers if they are in different control planes.
 
 {% navtabs "consumer-identity" %}
 {% navtab "API" %}
@@ -464,6 +510,32 @@ body:
 1. (Optional) To add more than one authentication type, click **Add and create another** and repeat the configuration for the additional type.
 {% endnavtab %}
 {% endnavtabs %}
+
+### Link a principal to Consumer Groups
+
+Map a principal to one or more Consumer Groups in a {{site.base_gateway}} control plane.
+
+Consumer Groups are mapped through the principal's metadata using the reserved `consumer_groups` key, not through the identities resource.
+
+Send a `PATCH` request to the `/v2/directories/{directoryId}/principals/{principalId}` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID
+status_code: 200
+method: PATCH
+body:
+  metadata:
+    consumer_groups:
+      - $CONSUMER_GROUP_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> Keep the following in mind when mapping Consumer Groups:
+> * If the principal is also mapped to a Consumer (for example, Consumer X) and that Consumer belongs to its own Consumer Groups (for example, Group C and Group D), and the principal's `consumer_groups` metadata also lists Group A and Group B, then all four groups (A, B, C, and D) load into the request context.
+> * Consumer Groups must be defined in the same control plane and workspace as the plugin.
+> * Consumer Groups have a many-to-many relationship with principals.
 
 ### Custom
 
@@ -512,3 +584,4 @@ The following are default limits for principals and directories:
 * Custom identity name and value combinations must be unique within a directory
 * OIDC identity issuer and claim combinations must be unique within a directory
 * Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
+* At most, you can map one Consumer per control plane to a principal. You can map multiple Consumers if they are in different control planes.
