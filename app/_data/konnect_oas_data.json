@@ -297,7 +297,7 @@
       "name": "v1",
       "id": "62d001b6-6892-43a3-ad97-346047341169"
     },
-    "description": null,
+    "description": "The Konnect API for managing Kong Identity auth servers.",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [
@@ -317,7 +317,20 @@
     "latestVersion": {
       "name": "v2",
       "id": "1e78499d-d296-4db8-9c7f-dcac5b7a2c5d"
-    }
+    },
+    "description": "The Konnect API for managing Kong Identity principals and directories.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "1e78499d-d296-4db8-9c7f-dcac5b7a2c5d",
+        "created_at": "2026-07-08T16:50:01.083Z",
+        "updated_at": "2026-07-08T17:51:09.869Z",
+        "name": "v2",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
   },
   {
     "id": "f8ebf955-6f09-40f6-b020-1feb80b4a773",
