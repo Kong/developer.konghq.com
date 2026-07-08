@@ -97,8 +97,7 @@ spec:
 Create the following resources:
 
 * A `GatewayConfiguration` and a `GatewayClass` to configure your gateway with the latest {{site.base_gateway}} version and {{site.operator_product_name}} as the controller.
-* A `Gateway` with the `cert-manager.io/issuer: "selfsigned-issuer"` annotation and the `tls.certificateRefs` pointing to the name of the Secret to provision.
-* A `Certificate` that references the cert-manager issuer and the provisioned Secret.
+* A `Gateway` with the `cert-manager.io/issuer: "selfsigned-issuer"` annotation, the `tls.certificateRefs` pointing to the name of the Secret to provision and `cert-manager.io/secret-template` to label the generated TLS Secret with konghq.com/secret=true.
 
 ```sh
 echo '
@@ -135,6 +134,7 @@ metadata:
   namespace: kong
   annotations:
     cert-manager.io/issuer: "selfsigned-issuer"
+    cert-manager.io/secret-template: "{\"labels\":{\"konghq.com/secret\":\"true\"}}"
 spec:
   gatewayClassName: kong-cert-manager
   listeners:
@@ -148,22 +148,6 @@ spec:
           - group: ""
             kind: Secret
             name: example-tls-secret
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: example-tls-certificate
-  namespace: kong
-spec:
-  secretName: example-tls-secret
-  issuerRef:
-    name: selfsigned-issuer
-    kind: Issuer
-  dnsNames:
-    - example.localdomain.dev
-  secretTemplate:
-    labels:
-      konghq.com/secret: "true"' | kubectl apply -f -
 ```
 
 ## Create an echo Service
