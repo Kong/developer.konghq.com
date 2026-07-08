@@ -45,7 +45,7 @@ faqs:
     a: Associations by ID are constrained to their originating control plane. Associations by string can span multiple member control planes.
 
   - q: Can a control plane group be configured directly?
-    a: No. control plane groups are read-only. Configuration changes must be made through a member control plane. The only exceptions are generating or uploading Data Plane node certificates and connecting Data Plane nodes.
+    a: No. Control plane groups are read-only. Configuration changes must be made through a member control plane. The only exceptions are generating or uploading Data Plane node certificates and connecting Data Plane nodes.
   - q: How do I migrate a control plane configuration into a control plane group?
     a: |
       Using [decK](/deck/), you can export the configuration of the control plane and sync it with the group: 
@@ -92,8 +92,7 @@ flowchart LR
   A(Team Blue)
   B(Team Green)
   C(Control plane Blue)
-  D(Control plane Purple
-    global config)
+  D(Control plane Purple<br>global config)
   E(Control plane Green)
   F(Data Plane nodes)
   G(Data Plane nodes)
@@ -127,7 +126,7 @@ In this diagram:
 
 ## How do I create a control plane group?
 
-In {{site.konnect_short_name}}, control plane groups can be created using the [control planes API](/api/konnect/control-planes/).
+In {{site.konnect_short_name}}, control plane groups can be created using the [Control Planes API](/api/konnect/control-planes/).
 
 <!--vale off-->
 {% control_plane_request %}
@@ -145,7 +144,7 @@ body:
 
 ## How do I attach control planes to a control plane group?
 
-Once you have a control plane group, you can add control planes to the Group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/#/operations/post-control-planes-id-group-memberships-add).
+Once you have a control plane group, you can add control planes to the group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/#/operations/post-control-planes-id-group-memberships-add).
 <!--vale off-->
 
 {% control_plane_request %}
@@ -261,7 +260,7 @@ rows:
 
 {% endtable %}
 
-## Limitation
+## Consumer analytics limitation
 
 If a Consumer is defined in one member control plane and the request it authorizes hits a Route or Gateway Service defined in a different member control plane of the same control plane group, {{site.observability}} can't resolve the Consumer across control planes. 
 In this case, the Consumer displays as `(deleted)` in Requests, Explorer, and Dashboards, even though it exists and successfully authorized the request. 
