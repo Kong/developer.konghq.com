@@ -1,4 +1,11 @@
 {
+  "3.15.0.1": [
+    {
+      "message": "Fixed the race condition where the balancer `tries` array was cleared before the asynchronous timer thread could safely encode it.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "the `ssl_verify` option is now enabled by default.\n",
