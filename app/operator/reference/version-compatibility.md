@@ -81,10 +81,13 @@ versions:
   - "1.2.0"
   - "1.3.0"
   - "1.4.0"
+  - "1.5.0"
+  - "1.5.1"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   "2.0.x": ["1.0.0", "1.1.0", "1.2.0", "1.3.0"]
   "2.1.x": ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0"]
+  "2.2.x": ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0", "1.5.0", "1.5.1"]
 {% endversion_compatibility_table %}
 
 [gateway-api]: https://github.com/kubernetes-sigs/gateway-api
