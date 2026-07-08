@@ -241,7 +241,7 @@ An {{site.ai_gateway}} instance is fully separate from {{site.base_gateway}} con
 
 ## Deployment topologies
 
-As of {{site.ai_gateway}} 2.0, {{site.ai_gateway}} runs in a single deployment mode: **hybrid**, with a {{site.konnect_short_name}}-managed control plane and self-managed data plane nodes. Configuration always originates in the {{site.konnect_short_name}} control plane and is distributed to data plane nodes from there.
+As of {{site.ai_gateway}} 2.0.X, {{site.ai_gateway}} runs in a single deployment mode: **hybrid**, with a {{site.konnect_short_name}}-managed control plane and self-managed data plane nodes. Configuration always originates in the {{site.konnect_short_name}} control plane and is distributed to data plane nodes from there.
 
 {:.info}
 > {{site.ai_gateway}} currently requires connectivity to {{site.konnect_short_name}}. There is no self-managed database-backed option, standalone DB-less mode, offline control plane, or fully self-hosted control plane. {{site.base_gateway}} already supports these deployment modes, and {{site.ai_gateway}} may add similar topologies in a future release.
