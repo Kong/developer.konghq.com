@@ -46,7 +46,7 @@ works_on:
 You can use these metrics to:
 
 * Track LLM request latency and upstream provider processing time
-* Monitor token consumption across AI Providers, AI Models, and AI Consumers
+* Monitor token consumption across AI Model Providers, AI Models, and AI Consumers
 * Measure time-to-first-token (TTFT) and inter-token latency (TPOT) for streaming responses
 * Calculate AI request costs
 * Observe MCP tool-call latency, error rates, and ACL decisions

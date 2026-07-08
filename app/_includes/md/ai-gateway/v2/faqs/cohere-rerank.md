@@ -1,1 +1,1 @@
-Configure an [AI Model](/ai-gateway/entities/ai-model/) with a Cohere [AI Provider](/ai-gateway/entities/ai-provider/) and send queries with candidate documents. The model filters for relevance and returns answers with citations.
+Configure an [AI Model](/ai-gateway/entities/ai-model/) with a Cohere [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and send queries with candidate documents. The model filters for relevance and returns answers with citations.
