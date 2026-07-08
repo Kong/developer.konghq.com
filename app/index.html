@@ -29,10 +29,10 @@ edit_and_issue_links: false
             <div class="flex flex-wrap gap-2 justify-center items-center">
                 <span class="text-xs text-terciary font-mono">Try</span>
                 {%- for chip in hp.hero.chips -%}
-                <button class="ask-ai-button text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer">{{ chip }}</button>
+                <button class="ask-ai-button text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer" data-query="{{ chip }}">{{ chip }}</button>
                 {%- endfor -%}
             </div>
-            <span class="text-sm"><a href="/sitemap/">View all Kong documentation</a></span>
+            <span class="text-sm"><a href="/sitemap/">View all Kong documentation &rarr;</a></span>
         </div>
     </div>
 
@@ -227,7 +227,7 @@ edit_and_issue_links: false
                 {%- assign spec_parts = specs.title | split: specs.title_italic -%}
                 <h2 class="text-[36px] leading-[44px]">{{ spec_parts[0] }}<em class="text-primary dark:text-brand italic font-bold">{{ specs.title_italic }}</em>{{ spec_parts[1] }}</h2>
             </div>
-            <a href="/api/" class="text-sm text-links no-icon shrink-0 mb-2">See all API specs &rarr;</a>
+            <a href="/api/" class="text-sm text-links no-icon shrink-0 mb-2">All API specs &rarr;</a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -281,3 +281,11 @@ edit_and_issue_links: false
     </div>
 
 </div>
+
+<script>
+  document.querySelectorAll("button.ask-ai-button[data-query]").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      window.Kapa("open", { query: btn.dataset.query, submit: true });
+    });
+  });
+</script>

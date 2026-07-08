@@ -40,6 +40,19 @@ llm: false
 
 - [Kong API catalog](/api/)
 
+## What's new
+
+{%- for entry in site.data.homepage.whats_new.entries %}
+{%- if entry.product %}
+{%- assign product_data = site.data.products[entry.product] %}
+{%- assign latest = product_data.releases | where: "latest", true | first %}
+{%- assign _ver = entry.version_override | default: latest.version | default: latest.release %}
+- **{{ product_data.name }}** (v{{ _ver }}) — [Changelog]({{ entry.changelog_url }})
+{%- else %}
+- **{{ entry.name }}** — [Changelog]({{ entry.changelog_url }})
+{%- endif %}
+{%- endfor %}
+
 ## Additional Resources
 
 - [All Kong documentation sitemap](/sitemap/)
