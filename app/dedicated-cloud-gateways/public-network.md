@@ -153,7 +153,7 @@ WAF inspection requires HTTP visibility, which means the WAF must sit at an HTTP
 * A cloud edge service
 
 Because the Kong-managed Dedicated Cloud Gateway data plane exposes a DNS hostname instead of an IP address, **you can't chain another public load balancer in front of it** (most load balancers' target groups don't support DNS-based targets).
-This is why the customer-managed ALB pattern used to front [private Dedicated Cloud Gateways](/dedicated-cloud-gateways/private-network/#aws-waf) doesn't carry over to public deployments: a private Dedicated Cloud Gateway exposes static private IP addresses that an ALB can target directly, but a public Dedicated Cloud Gateway doesn't.
+This is why you can't reuse the same approach you'd use with private Dedicated Cloud Gateways, where you deploy your own ALB in front of the gateway. A private Dedicated Cloud Gateway exposes static private IP addresses that your ALB can target directly; a public one exposes only a DNS hostname.
 Instead, you must use a CDN because it natively supports DNS-based origins and can attach WAF policies at the distribution level.
 
 Examples of CDN or edge services that support this pattern:
