@@ -29,7 +29,7 @@ edit_and_issue_links: false
             <div class="flex flex-wrap gap-2 justify-center items-center">
                 <span class="text-xs text-terciary font-mono">Try</span>
                 {%- for chip in hp.hero.chips -%}
-                <button class="ask-ai-button text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer" data-query="{{ chip }}">{{ chip }}</button>
+                <button class="ask-ai-button text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer" data-query="{{ chip }}">{{ chip | escape }}</button>
                 {%- endfor -%}
             </div>
             <span class="text-sm"><a href="/sitemap/">View all Kong documentation &rarr;</a></span>
@@ -71,7 +71,7 @@ edit_and_issue_links: false
                     </div>
                 </div>
                 <pre class="bg-code-block m-0 px-4 py-4 text-sm leading-relaxed overflow-x-auto border-0 rounded-none"><code><span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.install }}
-<span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only">{{ cli.install }}
+<span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only" aria-hidden="true">{{ cli.install }}
 {{ cli.command }}</span></code></pre>
                 <div class="px-5 pb-5 pt-4 flex flex-col gap-2 border-t border-primary flex-1">
                     <p class="text-sm text-secondary">{{ cli.description }}</p>
@@ -148,7 +148,7 @@ edit_and_issue_links: false
                         <li class="text-xs font-mono text-secondary flex gap-2"><span class="text-terciary">&rsaquo;</span>{{ line }}</li>
                         {%- endfor -%}
                     </ul>
-                    <span id="{{ fcard_id }}" class="sr-only">{% for line in fcard.snippet_lines %}{{ line }}
+                    <span id="{{ fcard_id }}" class="sr-only" aria-hidden="true">{% for line in fcard.snippet_lines %}{{ line }}
 {% endfor %}</span>
                 </div>
                 {%- endif -%}
