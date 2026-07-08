@@ -30,6 +30,8 @@ related_resources:
   - text: "Get started with prepaid credits"
     url: /how-to/get-started-with-prepaid-credits/
 next_steps:
+  - text: Learn about credit operational flows
+    url: /metering-and-billing/credits/operational-flows/
   - text: Get started with prepaid credits
     url: /how-to/get-started-with-prepaid-credits/
 ---
