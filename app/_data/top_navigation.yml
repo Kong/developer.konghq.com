@@ -17,6 +17,9 @@ platform:
     - text: Inso CLI
       url: /inso-cli/
       icon: /assets/icons/code.svg
+    - text: Koh CLI
+      url: /koh/
+      icon: /assets/icons/ai.svg
     - text: Terraform
       url: /terraform/
       icon: /assets/icons/terraform.svg
@@ -141,6 +144,9 @@ ai_tools:
     icon: /assets/icons/code.svg
   - text: Inso CLI
     url: /inso-cli/
+    icon: /assets/icons/code.svg
+  - text: Koh CLI
+    url: /koh/
     icon: /assets/icons/code.svg
 
 support:

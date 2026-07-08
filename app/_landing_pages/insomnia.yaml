@@ -118,7 +118,17 @@ rows:
             icon:  /assets/icons/terminal.svg
             cta:
               text: Learn more
-              url: /inso-cli/        
+              url: /inso-cli/
+      - blocks:
+        - type: card
+          config:
+            title: Koh CLI
+            description: Let AI agents like Claude Code work with your Insomnia collections, requests, and specs.
+            icon:  /assets/icons/ai.svg
+            tech_preview: true
+            cta:
+              text: Learn more
+              url: /koh/
 
   - header:
       type: h2
