@@ -5,13 +5,11 @@ permalink: /index.md
 llm: false
 ---
 
-# {{ site.data.homepage.title | liquify }}
+# Kong Developer
 
 {{ site.data.homepage.description | liquify }}
 
 ## For agents & the CLI
-
-{{ site.data.homepage.agents_section.title }}
 
 ### CLIs
 {%- for cli in site.data.homepage.agents_section.cli_cards %}
@@ -24,33 +22,35 @@ llm: false
 {%- endfor %}
 
 ## The platform
-
-{{ site.data.homepage.products_section.title }}
 {%- for cat in site.data.homepage.products_section.categories %}
 
 ### {{ cat.name }}
 {%- for item in cat.items %}
-- **{{ item.title | liquify }}** — {{ item.description | liquify }} [Docs]({{ item.url }})
+{%- assign first_link = item.links | first %}
+{%- if item.product %}
+{%- assign item_product = site.data.products[item.product] %}
+{%- assign item_latest = item_product.releases | where: "latest", true | first %}
+{%- assign item_ver = item_latest["ee-version"] | default: item_latest.version | default: item_latest.release %}
+- **{{ item.title | liquify }}** (v{{ item_ver }}) — {{ item.description | liquify }} [Docs]({{ first_link.url }})
+{%- else %}
+- **{{ item.title | liquify }}** — {{ item.description | liquify }} [Docs]({{ first_link.url }})
+{%- endif %}
 {%- endfor %}
 {%- endfor %}
 
 ## API specifications
 
-{{ site.data.homepage.specs_section.title }}
-
 - [Kong API catalog](/api/)
 
 ## What's new
-
-{%- for entry in site.data.homepage.whats_new.entries %}
-{%- if entry.product %}
-{%- assign product_data = site.data.products[entry.product] %}
+{%- for cat in site.data.homepage.products_section.categories %}
+{%- for item in cat.items %}
+{%- unless item.whats_new %}{% continue %}{% endunless %}
+{%- assign product_data = site.data.products[item.product] %}
 {%- assign latest = product_data.releases | where: "latest", true | first %}
-{%- assign _ver = entry.version_override | default: latest.version | default: latest.release %}
-- **{{ product_data.name }}** (v{{ _ver }}) — [Changelog]({{ entry.changelog_url }})
-{%- else %}
-- **{{ entry.name }}** — [Changelog]({{ entry.changelog_url }})
-{%- endif %}
+{%- assign _ver = latest["ee-version"] | default: latest.version | default: latest.release %}
+- **{{ product_data.name }}** (v{{ _ver }}) — [Changelog]({{ item.changelog_url }})
+{%- endfor %}
 {%- endfor %}
 
 ## Additional Resources

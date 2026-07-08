@@ -2,8 +2,6 @@ title: Kong Developer
 description: "Tools, APIs, and recipes to build, secure, and observe everything from a single API to fleets of AI agents. Ask, browse, or drop straight into the CLI."
 
 hero:
-  eyebrow: "Kong Developer · Documentation"
-  title_italic: "accomplish?"
   chips:
     - "Publish an API to Dev Portal"
     - "Configure OIDC auth"
@@ -12,8 +10,6 @@ hero:
     - "Trace API requests"
 
 agents_section:
-  title: "First-class tools for builders and agents"
-  title_italic: "tools"
   cli_cards:
     - tool: decK
       icon: /assets/icons/terminal.svg
@@ -67,14 +63,13 @@ agents_section:
       icon: /assets/icons/book.svg
 
 products_section:
-  title: "From edge to agent"
-  title_italic: "agent"
   categories:
     - name: Connectivity
       items:
         - title: Kong Gateway
           product: gateway
           changelog_url: /gateway/changelog/
+          whats_new: true
           icon: /assets/icons/gateway.svg
           description: "A lightweight, fast, and flexible cloud-native API gateway."
           links:
@@ -101,6 +96,7 @@ products_section:
         - title: Event Gateway
           product: event-gateway
           changelog_url: /event-gateway/changelog/
+          whats_new: true
           icon: /assets/icons/event.svg
           description: "A Kafka-native gateway built for governance, security, and cost-efficient use of Kafka."
           links:
@@ -115,6 +111,7 @@ products_section:
         - title: Kong Mesh
           product: mesh
           changelog_url: /mesh/changelog/
+          whats_new: true
           icon: /assets/icons/mesh.svg
           description: "Modern service mesh built on top of Kuma and Envoy, designed for simplicity, scalability, and security."
           links:
@@ -129,6 +126,7 @@ products_section:
         - title: Ingress Controller
           product: kic
           changelog_url: https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md
+          whats_new: true
           icon: /assets/icons/kubernetes.svg
           description: "Kubernetes-native ingress, declarative APIs."
           links:
@@ -141,6 +139,7 @@ products_section:
         - title: Operator
           product: operator
           changelog_url: /operator/changelog/
+          whats_new: true
           icon: /assets/icons/kubernetes.svg
           description: "Deploy and manage Kong on Kubernetes using Kubernetes resources."
           links:
@@ -181,6 +180,7 @@ products_section:
         - title: Insomnia
           product: insomnia
           changelog_url: https://insomnia.rest/changelog
+          whats_new: true
           icon: /assets/icons/insomnia/insomnia.svg
           description: "Design, debug, test, and mock APIs locally, on Git, or cloud."
           links:
@@ -208,8 +208,6 @@ products_section:
               url: /index/identity/
 
 specs_section:
-  title: "API specifications for every use case"
-  title_italic: "API specifications"
   featured_apis:
     - "Konnect Control Planes"
     - "Konnect Event Gateway"
@@ -219,21 +217,5 @@ specs_section:
     - "Metering & Billing"
 
 whats_new:
-  title: "Shipped recently"
-  title_italic: "recently"
   all_url: /sitemap/#changelogs
-  entries:
-    - product: gateway
-      version_override: "3.15.0.0"
-      changelog_url: /gateway/changelog/
-    - product: event-gateway
-      changelog_url: /event-gateway/changelog/
-    - product: insomnia
-      changelog_url: https://insomnia.rest/changelog
-    - product: mesh
-      changelog_url: /mesh/changelog/
-    - product: operator
-      changelog_url: /operator/changelog/
-    - product: kic
-      changelog_url: https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md
 

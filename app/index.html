@@ -15,7 +15,7 @@ edit_and_issue_links: false
         <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">Kong Developer · <span class="bg-brand text-button px-1">Documentation</span></p>
         <div class="flex flex-col gap-4">
             <h1 class="font-extrabold text-[72px] leading-[84px] [contain:layout:style]">
-                What do you want to <br><em class="text-primary dark:text-brand italic">{{ hp.hero.title_italic }}</em>
+                What do you want to <br><em class="text-primary dark:text-brand italic">accomplish?</em>
             </h1>
             <span class="leading-7 text-secondary text-lg max-w-3xl mx-auto">{{ hp.description | liquify }}</span>
         </div>
@@ -42,8 +42,7 @@ edit_and_issue_links: false
 
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">01 · <span class="bg-brand text-button px-1">For agents & the CLI</span></p>
-            {%- assign agent_parts = agents.title | split: agents.title_italic -%}
-            <h2 class="text-[36px] leading-[44px]">{{ agent_parts[0] }}<em class="text-primary dark:text-brand italic">{{ agents.title_italic }}</em>{{ agent_parts[1] }}</h2>
+            <h2 class="text-[36px] leading-[44px]">First-class <em class="text-primary dark:text-brand italic font-bold">tools</em> for builders and agents</h2>
         </div>
 
         <!-- CLI terminal cards -->
@@ -179,8 +178,7 @@ edit_and_issue_links: false
 
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">02 · <span class="bg-brand text-button px-1">The platform</span></p>
-            {%- assign prod_parts = prods.title | split: prods.title_italic -%}
-            <h2 class="text-[36px] leading-[44px]">{{ prod_parts[0] }}<em class="text-primary dark:text-brand italic font-bold">{{ prods.title_italic }}</em>{{ prod_parts[1] }}</h2>
+            <h2 class="text-[36px] leading-[44px]">From edge to <em class="text-primary dark:text-brand italic font-bold">agent</em></h2>
         </div>
 
         {%- for cat in prods.categories -%}
@@ -194,7 +192,7 @@ edit_and_issue_links: false
                         {%- if item.product -%}
                         {%- assign item_product = site.data.products[item.product] -%}
                         {%- assign item_latest = item_product.releases | where: "latest", true | first -%}
-                        {%- assign item_ver = item_latest.version | default: item_latest.release -%}
+                        {%- assign item_ver = item_latest["ee-version"] | default: item_latest.version | default: item_latest.release -%}
                         <a href="{{ item.changelog_url }}" class="no-icon">{% include badge.html text=item_ver %}</a>
                         {%- endif -%}
                     </div>
@@ -224,8 +222,7 @@ edit_and_issue_links: false
         <div class="flex items-end justify-between gap-4">
             <div class="flex flex-col gap-3">
                 <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">03 · <span class="bg-brand text-button px-1">API specifications</span></p>
-                {%- assign spec_parts = specs.title | split: specs.title_italic -%}
-                <h2 class="text-[36px] leading-[44px]">{{ spec_parts[0] }}<em class="text-primary dark:text-brand italic font-bold">{{ specs.title_italic }}</em>{{ spec_parts[1] }}</h2>
+                <h2 class="text-[36px] leading-[44px]"><em class="text-primary dark:text-brand italic font-bold">API specifications</em> for every use case</h2>
             </div>
             <a href="/api/" class="text-sm text-links no-icon shrink-0 mb-2">All API specs &rarr;</a>
         </div>
@@ -248,33 +245,24 @@ edit_and_issue_links: false
         <div class="flex items-end justify-between gap-4">
             <div class="flex flex-col gap-3">
                 <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">04 · <span class="bg-brand text-button px-1">What's new</span></p>
-                {%- assign wn_parts = wn.title | split: wn.title_italic -%}
-                <h2 class="text-[36px] leading-[44px]">{{ wn_parts[0] }}<em class="text-primary dark:text-brand italic font-bold">{{ wn.title_italic }}</em>{{ wn_parts[1] }}</h2>
+                <h2 class="text-[36px] leading-[44px]">Shipped <em class="text-primary dark:text-brand italic font-bold">recently</em></h2>
             </div>
             <a href="{{ wn.all_url }}" class="text-sm text-links no-icon shrink-0 mb-2">All release notes &rarr;</a>
         </div>
 
         <div class="flex flex-col border-t border-primary">
-            {%- for entry in wn.entries -%}
-            {%- if entry.product -%}
-            {%- assign product_data = site.data.products[entry.product] -%}
+            {%- for cat in prods.categories -%}
+            {%- for item in cat.items -%}
+            {%- unless item.whats_new -%}{%- continue -%}{%- endunless -%}
+            {%- assign product_data = site.data.products[item.product] -%}
             {%- assign latest = product_data.releases | where: "latest", true | first -%}
-            {%- assign display_name = product_data.name -%}
-            {%- assign _ver = entry.version_override | default: latest.version | default: latest.release -%}
-            {%- assign display_version = "v" | append: _ver -%}
-            {%- else -%}
-            {%- assign display_name = entry.name -%}
-            {%- assign display_version = nil -%}
-            {%- endif -%}
-            <a href="{{ entry.changelog_url }}" class="flex items-center gap-6 py-4 border-b border-primary hover:bg-hover-component/100 hover:px-4 hover:-mx-4 transition-all no-icon hover:no-underline group">
-                {%- if display_version -%}
-                <span class="font-mono text-sm text-brand w-16 shrink-0">{{ display_version }}</span>
-                {%- else -%}
-                <span class="w-16 shrink-0"></span>
-                {%- endif -%}
-                <span class="text-sm text-primary flex-1">{{ display_name }}</span>
+            {%- assign _ver = latest["ee-version"] | default: latest.version | default: latest.release -%}
+            <a href="{{ item.changelog_url }}" class="flex items-center gap-6 py-4 border-b border-primary hover:bg-hover-component/100 hover:px-4 hover:-mx-4 transition-all no-icon hover:no-underline group">
+                <span class="font-mono text-sm text-brand w-16 shrink-0">v{{ _ver }}</span>
+                <span class="text-sm text-primary flex-1">{{ product_data.name }}</span>
                 <span class="text-terciary group-hover:text-brand transition-colors">&rarr;</span>
             </a>
+            {%- endfor -%}
             {%- endfor -%}
         </div>
 
