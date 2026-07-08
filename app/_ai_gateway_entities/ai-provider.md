@@ -66,9 +66,9 @@ AI Model Providers and AI Models have a many-to-many relationship: one AI Model 
 
 When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an AI Model Provider by setting the `provider` field in each item of the [`targets`](/ai-gateway/entities/ai-model/#schema-aigateway-model-targets) array. You can reference by [`name`](#schema-aigateway-model-provider-name) or `id`. Use `id` if you plan to rename the AI Model Provider later.
 
-## Supported AI Providers
+## Supported upstream LLM providers
 
-{{site.ai_gateway}} supports the following upstream AI providers. The AI Model Provider's [`type`](#schema-aigateway-model-provider-type) field selects one of these targets. The following AI provider-specific pages document supported capabilities, configuration requirements, and limitations.
+{{site.ai_gateway}} supports the following upstream LLM providers. The AI Model Provider's [`type`](#schema-aigateway-model-provider-type) field selects one of these targets. The following provider-specific pages document supported capabilities, configuration requirements, and limitations.
 
 {% html_tag type="div" css_classes="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" %}
 {% icon_card icon="openai.svg" title="OpenAI" cta_url="/ai-gateway/ai-providers/openai/" %}
