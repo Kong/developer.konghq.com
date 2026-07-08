@@ -24224,5 +24224,34 @@
         "scope": "Plugin"
       }
     ]
+  },
+  "3.10.0.16": {
+    "kong-ee": [
+      {
+        "message": "**Debugger**: Fixed an issue where the default key name `apikey` of the `key-auth` and `key-auth-enc` plugins was not redacted when captured by the Debugger. This has been resolved by adding `apikey` to the list of default redacted headers.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the control plane could crash while handshaking with a data plane on the legacy clustering endpoint if a non-binary WebSocket frame (such as a ping/pong control frame) arrived before the `basic_info` frame. The control plane now drains and responds to control frames during the handshake until the expected frame is received, instead of dereferencing a nil plugin list.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**router**: Fixed an issue where WebSocket routes (`ws`/`wss`) returned HTTP 404 when using `router_flavor=expressions` due to incorrect protocol matching expressions being generated.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Improved performance of clustering payload handling for version compatibility, reducing CPU usage and transient memory pressure.",
+        "type": "performance",
+        "scope": "Clustering"
+      }
+    ]
   }
 }
