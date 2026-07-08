@@ -292,7 +292,7 @@
   },
   {
     "id": "090a2dcc-506d-4b09-9488-14778dc26fc4",
-    "title": "Kong Identity",
+    "title": "Kong Identity Auth Servers",
     "latestVersion": {
       "name": "v1",
       "id": "62d001b6-6892-43a3-ad97-346047341169"
@@ -310,6 +310,14 @@
         "registration_configs": []
       }
     ]
+  },
+  {
+    "id": "5e113996-3782-4922-a6b2-416817efcdbc",
+    "title": "Kong Identity Principals and Directories",
+    "latestVersion": {
+      "name": "v2",
+      "id": "1e78499d-d296-4db8-9c7f-dcac5b7a2c5d"
+    }
   },
   {
     "id": "f8ebf955-6f09-40f6-b020-1feb80b4a773",
