@@ -42,10 +42,10 @@ rows:
 
                   {:.warning}
                   > **Password requirements:**
-                  > * Passwords cannot reuse any of the previous 13 passwords.
-                  > * Must have a length of at least 12 characters.
-                  > * Must contain at least one uppercase letter, one lowercase letter, one number, and one special character.
-                  > * Must not contain more than two identical characters in a row.
+                  > * You cannot reuse any of the previous 13 passwords.
+                  > * Passwords must be at least 12 characters long.
+                  > * Passwords must contain at least one uppercase letter, one lowercase letter, one number, and one special character.
+                  > * Passwords must not contain more than two identical characters in a row.
 
   - header:
       type: h2
