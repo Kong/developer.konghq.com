@@ -173,6 +173,9 @@ When a developer creates an application, {{site.dev_portal}} automatically creat
 This principal entity then helps link the application to an existing Consumer entity in {{site.base_gateway}}.
 {{site.identity}} doesn't store any credentials for applications. It is only used for mapping an application to a Consumer.
 
+{:.info}
+> Since application to Consumer linking uses [{{site.identity}}](/identity/) in the backend, there may be some latency impact to the first request.
+
 You can apply plugins to an application in two different ways:
 
 <!--vale off-->

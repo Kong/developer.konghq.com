@@ -6,7 +6,7 @@ API packages use the ACE plugin to manage developer access control to APIs.
 
 If you [apply a plugin to a {{site.dev_portal}} application](/dev-portal/self-service/#apply-plugins-to-applications), the ACE plugin looks up the application's principal to resolve the mapped Consumer at runtime, so any Consumer or principal-scoped plugins apply to the application's traffic. 
 {{site.konnect_short_name}} caches principal lookups, so additional lookups aren't required until it evicts the cache. 
-Cache eviction is controlled at the principal and {{site.base_gateway}}-level.
+Cache eviction is controlled by {{site.identity}} directory TTLs and by {{site.base_gateway}} cache configuration.
 
 The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. 
 For example, if you have [Key Authentication](/plugins/key-auth/) configured and it rejects a request, the ACE plugin *will not* run. 

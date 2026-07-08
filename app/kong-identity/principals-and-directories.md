@@ -146,6 +146,9 @@ Each product has its own representation of who is authenticating: {{site.base_ga
   
   If the principal is also mapped to a Consumer and that Consumer belongs to its own Consumer Groups, the gateway loads the union of both sets into the request context. Only Consumer Groups that are defined in the same {{site.base_gateway}} as the control plane will be loaded into the request context.
 * **Applications**: You can map a {{site.dev_portal}} application to a {{site.base_gateway}} Consumer through a principal, creating a 1:1:1 relationship between the application, the principal, and the Consumer. This is how you apply Consumer-scoped plugins (including ACE and KAA) to traffic from a {{site.dev_portal}} application: configure the plugin on the mapped Consumer, and it runs for any request authenticated as the application. Consumer-dimension analytics also include the application's activity once the mapping is in place. A Portal Admin maps an existing application to an existing Consumer; {{site.identity}} creates or updates the principal of type `application` behind the scenes.
+  
+  {:.info}
+  > Since application to Consumer linking uses {{site.identity}} in the backend, there may be some latency impact to the first request.
 
 #### When to use principals instead of Consumers
 
@@ -572,4 +575,3 @@ The following are default limits for principals and directories:
 * OIDC identity issuer and claim combinations must be unique within a directory
 * Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
 * At most, you can map one Consumer per control plane to a principal. You can map multiple Consumers if they are in different control planes.
-* Since application to Consumer linking uses {{site.identity}} in the backend, there may be some latency impact to the first request.

@@ -7,7 +7,7 @@ The [authentication strategy](/dev-portal/auth-strategies/) that you select for 
 
 In {{site.base_gateway}} 3.15 or later, both plugins also look up {{site.identity}} principals to resolve any [plugins applied to a {{site.dev_portal}} application](/dev-portal/self-service/#map-an-application-to-a-consumer), so that Consumer or principal-scoped plugins apply to the application's traffic. 
 {{site.konnect_short_name}} caches principal lookups, so additional lookups aren't required until it evicts the cache. 
-Cache eviction is controlled at the principal and {{site.base_gateway}}-level.
+Cache eviction is controlled by {{site.identity}} directory TTLs and by {{site.base_gateway}} cache configuration.
 
 The following table can help you decide which option to pick:
 <!--vale off-->
