@@ -103,7 +103,7 @@ faqs:
   - q: What are the password requirements for {{site.konnect_short_name}} authentication?
     a: |
       {{site.konnect_short_name}} passwords must adhere to the following requirements:
-      * Passwords cannot reuse any of the previous 13 passwords.
+      * You cannot reuse any of the previous 13 passwords.
       * Must have a length of at least 12 characters.
       * Must contain at least one uppercase letter, one lowercase letter, one number, and one special character.
       * Must not contain more than two identical characters in a row.
