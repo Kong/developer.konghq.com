@@ -38,7 +38,7 @@ LLMc["LLM client"] -->|chat / embeddings| DP
 MCPc["MCP client"] -->|MCP protocol| DP
 A2Ac["Agent<br/>A2A client"] -->|A2A protocol| DP
 
-subgraph Customer["Self-managed<br/>(on-prem or cloud)"]
+subgraph Customer["Self-managed"]
   DP["{{site.ai_gateway}}<br/>data plane node(s)"]
 end
 
