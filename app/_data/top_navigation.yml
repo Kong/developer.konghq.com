@@ -147,7 +147,7 @@ ai_tools:
     icon: /assets/icons/code.svg
   - text: Koh CLI
     url: /koh/
-    icon: /assets/icons/code.svg
+    icon: /assets/icons/ai.svg
 
 support:
   - text: Community

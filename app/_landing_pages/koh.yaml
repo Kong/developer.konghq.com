@@ -75,7 +75,7 @@ rows:
             Koh currently supports Git projects only, so set up [Git Sync](/insomnia/storage/#git-sync) before running Koh commands.
 
   - header:
-      text: "What Koh CLI do?"
+      text: "What can Koh CLI do?"
       type: h2
     columns:
       - blocks:
@@ -94,7 +94,7 @@ rows:
                     config:
                       cmd: koh
                       args:
-                        -  collection
+                        - collection
                         - list
                         - --agent
                 - text: |
@@ -115,7 +115,6 @@ rows:
                     config:
                       cmd: koh
                       args:
-                        - koh
                         - request
                         - list
                         - --collection
@@ -141,7 +140,6 @@ rows:
                     config:
                       cmd: koh
                       args:
-                        - koh
                         - document
                         - spec
                         - operation
