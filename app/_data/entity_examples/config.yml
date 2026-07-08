@@ -140,6 +140,7 @@ formats:
       agent:           '/agents'
       mcp_server:      '/mcp-servers'
       provider:        '/providers'
+      model-provider:  '/model-providers'
       consumer:       '/consumers'
       consumer_group: '/consumer-groups'
       vault:          '/vaults'
