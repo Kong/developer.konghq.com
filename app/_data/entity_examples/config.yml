@@ -208,7 +208,7 @@ formats:
   ui:
     label: 'UI'
     entities:
-      - ai-provider
+      - ai-model-provider
       - ai-identity-provider
       - ai-model
       - ai-agent
