@@ -68,7 +68,7 @@ faqs:
 
 ## What is an AI Identity Provider?
 
-Your AI Models often need access control: some teams should reach certain models and others should not, and you need a way to verify who is calling before a request consumes tokens or touches sensitive data. An AI Identity Provider lets you declare an inbound authentication mechanism at the gateway level and attach it to specific models.
+Your AI Models often need access control: some teams should reach certain AI Models and others should not, and you need a way to verify who is calling before a request consumes tokens or touches sensitive data. An AI Identity Provider lets you declare an inbound authentication mechanism at the gateway level and attach it to specific AI Models.
 
 Use AI Identity Providers to:
 
