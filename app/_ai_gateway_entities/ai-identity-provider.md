@@ -189,7 +189,8 @@ access:
   identity_providers:
     - my-key-auth-provider
   acls:
-    - allowed-ai-consumer-group
+    allow:
+      - allowed-ai-consumer-group
 ```
 
 {:.info}
