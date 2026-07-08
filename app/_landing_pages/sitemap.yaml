@@ -18,6 +18,11 @@ rows:
           - type: structured_text
             config:
               blocks:
+                - type: text
+                  text: "**Connectivity runtimes**"
+          - type: structured_text
+            config:
+              blocks:
               - type: unordered_list
                 items:
                   - "[API Gateway](/index/gateway/)"
@@ -31,6 +36,11 @@ rows:
           - type: structured_text
             config:
               blocks:
+                - type: text
+                  text: "**Applications**"
+          - type: structured_text
+            config:
+              blocks:
               - type: unordered_list
                 items:
                   - "[{{site.konnect_short_name}}](/index/konnect/)"
@@ -39,12 +49,19 @@ rows:
                   - "[{{site.konnect_catalog}}](/index/catalog/)"
                   - "[{{site.observability}}](/index/observability/)"
                   - "[{{site.konnect_short_name}} Reference Platform](/index/konnect-reference-platform/)"
+                  - "[{{site.identity}}](/index/identity/)"
       - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: "**Tools**"
           - type: structured_text
             config:
               blocks:
               - type: unordered_list
                 items:
+                  - "[kongctl](/index/kongctl/)"
                   - "[decK](/index/deck/)"
                   - "[kongctl](/index/kongctl/)"
                   - "[Insomnia](/index/insomnia/)"
@@ -78,6 +95,7 @@ rows:
               - type: unordered_list
                 items:
                   - "[API references](/api/)"
+                  - "[Support knowledge base](/support/)"
 
   - header:
       type: h2
@@ -91,6 +109,7 @@ rows:
               - type: unordered_list
                 items:
                   - "[Gateway changelog](/gateway/changelog/)"
+                  - "[{{site.event_gateway_short}} changelog](/event-gateway/changelog/)"
                   - "[Mesh changelog](/mesh/changelog/)"
                   - "[{{site.konnect_short_name}} changelog (all {{site.konnect_short_name}} apps and platform changes)](https://releases.konghq.com/en)"
 
@@ -101,6 +120,7 @@ rows:
               - type: unordered_list
                 items:
                   - "[Insomnia changelog](https://insomnia.rest/changelog)"
+                  - "[kongctl changelog](https://github.com/kong/kongctl/releases)"
                   - "[decK changelog](https://github.com/Kong/deck/blob/main/CHANGELOG.md)"
                   - "[Operator changelog](/operator/changelog/)"
                   - "[{{site.kic_product_name_short}} changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md)"
