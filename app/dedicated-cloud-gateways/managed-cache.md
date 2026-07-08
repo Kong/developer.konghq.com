@@ -102,8 +102,8 @@ rows:
     notes: |
       Appropriate for development, testing, and other low-load or low-performance environments.
       These are burstable tiers, so performance may vary.
-      Micro fails at 10,000 RPS.
-      Small handles a 1,000 RPS baseline cleanly.
+      `micro` fails at 10,000 RPS.
+      `small` handles a 1,000 RPS baseline cleanly.
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
@@ -115,7 +115,7 @@ rows:
     rps: "≤10,000"
     instance: "`xlarge`"
     sync: "0.5–1.0"
-    notes: Large tiers are overwhelmed at 0.1 sync rate with this entity count. xLarge provides headroom.
+    notes: Large tiers are overwhelmed at a 0.1 sync rate with this entity count. The `xlarge` tier provides headroom.
   - profile: High-scale enterprise
     entities: "≤5,000 × ≤3,000 × 3 windows"
     rps: "≤20,000"
