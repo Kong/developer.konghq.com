@@ -1,6 +1,6 @@
 ---
-title: Use the AI AWS Guardrails plugin
-permalink: /ai-gateway/how-to/use-ai-aws-guardrails-plugin/
+title: Use the AI AWS Guardrails Policy
+permalink: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
 content_type: how_to
 
 related_resources:
@@ -8,7 +8,7 @@ related_resources:
     url: /plugins/ai-azure-content-safety/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-description: Learn how to use the AI AWS Guardrails plugin.
+description: Learn how to use the AI AWS Guardrails Policy.
 
 products:
     - ai-gateway
@@ -36,7 +36,7 @@ tags:
   - bedrock
 
 tldr:
-  q: How can I use the AI AWS Guardrails plugin with {{site.ai_gateway}}?
+  q: How can I use the AI AWS Guardrails Policy with {{site.ai_gateway}}?
   a: Configure an AI Provider and AI Model to route requests to any LLM upstreams. Apply an AI AWS Guardrails Policy to your model to block unsafe inputs and outputs based on a predefined Bedrock guardrail.
 
 ---
@@ -79,22 +79,21 @@ In this example, we're setting up the AI Provider with:
 curl --request POST \
   --url https://us.api.konghq.com/v1/ai-gateways/$AI_GATEWAY_ID/policies \
   --header 'Accept: application/json, application/problem+json' \
-  --header 'Authorization: Bearer ' \
+  --header "Authorization: Bearer $KONNECT_TOKEN" \
   --header 'Content-Type: application/json' \
   --data '{
   "display_name": "My AWS Guardrails Policy",
   "name": "my-aws-guardrails-policy",
   "type": "ai-aws-guardrails",
   "config": {
-    guardrails_id: "$DECK_GUARDRAILS_ID"
-    guardrails_version: "$DECK_GUARDRAILS_VERSION"
-    aws_region: "$DECK_AWS_REGION"
-    aws_access_key_id: "$DECK_AWS_ACCESS_KEY_ID"
-    aws_secret_access_key: "$DECK_AWS_SECRET_ACCESS_KEY"
+    "guardrails_id": "$GUARDRAILS_ID",
+    "guardrails_version": "$GUARDRAILS_VERSION",
+    "aws_region": "$AWS_REGION",
+    "aws_access_key_id": "$AWS_ACCESS_KEY_ID",
+    "aws_secret_access_key": "$AWS_SECRET_ACCESS_KEY"
   }
 }'
 ```
-
 
 ## Configure an AI Model with an AWS Guardrails AI Policy
 
@@ -176,7 +175,7 @@ method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
     - role: user
@@ -193,7 +192,7 @@ method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
     - role: user
@@ -219,7 +218,7 @@ method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
     - role: user
@@ -236,7 +235,7 @@ method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
     - role: user
@@ -262,7 +261,7 @@ method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
     - role: user
@@ -279,7 +278,7 @@ method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
     - role: user
@@ -296,7 +295,7 @@ method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
     - role: user
@@ -313,7 +312,7 @@ method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
     - role: user
