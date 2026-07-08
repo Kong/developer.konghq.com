@@ -11,34 +11,28 @@ edit_and_issue_links: false
 <div class="flex flex-col gap-20 w-full pb-36 landing-page">
 
     <!-- HERO -->
-    <div class="flex justify-between gap-[60px] flex-col md:flex-row">
-        <div class="flex flex-col gap-8 pt-24">
-            <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ hp.hero.eyebrow }}</p>
-            <div class="flex flex-col gap-2">
-                <h1 class="font-extrabold text-[56px] leading-[68px] [contain:layout:style]">
-                    What do you want to <em class="text-brand not-italic">{{ hp.hero.title_italic }}</em>
-                </h1>
-                <span class="leading-7">{{ hp.description | liquify }}</span>
-            </div>
-            <div class="flex flex-col gap-3">
-                <div class="flex gap-2 bg-secondary rounded-md border border-primary py-2 px-4 items-center cursor-pointer ask-ai-button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 12.0884V12.4355C15.7128 12.4355 14.5598 16.2296 14.5598 19.3252H14.2229C14.2229 16.2296 12.8732 12.4355 8.78272 12.4355V12.0884C13.497 12.0884 14.2229 8.29432 14.2229 5.19878H14.5598C14.5598 8.29432 15.2977 12.0884 20 12.0884ZM7.28629 11.0361C7.28629 9.27503 7.94267 7.11656 10.3813 7.11656V6.91952C7.70577 6.91952 7.28629 4.76104 7.28629 3H7.09502C7.09502 4.76104 6.68206 6.91952 4 6.91952V7.11656C6.32779 7.11656 7.09502 9.27503 7.09502 11.0361H7.28629ZM9.21089 14.1529H9.04788C9.04788 15.6531 8.69578 17.4925 6.41038 17.4925V17.6604C8.39367 17.6604 9.04788 19.4998 9.04788 21H9.21089C9.21089 19.4998 9.76948 17.6604 11.8484 17.6604V17.4925C9.56843 17.4925 9.21089 15.6531 9.21089 14.1529Z" fill="rgb(var(--color-text-secondary)"/>
-                    </svg>
-                    <span class="text-sm">Ask AI for concepts, guides, and tutorials</span>
-                </div>
-                <div class="flex flex-wrap gap-2 items-center">
-                    <span class="text-xs text-terciary font-mono">Try</span>
-                    {%- for chip in hp.hero.chips -%}
-                    <button class="ask-ai-button text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer">{{ chip }}</button>
-                    {%- endfor -%}
-                </div>
-                <span class="text-sm"><a href="/sitemap/">View all Kong documentation</a></span>
-            </div>
+    <div class="flex flex-col items-center text-center gap-8 pt-24 pb-4">
+        <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ hp.hero.eyebrow }}</p>
+        <div class="flex flex-col gap-4">
+            <h1 class="font-extrabold text-[72px] leading-[84px] [contain:layout:style]">
+                What do you want to <br><em class="text-brand italic">{{ hp.hero.title_italic }}</em>
+            </h1>
+            <span class="leading-7 text-secondary text-lg max-w-3xl mx-auto">{{ hp.description | liquify }}</span>
         </div>
-        <div class="md:pt-[70px] md:pr-[68px] relative hidden md:flex">
-            <span class="hidden dark:inline">{% include_svg '/assets/hero-images/home/kong-dark.svg' %}</span>
-            <span class="inline dark:hidden">{% include_svg '/assets/hero-images/home/kong.svg' %}</span>
+        <div class="flex flex-col gap-3 w-full max-w-4xl items-center">
+            <div class="flex gap-2 bg-secondary rounded-md border border-primary py-2 px-4 items-center cursor-pointer ask-ai-button w-full">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 12.0884V12.4355C15.7128 12.4355 14.5598 16.2296 14.5598 19.3252H14.2229C14.2229 16.2296 12.8732 12.4355 8.78272 12.4355V12.0884C13.497 12.0884 14.2229 8.29432 14.2229 5.19878H14.5598C14.5598 8.29432 15.2977 12.0884 20 12.0884ZM7.28629 11.0361C7.28629 9.27503 7.94267 7.11656 10.3813 7.11656V6.91952C7.70577 6.91952 7.28629 4.76104 7.28629 3H7.09502C7.09502 4.76104 6.68206 6.91952 4 6.91952V7.11656C6.32779 7.11656 7.09502 9.27503 7.09502 11.0361H7.28629ZM9.21089 14.1529H9.04788C9.04788 15.6531 8.69578 17.4925 6.41038 17.4925V17.6604C8.39367 17.6604 9.04788 19.4998 9.04788 21H9.21089C9.21089 19.4998 9.76948 17.6604 11.8484 17.6604V17.4925C9.56843 17.4925 9.21089 15.6531 9.21089 14.1529Z" fill="rgb(var(--color-text-secondary)"/>
+                </svg>
+                <span class="text-sm">Ask AI for concepts, guides, and tutorials</span>
+            </div>
+            <div class="flex flex-wrap gap-2 justify-center items-center">
+                <span class="text-xs text-terciary font-mono">Try</span>
+                {%- for chip in hp.hero.chips -%}
+                <button class="ask-ai-button text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer">{{ chip }}</button>
+                {%- endfor -%}
+            </div>
+            <span class="text-sm"><a href="/sitemap/">View all Kong documentation</a></span>
         </div>
     </div>
 
@@ -49,7 +43,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ agents.eyebrow }}</p>
             {%- assign agent_parts = agents.title | split: agents.title_italic -%}
-            <h2 class="text-[36px] leading-[44px]">{{ agent_parts[0] }}<em class="text-brand not-italic font-bold">{{ agents.title_italic }}</em>{{ agent_parts[1] }}</h2>
+            <h2 class="text-[36px] leading-[44px]">{{ agent_parts[0] }}<em class="text-brand italic">{{ agents.title_italic }}</em>{{ agent_parts[1] }}</h2>
         </div>
 
         <!-- CLI terminal cards -->
@@ -186,7 +180,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ prods.eyebrow }}</p>
             {%- assign prod_parts = prods.title | split: prods.title_italic -%}
-            <h2 class="text-[36px] leading-[44px]">{{ prod_parts[0] }}<em class="text-brand not-italic font-bold">{{ prods.title_italic }}</em>{{ prod_parts[1] }}</h2>
+            <h2 class="text-[36px] leading-[44px]">{{ prod_parts[0] }}<em class="text-brand italic font-bold">{{ prods.title_italic }}</em>{{ prod_parts[1] }}</h2>
         </div>
 
         {%- for cat in prods.categories -%}
@@ -222,7 +216,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">{{ specs.eyebrow }}</p>
             {%- assign spec_parts = specs.title | split: specs.title_italic -%}
-            <h2 class="text-[36px] leading-[44px]">{{ spec_parts[0] }}<em class="text-brand not-italic font-bold">{{ specs.title_italic }}</em>{{ spec_parts[1] }}</h2>
+            <h2 class="text-[36px] leading-[44px]">{{ spec_parts[0] }}<em class="text-brand italic font-bold">{{ specs.title_italic }}</em>{{ spec_parts[1] }}</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
