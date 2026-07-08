@@ -262,6 +262,10 @@ In a private deployment, your Application Load Balancer (ALB) is the internet-fa
 AWS WAF attaches directly to the ALB and inspects all inbound HTTP(S) traffic before it reaches your Dedicated Cloud Gateway.
 Traffic flows from the ALB to the Dedicated Cloud Gateway's static private IP addresses over your private network connection (VPC peering or Transit Gateway).
 
+The ALB and AWS WAF together are enough to route inbound traffic to your Dedicated Cloud Gateway, because the ALB can target the gateway's private IP addresses directly. You don't need to place anything else in front of the ALB.
+You can optionally place a CDN, like {{ site.amazon }} CloudFront, in front of the ALB for edge caching, global distribution, or an additional WAF layer.
+A CDN isn't required for the private connectivity path to work.
+
 To configure AWS WAF for a private Dedicated Cloud Gateway:
 
 1. [Create an internet-facing ALB](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-application-load-balancer.html) in your AWS account.
