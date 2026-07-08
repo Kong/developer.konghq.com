@@ -1,5 +1,5 @@
 title: Kong Developer
-description: "Tools, APIs, and recipes to build, secure, and observe everything from a single API to fleets of AI agents. Ask, browse, or drop straight into the CLI."
+description: "Tools, APIs, and guides to build, secure, and observe everything from a single API to fleets of AI agents."
 
 hero:
   chips:
@@ -13,7 +13,7 @@ agents_section:
   cli_cards:
     - tool: decK
       icon: /assets/icons/terminal.svg
-      description: "Manage Kong Gateway configuration as code. Diff, sync, dump, validate."
+      description: "Manage Kong Gateway configuration as code. Diff, sync, and validate."
       install: "brew install kong/deck/deck"
       command: "deck gateway diff kong.yaml"
       docs_url: /deck/
@@ -32,9 +32,9 @@ agents_section:
   featured_cards:
     - id: mcp
       title: "Konnect MCP server"
-      description: "Give Claude, Cursor, and ChatGPT live, scoped access to your Konnect APIs, control planes, and analytics."
+      description: "Give Claude, Cursor, and ChatGPT scoped access to manage Konnect."
       endpoint: "https://mcp.konghq.com/sse"
-      cta_text: "Connect Konnect MCP"
+      cta_text: "Build with Konnect MCP"
       cta_url: /konnect-platform/konnect-mcp/
       icon: /assets/icons/mcp.svg
       featured: true
@@ -45,7 +45,7 @@ agents_section:
         - "/plugin marketplace add kong/ai-marketplace"
         - "/plugin install kong-konnect@ai-marketplace"
         - "/reload-plugins"
-      description: "Copy-pasteable workflows for Konnect, AI Gateway, and decK — built on the Model Context Protocol. The fastest path is the three commands above, run inside Claude."
+      description: "Everything in Konnect MCP, plus the context: debugging, Terraform/kongctl/decK authoring, and setup workflows."
       cta_url: /skills/
       cta_text: "Browse all skills"
       icon: /assets/icons/brain.svg
