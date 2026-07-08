@@ -96,25 +96,26 @@ In this example, we're setting up the AI Provider with:
 
 ## Create an AWS Guardrails AI Policy
 
-```
-curl --request POST \
-  --url https://us.api.konghq.com/v1/ai-gateways/$AI_GATEWAY_ID/policies \
-  --header 'Accept: application/json, application/problem+json' \
-  --header "Authorization: Bearer $KONNECT_TOKEN" \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "display_name": "My AWS Guardrails Policy",
-  "name": "my-aws-guardrails-policy",
-  "type": "ai-aws-guardrails",
-  "config": {
-    "guardrails_id": "$GUARDRAILS_ID",
-    "guardrails_version": "$GUARDRAILS_VERSION",
-    "aws_region": "$AWS_REGION",
-    "aws_access_key_id": "$AWS_ACCESS_KEY_ID",
-    "aws_secret_access_key": "$AWS_SECRET_ACCESS_KEY"
-  }
-}'
-```
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/policies
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: My AWS Guardrails Policy
+  name: my-aws-guardrails-policy
+  type: ai-aws-guardrails
+  config:
+    guardrails_id: $GUARDRAILS_ID
+    guardrails_version: $GUARDRAILS_VERSION
+    aws_region: $AWS_REGION
+    aws_access_key_id: $AWS_ACCESS_KEY_ID
+    aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+{% endkonnect_api_request %}
+<!-- vale on -->
 
 ## Configure an AI Model with an AWS Guardrails AI Policy
 
