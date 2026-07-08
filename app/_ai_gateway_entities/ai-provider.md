@@ -28,6 +28,8 @@ related_resources:
     url: /ai-gateway/entities/ai-model/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
+  - text: AI Identity Provider entity
+    url: /ai-gateway/entities/ai-identity-provider/
 faqs:
   - q: What happens when I update an AI Model Provider's credentials?
     a: |
