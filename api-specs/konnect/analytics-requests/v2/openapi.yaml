@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect API Request Analytics
-  version: 2.0.0
+  version: 2.1.0
   description: The API to query detailed records for every API request proxied by Kong
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@f2a3c32e62e5ef96b2a27f8eb6c3ecce75538c2c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f2a3c32e62e5ef96b2a27f8eb6c3ecce75538c2c'
+  x-oas-source: kong/platform-api@c6fc548c13b370a653ae0e25d674adedb09ddaf6
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c6fc548c13b370a653ae0e25d674adedb09ddaf6'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -105,6 +105,7 @@ components:
               - $ref: '#/components/schemas/McpSessionIdFilterByField'
               - $ref: '#/components/schemas/McpToolNameFilterByField'
               - $ref: '#/components/schemas/PortalFilterByField'
+              - $ref: '#/components/schemas/PrincipalFilterByField'
               - $ref: '#/components/schemas/RealmFilterByField'
               - $ref: '#/components/schemas/ResponseBodySizeFilterByField'
               - $ref: '#/components/schemas/ResponseHeaderContentLengthFilterByField'
@@ -471,6 +472,14 @@ components:
                       nullable: true
           portal:
             description: Portal ID associated with the request.
+            type: string
+            nullable: true
+          principal:
+            description: Principal ID associated with the request.
+            type: string
+            nullable: true
+          realm:
+            description: Realm ID associated with the request.
             type: string
             nullable: true
           request_body_size:
@@ -1190,6 +1199,22 @@ components:
             - $ref: '#/components/schemas/FilterSingleValueUUID'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by portal
+    PrincipalFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - principal
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueUUID'
+            - $ref: '#/components/schemas/FilterSingleValueUUID'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by principal
     RealmFilterByField:
       allOf:
         - type: object
@@ -2026,6 +2051,8 @@ components:
                   response_body_size: 1024
                   error: null
             portal: 20076d8c-2d1b-4249-b323-4baa63796f8a
+            principal: 9f8b2c1d-3e4a-4b5c-8d6e-7f8a9b0c1d2e
+            realm: 5e6f7a8b-9c0d-4e1f-2a3b-4c5d6e7f8a9b
             request_body_size: 182
             request_id: f3043125bdec40385195f20db7e0491b
             request_uri: /notifications/graphql
@@ -2064,6 +2091,8 @@ components:
             latencies_upstream_ms: 10
             mcp_info: null
             portal: null
+            principal: null
+            realm: null
             request_body_size: 258
             request_id: a193bb0fefadcd3948cebc2c2c63a500
             request_uri: /users

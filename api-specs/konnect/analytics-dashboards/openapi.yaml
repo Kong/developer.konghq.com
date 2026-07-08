@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a123e05cf23d78f7383146d13ad0c09b386e6d6f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a123e05cf23d78f7383146d13ad0c09b386e6d6f'
+  x-oas-source: kong/platform-api@c6fc548c13b370a653ae0e25d674adedb09ddaf6
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c6fc548c13b370a653ae0e25d674adedb09ddaf6'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -272,6 +272,7 @@ components:
               - data_plane_node_version
               - gateway_service
               - portal
+              - principal
               - realm
               - response_source
               - route
@@ -339,6 +340,7 @@ components:
               - llm_embeddings_provider
               - llm_embeddings_model
               - time
+              - principal
               - realm
               - status_code
               - status_code_grouped
@@ -407,6 +409,7 @@ components:
               - mcp_session_id
               - mcp_tool_name
               - portal
+              - principal
               - realm
               - response_source
               - route
@@ -1396,6 +1399,42 @@ components:
             - operator
             - field
       title: Filter by portal
+    MetricsPrincipalFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - principal
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - principal
+          required:
+            - operator
+            - field
+      title: Filter by principal
     MetricsRealmFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -1674,6 +1713,7 @@ components:
             data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
             gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
             portal: '#/components/schemas/MetricsPortalFilterByField'
+            principal: '#/components/schemas/MetricsPrincipalFilterByField'
             realm: '#/components/schemas/MetricsRealmFilterByField'
             response_source: '#/components/schemas/MetricsResponseSourceFilterByField'
             route: '#/components/schemas/MetricsRouteFilterByField'
@@ -1695,6 +1735,7 @@ components:
           - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
           - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
           - $ref: '#/components/schemas/MetricsPortalFilterByField'
+          - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
           - $ref: '#/components/schemas/MetricsRealmFilterByField'
           - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'
           - $ref: '#/components/schemas/MetricsRouteFilterByField'
@@ -2090,6 +2131,7 @@ components:
             llm_cache_status: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
             llm_embeddings_model: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
             llm_embeddings_provider: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+            principal: '#/components/schemas/MetricsPrincipalFilterByField'
             realm: '#/components/schemas/MetricsRealmFilterByField'
             route: '#/components/schemas/MetricsRouteFilterByField'
             status_code: '#/components/schemas/MetricsStatusCodeFilterByField'
@@ -2107,6 +2149,7 @@ components:
           - $ref: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
           - $ref: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+          - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
           - $ref: '#/components/schemas/MetricsRealmFilterByField'
           - $ref: '#/components/schemas/MetricsRouteFilterByField'
           - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
@@ -2467,6 +2510,7 @@ components:
             mcp_session_id: '#/components/schemas/MetricsMcpSessionIdFilterByField'
             mcp_tool_name: '#/components/schemas/MetricsMcpToolNameFilterByField'
             portal: '#/components/schemas/MetricsPortalFilterByField'
+            principal: '#/components/schemas/MetricsPrincipalFilterByField'
             realm: '#/components/schemas/MetricsRealmFilterByField'
             response_source: '#/components/schemas/MetricsResponseSourceFilterByField'
             route: '#/components/schemas/MetricsRouteFilterByField'
@@ -2496,6 +2540,7 @@ components:
           - $ref: '#/components/schemas/MetricsMcpSessionIdFilterByField'
           - $ref: '#/components/schemas/MetricsMcpToolNameFilterByField'
           - $ref: '#/components/schemas/MetricsPortalFilterByField'
+          - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
           - $ref: '#/components/schemas/MetricsRealmFilterByField'
           - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'
           - $ref: '#/components/schemas/MetricsRouteFilterByField'
@@ -2837,6 +2882,7 @@ components:
         - $ref: '#/components/schemas/MetricsMcpSessionIdFilterByField'
         - $ref: '#/components/schemas/MetricsMcpToolNameFilterByField'
         - $ref: '#/components/schemas/MetricsPortalFilterByField'
+        - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
         - $ref: '#/components/schemas/MetricsRealmFilterByField'
         - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'
         - $ref: '#/components/schemas/MetricsRouteFilterByField'
