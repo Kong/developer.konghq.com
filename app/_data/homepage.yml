@@ -12,8 +12,7 @@ hero:
     - "Trace API requests"
 
 agents_section:
-  eyebrow: "01 · For agents & the CLI"
-  title: "First-class tools for builders and agents."
+  title: "First-class tools for builders and agents"
   title_italic: "tools"
   cli_cards:
     - tool: decK
@@ -68,8 +67,7 @@ agents_section:
       icon: /assets/icons/book.svg
 
 products_section:
-  eyebrow: "02 · The platform"
-  title: "From edge to agent."
+  title: "From edge to agent"
   title_italic: "agent."
   categories:
     - name: Connectivity
@@ -198,8 +196,7 @@ products_section:
               url: /index/identity/
 
 specs_section:
-  eyebrow: "03 · API specifications"
-  title: "API specifications for every use case."
+  title: "API specifications for every use case"
   title_italic: "API specifications"
   featured_apis:
     - "Konnect Control Planes"
