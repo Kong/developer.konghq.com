@@ -59,7 +59,8 @@ faqs:
 
   - q: How do I gate access to an AI Model, AI Agent, or AI MCP Server with an AI Consumer Group?
     a: |
-      Add the AI Consumer Group's name to the parent entity's `acls.allow` or `acls.deny` list.
+      Add the AI Consumer Group's name to the parent entity's `access.acls.allow` or `access.acls.deny` list.
+      For AI Models and AI Agents, configure exactly one of `allow` or `deny`. For AI MCP Servers, both can be set simultaneously.
       ACLs accept AI Consumer, AI Consumer Group, and Authenticated Group names.
       See the [AI Model entity](/ai-gateway/entities/ai-model/) reference.
 ---
@@ -143,7 +144,7 @@ You can attach multiple AI Policies to a single AI Consumer Group with different
 
 ## Use in parent entity ACLs
 
-To restrict access to specific [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), or [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) by AI Consumer Group (for example, allowing only Gold tier AI Consumers to access premium models), use ACLs. The `acls` field on these entities accepts AI Consumer Group names alongside AI Consumer and Authenticated Group names. Add an AI Consumer Group to a parent entity's `acls.allow` list to permit its members access, or to `acls.deny` to block them.
+To restrict access to specific [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), or [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) by AI Consumer Group (for example, allowing only Gold tier AI Consumers to access premium models), use ACLs. The `access.acls` field on these entities accepts AI Consumer Group names alongside AI Consumer and Authenticated Group names. For AI Models and AI Agents, configure exactly one of `access.acls.allow` to permit access or `access.acls.deny` to block it. Setting both at the same time is not supported. For AI MCP Servers, `access.acls` supports setting `allow`, `deny`, or both.
 
 AI Consumer Group membership is resolved after the request is authenticated and the AI Consumer is identified.
 
