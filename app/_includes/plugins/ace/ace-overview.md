@@ -5,7 +5,7 @@ Unlike the KAA plugin, the ACE plugin can link to control planes to configure ac
 API packages use the ACE plugin to manage developer access control to APIs. 
 
 If you [apply a plugin to a {{site.dev_portal}} application](/dev-portal/self-service/#apply-plugins-to-applications), the ACE plugin looks up the application's principal to resolve the mapped Consumer at runtime, so any Consumer or principal-scoped plugins apply to the application's traffic. 
-Principal lookups are cached, so additional lookups aren't required until the cache is evicted. 
+{{site.konnect_short_name}} caches principal lookups, so additional lookups aren't required until it evicts the cache. 
 Cache eviction is controlled at the principal and {{site.base_gateway}}-level.
 
 The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. 

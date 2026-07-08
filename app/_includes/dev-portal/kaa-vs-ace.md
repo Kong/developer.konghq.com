@@ -6,7 +6,7 @@ These plugins are responsible for applying authentication and authorization on t
 The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate.
 
 In {{site.base_gateway}} 3.15 or later, both plugins also look up {{site.identity}} principals to resolve any [plugins applied to a {{site.dev_portal}} application](/dev-portal/self-service/#map-an-application-to-a-consumer), so that Consumer or principal-scoped plugins apply to the application's traffic. 
-Principal lookups are cached, so additional lookups aren't required until the cache is evicted. 
+{{site.konnect_short_name}} caches principal lookups, so additional lookups aren't required until it evicts the cache. 
 Cache eviction is controlled at the principal and {{site.base_gateway}}-level.
 
 The following table can help you decide which option to pick:
