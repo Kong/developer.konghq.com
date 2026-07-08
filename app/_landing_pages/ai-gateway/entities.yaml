@@ -23,18 +23,18 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "AI Provider"
+              title: "AI Model Provider"
               description: Register upstream LLM providers with authentication and configuration. Reusable across models.
               cta:
-                text: AI Provider entity
-                url: /ai-gateway/entities/ai-provider/
+                text: AI Model Provider entity
+                url: /ai-gateway/entities/ai-model-provider/
       - blocks:
           - type: card
             config:
               title: AI Model
               description: Define how to reach and interact with a specific LLM, including routing, load balancing, LLM capabilities, and AI Policies.
               cta:
-                text: Model entity
+                text: AI Model entity
                 url: /ai-gateway/entities/ai-model/
       - blocks:
           - type: card
@@ -90,6 +90,14 @@ rows:
               cta:
                 text: AI Vault entity
                 url: /ai-gateway/entities/ai-vault/
+      - blocks:
+          - type: card
+            config:
+              title: AI Identity Provider
+              description: Configure inbound authentication for AI Consumers calling AI Models. Supports API key and OIDC token authentication.
+              cta:
+                text: AI Identity Provider entity
+                url: /ai-gateway/entities/ai-identity-provider/
       - blocks:
           - type: card
             config:
