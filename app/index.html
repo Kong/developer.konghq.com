@@ -42,46 +42,8 @@ edit_and_issue_links: false
 
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">01 · <span class="bg-brand text-button px-1">MCP & tools</span></p>
-            <h2 class="text-[36px] leading-[44px]">First-class <em class="text-primary dark:text-brand italic font-bold">tools</em> for builders and agents</h2>
+            <h2 class="text-[36px] leading-[44px]">Tools for <em class="text-primary dark:text-brand italic font-bold">builders and agents</em></h2>
         </div>
-
-        <!-- CLI terminal cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {%- for cli in agents.cli_cards -%}
-            {%- assign cli_id = "hp-cli-" | append: forloop.index -%}
-            <div class="card flex-col gap-0 overflow-hidden">
-                <div class="flex items-center gap-2 px-4 py-2.5 bg-code-block-header border-b border-primary">
-                    <div class="flex gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-red-primary opacity-70"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-yellow-primary opacity-70"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-green-primary opacity-70"></span>
-                    </div>
-                    <span class="ml-1 text-xs text-terciary font-mono">{{ cli.tool }}</span>
-                    <div class="ml-auto flex items-center gap-1 relative">
-                        <div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
-                        <clipboard-copy for="{{ cli_id }}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
-                            <svg width="14" height="14" viewBox="0 0 24 24" class="flex group-[.success]:hidden" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M5 22C4.45 22 3.97917 21.8042 3.5875 21.4125C3.19583 21.0208 3 20.55 3 20V6H5V20H16V22H5ZM9 18C8.45 18 7.97917 17.8042 7.5875 17.4125C7.19583 17.0208 7 16.55 7 16V4C7 3.45 7.19583 2.97917 7.5875 2.5875C7.97917 2.19583 8.45 2 9 2H18C18.55 2 19.0208 2.19583 19.4125 2.5875C19.8042 2.97917 20 3.45 20 4V16C20 16.55 19.8042 17.0208 19.4125 17.4125C19.0208 17.8042 18.55 18 18 18H9ZM9 16H18V4H9V16Z" fill="currentColor"/>
-                            </svg>
-                            <svg width="14" height="14" viewBox="0 0 24 24" class="hidden group-[.success]:flex" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="rgb(var(--color-semantic-green-primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M20 6 9 17l-5-5"></path>
-                            </svg>
-                        </clipboard-copy>
-                    </div>
-                </div>
-                <pre class="bg-code-block m-0 px-4 py-4 text-sm leading-relaxed overflow-x-auto border-0 rounded-none"><code><span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.install }}
-<span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only" aria-hidden="true">{{ cli.install }}
-{{ cli.command }}</span></code></pre>
-                <div class="px-5 pb-5 pt-4 flex flex-col gap-2 border-t border-primary flex-1">
-                    <p class="text-sm text-secondary">{{ cli.description }}</p>
-                    <div class="mt-4">
-                        <a href="{{ cli.docs_url }}" class="text-sm text-links no-icon">View docs &rarr;</a>
-                    </div>
-                </div>
-            </div>
-            {%- endfor -%}
-        </div>
-
         <!-- Featured cards: MCP (wide, featured) + Skill Hub + Cookbooks -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {%- for fcard in agents.featured_cards -%}
@@ -170,6 +132,43 @@ edit_and_issue_links: false
             {%- endfor -%}
         </div>
 
+        <!-- CLI terminal cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {%- for cli in agents.cli_cards -%}
+            {%- assign cli_id = "hp-cli-" | append: forloop.index -%}
+            <div class="card flex-col gap-0 overflow-hidden">
+                <div class="flex items-center gap-2 px-4 py-2.5 bg-code-block-header border-b border-primary">
+                    <div class="flex gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-red-primary opacity-70"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-yellow-primary opacity-70"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-semantic-green-primary opacity-70"></span>
+                    </div>
+                    <span class="ml-1 text-xs text-terciary font-mono">{{ cli.tool }}</span>
+                    <div class="ml-auto flex items-center gap-1 relative">
+                        <div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+                        <clipboard-copy for="{{ cli_id }}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+                            <svg width="14" height="14" viewBox="0 0 24 24" class="flex group-[.success]:hidden" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M5 22C4.45 22 3.97917 21.8042 3.5875 21.4125C3.19583 21.0208 3 20.55 3 20V6H5V20H16V22H5ZM9 18C8.45 18 7.97917 17.8042 7.5875 17.4125C7.19583 17.0208 7 16.55 7 16V4C7 3.45 7.19583 2.97917 7.5875 2.5875C7.97917 2.19583 8.45 2 9 2H18C18.55 2 19.0208 2.19583 19.4125 2.5875C19.8042 2.97917 20 3.45 20 4V16C20 16.55 19.8042 17.0208 19.4125 17.4125C19.0208 17.8042 18.55 18 18 18H9ZM9 16H18V4H9V16Z" fill="currentColor"/>
+                            </svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" class="hidden group-[.success]:flex" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="rgb(var(--color-semantic-green-primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M20 6 9 17l-5-5"></path>
+                            </svg>
+                        </clipboard-copy>
+                    </div>
+                </div>
+                <pre class="bg-code-block m-0 px-4 py-4 text-sm leading-relaxed overflow-x-auto border-0 rounded-none"><code><span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.install }}
+<span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only" aria-hidden="true">{{ cli.install }}
+{{ cli.command }}</span></code></pre>
+                <div class="px-5 pb-5 pt-4 flex flex-col gap-2 border-t border-primary flex-1">
+                    <p class="text-sm text-secondary">{{ cli.description }}</p>
+                    <div class="mt-4">
+                        <a href="{{ cli.docs_url }}" class="text-sm text-links no-icon">View docs &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            {%- endfor -%}
+        </div>
+
     </div>
 
     <!-- SECTION 02: THE PLATFORM -->
@@ -178,7 +177,7 @@ edit_and_issue_links: false
 
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">02 · <span class="bg-brand text-button px-1">Platform</span></p>
-            <h2 class="text-[36px] leading-[44px]">From edge to <em class="text-primary dark:text-brand italic font-bold">agent</em></h2>
+            <h2 class="text-[36px] leading-[44px]">Manage the entire <em class="text-primary dark:text-brand italic font-bold">AI connectivity layer</em></h2>
         </div>
 
         {%- for cat in prods.categories -%}
@@ -251,6 +250,11 @@ edit_and_issue_links: false
         </div>
 
         <div class="flex flex-col border-t border-primary">
+            <a href="https://releases.konghq.com/en" class="flex items-center gap-6 py-4 border-b border-primary hover:bg-hover-component/100 hover:px-4 hover:-mx-4 transition-all no-icon hover:no-underline group">
+                <span class="font-mono text-sm text-brand w-16 shrink-0">latest</span>
+                <span class="text-sm text-primary flex-1">{{ site.konnect_product_name }}</span>
+                <span class="text-terciary group-hover:text-brand transition-colors">&rarr;</span>
+            </a>
             {%- for cat in prods.categories -%}
             {%- for item in cat.items -%}
             {%- unless item.whats_new -%}{%- continue -%}{%- endunless -%}

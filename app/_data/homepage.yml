@@ -64,6 +64,61 @@ agents_section:
 
 products_section:
   categories:
+    - name: Applications
+      items:
+        - title: Dev Portal
+          icon: /assets/icons/dev-portal.svg
+          description: "Empower API consumers with self-service API documentation and developer tools."
+          links:
+            - text: Overview
+              url: /dev-portal/
+            - text: All documentation
+              url: /index/dev-portal/
+        - title: Observability
+          icon: /assets/icons/analytics.svg
+          description: "Gain visibility into API performance and usage patterns with real-time analytics."
+          links:
+            - text: Overview
+              url: /observability/
+            - text: All documentation
+              url: /index/observability/
+        - title: Catalog
+          icon: /assets/icons/service-hub.svg
+          description: "Manage and discover services within the Kong ecosystem effortlessly."
+          links:
+            - text: Overview
+              url: /catalog/
+            - text: All documentation
+              url: /index/catalog/
+        - title: Insomnia
+          product: insomnia
+          changelog_url: https://insomnia.rest/changelog
+          whats_new: true
+          icon: /assets/icons/insomnia/insomnia.svg
+          description: "Design, debug, test, and mock APIs locally, on Git, or cloud."
+          links:
+            - text: Overview
+              url: /insomnia/
+            - text: How-to guides
+              url: /how-to/?products=insomnia
+            - text: All documentation
+              url: /index/insomnia
+        - title: "Metering & Billing"
+          icon: /assets/icons/metering-and-billing.svg
+          description: "Meter and monetize the entire API and AI connectivity data path with usage-based billing and entitlements."
+          links:
+            - text: "Metering & Billing overview"
+              url: /metering-and-billing/
+            - text: All documentation
+              url: /index/metering-and-billing/
+        - title: "{{site.identity}}"
+          icon: /assets/icons/identity.svg
+          description: "{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access."
+          links:
+            - text: "{{site.identity}} overview"
+              url: /identity/
+            - text: All documentation
+              url: /index/identity/
     - name: Connectivity
       items:
         - title: Kong Gateway
@@ -151,61 +206,38 @@ products_section:
               url: /how-to/?products=operator
             - text: All documentation
               url: /index/operator/
-    - name: Applications
+    - name: Konnect Platform
       items:
-        - title: Dev Portal
-          icon: /assets/icons/dev-portal.svg
-          description: "Empower API consumers with self-service API documentation and developer tools."
+        - title: Platform auth
+          icon: /assets/icons/security.svg
+          description: "Secure the Konnect platform using SSO with any SAML and OIDC provider, or use built-in authentication."
           links:
-            - text: Overview
-              url: /dev-portal/
-            - text: All documentation
-              url: /index/dev-portal/
-        - title: Observability
-          icon: /assets/icons/analytics.svg
-          description: "Gain visibility into API performance and usage patterns with real-time analytics."
+            - text: Konnect platform authentication
+              url: /konnect-platform/authentication/
+            - text: Konnect SSO
+              url: /konnect-platform/sso/
+            - text: Teams and roles
+              url: /konnect-platform/teams-and-roles/
+        - title: Org management
+          icon: /assets/icons/organization.svg
+          description: "Streamline and govern organization-wide API access and operations."
           links:
-            - text: Overview
-              url: /observability/
-            - text: All documentation
-              url: /index/observability/
-        - title: Catalog
-          icon: /assets/icons/service-hub.svg
-          description: "Manage and discover services within the Kong ecosystem effortlessly."
+            - text: Account management
+              url: /konnect-platform/account/
+            - text: Geographic regions
+              url: /konnect-platform/geos/
+            - text: All org management references
+              url: /index/konnect-platform/#org-management
+        - title: Audit logs
+          icon: /assets/icons/edit.svg
+          description: "Detect and respond to potential security incidents when they occur."
           links:
-            - text: Overview
-              url: /catalog/
-            - text: All documentation
-              url: /index/catalog/
-        - title: Insomnia
-          product: insomnia
-          changelog_url: https://insomnia.rest/changelog
-          whats_new: true
-          icon: /assets/icons/insomnia/insomnia.svg
-          description: "Design, debug, test, and mock APIs locally, on Git, or cloud."
-          links:
-            - text: Overview
-              url: /insomnia/
-            - text: How-to guides
-              url: /how-to/?products=insomnia
-            - text: All documentation
-              url: /index/insomnia
-        - title: "Metering & Billing"
-          icon: /assets/icons/metering-and-billing.svg
-          description: "Meter and monetize the entire API and AI connectivity data path with usage-based billing and entitlements."
-          links:
-            - text: "Metering & Billing overview"
-              url: /metering-and-billing/
-            - text: All documentation
-              url: /index/metering-and-billing/
-        - title: "{{site.identity}}"
-          icon: /assets/icons/identity.svg
-          description: "{{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access."
-          links:
-            - text: "{{site.identity}} overview"
-              url: /identity/
-            - text: All documentation
-              url: /index/identity/
+            - text: Collect audit logs for Konnect
+              url: /how-to/collect-audit-logs/
+            - text: Collect audit logs for Dev Portal
+              url: /how-to/collect-dev-portal-audit-logs/
+            - text: Konnect audit logs reference
+              url: /konnect-platform/audit-logs/
 
 specs_section:
   featured_apis:
