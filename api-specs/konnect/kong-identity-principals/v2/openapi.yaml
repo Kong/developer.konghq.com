@@ -1,0 +1,2683 @@
+openapi: 3.0.3
+info:
+  title: Konnect Kong Identity admin api
+  version: 0.0.5
+servers:
+  - url: 'https://us.api.konghq.com/v2'
+    description: United-States Production region
+  - url: 'https://eu.api.konghq.com/v2'
+    description: Europe Production region
+  - url: 'https://au.api.konghq.com/v2'
+    description: Australia Production region
+  - url: 'https://me.api.konghq.com/v2'
+    description: Middle-East Production region
+  - url: 'https://in.api.konghq.com/v2'
+    description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
+paths:
+  /directories:
+    post:
+      operationId: createDirectory
+      summary: Create a new Directory
+      description: |
+        Creates a new directory for grouping principals around an organizational identity boundary.
+        Directories can be configured with metadata, labels, and control plane access restrictions.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateDirectoryRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/KongDirectoryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Kong Identity Directories
+    get:
+      operationId: ListKongDirectories
+      summary: List all directories
+      description: |
+        Retrieves a paginated list of all available directories in the organization.
+        Results can be sorted by name, created_at, or updated_at.
+      parameters:
+        - $ref: '#/components/parameters/CursorPageQuery'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of directories. Supported sort attributes are:
+            - name
+            - created_at
+            - updated_at
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListKongDirectoriesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Kong Identity Directories
+  '/directories/{directoryId}':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+    patch:
+      operationId: updateDirectory
+      summary: Update a Directory
+      description: |
+        Partially updates an existing directory by modifying only the provided fields.
+        Unspecified fields will retain their current values.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateDirectoryRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongDirectoryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Kong Identity Directories
+    put:
+      operationId: replaceDirectory
+      summary: Replace a Directory
+      description: |
+        Completely replaces an existing directory with the provided data.
+        All fields must be specified; any omitted fields will be reset to their defaults.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceDirectoryRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongDirectoryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Kong Identity Directories
+    get:
+      operationId: getDirectory
+      summary: Get a Directory
+      description: Retrieves detailed information about a specific directory by its ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/KongDirectoryResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Kong Identity Directories
+    delete:
+      operationId: deleteDirectory
+      summary: Delete a Directory
+      description: |
+        Deletes a directory and optionally all its associated resources (principals, keys, etc.).
+        Use the force parameter to control deletion behavior when dependencies exist.
+      parameters:
+        - name: force
+          in: query
+          description: 'If true, delete the specified directory and all its associated resources. If false, only allow deletion if no clients, scopes or claims are associated with the auth server.'
+          schema:
+            type: string
+            default: 'false'
+            enum:
+              - 'true'
+              - 'false'
+      responses:
+        '204':
+          description: Success
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Kong Identity Directories
+  '/directories/{directoryId}/realm-config':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+    get:
+      operationId: getRealmConfig
+      summary: Get the realm configuration of a Directory
+      description: Retrieves the realm configuration values for the specified directory.
+      responses:
+        '200':
+          $ref: '#/components/responses/KongDirectoryRealmValuesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Kong Identity Directories
+    put:
+      operationId: replaceRealmConfig
+      summary: Replace Directory realm configuration
+      description: |
+        Completely replaces the realm configuration for the specified directory.
+        All fields must be specified; any omitted fields will be reset to their defaults.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceRealmConfigRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongDirectoryRealmValuesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Kong Identity Directories
+  '/directories/{directoryId}/principals':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+    post:
+      operationId: createPrincipal
+      summary: Create a Principal in a Directory
+      description: |
+        Creates a new principal identity within the specified directory.
+        Principals can be configured with metadata and labels for organizational purposes.
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePrincipalRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/KongPrincipalResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipal
+    get:
+      operationId: listPrincipals
+      summary: List all the Principals of a Directory
+      description: |
+        Retrieves a paginated list of all principals within the specified directory.
+        Results can be sorted by display_name, created_at, or updated_at.
+      parameters:
+        - $ref: '#/components/parameters/CursorPageQuery'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of principals. Supported sort attributes are:
+            - `display_name`
+            - `created_at`
+            - `updated_at`
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: |
+            Filter principals by field. Supported filter fields:
+            - `display_name`: exact match or contains. Example: `filter[display_name]="service-account"` or `filter[display_name][contains]="service-account"`
+            - `description`: exact match or contains. Example: `filter[description]="service principal"`
+            - `id`: exact match. Example: `filter[id]="<uuid>"`
+            - `labels.<key>`: exact match on a specific label key. Example: `filter[labels.env]="prod"`
+          required: false
+          schema:
+            type: object
+            properties:
+              display_name:
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
+              description:
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              labels:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          explode: true
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/ListKongPrincipalsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - KongPrincipal
+  '/directories/{directoryId}/principals/{principalId}':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+    patch:
+      operationId: updatePrincipal
+      summary: Update a Principal
+      description: |
+        Partially updates an existing principal by modifying only the provided fields.
+        Unspecified fields will retain their current values.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePrincipalRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPrincipalResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipal
+    put:
+      operationId: replacePrincipal
+      summary: Replace a Principal
+      description: |
+        Completely replaces an existing principal with the provided data.
+        All fields must be specified; any omitted fields will be reset to their defaults.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplacePrincipalRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPrincipalResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipal
+    get:
+      operationId: getPrincipal
+      summary: Get a Principal
+      description: Retrieves detailed information about a specific principal by its ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPrincipalResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipal
+    delete:
+      operationId: deletePrincipal
+      summary: Delete a Principal
+      description: |
+        Permanently deletes a principal from the directory.
+      responses:
+        '204':
+          description: Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipal
+  '/directories/{directoryId}/principals/{principalId}/identities':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+    get:
+      operationId: listIdentities
+      summary: List all identities for a principal
+      description: |
+        Retrieves a paginated list of all identities associated with the specified principal.
+      parameters:
+        - $ref: '#/components/parameters/CursorPageQuery'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of identities. Supported sort attributes are:
+            - `created_at`
+            - `updated_at`
+            - `type`
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: |
+            Filter identities by field. Supported filter field:
+            - `type`: exact match on identity type. Accepted values: `oidc`, `consumer`, `custom`, `auth_server_client`.
+
+            Example: `filter[type]="oidc"`
+          required: false
+          schema:
+            type: object
+            properties:
+              type:
+                $ref: '#/components/schemas/StringFieldOEQFilter'
+          explode: true
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/ListKongPrincipalIdentitiesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalIdentity
+    post:
+      operationId: createIdentity
+      summary: Create an identity for a principal
+      description: |
+        Creates a new identity association for the specified principal.
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePrincipalIdentityRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/KongPrincipalIdentityResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipalIdentity
+  '/directories/{directoryId}/principals/{principalId}/identities/{identityId}':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+      - $ref: '#/components/parameters/identityId'
+    get:
+      operationId: getIdentity
+      summary: Get an identity
+      description: Retrieves detailed information about a specific principal identity by its ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPrincipalIdentityResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalIdentity
+    put:
+      operationId: replaceIdentity
+      summary: Replace an identity
+      description: |
+        Completely replaces an existing principal identity with the provided data.
+        All fields must be specified; any omitted fields will be reset to their defaults.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplacePrincipalIdentityRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPrincipalIdentityResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipalIdentity
+    patch:
+      operationId: updateIdentity
+      summary: Update an identity
+      description: |
+        Partially updates an existing principal identity by modifying only the provided fields.
+        Unspecified fields will retain their current values.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePrincipalIdentityRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPrincipalIdentityResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipalIdentity
+    delete:
+      operationId: deleteIdentity
+      summary: Delete an identity
+      description: |
+        Permanently deletes an identity association from the principal.
+        This operation cannot be undone.
+      responses:
+        '204':
+          description: Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalIdentity
+  '/directories/{directoryId}/principals/{principalId}/basic-auths':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+    get:
+      operationId: list-principal-basic-auths
+      summary: List all basic auth credentials
+      description: |
+        Retrieves a paginated list of all basic auth credentials associated with the specified principal.
+      parameters:
+        - $ref: '#/components/parameters/CursorPageQuery'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListKongBasicAuthsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - KongPrincipalCredential
+    post:
+      operationId: create-principal-basic-auth
+      summary: Create a basic auth credential
+      description: |
+        Creates a new basic auth credential for the specified principal.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateBasicAuthRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/KongBasicAuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipalCredential
+  '/directories/{directoryId}/principals/{principalId}/basic-auths/{basicAuthId}':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+      - $ref: '#/components/parameters/basicAuthId'
+    get:
+      operationId: get-principal-basic-auth
+      summary: Get a basic auth credential
+      description: |
+        Retrieves a specific basic auth credential by ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/KongBasicAuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+    patch:
+      operationId: update-principal-basic-auth
+      summary: Update a basic auth credential
+      description: |
+        Partially updates an existing basic auth credential. Unspecified fields retain their current values.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateBasicAuthRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongBasicAuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+    put:
+      operationId: replace-principal-basic-auth
+      summary: Replace a basic auth credential
+      description: |
+        Fully replaces an existing basic auth credential with the provided values.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceBasicAuthRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongBasicAuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+    delete:
+      operationId: delete-principal-basic-auth
+      summary: Delete a basic auth credential
+      description: |
+        Permanently deletes a basic auth credential and all associated passwords.
+        This operation cannot be undone.
+      responses:
+        '204':
+          description: Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+  '/directories/{directoryId}/principals/{principalId}/basic-auths/{basicAuthId}/passwords':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+      - $ref: '#/components/parameters/basicAuthId'
+    get:
+      operationId: listPasswords
+      summary: List all passwords for a basic auth
+      description: |
+        Retrieves a paginated list of all passwords associated with the specified basic auth credential.
+      parameters:
+        - $ref: '#/components/parameters/CursorPageQuery'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListKongPasswordsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - KongPrincipalCredential
+    post:
+      operationId: createPassword
+      summary: Create a password for a basic auth credential
+      description: |
+        Creates a new password for the specified basic auth credential.
+        The password value is only returned on creation and cannot be retrieved again.
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePasswordRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/KongPasswordCreateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipalCredential
+    delete:
+      operationId: deleteAllPasswords
+      summary: Delete all passwords for a basic auth
+      description: |
+        Permanently deletes all passwords associated with the specified basic auth credential.
+        This operation cannot be undone.
+      responses:
+        '204':
+          description: Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+  '/directories/{directoryId}/principals/{principalId}/basic-auths/{basicAuthId}/passwords/{passwordId}':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+      - $ref: '#/components/parameters/basicAuthId'
+      - $ref: '#/components/parameters/passwordId'
+    get:
+      operationId: getPassword
+      summary: Get a password
+      description: |
+        Retrieves a specific password by ID. The password value is not returned.
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPasswordResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+    patch:
+      operationId: updatePassword
+      summary: Update a password
+      description: |
+        Partially updates a password's expiration date.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePasswordRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPasswordResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+    put:
+      operationId: replacePassword
+      summary: Replace a password
+      description: |
+        Fully replaces an existing password with the provided values.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplacePasswordRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPasswordResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+    delete:
+      operationId: deletePassword
+      summary: Delete a password
+      description: |
+        Permanently deletes a password, immediately revoking its access.
+        This operation cannot be undone.
+      responses:
+        '204':
+          description: Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+  '/directories/{directoryId}/principals/{principalId}/api-keys':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+    post:
+      operationId: create-principal-key
+      summary: Create a principal API key
+      description: |
+        Creates a new API key for the specified principal.
+        Keys can be system-generated (v1) or imported with a custom secret, and may have an optional expiration date.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateKeyRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/KongPrincipalCreateKeyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipalCredential
+    get:
+      operationId: list-principal-keys
+      summary: List all API keys for a principal
+      description: |
+        Retrieves a paginated list of all API keys associated with the specified principal.
+        Results can be sorted by created_at, updated_at, or name.
+      parameters:
+        - $ref: '#/components/parameters/CursorPageQuery'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of principal Keys. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListKongPrincipalKeysResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - KongPrincipalCredential
+  '/directories/{directoryId}/principals/{principalId}/api-keys/{apiKeyId}':
+    parameters:
+      - $ref: '#/components/parameters/directoryId'
+      - $ref: '#/components/parameters/principalId'
+      - $ref: '#/components/parameters/apiKeyId'
+    patch:
+      operationId: update-principal-key
+      summary: Update a principal API key
+      description: |
+        Partially updates an existing API key's metadata.
+        Note: The key secret cannot be modified after creation.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateKeyRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPrincipalKeyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - KongPrincipalCredential
+    get:
+      operationId: get-identity-key
+      summary: Get a principal API key
+      description: |
+        Retrieves detailed information about a specific API key.
+        Note: The key secret is not returned; it is only available when the key is first created.
+      responses:
+        '200':
+          $ref: '#/components/responses/KongPrincipalKeyResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+    delete:
+      operationId: delete-principal-key
+      summary: Delete an API key
+      description: |
+        Permanently deletes an API key, immediately revoking its access.
+        This operation cannot be undone.
+      responses:
+        '204':
+          description: Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - KongPrincipalCredential
+components:
+  parameters:
+    apiKeyId:
+      name: apiKeyId
+      in: path
+      required: true
+      description: Unique identifier of the API key (UUID format)
+      schema:
+        type: string
+        format: uuid
+    basicAuthId:
+      name: basicAuthId
+      in: path
+      required: true
+      description: Unique identifier of the basic auth credential (UUID format)
+      schema:
+        type: string
+        format: uuid
+    CursorPageQuery:
+      name: page
+      description: Determines which page of the collection to retrieve.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/CursorPageParameters'
+    directoryId:
+      name: directoryId
+      in: path
+      required: true
+      description: ID of the directory
+      schema:
+        type: string
+        format: uuid
+    identityId:
+      name: identityId
+      in: path
+      required: true
+      description: Unique identifier of the principal identity (UUID format)
+      schema:
+        type: string
+        format: uuid
+    passwordId:
+      name: passwordId
+      in: path
+      required: true
+      description: Unique identifier of the password (UUID format)
+      schema:
+        type: string
+        format: uuid
+    principalId:
+      name: principalId
+      in: path
+      required: true
+      description: Unique identifier of the principal (UUID format)
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    KongIdentityAllowedControlPlanes:
+      description: |
+        List of control plane IDs authorized to make authentication requests to this directory.
+        Maximum of 32 control planes can be specified. Use allow_all_control_planes for unrestricted access.
+      type: array
+      items:
+        type: string
+        format: uuid
+        uniqueItems: true
+        minItems: 0
+        maxItems: 32
+      default: []
+      nullable: false
+    KongDirectoryRealmValues:
+      description: |
+        Configuration values used when a Kong v3 data plane connects to identity as realm. The directory is used as a realm for regional consumers.
+      type: object
+      properties:
+        ttl:
+          $ref: '#/components/schemas/RealmTTL'
+        negative_ttl:
+          $ref: '#/components/schemas/NegativeTTL'
+        consumer_groups:
+          $ref: '#/components/schemas/RealmConsumerGroups'
+      required:
+        - ttl
+        - negative_ttl
+        - consumer_groups
+    KongIdentityAllowAllControlPlanes:
+      description: |
+        When set to true, all control planes within the organization can make authentication requests to this directory.
+        This overrides the allowed_control_planes list. Defaults to false for security.
+      type: boolean
+      default: false
+      nullable: false
+    DirectoryName:
+      description: |
+        Human-readable name of the directory, used to identify the organizational boundary.
+        A directory name is unique within the organization.
+      type: string
+      maxLength: 255
+      minLength: 1
+      pattern: '^[a-z0-9-_]+$'
+    DirectoryDescription:
+      description: |
+        Optional description providing additional context about the directory's purpose or usage.
+      type: string
+      maxLength: 255
+    CreateDirectoryBody:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/DirectoryName'
+        description:
+          $ref: '#/components/schemas/DirectoryDescription'
+        allowed_control_planes:
+          $ref: '#/components/schemas/KongIdentityAllowedControlPlanes'
+        allow_all_control_planes:
+          $ref: '#/components/schemas/KongIdentityAllowAllControlPlanes'
+        ttl_secs:
+          $ref: '#/components/schemas/DirectoryTTLSecs'
+        negative_ttl_secs:
+          $ref: '#/components/schemas/DirectoryNegativeTTLSecs'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      additionalProperties: false
+      required:
+        - name
+    ReplaceDirectoryBody:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/DirectoryName'
+        description:
+          $ref: '#/components/schemas/DirectoryDescription'
+        allowed_control_planes:
+          $ref: '#/components/schemas/KongIdentityAllowedControlPlanes'
+        allow_all_control_planes:
+          $ref: '#/components/schemas/KongIdentityAllowAllControlPlanes'
+        ttl_secs:
+          $ref: '#/components/schemas/DirectoryTTLSecs'
+        negative_ttl_secs:
+          $ref: '#/components/schemas/DirectoryNegativeTTLSecs'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      additionalProperties: false
+      required:
+        - name
+    UpdateDirectoryBody:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/DirectoryName'
+        allowed_control_planes:
+          $ref: '#/components/schemas/KongIdentityAllowedControlPlanes'
+        allow_all_control_planes:
+          description: |
+            When set to true, all control planes within the organization can make authentication requests to this directory.
+            This overrides the allowed_control_planes list. When omitted, the existing value is preserved.
+          type: boolean
+          nullable: false
+        ttl_secs:
+          $ref: '#/components/schemas/DirectoryTTLSecs'
+        negative_ttl_secs:
+          $ref: '#/components/schemas/DirectoryNegativeTTLSecs'
+        labels:
+          $ref: '#/components/schemas/Labels'
+      additionalProperties: false
+    CreatePrincipalBody:
+      type: object
+      properties:
+        display_name:
+          $ref: '#/components/schemas/KongPrincipalDisplayName'
+        description:
+          $ref: '#/components/schemas/KongPrincipalDescription'
+        metadata:
+          $ref: '#/components/schemas/KongIdentityMetadata'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+    ReplacePrincipalBody:
+      type: object
+      properties:
+        display_name:
+          $ref: '#/components/schemas/KongPrincipalDisplayName'
+        description:
+          $ref: '#/components/schemas/KongPrincipalDescription'
+        metadata:
+          $ref: '#/components/schemas/KongIdentityMetadata'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+    UpdatePrincipalBody:
+      type: object
+      properties:
+        display_name:
+          $ref: '#/components/schemas/KongPrincipalDisplayName'
+        description:
+          $ref: '#/components/schemas/KongPrincipalDescription'
+        metadata:
+          $ref: '#/components/schemas/KongIdentityMetadata'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedByUpdate'
+    CreatePrincipalKeyBody:
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          imported: '#/components/schemas/CreatePrincipalKeyBodyImported'
+          v1: '#/components/schemas/CreatePrincipalKeyBodyv1'
+      oneOf:
+        - $ref: '#/components/schemas/CreatePrincipalKeyBodyImported'
+        - $ref: '#/components/schemas/CreatePrincipalKeyBodyv1'
+    CreatePrincipalKeyBodyImported:
+      properties:
+        type:
+          type: string
+          enum:
+            - imported
+        secret:
+          type: string
+          maxLength: 255
+          minLength: 1
+          x-sensitive: true
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+      additionalProperties: false
+      required:
+        - type
+        - secret
+    CreatePrincipalKeyBodyv1:
+      properties:
+        type:
+          type: string
+          enum:
+            - v1
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      additionalProperties: false
+      required:
+        - type
+    UpdatePrincipalKeyBody:
+      description: Request body for updating an API key's metadata
+      type: object
+      properties:
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+        managed_by:
+          $ref: '#/components/schemas/ManagedByUpdate'
+    CreateBasicAuthBody:
+      type: object
+      properties:
+        username:
+          description: The username for basic authentication.
+          type: string
+          maxLength: 255
+          minLength: 1
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      required:
+        - username
+    UpdateBasicAuthBody:
+      type: object
+      properties:
+        username:
+          description: The username for basic authentication.
+          type: string
+          maxLength: 255
+          minLength: 1
+        managed_by:
+          $ref: '#/components/schemas/ManagedByUpdate'
+    ReplaceBasicAuthBody:
+      type: object
+      properties:
+        username:
+          description: The username for basic authentication.
+          type: string
+          maxLength: 255
+          minLength: 1
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      required:
+        - username
+    CreatePasswordBody:
+      type: object
+      properties:
+        secret:
+          type: string
+          maxLength: 255
+          minLength: 1
+          x-sensitive: true
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+    UpdatePasswordBody:
+      description: Request body for partially updating a password
+      type: object
+      properties:
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+        managed_by:
+          $ref: '#/components/schemas/ManagedByUpdate'
+    ReplacePasswordBody:
+      description: Request body for replacing a password
+      type: object
+      properties:
+        secret:
+          type: string
+          maxLength: 255
+          minLength: 1
+          x-sensitive: true
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      required:
+        - secret
+        - expires_at
+    KongBasicAuth:
+      description: |
+        A basic auth credential associated with a principal, enabling username/password authentication.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        username:
+          description: The username for basic authentication.
+          type: string
+          maxLength: 255
+          minLength: 1
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      required:
+        - id
+        - username
+        - created_at
+        - updated_at
+        - managed_by
+    ListKongBasicAuths:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KongBasicAuth'
+      required:
+        - meta
+        - data
+    KongPassword:
+      description: |
+        A password credential associated with a basic auth entry. The password value is not returned after creation.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAtNullable'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      required:
+        - id
+        - created_at
+        - updated_at
+        - expires_at
+        - managed_by
+    KongPasswordWithSecret:
+      description: |
+        A password credential with the secret value. The secret is only returned when the password is first created
+        and cannot be retrieved again later.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        secret:
+          description: |
+            The password secret value. This is only returned when the password is first created
+            and cannot be retrieved again later.
+          type: string
+          x-sensitive: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAtNullable'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      required:
+        - id
+        - secret
+        - created_at
+        - updated_at
+        - expires_at
+        - managed_by
+    ListKongPasswords:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KongPassword'
+      required:
+        - meta
+        - data
+    ListKongPrincipalIdentities:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KongPrincipalIdentity'
+      required:
+        - meta
+        - data
+    ListKongDirectories:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KongDirectory'
+      required:
+        - meta
+        - data
+    ListKongPrincipals:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KongPrincipal'
+      required:
+        - meta
+        - data
+    ListKongPrincipalKeys:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KongPrincipalKey'
+      required:
+        - meta
+        - data
+    KongPrincipalKey:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAtNullable'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      required:
+        - id
+        - created_at
+        - updated_at
+        - expires_at
+        - managed_by
+    KongPrincipalKeyWithSecret:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAtNullable'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        secret:
+          description: |
+            The API key secret value. This is only returned when the key is first created
+            and cannot be retrieved again later.
+          type: string
+          x-sensitive: true
+      required:
+        - id
+        - secret
+        - created_at
+        - updated_at
+        - expires_at
+        - managed_by
+    DirectoryTTLSecs:
+      description: |
+        The time in seconds that a principal will be cached in memory on a running Gateway if it is
+        successfully authenticated from this directory. Maximum is 86400 seconds (24 hours).
+      type: integer
+      default: 600
+      maximum: 86400
+      minimum: 300
+    DirectoryNegativeTTLSecs:
+      description: |
+        If a running Gateway triggers a lookup for a principal that cannot be authenticated in this directory,
+        a `negative_ttl_secs` is set. The Gateway will not try to look up the principal in Konnect for `negative_ttl_secs` seconds.
+
+        A principal will be cached for `negative_ttl_secs` if it does not exist in the directory, or if the provided credentials are invalid.
+        Maximum is 86400 seconds (24 hours).
+      type: integer
+      default: 600
+      maximum: 86400
+      minimum: 300
+    KongDirectory:
+      description: |
+        A directory represents an organizational boundary for grouping principals and managing their identities.
+        Directories are region-specific and can control which control planes have authentication access.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          $ref: '#/components/schemas/DirectoryName'
+        description:
+          $ref: '#/components/schemas/DirectoryDescription'
+        allowed_control_planes:
+          $ref: '#/components/schemas/KongIdentityAllowedControlPlanes'
+        allow_all_control_planes:
+          $ref: '#/components/schemas/KongIdentityAllowAllControlPlanes'
+        ttl_secs:
+          $ref: '#/components/schemas/DirectoryTTLSecs'
+        negative_ttl_secs:
+          $ref: '#/components/schemas/DirectoryNegativeTTLSecs'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - description
+        - labels
+        - allowed_control_planes
+        - allow_all_control_planes
+        - ttl_secs
+        - negative_ttl_secs
+        - managed_by
+        - created_at
+        - updated_at
+    KongPrincipalDisplayName:
+      description: |
+        Human-readable name of the principal.
+      type: string
+      maxLength: 255
+    KongPrincipalDescription:
+      description: |
+        Optional description providing additional context about the principal's purpose or role.
+      type: string
+      maxLength: 255
+    KongPrincipal:
+      description: |
+        A principal represents an authenticated identity within a directory.
+        Principals can be associated with API keys and inherit metadata from their parent directory.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        display_name:
+          $ref: '#/components/schemas/KongPrincipalDisplayName'
+        description:
+          $ref: '#/components/schemas/KongPrincipalDescription'
+        metadata:
+          $ref: '#/components/schemas/KongIdentityMetadata'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        provisioned_by:
+          $ref: '#/components/schemas/ProvisionedBy'
+      required:
+        - id
+        - description
+        - metadata
+        - labels
+        - created_at
+        - updated_at
+        - managed_by
+        - provisioned_by
+    KongPrincipalIdentityBody:
+      discriminator:
+        propertyName: type
+        mapping:
+          oidc: '#/components/schemas/KongPrincipalIdentityOIDC'
+          auth_server_client: '#/components/schemas/KongPrincipalIdentityAuthServerClient'
+          control_plane_consumer: '#/components/schemas/KongPrincipalIdentityCPConsumer'
+          custom: '#/components/schemas/KongPrincipalIdentityCustom'
+      oneOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityOIDC'
+        - $ref: '#/components/schemas/KongPrincipalIdentityAuthServerClient'
+        - $ref: '#/components/schemas/KongPrincipalIdentityCPConsumer'
+        - $ref: '#/components/schemas/KongPrincipalIdentityCustom'
+    UpdatePrincipalIdentityBody:
+      description: |
+        Request body for partially updating a principal identity.
+        The identity type cannot be changed. All fields are optional;
+        only the fields relevant to the existing identity type will be applied.
+      type: object
+      properties:
+        issuer:
+          description: The issuer URL. Applicable to oidc type identities.
+          type: string
+        claim:
+          type: object
+          properties:
+            name:
+              type: string
+            value:
+              type: string
+        auth_server_id:
+          description: The auth server ID. Applicable to auth_server_client type identities.
+          type: string
+          format: uuid
+        client_id:
+          description: The client ID. Applicable to auth_server_client type identities.
+          type: string
+        control_plane_id:
+          description: The control plane ID. Applicable to control_plane_consumer type identities.
+          type: string
+        workspace_id:
+          description: The workspace ID. Applicable to control_plane_consumer type identities.
+          type: string
+        consumer_id:
+          description: The consumer ID. Applicable to control_plane_consumer type identities.
+          type: string
+        key:
+          description: The key. Applicable to custom type identities.
+          type: string
+        value:
+          description: The value. Applicable to custom type identities.
+          type: string
+    KongPrincipalIdentityBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+    KongPrincipalIdentityResponseBase:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityBase'
+        - type: object
+          required:
+            - id
+            - created_at
+            - updated_at
+            - labels
+    KongPrincipalIdentityOIDC:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - oidc
+            issuer:
+              type: string
+            claim:
+              type: object
+              properties:
+                name:
+                  type: string
+                value:
+                  type: string
+              required:
+                - name
+                - value
+          required:
+            - type
+            - issuer
+            - claim
+    KongPrincipalIdentityAuthServerClient:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - auth_server_client
+            auth_server_id:
+              type: string
+              format: uuid
+            client_id:
+              type: string
+          required:
+            - type
+            - auth_server_id
+            - client_id
+    KongPrincipalIdentityCPConsumer:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - control_plane_consumer
+            control_plane_id:
+              type: string
+            consumer_id:
+              type: string
+            workspace_id:
+              type: string
+          required:
+            - type
+            - control_plane_id
+            - consumer_id
+    KongPrincipalIdentityCustom:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - custom
+            key:
+              type: string
+            value:
+              type: string
+          required:
+            - type
+            - key
+            - value
+    KongPrincipalIdentityOIDCResponse:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityResponseBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - oidc
+            issuer:
+              type: string
+            claim:
+              type: object
+              properties:
+                name:
+                  type: string
+                value:
+                  type: string
+              required:
+                - name
+                - value
+          required:
+            - type
+            - issuer
+            - claim
+    KongPrincipalIdentityAuthServerClientResponse:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityResponseBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - auth_server_client
+            auth_server_id:
+              type: string
+              format: uuid
+            client_id:
+              type: string
+          required:
+            - type
+            - auth_server_id
+            - client_id
+    KongPrincipalIdentityCPConsumerResponse:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityResponseBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - control_plane_consumer
+            control_plane_id:
+              type: string
+            consumer_id:
+              type: string
+            workspace_id:
+              type: string
+          required:
+            - type
+            - control_plane_id
+            - consumer_id
+    KongPrincipalIdentityCustomResponse:
+      allOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityResponseBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - custom
+            key:
+              type: string
+            value:
+              type: string
+          required:
+            - type
+            - key
+            - value
+    KongPrincipalIdentity:
+      discriminator:
+        propertyName: type
+        mapping:
+          oidc: '#/components/schemas/KongPrincipalIdentityOIDCResponse'
+          auth_server_client: '#/components/schemas/KongPrincipalIdentityAuthServerClientResponse'
+          control_plane_consumer: '#/components/schemas/KongPrincipalIdentityCPConsumerResponse'
+          custom: '#/components/schemas/KongPrincipalIdentityCustomResponse'
+      oneOf:
+        - $ref: '#/components/schemas/KongPrincipalIdentityOIDCResponse'
+        - $ref: '#/components/schemas/KongPrincipalIdentityAuthServerClientResponse'
+        - $ref: '#/components/schemas/KongPrincipalIdentityCPConsumerResponse'
+        - $ref: '#/components/schemas/KongPrincipalIdentityCustomResponse'
+    CursorPageParameters:
+      type: object
+      properties:
+        size:
+          description: The number of items included per page.
+          type: integer
+          example: 10
+        after:
+          description: Cursor param specifying the page (i.e. the next page) of data returned.
+          type: string
+          example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+        before:
+          description: Cursor param specifying the page (i.e. the previous page) of data returned.
+          type: string
+          example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
+    UUID:
+      description: Contains a unique identifier used for this resource.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      readOnly: true
+    Labels:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 50
+      title: Labels
+    ManagedBy:
+      description: |
+        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+        Keys must be 1–63 characters long and start with an alphanumeric character.
+      type: object
+      example:
+        owner: terraform
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 5
+      title: ManagedBy
+    CreatedAt:
+      description: An ISO-8601 timestamp representation of entity creation date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    UpdatedAt:
+      description: An ISO-8601 timestamp representation of entity update date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    BaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+            type:
+              example: 'https://httpstatuses.com/401'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Invalid credentials
+    ForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+            type:
+              example: 'https://httpstatuses.com/403'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Forbidden
+    InvalidRules:
+      description: invalid parameters rules
+      type: string
+      enum:
+        - required
+        - is_array
+        - is_base64
+        - is_boolean
+        - is_date_time
+        - is_integer
+        - is_null
+        - is_number
+        - is_object
+        - is_string
+        - is_uuid
+        - is_fqdn
+        - is_arn
+        - unknown_property
+        - missing_reference
+        - is_label
+        - matches_regex
+        - invalid
+        - is_supported_network_availability_zone_list
+        - is_supported_network_cidr_block
+        - is_supported_provider_region
+        - type
+      nullable: true
+      readOnly: true
+    InvalidParameterStandard:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          $ref: '#/components/schemas/InvalidRules'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+    InvalidParameterMinimumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_length
+            - min_digits
+            - min_lowercase
+            - min_uppercase
+            - min_symbols
+            - min_items
+            - min
+          nullable: false
+          readOnly: true
+        minimum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must have at least 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_length
+            - max_items
+            - max
+          nullable: false
+          readOnly: true
+        maximum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must not have more than 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
+    InvalidParameterChoiceItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - enum
+          nullable: false
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        choices:
+          type: array
+          items: {}
+          minItems: 1
+          nullable: false
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - choices
+    InvalidParameterDependentItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - dependent_fields
+          nullable: true
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        dependents:
+          type: array
+          items: {}
+          nullable: true
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - rule
+        - reason
+        - dependents
+    InvalidParameters:
+      description: invalid parameters
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/InvalidParameterStandard'
+          - $ref: '#/components/schemas/InvalidParameterMinimumLength'
+          - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterChoiceItem'
+          - $ref: '#/components/schemas/InvalidParameterDependentItem'
+      minItems: 1
+      nullable: false
+      uniqueItems: true
+    BadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - invalid_parameters
+          properties:
+            invalid_parameters:
+              $ref: '#/components/schemas/InvalidParameters'
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: 'https://httpstatuses.com/404'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not found
+    RealmTTL:
+      description: |
+        The time in minutes that the Consumer will be cached in memory on a running Gateway if it is
+        successfully loaded from Konnect.
+      type: integer
+      default: 10
+      minimum: 5
+    NegativeTTL:
+      description: |
+        If a running Gateway triggers a lookup for a Consumer that cannot be authenticated this realm, a `negative_ttl`
+        is set. The Gateway will not try to lookup the Consumer in Konnect for `negative_ttl` minutes.
+
+        A Consumer will be cached for `negative_ttl` if they do not exist in the Realm, or if the provided credentials
+        are invalid.
+      type: integer
+      default: 10
+      minimum: 5
+    RealmConsumerGroups:
+      description: |
+        A list of consumer groups to automatically add to any consumers created within this Realm.
+        If `consumer_groups` are provided on the Consumer object _and_ on the Realm, the Consumer will be placed in all defined consumer groups.
+      type: array
+      items:
+        type: string
+        uniqueItems: true
+      format: set
+      title: RealmConsumerGroups
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      properties:
+        eq:
+          type: string
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
+      additionalProperties: false
+      x-examples:
+        example-1:
+          contains: some-value
+        example-2:
+          eq: some-value
+    KongIdentityMetadata:
+      description: |
+        A map of metadata key-value pairs associated with this entity. This metadata is passed to the data plane 
+        to enrich the execution context. During authentication, metadata is inherited and overridden in a hierarchical 
+        manner: Directory metadata is inherited by Principals, which is then inherited and overridden by Credentials.
+      type: object
+      additionalProperties:
+        oneOf:
+          - type: boolean
+          - type: string
+          - type: integer
+          - type: array
+            items:
+              type: string
+            minItems: 0
+            maxItems: 255
+            uniqueItems: true
+          - type: array
+            items:
+              type: integer
+            minItems: 0
+            maxItems: 255
+            uniqueItems: true
+      maxProperties: 50
+      minProperties: 0
+      nullable: true
+    ProvisionedBy:
+      description: 'Identifies the actor that provisioned this principal. Defaults to `konnect_user` for principals created directly by a user; other values identify a service that provisioned the principal on a user''s behalf (for example, `developer_portal`).'
+      type: string
+      default: konnect_user
+      enum:
+        - konnect_user
+        - developer_portal
+      readOnly: true
+    ManagedByUpdate:
+      description: |
+        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+        Set a key's value to `null` to remove it.
+
+        Keys must be 1–63 characters long and start with an alphanumeric character.
+      type: object
+      example:
+        owner: terraform
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+        nullable: true
+      maxProperties: 5
+      title: ManagedByUpdate
+      writeOnly: true
+    StringFieldOEQFilter:
+      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+      type: object
+      properties:
+        oeq:
+          type: string
+      additionalProperties: false
+      required:
+        - oeq
+      title: StringFieldOEQFilter
+      x-examples:
+        example-1:
+          oeq: 'some-value,some-other-value'
+    ExpiresAtNullable:
+      description: An ISO-8601 timestamp representation of entity expiration date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      nullable: true
+    ExpiresAt:
+      description: An ISO-8601 timestamp representation of entity expiration date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      nullable: true
+  examples:
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: Unauthorized
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+  requestBodies:
+    CreateDirectoryRequest:
+      description: Directory to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateDirectoryBody'
+          examples: {}
+    ReplaceDirectoryRequest:
+      description: Directory to be replaced
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplaceDirectoryBody'
+          examples: {}
+    UpdateDirectoryRequest:
+      description: Request body for partially updating a directory
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateDirectoryBody'
+          examples: {}
+    CreatePrincipalRequest:
+      description: Principal to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePrincipalBody'
+          examples: {}
+    ReplacePrincipalRequest:
+      description: Principal to be replaced
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplacePrincipalBody'
+          examples: {}
+    UpdatePrincipalRequest:
+      description: Principal to be updated
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePrincipalBody'
+          examples: {}
+    CreateKeyRequest:
+      description: Key to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePrincipalKeyBody'
+          examples: {}
+    UpdateKeyRequest:
+      description: Key to be updated
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePrincipalKeyBody'
+          examples: {}
+    CreateBasicAuthRequest:
+      description: Basic auth credential to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateBasicAuthBody'
+          examples: {}
+    UpdateBasicAuthRequest:
+      description: Basic auth credential to be partially updated
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateBasicAuthBody'
+          examples: {}
+    ReplaceBasicAuthRequest:
+      description: Basic auth credential to be replaced
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplaceBasicAuthBody'
+          examples: {}
+    CreatePasswordRequest:
+      description: Password to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePasswordBody'
+          examples: {}
+    UpdatePasswordRequest:
+      description: Password to be partially updated
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePasswordBody'
+          examples: {}
+    ReplacePasswordRequest:
+      description: Password to be replaced
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplacePasswordBody'
+          examples: {}
+    ReplaceRealmConfigRequest:
+      description: Realm configuration to be replaced
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongDirectoryRealmValues'
+          examples: {}
+    CreatePrincipalIdentityRequest:
+      description: Identity to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongPrincipalIdentityBody'
+          examples: {}
+    ReplacePrincipalIdentityRequest:
+      description: Identity to be replaced
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongPrincipalIdentityBody'
+          examples: {}
+    UpdatePrincipalIdentityRequest:
+      description: Identity to be partially updated
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePrincipalIdentityBody'
+          examples: {}
+  responses:
+    KongDirectoryResponse:
+      description: A Directory
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongDirectory'
+          examples: {}
+    ListKongDirectoriesResponse:
+      description: List of Directories
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListKongDirectories'
+          examples: {}
+    KongPrincipalResponse:
+      description: Response containing a single principal object
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongPrincipal'
+          examples: {}
+    ListKongPrincipalsResponse:
+      description: List of Kong Principals
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListKongPrincipals'
+          examples:
+            listPrincipals:
+              summary: List of principals
+              value:
+                meta:
+                  page:
+                    size: 2
+                    previous: null
+                    next: /v2/directories/019d4111-dbdd-7bee-8b2c-b4c3d3eb559a/principals?page%5Bafter%5D=f1kZDVNaQkZFXUJRRA1%2BE0BUMV5BWRBaSllYAggKHEJPQwxBFw%3D%3D&page%5Bsize%5D=2
+                data:
+                  - id: 12345678-1234-1234-1234-123456789012
+                    name: principal-1
+                    description: First principal
+                    metadata:
+                      consumer_groups:
+                        - group1
+                        - group2
+                      consumer_type: service
+                    labels:
+                      env: production
+                      team: platform
+                    created_at: '2024-01-15T10:30:00Z'
+                    updated_at: '2024-01-15T10:30:00Z'
+                    managed_by:
+                      owner: bob
+                    provisioned_by: konnect_user
+                  - id: 23456789-2345-2345-2345-234567890123
+                    name: principal-2
+                    description: Second principal
+                    metadata:
+                      consumer_type: application
+                    labels:
+                      env: staging
+                    created_at: '2024-01-16T14:20:00Z'
+                    updated_at: '2024-01-16T14:20:00Z'
+                    managed_by:
+                      owner: kelso
+                    provisioned_by: developer_portal
+    KongPrincipalCreateKeyResponse:
+      description: A Kong Principal Key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongPrincipalKeyWithSecret'
+          examples: {}
+    KongPrincipalKeyResponse:
+      description: A Kong Principal Key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongPrincipalKey'
+          examples: {}
+    ListKongPrincipalKeysResponse:
+      description: List Kong Principal Keys
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListKongPrincipalKeys'
+          examples: {}
+    KongBasicAuthResponse:
+      description: A basic auth credential
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongBasicAuth'
+          examples: {}
+    ListKongBasicAuthsResponse:
+      description: List of basic auth credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListKongBasicAuths'
+          examples: {}
+    KongPasswordCreateResponse:
+      description: 'A password with its secret value, returned only on creation'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongPasswordWithSecret'
+          examples: {}
+    KongPasswordResponse:
+      description: A password
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongPassword'
+          examples: {}
+    ListKongPasswordsResponse:
+      description: List of passwords
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListKongPasswords'
+          examples: {}
+    KongDirectoryRealmValuesResponse:
+      description: Realm configuration values for a directory
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongDirectoryRealmValues'
+          examples: {}
+    KongPrincipalIdentityResponse:
+      description: A principal identity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KongPrincipalIdentity'
+          examples: {}
+    ListKongPrincipalIdentitiesResponse:
+      description: List of principal identities
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListKongPrincipalIdentities'
+          examples: {}
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+  securitySchemes:
+    systemAccountAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The system account access token is meant for automations and integrations that are not directly associated with a human identity.
+        You can generate a system account Access Token by creating a system account and then obtaining a system account access token for that account.
+        The access token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The personal access token is meant to be used as an alternative to basic-auth when accessing Konnect via APIs.
+        You can generate a Personal Access Token (PAT) from the [personal access token page](https://cloud.konghq.com/global/account/tokens/) in the Konnect dashboard.
+        The PAT token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT...'`
+    konnectAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
+tags:
+  - name: Kong Identity Directories
+    description: |
+      Use a directory to group consumers around an identity, defined by organizational boundaries,
+      such as a production directory or a development directory. Directories are connected to a
+      [geographic region](https://docs.konghq.com/konnect/geo/) in Konnect. Centrally managed consumers defined in
+      directories can be used across multiple control planes.
+  - name: KongPrincipal
+    description: |
+      Principals represent identities within a directory that can be authenticated and authorized.
+      Each principal can have associated metadata and API keys for authentication purposes.
+  - name: KongPrincipalCredential
+    description: |
+      Credentials are authentication secrets associated with principals. Supported credential types are
+      API keys (system-generated or imported) and basic auth username/password pairs.
+  - name: KongPrincipalIdentity
+    description: |
+      Identities represent external authentication associations for a principal. Each identity links a principal
+      to an external system such as an OIDC provider, an auth server client, a control plane consumer, or a custom identifier.
+security:
+  - systemAccountAccessToken: []
+  - personalAccessToken: []
+  - konnectAccessToken: []
