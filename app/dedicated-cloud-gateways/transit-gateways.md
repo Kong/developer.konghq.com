@@ -67,9 +67,9 @@ This process includes three main steps:
     1. Create the resource share and save the resulting **RAM Share ARN**.
 
     {:.warning}
-    > **RAM share requirements:** 
+    > **RAM share requirements:**
     > * The same Transit Gateway can be used in multiple networks, but they must be shared by different RAM shares.
-    > * You need one RAM share per resource.
+    > * Create a separate RAM share for each shared resource (do not include multiple resources in a single RAM share).
 
 2. Accept the Transit Gateway Attachment in AWS:
 
