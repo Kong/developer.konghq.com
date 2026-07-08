@@ -20139,6 +20139,8 @@ components:
           $ref: '#/components/schemas/MeshControlPlaneFeatures'
         labels:
           $ref: '#/components/schemas/MeshControlPlaneLabels'
+        version:
+          $ref: '#/components/schemas/MeshControlPlaneVersion'
       additionalProperties: false
       required:
         - name

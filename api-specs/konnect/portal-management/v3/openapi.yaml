@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@557050b5fc631c64559a156e7cd4d8ea34ed1721
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/557050b5fc631c64559a156e7cd4d8ea34ed1721'
+  x-oas-source: kong/platform-api@5a86553bd5bcc25c1d0a1f2cbb3c0d8068cb7dac
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5a86553bd5bcc25c1d0a1f2cbb3c0d8068cb7dac'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -6004,6 +6004,102 @@ components:
         - enabled
         - type
         - config_data
+    EqualWebIntegrationConfigProperties:
+      description: Configuration data for the Equalweb integration
+      type: object
+      properties:
+        site_key:
+          description: The EqualWeb Site Key
+          type: string
+          example: asd7890asdhlkas87ohjasd98yohasd9
+          maxLength: 32
+          minLength: 32
+          pattern: '^[A-Za-z0-9]+$'
+          x-validation-message: 'must be a valid Equalweb Site Key (format: asd7890asdhlkas87ohjasd98yohasd9)'
+        widget_config:
+          type: object
+          example:
+            Position: left
+            Menulang: EN
+            draggable: true
+            btnStyle:
+              vPosition:
+                - 80%
+                - 70%
+              margin:
+                - '0'
+                - '2'
+              scale:
+                - '0.5'
+                - '0.25'
+              color:
+                main: '#1c4bb6'
+                second: '#ffffff'
+              icon:
+                outline: false
+                outlineColor: '#ffffff'
+                type: 1
+                shape: circle
+          default: {}
+      additionalProperties: false
+    EqualWebIntegration:
+      description: Equalweb integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - accessibility
+        config_data:
+          description: Configuration data for the Equalweb integration
+          type: object
+          additionalProperties: false
+          properties:
+            site_key:
+              description: The EqualWeb Site Key
+              type: string
+              example: asd7890asdhlkas87ohjasd98yohasd9
+              maxLength: 32
+              minLength: 32
+              pattern: '^[A-Za-z0-9]+$'
+              x-validation-message: 'must be a valid Equalweb Site Key (format: asd7890asdhlkas87ohjasd98yohasd9)'
+            widget_config:
+              type: object
+              example:
+                Position: left
+                Menulang: EN
+                draggable: true
+                btnStyle:
+                  vPosition:
+                    - 80%
+                    - 70%
+                  margin:
+                    - '0'
+                    - '2'
+                  scale:
+                    - '0.5'
+                    - '0.25'
+                  color:
+                    main: '#1c4bb6'
+                    second: '#ffffff'
+                  icon:
+                    outline: false
+                    outlineColor: '#ffffff'
+                    type: 1
+                    shape: circle
+              default: {}
+          required:
+            - site_key
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
     PortalIntegrations:
       description: Configuration data for Dev Portal integrations
       type: object
@@ -6012,6 +6108,8 @@ components:
           $ref: '#/components/schemas/GoogleTagManagerIntegration'
         google_analytics_4:
           $ref: '#/components/schemas/GoogleAnalytics4Integration'
+        equal_web:
+          $ref: '#/components/schemas/EqualWebIntegration'
       default: {}
       additionalProperties: false
       title: Portal Integrations
@@ -6049,6 +6147,23 @@ components:
           $ref: '#/components/schemas/GoogleAnalytics4IntegrationConfigProperties'
       additionalProperties: false
       nullable: true
+    UpdateEqualWebIntegration:
+      description: Partially update EqualWeb integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - accessibility
+        config_data:
+          type: object
+          $ref: '#/components/schemas/EqualWebIntegrationConfigProperties'
+      additionalProperties: false
+      nullable: true
     UpdatePortalIntegrations:
       description: Partially update configuration data for Dev Portal integrations
       type: object
@@ -6057,6 +6172,8 @@ components:
           $ref: '#/components/schemas/UpdateGoogleTagManagerIntegration'
         google_analytics_4:
           $ref: '#/components/schemas/UpdateGoogleAnalytics4Integration'
+        equal_web:
+          $ref: '#/components/schemas/UpdateEqualWebIntegration'
       default: {}
       additionalProperties: false
       title: Update Portal Integrations
