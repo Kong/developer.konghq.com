@@ -23,6 +23,8 @@ related_resources:
     url: /metering-and-billing/credits/grants/
   - text: "Credit consumption and expiration"
     url: /metering-and-billing/credits/consumption-and-expiration/
+  - text: "Feature filters"
+    url: /metering-and-billing/credits/feature-filters/
   - text: "Operational flows"
     url: /metering-and-billing/credits/operational-flows/
   - text: "Correctness guarantees"
@@ -30,8 +32,8 @@ related_resources:
   - text: "Get started with prepaid credits"
     url: /how-to/get-started-with-prepaid-credits/
 next_steps:
-  - text: Learn about credit operational flows
-    url: /metering-and-billing/credits/operational-flows/
+  - text: Learn about feature filters
+    url: /metering-and-billing/credits/feature-filters/
   - text: Get started with prepaid credits
     url: /how-to/get-started-with-prepaid-credits/
 ---
@@ -97,6 +99,13 @@ rows:
     description: "Optional key-value metadata attached to the movement."
 {% endtable %}
 <!--vale on-->
+
+## Filtering by feature
+
+You can filter the transaction history by product feature using `filter[feature_key]`.
+This returns only the transactions relevant to a specific feature, including shared unrestricted credits.
+
+For the full reference on transaction filters, see [Feature filters](/metering-and-billing/credits/feature-filters/).
 
 ## Ordering and pagination
 

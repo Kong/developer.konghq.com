@@ -23,6 +23,8 @@ related_resources:
     url: /metering-and-billing/credits/consumption-and-expiration/
   - text: "Credit transaction history"
     url: /metering-and-billing/credits/transaction-history/
+  - text: "Feature filters"
+    url: /metering-and-billing/credits/feature-filters/
   - text: "Operational flows"
     url: /metering-and-billing/credits/operational-flows/
   - text: "Correctness guarantees"
@@ -133,6 +135,14 @@ consumed:    -40
 expired:     -60
 ```
 {:.no-copy-code}
+
+## Feature restrictions
+
+You can restrict a grant to one or more product features using the feature filters through the `filters.features` field.
+Restricted credits can only be consumed by charges for the specified features.
+Credits without a feature restriction are shared and available to all features.
+
+For details on how feature restrictions affect balance and transaction queries, see [Feature filters](/metering-and-billing/credits/feature-filters/).
 
 ## Purchase and tax context
 
