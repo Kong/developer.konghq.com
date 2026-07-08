@@ -34,7 +34,6 @@ tldr:
 
 tools:
   - konnect-api
-  - kongctl
 
 prereqs:
   inline:
@@ -50,8 +49,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-major_version:
-  ai-gateway: 2
 
 ---
 
@@ -62,30 +59,39 @@ major_version:
 
 Next, configure the AI Prompt Guard plugin to allow general IT and helpdesk questions while denying prompts related to hacking, phishing, or inappropriate content.
 
-{% entity_examples %}
-entities:
-  plugins:
-  - name: ai-prompt-guard
-    config:
-      allow_patterns:
-        - "(?i).*what is .*"
-        - "(?i).*how do i .*"
-        - "(?i).*install .*"
-        - "(?i).*configure .*"
-        - "(?i).*reset .*"
-        - "(?i).*troubleshoot .*"
-      deny_patterns:
-        - "(?i).*bypass.*(login|password|auth).*"
-        - "(?i).*hack.*"
-        - "(?i).*phish.*"
-        - "(?i).*malware.*"
-        - "(?i).*cve.*"
-        - "(?i).*exploit.*"
-        - "(?i).*social engineering.*"
-        - "(?i).*pentest.*"
-        - "(?i).*impersonate.*"
-        - "(?i).*dating.*"
-{% endentity_examples %}
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/policies
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: My AI Prompt Guard Policy
+  name: my-ai-prompt-guard-policy
+  type: ai-prompt-guard
+  config:
+    allow_patterns:
+      - "(?i).*what is .*"
+      - "(?i).*how do i .*"
+      - "(?i).*install .*"
+      - "(?i).*configure .*"
+      - "(?i).*reset .*"
+      - "(?i).*troubleshoot .*"
+    deny_patterns:
+      - "(?i).*bypass.*(login|password|auth).*"
+      - "(?i).*hack.*"
+      - "(?i).*phish.*"
+      - "(?i).*malware.*"
+      - "(?i).*cve.*"
+      - "(?i).*exploit.*"
+      - "(?i).*social engineering.*"
+      - "(?i).*pentest.*"
+      - "(?i).*impersonate.*"
+      - "(?i).*dating.*"
+{% endkonnect_api_request %}
+<!-- vale on -->
 
 ## Configure an AI Model using the AI Prompt Guard Policy
 
