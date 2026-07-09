@@ -505,6 +505,8 @@ export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
 If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
 
+{% include /gateway/azure-vault-dcgw-unsupported.md %}
+
 At minimum, you'll also need to set the following values on your data plane. 
 
 ```sh
@@ -616,6 +618,8 @@ export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 By default, the vault looks for `AZURE_CLIENT_SECRET`, but you can customize this with the `credentials_prefix` field.
 
 If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
+
+{% include /gateway/azure-vault-dcgw-unsupported.md %}
 
 You also need to set `KONG_LUA_SSL_VERIFY_DEPTH` to at least `3` on your data plane to allow Kong to verify the Azure Key Vault TLS certificate chain:
 
