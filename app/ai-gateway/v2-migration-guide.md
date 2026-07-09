@@ -151,3 +151,37 @@ Run the old and new configurations in parallel during cutover so you can roll ba
 
 ## Troubleshooting
 
+### Drive kongctl extensions from the converter output
+
+The `ai-gateway.yaml` produced by the converter is a declarative artifact, which makes it a useful input to `kongctl` extensions. `kongctl` ships installable skills for coding agents, including a declarative skill for plan, apply, sync, delete, and adopt flows, and an extension builder for creating local CLI extensions.
+
+Install the skills from the root of the repository where your agent works:
+
+```sh
+kongctl install skills
+```
+
+By default, this writes skill files to `.kongctl/skills/` and symlinks them for supported agent tooling, for example `.claude/skills/kongctl-declarative` and `.agents/skills/kongctl-extension-builder`. Use `--dry-run` to preview the files and symlinks first, or `--path` to choose a different directory.
+
+With the converter output and these skills in place, you can build extensions that:
+
+- Diff a freshly converted `ai-gateway.yaml` against the live AI Gateway Control Plane and surface drift before an apply.
+- Wrap the full deck gateway dump, `ai-deck-converter`, and `kongctl apply` sequence into a single repeatable command for many Control Planes.
+- Validate that every `targets[].provider` reference resolves and that required fields such as `display_name` are populated, as a pre-apply gate.
+
+This lets you treat {{site.ai_gateway}} migration as a versioned, reviewable, and automatable pipeline rather than a one-time manual conversion.
+
+
+### Set up a fresh install with the {{site.konnect_short_name}} MCP Server
+
+If you would rather start clean instead of converting an existing configuration, you can provision Models, MCP Servers, and Agents directly through the Kong {{site.konnect_short_name}} MCP Server. This is well suited to teams that want to drive setup from an AI assistant or IDE copilot.
+
+Connect your MCP client to the regional {{site.konnect_short_name}} MCP Server endpoint, for example `https://us.mcp.konghq.com/` for the US region, and authenticate with a {{site.konnect_short_name}} PAT or System Account Access Token. All actions respect the permissions of the token you use.
+
+The {{site.konnect_short_name}} MCP Server exposes a discover-then-execute pattern with three core tools:
+
+- `search` finds the relevant API operation from a natural-language description, for example "create an AI Gateway model."
+- `get_schema` returns the full schema for that operation so the assistant knows which fields are required.
+- `execute` calls the operation with the right inputs.
+
+Using this pattern, you can ask your assistant to create an AI Gateway, declare AI Providers, then add AI Models, AI MCP Servers, and AI Agents, with the assistant reasoning over the live schema at each step rather than relying on hardcoded field lists. The same tools power KAi, Kong's in-product AI assistant, so the workflow is consistent whether you work from an IDE, the terminal, or {{site.konnect_short_name}} itself.
