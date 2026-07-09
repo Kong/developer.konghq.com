@@ -116,6 +116,9 @@ To use AWS resource endpoints with Dedicated Cloud Gateways, you must first crea
 1. Click **Next**.
 1. Click **Create resource share**.  
 
+{:.warning}
+> **Important:** Create a separate RAM share for each shared resource (do not include multiple resources in a single RAM share).
+
 ## Configure the resource endpoint connection in {{site.konnect_short_name}}
 
 Now that the resource share is configured in AWS, you can connect it with {{site.konnect_short_name}} to enable the resource endpoint connection.

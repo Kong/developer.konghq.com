@@ -25,6 +25,8 @@ related_resources:
     url: /metering-and-billing/credits/consumption-and-expiration/
   - text: "Credit transaction history"
     url: /metering-and-billing/credits/transaction-history/
+  - text: "Feature filters"
+    url: /metering-and-billing/credits/feature-filters/
   - text: "Operational flows"
     url: /metering-and-billing/credits/operational-flows/
   - text: "Get started with prepaid credits"

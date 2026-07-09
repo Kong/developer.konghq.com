@@ -23,6 +23,8 @@ related_resources:
     url: /metering-and-billing/credits/grants/
   - text: "Credit transaction history"
     url: /metering-and-billing/credits/transaction-history/
+  - text: "Feature filters"
+    url: /metering-and-billing/credits/feature-filters/
   - text: "Operational flows"
     url: /metering-and-billing/credits/operational-flows/
   - text: "Correctness guarantees"

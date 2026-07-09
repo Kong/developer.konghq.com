@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Konnect Mesh Control Plane manager
   description: Control Plane manager API
-  version: 0.0.1
+  version: 0.0.2
   x-ref-schema-name: DataplaneOverview
   contact:
     name: Kong
@@ -5130,6 +5130,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/MeshControlPlaneFilter'
       responses:
         '200':
           $ref: '#/components/responses/ListMeshControlPlanesResponse'
@@ -5305,6 +5306,14 @@ components:
       schema:
         type: string
         format: uuid
+    MeshControlPlaneFilter:
+      name: filter
+      description: Filters a collection of control planes.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/MeshControlPlaneFilterParameters'
+      style: deepObject
     PageNumber:
       name: 'page[number]'
       description: Determines which page of the entities to retrieve.
@@ -20098,6 +20107,8 @@ components:
           $ref: '#/components/schemas/MeshControlPlaneLabels'
         features:
           $ref: '#/components/schemas/MeshControlPlaneFeatures'
+        version:
+          $ref: '#/components/schemas/MeshControlPlaneVersion'
         created_at:
           type: string
           format: date-time
@@ -20128,6 +20139,8 @@ components:
           $ref: '#/components/schemas/MeshControlPlaneFeatures'
         labels:
           $ref: '#/components/schemas/MeshControlPlaneLabels'
+        version:
+          $ref: '#/components/schemas/MeshControlPlaneVersion'
       additionalProperties: false
       required:
         - name
@@ -20144,6 +20157,8 @@ components:
           maxLength: 250
         labels:
           $ref: '#/components/schemas/MeshControlPlaneLabels'
+        version:
+          $ref: '#/components/schemas/MeshControlPlaneVersion'
       title: UpdateMeshControlPlaneRequest
     PutMeshControlPlaneRequest:
       description: a payload to update the whole control plane
@@ -20155,6 +20170,8 @@ components:
           $ref: '#/components/schemas/MeshControlPlaneDescription'
         labels:
           $ref: '#/components/schemas/MeshControlPlaneNonNullableLabels'
+        version:
+          $ref: '#/components/schemas/MeshControlPlaneVersion'
       required:
         - name
       title: PutMeshControlPlaneRequest
@@ -20169,6 +20186,24 @@ components:
       type: string
       example: A control plane to handle traffic on development environment.
       maxLength: 250
+    MeshControlPlaneVersion:
+      description: 'The version of the control plane. Setting it propagates the change to the global control plane, and is the only way to move a control plane between versions.'
+      type: string
+      example: v3
+      default: v2
+      pattern: '^v[0-9]{1,9}$'
+      x-internal: true
+    MeshControlPlaneFilterParameters:
+      type: object
+      properties:
+        name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldEqualsFilter'
+            - $ref: '#/components/schemas/StringFieldContainsFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
+      additionalProperties: false
+      title: MeshControlPlaneFilterParameters
     BaseError:
       description: standard error
       type: object
@@ -20433,6 +20468,107 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not found
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+    StringFieldContainsFilter:
+      description: Filters on the given string field value by fuzzy match.
+      type: object
+      properties:
+        contains:
+          type: string
+      additionalProperties: false
+      required:
+        - contains
+      title: StringFieldContainsFilter
+      x-examples:
+        example-1:
+          contains: some-value
+    StringFieldOContainsFilter:
+      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
+      type: object
+      properties:
+        ocontains:
+          type: string
+      additionalProperties: false
+      required:
+        - ocontains
+      title: StringFieldOContainsFilter
+      x-examples:
+        example-1:
+          ocontains: 'this-value,or-that-value'
+    StringFieldOEQFilter:
+      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+      type: object
+      properties:
+        oeq:
+          type: string
+      additionalProperties: false
+      required:
+        - oeq
+      title: StringFieldOEQFilter
+      x-examples:
+        example-1:
+          oeq: 'some-value,some-other-value'
+    StringFieldNEQFilter:
+      description: Filters on the given string field value by exact match inequality.
+      type: object
+      properties:
+        neq:
+          type: string
+      additionalProperties: false
+      required:
+        - neq
+      title: StringFieldNEQFilter
+      x-examples:
+        example-1:
+          neq: not-this-value
+    StringFieldFilter:
+      description: Filters on the given string field value by either exact or fuzzy match.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOEQFilter'
+        - $ref: '#/components/schemas/StringFieldNEQFilter'
+      title: StringFieldFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+        example-3:
+          contains: some-value
+        example-4:
+          ocontains: 'some-potential,value'
+        example-5:
+          oeq: 'some-potential,value'
+        example-6:
+          neq: not-this-value
+    LabelsFieldFilter:
+      allOf:
+        - title: LabelsFieldFilter
+          description: |
+            Filters on the resource's `labels` field. Filters must use dot-notation to identify
+            the label key that will be used to filter the results. For example:
+              - `filter[labels.owner]`
+              - `filter[labels.owner][neq]=kong`
+              - `filter[labels.env]=dev`
+              - `filter[labels.env][ocontains]=dev,test`
+        - $ref: '#/components/schemas/StringFieldFilter'
     ForbiddenError:
       allOf:
         - $ref: '#/components/schemas/BaseError'

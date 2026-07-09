@@ -155,14 +155,10 @@ apis:
         visibility: One of (public | private)
     implementations: # /api/konnect/api-builder/v3/#/operations/create-api-implementation
       - ref: string
-        type: string required
-        service_reference:
-          service:
-            id: string required (uuid) # prefer: !ref <gateway-service-ref>
-            control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
-        control_plane_reference:
-          control_plane:
-            control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
+        type: service
+        service:
+          id: string required (uuid) # prefer: !ref <gateway-service-ref>
+          control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
     documents: # /api/konnect/api-builder/v3/#/operations/create-api-document
       - ref: string
         content: string required (markdown) # prefer: !file ./docs/page.md

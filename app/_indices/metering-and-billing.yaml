@@ -53,6 +53,7 @@ sections:
       - path: /metering-and-billing/credits/balance-model/
       - path: /metering-and-billing/credits/consumption-and-expiration/
       - path: /metering-and-billing/credits/transaction-history/
+      - path: /metering-and-billing/credits/feature-filters/
       - path: /metering-and-billing/credits/operational-flows/
       - path: /metering-and-billing/credits/correctness-guarantee/
   - title: Billing

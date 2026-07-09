@@ -1,0 +1,29 @@
+description: 'Enable the Harness WAAP plugin to send data to Traceable.'
+
+title: 'Enable Harness WAAP'
+
+weight: 900
+
+requirements:
+- "[The Traceable Platform Agent is deployed in your environment](https://docs.traceable.ai/docs/tpa)"
+- "[The Harness WAAP plugin is installed](/plugins/harness-waap/)"
+
+variables:
+  ext_cap_endpoint:
+    description: 'Host address of Traceable Module Extension (TME).'
+    value: $EXT_CAP_ENDPOINT
+  service_name:
+    description: 'Descriptive name of a Harness WAAP service. If unset, defaults to `kong`.'
+    value: $SERVICE_NAME
+
+config: 
+  ext_cap_endpoint: ${ext_cap_endpoint}
+  service_name: ${service_name}
+  allow_on_failure: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
