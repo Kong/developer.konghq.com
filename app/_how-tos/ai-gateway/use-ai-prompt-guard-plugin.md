@@ -54,6 +54,35 @@ cleanup:
 
 ## Configure an AI Provider
 
+Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to OpenAI and store your authentication credentials:
+
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  type: openai
+  display_name: generic-openai
+  name: generic-openai
+  config:
+    auth:
+      type: basic
+      headers:
+        - name: Authorization
+          value: Bearer $OPENAI_API_KEY
+{% endkonnect_api_request %}
+<!-- vale on -->
+
+In this example, we're setting up the AI Provider with:
+
+* `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
+* `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
+* `config.auth`: Stores your OpenAI API key. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+
 
 ## Configure an AI Prompt Guard Policy
 
@@ -94,6 +123,52 @@ body:
 <!-- vale on -->
 
 ## Configure an AI Model using the AI Prompt Guard Policy
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
+
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/models
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  formats:
+    - type: openai
+  config:
+    route:
+      paths:
+        - /v1
+    model: {}
+    logging:
+      payloads: false
+      statistics: true
+  targets:
+    - name: gpt-4o
+      provider: generic-openai
+      config:
+        type: openai
+  policies: [my-ai-prompt-guard-policy]
+  capabilities:
+    - generate
+{% endkonnect_api_request %}
+<!-- vale on -->
+
+In this example, we're setting up the AI Model with:
+
+* `type: model`: Specifies this is a synchronous model for request/response workloads.
+* `name: my-gpt-4o`: A unique identifier for this model.
+* `formats: [type: openai]`: Declares that this model accepts requests in OpenAI-compatible format.
+* `config.route.paths: [/v1]`: Configures the custom base path where this model's Routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific Routes.
+* `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
+* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
+* `config.logging`: Configures what gets logged. With `statistics: true`, usage metrics (tokens, latency, cost) are logged for monitoring and billing. With `payloads: false`, full request/response bodies are not logged for privacy.
+
 
 ## Validate configuration
 
