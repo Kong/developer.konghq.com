@@ -1,0 +1,2 @@
+{:.warning}
+> **Azure Key Vault is unsupported as a Vault backend on Dedicated Cloud Gateways:** Since the client secret has no Vault entity equivalent, it can only be set through this environment variable (or the `credentials_prefix` variant). Dedicated Cloud Gateways only accept `KONG_` and `OTEL_` prefixed [environment variables](/dedicated-cloud-gateways/reference/#kong-gateway-configuration), so `AZURE_CLIENT_SECRET` can't be set. Instance Managed Identity also isn't currently supported on Dedicated Cloud Gateways.

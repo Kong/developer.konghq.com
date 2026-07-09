@@ -73,6 +73,14 @@ faqs:
       Yes, Dedicated Cloud Gateway uses PKI certificates for control plane and data plane communication like [hybrid mode](/gateway/hybrid-mode/) Gateways. 
   - q: Can I use credential-less authentication (AWS workload identity or Azure managed identity) for Dedicated Cloud Gateways?
     a: You can use AWS workload identity with Dedicated Cloud Gateways. Azure managed identity isn't currently supported for Dedicated Cloud Gateways. 
+  - q: Can I set provider-specific Vault credentials, like `AZURE_CLIENT_SECRET`, `AWS_ACCESS_KEY_ID`, or `GCP_SERVICE_ACCOUNT`, as environment variables on a Dedicated Cloud Gateway?
+    a: |
+      No. Dedicated Cloud Gateways only accept environment variables prefixed with `KONG_` or `OTEL_`, so provider-specific credential env vars can't be set this way. 
+
+      Instead, configure these values using a [Vault entity](/gateway/entities/vault/#vault-provider-specific-configuration-parameters), which supports most provider-specific parameters directly.
+
+      {:.warning}
+      > **Azure Key Vault is unsupported as a Vault backend on Dedicated Cloud Gateways:** Azure Key Vault's client secret has no Vault entity equivalent, it's only ever read from an environment variable. Since Dedicated Cloud Gateways can't set that environment variable and don't currently support Azure managed identity as an alternative, Azure Key Vault can't be used as a Vault backend on Dedicated Cloud Gateways.
 
 related_resources:
   - text: Dedicated Cloud Gateways 
