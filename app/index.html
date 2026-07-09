@@ -86,7 +86,7 @@ edit_and_issue_links: false
 
     <!-- SECTION 01: FOR AGENTS & THE CLI -->
     {%- assign agents = hp.agents_section -%}
-    <div class="flex flex-col gap-10">
+    <div class="flex flex-col gap-6">
 
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">01 · <span class="bg-brand text-button px-1">MCP & tools</span></p>
@@ -210,7 +210,7 @@ edit_and_issue_links: false
                         <span class="w-2.5 h-2.5 rounded-full bg-semantic-yellow-primary opacity-70"></span>
                         <span class="w-2.5 h-2.5 rounded-full bg-semantic-green-primary opacity-70"></span>
                     </div>
-                    <span class="ml-1 text-xs text-terciary font-mono">{{ cli.tool }}</span>
+                    <span class="ml-1 text-xs text-terciary font-mono">~/{{ cli.tool }}</span>
                     <div class="ml-auto flex items-center gap-1 relative">
                         <div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
                         <clipboard-copy for="{{ cli_id }}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
@@ -249,7 +249,7 @@ edit_and_issue_links: false
         {%- for cat in prods.categories -%}
         <div class="flex flex-col gap-4">
             <h3 class="text-sm font-semibold uppercase tracking-widest text-terciary border-b border-primary pb-2">{{ cat.name }}</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {%- for item in cat.items -%}
                 <div class="card flex-col gap-5 p-6 pb-4">
                     <div class="flex justify-between items-center">
@@ -292,7 +292,7 @@ edit_and_issue_links: false
             <a href="/api/" class="text-sm text-links no-icon shrink-0 mb-2">All API specs &rarr;</a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {%- for api_title in specs.featured_apis -%}
             {%- assign api_page = all_api_pages | where: "title", api_title | first -%}
             {%- if api_page -%}
