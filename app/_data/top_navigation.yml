@@ -144,6 +144,9 @@ ai_tools:
     icon: /assets/icons/code.svg
 
 support:
+  - text: Knowledge Base
+    url: '/support/'
+    icon: '/assets/icons/document.svg'
   - text: Community
     url: 'https://konghq.com/community'
     icon: '/assets/icons/team.svg'
