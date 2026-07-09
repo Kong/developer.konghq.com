@@ -596,7 +596,7 @@ To update content for ingesting in hybrid mode or {{site.konnect_short_name}}, y
 3. Run the script from your Kong instance. This uses your AI RAG Injector plugin ID and the content you want to update. Here's an example:
 
    ```sh
-   kong runner ingest_api.lua b924e3e8-7893-4706-aacb-e75793a1d2e9 ./inject_policy.py
+   kong runner ingest_update.lua "<policy-id>" "<plain-text-content>"
    ```
 
 {% include_cached md/ai-gateway/v2/ai-vector-db.md %}
