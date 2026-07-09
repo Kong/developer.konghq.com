@@ -71,8 +71,7 @@ faqs:
 Your AI Models often need access control: some teams should reach certain AI Models and others should not, and you need a way to verify who is calling before a request consumes tokens or touches sensitive data. An AI Identity Provider lets you declare an inbound authentication mechanism at the gateway level and attach it to specific AI Models.
 
 Use AI Identity Providers to:
-
-* Issue API keys to AI Consumers and restrict which models they can access
+* Authenticate API keys and map them to AI Consumers
 * Authenticate enterprise users through an existing identity provider (Okta, Azure AD, Google, or any OIDC-compliant IdP) without managing keys manually
 * Apply different authentication to different models. For example, API keys for internal automation and OIDC bearer tokens for user-facing applications.
 
@@ -86,8 +85,8 @@ flowchart LR
     KeyAuth["Key Auth"]
     OIDC["OpenID Connect"]
     Decision{Auth?}
-    AnonErr["Anonymous AI Consumer<br/>Request Terminating w/ 401"]
-    ModelSel["ai-model-selector"]
+    AnonErr["Request Terminating w/ 401"]
+    ModelSel["Model selection"]
     ACLs["ACLs"]
     Model1["AI Model A"]
     Model2["AI Model B"]
@@ -98,11 +97,11 @@ flowchart LR
     Decision-->|no auth|AnonErr
     Decision-->|auth|ModelSel
     ModelSel-->|selects model|ACLs
-    ACLs-->Model1
-    ACLs-->Model2
+    ACLs-->|allowed|Model1
+    ACLs-->|denied|Model2
 {% endmermaid %}
 
-Authentication runs before `ai-model-selector` so that unauthenticated requests never reach model routing or policy evaluation.
+Authentication runs before model selection so that unauthenticated requests never reach model routing or policy evaluation.
 
 ## Manage AI Identity Providers
 
@@ -110,12 +109,13 @@ AI Identity Providers can be created and managed through:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/identity`
+* [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI Identity Provider](#set-up-an-ai-identity-provider) below.
 
 ## Authentication types
 
-{{site.ai_gateway}} supports two identity provider types. Pick based on how your AI Consumers authenticate:
+{{site.ai_gateway}} supports two identity provider types. Choose based on how your AI Consumers authenticate:
 
 {% table %}
 columns:
@@ -219,6 +219,23 @@ data:
     key_in_query: false
     hide_credentials: true
 {% endentity_example %}
+
+<!-- TODO: Uncomment before GA — kongctl declarative support for identity_providers is not yet released.
+```yaml
+ai_gateways:
+  - ref: <your-ai-gateway-ref>
+    identity_providers:
+      - ref: api-key-auth
+        name: api-key-auth
+        display_name: API Key Auth
+        type: key-auth
+        config:
+          key_names:
+            - X-API-Key
+          key_in_header: true
+          key_in_query: false
+          hide_credentials: true
+``` -->
 
 ### OIDC bearer token authentication
 
