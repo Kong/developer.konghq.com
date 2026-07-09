@@ -40,13 +40,19 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
 
    ```sh
    helm repo add kong https://charts.konghq.com
+   helm repo add jetstack https://charts.jetstack.io
    helm repo update
    ```
 
-1. Install [cert-manager](https://cert-manager.io/) on your cluster:
+1. Install [cert-manager](https://cert-manager.io/) on your cluster with Gateway API support enabled:
 
    ```sh
-   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
+   helm upgrade --install cert-manager jetstack/cert-manager \
+     --namespace cert-manager \
+     --create-namespace \
+     --set crds.enabled=true \
+     --set config.enableGatewayAPI=true \
+     --wait
    ```
 
 1. Install {{ site.operator_product_name }} using Helm:
@@ -97,7 +103,7 @@ spec:
 Create the following resources:
 
 * A `GatewayConfiguration` and a `GatewayClass` to configure your gateway with the latest {{site.base_gateway}} version and {{site.operator_product_name}} as the controller.
-* A `Gateway` with the `cert-manager.io/issuer: "selfsigned-issuer"` annotation, the `tls.certificateRefs` pointing to the name of the Secret to provision and `cert-manager.io/secret-template` to label the generated TLS Secret with konghq.com/secret=true.
+* A `Gateway` with the `cert-manager.io/issuer: "selfsigned-issuer"` annotation, the `tls.certificateRefs` pointing to the name of the Secret to provision and `cert-manager.io/secret-template` to label the generated TLS Secret with `konghq.com/secret=true`.
 
 ```sh
 echo '
@@ -147,7 +153,7 @@ spec:
         certificateRefs:
           - group: ""
             kind: Secret
-            name: example-tls-secret
+            name: example-tls-secret' | kubectl apply -f -
 ```
 
 ## Create an echo Service
@@ -172,6 +178,7 @@ metadata:
 spec:
   parentRefs:
     - name: kong-gateway
+      namespace: kong
   rules:
     - matches:
         - path:
@@ -188,8 +195,10 @@ spec:
 1.  Check that cert-manager has created the `Certificate` resource and that the `Secret` has been provisioned:
 
     ```bash
+    kubectl wait --for=condition=Ready certificate/example-tls-secret -n kong --timeout=120s
     kubectl get certificate -n kong
-    kubectl get secret example-tls-secret -n kong
+    kubectl get secret example-tls-secret -n kong --show-labels
+    kubectl wait --for=condition=Programmed gateway/kong-gateway -n kong --timeout=300s
     ```
 
 1. Get the Gateway's external IP:
