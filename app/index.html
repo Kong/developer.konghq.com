@@ -20,11 +20,59 @@ edit_and_issue_links: false
             <span class="leading-7 text-secondary text-lg max-w-3xl mx-auto">{{ hp.description | liquify }}</span>
         </div>
         <div class="flex flex-col gap-3 w-full max-w-4xl items-center">
-            <div class="flex gap-2 bg-secondary rounded-md border border-primary py-2 px-4 items-center cursor-pointer ask-ai-button w-full">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 12.0884V12.4355C15.7128 12.4355 14.5598 16.2296 14.5598 19.3252H14.2229C14.2229 16.2296 12.8732 12.4355 8.78272 12.4355V12.0884C13.497 12.0884 14.2229 8.29432 14.2229 5.19878H14.5598C14.5598 8.29432 15.2977 12.0884 20 12.0884ZM7.28629 11.0361C7.28629 9.27503 7.94267 7.11656 10.3813 7.11656V6.91952C7.70577 6.91952 7.28629 4.76104 7.28629 3H7.09502C7.09502 4.76104 6.68206 6.91952 4 6.91952V7.11656C6.32779 7.11656 7.09502 9.27503 7.09502 11.0361H7.28629ZM9.21089 14.1529H9.04788C9.04788 15.6531 8.69578 17.4925 6.41038 17.4925V17.6604C8.39367 17.6604 9.04788 19.4998 9.04788 21H9.21089C9.21089 19.4998 9.76948 17.6604 11.8484 17.6604V17.4925C9.56843 17.4925 9.21089 15.6531 9.21089 14.1529Z" fill="rgb(var(--color-text-secondary)"/>
-                </svg>
-                <span class="text-sm">Ask AI for concepts, guides, and tutorials</span>
+            <div class="flex w-full relative" id="hero-ask-ai">
+                <div class="flex w-full rounded-full border border-primary bg-secondary items-center p-1.5 gap-2">
+                    <input id="hero-ask-input" type="text" placeholder="Ask a question about Kong..."
+                        class="flex-1 bg-transparent text-sm text-primary placeholder:text-terciary px-4 py-1.5 outline-none border-0" />
+                    <div class="flex items-stretch shrink-0">
+                        <button id="hero-ask-kai"
+                            class="flex items-center gap-2 pl-4 pr-3 py-2 text-sm font-medium text-button bg-brand hover:bg-brand/80 transition-colors whitespace-nowrap rounded-l-full">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M20 12.0884V12.4355C15.7128 12.4355 14.5598 16.2296 14.5598 19.3252H14.2229C14.2229 16.2296 12.8732 12.4355 8.78272 12.4355V12.0884C13.497 12.0884 14.2229 8.29432 14.2229 5.19878H14.5598C14.5598 8.29432 15.2977 12.0884 20 12.0884ZM7.28629 11.0361C7.28629 9.27503 7.94267 7.11656 10.3813 7.11656V6.91952C7.70577 6.91952 7.28629 4.76104 7.28629 3H7.09502C7.09502 4.76104 6.68206 6.91952 4 6.91952V7.11656C6.32779 7.11656 7.09502 9.27503 7.09502 11.0361H7.28629ZM9.21089 14.1529H9.04788C9.04788 15.6531 8.69578 17.4925 6.41038 17.4925V17.6604C8.39367 17.6604 9.04788 19.4998 9.04788 21H9.21089C9.21089 19.4998 9.76948 17.6604 11.8484 17.6604V17.4925C9.56843 17.4925 9.21089 15.6531 9.21089 14.1529Z" fill="currentColor"/>
+                            </svg>
+                            Ask Kai
+                        </button>
+                        <button id="hero-ask-dropdown-toggle"
+                            class="flex items-center px-2 py-2 bg-brand hover:bg-brand/80 transition-colors rounded-r-full border-l border-primary"
+                            aria-haspopup="true" aria-expanded="false">
+                            <svg class="w-3 h-3 text-button transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="hero-ask-dropdown" class="hidden absolute right-0 top-full mt-1 z-10 min-w-52 bg-secondary border border-primary rounded-lg shadow-primary">
+                    <ul class="list-none m-0 p-1 flex flex-col">
+                        <li>
+                            <a id="hero-ask-claude" href="#" target="_blank" rel="noopener"
+                                class="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-hover-component/100 no-icon no-underline hover:no-underline text-primary">
+                                <span class="flex items-center justify-center w-7 h-7 rounded-md border border-primary bg-primary shrink-0">
+                                    <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4.03188 9.88255L6.60172 8.62367L6.64494 8.51434L6.60172 8.45352H6.47649L6.04701 8.43042L4.57865 8.39577L3.3052 8.34957L2.07142 8.29182L1.761 8.23408L1.46997 7.89915L1.49996 7.73207L1.761 7.57884L2.13492 7.60733L2.96126 7.65661L4.2012 7.7313L5.10074 7.77749L6.43328 7.89838H6.64494L6.67492 7.82369L6.60261 7.77749L6.54616 7.7313L5.26301 6.97212L3.87402 6.16983L3.14646 5.70785L2.75313 5.47379L2.5547 5.25435L2.46916 4.77544L2.82633 4.43204L3.30608 4.46052L3.42866 4.48901L3.91459 4.81548L4.95258 5.5169L6.30805 6.38849L6.50648 6.53248L6.58585 6.4832L6.59555 6.44855L6.50648 6.31843L5.76921 5.15503L4.98256 3.9716L4.63245 3.48114L4.53985 3.18702C4.50722 3.06614 4.48341 2.9645 4.48341 2.84054L4.88996 2.35855L5.11485 2.29541L5.65721 2.35855L5.88562 2.53179L6.22251 3.20473L6.7684 4.26419L7.61502 5.70477L7.86284 6.1321L7.99512 6.52786L8.04451 6.64874H8.13005V6.57944L8.19972 5.76791L8.32848 4.77159L8.45371 3.48961L8.49692 3.1285L8.70152 2.69579L9.10807 2.46172L9.42556 2.59415L9.6866 2.92061L9.65044 3.13158L9.49523 4.01241L9.19097 5.39217L8.99254 6.31612H9.10807L9.24036 6.20062L9.77567 5.58004L10.6752 4.59835L11.0721 4.20875L11.5351 3.77834L11.8323 3.57354H12.394L12.8076 4.1102L12.6224 4.66456L12.0439 5.30517L11.5642 5.84799L10.8763 6.65644L10.4468 7.3032L10.4865 7.35479L10.5888 7.34632L12.1427 7.05759L12.9822 6.92515L13.9841 6.77501L14.4374 6.9598L14.4868 7.14767L14.3086 7.53188L13.2371 7.76287L11.9804 7.9823L10.109 8.36882L10.0861 8.38345L10.1126 8.41194L10.9556 8.48123L11.3163 8.49817H12.1991L13.843 8.6052L14.2725 8.85312L14.53 9.15649L14.4868 9.38747L13.8253 9.68159L12.9329 9.4968L10.8498 9.06409L10.1355 8.90856H10.0367V8.96014L10.632 9.46832L11.7229 10.3284L13.089 11.4371L13.1586 11.7112L12.9831 11.9276L12.7979 11.9045L11.5977 11.116L11.1347 10.7611L10.0861 9.99035H10.0164V10.0712L10.2581 10.3799L11.5342 12.0546L11.6003 12.5682L11.5077 12.7352L11.177 12.8361L10.8137 12.7784L10.0667 11.8629L9.29592 10.8319L8.67418 9.90796L8.59834 9.94569L8.23147 13.3959L8.0595 13.5722L7.66264 13.7046L7.33193 13.4852L7.15644 13.1302L7.33193 12.4288L7.54359 11.5133L7.71556 10.7857L7.87077 9.88178L7.96337 9.5815L7.9572 9.56148L7.88136 9.56995L7.10088 10.5054L5.91385 11.906L4.97463 12.7837L4.74974 12.8615L4.35994 12.6852L4.3961 12.3703L4.61393 12.09L5.91385 10.6463L6.69785 9.75166L7.20406 9.23502L7.20053 9.16033H7.17055L3.71792 11.1176L3.10324 11.1869L2.83867 10.9705L2.8713 10.6155L2.99653 10.5001L4.03452 9.87639L4.031 9.87947L4.03188 9.88255Z" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                <span class="flex flex-col text-left">
+                                    <span class="text-xs font-medium">Ask Claude</span>
+                                    <span class="text-xs text-terciary">Send to claude.ai</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a id="hero-ask-chatgpt" href="#" target="_blank" rel="noopener"
+                                class="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-hover-component/100 no-icon no-underline hover:no-underline text-primary">
+                                <span class="flex items-center justify-center w-7 h-7 rounded-md border border-primary bg-primary shrink-0">
+                                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M20.6863 10.1842C20.913 9.51077 20.9914 8.79737 20.9163 8.09166C20.8411 7.38595 20.6142 6.70417 20.2506 6.09188C19.7116 5.16641 18.8886 4.43369 17.9002 3.99936C16.9118 3.56502 15.8091 3.45153 14.7511 3.67522C14.15 3.0157 13.3835 2.52379 12.5287 2.24891C11.6739 1.97402 10.7609 1.92585 9.8812 2.10921C9.00155 2.29258 8.18629 2.70103 7.51732 3.29355C6.84834 3.88606 6.3492 4.64178 6.07002 5.4848C5.36516 5.62738 4.69927 5.91671 4.11686 6.33346C3.53444 6.75021 3.04891 7.28479 2.69271 7.90146C2.14784 8.8254 1.91496 9.89632 2.02775 10.9594C2.14054 12.0225 2.59315 13.0226 3.32015 13.8153C3.09261 14.4884 3.01342 15.2017 3.08787 15.9074C3.16232 16.6131 3.38869 17.295 3.75185 17.9075C4.29155 18.8333 5.11531 19.5662 6.10441 20.0005C7.09351 20.4349 8.19686 20.5482 9.25547 20.3243C9.73301 20.8547 10.3198 21.2786 10.9766 21.5675C11.6334 21.8565 12.3452 22.0039 13.0644 21.9999C14.1488 22.0009 15.2055 21.662 16.0819 21.032C16.9584 20.402 17.6092 19.5137 17.9405 18.4951C18.6452 18.3523 19.311 18.0628 19.8934 17.6461C20.4758 17.2293 20.9614 16.6949 21.3178 16.0784C21.8562 15.1558 22.0851 14.0889 21.9717 13.0302C21.8582 11.9716 21.4083 10.9754 20.6863 10.1842Z" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                <span class="flex flex-col text-left">
+                                    <span class="text-xs font-medium">Ask ChatGPT</span>
+                                    <span class="text-xs text-terciary">Send to chatgpt.com</span>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="flex flex-wrap gap-2 justify-center items-center">
                 <span class="text-xs text-terciary font-mono">Try</span>
@@ -209,7 +257,7 @@ edit_and_issue_links: false
                         {%- if item.product -%}
                         {%- assign item_product = site.data.products[item.product] -%}
                         {%- assign item_latest = item_product.releases | where: "latest", true | first -%}
-                        {%- assign item_ver = item_latest["ee-version"] | default: item_latest.version | default: item_latest.release -%}
+                        {%- assign item_ver = item_latest["ee-version"] | default: item_latest.version | default: item_latest.release | split: "." | slice: 0, 2 | join: "." -%}
                         <a href="{{ item.changelog_url }}" class="no-icon">{% include badge.html text=item_ver %}</a>
                         {%- endif -%}
                     </div>
@@ -293,9 +341,65 @@ edit_and_issue_links: false
 </div>
 
 <script>
-  document.querySelectorAll("button.ask-ai-chip[data-query]").forEach(function(btn) {
-    btn.addEventListener("click", function() {
-      window.Kapa("open", { query: btn.dataset.query, submit: true });
+  (function() {
+    var input = document.getElementById('hero-ask-input');
+    var askKaiBtn = document.getElementById('hero-ask-kai');
+    var dropdownToggle = document.getElementById('hero-ask-dropdown-toggle');
+    var dropdown = document.getElementById('hero-ask-dropdown');
+    var claudeLink = document.getElementById('hero-ask-claude');
+    var chatgptLink = document.getElementById('hero-ask-chatgpt');
+    var chevron = dropdownToggle.querySelector('svg');
+    var CONTEXT = 'https://developer.konghq.com';
+
+    function openKapa(query) {
+      if (!query) return;
+      window.Kapa("open", { mode: "ai", query: query, submit: true });
+    }
+
+    function updateExternalLinks(q) {
+      var ctx = encodeURIComponent(q ? q + ' \u2014 context: ' + CONTEXT : CONTEXT);
+      claudeLink.href = 'https://claude.ai/new?q=' + ctx;
+      chatgptLink.href = 'https://chatgpt.com/?q=' + ctx;
+    }
+
+    function openDropdown() {
+      dropdown.classList.remove('hidden');
+      dropdownToggle.setAttribute('aria-expanded', 'true');
+      chevron.style.transform = 'rotate(180deg)';
+    }
+
+    function closeDropdown() {
+      dropdown.classList.add('hidden');
+      dropdownToggle.setAttribute('aria-expanded', 'false');
+      chevron.style.transform = '';
+    }
+
+    function toggleDropdown() {
+      dropdown.classList.contains('hidden') ? openDropdown() : closeDropdown();
+    }
+
+    input.addEventListener('keydown', function(e) { if (e.key === 'Enter') openKapa(input.value.trim()); });
+    input.addEventListener('input', function() { updateExternalLinks(input.value.trim()); });
+    askKaiBtn.addEventListener('click', function() { openKapa(input.value.trim()); });
+    dropdownToggle.addEventListener('click', function(e) { e.stopPropagation(); toggleDropdown(); });
+
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('hero-ask-ai').contains(e.target)) closeDropdown();
     });
-  });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeDropdown();
+    });
+
+    document.querySelectorAll("button.ask-ai-chip[data-query]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var q = btn.dataset.query;
+        input.value = q;
+        updateExternalLinks(q);
+        openKapa(q);
+      });
+    });
+
+    updateExternalLinks('');
+  })();
 </script>
