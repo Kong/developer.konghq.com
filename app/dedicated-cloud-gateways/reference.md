@@ -80,7 +80,7 @@ faqs:
       Instead, configure these values using a [Vault entity](/gateway/entities/vault/#vault-provider-specific-configuration-parameters), which supports most provider-specific parameters directly.
 
       {:.warning}
-      > **Azure Key Vault is unsupported as a Vault backend on Dedicated Cloud Gateways:** Azure Key Vault's client secret has no Vault entity equivalent. It's only read from an environment variable. Since Dedicated Cloud Gateways can't set that environment variable and don't currently support Azure managed identity as an alternative, Azure Key Vault can't be used as a Vault backend on Dedicated Cloud Gateways.
+      > **Azure Key Vault is not supported as a Vault backend on Dedicated Cloud Gateways:** Azure Key Vault's client secret has no Vault entity equivalent. It's only read from an environment variable. Since Dedicated Cloud Gateways can't set that environment variable and don't support Azure managed identity as an alternative, Azure Key Vault can't be used as a Vault backend on Dedicated Cloud Gateways.
 
 related_resources:
   - text: Dedicated Cloud Gateways 
