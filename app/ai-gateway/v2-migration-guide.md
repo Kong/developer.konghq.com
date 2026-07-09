@@ -31,9 +31,9 @@ This guide is intended for teams running {{site.ai_gateway}} version 1.x on {{si
 Before migrating, make sure you have:
 
 - Read the [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) guide.
-- An existing Kong API Gateway Control Plane in Konnect running {{site.ai_gateway}} version 1.x, with the AI plugins you want to migrate.
+- An existing Kong API Gateway Control Plane in {{site.konnect_short_name}} running {{site.ai_gateway}} version 1.x, with the AI plugins you want to migrate.
 - A new {{site.ai_gateway}} version 2.x Control Plane created in {{site.konnect_short_name}}. Note its Control Plane name.
-- A Konnect Personal Access Token (PAT) or System Account Access Token with permission to read the source Control Plane and write to the {{site.ai_gateway}} Control Plane.
+- A {{site.konnect_short_name}} Personal Access Token (PAT) or System Account Access Token with permission to read the source Control Plane and write to the {{site.ai_gateway}} Control Plane.
 - The `deck` CLI for exporting your current configuration.
 - The `kongctl` CLI for applying the converted configuration to the {{site.ai_gateway}} Control Plane.
 - The `kong/kongctl-ext-aigw-converter` extension added for translating the exported config to the version 2.x entity model.
@@ -57,3 +57,97 @@ flowchart LR
     C -->|review and validate| C
     C -->|kongctl apply| D["AI Gateway CP<br/>AI Gateway v2"]
 {% endmermaid %}
+
+### Step 1: Export your current configuration
+
+Use `deck` to dump the declarative configuration from the API {{site.base_gateway}} Control Plane that currently runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source Control Plane.
+
+```sh
+deck gateway dump \
+  --konnect-token $YOUR_KONNECT_PAT \
+  --konnect-control-plane-name $YOUR_KONNECT_API_GATEWAY_CONTROL_PLANE_NAME \
+  > kong.yaml
+
+```
+
+The resulting `kong.yaml` contains your Services, Routes, plugins (including ai-proxy-advanced, ai-mcp-proxy, and ai-a2a-proxy), Consumers, and Vaults.
+
+### Step 2: Run the converter
+
+Run `kongctl convert ai-gateway` against the exported `kong.yaml` file. The tool reads the version 1.x plugin configuration and emits an {{site.ai_gateway}} version 2.x entity configuration.
+
+```sh
+kongctl convert ai-gateway deck.yaml \
+  --from deck \
+  --to kongctl \
+  --gateway-name support-ai \
+  --output-file ai-gateway.yaml
+```
+
+The `-o` flag sets the output file. The converter inspects each AI plugin and translates it into the matching version 2.x entity:
+
+- Each `ai-proxy-advanced `plugin becomes an AI Model (and one Provider per distinct upstream provider and credential set).
+- Each `ai-mcp-proxy` plugin becomes an AI MCP Server whose type matches the plugin mode.
+- Each `ai-a2a-proxy` plugin becomes an AI Agent.
+- Supporting plugins on the same Service or Route become Policies attached to the relevant entity.
+
+### Step 3: Validate the converted configuration
+
+Open `ai-gateway.yaml` and confirm that the converter captured everything you expect. At minimum, check that:
+
+- Every version 1.x model has a corresponding AI Model entry, with the right `capabilities`, `formats`, and `targets`.
+- Provider credentials were extracted correctly, and each `targets[].provider` reference resolves to a declared AI Provider.
+- Every AI MCP Server has the correct `type` for its original plugin mode, and that `conversion-only` and `listener` pairs are linked by matching tags.
+- Each AI Agent points at the correct upstream url and carries the logging settings you had configured.
+- Supporting plugins were converted to AI Policies and attached to the right entities.
+
+Pay particular attention to anything the converter cannot infer from the version 1.x config, such as a AI Provider `display_name` or a AI Model `display_name`. These are required in version 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
+
+### Step 4: Add your Control Plane ID to kongctl
+
+`kongctl` needs to know which {{site.ai_gateway}} Control Plane to target. Add your Control Plane name to the `kongctl` configuration file so that apply writes to the correct Control Plane.
+
+```sh
+# Set the AI Gateway Control Plane that kongctl will apply to.
+ai_gateways:
+- ref: ai-gateway
+  _external:
+    selector:
+        matchFields:
+          name: "ai-gateway"
+```
+
+Keep one source of truth so that repeated applies always target the same Control Plane.
+
+### Step 5: Apply the configuration
+
+Sync the converted configuration to the {{site.ai_gateway}} Control Plane.
+
+```sh
+kongctl apply -f ai-gateway.yaml
+```
+
+`kongctl` creates the AI Providers, Models, MCP Servers, Agents, and Policies defined in the file. Because the configuration is declarative, you can re-run to apply after edits and `kongctl` will reconcile the Control Plane to match the file.
+
+After the apply succeeds, the {{site.ai_gateway}} exposes its configuration and telemetry endpoints. Send a representative request to each migrated AI Model, MCP server, and Agent to confirm behavior matches version 1.x before you transfer traffic over.
+
+## Entity specific advice
+
+- [Migrating models]()
+- [Migrating MCP servers]()
+- [Migrating agents]()
+
+## Verify your migration
+
+After you apply the converted configuration, verify the new Control Plane before moving production traffic:
+
+- Confirm each AI Model responds. Send a chat or embeddings request to the migrated AI Model route and compare the response and the `X-Kong-LLM-Model` header against its version 1.x equivalent.
+- Confirm AI MCP tool discovery and invocation. Connect an MCP client and list tools, then invoke one. If you migrated ACLs, test with both an allowed and a denied Consumer.
+- Confirm AI Agent traffic. Send an A2A request and check that the agent card url is rewritten to the gateway address and that A2A metrics appear in {{site.konnect_short_name}} analytics.
+- Confirm AI Policies took effect. Exercise rate limiting, authentication, and any AI policies such as `ai-sanitizer` to confirm they behave as they did in version 1.x.
+- Compare entity counts. The number of AI Models, MCP Servers, and Agents in the Control Plane should match the number of corresponding plugins in your version 1.x export.
+
+Run the old and new configurations in parallel during cutover so you can roll back by routing traffic to the version 1.x Control Plane if needed.
+
+## Troubleshooting
+
