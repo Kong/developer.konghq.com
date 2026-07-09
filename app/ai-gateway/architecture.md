@@ -135,7 +135,7 @@ All three flow through the same data plane and use the same authentication, obse
 
 ## How entities become {{site.base_gateway}} configuration
 
-AI entities are a high-level abstraction. When you save one, a dedicated conversion step lowers it into the same {{site.base_gateway}} building blocks classic Kong Gateway uses (Routes, Services, Plugins, Consumers), and that's what data plane nodes actually run.
+AI entities are a high-level abstraction. When you save one, a dedicated conversion step lowers it into the same {{site.base_gateway}} building blocks classic {{site.base_gateway}} uses (Routes, Services, Plugins, Consumers), and that's what data plane nodes actually run.
 
 The mapping isn't uniform. Some entities carry over almost directly: an AI Vault becomes a Kong Vault, and an AI Consumer or AI Consumer Group becomes a Kong Consumer or Consumer Group with its credentials and group membership. An AI Model fans out further: it becomes a Service, one or more Routes, and plugins such as `ai-model-selector` and `ai-proxy-advanced`. An AI Provider has no object of its own. It's folded into the `ai-proxy-advanced` target of every AI Model that references it. AI Policy is the most dynamic case: its `type` becomes the name of whichever {{site.base_gateway}} plugin implements it (for example `ai-prompt-guard` or `ai-rate-limiting-advanced`), applied globally or scoped to whatever the policy is attached to.
 
