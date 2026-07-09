@@ -15,7 +15,7 @@ edit_and_issue_links: false
         <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">Kong Developer · <span class="bg-brand text-button px-1">Documentation</span></p>
         <div class="flex flex-col gap-4">
             <h1 class="font-extrabold text-[72px] leading-[84px] [contain:layout:style]">
-                What do you want to <br><em class="text-primary dark:text-brand italic">accomplish?</em>
+                What do you want to <em class="text-primary dark:text-brand italic">build?</em>
             </h1>
             <span class="leading-7 text-secondary text-lg max-w-3xl mx-auto">{{ hp.description | liquify }}</span>
         </div>
@@ -29,7 +29,7 @@ edit_and_issue_links: false
             <div class="flex flex-wrap gap-2 justify-center items-center">
                 <span class="text-xs text-terciary font-mono">Try</span>
                 {%- for chip in hp.hero.chips -%}
-                <button class="ask-ai-button text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer" data-query="{{ chip }}">{{ chip | escape }}</button>
+                <button class="ask-ai-chip text-xs border border-primary rounded-md px-3 py-1 text-secondary bg-secondary hover:border-brand hover:text-primary transition-colors cursor-pointer" data-query="{{ chip }}">{{ chip | escape }}</button>
                 {%- endfor -%}
             </div>
             <span class="text-sm"><a href="/sitemap/">View all Kong documentation &rarr;</a></span>
@@ -49,7 +49,7 @@ edit_and_issue_links: false
             {%- for fcard in agents.featured_cards -%}
             {%- if fcard.endpoint -%}
             <div class="card card__featured flex flex-col gap-5 p-6">
-                <div class="text-xs absolute transform rotate-45 bg-brand-saturated dark:bg-terciary text-center text-primary dark:text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">Featured</div>
+                <div class="text-xs absolute transform rotate-45 bg-brand/80 text-center text-button font-semibold py-1 right-[-35px] top-[32px] w-[170px]">Featured</div>
                 {% include_svg fcard.icon class="card__icon" aria-label=fcard.title %}
                 <div class="flex flex-col gap-2 flex-grow">
                     <h3>{{ fcard.title }}</h3>
@@ -102,11 +102,24 @@ edit_and_issue_links: false
                     <div class="flex items-center gap-2 px-5 py-2 border-b border-primary">
                         {% include_svg '/assets/icons/third-party/claude.svg' class="w-4 h-4 shrink-0" aria-hidden="true" %}
                         <span class="text-xs font-mono font-bold text-primary dark:text-brand uppercase tracking-widest">{{ fcard.snippet_label }}</span>
+                        {%- if fcard.snippet_label_link -%}
+                        <a href="{{ fcard.snippet_label_link.url }}" class="text-xs italic text-terciary ml-auto no-icon hover:text-secondary">{{ fcard.snippet_label_link.text }}</a>
+                        {%- endif -%}
                     </div>
                     {%- endif -%}
                     <ul class="list-none m-0 px-5 py-3 flex flex-col gap-1">
                         {%- for line in fcard.snippet_lines -%}
+                        {%- assign is_last = forloop.last -%}
+                        {%- if fcard.snippet_url_prefix and line != "..." -%}
+                        <li class="text-xs font-mono flex gap-2 leading-none">
+                            <span class="text-terciary select-none">{% if is_last %}└──{% else %}├──{% endif %}</span>
+                            <a href="{{ fcard.snippet_url_prefix }}{{ line }}/" class="text-secondary hover:text-primary no-icon">{{ line }}/</a>
+                        </li>
+                        {%- elsif fcard.snippet_url_prefix -%}
+                        <li class="text-xs font-mono text-terciary flex gap-2 leading-none"><span class="select-none">└──</span>{{ line }}</li>
+                        {%- else -%}
                         <li class="text-xs font-mono text-secondary flex gap-2"><span class="text-terciary">&rsaquo;</span>{{ line }}</li>
+                        {%- endif -%}
                         {%- endfor -%}
                     </ul>
                     <span id="{{ fcard_id }}" class="sr-only" aria-hidden="true">{% for line in fcard.snippet_lines %}{{ line }}
@@ -122,9 +135,15 @@ edit_and_issue_links: false
                 </div>
                 <!-- CTAs -->
                 <div class="flex flex-col w-full text-sm border-t border-primary">
+                    {%- if fcard.ctas -%}
+                    {%- for cta in fcard.ctas -%}
+                    <a class="flex justify-between px-5 py-3 text-primary hover:bg-hover-component/100 hover:no-underline no-icon {% unless forloop.last %}border-b border-primary{% endunless %}" href="{{ cta.url }}">{{ cta.text }}<span class="card__arrow">&rarr;</span></a>
+                    {%- endfor -%}
+                    {%- else -%}
                     <a class="flex justify-between px-5 py-3 text-primary hover:bg-hover-component/100 hover:no-underline no-icon {% if fcard.cta_url_2 %}border-b border-primary{% endif %}" href="{{ fcard.cta_url }}">{{ fcard.cta_text }}<span class="card__arrow">&rarr;</span></a>
                     {%- if fcard.cta_url_2 -%}
                     <a class="flex justify-between px-5 py-3 text-primary hover:bg-hover-component/100 hover:no-underline no-icon" href="{{ fcard.cta_url_2 }}">{{ fcard.cta_text_2 }}<span class="card__arrow">&rarr;</span></a>
+                    {%- endif -%}
                     {%- endif -%}
                 </div>
             </div>
@@ -156,14 +175,13 @@ edit_and_issue_links: false
                         </clipboard-copy>
                     </div>
                 </div>
-                <pre class="bg-code-block m-0 px-4 py-4 text-sm leading-relaxed overflow-x-auto border-0 rounded-none"><code><span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.install }}
+                <pre class="bg-code-block m-0 px-4 py-4 text-sm leading-relaxed whitespace-pre-wrap break-word border-0 rounded-none flex-1"><code><span class="text-terciary"># {{ cli.description }}</span>
+
+<span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.install }}
 <span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only" aria-hidden="true">{{ cli.install }}
 {{ cli.command }}</span></code></pre>
-                <div class="px-5 pb-5 pt-4 flex flex-col gap-2 border-t border-primary flex-1">
-                    <p class="text-sm text-secondary">{{ cli.description }}</p>
-                    <div class="mt-4">
-                        <a href="{{ cli.docs_url }}" class="text-sm text-links no-icon">View docs &rarr;</a>
-                    </div>
+                <div class="flex flex-col w-full text-sm border-t border-primary">
+                    <a href="{{ cli.docs_url }}" class="flex justify-between px-5 py-3 text-primary hover:bg-hover-component/100 hover:no-underline no-icon">View docs<span class="card__arrow">&rarr;</span></a>
                 </div>
             </div>
             {%- endfor -%}
@@ -177,7 +195,7 @@ edit_and_issue_links: false
 
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">02 · <span class="bg-brand text-button px-1">Platform</span></p>
-            <h2 class="text-[36px] leading-[44px]">Manage the entire <em class="text-primary dark:text-brand italic font-bold">AI connectivity layer</em></h2>
+            <h2 class="text-[36px] leading-[44px]">Manage your entire <em class="text-primary dark:text-brand italic font-bold">connectivity layer</em></h2>
         </div>
 
         {%- for cat in prods.categories -%}
@@ -221,7 +239,7 @@ edit_and_issue_links: false
         <div class="flex items-end justify-between gap-4">
             <div class="flex flex-col gap-3">
                 <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">03 · <span class="bg-brand text-button px-1">API specifications</span></p>
-                <h2 class="text-[36px] leading-[44px]"><em class="text-primary dark:text-brand italic font-bold">API specifications</em> for every use case</h2>
+                <h2 class="text-[36px] leading-[44px]">OpenAPI specs for<em class="text-primary dark:text-brand italic font-bold"> humans and agents</em></h2>
             </div>
             <a href="/api/" class="text-sm text-links no-icon shrink-0 mb-2">All API specs &rarr;</a>
         </div>
@@ -251,7 +269,7 @@ edit_and_issue_links: false
 
         <div class="flex flex-col border-t border-primary">
             <a href="https://releases.konghq.com/en" class="flex items-center gap-6 py-4 border-b border-primary hover:bg-hover-component/100 hover:px-4 hover:-mx-4 transition-all no-icon hover:no-underline group">
-                <span class="font-mono text-sm text-brand w-16 shrink-0">latest</span>
+                <span class="text-lg text-brand w-20 shrink-0 text-right">&#8734;</span>
                 <span class="text-sm text-primary flex-1">{{ site.konnect_product_name }}</span>
                 <span class="text-terciary group-hover:text-brand transition-colors">&rarr;</span>
             </a>
@@ -262,7 +280,7 @@ edit_and_issue_links: false
             {%- assign latest = product_data.releases | where: "latest", true | first -%}
             {%- assign _ver = latest["ee-version"] | default: latest.version | default: latest.release -%}
             <a href="{{ item.changelog_url }}" class="flex items-center gap-6 py-4 border-b border-primary hover:bg-hover-component/100 hover:px-4 hover:-mx-4 transition-all no-icon hover:no-underline group">
-                <span class="font-mono text-sm text-brand w-16 shrink-0">v{{ _ver }}</span>
+                <span class="font-mono text-sm text-brand w-20 shrink-0 text-right">v{{ _ver }}</span>
                 <span class="text-sm text-primary flex-1">{{ product_data.name }}</span>
                 <span class="text-terciary group-hover:text-brand transition-colors">&rarr;</span>
             </a>
@@ -275,7 +293,7 @@ edit_and_issue_links: false
 </div>
 
 <script>
-  document.querySelectorAll("button.ask-ai-button[data-query]").forEach(function(btn) {
+  document.querySelectorAll("button.ask-ai-chip[data-query]").forEach(function(btn) {
     btn.addEventListener("click", function() {
       window.Kapa("open", { query: btn.dataset.query, submit: true });
     });

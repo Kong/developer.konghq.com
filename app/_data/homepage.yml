@@ -1,5 +1,5 @@
 title: Kong Developer
-description: "Tools, APIs, and guides to build, secure, and observe everything from a single API to fleets of AI agents."
+description: "Tools, APIs, and guides to build, secure, and observe everything from a single API to an AI fleet."
 
 hero:
   chips:
@@ -13,19 +13,19 @@ agents_section:
   cli_cards:
     - tool: decK
       icon: /assets/icons/terminal.svg
-      description: "Manage Kong Gateway configuration as code. Diff, sync, and validate."
+      description: "Manage Kong Gateway configuration as code. Diff, sync, validate, and more."
       install: "brew install kong/deck/deck"
       command: "deck gateway diff kong.yaml"
       docs_url: /deck/
     - tool: kongctl
       icon: /assets/icons/terminal.svg
-      description: "Control Konnect from the terminal. Manage orgs, control planes, and plugins."
+      description: "Control Konnect resources from the terminal, declaratively or imperatively."
       install: "brew install --cask kong/kongctl/kongctl"
       command: "kongctl get control-planes"
       docs_url: /kongctl/
     - tool: Inso CLI
       icon: /assets/icons/terminal.svg
-      description: "Run API tests, lint OpenAPI specs, and generate config — straight from CI."
+      description: "Run API tests, lint OpenAPI specs, and generate config, all straight from CI."
       install: "npm install -g insomnia-inso"
       command: "inso lint spec petstore.yaml"
       docs_url: /inso-cli/
@@ -41,6 +41,9 @@ agents_section:
     - id: skills
       title: "Skills Hub"
       snippet_label: "RUN IN CLAUDE"
+      snippet_label_link:
+        text: "View other providers &rarr;"
+        url: /cookbooks/
       snippet_lines:
         - "/plugin marketplace add kong/ai-marketplace"
         - "/plugin install kong-konnect@ai-marketplace"
@@ -51,15 +54,16 @@ agents_section:
       icon: /assets/icons/brain.svg
     - id: cookbooks
       title: "AI Cookbooks"
-      snippet_lines:
-        - "model-based-routing/"
-        - "claude-code-sso/"
-        - "llm-cost-optimization/"
-        - "secure-external-mcp-gateway/"
-        - "..."
-      description: "End-to-end recipes for agents on top of Kong AI Gateway and Konnect."
-      cta_url: /cookbooks/
-      cta_text: "Open cookbooks"
+      ctas:
+        - text: "Model-based routing"
+          url: /cookbooks/model-based-routing/
+        - text: "Claude Code SSO"
+          url: /cookbooks/claude-code-sso/
+        - text: "LLM cost optimization"
+          url: /cookbooks/llm-cost-optimization/
+        - text: "View all cookbooks"
+          url: /cookbooks/
+      description: "End-to-end recipes for agents on top of Kong AI Gateway."
       icon: /assets/icons/book.svg
 
 products_section:
