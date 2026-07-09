@@ -244,14 +244,15 @@ products_section:
               url: /konnect-platform/audit-logs/
 
 specs_section:
-  featured_apis:
-    - "Konnect Control Planes"
-    - "Konnect Event Gateway"
-    - "Gateway Admin - EE"
-    - "Konnect Developer Portal"
-    - "Kong Identity"
-    - "Metering & Billing"
+  featured_api_slugs:
+    - "konnect-control-planes"
+    - "konnect-control-planes-config"
+    - "konnect-event-gateway"
+    - "gateway-admin-ee"
+    - "konnect-portal-management"
+    - "kong-identity"
+    - "metering-billing"
 
 whats_new:
-  all_url: /sitemap/#changelogs
+  all_url: /changelogs/
 

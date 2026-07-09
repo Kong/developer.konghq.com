@@ -1,0 +1,94 @@
+metadata:
+  title: "Release notes"
+  content_type: landing_page
+  description: Release notes and changelogs for all Kong products.
+
+rows:
+  - header:
+      type: h1
+      text: "Release notes"
+      sub_text: "Changelogs for all Kong products and tools"
+
+  - header:
+      type: h2
+      text: "Platform"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.konnect_product_name}}"
+              description: "Release notes for all Konnect apps and platform changes."
+              cta:
+                text: "Konnect changelog"
+                url: https://releases.konghq.com/en
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.base_gateway}}"
+              description: "Release notes for {{site.base_gateway}}, including new features, bug fixes, and breaking changes."
+              cta:
+                text: "Gateway changelog"
+                url: /gateway/changelog/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.event_gateway}}"
+              description: "Release notes for {{site.event_gateway}}, the Kafka proxy for controlled, secure client access."
+              cta:
+                text: "Event Gateway changelog"
+                url: /event-gateway/changelog/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}}"
+              description: "Release notes for {{site.mesh_product_name}}, the service mesh for API developers and platform operators."
+              cta:
+                text: "Mesh changelog"
+                url: /mesh/changelog/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.kic_product_name}}"
+              description: "Release notes for {{site.kic_product_name}}, which configures {{site.base_gateway}} using Kubernetes CRDs."
+              cta:
+                text: "KIC changelog"
+                url: https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.operator_product_name}}"
+              description: "Release notes for {{site.operator_product_name}}, for deploying and managing Kong on Kubernetes."
+              cta:
+                text: "Operator changelog"
+                url: /operator/changelog/
+
+  - header:
+      type: h2
+      text: "Tools"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "decK"
+              description: "Release notes for decK, the command-line tool for Kong API lifecycle automation."
+              cta:
+                text: "decK changelog"
+                url: https://github.com/Kong/deck/blob/main/CHANGELOG.md
+      - blocks:
+          - type: card
+            config:
+              title: "kongctl"
+              description: "Release notes for kongctl, the CLI for managing {{site.konnect_short_name}} resources."
+              cta:
+                text: "kongctl changelog"
+                url: https://github.com/kong/kongctl/releases
+      - blocks:
+          - type: card
+            config:
+              title: "Insomnia"
+              description: "Release notes for Insomnia, the API design and testing client."
+              cta:
+                text: "Insomnia changelog"
+                url: https://insomnia.rest/changelog

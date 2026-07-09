@@ -86,12 +86,14 @@ edit_and_issue_links: false
 
     <!-- SECTION 01: FOR AGENTS & THE CLI -->
     {%- assign agents = hp.agents_section -%}
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-10">
 
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">01 · <span class="bg-brand text-button px-1">MCP & tools</span></p>
             <h2 class="text-[36px] leading-[44px]">Tools for <em class="text-primary dark:text-brand italic font-bold">builders and agents</em></h2>
+            <p class="text-lg font-light text-secondary m-0">Integrate and automate across the Konnect platform from your IDE, terminal, or AI agent.</p>
         </div>
+        <div class="flex flex-col gap-6">
         <!-- Featured cards: MCP (wide, featured) + Skill Hub + Cookbooks -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {%- for fcard in agents.featured_cards -%}
@@ -235,6 +237,7 @@ edit_and_issue_links: false
             {%- endfor -%}
         </div>
 
+        </div><!-- end cards group -->
     </div>
 
     <!-- SECTION 02: THE PLATFORM -->
@@ -244,6 +247,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">02 · <span class="bg-brand text-button px-1">Platform</span></p>
             <h2 class="text-[36px] leading-[44px]">Manage your entire <em class="text-primary dark:text-brand italic font-bold">connectivity layer</em></h2>
+            <p class="text-lg font-light text-secondary m-0">Securely connect, govern, and monetize API, AI, and event traffic across any model or cloud.</p>
         </div>
 
         {%- for cat in prods.categories -%}
@@ -288,13 +292,15 @@ edit_and_issue_links: false
             <div class="flex flex-col gap-3">
                 <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">03 · <span class="bg-brand text-button px-1">API specifications</span></p>
                 <h2 class="text-[36px] leading-[44px]">OpenAPI specs for<em class="text-primary dark:text-brand italic font-bold"> humans and agents</em></h2>
+                <p class="text-lg font-light text-secondary m-0">Browse and test the OpenAPI specs that power Kong's products and services.</p>
             </div>
             <a href="/api/" class="text-sm text-links no-icon shrink-0 mb-2">All API specs &rarr;</a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {%- for api_title in specs.featured_apis -%}
-            {%- assign api_page = all_api_pages | where: "title", api_title | first -%}
+            {%- for api_slug in specs.featured_api_slugs -%}
+            {%- assign api_base_url = "/api/" | append: api_slug | append: "/" -%}
+            {%- assign api_page = all_api_pages | where: "base_url", api_base_url | first -%}
             {%- if api_page -%}
             {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=api_page.title version=api_page.version description=api_page.description spec_url=api_page.url insomnia_link=api_page.insomnia_link %}
             {%- endif -%}
