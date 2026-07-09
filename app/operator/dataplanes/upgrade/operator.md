@@ -45,7 +45,7 @@ Any change that needs manual action is called out in the [changelog](/operator/c
 ## Prerequisites
 
 * [Helm 3](https://helm.sh/docs/intro/install/) and [`kubectl`](https://kubernetes.io/docs/tasks/tools/) installed and pointed at your cluster.
-* [`kustomize`](https://kubectl.docs.kubernetes.io/installation/kustomize/) (or `kubectl` v1.14+, which bundles it) for applying CRDs.
+* [`kustomize`](https://kubectl.docs.kubernetes.io/installation/kustomize/) installed (or use `kubectl kustomize` with `kubectl` v1.14+), for applying CRDs.
 * An existing {{ site.operator_product_name }} installation deployed with the `kong/kong-operator` chart.
 
 ## Step 1: Refresh the Helm repository
@@ -77,10 +77,10 @@ helm search repo kong/kong-operator --versions
 {:.warning}
 > Do this **before** upgrading the release. Helm does not update CRDs on `helm upgrade`, so new fields your target version depends on will be missing until you apply them manually.
 
-Apply the {{ site.operator_product_name }} CRDs for your target version, pinning the ref to the version you're upgrading to:
+Apply the {{ site.operator_product_name }} CRDs for the version you're upgrading to. The command below uses the latest operator version (v{{ site.data.operator_latest.release }}); if you're upgrading to a different version, replace the ref:
 
 ```bash
-kustomize build github.com/Kong/kong-operator/config/crd/gateway-operator?ref=v{{ site.data.operator_latest.release }} | kubectl apply --server-side -f -
+kustomize build "github.com/Kong/kong-operator/config/crd/gateway-operator?ref=v{{ site.data.operator_latest.release }}" | kubectl apply --server-side -f -
 ```
 
 If the release also bumps the Gateway API version, apply the matching Gateway API CRDs (this repo currently targets Gateway API `{{ site.gwapi_version }}`):
@@ -134,7 +134,7 @@ If something goes wrong, roll the release back to the previous revision:
 
 ```bash
 helm history kong-operator -n kong-system
-helm rollback kong-operator <REVISION> -n kong-system
+helm rollback kong-operator REVISION -n kong-system
 ```
 
 {:.warning}
