@@ -25,7 +25,8 @@ rows:
           config: |
             Koh CLI is an agent-friendly interface to Insomnia, allowing tools like Claude Code or Codex to interact directly with collections, requests, OpenAPI specs and other data stored in Insomnia.
 
-Koh CLI isn't the same as [Inso CLI](/inso-cli/), see [the FAQ section](#frequently-asked-questions).
+            Koh CLI isn't the same as [Inso CLI](/inso-cli/), see [the FAQ section](#frequently-asked-questions).
+            
             Koh CLI works only with Insomnia [Git projects](/insomnia/storage/#git-sync). For the package and detailed usage, see [koh-cli on npm](https://www.npmjs.com/package/koh-cli#detailed-usage).
             
   - header:
