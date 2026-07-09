@@ -126,4 +126,5 @@ You should see logs like the following:
 ```cef
 2025-06-18T21:02:36Z konghq.com CEF:0|KongInc|Konnect|1.0|konnect|Authz.control-planes|1|rt=1750280466889 src=127.0.0.6 action=list granted=true org_id=777db3e4-5cb7-4dd5-b51c-9878096a6999 principal_id=eb999f01-5976-4f4b-9fbc-dd5d514bd675 trace_id=3959872677347089807 user_agent=grpc-node-js/1.12.4 sig=KbLaBhQFnggT_8CyC95b777R1_fGvvLVDn7awjZK8eZLdGPrSvnS-sxJw63j930eKr-VTsQv8-TQTD_GVmAPAQ
 ```
+{:.no-copy-code.wrap}
 
