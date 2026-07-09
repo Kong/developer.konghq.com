@@ -49,7 +49,7 @@ The AI Model Provider entity lets you securely store and manage credentials for 
 * Centrally manage and rotate credentials across multiple AI Models
 * Enforce consistent authentication across your deployments
 
-{{site.ai_gateway}} has two distinct provider entity types. An AI Model Provider holds outbound credentials: the secrets {{site.ai_gateway}} uses to authenticate to an upstream LLM service on your behalf. An [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) configures inbound authentication: the mechanism that validates AI Consumer identity before a request reaches an AI Model. When an AI Consumer calls an AI Model, the AI Identity Provider checks who they are; the AI Model then uses the AI Model Provider's credentials to forward the request upstream.
+An AI Model Provider manages outbound credentials, which is distinct from the inbound authentication managed by an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/). When an AI Consumer calls an AI Model, the AI Identity Provider checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream.
 
 Each AI Model Provider has a [`type`](#schema-aigateway-model-provider-type) that selects the upstream LLM service and configures provider-specific options. See the [schema](#schema) below for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
 
@@ -163,6 +163,23 @@ data:
         - name: Authorization
           value: Bearer <your-openai-key>
 {% endentity_example %}
+
+<!-- TODO: Uncomment before GA — kongctl declarative support for model_providers is not yet released.
+```yaml
+ai_gateways:
+  - ref: <your-ai-gateway-ref>
+    model_providers:
+      - ref: my-openai-account
+        name: my-openai-account
+        display_name: OpenAI Production
+        type: openai
+        config:
+          auth:
+            type: basic
+            header_name: Authorization
+            header_value: Bearer <your-openai-key>
+```
+-->
 
 ## Schema
 
