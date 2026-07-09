@@ -42,14 +42,18 @@ Before migrating, make sure you have:
 
 The supported migration path uses the kongctl convert ai-gateway extension to translate your existing declarative configuration into the v2 entity model, then applies it with kongctl. The flow has five steps:
 
-Export the declarative configuration from your existing API Gateway control plane with decK.
-Run the converter to produce an AI Gateway entity configuration file.
-Validate that the output includes all of your models, MCP servers, and agents.
-Add your AI Gateway control plane ID to the kongctl configuration.
-Apply the converted configuration to the new AI Gateway control plane.
+1. Export the declarative configuration from your existing API {{site.base_gateway}} Control Plane with decK.
+1. Run the converter to produce an {{site.ai_gateway}} entity configuration file.
+1. Validate that the output includes all of your models, MCP servers, and agents.
+1. Add your {{site.ai_gateway}} Control Plane ID to the `kongctl` configuration.
+1. Apply the converted configuration to the new {{site.ai_gateway}} Control Plane.
 
-The diagram below shows where each tool sits in the flow.
+The diagram below shows where each tool sits in the flow:
 
 {% mermaid %}
-flowchart LR A[API Gateway CP<br>AI Gateway v1] -->|deck gateway dump| B[kong.yaml] B -->|ai-deck-converter| C[ai-gateway.yaml] C -->|review and validate| C C -->|kongctl apply| D[AI Gateway CP<br>AI Gateway v2] 
+flowchart LR
+    A["API Gateway CP<br/>AI Gateway v1"] -->|deck gateway dump| B["kong.yaml"]
+    B -->|ai-deck-converter| C["ai-gateway.yaml"]
+    C -->|review and validate| C
+    C -->|kongctl apply| D["AI Gateway CP<br/>AI Gateway v2"]
 {% endmermaid %}
