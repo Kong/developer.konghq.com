@@ -245,13 +245,12 @@ products_section:
 
 specs_section:
   featured_api_slugs:
-    - "konnect-control-planes"
-    - "konnect-control-planes-config"
-    - "konnect-event-gateway"
-    - "gateway-admin-ee"
-    - "konnect-portal-management"
-    - "kong-identity"
-    - "metering-billing"
+    - "konnect/control-planes"
+    - "konnect/control-planes-config"
+    - "konnect/event-gateway"
+    - "konnect/portal-management"
+    - "konnect/kong-identity"
+    - "konnect/metering-and-billing"
 
 whats_new:
   all_url: /changelogs/

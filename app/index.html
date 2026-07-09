@@ -157,23 +157,8 @@ edit_and_issue_links: false
                         {%- endif -%}
                     </div>
                     {%- endif -%}
-                    <ul class="list-none m-0 px-5 py-3 flex flex-col gap-1">
-                        {%- for line in fcard.snippet_lines -%}
-                        {%- assign is_last = forloop.last -%}
-                        {%- if fcard.snippet_url_prefix and line != "..." -%}
-                        <li class="text-xs font-mono flex gap-2 leading-none">
-                            <span class="text-terciary select-none">{% if is_last %}└──{% else %}├──{% endif %}</span>
-                            <a href="{{ fcard.snippet_url_prefix }}{{ line }}/" class="text-secondary hover:text-primary no-icon">{{ line }}/</a>
-                        </li>
-                        {%- elsif fcard.snippet_url_prefix -%}
-                        <li class="text-xs font-mono text-terciary flex gap-2 leading-none"><span class="select-none">└──</span>{{ line }}</li>
-                        {%- else -%}
-                        <li class="text-xs font-mono text-secondary flex gap-2"><span class="text-terciary">&rsaquo;</span>{{ line }}</li>
-                        {%- endif -%}
-                        {%- endfor -%}
-                    </ul>
-                    <span id="{{ fcard_id }}" class="sr-only" aria-hidden="true">{% for line in fcard.snippet_lines %}{{ line }}
-{% endfor %}</span>
+                    <pre class="bg-transparent m-0 px-5 py-3 border-0 rounded-none"><code id="{{ fcard_id }}" class="bg-transparent border-0 p-0" style="font-size: 0.75rem;">{% for line in fcard.snippet_lines %}<span class="text-secondary">{{ line }}</span>
+{% endfor %}</code></pre>
                 </div>
                 {%- endif -%}
                 <!-- Body -->
@@ -225,7 +210,7 @@ edit_and_issue_links: false
                         </clipboard-copy>
                     </div>
                 </div>
-                <pre class="bg-code-block m-0 px-4 py-4 text-sm leading-relaxed whitespace-pre-wrap break-word border-0 rounded-none flex-1"><code><span class="text-terciary"># {{ cli.description }}</span>
+                <pre class="bg-code-block m-0 px-4 py-4 leading-none whitespace-pre-wrap break-word border-0 rounded-none flex-1"><code class="bg-transparent border-0 p-0"><span class="text-terciary"># {{ cli.description }}</span>
 
 <span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.install }}
 <span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only" aria-hidden="true">{{ cli.install }}
