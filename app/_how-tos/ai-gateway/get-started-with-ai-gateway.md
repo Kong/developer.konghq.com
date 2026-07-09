@@ -143,5 +143,6 @@ body:
   messages:
   - role: "user"
     content: "Say this is a test!"
+  model: gpt-4o
 {% endvalidation %}
 <!-- vale on -->
