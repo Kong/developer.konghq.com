@@ -163,7 +163,7 @@ rows:
                   * **[Inso CLI](/inso-cli/)** is designed for people and CI/CD pipelines. Use it in production to lint OpenAPI specs, run collections and tests, and automate Insomnia workflows in your terminal or continuous integration environment. Inso CLI can read Insomnia data from a Git project or from the local Insomnia app data directory.
                   * **Koh CLI** is designed for both humans and AI agents, such as Claude Code or Codex. It exposes collections, requests, and OpenAPI specs as structured commands (use the `--agent` flag for JSON output) and installs skills that teach agents how to operate on your projects. Koh CLI is currently in [Tech Preview](/insomnia/release-policy/#release-types) and works only with Insomnia [Git projects](/insomnia/storage/#git-sync).
 
-                  In short, reach for Inso CLI to automate testing and linting yourself, and Koh CLI to let an AI agent work with your Insomnia data.
+                  In short, use the Inso CLI to automate testing and linting yourself, and Koh CLI to let an AI agent work with your Insomnia data.
   - header:
       type: h2
       text: Detailed usage
