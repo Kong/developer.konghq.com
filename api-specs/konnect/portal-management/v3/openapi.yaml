@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.5.12
+  version: 3.6.0
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@58fb00442dc3bffed8f327edb0211f6295232eac
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/58fb00442dc3bffed8f327edb0211f6295232eac'
+  x-oas-source: kong/platform-api@b1c0fe493af8615f1ec64898b4c0e7fdb9e574b1
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b1c0fe493af8615f1ec64898b4c0e7fdb9e574b1'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -820,6 +820,36 @@ paths:
       tags:
         - Pages
   '/portals/{portalId}/applications':
+    post:
+      operationId: create-application
+      summary: Create Application
+      description: 'Creates a new application for this portal. The application must be assigned to a developer or a team. An application can be registered for various APIs, issuing credentials for API access. If using DCR, an application will be linked to an Identity Provider''s application by its `client_id`.'
+      parameters:
+        - $ref: '#/components/parameters/PortalId'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateApplication'
+      responses:
+        '201':
+          $ref: '#/components/responses/GetApplication'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                CreateApplicationBadRequestExample1:
+                  $ref: '#/components/examples/CreateApplicationBadRequestExample1'
+                CreateApplicationBadRequestExample2:
+                  $ref: '#/components/examples/CreateApplicationBadRequestExample2'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Applications
+      x-terraform-id-to-object:
+        auth_strategy_id: auth_strategy.id
     get:
       operationId: list-applications
       summary: List Applications
@@ -1068,6 +1098,45 @@ paths:
     parameters:
       - $ref: '#/components/parameters/PortalId'
       - $ref: '#/components/parameters/ApplicationId'
+    post:
+      operationId: create-application-registration
+      summary: Create Registration
+      description: Creates a new registration for this application to access a specific API. Registrations created through the portal management API will respect the auto-approve settings of the portal and/or API publication. API publications that do not use auto-approve must be manually approved by an administrator after creation.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateApplicationRegistration'
+      responses:
+        '201':
+          $ref: '#/components/responses/GetApplicationRegistration'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                CreateApplicationRegistrationBadRequestExample1:
+                  $ref: '#/components/examples/CreateApplicationRegistrationBadRequestExample1'
+                CreateApplicationRegistrationBadRequestExample2:
+                  $ref: '#/components/examples/CreateApplicationRegistrationBadRequestExample2'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+              examples:
+                CreateApplicationRegistrationConflictExample:
+                  $ref: '#/components/examples/CreateApplicationRegistrationConflictExample'
+      tags:
+        - Application Registrations
+      x-terraform-id-to-object:
+        api_id: api.id
     get:
       operationId: list-registrations-by-application
       summary: List Registrations by Application
@@ -1584,6 +1653,39 @@ paths:
   '/portals/{portalId}/developers':
     parameters:
       - $ref: '#/components/parameters/PortalId'
+    post:
+      operationId: create-developer
+      summary: Create Developer Account
+      description: Creates a new developer account in the specified portal. SAML login is currently not supported.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateDeveloper'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateDeveloperResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                CreateDeveloperBadRequestExample1:
+                  $ref: '#/components/examples/CreateDeveloperBadRequestExample1'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+              examples:
+                CreateDeveloperConflictExample1:
+                  $ref: '#/components/examples/CreateDeveloperConflictExample1'
+      tags:
+        - Portal Developers
     get:
       operationId: list-portal-developers
       summary: List Developers
@@ -2925,6 +3027,39 @@ components:
       required:
         - data
       title: ReplacePortalImageAsset
+    CreateDeveloperRequest:
+      description: Request body for creating a developer in a portal.
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        full_name:
+          type: string
+          maxLength: 255
+        status:
+          description: 'When omitted, the portal''s `auto_approve_developers` setting determines the initial status. Set this property to override the portal default with any valid developer status.'
+          type: string
+          example: approved
+          enum:
+            - approved
+            - pending
+            - revoked
+            - rejected
+          title: DeveloperStatus
+        send_invitation_email:
+          description: 'When true, sends an invitation email to the developer. Default is false; no emails are sent unless explicitly requested.'
+          type: boolean
+          default: false
+      example:
+        email: developer@example.com
+        full_name: Developer Name
+      additionalProperties: false
+      required:
+        - email
+        - full_name
+      title: CreateDeveloperRequest
     UpdateDeveloperRequest:
       type: object
       properties:
@@ -3461,6 +3596,57 @@ components:
         - name
         - content
       title: CreatePortalSnippetRequest
+    CreateApplicationRequest:
+      type: object
+      properties:
+        name:
+          description: The name of the application.
+          type: string
+          maxLength: 255
+        description:
+          description: A description of the application.
+          type: string
+          maxLength: 255
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
+        dcr_client_id:
+          description: |
+            If using a DCR auth strategy, set this property to link the portal application to an existing
+            client from the DCR provider, instead of having Konnect create a new client.
+
+            This allows importing existing clients from an Identity Provider into Konnect, allowing
+            them to be controlled through DCR flows in the portal and use existing client secrets
+            for API access.
+
+            The value must be a valid client ID in the DCR provider associated with the auth strategy.
+            For some DCR providers, if the client ID is invalid, the application may still be created but will not function properly.
+
+            Note: For AzureAD auth strategies, the client ID must resolve to an accessible Microsoft Entra
+            application using the configured DCR provider credentials. Otherwise, application creation fails.
+          type: string
+          maxLength: 255
+        client_id:
+          $ref: '#/components/schemas/ApplicationClientId'
+        auth_strategy_id:
+          description: The ID of the authentication strategy the application will use when making requests to registered APIs.
+          type: string
+          format: uuid
+        owner:
+          $ref: '#/components/schemas/ApplicationOwner'
+      example:
+        name: Portal Application
+        description: A portal application provisioned for a developer by a Portal Admin.
+        labels:
+          env: production
+        auth_strategy_id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        owner:
+          id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+          type: developer
+      additionalProperties: false
+      required:
+        - name
+        - owner
+      title: CreateApplicationRequest
     UpdateApplicationRequest:
       type: object
       properties:
@@ -3823,6 +4009,26 @@ components:
         - registration_count
         - labels
       title: Key Auth Application
+    CreateApplicationRegistrationRequest:
+      type: object
+      properties:
+        api_id:
+          description: The ID of the API the application is registering for.
+          type: string
+          format: uuid
+        status:
+          description: The status of the application registration. It must be a valid status value for a registration creation.
+          type: string
+          example: approved
+          enum:
+            - approved
+            - pending
+      example:
+        api_id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      additionalProperties: false
+      required:
+        - api_id
+      title: CreateApplicationRegistrationRequest
     ApplicationRegistration:
       description: A application's registration for a specific version of an API.
       type: object
@@ -6362,6 +6568,12 @@ components:
         - name
         - credential_type
         - key_names
+    ApplicationClientId:
+      description: |
+        An identifier to correlate the application with an external system.
+        Cannot be set when using Dynamic Client Registration.
+      type: string
+      maxLength: 255
     ApiKeyCredentialListItem:
       description: API key credential returned when listing credentials.
       type: object
@@ -7158,6 +7370,17 @@ components:
         title: About Us
         name: about-us
         content: Welcome to the About Us page. This is where you can learn about our company.
+    CreateDeveloperExample1:
+      value:
+        email: developer@example.com
+        full_name: Developer Name
+    CreateDeveloperExample2:
+      summary: With optional status and invitation email
+      value:
+        email: invited-dev@example.com
+        full_name: Invited Developer
+        status: pending
+        send_invitation_email: true
     PortalSnippetExample1:
       value:
         id: 8f9fd312-a987-4628-b4c5-bb4f4fddd5f7
@@ -7184,6 +7407,49 @@ components:
             description: A custom snippet
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-10-08T17:00:00.52Z'
+    CreateApplicationExample:
+      value:
+        name: Portal Application
+        description: A portal application provisioned for a developer by a Portal Admin.
+        labels:
+          env: test
+        auth_strategy_id: 85606071-49c7-4c2e-ae49-8a86d72a8110
+        owner:
+          id: 8cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+          type: developer
+    CreateOIDCApplicationExample:
+      value:
+        name: My OIDC Application
+        description: This application has been pre-configured in an identity provider and is linked by its client_id.
+        labels:
+          env: test
+        auth_strategy_id: 75606071-49c7-4c2e-ae49-8a86d72a8110
+        client_id: z5Ul9d8f0h3kL0j2p4q0
+        owner:
+          id: 8cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+          type: developer
+    CreateApplicationBadRequestExample1:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: auth_strategy_id
+            rule: is_uuid
+            reason: '"auth_strategy_id" must be a valid UUID'
+            source: body
+    CreateApplicationBadRequestExample2:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: my_property
+            rule: unknown_property
+            reason: '"my_property" is not allowed'
+            source: body
     ListPortalSnippetsBadRequestExample1:
       value:
         status: 400
@@ -7547,6 +7813,34 @@ components:
             rule: unknown_property
             reason: '"filter[my_attribute]" is not allowed'
             source: query
+    CreateApplicationRegistrationBadRequestExample1:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: api_id
+            rule: is_uuid
+            reason: '"api_id" must be a valid UUID'
+            source: body
+    CreateApplicationRegistrationBadRequestExample2:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: api_id
+            rule: required
+            reason: '"api_id" is required'
+            source: body
+    CreateApplicationRegistrationConflictExample:
+      value:
+        status: 409
+        title: Conflict
+        instance: 'kong:trace:1433447772874964729'
+        detail: API is already registered to the application
     ListRegistrationsByApplicationBadRequestExample1:
       value:
         status: 400
@@ -7652,6 +7946,9 @@ components:
             rule: unknown_property
             reason: '"my_property" is not allowed'
             source: body
+    CreateApplicationRegistrationExample1:
+      value:
+        api_id: 56f637b7-cd95-478b-9b02-d770618f641c
     UpdateApplicationRegistrationApproved:
       value:
         status: approved
@@ -8091,6 +8388,23 @@ components:
             rule: unknown_property
             reason: '"filter[my_attribute]" is not allowed'
             source: query
+    CreateDeveloperBadRequestExample1:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: email
+            rule: required
+            reason: '"email" is required'
+            source: body
+    CreateDeveloperConflictExample1:
+      value:
+        status: 409
+        title: Conflict
+        instance: 'kong:trace:1433447772874964729'
+        detail: Developer with the given email already exists
     UpdateDeveloperResponseExample1:
       value:
         id: 7cd9feff-b4da-4a9f-ba49-cbe83c75ff22
@@ -8808,6 +9122,40 @@ components:
           examples:
             Example 1:
               $ref: '#/components/examples/UpdatePortalSnippetExample1'
+    CreateDeveloper:
+      description: Create a developer for a portal.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateDeveloperRequest'
+          examples:
+            Example 1:
+              $ref: '#/components/examples/CreateDeveloperExample1'
+            Example 2:
+              $ref: '#/components/examples/CreateDeveloperExample2'
+    CreateApplication:
+      description: Create an application for a portal.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateApplicationRequest'
+          examples:
+            Create Application Example:
+              $ref: '#/components/examples/CreateApplicationExample'
+            Create OIDC Application Example:
+              $ref: '#/components/examples/CreateOIDCApplicationExample'
+    CreateApplicationRegistration:
+      description: Create an application registration for a portal application.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateApplicationRegistrationRequest'
+          examples:
+            Example 1:
+              $ref: '#/components/examples/CreateApplicationRegistrationExample1'
     UpdateApplicationRegistration:
       description: Update an application registration.
       required: true
@@ -9111,6 +9459,15 @@ components:
           examples:
             Example 1:
               $ref: '#/components/examples/AssignedPortalRoleCollectionExample1'
+    CreateDeveloperResponse:
+      description: Details about the created developer in a portal.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalDeveloper'
+          examples:
+            Example 1:
+              $ref: '#/components/examples/GetDeveloperExample1'
     GetDeveloper:
       description: Details about a developer in a portal.
       content:
