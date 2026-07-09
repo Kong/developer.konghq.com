@@ -160,6 +160,16 @@ data:
   policies: []
 {% endentity_example %}
 
+<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
+```yaml
+consumer_groups:
+  - name: internal-teams
+    ref: internal-teams
+    display_name: "Internal Teams"
+    policies: []
+```
+-->
+
 ## Schema
 
 {% entity_schema %}

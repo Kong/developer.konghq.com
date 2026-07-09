@@ -401,6 +401,46 @@ data:
       algorithm: round-robin
 {% endentity_example %}
 
+<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
+```yaml
+models:
+  - name: gpt-4o-production
+    ref: gpt-4o-production
+    display_name: "GPT-4o Production"
+    type: model
+    capabilities:
+      - generate
+    formats:
+      - type: openai
+    access:
+      acls:
+        allow:
+          - internal-teams
+    policies: []
+    targets:
+      - name: gpt-4o
+        provider: my-openai-account
+        weight: 100
+        config:
+          type: openai
+          temperature: 0.7
+          max_tokens: 4096
+          input_cost: 0.0000025
+          output_cost: 0.000010
+    config:
+      route:
+        paths:
+          - /ai
+      logging:
+        statistics: true
+        payloads: false
+      model:
+        name_header: true
+      balancer:
+        algorithm: round-robin
+```
+-->
+
 ## Schema
 
 {% entity_schema %}

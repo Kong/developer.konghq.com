@@ -345,6 +345,30 @@ data:
       max_payload_size: 1048576
 {% endentity_example %}
 
+
+<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
+```yaml
+agents:
+  - name: kongair-flight-booking-agent
+    ref: kongair-flight-booking-agent
+    display_name: "KongAir Flight Booking Agent"
+    type: a2a
+    access:
+      acls:
+        allow:
+          - internal-teams
+    policies: []
+    config:
+      url: https://booking-agent.internal.kongair.com
+      route:
+        paths:
+          - /kongair-flight-booking
+      logging:
+        statistics: true
+        payloads: false
+        max_payload_size: 1048576
+```
+-->
 ## Schema
 
 {% entity_schema %}

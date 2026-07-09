@@ -584,6 +584,51 @@ data:
           description: Location query. Accepts US Zipcode, UK Postcode, Canada postal code, IP address, latitude/longitude, or city name.
 {% endentity_example %}
 
+<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
+```yaml
+mcp_servers:
+  - name: weather-mcp
+    ref: weather-mcp
+    display_name: "Weather API"
+    type: conversion-listener
+    enabled: true
+    policies: []
+    access:
+      acl_attribute_type: consumer
+      acls:
+        allow:
+          - __never_match__
+      default_tool_acls:
+        deny:
+          - __never_match__
+    config:
+      url: https://api.weatherapi.com/v1/current.json
+      route:
+        paths:
+          - /weather
+      logging:
+        payloads: false
+        statistics: true
+      server:
+        timeout: 60000
+    tools:
+      - name: get-current-weather
+        description: Get current weather for a location
+        method: GET
+        path: /weather
+        query:
+          key:
+            - $WEATHERAPI_API_KEY
+        parameters:
+          - name: q
+            in: query
+            required: true
+            schema:
+              type: string
+            description: Location query. Accepts US Zipcode, UK Postcode, Canada postal code, IP address, latitude/longitude, or city name.
+```
+-->
+
 ## Schema
 
 {% entity_schema %}
