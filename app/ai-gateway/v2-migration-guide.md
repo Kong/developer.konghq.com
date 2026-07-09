@@ -133,9 +133,9 @@ After the apply succeeds, the {{site.ai_gateway}} exposes its configuration and 
 
 ## Entity specific advice
 
-- [Migrating models]()
-- [Migrating MCP servers]()
-- [Migrating agents]()
+- [Migrating models](/ai-gateway/migrate-models/)
+- [Migrating MCP servers](/ai-gateway/migrate-mcp/)
+- [Migrating agents](/ai-gateway/migrate-agents/)
 
 ## Verify your migration
 
