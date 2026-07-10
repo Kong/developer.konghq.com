@@ -20,3 +20,5 @@ swap:
   ServiceHub: Service Hub
   Runtime Manager: API Gateway
   dbless: DB-less
+  Gateway Manager: API Gateway
+  Mesh Manager: Service Mesh
