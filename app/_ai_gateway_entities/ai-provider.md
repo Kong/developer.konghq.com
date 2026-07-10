@@ -46,7 +46,7 @@ faqs:
 
 The AI Model Provider entity lets you securely store and manage credentials for connecting to upstream LLM services. Use AI Model Providers to:
 * Store API keys for OpenAI, Azure, Bedrock, or any other LLM provider
-* Centrally manage and rotate credentials across multiple AI Models
+* Centrally manage and rotate credentials across multiple [AI Models](/ai-gateway/entities/ai-model/)
 * Enforce consistent authentication across your deployments
 
 An AI Model Provider manages outbound credentials, which is distinct from the inbound authentication managed by an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/). When an AI Consumer calls an AI Model, the AI Identity Provider checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream.
