@@ -169,7 +169,7 @@ rows:
 
 ### OIDC token authentication
 
-The `openid-connect` type uses the [OpenID Connect policy](/ai-gateway/policies/openid-connect/) to validate a JWT or OAuth 2.0 token that the AI Consumer obtains from an external IdP. The gateway verifies the token against the IdP's published keys, maps the token to an AI Consumer, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
+The `openid-connect` type uses the [OpenID Connect Policy](/ai-gateway/policies/openid-connect/) to validate a JWT or OAuth 2.0 token that the AI Consumer obtains from an external IdP. The gateway verifies the token against the IdP's published keys, maps the token to an AI Consumer, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
 
 Set `config.issuer` to the IdP's discovery URL (for example, `https://dev-123456.okta.com`). {{site.ai_gateway}} uses the OIDC discovery endpoint to fetch signing keys automatically.
 
