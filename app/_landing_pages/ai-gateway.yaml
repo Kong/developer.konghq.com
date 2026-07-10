@@ -26,17 +26,37 @@ rows:
                 - type: text
                   text: |
                     As AI systems grow from basic LLM calls to complex architectures with agents and tool servers, infrastructure must keep pace with challenges around authentication, governance, and observability. {{site.ai_gateway}} provides a unified control plane that secures and governs all AI traffic through first-class AI Entities and AI Policies.
-          - type: structured_text
+          - type: text
+            config: |
+              [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to configure {{site.ai_gateway}} using {{site.konnect_short_name}}.
+          - type: tabs
+            tab_group: run-ai-gateway
             config:
-              header:
-                text: "Get started"
-              blocks:
-                - type: text
-                  text: |
-                    [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to get started with {{site.ai_gateway}} or launch a local demo instance of {{site.ai_gateway}} with a single command:
-                    ```sh
-                    curl -Ls https://get.konghq.com/ai | bash
-                    ```
+              - title: Quickstart
+                content: |
+                  You can use the [quickstart script](https://get.konghq.com/ai) to get a demo instance of {{site.ai_gateway}} running almost instantly.
+
+                  This command requires a [Konnect Access Token](https://cloud.konghq.com/global/account/tokens).
+
+                  ```sh
+                  curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
+                  ```
+
+                  The script creates an {{site.ai_gateway}} control plane in {{site.konnect_short_name}} and deploys a local data plane using Docker.
+
+                  All licensing is handled automatically by {{site.konnect_short_name}}.
+              - title: Konnect UI
+                content: |
+                  To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, use the following steps:
+                  1. Sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/), then navigate to **AI Gateway** and click **New Gateway**.
+                  1. Choose your environment:
+                   * **Where do you want to run your AI gateway?**: Select **Self-managed**.
+                   * **How do you want to run your gateway?**: Select **Docker** or Linux.
+                  1. Under **General information**, enter a **Display name** and, optionally, a **Gateway description**, then click **Create**.
+                  1. On the gateway **Overview** page, click **Deploy a data plane node**.
+                  1. Under **Select a version and platform**, choose your **Gateway version** and deployment platform (for example, **Mac (Docker)**), then click **Generate certificate and script**.
+                  1. Copy the generated Docker command and run it on your data plane host.
+                  1. Once the control plane recognizes the connected data plane, return to the **Overview** page to confirm the node is listed.
 
       - blocks:
           - type: image
@@ -44,9 +64,9 @@ rows:
               url: /assets/images/gateway/ai-gateway-overview.svg
               alt_text: Overview of AI gateway
 
-  - header: 
+  - header:
       type: h2
-      text: "Quick starts" 
+      text: "Quick starts"
 
     columns:
       - blocks:
@@ -80,8 +100,8 @@ rows:
       type: h2
       text: "{{site.ai_gateway}} providers"
       description: |
-        {{site.ai_gateway}} routes AI requests through provider-agnostic APIs by combining AI Model Providers and AI Models.
-        AI Model Providers store upstream connectivity and credentials, while AI Models reference AI Model Providers to expose stable client-facing endpoints and routing behavior.
+        {{site.ai_gateway}} routes AI requests through provider-agnostic APIs by combining AI Providers and AI Models.
+        AI Providers store upstream connectivity and credentials, while AI Models reference Providers to expose stable client-facing endpoints and routing behavior.
     column_count: 4
     columns:
       - blocks:
@@ -195,7 +215,7 @@ rows:
                 text: |
                   Define a single endpoint for any traffic type: LLM, MCP, or A2A. Configure [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/) once, then govern them from a [unified control plane](https://cloud.konghq.com/ai-manager) with built-in auth, policy enforcement, and observability:
 
-                    * [Routing and load balancing](/ai-gateway/load-balancing/) across AI Model Providers
+                    * [Routing and load balancing](/ai-gateway/load-balancing/) across AI Providers
                     * [Streaming and authentication](/ai-gateway/streaming/) with [AI Policies](/ai-gateway/entities/ai-policy/)
                     * Access control with [AI Consumers](/ai-gateway/entities/ai-consumer/) and ACLs
                     * [Usage analytics](/ai-gateway/monitor-ai-llm-metrics/) for requests, tokens, errors, and latency
@@ -226,11 +246,11 @@ rows:
   #     - blocks:
   #       - type: card
   #         config:
-  #           title: AI Model Provider reference
-  #           description: Use an AI Model Provider to configure upstream LLM connectivity and authentication, then reuse it across AI Models.
+  #           title: AI Provider reference
+  #           description: Use an AI Provider to configure upstream LLM connectivity and authentication, then reuse it across AI Models.
   #           icon: /assets/icons/provider.svg
   #           cta:
-  #             url: /ai-gateway/entities/ai-model-provider/
+  #             url: /ai-gateway/entities/ai-provider/
   #             align: end
 
   - header:
@@ -469,7 +489,7 @@ rows:
         - type: card
           config:
             title: AI Entities
-            description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Model Providers, AI Identity Providers, AI Agents, AI MCP Servers, and AI Consumers.
+            description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Providers, AI Agents, AI MCP Servers, and AI Consumers.
             cta:
               url: /ai-gateway/entities/
               align: end
