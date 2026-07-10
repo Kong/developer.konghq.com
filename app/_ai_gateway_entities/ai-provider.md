@@ -94,7 +94,7 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="vllm.svg" title="vLLM" cta_url="/ai-gateway/ai-providers/vllm/" %}
 {% endhtml_tag %}
 
-## Authentication
+## Outbound authentication
 
 The [`config.auth`](#schema-aigateway-model-provider-config-auth) object declares how {{site.ai_gateway}} authenticates to the upstream AI provider. The shape of `auth` depends on the AI Model Provider's [`type`](#schema-aigateway-model-provider-type):
 
