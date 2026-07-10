@@ -12,13 +12,21 @@ llm: false
 ## For agents & the CLI
 
 ### CLIs
+
 {%- for cli in site.data.homepage.agents_section.cli_cards %}
-- **{{ cli.tool }}** (`{{ cli.command }}`) - {{ cli.description | replace: "—", "-" }} [Docs]({{ cli.docs_url }})
+- **{{ cli.tool }}** (install: `{{ cli.install }}`, run: `{{ cli.command }}`) - {{ cli.description }} [Docs]({{ cli.docs_url }})
 {%- endfor %}
 
 ### Agent tools
-{%- for fcard in site.data.homepage.agents_section.featured_cards %}
-- **{{ fcard.title }}** - {{ fcard.description | replace: "—", "-" }} [Explore]({{ fcard.cta_url }})
+
+{%- assign mcp = site.data.homepage.agents_section.featured_cards | where: "id", "mcp" | first %}
+- **{{ mcp.title }}** (endpoint: `{{ mcp.endpoint }}`) - {{ mcp.description }} [Explore]({{ mcp.cta_url }})
+{%- assign skills = site.data.homepage.agents_section.featured_cards | where: "id", "skills" | first %}
+- **{{ skills.title }}** (install: `{{ skills.snippet_lines | join: " && " }}`) - {{ skills.description }} [Explore]({{ skills.cta_url }})
+{%- assign cookbooks = site.data.homepage.agents_section.featured_cards | where: "id", "cookbooks" | first %}
+- **{{ cookbooks.title }}** {{ cookbooks.description }}
+{% for cta in cookbooks.ctas %}
+   - [{{ cta.text }}]({{ cta.url }})
 {%- endfor %}
 
 ## Platform
@@ -26,20 +34,26 @@ llm: false
 
 ### {{ cat.name }}
 {%- for item in cat.items %}{%- assign first_link = item.links | first %}{%- if item.product %}{%- assign item_product = site.data.products[item.product] %}{%- assign item_latest = item_product.releases | where: "latest", true | first %}{%- assign item_ver = item_latest["ee-version"] | default: item_latest.version | default: item_latest.release | split: "." | slice: 0, 2 | join: "." %}
-- **{{ item.title | liquify }}** (v{{ item_ver }}) - {{ item.description | liquify | replace: "—", "-" }} [Docs]({{ first_link.url }})
+- **{{ item.title | liquify }}** (v{{ item_ver }}) - {{ item.description | liquify }} [Docs]({{ first_link.url }})
 {%- else %}
-- **{{ item.title | liquify }}** - {{ item.description | liquify | replace: "—", "-" }} [Docs]({{ first_link.url }})
+- **{{ item.title | liquify }}** - {{ item.description | liquify }} [Docs]({{ first_link.url }})
 {%- endif %}{%- endfor %}
 {%- endfor %}
 
 ## API specifications
 
-- [Kong API catalog](/api/)
+[Kong API catalog](/api/)
+
+Featured APIs:
 {%- for api_slug in site.data.homepage.specs_section.featured_api_slugs %}
 - [{{ api_slug }}](/api/{{ api_slug }}/)
 {%- endfor %}
 
 ## What's new
+
+[All release notes and changelogs](/changelogs/)
+
+Featured changelogs:
 {%- for cat in site.data.homepage.products_section.categories %}{%- for item in cat.items %}{%- unless item.whats_new %}{%- continue %}{%- endunless %}{%- assign product_data = site.data.products[item.product] %}{%- assign latest = product_data.releases | where: "latest", true | first %}{%- assign _ver = latest["ee-version"] | default: latest.version | default: latest.release %}
 - **{{ product_data.name }}** (v{{ _ver }}) - [Changelog]({{ item.changelog_url }})
 {%- endfor %}{%- endfor %}
@@ -48,5 +62,4 @@ llm: false
 ## Additional Resources
 
 - [All Kong documentation sitemap](/sitemap/)
-- [All release notes and changelogs](/changelogs/)
 - [LLM-optimized documentation index](/llms.txt)
