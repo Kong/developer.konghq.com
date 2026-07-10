@@ -11,8 +11,8 @@ breadcrumbs:
   - /ai-gateway/
 description: |
   Understand the architecture of {{site.ai_gateway}}, including its control plane and data plane, how AI entities translate into data plane configuration, and its deployment and multi-tenancy topologies.
-tools:
-  - konnect-api
+works_on:
+  - konnect
 ---
 
 ## How {{site.ai_gateway}} works
@@ -23,7 +23,7 @@ tools:
 
 * **Data plane (self-managed)**: proxy nodes running in your own infrastructure. They receive AI traffic (LLM requests, MCP traffic, and A2A communication), evaluate it against the policies the control plane distributes, and forward allowed traffic to upstream services. Each node maintains a persistent connection to the control plane to stay in sync with configuration changes.
 
-The following diagram illustrates the high-level architecture:
+The following diagram shows the data and control plane traffic paths:
 
 <!--vale off-->
 {% mermaid %}
@@ -63,7 +63,7 @@ An **{{site.ai_gateway}} instance** is the top-level resource you create in {{si
 
 ## {{site.ai_gateway}} entities
 
-Each entity has a specific role and is scoped to a single {{site.ai_gateway}} instance. Two of them reuse existing {{site.base_gateway}} mechanisms rather than introducing new credential types: AI Vault wraps {{site.base_gateway}}'s vault references, and AI Data Plane Certificate wraps its hybrid-mode client certificates. The following table describes them:
+Each entity has a specific role and is scoped to a single {{site.ai_gateway}} instance. Two of them reuse the same underlying Kong primitives rather than introducing new credential types: AI Vault wraps a Kong Vault, the same primitive {{site.base_gateway}} uses, and AI Data Plane Certificate wraps a hybrid-mode client certificate, the same mTLS mechanism {{site.base_gateway}} uses for its own data planes. The following table describes them:
 
 {% table %}
 columns:
@@ -74,11 +74,17 @@ columns:
   - title: References
     key: references
 rows:
-  - entity: "[AI Provider](/ai-gateway/entities/ai-provider/)"
+    - entity: "[AI Model Provider](/ai-gateway/entities/ai-model-provider/)"
     description: |
-      Stores the credentials and endpoint configuration for an upstream LLM service (OpenAI, Anthropic, Bedrock, etc.). It has no effect on its own and produces no data plane configuration until an AI Model references it.
+      Stores the credentials and endpoint configuration for an upstream LLM service (OpenAI, Anthropic, Bedrock, etc.). It has no effect on its own and produces no data plane configuration until an AI Model references it. Can't take a Policy attachment directly; apply governance globally, on each referencing AI Model, or via an AI Consumer Group.
     references: |
-      [Schema](/ai-gateway/entities/ai-provider/#schema)
+      [Schema](/ai-gateway/entities/ai-model-provider/#schema)
+  - entity: "[AI Identity Provider](/ai-gateway/entities/ai-identity-provider/)"
+    description: |
+      Declares inbound authentication (API key or OpenID Connect) for the AI Consumers calling an AI Model. Distinct from AI Model Provider, which manages outbound credentials to the upstream LLM instead. Takes effect only once referenced in an AI Model's `access.identity_providers` array.
+    references: |
+      [Schema](/ai-gateway/entities/ai-identity-provider/#schema)
+
   - entity: "[AI Model](/ai-gateway/entities/ai-model/)"
     description: |
       The primary entry point for AI traffic. Declares which upstream AI Providers to route to and which capabilities to expose (such as chat completions, embeddings, and image, audio, video, and realtime generation). Handles load balancing, retries, and format conversion, and emits the usage and cost telemetry that attached logging policies record.
@@ -241,7 +247,7 @@ An {{site.ai_gateway}} instance is fully separate from {{site.base_gateway}} con
 
 ## Deployment topologies
 
-As of {{site.ai_gateway}} 2.0.X, {{site.ai_gateway}} runs in a single deployment mode: **hybrid**, with a {{site.konnect_short_name}}-managed control plane and self-managed data plane nodes. Configuration always originates in the {{site.konnect_short_name}} control plane and is distributed to data plane nodes from there.
+{{site.ai_gateway}} runs in a single deployment mode: **hybrid**, with a {{site.konnect_short_name}}-managed control plane and self-managed data plane nodes. Configuration always originates in the {{site.konnect_short_name}} control plane and is distributed to data plane nodes from there.
 
 {:.info}
 > {{site.ai_gateway}} currently requires connectivity to {{site.konnect_short_name}}. There is no self-managed database-backed option, standalone DB-less mode, offline control plane, or fully self-hosted control plane. {{site.base_gateway}} already supports these deployment modes, and {{site.ai_gateway}} may add similar topologies in a future release.
