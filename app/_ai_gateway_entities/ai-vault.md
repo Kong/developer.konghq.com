@@ -36,8 +36,9 @@ faqs:
   - q: How is an {{site.ai_gateway}} AI Vault different from a {{site.base_gateway}} Vault?
     a: |
       The runtime entity is the same secret-management abstraction. The {{site.ai_gateway}} surface
-      manages AI Vaults through the AI entity convention (`display_name`, `name`, `description`,
+      manages AI Vaults through the AI entity convention (`name`, `description`,
       `labels`) and exposes them through the {{site.konnect_short_name}} API alongside the other AI entities.
+      Unlike other {{site.ai_gateway}} entities, AI Vaults don't have a `display_name` field.
 
   - q: Which secret backends are supported?
     a: |
@@ -198,10 +199,12 @@ Cache duration and grace periods are tunable per vault, allowing you to balance 
 
 The following example registers an environment-variable AI Vault that resolves references against process environment variables prefixed with `KONG_`.
 
+{:.info}
+> Unlike AI Model, AI Model Provider, and AI Policy, AI Vault doesn't accept a `display_name` field—only `name` and `description` identify a vault. If you include `display_name` when creating an AI Vault, {{site.ai_gateway}} silently ignores it.
+
 {% entity_example %}
 type: vault
 data:
-  display_name: Production Env Vault
   name: prod-env-vault
   description: Vault for production secrets sourced from environment variables.
   type: env

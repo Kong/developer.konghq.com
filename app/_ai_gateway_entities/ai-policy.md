@@ -98,6 +98,9 @@ An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced)
 
 The following example creates a global AI PII Sanitizer Policy that runs for every {{site.ai_gateway}} Route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
 
+{:.info}
+> This Policy connects to an AI PII Anonymizer service at `host`/`port` (`sanitizer-service.internal:8080` in this example) to perform the actual sanitization. Substitute the address of your own running instance—see [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service) for image access and setup instructions. Without a reachable service at that address, requests through this Policy fail.
+
 {% entity_example %}
 type: policy
 data:

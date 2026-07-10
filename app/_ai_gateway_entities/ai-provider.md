@@ -138,7 +138,7 @@ An AI Model Provider stores the credentials, but doesn't generate any runtime pr
 
 AI Model Provider credentials are passed to the runtime only when an AI Model references the AI Model Provider. At that point, the credentials are then passed to the AI Model.
 
-When you update a the credentials of an AI Model Provider, the new credentials are passed to every AI Model that references it the next time a request is made through the AI Model.
+When you update the credentials of an AI Model Provider, the new credentials are passed to every AI Model that references it the next time a request is made through the AI Model.
 
 ## AI Policies and AI Model Providers
 

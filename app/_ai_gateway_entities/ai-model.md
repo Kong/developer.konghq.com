@@ -359,6 +359,8 @@ For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 
 ## Set up an AI Model
 
+Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service. The example below references a provider named `my-openai-account`—see [Set up an AI Model Provider](/ai-gateway/entities/ai-model-provider/#set-up-an-ai-model-provider) to create it, or substitute the name of your own AI Model Provider in `targets[].provider`.
+
 The following example creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
 
 {:.info}
@@ -377,7 +379,7 @@ data:
   policies: []
   targets:
     - name: gpt-4o
-      provider: generic-openai
+      provider: my-openai-account
       config:
         type: openai
   config:
@@ -390,6 +392,9 @@ data:
     model:
       alias: my-gpt-4o
 {% endentity_example %}
+
+{:.info}
+> Because [`config.model.alias`](#schema-aigateway-model-config-model-alias) is set here, requests through this AI Model must send `"model": "my-gpt-4o"` in the request body—the alias—instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
 
 <!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
 ```yaml
