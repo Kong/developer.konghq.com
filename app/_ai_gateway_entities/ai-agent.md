@@ -322,7 +322,12 @@ For available policy types and configuration, see the [AI Policy entity](/ai-gat
 
 ## Set up an Agent
 
+Before creating an AI Agent with access restrictions, first create an AI Consumer Group to reference in [`access.acls`](#schema-aigateway-agent-access). The example below references a group named `internal-teams`—see [Set up an AI Consumer Group](/ai-gateway/entities/ai-consumer-group/#set-up-an-ai-consumer-group) to create it, or substitute the name of your own AI Consumer, AI Consumer Group, or Authenticated Group in `access.acls.allow`.
+
 The following example creates an `a2a` Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with statistics logging enabled and access restricted to the `internal-teams` Consumer Group.
+
+{:.info}
+> This example proxies to a placeholder upstream at `https://booking-agent.internal.kongair.com`. Substitute the URL of your own running A2A agent in [`config.url`](#schema-aigateway-agent-config-url). Because this Agent has `type: a2a`, requests must use the A2A JSON-RPC envelope (`jsonrpc: "2.0"`, `id`, `method: "message/send"`, `params.message` with `kind` and `messageId`)—a flat `{"message": {...}}` body without that envelope is rejected by the upstream agent itself (for example, `"Invalid Request: jsonrpc must be 2.0"`), not by {{site.ai_gateway}}.
 
 {% entity_example %}
 type: agent

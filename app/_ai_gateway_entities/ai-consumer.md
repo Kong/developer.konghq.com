@@ -144,7 +144,10 @@ For supported policy types and how AI Policies attach to other entities, see the
 {% navtabs "consumer_type" %}
 {% navtab "api-key" %}
 
-The following example creates an `api-key` AI Consumer assigned to a single AI Consumer Group. After creating it, add one or more API key Credentials (see [Create Consumer Credentials](#create-consumer-credentials) below).
+The following example creates an `api-key` AI Consumer. After creating it, add one or more API key Credentials (see [Create Consumer Credentials](#create-consumer-credentials) below).
+
+{:.info}
+> Consumer Group membership isn't set on the Consumer itself—there's no `consumer_groups` field on this request. To add this Consumer to an AI Consumer Group, use the AI Consumer Group entity's add-consumer endpoint after creation—see [AI Consumer Group entity](/ai-gateway/entities/ai-consumer-group/).
 
 {% entity_example %}
 type: consumer
