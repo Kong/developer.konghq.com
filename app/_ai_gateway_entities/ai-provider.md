@@ -133,9 +133,11 @@ rows:
 
 ## Lifecycle
 
-Creating an AI Model Provider stores the entity but doesn't generate any runtime primitives. AI Model Provider credentials enter the runtime only when an AI Model references the AI Model Provider. At that point, the credentials are materialized into the underlying primitives of the AI Model.
+An AI Model Provider stores the credentials, but doesn't generate any runtime primitives.
 
-Updating an AI Model Provider re-materializes credentials into every AI Model that references it. The change takes effect on the next request through any referencing AI Model.
+AI Model Provider credentials are passed to the runtime only when an AI Model references the AI Model Provider. At that point, the credentials are then passed to the AI Model.
+
+When you update a the credentials of an AI Model Provider, the new credentials are passed to every AI Model that references it the next time a request is made through the AI Model.
 
 ## AI Policies and AI Model Providers
 
