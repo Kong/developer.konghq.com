@@ -102,7 +102,7 @@ models:
       name_header: true
     balancer:
       algorithm: round-robin
-  target_models:
+  targets:
   - name: gpt-4o
     provider: openai-prod
     weight: 70
