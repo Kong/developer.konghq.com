@@ -53,11 +53,14 @@ sequenceDiagram
 {% endmermaid %}
 {% endcomment %}
 
-## Create an enterprise application in Microsoft Entra ID
+## Create an enterprise application in Microsoft Entra ID 
+
+MAKE THIS A PREREQ AND JUST SPECIFY A LINK TO ENTRA DOCS FOR HOW TO DO THIS AND NOTE THAT YOU NEED TO CLICK THE NON-GALLERY OPTION.
 
 1. Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com) using your admin account.
-1. Go to **Microsoft Entra ID** > **Enterprise applications**.
-1. Click **New application**, then click **Create your own application**.
+1. In the sidebar, navigate to **Entra ID** > **Enterprise apps**.
+1. Click **New application**.
+1. then click **Create your own application**.
 1. Enter a name for the application (for example, `Kong Konnect SSO`), select **Integrate any other application you don't find in the gallery (Non-gallery)**, and click **Create**.
 
 ## Configure SAML settings in Microsoft Entra ID
