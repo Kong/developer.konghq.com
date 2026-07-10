@@ -26,8 +26,10 @@ related_resources:
     url: /ai-gateway/ai-providers/
   - text: Load balancing
     url: /ai-gateway/load-balancing/
-  - text: AI Provider entity
-    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Identity Provider entity
+    url: /ai-gateway/entities/ai-identity-provider/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"
@@ -55,13 +57,13 @@ faqs:
 
   - q: How do I limit which AI Consumers can reach an AI Model?
     a: |
-      Set the [`acls`](#schema-aigateway-model-acls) field on the AI Model with allow or deny lists.
+      Set the [`access.acls`](#schema-aigateway-model-access) field on the AI Model with an allow list or a deny list.
       Each entry is a string that references an AI Consumer, AI Consumer Group, or Authenticated Group by name.
 
-  - q: Does the AI Model entity store AI Provider credentials?
+  - q: Does the AI Model entity store AI Model Provider credentials?
     a: |
-      No. AI Provider credentials live on the [AI Provider entity](/ai-gateway/entities/ai-provider/) and are materialized into the underlying primitives at AI Model creation time.
-      Updating an AI Provider propagates the credential change to all AI Models that reference it.
+      No. AI Model Provider credentials live on the [AI Model Provider entity](/ai-gateway/entities/ai-model-provider/) and are materialized into the underlying primitives at AI Model creation time.
+      Updating an AI Model Provider propagates the credential change to all AI Models that reference it.
 
   - q: Can a client override the model name from the request body?
     a: |
@@ -90,7 +92,7 @@ The AI Model entity lets you expose LLM endpoints through {{site.ai_gateway}} fo
 * [Add observability](#logging-and-observability) to model traffic
 * [Attach policies](#attach-ai-policies) for security and transformation
 
-An AI Model declares which capabilities it exposes (like `chat` or `embeddings`), which upstream AI Provider models it routes to, and how requests are distributed and logged. {{site.ai_gateway}} handles the routing and translation, so clients interact with a single unified endpoint.
+An AI Model declares which capabilities it exposes (like `chat` or `embeddings`), which upstream LLM models it routes to via [AI Model Providers](/ai-gateway/entities/ai-model-provider/), and how requests are distributed and logged. Consumer authentication is configured through [AI Identity Providers](/ai-gateway/entities/ai-identity-provider/) on the model. {{site.ai_gateway}} handles routing and translation, so clients interact with a single unified endpoint.
 
 ## Manage AI Models
 
@@ -98,6 +100,7 @@ AI Models can be created and managed through:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/models`
+* [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model) below.
 
@@ -106,8 +109,8 @@ For configuration examples and step-by-step setup instructions, see [Set up an A
 At request time, the AI Model mediates traffic between clients and upstream AI Provider APIs:
 
 1. Translates between the request and response format chosen for the AI Model and the upstream AI Provider's native format.
-1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [AI Provider](/ai-gateway/entities/ai-provider/), unless the target is a self-hosted model.
-1. Authenticates to the upstream AI Provider using credentials stored on the AI Provider entity.
+1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [AI Model Provider](/ai-gateway/entities/ai-model-provider/), unless the target is a self-hosted model.
+1. Authenticates to the upstream LLM service using credentials stored on the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity.
 1. Decorates the upstream request with per-target configuration (such as temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
 1. Records usage statistics (tokens, cost, latency) for attached log AI Policies, and optionally the full request and response when payload logging is enabled.
 1. Fulfills requests to self-hosted models using the supported native format transformations.
@@ -116,9 +119,9 @@ A single AI Model can expose multiple upstream AI Providers behind a consistent 
 
 ## Model lifecycle
 
-When you create or update an AI Model, {{site.ai_gateway}} provisions the necessary runtime resources and applies the configuration atomically. Credentials are sourced from the AI Provider entity that the AI Model's [`targets`](#schema-aigateway-model-targets) reference at model creation time. If you update the AI Provider's credentials later, those changes automatically propagate to all AI Models that use it.
+When you create or update an AI Model, {{site.ai_gateway}} provisions the necessary runtime resources and applies the configuration atomically. Credentials are sourced from the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity that the AI Model's [`targets`](#schema-aigateway-model-targets) reference at model creation time. If you update the AI Model Provider's credentials later, those changes automatically propagate to all AI Models that use it.
 
-An AI Model is a managed entity—{{site.ai_gateway}} owns its runtime configuration. Direct modifications through other APIs are not supported. To change an AI Model's configuration, update the AI Model entity directly.
+An AI Model is a managed entity. {{site.ai_gateway}} owns its runtime configuration. Direct modifications through other APIs are not supported. To change an AI Model's configuration, update the AI Model entity directly.
 
 ## Capabilities
 
@@ -127,7 +130,7 @@ When you expose an AI Model, you choose which AI capabilities it provides throug
 * **`model` type**: for synchronous request/response workloads. Available capabilities: `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, `rerank`.
 * **`api` type**: for asynchronous batch processing. Available capabilities: `batches`, `files`.
 
-Not every AI Provider supports every capability. The set of capabilities you can declare on an AI Model depends on what the AI Provider in [`targets`](#schema-aigateway-model-targets) exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
+Not every LLM service supports every capability. The set of capabilities you can declare on an AI Model depends on what the AI Model Provider in [`targets`](#schema-aigateway-model-targets) exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
 
 <!-- vale off -->
 {% table %}
@@ -223,7 +226,7 @@ When a native format is set, only the corresponding provider is supported with i
 
 An AI Model is a virtual model: it exposes one Route ([`config.route`](#schema-aigateway-model-config-route)) and one set of capabilities, and routes requests to one or more concrete upstream models declared in its [`targets`](#schema-aigateway-model-targets) array. Each entry represents a single upstream model instance with one URL.
 
-For each target, you provide the upstream model name (for example, `gpt-4o`) and reference the AI Provider to use by its `name`. Each target can also override settings such as [`temperature`](#schema-aigateway-target-config-temperature), [`max_tokens`](#schema-aigateway-target-config-max-tokens), [`input_cost`](#schema-aigateway-target-config-input-cost), and [`output_cost`](#schema-aigateway-target-config-output-cost).
+For each target, you provide the upstream model name (for example, `gpt-4o`) and reference the AI Model Provider to use by its `name`. Each target can also override settings such as [`temperature`](#schema-aigateway-target-config-temperature), [`max_tokens`](#schema-aigateway-target-config-max-tokens), [`input_cost`](#schema-aigateway-target-config-input-cost), and [`output_cost`](#schema-aigateway-target-config-output-cost).
 
 There's no separate target entity or endpoint. Targets are managed only as nested data inside an AI Model, through the same AI Model API surface used to create, update, and delete the parent. Adding, removing, or modifying a target is an update to the AI Model itself.
 
@@ -305,13 +308,13 @@ For deeper background on vector storage and similarity matching, see [Embedding-
 
 Configure an embedding model to enable semantic routing. This lets {{site.ai_gateway}} route requests based on meaning and content similarity rather than just cost or latency. For example, route domain-specific queries to specialized providers or keep similar requests on the same provider for consistency.
 
-Set [`config.balancer.embeddings`](#schema-aigateway-model-config-balancer-embeddings) to reference an AI Provider and embedding model name. Supported provider types: `azure`, `bedrock`, `gemini`, `huggingface`. The embedding model also powers the `semantic` load balancing algorithm.
+Set [`config.balancer.embeddings`](#schema-aigateway-model-config-balancer-embeddings) to reference an AI Model Provider and embedding model name. Supported provider types: `azure`, `bedrock`, `databricks`, `gemini`, `huggingface`, `vercel`, `vertex`. The embedding model also powers the `semantic` load balancing algorithm.
 
 ## Templating
 
 The AI Model resolves runtime values from request data using placeholder substitution. This lets you select the target model dynamically per request, route to per-deployment Azure endpoints, or fan out to multiple providers from a single AI Model.
 
-Substitution applies to the [`name`](#schema-aigateway-model-target-models-name) of each target model and to any per-target [`config`](#schema-aigateway-model-target-models-config) option. Three placeholders are available:
+Substitution applies to the [`name`](#schema-aigateway-model-targets-name) of each target model and to any per-target [`config`](#schema-aigateway-model-targets-config) option. Three placeholders are available:
 
 * `$(headers.header_name)`: the value of a request header.
 * `$(uri_captures.path_parameter_name)`: the value of a captured URI path parameter.
@@ -327,7 +330,9 @@ When an alias is set, clients can send that alias in the request `model` field i
 
 ## Access control
 
-When you need to limit which teams or applications can call an AI Model—for example, restricting an expensive model to your internal team or blocking access to sensitive models—use the [`acls`](#schema-aigateway-model-acls) field to set either an allow list or a deny list. Reference [AI Consumers](/ai-gateway/entities/ai-consumer/) (individual applications), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (teams), or Authenticated Groups (all consumers authenticated via a specific OAuth2 scope or claim) by name. To control *how* consumers authenticate (API keys, OAuth2, etc.) rather than *who* can access, attach an authentication AI Policy to the model.
+To limit which teams or applications can call an AI Model, use the [`access.acls`](#schema-aigateway-model-access) field to set an allow list or a deny list. Reference [AI Consumers](/ai-gateway/entities/ai-consumer/) (individual applications), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (teams), or Authenticated Groups (all consumers authenticated via a specific OAuth2 scope or claim) by name.
+
+To control how consumers authenticate before their access is evaluated, configure the [`access.identity_providers`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) references. Each AI Model supports one `key-auth` identity provider and one `openid-connect` identity provider simultaneously.
 
 ## Attach AI Policies
 
@@ -337,7 +342,7 @@ Reference AI Policies through the [`policies`](#schema-aigateway-model-policies)
 
 ### AI Policy execution order
 
-AI Policies attach to AI Models and execute in a defined order based on policy type. Authentication policies run early to verify access. Other policies run after routing is resolved. If execution order matters for your use case, refer to the [{{site.baze_gateway}} priority documentation](/gateway/entities/plugin/#plugin-priority).
+AI Policies attach to AI Models and execute in a defined order based on policy type. Authentication policies run early to verify access. Other policies run after routing is resolved. If execution order matters for your use case, refer to the [plugin priority documentation](/gateway/entities/plugin/#plugin-priority).
 
 ## Upstream proxy configuration
 
@@ -349,7 +354,7 @@ Use the [`config.proxy`](#schema-aigateway-model-config-proxy) object to specify
 
 Enable [`statistics`](#schema-aigateway-model-config-logging-statistics) logging to track token consumption, request latency, and per-provider costs. This data flows into {{site.konnect_short_name}} analytics and any attached logging AI Policies, letting you monitor API spend, identify slow providers, and audit which AI Models drive the most usage.
 
-Optionally enable [`payloads`](#schema-aigateway-model-config-logging-payloads) to capture full request and response bodies (truncated at [`max_payload_size`](#schema-aigateway-model-config-logging-max-payload_size) bytes, default 1 MB). This is useful for debugging model responses, auditing sensitive operations, or replaying requests.
+Optionally enable [`payloads`](#schema-aigateway-model-config-logging-payloads) to capture full request and response bodies. This is useful for debugging model responses, auditing sensitive operations, or replaying requests.
 
 {:.warning}
 > Payload logging may expose sensitive data in your logging destination. Only enable it when your logging pipeline is prepared to handle request and response bodies, and verify that logging destinations comply with your data residency and privacy policies.
@@ -361,45 +366,74 @@ For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 The following example creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
 
 {:.info}
-> This AI Model proxies client requests to `/ai/chat/completions`. The base path `/ai` comes from [`config.route.paths`](#schema-aigateway-model-config-route-paths), and `/chat/completions` is appended by the `generate` capability automatically.
+> This AI Model proxies client requests to `/v1/chat/completions`. The base path `/v1` comes from [`config.route.paths`](#schema-aigateway-model-config-route-paths), and `/chat/completions` is appended by the `generate` capability automatically.
 
 {% entity_example %}
 type: model
 data:
-  display_name: GPT-4o Production
-  name: gpt-4o-production
+  display_name: my-gpt-4o
+  name: my-gpt-4o
   type: model
   capabilities:
     - generate
   formats:
     - type: openai
-  acls:
-    allow:
-      - internal-teams
-    deny: []
   policies: []
   targets:
     - name: gpt-4o
-      provider: my-openai-account
-      weight: 100
+      provider: generic-openai
       config:
         type: openai
-        temperature: 0.7
-        max_tokens: 4096
-        input_cost: 0.0000025
-        output_cost: 0.000010
   config:
     route:
       paths:
-        - /ai
+        - /v1
     logging:
       statistics: true
       payloads: false
     model:
-      name_header: true
-    balancer:
-      algorithm: round-robin
+      alias: my-gpt-4o
 {% endentity_example %}
+
+<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
+```yaml
+models:
+  - name: gpt-4o-production
+    ref: gpt-4o-production
+    display_name: "GPT-4o Production"
+    type: model
+    capabilities:
+      - generate
+    formats:
+      - type: openai
+    access:
+      acls:
+        allow:
+          - internal-teams
+    policies: []
+    targets:
+      - name: gpt-4o
+        provider: my-openai-account
+        weight: 100
+        config:
+          type: openai
+          temperature: 0.7
+          max_tokens: 4096
+          input_cost: 0.0000025
+          output_cost: 0.000010
+    config:
+      route:
+        paths:
+          - /ai
+      logging:
+        statistics: true
+        payloads: false
+      model:
+        name_header: true
+      balancer:
+        algorithm: round-robin
+```
+-->
 
 ## Schema
 

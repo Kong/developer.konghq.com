@@ -36,8 +36,8 @@ related_resources:
     url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
-  - text: AI Provider entity
-    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
   - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
 
@@ -48,11 +48,11 @@ related_resources:
 
 ## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Provider](/ai-gateway/entities/ai-provider/) as follows:
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/) as follows:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
 status_code: 201
 method: POST
 headers:

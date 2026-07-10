@@ -135,10 +135,10 @@ flowchart LR
     subgraph AIGateway
         LBLB[/Load Balancer/]
     end
-    LBLB -->|Request| AIProvider1(AI Provider 1)
+    LBLB -->|Request| AIProvider1(AI Model Provider 1)
     AIProvider1 --> Decision1{Is Success?}
     Decision1 -->|Yes| Client
-    Decision1 -->|No| AIProvider2(AI Provider 2)
+    Decision1 -->|No| AIProvider2(AI Model Provider 2)
     subgraph Retry
         AIProvider2 --> Decision2{Is Success?}
     end

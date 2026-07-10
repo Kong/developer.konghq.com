@@ -75,6 +75,7 @@ AI Policies are managed through:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/policies`
+* [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see [Set up a global AI Policy](#set-up-a-global-ai-policy) below.
 
