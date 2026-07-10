@@ -22,7 +22,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The core of [{{site.ai_gateway}}](/ai-gateway/) is the ability to serve [AI Models](/ai-gateway/entities/ai-model/) from various [AI Providers](/ai-gateway/entities/ai-provider/) via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
+                    The core of [{{site.ai_gateway}}](/ai-gateway/) is the ability to serve [AI Models](/ai-gateway/entities/ai-model/) from various [AI Model Providers](/ai-gateway/entities/ai-model-provider/) via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
 
                 - type: unordered_list
                   items:
