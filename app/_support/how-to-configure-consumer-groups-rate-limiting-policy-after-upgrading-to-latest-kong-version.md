@@ -14,8 +14,8 @@ tldr:
     The recommended approach is to scope the Rate Limiting plugin directly to the Consumer Group
     using the `/consumer_groups/{id}/plugins` endpoint.
 related_resources:
-  - text: Rate Limiting plugin examples
-    url: /plugins/rate-limiting/examples/
+  - text: Rate Limiting plugin
+    url: /plugins/rate-limiting/
   - text: Consumer Groups entity
     url: /gateway/entities/consumer-group/
   - text: Known limitations of dynamic plugin ordering
