@@ -48,13 +48,13 @@ faqs:
 
   - q: Can the same AI Consumer's identity gate access to specific tools?
     a: |
-      Yes. Set [`default_tool_acls`](#schema-aigateway-mcpserver-default-tool-acls) on the AI MCP Server with `allow` and `deny` lists, and override per
-      tool through [`tools[].acls`](#schema-aigateway-mcpserver-tools-acls). A per-tool ACL replaces the default for that tool, it doesn't
+      Yes. Set [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) on the AI MCP Server with `allow` and `deny` lists, and override per
+      tool through [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access). A per-tool ACL replaces the default for that tool, it doesn't
       merge.
 
   - q: How do OAuth-based ACLs differ from AI Consumer-based ACLs?
     a: |
-      Set [`acl_attribute_type`](#schema-aigateway-mcpserver-acl-attribute-type) to `oauth_access_token` and provide [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) (a jq
+      Set [`access.acl_attribute_type`](#schema-aigateway-mcpserver-access-acl-attribute-type) to `oauth_access_token` and provide [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) (a jq
       filter, for example `.user.email`). ACLs then evaluate against the claim value extracted from
       the OAuth access token instead of the resolved AI Consumer identity. The OAuth flow is supplied
       by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
@@ -312,7 +312,7 @@ For richer mapping, supply [`request_body`](#schema-aigateway-mcpserver-tools-re
 
 Tools can also carry MCP-spec [`annotations`](#schema-aigateway-mcpserver-tools-annotations) that hint at tool behavior to clients (for example, whether a tool is read-only, idempotent, or destructive). Annotations don't change runtime behavior; they help clients decide whether to surface a tool, confirm before invocation, or treat it as safe to retry.
 
-[Per-tool ACLs](#schema-aigateway-mcpserver-tools-acls) override the MCP Server's [default tool ACLs](#schema-aigateway-mcpserver-default-tool-acls). For more information, see [ACL tool control](#acl-tool-control).
+[Per-tool ACLs](#schema-aigateway-mcpserver-tools-access) override the MCP Server's [default tool ACLs](#schema-aigateway-mcpserver-access-default-tool-acls). For more information, see [ACL tool control](#acl-tool-control).
 
 ## Sessions
 
@@ -339,23 +339,30 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 {:.info}
 > **ACL in `listener` mode**
 >
-> Listener mode does not support direct ACL configuration. Instead, it inherits ACL rules from tagged `conversion-listener` or `conversion-only` AI MCP Servers.
+> `listener` mode supports direct ACL configuration on the MCP Server itself.
 >
 > To use ACLs with `listener` mode:
-> 1. Configure `conversion-listener` or `conversion-only` AI MCP Servers with ACL rules and tags.
-> 1. Configure `listener` mode to aggregate tools by matching tags.
-> 1. Set [`include_consumer_groups`](#schema-aigateway-mcpserver-include-consumer-groups): true on the listener. Without this setting, the listener cannot pass AI Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
+> 1. Configure authentication on the listener route so requests resolve to an authenticated AI Consumer.
+> 1. Set ACL fields directly on the listener: [`access.acl_attribute_type`](#schema-aigateway-mcpserver-access-acl-attribute-type), [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) (when using `oauth_access_token`), [`access.acls`](#schema-aigateway-mcpserver-access-acls) for server-level fallback rules, [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) for the default tool ACL, and per-tool [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access) for tool-specific overrides.
+> 1. Configure [AI Consumers](/ai-gateway/entities/ai-consumer/) and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) to match the `allow` and `deny` entries.
+>
+> ACL behavior:
+>
+> - `access.default_tool_acls` applies to all tools by default.
+> - If `access.default_tool_acls` isn't set, the listener falls back to the top-level `access.acls`.
+> - A tool's own `acls` fully overrides the default ACL for that tool.
+> - [`config.server.tag`](#schema-aigateway-mcpserver-config-server-tag) is used for tool filtering and aggregation, not for inheriting ACLs from other AI MCP Servers.
 
 ### Attribute types
 
-For modes that support ACL configuration (`conversion-listener`, `conversion-only`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
+For modes that support ACL configuration (`conversion-listener`, `conversion-only`, `upstream-server`, `listener`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
 
 1. **`consumer`** (default). Evaluates against the resolved AI Consumer identity.
-1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access_token_claim_field`](#schema-aigateway-mcpserver-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
+1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
 
 ### Using AI Consumers and Groups in ACLs
 
-When `acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated AI Consumer's identity and group memberships against your `allow` and `deny` lists.
+When `access.acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated AI Consumer's identity and group memberships against your `allow` and `deny` lists.
 
 ### How default and per-tool ACLs work
 
@@ -369,20 +376,20 @@ columns:
   - title: Description
     key: description
 rows:
-  - field: "`default_tool_acls`"
+  - field: "`access.default_tool_acls`"
     description: |
       Baseline rules that apply to all tools unless overridden.
-  - field: "`tools[].acls`"
+  - field: "`tools[].access.acls`"
     description: |
-      When configured, these rules replace the default ACL for that specific tool. The per-tool ACL doesn't inherit or merge with `default_tool_acls`. It is an all-or-nothing override.
+      When configured, these rules replace the default ACL for that specific tool. The per-tool ACL doesn't inherit or merge with `access.default_tool_acls`. It is an all-or-nothing override.
 {% endtable %}
 <!-- vale on -->
 
 {:.info}
-> If a tool defines its own ACL, the runtime ignores `default_tool_acls` for that tool:
+> If a tool defines its own ACL, the runtime ignores `access.default_tool_acls` for that tool:
 >
 > - Tools with no ACL configuration inherit the default rules (both `allow` and `deny` lists).
-> - Tools with an ACL must explicitly list all allowed subjects (even if they were already in `default_tool_acls`).
+> - Tools with an ACL must explicitly list all allowed subjects (even if they were already in `access.default_tool_acls`).
 
 ### ACL evaluation logic
 
@@ -549,13 +556,14 @@ data:
   type: conversion-listener
   enabled: true
   policies: []
-  acl_attribute_type: consumer
-  acls:
-    allow:
-      - __never_match__
-  default_tool_acls:
-    deny:
-      - __never_match__
+  access:
+    acl_attribute_type: consumer
+    acls:
+      allow:
+        - __never_match__
+    default_tool_acls:
+      deny:
+        - __never_match__
   config:
     url: https://api.weatherapi.com/v1/current.json
     route:
@@ -582,6 +590,51 @@ data:
             type: string
           description: Location query. Accepts US Zipcode, UK Postcode, Canada postal code, IP address, latitude/longitude, or city name.
 {% endentity_example %}
+
+<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
+```yaml
+mcp_servers:
+  - name: weather-mcp
+    ref: weather-mcp
+    display_name: "Weather API"
+    type: conversion-listener
+    enabled: true
+    policies: []
+    access:
+      acl_attribute_type: consumer
+      acls:
+        allow:
+          - __never_match__
+      default_tool_acls:
+        deny:
+          - __never_match__
+    config:
+      url: https://api.weatherapi.com/v1/current.json
+      route:
+        paths:
+          - /weather
+      logging:
+        payloads: false
+        statistics: true
+      server:
+        timeout: 60000
+    tools:
+      - name: get-current-weather
+        description: Get current weather for a location
+        method: GET
+        path: /weather
+        query:
+          key:
+            - $WEATHERAPI_API_KEY
+        parameters:
+          - name: q
+            in: query
+            required: true
+            schema:
+              type: string
+            description: Location query. Accepts US Zipcode, UK Postcode, Canada postal code, IP address, latitude/longitude, or city name.
+```
+-->
 
 ## Schema
 
