@@ -59,6 +59,7 @@ AI Model Providers can be created and managed through:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/model-providers`
+* [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI Model Provider](#set-up-an-ai-model-provider) below.
 

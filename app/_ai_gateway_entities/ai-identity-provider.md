@@ -175,7 +175,7 @@ Set `config.issuer` to the IdP's discovery URL (for example, `https://dev-123456
 
 The default `config.auth_methods` are `bearer` and `client_credentials`. If your AI Consumers use a different grant flow, add it to the list. For a full list of supported values, see the [OpenID Connect Policy reference](/ai-gateway/policies/openid-connect/).
 
-To map the token to an existing AI Consumer, set `config.consumer_claim` to the JSON path of the claim in the token that carries the AI Consumer identifier. If no mapping is needed, set `config.consumer_optional: true` to allow unauthenticated token holders through ACL checks.
+To map the token to an existing AI Consumer, set `config.consumer_claims` to an array of path segments locating the claim in the token that carries the AI Consumer identifier (for example, `[["user", "info", "id"]]` to map to a nested `user.info.id` claim). If no mapping is needed, set `config.consumer_optional: true` to allow unauthenticated token holders through ACL checks.
 
 {:.warning}
 > All AI Models in the same {{site.ai_gateway}} that use OIDC authentication must reference the same `openid-connect` AI Identity Provider. Using different OIDC providers across models in the same {{site.ai_gateway}} is not supported.

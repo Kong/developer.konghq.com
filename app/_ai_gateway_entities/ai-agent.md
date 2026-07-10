@@ -48,8 +48,8 @@ faqs:
   - q: Why is the agent-card URL rewritten?
     a: |
       A2A clients use agent-card responses (at `/.well-known/agent-card.json`) to discover where to
-      send subsequent requests. Rewriting the [`url`](#schema-aigateway-agent-config-url) field, and any [`additionalInterfaces[].url`](#schema-aigateway-agent-config-additional-interfaces-url)
-      fields, to the {{site.ai_gateway}} address means clients route follow-up traffic through the
+      send subsequent requests. Rewriting the [`url`](#schema-aigateway-agent-config-url) field, and any `additionalInterfaces[].url`
+      fields on the agent card response, to the {{site.ai_gateway}} address means clients route follow-up traffic through the
       gateway instead of bypassing it. The rewrite honors `X-Forwarded-*` headers when the gateway
       sits behind a load balancer.
 
@@ -87,6 +87,7 @@ AI Agents can be created and managed through:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/agents`
+* [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see the following [Set up an AI Agent](#set-up-an-ai-agent) section.
 

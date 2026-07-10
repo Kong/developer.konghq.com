@@ -100,6 +100,7 @@ AI Models can be created and managed through:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/models`
+* [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model) below.
 
@@ -303,13 +304,13 @@ For deeper background on vector storage and similarity matching, see [Embedding-
 
 Configure an embedding model to enable semantic routing. This lets {{site.ai_gateway}} route requests based on meaning and content similarity rather than just cost or latency. For example, route domain-specific queries to specialized providers or keep similar requests on the same provider for consistency.
 
-Set [`config.balancer.embeddings`](#schema-aigateway-model-config-balancer-embeddings) to reference an AI Model Provider and embedding model name. Supported provider types: `azure`, `bedrock`, `gemini`, `huggingface`. The embedding model also powers the `semantic` load balancing algorithm.
+Set [`config.balancer.embeddings`](#schema-aigateway-model-config-balancer-embeddings) to reference an AI Model Provider and embedding model name. Supported provider types: `azure`, `bedrock`, `databricks`, `gemini`, `huggingface`, `vercel`, `vertex`. The embedding model also powers the `semantic` load balancing algorithm.
 
 ## Templating
 
 The AI Model resolves runtime values from request data using placeholder substitution. This lets you select the target model dynamically per request, route to per-deployment Azure endpoints, or fan out to multiple providers from a single AI Model.
 
-Substitution applies to the [`name`](#schema-aigateway-model-target-models-name) of each target model and to any per-target [`config`](#schema-aigateway-model-target-models-config) option. Three placeholders are available:
+Substitution applies to the [`name`](#schema-aigateway-model-targets-name) of each target model and to any per-target [`config`](#schema-aigateway-model-targets-config) option. Three placeholders are available:
 
 * `$(headers.header_name)`: the value of a request header.
 * `$(uri_captures.path_parameter_name)`: the value of a captured URI path parameter.
@@ -349,7 +350,7 @@ Use the [`config.proxy`](#schema-aigateway-model-config-proxy) object to specify
 
 Enable [`statistics`](#schema-aigateway-model-config-logging-statistics) logging to track token consumption, request latency, and per-provider costs. This data flows into {{site.konnect_short_name}} analytics and any attached logging AI Policies, letting you monitor API spend, identify slow providers, and audit which AI Models drive the most usage.
 
-Optionally enable [`payloads`](#schema-aigateway-model-config-logging-payloads) to capture full request and response bodies (truncated at [`max_payload_size`](#schema-aigateway-model-config-logging-max-payload_size) bytes, default 1 MB). This is useful for debugging model responses, auditing sensitive operations, or replaying requests.
+Optionally enable [`payloads`](#schema-aigateway-model-config-logging-payloads) to capture full request and response bodies. This is useful for debugging model responses, auditing sensitive operations, or replaying requests.
 
 {:.warning}
 > Payload logging may expose sensitive data in your logging destination. Only enable it when your logging pipeline is prepared to handle request and response bodies, and verify that logging destinations comply with your data residency and privacy policies.
@@ -361,44 +362,33 @@ For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 The following example creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
 
 {:.info}
-> This AI Model proxies client requests to `/ai/chat/completions`. The base path `/ai` comes from [`config.route.paths`](#schema-aigateway-model-config-route-paths), and `/chat/completions` is appended by the `generate` capability automatically.
+> This AI Model proxies client requests to `/v1/chat/completions`. The base path `/v1` comes from [`config.route.paths`](#schema-aigateway-model-config-route-paths), and `/chat/completions` is appended by the `generate` capability automatically.
 
 {% entity_example %}
 type: model
 data:
-  display_name: GPT-4o Production
-  name: gpt-4o-production
+  display_name: my-gpt-4o
+  name: my-gpt-4o
   type: model
   capabilities:
     - generate
   formats:
     - type: openai
-  access:
-    acls:
-      allow:
-        - internal-teams
   policies: []
   targets:
     - name: gpt-4o
-      provider: my-openai-account
-      weight: 100
+      provider: generic-openai
       config:
         type: openai
-        temperature: 0.7
-        max_tokens: 4096
-        input_cost: 0.0000025
-        output_cost: 0.000010
   config:
     route:
       paths:
-        - /ai
+        - /v1
     logging:
       statistics: true
       payloads: false
     model:
-      name_header: true
-    balancer:
-      algorithm: round-robin
+      alias: my-gpt-4o
 {% endentity_example %}
 
 <!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
