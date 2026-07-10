@@ -44,6 +44,12 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
    helm repo update
    ```
 
+1. Install the Kubernetes Gateway API CRDs. cert-manager checks for these CRDs at startup when Gateway API support is enabled, so they must exist before you install cert-manager:
+
+   ```sh
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ site.gwapi_version }}/standard-install.yaml --server-side
+   ```
+
 1. Install [cert-manager](https://cert-manager.io/) on your cluster with Gateway API support enabled:
 
    ```sh
@@ -80,6 +86,50 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
    indent: 3
    {% endkonnect %}
 
+{% konnect %}
+title: Authenticate to Konnect
+step: true
+content: |
+  Create a `KonnectAPIAuthConfiguration` resource so {{ site.operator_product_name }} can authenticate to {{ site.konnect_short_name }}. Export your {{ site.konnect_short_name }} personal access token, then apply the resource:
+
+  ```sh
+  export KONNECT_TOKEN='YOUR KONNECT TOKEN'
+  ```
+
+  ```sh
+  echo '
+  kind: KonnectAPIAuthConfiguration
+  apiVersion: konnect.konghq.com/v1alpha1
+  metadata:
+    name: konnect-api-auth
+    namespace: kong
+  spec:
+    type: token
+    token: "'$KONNECT_TOKEN'"
+    serverURL: us.api.konghq.com
+  ' | kubectl apply -f -
+  ```
+
+  {{ site.konnect_short_name }} provides the Enterprise license automatically once the `Gateway` is linked through this resource. No additional license steps are required.
+{% endkonnect %}
+
+{% on_prem %}
+title: Apply an Enterprise license
+step: true
+content: |
+  {{ site.operator_product_name }} requires an Enterprise license to reconcile Gateway API resources. Apply a `KongLicense`. This assumes that your license is available in `./license.json`:
+
+  ```sh
+  echo "
+  apiVersion: configuration.konghq.com/v1alpha1
+  kind: KongLicense
+  metadata:
+    name: kong-license
+  rawLicenseString: '$(cat ./license.json)'
+  " | kubectl apply -f -
+  ```
+{% endon_prem %}
+
 ## Create a cert-manager issuer
 
 The cert-manager `Issuer` resource represents a certificate authority. For more information, see the [cert-manager documentation](https://cert-manager.io/docs/configuration/).
@@ -105,56 +155,116 @@ Create the following resources:
 * A `GatewayConfiguration` and a `GatewayClass` to configure your gateway with the latest {{site.base_gateway}} version and {{site.operator_product_name}} as the controller.
 * A `Gateway` with the `cert-manager.io/issuer: "selfsigned-issuer"` annotation, the `tls.certificateRefs` pointing to the name of the Secret to provision and `cert-manager.io/secret-template` to label the generated TLS Secret with `konghq.com/secret=true`.
 
-```sh
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: kong-gateway-configuration
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: kong-cert-manager
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
+{% on_prem %}
+content: |
+  ```sh
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
     name: kong-gateway-configuration
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong-gateway
-  namespace: kong
-  annotations:
-    cert-manager.io/issuer: "selfsigned-issuer"
-    cert-manager.io/secret-template: "{\"labels\":{\"konghq.com/secret\":\"true\"}}"
-spec:
-  gatewayClassName: kong-cert-manager
-  listeners:
-    - name: https
-      port: 443
-      protocol: HTTPS
-      hostname: example.localdomain.dev
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - group: ""
-            kind: Secret
-            name: example-tls-secret' | kubectl apply -f -
-```
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-cert-manager
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: kong-gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-gateway
+    namespace: kong
+    annotations:
+      cert-manager.io/issuer: "selfsigned-issuer"
+      cert-manager.io/secret-template: "{\"labels\":{\"konghq.com/secret\":\"true\"}}"
+  spec:
+    gatewayClassName: kong-cert-manager
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: example.localdomain.dev
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: example-tls-secret' | kubectl apply -f -
+  ```
+{% endon_prem %}
+
+{% konnect %}
+content: |
+  ```sh
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: kong-gateway-configuration
+    namespace: kong
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-cert-manager
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: kong-gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-gateway
+    namespace: kong
+    annotations:
+      cert-manager.io/issuer: "selfsigned-issuer"
+      cert-manager.io/secret-template: "{\"labels\":{\"konghq.com/secret\":\"true\"}}"
+  spec:
+    gatewayClassName: kong-cert-manager
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: example.localdomain.dev
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: example-tls-secret' | kubectl apply -f -
+  ```
+{% endkonnect %}
 
 ## Create an echo Service
 
