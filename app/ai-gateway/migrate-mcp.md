@@ -20,7 +20,7 @@ min_version:
 description: This guide walks you through moving your MCP servers to the new {{site.ai_gateway}} AI MCP Server entities.
 ---
 
-In {{site.ai_gateway}} version 1.x, an MCP server is an [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin attached to a Service and Route. The plugin runs in one of four modes and holds the tools, Access Control List (ACLs), and logging settings in its config.
+In {{site.ai_gateway}} version 1.x, an MCP server is an [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin attached to a Service and Route. The plugin runs in one of four modes and holds the tools, Access Control Lists (ACLs), and logging settings in its config.
 
 In {{site.ai_gateway}} version 2.x, that plugin becomes a single [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, with the following changes:
 * The plugin `mode` setting becomes an MCP Server `type` setting. This part of the migration essentially consists in copying whatever value you set in `config.mode` to the `type` setting.
@@ -30,9 +30,9 @@ The following table maps each version 1.x plugin mode to its version 2.x MCP Ser
 
 {% table %}
 columns:
-  - title: "v1 `ai-mcp-proxy` `config.mode`"
+  - title: "Version 1.x MCP proxy `config.mode`"
     key: mode
-  - title: "v2 AI MCP Server `type`"
+  - title: "Version 2.x AI MCP Server `type`"
     key: type
 rows:
   - mode: "`passthrough-listener`"
@@ -43,13 +43,13 @@ rows:
     type: "`conversion-only`"
   - mode: "`listener`"
     type: "`listener`"
-  - mode: "(no v1 equivalent)"
+  - mode: "(no version 1.x equivalent)"
     type: "`upstream-server`"
 {% endtable %}
 
 ## Converting configuration files
 
-The following `deck` snippet:
+The following version 1.x example config:
 * Converts a REST flights API into MCP tools
 * Serves the tools on a Route, with `key-auth` in front and a default ACL:
 
@@ -79,10 +79,10 @@ services:
         # ...OpenAPI-derived tool definition...
 ```
 
-The following [converter](/ai-gateway/v2-migration-guide/#step-2-run-the-converter):
+Converting the example to use the version 2.x model:
 * Moves the upstream URL, route, tools, and logging settings onto a single AI MCP Server entity
-* Copies the value from the plugin `mode` into the entity `type` .
-* Converts the `key-auth` plugin into a Policy and attaches it to the entity.
+* Copies the value from the plugin `mode` into the MCP Server `type` .
+* Converts the `key-auth` plugin into a Policy and attaches it to the MCP Server.
 * Renames `default_acl` to `default_tool_acls` and sets the ACL evaluation mode explicitly with `acl_attribute_type`.
 * Renames the `config.logging` fields: `log_statistics` becomes `statistics`, and `log_audits` becomes `audits`.
 
@@ -129,5 +129,5 @@ mcp-servers:
 - Mode and type: confirm the `type` matches the original mode. The `conversion-only` and `conversion-listener` modes require Route information, so make sure the converted entity includes a `config.route`.
 - Listener aggregation: if you used `conversion-only` plugins feeding a `listener` plugin via tags in version 1.x, confirm the converter preserved the tags so the version 2.x listener AI MCP Server still aggregates the right tools.
 - ACL mode: version 2.x makes the ACL subject explicit. Use `acl_attribute_type: consumer` to evaluate against Consumers and Consumer Groups, or `acl_attribute_type: oauth_access_token` with `access_token_claim_field` to evaluate against a claim in an OAuth2 access token.
-- Per-tool ACLs: a per-tool `acl` replaces the default for that tool and does not merge with `default_tool_acls`, so list every allowed subject on the tool explicitly.
+- Per-tool ACLs: a per-tool `acl` replaces the default for that tool and does not merge with `default_tool_acls`. Ensure every allowed subject is listed on the tool explicitly.
 - Logging field names: the version 1.x `log_statistics`, `log_payloads`, and `log_audits` fields become `statistics`, `payloads`, and `audits` under `config.logging`.

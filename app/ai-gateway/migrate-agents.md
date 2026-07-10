@@ -29,7 +29,7 @@ In {{site.ai_gateway}} version 2.x, that plugin becomes an [AI Agent](/ai-gatewa
 
 ## Converting configuration files
 
-The following `deck` snippet defines an A2A agent that proxies to an upstream agent that handles flight bookings (the backend the gateway forwards requests to), with payload logging disabled:
+The following version 1.x example defines an A2A agent that proxies an upstream agent that handles flight bookings:
 
 ```
 # kong.yaml (AI Gateway v1, exported with deck gateway dump)
@@ -50,10 +50,9 @@ services:
         max_payload_size: 1048576
 ```
 
-The following [converter](/ai-gateway/v2-migration-guide/#step-2-run-the-converter):
+Converting the example to use the version 2.x model:
 * Moves the upstream URL, route, request-size limit, and logging settings onto a single AI Agent entity.
 * Renames the `config.logging` fields: `log_statistics` becomes `statistics`, and `log_payloads` becomes `payloads`
-* Automatically applies the agent card rewriting
 
 ```
 # ai-gateway.yaml (AI Gateway v2 entity model)
