@@ -140,7 +140,7 @@ rows:
 
 ### API key authentication
 
-The `key-auth` type uses the [Key Auth policy](/ai-gateway/policies/key-auth/) to validate an API key that the AI Consumer passes on every request. The gateway looks for the key in a configurable header or query parameter, checks it against the AI Consumer's registered key, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
+The `key-auth` type uses the [Key Auth Policy](/ai-gateway/policies/key-auth/) to validate an API key that the AI Consumer passes on every request. The gateway looks for the key in a configurable header or query parameter, checks it against the AI Consumer's registered key, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
 
 By default, {{site.ai_gateway}} accepts the key in an `apikey` header or `apikey` query parameter. Override the key name with `config.key_names`. For example, set `config.key_names: ["X-API-Key"]` to enforce a standard header name across your APIs.
 
