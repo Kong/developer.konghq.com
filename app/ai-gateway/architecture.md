@@ -192,7 +192,7 @@ An {{site.ai_gateway}} instance is its own top-level resource in {{site.konnect_
 
 {:.info}
 > This hybrid topology, with its {{site.konnect_short_name}}-managed control plane, is specific to the {{site.ai_gateway}} entity model described on this page.
-> There's no self-managed database-backed option, standalone DB-less mode, or fully self-hosted control plane for AI Gateway entities today. {{site.base_gateway}} already supports those deployment modes, and {{site.ai_gateway}} may add similar topologies for its entity model in a future release.
+> There's no self-managed database-backed option, standalone DB-less mode, or fully self-hosted control plane for {{site.ai_gateway}} entities today. {{site.base_gateway}} already supports those deployment modes, and {{site.ai_gateway}} may add similar topologies for its entity model in a future release.
 
 
 Data plane nodes are stateless and run in your own infrastructure. Size the pool to your traffic and availability needs:
