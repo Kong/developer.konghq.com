@@ -60,7 +60,6 @@ body:
   name: my-vertex-account
   type: vertex
   config:
-    project_id: $VERTEX_PROJECT
     auth:
       type: gcp
       service_account_json: $GCP_ACCOUNT_JSON

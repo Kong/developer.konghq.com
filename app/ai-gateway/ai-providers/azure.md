@@ -51,6 +51,9 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model P
 
 Here's a minimal configuration for chat completions:
 
+{:.info}
+> Replace `kong-az-east` with your Azure OpenAI resource instance name (the subdomain in your resource's endpoint, for example the `kong-az-east` in `https://kong-az-east.openai.azure.com`).
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
@@ -68,6 +71,7 @@ body:
       headers:
         - name: Authorization
           value: Bearer $AZURE_OPENAI_API_KEY
+    instance: kong-az-east
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -79,4 +83,5 @@ You can also use {{ provider.name }} with Azure credentials by setting `auth` to
 * **`client_id`** (optional): Entra ID (formerly AAD) application client ID. Required if using a user-assigned managed identity or service principal instead of system-assigned managed identity.
 * **`client_secret`** (optional): Client secret for the Entra ID application. Required if `client_id` is set.
 * **`tenant_id`** (optional): Azure tenant ID (directory ID). Required if using service principal credentials.
-* **`instance`** (optional): Azure cloud instance (e.g. `china`, `government`). Defaults to public cloud.
+
+Regardless of the `auth` type you use, `config.instance` is always required and must be set to your Azure OpenAI resource instance name.

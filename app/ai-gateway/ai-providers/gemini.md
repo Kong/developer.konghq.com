@@ -75,7 +75,9 @@ body:
   type: gemini
   config:
     auth:
-      type: gcp
-      service_account_json: "$GCP_SERVICE_ACCOUNT_JSON"
+      type: basic
+      headers:
+        - name: x-goog-api-key
+          value: $GEMINI_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
