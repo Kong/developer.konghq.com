@@ -143,7 +143,7 @@ You can't attach [AI Policies](/ai-gateway/entities/ai-policy/) directly to an A
 
 To apply an AI Policy across requests using a particular AI Model Provider, you can:
 1. Set the policy to `global: true` to apply it to all resources in the gateway.
-1. Attach the same policy to each AI Model that references the AI Model Provider
+1. Attach the same policy to each AI Model that references the AI Model Provider.
 1. Create an AI Consumer Group with the policy and control access to AI Models via ACLs
 
 ## Set up an AI Model Provider
