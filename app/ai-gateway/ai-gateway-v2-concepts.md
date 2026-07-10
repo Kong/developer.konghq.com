@@ -42,19 +42,49 @@ The following section describes how the two models relate at a high level: a ver
 
 ### Entity mapping
 
-| Version 1.x (API {{site.base_gateway}} model)                                                                 | Version 2.x (Native {{site.ai_gateway}} model)                                                                                                                                                                           | Description                                                                                                                                            |
-| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [AI Proxy Advanced](/plugins/ai-proxy-advanced/) on a Service or Route                                        | [AI Model](/ai-gateway/entities/ai-model/)                                                                                                                                                                               | One model entry per virtual model, with one or more `targets`.                                                                                         |
-| Set `config.targets[].model.provider` on an [AI Proxy Advanced](/plugins/ai-proxy-advanced/) with inline auth | [AI Provider](/ai-gateway/entities/ai-provider)                                                                                                                                                                          | Provider credentials are now declared once and reused across AI Model entities.                                                                        |
-| Set `config.targets[].route_type` on an [AI Proxy Advanced](/plugins/ai-proxy-advanced/)                      | Set `capabilities` and `formats.type` on an [AI Model](/ai-gateway/entities/ai-model/)                                                                                                                                   | The `route_type` is decomposed into a `capabilities` array and a format `type`.                                                                        |
-| Set `config.balancer` on an [AI Proxy Advanced](/plugins/ai-proxy-advanced/)                                  | Set `config.balancer` on an [AI Model](/ai-gateway/entities/ai-model/)                                                                                                                                                   | The same load balancing algorithms are available.                                                                                                      |
-| Set `config.vectordb` and `config.embeddings` on an [AI Proxy Advanced](/plugins/ai-proxy-advanced/)          | Set `config.balancer.AIGatewayModelBalancerSemanticConfig.vectordb` and `config.balancer.AIGatewayModelBalancerSemanticConfig.embeddings` on an [AI Model](/ai-gateway/entities/ai-model/)                               | Carried over with the same Redis and pgvector strategies.                                                                                              |
-| [AI MCP Proxy](/plugins/ai-mcp-proxy/) on a Service or Route                                                  | [AI MCP Server](/ai-gateway/entities/ai-mcp-server/)                                                                                                                                                                     | Each version 1.x plugin `mode` maps directly to an AI MCP Server `type` value in version 2.x. Additionally, a new `upstream-server` type is available. |
-| Set `config.default_acl` and `config.tools.acl` on an [AI MCP Proxy](/plugins/ai-mcp-proxy/)                  | Set `access` or `tools.access` on an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/). Configure an [AI Consumer](/ai-gateway/entities/ai-consumer/) or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) | ACLs become first-class fields.                                                                                                                        |
-| [AI A2A Proxy](/plugins/ai-a2a-proxy/) on a Service or Route                                                  | [AI Agent](/ai-gateway/entities/ai-agent/)                                                                                                                                                                               | First class A2A support with URL rewriting and A2A analytics built in.                                                                                 |
-| [Plugins](/plugins/?category=ai)                                                                              | [Policies](/ai-gateway/policies/)                                                                                                                                                                                        | AI Policies replace plugins, and can be attached to other entities. The 'type' field on a Policy corresponds to the version 1.x plugin.                |
-| Consumers and Consumer Groups                                                                                 | [AI Consumer](/ai-gateway/entities/ai-consumer/) and [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)                                                                                                        | Managed from the Control Plane.                                                                                                                                                       |
-| Vault                                                                                                         | [AI Vault](/ai-gateway/entities/ai-vault/) and [AI Data Plane Certificates](/ai-gateway/entities/ai-data-plane-certificate/)                                                                                             | Referenceable fields keep the same {vault://...} syntax.                                                                                               |
+{% table %}
+columns:
+  - title: Version 1.x (API {{site.base_gateway}} model)
+    key: v1
+  - title: Version 2.x (Native {{site.ai_gateway}} model)
+    key: v2
+  - title: Description
+    key: description
+rows:
+  - v1: "[AI Proxy Advanced](/plugins/ai-proxy-advanced/) on a Service or Route"
+    v2: "[AI Model](/ai-gateway/entities/ai-model/)"
+    description: "One model entry per virtual model, with one or more `targets`."
+  - v1: "Set `config.targets[].model.provider` on an [AI Proxy Advanced](/plugins/ai-proxy-advanced/) with inline auth"
+    v2: "[AI Provider](/ai-gateway/entities/ai-provider)"
+    description: "Provider credentials are now declared once and reused across AI Model entities."
+  - v1: "Set `config.targets[].route_type` on an [AI Proxy Advanced](/plugins/ai-proxy-advanced/)"
+    v2: "Set `capabilities` and `formats.type` on an [AI Model](/ai-gateway/entities/ai-model/)"
+    description: "The `route_type` is decomposed into a `capabilities` array and a format `type`."
+  - v1: "Set `config.balancer` on an [AI Proxy Advanced](/plugins/ai-proxy-advanced/)"
+    v2: "Set `config.balancer` on an [AI Model](/ai-gateway/entities/ai-model/)"
+    description: "The same load balancing algorithms are available."
+  - v1: "Set `config.vectordb` and `config.embeddings` on an [AI Proxy Advanced](/plugins/ai-proxy-advanced/)"
+    v2: "Set `config.balancer.AIGatewayModelBalancerSemanticConfig.vectordb` and `config.balancer.AIGatewayModelBalancerSemanticConfig.embeddings` on an [AI Model](/ai-gateway/entities/ai-model/)"
+    description: "Carried over with the same Redis and pgvector strategies."
+  - v1: "[AI MCP Proxy](/plugins/ai-mcp-proxy/) on a Service or Route"
+    v2: "[AI MCP Server](/ai-gateway/entities/ai-mcp-server/)"
+    description: "Each version 1.x plugin `mode` maps directly to an AI MCP Server `type` value in version 2.x. Additionally, a new `upstream-server` type is available."
+  - v1: "Set `config.default_acl` and `config.tools.acl` on an [AI MCP Proxy](/plugins/ai-mcp-proxy/)"
+    v2: "Set `access` or `tools.access` on an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/). Configure an [AI Consumer](/ai-gateway/entities/ai-consumer/) or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)"
+    description: "ACLs become first-class fields."
+  - v1: "[AI A2A Proxy](/plugins/ai-a2a-proxy/) on a Service or Route"
+    v2: "[AI Agent](/ai-gateway/entities/ai-agent/)"
+    description: "First class A2A support with URL rewriting and A2A analytics built in."
+  - v1: "[Plugins](/plugins/?category=ai)"
+    v2: "[Policies](/ai-gateway/policies/)"
+    description: "AI Policies replace plugins, and can be attached to other entities. The 'type' field on a Policy corresponds to the version 1.x plugin."
+  - v1: "Consumers and Consumer Groups"
+    v2: "[AI Consumer](/ai-gateway/entities/ai-consumer/) and [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)"
+    description: "Managed from the Control Plane."
+  - v1: "Vault"
+    v2: "[AI Vault](/ai-gateway/entities/ai-vault/) and [AI Data Plane Certificates](/ai-gateway/entities/ai-data-plane-certificate/)"
+    description: "Referenceable fields keep the same {vault://...} syntax."
+{% endtable %}
 
 Note the following terminology changes:
 
