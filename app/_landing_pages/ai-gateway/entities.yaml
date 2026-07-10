@@ -24,7 +24,7 @@ rows:
           - type: card
             config:
               title: "AI Model Provider"
-              description: Register upstream LLM providers with authentication and configuration. Reusable across models.
+              description: Register upstream LLM providers with authentication and configuration. Reusable across AI Models.
               cta:
                 text: AI Model Provider entity
                 url: /ai-gateway/entities/ai-model-provider/
