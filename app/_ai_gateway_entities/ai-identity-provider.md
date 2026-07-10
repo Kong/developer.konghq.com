@@ -173,7 +173,7 @@ The `openid-connect` type uses the [OpenID Connect Policy](/ai-gateway/policies/
 
 Set `config.issuer` to the IdP's discovery URL (for example, `https://dev-123456.okta.com`). {{site.ai_gateway}} uses the OIDC discovery endpoint to fetch signing keys automatically.
 
-The default `config.auth_methods` are `bearer` and `client_credentials`. If your AI Consumers use a different grant flow, add it to the list. For a full list of supported values, see the [OpenID Connect policy reference](/ai-gateway/policies/openid-connect/).
+The default `config.auth_methods` are `bearer` and `client_credentials`. If your AI Consumers use a different grant flow, add it to the list. For a full list of supported values, see the [OpenID Connect Policy reference](/ai-gateway/policies/openid-connect/).
 
 To map the token to an existing AI Consumer, set `config.consumer_claim` to the JSON path of the claim in the token that carries the AI Consumer identifier. If no mapping is needed, set `config.consumer_optional: true` to allow unauthenticated token holders through ACL checks.
 
