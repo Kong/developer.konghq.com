@@ -131,7 +131,7 @@ rows:
 
 {{site.ai_gateway}} proxies three distinct types of traffic:
 
-- **LLM traffic**: Client requests to [AI Models](/ai-gateway/entities/ai-model/), routed to upstream [AI Model Providers](/ai-gateway/entities/ai-provider/) (OpenAI, Anthropic, Bedrock, etc.). Supports chat completions and other text generation, embeddings, image generation, audio (speech and transcription), video generation, and realtime streaming. Handles format conversion, credential injection, load balancing, and cost/token tracking.
+- **LLM traffic**: Client requests to [AI Models](/ai-gateway/entities/ai-model/), routed to upstream [AI Model Providers](/ai-gateway/entities/ai-model-provider/) (OpenAI, Anthropic, Bedrock, etc.). Supports chat completions and other text generation, embeddings, image generation, audio (speech and transcription), video generation, and realtime streaming. Handles format conversion, credential injection, load balancing, and cost/token tracking.
 
 - **MCP traffic**: Model Context Protocol requests from MCP clients, handled by [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/). Each AI MCP Server operates in one mode: proxying an upstream MCP server, converting REST APIs into MCP tools, or aggregating tools from multiple sources into one endpoint. Includes session management and tool-level access control.
 
@@ -147,7 +147,7 @@ On an upstream error or timeout, the data plane retries (5 times by default) and
 
 ## Node registration and synchronization
 
-Data plane nodes authenticate to the control plane with an [AI Data Plane Certificate](/ai-gateway/entities/ai-data-plana-certificate/) over mTLS. When a node starts, it presents its certificate, registers, and pulls the latest configuration.
+Data plane nodes authenticate to the control plane with an [AI Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/) over mTLS. When a node starts, it presents its certificate, registers, and pulls the latest configuration.
 
 Configuration changes are push-triggered: the control plane notifies connected nodes as soon as a change is available, and each node pulls the update, tracked by a `config_hash`. Nodes and the control plane exchange a 30-second keepalive ping to confirm the connection is alive. If the control plane doesn't hear from a node for 45 seconds (1.5× the ping interval), it marks the node disconnected, and the node reconnects with a randomized 5-10 second backoff. Nodes apply each configuration change as soon as they receive it.
 
