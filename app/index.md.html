@@ -25,7 +25,7 @@ llm: false
 {%- for cat in site.data.homepage.products_section.categories %}
 
 ### {{ cat.name }}
-{%- for item in cat.items %}{%- assign first_link = item.links | first %}{%- if item.product %}{%- assign item_product = site.data.products[item.product] %}{%- assign item_latest = item_product.releases | where: "latest", true | first %}{%- assign item_ver = item_latest["ee-version"] | default: item_latest.version | default: item_latest.release %}
+{%- for item in cat.items %}{%- assign first_link = item.links | first %}{%- if item.product %}{%- assign item_product = site.data.products[item.product] %}{%- assign item_latest = item_product.releases | where: "latest", true | first %}{%- assign item_ver = item_latest["ee-version"] | default: item_latest.version | default: item_latest.release | split: "." | slice: 0, 2 | join: "." %}
 - **{{ item.title | liquify }}** (v{{ item_ver }}) - {{ item.description | liquify | replace: "—", "-" }} [Docs]({{ first_link.url }})
 {%- else %}
 - **{{ item.title | liquify }}** - {{ item.description | liquify | replace: "—", "-" }} [Docs]({{ first_link.url }})
@@ -35,6 +35,9 @@ llm: false
 ## API specifications
 
 - [Kong API catalog](/api/)
+{%- for api_slug in site.data.homepage.specs_section.featured_api_slugs %}
+- [{{ api_slug }}](/api/{{ api_slug }}/)
+{%- endfor %}
 
 ## What's new
 {%- for cat in site.data.homepage.products_section.categories %}{%- for item in cat.items %}{%- unless item.whats_new %}{%- continue %}{%- endunless %}{%- assign product_data = site.data.products[item.product] %}{%- assign latest = product_data.releases | where: "latest", true | first %}{%- assign _ver = latest["ee-version"] | default: latest.version | default: latest.release %}
@@ -45,4 +48,5 @@ llm: false
 ## Additional Resources
 
 - [All Kong documentation sitemap](/sitemap/)
+- [All release notes and changelogs](/changelogs/)
 - [LLM-optimized documentation index](/llms.txt)

@@ -11,7 +11,7 @@ hero:
 
 agents_section:
   cli_cards:
-    - tool: decK
+    - tool: deck
       icon: /assets/icons/terminal.svg
       description: "Manage Kong Gateway configuration as code. Diff, sync, validate, and more."
       install: "brew install kong/deck/deck"
@@ -23,7 +23,7 @@ agents_section:
       install: "brew install --cask kong/kongctl/kongctl"
       command: "kongctl get control-planes"
       docs_url: /kongctl/
-    - tool: Inso CLI
+    - tool: inso
       icon: /assets/icons/terminal.svg
       description: "Run API tests, lint OpenAPI specs, and generate config, all straight from CI."
       install: "npm install -g insomnia-inso"
@@ -43,7 +43,7 @@ agents_section:
       snippet_label: "RUN IN CLAUDE"
       snippet_label_link:
         text: "View other providers &rarr;"
-        url: /cookbooks/
+        url: /skills/
       snippet_lines:
         - "/plugin marketplace add kong/ai-marketplace"
         - "/plugin install kong-konnect@ai-marketplace"
@@ -76,6 +76,8 @@ products_section:
           links:
             - text: Overview
               url: /dev-portal/
+            - text: How-to guides
+              url: /how-to/?products=dev-portal
             - text: All documentation
               url: /index/dev-portal/
         - title: Observability
@@ -84,6 +86,8 @@ products_section:
           links:
             - text: Overview
               url: /observability/
+            - text: How-to guides
+              url: /how-to/?products=observability
             - text: All documentation
               url: /index/observability/
         - title: Catalog
@@ -92,6 +96,8 @@ products_section:
           links:
             - text: Overview
               url: /catalog/
+            - text: How-to guides
+              url: /how-to/?products=catalog
             - text: All documentation
               url: /index/catalog/
         - title: Insomnia
@@ -113,6 +119,8 @@ products_section:
           links:
             - text: "Metering & Billing overview"
               url: /metering-and-billing/
+            - text: How-to guides
+              url: /how-to/?products=metering-and-billing
             - text: All documentation
               url: /index/metering-and-billing/
         - title: "{{site.identity}}"
@@ -121,6 +129,8 @@ products_section:
           links:
             - text: "{{site.identity}} overview"
               url: /identity/
+            - text: How-to guides
+              url: /how-to/?products=identity
             - text: All documentation
               url: /index/identity/
     - name: Connectivity

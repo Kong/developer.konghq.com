@@ -157,7 +157,7 @@ edit_and_issue_links: false
                         {%- endif -%}
                     </div>
                     {%- endif -%}
-                    <pre class="bg-transparent m-0 px-5 py-3 border-0 rounded-none"><code id="{{ fcard_id }}" class="bg-transparent border-0 p-0" style="font-size: 0.75rem;">{% for line in fcard.snippet_lines %}<span class="text-secondary">{{ line }}</span>
+                    <pre class="bg-transparent m-0 px-5 py-3 border-0 rounded-none"><code id="{{ fcard_id }}" class="bg-transparent border-0 p-0 text-xs">{% for line in fcard.snippet_lines %}<span class="text-secondary">{{ line }}</span>
 {% endfor %}</code></pre>
                 </div>
                 {%- endif -%}
@@ -210,7 +210,7 @@ edit_and_issue_links: false
                         </clipboard-copy>
                     </div>
                 </div>
-                <pre class="bg-code-block m-0 px-4 py-4 leading-none whitespace-pre-wrap break-word border-0 rounded-none flex-1"><code class="bg-transparent border-0 p-0"><span class="text-terciary"># {{ cli.description }}</span>
+                <pre class="bg-code-block m-0 px-4 py-4 whitespace-pre-wrap break-word border-0 rounded-none flex-1"><code class="bg-transparent border-0 p-0 text-xs"><span class="text-terciary"># {{ cli.description }}</span>
 
 <span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.install }}
 <span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only" aria-hidden="true">{{ cli.install }}
