@@ -129,3 +129,7 @@ If your Policy uses a Redis datastore, you can authenticate to it with a cloud R
 This allows you to seamlessly rotate credentials without relying on static passwords. 
 
 {% include_cached /md/ai-gateway/v2/redis-cloud-providers.md name=page.name heading_level=3 %}
+
+## Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}

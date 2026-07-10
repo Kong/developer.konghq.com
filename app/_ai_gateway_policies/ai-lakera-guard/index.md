@@ -120,3 +120,7 @@ When the guardrails block a request, the log captures the violation reason, dete
   }
 }
 ```
+
+## Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}

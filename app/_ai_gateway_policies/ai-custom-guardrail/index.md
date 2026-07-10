@@ -87,3 +87,6 @@ The [`config.metrics`](./reference/#schema--config-metrics) field allows you to 
 
 The values can be set to Lua expressions. You can also use the [`config.custom_metrics`](./reference/#schema--config-custom-metrics) field to define additional metrics.
 
+## Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}

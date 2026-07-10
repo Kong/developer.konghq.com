@@ -82,3 +82,7 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 {% include_cached md/ai-gateway/v2/redis-cloud-auth.md tier=page.tier %}
 
 {% include_cached md/ai-gateway/v2/redis-cloud-providers.md name=page.name heading_level=3 %}
+
+## Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}
