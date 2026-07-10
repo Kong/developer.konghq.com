@@ -140,6 +140,8 @@ formats:
       agent:           '/agents'
       mcp_server:      '/mcp-servers'
       provider:        '/providers'
+      model-provider:  '/model-providers'
+      identity-provider: '/identity'
       consumer:       '/consumers'
       consumer_group: '/consumer-groups'
       vault:          '/vaults'
@@ -206,7 +208,8 @@ formats:
   ui:
     label: 'UI'
     entities:
-      - ai-provider
+      - ai-model-provider
+      - ai-identity-provider
       - ai-model
       - ai-agent
       - ai-mcp-server

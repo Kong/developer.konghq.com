@@ -45,7 +45,7 @@ You can also capture [A2A agent traffic](#a2a-span-attributes) by enabling stati
 
 You can export these attributes via a supported backend to:
 
-* Inspect which AI Model or AI Provider handled a request
+* Inspect which AI Model or AI Model Provider handled a request
 * Track conversation/session identifiers across requests
 * Analyze prompt structure (system vs. user vs. tool messages)
 * Evaluate model parameters (such as temperature, top-k)
