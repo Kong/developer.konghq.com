@@ -22,7 +22,7 @@ description: This guide walks you through setting up AI Models with streaming.
 
 ## What is request streaming?
 
-In an LLM (Large Language Model) inference request, {{site.ai_gateway}} uses the upstream AI Provider's REST API to generate the next chat message from the caller.
+In an LLM (Large Language Model) inference request, {{site.ai_gateway}} uses the upstream AI Model Provider's REST API to generate the next chat message from the caller.
 
 Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.ai_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the [`max_tokens`](/ai-gateway/entities/ai-model/#targets), other request parameters, and the complexity of the request sent to the LLM model. Request streaming in {{site.ai_gateway}} uses the [AI Model entity](/ai-gateway/entities/ai-model/). 
 
@@ -171,7 +171,7 @@ for chunk in stream:
 ```
 
 {:.info}
-> This feature works with any AI Provider and AI Model when [`formats`](/ai-gateway/entities/ai-model/#request-and-response-formats) is set to `openai` mode.
+> This feature works with any AI Model Provider and AI Model when [`formats`](/ai-gateway/entities/ai-model/#request-and-response-formats) is set to `openai` mode.
 >
 > See the [OpenAI API Documentation](https://platform.openai.com/docs/api-reference/chat/create#chat_create-stream_options) for more information on stream options.
 

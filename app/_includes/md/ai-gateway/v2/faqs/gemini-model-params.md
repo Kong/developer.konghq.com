@@ -2,7 +2,7 @@ You can configure model generation parameters when calling Gemini through {{site
 
 - **Using the {{ site.gemini }} SDK**:
 
-    1. Create an [AI Provider](/ai-gateway/entities/ai-provider/) for Gemini and an [AI Model](/ai-gateway/entities/ai-model/) that references it.
+    1. Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for Gemini and an [AI Model](/ai-gateway/entities/ai-model/) that references it.
     1. Configure parameters like `temperature`, `top_p`, and `top_k` on the client side:
         ```python
         model = genai.GenerativeModel(
@@ -17,7 +17,7 @@ You can configure model generation parameters when calling Gemini through {{site
         ```
 
 - **Using the OpenAI SDK** with {{site.ai_gateway}}:
-    1. Create an [AI Provider](/ai-gateway/entities/ai-provider/) for Gemini with `llm_format` set to `openai`.
+    1. Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for Gemini with `llm_format` set to `openai`.
     1. You can configure parameters in one of three ways:
         - Configure them in the [AI Model](/ai-gateway/entities/ai-model/) only.
         - Configure them in the client only.
