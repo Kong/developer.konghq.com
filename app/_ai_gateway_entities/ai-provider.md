@@ -142,7 +142,7 @@ Updating an AI Model Provider re-materializes credentials into every AI Model th
 You can't attach [AI Policies](/ai-gateway/entities/ai-policy/) directly to an AI Model Provider entity instance. AI Policies attach to [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI Consumers](/ai-gateway/entities/ai-consumer/), or [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) to control security, rate limiting, guardrails, and observability.
 
 To apply an AI Policy across requests using a particular AI Model Provider, you can:
-1. Set the policy to `global: true` to apply it to all resources in the gateway
+1. Set the policy to `global: true` to apply it to all resources in the gateway.
 1. Attach the same policy to each AI Model that references the AI Model Provider
 1. Create an AI Consumer Group with the policy and control access to AI Models via ACLs
 
