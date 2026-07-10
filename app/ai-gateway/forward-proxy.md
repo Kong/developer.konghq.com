@@ -278,8 +278,9 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
           - /v1
       model: {}
       proxy:
-        http_proxy_host: secure.mycompany
-        http_proxy_port: 3128
+        http_proxy:
+            host: secure.mycompany
+            port: 3128
         proxy_scheme: http
     targets:
       - name: gpt-4o
