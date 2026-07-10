@@ -144,7 +144,7 @@ You can attach multiple AI Policies to a single AI Consumer Group with different
 
 ## Use in parent entity ACLs
 
-To restrict access to specific [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), or [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) by AI Consumer Group (for example, allowing only Gold tier AI Consumers to access premium models), use ACLs. The `access.acls` field on these entities accepts AI Consumer Group names alongside AI Consumer and Authenticated Group names. For AI Models and AI Agents, configure exactly one of `access.acls.allow` to permit access or `access.acls.deny` to block it. Setting both at the same time is not supported. For AI MCP Servers, `access.acls` supports setting `allow`, `deny`, or both.
+To restrict access to specific [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), or [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) by AI Consumer Group (for example, allowing only Gold tier AI Consumers to access premium models), use ACLs. The `access.acls` field on these entities accepts AI Consumer Group names alongside AI Consumer and Authenticated Group names. For AI Models and AI Agents, configure exactly one of `access.acls.allow` to permit access or `access.acls.deny` to block it. You can't set both at the same time. For AI MCP Servers, `access.acls` supports setting `allow`, `deny`, or both.
 
 AI Consumer Group membership is resolved after the request is authenticated and the AI Consumer is identified.
 
