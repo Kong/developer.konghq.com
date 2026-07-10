@@ -343,7 +343,7 @@
   }
 
   .button.button--primary {
-    @apply !bg-brand !text-button !border-transparent;
+    @apply !bg-brand !text-button !border-transparent hover:!bg-brand/70;
   }
 
   .button.button--secondary {
