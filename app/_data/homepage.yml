@@ -191,6 +191,8 @@ products_section:
           links:
             - text: Overview
               url: /kubernetes-ingress-controller/
+            - text: Install
+              url: /kubernetes-ingress-controller/install/
             - text: How-to guides
               url: /how-to/?products=kubernetes-ingress-controller
             - text: All documentation
