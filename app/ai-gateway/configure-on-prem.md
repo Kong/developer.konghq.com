@@ -29,16 +29,18 @@ related_resources:
     url: /plugins/ai-a2a-proxy/
 ---
 
-On {{site.konnect_short_name}}, you configure {{site.ai_gateway}} through its entity model: [AI Providers](/ai-gateway/entities/ai-provider/), [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI Policies](/ai-gateway/entities/ai-policy/). Self-hosted {{site.base_gateway}} doesn't expose these entities. Instead, you configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
+On {{site.konnect_short_name}}, you configure {{site.ai_gateway}} through its entity model: [AI Models](/ai-gateway/entities/ai-model/), [AI Model Providers](/ai-gateway/entities/ai-model-provider/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI Identity Providers](/ai-gateway/entities/ai-identity-provider/), [AI Policies](/ai-gateway/entities/ai-policy/), [AI Consumers](/ai-gateway/entities/ai-consumer/), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), and [AI Vaults](/ai-gateway/entities/ai-vault/). Self-hosted {{site.base_gateway}} doesn't expose these entities. Instead, you configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
 
 Both deployments run the same {{site.base_gateway}} primitives. When you save an AI entity in {{site.konnect_short_name}}, {{site.ai_gateway}} generates the Services, Routes, Plugins, and Consumers that data planes run. On-prem, you create those primitives yourself.
 
 {:.info}
-> On-prem, each plugin's configuration maps 1:1 to an [{{site.ai_gateway}} Policy](/ai-gateway/policies/). The AI Policy fields and the plugin fields are the same.
+> On-prem, each Policy-backed plugin's configuration maps 1:1 to an [{{site.ai_gateway}} Policy](/ai-gateway/policies/). The AI Policy fields and the plugin fields are the same.
 
-## How entities become {{site.base_gateway}} configurations
+## How entities become {{site.base_gateway}} configuration
 
-The mapping depends on the entity. Some entities generate a single {{site.base_gateway}} primitive, some generate several, and an AI Provider generates none of its own.
+AI entities are a high-level abstraction. When you save one, a dedicated conversion step lowers it into the same {{site.base_gateway}} building blocks classic {{site.base_gateway}} uses (Routes, Services, Plugins, Consumers), and that's what data plane nodes actually run.
+
+The mapping isn't uniform. Some entities carry over almost directly: an AI Vault becomes a Kong Vault, and an AI Consumer or AI Consumer Group becomes a Kong Consumer or Consumer Group with its credentials and group membership. An AI Model fans out further: it becomes a Service, one or more Routes, and the AI Proxy Advanced plugin. An AI Provider has no object of its own. It's folded into the AI Proxy Advanced target of every AI Model that references it. AI Policy is the most dynamic case: its type becomes the name of whichever {{site.base_gateway}} plugin implements it (for example AI Prompt Guard or AI Rate Limiting Advanced), applied globally or scoped to whatever the policy is attached to.
 
 {% table %}
 columns:
@@ -48,15 +50,15 @@ columns:
     key: primitives
 rows:
   - entity: "[AI Model](/ai-gateway/entities/ai-model/)"
-    primitives: "A Service, one Route per capability it serves, and the plugins on each Route (`ai-model-selector` and [`ai-proxy-advanced`](/plugins/ai-proxy-advanced/))."
+    primitives: "A Service, one Route per capability it serves, and the AI Proxy Advanced plugin on each Route."
   - entity: "[AI Provider](/ai-gateway/entities/ai-provider/)"
-    primitives: "None of its own. Its `type` and credentials are materialized into the `ai-proxy-advanced` target of every AI Model that references it."
+    primitives: "None of its own. Its `type` and credentials are materialized into the AI Proxy Advanced target of every AI Model that references it."
   - entity: "[AI MCP Server](/ai-gateway/entities/ai-mcp-server/)"
-    primitives: "One or more Routes carrying the [`ai-mcp-proxy`](/plugins/ai-mcp-proxy/) plugin. The Route topology depends on the server [mode](/ai-gateway/entities/ai-mcp-server/#server-modes)."
+    primitives: "One or more Routes carrying the AI MCP Proxy plugin. The Route topology depends on the server [mode](/ai-gateway/entities/ai-mcp-server/#server-modes)."
   - entity: "[AI Agent](/ai-gateway/entities/ai-agent/)"
-    primitives: "A Service, a Route, and the [`ai-a2a-proxy`](/plugins/ai-a2a-proxy/) plugin."
+    primitives: "A Service, a Route, and the AI A2A Proxy plugin."
   - entity: "[AI Policy](/ai-gateway/entities/ai-policy/)"
-    primitives: "The {{site.base_gateway}} plugin named by the policy `type` (for example, `ai-prompt-guard` or `ai-rate-limiting-advanced`), applied globally or scoped to whatever the policy is attached to."
+    primitives: "The {{site.base_gateway}} plugin named by the policy `type` (for example, AI Prompt Guard or AI Rate Limiting Advanced), applied globally or scoped to whatever the policy is attached to."
   - entity: "[AI Consumer](/ai-gateway/entities/ai-consumer/)"
     primitives: "A [Consumer](/gateway/entities/consumer/) with its credentials."
   - entity: "[AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)"
