@@ -48,8 +48,8 @@ faqs:
   - q: Why is the agent-card URL rewritten?
     a: |
       A2A clients use agent-card responses (at `/.well-known/agent-card.json`) to discover where to
-      send subsequent requests. Rewriting the [`url`](#schema-aigateway-agent-config-url) field, and any [`additionalInterfaces[].url`](#schema-aigateway-agent-config-additional-interfaces-url)
-      fields, to the {{site.ai_gateway}} address means clients route follow-up traffic through the
+      send subsequent requests. Rewriting the [`url`](#schema-aigateway-agent-config-url) field, and any `additionalInterfaces[].url`
+      fields on the agent card response, to the {{site.ai_gateway}} address means clients route follow-up traffic through the
       gateway instead of bypassing it. The rewrite honors `X-Forwarded-*` headers when the gateway
       sits behind a load balancer.
 
@@ -61,12 +61,12 @@ faqs:
 
   - q: How do I limit which AI Consumers can reach an AI Agent?
     a: |
-      Set the [`acls`](#schema-aigateway-agent-acls) field on the AI Agent with allow or deny lists. Each entry is a string that
+      Set the [`access.acls`](#schema-aigateway-agent-access) field on the AI Agent with an allow list or a deny list. Each entry is a string that
       references an AI Consumer, AI Consumer Group, or Authenticated Group by name.
 
-  - q: Can the same plugin run on an AI Agent that I'd attach to a route or service?
+  - q: How do I attach AI Policies to an AI Agent?
     a: |
-      Plugin configuration that applies to the AI Agent goes through the [AI Policy entity](/ai-gateway/entities/ai-policy/).
+      Configuration that applies to the AI Agent goes through the [AI Policy entity](/ai-gateway/entities/ai-policy/).
       Attach AI Policies to the AI Agent through its [`policies`](#schema-aigateway-agent-policies) field.
 ---
 
@@ -87,6 +87,7 @@ AI Agents can be created and managed through:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/agents`
+* [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see the following [Set up an AI Agent](#set-up-an-ai-agent) section.
 
@@ -282,7 +283,7 @@ When an upstream agent returns an agent card, the runtime rewrites the [`url`](#
 
 To track agent performance, debug issues, and monitor A2A traffic patterns, enable statistics logging. {{site.ai_gateway}} emits structured A2A telemetry that flows to {{site.konnect_short_name}} analytics, logging plugins, and OpenTelemetry for full visibility into agent operations.
 
-The telemetry data is emitted into the `ai.a2a` namespace (consumed by {{site.konnect_short_name}} analytics and logging plugins) and creates a `kong.a2a` child span when you've configured [{{site.base_gateway}} tracing](/gateway/tracing/). For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
+The telemetry data is emitted into the `ai.a2a` namespace (consumed by {{site.konnect_short_name}} analytics and logging AI Policies) and creates a `kong.a2a` child span when you've configured [{{site.base_gateway}} tracing](/gateway/tracing/). For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
 
 {:.info}
 > When statistics logging is enabled, the runtime removes the `Accept-Encoding` request header
@@ -299,17 +300,17 @@ You can view A2A analytics in {{site.konnect_short_name}} Explorer and Dashboard
 
 ### Log output fields
 
-{% include /plugins/ai-a2a-proxy/log-output-fields.md %}
+{% include md/ai-gateway/v2/log-output-fields.md %}
 
 ### OpenTelemetry span attributes
 
 When statistics logging is enabled and {{site.base_gateway}} tracing is configured, the runtime creates a `kong.a2a` child span with the following attributes:
 
-{% include /plugins/ai-a2a-proxy/otel-span-attributes.md %}
+{% include md/ai-gateway/v2/otel-span-attributes.md %}
 
 ## Access control
 
-To restrict which consumers or teams can reach a specific agent, use ACLs. The [`acls`](#schema-aigateway-agent-acls) field defines `allow` and `deny` lists of identities that can access the agent. Each entry references an [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or Authenticated Group by name. An **Authenticated Group** is a dynamic group representing all consumers authenticated via a specific OAuth2 scope or claim. Access is enforced before traffic reaches the upstream agent.
+To restrict which AI Consumers or teams can reach a specific agent, use ACLs. The [`access.acls`](#schema-aigateway-agent-access) field defines either an `allow` or a `deny` list of identities that can access the agent. Each entry references an [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or Authenticated Group by name. An Authenticated Group is a dynamic group representing all consumers authenticated via a specific OAuth2 scope or claim. Access is enforced before traffic reaches the upstream agent.
 
 For per-request authentication and identity validation, attach an authentication AI Policy to the AI Agent.
 
@@ -329,9 +330,10 @@ data:
   display_name: KongAir Flight Booking Agent
   name: kongair-flight-booking-agent
   type: a2a
-  acls:
-    allow:
-      - internal-teams
+  access:
+    acls:
+      allow:
+        - internal-teams
   policies: []
   config:
     url: https://booking-agent.internal.kongair.com
@@ -344,6 +346,30 @@ data:
       max_payload_size: 1048576
 {% endentity_example %}
 
+
+<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
+```yaml
+agents:
+  - name: kongair-flight-booking-agent
+    ref: kongair-flight-booking-agent
+    display_name: "KongAir Flight Booking Agent"
+    type: a2a
+    access:
+      acls:
+        allow:
+          - internal-teams
+    policies: []
+    config:
+      url: https://booking-agent.internal.kongair.com
+      route:
+        paths:
+          - /kongair-flight-booking
+      logging:
+        statistics: true
+        payloads: false
+        max_payload_size: 1048576
+```
+-->
 ## Schema
 
 {% entity_schema %}

@@ -40,15 +40,17 @@ faqs:
 
   - q: How do I add credentials to an AI Consumer?
     a: |
-      Credentials are managed through a separate credentials endpoint, not as a field on the Consumer.
-      Create them via POST to `/consumers/{id}/credentials` with the credential type and details.
+      For `type: api-key` AI Consumers, credentials are managed through a separate credentials
+      endpoint, not as a field on the Consumer. Create them via POST to `/consumers/{id}/credentials`.
+      `type: oauth` AI Consumers don't use this endpoint — see the next question.
 
   - q: "What's the difference between `type: api-key` and `type: oauth`?"
     a: |
-      The `type` declares which credential family the AI Consumer authenticates with. An `api-key`
-      AI Consumer holds one or more `api-key` Credentials. An `oauth` AI Consumer holds one or more
-      `oauth` Credentials whose `custom_id` maps to the OAuth provider's identifier. The
-      Credential's `type` must match the Consumer's `type`.
+      The `type` declares how the AI Consumer authenticates. An `api-key` AI Consumer holds one or
+      more `api-key` Credentials created through the credentials endpoint. An `oauth` AI Consumer
+      has no Credentials — instead, its own `custom_id` field is set (at creation or update time) to
+      the identifier your OIDC provider issues (for example, a `sub` claim), and an authentication
+      policy maps the incoming token to that AI Consumer.
 
   - q: Can an AI Consumer belong to multiple AI Consumer Groups?
     a: |
@@ -98,6 +100,7 @@ AI Consumers can be created and managed through:
 
 * {{site.konnect_short_name}} UI
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/consumers`
+* [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI Consumer](#set-up-an-ai-consumer) below.
 
@@ -116,11 +119,11 @@ rows:
   - type: "`api-key`"
     use_case: Simple, stateless authentication for internal services or mobile apps using a shared secret.
   - type: "`oauth`"
-    use_case: Federated identity with an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect Policy](/ai-gateway/policies/openid-connect/), or for MCP traffic through the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/). The credential's `custom_id` field maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
+    use_case: Federated identity with an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect Policy](/ai-gateway/policies/openid-connect/), or for MCP traffic through the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/). The AI Consumer's own `custom_id` field maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
 {% endtable %}
 <!-- vale on -->
 
-The `type` of every Credential configured on the AI Consumer must match the AI Consumer's `type`.
+`api-key` AI Consumers authenticate through one or more `api-key` Credentials created via the credentials endpoint. `oauth` AI Consumers don't have Credentials — set `custom_id` directly on the AI Consumer instead.
 
 ## AI Consumer Group membership
 
@@ -138,7 +141,10 @@ For supported policy types and how AI Policies attach to other entities, see the
 
 ## Set up an AI Consumer
 
-The following example creates an AI Consumer assigned to a single AI Consumer Group.
+{% navtabs "consumer_type" %}
+{% navtab "api-key" %}
+
+The following example creates an `api-key` AI Consumer assigned to a single AI Consumer Group. After creating it, add one or more API key Credentials (see [Create Consumer Credentials](#create-consumer-credentials) below).
 
 {% entity_example %}
 type: consumer
@@ -149,14 +155,27 @@ data:
   policies: []
 {% endentity_example %}
 
+{% endnavtab %}
+{% navtab "oauth" %}
+
+The following example creates an `oauth` AI Consumer. Set `custom_id` to the identifier your OIDC provider issues (for example, a `sub` claim) — this is how {{site.ai_gateway}} maps an incoming token to this AI Consumer. `oauth` AI Consumers don't have Credentials.
+
+{% entity_example %}
+type: consumer
+data:
+  display_name: OAuth User 1
+  name: oauth-user-1
+  type: oauth
+  custom_id: user-id-from-oidc-provider
+  policies: []
+{% endentity_example %}
+
+{% endnavtab %}
+{% endnavtabs %}
+
 ## Create Consumer Credentials
 
-After creating an AI Consumer, create credentials for authentication. Credentials are managed through a separate endpoint.
-
-{% navtabs "credential_type" %}
-{% navtab "api-key" %}
-
-Create an API key credential for an AI Consumer with `type: api-key`:
+After creating an `api-key` AI Consumer, create one or more Credentials for authentication. Credentials are managed through a separate endpoint and only support `type: api-key` — `oauth` AI Consumers authenticate through their `custom_id` field instead (see [Set up an AI Consumer](#set-up-an-ai-consumer) above).
 
 <!-- vale off -->
 {% konnect_api_request %}
@@ -174,32 +193,6 @@ body:
 <!-- vale on -->
 
 The response includes the generated `api_key` value. Store this securely — it cannot be retrieved later.
-
-{% endnavtab %}
-{% navtab "oauth" %}
-
-Create an OAuth credential for an AI Consumer with `type: oauth`:
-
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  display_name: OAuth User 1
-  name: oauth-user-1
-  type: oauth
-  custom_id: user-id-from-oidc-provider
-{% endkonnect_api_request %}
-<!-- vale on -->
-
-The `custom_id` must match the user identifier from your OAuth provider (for example, the `sub` claim from an OIDC token).
-
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Schema
 
