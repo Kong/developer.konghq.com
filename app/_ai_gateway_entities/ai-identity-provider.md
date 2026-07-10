@@ -71,7 +71,7 @@ faqs:
 Your [AI Models](/ai-gateway/entities/ai-model/) often need access control: some teams should reach certain AI Models and others should not, and you need a way to verify who is calling before a request consumes tokens or touches sensitive data. An AI Identity Provider lets you declare an inbound authentication mechanism at the gateway level and attach it to specific AI Models.
 
 Use AI Identity Providers to:
-* Authenticate API keys and map them to AI Consumers
+* Authenticate API keys and map them to [AI Consumers](/ai-gateway/entities/ai-consumer/)
 * Authenticate enterprise users through an existing identity provider (Okta, Azure AD, Google, or any OIDC-compliant IdP) without managing keys manually
 * Apply different authentication to different models. For example, API keys for internal automation and OIDC bearer tokens for user-facing applications.
 
