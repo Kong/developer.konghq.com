@@ -216,7 +216,7 @@ edit_and_issue_links: false
 <span class="text-links font-bold" aria-hidden="true">$</span> {{ cli.command }}<span id="{{ cli_id }}" class="sr-only" aria-hidden="true">{{ cli.install }}
 {{ cli.command }}</span></code></pre>
                 <div class="flex flex-col w-full text-sm border-t border-primary">
-                    <a href="{{ cli.docs_url }}" class="flex justify-between px-5 py-3 text-primary hover:bg-hover-component/100 hover:no-underline no-icon">View docs<span class="card__arrow">&rarr;</span></a>
+                    <a href="{{ cli.docs_url }}" class="flex justify-between px-5 py-3 text-primary hover:bg-hover-component/30 hover:no-underline no-icon">View docs<span class="card__arrow">&rarr;</span></a>
                 </div>
             </div>
             {%- endfor -%}
@@ -232,7 +232,7 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-3">
             <p class="font-mono text-xs uppercase tracking-widest text-terciary m-0">02 · <span class="bg-brand text-button px-1">Platform</span></p>
             <h2 class="text-[36px] leading-[44px]">Manage your entire <em class="text-primary dark:text-brand italic font-bold">connectivity layer</em></h2>
-            <p class="text-lg font-light text-secondary m-0">Securely connect, govern, and monetize API, AI, and event traffic across any model or cloud.</p>
+            <p class="text-lg font-light text-secondary m-0">Securely connect, govern, and monetize AI, API, and event traffic across any model or cloud.</p>
         </div>
 
         {%- for cat in prods.categories -%}
@@ -345,6 +345,7 @@ edit_and_issue_links: false
     function openKapa(query) {
       if (!query) return;
       window.Kapa("open", { mode: "ai", query: query, submit: true });
+      input.value = '';
     }
 
     function updateExternalLinks(q) {
