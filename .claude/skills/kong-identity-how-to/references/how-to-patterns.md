@@ -14,7 +14,7 @@ title: Configure the [Plugin Name] plugin with Kong Identity   # sentence case, 
 content_type: how_to
 permalink: /how-to/configure-kong-identity-[slug]/
 breadcrumbs:
-  - /kong-identity/
+  - /identity/
 description: Learn how to configure Kong Identity with [feature].
 
 entities:
@@ -63,9 +63,9 @@ automated_tests: false    # always false for Kong Identity how-tos currently
 
 related_resources:
   - text: Kong Identity
-    url: /kong-identity/
+    url: /identity/
   - text: Dynamic claim templating
-    url: /kong-identity/#dynamic-claim-templates
+    url: /identity/auth-servers/#dynamic-claim-templates
 ---
 ```
 

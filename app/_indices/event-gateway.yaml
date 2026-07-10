@@ -44,6 +44,8 @@ sections:
       - path: /event-gateway/configure-sasl-plain-backend-cluster-auth/
       - path: /event-gateway/configure-mtls-backend-cluster-auth/
       - path: /event-gateway/validate-avro-messages-with-schema-registry/
+      - path: /event-gateway/kong-identity-metadata-integration/
+      - path: /event-gateway/kong-identity-jwt-metadata-integration/
       - path: /event-gateway/verify-image-signatures-and-attestations/
       - path: /event-gateway/configure-topic-aliases/
       - path: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
