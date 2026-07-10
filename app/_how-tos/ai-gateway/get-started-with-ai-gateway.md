@@ -55,7 +55,7 @@ Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your
 
 <!-- vale off -->
 {% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
 status_code: 201
 method: POST
 headers:
@@ -143,5 +143,6 @@ body:
   messages:
   - role: "user"
     content: "Say this is a test!"
+  model: gpt-4o
 {% endvalidation %}
 <!-- vale on -->
