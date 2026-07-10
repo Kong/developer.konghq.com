@@ -37,7 +37,7 @@ related_resources:
 faqs:
   - q: What is the difference between an AI Identity Provider and an AI Model Provider?
     a: |
-      An AI Identity Provider manages inbound authentication: it validates credentials that AI Consumers
+      An AI Identity Provider manages inbound authentication: it validates the credentials that AI Consumers
       present when calling an AI Model. An AI Model Provider manages outbound credentials: the secrets
       {{site.ai_gateway}} uses to authenticate to an upstream LLM service on behalf of the AI Consumer.
 
