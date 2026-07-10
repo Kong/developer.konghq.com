@@ -68,7 +68,7 @@ In {{site.konnect_short_name}} hybrid mode, upload the plugin schema to the cont
      --data "{\"lua_schema\": $(jq -Rs . kong/plugins/{{include.plugin_slug}}/schema.lua)}"
    ```
 
-   Your control plane ID is visible in the {{site.konnect_short_name}} API Gateway URL, or on the control plane's overview page.
+Your control plane ID is visible in the URL when viewing the control plane in {{site.konnect_short_name}}, or on the control plane's overview page.
 
 1. Build the custom {{site.base_gateway}} image using the Dockerfile in the repository:
 
