@@ -237,7 +237,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
   <!-- vale off -->
   {% konnect_api_request %}
-  url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
+  url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
   status_code: 201
   method: POST
   headers:
