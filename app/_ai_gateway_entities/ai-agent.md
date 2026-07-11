@@ -322,7 +322,8 @@ For available policy types and configuration, see the [AI Policy entity](/ai-gat
 
 ## Set up an Agent
 
-Before creating an AI Agent with access restrictions, first create an AI Consumer Group to reference in [`access.acls`](#schema-aigateway-agent-access). The example below references a group named `internal-teams`—see [Set up an AI Consumer Group](/ai-gateway/entities/ai-consumer-group/#set-up-an-ai-consumer-group) to create it, or substitute the name of your own AI Consumer, AI Consumer Group, or Authenticated Group in `access.acls.allow`.
+Before creating an AI Agent with access restrictions, create an AI Consumer Group to reference in [`access.acls`](#schema-aigateway-agent-access). 
+This example references a group named `internal-teams`. See [Set up an AI Consumer Group](/ai-gateway/entities/ai-consumer-group/#set-up-an-ai-consumer-group) to create it, or substitute the name of your own AI Consumer, AI Consumer Group, or Authenticated Group in `access.acls.allow`.
 
 The following example creates an `a2a` Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with statistics logging enabled and access restricted to the `internal-teams` Consumer Group.
 
