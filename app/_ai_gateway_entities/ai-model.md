@@ -359,9 +359,11 @@ For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 
 ## Set up an AI Model
 
-Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service. The example below references a provider named `my-openai-account`—see [Set up an AI Model Provider](/ai-gateway/entities/ai-model-provider/#set-up-an-ai-model-provider) to create it, or substitute the name of your own AI Model Provider in `targets[].provider`.
+Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service. 
 
-The following example creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
+The following example:
+* Creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
+* References a provider named `my-openai-account`. Either see [Set up an AI Model Provider](/ai-gateway/entities/ai-model-provider/#set-up-an-ai-model-provider) to create it, or substitute the name of your own AI Model Provider in `targets[].provider`.
 
 {:.info}
 > This AI Model proxies client requests to `/v1/chat/completions`. The base path `/v1` comes from [`config.route.paths`](#schema-aigateway-model-config-route-paths), and `/chat/completions` is appended by the `generate` capability automatically.
