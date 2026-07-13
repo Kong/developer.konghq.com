@@ -216,6 +216,7 @@ formats:
       - ai-policy
       - ai-consumer
       - ai-consumer-group
+      - ai-vault
       - admin
       - ca_certificate
       - certificate
