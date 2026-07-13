@@ -103,7 +103,7 @@ In this example, we're setting up the AI Model with:
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-claude`: A unique identifier for this model.
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format.
-* `config.route.paths: [/v1]`: Configures the custom base path where this model's Routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific Routes.
+* `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
 * `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
 * `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
 * `config.logging`: Configures what gets logged. With `statistics: true`, usage metrics (tokens, latency, cost) are logged for monitoring and billing. With `payloads: false`, full request/response bodies are not logged for privacy.
