@@ -48,7 +48,7 @@ event_gateway_variables: &event_gateway_variables
 
 ai_gateway_variables: &ai_gateway_variables
   ai_gateway:
-    placeholder: 'aiGatewayName'
+    placeholder: 'ai-gateway-name'
     description: "The `name` of your AI Gateway."
 
 formats:
