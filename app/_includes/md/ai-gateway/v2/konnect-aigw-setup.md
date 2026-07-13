@@ -1,7 +1,7 @@
-To create a new Gateway using Konnect:
+To create a new AI Gateway using {{site.konnect_short_name}}, do the following:
 
-1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-1. Export your token to an environment variable:
+1. Create a new personal access token from the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) by selecting **Generate Token**.
+1. Export your token as an environment variable:
 
    ```bash
    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
