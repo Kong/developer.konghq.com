@@ -32,6 +32,7 @@ Here's how it works if you apply it to both requests and responses:
    1. The Azure AI Content Safety service analyzes the response against configured moderation categories and allows or blocks the response.
 1. If allowed, the response is forwarded to the client.
 
+{% comment %}
 <!--vale off-->
 {% mermaid %}
 sequenceDiagram
@@ -60,6 +61,7 @@ sequenceDiagram
 <!--vale on-->
 
 > _Figure 1: Diagram showing the request and response flow with the AI Azure Content Safety Policy._
+{% endcomment %}
 
 ## TLS verification
 
