@@ -3,6 +3,7 @@ title: AI Vaults
 content_type: reference
 entities:
   - ai-vault
+  - ai-model-provider
 products:
   - ai-gateway
 min_version:
