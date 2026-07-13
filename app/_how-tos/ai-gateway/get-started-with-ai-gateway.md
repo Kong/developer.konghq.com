@@ -56,8 +56,10 @@ _defaults:
 
 ai_gateways:
   - ref: ai-quickstart
-    name: ai-quickstart
-    display_name: "ai-quickstart"
+    _external:
+      selector:
+        matchFields:
+          name: "ai-quickstart"
 
 ai_gateway_model_providers:
   - ref: generic-openai
@@ -68,10 +70,13 @@ ai_gateway_model_providers:
     config:
       auth:
         type: basic
-        header_name: Authorization
-        header_value: "Bearer $OPENAI_API_KEY"
+        name: Authorization
+        value: "Bearer !env OPENAI_API_KEY"
 EOF
 ```
+
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
 In this example, we're setting up the AI Provider with:
 
@@ -91,8 +96,10 @@ _defaults:
 
 ai_gateways:
   - ref: ai-quickstart
-    name: ai-quickstart
-    display_name: "ai-quickstart"
+    _external:
+      selector:
+        matchFields:
+          name: "ai-quickstart"
 
 ai_gateway_models:
   - ref: my-gpt-4o
@@ -108,7 +115,7 @@ ai_gateway_models:
           - /v1
       model:
         alias: my-gpt-4o
-    target_models:
+    targets:
       - name: gpt-4o
         provider: generic-openai
         config:
@@ -119,6 +126,9 @@ ai_gateway_models:
 EOF
 ```
 
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script, same as in the previous step.
+
 In this example, we're setting up the AI Model with:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
@@ -127,7 +137,7 @@ In this example, we're setting up the AI Model with:
 * `config.route.paths: [/v1]`: Configures the custom base path where this model's Routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific Routes.
 * `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
 * `config.model.alias: my-gpt-4o`: Lets clients send `my-gpt-4o` in the request `model` field instead of the upstream model name.
-* `target_models`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
+* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
 
 ## Validate
 
