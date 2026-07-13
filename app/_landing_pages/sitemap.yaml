@@ -123,7 +123,8 @@ rows:
               blocks:
               - type: unordered_list
                 items:
-                  - "[Gateway changelog](/gateway/changelog/)"
+                  - "[API Gateway changelog](/gateway/changelog/)"
+                  - "[{{site.ai_gateway}} changelog](/ai-gateway/changelog/)"
                   - "[{{site.event_gateway_short}} changelog](/event-gateway/changelog/)"
                   - "[Mesh changelog](/mesh/changelog/)"
                   - "[{{site.konnect_short_name}} changelog (all {{site.konnect_short_name}} apps and platform changes)](https://releases.konghq.com/en)"
