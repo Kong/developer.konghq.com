@@ -71,92 +71,57 @@ major_version:
 
 ---
 
-## Create an AI Provider entity
+## Configure the AI Proxy plugin
 
-Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to Anthropic and store your authentication credentials:
+First, configure the AI Proxy plugin for the [OpenAI provider](/ai-gateway/v1/ai-providers/#openai):
+ * This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
+ * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
 
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  type: anthropic
-  display_name: openai-anthropic
-  name: openai-anthropic
-  config:
-    auth:
-      type: basic
-      headers:
-        - name: x-api-key
-          value: $OPENAI_API_KEY
-{% endkonnect_api_request %}
-<!-- vale on -->
+The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude }}'s native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when {{ site.claude_code }} communicates with the OpenAI endpoint.
 
-In this example, we're setting up the AI Provider with:
-
-* `type: anthropic`: Specifies that this provider connects to the Anthropic service using Anthropic's standard API format. This is important when using an alternate provider with Claude Code. Without this setting, {{site.ai_gateway}} would default to OpenAI’s format, which would cause request failures when Claude Code communicates with the OpenAI endpoint.
-* `name: openai-anthropic`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth`: Stores your API key. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
-
-## Create an AI Model entity
-
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
-
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/models
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  display_name: gpt-for-claude
-  name: gpt-for-claude
-  type: model
-  formats:
-    - type: anthropic
-  config:
-    route:
-      paths:
-        - /
-    model: {
-      alias: gpt-for-claude
-    }
-    logging:
-      payloads: false
-      statistics: true
-  targets:
-    - name: gpt-5.6-luna
-      provider: openai-anthropic
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy
       config:
-        type: anthropic
-  policies: []
-  capabilities:
-    - generate
-{% endkonnect_api_request %}
-<!-- vale on -->
+        llm_format: anthropic
+        route_type: llm/v1/chat
+        logging:
+          log_statistics: true
+          log_payloads: false
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${openai_key}
+          allow_override: false
+        model:
+          provider: openai
+          name: gpt-5-mini
+        max_request_body_size: 524288
+variables:
+  openai_key:
+    value: "$OPENAI_API_KEY"
+{% endentity_examples %}
 
-In this example, we're setting up the AI Model with:
+## Configure the File Log plugin
 
-* `type: model`: Specifies this is a synchronous model for request/response workloads.
-* `name: gpt-for-claude`: A unique identifier for this model.
-* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format.
-* `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
-* `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
-* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: openai-anthropic` references the AI Provider we created earlier, and `name: gpt-5.6-luna` specifies which Anthropic model to call upstream.
-* `config.logging`: Configures what gets logged. With `statistics: true`, usage metrics (tokens, latency, cost) are logged for monitoring and billing. With `payloads: false`, full request/response bodies are not logged for privacy.
+Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: file-log
+      config:
+        path: "/tmp/claude.json"
+{% endentity_examples %}
 
 ## Verify traffic through {{site.ai_gateway}}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
 ```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'gpt-for-claude'
+ANTHROPIC_BASE_URL=http://localhost:8000/anything \
+ANTHROPIC_MODEL=gpt-5-mini \
+claude
 ```
 
 {{ site.claude_code }} asks for permission before it runs tools or interacts with files:
@@ -197,3 +162,54 @@ sharply criticizes and even vilifies the emperor, the empress, and other
 key figures of the time.
 ```
 {:.no-copy-code}
+
+Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
+
+```sh
+docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
+```
+
+You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
+
+```json
+{
+  ...
+  "method": "POST",
+  "headers": {
+    "user-agent": "claude-cli/2.0.37 (external, cli)",
+    "content-type": "application/json"
+  },
+  "ai": {
+    "meta": {
+      "request_model": "gpt-5-mini",
+      "request_mode": "oneshot",
+      "response_model": "gpt-5-mini-2025-08-07",
+      "provider_name": "openai",
+      "llm_latency": 6786,
+      "plugin_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    },
+    "usage": {
+      "completion_tokens": 456,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "reasoning_tokens": 256
+      },
+      "total_tokens": 481,
+      "cost": 0,
+      "time_per_token": 14.881578947368,
+      "time_to_first_token": 6785,
+      "prompt_tokens": 25,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+  ...
+}
+```
+{:.no-copy-code}
+
+This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using the `gpt-5-mini` model we selected while starting the {{ site.claude_code }} session.
