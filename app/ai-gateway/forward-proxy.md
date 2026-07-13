@@ -331,63 +331,60 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 1. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool:
 
   <!-- vale off -->
-  {% capture mcp-server %}
   {% konnect_api_request %}
-  url: /v1/ai-gateways/$AI_GATEWAY_ID/mcp-servers
-  status_code: 201
-  method: POST
-  headers:
-    - 'Content-Type: application/json'
-    - 'Accept: application/json, application/problem+json'
-  body:
-    display_name: Weather API
-    name: weather-mcp
-    type: conversion-listener
-    enabled: true
-    policies: []
-    acl_attribute_type: consumer
-    acls:
-      allow:
-        - __never_match__
-    default_tool_acls:
-      deny:
-        - __never_match__
-    config:
-      url: https://api.weatherapi.com/v1/current.json
-      route:
-        paths:
-          - /weather
-      logging:
-        payloads: false
-        statistics: true
-      server:
-        timeout: 60000
-      proxy:
-        http_proxy:
-            host: secure.mycompany
-            port: 3128
-        proxy_scheme: http
-    tools:
-      - name: get-current-weather
-        description: Get current weather for a location
-        method: GET
-        path: /weather
-        query:
-          key:
-            - $WEATHERAPI_API_KEY
-        parameters:
-          - name: q
-            in: query
-            required: true
-            schema:
-              type: string
-            description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
+     url: /v1/ai-gateways/$AI_GATEWAY_ID/mcp-servers
+     status_code: 201
+     method: POST
+     headers:
+       - 'Content-Type: application/json'
+       - 'Accept: application/json, application/problem+json'
+     body:
+       display_name: Weather API
+       name: weather-mcp
+       type: conversion-listener
+       enabled: true
+       policies: []
+       acl_attribute_type: consumer
+       acls:
+         allow:
+           - __never_match__
+       default_tool_acls:
+         deny:
+           - __never_match__
+       config:
+         url: https://api.weatherapi.com/v1/current.json
+         route:
+           paths:
+             - /weather
+         logging:
+           payloads: false
+           statistics: true
+         server:
+           timeout: 60000
+         proxy:
+           http_proxy:
+               host: secure.mycompany
+               port: 3128
+           proxy_scheme: http
+       tools:
+         - name: get-current-weather
+           description: Get current weather for a location
+           method: GET
+           path: /weather
+           query:
+             key:
+               - $WEATHERAPI_API_KEY
+           parameters:
+             - name: q
+               in: query
+               required: true
+               schema:
+                 type: string
+               description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
   {% endkonnect_api_request %}
-  {% endcapture %}
-  {{ mcp-server | indent: 3}}
   <!-- vale on -->
 
-2. Call `get-current-weather`, this will be forwarded to your proxy service and return an error:
+1. Call `get-current-weather`, this will be forwarded to your proxy service and return an error:
 
     ```sh
     curl -i -X POST http://localhost:8000/weather \
@@ -405,7 +402,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
         }
       }'
     ```
-3. Examine the Squid logs to verify your requests:
+2. Examine the Squid logs to verify your requests:
 
     ```
     docker exec -it squid tail -f /var/log/squid/access.log
