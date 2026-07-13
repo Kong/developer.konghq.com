@@ -331,6 +331,22 @@ Configure how long sessions persist using [`session_ttl`](#schema-aigateway-mcps
 {:.info}
 > Secrets used in session encryption can be referenced from an [AI Vault](/ai-gateway/entities/ai-vault/).
 
+## Connecting to the MCP endpoint
+
+An MCP client such as [Claude Desktop](https://claude.ai/download), Cursor, or [ChatWise](https://chatwise.app/) handles the following details automatically. They matter when testing an AI MCP Server directly, for example with `curl`, or when building a custom MCP client.
+
+**Streamable HTTP handshake**. {{site.ai_gateway}} implements the MCP [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http). A spec-compliant client performs this sequence before calling tools:
+
+1. Send an `initialize` request to the route configured on [`config.route.paths`](#schema-aigateway-mcpserver-config-route-paths). The response includes an `Mcp-Session-Id` header.
+1. Send a `notifications/initialized` notification to the same route.
+1. Carry the `Mcp-Session-Id` header on subsequent `tools/list` and `tools/call` requests.
+
+{:.success}
+> **Tool argument naming**.
+>
+>Tools generated from [`parameters`](#schema-aigateway-mcpserver-tools-parameters) (`conversion-listener`, `conversion-only`) rename `query`, `path`, `header`, and `cookie` args to `{in}_{name}`: `query: q` becomes `query_q`.
+> Bodies collapse into a single `body` property. Check `tools/list` before calling `tools/call`.
+
 ## ACL tool control
 
 When exposing MCP servers through {{site.ai_gateway}}, you may need granular control over which authenticated [AI Consumers](/ai-gateway/entities/ai-consumer/) can discover and invoke specific tools. The MCP Server's ACL feature lets you define access rules at both the default level (which applies to all tools) and per-tool level (for fine-grained exceptions).
