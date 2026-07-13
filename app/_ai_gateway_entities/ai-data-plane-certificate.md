@@ -22,8 +22,8 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Provider entity
-    url: /ai-gateway/entities/ai-provider/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
   - text: Vault entity
     url: /ai-gateway/entities/ai-vault/
 faqs:

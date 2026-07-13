@@ -21,7 +21,7 @@ tldr:
   q: How do I proxy LLM traffic with {{site.ai_gateway}} entities?
   a: |
     {{site.ai_gateway}} provides first-class entities for managing LLM providers and models in {{site.konnect_product_name}}.
-    Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to connect and authenticate to an LLM service like OpenAI, then create an [AI
+    Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to connect and authenticate to an LLM service like OpenAI, then create an [AI
     Model](/ai-gateway/entities/ai-model/) entity to specify which model is available for requests.
 
     This tutorial shows you how to set up an AI Provider and AI Model for OpenAI in {{site.konnect_product_name}} using kongctl and how to proxy your first request to OpenAI.
@@ -48,7 +48,7 @@ min_version:
 
 ## Create an AI Provider entity
 
-Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to OpenAI and store your authentication credentials:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to OpenAI and store your authentication credentials:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
