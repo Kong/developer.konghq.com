@@ -46,7 +46,7 @@ body:
   name: generic-anthropic
   config:
     auth:
-      type: x-api-key
+      type: basic
       headers:
         - name: x-api-key
           value: $ANTHROPIC_API_KEY
@@ -113,7 +113,7 @@ In this example, we're setting up the AI Model with:
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
 ```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/v1 claude --model 'my-claude'
+ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'my-claude'
 ```
 
 {{ site.claude_code }} asks for permission before it runs tools or interacts with files:
