@@ -86,7 +86,7 @@ rows:
             description: Expose and observe your first tool server over Model Context Protocol.
             icon: /assets/icons/mcp-quickstart.svg
             cta:
-              url: /ai-gateway/mcp/
+              url: /ai-gateway/get-started-with-mcp-server/
               align: end
       - blocks:
         - type: card
