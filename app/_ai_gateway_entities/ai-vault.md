@@ -202,7 +202,7 @@ Cache duration and grace periods are tunable per vault, allowing you to balance 
 The following example registers an environment-variable AI Vault that resolves references against process environment variables prefixed with `KONG_`.
 
 {:.info}
-> Unlike AI Model, AI Model Provider, and AI Policy, AI Vault doesn't accept a `display_name` field. Only `name` and `description` identify a vault. If you include `display_name` when creating an AI Vault, {{site.ai_gateway}} silently ignores it.
+> AI Vault doesn't accept a `display_name` field. Only `name` and `description` identify a vault. If you include `display_name` when creating an AI Vault, {{site.ai_gateway}} silently ignores it.
 
 {% entity_example %}
 type: vault
