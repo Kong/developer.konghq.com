@@ -34,7 +34,7 @@ tools:
 
 prereqs:
   inline:
-    - title: Congifure kongctl
+    - title: Configure kongctl
       include_content: md/ai-gateway/v2/prereqs/kongctl
     - title: OpenAI API key
       content: |
