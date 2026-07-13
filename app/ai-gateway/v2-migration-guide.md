@@ -18,6 +18,14 @@ min_version:
   ai-gateway: '2.0'
 
 description: This guide walks you through moving your configuration from the API {{site.base_gateway}} plugin model to the new {{site.ai_gateway}} Policies model.
+
+related_information:
+  - text: "{{site.ai_gateway}} 2.x concepts"
+    url: /ai-gateway/ai-gateway-v2-concepts/
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/entities/ai-policy/
+  - text: "{{site.ai_gateway}} entities"
+    url: /ai-gateway/entities/
 ---
 
 {{site.ai_gateway}} version 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of the API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: AI Providers, AI Models, AI MCP Servers, and AI Agents. 
@@ -52,10 +60,10 @@ The diagram below shows where each tool sits in the flow:
 
 {% mermaid %}
 flowchart LR
-    A["API Gateway CP<br/>AI Gateway v1"] -->|deck gateway dump| B["kong.yaml"]
+    A["API Gateway CP<br/>{{site.ai_gateway}} v1"] -->|deck gateway dump| B["kong.yaml"]
     B -->|ai-deck-converter| C["ai-gateway.yaml"]
     C -->|review and validate| C
-    C -->|kongctl apply| D["AI Gateway CP<br/>AI Gateway v2"]
+    C -->|kongctl apply| D["{{site.ai_gateway}} CP<br/>{{site.ai_gateway}} v2"]
 {% endmermaid %}
 
 ### Step 1: Export your current configuration
@@ -107,6 +115,7 @@ Pay particular attention to anything the converter cannot infer from the version
 
 `kongctl` needs to know which {{site.ai_gateway}} control plane to target. Add your control plane name to the `kongctl` configuration file so that `kongctl apply` writes to the correct control plane.
 
+<!--vale off-->
 ```sh
 # Set the AI Gateway control plane that kongctl will apply to.
 ai_gateways:
@@ -116,6 +125,7 @@ ai_gateways:
         matchFields:
           name: "ai-gateway"
 ```
+<!--vale on-->
 
 Keep one source of truth so that repeated applies always target the same control plane.
 
@@ -146,6 +156,7 @@ This allows you to reuse AI Providers in multiple AI Models.
 
 The following `deck` snippet defines a chat model that load balances across two OpenAI models using round-robin:
 
+<!--vale off-->
 ```yaml
 # kong.yaml (AI Gateway v1, exported with deck gateway dump)
 services:
@@ -185,9 +196,11 @@ services:
             temperature: 0.7
 ```
 {:.collapsible}
+<!--vale on-->
 
 The converter splits the credentials into an AI Provider and the routing and balancing into an AI Model. The route_type of `llm/v1/chat` becomes `capabilities: [generate]` with an `openai` format, and each target references the AI Provider by name.
 
+<!--vale off-->
 ```yaml
 # ai-gateway.yaml (AI Gateway v2 entity model)
 providers:
@@ -239,6 +252,7 @@ models:
       temperature: 0.7
 ```
 {:.collapsible}
+<!--vale on-->
 
 #### Verify AI Models entity configuration
 
@@ -286,6 +300,7 @@ The following version 1.x example config:
 * Converts a REST flights API into MCP tools
 * Serves the tools on a Route, with `key-auth` in front and a default ACL
 
+<!--vale off-->
 ```yaml
 # kong.yaml (AI Gateway v1, exported with deck gateway dump)
 services:
@@ -312,6 +327,7 @@ services:
         # ...OpenAPI-derived tool definition...
 ```
 {:.collapsible}
+<!--vale on-->
 
 Converting the example to use the version 2.x model:
 * Moves the upstream URL, route, tools, and logging settings onto a single AI MCP Server entity
@@ -320,6 +336,7 @@ Converting the example to use the version 2.x model:
 * Renames `default_acl` to `default_tool_acls` and sets the ACL evaluation mode explicitly with `acl_attribute_type`
 * Renames the `config.logging` fields: `log_statistics` becomes `statistics`, and `log_audits` becomes `audits`
 
+<!--vale off-->
 ```yaml
 # ai-gateway.yaml (AI Gateway v2 entity model)
 policies:
@@ -358,6 +375,7 @@ mcp-servers:
     # ...OpenAPI-derived tool definition...
 ```
 {:.collapsible}
+<!--vale on-->
 
 #### Verify AI MCP Servers entity configuration
 
@@ -382,6 +400,7 @@ In {{site.ai_gateway}} version 2.x, that plugin becomes an [AI Agent](/ai-gatewa
 
 The following version 1.x example defines an A2A agent that proxies an upstream agent that handles flight bookings:
 
+<!--vale off-->
 ```yaml
 # kong.yaml (AI Gateway v1, exported with deck gateway dump)
 services:
@@ -401,11 +420,13 @@ services:
         max_payload_size: 1048576
 ```
 {:.collapsible}
+<!--vale on-->
 
 Converting the example to use the version 2.x model:
 * Moves the upstream URL, route, request-size limit, and logging settings onto a single AI Agent entity.
 * Renames the `config.logging` fields: `log_statistics` becomes `statistics`, and `log_payloads` becomes `payloads`
 
+<!--vale off-->
 ```yaml
 # ai-gateway.yaml (AI Gateway v2 entity model)
 agents:
@@ -430,6 +451,7 @@ agents:
       max_payload_size: 1048576
 ```
 {:.collapsible}
+<!--vale on-->
 
 #### Verify AI Agent entity configuration
 
@@ -468,11 +490,11 @@ By default, this writes skill files to `.kongctl/skills/` and symlinks them for 
 
 With the converter output and these skills in place, you can build extensions that:
 
-- Diff a freshly converted `ai-gateway.yaml` against the live AI Gateway control plane and surface drift before an apply.
+- Diff a freshly converted `ai-gateway.yaml` against the live {{site.ai_gateway}} control plane and surface drift before an apply.
 - Wrap the full `deck gateway dump`, `ai-deck-converter`, and `kongctl apply` sequence into a single repeatable command for many control planes.
 - Validate that every `targets[].provider` reference resolves and that required fields such as `display_name` are populated, as a pre-apply gate.
 
-This lets you treat {{site.ai_gateway}} migration as a versioned, reviewable, and automatable pipeline rather than a one-time manual conversion.
+This lets you treat {{site.ai_gateway}} migration as a versioned, reviewable, and automated pipeline rather than a one-time manual conversion.
 
 
 ### Set up a fresh install with the {{site.konnect_short_name}} MCP Server
@@ -483,8 +505,8 @@ Connect your MCP client to the regional {{site.konnect_short_name}} MCP Server e
 
 The {{site.konnect_short_name}} MCP Server exposes a discover-then-execute pattern with three core tools:
 
-- `search` finds the relevant API operation from a natural-language description, for example "create an AI Gateway model."
+- `search` finds the relevant API operation from a natural-language description, for example "create an {{site.ai_gateway}} model."
 - `get_schema` returns the full schema for that operation so the assistant knows which fields are required.
 - `execute` calls the operation with the right inputs.
 
-Using this pattern, you can ask your assistant to create an AI Gateway, declare AI Providers, then add AI Models, AI MCP Servers, and AI Agents, with the assistant reasoning over the live schema at each step rather than relying on hardcoded field lists. The same tools power [KAi](/konnect-platform/kai/), Kong's in-product AI assistant, so the workflow is consistent whether you work from an IDE, the terminal, or {{site.konnect_short_name}} itself.
+Using this pattern, you can ask your assistant to create an {{site.ai_gateway}}, declare AI Providers, then add AI Models, AI MCP Servers, and AI Agents, with the assistant reasoning over the live schema at each step rather than relying on hardcoded field lists. The same tools power [KAi](/konnect-platform/kai/), Kong's in-product AI assistant, so the workflow is consistent whether you work from an IDE, the terminal, or {{site.konnect_short_name}} itself.

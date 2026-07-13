@@ -18,6 +18,14 @@ min_version:
   ai-gateway: '2.0'
 
 description: This page describes the differences between the API {{site.base_gateway}} plugin model and the new {{site.ai_gateway}} Policies model.
+
+related_information:
+  - text: "Migrate to {{site.ai_gateway}} 2.x"
+    url: /ai-gateway/v2-migration-guide/
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/entities/ai-policy/
+  - text: "{{site.ai_gateway}} entities"
+    url: /ai-gateway/entities/
 ---
 
 {{site.ai_gateway}} version 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: Providers, Models, MCP Servers, and Agents. 
