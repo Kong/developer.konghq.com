@@ -232,6 +232,10 @@ sequenceDiagram
 
 {% include md/ai-gateway/v2/forward-proxy.md %}
 
+## Tool aggregation with upstream-server
+
+You can use a `listener` to pull tools from multiple `upstream-server` MCP Servers and expose them through a single endpoint. The listener discovers and aggregates tools based on matching tags, so clients see one unified tool catalog while your services remain independent.
+
 ### How aggregation works
 
 1. **Tags connect upstreams to listeners**: Set [`config.server.tag`](#schema-aigateway-mcpserver-config-server-tag) on the listener (e.g., `my-tools`). Set the same tag on every `upstream-server` AI MCP Server you want included. Any upstream with matching tags gets pulled into the aggregation.
