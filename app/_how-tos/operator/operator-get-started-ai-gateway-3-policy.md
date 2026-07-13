@@ -1,6 +1,6 @@
 ---
 title: Apply AI policies with {{site.operator_product_name}}
-description: Add AIGatewayPolicy resources to enforce prompt guardrails and content governance on your AI Gateway deployment.
+description: Add AIGatewayPolicy resources to enforce prompt guardrails and content governance on your {{ site.ai_gateway }} deployment.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/policy/
 
