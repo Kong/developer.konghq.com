@@ -27,7 +27,7 @@ tags:
 
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, optionally enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
+  a: Create an AI Provider entity to store your Anthropic API key, create an AI Model entity that routes to Anthropic through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
 ---
 
@@ -52,12 +52,12 @@ ai_gateway_model_providers:
     ai_gateway: ai-quickstart
     name: generic-anthropic
     display_name: "generic-anthropic"
-    type: openai
+    type: anthropic
     config:
       auth:
         type: basic
         header_name: x-api-key
-        header_value: "$OPENAI_API_KEY"
+        header_value: "$ANTHROPIC_API_KEY"
 EOF
 ```
 
@@ -96,7 +96,7 @@ ai_gateway_models:
           - /
       model:
         alias: my-claude
-    target_models:
+    targets:
       - name: claude-opus-4-8
         provider: generic-anthropic
         config:
@@ -113,9 +113,8 @@ In this example, we're setting up the AI Model with:
 * `name: my-claude`: A unique identifier for this model.
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format.
 * `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
-* `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
+* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
 * `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
-* `config.logging`: Configures what gets logged. With `statistics: true`, usage metrics (tokens, latency, cost) are logged for monitoring and billing. With `payloads: false`, full request/response bodies are not logged for privacy.
 
 ## Verify traffic through Kong
 
