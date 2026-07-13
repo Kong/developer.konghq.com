@@ -312,16 +312,6 @@ rows:
 
 When your upstream services need to enforce their own access controls or apply client-specific logic based on identity, enable [`config.server.forward_client_headers`](#schema-aigateway-mcpserver-config-server-forward-client-headers) on the `listener` or `upstream-server`. This setting passes the original client's headers (authentication tokens, context) so upstreams see the actual client, not just the listener.
 
-## Tools
-
-A [tool](#schema-aigateway-mcpserver-tools) maps an MCP tool name to an upstream HTTP endpoint. Each tool needs at minimum a description and an HTTP method. The runtime extracts the host, path, headers, and query from the route configuration, so most tool entries don't need to specify them. Override these on the tool entry only when the route doesn't match the upstream endpoint exactly.
-
-For richer mapping, supply [`request_body`](#schema-aigateway-mcpserver-tools-request-body), [`responses`](#schema-aigateway-mcpserver-tools-responses), and [`parameters`](#schema-aigateway-mcpserver-tools-parameters) specifications in OpenAPI JSON format. The runtime uses them to validate calls and shape upstream HTTP requests.
-
-Tools can also carry MCP-spec [`annotations`](#schema-aigateway-mcpserver-tools-annotations) that hint at tool behavior to clients (for example, whether a tool is read-only, idempotent, or destructive). Annotations don't change runtime behavior; they help clients decide whether to surface a tool, confirm before invocation, or treat it as safe to retry.
-
-[Per-tool ACLs](#schema-aigateway-mcpserver-tools-access) override the MCP Server's [default tool ACLs](#schema-aigateway-mcpserver-access-default-tool-acls). For more information, see [ACL tool control](#acl-tool-control).
-
 ## Sessions
 
 Some MCP clients need to maintain state across multiple tool calls such as authentication tokens, conversation context, or request IDs. {{site.ai_gateway}} can manage session state for you in `listener` and `conversion-listener` modes, storing it either encrypted on the client or in Redis. Configure session storage through [`config.server.session`](#schema-aigateway-mcpserver-config-server-session). The `passthrough-listener` mode doesn't manage sessions because state lives entirely on the upstream MCP server.
