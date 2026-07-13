@@ -86,7 +86,7 @@ body:
       payloads: false
       statistics: true
   targets:
-    - name: claude-opus-4-6
+    - name: claude-opus-4-8
       provider: generic-anthropic
       config:
         type: anthropic
@@ -103,7 +103,7 @@ In this example, we're setting up the AI Model with:
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format.
 * `config.route.paths: [/v1]`: Configures the custom base path where this model's Routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific Routes.
 * `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
-* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Provider we created earlier, and `name: claude-opus-4-6` specifies which Anthropic model to call upstream.
+* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
 * `config.logging`: Configures what gets logged. With `statistics: true`, usage metrics (tokens, latency, cost) are logged for monitoring and billing. With `payloads: false`, full request/response bodies are not logged for privacy.
 
 ## Verify traffic through Kong
@@ -111,8 +111,8 @@ In this example, we're setting up the AI Model with:
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
 ```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=claude-sonnet-4-5-20250929 \
+ANTHROPIC_BASE_URL=http://localhost:8000/v1 \
+ANTHROPIC_MODEL=claude-opus-4-8 \
 claude
 ```
 
