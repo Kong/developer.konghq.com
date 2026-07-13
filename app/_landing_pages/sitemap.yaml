@@ -75,6 +75,11 @@ rows:
           - type: structured_text
             config:
               blocks:
+                - type: text
+                  text: "**Plugins**"
+          - type: structured_text
+            config:
+              blocks:
               - type: unordered_list
                 items:
                   - "[Gateway plugin hub](/plugins/)"
@@ -83,11 +88,22 @@ rows:
           - type: structured_text
             config:
               blocks:
+                - type: text
+                  text: "**Policies**"
+          - type: structured_text
+            config:
+              blocks:
               - type: unordered_list
                 items:
+                  - "[{{site.ai_gateway}} policy hub](/ai-gateway/policies/)"
                   - "[Mesh policy hub](/mesh/policies/)"
                   - "[{{site.event_gateway_short}} policy hub](/event-gateway/policies/)"
       - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: "**Other**"
           - type: structured_text
             config:
               blocks:
