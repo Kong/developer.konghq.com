@@ -26,6 +26,7 @@ Here's how it works if you apply it to both requests and responses:
    1. The guardrail service analyzes the response against configured moderation categories and allows or blocks the response.
 1. If allowed, the response is forwarded to the client.
 
+{% comment %}
 <!-- vale off -->
 {% mermaid %}
 sequenceDiagram
@@ -50,6 +51,7 @@ sequenceDiagram
   custguardrail->>client: Forward allowed response
 {% endmermaid %}
 <!-- vale on -->
+{% endcomment %}
 
 ## Configuration
 
