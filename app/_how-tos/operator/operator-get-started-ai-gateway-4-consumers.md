@@ -275,20 +275,19 @@ curl -s -o /dev/null -w "%{http_code}\n" \
    kubectl get aigatewayconsumer,aigatewayconsumergroup -n kong
    ```
 
-## Inspect consumer status
+## Inspect AI Consumer status
 
-List all consumers and their reconciliation status:
+List all AI Consumers and their reconciliation status:
 
 ```bash
 kubectl get aigatewayconsumer -n kong
 ```
 
-```
+You should see an output like the following:
 NAME            ID                                     PROGRAMMED   AGE
 team-platform   <konnect-id>                           True         2m
-```
 
-Describe a consumer to see the full status and any reconciliation errors:
+Describe an AI Consumer to see the full status and any reconciliation errors:
 
 ```bash
 kubectl describe aigatewayconsumer/team-platform -n kong
