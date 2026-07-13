@@ -15,7 +15,6 @@
 
 <script setup>
 import { ref, toRaw, onMounted, watch, computed } from 'vue'
-import axios from 'axios';
 
 import { SchemaRenderer, parseSpecDocument, parsedDocument } from '@kong/spec-renderer'
 import ApiService from '../services/api.js'
@@ -71,11 +70,13 @@ function annotateNode(obj) {
 }
 
 async function fetchSpec() {
-  let response = await axios.get(`http://localhost:3036/vite-dev/api/v3/apis/${productId.value}/versions/${productVersionId.value}/`)
-   .catch(e => {
+  let response = await versionsAPI.getProductVersionSpec({
+    productId: productId.value,
+    productVersionId: productVersionId.value,
+  }).catch(e => {
     console.log(e)
   })
-  specText.value = response.data.content || response.data.spec.content;
+  specText.value = response.data.content
 }
 </script>
 
