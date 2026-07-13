@@ -141,5 +141,6 @@ Once the replay job is marked as Complete, you can view the recovered audit logs
 ```cef
 2025-06-23T14:28:47Z konghq.com CEF:0|KongInc|Dev-Portal|1.0|AUTHENTICATION_TYPE_BASIC|AUTHENTICATION_OUTCOME_SUCCESS|0|rt=1750688927556 src=172.71.232.22 request=/api/v2/developer/authenticate success=true org_id=998db3e4-5cb7-4dd5-b51c-9878096a6999 portal_id=3e551b39-227d-4297-b911-e68fd5d77c17 principal_id=a3d2699a-0ed3-4417-bb10-d8e74a1513a4 trace_id=3360194145499877252 user_agent= sig=XQC3OSFxLbi5dy2-o4xAXHT-x8oW5Df-zVsACWQLMU9Q-sPnEyk5CVs4JHwuRcwO0QNLsNaP1wsyrXYPeneXDQ
 ```
+{:.no-copy-code.wrap}
 
 

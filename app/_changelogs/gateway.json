@@ -23200,12 +23200,12 @@
     "kong-ee": [
       {
         "message": "Added error attribution for plugin execution errors (HTTP 500). Kong classifies errors as\n`kong` (bundled plugins) or `custom` (custom plugins), and Prometheus exposes this via\nthe `source` label to separate custom plugin failures from internal Kong errors.",
-        "type": "Breaking Change",
+        "type": "feature",
         "scope": "Core"
       },
       {
         "message": "**Conditional Plugin Execution**: The plugin `condition` field now uses\nCommon Expression Language (CEL) with broader operator and type\nsupport, aligned across UI, Control Plane, and Data Plane.  Refer to\nthe official documentation for the full syntax, supported variables,\noperators, and types.",
-        "type": "Breaking Change",
+        "type": "feature",
         "scope": "Core"
       },
       {
@@ -24148,6 +24148,109 @@
         "message": "**router**: Fixed an issue where WebSocket routes (`ws`/`wss`) returned HTTP 404 when using `router_flavor=expressions` due to incorrect protocol matching expressions being generated.",
         "type": "bugfix",
         "scope": "Core"
+      }
+    ]
+  },
+  "3.15.0.1": {
+    "kong-ee": [
+      {
+        "message": "**ACL**: Fixed an issue where the ACL plugin returned a 403 error for authenticated\ncredentials with no consumer and no groups (e.g. ACE / Dev Portal application\ncredentials) when configured with a deny list. A group-less identity cannot\nmatch a deny list and should be allowed through.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**acl**: Fixed an issue where the ACL plugin ignored a consumer's ACL groups when `include_consumer_groups` was enabled and the consumer belonged to an enterprise consumer group, causing incorrect 403 denials (with `allow`) or incorrect access (with `deny`) for authenticated and anonymous consumers. The plugin now falls back to the consumer's ACL groups when no third-party authenticated groups are present.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a failure in a `dao:*:post` hook during insert/update/upsert\nwas silently swallowed, causing the DAO to return `nil` with no error.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where data planes retried unrecoverable TLS certificate setup failures instead of loading their backup configuration.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where immediate cosocket SSL handshake errors could be reported as subsequent socket write failures.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where pushing a configuration with a Datakit plugin whose `inputs` node contained a null value to an older data plane crashed the control plane's config compatibility checker with the error `\"attempt to index local 'value' (a userdata value)\"`.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where resetting the password of an admin or developer failed with the error `Old password is invalid`, which happened when the credential was created before the basic auth hashing algorithm was upgraded from SHA1 to SHA256 (e.g. a `kong_admin` user created in an older version and carried over through an upgrade). The old password is now verified with the backward-compatible verification logic that supports both SHA1 and SHA256 hashed passwords.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "Fixed an issue where the error wrapper was not being freed after sandboxed template rendering in plugins such as `request-transformer` and `response-transformer`.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Increased the default `proxy_ssl_verify_depth` and `lua_ssl_verify_depth` from `1` to `5`.",
+        "type": "bugfix",
+        "scope": "Configuration"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where a token endpoint response with `expires_in <= 0` was cached indefinitely with the proactive expiry re-check disabled, causing the plugin to silently forward an already-expired token to the upstream until a worker/process restart.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where consumer groups could not be resolved\nwhen the groups claim was only available from the user info endpoint, which\nresulted in a `500` error.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-transformer**: Fixed a regression where `remove.headers` entries in `header:value` format (e.g. `correlationId:1222`) failed to remove the header. The value part is now correctly ignored during removal, restoring the behavior from 3.11.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**tcp-log**: Fixed the race condition where the balancer `tries` array was cleared before the asynchronous timer thread could safely encode it.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.10.0.16": {
+    "kong-ee": [
+      {
+        "message": "**Debugger**: Fixed an issue where the default key name `apikey` of the `key-auth` and `key-auth-enc` plugins was not redacted when captured by the Debugger. This has been resolved by adding `apikey` to the list of default redacted headers.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the control plane could crash while handshaking with a data plane on the legacy clustering endpoint if a non-binary WebSocket frame (such as a ping/pong control frame) arrived before the `basic_info` frame. The control plane now drains and responds to control frames during the handshake until the expected frame is received, instead of dereferencing a nil plugin list.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**router**: Fixed an issue where WebSocket routes (`ws`/`wss`) returned HTTP 404 when using `router_flavor=expressions` due to incorrect protocol matching expressions being generated.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Improved performance of clustering payload handling for version compatibility, reducing CPU usage and transient memory pressure.",
+        "type": "performance",
+        "scope": "Clustering"
       }
     ]
   }

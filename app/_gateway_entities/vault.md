@@ -11,6 +11,8 @@ description: |
 related_resources:
   - text: Secrets Management
     url: /gateway/secrets-management/
+  - text: Create a custom vault backend
+    url: /how-to/create-custom-vault/
   - text: Workspaces
     url: /gateway/entities/workspace/
   - text: RBAC
@@ -290,6 +292,11 @@ features:
     supports_konnect: true
     how_to: |
       * [Basic setup](/how-to/configure-file-system-as-a-vault-backend/)
+  - title: Custom vault backend
+    url: /how-to/create-custom-vault/
+    oss: true
+    enterprise: true
+    supports_konnect: false
 {% endfeature_table %}
 
 ## How do I reference secrets stored in a Vault?
@@ -498,6 +505,8 @@ export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
 If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
 
+{% include /gateway/azure-vault-dcgw-unsupported.md %}
+
 At minimum, you'll also need to set the following values on your data plane. 
 
 ```sh
@@ -609,6 +618,8 @@ export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 By default, the vault looks for `AZURE_CLIENT_SECRET`, but you can customize this with the `credentials_prefix` field.
 
 If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
+
+{% include /gateway/azure-vault-dcgw-unsupported.md %}
 
 You also need to set `KONG_LUA_SSL_VERIFY_DEPTH` to at least `3` on your data plane to allow Kong to verify the Azure Key Vault TLS certificate chain:
 

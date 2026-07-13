@@ -111,6 +111,9 @@
 /kongctl/tail/konnect/audit-logs/   /kongctl/tail/konnect/#kongctl-tail-konnect-audit-logs
 
 # Plugins
+/plugins/traceableai/  /plugins/harness-waap/
+/plugins/traceableai/reference/  /plugins/harness-waap/reference/
+/plugins/traceableai/examples/enable-traceable/  /plugins/harness-waap/examples/enable-harness-waap/
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 /gateway/plugin-development/  /custom-plugins/
 /gateway/plugin-development/*  /custom-plugins/

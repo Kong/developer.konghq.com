@@ -87,7 +87,7 @@ columns:
     key: entities
   - title: Target RPS
     key: rps
-  - title: Recommended minimum instance
+  - title: Recommended minimum tier
     key: instance
   - title: Recommended sync rate
     key: sync
@@ -97,35 +97,35 @@ rows:
   - profile: Small/Dev/Test/Low Performance Env
     entities: "≤100 × ≤100 × 1 window"
     rps: "≤1,000"
-    instance: "`cache.t3.micro` or `cache.t3.small`"
+    instance: "`micro` or `small`"
     sync: "0.5"
     notes: |
-      Appropriate for development, testing, and other low-load or low-performance environments.
-      These are burstable instance types, so performance may vary.
-      Micro fails at 10,000 RPS.
-      Small handles a 1,000 RPS baseline cleanly.
+      Appropriate for development, testing, and other low-load or low-performance environments.
+      These are burstable tiers, so performance may vary.
+      `micro` fails at 10,000 RPS.
+      `small` handles a 1,000 RPS baseline cleanly.
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
-    instance: "`cache.t3.medium`"
+    instance: "`medium`"
     sync: "0.5"
     notes: "--"
   - profile: Large enterprise
     entities: "≤5,000 × ≤3,000 × 3 windows"
     rps: "≤10,000"
-    instance: "`cache.m5.xlarge`"
+    instance: "`xlarge`"
     sync: "0.5–1.0"
-    notes: Large instances are overwhelmed at 0.1 sync rate with this entity count. xLarge provides headroom.
+    notes: Large tiers are overwhelmed at a 0.1 sync rate with this entity count. The `xlarge` tier provides headroom.
   - profile: High-scale enterprise
     entities: "≤5,000 × ≤3,000 × 3 windows"
     rps: "≤20,000"
-    instance: "`cache.m5.2xlarge`"
+    instance: "`2xlarge`"
     sync: "0.5–1.0"
     notes: "--"
   - profile: Ultra-high-scale
     entities: ">5,000 × >3,000 × 3 windows"
     rps: "≤65,000"
-    instance: "`cache.m5.4xlarge`"
+    instance: "`4xlarge`"
     sync: "0.5"
     notes: At this tier, it's critical that the base RPS you configured for the Dedicated Cloud Gateway is accurate to your production traffic.
 {% endtable %}
@@ -148,20 +148,20 @@ rows:
     syncs_per_sec: "10"
     notes: |
       Highest Redis command load. 
-      Only viable on `cache.m5.xlarge` or larger when entity counts exceed 1,000 Consumers. 
-      On smaller instances, it causes cache CPU saturation, Redis timeout cascades, and data plane node restarts.
+      Only viable on `xlarge` or larger when entity counts exceed 1,000 Consumers. 
+      On smaller tiers, it causes cache CPU saturation, Redis timeout cascades, and data plane node restarts.
       <br><br>
       Only use this when sub-second rate limiting accuracy is business-critical.
       <br><br>
       If you must use sync rate 0.1 for accuracy, size up the cache by at least one tier beyond what the entity count alone would suggest. 
-      If you can tolerate sync rate 0.5, you can use a smaller cache instance.
+      If you can tolerate sync rate 0.5, you can use a smaller cache tier.
   - sync_rate: "0.5"
     syncs_per_sec: "2"
     notes: |
       **Recommended default for production.**
       Best balance of accuracy and resource efficiency. 
-      Stable across all instance types for standard workloads. 
-      For high-entity deployments, this works well on `cache.m5.large` and above.
+      Stable across all tiers for standard workloads. 
+      For high-entity deployments, this works well on `large` and above.
   - sync_rate: "1.0"
     syncs_per_sec: "1"
     notes: |

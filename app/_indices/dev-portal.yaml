@@ -41,3 +41,8 @@ sections:
       - path: /dev-portal/sso/
       - path: /dev-portal/security-settings/
       - path: /dev-portal/self-service/
+  - title: Integrations
+    items:
+      - path: /dev-portal/google-analytics/
+      - path: /dev-portal/google-tag-manager/
+      - path: /dev-portal/equalweb/

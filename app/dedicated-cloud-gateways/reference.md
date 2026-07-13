@@ -73,6 +73,14 @@ faqs:
       Yes, Dedicated Cloud Gateway uses PKI certificates for control plane and data plane communication like [hybrid mode](/gateway/hybrid-mode/) Gateways. 
   - q: Can I use credential-less authentication (AWS workload identity or Azure managed identity) for Dedicated Cloud Gateways?
     a: You can use AWS workload identity with Dedicated Cloud Gateways. Azure managed identity isn't currently supported for Dedicated Cloud Gateways. 
+  - q: Can I set provider-specific Vault credentials, like `AZURE_CLIENT_SECRET`, `AWS_ACCESS_KEY_ID`, or `GCP_SERVICE_ACCOUNT`, as environment variables on a Dedicated Cloud Gateway?
+    a: |
+      No. Dedicated Cloud Gateways only accept environment variables prefixed with `KONG_` or `OTEL_`, so provider-specific credential env vars can't be set this way. 
+
+      Instead, configure these values using a [Vault entity](/gateway/entities/vault/#vault-provider-specific-configuration-parameters), which supports most provider-specific parameters directly.
+
+      {:.warning}
+      > **Azure Key Vault is not supported as a Vault backend on Dedicated Cloud Gateways:** Azure Key Vault's client secret has no Vault entity equivalent. It's only read from an environment variable. Since Dedicated Cloud Gateways can't set that environment variable and don't support Azure managed identity as an alternative, Azure Key Vault can't be used as a Vault backend on Dedicated Cloud Gateways.
 
 related_resources:
   - text: Dedicated Cloud Gateways 
@@ -403,8 +411,8 @@ The following table lists the environment variables that you can set while creat
 config:
   - name: log_level
     description: |
-      Log level of the data plane node.
-      
+      Log level of the data plane node. See the [Nginx error log reference](http://nginx.org/en/docs/ngx_core_module.html#error_log) for a list of accepted values.
+
       The logs are available in {{site.konnect_short_name}}, in the **Logs** tab of the data plane node.
   - name: request_debug_token
   - name: tracing_instrumentations

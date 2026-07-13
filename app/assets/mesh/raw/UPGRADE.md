@@ -5,6 +5,76 @@ This document guides you through the process of upgrading Kong Mesh.
 First, check if a section named `Upgrade to x.y.z` exists,
 with `x.y.z` being the version you are planning to upgrade to.
 
+## Upgrade to `3.0.0`
+
+{:.info}
+> The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+### Auto reachable services removed
+
+The experimental auto reachable services feature has been removed. The control
+plane no longer computes the set of services a data plane proxy can reach from
+`MeshTrafficPermission` to prune its Envoy configuration.
+
+The following configuration has been removed:
+
+- Control plane: `experimental.autoReachableServices`
+  (`KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES`).
+
+**Action required**
+
+Remove the setting above from your control plane config. Setting
+`KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES` no longer has any effect in Kuma
+3.0.0.
+
+To trim the outbound clusters a proxy receives, configure reachable services or
+reachable backends explicitly on the `Dataplane` (the
+`kuma.io/transparent-proxying-reachable-services` and `kuma.io/reachable-backends`
+annotations on Kubernetes). Traffic that is not permitted by a
+`MeshTrafficPermission` is still denied at the proxy; it is simply no longer
+pruned from the proxy configuration.
+
+### `kumactl install observability` removed
+
+The deprecated `kumactl install observability` command has been removed for Kuma 3.0.
+Use separately managed observability components or your platform's preferred observability stack instead.
+Kuma still ships first-party Grafana dashboards in the release tarball under `dashboards/grafana/`.
+
+### Delta xDS is now the only xDS protocol
+
+The control plane previously delivered configuration to data plane proxies using
+state-of-the-world (SOTW) xDS by default, with incremental (Delta) xDS available
+behind an experimental flag. Delta xDS is now always used and the SOTW code path
+has been removed. The control plane no longer serves `StreamAggregatedResources`;
+only `DeltaAggregatedResources` is implemented.
+
+The following configuration has been removed:
+
+- Control plane: `experimental.deltaXds` (`KUMA_EXPERIMENTAL_DELTA_XDS`) and the
+  Helm value `experimental.deltaXds`.
+- Data plane: `dataplaneRuntime.envoyXdsTransportProtocolVariant`
+  (`KUMA_DATAPLANE_RUNTIME_ENVOY_XDS_TRANSPORT_PROTOCOL_VARIANT`) and the
+  `kuma.io/xds-transport-protocol-variant` pod annotation.
+
+**Action required**
+
+Remove the settings above from your control plane config, Helm values, and pod
+annotations. Setting `KUMA_EXPERIMENTAL_DELTA_XDS` no longer has any effect in
+Kuma 3.0.0.
+
+For zero-downtime upgrades, first enable Delta xDS with
+`KUMA_EXPERIMENTAL_DELTA_XDS=true` on the old control plane version, then restart
+all `kuma-dp` instances (or roll the workloads on Kubernetes) so their Envoy
+bootstraps use Delta xDS. After every data plane proxy is connected with Delta
+xDS, upgrade the control plane to Kuma 3.0.0 and roll the data plane proxies
+again as part of the normal upgrade flow.
+
+The protocol a proxy uses is fixed in its Envoy bootstrap at startup, so a proxy
+that started against an older control plane keeps using SOTW until it reconnects
+with a fresh bootstrap. Once the control plane is upgraded to Kuma 3.0.0, any
+proxy still trying to use the removed SOTW stream cannot establish ADS and must
+be restarted with a Delta xDS bootstrap.
+
 ## Upgrade to `2.14.x`
 
 ### cert-manager mesh identity: `list` verb added to RBAC Role
@@ -1030,6 +1100,11 @@ If you're using Kubernetes mode, and you did not specify `default.passthroughMod
 
 The documentation did not mention the `SourceIP` type, but it was possible to create a policy using it instead of `Connection`. Since `SourceIP` 
 is not a correct value, we have decided to deprecate it. If you are using `SourceIP` in your policy, please update it to use `Connection` instead.
+
+### Built-in MeshGateway policy targeting
+
+Policies no longer attach directly to built-in `MeshGateway` listeners through `spec.targetRef.kind: MeshGateway` for `MeshAccessLog`, `MeshCircuitBreaker`, `MeshFaultInjection`, `MeshHealthCheck`, `MeshRateLimit`, `MeshRetry`, `MeshTimeout`, `MeshTLS`, `MeshTrace`, or `MeshLoadBalancingStrategy`.
+Use `MeshHTTPRoute` or `MeshTCPRoute` resources for built-in gateway routing behavior, and move the affected policy configuration to supported target kinds before upgrading.
 
 ### MeshHealthCheck
 

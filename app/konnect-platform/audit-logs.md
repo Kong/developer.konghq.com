@@ -205,7 +205,7 @@ Authentication attempts and their outcomes are logged whenever a user logs in to
 Example log entry:
 
 {% navtabs "logs" %}
-{% navtab "CEF" %}
+{% navtab "{{site.konnect_short_name}} (CEF)" %}
 ```
 2025-05-19T00:03:39Z
 konghq.com CEF:0|ExampleOrg|Konnect|1.0|AUTHENTICATION_TYPE_PAT|AUTHENTICATION_OUTCOME_SUCCESS|0|rt=3958q3097698
@@ -218,10 +218,10 @@ trace_id=3895213347334635099
 user_agent=grpc-go/1.51.0
 sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB1NmTSwRRDg
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 {% endnavtab %}
-{% navtab "JSON" %}
+{% navtab "{{site.konnect_short_name}} (JSON)" %}
 ```json
 {
     "cef_version": 0,
@@ -243,7 +243,50 @@ sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB
     "user_agent": "grpc-node-js/1.8.10"
 }
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
+
+{% endnavtab %}
+{% navtab "{{site.dev_portal}} (CEF)" %}
+```
+2025-06-23T14:28:47Z
+konghq.com CEF:0|KongInc|Dev-Portal|1.0|AUTHENTICATION_TYPE_BASIC|AUTHENTICATION_OUTCOME_SUCCESS|0|rt=1750688927556
+src=172.71.232.22
+request=/api/v2/developer/authenticate
+success=true
+org_id=998db3e4-5cb7-4dd5-b51c-9878096a6999
+portal_id=3e551b39-227d-4297-b911-e68fd5d77c17
+principal_id=a3d2699a-0ed3-4417-bb10-d8e74a1513a4
+trace_id=3360194145499877252
+user_agent=
+sig=XQC3OSFxLbi5dy2-o4xAXHT-x8oW5Df-zVsACWQLMU9Q-sPnEyk5CVs4JHwuRcwO0QNLsNaP1wsyrXYPeneXDQ
+```
+{:.no-copy-code.wrap}
+
+{% endnavtab %}
+{% navtab "{{site.dev_portal}} (JSON)" %}
+```json
+{
+    "cef_version": 0,
+    "event_class_id": "AUTHENTICATION_TYPE_BASIC",
+    "event_product": "Dev-Portal",
+    "event_ts": "2025-06-23T14:28:47Z",
+    "event_vendor": "KongInc",
+    "event_version": "1.0",
+    "name": "AUTHENTICATION_OUTCOME_SUCCESS",
+    "org_id": "998db3e4-5cb7-4dd5-b51c-9878096a6999",
+    "portal_id": "3e551b39-227d-4297-b911-e68fd5d77c17",
+    "principal_id": "a3d2699a-0ed3-4417-bb10-d8e74a1513a4",
+    "request": "/api/v2/developer/authenticate",
+    "rt": "1750688927556",
+    "severity": 0,
+    "sig": "XQC3OSFxLbi5dy2-o4xAXHT-x8oW5Df-zVsACWQLMU9Q-sPnEyk5CVs4JHwuRcwO0QNLsNaP1wsyrXYPeneXDQ",
+    "src": "172.71.232.22",
+    "success": "true",
+    "trace_id": 3360194145499877252,
+    "user_agent": ""
+}
+```
+{:.no-copy-code.wrap}
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -274,6 +317,8 @@ rows:
       <br> - `AUTHENTICATION_OUTCOME_DISABLED`: User account has been disabled
   - property: "success"
     description: "`true` or `false`, depending on whether authentication was successful or not."
+  - property: "`portal_id`"
+    description: "The ID of the {{site.dev_portal}} the event occurred in. Only present in {{site.dev_portal}} authentication log entries."
 {% endtable %}
 <!--vale on-->
 
@@ -298,7 +343,7 @@ trace_id=8809518331550410226
 user_agent=grpc-node/1.24.11 grpc-c/8.0.0 (linux; chttp2; ganges)
 sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB1NmTSwRRDg
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 {% endnavtab %}
 {% navtab "JSON" %}
@@ -323,7 +368,7 @@ sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB
     "user_agent": "grpc-node-js/1.8.10"
 }
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -367,7 +412,7 @@ trace_id=1146381705542353508
 query={"end":"1684270800","start":"1684098000"}
 sig=JxJaQG3Bozrb5WdHE_Y0HaOsim2F1Xsq_bCfk71VgsfldkLAD_SF234cnKNS
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 {% endnavtab %}
 {% navtab "JSON" %}
@@ -394,7 +439,7 @@ sig=JxJaQG3Bozrb5WdHE_Y0HaOsim2F1Xsq_bCfk71VgsfldkLAD_SF234cnKNS
     "sig": "N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB1NmTSwRRDg",
 }
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 {% endnavtab %}
 {% endnavtabs %}
