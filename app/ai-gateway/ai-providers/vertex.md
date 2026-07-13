@@ -62,6 +62,7 @@ body:
   config:
     auth:
       type: gcp
+      use_gcp_service_account: true
       service_account_json: $GCP_ACCOUNT_JSON
 {% endkonnect_api_request %}
 <!--vale on-->
