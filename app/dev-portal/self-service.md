@@ -114,6 +114,107 @@ Once approved, developers can create applications and view APIs, and the applica
 Applications and API keys are specific to a [geographic region](/konnect-platform/geos/).
 When you enable application registration by selecting an authentication strategy during publication, the resulting applications and API keys are tied to the developers and traffic in that region.
 
+### Automate developer creation
+
+You can pre-create developer accounts to provision their team association and API access before they access the {{site.dev_portal}}.
+
+1. To automatically create developers and send them an email to create a password, send a `POST` request to the [`/portals/{portalId}/developers` endpoint](/api/konnect/portal-management/v3/#/operations/create-developer):
+{% capture create-dev %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/developers
+method: POST
+status_code: 201
+body:
+  full_name: "Raina Sovani"
+  email: "raina.sovani@example.com"
+  status: "approved"
+  send_invitation_email: true
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{create-dev | indent: 3}}
+
+1. Copy and export the developer ID:
+  ```sh
+  export DEVELOPER_ID='YOUR DEVELOPER ID'
+  ```
+
+1. Add the developer to an existing team that has the correct roles for the APIs they need access to by sending a `POST` request to the [`/portals/{portalId}/teams/{teamId}/developers` endpoint](/api/konnect/portal-management/v3/#/operations/add-developer-to-portal-team):
+{% capture add-dev-to-team %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/teams/$TEAM_ID/developers
+method: POST
+status_code: 201
+body:
+  id: "$DEVELOPER_ID"
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{add-dev-to-team | indent: 3}} 
+
+{:.warning}
+> **Logging in to {{site.dev_portal}}s:**
+> * **SSO:** If a developer is created in a {{site.dev_portal}} with SSO configured, they must be able to use SSO to log in if their email address is configured in the identity provider. 
+>  After they log in, they will automatically be approved. Both OIDC and SAML SSO are supported.
+> * **Basic auth:** If a developer is created in a {{site.dev_portal}} with basic auth configured, they must be able to set their password. This can be done one of two ways:
+>   * `send_invitation_email: true`: Developers can use the link in the email to set their password.
+>   * Developers can click **Forgot password** in the {{site.dev_portal}} UI to set a password, regardless of whether `send_invitation_email` is `true` or `false`.
+
+### Automate application creation
+
+You can automate applications and application registrations on behalf of a developer or team using the {{site.konnect_short_name}} API.
+The [authentication strategy](/dev-portal/auth-strategies/) you want to use must be enabled on your {{site.dev_portal}} and your published API.
+Key auth credentials can't be automatically created or imported.
+
+1. Create a developer application by sending a `POST` request to the [`/portals/{portalId}/applications` endpoint](/api/konnect/portal-management/v3/#/operations/create-application):
+{% capture create-application %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/applications
+method: POST
+status_code: 201
+body:
+  name: "KongAir Application"
+  description: "A portal application provisioned for a developer by a Portal Admin."
+  auth_strategy_id: "$AUTH_STRATEGY_ID"
+  owner:
+    id: "$DEVELOPER_ID"
+    type: "developer"
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{create-application | indent: 3}}
+   
+   If the application is for a team, configure `owner.type: team` and set `owner.id` to the team ID instead of `$DEVELOPER_ID`.
+
+1. Copy and export the application ID:
+  ```sh
+  export APPLICATION_ID='YOUR APPLICATION ID'
+  ```
+
+1. Create an application registration by sending a `POST` request to the `/portals/{portalId}/applications/{applicationId}/registrations` endpoint:
+{% capture create-application-registration %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/applications/$APPLICATION_ID/registrations
+method: POST
+status_code: 201
+body:
+  api_id: "$API_ID"
+  status: "approved"
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{create-application-registration | indent: 3}}
+   
+   {:.warning}
+   > **DCR applications:**
+   > If the application will be using a DCR provider with the given auth strategy, your configuration depends on your use case:
+   > * You want to create a new DCR application, where the IdP client will be created in the identity provider and assigned a `client_id`. This will be set as the `client_id` of the application and can't be changed moving forward. **Do not** specify `dcr_client_id` or `client_id` in this case. `client_id` will be present in the response.
+   > * You want to create an application that is linked to an existing IdP client, but treated as if it was created via the DCR app creation process. This allows you to import existing IdP clients when onboarding your applications into {{site.konnect_short_name}}. In this case, you must specify `dcr_client_id` and `client_id` will be present in the response.
+
 ### Share applications with a team
 
 You can assign an application to a team so that all members of that team share ownership of the application.
