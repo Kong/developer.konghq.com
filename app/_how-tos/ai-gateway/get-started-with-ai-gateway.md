@@ -31,8 +31,6 @@ tools:
 
 prereqs:
   inline:
-    - title: Configure kongctl
-      include_content: md/ai-gateway/v2/prereqs/kongctl
     - title: OpenAI
       include_content: md/ai-gateway/v2/prereqs/openai
       icon_url: /assets/icons/openai.svg
