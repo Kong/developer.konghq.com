@@ -46,6 +46,11 @@ event_gateway_variables: &event_gateway_variables
     placeholder: 'tlsTrustBundleName'
     description: "The `name` of the TLS Trust Bundle."
 
+ai_gateway_variables: &ai_gateway_variables
+  ai_gateway:
+    placeholder: 'aiGatewayName'
+    description: "The `name` of your AI Gateway."
+
 formats:
   deck:
     label: 'decK'
@@ -204,6 +209,7 @@ formats:
   kongctl:
     label: 'kongctl'
     event_gateway_variables: *event_gateway_variables
+    ai_gateway_variables: *ai_gateway_variables
 
   ui:
     label: 'UI'

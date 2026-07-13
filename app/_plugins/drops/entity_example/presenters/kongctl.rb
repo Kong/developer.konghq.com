@@ -9,12 +9,24 @@ module Jekyll
         module Kongctl
           class Base < Presenters::Base
             ENTITY_TO_CHILD_KEY = {
-              'backend_cluster'  => 'backend_clusters',
-              'virtual_cluster'  => 'virtual_clusters',
-              'listener'         => 'listeners',
-              'static_key'       => 'static_keys',
+              'backend_cluster' => 'backend_clusters',
+              'virtual_cluster' => 'virtual_clusters',
+              'listener' => 'listeners',
+              'static_key' => 'static_keys',
               'tls_trust_bundle' => 'tls_trust_bundles',
-              'schema_registry'  => 'schema_registries'
+              'schema_registry' => 'schema_registries'
+            }.freeze
+
+            AI_GATEWAY_ENTITY_TO_CHILD_KEY = {
+              'model' => 'ai_gateway_models',
+              'vault' => 'ai_gateway_vaults',
+              'model-provider' => 'ai_gateway_model_providers',
+              'agent' => 'ai_gateway_agents',
+              'consumer' => 'ai_gateway_consumers',
+              'consumer_group' => 'ai_gateway_consumer_groups',
+              'mcp_server' => 'ai_gateway_mcp_servers',
+              'identity-provider' => 'ai_gateway_identity_providers',
+              'policy' => 'ai_gateway_policies'
             }.freeze
 
             def data
@@ -26,36 +38,66 @@ module Jekyll
             end
 
             def missing_variables
-              @missing_variables ||= [formats['kongctl']['event_gateway_variables']['event_gateway']]
+              @missing_variables ||= if @example_drop.product == 'ai-gateway'
+                                       [formats['kongctl']['ai_gateway_variables']['ai_gateway']]
+                                     else
+                                       [formats['kongctl']['event_gateway_variables']['event_gateway']]
+                                     end
             end
 
             def template_file
               '/components/entity_example/format/kongctl.md'
             end
 
+            def product
+              @product ||= @example_drop.product
+            end
+
             private
 
             def build_config_hash
-              {
-                'event_gateways' => [
-                  {
-                    'ref'  => event_gateway_placeholder,
-                    'name' => event_gateway_placeholder,
-                    child_key => [{ 'ref' => data['name'] }.merge(data)]
-                  }
-                ]
-              }
+              if @example_drop.product == 'ai-gateway'
+                {
+                  'ai_gateways' => [
+                    {
+                      'ref' => ai_gateway_placeholder,
+                      'name' => ai_gateway_placeholder,
+                      child_key => [{ 'ref' => data['name'] }.merge(data)]
+                    }
+                  ]
+                }
+              else
+                {
+                  'event_gateways' => [
+                    {
+                      'ref' => event_gateway_placeholder,
+                      'name' => event_gateway_placeholder,
+                      child_key => [{ 'ref' => data['name'] }.merge(data)]
+                    }
+                  ]
+                }
+              end
             end
 
             def child_key
-              ENTITY_TO_CHILD_KEY.fetch(entity_type) do
+              map = if @example_drop.product == 'ai-gateway'
+                      AI_GATEWAY_ENTITY_TO_CHILD_KEY
+                    else
+                      ENTITY_TO_CHILD_KEY
+                    end
+
+              map.fetch(entity_type) do
                 raise ArgumentError,
-                      "Unsupported kongctl entity_type `#{entity_type}`. Supported entity types: #{ENTITY_TO_CHILD_KEY.keys.join(', ')}"
+                      "Unsupported kongctl entity_type `#{entity_type}`. Supported entity types: #{map.keys.join(', ')}"
               end
             end
 
             def event_gateway_placeholder
               formats['kongctl']['event_gateway_variables']['event_gateway']['placeholder']
+            end
+
+            def ai_gateway_placeholder
+              formats['kongctl']['ai_gateway_variables']['ai_gateway']['placeholder']
             end
           end
 
@@ -71,11 +113,11 @@ module Jekyll
             def missing_variables
               @missing_variables ||= begin
                 vars = [formats['kongctl']['event_gateway_variables']['event_gateway']]
-                if policy_target == 'listener'
-                  vars << formats['kongctl']['event_gateway_variables']['listener']
-                else
-                  vars << formats['kongctl']['event_gateway_variables']['virtual_cluster']
-                end
+                vars << if policy_target == 'listener'
+                          formats['kongctl']['event_gateway_variables']['listener']
+                        else
+                          formats['kongctl']['event_gateway_variables']['virtual_cluster']
+                        end
                 vars
               end
             end
@@ -92,9 +134,9 @@ module Jekyll
 
             def policy_item
               {
-                'ref'           => data['name'],
-                'type'          => data['type'],
-                data['type']    => data.except('type')
+                'ref' => data['name'],
+                'type' => data['type'],
+                data['type'] => data.except('type')
               }.compact
             end
 
@@ -110,12 +152,12 @@ module Jekyll
               {
                 'event_gateways' => [
                   {
-                    'ref'              => event_gateway_placeholder,
-                    'name'             => event_gateway_placeholder,
+                    'ref' => event_gateway_placeholder,
+                    'name' => event_gateway_placeholder,
                     'virtual_clusters' => [
                       {
-                        'ref'    => virtual_cluster_placeholder,
-                        'name'   => virtual_cluster_placeholder,
+                        'ref' => virtual_cluster_placeholder,
+                        'name' => virtual_cluster_placeholder,
                         phase_key => [policy_item]
                       }
                     ]
@@ -128,12 +170,12 @@ module Jekyll
               {
                 'event_gateways' => [
                   {
-                    'ref'       => event_gateway_placeholder,
-                    'name'      => event_gateway_placeholder,
+                    'ref' => event_gateway_placeholder,
+                    'name' => event_gateway_placeholder,
                     'listeners' => [
                       {
-                        'ref'      => listener_placeholder,
-                        'name'     => listener_placeholder,
+                        'ref' => listener_placeholder,
+                        'name' => listener_placeholder,
                         'policies' => [policy_item]
                       }
                     ]
