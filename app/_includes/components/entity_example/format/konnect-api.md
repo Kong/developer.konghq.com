@@ -54,7 +54,9 @@ To create a TLS trust bundle, call the Event Gateway API's [`/tls-trust-bundles`
 {% include components/entity_example/replace_variables.md missing_variables=include.presenter.missing_variables %}
 {% if include.presenter.product == 'event-gateway' %}
 See the [Konnect Event Gateway API reference](/api/konnect/event-gateway/) to learn about region-specific URLs and personal access tokens.
+{% elsif include.presenter.product == 'ai-gateway' %}
+See the [Konnect AI Gateway API reference](/api/konnect/ai-gateway/) to learn about region-specific URLs and personal access tokens.
 {% else %}
-See the [Konnect API reference](/api/konnect/control-planes-config/) to learn about region-specific URLs and personal access tokens.
+See the [Konnect Control Planes Config API reference](/api/konnect/control-planes-config/) to learn about region-specific URLs and personal access tokens.
 {% endif %}
 {% endif %}
