@@ -76,7 +76,7 @@ When `proxy` is set on an AI Model or MCP Server entity, every outbound request 
 
 The Forward Proxy Advanced plugin takes over the request before the balancer phase runs, which works for standard Gateway Services but not with behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
 
-For {{site.ai_gateway}} traffic through an AI Model or MCP Server entity you should use the native `proxy` configuration instead, this ensures the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy`.
+For {{site.ai_gateway}} traffic through an AI Model or MCP Server entity, you should use the native `proxy` configuration instead. This ensures the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy`.
 
 ## Proxy configuration fields
 
@@ -173,7 +173,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 {:.warning}
 > In a production deployment your forward proxy should authenticate users, including {{site.ai_gateway}}.  To do this. set `auth_username` and `auth_password`. You can reference secrets from an [AI Vault](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets).
 
-1. Create minimal config file for Squid:
+1. Create a minimal config file for Squid:
 
     ```
     echo '
@@ -233,9 +233,10 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
 ### AI Model
 
-1. Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your LLM service and store authentication credentials:
+1. Create an [AI Provider](/ai-gateway/entities/ai-model-provider/) entity to define your LLM service and store authentication credentials:
 
   <!-- vale off -->
+  {% capture model-provider %}
   {% konnect_api_request %}
   url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
   status_code: 201
@@ -254,11 +255,14 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
           - name: Authorization
             value: Bearer $OPENAI_API_KEY
   {% endkonnect_api_request %}
+  {% endcapture %}
+  {{ model-provider | indent: 3}}
   <!-- vale on -->
 
 2. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
 
   <!-- vale off -->
+  {% capture model %}
   {% konnect_api_request %}
   url: /v1/ai-gateways/$AI_GATEWAY_ID/models
   status_code: 201
@@ -291,11 +295,14 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
     capabilities:
       - generate
   {% endkonnect_api_request %}
+  {% endcapture %}
+  {{ model | indent: 3}}
   <!-- vale on -->
 
 3. Send a chat request. This will be forwarded to your proxy service and return an error:
 
   <!-- vale off -->
+  {% capture chat-request %}
   {% validation request-check %}
   url: /v1/chat/completions
   status_code: 200
@@ -309,6 +316,8 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
     - role: "user"
       content: "Say this is a test!"
   {% endvalidation %}
+  {% endcapture %}
+  {{ chat-request | indent: 3}}
   <!-- vale on -->
 
 4. Examine the Squid logs to verify your requests:
@@ -322,6 +331,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 1. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool:
 
   <!-- vale off -->
+  {% capture mcp-server %}
   {% konnect_api_request %}
   url: /v1/ai-gateways/$AI_GATEWAY_ID/mcp-servers
   status_code: 201
@@ -373,6 +383,8 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
               type: string
             description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
   {% endkonnect_api_request %}
+  {% endcapture %}
+  {{ mcp-server | indent: 3}}
   <!-- vale on -->
 
 2. Call `get-current-weather`, this will be forwarded to your proxy service and return an error:
