@@ -43,7 +43,7 @@ Outbound requests issued by an AI Model or MCP Server can be sent through the sp
 The three request categories are:
 
 - **Inference**: Requests from clients to LLM providers, proxied by an [AI Model](/ai-gateway/entities/ai-model/) through the {{site.ai_gateway}}. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when forward proxy support is active. Upstream keepalive is disabled while the forward proxy is active, so inference connections are not reused across requests targeting different upstream peers.
-- **Identity auth**: Cloud identity authentication issued by provider SDKs. AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition, when targets require managed identity.
+- **Identity auth**: Cloud identity authentication issued by provider SDKs. This includes, AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition when targets require managed identity.
 - **Auxiliary calls**: Direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor Policies to their external services. For example, an embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint.
 
 <!--vale off-->
