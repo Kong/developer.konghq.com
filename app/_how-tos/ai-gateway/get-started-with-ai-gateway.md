@@ -144,6 +144,7 @@ method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
+    - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   messages:
   - role: "user"

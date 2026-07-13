@@ -10,6 +10,6 @@ This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configurat
 
     ```sh
     kongctl adopt ai-gateway "$AI_GATEWAY_ID" \
-        --namespace: ai-gateway-get-started
+        --namespace ai-gateway-get-started \
         --pat "$KONNECT_TOKEN"
     ```
