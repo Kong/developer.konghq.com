@@ -1,6 +1,6 @@
 ---
 title: Install {{site.operator_product_name}} for {{ site.ai_gateway_name }}
-description: Install {{site.operator_product_name}} with the AI Gateway data plane controller enabled and prepare a Kubernetes cluster for {{ site.ai_gateway_name }}.
+description: Install {{site.operator_product_name}} with the {{ site.ai_gateway }} data plane controller enabled and prepare a Kubernetes cluster for {{ site.ai_gateway_name }}.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/install/
 
@@ -35,7 +35,7 @@ prereqs:
 
 tldr:
   q: How do I install {{site.operator_product_name}} for {{ site.ai_gateway_name }}?
-  a: Install {{site.operator_product_name}} with `--set env.ENABLE_CONTROLLER_AIGATEWAYDATAPLANE=true` to enable the AI Gateway data plane controller, then store your Konnect credentials in a Kubernetes Secret.
+  a: Install {{site.operator_product_name}} with `--set env.ENABLE_CONTROLLER_AIGATEWAYDATAPLANE=true` to enable the {{ site.ai_gateway }} data plane controller, then store your Konnect credentials in a Kubernetes Secret.
 
 next_steps:
   - text: Deploy {{ site.ai_gateway_name }}
@@ -76,13 +76,13 @@ kubectl create namespace kong
 
 ## Install {{site.operator_product_name}}
 
-Install {{site.operator_product_name}} with the AI Gateway data plane controller enabled:
+Install {{site.operator_product_name}} with the {{ site.ai_gateway }} data plane controller enabled:
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
 
-## Verify AI Gateway CRDs
+## Verify {{ site.ai_gateway }} CRDs
 
-Confirm the AI Gateway CRDs are registered in the cluster:
+Confirm the {{ site.ai_gateway }} CRDs are registered in the cluster:
 
 ```bash
 kubectl get crd | grep -E "aigateway|aigatewaydataplane"

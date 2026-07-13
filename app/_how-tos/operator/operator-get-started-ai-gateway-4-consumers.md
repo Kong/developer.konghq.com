@@ -1,6 +1,6 @@
 ---
 title: Add AI consumers with {{site.operator_product_name}}
-description: Use AIGatewayConsumer, AIGatewayConsumerCredential, and AIGatewayConsumerGroup to authenticate downstream clients and enforce per-consumer controls on your AI Gateway deployment.
+description: Use AIGatewayConsumer, AIGatewayConsumerCredential, and AIGatewayConsumerGroup to authenticate downstream clients and enforce per-consumer controls on your {{ site.ai_gateway }} deployment.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/consumers/
 
