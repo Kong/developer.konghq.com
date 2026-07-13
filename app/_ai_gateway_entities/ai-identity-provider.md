@@ -221,23 +221,6 @@ data:
     hide_credentials: true
 {% endentity_example %}
 
-<!-- TODO: Uncomment before GA — kongctl declarative support for identity_providers is not yet released.
-```yaml
-ai_gateways:
-  - ref: <your-ai-gateway-ref>
-    identity_providers:
-      - ref: api-key-auth
-        name: api-key-auth
-        display_name: API Key Auth
-        type: key-auth
-        config:
-          key_names:
-            - X-API-Key
-          key_in_header: true
-          key_in_query: false
-          hide_credentials: true
-``` -->
-
 ### OIDC bearer token authentication
 
 The following example creates an `openid-connect` AI Identity Provider that accepts bearer tokens issued by Okta:

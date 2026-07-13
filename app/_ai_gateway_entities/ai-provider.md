@@ -168,24 +168,6 @@ data:
           value: Bearer <your-openai-key>
 {% endentity_example %}
 
-<!-- TODO: Uncomment before GA — kongctl declarative support for model_providers is not yet released.
-```yaml
-ai_gateways:
-  - ref: <your-ai-gateway-ref>
-    model_providers:
-      - ref: my-openai-account
-        name: my-openai-account
-        display_name: OpenAI Production
-        type: openai
-        config:
-          auth:
-            type: basic
-            headers:
-              - name: Authorization
-                value: Bearer <your-openai-key>
-```
--->
-
 ## Schema
 
 {% entity_schema %}
