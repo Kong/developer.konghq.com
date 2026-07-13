@@ -3,7 +3,7 @@
 {% when 'model-provider' %}
 The following creates a new AI Model Provider. Suggested values are shown in backticks:
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Providers**.
 1. Click **New Provider**.
@@ -18,7 +18,7 @@ The following creates a new AI Identity Provider. Suggested values are shown in 
 
 The following creates a new identity provider. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Identity**.
 1. Click **New identity provider**.
@@ -29,7 +29,7 @@ The following creates a new identity provider. Suggested values are shown in bac
 {% when 'policy' %}
 The following creates a new AI Policy. Suggested values are shown in backticks:
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Policies**.
 1. Click **New Policy**.
@@ -40,7 +40,7 @@ The following creates a new AI Policy. Suggested values are shown in backticks:
 {% when 'consumer' %}
 The following creates a new AI Consumer. Suggested values are shown in backticks:
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Consumers**.
 1. Click **New consumer**.
@@ -51,7 +51,7 @@ The following creates a new AI Consumer. Suggested values are shown in backticks
 {% when 'consumer_group' %}
 The following creates a new AI consumer group. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Consumers**.
 1. Select the **Groups** tab.
@@ -64,7 +64,7 @@ The following creates a new model. Suggested values are shown in backticks.
 
 The following creates a new model. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Models**.
 1. Click **New model**.
@@ -78,7 +78,7 @@ The following creates a new model. Suggested values are shown in backticks.
 {% when 'agent' %}
 The following creates a new agent. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Agents**.
 1. Click **New agent**.
@@ -92,7 +92,7 @@ The following creates a new agent. Suggested values are shown in backticks.
 {% when 'mcp_server' %}
 The following creates a new MCP server. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **MCP servers**.
 1. Click **New MCP server**.
@@ -109,7 +109,7 @@ The following creates a new MCP server. Suggested values are shown in backticks.
 {% when 'vault' %}
 The following creates a new AI Vault. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Vaults**.
 1. Click **New vault**.
