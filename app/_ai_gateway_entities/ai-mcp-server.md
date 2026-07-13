@@ -356,10 +356,12 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 
 ### Attribute types
 
-For modes that support ACL configuration (`conversion-listener`, `conversion-only`, `upstream-server`, `listener`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
+For modes that support server-level ACL configuration (`conversion-listener`, `listener`, `passthrough-listener`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
 
 1. **`consumer`** (default). Evaluates against the resolved AI Consumer identity.
 1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
+
+`conversion-only` AI MCP Servers have no `access` field of their own, since they never accept incoming MCP traffic directly. They only support per-tool ACLs (via [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access)), which travel with the tool definition when a `listener` aggregates it.
 
 ### Using AI Consumers and Groups in ACLs
 

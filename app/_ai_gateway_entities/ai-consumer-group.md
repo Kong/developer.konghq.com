@@ -44,12 +44,18 @@ faqs:
 
   - q: How do I assign an AI Consumer to an AI Consumer Group?
     a: |
-      You add an AI Consumer to an AI Consumer Group through the AI Consumer Group entity.
-      See the [AI Consumer entity](/ai-gateway/entities/ai-consumer/) reference.
+      Either add the AI Consumer through the AI Consumer Group's `consumers` sub-resource
+      (`POST /ai-gateways/{aiGatewayId}/consumer-groups/{consumerGroupId}/consumers`), or set the
+      AI Consumer's group membership directly
+      (`PUT /ai-gateways/{aiGatewayId}/consumers/{consumerIdOrName}/consumer-groups`).
+      These aren't fields on the AI Consumer or AI Consumer Group entity bodies themselves —
+      they're managed through these dedicated endpoints.
 
   - q: Can an AI Consumer belong to multiple AI Consumer Groups?
     a: |
-      Yes. The AI Consumer's `consumer_groups` array accepts one or more references.
+      Yes. The `consumer_groups` list accepted by
+      `PUT /ai-gateways/{aiGatewayId}/consumers/{consumerIdOrName}/consumer-groups` can include
+      more than one AI Consumer Group name.
 
   - q: How do I attach AI Policies to an AI Consumer Group?
     a: |
@@ -135,7 +141,7 @@ rows:
 
 ## Membership
 
-To organize AI Consumers by team, department, or tier, add them to an AI Consumer Group. Membership is managed through the [AI Consumer entity](/ai-gateway/entities/ai-consumer/) — set the `consumer_groups` array on any AI Consumer to add it to one or more AI Consumer Groups. A single AI Consumer can belong to multiple AI Consumer Groups, allowing flexible organizational schemes.
+To organize AI Consumers by team, department, or tier, add them to an AI Consumer Group. Membership isn't a field on either entity's body — manage it through dedicated sub-resource endpoints: add a Consumer to a group with `POST /ai-gateways/{aiGatewayId}/consumer-groups/{consumerGroupId}/consumers`, or set the full list of groups a Consumer belongs to with `PUT /ai-gateways/{aiGatewayId}/consumers/{consumerIdOrName}/consumer-groups`. A single AI Consumer can belong to multiple AI Consumer Groups, allowing flexible organizational schemes.
 
 ## Attach AI Policies
 
