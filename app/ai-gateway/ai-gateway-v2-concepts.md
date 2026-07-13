@@ -63,7 +63,7 @@ rows:
     v2: "[AI Model](/ai-gateway/entities/ai-model/)"
     description: "One model entry per virtual model, with one or more `targets`."
   - v1: "Set `config.targets[].model.provider` on [AI Proxy Advanced](/plugins/ai-proxy-advanced/) with inline auth"
-    v2: "[AI Provider](/ai-gateway/entities/ai-provider)"
+    v2: "[AI Model Provider](/ai-gateway/entities/ai--model-provider)"
     description: "Provider credentials are now declared once and reused across AI Model entities."
   - v1: "Set `config.targets[].route_type` on [AI Proxy Advanced](/plugins/ai-proxy-advanced/)"
     v2: "Set `capabilities` and `formats.type` on an [AI Model](/ai-gateway/entities/ai-model/)"
@@ -97,5 +97,5 @@ rows:
 Note the following terminology changes:
 
 - AI Policies replace API {{site.base_gateway}} plugins. All AI Policies have some common parameters, in addition each AI Policy has a `type` which corresponds to a version 1.x plugin such as `ai-sanitizer` or `openid-connect` and their `config` is the same as the version 1.x plugin.
-- AI Providers are now separate reusable entities. This decouples config and credentials of upstream providers from specific models, which allows you to declare an AI Provider once and reference it by name from multiple AI Models.
+- AI Model Providers are now separate reusable entities. This decouples config and credentials of upstream providers from specific models, which allows you to declare an AI Model Provider once and reference it by name from multiple AI Models.
 - A version 1.x route is split into two version 2.x concepts: a `capabilities` list and a `formats` entry. 

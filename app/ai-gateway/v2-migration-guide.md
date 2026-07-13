@@ -28,7 +28,7 @@ related_resources:
     url: /ai-gateway/entities/
 ---
 
-{{site.ai_gateway}} version 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of the API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: AI Providers, AI Models, AI MCP Servers, and AI Agents. 
+{{site.ai_gateway}} version 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of the API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: AI Model Providers, AI Models, AI MCP Servers, and AI Agents. 
 
 This guide walks you through migrating an existing configuration using the `kongctl` {{site.ai_gateway}} conversion extension.
 
@@ -52,7 +52,7 @@ Migration uses the `kongctl convert ai-gateway extension` to translate your exis
 
 1. Export the declarative configuration from your existing API {{site.base_gateway}} control plane with decK.
 1. Run the converter to produce an {{site.ai_gateway}} entity configuration file.
-1. Validate that the output includes all of your [AI Models](/ai-gateway/migrate-models/), [AI MCP Servers](/ai-gateway/migrate-mcp/), and [AI Agents](/ai-gateway/migrate-agents/).
+1. Validate that the output includes all of your AI Models, AI MCP Servers, and AI Agents.
 1. Add your {{site.ai_gateway}} control plane ID to the `kongctl` configuration.
 1. Apply the converted configuration to the new {{site.ai_gateway}} control plane.
 
@@ -94,7 +94,7 @@ kongctl convert ai-gateway deck.yaml \
 
 The `-o` flag sets the output file. The converter inspects each AI plugin and translates it into the matching version 2.x entity:
 
-- Each `ai-proxy-advanced` plugin becomes an [AI Model](/ai-gateway/entities/ai-provider/) (and one [AI Provider](/ai-gateway/entities/ai-provider/) per distinct upstream provider and credential set).
+- Each `ai-proxy-advanced` plugin becomes an [AI Model](/ai-gateway/entities/ai-provider/) (and one [AI Model Provider](/ai-gateway/entities/ai-model-provider/) per distinct upstream provider and credential set).
 - Each `ai-mcp-proxy` plugin becomes an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) whose type matches the plugin mode.
 - Each `ai-a2a-proxy` plugin becomes an [AI Agent](/ai-gateway/entities/ai-agent/).
 - Supporting plugins on the same Service or Route become [AI Policies](/ai-gateway/entities/ai-policy/) attached to the relevant entity.
@@ -104,12 +104,12 @@ The `-o` flag sets the output file. The converter inspects each AI plugin and tr
 Open `ai-gateway.yaml` and confirm that the converter captured everything you expect. At minimum, check that:
 
 - Every version 1.x model has a corresponding AI Model entry, with the right `capabilities`, `formats`, and `targets`.
-- Provider credentials were extracted correctly, and each `targets[].provider` reference resolves to a declared AI Provider.
+- Provider credentials were extracted correctly, and each `targets[].provider` reference resolves to a declared AI Model Provider.
 - Every AI MCP Server has the correct `type` for its original plugin mode, and that `conversion-only` and `listener` pairs are linked by matching tags.
 - Each AI Agent points at the correct upstream url and carries the logging settings you had configured.
 - Supporting plugins were converted to AI Policies and attached to the right entities.
 
-Pay particular attention to anything the converter cannot infer from the version 1.x config, such as a AI Provider `display_name` or a AI Model `display_name`. These are required in version 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
+Pay particular attention to anything the converter cannot infer from the version 1.x config, such as a AI Model Provider `display_name` or a AI Model `display_name`. These are required in version 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
 
 ### Step 4: Add your control plane ID to kongctl
 
@@ -137,7 +137,7 @@ Sync the converted configuration to the {{site.ai_gateway}} control plane:
 kongctl apply -f ai-gateway.yaml
 ```
 
-`kongctl` creates the AI Providers, Models, MCP Servers, Agents, and Policies defined in the file. Because the configuration is declarative, you can re-run to apply after edits and `kongctl` will reconcile the control plane to match the file.
+`kongctl` creates the AI Model Providers, Models, MCP Servers, Agents, and Policies defined in the file. Because the configuration is declarative, you can re-run to apply after edits and `kongctl` will reconcile the control plane to match the file.
 
 After the apply succeeds, the {{site.ai_gateway}} exposes its configuration and telemetry endpoints. Send a representative request to each migrated AI Model, MCP server, and Agent to confirm behavior matches version 1.x before you transfer traffic over.
 
@@ -149,8 +149,8 @@ The following sections provide migration advice for the different AI entities.
 
 In {{site.ai_gateway}} version 1.x, a model is an [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin attached to a Service and Route. The plugin holds the provider, credentials, route type, model options, and load balancer all in one place. 
 
-In {{site.ai_gateway}} version 2.x, that single plugin becomes two entities: an [AI Provider](/ai-gateway/entities/ai-provider) that holds the upstream connection and credentials, and an [AI Model](/ai-gateway/entities/ai-model/) that holds routing, capabilities, format, load balancing, and one or more `targets` that each reference an AI Provider.
-This allows you to reuse AI Providers in multiple AI Models.
+In {{site.ai_gateway}} version 2.x, that single plugin becomes two entities: an [AI Model Provider](/ai-gateway/entities/ai-model-provider) that holds the upstream connection and credentials, and an [AI Model](/ai-gateway/entities/ai-model/) that holds routing, capabilities, format, load balancing, and one or more `targets` that each reference an AI Model Provider.
+This allows you to reuse AI Model Providers in multiple AI Models.
 
 #### Convert configuration files
 
@@ -198,7 +198,7 @@ services:
 {:.collapsible}
 <!--vale on-->
 
-The converter splits the credentials into an AI Provider and the routing and balancing into an AI Model. The route_type of `llm/v1/chat` becomes `capabilities: [generate]` with an `openai` format, and each target references the AI Provider by name.
+The converter splits the credentials into an AI Model Provider and the routing and balancing into an AI Model. The route_type of `llm/v1/chat` becomes `capabilities: [generate]` with an `openai` format, and each target references the AI Model Provider by name.
 
 <!--vale off-->
 ```yaml
@@ -259,7 +259,7 @@ models:
 To verify your AI Models entity migration, be sure to check the following:
 
 - Capabilities and format: Confirm the `route_type` was decomposed correctly. For example, `llm/v1/chat` maps to `capabilities: [generate]` and `formats: [{type: openai}]`, while `llm/v1/embeddings` maps to `capabilities: [embeddings]`. Asynchronous file and batch route types map to an AI Model with `type: api` and `capabilities` of `files` or `batches`.
-- Provider reuse: If several version 1.x targets shared the same provider and credentials, the converter should produce a single AI Provider that all targets reference. Deduplicate any near-identical AI Providers it couldn't merge.
+- Provider reuse: If several version 1.x targets shared the same provider and credentials, the converter should produce a single AI Model Provider that all targets reference. Deduplicate any near-identical AI Model Providers it couldn't merge.
 - Model options: Per-target options such as `max_tokens`, `temperature`, `top_p`, and `top_k` move into each `targets[].config`, keyed by the provider `type`.
 - Auth override: If you relied on `config.targets.auth.allow_override` in version 1.x, set `allow_auth_override: true` on the corresponding target in version 2.x.
 - Vector database and embeddings: `config.vectordb` and `config.embeddings` settings carry over onto the AI Model config under the `balancer` config, keeping the same Redis or pgvector strategy.
@@ -509,4 +509,4 @@ The {{site.konnect_short_name}} MCP Server exposes a discover-then-execute patte
 - `get_schema` returns the full schema for that operation so the assistant knows which fields are required.
 - `execute` calls the operation with the right inputs.
 
-Using this pattern, you can ask your assistant to create an {{site.ai_gateway}}, declare AI Providers, then add AI Models, AI MCP Servers, and AI Agents, with the assistant reasoning over the live schema at each step rather than relying on hardcoded field lists. The same tools power [KAi](/konnect-platform/kai/), Kong's in-product AI assistant, so the workflow is consistent whether you work from an IDE, the terminal, or {{site.konnect_short_name}} itself.
+Using this pattern, you can ask your assistant to create an {{site.ai_gateway}}, declare AI Model Providers, then add AI Models, AI MCP Servers, and AI Agents, with the assistant reasoning over the live schema at each step rather than relying on hardcoded field lists. The same tools power [KAi](/konnect-platform/kai/), Kong's in-product AI assistant, so the workflow is consistent whether you work from an IDE, the terminal, or {{site.konnect_short_name}} itself.
