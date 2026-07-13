@@ -94,7 +94,7 @@ kongctl convert ai-gateway deck.yaml \
 
 The `-o` flag sets the output file. The converter inspects each AI plugin and translates it into the matching version 2.x entity:
 
-- Each `ai-proxy-advanced` plugin becomes an [AI Model](/ai-gateway/entities/ai-provider/) (and one [AI Model Provider](/ai-gateway/entities/ai-model-provider/) per distinct upstream provider and credential set).
+- Each `ai-proxy-advanced` plugin becomes an [AI Model](/ai-gateway/entities/ai-model/) (and one [AI Model Provider](/ai-gateway/entities/ai-model-provider/) per distinct upstream provider and credential set).
 - Each `ai-mcp-proxy` plugin becomes an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) whose type matches the plugin mode.
 - Each `ai-a2a-proxy` plugin becomes an [AI Agent](/ai-gateway/entities/ai-agent/).
 - Supporting plugins on the same Service or Route become [AI Policies](/ai-gateway/entities/ai-policy/) attached to the relevant entity.

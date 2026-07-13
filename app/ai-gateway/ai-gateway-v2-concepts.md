@@ -63,7 +63,7 @@ rows:
     v2: "[AI Model](/ai-gateway/entities/ai-model/)"
     description: "One model entry per virtual model, with one or more `targets`."
   - v1: "Set `config.targets[].model.provider` on [AI Proxy Advanced](/plugins/ai-proxy-advanced/) with inline auth"
-    v2: "[AI Model Provider](/ai-gateway/entities/ai--model-provider)"
+    v2: "[AI Model Provider](/ai-gateway/entities/ai-model-provider)"
     description: "Provider credentials are now declared once and reused across AI Model entities."
   - v1: "Set `config.targets[].route_type` on [AI Proxy Advanced](/plugins/ai-proxy-advanced/)"
     v2: "Set `capabilities` and `formats.type` on an [AI Model](/ai-gateway/entities/ai-model/)"
