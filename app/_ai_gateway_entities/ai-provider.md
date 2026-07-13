@@ -179,8 +179,9 @@ ai_gateways:
         config:
           auth:
             type: basic
-            header_name: Authorization
-            header_value: Bearer <your-openai-key>
+            headers:
+              - name: Authorization
+                value: Bearer <your-openai-key>
 ```
 -->
 
