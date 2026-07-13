@@ -80,22 +80,6 @@ Install {{site.operator_product_name}} with the AI Gateway data plane controller
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
 
-## Store Konnect credentials
-
-Store your {{site.konnect_short_name}} personal access token (PAT) in a Kubernetes Secret. The operator uses this secret to authenticate with the {{site.konnect_short_name}} API on your behalf.
-
-```bash
-kubectl create secret generic konnect-api-auth \
-  --from-literal=token=$KONNECT_PAT \
-  -n kong
-```
-
-Verify the operator pod is running before continuing:
-
-```bash
-kubectl get pods -n kong-system
-```
-
 ## Verify AI Gateway CRDs
 
 Confirm the AI Gateway CRDs are registered in the cluster:

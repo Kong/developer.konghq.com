@@ -285,7 +285,7 @@ The provider depends on the `KonnectAIGateway` being `Programmed=True` first. Ch
 Confirm the `AIGatewayDataPlane` pod is running and the `LoadBalancer` address is assigned:
 
 ```bash
-kubectl get pods,svc -n kong -l app=my-ai-gateway-dp
+kubectl get pods,svc -n kong -l app.kubernetes.io/name=my-ai-gateway-dp
 ```
 
 **Policy not taking effect**
