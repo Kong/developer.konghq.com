@@ -30,22 +30,23 @@ tldr:
     This tutorial shows you how to set up an AI Agent entity in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API and how to test A2A traffic flowing through the gateway.
 
 tools:
-  - konnect-api
+  - kongctl
 
 prereqs:
   inline:
+    - title: Congifure kongctl
+      include_content: md/ai-gateway/v2/prereqs/kongctl
     - title: OpenAI API key
       content: |
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
         1. Export your key:
            ```bash
-           export DECK_OPENAI_API_KEY='YOUR_OPENAI_API_KEY'
+           export OPENAI_API_KEY='YOUR_OPENAI_API_KEY'
            ```
 
     - title: A2A agent
-      include_content: prereqs/a2a-kongair-agent-2
-
+      include_content: md/ai-gateway/v2/prereqs/a2a-agent
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
@@ -85,38 +86,44 @@ faqs:
 
 Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent.
 
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/agents
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  display_name: Kong Air Flight Booking Agent
-  name: kongair-flight-booking-agent
-  type: a2a
-  enabled: true
-  config:
-    url: http://host.docker.internal:10000
-    route:
-      paths:
-        - /a2a
-      methods:
-        - GET
-        - POST
-      protocols:
-        - http
-        - https
-      strip_path: true
-    logging:
-      payloads: true
-      statistics: true
-      max_payload_size: 1048576
-    max_request_body_size: 8388608
-{% endkonnect_api_request %}
-<!-- vale on -->
+```sh
+kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+_defaults:
+  kongctl:
+    namespace: ai-gateway-get-started
+
+ai_gateways:
+  - ref: ai-quickstart
+    name: ai-quickstart
+    display_name: "ai-quickstart"
+
+    agents:
+      - ref: kongair-flight-booking-agent
+        ai_gateway: "$AI_GATEWAY_ID"
+        display_name: "Kong Air Flight Booking Agent"
+        type: a2a
+        enabled: true
+        config:
+          url: http://host.docker.internal:10000
+          route:
+            paths:
+              - /a2a
+            methods:
+              - GET
+              - POST
+            protocols:
+              - http
+              - https
+            strip_path: true
+          logging:
+            payloads: true
+            statistics: true
+            max_payload_size: 1048576
+          max_request_body_size: 8388608
+EOF
+```
+
+The `ai_gateways` entry references your existing {{site.ai_gateway}} by its `name` (`ai-quickstart`, as set up by the [quickstart script](/ai-gateway/get-started/)), so `kongctl` manages the agent underneath it instead of creating a new gateway. Each nested agent still declares its own `ai_gateway` field, pointing at the gateway's ID, to link it to the parent.
 
 The agent is now accessible at the `/a2a` route and proxies A2A JSON-RPC requests to the upstream agent running at `http://host.docker.internal:10000`.
 
