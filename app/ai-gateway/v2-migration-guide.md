@@ -19,7 +19,7 @@ min_version:
 
 description: This guide walks you through moving your configuration from the API {{site.base_gateway}} plugin model to the new {{site.ai_gateway}} Policies model.
 
-related_information:
+related_resources:
   - text: "{{site.ai_gateway}} 2.x concepts"
     url: /ai-gateway/ai-gateway-v2-concepts/
   - text: "{{site.ai_gateway}} Policies"

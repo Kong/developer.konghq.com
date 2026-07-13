@@ -19,7 +19,7 @@ min_version:
 
 description: This page describes the differences between the API {{site.base_gateway}} plugin model and the new {{site.ai_gateway}} Policies model.
 
-related_information:
+related_resources:
   - text: "Migrate to {{site.ai_gateway}} 2.x"
     url: /ai-gateway/v2-migration-guide/
   - text: "{{site.ai_gateway}} Policies"
