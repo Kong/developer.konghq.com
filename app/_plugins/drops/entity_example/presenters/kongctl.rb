@@ -34,7 +34,7 @@ module Jekyll
             end
 
             def config
-              @config ||= Jekyll::Utils::HashToYAML.new(build_config_hash).convert
+              @config ||= apply_env_tags(yaml_config)
             end
 
             def missing_variables
@@ -62,7 +62,7 @@ module Jekyll
                     {
                       'ref' => ai_gateway_placeholder,
                       'name' => ai_gateway_placeholder,
-                      child_key => [{ 'ref' => data['name'] }.merge(data)]
+                      child_key => [{ 'ref' => yaml_data['name'] }.merge(yaml_data)]
                     }
                   ]
                 }
@@ -72,7 +72,7 @@ module Jekyll
                     {
                       'ref' => event_gateway_placeholder,
                       'name' => event_gateway_placeholder,
-                      child_key => [{ 'ref' => data['name'] }.merge(data)]
+                      child_key => [{ 'ref' => yaml_data['name'] }.merge(yaml_data)]
                     }
                   ]
                 }
@@ -92,6 +92,18 @@ module Jekyll
               end
             end
 
+            def yaml_config
+              Jekyll::Utils::HashToYAML.new(build_config_hash).convert
+            end
+
+            def apply_env_tags(yaml)
+              Utils::VariableReplacer::KongctlData.apply_tags(yaml)
+            end
+
+            def yaml_data
+              @yaml_data ||= Utils::VariableReplacer::KongctlData.run(data: data)
+            end
+
             def event_gateway_placeholder
               formats['kongctl']['event_gateway_variables']['event_gateway']['placeholder']
             end
@@ -102,14 +114,6 @@ module Jekyll
           end
 
           class EventGatewayPolicy < Base
-            def config
-              @config ||= if policy_target == 'listener'
-                            Jekyll::Utils::HashToYAML.new(build_listener_policy_hash).convert
-                          else
-                            Jekyll::Utils::HashToYAML.new(build_virtual_cluster_policy_hash).convert
-                          end
-            end
-
             def missing_variables
               @missing_variables ||= begin
                 vars = [formats['kongctl']['event_gateway_variables']['event_gateway']]
@@ -124,6 +128,14 @@ module Jekyll
 
             private
 
+            def yaml_config
+              if policy_target == 'listener'
+                Jekyll::Utils::HashToYAML.new(build_listener_policy_hash).convert
+              else
+                Jekyll::Utils::HashToYAML.new(build_virtual_cluster_policy_hash).convert
+              end
+            end
+
             def policy_target
               @example_drop.policy_target
             end
@@ -133,10 +145,11 @@ module Jekyll
             end
 
             def policy_item
+              type = data['type']
               {
-                'ref' => data['name'],
-                'type' => data['type'],
-                data['type'] => data.except('type')
+                'ref' => yaml_data['name'],
+                'type' => type,
+                type => yaml_data.except('type')
               }.compact
             end
 
