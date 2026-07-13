@@ -44,9 +44,9 @@ rows:
               url: /assets/images/gateway/ai-gateway-overview.svg
               alt_text: Overview of AI gateway
 
-  - header: 
+  - header:
       type: h2
-      text: "Quick starts" 
+      text: "Quick starts"
 
     columns:
       - blocks:
@@ -74,7 +74,7 @@ rows:
             description: Route and secure agent-to-agent traffic with protocol-aware observability.
             icon: /assets/icons/a2a-quickstart.svg
             cta:
-              url: /ai-gateway/a2a/
+              url: /ai-gateway/get-started-with-ai-agent/
               align: end
   - header:
       type: h2
