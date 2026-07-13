@@ -31,7 +31,7 @@ related_resources:
   - text: AI MCP Server
     url: /ai-gateway/entities/ai-mcp-server/
   - text: AI Consumer Credential
-    url: /ai-gateway/entities/ai-consumer-credential/
+    url: /ai-gateway/entities/ai-consumer/#create-consumer-credentials
 faqs:
   - q: How is an {{site.ai_gateway}} AI Vault different from a {{site.base_gateway}} Vault?
     a: |
