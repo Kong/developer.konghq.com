@@ -6,13 +6,13 @@ To create a new {{site.ai_gateway}} using {{site.konnect_short_name}}, do the fo
    ```bash
    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
    ```
-1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/quickstart/ai) to automatically provision a Control Plane in {{site.konnect_product_name}} and a local Data Plane:
+1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/quickstart/ai) to automatically provision a control plane in {{site.konnect_product_name}} and a local data plane:
 
    ```bash
    curl -Ls https://get.konghq.com/quickstart/ai | bash -s -- -k $KONNECT_TOKEN
    ```
 
-This sets up a {{site.ai_gateway}} Control Plane named `ai-quickstart`, provisions a local Data Plane, and prints out the following environment variables export:
+This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
 
 ```bash
 export AI_GATEWAY_ID=your-gateway-id
