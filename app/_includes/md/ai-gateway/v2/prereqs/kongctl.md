@@ -10,6 +10,6 @@ This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configurat
 
     ```sh
     kongctl adopt ai-gateway "$AI_GATEWAY_ID" \
-        --namespace weather-mcp \
+        --namespace: ai-gateway-get-started
         --pat "$KONNECT_TOKEN"
     ```
