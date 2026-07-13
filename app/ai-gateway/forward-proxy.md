@@ -236,7 +236,6 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 1. Create an [AI Provider](/ai-gateway/entities/ai-model-provider/) entity to define your LLM service and store authentication credentials:
 
   <!-- vale off -->
-  {% capture model-provider %}
   {% konnect_api_request %}
   url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
   status_code: 201
@@ -255,14 +254,11 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
           - name: Authorization
             value: Bearer $OPENAI_API_KEY
   {% endkonnect_api_request %}
-  {% endcapture %}
-  {{ model-provider | indent: 3}}
   <!-- vale on -->
 
-2. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
+1. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
 
   <!-- vale off -->
-  {% capture model %}
   {% konnect_api_request %}
   url: /v1/ai-gateways/$AI_GATEWAY_ID/models
   status_code: 201
@@ -295,14 +291,11 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
     capabilities:
       - generate
   {% endkonnect_api_request %}
-  {% endcapture %}
-  {{ model | indent: 3}}
   <!-- vale on -->
 
-3. Send a chat request. This will be forwarded to your proxy service and return an error:
+1. Send a chat request. This will be forwarded to your proxy service and return an error:
 
   <!-- vale off -->
-  {% capture chat-request %}
   {% validation request-check %}
   url: /v1/chat/completions
   status_code: 200
@@ -316,11 +309,9 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
     - role: "user"
       content: "Say this is a test!"
   {% endvalidation %}
-  {% endcapture %}
-  {{ chat-request | indent: 3}}
   <!-- vale on -->
 
-4. Examine the Squid logs to verify your requests:
+1. Examine the Squid logs to verify your requests:
 
     ```
     docker exec -it squid tail -f /var/log/squid/access.log
