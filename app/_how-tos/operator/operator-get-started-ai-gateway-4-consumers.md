@@ -35,7 +35,7 @@ prereqs:
 tldr:
   q: How do I add AI consumers with {{site.operator_product_name}}?
   a: |
-    Create an `AIGatewayConsumer` with `spec.apiSpec.type: api-key`, store the key in a Kubernetes Secret, then create an `AIGatewayConsumerCredential` referencing it. Use `AIGatewayConsumerGroup` to apply shared policies to multiple consumers at once.
+    Create an `AIGatewayIdentityProvider` and attach it to your model via `spec.apiSpec.model.access.identityProviders`. Then create an `AIGatewayConsumer` with `spec.apiSpec.type: api-key`, store the key in a Kubernetes Secret, and create an `AIGatewayConsumerCredential` referencing it. Use `AIGatewayConsumerGroup` to target shared policies, model access controls, and analytics attribution at the group level.
 
 next_steps:
   - text: "{{ site.ai_gateway_name }} resource reference"
@@ -55,13 +55,13 @@ tags:
 
 ---
 
-This guide builds on the [policy step](/operator/get-started/ai-gateway/policy/) and introduces consumer-level authentication to the running {{ site.ai_gateway }} deployment. Before creating consumers, you configure an `AIGatewayIdentityProvider` that tells the gateway which authentication scheme to use.
+This guide builds on the [policy step](/operator/get-started/ai-gateway/policy/) and introduces consumer-level authentication to the running {{ site.ai_gateway }} deployment. Before creating consumers, you configure an `AIGatewayIdentityProvider` that defines the authentication scheme, then attach it to a model via `spec.apiSpec.model.access.identityProviders`. Authentication is enforced per-model, not globally — a model without an identity provider reference accepts unauthenticated traffic.
 
 With consumers in place you can:
 
 - issue API keys per team and revoke them independently
 - enforce per-consumer `AIGatewayPolicy` rules such as different allowlists per team
-- group consumers with `AIGatewayConsumerGroup` to apply shared policies at the group level
+- group consumers with `AIGatewayConsumerGroup` to target shared policies, model access controls, and analytics attribution at the group level
 - attribute usage and cost to a specific consumer in the {{ site.konnect_short_name }} analytics dashboard
 
 ## Create an `AIGatewayIdentityProvider`
@@ -89,6 +89,8 @@ The `AIGatewayIdentityProvider` resource configures the authentication scheme th
          displayName: API Key Authentication
          config:
            hideCredentials: Enabled
+           keyNames:
+             - x-api-key
    ' | kubectl apply -f -
    ```
 
@@ -99,6 +101,24 @@ The `AIGatewayIdentityProvider` resource configures the authentication scheme th
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+
+## Attach the identity provider to the model
+
+An `AIGatewayIdentityProvider` takes effect only when it is attached to a model via `spec.apiSpec.model.access.identityProviders`. Patch the model you created in the [deployment step](/operator/get-started/ai-gateway/deploy/) to enable authentication:
+
+```bash
+kubectl patch aigatewaymodel gpt-4o-mini -n kong \
+  --type=merge \
+  -p '{"spec":{"apiSpec":{"model":{"access":{"identityProviders":["key-auth-provider"]}}}}}'
+```
+
+Wait for the model to be reconciled with the updated configuration:
+
+```bash
+kubectl wait aigatewaymodel/gpt-4o-mini -n kong \
+  --for=condition=Programmed=True \
+  --timeout=5m
+```
 
 ## Create an AI consumer
 
@@ -172,6 +192,14 @@ The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayC
    ' | kubectl apply -f -
    ```
 
+1. Wait for the credential to be reconciled:
+
+   ```bash
+   kubectl wait aigatewayconsumercredential/team-platform-key-auth -n kong \
+     --for=condition=Programmed=True \
+     --timeout=5m
+   ```
+
 {:.info}
 > **Credentials are immutable:** `AIGatewayConsumerCredential` only supports create and delete — updates are not propagated. To rotate a key, delete the credential and create a new one.
 
@@ -180,7 +208,7 @@ The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayC
 Export the data plane address if you no longer have it set from the previous step:
 
 ```bash
-export AIGW_HOST=$(kubectl get service my-ai-gateway-dp -n kong \
+export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
@@ -188,26 +216,30 @@ Authenticated request using the API key:
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" \
-  http://${AIGW_HOST}:8080/v1/chat/completions \
-  -H "apikey: my-platform-team-api-key" \
+  http://${AIGW_HOST}:8000/v1/chat/completions \
+  -H "x-api-key: my-platform-team-api-key" \
   -H "Content-Type: application/json" \
-  -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"Hello from the platform team"}]}'
+  -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"How do I configure a Kong service?"}]}'
 ```
 
 Unauthenticated request — expect `401 Unauthorized`:
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" \
-  http://${AIGW_HOST}:8080/v1/chat/completions \
+  http://${AIGW_HOST}:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"Hello"}]}'
+  -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"How do I configure a Kong service?"}]}'
 ```
 
 ## Group consumers with a consumer group
 
-`AIGatewayConsumerGroup` lets you apply shared policies to multiple consumers at once. For example, you can attach a rate-limiting or topic-allowlist policy to an entire team group instead of configuring it per consumer.
+`AIGatewayConsumerGroup` is a named set of consumers that you can target as a unit. Use groups to:
 
-1. Create a consumer group and attach an existing policy by name:
+- apply shared policies to a team by listing policy names in `spec.apiSpec.policies` — useful for policies scoped with `global: Disabled` that should only apply to specific groups
+- restrict or allow group access to individual models via `spec.apiSpec.model.access.acls` on the `AIGatewayModel`
+- attribute usage across multiple consumers to a single group in {{ site.konnect_short_name }} analytics
+
+1. Create a consumer group:
 
    ```bash
    echo '
@@ -224,8 +256,7 @@ curl -s -o /dev/null -w "%{http_code}\n" \
      apiSpec:
        name: platform-team-group
        displayName: Platform Team
-       policies:
-         - injection-guard
+       policies: []
    ' | kubectl apply -f -
    ```
 
@@ -249,6 +280,11 @@ List all consumers and their reconciliation status:
 
 ```bash
 kubectl get aigatewayconsumer -n kong
+```
+
+```
+NAME            ID                                     PROGRAMMED   AGE
+team-platform   <konnect-id>                           True         2m
 ```
 
 Describe a consumer to see the full status and any reconciliation errors:

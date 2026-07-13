@@ -158,21 +158,21 @@ The `AIGatewayModel` resource defines a route and maps it to one or more provide
        namespacedRef:
          name: my-ai-gateway-cp
      apiSpec:
-       type: api
-       api:
+       type: model
+       model:
          name: gpt-4o-mini
          displayName: GPT-4o Mini
          enabled: Enabled
          formats:
            - type: openai
          capabilities:
-           - chat
+           - generate
          config:
            model:
              alias: gpt-4o-mini
            route:
              paths:
-               - /v1/chat/completions
+               - /v1
          targets:
            - name: gpt-4o-mini
              provider: openai-provider
@@ -193,7 +193,7 @@ The `AIGatewayModel` resource defines a route and maps it to one or more provide
 
 ## Deploy the `AIGatewayDataPlane`
 
-The `AIGatewayDataPlane` resource runs the {{ site.ai_gateway }} binary inside your Kubernetes cluster. It exposes a `LoadBalancer` Service on port `8080` for inference requests.
+The `AIGatewayDataPlane` resource runs the {{ site.ai_gateway }} binary inside your Kubernetes cluster. It exposes a `LoadBalancer` Service on port `8000` for inference requests.
 
 The operator automatically provisions the mTLS certificate and registers it with the control plane — there is no need to create an `AIGatewayDataPlaneCertificate` manually.
 
@@ -219,8 +219,8 @@ The operator automatically provisions the mTLS certificate and registers it with
            type: LoadBalancer
            ports:
              - name: http
-               port: 8080
-               targetPort: 8080
+               port: 8000
+               targetPort: 8000
    ' | kubectl apply -f -
    ```
 
@@ -235,7 +235,7 @@ The operator automatically provisions the mTLS certificate and registers it with
 ## Export the `LoadBalancer` address
 
 ```bash
-export AIGW_HOST=$(kubectl get service my-ai-gateway-dp -n kong \
+export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo $AIGW_HOST
 ```
@@ -245,7 +245,7 @@ echo $AIGW_HOST
 Send a request to the model route you configured:
 
 ```bash
-curl -s http://${AIGW_HOST}:8080/v1/chat/completions \
+curl -s http://${AIGW_HOST}:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o-mini",
