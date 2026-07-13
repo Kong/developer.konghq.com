@@ -90,9 +90,9 @@ The following creates a new agent. Suggested values are shown in backticks.
 1. Optional. Expand **Advanced fields** for further route configuration.
 1. Click **Create**.
 {% when 'mcp_server' %}
-The following creates a new MCP server. Suggested values are shown in backticks.
+The following creates a new AI MCP Server. Suggested values are shown in backticks:
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **MCP servers**.
 1. Click **New MCP server**.
@@ -107,9 +107,9 @@ The following creates a new MCP server. Suggested values are shown in backticks.
 1. In **Tools**, click **Add tool** to allow or deny access to specific upstream tools. If no tools are added, requests are proxied to the upstream MCP server without restriction.
 1. Click **Create**.
 {% when 'vault' %}
-The following creates a new AI Vault. Suggested values are shown in backticks.
+The following creates a new AI Vault. Suggested values are shown in backticks:
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Vaults**.
 1. Click **New vault**.
