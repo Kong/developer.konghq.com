@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@b1c0fe493af8615f1ec64898b4c0e7fdb9e574b1
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b1c0fe493af8615f1ec64898b4c0e7fdb9e574b1'
+  x-oas-source: kong/platform-api@1224679bfc5f8833192fc40a21cb2b4b79dc1235
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1224679bfc5f8833192fc40a21cb2b4b79dc1235'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1233,6 +1233,58 @@ paths:
       description: |-
         Deletes an application registration, which if currently approved will immediately block API traffic to the API.
         Note: Developers can request a new application registration for the given API as long as they have RBAC access to consume.
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Application Registrations
+  '/portals/{portalId}/applications/{applicationId}/registrations/{registrationId}/consumer':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+      - $ref: '#/components/parameters/ApplicationId'
+      - $ref: '#/components/parameters/RegistrationId'
+    put:
+      operationId: update-application-registration-consumer
+      summary: Update application consumer mapping
+      description: |-
+        Associates an existing Gateway Consumer with the application in the Gateway context resolved from the specified registration.
+        The consumer must already exist and be accessible within the API's Gateway context.
+        If multiple registrations of the same application target APIs implemented in the same Gateway context, they share the same effective consumer mapping.
+        Updating the consumer mapping for one registration updates the mapping for all registrations that resolve to the same Gateway context.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateRegistrationConsumerRequest'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                UpdateRegistrationConsumerBadRequestExample1:
+                  $ref: '#/components/examples/UpdateRegistrationConsumerBadRequestExample1'
+                UpdateRegistrationConsumerBadRequestExample2:
+                  $ref: '#/components/examples/UpdateRegistrationConsumerBadRequestExample2'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Application Registrations
+    delete:
+      operationId: delete-application-registration-consumer
+      summary: Delete application consumer mapping
+      description: Removes the Gateway Consumer mapping associated with the application in the Gateway context resolved from the specified registration.
       responses:
         '204':
           description: No Content
@@ -4075,6 +4127,24 @@ components:
           required:
             - id
             - name
+        consumer:
+          description: Details about the consumer associated with this application registration.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            custom_id:
+              description: The custom ID of the associated consumer.
+              type: string
+            username:
+              description: The username of the associated consumer.
+              type: string
+            control_plane_id:
+              $ref: '#/components/schemas/UUID'
+          required:
+            - id
+            - control_plane_id
       example:
         id: c300cc33-2d33-4754-b086-a98e0fcd36fb
         status: approved
@@ -4118,6 +4188,20 @@ components:
         status: rejected
       additionalProperties: false
       title: UpdateApplicationRegistrationRequest
+    UpdateRegistrationConsumerRequest:
+      type: object
+      properties:
+        id:
+          description: The ID of the existing Gateway Consumer to associate with the application.
+          type: string
+          format: uuid
+          nullable: false
+      example:
+        id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      additionalProperties: false
+      required:
+        - id
+      title: UpdateRegistrationConsumerRequest
     PortalFilterParameters:
       type: object
       properties:
@@ -7702,6 +7786,25 @@ components:
           entity_type: api
         created_at: '2022-12-22T20:13:07.305Z'
         updated_at: '2022-12-22T20:13:36.710Z'
+    GetApplicationRegistrationExample2:
+      value:
+        id: c300cc33-2d33-4754-b086-a98e0fcd36fb
+        status: approved
+        application:
+          id: c15e2460-ba40-431d-9df0-4957fcff7cda
+          name: App 1
+        api:
+          id: 86f637b7-cd95-478b-9b02-d770618f641c
+          name: Great Stuff
+          version: v1
+          entity_type: api
+        consumer:
+          id: 9b8d8f64-1c6a-4d4f-bf5a-7b8c2e3a4f01
+          custom_id: app-1-consumer
+          username: app-1
+          control_plane_id: a1b2c3d4-e5f6-4789-89ab-cdef01234567
+        created_at: '2022-12-22T20:13:07.305Z'
+        updated_at: '2022-12-22T20:13:36.710Z'
     UpdateApplicationRegistrationResponseExample1:
       value:
         id: c300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -8651,6 +8754,31 @@ components:
         ssl:
           verification_status: verified
           domain_verification_method: http
+    UpdateRegistrationConsumerExample1:
+      value:
+        id: 18ee2573-dec0-4b83-be99-fa7700bcdc61
+    UpdateRegistrationConsumerBadRequestExample1:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: id
+            rule: invalid
+            reason: value of "id" must be a UUID
+            source: body
+    UpdateRegistrationConsumerBadRequestExample2:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: id
+            rule: invalid
+            reason: this gateway consumer id does not exist
+            source: body
     UnauthorizedExample:
       value:
         status: 401
@@ -9172,6 +9300,16 @@ components:
               $ref: '#/components/examples/UpdateApplicationRegistrationRejected'
             Revoked:
               $ref: '#/components/examples/UpdateApplicationRegistrationRevoked'
+    UpdateRegistrationConsumerRequest:
+      description: Update the consumer of an application registration.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateRegistrationConsumerRequest'
+          examples:
+            Example 1:
+              $ref: '#/components/examples/UpdateRegistrationConsumerExample1'
     UpdateApplication:
       description: Update an application.
       required: true
@@ -9895,6 +10033,8 @@ components:
           examples:
             Example 1:
               $ref: '#/components/examples/GetApplicationRegistrationExample1'
+            Example 2:
+              $ref: '#/components/examples/GetApplicationRegistrationExample2'
     UpdateApplicationRegistration:
       description: Details about the application registration being updated.
       content:

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.6
+  version: 2.1.0
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@e7d652d9639a319c73650f130fbce9bb5be2439b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e7d652d9639a319c73650f130fbce9bb5be2439b'
+  x-oas-source: kong/platform-api@1224679bfc5f8833192fc40a21cb2b4b79dc1235
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1224679bfc5f8833192fc40a21cb2b4b79dc1235'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -1109,10 +1109,24 @@ components:
         - status
         - errors
       title: VerifyDcrProviderResponse
+    AuthStrategyPrincipals:
+      description: |
+        Application principal settings for this auth strategy. Runtime effect applies to V3 API Catalog (ACE) portals and
+        applications; stored values may be set for any auth strategy in the organization.
+      type: object
+      properties:
+        enabled:
+          description: Whether application principals are enabled for this auth strategy.
+          type: boolean
+          default: false
+      additionalProperties: false
+      required:
+        - enabled
+      title: AuthStrategyPrincipals
     AppAuthStrategyConfigKeyAuth:
       description: |
-        The most basic mode to configure an Application Auth Strategy for an API Product Version. 
-        Using this mode will allow developers to generate API keys that will authenticate their application requests. 
+        The most basic mode to configure an Application Auth Strategy for an API Product Version.
+        Using this mode will allow developers to generate API keys that will authenticate their application requests.
         Once authenticated, an application will be granted access to any Product Version it is registered for that is configured for Key Auth.
       type: object
       properties:
@@ -1177,9 +1191,9 @@ components:
       title: PartialAppAuthStrategyConfigKeyAuth
     PartialAppAuthStrategyConfigOpenIDConnect:
       description: |
-        A more advanced mode to configure an API Product Version’s Application Auth Strategy. 
-        Using this mode will allow developers to use API credentials issued from an external IdP that will authenticate their application requests. 
-        Once authenticated, an application will be granted access to any Product Version it is registered for that is configured for the same Auth Strategy. 
+        A more advanced mode to configure an API Product Version’s Application Auth Strategy.
+        Using this mode will allow developers to use API credentials issued from an external IdP that will authenticate their application requests.
+        Once authenticated, an application will be granted access to any Product Version it is registered for that is configured for the same Auth Strategy.
         An OIDC strategy may be used in conjunction with a DCR provider to automatically create the IdP application.
       type: object
       properties:
@@ -1209,9 +1223,9 @@ components:
       title: PartialAppAuthStrategyConfigOpenIDConnect
     AppAuthStrategyConfigOpenIDConnect:
       description: |
-        A more advanced mode to configure an API Product Version’s Application Auth Strategy. 
-        Using this mode will allow developers to use API credentials issued from an external IdP that will authenticate their application requests. 
-        Once authenticated, an application will be granted access to any Product Version it is registered for that is configured for the same Auth Strategy. 
+        A more advanced mode to configure an API Product Version’s Application Auth Strategy.
+        Using this mode will allow developers to use API credentials issued from an external IdP that will authenticate their application requests.
+        Once authenticated, an application will be granted access to any Product Version it is registered for that is configured for the same Auth Strategy.
         An OIDC strategy may be used in conjunction with a DCR provider to automatically create the IdP application.
       type: object
       properties:
@@ -1267,6 +1281,8 @@ components:
             - key-auth
         labels:
           $ref: '#/components/schemas/Labels'
+        principals:
+          $ref: '#/components/schemas/AuthStrategyPrincipals'
       additionalProperties: false
       required:
         - name
@@ -1338,6 +1354,8 @@ components:
           type: boolean
           default: true
           readOnly: true
+        principals:
+          $ref: '#/components/schemas/AuthStrategyPrincipals'
       additionalProperties: false
       required:
         - id
@@ -1378,6 +1396,8 @@ components:
           nullable: true
         labels:
           $ref: '#/components/schemas/Labels'
+        principals:
+          $ref: '#/components/schemas/AuthStrategyPrincipals'
       additionalProperties: false
       required:
         - name
@@ -1449,6 +1469,8 @@ components:
             - `false` when not supported for Client Credentials strategies
           type: boolean
           readOnly: true
+        principals:
+          $ref: '#/components/schemas/AuthStrategyPrincipals'
       additionalProperties: false
       required:
         - id
@@ -1510,6 +1532,8 @@ components:
           oneOf:
             - $ref: '#/components/schemas/UpdateAppAuthStrategyRequestOpenIdConnect'
             - $ref: '#/components/schemas/UpdateAppAuthStrategyRequestKeyAuth'
+        principals:
+          $ref: '#/components/schemas/AuthStrategyPrincipals'
       additionalProperties: false
       title: UpdateAppAuthStrategyRequest
     UpdateAppAuthStrategyRequestOpenIdConnect:
@@ -2211,6 +2235,8 @@ components:
         name: auth strategy 1
         display_name: API Key Auth
         strategy_type: key_auth
+        principals:
+          enabled: false
         configs:
           key-auth:
             key_names:
@@ -2519,10 +2545,11 @@ tags:
   - name: DCR Providers
     description: |
       Dynamic Client Registration Providers are configurations representing an external Identity Provider whose clients (i.e. Applications) Konnect will be authorized to manage.
-      For instance, they will be able to perform dynamic client registration (DCR) with the provider. 
+      For instance, they will be able to perform dynamic client registration (DCR) with the provider.
       The DCR provider provides credentials to each DCR-enabled application in Konnect that can be used to access Product Versions that the app is registered for.
   - name: App Auth Strategies
     description: |
-      Application Auth Strategies are sets of plugin configurations that represent how the gateway will perform authentication and authorization for a Product Version. 
-      Called “Auth Strategy” for short in the context of portals/applications. 
+      Application Auth Strategies are sets of plugin configurations that represent how the gateway will perform authentication and authorization for a Product Version.
+      Called “Auth Strategy” for short in the context of portals/applications.
       The plugins are synced to any Gateway Service that is currently linked or becomes linked to the Product Version.
+      The optional `principals` property controls application-principal behavior for V3 API Catalog portals and applications. It defaults to disabled when omitted.
