@@ -66,7 +66,7 @@ rows:
 
   - header:
       type: h2
-      text: "Quick starts"
+      text: "Guided quickstarts"
 
     columns:
       - blocks:
@@ -95,6 +95,30 @@ rows:
             icon: /assets/icons/a2a-quickstart.svg
             cta:
               url: /ai-gateway/a2a/
+              align: end
+
+  - header:
+      type: h2
+      text: "Core concepts"
+
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Architecture
+            description: Understand how {{site.ai_gateway}} works, including its control plane, data plane, and deployment topologies.
+            icon: /assets/icons/network.svg
+            cta:
+              url: /ai-gateway/architecture/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.ai_gateway}} entities"
+            description: Learn about AI Models, AI Model Providers, AI Agents, AI MCP Servers, AI Policies, and the other entities that make up {{site.ai_gateway}}.
+            icon: /assets/icons/linked-services.svg
+            cta:
+              url: /ai-gateway/entities/
               align: end
   - header:
       type: h2
