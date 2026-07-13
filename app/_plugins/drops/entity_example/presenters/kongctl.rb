@@ -18,15 +18,15 @@ module Jekyll
             }.freeze
 
             AI_GATEWAY_ENTITY_TO_CHILD_KEY = {
-              'model' => 'ai_gateway_models',
-              'vault' => 'ai_gateway_vaults',
-              'model-provider' => 'ai_gateway_model_providers',
-              'agent' => 'ai_gateway_agents',
-              'consumer' => 'ai_gateway_consumers',
-              'consumer_group' => 'ai_gateway_consumer_groups',
-              'mcp_server' => 'ai_gateway_mcp_servers',
-              'identity-provider' => 'ai_gateway_identity_providers',
-              'policy' => 'ai_gateway_policies'
+              'model' => 'models',
+              'vault' => 'vaults',
+              'model-provider' => 'model_providers',
+              'agent' => 'agents',
+              'consumer' => 'consumers',
+              'consumer_group' => 'consumer_groups',
+              'mcp_server' => 'mcp_servers',
+              'identity-provider' => 'identity_providers',
+              'policy' => 'policies'
             }.freeze
 
             def data
