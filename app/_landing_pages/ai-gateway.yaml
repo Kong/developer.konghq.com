@@ -125,8 +125,8 @@ rows:
       type: h2
       text: "{{site.ai_gateway}} providers"
       description: |
-        {{site.ai_gateway}} routes AI requests through provider-agnostic APIs by combining AI Providers and AI Models.
-        AI Providers store upstream connectivity and credentials, while AI Models reference Providers to expose stable client-facing endpoints and routing behavior.
+        {{site.ai_gateway}} routes AI requests through provider-agnostic APIs by combining AI Model Providers and AI Models.
+        AI Model Providers store upstream connectivity and credentials, while AI Models reference Providers to expose stable client-facing endpoints and routing behavior.
     column_count: 4
     columns:
       - blocks:
@@ -240,7 +240,7 @@ rows:
                 text: |
                   Define a single endpoint for any traffic type: LLM, MCP, or A2A. Configure [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/) once, then govern them from a [unified control plane](https://cloud.konghq.com/ai-manager) with built-in auth, policy enforcement, and observability:
 
-                    * [Routing and load balancing](/ai-gateway/load-balancing/) across AI Providers
+                    * [Routing and load balancing](/ai-gateway/load-balancing/) across AI Model Providers
                     * [Streaming and authentication](/ai-gateway/streaming/) with [AI Policies](/ai-gateway/entities/ai-policy/)
                     * Access control with [AI Consumers](/ai-gateway/entities/ai-consumer/) and ACLs
                     * [Usage analytics](/ai-gateway/monitor-ai-llm-metrics/) for requests, tokens, errors, and latency
@@ -257,26 +257,6 @@ rows:
           config:
             url: /assets/images/gateway/universal-api.svg
             alt_text: Overview of AI gateway
-
-  # - columns:
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: AI Model reference
-  #           description: Use an AI Model to define a client-facing AI endpoint with capabilities, formats, and routing behavior.
-  #           icon: /assets/icons/model.svg
-  #           cta:
-  #             url: /ai-gateway/entities/ai-model/
-  #             align: end
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: AI Provider reference
-  #           description: Use an AI Provider to configure upstream LLM connectivity and authentication, then reuse it across AI Models.
-  #           icon: /assets/icons/provider.svg
-  #           cta:
-  #             url: /ai-gateway/entities/ai-provider/
-  #             align: end
 
   - header:
       type: h2
@@ -514,7 +494,7 @@ rows:
         - type: card
           config:
             title: AI Entities
-            description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Providers, AI Agents, AI MCP Servers, and AI Consumers.
+            description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Model Providers, AI Identity Providers, AI Agents, AI MCP Servers, and AI Consumers.
             cta:
               url: /ai-gateway/entities/
               align: end
