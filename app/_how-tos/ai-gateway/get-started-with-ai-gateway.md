@@ -76,7 +76,7 @@ EOF
 ```
 
 {:.info}
-> `ai-quickstart` references the AI Gateway created by the quickstart script in the prerequisites above, instead of creating a new one.
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
 In this example, we're setting up the AI Provider with:
 
@@ -127,7 +127,7 @@ EOF
 ```
 
 {:.info}
-> `ai-quickstart` references the AI Gateway created by the quickstart script, same as in the previous step.
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script, same as in the previous step.
 
 In this example, we're setting up the AI Model with:
 
