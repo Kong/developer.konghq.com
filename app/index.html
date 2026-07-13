@@ -132,7 +132,7 @@ edit_and_issue_links: false
                     {% include_svg fcard.icon class="card__icon" aria-label=fcard.title %}
                     <span class="font-semibold text-sm flex-1 ml-2">{{ fcard.title }}</span>
                     {%- if fcard.badge -%}
-                    <span class="text-xs font-semibold bg-brand/20 text-brand px-1.5 py-0.5 rounded shrink-0">{{ fcard.badge }}</span>
+                    <span class="text-xs font-semibold bg-brand/20 text-button dark:text-brand px-1.5 py-0.5 rounded shrink-0">{{ fcard.badge }}</span>
                     {%- endif -%}
                     {%- if fcard.snippet_label -%}
                     <div class="relative flex items-center gap-1 shrink-0">
