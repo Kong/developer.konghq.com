@@ -21,6 +21,7 @@ products:
 
 min_version:
   operator: '2.2'
+  ai-gateway: '2.0'
 
 works_on:
   - konnect
@@ -36,11 +37,11 @@ tldr:
   q: How do I apply AI policies with {{site.operator_product_name}}?
   a: |
     Create an `AIGatewayPolicy` resource pointing to your `KonnectAIGateway` via `spec.aiGatewayRef`.
-    Set `spec.apiSpec.global` to `Enabled` to apply the policy to every model on the gateway, or `Disabled` to target a specific model.
-    Use a single policy resource to combine `deny_patterns` (block injection attempts) and `allow_patterns` (restrict to a topic list) — the gateway evaluates deny patterns first, then checks that the request matches at least one allow pattern.
+    Set `spec.apiSpec.global` to `Enabled` to apply the Policy to every model on the gateway, or `Disabled` to target a specific model.
+    Use a single Policy resource to combine `deny_patterns` (block injection attempts) and `allow_patterns` (restrict to a topic list). The gateway evaluates deny patterns first, then checks that the request matches at least one allow pattern.
 
 next_steps:
-  - text: Add AI consumers and credentials
+  - text: Add AI Consumers and credentials
     url: /operator/get-started/ai-gateway/consumers/
   - text: "{{ site.ai_gateway_name }} resource reference"
     url: /operator/konnect/ai-gateway/
@@ -48,7 +49,7 @@ next_steps:
 related_resources:
   - text: "{{ site.ai_gateway_name }} with {{ site.operator_product_name }}"
     url: /operator/konnect/ai-gateway/
-  - text: AI policies
+  - text: AI Policies
     url: /ai-gateway/entities/ai-policy/
   - text: Cross namespace references
     url: /operator/konnect/cross-namespace-references/
@@ -63,10 +64,10 @@ This guide builds on the [deployment step](/operator/get-started/ai-gateway/depl
 
 By the end of this guide, you will have a single `ai-prompt-guard` policy that:
 
-- blocks prompt injection and jailbreak attempts using deny patterns
-- restricts the gateway to a defined set of engineering topics using allow patterns
+- Blocks prompt injection and jailbreak attempts using deny patterns
+- Restricts the gateway to a defined set of engineering topics using allow patterns
 
-The `ai-prompt-guard` policy evaluates deny patterns first. If the prompt matches a deny pattern, the request is rejected immediately. If no deny pattern matches, the prompt must then match at least one allow pattern to proceed. This means both rules must be in the same policy to work together correctly.
+The `ai-prompt-guard` Policy evaluates deny patterns first. If the prompt matches a deny pattern, the request is rejected immediately. If no deny pattern matches, the prompt must then match at least one allow pattern to proceed. This means both rules must be in the same Policy to work together correctly.
 
 Export the `AIGatewayDataPlane` address from the previous step if you no longer have it set:
 
@@ -75,9 +76,9 @@ export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
-## Create the prompt guard policy
+## Create the AI Prompt Guard Policy
 
-1. Create a policy that blocks injection attempts and restricts prompts to engineering topics:
+1. Create a Policy that blocks injection attempts and restricts prompts to engineering topics:
 
    ```bash
    echo '
@@ -111,7 +112,7 @@ export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
    ' | kubectl apply -f -
    ```
 
-1. Wait for the policy to be reconciled:
+1. Wait for the Policy to be reconciled:
 
    ```bash
    kubectl wait aigatewaypolicy/content-guardrails -n kong \
@@ -119,12 +120,12 @@ export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
      --timeout=5m
    ```
 
-## Validate the policy
+## Validate the Policy
 
 Send a legitimate on-topic prompt. It should pass through to the model:
 
 ```bash
-curl -s http://${AIGW_HOST}:8000/v1/chat/completions \
+curl -s http://$AIGW_HOST:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o-mini",
@@ -136,7 +137,7 @@ Send an off-topic prompt. It should be rejected because it does not match the al
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" \
-  http://${AIGW_HOST}:8000/v1/chat/completions \
+  http://$AIGW_HOST:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o-mini",
@@ -148,7 +149,7 @@ Send a prompt injection attempt. It should also be rejected:
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" \
-  http://${AIGW_HOST}:8000/v1/chat/completions \
+  http://$AIGW_HOST:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o-mini",
@@ -158,7 +159,7 @@ curl -s -o /dev/null -w "%{http_code}\n" \
 
 Both blocked requests return `400`. The data plane rejected them before they reached OpenAI.
 
-## Inspect the policy
+## Inspect the Policy
 
 List all `AIGatewayPolicy` resources and their reconciliation status:
 
@@ -166,14 +167,14 @@ List all `AIGatewayPolicy` resources and their reconciliation status:
 kubectl get aigatewaypolicy -n kong
 ```
 
-The output shows each policy, its type, and whether it has been reconciled:
+The output shows each Policy, its type, and whether it has been reconciled:
 
 ```
 NAME                 PROGRAMMED   AGE
 content-guardrails   True         2m
 ```
 
-Describe the policy to see its full status, including any reconciliation errors from the operator:
+Describe the Policy to see its full status, including any reconciliation errors from the operator:
 
 ```bash
 kubectl describe aigatewaypolicy/content-guardrails -n kong

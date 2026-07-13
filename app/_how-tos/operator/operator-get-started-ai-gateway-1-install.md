@@ -21,6 +21,7 @@ products:
 
 min_version:
   operator: '2.2'
+  ai-gateway: '2.0'
 
 works_on:
   - konnect
@@ -35,7 +36,7 @@ prereqs:
 
 tldr:
   q: How do I install {{site.operator_product_name}} for {{ site.ai_gateway_name }}?
-  a: Install {{site.operator_product_name}} with `--set env.ENABLE_CONTROLLER_AIGATEWAYDATAPLANE=true` to enable the {{ site.ai_gateway }} data plane controller, then store your Konnect credentials in a Kubernetes Secret.
+  a: Install {{site.operator_product_name}} with `--set env.ENABLE_CONTROLLER_AIGATEWAYDATAPLANE=true` to enable the {{ site.ai_gateway }} data plane controller, then store your {{site.konnect_short_name}} credentials in a Kubernetes Secret.
 
 next_steps:
   - text: Deploy {{ site.ai_gateway_name }}
@@ -60,11 +61,11 @@ This guide walks through a complete {{ site.ai_gateway_name }} setup using {{sit
 
 By the end of the series, you will have:
 
-- a {{site.konnect_short_name}} {{ site.ai_gateway_name }} control plane
-- an AI model provider (OpenAI) and model route
-- an {{ site.ai_gateway_name }} data plane running in Kubernetes
-- prompt guard policies enforcing content governance
-- authenticated consumers with per-team API keys
+- A {{site.konnect_short_name}} {{ site.ai_gateway_name }} control plane
+- An AI Model Provider (OpenAI) and an AI Model route
+- An {{ site.ai_gateway_name }} data plane running in Kubernetes
+- AI Prompt Guard Policies enforcing content governance
+- Authenticated AI Consumers with per-team API keys
 
 ## Create the Kubernetes namespace
 

@@ -21,6 +21,7 @@ products:
 
 min_version:
   operator: '2.2'
+  ai-gateway: '2.0'
 
 works_on:
   - konnect
@@ -87,7 +88,7 @@ The `KonnectAIGateway` resource creates the {{ site.ai_gateway }} control plane 
      --timeout=10m
    ```
 
-## Create an AI model provider
+## Create an AI Model Provider
 
 The `AIGatewayModelProvider` resource configures authentication and connection details for an upstream LLM provider. This example uses OpenAI.
 
@@ -139,7 +140,7 @@ The `AIGatewayModelProvider` resource configures authentication and connection d
      --timeout=10m
    ```
 
-## Create an AI model
+## Create an AI Model
 
 The `AIGatewayModel` resource defines a route and maps it to one or more provider targets. Clients send inference requests to the path configured here.
 
@@ -245,7 +246,7 @@ echo $AIGW_HOST
 Send a request to the model route you configured:
 
 ```bash
-curl -s http://${AIGW_HOST}:8000/v1/chat/completions \
+curl -s http://$AIGW_HOST:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o-mini",
