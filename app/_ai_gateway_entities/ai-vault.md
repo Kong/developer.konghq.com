@@ -213,19 +213,6 @@ data:
     prefix: KONG_
 {% endentity_example %}
 
-<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
-```yaml
-vaults:
-  - name: prod-env-vault
-    ref: prod-env-vault
-    display_name: "Production Env Vault"
-    description: "Vault for production secrets sourced from environment variables."
-    type: env
-    config:
-      prefix: KONG_
-```
--->
-
 ## Schema
 
 {% entity_schema %}

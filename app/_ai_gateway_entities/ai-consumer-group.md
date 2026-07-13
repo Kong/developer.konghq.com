@@ -167,16 +167,6 @@ data:
 {:.info}
 > This creates an empty AI Consumer Group with no members. To add AI Consumers to it, see [Membership](#membership). There's no `consumers` field on the AI Consumer Group itself; membership is set through a separate endpoint.
 
-<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
-```yaml
-consumer_groups:
-  - name: internal-teams
-    ref: internal-teams
-    display_name: "Internal Teams"
-    policies: []
-```
--->
-
 ## Schema
 
 {% entity_schema %}
