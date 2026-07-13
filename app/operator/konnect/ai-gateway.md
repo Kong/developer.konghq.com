@@ -102,7 +102,7 @@ All configuration resources anchor to the `KonnectAIGateway` as their root via `
 
 1. `AIGatewayModelProvider.spec.aiGatewayRef` → `KonnectAIGateway`
 2. `AIGatewayModel.spec.aiGatewayRef` → `KonnectAIGateway`
-3. `AIGatewayModel.spec.apiSpec.api.targets[].provider` → `AIGatewayModelProvider` (by name)
+3. `AIGatewayModel.spec.apiSpec.model.targets[].provider` → `AIGatewayModelProvider` (by name)
 4. `AIGatewayPolicy.spec.aiGatewayRef` → `KonnectAIGateway`
 5. `AIGatewayIdentityProvider.spec.aiGatewayRef` → `KonnectAIGateway`
 6. `AIGatewayConsumer.spec.aiGatewayRef` → `KonnectAIGateway`

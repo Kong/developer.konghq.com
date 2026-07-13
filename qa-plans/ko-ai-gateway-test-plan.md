@@ -394,21 +394,21 @@ spec:
     namespacedRef:
       name: my-ai-gateway-cp
   apiSpec:
-    type: api
-    api:
+    type: model
+    model:
       name: gpt-4o-mini
       displayName: GPT-4o Mini
       enabled: Enabled
       formats:
         - type: openai
       capabilities:
-        - chat
+        - generate
       config:
         model:
           alias: gpt-4o-mini
         route:
           paths:
-            - /v1/chat/completions
+            - /v1
       targets:
         - name: gpt-4o-mini
           provider: openai-provider
@@ -454,21 +454,21 @@ spec:
     namespacedRef:
       name: my-ai-gateway-cp
   apiSpec:
-    type: api
-    api:
+    type: model
+    model:
       name: claude-sonnet
       displayName: Claude Sonnet
       enabled: Enabled
       formats:
         - type: openai
       capabilities:
-        - chat
+        - generate
       config:
         model:
           alias: claude-sonnet-4-5
         route:
           paths:
-            - /v1/claude/chat/completions
+            - /v1/claude
       targets:
         - name: claude-sonnet
           provider: anthropic-provider
@@ -504,15 +504,15 @@ spec:
     namespacedRef:
       name: my-ai-gateway-cp
   apiSpec:
-    type: api
-    api:
+    type: model
+    model:
       name: bad-model
       displayName: Bad Model
       enabled: Enabled
       formats:
         - type: openai
       capabilities:
-        - chat
+        - generate
       config:
         route:
           paths:
