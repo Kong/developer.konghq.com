@@ -95,7 +95,7 @@ rows:
             description: Route and secure agent-to-agent traffic with protocol-aware observability.
             icon: /assets/icons/a2a-quickstart.svg
             cta:
-              url: /ai-gateway/a2a/
+              url: /ai-gateway/get-started-with-ai-agent/
               align: end
 
   - header:
