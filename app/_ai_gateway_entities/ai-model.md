@@ -103,7 +103,7 @@ AI Models can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/models`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model) below.
+For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model).
 
 ## How it works
 
@@ -321,7 +321,7 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Model aliasing
 
-By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name—for abstraction, stability, or to hide implementation details—set [`config.model.alias`](#schema-aigateway-model-config-model-alias).
+By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, set [`config.model.alias`](#schema-aigateway-model-config-model-alias).
 
 When an alias is set, clients can send that alias in the request `model` field instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
@@ -335,7 +335,7 @@ To control how consumers authenticate before their access is evaluated, configur
 
 Attach an AI Policy to an AI Model to add security, observability, governance, rate limiting, and cost optimization to all requests through that model. For example, you can add guardrails ([AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)), enable [logging and metrics](/ai-gateway/policies/?category=logging), audit and [compliance controls](/ai-gateway/policies/ai-sanitizer/), cache responses, or [rate-limit](/ai-gateway/policies/ai-rate-limiting-advanced/) LLM traffic.
 
-Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations. Not every AI Policy type supports AI Model attachment. AI Policies are not deleted when the AI Model is deleted—only the AI Model's reference is removed. For more details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/).
+Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations. Not every AI Policy type supports AI Model attachment. AI Policies are not deleted when the AI Model is deleted, only the AI Model's reference is removed. For more details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/).
 
 ### AI Policy execution order
 
@@ -397,7 +397,7 @@ data:
 {% endentity_example %}
 
 {:.info}
-> Because [`config.model.alias`](#schema-aigateway-model-config-model-alias) is set here, requests through this AI Model must send `"model": "my-gpt-4o"` in the request body—the alias—instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
+> Because [`config.model.alias`](#schema-aigateway-model-config-model-alias) is set here, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
 
 
 ## Schema

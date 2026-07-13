@@ -112,7 +112,7 @@ AI Identity Providers can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/identity`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Identity Provider](#set-up-an-ai-identity-provider) below.
+For configuration examples and step-by-step setup instructions, see [Set up an AI Identity Provider](#set-up-an-ai-identity-provider).
 
 ## Authentication types
 

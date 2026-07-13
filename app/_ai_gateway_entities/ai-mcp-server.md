@@ -422,7 +422,7 @@ Both default and per-tool ACLs use `allow` and `deny` lists. Evaluation follows 
 
 All access attempts (allowed or denied) are written to the audit log.
 
-The table below summarizes the possible ACL configurations and their outcomes.
+The following table summarizes the possible ACL configurations and their outcomes.
 
 {% table %}
 columns:
@@ -519,7 +519,7 @@ To monitor and troubleshoot MCP traffic, enable logging and audit trails through
 
 ## Scope of support
 
-The AI MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is supported and what is outside the current scope.
+The AI MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The following table summarizes what is supported and what is outside the current scope.
 
 <!-- vale off -->
 {% feature_table %}

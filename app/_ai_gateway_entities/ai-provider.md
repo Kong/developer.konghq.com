@@ -52,7 +52,7 @@ The AI Model Provider entity lets you securely store and manage credentials for 
 
 An AI Model Provider manages outbound credentials, which is distinct from the inbound authentication managed by an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/). When an AI Consumer calls an AI Model, the AI Identity Provider checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream.
 
-Each AI Model Provider has a [`type`](#schema-aigateway-model-provider-type) that selects the upstream LLM service and configures provider-specific options. See the [schema](#schema) below for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
+Each AI Model Provider has a [`type`](#schema-aigateway-model-provider-type) that selects the upstream LLM service and configures provider-specific options. See the [schema](#schema) for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
 
 ## Manage AI Model Providers
 
@@ -62,7 +62,7 @@ AI Model Providers can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/model-providers`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Model Provider](#set-up-an-ai-model-provider) below.
+For configuration examples and step-by-step setup instructions, see [Set up an AI Model Provider](#set-up-an-ai-model-provider).
 
 ### Relationship to AI Models
 

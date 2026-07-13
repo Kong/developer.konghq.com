@@ -49,8 +49,8 @@ faqs:
       (`POST /ai-gateways/{aiGatewayId}/consumer-groups/{consumerGroupId}/consumers`), or set the
       AI Consumer's group membership directly
       (`PUT /ai-gateways/{aiGatewayId}/consumers/{consumerIdOrName}/consumer-groups`).
-      These aren't fields on the AI Consumer or AI Consumer Group entity bodies themselves —
-      they're managed through these dedicated endpoints.
+      These aren't fields on the AI Consumer or AI Consumer Group entity bodies themselves.
+      They're managed through these dedicated endpoints.
 
   - q: Can an AI Consumer belong to multiple AI Consumer Groups?
     a: |
@@ -78,7 +78,7 @@ An AI Consumer Group is the {{site.ai_gateway}} entity that represents a collect
 
 By grouping AI Consumers together, you eliminate the need to manage AI Policies and access controls individually, providing a scalable, efficient approach to AI governance. With AI Consumer Groups, you can scope AI Policies to specifically defined groups, making configurations and customizations more flexible.
 
-For example, you could define three groups (Bronze, Gold, and Enterprise) and attach an [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) policy to each with different token quotas and cost budgets. Without AI Consumer Groups, you would attach a separate AI Rate Limiting Advanced policy to each individual AI Consumer — in production, that could be thousands of individual policy attachments instead of three group-level ones.
+For example, you could define three groups (Bronze, Gold, and Enterprise) and attach an [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) policy to each with different token quotas and cost budgets. Without AI Consumer Groups, you would attach a separate AI Rate Limiting Advanced policy to each individual AI Consumer. In production, that could be thousands of individual policy attachments instead of three group-level ones.
 
 <!-- vale off -->
 {% mermaid %}
@@ -113,7 +113,7 @@ AI Consumer Groups can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/consumer-groups`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Consumer Group](#set-up-an-ai-consumer-group) below.
+For configuration examples and step-by-step setup instructions, see [Set up an AI Consumer Group](#set-up-an-ai-consumer-group).
 
 ## Use cases for using AI Consumer Group
 
@@ -142,7 +142,7 @@ rows:
 
 ## Membership
 
-To organize AI Consumers by team, department, or tier, add them to an AI Consumer Group. Membership isn't a field on either entity's body — manage it through dedicated sub-resource endpoints: add a Consumer to a group with `POST /ai-gateways/{aiGatewayId}/consumer-groups/{consumerGroupId}/consumers`, or set the full list of groups a Consumer belongs to with `PUT /ai-gateways/{aiGatewayId}/consumers/{consumerIdOrName}/consumer-groups`. A single AI Consumer can belong to multiple AI Consumer Groups, allowing flexible organizational schemes.
+To organize AI Consumers by team, department, or tier, add them to an AI Consumer Group. Membership isn't a field on either entity's body. Manage it through dedicated sub-resource endpoints: add a Consumer to a group with `POST /ai-gateways/{aiGatewayId}/consumer-groups/{consumerGroupId}/consumers`, or set the full list of groups a Consumer belongs to with `PUT /ai-gateways/{aiGatewayId}/consumers/{consumerIdOrName}/consumer-groups`. A single AI Consumer can belong to multiple AI Consumer Groups, allowing flexible organizational schemes.
 
 ## Attach AI Policies
 

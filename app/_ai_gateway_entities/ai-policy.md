@@ -65,7 +65,7 @@ Create an AI Policy when you want to add governance, security, transformation, o
 - Attach [logging Policies](/ai-gateway/policies/?category=logging) to track requests and responses for observability
 - Attach authentication policies like [OpenID Connect](/ai-gateway/policies/openid-connect/) to control access and verify identity
 
-**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies—not configurations shared with other parts of your gateway.
+**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies, not configurations shared with other parts of your gateway.
 
 {:.info}
 > For the complete set of available policy types and configurations, see the [AI Policies hub](/ai-gateway/policies/).
@@ -78,7 +78,7 @@ AI Policies are managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/policies`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up a global AI Policy](#set-up-a-global-ai-policy) below.
+For configuration examples and step-by-step setup instructions, see [Set up a global AI Policy](#set-up-a-global-ai-policy).
 
 ## AI Policy scopes
 
