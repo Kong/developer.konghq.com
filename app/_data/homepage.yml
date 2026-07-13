@@ -52,19 +52,34 @@ agents_section:
       cta_url: /skills/
       cta_text: "Browse all skills"
       icon: /assets/icons/brain.svg
-    - id: cookbooks
-      title: "AI Cookbooks"
+    - id: aigw
+      title: "AI Gateway 2.0"
+      badge: "New"
+      snippet_label: "QUICKSTART"
+      snippet_lines:
+        - "curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN"
+      description: "Connectivity and governance layer for modern AI-native applications."
       ctas:
-        - text: "Model-based routing"
-          url: /cookbooks/model-based-routing/
-        - text: "Claude Code SSO"
-          url: /cookbooks/claude-code-sso/
-        - text: "LLM cost optimization"
-          url: /cookbooks/llm-cost-optimization/
-        - text: "View all cookbooks"
-          url: /cookbooks/
-      description: "End-to-end recipes for agents on top of Kong AI Gateway."
-      icon: /assets/icons/book.svg
+        - text: "Other ways to get started"
+          url: /ai-gateway/#guided-quickstarts
+        - text: "View all AI Gateway 2.0 docs"
+          url: /ai-gateway/
+      icon: /assets/icons/ai.svg
+
+##### Taking out cookbooks until they're updated for AIGW 2.0; when they're ready, remove AIGW section above and uncomment this one.
+    # - id: aigw
+    #   title: "AI Cookbooks"
+    #   ctas:
+    #     - text: "Model-based routing"
+    #       url: /cookbooks/model-based-routing/
+    #     - text: "Claude Code SSO"
+    #       url: /cookbooks/claude-code-sso/
+    #     - text: "LLM cost optimization"
+    #       url: /cookbooks/llm-cost-optimization/
+    #     - text: "View all cookbooks"
+    #       url: /cookbooks/
+    #   description: "End-to-end recipes for agents on top of Kong AI Gateway."
+    #   icon: /assets/icons/book.svg
 
 products_section:
   categories:
@@ -151,8 +166,11 @@ products_section:
             - text: All documentation
               url: /index/gateway/
         - title: AI Gateway
+          product: ai-gateway
+          changelog_url: /ai-gateway/changelog/
+          whats_new: true
           icon: /assets/icons/ai.svg
-          description: "Connectivity and governance layer for modern AI-native applications built on top of Kong Gateway."
+          description: "Connectivity and governance layer for modern AI-native applications."
           links:
             - text: Overview
               url: /ai-gateway/
@@ -257,7 +275,7 @@ products_section:
 
 specs_section:
   featured_api_slugs:
-    - "konnect/control-planes"
+    - "konnect/ai-gateway"
     - "konnect/control-planes-config"
     - "konnect/event-gateway"
     - "konnect/portal-management"

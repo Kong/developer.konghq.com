@@ -131,6 +131,9 @@ edit_and_issue_links: false
                 <div class="flex items-center justify-between gap-2 px-5 py-4 border-b border-primary">
                     {% include_svg fcard.icon class="card__icon" aria-label=fcard.title %}
                     <span class="font-semibold text-sm flex-1 ml-2">{{ fcard.title }}</span>
+                    {%- if fcard.badge -%}
+                    <span class="text-xs font-semibold bg-brand/20 text-brand px-1.5 py-0.5 rounded shrink-0">{{ fcard.badge }}</span>
+                    {%- endif -%}
                     {%- if fcard.snippet_label -%}
                     <div class="relative flex items-center gap-1 shrink-0">
                         <div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
@@ -150,14 +153,14 @@ edit_and_issue_links: false
                 <div class="bg-code-block border-b border-primary">
                     {%- if fcard.snippet_label -%}
                     <div class="flex items-center gap-2 px-5 py-2 border-b border-primary">
-                        {% include_svg '/assets/icons/third-party/claude.svg' class="w-4 h-4 shrink-0" aria-hidden="true" %}
+                        {%- if fcard.snippet_label_link -%}{% include_svg '/assets/icons/third-party/claude.svg' class="w-4 h-4 shrink-0" aria-hidden="true" %}{%- endif -%}
                         <span class="text-xs font-mono font-bold text-primary dark:text-brand uppercase tracking-widest">{{ fcard.snippet_label }}</span>
                         {%- if fcard.snippet_label_link -%}
                         <a href="{{ fcard.snippet_label_link.url }}" class="text-xs italic text-terciary ml-auto no-icon hover:text-secondary">{{ fcard.snippet_label_link.text }}</a>
                         {%- endif -%}
                     </div>
                     {%- endif -%}
-                    <pre class="bg-transparent m-0 px-5 py-3 border-0 rounded-none"><code id="{{ fcard_id }}" class="bg-transparent border-0 p-0 text-xs">{% for line in fcard.snippet_lines %}<span class="text-secondary">{{ line }}</span>
+                    <pre class="bg-transparent m-0 px-5 py-3 border-0 rounded-none whitespace-pre-wrap break-words"><code id="{{ fcard_id }}" class="bg-transparent border-0 p-0 text-xs">{% for line in fcard.snippet_lines %}<span class="text-secondary">{{ line }}</span>
 {% endfor %}</code></pre>
                 </div>
                 {%- endif -%}
