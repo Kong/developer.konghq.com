@@ -27,7 +27,7 @@ tags:
 
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Install {{ site.claude_code }}, create an AI Model Provider for Anthropic and an AI Model that targets it, then then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
+  a: Install {{ site.claude_code }}, create an AI Model Provider for Anthropic and an AI Model that targets it, then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
 ---
 
