@@ -115,10 +115,22 @@ configuration parameter:
 
 The scenario above shows the difference plainly:
 
-| | `new` | `legacy` |
-|---|---|---|
-| Result | `request-callout, opentelemetry, pre-function` | `opentelemetry, pre-function, request-callout` |
-| What moved | only `pre-function` (as configured) | `opentelemetry` jumped to the front and `request-callout` was pushed to the end — **neither was configured** |
+{% table %}
+columns:
+  - title: ""
+    key: item
+  - title: "`new`"
+    key: new
+  - title: "`legacy`"
+    key: legacy
+rows:
+  - item: Result
+    new: "`request-callout, opentelemetry, pre-function`"
+    legacy: "`opentelemetry, pre-function, request-callout`"
+  - item: What moved
+    new: "only `pre-function` (as configured)"
+    legacy: "`opentelemetry` jumped to the front and `request-callout` was pushed to the end — **neither was configured**"
+{% endtable %}
 
 Under `legacy`, moving `pre-function` displaced `opentelemetry` and `request-callout` even though
 you never mentioned them. That surprise — an unrelated plugin changing position — is exactly what
