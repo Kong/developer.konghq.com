@@ -141,10 +141,22 @@ you never mentioned them. That surprise — an unrelated plugin changing positio
 Take five plugins in natural priority order `e(500), d(400), c(300), b(200), a(100)` and express
 the same relationship two ways:
 
-| Configuration | `new` result | `legacy` result |
-|---|---|---|
-| `b` with `before: [d]` | `e, b, d, c, a` | `e, b, d, c, a` |
-| `d` with `after: [b]` | `e, c, b, d, a` | `e, b, d, c, a` |
+{% table %}
+columns:
+  - title: Configuration
+    key: config
+  - title: "`new` result"
+    key: new
+  - title: "`legacy` result"
+    key: legacy
+rows:
+  - config: "`b` with `before: [d]`"
+    new: "`e, b, d, c, a`"
+    legacy: "`e, b, d, c, a`"
+  - config: "`d` with `after: [b]`"
+    new: "`e, c, b, d, a`"
+    legacy: "`e, b, d, c, a`"
+{% endtable %}
 
 Under `new`, `d after b` moves only `d` (down to just after `b`), so `c` and `e` stay put. Under
 `legacy`, `before` and `after` are identical, so both forms produce the same order — and to get
