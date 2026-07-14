@@ -68,7 +68,7 @@ rows:
             icon: /assets/icons/azure.svg
             description: Use Claude Code with Azure AI provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-azure/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-azure/
               align: end
       - blocks:
         - type: card
