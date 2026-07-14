@@ -70,8 +70,9 @@ ai_gateway_model_providers:
     config:
       auth:
         type: basic
-        name: Authorization
-        value: "Bearer !env OPENAI_API_KEY"
+        headers:
+          - name: Authorization
+            value: "Bearer $OPENAI_API_KEY"
 EOF
 ```
 
