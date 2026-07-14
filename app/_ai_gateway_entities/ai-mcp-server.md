@@ -228,6 +228,10 @@ sequenceDiagram
 > Pings from MCP clients are included in the total request count for an {{site.ai_gateway}}
 > instance, in addition to requests made to the MCP server itself.
 
+### Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}
+
 ## Tool aggregation with upstream-server
 
 You can use a `listener` to pull tools from multiple `upstream-server` MCP Servers and expose them through a single endpoint. The listener discovers and aggregates tools based on matching tags, so clients see one unified tool catalog while your services remain independent.

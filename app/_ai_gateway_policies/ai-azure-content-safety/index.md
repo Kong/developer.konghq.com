@@ -77,3 +77,7 @@ To log the raw content of blocked requests and responses, enable [`config.log_bl
 
 This Policy works with all of the AI Model entity's [`model.capabilities` settings](/ai-gateway/entities/ai-model/#capabilities), and is able to
 compose an Azure Content Safety text check by compiling all chat history, or just the `'user'` content.
+
+## Forward proxy support
+
+{% include md/ai-gateway/v2/forward-proxy.md %}

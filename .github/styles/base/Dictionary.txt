@@ -606,6 +606,7 @@ PDFs
 pg_max_concurrent_queries
 pgdump
 pgvector
+Pinecone
 pipeline
 pipelined
 pipelines
