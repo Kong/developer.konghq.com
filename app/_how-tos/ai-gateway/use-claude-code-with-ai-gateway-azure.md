@@ -65,14 +65,14 @@ EOF
 
 In this example, we're setting up the AI Model Provider with:
 
- * `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure` — that driver assumes an Azure OpenAI-shaped deployment path (`/openai/deployments/<id>`) that Foundry's Claude endpoint doesn't use.
+ * `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`. That driver assumes an Azure OpenAI-shaped deployment path (`/openai/deployments/<id>`) that Foundry's Claude endpoint doesn't use.
  * `name: azure-claude`: A unique identifier that AI Models will reference to route requests through this provider.
  * `config.auth.headers[0].name: x-api-key`: Azure AI Foundry's native Anthropic endpoint expects the API key in the `x-api-key` header, not `api-key` (which is specific to Azure OpenAI resources).
  * `config.auth.headers[0].value: !env AZURE_AI_FOUNDRY_TOKEN`: Loads the API key from your environment at apply time so it is not embedded in the config.
 
 ## Create a Request Transformer AI Policy
 
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra headers that Azure does not support.
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra headers that Azure doesn't support.
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -161,14 +161,14 @@ EOF
 In this example, we're setting up the AI Model with:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
-* `name`/`display_name: claude-code-azure-sonnet`: The identifier you pass to `claude --model` — {{ site.claude_code }} uses this, not the upstream target name, to select the model.
+* `name`/`display_name: claude-code-azure-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target name, to select the model.
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively.
-* `config.route.paths: [/]`: Configures the base path where this model's Routes are accessible.
+* `config.route.paths: [/]`: Configures the base path where this model's routes are accessible.
 * `config.model.name_header: true`: Lets {{ site.claude_code }} select this model by sending its `name` in the request, instead of requiring a separate `alias`.
 * `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
 * `policies`: Attaches the `claude-code-compat` policy created in the previous step, so its header and body transformations apply to every request sent through this model.
 * `targets`: Specifies which upstream model to route requests to. `provider: azure-claude` references the AI Provider created earlier, and `name: claude-sonnet-4-6` must match the name of your Claude deployment in Azure AI Foundry.
-* `targets[0].config.upstream_url`: The base Azure AI Foundry endpoint from the prerequisites, ending at `/anthropic` — {{site.ai_gateway}} appends the rest of the Anthropic Messages API path automatically.
+* `targets[0].config.upstream_url`: The base Azure AI Foundry endpoint from the prerequisites, ending at `/anthropic`. {{site.ai_gateway}} appends the rest of the Anthropic Messages API path automatically.
 
 ## Verify traffic through {{site.ai_gateway}}
 
@@ -202,7 +202,7 @@ Select **Yes, continue**. The session starts. Ask a simple question to confirm t
 Tell me about Vienna Oribasius manuscript.
 ```
 
-{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
+{{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
 The "Vienna Oribasius manuscript" refers to a famous illustrated medical
