@@ -80,7 +80,7 @@ For {{site.ai_gateway}} traffic through an AI Model or MCP Server entity, you sh
 
 ## Proxy configuration fields
 
-AI Models and MCP Servers accept the same `proxy` records at the top level of their `config` block.
+AI Models accept a `proxy` record at the top level of their `config` block. MCP Servers only accept it when their `type` is `passthrough-listener` — `conversion-listener` and `listener` type MCP Servers do not currently support forward proxy configuration at all.
 
 <!--vale off-->
 {% table %}
@@ -92,37 +92,28 @@ columns:
   - title: Description
     key: description
 rows:
-  - field: "`http_proxy_host`"
-    type: "host"
-    description: "Hostname of the forward proxy used for HTTP upstreams. Must be set together with `http_proxy_port`."
-  - field: "`http_proxy_port`"
-    type: "port"
-    description: "Port of the forward proxy used for HTTP upstreams. Must be set together with `http_proxy_host`."
-  - field: "`https_proxy_host`"
-    type: "host"
-    description: "Hostname of the forward proxy used for HTTPS upstreams. Must be set together with `https_proxy_port`."
-  - field: "`https_proxy_port`"
-    type: "port"
-    description: "Port of the forward proxy used for HTTPS upstreams. Must be set together with `https_proxy_host`."
+  - field: "`http_proxy`"
+    type: "object"
+    description: "The forward proxy used for HTTP upstreams. An object with `host` and `port` fields."
+  - field: "`https_proxy`"
+    type: "object"
+    description: "The forward proxy used for HTTPS upstreams. An object with `host` and `port` fields."
   - field: "`proxy_scheme`"
     type: "string"
-    description: "Scheme used to connect to the forward proxy itself. One of `http` or `https`. Defaults to `http`."
-  - field: "`auth_username`"
-    type: "string"
-    description: "Username for proxy authentication. Optional. Referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/)."
-  - field: "`auth_password`"
-    type: "string"
-    description: "Password for proxy authentication. Optional. Encrypted at rest and referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/)."
+    description: "Scheme used to connect to the forward proxy itself. Currently only `http` is supported. Defaults to `http`."
+  - field: "`auth`"
+    type: "object"
+    description: "Credentials for proxy authentication. An object with `username` and `password` fields. Both are optional and referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets)."
   - field: "`no_proxy`"
-    type: "list"
+    type: "string"
     description: "Comma-separated list of hosts that should not be proxied."
 {% endtable %}
 <!--vale on-->
 
 Two validation rules apply to the record:
 
-- `http_proxy_host` and `http_proxy_port` must both be set or both be absent.
-- `https_proxy_host` and `https_proxy_port` must both be set or both be absent.
+- If `http_proxy` is set, both `host` and `port` must be set.
+- If `https_proxy` is set, both `host` and `port` must be set.
 
 ### Supported Policies
 
@@ -299,23 +290,26 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
 
 1. Send a chat request. This will be forwarded through your proxy service to Anthropic:
 
-    <!-- vale off -->
-    {% validation request-check %}
-    url: /v1/messages
-    status_code: 200
-    method: POST
-    headers:
-        - 'Accept: application/json'
-        - 'Content-Type: application/json'
-        - 'Authorization: Bearer $ANTHROPIC_API_KEY'
-    body:
-      model: my-claude
-      max_tokens: 100
-      messages:
-      - role: "user"
-        content: "Say this is a test!"
-    {% endvalidation %}
-    <!-- vale on -->
+   <!-- vale off -->
+   {% capture chat-request %}
+   {% validation request-check %}
+   url: /v1/messages
+   status_code: 200
+   method: POST
+   headers:
+     - 'Accept: application/json'
+     - 'Content-Type: application/json'
+     - 'Authorization: Bearer $ANTHROPIC_API_KEY'
+   body:
+     model: my-claude
+     max_tokens: 100
+     messages:
+     - role: "user"
+       content: "Say this is a test!"
+   {% endvalidation %}
+   {% endcapture %}
+   {{ chat-request | indent: 3 }}
+   <!-- vale on -->
 
 1. Examine the Squid logs to verify your requests:
 
@@ -359,11 +353,6 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
          statistics: true
        server:
          timeout: 60000
-       proxy:
-         http_proxy:
-             host: host.docker.internal
-             port: 3128
-         proxy_scheme: http
      tools:
        - name: get-current-weather
          description: Get current weather for a location
@@ -384,7 +373,7 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
    {{ mcp-server | indent: 3 }}
    <!-- vale on -->
 
-1. Call `get-current-weather`, this will be forwarded to your proxy service and return an error:
+1. This MCP Server does not route through your forward proxy, since `conversion-listener` doesn't support it. Calling `get-current-weather` reaches WeatherAPI directly:
 
     ```sh
     curl -i -X POST http://localhost:8000/weather \
@@ -401,11 +390,6 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
           }
         }
       }'
-    ```
-1. Examine the Squid logs to verify your requests:
-
-    ```
-    docker exec -it squid tail -f /var/log/squid/access.log
     ```
 
 ## Limitations
