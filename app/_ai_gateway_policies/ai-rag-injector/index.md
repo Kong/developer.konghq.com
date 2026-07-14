@@ -17,16 +17,9 @@ works_on:
 min_version:
     ai-gateway: '2.0'
 
-topologies:
-  konnect_deployments:
-    - hybrid
-    - cloud-gateways
-    - serverless
 
 icon: ai-rag-injector.png
 
-categories:
-  - ai
 related_resources:
   - text: All {{site.ai_gateway}} AI Policies
     url: /ai-gateway/policies/
@@ -35,16 +28,6 @@ related_resources:
   - text: AI Semantic Cache Policy
     url: /ai-gateway/policies/ai-semantic-cache/
 
-tags:
-  - ai
-search_aliases:
-  - ai-rag-injector
-  - ai
-  - llm
-  - artificial
-  - intelligence
-  - language
-  - model
 
 faqs:
   - q: What embedding dimension should I use in my `vectordb` config?
@@ -284,7 +267,7 @@ rows:
   - field: |
       [`consumer_identifier`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-consumer-identifier)
     description: |
-      Determines which consumer attribute is matched against ACL rules. Options: `consumer_group`, `username`, `custom_id`, or `consumer_id`
+      Determines which AI Consumer attribute is matched against ACL rules. Options: `consumer_group`, `username`, `custom_id`, or `consumer_id`
   - field: |
       [`global_acl_config.allow[]`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-global-acl-config-allow)
     description: |
@@ -476,7 +459,7 @@ The following diagram shows how ACL and metadata filtering work together during 
 
 {% mermaid %}
 flowchart TB
-    Start([Query Request]) --> Auth[Authenticate Consumer]
+    Start([Query Request]) --> Auth[Authenticate AI Consumer]
     Auth --> CheckACL{Authorized<br/>Collections?}
     CheckACL -->|No| Deny[❌ Access Denied]
     CheckACL -->|Yes| HasFilter{Metadata<br/>Filters<br/>Specified?}
