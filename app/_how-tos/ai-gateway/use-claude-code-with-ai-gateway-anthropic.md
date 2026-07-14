@@ -56,8 +56,8 @@ ai_gateway_model_providers:
     config:
       auth:
         type: basic
-        header_name: x-api-key
-        header_value: "$ANTHROPIC_API_KEY"
+        name: x-api-key
+        value: "$ANTHROPIC_API_KEY"
 EOF
 ```
 
