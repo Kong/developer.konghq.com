@@ -33,7 +33,7 @@ tldr:
 
 ## Create an AI Model Provider entity
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to Anthropic and store your authentication credentials:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Anthropic and store your authentication credentials:
 
 
 ```sh
@@ -113,7 +113,7 @@ In this example, we're setting up the AI Model with:
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-claude`: A unique identifier for this model.
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format.
-* `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
+* `config.route.paths: [/]`: Configures the custom base path where this model's routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
 * `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/messages`.
 * `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Model Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
 
@@ -143,10 +143,10 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 ```
 {:.no-copy-code}
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
+Select **Yes, continue**. The session starts. Ask a question to confirm that requests reach {{site.ai_gateway}}.
 
 ```text
-Tell me about Madrid Skylitzes manuscript.
+Tell me about the Madrid Skylitzes manuscript.
 ```
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
