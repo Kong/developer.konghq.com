@@ -375,6 +375,27 @@
     ]
   },
   {
+    "id": "5e0005b9-232b-4808-8bdf-9560d4596080",
+    "title": "Konnect AI Gateway",
+    "latestVersion": {
+      "name": "v1",
+      "id": "8cf2d03b-e257-4cc8-8b02-04abee8376b3"
+    },
+    "description": "The API for configuring AI Gateways in Konnect.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "8cf2d03b-e257-4cc8-8b02-04abee8376b3",
+        "created_at": "2026-07-14T16:16:38.145Z",
+        "updated_at": "2026-07-14T16:20:12.585Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "a9357984-c292-4846-856b-85aff7df6c54",
     "title": "Konnect Analytics Dashboards",
     "latestVersion": {
