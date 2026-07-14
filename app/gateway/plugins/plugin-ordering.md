@@ -90,7 +90,7 @@ moved `pre-function`, and only `pre-function` moved.
 ## New vs. legacy ordering
 
 {{site.base_gateway}} includes two ordering algorithms, selected by the
-[`plugin_ordering_algorithm`](/gateway/reference/configuration/#plugin_ordering_algorithm)
+[`plugin_ordering_algorithm`](/gateway/configuration/)
 configuration parameter:
 
 * **`new`** — the algorithm described above. Only the configured plugin moves; unconfigured plugins
