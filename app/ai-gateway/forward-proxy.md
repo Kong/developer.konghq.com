@@ -319,6 +319,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
       - 'Content-Type: application/json'
       - 'Authorization: Bearer $ANTHROPIC_API_KEY'
   body:
+    model: my-claude
     messages:
     - role: "user"
       content: "Say this is a test!"
