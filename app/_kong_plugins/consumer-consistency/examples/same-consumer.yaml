@@ -1,0 +1,21 @@
+description: 'Requires that stacked Key Auth and Basic Auth factors both resolve to the same Consumer, rejecting cross-Consumer requests with 403.'
+
+title: 'Enforce a single identity across stacked authentication'
+
+weight: 900
+
+requirements:
+  - "[Key Authentication](/plugins/key-auth/) and [Basic Authentication](/plugins/basic-auth/) configured on the same Service or Route, with `config.anonymous` unset"
+
+config:
+  message: "Authentication factors must resolve to the same consumer"
+
+min_version:
+  gateway: '3.16'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

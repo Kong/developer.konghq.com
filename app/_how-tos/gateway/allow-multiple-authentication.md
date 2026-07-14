@@ -44,6 +44,11 @@ faqs:
       If `config.anonymous` isn't set, then all configured authentication plugins will attempt to authenticate every request. 
       For example, if you have Key Auth and Basic Auth configured on a Gateway Service, then every request has to contain **both** types of authentication. 
       In this case, the last plugin executed is the one setting the credentials passed to the upstream service. 
+  - q: Does stacking authentication plugins guarantee both credentials belong to the same Consumer?
+    a: |
+      No. With `config.anonymous` unset, each authentication plugin authenticates independently and the last plugin executed overwrites the authenticated Consumer.
+      {{site.base_gateway}} does **not** verify that the credentials for each factor belong to the same Consumer, so a request can satisfy the whole chain using credentials from two different Consumers. Downstream Consumer-scoped policies (such as ACL and Rate Limiting) only see the surviving identity. Stacking authentication plugins is **not** equivalent to multi-factor authentication for a single identity.
+      To require that all factors resolve to the same Consumer, enable the [Consumer Consistency](/plugins/consumer-consistency/) plugin on the Gateway Service or Route. A request whose factors resolve to different Consumers is then rejected with `403`. This check applies only to Consumer-based authentication.
 
   - q: What if I configure an anonymous Consumer but don't add request termination?
     a: |
