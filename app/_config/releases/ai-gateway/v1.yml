@@ -275,8 +275,7 @@ app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-gemini.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/gemini/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-huggingface.md:
-  status: pending
-  canonical_url: /ai-gateway/ai-providers/huggingface/
+  canonical_url: /ai-gateway/use-claude-code-with-ai-gateway-huggingface/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-openai.md:
   canonical_url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-vertex.md:
