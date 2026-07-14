@@ -225,7 +225,9 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 
 Select **Yes, continue**. The session starts. 
 
+<!--vale off-->
 {:.warning}
 > Disable thinking with `Opt` + `T`. If you don't disable thinking, you'll get an error with `API Error: 400 `reasoning_effort` is not supported with this model`. 
+<!--vale on-->
 
 Ask a simple question to confirm that requests reach {{site.ai_gateway}} and are routed to Hugging Face.
