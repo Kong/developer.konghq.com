@@ -13,6 +13,7 @@ module Jekyll
 
       product_latest_release(site)
       tools_latest_release(site)
+      load_blocked_user_agents(site)
     end
 
     def search_filters(site)
@@ -46,6 +47,10 @@ module Jekyll
 
         site.data["#{tool.underscore}_latest"] = releases.detect { |r| r['latest'] }
       end
+    end
+
+    def load_blocked_user_agents(site)
+      site.data['blocked_user_agents'] = YAML.load_file(File.expand_path('app/_config/blocked_user_agents.yml'))
     end
   end
 end
