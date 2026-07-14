@@ -282,8 +282,7 @@ app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-huggingface.md:
   status: pending
   canonical_url:
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-openai.md:
-  status: pending
-  canonical_url:
+  canonical_url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-vertex.md:
   status: pending
   canonical_url:
