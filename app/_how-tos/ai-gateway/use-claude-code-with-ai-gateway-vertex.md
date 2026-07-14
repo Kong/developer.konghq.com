@@ -46,6 +46,7 @@ prereqs:
         export GCP_PROJECT_ID="<your-gemini-project-id>"
         export GEMINI_LOCATION_ID="<your-gemini-location_id>"
         export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
+        export GCP_SERVICE_ACCOUNT="<your_account_json>"
         ```
       icon_url: /assets/icons/vertex.svg
     - title: Claude Code CLI
@@ -56,9 +57,74 @@ prereqs:
 
 ## Create an AI Provider entity
 
+```sh
+kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+_defaults:
+  kongctl:
+    namespace: ai-gateway-get-started
+
+ai_gateways:
+  - ref: ai-quickstart
+    name: ai-quickstart
+    display_name: "ai-quickstart"
+
+ai_gateway_model_providers:
+  - ref: vertex-prod
+    name: vertex-prod
+    display_name: "Google Vertex Prod"
+    ai_gateway: ai-quickstart
+    type: vertex
+    config:
+      auth:
+        type: gcp
+        service_account_json: !env GCP_SERVICE_ACCOUNT
+EOF
+```
+
+In this example, we're setting up the AI Model Provider with:
 
 ## Create an AI Model entity
 
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
+
+```sh
+kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+_defaults:
+  kongctl:
+    namespace: ai-gateway-get-started
+
+ai_gateways:
+  - ref: ai-quickstart
+    name: ai-quickstart
+    display_name: "ai-quickstart"
+
+ai_gateway_models:
+  - ref: claude-code-vertex-sonnet
+    type: model
+    name: claude-code-vertex-sonnet
+    display_name: "Claude Code - Vertex - Sonnet 4.6"
+    ai_gateway: ai-quickstart
+    enabled: true
+    config:
+      route:
+        paths:
+        - /
+      model:
+        alias: "claude-code-vertex-sonnet"
+    formats:
+    - type: anthropic
+    target_models:
+    - name: claude-sonnet-4-6
+      provider: vertex-prod
+      config:
+        type: vertex
+        upstream_url: !env VERTEX_UPSTREAM_URL
+    capabilities:
+    - generate
+EOF
+```
+
+In this example, we're setting up the AI Model with:
 
 ## Verify traffic through Kong
 
@@ -68,9 +134,7 @@ Now, we can start a {{ site.claude_code }} session that points it to the local {
 > Ensure that `ANTHROPIC_MODEL` matches the model you deployed in Gemini.
 
 ```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=YOUR_VERTEX_MODEL \
-claude
+ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'claude-code-vertex-sonnet'
 ```
 
 {{ site.claude_code }} asks for permission before it runs tools or interacts with files:
@@ -107,61 +171,3 @@ I Komnenos (r. 1081-1118). The Alexiad is a valuable primary source for
 understanding Byzantine history and the First Crusade.
 ```
 {:.no-copy-code}
-
-Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
-
-```sh
-docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
-```
-
-You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
-
-```json
-{
-  ...
-  "method": "POST",
-  "headers": {
-    "user-agent": "claude-cli/2.0.37 (external, cli)",
-    "content-type": "application/json"
-  },
-  ...
-  "ai": {
-    "proxy": {
-      "tried_targets": [
-        {
-          "provider": "gemini",
-          "model": "gemini-2.0-flash",
-          "port": 443,
-          "upstream_scheme": "https",
-          "host": "us-central1-aiplatform.googleapis.com",
-          "upstream_uri": "/v1/projects/example-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent",
-          "route_type": "llm/v1/chat",
-          "ip": "xxx.xxx.xxx.xxx"
-        }
-      ],
-      "meta": {
-        "request_model": "gemini-2.5-flash",
-        "request_mode": "oneshot",
-        "response_model": "gemini-2.5-flash",
-        "provider_name": "gemini",
-        "llm_latency": 1694,
-        "plugin_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-      },
-      "usage": {
-        "completion_tokens": 19,
-        "completion_tokens_details": {},
-        "total_tokens": 11203,
-        "cost": 0,
-        "time_per_token": 85.157894736842,
-        "time_to_first_token": 2546,
-        "prompt_tokens": 11184,
-        "prompt_tokens_details": {}
-      }
-    }
-  }
-  ...
-}
-```
-{:.no-copy-code}
-
-This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using the `gemini-2.5-flash` model we selected while starting the {{ site.claude_code }} session.
