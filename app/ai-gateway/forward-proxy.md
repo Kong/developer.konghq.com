@@ -235,75 +235,89 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
 1. Create an [AI Provider](/ai-gateway/entities/ai-model-provider/) entity to define your LLM service and store authentication credentials:
 
-  <!-- vale off -->
-  {% konnect_api_request %}
-  url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-  status_code: 201
-  method: POST
-  headers:
-    - 'Content-Type: application/json'
-    - 'Accept: application/json, application/problem+json'
-  body:
-    type: openai
-    display_name: generic-openai
-    name: generic-openai
-    config:
-      auth:
-        type: basic
-        headers:
-          - name: Authorization
-            value: Bearer $OPENAI_API_KEY
-  {% endkonnect_api_request %}
-  <!-- vale on -->
+  ```
+    kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+    _defaults:
+      kongctl:
+        namespace: ai-gateway-get-started
 
-1. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
+    ai_gateways:
+      - ref: ai-quickstart
+        name: ai-quickstart
+        display_name: "ai-quickstart"
 
-  <!-- vale off -->
-  {% konnect_api_request %}
-  url: /v1/ai-gateways/$AI_GATEWAY_ID/models
-  status_code: 201
-  method: POST
-  headers:
-    - 'Content-Type: application/json'
-    - 'Accept: application/json, application/problem+json'
-  body:
-    display_name: my-gpt-4o
-    name: my-gpt-4o
-    type: model
-    formats:
-      - type: openai
-    config:
-      route:
-        paths:
-          - /v1
-      model: {}
-      proxy:
-        http_proxy:
-            host: secure.mycompany
-            port: 3128
-        proxy_scheme: http
-    targets:
-      - name: gpt-4o
-        provider: generic-openai
+    ai_gateway_model_providers:
+      - ref: generic-anthropic
+        ai_gateway: ai-quickstart
+        name: generic-anthropic
+        display_name: "generic-anthropic"
+        type: anthropic
         config:
-          type: openai
-    policies: []
-    capabilities:
-      - generate
-  {% endkonnect_api_request %}
-  <!-- vale on -->
+          auth:
+            type: basic
+            headers:
+              - name: x-api-key
+                value: !env ANTHROPIC_API_KEY
+    EOF
+```
 
-1. Send a chat request. This will be forwarded to your proxy service and return an error:
+2. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
+
+    ```
+    kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+    _defaults:
+      kongctl:
+        namespace: ai-gateway-get-started
+
+    ai_gateways:
+      - ref: ai-quickstart
+        name: ai-quickstart
+        display_name: "ai-quickstart"
+
+    ai_gateway_models:
+      - ref: my-claude
+        ai_gateway: ai-quickstart
+        name: my-claude
+        display_name: "my-claude"
+        type: model
+        formats:
+          - type: anthropic
+        config:
+          route:
+            paths:
+              - /
+          proxy:
+            http_proxy:
+              host: secure.mycompany
+              port: 3128
+            https_proxy:
+              host: secure.mycompany
+              port: 3128
+            proxy_scheme: http
+          model:
+            alias: my-claude
+        targets:
+          - name: claude-opus-4-8
+            provider: generic-anthropic
+            config:
+              type: anthropic
+        policies: []
+        capabilities:
+          - generate
+    EOF
+    ```
+
+3. Send a chat request. This will be forwarded to your proxy service and return an error:
 
   <!-- vale off -->
   {% validation request-check %}
-  url: /v1/chat/completions
+  url: /v1/messages
   status_code: 200
   method: POST
   headers:
       - 'Accept: application/json'
       - 'Content-Type: application/json'
-      - 'Authorization: Bearer $OPENAI_API_KEY'
+      - 'Authorization: Bearer $ANTHROPIC_API_KEY'
   body:
     messages:
     - role: "user"
