@@ -27,13 +27,13 @@ tags:
 
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Create an AI Provider entity to store your Anthropic API key, create an AI Model entity that routes to Anthropic through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
+  a: Install {{ site.claude_code }}, create an AI Model Provider for Anthropic and an AI Model that targets it, then then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
 ---
 
-## Create an AI Provider entity
+## Create an AI Model Provider entity
 
-Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to Anthropic and store your authentication credentials:
+Create an [AI Model Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to Anthropic and store your authentication credentials:
 
 
 ```sh
@@ -62,7 +62,7 @@ ai_gateway_model_providers:
 EOF
 ```
 
-In this example, we're setting up the AI Provider with:
+In this example, we're setting up the AI Model Provider with:
 
 * `type: anthropic`: Specifies that this provider connects to the Anthropic service using Anthropic's standard API format.
 * `name: generic-anthropic`: A unique identifier that AI Models will reference to route requests through this provider.
@@ -70,7 +70,7 @@ In this example, we're setting up the AI Provider with:
 
 ## Create an AI Model entity
 
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -115,9 +115,9 @@ In this example, we're setting up the AI Model with:
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format.
 * `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
 * `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/messages`.
-* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
+* `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Model Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
 
-## Verify traffic through Kong
+## Verify traffic through {{site.ai_gateway}}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
