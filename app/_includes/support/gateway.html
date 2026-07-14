@@ -65,14 +65,14 @@ rows:
                         {% if distro.package %}
                         {% assign cloudsmith_version = include.release.release | remove: "." %}
                         <div class="flex w-full items-center justify-center">
-                            <a href="https://cloudsmith.io/~kong/repos/gateway-{{ cloudsmith_version }}/packages/" class="badge" target="_blank" rel="noopener">package</a>
+                            <a href="https://cloudsmith.io/~kong/repos/gateway-{{ cloudsmith_version }}/packages/" class="badge" target="_blank" rel="noopener noreferrer">package</a>
                         </div>
                         {% endif %}
                         {% if distro.docker %}
                         <div class="flex w-full items-center justify-center">
                             {% if package.docker_tag %}
                             {% assign docker_url = "https://hub.docker.com/r/kong/kong-gateway/tags?name=" | append: include.release.release | append: "-" | append: package.docker_tag %}
-                            <a href="{{ docker_url }}" class="badge" target="_blank" rel="noopener">docker</a>
+                            <a href="{{ docker_url }}" class="badge" target="_blank" rel="noopener noreferrer">docker</a>
                             {% else %}
                             <span class="badge">docker</span>
                             {% endif %}
