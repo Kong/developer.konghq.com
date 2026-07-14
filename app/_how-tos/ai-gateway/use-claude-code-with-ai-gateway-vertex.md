@@ -26,8 +26,8 @@ tags:
   - vertex-ai
 
 tldr:
-  q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
+  q: How do I run Claude CLI through {{site.ai_gateway}} against a Vertex AI model?
+  a: Create an AI Provider entity to store your GCP service account credentials, create an AI Model entity with an Anthropic-compatible format that routes to a Gemini model on Vertex AI through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
 prereqs:
   inline:
@@ -42,8 +42,10 @@ prereqs:
 
         Export these values as environment variables:
         ```sh
-        export VERTEX_UPSTREAM_URL="<your_upstream_url>"
-        export GCP_SERVICE_ACCOUNT_JSON="<your_account_json>"
+        export GEMINI_API_KEY="<your_gemini_api_key>"
+        export GCP_PROJECT_ID="<your-gemini-project-id>"
+        export GEMINI_LOCATION_ID="<your-gemini-location_id>"
+        export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
         ```
       icon_url: /assets/icons/vertex.svg
     - title: Claude Code CLI
@@ -53,6 +55,8 @@ prereqs:
 ---
 
 ## Create an AI Provider entity
+
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Vertex AI and store your GCP service account credentials:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -66,19 +70,24 @@ ai_gateways:
     display_name: "ai-quickstart"
 
 ai_gateway_model_providers:
-  - ref: vertex-prod
-    name: vertex-prod
-    display_name: "Google Vertex Prod"
+  - ref: my-vertex-account
     ai_gateway: ai-quickstart
+    name: my-vertex-account
+    display_name: "my-vertex-account"
     type: vertex
     config:
       auth:
         type: gcp
-        service_account_json: !env GCP_SERVICE_ACCOUNT_JSON
+        use_gcp_service_account: true
+        service_account_json: !env GEMINI_API_KEY
 EOF
 ```
 
 In this example, we're setting up the AI Model Provider with:
+
+* `type: vertex`: Specifies that this provider connects to Google Cloud Vertex AI.
+* `name: my-vertex-account`: A unique identifier that AI Models will reference to route requests through this provider.
+* `config.auth`: Authenticates to Vertex AI with a GCP service account. `use_gcp_service_account: true` tells {{site.ai_gateway}} to authenticate using service account credentials, and `service_account_json: !env GEMINI_API_KEY` loads the service account JSON key from your environment at apply time instead of embedding it in the YAML. `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass credentials.
 
 ## Create an AI Model entity
 
@@ -96,26 +105,28 @@ ai_gateways:
     display_name: "ai-quickstart"
 
 ai_gateway_models:
-  - ref: claude-code-vertex-sonnet
-    type: model
-    name: claude-code-vertex-sonnet
-    display_name: "Claude Code - Vertex - Sonnet 4.6"
+  - ref: my-claude-vertex
     ai_gateway: ai-quickstart
-    enabled: true
+    name: my-claude-vertex
+    display_name: "my-claude-vertex"
+    type: model
+    formats:
+      - type: anthropic
     config:
       route:
         paths:
-        - /
+          - /
       model:
-        alias: "claude-code-vertex-sonnet"
-    formats:
-      - type: anthropic
+        alias: my-claude-vertex
     targets:
-      - name: claude-sonnet-4-6
-        provider: vertex-prod
+      - name: gemini-2.5-flash
+        provider: my-vertex-account
         config:
           type: vertex
-          upstream_url: !env VERTEX_UPSTREAM_URL
+          api_endpoint: !env GEMINI_API_ENDPOINT
+          project_id: !env GCP_PROJECT_ID
+          location_id: !env GEMINI_LOCATION_ID
+    policies: []
     capabilities:
       - generate
 EOF
@@ -123,15 +134,19 @@ EOF
 
 In this example, we're setting up the AI Model with:
 
+* `type: model`: Specifies this is a synchronous model for request/response workloads.
+* `name: my-claude-vertex`: A unique identifier for this model.
+* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively, even though the upstream model is a Gemini model on Vertex AI.
+* `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
+* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
+* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: my-vertex-account` references the AI Provider we created earlier, and `name: gemini-2.5-flash` specifies which Gemini model to call upstream. `config.api_endpoint`, `config.project_id`, and `config.location_id` identify the specific Vertex AI deployment to route requests to.
+
 ## Verify traffic through Kong
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-{:.warning}
-> Ensure that `ANTHROPIC_MODEL` matches the model you deployed in Gemini.
-
 ```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'claude-code-vertex-sonnet'
+ANTHROPIC_BASE_URL=http://localhost:8000/ ANTHROPIC_MODEL=my-claude-vertex claude
 ```
 
 {{ site.claude_code }} asks for permission before it runs tools or interacts with files:
