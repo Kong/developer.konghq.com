@@ -109,15 +109,15 @@ ai_gateway_models:
       model:
         alias: "claude-code-vertex-sonnet"
     formats:
-    - type: anthropic
-    target_models:
-    - name: claude-sonnet-4-6
-      provider: vertex-prod
-      config:
-        type: vertex
-        upstream_url: !env VERTEX_UPSTREAM_URL
+      - type: anthropic
+    targets:
+      - name: claude-sonnet-4-6
+        provider: vertex-prod
+        config:
+          type: vertex
+          upstream_url: !env VERTEX_UPSTREAM_URL
     capabilities:
-    - generate
+      - generate
 EOF
 ```
 
