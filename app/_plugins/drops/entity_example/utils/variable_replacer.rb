@@ -108,6 +108,34 @@ module Jekyll
               "var.#{env_variable}"
             end
           end
+
+          class KongctlData
+            SENTINEL_PATTERN = /__kongctl_env_([A-Z][A-Z0-9_]*)__/
+            ENV_VAR_PATTERN = /\A\$([A-Z][A-Z0-9_]*)\z/
+
+            def self.run(data:)
+              new.process(data)
+            end
+
+            def self.apply_tags(yaml)
+              yaml.gsub(SENTINEL_PATTERN, '!env \1')
+            end
+
+            def process(data)
+              case data
+              when Hash  then data.transform_values { |v| process(v) }
+              when Array then data.map { |item| process(item) }
+              when String then transform_env_var(data)
+              else data
+              end
+            end
+
+            private
+
+            def transform_env_var(str)
+              str.gsub(ENV_VAR_PATTERN, '__kongctl_env_\1__')
+            end
+          end
         end
       end
     end

@@ -19,6 +19,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
@@ -51,7 +52,7 @@ The AI Model Provider entity lets you securely store and manage credentials for 
 
 An AI Model Provider manages outbound credentials, which is distinct from the inbound authentication managed by an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/). When an AI Consumer calls an AI Model, the AI Identity Provider checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream.
 
-Each AI Model Provider has a [`type`](#schema-aigateway-model-provider-type) that selects the upstream LLM service and configures provider-specific options. See the [schema](#schema) below for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
+Each AI Model Provider has a [`type`](#schema-aigateway-model-provider-type) that selects the upstream LLM service and configures provider-specific options. See the [schema](#schema) for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
 
 ## Manage AI Model Providers
 
@@ -61,7 +62,7 @@ AI Model Providers can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/model-providers`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Model Provider](#set-up-an-ai-model-provider) below.
+For configuration examples and step-by-step setup instructions, see [Set up an AI Model Provider](#set-up-an-ai-model-provider).
 
 ### Relationship to AI Models
 
@@ -138,7 +139,7 @@ An AI Model Provider stores the credentials, but doesn't generate any runtime pr
 
 AI Model Provider credentials are passed to the runtime only when an AI Model references the AI Model Provider. At that point, the credentials are then passed to the AI Model.
 
-When you update a the credentials of an AI Model Provider, the new credentials are passed to every AI Model that references it the next time a request is made through the AI Model.
+When you update the credentials of an AI Model Provider, the new credentials are passed to every AI Model that references it the next time a request is made through the AI Model.
 
 ## AI Policies and AI Model Providers
 
@@ -166,24 +167,6 @@ data:
         - name: Authorization
           value: Bearer <your-openai-key>
 {% endentity_example %}
-
-<!-- TODO: Uncomment before GA — kongctl declarative support for model_providers is not yet released.
-```yaml
-ai_gateways:
-  - ref: <your-ai-gateway-ref>
-    model_providers:
-      - ref: my-openai-account
-        name: my-openai-account
-        display_name: OpenAI Production
-        type: openai
-        config:
-          auth:
-            type: basic
-            headers:
-              - name: Authorization
-                value: Bearer <your-openai-key>
-```
--->
 
 ## Schema
 

@@ -19,6 +19,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
@@ -111,7 +112,7 @@ AI Identity Providers can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/identity`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Identity Provider](#set-up-an-ai-identity-provider) below.
+For configuration examples and step-by-step setup instructions, see [Set up an AI Identity Provider](#set-up-an-ai-identity-provider).
 
 ## Authentication types
 
@@ -219,23 +220,6 @@ data:
     key_in_query: false
     hide_credentials: true
 {% endentity_example %}
-
-<!-- TODO: Uncomment before GA — kongctl declarative support for identity_providers is not yet released.
-```yaml
-ai_gateways:
-  - ref: <your-ai-gateway-ref>
-    identity_providers:
-      - ref: api-key-auth
-        name: api-key-auth
-        display_name: API Key Auth
-        type: key-auth
-        config:
-          key_names:
-            - X-API-Key
-          key_in_header: true
-          key_in_query: false
-          hide_credentials: true
-``` -->
 
 ### OIDC bearer token authentication
 

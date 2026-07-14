@@ -19,6 +19,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: About {{site.ai_gateway}}
     url: /ai-gateway/
@@ -421,7 +422,7 @@ Both default and per-tool ACLs use `allow` and `deny` lists. Evaluation follows 
 
 All access attempts (allowed or denied) are written to the audit log.
 
-The table below summarizes the possible ACL configurations and their outcomes.
+The following table summarizes the possible ACL configurations and their outcomes.
 
 {% table %}
 columns:
@@ -518,7 +519,7 @@ To monitor and troubleshoot MCP traffic, enable logging and audit trails through
 
 ## Scope of support
 
-The AI MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is supported and what is outside the current scope.
+The AI MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The following table summarizes what is supported and what is outside the current scope.
 
 <!-- vale off -->
 {% feature_table %}
@@ -609,51 +610,6 @@ data:
             type: string
           description: Location query. Accepts US Zipcode, UK Postcode, Canada postal code, IP address, latitude/longitude, or city name.
 {% endentity_example %}
-
-<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
-```yaml
-mcp_servers:
-  - name: weather-mcp
-    ref: weather-mcp
-    display_name: "Weather API"
-    type: conversion-listener
-    enabled: true
-    policies: []
-    access:
-      acl_attribute_type: consumer
-      acls:
-        allow:
-          - __never_match__
-      default_tool_acls:
-        deny:
-          - __never_match__
-    config:
-      url: https://api.weatherapi.com/v1/current.json
-      route:
-        paths:
-          - /weather
-      logging:
-        payloads: false
-        statistics: true
-      server:
-        timeout: 60000
-    tools:
-      - name: get-current-weather
-        description: Get current weather for a location
-        method: GET
-        path: /weather
-        query:
-          key:
-            - $WEATHERAPI_API_KEY
-        parameters:
-          - name: q
-            in: query
-            required: true
-            schema:
-              type: string
-            description: Location query. Accepts US Zipcode, UK Postcode, Canada postal code, IP address, latitude/longitude, or city name.
-```
--->
 
 ## Schema
 

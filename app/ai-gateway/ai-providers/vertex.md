@@ -60,9 +60,9 @@ body:
   name: my-vertex-account
   type: vertex
   config:
-    project_id: $VERTEX_PROJECT
     auth:
       type: gcp
+      use_gcp_service_account: true
       service_account_json: $GCP_ACCOUNT_JSON
 {% endkonnect_api_request %}
 <!--vale on-->

@@ -19,6 +19,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
@@ -64,7 +65,7 @@ Create an AI Policy when you want to add governance, security, transformation, o
 - Attach [logging Policies](/ai-gateway/policies/?category=logging) to track requests and responses for observability
 - Attach authentication policies like [OpenID Connect](/ai-gateway/policies/openid-connect/) to control access and verify identity
 
-**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies—not configurations shared with other parts of your gateway.
+**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies, not configurations shared with other parts of your gateway.
 
 {:.info}
 > For the complete set of available policy types and configurations, see the [AI Policies hub](/ai-gateway/policies/).
@@ -77,7 +78,7 @@ AI Policies are managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/policies`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up a global AI Policy](#set-up-a-global-ai-policy) below.
+For configuration examples and step-by-step setup instructions, see [Set up a global AI Policy](#set-up-a-global-ai-policy).
 
 ## AI Policy scopes
 
@@ -97,6 +98,11 @@ The available scopes are:
 An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced) and a `config` block that configures that behavior. {{site.ai_gateway}} applies the policy at the scope you choose: globally across all traffic, or scoped to a specific entity.
 
 The following example creates a global AI PII Sanitizer Policy that runs for every {{site.ai_gateway}} Route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
+
+{:.info}
+> This Policy connects to an AI PII Anonymizer service at `host`/`port` (`sanitizer-service.internal:8080` in this example) to perform the actual sanitization. Substitute the address of your own running instance. See [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service) for image access and setup instructions. 
+>
+> Without a reachable service at that address, requests through this Policy will fail.
 
 {% entity_example %}
 type: policy

@@ -20,6 +20,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
@@ -37,8 +38,9 @@ faqs:
   - q: How is an {{site.ai_gateway}} AI Vault different from a {{site.base_gateway}} Vault?
     a: |
       The runtime entity is the same secret-management abstraction. The {{site.ai_gateway}} surface
-      manages AI Vaults through the AI entity convention (`display_name`, `name`, `description`,
+      manages AI Vaults through the AI entity convention (`name`, `description`,
       `labels`) and exposes them through the {{site.konnect_short_name}} API alongside the other AI entities.
+      Unlike other {{site.ai_gateway}} entities, AI Vaults don't have a `display_name` field.
 
   - q: Which secret backends are supported?
     a: |
@@ -199,29 +201,18 @@ Cache duration and grace periods are tunable per vault, allowing you to balance 
 
 The following example registers an environment-variable AI Vault that resolves references against process environment variables prefixed with `KONG_`.
 
+{:.info}
+> AI Vault doesn't accept a `display_name` field. Only `name` and `description` identify a vault. If you include `display_name` when creating an AI Vault, {{site.ai_gateway}} silently ignores it.
+
 {% entity_example %}
 type: vault
 data:
-  display_name: Production Env Vault
   name: prod-env-vault
   description: Vault for production secrets sourced from environment variables.
   type: env
   config:
     prefix: KONG_
 {% endentity_example %}
-
-<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
-```yaml
-vaults:
-  - name: prod-env-vault
-    ref: prod-env-vault
-    display_name: "Production Env Vault"
-    description: "Vault for production secrets sourced from environment variables."
-    type: env
-    config:
-      prefix: KONG_
-```
--->
 
 ## Schema
 

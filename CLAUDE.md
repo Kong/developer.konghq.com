@@ -73,6 +73,11 @@ When writing UI steps, follow the formats in `docs/ui-steps-standards.md`.
 
 When adding frontmatter `tags:`, follow the schema in `docs/update-tag-schema.md`.
 
+## Prose style
+
+- Don't use em dashes, en dashes, or dashes as sentence punctuation (e.g. "X — Y"). Rewrite as two sentences, or use a comma, colon, semicolon, or parentheses instead. (Hyphens in compound words like `well-known` or in code/YAML are fine.)
+- Don't use positional language like "below" or "above" to refer to other content on the page (e.g. "the table below", "see above"). Content gets reordered, so these references go stale. Use "the following" for content that comes next, or just link/name the section (e.g. "see [Set up an AI Consumer](#set-up-an-ai-consumer)") instead of describing where it sits on the page.
+
 ## PR review standards
 
 - Provide GitHub suggestions with actionable code, not vague feedback.

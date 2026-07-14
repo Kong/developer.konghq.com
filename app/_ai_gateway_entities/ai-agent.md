@@ -19,6 +19,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: About {{site.ai_gateway}}
     url: /ai-gateway/
@@ -322,7 +323,13 @@ For available policy types and configuration, see the [AI Policy entity](/ai-gat
 
 ## Set up an Agent
 
+Before creating an AI Agent with access restrictions, create an AI Consumer Group to reference in [`access.acls`](#schema-aigateway-agent-access). 
+This example references a group named `internal-teams`. See [Set up an AI Consumer Group](/ai-gateway/entities/ai-consumer-group/#set-up-an-ai-consumer-group) to create it, or substitute the name of your own AI Consumer, AI Consumer Group, or Authenticated Group in `access.acls.allow`.
+
 The following example creates an `a2a` Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with statistics logging enabled and access restricted to the `internal-teams` Consumer Group.
+
+{:.info}
+> This example proxies to a placeholder upstream at `https://booking-agent.internal.kongair.com`. Substitute the URL of your own running A2A agent in [`config.url`](#schema-aigateway-agent-config-url). Because this Agent has `type: a2a`, requests must use the A2A JSON-RPC envelope (`jsonrpc: "2.0"`, `id`, `method: "message/send"`, `params.message` with `kind` and `messageId`). A flat `{"message": {...}}` body without that envelope is rejected by the upstream agent itself (for example, `"Invalid Request: jsonrpc must be 2.0"`), not by {{site.ai_gateway}}.
 
 {% entity_example %}
 type: agent
@@ -346,30 +353,6 @@ data:
       max_payload_size: 1048576
 {% endentity_example %}
 
-
-<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
-```yaml
-agents:
-  - name: kongair-flight-booking-agent
-    ref: kongair-flight-booking-agent
-    display_name: "KongAir Flight Booking Agent"
-    type: a2a
-    access:
-      acls:
-        allow:
-          - internal-teams
-    policies: []
-    config:
-      url: https://booking-agent.internal.kongair.com
-      route:
-        paths:
-          - /kongair-flight-booking
-      logging:
-        statistics: true
-        payloads: false
-        max_payload_size: 1048576
-```
--->
 ## Schema
 
 {% entity_schema %}

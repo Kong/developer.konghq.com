@@ -19,6 +19,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: About {{site.ai_gateway}}
     url: /ai-gateway/
@@ -102,7 +103,7 @@ AI Models can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/models`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model) below.
+For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model).
 
 ## How it works
 
@@ -320,7 +321,7 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Model aliasing
 
-By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name—for abstraction, stability, or to hide implementation details—set [`config.model.alias`](#schema-aigateway-model-config-model-alias).
+By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, set [`config.model.alias`](#schema-aigateway-model-config-model-alias).
 
 When an alias is set, clients can send that alias in the request `model` field instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
@@ -334,7 +335,7 @@ To control how consumers authenticate before their access is evaluated, configur
 
 Attach an AI Policy to an AI Model to add security, observability, governance, rate limiting, and cost optimization to all requests through that model. For example, you can add guardrails ([AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)), enable [logging and metrics](/ai-gateway/policies/?category=logging), audit and [compliance controls](/ai-gateway/policies/ai-sanitizer/), cache responses, or [rate-limit](/ai-gateway/policies/ai-rate-limiting-advanced/) LLM traffic.
 
-Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations. Not every AI Policy type supports AI Model attachment. AI Policies are not deleted when the AI Model is deleted—only the AI Model's reference is removed. For more details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/).
+Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations. Not every AI Policy type supports AI Model attachment. AI Policies are not deleted when the AI Model is deleted, only the AI Model's reference is removed. For more details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/).
 
 ### AI Policy execution order
 
@@ -359,7 +360,11 @@ For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 
 ## Set up an AI Model
 
-The following example creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
+Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service. 
+
+The following example:
+* Creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
+* References a provider named `my-openai-account`. Either see [Set up an AI Model Provider](/ai-gateway/entities/ai-model-provider/#set-up-an-ai-model-provider) to create it, or substitute the name of your own AI Model Provider in `targets[].provider`.
 
 {:.info}
 > This AI Model proxies client requests to `/v1/chat/completions`. The base path `/v1` comes from [`config.route.paths`](#schema-aigateway-model-config-route-paths), and `/chat/completions` is appended by the `generate` capability automatically.
@@ -377,7 +382,7 @@ data:
   policies: []
   targets:
     - name: gpt-4o
-      provider: generic-openai
+      provider: my-openai-account
       config:
         type: openai
   config:
@@ -391,45 +396,9 @@ data:
       alias: my-gpt-4o
 {% endentity_example %}
 
-<!-- Uncomment before GA (kongctl AI Gateway declarative support not yet documented in app/kongctl/supported-resources.md):
-```yaml
-models:
-  - name: gpt-4o-production
-    ref: gpt-4o-production
-    display_name: "GPT-4o Production"
-    type: model
-    capabilities:
-      - generate
-    formats:
-      - type: openai
-    access:
-      acls:
-        allow:
-          - internal-teams
-    policies: []
-    targets:
-      - name: gpt-4o
-        provider: my-openai-account
-        weight: 100
-        config:
-          type: openai
-          temperature: 0.7
-          max_tokens: 4096
-          input_cost: 0.0000025
-          output_cost: 0.000010
-    config:
-      route:
-        paths:
-          - /ai
-      logging:
-        statistics: true
-        payloads: false
-      model:
-        name_header: true
-      balancer:
-        algorithm: round-robin
-```
--->
+{:.info}
+> Because [`config.model.alias`](#schema-aigateway-model-config-model-alias) is set here, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
+
 
 ## Schema
 
