@@ -3,7 +3,7 @@ title: Deploy {{ site.ai_gateway_name }} with {{site.operator_product_name}}
 description: Create an {{ site.ai_gateway }} control plane, configure an AI provider and model, and deploy the data plane in Kubernetes.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/deploy/
-
+tech_preview: true
 series:
   id: operator-get-started-ai-gateway
   position: 2

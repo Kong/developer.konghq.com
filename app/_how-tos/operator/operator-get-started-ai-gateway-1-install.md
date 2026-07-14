@@ -3,7 +3,7 @@ title: Install {{site.operator_product_name}} for {{ site.ai_gateway_name }}
 description: Install {{site.operator_product_name}} with the {{ site.ai_gateway }} data plane controller enabled and prepare a Kubernetes cluster for {{ site.ai_gateway_name }}.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/install/
-
+tech_preview: true
 series:
   id: operator-get-started-ai-gateway
   position: 1
