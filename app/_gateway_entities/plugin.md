@@ -158,6 +158,11 @@ This determines plugin ordering during the [`access` phase](#plugin-contexts), a
 
 You can choose to run a particular plugin `before` or `after` a specified plugin or list of plugins.
 
+{:.info}
+> For how the reordering is decided — the principle behind it, how to predict the exact result of an
+> `ordering` configuration, and the difference between the `new` and `legacy` algorithms — see
+> [How dynamic plugin ordering works](/gateway/plugins/plugin-ordering/).
+
 The configuration looks like this:
 
 ```yaml
@@ -220,6 +225,8 @@ In some cases, this might be compensated for when you run rate limiting before a
 
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
 {{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
+
+* **Algorithm selection**: The [`plugin_ordering_algorithm`](/gateway/reference/configuration/#plugin_ordering_algorithm) parameter selects how plugins are reordered. It defaults to `legacy` (the original behavior); set it to `new` to only move the plugin you configure and keep unconfigured plugins in their priority order. See [How dynamic plugin ordering works](/gateway/plugins/plugin-ordering/).
 
 {:.info}
 > **Note**: In {{site.base_gateway}} 3.13 and earlier, Consumer and Consumer Group scoping was not compatible with dynamic plugin ordering. If you had [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, dynamic plugin ordering would cause those plugins **not to trigger**. This limitation was resolved in {{site.base_gateway}} 3.14.
