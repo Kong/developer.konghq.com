@@ -64,7 +64,7 @@ rows:
   - entity: "[AI Agent](/ai-gateway/entities/ai-agent/)"
     primitives: "A Service, a Route, and the AI A2A Proxy plugin."
   - entity: "[AI Identity Provider](/ai-gateway/entities/ai-identity-provider/)"
-    primitives: "None of its own. A `key-auth` type materializes into a Key Auth plugin, and an `openid-connect` type into an OpenID Connect plugin, on the Route of every AI Model that references it, plus a shared anonymous Consumer with a Request Termination plugin that returns 401 for unauthenticated requests."
+    primitives: "None of its own. A `key-auth` type materializes into a Key Auth Policy, and an `openid-connect` type into an OpenID Connect Policy, on the Route of every AI Model that references it, plus a shared anonymous Consumer with a Request Termination Policy that returns 401 for unauthenticated requests."
   - entity: "[AI Policy](/ai-gateway/entities/ai-policy/)"
     primitives: "The {{site.base_gateway}} plugin named by the policy `type` (for example, AI Prompt Guard or AI Rate Limiting Advanced), applied globally or scoped to whatever the policy is attached to."
   - entity: "[AI Consumer](/ai-gateway/entities/ai-consumer/)"
