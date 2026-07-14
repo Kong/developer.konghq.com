@@ -27,7 +27,7 @@ tags:
 
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
+  a: Create an AI Model Provider entity to authenticate to Google Vertex AI, create an AI Model entity that accepts Anthropic-compatible requests and targets your Vertex model, then point Claude CLI’s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests are proxied for monitoring and control.
 
 prereqs:
   inline:
@@ -80,6 +80,39 @@ EOF
 
 In this example, we're setting up the AI Model Provider with:
 
+ * `type: vertex`: Specifies that this provider connects to Google Vertex AI.
+ * `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
+
+## Create an AI Policy entity
+
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra headers that Azure does not support.
+
+```sh
+kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+_defaults:
+  kongctl:
+    namespace: ai-gateway-get-started
+
+ai_gateways:
+  - ref: ai-quickstart
+    name: ai-quickstart
+    display_name: "ai-quickstart"
+
+ai_gateway_policies:
+  - ref: claude-code-compat
+    name: claude-code-compat
+    ai_gateway: ai-quickstart
+    type: request-transformer-advanced
+    enabled: true
+    global: false
+    config:
+      remove:
+        headers: [anthropic-beta]
+        querystring: [beta]
+        body: [output_config, context_management, mcp_servers, container, service_tier]
+EOF
+```
+
 ## Create an AI Model entity
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
@@ -97,38 +130,37 @@ ai_gateways:
 
 ai_gateway_models:
   - ref: claude-code-vertex-sonnet
-    type: model
     name: claude-code-vertex-sonnet
     display_name: "Claude Code - Vertex - Sonnet 4.6"
     ai_gateway: ai-quickstart
+    type: model
     enabled: true
+    formats: [{ type: anthropic }]
     config:
-      route:
-        paths:
-        - /
-      model:
-        alias: "claude-code-vertex-sonnet"
-    formats:
-      - type: anthropic
+      route: { paths: [/] }
+      model: { name_header: true }
+    capabilities: [generate]
+    policies: [ !ref claude-code-compat#name ]
     targets:
-      - name: claude-sonnet-4-6
+      - name: claude-sonnet-4-5@20250929
         provider: vertex-prod
         config:
           type: vertex
           upstream_url: !env VERTEX_UPSTREAM_URL
-    capabilities:
-      - generate
 EOF
 ```
 
+display_name: "Claude Code - Vertex - Sonnet 4.6"
+
 In this example, we're setting up the AI Model with:
+
+ * `formats: [type: anthropic]`: Accepts Anthropic-compatible requests (what {{ site.claude_code }} sends).
+ * `config.model.alias: claude-code-vertex-sonnet`: The model name you pass from Claude CLI.
+ * `targets[0].provider: vertex-prod`: Routes upstream requests through the Vertex AI Provider created earlier.
 
 ## Verify traffic through Kong
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
-
-{:.warning}
-> Ensure that `ANTHROPIC_MODEL` matches the model you deployed in Gemini.
 
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'claude-code-vertex-sonnet'
@@ -148,7 +180,7 @@ This means I can:
 Learn more ( https://docs.claude.com/s/claude-code-security )
 
 ❯ 1. Yes, continue
-2. No, exit
+1. No, exit
 ```
 {:.no-copy-code}
 
