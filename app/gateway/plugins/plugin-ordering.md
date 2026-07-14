@@ -66,11 +66,25 @@ Two consequences fall out of that rule, and they are the whole behavior:
 Because the order is built by that one repeated step, you can always work it out by hand. Take the
 customer scenario that motivated this feature:
 
-| Plugin | Priority | Ordering rule |
-|---|---|---|
-| `pre-function` | 1000000 | `after: [opentelemetry]` |
-| `request-callout` | 812 | *(none)* |
-| `opentelemetry` | 14 | *(none)* |
+{% table %}
+columns:
+  - title: Plugin
+    key: plugin
+  - title: Priority
+    key: priority
+  - title: Ordering rule
+    key: ordering
+rows:
+  - plugin: "`pre-function`"
+    priority: 1000000
+    ordering: "`after: [opentelemetry]`"
+  - plugin: "`request-callout`"
+    priority: 812
+    ordering: "*(none)*"
+  - plugin: "`opentelemetry`"
+    priority: 14
+    ordering: "*(none)*"
+{% endtable %}
 
 By static priority alone the order would be `pre-function → request-callout → opentelemetry`. You've
 asked for one change: run `pre-function` **after** `opentelemetry`. Here's how {{site.base_gateway}}
