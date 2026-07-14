@@ -80,7 +80,7 @@ For {{site.ai_gateway}} traffic through an AI Model or MCP Server entity, you sh
 
 ## Proxy configuration fields
 
-AI Models and MCP Servers accept the same `proxy` records at the top level of their `config` block.
+AI Models accept a `proxy` record at the top level of their `config` block. MCP Servers only accept it when their `type` is `passthrough-listener`. `conversion-listener` and `listener` type MCP Servers do not currently support forward proxy configuration at all.
 
 <!--vale off-->
 {% table %}
@@ -92,37 +92,28 @@ columns:
   - title: Description
     key: description
 rows:
-  - field: "`http_proxy_host`"
-    type: "host"
-    description: "Hostname of the forward proxy used for HTTP upstreams. Must be set together with `http_proxy_port`."
-  - field: "`http_proxy_port`"
-    type: "port"
-    description: "Port of the forward proxy used for HTTP upstreams. Must be set together with `http_proxy_host`."
-  - field: "`https_proxy_host`"
-    type: "host"
-    description: "Hostname of the forward proxy used for HTTPS upstreams. Must be set together with `https_proxy_port`."
-  - field: "`https_proxy_port`"
-    type: "port"
-    description: "Port of the forward proxy used for HTTPS upstreams. Must be set together with `https_proxy_host`."
+  - field: "`http_proxy`"
+    type: "object"
+    description: "The forward proxy used for HTTP upstreams. An object with `host` and `port` fields."
+  - field: "`https_proxy`"
+    type: "object"
+    description: "The forward proxy used for HTTPS upstreams. An object with `host` and `port` fields."
   - field: "`proxy_scheme`"
     type: "string"
-    description: "Scheme used to connect to the forward proxy itself. One of `http` or `https`. Defaults to `http`."
-  - field: "`auth_username`"
-    type: "string"
-    description: "Username for proxy authentication. Optional. Referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/)."
-  - field: "`auth_password`"
-    type: "string"
-    description: "Password for proxy authentication. Optional. Encrypted at rest and referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/)."
+    description: "Scheme used to connect to the forward proxy itself. Currently only `http` is supported. Defaults to `http`."
+  - field: "`auth`"
+    type: "object"
+    description: "Credentials for proxy authentication. An object with `username` and `password` fields. Both are optional and referenceable from an [AI Vault](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets)."
   - field: "`no_proxy`"
-    type: "list"
+    type: "string"
     description: "Comma-separated list of hosts that should not be proxied."
 {% endtable %}
 <!--vale on-->
 
 Two validation rules apply to the record:
 
-- `http_proxy_host` and `http_proxy_port` must both be set or both be absent.
-- `https_proxy_host` and `https_proxy_port` must both be set or both be absent.
+- If `http_proxy` is set, both `host` and `port` must be set.
+- If `https_proxy` is set, both `host` and `port` must be set.
 
 ### Supported Policies
 
@@ -166,9 +157,9 @@ rows:
 
 ### Set up a forward proxy
 
-You can use [Squid](https://www.squid-cache.org/) to create a simple forward proxy for testing. 
+You can use [Squid](https://www.squid-cache.org/) to create a simple forward proxy for testing.
 
-In the following examples `secure.mycompany` is used as the `visible_hostname` for the forward proxy.
+Squid runs as its own Docker container, separate from the {{site.ai_gateway}} data plane container. In the following examples, the data plane reaches Squid through `host.docker.internal`, the special hostname that Docker Desktop and OrbStack resolve to the host machine from inside any container. This works because the compose file below publishes Squid's port to the host, so any container — including the {{site.ai_gateway}} data plane, which runs in its own separate Docker network — can reach it via the host machine, without needing to share a Docker network or edit your machine's hosts file.
 
 {:.warning}
 > In a production deployment your forward proxy should authenticate users, including {{site.ai_gateway}}.  To do this. set `auth_username` and `auth_password`. You can reference secrets from an [AI Vault](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets).
@@ -177,8 +168,11 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
     ```
     echo '
-    # Allow your local machine
-    acl localnet src 172.0.0.0/8     # Docker bridge network range
+    # Allow your local machine. Different container runtimes (Docker Desktop, OrbStack, Colima)
+    # allocate bridge networks in different private ranges, so this allows all of them.
+    acl localnet src 10.0.0.0/8
+    acl localnet src 172.16.0.0/12
+    acl localnet src 192.168.0.0/16
 
     acl SSL_ports port 443
     acl Safe_ports port 80 443
@@ -206,20 +200,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
           - "3128:3128"
         volumes:
           - ./squid.conf:/etc/squid/squid.conf:ro
-        networks:
-          proxy-net:
-            aliases:
-              - secure.mycompany   # ← the named host
-
-    networks:
-      proxy-net:
-        driver: bridge
     ' > docker-compose.yml
-    ```
-1. Add the  proxy to your hosts:
-
-    ```
-    echo "127.0.0.1   secure.mycompany" | sudo tee -a /etc/hosts
     ```
 1. Run Squid using docker:
 
@@ -235,83 +216,93 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
 
 1. Create an [AI Provider](/ai-gateway/entities/ai-model-provider/) entity to define your LLM service and store authentication credentials:
 
-   <!-- vale off -->
-   {% capture model-provider %}
-   {% konnect_api_request %}
-   url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-   status_code: 201
-   method: POST
-   headers:
-     - 'Content-Type: application/json'
-     - 'Accept: application/json, application/problem+json'
-   body:
-     type: openai
-     display_name: generic-openai
-     name: generic-openai
-     config:
-       auth:
-         type: basic
-         headers:
-           - name: Authorization
-             value: Bearer $OPENAI_API_KEY
-   {% endkonnect_api_request %}
-   {% endcapture %}
-   {{ model-provider | indent: 3 }}
-   <!-- vale on -->
+    ```
+    kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+    _defaults:
+      kongctl:
+        namespace: ai-gateway-get-started
+
+    ai_gateways:
+      - ref: ai-quickstart
+        name: ai-quickstart
+        display_name: "ai-quickstart"
+
+    ai_gateway_model_providers:
+      - ref: generic-anthropic
+        ai_gateway: ai-quickstart
+        name: generic-anthropic
+        display_name: "generic-anthropic"
+        type: anthropic
+        config:
+          auth:
+            type: basic
+            headers:
+              - name: x-api-key
+                value: !env ANTHROPIC_API_KEY
+    EOF
+    ```
 
 1. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
 
-   <!-- vale off -->
-   {% capture model %}
-   {% konnect_api_request %}
-   url: /v1/ai-gateways/$AI_GATEWAY_ID/models
-   status_code: 201
-   method: POST
-   headers:
-     - 'Content-Type: application/json'
-     - 'Accept: application/json, application/problem+json'
-   body:
-     display_name: my-gpt-4o
-     name: my-gpt-4o
-     type: model
-     formats:
-       - type: openai
-     config:
-       route:
-         paths:
-           - /v1
-       model: {}
-       proxy:
-         http_proxy:
-             host: secure.mycompany
-             port: 3128
-         proxy_scheme: http
-     targets:
-       - name: gpt-4o
-         provider: generic-openai
-         config:
-           type: openai
-     policies: []
-     capabilities:
-       - generate
-   {% endkonnect_api_request %}
-   {% endcapture %}
-   {{ model | indent: 3 }}
-   <!-- vale on -->
+    ```
+    kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+    _defaults:
+      kongctl:
+        namespace: ai-gateway-get-started
 
-1. Send a chat request. This will be forwarded to your proxy service and return an error:
+    ai_gateways:
+      - ref: ai-quickstart
+        name: ai-quickstart
+        display_name: "ai-quickstart"
+
+    ai_gateway_models:
+      - ref: my-claude
+        ai_gateway: ai-quickstart
+        name: my-claude
+        display_name: "my-claude"
+        type: model
+        formats:
+          - type: anthropic
+        config:
+          route:
+            paths:
+              - /
+          proxy:
+            http_proxy:
+              host: host.docker.internal
+              port: 3128
+            https_proxy:
+              host: host.docker.internal
+              port: 3128
+            proxy_scheme: http
+          model:
+            alias: my-claude
+        targets:
+          - name: claude-opus-4-8
+            provider: generic-anthropic
+            config:
+              type: anthropic
+        policies: []
+        capabilities:
+          - generate
+    EOF
+    ```
+
+1. Send a chat request. This will be forwarded through your proxy service to Anthropic:
 
    <!-- vale off -->
    {% capture chat-request %}
    {% validation request-check %}
-   url: /v1/chat/completions
+   url: /v1/messages
    status_code: 200
    method: POST
    headers:
-       - 'Accept: application/json'
-       - 'Content-Type: application/json'
-       - 'Authorization: Bearer $OPENAI_API_KEY'
+     - 'Accept: application/json'
+     - 'Content-Type: application/json'
+     - 'Authorization: Bearer $ANTHROPIC_API_KEY'
    body:
+     model: my-claude
+     max_tokens: 100
      messages:
      - role: "user"
        content: "Say this is a test!"
@@ -362,11 +353,6 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
          statistics: true
        server:
          timeout: 60000
-       proxy:
-         http_proxy:
-             host: secure.mycompany
-             port: 3128
-         proxy_scheme: http
      tools:
        - name: get-current-weather
          description: Get current weather for a location
@@ -387,7 +373,7 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
    {{ mcp-server | indent: 3 }}
    <!-- vale on -->
 
-1. Call `get-current-weather`, this will be forwarded to your proxy service and return an error:
+1. This MCP Server does not route through your forward proxy, since `conversion-listener` doesn't support it. Calling `get-current-weather` reaches WeatherAPI directly:
 
     ```sh
     curl -i -X POST http://localhost:8000/weather \
@@ -404,11 +390,6 @@ In the following examples `secure.mycompany` is used as the `visible_hostname` f
           }
         }
       }'
-    ```
-1. Examine the Squid logs to verify your requests:
-
-    ```
-    docker exec -it squid tail -f /var/log/squid/access.log
     ```
 
 ## Limitations
