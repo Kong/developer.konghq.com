@@ -66,7 +66,7 @@ In this example, we're setting up the AI Provider with:
 
 * `type: anthropic`: Specifies that this provider connects to the Anthropic service using Anthropic's standard API format.
 * `name: generic-anthropic`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth`: Stores your Anthropic API key. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+* `config.auth`: Adds the Anthropic API key set in the `ANTHROPIC_API_KEY` environment variable. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
 
 ## Create an AI Model entity
 
@@ -114,7 +114,7 @@ In this example, we're setting up the AI Model with:
 * `name: my-claude`: A unique identifier for this model.
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format.
 * `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
-* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
+* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/messages`.
 * `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
 
 ## Verify traffic through Kong
