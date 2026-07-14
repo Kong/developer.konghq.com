@@ -20,8 +20,6 @@ tools:
 
 prereqs:
   inline:
-    - title: Configure kongctl
-      include_content: md/ai-gateway/v2/prereqs/kongctl
     - title: Hugging Face
       content: |
         1. Create a [Hugging Face access token](https://huggingface.co/settings/tokens) with inference permissions.
@@ -43,9 +41,9 @@ tldr:
 
 ---
 
-## Create an AI Provider entity
+## Create an AI Model Provider entity
 
-Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to Hugging Face and store your access token:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Hugging Face and store your access token:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -97,8 +95,11 @@ ai_gateway_policies:
         querystring:
           - beta
         body:
-          - model
           - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
 EOF
 ```
 
@@ -121,24 +122,41 @@ ai_gateways:
 ai_gateway_model_providers:
   - ref: my-huggingface-account
     ai_gateway: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "my-huggingface-account"
+    name: my-huggingface-account
+    display_name: "Hugging Face"
+    type: huggingface
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !env HUGGINGFACE_AUTH_HEADER
 
 ai_gateway_policies:
   - ref: strip-claude-beta-info
     ai_gateway: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "strip-claude-beta-info"
+    name: strip-claude-beta-info
+    display_name: "Strip Claude beta info"
+    type: request-transformer-advanced
+    config:
+      remove:
+        headers:
+          - anthropic-beta
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
+          - reasoning_effort
 
 ai_gateway_models:
-  - ref: my-claude-huggingface
+  - ref: my-huggingface
     ai_gateway: ai-quickstart
-    name: my-claude-huggingface
-    display_name: "my-claude-huggingface"
+    name: my-huggingface
+    display_name: "my-huggingface"
     type: model
     formats:
       - type: anthropic
@@ -147,10 +165,34 @@ ai_gateway_models:
         paths:
           - /
       model:
-        alias: my-claude-huggingface
+        alias: my-huggingface
     targets:
       - name: meta-llama/Llama-3.3-70B-Instruct
-        provider: my-huggingface-account
+        provider: !ref my-huggingface-account#name
+        config:
+          type: huggingface
+    policies:
+      - !ref strip-claude-beta-info#name
+    capabilities:
+      - generate
+
+ai_gateway_models:
+  - ref: my-huggingface
+    ai_gateway: diana
+    name: my-huggingface
+    display_name: "my-huggingface"
+    type: model
+    formats:
+      - type: anthropic
+    config:
+      route:
+        paths:
+          - /
+      model:
+        alias: my-huggingface
+    targets:
+      - name: meta-llama/Llama-3.3-70B-Instruct
+        provider: !ref my-huggingface-account#name
         config:
           type: huggingface
     policies:
@@ -169,7 +211,7 @@ curl -i -X POST http://localhost:8000/v1/messages \
   -H 'Content-Type: application/json' \
   -H 'anthropic-version: 2023-06-01' \
   --data '{
-    "model": "my-claude-huggingface",
+    "model": "my-huggingface",
     "max_tokens": 1024,
     "messages": [
       {"role": "user", "content": "hello"}
@@ -183,9 +225,7 @@ curl -i -X POST http://localhost:8000/v1/messages \
 
 ```sh
 export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
-
-ANTHROPIC_BASE_URL=http://localhost:8000/ \
-ANTHROPIC_MODEL=my-claude-huggingface \
+ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'my-huggingface' --strict-mcp-config --mcp-config '{"mcpServers": {}}'
 claude
 ```
 
@@ -207,4 +247,9 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 ```
 {:.no-copy-code}
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}} and are routed to Hugging Face.
+Select **Yes, continue**. The session starts. 
+
+{:.warning}
+Disable thinking with Cmd + T. If you don't disable thinking, you'll get an error with `API Error: 400 `reasoning_effort` is not supported with this model`. 
+
+Ask a simple question to confirm that requests reach {{site.ai_gateway}} and are routed to Hugging Face.
