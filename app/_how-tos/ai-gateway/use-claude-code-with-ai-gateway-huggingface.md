@@ -175,30 +175,6 @@ ai_gateway_models:
       - !ref strip-claude-beta-info#name
     capabilities:
       - generate
-
-ai_gateway_models:
-  - ref: my-huggingface
-    ai_gateway: diana
-    name: my-huggingface
-    display_name: "my-huggingface"
-    type: model
-    formats:
-      - type: anthropic
-    config:
-      route:
-        paths:
-          - /
-      model:
-        alias: my-huggingface
-    targets:
-      - name: meta-llama/Llama-3.3-70B-Instruct
-        provider: !ref my-huggingface-account#name
-        config:
-          type: huggingface
-    policies:
-      - !ref strip-claude-beta-info#name
-    capabilities:
-      - generate
 EOF
 ```
 
@@ -250,6 +226,6 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 Select **Yes, continue**. The session starts. 
 
 {:.warning}
-Disable thinking with Cmd + T. If you don't disable thinking, you'll get an error with `API Error: 400 `reasoning_effort` is not supported with this model`. 
+> Disable thinking with `Opt` + `T`. If you don't disable thinking, you'll get an error with `API Error: 400 `reasoning_effort` is not supported with this model`. 
 
 Ask a simple question to confirm that requests reach {{site.ai_gateway}} and are routed to Hugging Face.
