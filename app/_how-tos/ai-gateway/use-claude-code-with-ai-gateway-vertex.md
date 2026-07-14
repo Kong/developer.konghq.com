@@ -42,11 +42,8 @@ prereqs:
 
         Export these values as environment variables:
         ```sh
-        export GEMINI_API_KEY="<your_gemini_api_key>"
-        export GCP_PROJECT_ID="<your-gemini-project-id>"
-        export GEMINI_LOCATION_ID="<your-gemini-location_id>"
-        export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
-        export GCP_SERVICE_ACCOUNT="<your_account_json>"
+        export VERTEX_UPSTREAM_URL="<your_upstream_url>"
+        export GCP_SERVICE_ACCOUNT_JSON="<your_account_json>"
         ```
       icon_url: /assets/icons/vertex.svg
     - title: Claude Code CLI
@@ -77,7 +74,7 @@ ai_gateway_model_providers:
     config:
       auth:
         type: gcp
-        service_account_json: !env GCP_SERVICE_ACCOUNT
+        service_account_json: !env GCP_SERVICE_ACCOUNT_JSON
 EOF
 ```
 
