@@ -80,7 +80,7 @@ For {{site.ai_gateway}} traffic through an AI Model or MCP Server entity, you sh
 
 ## Proxy configuration fields
 
-AI Models accept a `proxy` record at the top level of their `config` block. MCP Servers only accept it when their `type` is `passthrough-listener` — `conversion-listener` and `listener` type MCP Servers do not currently support forward proxy configuration at all.
+AI Models accept a `proxy` record at the top level of their `config` block. MCP Servers only accept it when their `type` is `passthrough-listener`. `conversion-listener` and `listener` type MCP Servers do not currently support forward proxy configuration at all.
 
 <!--vale off-->
 {% table %}
