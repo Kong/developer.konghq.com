@@ -260,8 +260,7 @@ app/_how-tos/ai-gateway/v1/use-bedrock-rerank-api.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/bedrock/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-anthropic.md:
-  status: pending
-  canonical_url: /ai-gateway/ai-providers/anthropic/
+  canonical_url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-azure.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/azure/
