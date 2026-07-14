@@ -119,6 +119,15 @@ rows:
             cta:
               url: /ai-gateway/entities/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Manage with kongctl
+            description: Use kongctl to create and manage {{site.ai_gateway}} resources declaratively or with imperative commands.
+            icon: /assets/icons/terminal.svg
+            cta:
+              url: /ai-gateway/kongctl/
+              align: end
   - header:
       type: h2
       text: "{{site.ai_gateway}} providers"
