@@ -50,7 +50,7 @@ rows:
             description: Use Claude Code with Anthropic provider
             icon: /assets/icons/anthropic.svg
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-anthropic/
+              url:  /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
               align: end
       - blocks:
         - type: card
@@ -59,7 +59,7 @@ rows:
             icon: /assets/icons/openai.svg
             description: Use Claude Code with OpenAI provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-openai/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
               align: end
       - blocks:
         - type: card
