@@ -38,7 +38,7 @@ related_resources:
 tags:
   - ai
 search_aliases:
-  - ai-semantic-cache
+  - ai-rag-injector
   - ai
   - llm
   - artificial
@@ -86,8 +86,6 @@ faqs:
   - q: Does the AI RAG Injector Policy work with GCP Memorystore Redis clusters?
     a: |
       No. GCP Memorystore Redis clusters do not support the AI RAG Injector Policy. The Redis JSON module required for vector operations is not available in GCP's managed Redis service.
-
-      Attempting to ingest chunks with GCP Redis results in the following error:
 ---
 
 ## What is Retrieval Augmented Generation (RAG)?
@@ -284,23 +282,23 @@ columns:
     key: description
 rows:
   - field: |
-      [`consumer_identifier`](/#schema--config-consumer-identifier)
+      [`consumer_identifier`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-consumer-identifier)
     description: |
       Determines which consumer attribute is matched against ACL rules. Options: `consumer_group`, `username`, `custom_id`, or `consumer_id`
   - field: |
-      [`global_acl_config.allow[]`](/#schema--config-global-acl-config-allow)
+      [`global_acl_config.allow[]`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-global-acl-config-allow)
     description: |
       Group names with access to all collections (unless overridden)
   - field: |
-      [`global_acl_config.deny[]`](/#schema--config-global-acl-config-deny)
+      [`global_acl_config.deny[]`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-global-acl-config-deny)
     description: |
       Group names explicitly denied access to all collections
   - field: |
-      [`collection_acl_config.<name>.allow[]`]()
+      [`collection_acl_config.<name>.allow[]`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-collection-acl-config)
     description: |
       Group names with access to this specific collection. Empty list means allow all
   - field: |
-      [`collection_acl_config.<name>.deny[]`](/#schema--config-collection-acl-config)
+      [`collection_acl_config.<name>.deny[]`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-collection-acl-config)
     description: |
       Group names explicitly denied access to this specific collection
 {% endtable %}
@@ -432,10 +430,10 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-You can include filters in the `ai_rag_injector` parameter of your request:
+You can include filters in the `ai-rag-injector` parameter of your request:
 
 <!-- vale off -->
-```json
+```bash
 curl "http://localhost:8000/" \
      -H "Content-Type: application/json" \
      --json '{
