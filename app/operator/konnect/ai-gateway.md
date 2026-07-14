@@ -72,7 +72,7 @@ rows:
     purpose: Defines a model route, its capabilities, and which provider targets it
   - resource: "`AIGatewayPolicy`"
     api_group: "`konnect.konghq.com/v1alpha1`"
-    purpose: Applies a Policy to the gateway (for example: prompt guard, sanitizer, rate limiting)
+    purpose: "Applies a Policy to the gateway (for example: prompt guard, sanitizer, rate limiting)"
   - resource: "`AIGatewayIdentityProvider`"
     api_group: "`konnect.konghq.com/v1alpha1`"
     purpose: Configures the gateway authentication scheme (`key-auth` or `openid-connect`)
