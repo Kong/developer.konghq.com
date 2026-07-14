@@ -60,6 +60,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.9": [
+    {
+      "message": "Fixed token counters being decremented on AI Semantic Cache hits.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to count cost for routes with dynamic AI models.\n",

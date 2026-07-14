@@ -44,6 +44,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.9": [
+    {
+      "message": "Fixed an issue where the ACL plugin returned 403 for authenticated\ncredentials with no consumer and no groups (e.g. ACE / Dev Portal application\ncredentials) when configured with a deny list. A group-less identity cannot\nmatch a deny list and should be allowed through.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where the cache was not being invalidated for incremental sync in certain scenarios, leading to stale data being served.",
