@@ -29,8 +29,8 @@ related_resources:
     url: /plugins/ai-a2a-proxy/
 ---
 
-{{site.ai_gateway}} on {{site.konnect_short_name}} is documented around its entity model. 
-If you run {{site.ai_gateway}} on self-hosted {{site.base_gateway}}, this page maps each entity to the plugins and objects you already configure, so you can read {{site.ai_gateway}} docs and know how to apply them to your deployment. 
+{{site.ai_gateway}} on {{site.konnect_short_name}} is documented around its entity model.
+If you run {{site.ai_gateway}} on self-hosted {{site.base_gateway}}, this page maps each entity to the plugins and objects you already configure, so you can read {{site.ai_gateway}} docs and know how to apply them to your deployment.
 You can [convert](#convert-ai-gateway-2-0-entities-to-on-prem-ai-gateway) any {{site.ai_gateway}} 2.0 decK configuration into the equivalent self-hosted config.
 
 On {{site.konnect_short_name}}, you configure {{site.ai_gateway}} through its entity model: [AI Models](/ai-gateway/entities/ai-model/), [AI Model Providers](/ai-gateway/entities/ai-model-provider/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI Identity Providers](/ai-gateway/entities/ai-identity-provider/), [AI Policies](/ai-gateway/entities/ai-policy/), [AI Consumers](/ai-gateway/entities/ai-consumer/), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), and [AI Vaults](/ai-gateway/entities/ai-vault/). Self-hosted {{site.base_gateway}} doesn't expose these entities. Instead, you configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
@@ -57,12 +57,14 @@ columns:
 rows:
   - entity: "[AI Model](/ai-gateway/entities/ai-model/)"
     primitives: "A Service, one Route per capability it serves, and the AI Proxy Advanced plugin on each Route."
-  - entity: "[AI Provider](/ai-gateway/entities/ai-provider/)"
+  - entity: "[AI Model Provider](/ai-gateway/entities/ai-model-provider/)"
     primitives: "None of its own. Its `type` and credentials are materialized into the AI Proxy Advanced target of every AI Model that references it."
   - entity: "[AI MCP Server](/ai-gateway/entities/ai-mcp-server/)"
     primitives: "One or more Routes carrying the AI MCP Proxy plugin. The Route topology depends on the server [mode](/ai-gateway/entities/ai-mcp-server/#server-modes)."
   - entity: "[AI Agent](/ai-gateway/entities/ai-agent/)"
     primitives: "A Service, a Route, and the AI A2A Proxy plugin."
+  - entity: "[AI Identity Provider](/ai-gateway/entities/ai-identity-provider/)"
+    primitives: "None of its own. A `key-auth` type materializes into a Key Auth Policy, and an `openid-connect` type into an OpenID Connect Policy, on the Route of every AI Model that references it, plus a shared anonymous Consumer with a Request Termination Policy that returns 401 for unauthenticated requests."
   - entity: "[AI Policy](/ai-gateway/entities/ai-policy/)"
     primitives: "The {{site.base_gateway}} plugin named by the policy `type` (for example, AI Prompt Guard or AI Rate Limiting Advanced), applied globally or scoped to whatever the policy is attached to."
   - entity: "[AI Consumer](/ai-gateway/entities/ai-consumer/)"
@@ -120,11 +122,11 @@ Access control and secret management on-prem use the same {{site.base_gateway}} 
 
 ## Convert {{site.ai_gateway}} 2.0 entities to self-hosted {{site.base_gateway}} config
 
-Use `deck file ai2kong` to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities. 
+Use `deck file ai2kong` to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities.
 The following steps walk through converting a decK `ai.yaml` file for a single AI Model.
 
 1. Write a decK `ai.yaml` configuration file using the {{site.ai_gateway}} 2.0 entity model. For example, the following AI Model, `gpt-5-2`, exposes the `generate` capability on `/ai` and routes to a single target backed by the `openai-prod` AI Provider:
-   
+
    ```sh
    echo '
    models:
@@ -158,12 +160,12 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
    ' > ai.yaml
    ```
 1. Convert the {{site.ai_gateway}} entity config to {{site.base_gateway}} 3.x config:
-   
+
    ```sh
    deck file ai2kong --state ai.yaml --output-file kong.yaml
    ```
    For this example AI Model, {{site.ai_gateway}} generates a Service, a Route, and an `ai-proxy-advanced` plugin on that Route. `kong.yaml` contains:
-   
+
    ```yaml
    _format_version: "3.0"
    _info:
