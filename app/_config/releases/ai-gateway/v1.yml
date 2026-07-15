@@ -268,8 +268,7 @@ app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-bedrock.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/bedrock/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-dashscope.md:
-  status: pending
-  canonical_url: /ai-gateway/ai-providers/dashscope/
+  canonical_url: /ai-gateway/use-claude-code-with-ai-gateway-dashscope/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-gemini.md:
   canonical_url: /ai-gateway/use-claude-code-with-ai-gateway-gemini/
 app/_how-tos/ai-gateway/v1/use-claude-code-with-ai-gateway-huggingface.md:
