@@ -947,11 +947,6 @@ kmesh:
     # inline: "" # ENV: KMESH_LICENSE_INLINE
     # Path to a file with the Kong Mesh license
     path: "" # ENV: KMESH_LICENSE_PATH
-  opa:
-    # Interval for re-generating OPA configuration for Dataplanes connected to the Control Plane
-    configurationRefreshInterval: 1s # ENV: KMESH_OPA_CONFIGURATION_REFRESH_INTERVAL
-    # Backoff that is executed when Control Plane is sending the response that was previously rejected by OPA
-    nackBackoff: 5s # ENV: KMESH_OPA_CONFIGURATION_NACK_BACKOFF
   multizone:
     global:
       kds:
