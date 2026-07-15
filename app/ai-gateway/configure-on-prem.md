@@ -31,7 +31,7 @@ related_resources:
 
 {{site.ai_gateway}} on {{site.konnect_short_name}} is documented around its entity model.
 If you run {{site.ai_gateway}} on self-hosted {{site.base_gateway}}, this page maps each entity to the plugins and objects you already configure, so you can read {{site.ai_gateway}} docs and know how to apply them to your deployment.
-You can [convert](#convert-ai-gateway-2-0-entities-to-on-prem-ai-gateway) any {{site.ai_gateway}} 2.0 decK configuration into the equivalent self-hosted config.
+You can [convert](#convert-ai-gateway-2-0-entities-to-self-hosted-kong-gateway-config) any {{site.ai_gateway}} 2.0 decK configuration into the equivalent self-hosted config.
 
 On {{site.konnect_short_name}}, you configure {{site.ai_gateway}} through its entity model: [AI Models](/ai-gateway/entities/ai-model/), [AI Model Providers](/ai-gateway/entities/ai-model-provider/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), [AI Agents](/ai-gateway/entities/ai-agent/), [AI Identity Providers](/ai-gateway/entities/ai-identity-provider/), [AI Policies](/ai-gateway/entities/ai-policy/), [AI Consumers](/ai-gateway/entities/ai-consumer/), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), and [AI Vaults](/ai-gateway/entities/ai-vault/). Self-hosted {{site.base_gateway}} doesn't expose these entities. Instead, you configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
 

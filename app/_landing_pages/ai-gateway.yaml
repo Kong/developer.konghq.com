@@ -99,7 +99,7 @@ rows:
   - header:
       type: h2
       text: "Core concepts"
-
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -128,6 +128,34 @@ rows:
             cta:
               url: /ai-gateway/kongctl/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Run {{site.ai_gateway}} on-prem
+            description: Configure {{site.ai_gateway}} on self-hosted {{site.base_gateway}} using the {{site.base_gateway}} data model and AI plugins.
+            icon: /assets/icons/gateway.svg
+            cta:
+              url: /ai-gateway/configure-on-prem/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.ai_gateway}} 2.x concepts"
+            description: Understand how v1 concepts like AI Proxy map to v2 entities such as AI Models and AI Model Providers.
+            icon: /assets/icons/linked-services.svg
+            cta:
+              url: /ai-gateway/ai-gateway-v2-concepts/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Migrate to {{site.ai_gateway}} 2.x
+            description: Step-by-step guide for migrating from v1 AI Proxy and AI Proxy Advanced to the v2 entity model.
+            icon: /assets/icons/redo.svg
+            cta:
+              url: /ai-gateway/v2-migration-guide/
+              align: end
+
   - header:
       type: h2
       text: "{{site.ai_gateway}} providers"
@@ -536,3 +564,25 @@ rows:
                 If you just add an LLM's API behind {{site.base_gateway}}, you can only interact at the API level with internal traffic.
                 With {{site.ai_gateway}} AI Policies and runtime components, {{site.base_gateway}} can understand the prompts that are being sent through the gateway.
                 AI Policies can inspect the body and provide more specific AI capabilities to your traffic.
+
+            - q: I'm migrating from AI Gateway v1. Where do I start?
+              a: |
+                {{site.ai_gateway}} 2.x replaces v1's plugin-centric model with an entity model.
+                Instead of configuring the AI Proxy/AI Proxy Advanced plugin directly, you now create AI Model Provider and AI Model entities to manage upstream connectivity and routing.
+                See [AI Gateway 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of v1 concepts to v2 entities, and [Migrate to AI Gateway 2.x](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
+
+            - q: I was using AI Proxy or AI Proxy Advanced. Where did those policies go?
+              a: |
+                In {{site.ai_gateway}} 2.x, the proxy is configured through the [AI Model entity](/ai-gateway/entities/ai-model/) rather than the AI Proxy plugin.
+                An AI Model defines the upstream provider, model name, and routing behavior that the old AI Proxy plugin handled.
+                You can attach AI Policies for things like guardrails, transformations, and rate limiting as before.
+
+            - q: Can I run {{site.ai_gateway}} on-prem?
+              a: |
+                Yes. {{site.ai_gateway}} supports both {{site.konnect_short_name}} and self-hosted deployments.
+                See [Configure {{site.ai_gateway_name}} on-prem](/ai-gateway/configure-on-prem/) for setup instructions.
+
+            - q: How do I manage {{site.ai_gateway}} resources?
+              a: |
+                For {{site.konnect_short_name}}-managed deployments, use [kongctl](/ai-gateway/kongctl/) to create and manage resources declaratively or with imperative commands.
+                For on-prem deployments, use [decK](https://docs.konghq.com/deck/) to manage gateway configuration.

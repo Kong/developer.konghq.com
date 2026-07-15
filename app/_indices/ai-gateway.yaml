@@ -3,57 +3,69 @@ description: Index containing all documentation for {{site.ai_gateway}}.
 sections:
   - title: Overview
     items:
-      - title: "{{site.ai_gateway}} Overview"
+      - title: "{{site.ai_gateway}} overview"
         description: Overview of AI gateway capabilities
         url: /ai-gateway/
       - title: Quickstart
-        description: Get started quickly with {{site.ai_gateway}} setup and usage.
+        description: Launch a {{site.ai_gateway}} control plane and data plane.
         url: /ai-gateway/#quickstart
-      - title: "{{site.ai_gateway}} Capabilities"
+      - title: Get started with AI Gateway
+        description: Set up your first {{site.ai_gateway}} instance and start proxying requests to LLM providers.
+        url: /ai-gateway/get-started/
+      - path: /ai-gateway/architecture/
+      - title: "{{site.ai_gateway}} capabilities"
         description: Learn about the core capabilities of {{site.ai_gateway}}.
         url: /ai-gateway/#ai-gateway-capabilities
       - title: AI providers
         description: Learn about the various providers supported by {{site.ai_gateway}}.
         url: /ai-gateway/ai-providers/
-      - title: AI Usage Governance
+      - title: AI Gateway policies
+        description: Browse policies available for use with {{site.ai_gateway}}.
+        url: /ai-gateway/policies/
+      - title: AI Usage governance
         description: Understand how to manage and govern AI usage effectively.
         url: /ai-gateway/#ai-usage-governance
-      - title: Data Governance
+      - title: Data governance
         description: Explore how {{site.ai_gateway}} helps enforce data governance policies.
         url: /ai-gateway/#data-governance
-      - title: "{{site.ai_gateway}} Data Governance."
+      - title: "{{site.ai_gateway}} data governance"
         description: This page provides an overview of {{site.ai_gateway}} safety, security and compliance features.
         url: /ai-gateway/ai-data-gov/
-      - title: Prompt Engineering
+      - title: Prompt engineering
         description: Best practices and tools for designing effective prompts.
         url: /ai-gateway/#prompt-engineering
-      - title: Guardrails and Content Safety
+      - title: Guardrails and content safety
         description: Implement safeguards to ensure safe and compliant AI outputs.
         url: /ai-gateway/#guardrails-and-content-safety
-      - title: Request Transformations
+      - title: Request transformations
         description: Customize and transform AI requests with Gateway features.
         url: /ai-gateway/#request-transformations
       - title: Streaming
-        description: Learn how AI Proxy streaming works.
+        description: Learn how AI proxy streaming works.
         url: /ai-gateway/streaming/
-      - title: Audit log
-        description: Learn about {{site.ai_gateway}} logging capabilities.
-        url: /ai-gateway/ai-audit-log-reference/
-      - title: Monitor AI LLM Metrics
-        description: Explore how to monitor AI LLM metrics in {{site.ai_gateway}}.
-        url: /ai-gateway/monitor-ai-llm-metrics/
-      - title: Observability
-        description: Access advanced analytics features in {{site.ai_gateway}}.
-        url: /observability/
       - title: "{{site.ai_gateway}} resource sizing guidelines"
         description: Review {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
       - title: "Proxy AI CLI tools through {{site.ai_gateway}}"
-        description: onfigure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
+        description: Configure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
         url: /ai-gateway/ai-clis/
-      - title: Gen AI OpenTelemetry attributes reference
-        description: Reference for OpenTelemetry span attributes emitted by {{site.ai_gateway}} for generative AI requests, including model parameters, token usage, and tool-call metadata.
-        url: /ai-gateway/llm-open-telemetry/
+      - path: /ai-gateway/forward-proxy/
+      - path: /ai-gateway/semantic-similarity/
+      - path: /ai-gateway/changelog/
+
+  - title: "{{site.ai_gateway}} entities"
+    items:
+      - path: /ai-gateway/entities/
+      - path: /ai-gateway/entities/ai-model-provider/
+      - path: /ai-gateway/entities/ai-model/
+      - path: /ai-gateway/entities/ai-agent/
+      - path: /ai-gateway/entities/ai-mcp-server/
+      - path: /ai-gateway/entities/ai-policy/
+      - path: /ai-gateway/entities/ai-consumer/
+      - path: /ai-gateway/entities/ai-consumer-group/
+      - path: /ai-gateway/entities/ai-vault/
+      - path: /ai-gateway/entities/ai-identity-provider/
+      - path: /ai-gateway/entities/ai-data-plane-certificate/
   - title: "{{site.ai_gateway}} providers"
     items:
       - path: /ai-gateway/ai-providers/**/*
@@ -66,6 +78,9 @@ sections:
       - title: MCP traffic metrics
         description: Learn about metrics available for MCP traffic via {{site.ai_gateway}}
         url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
+      - title: Get started with MCP Server
+        description: Get started proxying MCP server traffic through AI Gateway.
+        url: /ai-gateway/get-started-with-mcp-server/
   - title: A2A traffic gateway
     items:
     - title: A2A traffic gateway
@@ -82,8 +97,37 @@ sections:
       - path: /kongctl/supported-resources/#ai-gateway
       - path: /kongctl/declarative/
 
+  - title: Observability
+    items:
+      - title: Audit log
+        description: Learn about {{site.ai_gateway}} logging capabilities.
+        url: /ai-gateway/ai-audit-log-reference/
+      - title: Monitor AI LLM metrics
+        description: Explore how to monitor AI LLM metrics in {{site.ai_gateway}}.
+        url: /ai-gateway/monitor-ai-llm-metrics/
+      - title: Observability
+        description: Access advanced analytics features in {{site.ai_gateway}}.
+        url: /observability/
+      - title: Gen AI OpenTelemetry attributes reference
+        description: Reference for OpenTelemetry span attributes emitted by {{site.ai_gateway}} for generative AI requests, including model parameters, token usage, and tool-call metadata.
+        url: /ai-gateway/llm-open-telemetry/
+      - path: /ai-gateway/ai-otel-metrics/
+      - path: /ai-gateway/ai-logs/
   - title: AI load balancing
     items:
       - title: Load balancing with AI Proxy Advanced
         description: Overview of load balancing and retry and fallback strategies in the AI Proxy Advanced plugin.
         url: /ai-gateway/load-balancing/
+  - title: Reference
+    items:
+      - path: /ai-gateway/ai-gateway-v2-concepts/
+      - path: /ai-gateway/configuration/
+      - path: /ai-gateway/configure-on-prem/
+      - path: /ai-gateway/v2-migration-guide/
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - ai-gateway
+        min_version:
+          ai-gateway: '2.0'
