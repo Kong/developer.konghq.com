@@ -50,7 +50,7 @@ prereqs:
 
 ---
 
-## Create the AI Model Provider and AI Model
+## Create an AI Model Provider and AI Model
 
 Codex speaks OpenAI's native format and calls the [Responses API](https://platform.openai.com/docs/api-reference/responses), so no request-transformer policy is needed. Create both the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and the [AI Model](/ai-gateway/entities/ai-model/) in a **single apply** so the model can reference the provider:
 
