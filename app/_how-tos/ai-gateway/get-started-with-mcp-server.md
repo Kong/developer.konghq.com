@@ -26,7 +26,7 @@ tldr:
     {{site.ai_gateway}} provides first-class MCP Server entities in {{site.konnect_product_name}} that expose REST APIs as tools for MCP-compatible clients.
     Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity configured as a `conversion-listener` to convert REST endpoints into MCP tools that clients can call directly, without managing API credentials.
 
-    This tutorial shows you how to set up an AI MCP Server to expose the [WeatherAPI](https://openweathermap.org/api/one-call-4?collection=one_call_api) in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API and how to proxy your first MCP request.
+    This tutorial shows you how to set up an AI MCP Server to expose the [WeatherAPI](https://openweathermap.org/api/one-call-4?collection=one_call_api) in {{site.konnect_product_name}} using [kongctl](/kongctl/), and how to proxy your first MCP request.
 
 tools:
   - kongctl
@@ -148,11 +148,11 @@ curl -i -X POST http://localhost:8000/weather \
   --data '{"jsonrpc":"2.0","method":"notifications/initialized"}'
 ```
 
-A `202 Accepted` response confirms the session is ready. Carry the `Mcp-Session-Id` header on the following requests to match standard MCP client behavior.
+A `202 Accepted` response confirms the session is ready.
 
 ### Call the tool
 
-List the available tools to confirm the `get-current-weather` tool and inspect its `inputSchema`:
+List the available tools to confirm the `get-current-weather` tool exists, and inspect its `inputSchema`. Include the `Mcp-Session-Id` header:
 
 ```sh
 curl -X POST http://localhost:8000/weather \
@@ -162,7 +162,7 @@ curl -X POST http://localhost:8000/weather \
   --data '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
 ```
 
-The `q` parameter you configured is exposed to MCP clients as `query_q`. For `conversion-listener` and `conversion-only` MCP Servers, the generated `inputSchema` names each converted REST parameter `{in}_{name}`, not the bare configured name. Call the tool with that argument name:
+ For `conversion-listener` and `conversion-only` MCP Servers, the generated `inputSchema` names each converted REST parameter `{in}_{name}`, not the bare configured name. Since [you configured](#create-an-mcp-server-entity) the `q` parameter as `name: q` and `in: query`, {{site.ai_gateway}} exposes to MCP clients as `query_q`. Call the tool with that argument name:
 
 ```sh
 curl -X POST http://localhost:8000/weather \
