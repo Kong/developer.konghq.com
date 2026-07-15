@@ -1,6 +1,6 @@
 ---
 title: Use AI Prompt Guard Policy to govern your LLM traffic
-permalink: /ai-gateway/how-to/use-ai-prompt-guard-policy/
+permalink: /ai-gateway/use-ai-prompt-guard-policy/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -20,20 +20,24 @@ min_version:
   ai-gateway: '2.0'
 
 entities:
-  - ai-provider
+  - ai-model-provider
   - ai-model
   - ai-policy
 
 tags:
   - ai
-  - mistral
 
 tldr:
   q: How do I allow only general IT-related prompts and block hacking content?
-  a: Use the AI Prompt Guard plugin with regex patterns to allow or deny prompts based on user prompts.
+  a: Use the AI Prompt Guard Policy with regex patterns to allow or deny prompts based on user prompts.
 
 tools:
-  - konnect-api
+  - kongctl
+
+prereqs:
+  inline:
+    - title: OpenAI API key
+      include_content: md/ai-gateway/v2/prereqs/openai-kongctl
 
 cleanup:
   inline:
@@ -46,13 +50,11 @@ cleanup:
 
 ---
 
-## Configure
+## Create the AI Model Provider, AI Model, and AI Prompt Guard Policy
 
-First, set the OPENAI_AUTH_HEADER environment variable to your OpenAI API key:
+Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and an [AI Model](/ai-gateway/entities/ai-model/) with a single `kongctl` apply command.
 
-```
-export OPENAI_AUTH_HEADER="Bearer $OPENAI_API_KEY"
-```
+You'll also configure the [AI Prompt Guard Policy](/ai-gateway/policies/ai-prompt-guard/) to filter LLM traffic based on regex rules that allow general IT questions and deny unsafe or off-topic content.
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -130,21 +132,13 @@ ai_gateway_models:
 EOF
 ```
 
-In this example, we're setting up the AI Provider with:
+In this example, we're setting up the AI Prompt Guard Policy with:
 
-* `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
-* `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth`: Stores your OpenAI API key. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
-
-In this example, we're setting up the AI Model with:
-
-* `type: model`: Specifies this is a synchronous model for request/response workloads.
-* `name: my-gpt-4o`: A unique identifier for this model.
-* `formats: [type: openai]`: Declares that this model accepts requests in OpenAI-compatible format.
-* `config.route.paths: [/v1]`: Configures the custom base path where this model's Routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific Routes.
-* `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
-* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
-* `config.logging`: Configures what gets logged. With `statistics: true`, usage metrics (tokens, latency, cost) are logged for monitoring and billing. With `payloads: false`, full request/response bodies are not logged for privacy.
+* `type: ai-prompt-guard`: Specifies that this Policy filters requests by matching the user's prompt against allow and deny regex pattern lists.
+* `global: false`: Scopes the Policy to only the AI Models it's explicitly attached to via `policies:`, rather than applying it to every resource on {{site.ai_gateway}}.
+* `config.allow_patterns`: A list of regexes matched against the user's prompt. The request must match at least one of these to pass through, unless it's also blocked by `deny_patterns`.
+* `config.deny_patterns`: A list of regexes matched against the user's prompt. A match here always rejects the request with a 400 response, even if the prompt also matches an `allow_patterns` entry. Deny always takes precedence over allow.
+* `policies: [!ref my-ai-prompt-guard-policy#name]` on the AI Model: Attaches this Policy so it applies to every request routed through `my-gpt-4o`.
 
 
 ## Validate configuration
