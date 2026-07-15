@@ -27,7 +27,7 @@ tags:
 
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}} for a Claude model hosted on Google Vertex AI?
-  a: Create an AI Model Provider entity to authenticate to Google Vertex AI, add a policy to strip Anthropic-only request fields Vertex doesn't support, create an AI Model entity that accepts Anthropic-compatible requests and targets your Vertex model, then point Claude CLI’s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests are proxied for monitoring and control.
+  a: Create an AI Model Provider entity to authenticate to Google Vertex AI, add a Policy to strip Anthropic-only request fields Vertex doesn't support, create an AI Model entity that accepts Anthropic-compatible requests and targets your Vertex model. Then, point Claude CLI’s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests are proxied for monitoring and control.
 
 prereqs:
   inline:
@@ -37,7 +37,7 @@ prereqs:
 
         1. In [Vertex AI Model Garden](https://console.cloud.google.com/vertex-ai/model-garden), enable a Claude model (for example, **Claude Sonnet 4.5**). Note the **location** it's enabled in. Depending on your project, Vertex may offer Claude in a specific region (for example, `us-east5`) or under `global`.
         1. Create a Google Cloud service account with Vertex AI permissions and download its JSON key file.
-        1. Export the service account JSON and the full `:rawPredict` upstream URL as environment variables. Vertex encodes your project, location, and model id directly in this URL, so there are no separate provider or target fields for them. The hostname depends on the location from step 1: a specific region uses a region-prefixed host, while `global` uses the plain host with no region prefix:
+        1. Export the service account JSON and the full `:rawPredict` upstream URL as environment variables. Vertex encodes your project, location, and model ID directly in this URL, so there are no separate provider or target fields for them. The hostname depends on the location from step 1: a specific region uses a region-prefixed host, while `global` uses the plain host with no region prefix:
 
             ```sh
             export GCP_SERVICE_ACCOUNT_JSON="$(cat /path/to/service-account.json)"
@@ -50,7 +50,7 @@ prereqs:
             ```
 
         {:.info}
-        > Vertex publisher model ids use the format `name@YYYYMMDD` (for example, `claude-sonnet-4-5@20250929`), not a plain model name. Use the exact id shown for your enabled model in Model Garden.
+        > Vertex publisher model IDs use the format `name@YYYYMMDD` (for example, `claude-sonnet-4-5@20250929`), not a plain model name. Use the exact ID shown for your enabled model in Model Garden.
       icon_url: /assets/icons/vertex.svg
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
@@ -58,7 +58,9 @@ prereqs:
 
 ---
 
-## Create an AI Provider entity
+## Create an AI Model Provider entity
+
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Vertex AI and store your API key:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -100,7 +102,7 @@ This AI Model Provider uses:
 Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Vertex AI's Claude endpoint does not support, and an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream model is available and attach that policy to it.
 
 {:.warning}
-> Apply the policy and the model together, in the same `kongctl apply` call, as shown below. The model's `policies` field references the policy via `!ref`, and `ref` values are local to a single `kongctl apply` call. They're never written to {{site.konnect_short_name}}. If you split this into two separate `kongctl apply` calls, the second one fails with `resource not found: claude-code-compat`, even though the policy already exists.
+> Apply the Policy and the AI Model together, in the same `kongctl apply` call, as shown below. The AI Model's `policies` field references the Policy via `!ref`, and `ref` values are local to a single `kongctl apply` call. They're never written to {{site.konnect_short_name}}. If you split this into two separate `kongctl apply` calls, the second one fails with `resource not found: claude-code-compat`, even though the Policy already exists.
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -159,18 +161,18 @@ The AI Policy uses:
 * `config.remove.headers` / `config.remove.querystring` / `config.remove.body`: Strips fields that {{ site.claude_code }} sends but that Vertex AI's Claude endpoint rejects with a `400 Extra inputs are not permitted`: the `anthropic-beta` header, the `beta` query string, and body fields like `mcp_servers` and `container`. The list also includes `thinking`. {{ site.claude_code }} sends `thinking: {"type": "adaptive", ...}` by default, and Vertex's schema only accepts `disabled` or `enabled` for `thinking.type`, so it must be removed rather than left as-is.
 
 {:.info}
-> Unlike the Azure AI Foundry version of this how-to, you don't need to add an `anthropic-version` header here. The Vertex driver injects it into the request body automatically.
+> The Vertex driver injects the `anthropic-version` header into the request body automatically. 
 
 The AI Model uses:
 
- * `name`/`display_name: claude-code-vertex-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target id, to select the model.
+ * `name`/`display_name: claude-code-vertex-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target ID, to select the model.
  * `formats: [type: anthropic]`: Accepts Anthropic-compatible requests (what {{ site.claude_code }} sends).
  * `config.model.name_header: true`: Lets {{ site.claude_code }} select this model by sending its `name` in the request, instead of requiring a separate `alias`.
  * `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API.
  * `policies`: Attaches the `claude-code-compat` policy defined above, via `!ref claude-code-compat#name`, so its body-stripping transformation applies to every request sent through this model.
  * `targets[0].provider: vertex-prod`: Routes upstream requests through the Vertex AI Provider created earlier.
- * `targets[0].name: claude-sonnet-4-5@20250929`: The Vertex publisher model id, in `name@YYYYMMDD` format. It must match a model you've enabled in Vertex AI Model Garden.
- * `targets[0].config.upstream_url`: The full `:rawPredict` URL from the prerequisites, encoding your project, location, and model id.
+ * `targets[0].name: claude-sonnet-4-5@20250929`: The Vertex publisher model ID, in `name@YYYYMMDD` format. It must match a model you've enabled in Vertex AI Model Garden.
+ * `targets[0].config.upstream_url`: The full `:rawPredict` URL from the prerequisites, encoding your project, location, and model ID.
 
 ## Verify traffic through Kong
 
@@ -198,7 +200,7 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 ```
 {:.no-copy-code}
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
+Select **Yes, continue**. The session starts. Ask a question to confirm that requests reach {{site.ai_gateway}}.
 
 ```text
 Tell me about Anna Komnene's Alexiad.
