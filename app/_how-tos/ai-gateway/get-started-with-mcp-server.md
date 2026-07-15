@@ -26,33 +26,13 @@ tldr:
     {{site.ai_gateway}} provides first-class MCP Server entities in {{site.konnect_product_name}} that expose REST APIs as tools for MCP-compatible clients.
     Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity configured as a `conversion-listener` to convert REST endpoints into MCP tools that clients can call directly, without managing API credentials.
 
-    This tutorial shows you how to set up an AI MCP Server to expose the [WeatherAPI](https://openweathermap.org/api/one-call-4?collection=one_call_api) in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API and how to proxy your first MCP request.
+    This tutorial shows you how to set up an AI MCP Server to expose the [WeatherAPI](https://openweathermap.org/api/one-call-4?collection=one_call_api) in {{site.konnect_product_name}} using [kongctl](/kongctl/), and how to proxy your first MCP request.
 
 tools:
-  - konnect-api
-  # - kongctl # re-enable once kongctl supports tools[].query and tools[].parameters on ai_gateway.mcp_servers
+  - kongctl
 
 prereqs:
   inline:
-    # kongctl prereq disabled: kongctl's ai_gateway.mcp_servers.tools schema doesn't yet support
-    # the query/parameters fields this tutorial's tool needs. Re-enable once it does.
-    # - title: kongctl
-    #   content: |
-    #     This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
-
-    #     1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
-    #     1. Verify the installation:
-
-    #        ```sh
-    #        kongctl version
-    #        ```
-    #     1. Adopt your {{site.ai_gateway}} into a kongctl namespace so the apply command later in this tutorial can manage it:
-
-    #        ```sh
-    #        kongctl adopt ai-gateway "$AI_GATEWAY_ID" \
-    #          --namespace weather-mcp \
-    #          --pat "$KONNECT_TOKEN"
-    #        ```
     - title: WeatherAPI account
       content: |
         1. Go to [WeatherAPI](https://www.weatherapi.com/).
@@ -76,120 +56,58 @@ cleanup:
 
 ## Create an MCP Server entity
 
-Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool called `get-current-weather`.
-
-This tool maps to the WeatherAPI `/v1/current.json` endpoint and accepts a location query parameter.
-
-<!--
-kongctl apply disabled: ai_gateway.mcp_servers.tools in kongctl's declarative schema
-doesn't yet support the query/parameters fields this tool needs. Re-enable once
-kongctl adds support (see kongctl explain ai_gateway.mcp_servers -o json).
+Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool called `get-current-weather`, mapped from the WeatherAPI `/v1/current.json` endpoint. `tools[].query.key` injects your WeatherAPI credentials automatically, so clients never handle the API key:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: weather-mcp
-
 ai_gateways:
-  - ref: weather-ai-gateway
-    id: "$AI_GATEWAY_ID"
-    mcp_servers:
-      - ref: weather-mcp
-        type: conversion-listener
-        name: weather-mcp
-        display_name: "Weather API"
-        enabled: true
-        policies: []
-        access:
-          acl_attribute_type: consumer
-          acls:
-            allow: []
-          default_tool_acls:
-            deny: []
-        config:
-          url: https://api.weatherapi.com/v1/current.json
-          route:
-            paths:
-              - /weather
-          logging:
-            payloads: false
-            statistics: true
-          server:
-            timeout: 60000
-        tools:
-          - name: get-current-weather
-            description: Get current weather for a location
-            method: GET
-            path: /weather
-            query:
-              key:
-                - $WEATHERAPI_API_KEY
-            parameters:
-              - name: q
-                in: query
-                required: true
-                schema:
-                  type: string
-                description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
+  - ref: ai-quickstart
+    _external:
+      selector:
+        matchFields:
+          name: "ai-quickstart"
+
+ai_gateway_mcp_servers:
+  - ref: weather-mcp
+    ai_gateway: ai-quickstart
+    name: weather-mcp
+    display_name: "Weather API"
+    type: conversion-listener
+    enabled: true
+    policies: []
+    access:
+      acl_attribute_type: consumer
+      acls:
+        allow: []
+      default_tool_acls:
+        deny: []
+    config:
+      url: https://api.weatherapi.com/v1/current.json
+      route:
+        paths:
+          - /weather
+      logging:
+        payloads: false
+        statistics: true
+      server:
+        timeout: 60000
+    tools:
+      - name: get-current-weather
+        description: Get current weather for a location
+        method: GET
+        path: /weather
+        query:
+          key:
+            - !env WEATHERAPI_API_KEY
+        parameters:
+          - name: q
+            in: query
+            required: true
+            schema:
+              type: string
+            description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
 EOF
 ```
--->
-
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/mcp-servers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  display_name: "Weather API"
-  name: weather-mcp
-  type: conversion-listener
-  enabled: true
-  policies: []
-  access:
-    acl_attribute_type: consumer
-    acls:
-      allow: []
-    default_tool_acls:
-      deny: []
-  config:
-    url: https://api.weatherapi.com/v1/current.json
-    route:
-      paths:
-        - /weather
-    logging:
-      payloads: false
-      statistics: true
-    server:
-      timeout: 60000
-  tools:
-    - name: get-current-weather
-      description: Get current weather for a location
-      method: GET
-      path: /weather
-      query:
-        key:
-          - $WEATHERAPI_API_KEY
-      parameters:
-        - name: q
-          in: query
-          required: true
-          schema:
-            type: string
-          description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
-{% endkonnect_api_request %}
-<!-- vale on -->
-
-In this example, we're setting up the MCP Server with:
-
-* `type: conversion-listener`: Converts the WeatherAPI REST endpoint into an MCP tool that clients can call directly.
-* `config.url` and `config.route.paths`: The upstream API endpoint and the path clients use to reach it over MCP.
-* `tools`: Maps the WeatherAPI `/v1/current.json` endpoint to the `get-current-weather` tool. The `query.key` parameter injects your WeatherAPI credentials automatically, so clients never handle the API key.
-* `access`: Sets ACLs that gate which [AI Consumers](/ai-gateway/entities/ai-consumer/) can access the server and its tools.
 
 ## Validate the MCP Server
 
@@ -230,11 +148,11 @@ curl -i -X POST http://localhost:8000/weather \
   --data '{"jsonrpc":"2.0","method":"notifications/initialized"}'
 ```
 
-A `202 Accepted` response confirms the session is ready. Carry the `Mcp-Session-Id` header on the following requests to match standard MCP client behavior.
+A `202 Accepted` response confirms the session is ready.
 
 ### Call the tool
 
-List the available tools to confirm the `get-current-weather` tool and inspect its `inputSchema`:
+List the available tools to confirm the `get-current-weather` tool exists, and inspect its `inputSchema`. Include the `Mcp-Session-Id` header:
 
 ```sh
 curl -X POST http://localhost:8000/weather \
@@ -244,7 +162,7 @@ curl -X POST http://localhost:8000/weather \
   --data '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
 ```
 
-The `q` parameter you configured is exposed to MCP clients as `query_q`. For `conversion-listener` and `conversion-only` MCP Servers, the generated `inputSchema` names each converted REST parameter `{in}_{name}`, not the bare configured name. Call the tool with that argument name:
+ For `conversion-listener` and `conversion-only` MCP Servers, the generated `inputSchema` names each converted REST parameter `{in}_{name}`, not the bare configured name. Since [you configured](#create-an-mcp-server-entity) the `q` parameter as `name: q` and `in: query`, {{site.ai_gateway}} exposes to MCP clients as `query_q`. Call the tool with that argument name:
 
 ```sh
 curl -X POST http://localhost:8000/weather \
