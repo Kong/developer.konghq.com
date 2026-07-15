@@ -66,3 +66,18 @@ body:
           value: Bearer $MISTRAL_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Configure a model target for {{ provider.name }}
+
+A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. Beyond the common target options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
+
+* **`format`**: The request format your endpoint expects. One of `ollama` or `openai`.
+
+```yaml
+targets:
+  - name: mistral-large-latest
+    provider: my-mistral-account
+    config:
+      type: mistral
+      format: openai
+```

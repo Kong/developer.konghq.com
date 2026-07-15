@@ -81,3 +81,15 @@ body:
           value: $GEMINI_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Authentication with GCP IAM
+
+You can also use {{ provider.name }} with Google Cloud Platform (GCP) credentials by setting `auth` to `gcp`.
+
+The authentication chain follows the same order of precedence as the `gcloud` tool:
+1. Service account JSON defined directly in the Provider: `auth.service_account_json`.
+1. Service account JSON defined in environment variable `GCP_SERVICE_ACCOUNT`.
+1. Workload IAM Role (for example, a GKE or Deployment Service Account).
+1. VM Instance defined IAM Role.
+
+For restricted networks, override the default endpoints with `auth.metadata_url` or `auth.oauth_token_url`.

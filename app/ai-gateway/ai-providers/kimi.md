@@ -12,10 +12,6 @@ permalink: /ai-gateway/ai-providers/kimi/
 min_version:
   ai-gateway: '2.0'
 
-schema:
-  api: konnect/ai-gateway
-  path: /schemas/AIGatewayModel
-
 works_on:
   - konnect
 

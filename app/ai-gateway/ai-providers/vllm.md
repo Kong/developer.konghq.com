@@ -64,3 +64,18 @@ body:
       type: basic
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Configure a model target for {{ provider.name }}
+
+A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. Beyond the common target options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
+
+* **`upstream_url`**: The URL of your self-hosted vLLM server.
+
+```yaml
+targets:
+  - name: my-vllm-model
+    provider: my-vllm-account
+    config:
+      type: vllm
+      upstream_url: http://my-vllm-server.internal:8000
+```
