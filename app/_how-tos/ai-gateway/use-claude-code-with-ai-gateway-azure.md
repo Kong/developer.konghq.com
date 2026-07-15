@@ -19,6 +19,9 @@ tools:
   - kongctl
 
 prereqs:
+  konnect:
+    - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE
+      value: 2m
   inline:
     - title: Azure AI Foundry
       include_content: md/ai-gateway/v2/prereqs/azure-ai-claude
@@ -32,22 +35,19 @@ tldr:
 
 ---
 
-## Configure an AI Model Provider
-
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Azure and store your authentication credentials:
+## Create an AI Model Provider entity
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
 _defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
+  kongctl: { namespace: ai-gateway-get-started }
 
 ai_gateways:
   - ref: ai-quickstart
     _external:
       selector:
         matchFields:
-          name: "ai-quickstart"
+          name: ai-quickstart
 
 ai_gateway_model_providers:
   - ref: azure-claude
@@ -63,16 +63,15 @@ ai_gateway_model_providers:
 EOF
 ```
 
-In this example, we're setting up the AI Model Provider with:
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
- * `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`. That driver assumes an Azure OpenAI-shaped deployment path (`/openai/deployments/<id>`) that Foundry's Claude endpoint doesn't use.
- * `name: azure-claude`: A unique identifier that AI Models will reference to route requests through this provider.
- * `config.auth.headers[0].name: x-api-key`: Azure AI Foundry's native Anthropic endpoint expects the API key in the `x-api-key` header, not `api-key` (which is specific to Azure OpenAI resources).
+The AI Model Provider uses:
+
+ * `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`.
  * `config.auth.headers[0].value: !env AZURE_AI_FOUNDRY_TOKEN`: Loads the API key from your environment at apply time so it is not embedded in the config.
 
-## Create a Request Transformer AI Policy
-
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra headers that Azure doesn't support.
+## Create an AI Policy and AI Model
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -96,42 +95,24 @@ ai_gateway_policies:
     global: false
     config:
       add:
-        headers: ["anthropic-version:2023-06-01"]
+        headers:
+          - "anthropic-version:2023-06-01"
       remove:
-        headers: [anthropic-beta]
-        querystring: [beta]
-        body: [output_config, context_management, mcp_servers, container, service_tier]
-
-EOF
-```
-
-In this example, we're setting up the AI Policy with:
-
-* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
-* `config.add.headers`: Adds the `anthropic-version` header Azure AI Foundry's native Anthropic endpoint requires. {{ site.claude_code }} doesn't send this header itself, and Foundry rejects requests without it with a `400`.
-* `config.remove.headers` / `config.remove.querystring` / `config.remove.body`: Strips Anthropic-beta-only fields — the `anthropic-beta` header, `beta` query string, and body fields like `mcp_servers` and `container` — that {{ site.claude_code }} sends but that Azure AI Foundry's Claude deployment doesn't support.
-
-## Create an AI Model entity
-
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
-
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
+        headers:
+          - anthropic-beta
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
 
 ai_gateway_models:
   - ref: claude-code-azure-sonnet
+    display_name: claude-code-azure-sonnet
     name: claude-code-azure-sonnet
-    display_name: "claude-code-azure-sonnet"
     ai_gateway: ai-quickstart
     type: model
     enabled: true
@@ -144,23 +125,34 @@ ai_gateway_models:
       model:
         name_header: true
     capabilities:
-      - generate
-    policies: [ !ref claude-code-compat#name ]
+       - generate
+    policies:
+      - !ref claude-code-compat#name
     targets:
       - name: claude-sonnet-4-6
         provider: azure-claude
         config:
           type: anthropic
           upstream_url: !env AZURE_AI_FOUNDRY_UPSTREAM_URL
+
 EOF
 ```
+{:.collapsible}
+
+We create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Azure AI Foundry's Claude endpoint does not support. 
+
+This uses the following settings:
+
+* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
+* `config.add.headers`: Adds the `anthropic-version` header Azure AI Foundry's native Anthropic endpoint requires. {{ site.claude_code }} doesn't send this header itself, and Foundry rejects requests without it with a `400`.
+* `config.remove.headers` / `config.remove.querystring` / `config.remove.body`: Strips Anthropic-beta-only fields — the `anthropic-beta` header, `beta` query string, and body fields like `mcp_servers` and `container` — that {{ site.claude_code }} sends but that Azure AI Foundry's Claude deployment doesn't support.
+* `name: claude-code-compat`: The identifier you use to attach the policy.
 
 {:.info}
 > Replace `claude-sonnet-4-6` with the name of your own Claude deployment in Azure AI Foundry.
 
-In this example, we're setting up the AI Model with:
+The AI Model uses:
 
-* `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name`/`display_name: claude-code-azure-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target name, to select the model.
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively.
 * `config.route.paths: [/]`: Configures the base path where this model's routes are accessible.
