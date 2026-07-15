@@ -66,3 +66,18 @@ body:
           value: Bearer $MISTRAL_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Configure a target
+
+Beyond the common [target](/ai-gateway/entities/ai-model/#targets) options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
+
+* **`format`**: the request format your endpoint expects. One of `ollama` or `openai`.
+
+```yaml
+targets:
+  - name: mistral-large-latest
+    provider: my-mistral-account
+    config:
+      type: mistral
+      format: openai
+```

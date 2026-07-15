@@ -60,6 +60,12 @@ faqs:
       `name` is a user-defined unique identifier and the stable handle used to look up the AI Vault
       configuration when other entities reference secrets. Renaming an AI Vault breaks any reference
       pointing at the old value.
+
+  - q: How do I add secrets to a `konnect`-type AI Vault?
+    a: |
+      A `konnect`-type AI Vault doesn't hold secret values itself. It references a Config Store by
+      [`config.config_store_id`](#konnect-config-store), and you create and manage the actual
+      secrets through the Config Store's own API. See [Konnect Config Store](#konnect-config-store).
 ---
 
 ## What is an AI Vault?
@@ -85,7 +91,7 @@ For configuration examples and step-by-step setup instructions, see [Set up an A
 
 Each AI Vault selects one of the supported secret backends:
 
-* {{site.konnect_short_name}} Config Store
+* [{{site.konnect_short_name}} Config Store](#konnect-config-store)
 * Environment variables
 * [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/)
 * [Google Secret Manager](https://cloud.google.com/secret-manager)
@@ -196,6 +202,73 @@ Cloud-backed vault types (`aws`, `gcp`, `azure`, `conjur`, `hcv`) cache resolved
 If your vault becomes unreachable, {{site.ai_gateway}} can continue using recently-cached secrets for a grace period, keeping your system operational during brief vault outages. This allows you to maintain service continuity even when secret infrastructure is temporarily unavailable.
 
 Cache duration and grace periods are tunable per vault, allowing you to balance between fresh secrets (shorter cache times) and reduced vault requests (longer cache times). The default settings work for most deployments; adjust only if your secret rotation strategy or vault reliability requires custom behavior.
+
+## Konnect Config Store
+
+Unlike the other backends, the `konnect` type doesn't connect out to an external secret manager. It stores secrets directly in {{site.konnect_short_name}}, in a Config Store: a named container of key-value secrets that you create and populate through its own API, separate from the AI Vault entity itself.
+
+A `konnect`-type AI Vault doesn't hold any secret values. It only references a Config Store by ID through `config.config_store_id`. The Config Store holds the actual secrets.
+
+{:.info}
+> Secret values are write-only. Once stored, {{site.ai_gateway}} never returns the value again, only the secret's `key` and timestamps.
+
+### Manage Config Stores
+
+Config Stores are managed through the {{site.ai_gateway}} API:
+
+* Config Store: `/v1/ai-gateways/{aiGatewayId}/config-stores`
+* Config Store secrets: `/v1/ai-gateways/{aiGatewayId}/config-stores/{configStoreIdOrName}/secrets`
+
+Both support full create, list, get, update, and delete operations. Deleting a Config Store that still has secrets fails unless you pass `?force=true`, which cascades the delete to all secrets in that Config Store.
+
+### Create a Config Store and add a secret
+
+The following example creates a Config Store, then adds a secret to it:
+
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/config-stores
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  name: prod-secrets
+{% endkonnect_api_request %}
+
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/config-stores/$CONFIG_STORE_ID/secrets
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  key: openai-api-key
+  value: sk-my-openai-key
+{% endkonnect_api_request %}
+<!-- vale on -->
+
+### Reference the Config Store from a `konnect` AI Vault
+
+Create a `konnect`-type AI Vault that points at the Config Store's `id`:
+
+{% entity_example %}
+type: vault
+data:
+  name: prod-config-store-vault
+  description: Vault backed by the built-in Konnect Config Store.
+  type: konnect
+  config:
+    config_store_id: $CONFIG_STORE_ID
+{% endentity_example %}
+
+Reference the secret the same way as any other AI Vault:
+
+```
+{vault://prod-config-store-vault/openai-api-key}
+```
 
 ## Set up an AI Vault
 

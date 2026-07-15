@@ -66,3 +66,20 @@ body:
           value: Bearer $LLAMA_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Configure a target
+
+Beyond the common [target](/ai-gateway/entities/ai-model/#targets) options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
+
+* **`upstream_url`**: the URL of your self-hosted Llama model endpoint.
+* **`format`**: the request format your endpoint expects. One of `ollama`, `openai`, or `raw`.
+
+```yaml
+targets:
+  - name: llama-3-70b
+    provider: my-llama2-account
+    config:
+      type: llama2
+      upstream_url: https://my-llama-endpoint.internal:8000
+      format: openai
+```

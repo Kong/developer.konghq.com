@@ -66,3 +66,18 @@ body:
           value: Bearer $DATABRICKS_TOKEN
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Configure a target
+
+Beyond the common [target](/ai-gateway/entities/ai-model/#targets) options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
+
+* **`workspace_instance_id`**: the Databricks workspace instance ID hosting the model.
+
+```yaml
+targets:
+  - name: databricks-dbrx-instruct
+    provider: my-databricks-account
+    config:
+      type: databricks
+      workspace_instance_id: my-workspace-instance-id
+```
