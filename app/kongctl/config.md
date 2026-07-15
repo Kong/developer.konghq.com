@@ -109,16 +109,20 @@ default:
 
 ## Environment variables
 
-When values are loaded via environment variables, the variable names 
-must start with the `KONGCTL_` prefix, then the desired profile, 
-and finally the config path in uppercase with underscores instead of dots. 
+When values are loaded via environment variables, the variable names
+must start with the `KONGCTL_` prefix, then the desired profile,
+and finally the config path in uppercase with underscores instead of dots.
 
-For example, to set the same region value for the default profiles, 
+For example, to set the same region value for the default profiles,
 set the following environment variable:
 
 ```text
 KONGCTL_DEFAULT_KONNECT_REGION=eu
 ```
+
+{:.info}
+> **Note**: The `KONGCTL_` prefix is for configuring the kongctl CLI itself.
+> To inject environment variable values into declarative resource configuration files, use the [`!env` YAML tag](/kongctl/declarative/#loading-values-from-environment-variables) instead.
 
 
 ## Configuration file
