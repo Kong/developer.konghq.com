@@ -57,7 +57,7 @@ See [Configuration of kongctl](/kongctl/config/) for how to set this.
 
 ## Declarative configuration
 
-In declarative mode, you describe the desired state of your resources in declarative configuration file and kongctl calculates and applies the diff.
+In declarative mode, you describe the desired state of your resources in declarative configuration files and kongctl calculates and applies the diff.
 This is the recommended approach for most {{site.ai_gateway}} configuration because it lets you store configuration in source control and apply it safely at any time.
 
 The {{site.ai_gateway}} [how-to guides](/how-to/?products=ai-gateway) use this approach.

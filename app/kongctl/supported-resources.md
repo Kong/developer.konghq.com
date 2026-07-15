@@ -877,6 +877,8 @@ Use `kongctl explain ai_gateways --output yaml` as the authoritative schema for 
 
 ### {{site.ai_gateway}}s
 
+[{{site.ai_gateway}}s](/ai-gateway/) are the top-level resource that contains other {{site.ai_gateway}} resources.
+
 ```yaml
 ai_gateways:
   - ref: string
