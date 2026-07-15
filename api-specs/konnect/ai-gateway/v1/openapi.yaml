@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 0.0.59
+  version: 0.0.60
   description: The API for configuring AI Gateways in Konnect.
   contact:
     name: Kong
@@ -4728,7 +4728,7 @@ components:
       type: object
       properties:
         allow:
-          description: 'List of Consumers, Consumer Groups, or Authenticated Groups that are permitted access.'
+          description: 'List of Consumer Groups Names, or Authenticated Groups Names that are permitted access.'
           type: array
           items:
             type: string
@@ -4741,7 +4741,7 @@ components:
       type: object
       properties:
         deny:
-          description: 'List of Consumers, Consumer Groups, or Authenticated Groups that are denied access.'
+          description: 'List of Consumer Groups Names, or Authenticated Groups Names that are denied access.'
           type: array
           items:
             type: string
