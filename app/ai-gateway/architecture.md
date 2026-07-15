@@ -200,6 +200,8 @@ Data plane nodes are stateless and run in your own infrastructure. Size the pool
 - **Single node**: one node per environment. Suitable for development, testing, or low-volume workloads.
 - **Multi-node pool**: multiple nodes behind a load balancer, all serving the same configuration. Nodes run active-active with no leader, so you scale out and handle failover by adding or removing nodes. Run pools across availability zones or regions for locality and resilience.
 
+{% include gateway/hardened-container-note.md %}
+
 <!--vale off-->
 {% mermaid %}
 flowchart TB
