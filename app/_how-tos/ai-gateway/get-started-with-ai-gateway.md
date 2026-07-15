@@ -51,7 +51,7 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to
 First, set the `OPENAI_AUTH_HEADER` environment variable to your OpenAI API key:
 
 ```sh
-export OPENAI_AUTH_HEADER="Bearer YOUR_OPENAI_API_KEY"
+export OPENAI_AUTH_HEADER="Bearer $OPENAI_API_KEY"
 ```
 
 Then, apply the configuration using `kongctl`:
