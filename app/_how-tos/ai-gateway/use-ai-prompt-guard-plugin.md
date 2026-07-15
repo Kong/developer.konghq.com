@@ -35,12 +35,6 @@ tldr:
 tools:
   - konnect-api
 
-prereqs:
-  inline:
-    - title: Mistral
-      include_content: prereqs/mistral
-      icon_url: /assets/icons/mistral.svg
-
 cleanup:
   inline:
     - title: Clean up Konnect environment
@@ -52,112 +46,89 @@ cleanup:
 
 ---
 
-## Configure an AI Provider
+## Configure
 
-Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to OpenAI and store your authentication credentials:
+```sh
+kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+_defaults:
+  kongctl: { namespace: ai-gateway-get-started }
 
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  type: openai
-  display_name: generic-openai
-  name: generic-openai
-  config:
-    auth:
-      type: basic
-      headers:
-        - name: Authorization
-          value: Bearer $OPENAI_API_KEY
-{% endkonnect_api_request %}
-<!-- vale on -->
+ai_gateways:
+  - ref: ai-quickstart
+    _external:
+      selector:
+        matchFields:
+          name: ai-quickstart
+
+ai_gateway_model_providers:
+  - ref: generic-openai
+    name: generic-openai
+    ai_gateway: ai-quickstart
+    type: openai
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !env OPENAI_AUTH_HEADER
+
+ai_gateway_policies:
+  - ref: my-ai-prompt-guard-policy
+    name: my-ai-prompt-guard-policy
+    ai_gateway: ai-quickstart
+    type: ai-prompt-guard
+    enabled: true
+    global: false
+    config:
+      allow_patterns:
+        [
+          "(?i).*what is .*",
+          "(?i).*how do i .*",
+          "(?i).*install .*",
+          "(?i).*configure .*",
+          "(?i).*reset .*",
+          "(?i).*troubleshoot .*"
+        ]
+      deny_patterns:
+        [
+          "(?i).*bypass.*(login|password|auth).*",
+          "(?i).*hack.*",
+          "(?i).*phish.*",
+          "(?i).*malware.*",
+          "(?i).*cve.*",
+          "(?i).*exploit.*",
+          "(?i).*social engineering.*",
+          "(?i).*pentest.*",
+          "(?i).*impersonate.*",
+          "(?i).*dating.*"
+        ]
+
+ai_gateway_models:
+  - ref: my-gpt-4o
+    display_name: my-gpt-4o
+    name: my-gpt-4o
+    ai_gateway: ai-quickstart
+    type: model
+    enabled: true
+    formats: [{ type: openai }]
+    config:
+      route: { paths: [/] }
+      model: { name_header: true }
+    capabilities: [generate]
+    policies: [ !ref my-ai-prompt-guard-policy#name ]
+    targets:
+      - name: gpt-4o
+        provider: generic-openai
+        config:
+          type: openai
+EOF
+```
 
 In this example, we're setting up the AI Provider with:
 
 * `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
 * `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
 * `config.auth`: Stores your OpenAI API key. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
-
-
-## Configure an AI Prompt Guard Policy
-
-Next, configure the AI Prompt Guard plugin to allow general IT and helpdesk questions while denying prompts related to hacking, phishing, or inappropriate content.
-
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/policies
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  display_name: My AI Prompt Guard Policy
-  name: my-ai-prompt-guard-policy
-  type: ai-prompt-guard
-  config:
-    allow_patterns:
-      - "(?i).*what is .*"
-      - "(?i).*how do i .*"
-      - "(?i).*install .*"
-      - "(?i).*configure .*"
-      - "(?i).*reset .*"
-      - "(?i).*troubleshoot .*"
-    deny_patterns:
-      - "(?i).*bypass.*(login|password|auth).*"
-      - "(?i).*hack.*"
-      - "(?i).*phish.*"
-      - "(?i).*malware.*"
-      - "(?i).*cve.*"
-      - "(?i).*exploit.*"
-      - "(?i).*social engineering.*"
-      - "(?i).*pentest.*"
-      - "(?i).*impersonate.*"
-      - "(?i).*dating.*"
-{% endkonnect_api_request %}
-<!-- vale on -->
-
-## Configure an AI Model using the AI Prompt Guard Policy
-
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
-
-<!-- vale off -->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/models
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  display_name: my-gpt-4o
-  name: my-gpt-4o
-  type: model
-  formats:
-    - type: openai
-  config:
-    route:
-      paths:
-        - /v1
-    model: {}
-    logging:
-      payloads: false
-      statistics: true
-  targets:
-    - name: gpt-4o
-      provider: generic-openai
-      config:
-        type: openai
-  policies: [my-ai-prompt-guard-policy]
-  capabilities:
-    - generate
-{% endkonnect_api_request %}
-<!-- vale on -->
 
 In this example, we're setting up the AI Model with:
 
