@@ -220,6 +220,24 @@ rows:
     example: |
       `record.value.schema.json.id == 'https://example.com/schemas/order.json'`
   - variable: |
+      `record.value.schema.metadata.properties` {% new_in 1.3 %}
+    type: "`map<string, string>`"
+    description: |
+      Confluent schema registry `metadata.properties`, the user-defined `string` to `string` properties attached to the schema (for example `owner` or `domain`). Always present (an empty map when the registry returns no properties) whenever `record.value.schema` is present, so you don't need `has()` on the map itself. Use `in` to test for a key before indexing it.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `'owner' in record.value.schema.metadata.properties && record.value.schema.metadata.properties['owner'] == 'payments-team'`
+  - variable: |
+      `record.value.schema.metadata.tags` {% new_in 1.3 %}
+    type: "`map<string, list<string>>`"
+    description: |
+      Confluent schema registry `metadata.tags`, keyed by tag. Each value is the list of Confluent schema paths (for example `io.confluent.field.<name>` or `io.confluent.record.<name>`) that carry that tag. Always present (an empty map when the registry returns no tags) whenever `record.value.schema` is present. Paths are returned exactly as Confluent stores them, not in `record.value.content` notation.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `'PII' in record.value.schema.metadata.tags`
+  - variable: |
       `record.key.schema.*` {% new_in 1.2 %}
     type: |
       same as `record.value.schema.*`
@@ -261,4 +279,16 @@ Apply a policy if the topic is `filterdemo` and that the record content has a fi
 
 ```sh
 context.topic.name == 'filterdemo' && record.value.content['foo'] == 'bar' || record.value.content['sub.other'] == 3
+```
+
+Apply a policy only when the record's schema is tagged as `PII` in the Confluent schema registry {% new_in 1.3 %}:
+
+```sh
+'PII' in record.value.schema.metadata.tags
+```
+
+Apply a policy only to schemas owned by the `payments-team`, based on a schema registry property {% new_in 1.3 %}:
+
+```sh
+'owner' in record.value.schema.metadata.properties && record.value.schema.metadata.properties['owner'] == 'payments-team'
 ```
