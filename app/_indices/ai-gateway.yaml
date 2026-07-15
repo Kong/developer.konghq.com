@@ -76,6 +76,12 @@ sections:
         - ai-gateway
       tags:
         - a2a
+  - title: Manage with kongctl
+    items:
+      - path: /ai-gateway/kongctl/
+      - path: /kongctl/supported-resources/#ai-gateway
+      - path: /kongctl/declarative/
+
   - title: AI load balancing
     items:
       - title: Load balancing with AI Proxy Advanced

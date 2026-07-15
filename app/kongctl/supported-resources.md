@@ -865,3 +865,430 @@ audit-logs:
           matchFields:
             name: foo
 ```
+
+## {{site.ai_gateway}}
+
+This section covers the {{site.ai_gateway}} resources supported by kongctl.
+Use `kongctl explain ai_gateways --output yaml` as the authoritative schema for nested {{site.ai_gateway}} resources and fields, and use `kongctl scaffold ai_gateways` to generate starter YAML.
+
+* [{{site.ai_gateway}} entities reference](/ai-gateway/entities/)
+* [Using kongctl to manage {{site.ai_gateway}}](/ai-gateway/kongctl/)
+* [Get started with {{site.ai_gateway}}](/ai-gateway/get-started/)
+
+### {{site.ai_gateway}}s
+
+[{{site.ai_gateway}}s](/ai-gateway/) are the top-level resource that contains other {{site.ai_gateway}} resources.
+
+```yaml
+ai_gateways:
+  - ref: string
+    name: string required
+    display_name: string required
+    description: string (nullable)
+    proxy_urls: array[object]
+      - host: string required
+        port: integer required
+        protocol: string required
+    labels: object [string]string
+      key: value
+    model_providers: # see AI Model Providers
+    identity_providers: # see AI Identity Providers
+    policies: # see AI Policies
+    agents: # see AI Agents
+    consumers: # see AI Consumers
+    consumer_groups: # see AI Consumer Groups
+    models: # see AI Models
+    mcp_servers: # see AI MCP Servers
+    vaults: # see AI Vaults
+    data_plane_certificates:
+      - ref: string
+        title: string required
+        description: string (nullable)
+        cert: string required # PEM-encoded certificate; prefer: !file ./certs/data-plane.pem
+```
+
+### AI Model Providers
+
+[AI Model Providers](/ai-gateway/entities/ai-model-provider/) define connections to upstream LLM services and store authentication credentials.
+The `type` field determines the provider and the shape of `config.auth`.
+
+Most providers use `type: basic` auth with a `headers` array.
+AWS Bedrock supports `type: aws` for IAM credentials.
+Azure supports `type: azure` for service principal or managed identity auth.
+Gemini and Vertex support `type: gcp` for service account auth.
+
+```yaml
+ai_gateway_model_providers:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    labels: object [string]string
+      key: value
+    # Basic auth (used by openai, anthropic, cerebras, cohere, dashscope,
+    # databricks, deepseek, huggingface, kimi, llama2, mistral, ollama,
+    # vercel, vllm, xai, and as an option for bedrock, azure, gemini, vertex)
+    type: One of (openai | anthropic | cerebras | cohere | dashscope | databricks | deepseek | huggingface | kimi | llama2 | mistral | ollama | vercel | vllm | xai | bedrock | azure | gemini | vertex) required
+    config:
+      auth:
+        type: basic required
+        headers: # at least one of headers or params
+          - name: string required
+            value: string
+        params:
+          - name: string required
+            value: string
+            location: One of (body | query)
+    # AWS Bedrock with IAM credentials (type=bedrock, auth type=aws)
+    # type: bedrock
+    # config:
+    #   auth:
+    #     type: aws
+    #     access_key_id: string # prefer: !env AWS_ACCESS_KEY_ID
+    #     secret_access_key: string # prefer: !env AWS_SECRET_ACCESS_KEY
+    #     assume_role_arn: string (nullable)
+    #     role_session_name: string (nullable)
+    #     sts_endpoint_url: string (nullable)
+    #     batch_role_arn: string (nullable)
+    # Azure with service principal (type=azure, auth type=azure)
+    # type: azure
+    # config:
+    #   auth:
+    #     type: azure
+    #     client_id: string # prefer: !env AZURE_CLIENT_ID
+    #     client_secret: string # prefer: !env AZURE_CLIENT_SECRET
+    #     tenant_id: string # prefer: !env AZURE_TENANT_ID
+    #     use_managed_identity: boolean
+    #   instance: string # Azure instance name
+    # GCP-based providers (type=gemini or type=vertex, auth type=gcp)
+    # type: gemini # or vertex
+    # config:
+    #   auth:
+    #     type: gcp
+    #     service_account_json: string # prefer: !env GCP_SERVICE_ACCOUNT_JSON
+    #     metadata_url: string (nullable)
+    #     oauth_token_url: string (nullable)
+    #     use_gcp_service_account: boolean
+```
+{:.collapsible}
+
+### AI Models
+
+[AI Models](/ai-gateway/entities/ai-model/) declare which upstream models are available, configure routing, and specify which AI Model Provider to use.
+
+```yaml
+ai_gateway_models:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    enabled: boolean
+    type: One of (model | api) required
+    formats: array[object] required
+      - type: string required (for example openai)
+    config:
+      route: object required
+        paths: array[string]
+        hosts: array[string]
+        methods: array[string]
+        protocols: array[string]
+        headers: object
+        strip_path: boolean
+        preserve_host: boolean
+        regex_priority: integer
+        https_redirect_status_code: integer
+        request_buffering: boolean
+        response_buffering: boolean
+        tags: array[string]
+      model: object
+        alias: string
+      logging: object
+        payloads: boolean
+        statistics: boolean
+      response_streaming: One of (allow | deny | always)
+      max_request_body_size: integer
+      balancer: object
+      proxy: object
+    targets: array[object] required
+      - name: string required # upstream model name (for example gpt-4o)
+        provider: string required # AI Model Provider name
+        weight: integer
+        semantic_description: string
+        allow_auth_override: boolean
+        config:
+          type: One of (openai | anthropic | azure | bedrock | cerebras | cohere | dashscope | databricks | deepseek | gemini | huggingface | kimi | llama2 | mistral | ollama | vercel | vertex | vllm | xai) required
+          upstream_url: string (nullable)
+          # anthropic
+          version: string
+          # azure
+          deployment_id: string
+          api_version: string
+          # bedrock
+          region: string
+          # and more provider-specific fields; run `kongctl explain ai_gateway_models` for full detail
+    access: object
+      acls:
+        oneOf:
+          allow: array[string] # consumer group names
+          deny: array[string]
+      identity_providers: array[string] # identity provider names
+    capabilities: array[string] # for example [generate]
+    policies: array[string] # policy names; prefer: !ref values
+    labels: object [string]string
+      key: value
+```
+{:.collapsible}
+
+### AI Identity Providers
+
+[AI Identity Providers](/ai-gateway/entities/ai-identity-provider/) configure authentication for {{site.ai_gateway}} endpoints.
+
+```yaml
+ai_gateway_identity_providers:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    labels: object [string]string
+      key: value
+    type: One of (key-auth | openid-connect) required
+    # Key auth
+    config: # if type=key-auth
+      hide_credentials: boolean
+      key_in_body: boolean
+      key_in_header: boolean
+      key_in_query: boolean
+      key_names: array[string] required
+    # OIDC
+    # config: # if type=openid-connect
+    #   issuer: string required
+    #   client_id: array[string]
+    #   client_secret: array[string] # write-only; prefer: !env
+    #   scopes: array[string]
+    #   auth_methods: array[string]
+    #   consumer_claims: array[string]
+    #   consumer_optional: boolean
+    #   cache_tokens_salt: string
+    #   ssl_verify: boolean
+```
+
+### AI Policies
+
+[AI Policies](/ai-gateway/entities/ai-policy/) apply rules to requests and responses passing through {{site.ai_gateway}}.
+
+```yaml
+ai_gateway_policies:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    type: string required # for example ai-sanitizer
+    enabled: boolean
+    global: boolean
+    config: object # policy-specific configuration
+    labels: object [string]string
+      key: value
+```
+
+### AI Consumers
+
+[AI Consumers](/ai-gateway/entities/ai-consumer/) represent clients that access {{site.ai_gateway}} endpoints.
+
+```yaml
+ai_gateway_consumers:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    type: One of (api-key) required
+    custom_id: string (nullable)
+    policies: array[string] # policy names; prefer: !ref values
+    credentials:
+      - ref: string
+        ai_gateway_consumer: string required # prefer: !ref <consumer-ref>
+        name: string required
+        display_name: string required
+        type: One of (api-key) required
+        ttl: integer
+        labels: object [string]string
+          key: value
+    labels: object [string]string
+      key: value
+```
+
+### AI Consumer Groups
+
+[AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) collect consumers so that policies can be applied to them as a set.
+
+```yaml
+ai_gateway_consumer_groups:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    consumers: array[string] # consumer names; prefer: !ref <consumer-ref>#name
+    policies: array[string] # policy names; prefer: !ref values
+    labels: object [string]string
+      key: value
+```
+
+### AI MCP Servers
+
+[AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) expose Model Context Protocol tool endpoints through {{site.ai_gateway}}.
+The `type` controls how the server is exposed: `conversion-only` converts MCP to REST without a listener, `listener` creates a dedicated MCP listener, `passthrough-listener` forwards MCP traffic as-is, and `upstream-server` proxies to an upstream MCP server.
+
+```yaml
+ai_gateway_mcp_servers:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    enabled: boolean
+    type: One of (conversion-only | conversion-listener | listener | passthrough-listener | upstream-server) required
+    config:
+      url: string required # upstream MCP server URL
+      route: object
+        paths: array[string]
+        hosts: array[string]
+        methods: array[string]
+        protocols: array[string]
+        headers: object
+        strip_path: boolean
+        preserve_host: boolean
+        regex_priority: integer
+        https_redirect_status_code: integer
+        request_buffering: boolean
+        response_buffering: boolean
+        tags: array[string]
+      logging: object
+        payloads: boolean
+        statistics: boolean
+        audits: boolean
+      max_request_body_size: integer
+      server: object
+      proxy: object
+      tools_cache_ttl_seconds: integer
+    tools: array[object]
+      - name: string required
+        description: string
+        method: string required # for example GET
+        path: string required # for example /customers/{customer_id}
+        scheme: string
+        host: string
+        headers: object
+        query: object
+        request_body: object
+        responses: object
+        parameters: array[object]
+          - name: string required
+            in: One of (path | query | header) required
+            description: string
+            required: boolean
+            schema: object
+        annotations: object
+          title: string
+          read_only_hint: boolean
+          destructive_hint: boolean
+          idempotent_hint: boolean
+          open_world_hint: boolean
+        input_schema: object
+        output_schema: object
+        access: object
+          acls:
+            oneOf:
+              allow: array[string]
+              deny: array[string]
+    access: object # for listener, passthrough-listener, conversion-listener, upstream-server types
+      acl_attribute_type: One of (consumer)
+      access_token_claim_field: string
+      acls:
+        oneOf:
+          allow: array[string]
+          deny: array[string]
+      default_tool_acls:
+        oneOf:
+          allow: array[string]
+          deny: array[string]
+    policies: array[string] # policy names
+    labels: object [string]string
+      key: value
+```
+{:.collapsible}
+
+### AI Agents
+
+[AI Agents](/ai-gateway/entities/ai-agent/) expose agent-to-agent (A2A) endpoints through {{site.ai_gateway}}.
+
+```yaml
+ai_gateway_agents:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    type: One of (a2a) required
+    enabled: boolean
+    config:
+      url: string required # upstream agent URL
+      route: object
+        paths: array[string]
+        hosts: array[string]
+        methods: array[string]
+        protocols: array[string]
+        headers: object
+        strip_path: boolean
+        preserve_host: boolean
+        regex_priority: integer
+        https_redirect_status_code: integer
+        request_buffering: boolean
+        response_buffering: boolean
+        tags: array[string]
+      max_request_body_size: integer
+      logging: object
+        payloads: boolean
+        statistics: boolean
+        max_payload_size: integer
+    access: object
+      acls:
+        oneOf:
+          allow: array[string] # consumer group names
+          deny: array[string]
+    policies: array[string] # policy names; prefer: !ref values
+    labels: object [string]string
+      key: value
+```
+{:.collapsible}
+
+### AI Vaults
+
+[AI Vaults](/ai-gateway/entities/ai-vault/) store secrets and credentials for use by {{site.ai_gateway}} resources.
+The `type` field determines the backend and the shape of `config`.
+
+```yaml
+ai_gateway_vaults:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    description: string (nullable)
+    type: One of (env | konnect | aws | gcp | azure | conjur | hcv) required
+    labels: object [string]string
+      key: value
+    # Environment variables (type=env)
+    config: # if type=env
+      prefix: string required
+      base64_decode: boolean
+    # Konnect Config Store (type=konnect)
+    # config: # if type=konnect
+    #   config_store_id: string required
+    # AWS Secrets Manager (type=aws)
+    # config: # if type=aws
+    #   region: string required
+    # GCP Secret Manager (type=gcp)
+    # config: # if type=gcp
+    #   project_id: string required
+    # Azure Key Vault (type=azure)
+    # config: # if type=azure
+    #   vault_uri: string required
+    # HashiCorp Vault (type=hcv) and Conjur (type=conjur)
+    # config: # provider-specific; run `kongctl explain ai_gateway_vaults` for full detail
+```
+{:.collapsible}
