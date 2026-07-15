@@ -1,6 +1,6 @@
 ### LLM traffic metrics
 
-When the `config.ai_metrics` parameter is set to `true` in the Prometheus plugin, you can get the following [AI LLM metrics](/ai-gateway/monitor-ai-llm-metrics/#llm-traffic-metrics-overview):
+When the `config.ai_metrics` parameter is set to `true` in the Prometheus policy, you can get the following [AI LLM metrics](/ai-gateway/monitor-ai-llm-metrics/#llm-traffic-metrics-overview):
 
 - **AI requests**: AI request sent to LLM providers.
 - **AI cost**: AI cost charged by LLM providers.

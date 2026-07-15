@@ -449,7 +449,7 @@ rows:
       text: "LLM cost control"
       description: |
         The {{site.ai_gateway}} helps reduce LLM usage costs by giving you control over how prompts are built and routed.
-        You can compress and structure prompts efficiently using AI Compressor, RAG Injector, and AI Prompt Decorator policies.
+        You can compress and structure prompts efficiently using AI Compressor, RAG Injector, and AI Prompt Decorator Policies.
     columns:
       - blocks:
         - type: aigw_policy
@@ -565,13 +565,12 @@ rows:
                 With {{site.ai_gateway}} AI Policies and runtime components, {{site.base_gateway}} can understand the prompts that are being sent through the gateway.
                 AI Policies can inspect the body and provide more specific AI capabilities to your traffic.
 
-            - q: I'm migrating from AI Gateway v1. Where do I start?
+            - q: I'm migrating from {{site.ai_gateway}} v1. Where do I start?
               a: |
                 {{site.ai_gateway}} 2.x replaces v1's plugin-centric model with an entity model.
                 Instead of configuring the AI Proxy/AI Proxy Advanced plugin directly, you now create AI Model Provider and AI Model entities to manage upstream connectivity and routing.
-                See [AI Gateway 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of v1 concepts to v2 entities, and [Migrate to AI Gateway 2.x](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
-
-            - q: I was using AI Proxy or AI Proxy Advanced. Where did those policies go?
+                See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of v1 concepts to v2 entities, and [Migrate to {{site.ai_gateway}} 2.x](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
+            - q: I was using AI Proxy or AI Proxy Advanced. Where did those plugins go?
               a: |
                 In {{site.ai_gateway}} 2.x, the proxy is configured through the [AI Model entity](/ai-gateway/entities/ai-model/) rather than the AI Proxy plugin.
                 An AI Model defines the upstream provider, model name, and routing behavior that the old AI Proxy plugin handled.

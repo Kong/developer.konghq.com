@@ -4,12 +4,12 @@ sections:
   - title: Overview
     items:
       - title: "{{site.ai_gateway}} overview"
-        description: Overview of AI gateway capabilities
+        description: Overview of {{site.ai_gateway}} capabilities
         url: /ai-gateway/
       - title: Quickstart
         description: Launch a {{site.ai_gateway}} control plane and data plane.
         url: /ai-gateway/#quickstart
-      - title: Get started with AI Gateway
+      - title: "Get started with {{site.ai_gateway}}"
         description: Set up your first {{site.ai_gateway}} instance and start proxying requests to LLM providers.
         url: /ai-gateway/get-started/
       - path: /ai-gateway/architecture/
@@ -19,14 +19,14 @@ sections:
       - title: AI providers
         description: Learn about the various providers supported by {{site.ai_gateway}}.
         url: /ai-gateway/ai-providers/
-      - title: AI Gateway policies
-        description: Browse policies available for use with {{site.ai_gateway}}.
+      - title: "{{site.ai_gateway}} Policies"
+        description: Browse Policies available for use with {{site.ai_gateway}}.
         url: /ai-gateway/policies/
       - title: AI Usage governance
         description: Understand how to manage and govern AI usage effectively.
         url: /ai-gateway/#ai-usage-governance
       - title: Data governance
-        description: Explore how {{site.ai_gateway}} helps enforce data governance policies.
+        description: Explore how {{site.ai_gateway}} helps enforce data governance Policies.
         url: /ai-gateway/#data-governance
       - title: "{{site.ai_gateway}} data governance"
         description: This page provides an overview of {{site.ai_gateway}} safety, security and compliance features.
@@ -79,7 +79,7 @@ sections:
         description: Learn about metrics available for MCP traffic via {{site.ai_gateway}}
         url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
       - title: Get started with MCP Server
-        description: Get started proxying MCP server traffic through AI Gateway.
+        description: Get started proxying MCP server traffic through {{site.ai_gateway}}.
         url: /ai-gateway/get-started-with-mcp-server/
   - title: A2A traffic gateway
     items:

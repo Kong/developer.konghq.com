@@ -29,8 +29,8 @@ related_resources:
     url: /ai-gateway/policies/ai-prompt-guard/
   - text: AI Semantic Prompt Guard
     url: /ai-gateway/policies/ai-semantic-prompt-guard/
-  - text: AI Proxy plugin
-    url: /plugins/ai-proxy/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
   - text: AI Semantic Cache
     url: /ai-gateway/policies/ai-semantic-cache/
   - text: Embedding-based similarity matching in {{site.ai_gateway}} AI Policies

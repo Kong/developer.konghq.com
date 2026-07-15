@@ -35,7 +35,7 @@ The information in this reference doc helps you understand and modify {{site.ai_
 
 ## Where are {{site.ai_gateway}} logs located?
 
-By default, you can view {{site.ai_gateway}} logs at `/usr/local/kong/logs/error.log`. If you are running a {{site.ai_gateway}} DAta Plane in Docker, you can also view them from your Docker container.
+By default, you can view {{site.ai_gateway}} logs at `/usr/local/kong/logs/error.log`. If you are running a {{site.ai_gateway}} data plane in Docker, you can also view them from your Docker container.
 
 ## Log levels
 

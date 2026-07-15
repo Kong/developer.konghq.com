@@ -128,10 +128,10 @@ rows:
         - type: card
           config:
             title: Amazon Bedrock guardrails
-            description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
+            description: Include your Amazon Bedrock guardrails configuration in {{site.ai_gateway}} requests
             icon: /assets/icons/bedrock.svg
             cta:
-              url: /plugins/ai-proxy/#supported-native-llm-formats
+              url: /ai-gateway/ai-providers/bedrock/
               align: end
   - header:
       type: h2

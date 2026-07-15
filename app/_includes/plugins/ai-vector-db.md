@@ -14,4 +14,4 @@ The {{include.name}} plugin supports the following vector databases:
 * Using `config.vectordb.strategy: pgvector` and parameters in `config.vectordb.pgvector`:
   * **[PostgreSQL with pgvector](https://github.com/pgvector/pgvector)** {% new_in 3.10 %}
 
-To learn more about vector databases in {{site.ai_gateway}}, see [Embedding-based similarity matching in Kong AI gateway plugins](/ai-gateway/semantic-similarity/).
+To learn more about vector databases in {{site.ai_gateway}}, see [Embedding-based similarity matching in Kong AI gateway plugins](/ai-gateway/v1/semantic-similarity/).

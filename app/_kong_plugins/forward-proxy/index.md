@@ -41,7 +41,7 @@ min_version:
 
 related_resources:
   - text: Forward proxy support for {{site.ai_gateway}}
-    url: /ai-gateway/forward-proxy/
+    url: /ai-gateway/v1/forward-proxy/
 ---
 
 The Forward Proxy Advanced plugin allows {{site.base_gateway}} to connect to intermediary transparent HTTP proxies, instead of directly to the `upstream_url`, when forwarding requests upstream. 

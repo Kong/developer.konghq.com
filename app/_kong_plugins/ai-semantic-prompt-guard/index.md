@@ -53,7 +53,7 @@ search_aliases:
 
 related_resources:
   - text: Get started with {{site.ai_gateway}}
-    url: /ai-gateway/get-started/
+    url: /ai-gateway/v1/get-started/
   - text: AI Prompt Guard plugin
     url: /plugins/ai-prompt-guard/
   - text: AI Proxy plugin
@@ -63,7 +63,7 @@ related_resources:
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
   - text: Embedding-based similarity matching in {{site.ai_gateway}} plugins
-    url: /ai-gateway/semantic-similarity/
+    url: /ai-gateway/v1/semantic-similarity/
 
 faqs:
   - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
