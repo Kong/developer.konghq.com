@@ -48,6 +48,14 @@ min_version:
 
 Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to OpenAI and store your authentication credentials:
 
+First, set the `OPENAI_AUTH_HEADER` environment variable to your OpenAI API key:
+
+```sh
+export OPENAI_AUTH_HEADER="Bearer YOUR_OPENAI_API_KEY"
+```
+
+Then, apply the configuration using `kongctl`:
+
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
 _defaults:
@@ -71,8 +79,8 @@ ai_gateway_model_providers:
       auth:
         type: basic
         headers:
-          - name: Authorization
-            value: "Bearer $OPENAI_API_KEY"
+        - name: Authorization
+          value: !env OPENAI_AUTH_HEADER
 EOF
 ```
 
