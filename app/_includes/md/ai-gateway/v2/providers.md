@@ -260,8 +260,6 @@ rows:
 {% endtable %}
 
 {:.info}
-> For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
->
 > For requests with large payloads, consider increasing [`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on your [AI Model](/ai-gateway/entities/ai-model/) entity to three times the raw binary size.
 >
 > Supported audio formats, voices, and parameters vary by model. Refer to your provider's documentation for available options.
@@ -298,8 +296,6 @@ rows:
 {% endtable %}
 
 {:.info}
-> For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
->
 > For requests with large payloads, consider increasing [`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on your [AI Model](/ai-gateway/entities/ai-model/) entity to three times the raw binary size.
 >
 > Supported image sizes and formats vary by model. Refer to your provider's documentation for allowed dimensions and requirements.

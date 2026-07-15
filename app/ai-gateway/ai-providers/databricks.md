@@ -67,9 +67,9 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Configure a target
+## Configure a model target for {{ provider.name }}
 
-Beyond the common [target](/ai-gateway/entities/ai-model/#targets) options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
+A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. Beyond the common target options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
 
 * **`workspace_instance_id`**: the Databricks workspace instance ID hosting the model.
 
