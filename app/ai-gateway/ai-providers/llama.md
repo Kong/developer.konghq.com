@@ -71,8 +71,8 @@ body:
 
 A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. Beyond the common target options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
 
-* **`upstream_url`**: the URL of your self-hosted Llama model endpoint.
-* **`format`**: the request format your endpoint expects. One of `ollama`, `openai`, or `raw`.
+* **`upstream_url`**: The URL of your self-hosted Llama model endpoint.
+* **`format`**: The request format your endpoint expects. One of `ollama`, `openai`, or `raw`.
 
 ```yaml
 targets:

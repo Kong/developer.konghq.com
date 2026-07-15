@@ -71,7 +71,7 @@ body:
 
 A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. Beyond the common target options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
 
-* **`workspace_instance_id`**: the Databricks workspace instance ID hosting the model.
+* **`workspace_instance_id`**: The Databricks workspace instance ID hosting the model.
 
 ```yaml
 targets:

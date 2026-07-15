@@ -65,7 +65,7 @@ faqs:
     a: |
       A `konnect`-type AI Vault doesn't hold secret values itself. It references a Config Store by
       [`config.config_store_id`](#konnect-config-store), and you create and manage the actual
-      secrets through the Config Store's own API. See [Konnect Config Store](#konnect-config-store).
+      secrets through the Config Store's own API. For more information, see [Konnect Config Store](#konnect-config-store).
 ---
 
 ## What is an AI Vault?
@@ -203,7 +203,7 @@ If your vault becomes unreachable, {{site.ai_gateway}} can continue using recent
 
 Cache duration and grace periods are tunable per vault, allowing you to balance between fresh secrets (shorter cache times) and reduced vault requests (longer cache times). The default settings work for most deployments; adjust only if your secret rotation strategy or vault reliability requires custom behavior.
 
-## Konnect Config Store
+## {{site.konnect_short_name}} Config Store
 
 Unlike the other backends, the `konnect` type doesn't connect out to an external secret manager. It stores secrets directly in {{site.konnect_short_name}}, in a Config Store: a named container of key-value secrets that you create and populate through its own API, separate from the AI Vault entity itself.
 
