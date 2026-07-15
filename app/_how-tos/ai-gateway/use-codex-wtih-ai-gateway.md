@@ -37,7 +37,7 @@ prereqs:
         Get an API key from [platform.openai.com/api-keys](https://platform.openai.com/api-keys) and export it as the **full `Authorization` header value** (including the `Bearer ` prefix):
 
         ```sh
-        export OPENAI_AUTH_HEADER="Bearer sk-..."
+        export OPENAI_AUTH_HEADER="Bearer your_api_key"
         ```
     - title: Codex CLI
       icon_url: /assets/icons/openai.svg
@@ -52,7 +52,7 @@ prereqs:
 
 ## Create an AI Model Provider and AI Model
 
-Codex speaks OpenAI's native format and calls the [Responses API](https://platform.openai.com/docs/api-reference/responses), so no request-transformer policy is needed. Create both the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and the [AI Model](/ai-gateway/entities/ai-model/) in a **single apply** so the model can reference the provider:
+Codex speaks OpenAI's native format and calls the [Responses API](https://platform.openai.com/docs/api-reference/responses), so no request-transformer policy is needed. Create both the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and the [AI Model](/ai-gateway/entities/ai-model/) in a single `kongctl` apply command so the model can reference the provider:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -117,6 +117,9 @@ curl -sS http://localhost:8000/codex/responses \
   -d '{"model":"gpt-5.4","input":"Reply with just: ok","max_output_tokens":16}'
 ```
 
+{% warning %}
+If you are a new Codex user, you must Initialise the tool first by running `codex` and following the steps provided.
+{% endwarning %}
 ## Point Codex CLI at {{site.ai_gateway}}
 
 Open a new terminal and set `OPENAI_BASE_URL` to the local {{site.ai_gateway}} endpoint. The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the gateway, so a placeholder is fine:
