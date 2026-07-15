@@ -23,10 +23,9 @@ tools:
   - kongctl
 
 prereqs:
-  gateway:
-    - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m
   konnect:
-     - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m
+     - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE
+       value: 2m
   inline:
     - title: AWS Bedrock
       content: |
