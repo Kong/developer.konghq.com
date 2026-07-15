@@ -39,7 +39,7 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 ## Policy-based rate limiting
 
-The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the [AI Consumer](./examples/consumer-rate-limiting), [AI Consumer Group](./examples/consumer-group-rate-limiting), [IP address](./examples/ip-rate-limiting), [header](./examples/header-rate-limiting), [path](./examples/path-rate-limiting), [model](./examples/llm-model-rate-limiting), and [provider](./examples/llm-provider-policy-based-rate-limiting) level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up [multi-dimensional rate limiting](./examples/rate-limiting-multiple-conditions). For example, you can set different rate limiting policies for a specific Consumer and model:
+The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the AI Consumer, AI Consumer Group, IP address, header, path, model, and provider level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up multi-dimensional rate limiting. For example, you can set different rate limiting policies for a specific Consumer and model:
 
 {% entity_example %}
 type: policy
@@ -168,8 +168,6 @@ You can decide to use a custom function to count the tokens for a requests.
 To configure it, specify the function in [`config.request_prompt_count_function`](./reference/#schema--config-request-prompt-count-function).
 
 When using the request prompt provider, it will call the function to get the token count at the request level and implement a limit.
-
-See the following [example configuration](./examples/request-prompt-count-function/) for more detail.
 
 ## Known limitations of AI Rate Limiting Advanced
 
