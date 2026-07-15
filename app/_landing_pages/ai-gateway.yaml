@@ -151,6 +151,20 @@ rows:
       - blocks:
         - type: icon_card
           config:
+            title: Amazon Bedrock
+            icon: /assets/icons/bedrock.svg
+            cta:
+              url: /ai-gateway/ai-providers/bedrock/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Vertex AI
+            icon: /assets/icons/vertex.svg
+            cta:
+              url: /ai-gateway/ai-providers/vertex/
+      - blocks:
+        - type: icon_card
+          config:
             title: More...
             icon: /assets/icons/dots.svg
             cta:
