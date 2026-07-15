@@ -1,4 +1,4 @@
-{% assign product = page.products | first %}{% if product == 'ai-gateway' %}{% assign hardened_product_name = site.ai_gateway %}{% else %}{% assign hardened_product_name = site.base_gateway %}{% endif %}
+{% if page.products and page.products contains 'ai-gateway' %}{% assign hardened_product_name = site.ai_gateway %}{% else %}{% assign hardened_product_name = site.base_gateway %}{% endif %}
 {:.info}
 > **Running in a hardened container**
 >
