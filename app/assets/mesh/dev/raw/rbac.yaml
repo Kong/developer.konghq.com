@@ -42,8 +42,6 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gateways
-      - referencegrants
       - httproutes
     verbs:
       - get
@@ -54,21 +52,9 @@ rules:
     resources:
       - gatewayclasses
     verbs:
-      - create
-      - delete
       - get
       - list
       - patch
-      - update
-      - watch
-  - apiGroups:
-      - gateway.networking.k8s.io
-    resources:
-      - gatewayclasses/status
-    verbs:
-      - get
-      - patch
-      - update
   - apiGroups:
       - kuma.io
     resources:
@@ -211,8 +197,6 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gateways
-      - referencegrants
       - httproutes
     verbs:
       - create
@@ -225,7 +209,6 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gateways/status
       - httproutes/status
     verbs:
       - get
@@ -340,8 +323,6 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gateways
-      - referencegrants
       - httproutes
     verbs:
       - create
@@ -354,7 +335,6 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gateways/status
       - httproutes/status
     verbs:
       - get
