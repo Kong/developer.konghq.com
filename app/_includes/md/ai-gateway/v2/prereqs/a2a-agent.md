@@ -9,7 +9,7 @@ services:
     container_name: a2a-kongair-agent
     image: ghcr.io/tomek-labuk/a2a-kongair-openai-agent:1.0.0
     environment:
-      - OPENAI_API_KEY=${DECK_OPENAI_API_KEY}
+      - OPENAI_API_KEY=${YOUR_OPENAI_API_KEY}
       - OPENAI_MODEL=gpt-5-mini
       - KONGAIR_BASE_URL=https://api.kong-air.com
       - PUBLIC_AGENT_URL=http://localhost:10000
