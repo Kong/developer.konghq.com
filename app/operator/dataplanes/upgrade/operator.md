@@ -1,6 +1,6 @@
 ---
 title: "Upgrade {{ site.operator_product_name }}"
-description: "Upgrade {{ site.operator_product_name }} with Helm, including the manual CRD steps Helm doesn't handle for you"
+description: "Understand how {{ site.operator_product_name }} versioning works, what to check before upgrading, and version-specific upgrade notes"
 content_type: reference
 layout: reference
 products:
@@ -13,9 +13,23 @@ breadcrumbs:
     group: Gateway Deployment
     section: Upgrading
 
+related_resources:
+  - text: "Upgrade {{ site.operator_product_name }} with Helm"
+    url: /operator/dataplanes/how-to/upgrade-operator/
+  - text: "{{ site.operator_product_name }} changelog"
+    url: /operator/changelog/
+  - text: "Chart UPGRADE.md"
+    url: https://github.com/Kong/charts/blob/main/charts/kong-operator/UPGRADE.md
+  - text: "Version compatibility"
+    url: /operator/reference/version-compatibility/
+  - text: "Install {{ site.operator_product_name }}"
+    url: /operator/get-started/gateway-api/install/
+  - text: "Migrate {{ site.kic_product_name }} to {{ site.operator_product_name }}"
+    url: /operator/migrate/migrate-kic-to-ko/
+
 ---
 
-{{ site.operator_product_name }} is installed and upgraded exclusively with the [`kong/kong-operator` Helm chart](https://github.com/Kong/charts/tree/main/charts/kong-operator). This guide walks through a safe, step-by-step upgrade.
+{{ site.operator_product_name }} is installed and upgraded exclusively with the [`kong/kong-operator` Helm chart](https://github.com/Kong/charts/tree/main/charts/kong-operator). This page covers what to know before you upgrade; for the step-by-step procedure, see [Upgrade {{ site.operator_product_name }} with Helm](/operator/dataplanes/how-to/upgrade-operator/).
 
 The most important thing to know up front: **Helm installs Custom Resource Definitions (CRDs) on the first install, but it never updates them afterwards.** Any upgrade that ships new CRD fields requires you to apply the CRDs manually *before* you upgrade the release. Skipping this is the most common cause of a broken upgrade.
 
@@ -42,104 +56,6 @@ Any change that needs manual action is called out in the [changelog](/operator/c
 {:.warning}
 > Migrating between major versions may need extra work. See the dedicated guides for [{{ site.kic_product_name }} to {{ site.operator_product_name }}](/operator/migrate/migrate-kic-to-ko/) and [1.6.x to 2.0.0](/operator/migrate/migrate-1.6.x-2.0.0/).
 
-## Prerequisites
-
-* [Helm 3](https://helm.sh/docs/intro/install/) and [`kubectl`](https://kubernetes.io/docs/tasks/tools/) installed and pointed at your cluster.
-* [`kustomize`](https://kubectl.docs.kubernetes.io/installation/kustomize/) installed (or use `kubectl kustomize` with `kubectl` v1.14+), for applying CRDs.
-* An existing {{ site.operator_product_name }} installation deployed with the `kong/kong-operator` chart.
-
-## Step 1: Refresh the Helm repository
-
-Pull the latest chart metadata so Helm can see new versions:
-
-```bash
-helm repo add kong https://charts.konghq.com
-helm repo update
-```
-
-## Step 2: Note your current version
-
-Record what's running now so you can compare after the upgrade and roll back if needed:
-
-```bash
-helm list -n kong-system
-kubectl -n kong-system get pods
-```
-
-To see which chart versions are now available:
-
-```bash
-helm search repo kong/kong-operator --versions
-```
-
-## Step 3: Upgrade the CRDs
-
-{:.warning}
-> Do this **before** upgrading the release. Helm does not update CRDs on `helm upgrade`, so new fields your target version depends on will be missing until you apply them manually.
-
-Apply the {{ site.operator_product_name }} CRDs for the version you're upgrading to. The command below uses the latest operator version (v{{ site.data.operator_latest.release }}); if you're upgrading to a different version, replace the ref:
-
-```bash
-kustomize build "github.com/Kong/kong-operator/config/crd/gateway-operator?ref=v{{ site.data.operator_latest.release }}" | kubectl apply --server-side -f -
-```
-
-If the release also bumps the Gateway API version, apply the matching Gateway API CRDs (this repo currently targets Gateway API `{{ site.gwapi_version }}`):
-
-```bash
-kustomize build "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v{{ site.gwapi_version }}" | kubectl apply --server-side -f -
-```
-
-## Step 4: Upgrade the release
-
-Run `helm upgrade` against the `kong-system` namespace, setting `image.tag` to your target version. Because the command uses `--install`, it's safe to re-run:
-
-{% konnect %}
-content: |
-  ```bash
-  helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-    --set image.tag={{ site.data.operator_latest.release }} \
-    --set env.ENABLE_CONTROLLER_KONNECT=true
-  ```
-{% endkonnect %}
-
-{% on_prem %}
-content: |
-  ```bash
-  helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-    --set image.tag={{ site.data.operator_latest.release }}
-  ```
-{% endon_prem %}
-
-{:.info}
-> Preserve any `--set` flags or `-f values.yaml` files you used at install time (for example `env.ENABLE_CONTROLLER_*` toggles). `helm upgrade` replaces the release configuration, so flags you drop are reset to their chart defaults. To reuse your existing values without re-listing them, add `--reuse-values`.
-
-## Step 5: Validate the upgrade
-
-Wait for the controller manager to become available again:
-
-{% include prereqs/products/operator-validate-deployment.md %}
-
-Then confirm the release and pods report the new version:
-
-```bash
-helm list -n kong-system
-kubectl -n kong-system get pods
-```
-
-Your `DataPlane` gateways continue serving traffic during the upgrade; only the operator control plane restarts.
-
-## Rolling back
-
-If something goes wrong, roll the release back to the previous revision:
-
-```bash
-helm history kong-operator -n kong-system
-helm rollback kong-operator REVISION -n kong-system
-```
-
-{:.warning}
-> A Helm rollback restores the operator Deployment, but it does **not** remove CRD fields you applied in [Step 3](#step-3-upgrade-the-crds). CRDs are additive and backward-compatible within a major version, so leaving them in place is safe. For a major-version rollback, follow the relevant migration guide (for example [1.6.x to 2.0.0](/operator/migrate/migrate-1.6.x-2.0.0/)) in reverse.
-
 ## Version-specific notes
 
 ### Migrating from {{ site.gateway_operator_product_name }} (`kong/gateway-operator` chart)
@@ -162,11 +78,3 @@ spec:
     translation:
       combinedServicesFromDifferentHTTPRoutes: disabled
 ```
-
-## See also
-
-* [{{ site.operator_product_name }} changelog](/operator/changelog/)
-* [Chart `UPGRADE.md`](https://github.com/Kong/charts/blob/main/charts/kong-operator/UPGRADE.md)
-* [Version compatibility](/operator/reference/version-compatibility/)
-* [Install {{ site.operator_product_name }}](/operator/get-started/gateway-api/install/)
-* [Migrate {{ site.kic_product_name }} to {{ site.operator_product_name }}](/operator/migrate/migrate-kic-to-ko/)
