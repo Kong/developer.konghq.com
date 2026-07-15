@@ -13,13 +13,14 @@ This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configurat
    ```sh
    kongctl version
    ```
-1. Adopt your {{site.ai_gateway}} into a kongctl namespace so the apply command later in this tutorial can manage it:
 
-    ```sh
-    kongctl adopt ai-gateway "$AI_GATEWAY_ID" \
-        --namespace ai-gateway-get-started \
-        --pat "$KONNECT_TOKEN"
-    ```
+If you're using an existing {{site.ai_gateway}} instead of the quickstart script, adopt it into a kongctl namespace so the apply command later in this tutorial can manage it:
+
+```sh
+kongctl adopt ai-gateway "$AI_GATEWAY_ID" \
+    --namespace ai-gateway-get-started \
+    --pat "$KONNECT_TOKEN"
+```
 {% else %}
   kongctl is a CLI tool for managing {{site.konnect_short_name}} resources programmatically. To complete this tutorial, 
   install [kongctl](/kongctl/).
