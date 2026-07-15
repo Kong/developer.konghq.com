@@ -1,4 +1,5 @@
 {% assign summary='{{site.ai_gateway}} running' %}
+{% assign env_variables = include.prereqs['konnect'] %}
 {% capture details_content %}
 
 This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_short_name}} personal access token.
@@ -14,7 +15,8 @@ This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_sho
 1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) to automatically provision a control plane and data plane in {{site.konnect_product_name}}, and configure your environment:
 
    ```bash
-   curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
+   curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN {% if env_variables %}\{% endif %}{% for variable in env_variables %}
+     -e {{variable.name}}{% if variable.value %}={{variable.value}}{% endif %}{% unless forloop.last %} \{% endunless %}{% endfor %}
    ```
 
 This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
