@@ -82,7 +82,7 @@ An AI Vault entity stores the connection configuration and credentials needed to
 AI Vaults can be created and managed through:
 
 * {{site.konnect_short_name}} UI
-* {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/vaults`
+* [{{site.ai_gateway}} API](/api/konnect/ai-gateway/): `/ai-gateways/{aiGatewayId}/vaults`
 * [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI Vault](#set-up-an-ai-vault).
@@ -205,7 +205,8 @@ Cache duration and grace periods are tunable per vault, allowing you to balance 
 
 ## {{site.konnect_short_name}} Config Store
 
-Unlike the other backends, the `konnect` type doesn't connect out to an external secret manager. It stores secrets directly in {{site.konnect_short_name}}, in a Config Store: a named container of key-value secrets that you create and populate through its own API, separate from the AI Vault entity itself.
+Unlike the other backends, the `konnect` type doesn't connect out to an external secret manager. 
+It stores secrets directly in {{site.konnect_short_name}}, in a Config Store: a named container of key-value secrets that you create and populate through its own API, separate from the AI Vault entity itself.
 
 A `konnect`-type AI Vault doesn't hold any secret values. It only references a Config Store by ID through `config.config_store_id`. The Config Store holds the actual secrets.
 
@@ -216,14 +217,15 @@ A `konnect`-type AI Vault doesn't hold any secret values. It only references a C
 
 Config Stores are managed through the {{site.ai_gateway}} API:
 
-* Config Store: `/v1/ai-gateways/{aiGatewayId}/config-stores`
-* Config Store secrets: `/v1/ai-gateways/{aiGatewayId}/config-stores/{configStoreIdOrName}/secrets`
+* Config Store: [`/ai-gateways/{aiGatewayId}/config-stores`](/api/konnect/ai-gateway/#/operations/create-ai-gateway-config-store)
+* Config Store secrets: [`/ai-gateways/{aiGatewayId}/config-stores/{configStoreIdOrName}/secrets`](/api/konnect/ai-gateway/#/operations/create-ai-gateway-config-store-secret)
 
-Both support full create, list, get, update, and delete operations. Deleting a Config Store that still has secrets fails unless you pass `?force=true`, which cascades the delete to all secrets in that Config Store.
+Both support full create, list, get, update, and delete operations. 
+Deleting a Config Store that still has secrets fails unless you pass `?force=true`, which cascades the delete to all secrets in that Config Store.
 
 ### Create a Config Store and add a secret
 
-The following example creates a Config Store, then adds a secret to it:
+The following example creates a Config Store:
 
 <!-- vale off -->
 {% konnect_api_request %}
@@ -237,6 +239,7 @@ body:
   name: prod-secrets
 {% endkonnect_api_request %}
 
+Add a secret to the Config Store:
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/config-stores/$CONFIG_STORE_ID/secrets
 status_code: 201
@@ -250,7 +253,7 @@ body:
 {% endkonnect_api_request %}
 <!-- vale on -->
 
-### Reference the Config Store from a `konnect` AI Vault
+### Reference the Config Store from a konnect-type AI Vault
 
 Create a `konnect`-type AI Vault that points at the Config Store's `id`:
 
