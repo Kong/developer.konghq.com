@@ -23,6 +23,10 @@ tools:
   - kongctl
 
 prereqs:
+  gateway:
+    - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m
+  konnect:
+     - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m
   inline:
     - title: Congifure kongctl
       include_content: md/ai-gateway/v2/prereqs/kongctl
@@ -60,7 +64,7 @@ tldr:
 
 ## Create an AI Provider entity
 
-Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to AWS Bedrock and store your IAM credentials.
+Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to AWS Bedrock and store your IAM credentials:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -82,12 +86,16 @@ ai_gateway_model_providers:
         type: aws
         access_key_id: !env AWS_ACCESS_KEY_ID
         secret_access_key: !env AWS_SECRET_ACCESS_KEY
+    _external:
+      selector:
+        matchFields:
+          name: "my-aws-account"
 EOF
 ```
 
 ## Create an AI Policy entity
 
-{{ site.claude_code }} sends beta headers and fields that Bedrock's API rejects. Create an [AI Policy](/ai-gateway/entities/ai-policy/) with a `request-transformer-advanced` config that strips the `anthropic-beta` header, `beta` query string parameter, and `model` body field before the request reaches Bedrock:
+{{ site.claude_code }} sends beta headers and fields that Bedrock's API rejects. Create an [AI Policy](/ai-gateway/entities/ai-policy/) with a `request-transformer` config that strips the `anthropic-beta` header, `beta` query string parameter, and beta-gated body fields before the request reaches Bedrock. Don't strip `model`: {{site.ai_gateway}} uses that field to select the target, and removing it breaks routing.
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -103,7 +111,7 @@ ai_gateway_policies:
     ai_gateway: ai-quickstart
     name: strip-claude-beta-info
     display_name: "Strip Claude beta info"
-    type: request-transformer-advanced
+    type: request-transformer
     config:
       remove:
         headers:
@@ -111,8 +119,15 @@ ai_gateway_policies:
         querystring:
           - beta
         body:
-          - model
           - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
+    _external:
+      selector:
+        matchFields:
+          name: "strip-claude-beta-info"
 EOF
 ```
 
@@ -173,23 +188,6 @@ ai_gateway_models:
     capabilities:
       - generate
 EOF
-```
-
-## Validate the AI Model
-
-Send a test request directly to confirm the setup works before pointing {{ site.claude_code }} at it:
-
-```sh
-curl -i -X POST http://localhost:8000/v1/messages \
-  -H 'Content-Type: application/json' \
-  -H 'anthropic-version: 2023-06-01' \
-  --data '{
-    "model": "my-claude-bedrock",
-    "max_tokens": 1024,
-    "messages": [
-      {"role": "user", "content": "hello"}
-    ]
-  }'
 ```
 
 ## Verify traffic through Kong
