@@ -1,25 +1,4 @@
 [
-    {
-    "id": "38df0a35-37de-48fa-ac9d-60595d26eddf",
-    "title": "New AI Gateway",
-    "latestVersion": {
-      "name": "v2",
-      "id": "987bb874-f9f9-471e-9ae3-51897cbd2ccd"
-    },
-    "description": "New AI Gateway API.",
-    "documentCount": 0,
-    "versionCount": 1,
-    "versions": [
-      {
-        "id": "987bb874-f9f9-471e-9ae3-51897cbd2ccd",
-        "created_at": "2024-02-21T17:28:17.757Z",
-        "updated_at": "2024-10-17T19:13:18.223Z",
-        "name": "v2",
-        "deprecated": false,
-        "registration_configs": []
-      }
-    ]
-  },
   {
     "id": "ccb264be-1963-49a4-b6e8-bc7c98a6e4c2",
     "title": "Application Auth Strategies",
@@ -369,6 +348,27 @@
         "created_at": "2025-05-05T20:59:18.970Z",
         "updated_at": "2025-05-07T16:26:12.925Z",
         "name": "v0",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
+    "id": "5e0005b9-232b-4808-8bdf-9560d4596080",
+    "title": "Konnect AI Gateway",
+    "latestVersion": {
+      "name": "v1",
+      "id": "8cf2d03b-e257-4cc8-8b02-04abee8376b3"
+    },
+    "description": "The API for configuring AI Gateways in Konnect.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "8cf2d03b-e257-4cc8-8b02-04abee8376b3",
+        "created_at": "2026-07-14T16:16:38.145Z",
+        "updated_at": "2026-07-14T16:20:12.585Z",
+        "name": "v1",
         "deprecated": false,
         "registration_configs": []
       }
