@@ -28,8 +28,6 @@ prereqs:
   konnect:
      - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m
   inline:
-    - title: Congifure kongctl
-      include_content: md/ai-gateway/v2/prereqs/kongctl
     - title: AWS Bedrock
       content: |
         1. Enable model access in AWS Bedrock:
