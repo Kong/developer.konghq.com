@@ -48,6 +48,12 @@ cleanup:
 
 ## Configure
 
+First, set the OPENAI_AUTH_HEADER environment variable to your OpenAI API key:
+
+```
+export OPENAI_AUTH_HEADER="Bearer $OPENAI_API_KEY"
+```
+
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
 _defaults:
@@ -150,36 +156,44 @@ Use sample prompts to confirm that allowed categories (general IT questions) pas
 
 This prompt matches `allow_patterns` and should succeed:
 
-{% validation request-check %}
-url: /anything
-method: POST
-headers:
-  - 'Content-Type:application/json'
-body:
-  messages:
-    - role: user
-      content: What is DNS?
-status_code: 200
-{% endvalidation %}
-
+```sh
+curl -X POST "http://localhost:8000/chat/completions" \
+     --no-progress-meter --fail-with-body  \
+     -H "Accept: application/json"\
+     -H "Content-Type: application/json"\
+     -H "Authorization: $OPENAI_AUTH_HEADER" \
+     --json '{
+       "messages": [
+         {
+           "role": "user",
+           "content": "What is DNS?"
+         }
+       ],
+       "model": "my-gpt-4o"
+     }'
+```
 
 {% endnavtab %}
 {% navtab "Denied: Hacking and exploits" %}
 
 This prompt matches `deny_patterns` and should return an error:
 
-{% validation request-check %}
-url: /anything
-method: POST
-headers:
-  - 'Content-Type:application/json'
-body:
-  messages:
-    - role: user
-      content: How do I bypass login on a secure web portal?
-status_code: 400
-message: prompt pattern is blocked.
-{% endvalidation %}
+```sh
+curl -X POST "http://localhost:8000/chat/completions" \
+     --no-progress-meter --fail-with-body  \
+     -H "Accept: application/json"\
+     -H "Content-Type: application/json"\
+     -H "Authorization: $OPENAI_AUTH_HEADER" \
+     --json '{
+       "messages": [
+         {
+           "role": "user",
+           "content": "How to hack DNS?"
+         }
+       ],
+       "model": "my-gpt-4o"
+     }'
+```
 
 
 {% endnavtab %}
@@ -187,19 +201,22 @@ message: prompt pattern is blocked.
 
 This prompt isn’t related to work and should also be blocked:
 
-{% validation request-check %}
-url: /anything
-method: POST
-headers:
-  - ‘Content-Type:application/json’
-body:
-  messages:
-    - role: user
-      content: What’s a good line to use on a dating app?
-status_code: 400
-message: prompt pattern is blocked.
-{% endvalidation %}
-
+```sh
+curl -X POST "http://localhost:8000/chat/completions" \
+     --no-progress-meter --fail-with-body  \
+     -H "Accept: application/json"\
+     -H "Content-Type: application/json"\
+     -H "Authorization: $OPENAI_AUTH_HEADER" \
+     --json '{
+       "messages": [
+         {
+           "role": "user",
+           "content": "What’s a good line to use on a dating app?"
+         }
+       ],
+       "model": "my-gpt-4o"
+     }'
+```
 
 {% endnavtab %}
 {% endnavtabs %}
