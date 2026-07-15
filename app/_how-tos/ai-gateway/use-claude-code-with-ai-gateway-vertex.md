@@ -30,6 +30,9 @@ tldr:
   a: Create an AI Model Provider entity to authenticate to Google Vertex AI, add a Policy to strip Anthropic-only request fields Vertex doesn't support, create an AI Model entity that accepts Anthropic-compatible requests and targets your Vertex model. Then, point Claude CLI’s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests are proxied for monitoring and control.
 
 prereqs:
+  konnect:
+     - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE
+       value: 2m
   inline:
     - title: Vertex
       content: |
