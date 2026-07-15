@@ -39,7 +39,7 @@ prereqs:
         Get an API key from the [Alibaba Cloud DashScope console](https://dashscope.aliyuncs.com/) and export it as the **full `Authorization` header value** (including the `Bearer` prefix):
 
         ```sh
-        export DASHSCOPE_AUTH_HEADER="Bearer my_key"
+        export DASHSCOPE_AUTH_HEADER="Bearer YOUR_DASHSCOPE_KEY"
         ```
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
@@ -126,10 +126,10 @@ curl -sS http://localhost:8000/v1/messages \
 Run {{ site.claude_code }}, selecting the model you configured:
 
 ```sh
-export ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'qwen-plus'
+ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'qwen-plus'
 ```
 
-When {{ site.claude_code }} asks for permission to work with your files, select **Yes, continue**. The session will start. Ask a simple question to confirm traffic flows through {{site.ai_gateway}} to the upstream Qwen model:
+When {{ site.claude_code }} asks for permission to work with your files, select **Yes, continue**. The session will start. Ask a question to confirm traffic flows through {{site.ai_gateway}} to the upstream Qwen model:
 
 ```text
 Say hello in one sentence.
