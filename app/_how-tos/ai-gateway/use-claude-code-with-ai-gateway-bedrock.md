@@ -150,18 +150,33 @@ ai_gateways:
 ai_gateway_model_providers:
   - ref: my-aws-account
     ai_gateway: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "my-aws-account"
+    name: my-aws-account
+    display_name: "AWS Production"
+    type: bedrock
+    config:
+      auth:
+        type: aws
+        access_key_id: !env AWS_ACCESS_KEY_ID
+        secret_access_key: !env AWS_SECRET_ACCESS_KEY
 
 ai_gateway_policies:
   - ref: strip-claude-beta-info
     ai_gateway: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "strip-claude-beta-info"
+    name: strip-claude-beta-info
+    display_name: "Strip Claude beta info"
+    type: request-transformer
+    config:
+      remove:
+        headers:
+          - anthropic-beta
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
 
 ai_gateway_models:
   - ref: my-claude-bedrock
