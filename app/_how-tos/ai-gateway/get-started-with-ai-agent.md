@@ -34,8 +34,6 @@ tools:
 
 prereqs:
   inline:
-    - title: Configure kongctl
-      include_content: md/ai-gateway/v2/prereqs/kongctl
     - title: OpenAI API key
       content: |
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
