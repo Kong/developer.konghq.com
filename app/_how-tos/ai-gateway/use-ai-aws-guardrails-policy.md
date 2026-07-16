@@ -131,12 +131,18 @@ EOF
 
 In this example, we're setting up the AI AWS Guardrail Policy with:
 
+* `type: ai-aws-guardrails`: Specifies that this Policy filters requests using an AWS Guardrail.
+* `global: false`: Scopes the Policy to only the AI Models it's explicitly attached to via `policies:`, rather than applying it to every resource on {{site.ai_gateway}}.
+* `config.guardrails_id`: Specifies the AWS resource to used for filtering requests.
+* `config.aws_region`, `config.aws_access_key_id`, and `config.aws_secret_access_key`: Specifies your AWS environment.
+* `policies: [!ref my-ai-aws-guardrails-policy#name]` on the AI Model: Attaches this Policy so it applies to every request routed through `my-gpt-4o`.
+
 
 ## Test the configuration
 
 AWS Guardrails can be set it up to block specific banned words such as the topic of quantum computing, content categories like violence, hate, sexual content, insults, and misconduct, then apply blocking actions on both input and output.
 
-Let’s test these guardrails using example prompts designed to trigger each blocked category. Sending any of these prompts will result in the following error response:
+You can test these guardrails using example prompts designed to trigger each blocked category. Sending any of these prompts will result in the following error response:
 
 ```json
 {
