@@ -66,10 +66,11 @@ The {{site.ai_gateway}} [how-to guides](/how-to/?products=ai-gateway) use this a
 
 Use the following workflow to manage {{site.ai_gateway}} resources declaratively:
 
-1. Write a configuration file describing the resources you want.
-2. Run `kongctl plan -f example.yaml` to preview what will change (optional but recommended).
-3. Run `kongctl apply -f example.yaml` to create or update resources.
-4. Run `kongctl sync -f example.yaml` when you want kongctl to also delete resources that are no longer in the file.
+* Write a configuration file describing the resources you want.
+* Run `kongctl plan -f example.yaml` to preview what will change (optional but recommended).
+* Run `kongctl apply -f example.yaml` to create or update resources.
+* Run `kongctl sync -f example.yaml` when you want kongctl to also create, update, or delete resources. 
+See the [kongctl sync reference](/kongctl/sync/) for more detail on sync behavior.
 
 For example, this configuration file creates an {{site.ai_gateway}}:
 
@@ -86,10 +87,10 @@ ai_gateways:
 Save this as `ai-gateway.yaml`, then preview what will change:
 
 ```bash
-kongctl plan -f ai-gateway.yaml --pat "$KONNECT_TOKEN"
+kongctl diff --mode apply -f ai-gateway.yaml --pat "$KONNECT_TOKEN"
 ```
 
-Then apply:
+Then apply, confirming the changes if you approve:
 
 ```bash
 kongctl apply -f ai-gateway.yaml --pat "$KONNECT_TOKEN"
@@ -130,9 +131,23 @@ kongctl adopt ai-gateway "$AI_GATEWAY_ID" \
 `adopt` registers the existing {{site.ai_gateway}} with a kongctl namespace so it can be tracked.
 Pre-existing resources need to be adopted before kongctl includes them in plan and sync operations.
 
-You can reference the {{site.ai_gateway}} in your configuration files using `_external`.
-`_external` tells kongctl to look up the resource without taking ownership of it in the current configuration.
-For example, here the gateway is managed (adopted), but not owned by this configuration file:
+After adopting, run `kongctl dump declarative` to export the current configuration as a YAML file you can use as the starting point for declarative management:
+
+```bash
+kongctl dump declarative \
+  --default-namespace my-namespace \
+  --resources ai_gateways,ai_gateway_models,ai_gateway_model_providers \
+  --pat "$KONNECT_TOKEN" > ai-gateway.yaml
+```
+
+From here you can edit `ai-gateway.yaml`, commit it to source control, and manage the resource going forward with commands like `kongctl apply` or `kongctl sync`.
+
+### Referencing external resources
+
+`_external` tells kongctl to look up a resource by selector without taking ownership of it in the current configuration.
+Use it when a resource exists in {{site.konnect_product_name}} but is managed by a different team or configuration file, and you need to reference it as a parent for child resources you do own.
+
+For example, here the {{site.ai_gateway}} exists in {{site.konnect_product_name}} but isn't managed by this configuration file:
 
 ```yaml
 ai_gateways:
@@ -153,6 +168,9 @@ ai_gateway_model_providers:
         name: Authorization
         value: "Bearer !env OPENAI_API_KEY"
 ```
+
+kongctl resolves the external resource's ID at plan time and uses it to scope the child resources.
+The external resource itself is not modified or deleted by `sync`.
 
 ### Commands reference
 
