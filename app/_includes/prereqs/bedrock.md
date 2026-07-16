@@ -128,11 +128,11 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
 
     ```bash
     aws bedrock create-guardrail \
-    --cli-input-json file://$HOME/guardrail.json \
-    --region $DECK_AWS_REGION
+    --cli-input-json file://$PWD/guardrail.json \
+    --region $AWS_REGION
     ```
 
-    If successful, your terminal will output the following:
+    If successful, your terminal will output something similar to:
 
     ```json
     {
@@ -146,6 +146,6 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
     Export the Guardrail ID and Guardrail version as environment variables:
 
     ```bash
-    export DECK_GUARDRAILS_ID=0abcs5r0q3abcd
-    export DECK_GUARDRAILS_VERSION=DRAFT
+    export GUARDRAILS_ID=my_guardrailId
+    export GUARDRAILS_VERSION=DRAFT
     ```

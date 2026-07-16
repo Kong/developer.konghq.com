@@ -32,12 +32,11 @@ tools:
 tags:
   - ai
   - openai
-  - azure
-  - bedrock
+  - aws
 
 tldr:
   q: How can I use the AI AWS Guardrails Policy with {{site.ai_gateway}}?
-  a: Configure an AI Provider and AI Model to route requests to any LLM upstreams. Apply an AI AWS Guardrails Policy to your model to block unsafe inputs and outputs based on a predefined Bedrock guardrail.
+  a: Configure an AI Provider and AI Model to route requests to any LLM upstreams. Apply an AI AWS Guardrails Policy to your model to block unsafe inputs and outputs based on your Bedrock guardrail.
 
 prereqs:
   inline:
@@ -51,9 +50,9 @@ prereqs:
 
         You can get the access key ID and secret access key from the AWS IAM Console under **Users > Security credentials**, and the region from the AWS Console where your resources are deployed. Once you have them, export them as environment variables by running the following command and replacing placeholder values with your secrets:
         ```bash
-        export DECK_AWS_REGION='YOUR_AWS_REGION'
-        export DECK_AWS_ACCESS_KEY_ID='YOUR_AWS_ACCESS_KEY'
-        export DECK_AWS_SECRET_ACCESS_KEY='YOUR_AWS_SECRET_ACCESS_KEY'
+        export AWS_REGION='YOUR_AWS_REGION'
+        export AWS_ACCESS_KEY_ID='YOUR_AWS_ACCESS_KEY'
+        export AWS_SECRET_ACCESS_KEY='YOUR_AWS_SECRET_ACCESS_KEY'
         ```
       icon_url: /assets/icons/aws.svg
     - title: Bedrock Guardrail
