@@ -17,7 +17,7 @@ tags:
 min_version:
   ai-gateway: '2.0'
 
-description: This guide walks you through moving your configuration from the API {{site.base_gateway}} plugin model to the new {{site.ai_gateway}} Policies model.
+description: This guide walks you through moving your configuration from the {{site.ai_gateway}} running on {{site.base_gateway}} plugin model to the new {{site.ai_gateway}} 2.x Policies model.
 
 related_resources:
   - text: "{{site.ai_gateway}} 2.x concepts"
@@ -28,11 +28,11 @@ related_resources:
     url: /ai-gateway/entities/
 ---
 
-{{site.ai_gateway}} version 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of the API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: AI Model Providers, AI Models, AI MCP Servers, and AI Agents. 
+{{site.ai_gateway}} 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: AI Model Providers, AI Models, AI MCP Servers, and AI Agents.
 
 This guide walks you through migrating an existing configuration using the `kongctl` {{site.ai_gateway}} conversion extension.
 
-This guide is intended for teams running {{site.ai_gateway}} via {{site.base_gateway}} 3.x plugins who want to move to the {{site.ai_gateway}} version 2.x control plane. If you are starting fresh, see [Set up a fresh install with the {{site.konnect_short_name}} MCP Server](#set-up-a-fresh-install-with-the-konnect-mcp-server).
+This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see [Set up a fresh install with the {{site.konnect_short_name}} MCP Server](#set-up-a-fresh-install-with-the-konnect-mcp-server).
 
 ## Prerequisites 
 
@@ -40,7 +40,7 @@ Before migrating, make sure you have:
 
 - Read the [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) guide.
 - An existing Kong API Gateway control plane in {{site.konnect_short_name}} running {{site.ai_gateway}} on {{site.base_gateway}} 3.x with the AI plugins you want to migrate.
-- A new {{site.ai_gateway}} version 2.x control plane created in {{site.konnect_short_name}}. Note its control plane name.
+- A new {{site.ai_gateway}} 2.x control plane created in {{site.konnect_short_name}}. Note its control plane name.
 - A [{{site.konnect_short_name}} Personal Access Token (PAT) or System Account Access Token](/konnect-api/#konnect-api-authentication) with permission to read the source control plane and write to the {{site.ai_gateway}} control plane.
 - The [`deck` CLI](/deck/#install-deck) for exporting your current configuration.
 - The [`kongctl` CLI](/kongctl/) for applying the converted configuration to the {{site.ai_gateway}} control plane.
@@ -48,9 +48,9 @@ Before migrating, make sure you have:
 
 ## Migration overview
 
-Migration uses the `kongctl convert ai-gateway extension` to translate your existing declarative configuration into the v2 entity model, then applies it with `kongctl`. The flow has five steps:
+Migration uses the `kongctl convert ai-gateway extension` to translate your existing declarative configuration into the {{site.ai_gateway}} 2.x entity model, then applies it with `kongctl`. The flow has five steps:
 
-1. Export the declarative configuration from your existing API {{site.base_gateway}} control plane with decK.
+1. Export the declarative configuration from your existing {{site.base_gateway}} control plane with decK.
 1. Run the converter to produce an {{site.ai_gateway}} entity configuration file.
 1. Validate that the output includes all of your AI Models, AI MCP Servers, and AI Agents.
 1. Add your {{site.ai_gateway}} control plane ID to the `kongctl` configuration.
@@ -68,7 +68,7 @@ flowchart LR
 
 ### Step 1: Export your current configuration
 
-Use `deck` to dump the declarative configuration from the API {{site.base_gateway}} control plane that currently runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source control plane.
+Use `deck` to dump the declarative configuration from the {{site.base_gateway}} control plane that currently runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source control plane.
 
 ```sh
 deck gateway dump \
@@ -82,7 +82,7 @@ The resulting `kong.yaml` contains your Services, Routes, plugins (including `ai
 
 ### Step 2: Run the converter
 
-Run `kongctl convert ai-gateway` against the exported `kong.yaml` file. The tool reads the {{site.base_gateway}} plugin configuration and emits an {{site.ai_gateway}} version 2.x entity configuration.
+Run `kongctl convert ai-gateway` against the exported `kong.yaml` file. The tool reads the {{site.ai_gateway}} running on {{site.base_gateway}} plugin configuration and emits an {{site.ai_gateway}} 2.x entity configuration.
 
 ```sh
 kongctl convert ai-gateway deck.yaml \
@@ -109,7 +109,7 @@ Open `ai-gateway.yaml` and confirm that the converter captured everything you ex
 - Each AI Agent points at the correct upstream url and carries the logging settings you had configured.
 - Supporting plugins were converted to AI Policies and attached to the right entities.
 
-Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as a AI Model Provider `display_name` or a AI Model `display_name`. These are required in version 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
+Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as an AI Model Provider `display_name` or an AI Model `display_name`. These are required in {{site.ai_gateway}} 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
 
 ### Step 4: Add your control plane ID to kongctl
 
