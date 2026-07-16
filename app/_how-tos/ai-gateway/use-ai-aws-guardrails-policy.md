@@ -56,7 +56,7 @@ prereqs:
         ```
       icon_url: /assets/icons/aws.svg
     - title: Bedrock Guardrail
-      include_content: /md/ai-gateway/v2/prereqs/prereqs/bedrock
+      include_content: md/ai-gateway/v2/prereqs/bedrock
       icon_url: /assets/icons/bedrock.svg
 
 ---
