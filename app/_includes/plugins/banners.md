@@ -14,5 +14,5 @@
 {%- endif %}
 {%- if page.tier and page.tier == 'ai_gateway_enterprise' %}
 {:.ai.w-full.-my-4}
-> **AI Gateway Enterprise:** This plugin is only available as part of our AI Gateway Enterprise offering. 
+> **{{site.ai_gateway}} Enterprise:** This plugin is only available as part of our {{site.ai_gateway}} Enterprise offering. 
 {% endif %}{% endif %}
