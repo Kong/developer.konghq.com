@@ -59,9 +59,9 @@ tldr:
 
 ---
 
-## Create an AI Provider entity
+## Create an AI Model Provider entity
 
-Create an [AI Provider](/ai-gateway/entities/ai-provider/) entity to define your connection to AWS Bedrock and store your IAM credentials:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to AWS Bedrock and store your IAM credentials:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
