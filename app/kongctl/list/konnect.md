@@ -27,6 +27,12 @@ List {{site.konnect_short_name}} resources.
 
 {% include_cached /kongctl/help/list/konnect/index.md %}
 
+### kongctl list konnect ai-gateway
+
+List {{site.konnect_short_name}} {{site.ai_gateway}}s.
+
+{% include_cached /kongctl/help/list/konnect/ai-gateway.md %}
+
 ### kongctl list konnect analytics
 
 The `analytics` command allows you to work with [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources.

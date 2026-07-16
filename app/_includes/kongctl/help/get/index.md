@@ -25,6 +25,7 @@ Examples:
   kongctl get audit-logs destinations
 
 Available Commands:
+  ai-gateway    List or get Konnect AI Gateways [beta]
   analytics     Manage Konnect Analytics resources
   api           List or get Konnect APIs
   audit-logs    Get Konnect audit-log destinations and webhook state
@@ -52,6 +53,7 @@ Flags:
                                 - Config path: [ color-theme ]
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for get

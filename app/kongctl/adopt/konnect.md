@@ -27,6 +27,12 @@ Adopt {{site.konnect_short_name}} resources.
 
 {% include_cached /kongctl/help/adopt/konnect/index.md %}
 
+### kongctl adopt konnect ai-gateway
+
+Apply the KONGCTL-namespace label to an existing {{site.konnect_short_name}} {{site.ai_gateway}} that is not currently managed by kongctl.
+
+{% include_cached /kongctl/help/adopt/konnect/ai-gateway.md %}
+
 ### kongctl adopt konnect analytics
 
 The `analytics` command adopts [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources into namespace management.
