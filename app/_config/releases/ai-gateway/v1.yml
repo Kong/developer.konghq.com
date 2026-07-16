@@ -230,8 +230,7 @@ app/_how-tos/ai-gateway/v1/use-ai-prompt-decorator-plugin.md:
   status: pending
   canonical_url: /ai-gateway/policies/ai-prompt-decorator/
 app/_how-tos/ai-gateway/v1/use-ai-prompt-guard-plugin.md:
-  status: pending
-  canonical_url: /ai-gateway/policies/ai-prompt-guard/
+  canonical_url: /ai-gateway/use-ai-prompt-guard-policy/
 app/_how-tos/ai-gateway/v1/use-ai-prompt-template-plugin.md:
   status: pending
   canonical_url: /ai-gateway/policies/ai-prompt-template/
