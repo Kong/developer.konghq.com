@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 0.0.60
+  version: 0.1.1
   description: The API for configuring AI Gateways in Konnect.
   contact:
     name: Kong
@@ -24,7 +24,11 @@ paths:
     get:
       operationId: list-ai-gateways
       summary: List AI Gateways
-      description: Returns a list of AI Gateways in the organization.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of AI Gateways in the organization.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
@@ -42,7 +46,11 @@ paths:
     post:
       operationId: create-ai-gateway
       summary: Create an AI Gateway
-      description: Creates a new AI Gateway in the organization.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Creates a new AI Gateway in the organization.
       requestBody:
         required: true
         content:
@@ -73,7 +81,11 @@ paths:
     get:
       operationId: get-ai-gateway
       summary: Get an AI Gateway
-      description: Returns the details of a specific AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayResponse'
@@ -90,7 +102,11 @@ paths:
     put:
       operationId: update-ai-gateway
       summary: Update an AI Gateway
-      description: Updates the configuration of an existing AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway.
       requestBody:
         required: true
         content:
@@ -118,7 +134,11 @@ paths:
     delete:
       operationId: delete-ai-gateway
       summary: Delete an AI Gateway
-      description: Deletes an existing AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Deletes an existing AI Gateway.
       responses:
         '204':
           description: AI Gateway deleted successfully.
@@ -138,7 +158,11 @@ paths:
     get:
       operationId: list-ai-gateway-data-plane-certificates
       summary: List AI Gateway DataPlane Certificates
-      description: Returns a list of DataPlane certificates that are associated to this AI Gateway. A DataPlane certificate allows DataPlanes configured with the certificate and corresponding private key to establish connection with this AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of DataPlane certificates that are associated to this AI Gateway. A DataPlane certificate allows DataPlanes configured with the certificate and corresponding private key to establish connection with this AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -160,7 +184,11 @@ paths:
     post:
       operationId: create-ai-gateway-data-plane-certificate
       summary: Create New AI Gateway DataPlane Certificate
-      description: Create a new DataPlane Certificate for this AI Gateway. A DataPlane certificate allows DataPlanes configured with the certificate and corresponding private key to establish connection with this AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Create a new DataPlane Certificate for this AI Gateway. A DataPlane certificate allows DataPlanes configured with the certificate and corresponding private key to establish connection with this AI Gateway.
       requestBody:
         content:
           application/json:
@@ -191,7 +219,11 @@ paths:
     get:
       operationId: get-ai-gateway-data-plane-certificate
       summary: Get a DataPlane Certificate
-      description: Retrieve a DataPlane certificate associated to this AI Gateway. A DataPlane certificate allows DataPlanes configured with the certificate and corresponding private key to establish connection with this AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Retrieve a DataPlane certificate associated to this AI Gateway. A DataPlane certificate allows DataPlanes configured with the certificate and corresponding private key to establish connection with this AI Gateway.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayDataPlaneCertificateResponse'
@@ -210,7 +242,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-data-plane-certificate
       summary: Delete AI Gateway DataPlane Certificate
-      description: Remove a DataPlane client certificate associated to this AI Gateway. Removing a DataPlane certificate would invalidate any DataPlanes currently connected to this AI Gateway using this certificate.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Remove a DataPlane client certificate associated to this AI Gateway. Removing a DataPlane certificate would invalidate any DataPlanes currently connected to this AI Gateway using this certificate.
       responses:
         '204':
           description: No Content
@@ -230,7 +266,11 @@ paths:
     get:
       operationId: get-ai-gateway-expected-config-version
       summary: Get the Expected Config Version
-      description: Retrieve the expected config version for this AI Gateway. The expected config version can be used to verify if the config version of a data plane node is up to date with the AI Gateway. The config version will be the same if they are in sync.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Retrieve the expected config version for this AI Gateway. The expected config version can be used to verify if the config version of a data plane node is up to date with the AI Gateway. The config version will be the same if they are in sync.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayExpectedConfigVersionResponse'
@@ -246,43 +286,15 @@ paths:
         - AI Gateway DataPlane
     parameters:
       - $ref: '#/components/parameters/AIGatewayId'
-  '/ai-gateways/{gatewayId}/debug-cp-output':
-    get:
-      operationId: get-ai-gateway-debug-cp-output
-      summary: Get the CP config output for an AI Gateway
-      description: |
-        Internal / privileged endpoint. Returns the control-plane configuration Koko would deliver to the given AI
-        Gateway's data planes, as JSON by default or as YAML when the Accept header requests application/yaml.
-
-        Requires a privileged internal service-client token; the organization is derived from the gateway.
-      responses:
-        '200':
-          description: The CP config output for the AI Gateway.
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
-            application/yaml:
-              schema:
-                type: string
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-      tags:
-        - AI Gateway Debug
-    parameters:
-      - $ref: '#/components/parameters/AIGatewayId'
   '/ai-gateways/{gatewayId}/nodes':
     get:
       operationId: list-ai-gateway-nodes
       summary: List Nodes
-      description: Returns a list of nodes associated with the specified AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of nodes associated with the specified AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -308,7 +320,11 @@ paths:
     get:
       operationId: get-ai-gateway-node
       summary: Get a Node
-      description: Returns information about a specific node associated with the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns information about a specific node associated with the AI Gateway.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayDataPlaneNodeResponse'
@@ -328,7 +344,11 @@ paths:
     get:
       operationId: list-ai-gateway-vaults
       summary: List AI Gateway Vaults
-      description: Returns a list of vaults associated with the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of vaults associated with the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -348,7 +368,11 @@ paths:
     post:
       operationId: create-ai-gateway-vault
       summary: Create an AI Gateway Vault
-      description: Registers a new vault for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Registers a new vault for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -379,7 +403,11 @@ paths:
     get:
       operationId: get-ai-gateway-vault
       summary: Get an AI Gateway Vault
-      description: Returns the details of a specific AI Gateway vault.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway vault.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayVaultResponse'
@@ -396,7 +424,11 @@ paths:
     put:
       operationId: update-ai-gateway-vault
       summary: Update an AI Gateway Vault
-      description: Updates the configuration of an existing AI Gateway vault.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway vault.
       requestBody:
         required: true
         content:
@@ -421,7 +453,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-vault
       summary: Delete an AI Gateway Vault
-      description: Removes a specific AI Gateway vault.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway vault.
       responses:
         '204':
           description: Vault deleted successfully.
@@ -435,54 +471,17 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
       tags:
         - AI Gateway Vaults
-  '/ai-gateways/{gatewayId}/available-policies':
-    parameters:
-      - $ref: '#/components/parameters/AIGatewayId'
-    get:
-      operationId: list-ai-gateway-available-policies
-      summary: List AI Gateway Available Policies
-      description: Returns a list of available policies for the AI Gateway.
-      responses:
-        '200':
-          $ref: '#/components/responses/ListAIGatewayAvailablePoliciesResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-      tags:
-        - AI Gateway Policies
-  '/ai-gateways/{gatewayId}/policies/schemas/{policySchemaName}':
-    parameters:
-      - $ref: '#/components/parameters/AIGatewayId'
-      - $ref: '#/components/parameters/AIGatewayPolicySchemaName'
-    get:
-      operationId: get-ai-gateway-policy-schema
-      summary: Get an AI Gateway Policy Schema
-      description: Returns the details of a specific AI Gateway policy schema using the schema name.
-      responses:
-        '200':
-          $ref: '#/components/responses/GetAIGatewayPolicySchemaResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-      tags:
-        - AI Gateway Policies
   '/ai-gateways/{gatewayId}/policies':
     parameters:
       - $ref: '#/components/parameters/AIGatewayId'
     get:
       operationId: list-ai-gateway-policies
       summary: List AI Gateway Policies
-      description: Returns a list of policies configured for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of policies configured for the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -502,7 +501,11 @@ paths:
     post:
       operationId: create-ai-gateway-policy
       summary: Create an AI Gateway Policy
-      description: Registers a new policy for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Registers a new policy for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -533,7 +536,11 @@ paths:
     get:
       operationId: get-ai-gateway-policy
       summary: Get an AI Gateway Policy
-      description: Returns the details of a specific AI Gateway policy.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway policy.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayPolicyResponse'
@@ -550,7 +557,11 @@ paths:
     put:
       operationId: update-ai-gateway-policy
       summary: Update an AI Gateway Policy
-      description: Updates the configuration of an existing AI Gateway policy.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway policy.
       requestBody:
         required: true
         content:
@@ -575,35 +586,16 @@ paths:
     delete:
       operationId: delete-ai-gateway-policy
       summary: Delete an AI Gateway Policy
-      description: Removes a specific AI Gateway policy.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway policy.
       responses:
         '204':
           description: Policy deleted successfully.
         '400':
           $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-      tags:
-        - AI Gateway Policies
-  '/ai-gateways/{gatewayId}/policies/{policyId}/usage':
-    parameters:
-      - $ref: '#/components/parameters/AIGatewayId'
-      - $ref: '#/components/parameters/AIGatewayPolicyId'
-    get:
-      operationId: list-ai-gateway-policy-usage
-      summary: List AI Gateway Policy Usage
-      description: |
-        Returns a response containing the usage by entity of a specific AI Gateway policy.
-        The response is limited to only return the first N records per entity type.
-      responses:
-        '200':
-          $ref: '#/components/responses/ListAIGatewayPolicyUsageResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -620,7 +612,11 @@ paths:
     get:
       operationId: list-ai-gateway-models
       summary: List AI Gateway Models
-      description: Returns a list of all models registered in the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of all models registered in the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -640,7 +636,11 @@ paths:
     post:
       operationId: create-ai-gateway-model
       summary: Create an AI Gateway Model
-      description: 'Registers a new model with routing, capabilities, and target backends.'
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Registers a new model with routing, capabilities, and target backends.
       requestBody:
         required: true
         content:
@@ -671,7 +671,11 @@ paths:
     get:
       operationId: get-ai-gateway-model
       summary: Get an AI Gateway Model
-      description: Returns the details of a specific AI Gateway model.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway model.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayModelResponse'
@@ -688,7 +692,11 @@ paths:
     put:
       operationId: update-ai-gateway-model
       summary: Update an AI Gateway Model
-      description: Updates the configuration of an existing AI Gateway model.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway model.
       requestBody:
         required: true
         content:
@@ -713,7 +721,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-model
       summary: Delete an AI Gateway Model
-      description: Removes a specific AI Gateway model.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway model.
       responses:
         '204':
           description: Model deleted successfully.
@@ -733,7 +745,11 @@ paths:
     get:
       operationId: list-ai-gateway-agents
       summary: List AI Gateway Agents
-      description: Returns a list of all agents registered in the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of all agents registered in the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -753,7 +769,11 @@ paths:
     post:
       operationId: create-ai-gateway-agent
       summary: Create an AI Gateway Agent
-      description: Creates a new agent for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Creates a new agent for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -784,7 +804,11 @@ paths:
     get:
       operationId: get-ai-gateway-agent
       summary: Get an AI Gateway Agent
-      description: Returns the details of a specific AI Gateway agent.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway agent.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayAgentResponse'
@@ -801,7 +825,11 @@ paths:
     put:
       operationId: update-ai-gateway-agent
       summary: Update an AI Gateway Agent
-      description: Updates the configuration of an existing AI Gateway agent.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway agent.
       requestBody:
         required: true
         content:
@@ -826,7 +854,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-agent
       summary: Delete an AI Gateway Agent
-      description: Removes a specific AI Gateway agent.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway agent.
       responses:
         '204':
           description: Agent deleted successfully.
@@ -846,7 +878,11 @@ paths:
     get:
       operationId: list-ai-gateway-consumers
       summary: List AI Gateway Consumers
-      description: Returns a list of all consumers for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of all consumers for the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -866,7 +902,11 @@ paths:
     post:
       operationId: create-ai-gateway-consumer
       summary: Create an AI Gateway Consumer
-      description: Creates a new consumer for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Creates a new consumer for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -895,7 +935,11 @@ paths:
     get:
       operationId: get-ai-gateway-consumer
       summary: Get an AI Gateway Consumer
-      description: Returns the details of a specific AI Gateway consumer.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway consumer.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayConsumerResponse'
@@ -912,7 +956,11 @@ paths:
     put:
       operationId: update-ai-gateway-consumer
       summary: Update an AI Gateway Consumer
-      description: Updates the configuration of an existing AI Gateway consumer.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway consumer.
       requestBody:
         required: true
         content:
@@ -937,7 +985,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-consumer
       summary: Delete an AI Gateway Consumer
-      description: Removes a specific AI Gateway consumer.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway consumer.
       responses:
         '204':
           description: Consumer deleted successfully.
@@ -958,7 +1010,11 @@ paths:
     get:
       operationId: list-ai-gateway-consumer-groups-for-consumer
       summary: List Consumer Groups a Consumer belongs to
-      description: List AI Gateway Consumer Groups an Consumer belongs to
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        List AI Gateway Consumer Groups an Consumer belongs to
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -978,7 +1034,11 @@ paths:
     put:
       operationId: update-ai-gateway-consumer-groups-for-consumer
       summary: Updates Consumer Groups a Consumer belongs to
-      description: Updates AI Gateway Consumer Groups a Consumer belongs to
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates AI Gateway Consumer Groups a Consumer belongs to
       requestBody:
         required: true
         content:
@@ -1023,7 +1083,11 @@ paths:
     get:
       operationId: list-ai-gateway-consumer-credentials
       summary: List AI Gateway Consumer Credentials
-      description: Returns a list of all credentials for an AI Gateway consumer.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of all credentials for an AI Gateway consumer.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1043,7 +1107,11 @@ paths:
     post:
       operationId: create-ai-gateway-consumer-credential
       summary: Create an AI Gateway Consumer Credential
-      description: Creates a new credential for an AI Gateway consumer.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Creates a new credential for an AI Gateway consumer.
       requestBody:
         required: true
         content:
@@ -1073,7 +1141,11 @@ paths:
     get:
       operationId: get-ai-gateway-consumer-credential
       summary: Get an AI Gateway Consumer Credential
-      description: Returns the details of a specific credential for an AI Gateway consumer.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific credential for an AI Gateway consumer.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayConsumerCredentialResponse'
@@ -1090,7 +1162,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-consumer-credential
       summary: Delete an AI Gateway Consumer Credential
-      description: Removes a specific credential for an AI Gateway consumer.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific credential for an AI Gateway consumer.
       responses:
         '204':
           description: Credential deleted successfully.
@@ -1110,7 +1186,11 @@ paths:
     get:
       operationId: list-ai-gateway-consumer-groups
       summary: List AI Gateway Consumer Groups
-      description: Returns a list of all consumer groups for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of all consumer groups for the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1130,7 +1210,11 @@ paths:
     post:
       operationId: create-ai-gateway-consumer-group
       summary: Create an AI Gateway Consumer Group
-      description: Creates a new Consumer Group for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Creates a new Consumer Group for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -1159,7 +1243,11 @@ paths:
     get:
       operationId: get-ai-gateway-consumer-group
       summary: Get an AI Gateway Consumer Group
-      description: Returns the details of a specific AI Gateway Consumer Group.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway Consumer Group.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayConsumerGroupResponse'
@@ -1176,7 +1264,11 @@ paths:
     put:
       operationId: update-ai-gateway-consumer-group
       summary: Update an AI Gateway Consumer Group
-      description: Updates the configuration of an existing AI Gateway Consumer Group.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway Consumer Group.
       requestBody:
         required: true
         content:
@@ -1201,7 +1293,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-consumer-group
       summary: Delete an AI Gateway Consumer Group
-      description: Removes a specific AI Gateway Consumer Group.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway Consumer Group.
       responses:
         '204':
           description: Consumer Group deleted successfully.
@@ -1222,7 +1318,11 @@ paths:
     get:
       operationId: list-ai-gateway-consumers-in-consumer-group
       summary: List AI Gateway Consumers in a Consumer Group
-      description: Returns a list of all consumers in the given consumer group for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of all consumers in the given consumer group for the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1242,7 +1342,11 @@ paths:
     post:
       operationId: add-ai-gateway-consumer-to-consumer-group
       summary: Add a Consumer to a Consumer Group
-      description: Add a consumer to an AI Gateway Consumer Group.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Add a consumer to an AI Gateway Consumer Group.
       requestBody:
         required: true
         content:
@@ -1272,7 +1376,11 @@ paths:
     delete:
       operationId: remove-ai-gateway-consumer-from-consumer-group
       summary: Remove a Consumer from a Consumer Group
-      description: Remove a consumer from an AI Gateway Consumer Group.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Remove a consumer from an AI Gateway Consumer Group.
       responses:
         '204':
           description: Consumer removed from group successfully.
@@ -1292,7 +1400,11 @@ paths:
     get:
       operationId: list-ai-gateway-mcp-servers
       summary: List MCP Servers
-      description: Returns a list of MCP Servers configured for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of MCP Servers configured for the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1312,7 +1424,11 @@ paths:
     post:
       operationId: create-ai-gateway-mcp-server
       summary: Create an MCP Server
-      description: Registers a new MCP Server for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Registers a new MCP Server for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -1343,7 +1459,11 @@ paths:
     get:
       operationId: get-ai-gateway-mcp-server
       summary: Get an MCP Server
-      description: Returns the details of a specific MCP Server.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific MCP Server.
       responses:
         '200':
           $ref: '#/components/responses/GetMCPServerResponse'
@@ -1360,7 +1480,11 @@ paths:
     put:
       operationId: update-ai-gateway-mcp-server
       summary: Update an MCP Server
-      description: Updates the configuration of an existing MCP Server.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing MCP Server.
       requestBody:
         required: true
         content:
@@ -1385,7 +1509,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-mcp-server
       summary: Delete an MCP Server
-      description: Removes a specific MCP Server from the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific MCP Server from the AI Gateway.
       responses:
         '204':
           description: MCP Server deleted successfully.
@@ -1405,7 +1533,11 @@ paths:
     get:
       operationId: list-ai-gateway-model-providers
       summary: List AI Gateway Model Providers
-      description: Returns a list of model providers configured for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of model providers configured for the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1425,7 +1557,11 @@ paths:
     post:
       operationId: create-ai-gateway-model-provider
       summary: Create an AI Gateway Model Provider
-      description: Registers a new model provider for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Registers a new model provider for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -1454,7 +1590,11 @@ paths:
     get:
       operationId: get-ai-gateway-model-provider
       summary: Get an AI Gateway Model Provider
-      description: Returns the details of a specific AI Gateway model provider.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway model provider.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayModelProviderResponse'
@@ -1471,7 +1611,11 @@ paths:
     put:
       operationId: update-ai-gateway-model-provider
       summary: Update an AI Gateway Model Provider
-      description: Updates the configuration of an existing AI Gateway model provider.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway model provider.
       requestBody:
         required: true
         content:
@@ -1496,7 +1640,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-model-provider
       summary: Delete an AI Gateway Model Provider
-      description: Removes a specific AI Gateway model provider.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway model provider.
       responses:
         '204':
           description: Model provider deleted successfully.
@@ -1520,7 +1668,11 @@ paths:
     get:
       operationId: list-ai-gateway-identity-providers
       summary: List AI Gateway Identity Providers
-      description: Returns a list of identity providers configured for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of identity providers configured for the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1540,7 +1692,11 @@ paths:
     post:
       operationId: create-ai-gateway-identity-provider
       summary: Create an AI Gateway Identity Provider
-      description: Registers a new identity provider for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Registers a new identity provider for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -1569,7 +1725,11 @@ paths:
     get:
       operationId: get-ai-gateway-identity-provider
       summary: Get an AI Gateway Identity Provider
-      description: Returns the details of a specific AI Gateway identity provider.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway identity provider.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayIdentityProviderResponse'
@@ -1586,7 +1746,11 @@ paths:
     put:
       operationId: update-ai-gateway-identity-provider
       summary: Update an AI Gateway Identity Provider
-      description: Updates the configuration of an existing AI Gateway Identity provider.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway Identity provider.
       requestBody:
         required: true
         content:
@@ -1611,7 +1775,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-identity-provider
       summary: Delete an AI Gateway Identity Provider
-      description: Removes a specific AI Gateway Identity provider.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway Identity provider.
       responses:
         '204':
           description: Identity provider deleted successfully.
@@ -1635,7 +1803,11 @@ paths:
     get:
       operationId: list-ai-gateway-config-stores
       summary: List AI Gateway Config Stores
-      description: Returns a list of Config Stores associated with the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a list of Config Stores associated with the AI Gateway.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1655,7 +1827,11 @@ paths:
     post:
       operationId: create-ai-gateway-config-store
       summary: Create an AI Gateway Config Store
-      description: Creates a new Config Store for the AI Gateway.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Creates a new Config Store for the AI Gateway.
       requestBody:
         required: true
         content:
@@ -1684,7 +1860,11 @@ paths:
     get:
       operationId: get-ai-gateway-config-store
       summary: Get an AI Gateway Config Store
-      description: Returns the details of a specific AI Gateway Config Store.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the details of a specific AI Gateway Config Store.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayConfigStoreResponse'
@@ -1701,7 +1881,11 @@ paths:
     put:
       operationId: update-ai-gateway-config-store
       summary: Update an AI Gateway Config Store
-      description: Updates the configuration of an existing AI Gateway Config Store.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates the configuration of an existing AI Gateway Config Store.
       requestBody:
         required: true
         content:
@@ -1726,7 +1910,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-config-store
       summary: Delete an AI Gateway Config Store
-      description: Removes a specific AI Gateway Config Store.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a specific AI Gateway Config Store.
       parameters:
         - name: force
           in: query
@@ -1756,7 +1944,11 @@ paths:
     get:
       operationId: list-ai-gateway-config-store-secrets
       summary: List AI Gateway Config Store Secrets
-      description: Returns a collection of all secrets for an AI Gateway Config Store.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns a collection of all secrets for an AI Gateway Config Store.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1778,7 +1970,11 @@ paths:
     post:
       operationId: create-ai-gateway-config-store-secret
       summary: Create an AI Gateway Config Store Secret
-      description: Creates a secret for an AI Gateway Config Store.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Creates a secret for an AI Gateway Config Store.
       requestBody:
         required: true
         content:
@@ -1815,7 +2011,11 @@ paths:
     get:
       operationId: get-ai-gateway-config-store-secret
       summary: Get an AI Gateway Config Store Secret
-      description: Returns the secret entity for the Config Store. Secret values once stored cannot be retrieved.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Returns the secret entity for the Config Store. Secret values once stored cannot be retrieved.
       responses:
         '200':
           $ref: '#/components/responses/GetAIGatewayConfigStoreSecretResponse'
@@ -1834,7 +2034,11 @@ paths:
     put:
       operationId: update-ai-gateway-config-store-secret
       summary: Update an AI Gateway Config Store Secret
-      description: Updates a secret for an AI Gateway Config Store.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Updates a secret for an AI Gateway Config Store.
       requestBody:
         required: true
         content:
@@ -1859,7 +2063,11 @@ paths:
     delete:
       operationId: delete-ai-gateway-config-store-secret
       summary: Delete an AI Gateway Config Store Secret
-      description: Removes a secret from an AI Gateway Config Store.
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes a secret from an AI Gateway Config Store.
       responses:
         '204':
           description: Config Store Secret deleted successfully.
@@ -2037,14 +2245,6 @@ components:
           summary: The id of the entity.
       schema:
         $ref: '#/components/schemas/AIGatewayEntityIdentifier'
-    AIGatewayPolicyId:
-      name: policyId
-      in: path
-      required: true
-      description: The unique ID of the AI Gateway policy.
-      example: bf138ba2-c9b1-4229-b268-04d9d8a6410b
-      schema:
-        $ref: '#/components/schemas/UUID'
     AIGatewayPolicyIdOrName:
       name: policyIdOrName
       in: path
@@ -2059,14 +2259,6 @@ components:
           summary: The id of the entity.
       schema:
         $ref: '#/components/schemas/AIGatewayEntityIdentifier'
-    AIGatewayPolicySchemaName:
-      name: policySchemaName
-      in: path
-      required: true
-      description: The type of the Policy. This is equivalent to the Kong 3 plugin name.
-      example: ai-sanitizer
-      schema:
-        type: string
     AIGatewayVaultIdOrName:
       name: vaultIdOrName
       in: path
@@ -2139,6 +2331,9 @@ components:
         - port
         - protocol
     CreateAIGatewayRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -2170,6 +2365,9 @@ components:
         - display_name
         - name
     UpdateAIGatewayRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -2201,6 +2399,9 @@ components:
         - display_name
         - name
     AIGateway:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -2270,6 +2471,9 @@ components:
         - created_at
         - updated_at
     CreateAIGatewayDataPlaneCertificateRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         cert:
@@ -2289,6 +2493,9 @@ components:
         - cert
         - title
     AIGatewayDataPlaneClientCertificate:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         cert:
@@ -2537,7 +2744,11 @@ components:
         - parent_code
         - details
     AIGatewayModelModel:
-      description: Configuration for proxying synchronous requests/responses to/from an AI Gateway model using generative APIs.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for proxying synchronous requests/responses to/from an AI Gateway model using generative APIs.
       type: object
       properties:
         display_name:
@@ -2547,7 +2758,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model, used as a stable human-readable reference. This value is immutable after creation.
           example: my-gpt-5-model
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -2609,7 +2824,11 @@ components:
         - config
         - capabilities
     AIGatewayModelAPI:
-      description: Configuration for proxying asynchronous requests/responses to/from an AI Gateway model using the files and batches APIs.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for proxying asynchronous requests/responses to/from an AI Gateway model using the files and batches APIs.
       type: object
       properties:
         display_name:
@@ -2619,7 +2838,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model, used as a stable human-readable reference. This value is immutable after creation.
           example: my-gpt-5-model
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -2672,7 +2895,11 @@ components:
         - config
         - capabilities
     CreateAIGatewayModelRequest:
-      description: Configuration for an AI Gateway model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway model.
       discriminator:
         propertyName: type
         mapping:
@@ -2682,7 +2909,11 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelAPI'
         - $ref: '#/components/schemas/AIGatewayModelModel'
     UpdateAIGatewayModelRequest:
-      description: Configuration for an AI Gateway model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway model.
       discriminator:
         propertyName: type
         mapping:
@@ -2692,7 +2923,11 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelAPI'
         - $ref: '#/components/schemas/AIGatewayModelModel'
     AIGatewayModel:
-      description: Configuration for an AI Gateway model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway model.
       type: object
       properties:
         id:
@@ -2720,7 +2955,11 @@ components:
         route:
           $ref: '#/components/schemas/AIGatewayRouteConfig'
         logging:
-          description: Configuration for AI Gateway logging.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Configuration for AI Gateway logging.
           type: object
           additionalProperties: false
           properties:
@@ -2742,18 +2981,28 @@ components:
           type: integer
           default: 8388608
         model:
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
           type: object
           default:
             name_header: true
           additionalProperties: false
           properties:
             alias:
-              description: |
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
                 An alias for the model, used to select the target virtual model when passed in the "model" parameter of the request body.
                 When not set, this defaults to the AI Gateway model's name.
               type: string
             name_header:
-              description: Display the model name selected in the X-Kong-LLM-Model response header
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
+                Display the model name selected in the X-Kong-LLM-Model response header
               type: boolean
               default: true
         balancer:
@@ -2770,7 +3019,11 @@ components:
         route:
           $ref: '#/components/schemas/AIGatewayRouteConfig'
         logging:
-          description: Configuration for AI Gateway logging.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Configuration for AI Gateway logging.
           type: object
           additionalProperties: false
           properties:
@@ -2796,11 +3049,17 @@ components:
         proxy:
           $ref: '#/components/schemas/AIGatewayProxyConfig'
         model:
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
           type: object
           additionalProperties: false
           properties:
             alias:
-              description: |
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
                 An alias for the model, used to select the target virtual model when passed in the "model" parameter of the request body.
                 When not set, this defaults to the AI Gateway model's name.
               type: string
@@ -2808,7 +3067,11 @@ components:
       required:
         - route
     AIGatewayModelBalancerConfig:
-      description: Configuration for a model's load balancer when multiple target models are configured.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for a model's load balancer when multiple target models are configured.
       discriminator:
         propertyName: algorithm
         mapping:
@@ -2828,6 +3091,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelBalancerRoundRobinConfig'
         - $ref: '#/components/schemas/AIGatewayModelBalancerSemanticConfig'
     AIGatewayModelBalancerConsistentHashingConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         connect_timeout:
@@ -2897,9 +3163,13 @@ components:
           description: The header to use for consistent-hashing.
           type: string
           default: X-Kong-LLM-Request-ID
+      additionalProperties: false
       required:
         - algorithm
     AIGatewayModelBalancerLeastConnectionsConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         connect_timeout:
@@ -2965,9 +3235,13 @@ components:
           type: string
           enum:
             - least-connections
+      additionalProperties: false
       required:
         - algorithm
     AIGatewayModelBalancerLowestLatencyConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         connect_timeout:
@@ -3040,10 +3314,14 @@ components:
           enum:
             - e2e
             - tpot
+      additionalProperties: false
       required:
         - algorithm
         - latency_strategy
     AIGatewayModelBalancerLowestUsageConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         connect_timeout:
@@ -3119,10 +3397,14 @@ components:
             - llm-accuracy
             - prompt-tokens
             - total-tokens
+      additionalProperties: false
       required:
         - algorithm
         - tokens_count_strategy
     AIGatewayModelBalancerPriorityConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         connect_timeout:
@@ -3188,9 +3470,13 @@ components:
           type: string
           enum:
             - priority
+      additionalProperties: false
       required:
         - algorithm
     AIGatewayModelBalancerRoundRobinConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         connect_timeout:
@@ -3256,9 +3542,13 @@ components:
           type: string
           enum:
             - round-robin
+      additionalProperties: false
       required:
         - algorithm
     AIGatewayModelBalancerSemanticConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         connect_timeout:
@@ -3347,12 +3637,17 @@ components:
             - config
         vectordb:
           $ref: '#/components/schemas/AIGatewayModelVectorDBConfig'
+      additionalProperties: false
       required:
         - algorithm
         - embeddings
         - vectordb
     AIGatewayEmbeddingsModelConfig:
-      description: Configuration for an embeddings model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an embeddings model.
       discriminator:
         propertyName: type
         mapping:
@@ -3374,7 +3669,11 @@ components:
         - $ref: '#/components/schemas/AIGatewayOpenaiEmbeddingsModelConfig'
         - $ref: '#/components/schemas/AIGatewayVertexEmbeddingsModelConfig'
     AIGatewayAzureEmbeddingsModelConfig:
-      description: Azure-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Azure-specific configuration for a model.
       type: object
       properties:
         upstream_url:
@@ -3393,11 +3692,14 @@ components:
           default: '2023-05-15'
       additionalProperties: false
       required:
-        - upstream_url
         - type
         - deployment_id
     AIGatewayBedrockEmbeddingsModelConfig:
-      description: AWS Bedrock-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        AWS Bedrock-specific configuration for a model.
       type: object
       properties:
         upstream_url:
@@ -3427,10 +3729,13 @@ components:
           type: string
       additionalProperties: false
       required:
-        - upstream_url
         - type
     AIGatewayGeminiEmbeddingsModelConfig:
-      description: Google Gemini-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Google Gemini-specific configuration for a model.
       type: object
       properties:
         upstream_url:
@@ -3444,10 +3749,13 @@ components:
           $ref: '#/components/schemas/GCPModelConfig'
       additionalProperties: false
       required:
-        - upstream_url
         - type
     AIGatewayHuggingfaceEmbeddingsModelConfig:
-      description: Hugging Face-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Hugging Face-specific configuration for a model.
       type: object
       properties:
         upstream_url:
@@ -3467,10 +3775,11 @@ components:
           default: false
       additionalProperties: false
       required:
-        - upstream_url
         - type
     AIGatewayMistralEmbeddingsModelConfig:
-      description: Mistral-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         upstream_url:
@@ -3480,19 +3789,15 @@ components:
           type: string
           enum:
             - mistral
-        format:
-          description: The request format to use when communicating with the Mistral model.
-          type: string
-          enum:
-            - ollama
-            - openai
       additionalProperties: false
       required:
-        - upstream_url
         - type
-        - format
     AIGatewayOllamaEmbeddingsModelConfig:
-      description: Ollama-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Ollama-specific configuration for a model.
       type: object
       properties:
         upstream_url:
@@ -3504,10 +3809,13 @@ components:
             - ollama
       additionalProperties: false
       required:
-        - upstream_url
         - type
     AIGatewayOpenaiEmbeddingsModelConfig:
-      description: Openai-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Openai-specific configuration for a model.
       type: object
       properties:
         upstream_url:
@@ -3519,10 +3827,13 @@ components:
             - openai
       additionalProperties: false
       required:
-        - upstream_url
         - type
     AIGatewayVertexEmbeddingsModelConfig:
-      description: Google Vertex-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Google Vertex-specific configuration for a model.
       type: object
       properties:
         upstream_url:
@@ -3536,10 +3847,13 @@ components:
           $ref: '#/components/schemas/GCPModelConfig'
       additionalProperties: false
       required:
-        - upstream_url
         - type
     AIGatewayModelVectorDBConfig:
-      description: Configuration for the vector database used by the model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for the vector database used by the model.
       discriminator:
         propertyName: type
         mapping:
@@ -3549,7 +3863,11 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelVectorDBConfigPgVector'
         - $ref: '#/components/schemas/AIGatewayModelVectorDBConfigRedis'
     AIGatewayModelVectorDBConfigRedis:
-      description: Config for connecting to a Cloud Provider's Redis instance.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Config for connecting to a Cloud Provider's Redis instance.
       type: object
       properties:
         type:
@@ -3748,6 +4066,9 @@ components:
         - dimensions
         - distance_metric
     AIGatewayModelVectorDBConfigPgVector:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         type:
@@ -3882,7 +4203,11 @@ components:
         - provider
         - config
     AIGatewayTargetConfig:
-      description: Configuration for a target model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for a target model.
       discriminator:
         propertyName: type
         mapping:
@@ -3926,7 +4251,11 @@ components:
         - $ref: '#/components/schemas/AIGatewayTargetVllmConfig'
         - $ref: '#/components/schemas/AIGatewayTargetXaiConfig'
     AIGatewayTargetAnthropicConfig:
-      description: Anthropic-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Anthropic-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -3965,7 +4294,11 @@ components:
       required:
         - type
     AIGatewayTargetAzureConfig:
-      description: Azure-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Azure-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4008,7 +4341,11 @@ components:
         - type
         - deployment_id
     AIGatewayTargetBedrockConfig:
-      description: AWS Bedrock-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        AWS Bedrock-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4061,7 +4398,11 @@ components:
       required:
         - type
     AIGatewayTargetCerebrasConfig:
-      description: Cerebras-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Cerebras-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4096,7 +4437,11 @@ components:
       required:
         - type
     AIGatewayTargetCohereConfig:
-      description: Cohere-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Cohere-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4154,7 +4499,11 @@ components:
       required:
         - type
     AIGatewayTargetDashscopeConfig:
-      description: Alibaba DashScope-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Alibaba DashScope-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4193,7 +4542,11 @@ components:
       required:
         - type
     AIGatewayTargetDatabricksConfig:
-      description: Databricks-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Databricks-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4232,7 +4585,11 @@ components:
         - type
         - workspace_instance_id
     AIGatewayTargetDeepseekConfig:
-      description: Deepseek-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Deepseek-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4267,7 +4624,11 @@ components:
       required:
         - type
     AIGatewayTargetGeminiConfig:
-      description: Google Gemini-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Google Gemini-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4304,7 +4665,11 @@ components:
       required:
         - type
     AIGatewayTargetHuggingfaceConfig:
-      description: Hugging Face-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Hugging Face-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4347,7 +4712,11 @@ components:
       required:
         - type
     AIGatewayTargetKimiConfig:
-      description: Kimi (Moonshot AI)-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Kimi (Moonshot AI)-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4388,7 +4757,11 @@ components:
       required:
         - type
     AIGatewayTargetLlama2Config:
-      description: Llama2-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Llama2-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4432,7 +4805,11 @@ components:
         - format
         - upstream_url
     AIGatewayTargetMistralConfig:
-      description: Mistral-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Mistral-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4474,7 +4851,11 @@ components:
         - type
         - format
     AIGatewayTargetOllamaConfig:
-      description: Ollama-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Ollama-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4509,7 +4890,11 @@ components:
       required:
         - type
     AIGatewayTargetOpenaiConfig:
-      description: Openai-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Openai-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4544,7 +4929,11 @@ components:
       required:
         - type
     AIGatewayTargetVercelConfig:
-      description: Vercel AI Gateway-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Vercel AI Gateway-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4579,7 +4968,11 @@ components:
       required:
         - type
     AIGatewayTargetVertexConfig:
-      description: Google Vertex-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Google Vertex-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4612,7 +5005,11 @@ components:
           enum:
             - vertex
         gcp_environment:
-          description: Configuration for a model hosted on Google Cloud Project.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Configuration for a model hosted on Google Cloud Project.
           type: object
           properties:
             api_endpoint:
@@ -4637,7 +5034,11 @@ components:
       required:
         - type
     AIGatewayTargetVllmConfig:
-      description: Vllm-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Vllm-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4673,7 +5074,11 @@ components:
         - type
         - upstream_url
     AIGatewayTargetXaiConfig:
-      description: Xai-specific configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Xai-specific configuration for a model.
       type: object
       properties:
         embeddings_dimensions:
@@ -4708,7 +5113,11 @@ components:
       required:
         - type
     GCPModelConfig:
-      description: Configuration for a model hosted on Google Cloud Project.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for a model hosted on Google Cloud Project.
       type: object
       properties:
         api_endpoint:
@@ -4725,6 +5134,9 @@ components:
         - location_id
         - project_id
     AIGatewayAllowACL:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         allow:
@@ -4738,6 +5150,9 @@ components:
       required:
         - allow
     AIGatewayDenyACL:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         deny:
@@ -4751,19 +5166,31 @@ components:
       required:
         - deny
     AIGatewayACLS:
-      description: Access control rules. Configure exactly one of `allow` or `deny`.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Access control rules. Configure exactly one of `allow` or `deny`.
       oneOf:
         - $ref: '#/components/schemas/AIGatewayAllowACL'
         - $ref: '#/components/schemas/AIGatewayDenyACL'
     AIGatewayAgentAccess:
-      description: Access control configuration for an agent.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Access control configuration for an agent.
       type: object
       properties:
         acls:
           $ref: '#/components/schemas/AIGatewayACLS'
       additionalProperties: false
     AIGatewayModelAccess:
-      description: Access control configuration for a model.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Access control configuration for a model.
       type: object
       properties:
         acls:
@@ -4777,7 +5204,11 @@ components:
             $ref: '#/components/schemas/AIGatewayIdentityProviderReference'
       additionalProperties: false
     AIGatewayMCPACLs:
-      description: 'Access control rules for MCP resources. Configure `allow`, `deny`, or both.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Access control rules for MCP resources. Configure `allow`, `deny`, or both.
       type: object
       properties:
         allow:
@@ -4802,10 +5233,16 @@ components:
         type: string
         description: Reference to a policy instance by name.
     KonnectConfigStoreVault:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         name:
-          description: |
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
             A user-defined unique identifier for this vault instance, used as a stable human-readable reference.
             This value is immutable after creation.
             The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities.
@@ -4841,10 +5278,16 @@ components:
         - type
         - config
     EnvironmentVariableVault:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         name:
-          description: |
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
             A user-defined unique identifier for this vault instance, used as a stable human-readable reference.
             This value is immutable after creation.
             The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities.
@@ -4865,6 +5308,9 @@ components:
           enum:
             - env
         config:
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
           type: object
           properties:
             base64_decode:
@@ -4884,10 +5330,16 @@ components:
         - type
         - config
     AwsSecretsManagerVault:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         name:
-          description: |
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
             A user-defined unique identifier for this vault instance, used as a stable human-readable reference.
             This value is immutable after creation.
             The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities.
@@ -4908,6 +5360,9 @@ components:
           enum:
             - aws
         config:
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
           type: object
           properties:
             base64_decode:
@@ -4968,10 +5423,16 @@ components:
         - type
         - config
     GoogleSecretManagerVault:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         name:
-          description: |
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
             A user-defined unique identifier for this vault instance, used as a stable human-readable reference.
             This value is immutable after creation.
             The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities.
@@ -4992,6 +5453,9 @@ components:
           enum:
             - gcp
         config:
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
           type: object
           properties:
             base64_decode:
@@ -5033,10 +5497,16 @@ components:
         - type
         - config
     AzureKeyVault:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         name:
-          description: |
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
             A user-defined unique identifier for this vault instance, used as a stable human-readable reference.
             This value is immutable after creation.
             The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities.
@@ -5057,6 +5527,9 @@ components:
           enum:
             - azure
         config:
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
           type: object
           properties:
             base64_decode:
@@ -5125,10 +5598,16 @@ components:
         - type
         - config
     ConjurVault:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         name:
-          description: |
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
             A user-defined unique identifier for this vault instance, used as a stable human-readable reference.
             This value is immutable after creation.
             The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities.
@@ -5149,6 +5628,9 @@ components:
           enum:
             - conjur
         config:
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
           type: object
           properties:
             base64_decode:
@@ -5204,10 +5686,16 @@ components:
         - type
         - config
     HashiCorpVault:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         name:
-          description: |
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
             A user-defined unique identifier for this vault instance, used as a stable human-readable reference.
             This value is immutable after creation.
             The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities.
@@ -5234,7 +5722,11 @@ components:
         - type
         - config
     HashiCorpVaultConfig:
-      description: Configuration for an AI Gateway Vault.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway Vault.
       discriminator:
         propertyName: auth_method
         mapping:
@@ -5261,6 +5753,9 @@ components:
         - $ref: '#/components/schemas/HashiCorpVaultAzureConfig'
       title: HashiCorpVaultConfig
     HashiCorpVaultTokenConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -5334,6 +5829,9 @@ components:
         - mount
         - auth_method
     HashiCorpVaultCertConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -5422,6 +5920,9 @@ components:
         - auth_method
         - cert
     HashiCorpVaultOauth2Config:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -5514,6 +6015,9 @@ components:
         - token_endpoint
         - client_id
     HashiCorpVaultAppRoleConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -5608,6 +6112,9 @@ components:
         - mount
         - auth_method
     HashiCorpVaultKubernetesConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -5691,6 +6198,9 @@ components:
         - mount
         - auth_method
     HashiCorpVaultGcpIAMConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -5774,6 +6284,9 @@ components:
         - service_account
         - jwt_exp
     HashiCorpVaultGcpGCEConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -5851,6 +6364,9 @@ components:
         - auth_method
         - role
     HashiCorpVaultAzureConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -5928,6 +6444,9 @@ components:
         - auth_method
         - role
     HashiCorpVaultAwsEC2Config:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -6009,6 +6528,9 @@ components:
         - role
         - nonce
     HashiCorpVaultAwsIAMConfig:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         base64_decode:
@@ -6118,7 +6640,11 @@ components:
         - role
         - region
     CreateAIGatewayVaultRequest:
-      description: Configuration for an AI Gateway Vault.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway Vault.
       discriminator:
         propertyName: type
         mapping:
@@ -6138,7 +6664,11 @@ components:
         - $ref: '#/components/schemas/ConjurVault'
         - $ref: '#/components/schemas/HashiCorpVault'
     UpdateAIGatewayVaultRequest:
-      description: Configuration for an AI Gateway Vault.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway Vault.
       discriminator:
         propertyName: type
         mapping:
@@ -6158,7 +6688,11 @@ components:
         - $ref: '#/components/schemas/ConjurVault'
         - $ref: '#/components/schemas/HashiCorpVault'
     AIGatewayVault:
-      description: Configuration for an AI Gateway Vault.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway Vault.
       type: object
       properties:
         id:
@@ -6190,6 +6724,9 @@ components:
         - created_at
         - updated_at
     CreateAIGatewayPolicyRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6199,7 +6736,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this policy instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this policy instance, used as a stable human-readable reference. This value is immutable after creation.
           example: ai-pii-sanitizer-1234
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6242,6 +6783,9 @@ components:
         - type
         - config
     UpdateAIGatewayPolicyRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6251,7 +6795,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this policy instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this policy instance, used as a stable human-readable reference. This value is immutable after creation.
           example: ai-pii-sanitizer-1234
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6294,6 +6842,9 @@ components:
         - type
         - config
     AIGatewayPolicy:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6303,7 +6854,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this policy instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this policy instance, used as a stable human-readable reference. This value is immutable after creation.
           example: ai-pii-sanitizer-1234
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6354,49 +6909,10 @@ components:
         - id
         - created_at
         - updated_at
-    AIGatewayPolicySchema:
-      type: object
-      properties:
-        name:
-          description: 'The plugin name (e.g. "key-auth", "cors").'
-          type: string
-          example: key-auth
-        fields:
-          description: List of the plugin's fields
-          type: array
-          items:
-            type: object
-        entity_checks:
-          description: Entity-level (cross-field) validation rules applied to the whole record.
-          type: array
-          items:
-            type: object
-      additionalProperties: true
-      required:
-        - name
-        - fields
-    AIGatewayAvailablePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          example: ai-sanitizer
-        scopes:
-          type: array
-          items:
-            type: string
-            enum:
-              - global
-              - models
-              - mcp-servers
-              - agents
-              - consumers
-              - consumer-groups
-      additionalProperties: false
-      required:
-        - name
-        - scopes
     CreateAIGatewayAgentRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6406,7 +6922,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this agent, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this agent, used as a stable human-readable reference. This value is immutable after creation.
           example: kongair-flight-booking-agent
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6445,7 +6965,11 @@ components:
               type: integer
               default: 8388608
             logging:
-              description: Configuration for AI Gateway logging.
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
+                Configuration for AI Gateway logging.
               type: object
               additionalProperties: false
               properties:
@@ -6473,6 +6997,9 @@ components:
         - type
         - config
     UpdateAIGatewayAgentRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6482,7 +7009,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this agent, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this agent, used as a stable human-readable reference. This value is immutable after creation.
           example: kongair-flight-booking-agent
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6521,7 +7052,11 @@ components:
               type: integer
               default: 8388608
             logging:
-              description: Configuration for AI Gateway logging.
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
+                Configuration for AI Gateway logging.
               type: object
               additionalProperties: false
               properties:
@@ -6549,6 +7084,9 @@ components:
         - type
         - config
     AIGatewayAgent:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6558,7 +7096,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this agent, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this agent, used as a stable human-readable reference. This value is immutable after creation.
           example: kongair-flight-booking-agent
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6597,7 +7139,11 @@ components:
               type: integer
               default: 8388608
             logging:
-              description: Configuration for AI Gateway logging.
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
+                Configuration for AI Gateway logging.
               type: object
               additionalProperties: false
               properties:
@@ -6634,7 +7180,11 @@ components:
         - created_at
         - updated_at
     CreateAIGatewayConsumerRequest:
-      description: Configuration for an AI Gateway Consumer.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway Consumer.
       type: object
       properties:
         display_name:
@@ -6644,7 +7194,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this consumer, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this consumer, used as a stable human-readable reference. This value is immutable after creation.
           example: gregs-dev-consumer
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6670,7 +7224,11 @@ components:
         - name
         - type
     UpdateAIGatewayConsumerRequest:
-      description: Configuration for an AI Gateway Consumer.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway Consumer.
       type: object
       properties:
         display_name:
@@ -6680,7 +7238,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this consumer, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this consumer, used as a stable human-readable reference. This value is immutable after creation.
           example: gregs-dev-consumer
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6706,7 +7268,11 @@ components:
         - name
         - type
     AIGatewayConsumer:
-      description: Configuration for an AI Gateway Consumer.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway Consumer.
       type: object
       properties:
         display_name:
@@ -6716,7 +7282,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this consumer, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this consumer, used as a stable human-readable reference. This value is immutable after creation.
           example: gregs-dev-consumer
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6758,7 +7328,11 @@ components:
           type: string
           example: Greg's Dev Key
         name:
-          description: 'A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.
           example: gregs-dev-key
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6798,7 +7372,11 @@ components:
           type: string
           example: Greg's Dev Key
         name:
-          description: 'A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.
           example: gregs-dev-key
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6843,7 +7421,11 @@ components:
           type: string
           example: Greg's Dev Key
         name:
-          description: 'A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.
           example: gregs-dev-key
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6872,6 +7454,9 @@ components:
         - name
         - type
     CreateAIGatewayConsumerGroupRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6881,7 +7466,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this consumer group, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this consumer group, used as a stable human-readable reference. This value is immutable after creation.
           example: dev-users
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6896,6 +7485,9 @@ components:
         - display_name
         - name
     UpdateAIGatewayConsumerGroupRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6905,7 +7497,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this consumer group, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this consumer group, used as a stable human-readable reference. This value is immutable after creation.
           example: dev-users
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6920,6 +7516,9 @@ components:
         - display_name
         - name
     AddAIGatewayConsumerToGroupRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       properties:
         consumer:
           description: The ID or name of the consumer to add to the group.
@@ -6929,6 +7528,9 @@ components:
       required:
         - consumer
     AIGatewayConsumerGroup:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -6938,7 +7540,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this consumer group, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this consumer group, used as a stable human-readable reference. This value is immutable after creation.
           example: dev-users
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -6962,6 +7568,9 @@ components:
         - created_at
         - updated_at
     AIGatewayMCPServerConversionOnly:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         type:
@@ -6982,7 +7591,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.
           example: kongair-flights
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -7004,6 +7617,9 @@ components:
         - display_name
         - name
     AIGatewayMCPServerConversionListener:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         type:
@@ -7026,7 +7642,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.
           example: kongair-flights
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -7048,6 +7668,9 @@ components:
         - display_name
         - name
     AIGatewayMCPServerListener:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         type:
@@ -7070,7 +7693,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.
           example: kongair-flights
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -7092,6 +7719,9 @@ components:
         - display_name
         - name
     AIGatewayMCPServerPassthroughListener:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         type:
@@ -7114,7 +7744,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.
           example: kongair-flights
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -7136,6 +7770,9 @@ components:
         - display_name
         - name
     AIGatewayMCPServerUpstreamServer:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         type:
@@ -7158,7 +7795,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation.
           example: kongair-flights
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -7188,7 +7829,10 @@ components:
           additionalProperties: false
           properties:
             acls:
-              description: |
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
                 Access control rules for allowing or denying consumer groups access to this tool.
                 When configured, these will override the default access control rules defined on the MCP Server.
               allOf:
@@ -7239,6 +7883,9 @@ components:
         - description
         - method
     AIGatewayMCPServerBaseACLProperties:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       default:
         acl_attribute_type: consumer
       discriminator:
@@ -7250,6 +7897,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayMCPServerBaseACLPropertiesConsumer'
         - $ref: '#/components/schemas/AIGatewayMCPServerBaseACLPropertiesOauth'
     AIGatewayMCPServerBaseACLPropertiesConsumer:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         acl_attribute_type:
@@ -7259,17 +7909,28 @@ components:
           enum:
             - consumer
         acls:
-          description: Access control rules for allowing or denying consumer groups.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Access control rules for allowing or denying consumer groups.
           allOf:
             - $ref: '#/components/schemas/AIGatewayMCPACLs'
         default_tool_acls:
-          description: Default access control rules for allowing or denying consumer groups to tools.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Default access control rules for allowing or denying consumer groups to tools.
           allOf:
             - $ref: '#/components/schemas/AIGatewayMCPACLs'
       required:
         - acl_attribute_type
       title: AIGatewayMCPServerBaseACLPropertiesConsumer
     AIGatewayMCPServerBaseACLPropertiesOauth:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         acl_attribute_type:
@@ -7283,11 +7944,19 @@ components:
             Nested claim can be fetched by using a jq filter starts with dot, e.g., “.user.email”: https://jqlang.org/manual/#object-identifier-index
           type: string
         acls:
-          description: Access control rules for allowing or denying consumer groups.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Access control rules for allowing or denying consumer groups.
           allOf:
             - $ref: '#/components/schemas/AIGatewayMCPACLs'
         default_tool_acls:
-          description: Default access control rules for allowing or denying consumer groups to tools.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Default access control rules for allowing or denying consumer groups to tools.
           allOf:
             - $ref: '#/components/schemas/AIGatewayMCPACLs'
       required:
@@ -7295,7 +7964,11 @@ components:
         - access_token_claim_field
       title: AIGatewayMCPServerBaseACLPropertiesOauth
     AIGatewayRedisAWSAuthentication:
-      description: AWS specific configs for connecting to a Cloud Provider's redis instance.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        AWS specific configs for connecting to a Cloud Provider's redis instance.
       type: object
       properties:
         type:
@@ -7348,7 +8021,11 @@ components:
         - type
       title: AIGatewayRedisAWSAuthentication
     AIGatewayRedisAzureAuthentication:
-      description: Azure specific configs for connecting to a Cloud Provider's redis instance.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Azure specific configs for connecting to a Cloud Provider's redis instance.
       type: object
       properties:
         type:
@@ -7379,7 +8056,11 @@ components:
         - type
       title: AIGatewayRedisAzureAuthentication
     AIGatewayRedisGCPAuthentication:
-      description: GCP specific configs for connecting to a Cloud Provider's redis instance.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        GCP specific configs for connecting to a Cloud Provider's redis instance.
       type: object
       properties:
         type:
@@ -7398,7 +8079,11 @@ components:
         - type
       title: AIGatewayRedisGCPAuthentication
     AIGatewayRedisCloudConfiguration:
-      description: Config for connecting to a Cloud Provider's Redis instance.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Config for connecting to a Cloud Provider's Redis instance.
       type: object
       properties:
         cloud_authentication:
@@ -7635,7 +8320,11 @@ components:
           type: string
       additionalProperties: false
     AIGatewayRouteConfig:
-      description: Configuration for an AI Gateway route.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an AI Gateway route.
       type: object
       properties:
         headers:
@@ -7701,13 +8390,21 @@ components:
             type: string
       additionalProperties: false
     AIGatewayMCPServerNoUpstreamConfig:
-      description: 'Routing, logging, and server configuration for the MCP Server.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Routing, logging, and server configuration for the MCP Server.
       type: object
       properties:
         route:
           $ref: '#/components/schemas/AIGatewayRouteConfig'
         logging:
-          description: Configuration for AI Gateway logging.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Configuration for AI Gateway logging.
           type: object
           additionalProperties: false
           properties:
@@ -7728,13 +8425,21 @@ components:
           $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
       additionalProperties: false
     AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig:
-      description: 'Routing, logging, and request body size limits for the MCP Server.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Routing, logging, and request body size limits for the MCP Server.
       type: object
       properties:
         route:
           $ref: '#/components/schemas/AIGatewayRouteConfig'
         logging:
-          description: Configuration for AI Gateway logging.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Configuration for AI Gateway logging.
           type: object
           additionalProperties: false
           properties:
@@ -7762,13 +8467,21 @@ components:
       required:
         - url
     AIGatewayMCPServerWithUpstreamNoProxyConfig:
-      description: 'Routing, logging, and server configuration for the MCP Server.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Routing, logging, and server configuration for the MCP Server.
       type: object
       properties:
         route:
           $ref: '#/components/schemas/AIGatewayRouteConfig'
         logging:
-          description: Configuration for AI Gateway logging.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Configuration for AI Gateway logging.
           type: object
           additionalProperties: false
           properties:
@@ -7798,13 +8511,21 @@ components:
       required:
         - url
     AIGatewayMCPServerWithUpstreamConfig:
-      description: 'Routing, logging, and server configuration for the MCP Server.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Routing, logging, and server configuration for the MCP Server.
       type: object
       properties:
         route:
           $ref: '#/components/schemas/AIGatewayRouteConfig'
         logging:
-          description: Configuration for AI Gateway logging.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Configuration for AI Gateway logging.
           type: object
           additionalProperties: false
           properties:
@@ -7836,13 +8557,21 @@ components:
       required:
         - url
     AIGatewayMCPServerUpstreamServerConfig:
-      description: 'Routing, logging, and server configuration for the MCP Server.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Routing, logging, and server configuration for the MCP Server.
       type: object
       properties:
         route:
           $ref: '#/components/schemas/AIGatewayRouteConfig'
         logging:
-          description: Configuration for AI Gateway logging.
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Configuration for AI Gateway logging.
           type: object
           additionalProperties: false
           properties:
@@ -7879,7 +8608,11 @@ components:
         - url
         - tools_cache_ttl_seconds
     AIGatewayMCPServerServerConfigBase:
-      description: Server-side configuration for the MCP Server.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Server-side configuration for the MCP Server.
       type: object
       properties:
         forward_client_headers:
@@ -7935,7 +8668,11 @@ components:
           default: 10000
       additionalProperties: false
     AIGatewayMCPServerUpstreamServerServerConfig:
-      description: Server-side configuration specific to `upstream-server` mode.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Server-side configuration specific to `upstream-server` mode.
       type: object
       properties:
         forward_client_headers:
@@ -8000,7 +8737,11 @@ components:
           $ref: '#/components/schemas/AIGatewayMCPServerUpstreamServerServerToolAuthConfig'
       additionalProperties: false
     AIGatewayMCPServerUpstreamServerServerToolAuthConfig:
-      description: Configuration for an Upstream Server's MCP Server Tools' Authentication.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an Upstream Server's MCP Server Tools' Authentication.
       discriminator:
         propertyName: type
         mapping:
@@ -8010,6 +8751,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayMCPServerUpstreamServerToolOauth2ConfigJwt'
         - $ref: '#/components/schemas/AIGatewayMCPServerUpstreamServerToolOauth2ConfigCredentials'
     AIGatewayMCPServerUpstreamServerToolOauth2ConfigJwt:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         scope:
@@ -8034,9 +8778,13 @@ components:
           type: string
           enum:
             - jwt
+      additionalProperties: false
       required:
         - type
     AIGatewayMCPServerUpstreamServerToolOauth2ConfigCredentials:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         scope:
@@ -8081,11 +8829,15 @@ components:
           type: string
           writeOnly: true
           x-referenceable: true
+      additionalProperties: false
       required:
         - type
         - token_endpoint
         - client_id
     CreateAIGatewayMCPServerRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       discriminator:
         propertyName: type
         mapping:
@@ -8101,6 +8853,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayMCPServerPassthroughListener'
         - $ref: '#/components/schemas/AIGatewayMCPServerUpstreamServer'
     UpdateAIGatewayMCPServerRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       discriminator:
         propertyName: type
         mapping:
@@ -8116,6 +8871,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayMCPServerPassthroughListener'
         - $ref: '#/components/schemas/AIGatewayMCPServerUpstreamServer'
     AIGatewayMCPServer:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         id:
@@ -8151,7 +8909,10 @@ components:
           additionalProperties: false
           properties:
             acls:
-              description: |
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
                 Access control rules for allowing or denying consumer groups access to this tool.
                 When configured, these will override the default access control rules defined on the MCP Server.
               allOf:
@@ -8209,7 +8970,10 @@ components:
           additionalProperties: false
           properties:
             acls:
-              description: |
+              description: |-
+                **Pre-release Feature**
+                This feature is currently in beta and is subject to change.
+
                 Access control rules for allowing or denying consumer groups access to this tool.
                 When configured, these will override the default access control rules defined on the MCP Server.
               allOf:
@@ -8273,6 +9037,9 @@ components:
         - name
         - description
     AIGatewayMCPToolAnnotations:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         destructive_hint:
@@ -8292,22 +9059,41 @@ components:
           type: string
       additionalProperties: false
     AIGatewayMCPToolHeaders:
-      description: 'The headers of the exported API. By default, Kong will extract the headers from API configuration. If the configured headers are not exactly matched, this field is required.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        The headers of the exported API. By default, Kong will extract the headers from API configuration. If the configured headers are not exactly matched, this field is required.
       type: object
       additionalProperties: true
     AIGatewayMCPToolQuery:
-      description: 'The query arguments of the exported API. If the generated query arguments are not exactly matched, this field is required.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        The query arguments of the exported API. If the generated query arguments are not exactly matched, this field is required.
       type: object
       additionalProperties: true
     AIGatewayMCPToolRequestBody:
-      description: 'The API requestBody specification defined in OpenAPI JSON format. For example, ''{"content":{"application/x-www-form-urlencoded":{"schema":{"type":"object","properties":{"color":{"type":"array","items":{"type":"string"}}}}}}}''. See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details. Note that `$ref` is not supported.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        The API requestBody specification defined in OpenAPI JSON format. For example, '{"content":{"application/x-www-form-urlencoded":{"schema":{"type":"object","properties":{"color":{"type":"array","items":{"type":"string"}}}}}}}'. See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details. Note that `$ref` is not supported.
       type: object
       additionalProperties: true
     AIGatewayMCPToolResponses:
-      description: 'The API responses specification defined in OpenAPI JSON format. This specification will be used to validate the upstream response and map it back to the structuredOutput. For example, ''{"200":{"content":{"application/json":{"schema":{"type":"object","properties":{"result":{"type":"string"}}}}}}}}''. See https://swagger.io/docs/specification/v3_0/describing-responses/ for more details. Only one non-error (status code < 400) response is supported. Note that `$ref` is not supported.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        The API responses specification defined in OpenAPI JSON format. This specification will be used to validate the upstream response and map it back to the structuredOutput. For example, '{"200":{"content":{"application/json":{"schema":{"type":"object","properties":{"result":{"type":"string"}}}}}}}}'. See https://swagger.io/docs/specification/v3_0/describing-responses/ for more details. Only one non-error (status code < 400) response is supported. Note that `$ref` is not supported.
       type: object
       additionalProperties: true
     AIGatewayMCPToolParameters:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: array
       items:
         $ref: '#/components/schemas/AIGatewayMCPToolParameter'
@@ -8349,7 +9135,11 @@ components:
       type: string
       example: okta-ai-se
     AIGatewayIdentityProviderKeyAuth:
-      description: Configuration for an identity provider.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an identity provider.
       type: object
       properties:
         display_name:
@@ -8359,7 +9149,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this identity provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this identity provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: okta-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8415,7 +9209,11 @@ components:
         - type
       title: AIGatewayIdentityProviderKeyAuthConfig
     AIGatewayIdentityProviderOpenIDConnect:
-      description: Configuration for an identity provider.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Configuration for an identity provider.
       type: object
       properties:
         display_name:
@@ -8425,7 +9223,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this identity provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this identity provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: okta-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8523,7 +9325,10 @@ components:
       type: string
       example: azure-ai-se
     AIGatewayModelProviderAnthropic:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8538,7 +9343,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8561,7 +9370,10 @@ components:
         - name
         - config
     AIGatewayModelProviderCerebras:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8576,7 +9388,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8599,7 +9415,10 @@ components:
         - name
         - config
     AIGatewayModelProviderCohere:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8614,7 +9433,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8637,7 +9460,10 @@ components:
         - name
         - config
     AIGatewayModelProviderDashscope:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8652,7 +9478,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8675,7 +9505,10 @@ components:
         - name
         - config
     AIGatewayModelProviderDatabricks:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8690,7 +9523,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8713,7 +9550,10 @@ components:
         - name
         - config
     AIGatewayModelProviderDeepseek:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8728,7 +9568,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8751,7 +9595,10 @@ components:
         - name
         - config
     AIGatewayModelProviderHuggingface:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8766,7 +9613,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8789,7 +9640,10 @@ components:
         - name
         - config
     AIGatewayModelProviderKimi:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8804,7 +9658,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8827,7 +9685,10 @@ components:
         - name
         - config
     AIGatewayModelProviderLlama2:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8842,7 +9703,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8865,7 +9730,10 @@ components:
         - name
         - config
     AIGatewayModelProviderMistral:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8880,7 +9748,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8903,7 +9775,10 @@ components:
         - name
         - config
     AIGatewayModelProviderOllama:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8918,7 +9793,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8941,7 +9820,10 @@ components:
         - name
         - config
     AIGatewayModelProviderOpenai:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8956,7 +9838,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -8979,7 +9865,10 @@ components:
         - name
         - config
     AIGatewayModelProviderVercel:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -8994,7 +9883,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -9017,7 +9910,10 @@ components:
         - name
         - config
     AIGatewayModelProviderVllm:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -9032,7 +9928,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -9055,7 +9955,10 @@ components:
         - name
         - config
     AIGatewayModelProviderXai:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for an upstream model provider.
       type: object
       properties:
@@ -9070,7 +9973,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -9093,7 +10000,10 @@ components:
         - name
         - config
     AIGatewayModelProviderConfigAuthBasic:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Basic auth config for an upstream model provider.
       type: object
       properties:
@@ -9154,7 +10064,10 @@ components:
         - type
       title: AIGatewayModelProviderConfigAuthBasic
     AIGatewayModelProviderBedrock:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Config for AWS model provider.
       type: object
       properties:
@@ -9169,7 +10082,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -9198,7 +10115,10 @@ components:
         - name
         - config
     AIGatewayModelProviderConfigAuthAWS:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for AWS model provider.
       type: object
       properties:
@@ -9241,7 +10161,10 @@ components:
         - type
       title: AIGatewayModelProviderConfigAuthAWS
     AIGatewayModelProviderAzure:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Config for Azure model provider.
       type: object
       properties:
@@ -9256,7 +10179,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -9289,7 +10216,10 @@ components:
         - name
         - config
     AIGatewayModelProviderConfigAuthAzure:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for Azure model provider.
       type: object
       properties:
@@ -9324,7 +10254,10 @@ components:
         - type
       title: AIGatewayModelProviderConfigAuthAzure
     AIGatewayModelProviderGemini:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Config for GCP model provider.
       type: object
       properties:
@@ -9339,7 +10272,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -9368,7 +10305,10 @@ components:
         - name
         - config
     AIGatewayModelProviderVertex:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Config for GCP model provider.
       type: object
       properties:
@@ -9383,7 +10323,11 @@ components:
           maxLength: 256
           minLength: 1
         name:
-          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.
           example: azure-ai-se
           allOf:
             - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
@@ -9412,7 +10356,10 @@ components:
         - name
         - config
     AIGatewayModelProviderConfigAuthGCP:
-      description: |
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
         Configuration for GCP model provider.
       type: object
       properties:
@@ -9447,6 +10394,9 @@ components:
         - type
       title: AIGatewayModelProviderConfigAuthGCP
     CreateAIGatewayConfigStoreRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -9466,6 +10416,9 @@ components:
       required:
         - name
     UpdateAIGatewayConfigStoreRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -9478,6 +10431,9 @@ components:
           $ref: '#/components/schemas/ManagedBy'
       additionalProperties: false
     AIGatewayConfigStore:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         display_name:
@@ -9506,18 +10462,29 @@ components:
         - created_at
         - updated_at
     AIGatewayConfigStoreSecretKey:
-      description: The unique key identifying the secret within the Config Store.
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        The unique key identifying the secret within the Config Store.
       type: string
       example: my-secret-key
       maxLength: 512
       minLength: 1
     AIGatewayConfigStoreSecretValue:
-      description: 'The secret value. Once stored, this value cannot be retrieved.'
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        The secret value. Once stored, this value cannot be retrieved.
       type: string
       example: my-secret-value
       maxLength: 5120
       writeOnly: true
     CreateAIGatewayConfigStoreSecretRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         key:
@@ -9529,6 +10496,9 @@ components:
         - key
         - value
     UpdateAIGatewayConfigStoreSecretRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         value:
@@ -9537,6 +10507,9 @@ components:
       required:
         - value
     AIGatewayConfigStoreSecret:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         key:
@@ -9551,6 +10524,9 @@ components:
         - created_at
         - updated_at
     CreateAIGatewayModelProviderRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       discriminator:
         propertyName: type
         mapping:
@@ -9594,6 +10570,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelProviderXai'
         - $ref: '#/components/schemas/AIGatewayModelProviderVertex'
     UpdateAIGatewayModelProviderRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       discriminator:
         propertyName: type
         mapping:
@@ -9637,6 +10616,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelProviderXai'
         - $ref: '#/components/schemas/AIGatewayModelProviderVertex'
     AIGatewayModelProvider:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         id:
@@ -9692,6 +10674,9 @@ components:
         - created_at
         - updated_at
     CreateAIGatewayIdentityProviderRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       discriminator:
         propertyName: type
         mapping:
@@ -9701,6 +10686,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayIdentityProviderKeyAuth'
         - $ref: '#/components/schemas/AIGatewayIdentityProviderOpenIDConnect'
     UpdateAIGatewayIdentityProviderRequest:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       discriminator:
         propertyName: type
         mapping:
@@ -9710,6 +10698,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayIdentityProviderKeyAuth'
         - $ref: '#/components/schemas/AIGatewayIdentityProviderOpenIDConnect'
     AIGatewayIdentityProvider:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       discriminator:
         propertyName: type
         mapping:
@@ -9719,6 +10710,9 @@ components:
         - $ref: '#/components/schemas/AIGatewayIdentityProviderKeyAuthResponse'
         - $ref: '#/components/schemas/AIGatewayIdentityProviderOpenIDConnectResponse'
     AIGatewayIdentityProviderResponseProperties:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       type: object
       properties:
         id:
@@ -9732,11 +10726,17 @@ components:
         - created_at
         - updated_at
     AIGatewayIdentityProviderKeyAuthResponse:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       allOf:
         - $ref: '#/components/schemas/AIGatewayIdentityProviderKeyAuth'
         - $ref: '#/components/schemas/AIGatewayIdentityProviderResponseProperties'
       title: AIGatewayIdentityProviderKeyAuthResponse
     AIGatewayIdentityProviderOpenIDConnectResponse:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
       allOf:
         - $ref: '#/components/schemas/AIGatewayIdentityProviderOpenIDConnect'
         - $ref: '#/components/schemas/AIGatewayIdentityProviderResponseProperties'
@@ -10438,65 +11438,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/AIGatewayPolicy'
-    GetAIGatewayPolicySchemaResponse:
-      description: A successful response returning the AI Gateway Policy Schema.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AIGatewayPolicySchema'
     UpdateAIGatewayPolicyResponse:
       description: Policy updated successfully.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/AIGatewayPolicy'
-    ListAIGatewayPolicyUsageResponse:
-      description: A successful response listing usage of a Policy.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              agents:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AIGatewayAgent'
-              consumers:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AIGatewayConsumer'
-              consumer_groups:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AIGatewayConsumerGroup'
-              models:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AIGatewayModel'
-              mcp_servers:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AIGatewayMCPServer'
-            additionalProperties: false
-            required:
-              - agents
-              - consumers
-              - consumer_groups
-              - models
-              - mcp_servers
-    ListAIGatewayAvailablePoliciesResponse:
-      description: A successful response listing available AI Gateway Policies.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AIGatewayAvailablePolicy'
-            required:
-              - data
     ListAIGatewayPoliciesResponse:
       description: A successful response listing AI Gateway Policies.
       content:
@@ -10904,7 +11851,5 @@ tags:
     description: MCP Servers that expose tools for AI Gateway integrations.
   - name: AI Gateway Model Providers
     description: Model providers that define the backend AI service connections for the AI Gateway.
-  - name: AI Gateway Debug
-    description: AI Gateway debug endpoints.
 security:
   - konnectAccessToken: []
