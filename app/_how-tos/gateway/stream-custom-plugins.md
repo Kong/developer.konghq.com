@@ -73,8 +73,7 @@ In this guide, you'll define two plugins inline to demonstrate how streaming wor
 
 You'll apply `replaceme` globally with a condition so it only runs when the request path does not contain the word `skip`, then validate both cases.
 
-{:.warning}
-> Custom plugin streaming isn't supported on Serverless Gateways. It's supported on Dedicated Cloud Gateways and self-managed hybrid-mode deployments.
+{% include_cached /gateway/custom-plugin-streaming-serverless-unsupported.md %}
 
 ## Create the first plugin
 

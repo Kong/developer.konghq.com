@@ -33,8 +33,7 @@ related_resources:
 
 You can define a custom plugin directly in Kong entity configuration.
 
-{:.warning}
-> Custom plugin streaming isn't supported on Serverless Gateways. It's supported on Dedicated Cloud Gateways and self-managed {{site.base_gateway}} deployments (hybrid mode, traditional, and DB-less).
+{% include_cached /gateway/custom-plugin-streaming-serverless-unsupported.md %}
 
 ## How does custom plugin streaming work? 
 
