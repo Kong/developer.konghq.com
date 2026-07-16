@@ -565,11 +565,11 @@ rows:
                 With {{site.ai_gateway}} AI Policies and runtime components, {{site.base_gateway}} can understand the prompts that are being sent through the gateway.
                 AI Policies can inspect the body and provide more specific AI capabilities to your traffic.
 
-            - q: I'm migrating from {{site.ai_gateway}} v1. Where do I start?
+            - q: I'm migrating from {{site.ai_gateway}} running on {{site.base_gateway}}. Where do I start?
               a: |
-                {{site.ai_gateway}} 2.x replaces v1's plugin-centric model with an entity model.
+                {{site.ai_gateway}} 2.x replaces {{site.base_gateway}}'s plugin-centric model (V1) with an entity model (V2).
                 Instead of configuring the AI Proxy/AI Proxy Advanced plugin directly, you now create AI Model Provider and AI Model entities to manage upstream connectivity and routing.
-                See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of v1 concepts to v2 entities, and [Migrate to {{site.ai_gateway}} 2.x](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
+                See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of V1 concepts to V2 entities, and [Migrate to {{site.ai_gateway}} 2.x](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
             - q: I was using AI Proxy or AI Proxy Advanced. Where did those plugins go?
               a: |
                 In {{site.ai_gateway}} 2.x, the proxy is configured through the [AI Model entity](/ai-gateway/entities/ai-model/) rather than the AI Proxy plugin.
