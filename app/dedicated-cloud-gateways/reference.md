@@ -81,6 +81,9 @@ faqs:
 
       {:.warning}
       > **Azure Key Vault is not supported as a Vault backend on Dedicated Cloud Gateways:** Azure Key Vault's client secret has no Vault entity equivalent. It's only read from an environment variable. Since Dedicated Cloud Gateways can't set that environment variable and don't support Azure managed identity as an alternative, Azure Key Vault can't be used as a Vault backend on Dedicated Cloud Gateways.
+  - q: Can I use the file system vault backend with Dedicated Cloud Gateways?
+    a: |
+      No. The file system vault backend isn't supported on Dedicated Cloud Gateways, since Dedicated Cloud Gateways don't provide access to the data plane's filesystem to store secret files.
 
 related_resources:
   - text: Dedicated Cloud Gateways 

@@ -1225,6 +1225,8 @@ rows:
 {% new_in 3.15 %} The file system vault reads secrets from files on the {{site.base_gateway}} data plane's local filesystem.
 The file system vault doesn't require any external services or credentials.
 
+{% include /gateway/file-system-vault-cloud-unsupported.md %}
+
 Secrets can be plain text files or JSON files. Set `vaults.config.prefix` to the directory containing your secret files, then reference secrets relative to that directory:
 
 <!--vale off-->

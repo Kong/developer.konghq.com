@@ -66,6 +66,9 @@ Normally, deploying a custom plugin requires uploading Lua files to every data p
 With streaming plugins, you define the plugin schema and handler directly in your {{site.base_gateway}} entity configuration. 
 The control plane becomes the single source of truth and distributes the plugin to all connected data planes automatically, with no file management or restarts needed.
 
+{:.warning}
+> Custom plugin streaming isn't supported on Serverless Gateways. It's supported on Dedicated Cloud Gateways and self-managed hybrid-mode deployments.
+
 In this guide, you'll define two plugins inline to demonstrate how streaming works:
 
 * `replaceme`: Substitutes a target word in the request body with a replacement word before forwarding to the upstream.
