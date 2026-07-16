@@ -27,6 +27,12 @@ Get {{site.konnect_short_name}} account information.
 
 {% include_cached /kongctl/help/get/konnect/index.md %}
 
+### kongctl get konnect ai-gateway
+
+Use the `get` verb with the `ai-gateway` command to query {{site.konnect_short_name}} {{site.ai_gateway}}s.
+
+{% include_cached /kongctl/help/get/konnect/ai-gateway.md %}
+
 ### kongctl get konnect analytics
 
 The `analytics` command allows you to work with [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources.

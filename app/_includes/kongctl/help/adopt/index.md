@@ -14,10 +14,13 @@ Examples:
   kongctl adopt analytics dashboard 22cd8a0b-72e7-4212-9099-0764f8e9c5ac --namespace analytics
   # Adopt a DCR provider by name
   kongctl adopt dcr-provider my-dcr-provider --namespace team-alpha
+  # Adopt an AI Gateway by display name
+  kongctl adopt ai-gateway my-ai-gateway --namespace team-alpha
   # Adopt an API explicitly via the konnect product
   kongctl adopt konnect api my-api --namespace team-alpha
 
 Available Commands:
+  ai-gateway    Adopt an existing Konnect AI Gateway into namespace management [beta]
   analytics     Adopt Konnect Analytics resources into namespace management
   api           Adopt an existing Konnect API into namespace management
   auth-strategy Adopt an existing Konnect auth strategy into namespace management
