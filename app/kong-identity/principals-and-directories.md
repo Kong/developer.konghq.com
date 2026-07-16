@@ -7,7 +7,7 @@ products:
   - identity
   - konnect
 api_specs:
-    - konnect/kong-identity
+    - konnect/kong-identity-principals
 works_on:
   - konnect
 
