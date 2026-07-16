@@ -60,7 +60,7 @@ to get an instance of {{site.base_gateway}} running almost instantly.
    {% if page.output_format == 'markdown' %}
    {{vanilla_snippet | liquify | indent: 3}}
    {% else %}
-   <div data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }' markdown="1">
+   <div data-test-setup='{ "gateway": "{{page.min_version.gateway}}"{% for variable in include.env_variables %}{% if variable.value %}, "{{variable.name}}": "{{variable.value}}"{% else %}{% assign parts = variable.name | split: "=" %}, "{{parts[0]}}": "{{parts[1]}}"{% endif %}{% endfor %} }' markdown="1">
 {{vanilla_snippet | indent: 3}}
    </div>
 

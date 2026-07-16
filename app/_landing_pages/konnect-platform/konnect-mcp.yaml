@@ -55,6 +55,7 @@ rows:
                   * **API debugging**: Create debug sessions with active tracing to investigate performance issues and identify bottlenecks.
                   * **Analytics and monitoring**: Query API request data with filters for time range, status codes, consumers, services, and routes.
                   * **Kong documentation search**: Search Kong's documentation for configuration guidance and troubleshooting steps.
+                  * **{{site.dev_portal}} content management**: Create, edit, and publish {{site.dev_portal}} pages, snippets, and [Markdown Components (MDC)](https://portaldocs.konghq.com/) to manage your portal content.
       - blocks:
         - type: structured_text
           config:
@@ -69,6 +70,7 @@ rows:
                   * You need to debug API performance issues with active tracing
                   * You prefer working with AI assistants for infrastructure tasks
                   * You need to query analytics and traffic patterns programmatically
+                  * You want to manage {{site.dev_portal}} pages and content using [Markdown Components (MDC)](https://portaldocs.konghq.com/)
 
   - header:
       text: "How the {{site.konnect_product_name}} MCP Server works"

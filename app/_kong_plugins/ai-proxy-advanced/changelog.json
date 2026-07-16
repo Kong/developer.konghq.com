@@ -348,6 +348,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.9": [
+    {
+      "message": "Fixed an issue where we didn't handle SSE event headers correctly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where native Bedrock request parsing dropped string message content in Kong's internal format, causing other plugins to receive invalid data.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed Azure OpenAI Responses API support for deployment-style routing.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Supported health checks and circuit breaker for the load balancer. Added two new fields `max_fails` and `fail_timeout`.",

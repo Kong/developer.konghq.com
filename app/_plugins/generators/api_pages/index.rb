@@ -29,7 +29,7 @@ module Jekyll
 
       def data
         {
-          'title' => 'OpenAPI Specifications',
+          'title' => 'API Reference',
           'description' => 'Directory of OpenAPI specifications for various Kong APIs.',
           'layout' => 'api/index',
           'get_help' => false,

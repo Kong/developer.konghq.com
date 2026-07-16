@@ -165,6 +165,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.9": [
+    {
+      "message": "Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where consumer groups could not be resolved\nwhen the groups claim was only available from the user info endpoint, which\nresulted in a `500` error.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to the `tls_certificate_verify`\nglobal option. When this option is enabled the plugin's flags\n`ssl_verify`, `tls_client_auth_ssl_verify`, and `session_memcached_ssl_verify`\ncannot be disabled.\n",

@@ -50,6 +50,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.9": [
+    {
+      "message": "Fixed an issue where the Bedrock driver could not handle the OpenAI `content_parts` format in system messages, user/assistant messages, and array-typed tool results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed OpenAI-compatible completions requests with string array prompts.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",

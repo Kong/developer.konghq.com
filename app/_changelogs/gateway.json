@@ -24253,5 +24253,104 @@
         "scope": "Clustering"
       }
     ]
+  },
+  "3.14.0.9": {
+    "kong-ee": [
+      {
+        "message": "Bumped kong-redis-cluster from 1.5.7 to 1.6.1. This fixes a breaking change in\n`refresh_slots` that could lead to a lock issue, optimizes hot paths (slot\niteration and array creation), and avoids early concatenation of error log strings.\nThis also accepts the `x.y` Redis version format reported by some managed services\n(e.g. AWS ElastiCache Serverless Valkey) by making the patch component optional,\nand only warns on Redis version `9.0` or newer instead of `8.0` or newer.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ACL**: Fixed an issue where the ACL plugin returned 403 for authenticated\ncredentials with no consumer and no groups (e.g. ACE / Dev Portal application\ncredentials) when configured with a deny list. A group-less identity cannot\nmatch a deny list and should be allowed through.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where the ACL decision cache had collisions.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't handle SSE event headers correctly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where native Bedrock request parsing dropped string message content in Kong's internal format, causing other plugins to receive invalid data.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Azure OpenAI Responses API support for deployment-style routing.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where the Bedrock driver could not handle the OpenAI `content_parts` format in system messages, user/assistant messages, and array-typed tool results.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed OpenAI-compatible completions requests with string array prompts.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed token counters being decremented on AI Semantic Cache hits.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where instrumenting third-party HTTP client calls produced two indistinguishable `kong.io.http.request` spans for `httpc:request_uri()`.\nIt is now traced under a dedicated `kong.io.http.request_uri` span, and the `connect`, DNS, and internal `request` spans it triggers are nested beneath it.\nThe `kong.io.http.request` span now also reports the `http.url` attribute.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where dynamic plugin ordering (`ordering`) leaked into the\ndownstream phases (`header_filter`, `body_filter`, `response`, `log`). Dynamic\nordering now again applies only to the `access` phase; downstream phases execute\nin static plugin-priority order.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where resetting the password of an admin or developer failed with the error `Old password is invalid`, which happened when the credential was created before the basic auth hashing algorithm was upgraded from SHA1 to SHA256 (e.g. a `kong_admin` user created in an older version and carried over through an upgrade). The old password is now verified with the backward-compatible verification logic that supports both SHA1 and SHA256 hashed passwords.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where consumer groups could not be resolved\nwhen the groups claim was only available from the user info endpoint, which\nresulted in a `500` error.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**otel**: Fixed an issue where OpenTelemetry metrics only supported integer values by adding support for floating-point values in the OTLP exporter.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Prometheus**: A histogram's series (its buckets, `_count` and `_sum`) is now\nread as one atomic group during a scrape. Previously, the exporter yielded and\nflushed output between individual samples, so an observation landing mid-scrape\ncould bump `_count`/`_sum` after the buckets were already read, producing an\ninternally inconsistent histogram in a single response.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Prometheus**: Histogram series are now emitted grouped by label set (all\nbuckets in ascending `le` order, then `_count`, then `_sum`) so the output\nfollows the OpenMetrics interleaving rule. Previously, samples were grouped by\nsuffix, which caused strict consumers such as Google Managed Prometheus to\ndrop points.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Prometheus**: Histograms now expose every bucket (including those with a\nvalue of `0`) starting from the first observation of a given label set.\nPreviously, only buckets greater than or equal to the observed value were\ncreated, so lower buckets appeared lazily on later scrapes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-transformer**: Fixed a regression where `remove.headers` entries in `header:value` format (e.g. `correlationId:1222`) failed to remove the header. The value part is now correctly ignored during removal, restoring the behavior from 3.11.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
   }
 }

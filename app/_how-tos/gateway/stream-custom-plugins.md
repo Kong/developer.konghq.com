@@ -24,9 +24,11 @@ prereqs:
       include_content: prereqs/custom-plugin-permissions
       icon_url: /assets/icons/kogo-white.svg
   gateway:
-    - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on"
+    - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED"
+      value: "on"
   konnect:
-    - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on"
+    - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED"
+      value: "on"
   entities:
     services:
         - example-service
@@ -119,6 +121,7 @@ custom_plugins:
       return WordReplacerHandler
 EOF
 ```
+{:data-test-step='block'}
 
 Where:
 * `custom_plugins.name`: A unique name for the plugin.
@@ -157,6 +160,7 @@ custom_plugins:
       return ReflectorHandler
 EOF
 ```
+{:data-test-step='block'}
 
 ## Configure the plugins
 

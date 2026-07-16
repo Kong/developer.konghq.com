@@ -76,6 +76,10 @@ backporting
 backports
 backreference
 backreferences
+wget
+meshtrust
+sectionName
+inotify
 backtrace
 balancer's
 bargineer

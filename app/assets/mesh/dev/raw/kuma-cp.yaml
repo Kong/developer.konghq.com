@@ -475,9 +475,6 @@ runtime:
     # If this is set to true, deleting a Mesh will not delete resources that belong to that Mesh.
     # This can be useful when resources are managed in Argo CD where creation/deletion is managed there.
     skipMeshOwnerReference: false # ENV: KUMA_RUNTIME_KUBERNETES_SKIP_MESH_OWNER_REFERENCE
-    # If true, then control plane can support TLS secrets for builtin gateway outside of mesh system namespace.
-    # The downside is that control plane requires permission to read Secrets in all namespaces.
-    supportGatewaySecretsInAllNamespaces: false # ENV: KUMA_RUNTIME_KUBERNETES_SUPPORT_GATEWAY_SECRETS_IN_ALL_NAMESPACES
     # WorkloadLabels is a prioritized list of pod labels to use for generating the kuma.io/workload label on DataplaneProxy.
     # The first non-empty label value found will be used. If no labels match, falls back to ServiceAccount name.
     # Default is empty list (uses ServiceAccount as workload identifier).
@@ -507,8 +504,6 @@ defaults:
   skipMeshCreation: false # ENV: KUMA_DEFAULTS_SKIP_MESH_CREATION
   # If true, it skips creating the default tenant resources
   skipTenantResources: false # ENV: KUMA_DEFAULTS_SKIP_TENANT_RESOURCES
-  # If true, it creates the default routing (TrafficPermission and TrafficRoute) resources for a new Mesh
-  createMeshRoutingResources: false # ENV: KUMA_DEFAULTS_CREATE_MESH_ROUTING_RESOURCES
   # If true, it skips creating default hostname generators
   skipHostnameGenerators: false # ENV: KUMA_DEFAULTS_SKIP_HOSTNAME_GENERATORS
 # Metrics configuration
@@ -839,9 +834,6 @@ access:
       groups: ["mesh-system:unauthenticated", "mesh-system:authenticated"] # ENV: KUMA_ACCESS_STATIC_CONTROL_PLANE_METADATA_GROUPS
 # Configuration of experimental features of Kuma
 experimental:
-  # If true, instead of embedding kubernetes outbounds into Dataplane object, they are persisted next to VIPs in ConfigMap
-  # This can improve performance, but it should be enabled only after all instances are migrated to version that supports this config
-  kubeOutboundsAsVIPs: true # ENV: KUMA_EXPERIMENTAL_KUBE_OUTBOUNDS_AS_VIPS
   # Tag first virtual outbound model is compressed version of default Virtual Outbound model
   # It is recommended to use tag first model for deployments with more than 2k services
   # You can enable this flag on existing deployment. In order to downgrade cp with this flag enabled
@@ -863,14 +855,6 @@ experimental:
     fullResyncInterval: 60s # ENV: KUMA_EXPERIMENTAL_KDS_EVENT_BASED_WATCHDOG_FULL_RESYNC_INTERVAL
     # If true, then initial full resync is going to be delayed by 0 to FullResyncInterval.
     delayFullResync: false # ENV: KUMA_EXPERIMENTAL_KDS_EVENT_BASED_WATCHDOG_DELAY_FULL_RESYNC
-  # Enables sidecar containers in Kubernetes if supported by the Kubernetes
-  # environment.
-  sidecarContainers: true # ENV: KUMA_EXPERIMENTAL_SIDECAR_CONTAINERS
-proxy:
-  gateway:
-    # Sets the envoy runtime value to limit maximum number of incoming
-    # connections to a builtin gateway data plane proxy
-    globalDownstreamMaxConnections: 50000 # ENV: KUMA_PROXY_GATEWAY_GLOBAL_DOWNSTREAM_MAX_CONNECTIONS
 tracing:
   openTelemetry:
     endpoint: "" # e.g. otel-collector:4317
@@ -963,11 +947,6 @@ kmesh:
     # inline: "" # ENV: KMESH_LICENSE_INLINE
     # Path to a file with the Kong Mesh license
     path: "" # ENV: KMESH_LICENSE_PATH
-  opa:
-    # Interval for re-generating OPA configuration for Dataplanes connected to the Control Plane
-    configurationRefreshInterval: 1s # ENV: KMESH_OPA_CONFIGURATION_REFRESH_INTERVAL
-    # Backoff that is executed when Control Plane is sending the response that was previously rejected by OPA
-    nackBackoff: 5s # ENV: KMESH_OPA_CONFIGURATION_NACK_BACKOFF
   multizone:
     global:
       kds:

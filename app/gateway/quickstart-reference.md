@@ -92,7 +92,7 @@ rows:
 Kong also provides an interactive AI quickstart script that launches a demo instance of {{site.base_gateway}} running [AI Proxy](/plugins/ai-proxy/):
 
 ```sh
-curl -Ls https://get.konghq.com/ai | bash -s -- -e KONG_LICENSE_DATA
+curl -Ls https://get.konghq.com/ai/v1 | bash -s -- -e KONG_LICENSE_DATA
 ```
 
 The script can either run a {{site.base_gateway}} instance in traditional mode or as a data plane instance for {{site.konnect_short_name}}. You will be prompted to input an API key to configure authentication with an AI provider.
