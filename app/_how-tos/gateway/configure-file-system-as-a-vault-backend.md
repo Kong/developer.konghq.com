@@ -118,7 +118,7 @@ next_steps:
 automated_tests: false
 ---
 
-{% include /gateway/file-system-vault-cloud-unsupported.md %}
+{% include_cached /gateway/file-system-vault-cloud-unsupported.md %}
 
 ## Create a Vault entity for the file system vault
 
