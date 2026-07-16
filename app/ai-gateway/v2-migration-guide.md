@@ -17,7 +17,7 @@ tags:
 min_version:
   ai-gateway: '2.0'
 
-description: This guide walks you through moving your configuration from the API {{site.base_gateway}} plugin model to the new {{site.ai_gateway}} Policies model.
+description: This guide walks you through moving your configuration from the {{site.ai_gateway}} running on {{site.base_gateway}} plugin model to the new {{site.ai_gateway}} 2.x Policies model.
 
 related_resources:
   - text: "{{site.ai_gateway}} 2.x concepts"
@@ -28,19 +28,19 @@ related_resources:
     url: /ai-gateway/entities/
 ---
 
-{{site.ai_gateway}} version 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of the API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: AI Model Providers, AI Models, AI MCP Servers, and AI Agents. 
+{{site.ai_gateway}} 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: AI Model Providers, AI Models, AI MCP Servers, and AI Agents.
 
 This guide walks you through migrating an existing configuration using the `kongctl` {{site.ai_gateway}} conversion extension.
 
-This guide is intended for teams running {{site.ai_gateway}} version 1.x on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} version 2.x control plane. If you are starting fresh, see [Set up a fresh install with the {{site.konnect_short_name}} MCP Server](#set-up-a-fresh-install-with-the-konnect-mcp-server).
+This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see [Set up a fresh install with the {{site.konnect_short_name}} MCP Server](#set-up-a-fresh-install-with-the-konnect-mcp-server).
 
 ## Prerequisites 
 
 Before migrating, make sure you have:
 
 - Read the [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) guide.
-- An existing Kong API Gateway control plane in {{site.konnect_short_name}} running {{site.ai_gateway}} version 1.x, with the AI plugins you want to migrate.
-- A new {{site.ai_gateway}} version 2.x control plane created in {{site.konnect_short_name}}. Note its control plane name.
+- An existing Kong API Gateway control plane in {{site.konnect_short_name}} running {{site.ai_gateway}} on {{site.base_gateway}} 3.x with the AI plugins you want to migrate.
+- A new {{site.ai_gateway}} 2.x control plane created in {{site.konnect_short_name}}. Note its control plane name.
 - A [{{site.konnect_short_name}} Personal Access Token (PAT) or System Account Access Token](/konnect-api/#konnect-api-authentication) with permission to read the source control plane and write to the {{site.ai_gateway}} control plane.
 - The [`deck` CLI](/deck/#install-deck) for exporting your current configuration.
 - The [`kongctl` CLI](/kongctl/) for applying the converted configuration to the {{site.ai_gateway}} control plane.
@@ -48,9 +48,9 @@ Before migrating, make sure you have:
 
 ## Migration overview
 
-Migration uses the `kongctl convert ai-gateway extension` to translate your existing declarative configuration into the v2 entity model, then applies it with `kongctl`. The flow has five steps:
+Migration uses the `kongctl convert ai-gateway extension` to translate your existing declarative configuration into the {{site.ai_gateway}} 2.x entity model, then applies it with `kongctl`. The flow has five steps:
 
-1. Export the declarative configuration from your existing API {{site.base_gateway}} control plane with decK.
+1. Export the declarative configuration from your existing {{site.base_gateway}} control plane with decK.
 1. Run the converter to produce an {{site.ai_gateway}} entity configuration file.
 1. Validate that the output includes all of your AI Models, AI MCP Servers, and AI Agents.
 1. Add your {{site.ai_gateway}} control plane ID to the `kongctl` configuration.
@@ -68,7 +68,7 @@ flowchart LR
 
 ### Step 1: Export your current configuration
 
-Use `deck` to dump the declarative configuration from the API {{site.base_gateway}} control plane that currently runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source control plane.
+Use `deck` to dump the declarative configuration from the {{site.base_gateway}} control plane that currently runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source control plane.
 
 ```sh
 deck gateway dump \
@@ -82,7 +82,7 @@ The resulting `kong.yaml` contains your Services, Routes, plugins (including `ai
 
 ### Step 2: Run the converter
 
-Run `kongctl convert ai-gateway` against the exported `kong.yaml` file. The tool reads the version 1.x plugin configuration and emits an {{site.ai_gateway}} version 2.x entity configuration.
+Run `kongctl convert ai-gateway` against the exported `kong.yaml` file. The tool reads the {{site.ai_gateway}} running on {{site.base_gateway}} plugin configuration and emits an {{site.ai_gateway}} 2.x entity configuration.
 
 ```sh
 kongctl convert ai-gateway deck.yaml \
@@ -103,13 +103,13 @@ The `-o` flag sets the output file. The converter inspects each AI plugin and tr
 
 Open `ai-gateway.yaml` and confirm that the converter captured everything you expect. At minimum, check that:
 
-- Every version 1.x model has a corresponding AI Model entry, with the right `capabilities`, `formats`, and `targets`.
+- Every AI Proxy plugin-based model has a corresponding AI Model entry, with the right `capabilities`, `formats`, and `targets`.
 - Provider credentials were extracted correctly, and each `targets[].provider` reference resolves to a declared AI Model Provider.
 - Every AI MCP Server has the correct `type` for its original plugin mode, and that `conversion-only` and `listener` pairs are linked by matching tags.
 - Each AI Agent points at the correct upstream url and carries the logging settings you had configured.
 - Supporting plugins were converted to AI Policies and attached to the right entities.
 
-Pay particular attention to anything the converter cannot infer from the version 1.x config, such as a AI Model Provider `display_name` or a AI Model `display_name`. These are required in version 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
+Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as an AI Model Provider `display_name` or an AI Model `display_name`. These are required in {{site.ai_gateway}} 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
 
 ### Step 4: Add your control plane ID to kongctl
 
@@ -139,7 +139,7 @@ kongctl apply -f ai-gateway.yaml
 
 `kongctl` creates the AI Model Providers, Models, MCP Servers, Agents, and Policies defined in the file. Because the configuration is declarative, you can re-run to apply after edits and `kongctl` will reconcile the control plane to match the file.
 
-After the apply succeeds, the {{site.ai_gateway}} exposes its configuration and telemetry endpoints. Send a representative request to each migrated AI Model, MCP server, and Agent to confirm behavior matches version 1.x before you transfer traffic over.
+After the apply succeeds, the {{site.ai_gateway}} exposes its configuration and telemetry endpoints. Send a representative request to each migrated AI Model, MCP server, and Agent to confirm behavior matches {{site.ai_gateway}} running on {{site.base_gateway}} before you transfer traffic over.
 
 ## Entity specific advice
 
@@ -147,7 +147,7 @@ The following sections provide migration advice for the different AI entities.
 
 ### Migrate models
 
-In {{site.ai_gateway}} version 1.x, a model is an [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin attached to a Service and Route. The plugin holds the provider, credentials, route type, model options, and load balancer all in one place. 
+In {{site.ai_gateway}} running on {{site.base_gateway}}, a model is an [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin attached to a Service and Route. The plugin holds the provider, credentials, route type, model options, and load balancer all in one place. 
 
 In {{site.ai_gateway}} version 2.x, that single plugin becomes two entities: an [AI Model Provider](/ai-gateway/entities/ai-model-provider) that holds the upstream connection and credentials, and an [AI Model](/ai-gateway/entities/ai-model/) that holds routing, capabilities, format, load balancing, and one or more `targets` that each reference an AI Model Provider.
 This allows you to reuse AI Model Providers in multiple AI Models.
@@ -259,27 +259,27 @@ models:
 To verify your AI Models entity migration, be sure to check the following:
 
 - Capabilities and format: Confirm the `route_type` was decomposed correctly. For example, `llm/v1/chat` maps to `capabilities: [generate]` and `formats: [{type: openai}]`, while `llm/v1/embeddings` maps to `capabilities: [embeddings]`. Asynchronous file and batch route types map to an AI Model with `type: api` and `capabilities` of `files` or `batches`.
-- Provider reuse: If several version 1.x targets shared the same provider and credentials, the converter should produce a single AI Model Provider that all targets reference. Deduplicate any near-identical AI Model Providers it couldn't merge.
+- Provider reuse: If several {{site.ai_gateway}} running on {{site.base_gateway}} targets shared the same provider and credentials, the converter should produce a single AI Model Provider that all targets reference. Deduplicate any near-identical AI Model Providers it couldn't merge.
 - Model options: Per-target options such as `max_tokens`, `temperature`, `top_p`, and `top_k` move into each `targets[].config`, keyed by the provider `type`.
-- Auth override: If you relied on `config.targets.auth.allow_override` in version 1.x, set `allow_auth_override: true` on the corresponding target in version 2.x.
+- Auth override: If you relied on `config.targets.auth.allow_override` when running {{site.ai_gateway}} on {{site.base_gateway}}, set `allow_auth_override: true` on the corresponding target in version 2.x.
 - Vector database and embeddings: `config.vectordb` and `config.embeddings` settings carry over onto the AI Model config under the `balancer` config, keeping the same Redis or pgvector strategy.
 
 
 ### Migrate MCP servers
 
-In {{site.ai_gateway}} version 1.x, an MCP server is an [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin attached to a Service and Route. The plugin runs in one of four modes and holds the tools, Access Control Lists (ACLs), and logging settings in its config.
+In {{site.ai_gateway}} running on {{site.base_gateway}}, an MCP server is an [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin attached to a Service and Route. The plugin runs in one of four modes and holds the tools, Access Control Lists (ACLs), and logging settings in its config.
 
 In {{site.ai_gateway}} version 2.x, that plugin becomes a single [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, with the following changes:
 * The plugin `mode` setting becomes an MCP Server `type` setting. This part of the migration essentially consists in copying the value you set in `config.mode` to the `type` setting.
-* ACLs, which were plugin fields in version 1.x, become a top-level fields on the AI MCP Server.
+* ACLs, which were plugin fields in {{site.ai_gateway}} running on {{site.base_gateway}}, become a top-level fields on the AI MCP Server.
 
-The following table maps each version 1.x plugin mode to its version 2.x MCP Server type:
+The following table maps each {{site.base_gateway}} plugin mode to its version 2.x MCP Server type:
 
 {% table %}
 columns:
-  - title: "Version 1.x MCP proxy `config.mode`"
+  - title: "V1 MCP proxy `config.mode`"
     key: mode
-  - title: "Version 2.x AI MCP Server `type`"
+  - title: "V2 AI MCP Server `type`"
     key: type
 rows:
   - mode: "`passthrough-listener`"
@@ -290,13 +290,13 @@ rows:
     type: "`conversion-only`"
   - mode: "`listener`"
     type: "`listener`"
-  - mode: "(no version 1.x equivalent)"
+  - mode: "(no V1 equivalent)"
     type: "`upstream-server`"
 {% endtable %}
 
 #### Convert configuration files
 
-The following version 1.x example config:
+The following {{site.ai_gateway}} running on {{site.base_gateway}} example config:
 * Converts a REST flights API into MCP tools
 * Serves the tools on a Route, with `key-auth` in front and a default ACL
 
@@ -382,14 +382,14 @@ mcp-servers:
 To verify your AI MCP Servers entity migration, be sure to check the following:
 
 - Mode and type: Confirm the `type` matches the original mode. The `conversion-only` and `conversion-listener` modes require Route information, so make sure the converted entity includes a `config.route`.
-- Listener aggregation: If you used `conversion-only` plugins feeding a `listener` plugin via tags in version 1.x, confirm the converter preserved the tags so the version 2.x listener AI MCP Server still aggregates the right tools.
+- Listener aggregation: If you used `conversion-only` plugins feeding a `listener` plugin via tags, confirm the converter preserved the tags so the version 2.x listener AI MCP Server still aggregates the right tools.
 - ACL mode: Version 2.x makes the ACL subject explicit. Use `acl_attribute_type: consumer` to evaluate against Consumers and Consumer Groups, or `acl_attribute_type: oauth_access_token` with `access_token_claim_field` to evaluate against a claim in an OAuth2 access token.
 - Per-tool ACLs: A per-tool `acl` replaces the default for that tool and does not merge with `default_tool_acls`. Ensure every allowed subject is listed on the tool explicitly.
-- Logging field names: The version 1.x `log_statistics`, `log_payloads`, and `log_audits` fields become `statistics`, `payloads`, and `audits` under `config.logging`.
+- Logging field names: The older `log_statistics`, `log_payloads`, and `log_audits` fields become `statistics`, `payloads`, and `audits` under `config.logging`.
 
 ### Migrate agents
 
-In {{site.ai_gateway}} version 1.x, an agent is an [AI A2A Proxy](/plugins/ai-a2a-proxy/) plugin attached to a Service and Route. The plugin is a transparent proxy that adds observability and agent card URL rewriting to Agent-to-Agent (A2A) traffic (where the gateway automatically changes the agent's address so clients connect through the gateway instead of directly to the agent.)
+In {{site.ai_gateway}} running on {{site.base_gateway}}, an agent is an [AI A2A Proxy](/plugins/ai-a2a-proxy/) plugin attached to a Service and Route. The plugin is a transparent proxy that adds observability and agent card URL rewriting to Agent-to-Agent (A2A) traffic (where the gateway automatically changes the agent's address so clients connect through the gateway instead of directly to the agent.)
 
 In {{site.ai_gateway}} version 2.x, that plugin becomes an [AI Agent](/ai-gateway/entities/ai-agent/) entity, which captures the following in a single entity and applies the agent card which automatically rewrites the:
 * Upstream URL
@@ -398,7 +398,7 @@ In {{site.ai_gateway}} version 2.x, that plugin becomes an [AI Agent](/ai-gatewa
 
 #### Convert configuration files
 
-The following version 1.x example defines an A2A agent that proxies an upstream agent that handles flight bookings:
+The following example for {{site.ai_gateway}} running on {{site.base_gateway}} defines an A2A agent that proxies an upstream agent that handles flight bookings:
 
 <!--vale off-->
 ```yaml
@@ -458,7 +458,7 @@ agents:
 To verify your AI Agent entity migration, be sure to check the following:
 
 - Agent type: Most A2A workloads use `type: a2a`. Use `type: http` for plain HTTP agent traffic that does not follow the A2A protocol bindings.
-- URL rewriting: The AI Agent entity rewrites the agent card `url` and `additionalInterfaces[].url` fields to the gateway address automatically, the same behavior the version 1.x plugin provided. No extra configuration is needed.
+- URL rewriting: The AI Agent entity rewrites the agent card `url` and `additionalInterfaces[].url` fields to the gateway address automatically, the same behavior the older plugin provided. No extra configuration is needed.
 - Logging field names: As with AI MCP Servers, `log_statistics` and `log_payloads` become `statistics` and `payloads` under `config.logging`.
 - Analytics: When `statistics` is enabled, A2A metrics flow into {{site.konnect_short_name}} analytics. View them under Agentic usage analytics in {{site.konnect_short_name}} [Explorer](/observability/explorer/) and [Dashboards](/observability/#dashboard).
 
@@ -466,13 +466,13 @@ To verify your AI Agent entity migration, be sure to check the following:
 
 After you apply the converted configuration, verify the new control plane before moving production traffic:
 
-- Confirm each AI Model responds. Send a chat or embeddings request to the migrated AI Model route and compare the response and the `X-Kong-LLM-Model` header against its version 1.x equivalent.
+- Confirm each AI Model responds. Send a chat or embeddings request to the migrated AI Model route and compare the response and the `X-Kong-LLM-Model` header against its plugin equivalent.
 - Confirm AI MCP tool discovery and invocation. Connect an MCP client and list tools, then invoke one. If you migrated ACLs, test with both an allowed and a denied Consumer.
 - Confirm AI Agent traffic. Send an A2A request and check that the agent card URL is rewritten to the gateway address and that A2A metrics appear in {{site.konnect_short_name}} analytics.
-- Confirm AI Policies took effect. Exercise rate limiting, authentication, and any AI policies such as `ai-sanitizer` to confirm they behave as they did in version 1.x.
-- Compare entity counts. The number of AI Models, MCP Servers, and Agents in the control plane should match the number of corresponding plugins in your version 1.x export.
+- Confirm AI Policies took effect. Exercise rate limiting, authentication, and any AI policies such as `ai-sanitizer` to confirm they behave as they did before.
+- Compare entity counts. The number of AI Models, MCP Servers, and Agents in the control plane should match the number of corresponding plugins in your {{site.ai_gateway}} running on {{site.base_gateway}} export.
 
-Run the old and new configurations in parallel during cutover so you can roll back by routing traffic to the version 1.x control plane if needed.
+Run the old and new configurations in parallel during cutover so you can roll back by routing traffic to the original control plane if needed.
 
 ## Troubleshooting
 

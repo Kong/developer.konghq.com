@@ -33,7 +33,7 @@ topologies:
 
 related_resources:
   - text: Get started with {{site.ai_gateway}}
-    url: /ai-gateway/get-started/
+    url: /ai-gateway/v1/get-started/
   - text: AI Prompt Guard plugin
     url: /plugins/ai-prompt-guard/
   - text: AI Semantic Prompt Guard
@@ -45,7 +45,7 @@ related_resources:
   - text: Use AI Semantic Response Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-response-guard-plugin/
   - text: Embedding-based similarity matching in Kong AI gateway plugins
-    url: /ai-gateway/semantic-similarity/
+    url: /ai-gateway/v1/semantic-similarity/
 
 icon: ai-semantic-response-guard.png
 

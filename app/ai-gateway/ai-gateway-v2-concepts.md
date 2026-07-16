@@ -17,7 +17,7 @@ tags:
 min_version:
   ai-gateway: '2.0'
 
-description: This page describes the differences between the API {{site.base_gateway}} plugin model and the new {{site.ai_gateway}} Policies model.
+description: This page describes the differences between the {{site.ai_gateway}} running on {{site.base_gateway}} plugin model (V1) and the new {{site.ai_gateway}} 2.x Policies model.
 
 related_resources:
   - text: "Migrate to {{site.ai_gateway}} 2.x"
@@ -28,15 +28,15 @@ related_resources:
     url: /ai-gateway/entities/
 ---
 
-{{site.ai_gateway}} version 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: Providers, Models, MCP Servers, and Agents. 
+{{site.ai_gateway}} 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: Providers, Models, MCP Servers, and Agents.
 
 This guide explains what changed, maps each AI entity to it's corresponding proxy plugin configuration, and walks you through migrating an existing configuration using the `kongctl` {{site.ai_gateway}} conversion extension.
 
-This guide is intended for teams running {{site.ai_gateway}} version 1.x on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} version 2.x control plane. If you are starting fresh, see Appendix B: Set up a fresh install with the {{site.konnect_short_name}} MCP Server.
+This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see Appendix B: Set up a fresh install with the {{site.konnect_short_name}} MCP Server.
 
 ## What's changing
 
-In {{site.ai_gateway}} version 1.x, AI functionality is delivered by three proxy plugins that extend {{site.base_gateway}}'s core proxying. You build Services and Routes, then attach a plugin to add AI behavior:
+In {{site.ai_gateway}} running on {{site.base_gateway}}, AI functionality is delivered by three proxy plugins that extend {{site.base_gateway}}'s core proxying. You build Services and Routes, then attach a plugin to add AI behavior:
 
 - AI Proxy Advanced provides model proxying, transformation, and load balancing across providers and models.
 - AI MCP Proxy bridges Kong-managed Services to the Model Context Protocol, converting REST APIs into MCP tools or fronting upstream MCP servers.
@@ -44,17 +44,17 @@ In {{site.ai_gateway}} version 1.x, AI functionality is delivered by three proxy
 
 This model works, but it couples every AI concept to {{site.base_gateway}} primitives. A single logical model can require a Service, a Route, an AI Proxy Advanced plugin, and several supporting plugins, with the AI intent spread across all of them.
 
-{{site.ai_gateway}} version 2.x abstracts those plugins into a purpose-built entity model on its own control plane. You no longer need to configure Services, Routes, and plugins manually. Instead, you declare the AI resource you want, and the control plane provisions the underlying primitives for you.
+{{site.ai_gateway}} 2.x abstracts those plugins into a purpose-built entity model on its own control plane. You no longer need to configure Services, Routes, and plugins manually. Instead, you declare the AI resource you want, and the control plane provisions the underlying primitives for you.
 
 ### Entity mapping
 
-The following table describes how the two models relate at a high level: a version 1.x deployment is a collection of {{site.base_gateway}}'s Services and Routes with AI plugins attached, while a version 2.x deployment is a collection of {{site.ai_gateway}} entities managed under a single {{site.ai_gateway}} control plane.
+The following table describes how the two models relate at a high level: a deployment with {{site.ai_gateway}} running on {{site.base_gateway}} is a collection of Services and Routes with AI plugins attached, while an {{site.ai_gateway}} 2.x deployment is a collection of {{site.ai_gateway}} entities managed under a single {{site.ai_gateway}} control plane.
 
 {% table %}
 columns:
-  - title: Version 1.x (API {{site.base_gateway}} model)
+  - title: V1 (API {{site.base_gateway}} model)
     key: v1
-  - title: Version 2.x (Native {{site.ai_gateway}} model)
+  - title: V2 (Native {{site.ai_gateway}} model)
     key: v2
   - title: Description
     key: description
@@ -76,7 +76,7 @@ rows:
     description: "Carried over with the same Redis and pgvector strategies."
   - v1: "[AI MCP Proxy](/plugins/ai-mcp-proxy/) on a Service or Route"
     v2: "[AI MCP Server](/ai-gateway/entities/ai-mcp-server/)"
-    description: "Each version 1.x plugin `mode` maps directly to an AI MCP Server `type` value in version 2.x. Additionally, a new `upstream-server` type is available."
+    description: "Each plugin `mode` maps directly to an AI MCP Server `type` value in version 2.x. Additionally, a new `upstream-server` type is available."
   - v1: "Set `config.default_acl` and `config.tools.acl` on [AI MCP Proxy](/plugins/ai-mcp-proxy/)"
     v2: "Set `access` or `tools.access` on an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/). Configure an [AI Consumer](/ai-gateway/entities/ai-consumer/) or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)"
     description: "ACLs become first-class fields."
@@ -85,7 +85,7 @@ rows:
     description: "First class A2A support with URL rewriting and A2A analytics built in."
   - v1: "[Plugins](/plugins/?category=ai)"
     v2: "[Policies](/ai-gateway/policies/)"
-    description: "AI Policies replace plugins, and can be attached to other entities. The 'type' field on a Policy corresponds to the version 1.x plugin."
+    description: "AI Policies replace plugins, and can be attached to other entities. The 'type' field on a Policy corresponds to the plugin."
   - v1: "Consumers and Consumer Groups"
     v2: "[AI Consumer](/ai-gateway/entities/ai-consumer/) and [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)"
     description: "Managed from the control plane."
@@ -96,6 +96,6 @@ rows:
 
 Note the following terminology changes:
 
-- AI Policies replace API {{site.base_gateway}} plugins. All AI Policies have some common parameters, in addition each AI Policy has a `type` which corresponds to a version 1.x plugin such as `ai-sanitizer` or `openid-connect` and their `config` is the same as the version 1.x plugin.
+- AI Policies replace API {{site.base_gateway}} plugins. All AI Policies have some common parameters, in addition each AI Policy has a `type` which corresponds to a plugin from {{site.ai_gateway}} running on {{site.base_gateway}}, such as `ai-sanitizer` or `openid-connect`, and their `config` is the same as the plugin.
 - AI Model Providers are now separate reusable entities. This decouples config and credentials of upstream providers from specific models, which allows you to declare an AI Model Provider once and reference it by name from multiple AI Models.
-- A version 1.x route is split into two version 2.x concepts: a `capabilities` list and a `formats` entry. 
+- A Route from {{site.ai_gateway}} running on {{site.base_gateway}} is split into two {{site.ai_gateway}} 2.x concepts: a `capabilities` list and a `formats` entry.
