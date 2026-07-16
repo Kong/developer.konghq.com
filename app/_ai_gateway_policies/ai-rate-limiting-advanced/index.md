@@ -5,10 +5,10 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
-The AI Rate Limiting Advanced Policy provides rate limiting for any AI Policies. The
+The AI Rate Limiting Advanced Policy provides rate limiting for all [AI Policies](/ai-gateway/policies/). The
 AI Rate Limiting Advanced Policy extends the
 [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy.
 
@@ -19,9 +19,6 @@ LLM providers.
 A common pattern to protect your AI API is to analyze and assign costs to incoming queries, then rate limit the consumer's
 cost for a given time window and provider or policy.
 You can also create a generic prompt rate limit using the [request prompt provider](#request-prompt-function).
-
-Kong also provides multiple specialized rate limiting Policies, including rate limiting for service protection and on GraphQL queries.
-See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose the AI Policy that is most useful in your use case.
 
 ## Strategies
 
