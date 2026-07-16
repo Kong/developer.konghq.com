@@ -30,12 +30,18 @@ If any paths correspond to removed commands (the include file no longer exists),
 
 ## Prerequisites
 
-Check that `kongctl` is installed. If not, ask the user before installing:
+Check that `kongctl` is installed and up to date. Run:
 
 ```sh
 which kongctl && kongctl version
 # If missing: brew install kongctl (or: brew upgrade kongctl)
 ```
+
+Ask the user to upgrade to the latest version before proceeding:
+
+> "Before I start, please upgrade kongctl to the latest version. You can use `brew upgrade kongctl` or `curl -fsSL https://get.konghq.com/kongctl | sh -s -- --version <version-name>`. Let me know when that's done."
+
+Only continue once the user confirms their version is up to date.
 
 Only run kongctl commands with the `--help` flag.
 

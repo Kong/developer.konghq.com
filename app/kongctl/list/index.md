@@ -31,6 +31,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl list ai-gateway](/kongctl/list/ai-gateway/)
+    description: "List {{site.ai_gateway}}s."
+  - command: |
       [kongctl list api](/kongctl/list/api/)
     description: "List APIs."
   - command: |

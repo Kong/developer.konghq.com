@@ -63,6 +63,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl adopt ai-gateway](/kongctl/adopt/ai-gateway/)
+    description: "Adopt an existing {{site.konnect_short_name}} {{site.ai_gateway}} into namespace management."
+  - command: |
       [kongctl adopt analytics](/kongctl/adopt/analytics/)
     description: "Adopt {{site.konnect_short_name}} {{site.observability}} resources."
   - command: |
