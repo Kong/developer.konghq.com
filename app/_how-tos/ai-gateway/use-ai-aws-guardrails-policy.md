@@ -36,7 +36,7 @@ tags:
 
 tldr:
   q: How can I use the AI AWS Guardrails Policy with {{site.ai_gateway}}?
-  a: Configure an AI Provider and AI Model to route requests to any LLM upstreams. Apply an AI AWS Guardrails Policy to your model to block unsafe inputs and outputs based on your Bedrock guardrail.
+  a: Configure an AI Model Provider and AI Model to route requests to any LLM upstreams. Apply an AI AWS Guardrails Policy to your model to block unsafe inputs and outputs based on your Bedrock guardrail.
 
 prereqs:
   inline:
@@ -58,6 +58,8 @@ prereqs:
     - title: Bedrock Guardrail
       include_content: md/ai-gateway/v2/prereqs/bedrock
       icon_url: /assets/icons/bedrock.svg
+    - title: OpenAI API key
+      include_content: md/ai-gateway/v2/prereqs/openai-kongctl
 
 ---
 
