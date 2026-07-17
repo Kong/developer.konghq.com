@@ -34,6 +34,7 @@ categories:
 
 search_aliases:
   - collectd
+  - statsd-advanced
 
 related_resources:
   - text: Collect {{site.base_gateway}} metrics with the StatsD plugin
@@ -49,6 +50,11 @@ It can also be used to log metrics on the [Collectd](https://collectd.org/) daem
 
 By default, the plugin sends a packet for each metric it observes. The [`config.udp_packet_size`](/plugins/statsd/reference/#schema--config-udp-packet-size) option configures the greatest datagram size the plugin can combine. 
 It should be less than 65507, according to UDP protocol. Consider the MTU of the network when setting this parameter.
+
+{:.info}
+> **Note**: As of {{site.base_gateway}} 3.0.0.0, all capabilities of StatsD Advanced are bundled in the StatsD plugin.
+> StatsD Advanced has been deprecated and will be removed in 4.0.
+> If you're still using StatsD Advanced, the StatsD reference documentation also applies to that plugin.
 
 ## Metrics
 
