@@ -207,6 +207,49 @@ spec:
       # name: my-service-name
 ```
 
+## Konnect authentication configuration {% new_in 2.3 %}
+
+When configuring a `KonnectAPIAuthConfiguration` with `spec.type: secretRef`, you can reference the `Secret` holding the {{site.konnect_short_name}} token in a different namespace.
+
+You can do this with the `spec.secretRef.namespace` field, by specifying the `namespace` of the `Secret` resource:
+
+```yaml
+apiVersion: konnect.konghq.com/v1alpha1
+kind: KonnectAPIAuthConfiguration
+metadata:
+  name: konnect-api-auth
+  namespace: default
+spec:
+  type: secretRef
+  secretRef:
+    name: konnect-api-auth-secret
+    namespace: auth
+  serverURL: us.api.konghq.com
+```
+
+In order to protect cross-namespace references, the `Secret` resource must explicitly allow references from other namespaces using `KongReferenceGrant` resources:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
+kind: KongReferenceGrant
+metadata:
+  name: allow-konnectapiauthconfiguration-to-secret
+  namespace: auth
+spec:
+  from:
+    - group: konnect.konghq.com
+      kind: KonnectAPIAuthConfiguration
+      namespace: default
+  to:
+    - group: core
+      kind: Secret
+      # Optionally specify a specific Secret name to allow
+      # only this specific resource to be referenced.
+      # name: konnect-api-auth-secret
+```
+
+Without a valid grant, the `KonnectAPIAuthConfiguration` reports `ResolvedRefs=False` with reason `RefNotPermitted` and `APIAuthValid=False`. Once a permitting `KongReferenceGrant` is created, the object is reconciled and the reference becomes valid.
+
 ## Troubleshooting
 
 If you're having issues with cross namespace references, you can always check your
