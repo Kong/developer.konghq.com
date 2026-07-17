@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Organizations
-  version: 3.0.0
+  version: 3.0.2
   description: Konnect Organizations API.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@2f417aecb49b4cad4a6f3a03a72a407e70bba8a9
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2f417aecb49b4cad4a6f3a03a72a407e70bba8a9'
+  x-oas-source: kong/platform-api@e5df6b8d97c62980613512ec65292c8d1094c998
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e5df6b8d97c62980613512ec65292c8d1094c998'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -80,6 +80,7 @@ paths:
         - personalAccessToken: []
         - konnectAccessToken: []
         - serviceAccessToken: []
+        - systemAccountAccessToken: []
       tags:
         - Personal Access Tokens
     patch:
@@ -100,6 +101,7 @@ paths:
       security:
         - personalAccessToken: []
         - konnectAccessToken: []
+        - systemAccountAccessToken: []
       tags:
         - Personal Access Tokens
   '/organizations/{organizationId}/ip-allow-list':
@@ -891,6 +893,15 @@ components:
       bearerFormat: JWT
       description: |
         The Service access token is meant to be used between internal services.
+    systemAccountAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The system account access token is meant for automations and integrations that are not directly associated with a human identity.
+        You can generate a system account Access Token by creating a system account and then obtaining a system account access token for that account.
+        The access token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
 tags:
   - name: Organizations
     description: API related to the management of Konnect Organizations
