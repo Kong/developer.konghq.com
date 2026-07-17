@@ -235,9 +235,11 @@ curl -s -o /dev/null -w "%{http_code}\n" \
 
 `AIGatewayConsumerGroup` is a named set of consumers that you can target as a unit. Use groups to:
 
-- apply shared policies to a team by listing policy names in `spec.apiSpec.policies` — useful for policies scoped with `global: Disabled` that should only apply to specific groups
+- apply shared policies to a team via `spec.apiSpec.policies` on the group — each entry is an object with a `name` field referencing an `AIGatewayPolicy` by its Kubernetes resource name, useful for policies scoped with `global: Disabled`
 - restrict or allow group access to individual models via `spec.apiSpec.model.access.acls` on the `AIGatewayModel`
 - attribute usage across multiple consumers to a single group in {{ site.konnect_short_name }} analytics
+
+Consumer membership is declared on the `AIGatewayConsumer`, not on the group. Use `spec.consumerGroups` on the consumer to reference the groups it belongs to.
 
 1. Create a consumer group:
 
@@ -264,6 +266,22 @@ curl -s -o /dev/null -w "%{http_code}\n" \
 
    ```bash
    kubectl wait aigatewayconsumergroup/platform-team-group -n kong \
+     --for=condition=Programmed=True \
+     --timeout=5m
+   ```
+
+1. Enroll the consumer in the group by patching the consumer resource:
+
+   ```bash
+   kubectl patch aigatewayconsumer team-platform -n kong \
+     --type=merge \
+     -p '{"spec":{"consumerGroups":[{"name":"platform-team-group"}]}}'
+   ```
+
+1. Wait for the consumer to reconcile with the updated group membership:
+
+   ```bash
+   kubectl wait aigatewayconsumer/team-platform -n kong \
      --for=condition=Programmed=True \
      --timeout=5m
    ```
