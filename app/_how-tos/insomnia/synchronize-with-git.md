@@ -87,12 +87,7 @@ related_resources:
 1. In your Insomnia organization, click the **+** button under **PROJECTS** in the left pane.
 1. In the **Project name** field, name your project.
 1. In the **Type** field, click **Git Sync**.
-1. Select whether you want to clone the repository from GitHub, GitLab, or Git:
-
-{% capture sync %}
-1. Click **Scan for files**.
-1. Click **Clone Project**.
-{% endcapture %}
+1. Select whether you want to clone the repository from GitHub, GitLab, or another Git remote. Since {% new_in 13.1 %}, you can also add a local folder:
 
 {% navtabs "repo" %}
 
@@ -108,6 +103,11 @@ related_resources:
 
 {% navtab "Git" %}
 {% include how-tos/steps/insomnia-git.md %}
+{{ sync }}
+{% endnavtab %}
+
+{% navtab "Local folder" %}
+{% include how-tos/steps/insomnia-git-local-folder.md %}
 {{ sync }}
 {% endnavtab %}
 
