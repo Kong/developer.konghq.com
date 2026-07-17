@@ -7,7 +7,7 @@
 1. Select the credentials for your Git repository. Insomnia supports two types of Git credentials:
 
    * **Third-party authentication:** GitHub, GitLab, and access tokens
-   * **Native Git credentials** stored on your system
+   * **Native Git credentials**: the credentials stored on your system, detected and applied automatically.
 
 {:.warning}
 > Insomnia does not enforce secret protection in your repository. Use [private environments](/insomnia/environments/), external vaults, or repository scanners to manage sensitive data.
