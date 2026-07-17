@@ -17,15 +17,15 @@ rows:
   - field_type: "Short text"
     description: "A single-line text input."
     properties: "`label`, `placeholder`, `description` (help text, supports Markdown), `required`"
-    example: "Full Name"
+    example: "Full name"
   - field_type: "Email"
     description: "A single-line text input, validated as an email address."
     properties: "`label`, `placeholder`, `description`, `required`"
-    example: "Email Address"
+    example: "Email address"
   - field_type: "Number"
     description: "A numeric input."
     properties: "`label`, `placeholder`, `description`, `required`"
-    example: "Age"
+    example: "Team size"
   - field_type: "Long text"
     description: "A multi-line text input."
     properties: "`label`, `placeholder`, `description`, `required`"
@@ -41,16 +41,10 @@ rows:
   - field_type: "Checkbox"
     description: "A single boolean checkbox. Commonly used for terms acceptance, since the label and description both support inline Markdown links."
     properties: "`label`, `description` (supports Markdown links), `required`"
-    example: "I agree to the [terms and conditions](#)"
+    example: "Terms and conditions acceptance"
   - field_type: "Submit"
     description: "The submit button for the form. Exactly one is required per form."
     properties: "`value` (button label, defaults to \"Create account\")"
-    example: "Create account"
+    example: "Submit button"
 {% endtable %}
 <!--vale on-->
-
-Keep the following constraints in mind when configuring a form:
-* A form can have a maximum of 20 fields.
-* A form must contain exactly one submit field.
-* Each field has a `name` (a lowercase slug of letters, digits, underscores, and hyphens) that acts as its permanent identifier. Once set, it can't be changed. Renaming a field's label doesn't change its `name`, so previously collected data always stays linked to the field.
-* Built-in fields (`full_name` and `email` on the developer registration form) can have their `placeholder`, `description`, and `required` properties edited, but their type, label, and name can't be changed, and they can't be removed.

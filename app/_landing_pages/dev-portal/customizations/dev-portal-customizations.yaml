@@ -219,13 +219,15 @@ rows:
                     Custom forms let you add configurable fields to the developer registration form or to a per-API application registration form, so you can capture the information you need to make approval decisions.
 
                     There are two types of custom forms:
-                    * **Developer registration form**: One per {{site.dev_portal}}. Extends the default developer sign-up form with additional fields.
+                    * **Developer registration form**: One per {{site.dev_portal}}. Once published, it replaces the default developer sign-up form. You must include the required `full_name` and `email` fields yourself, along with any other additional fields you want.
                     * **API registration forms**: You can create multiple forms and assign one to each API publication. APIs without an assigned form use the default registration flow, with no extra fields.
 
                     Use cases for custom forms include:
                     {% include_cached sections/custom-form-use-cases.md %}
 
-                    The following field types are available when building a form:
+                    {% include_cached sections/custom-form-constraints.md %}
+
+                    The table shows which field types are available when building a form.
       - blocks:
           - type: structured_text
             config:
