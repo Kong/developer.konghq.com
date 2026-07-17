@@ -69,7 +69,7 @@ faqs:
 
 ## Add a plugin with a condition
 
-Add the Request Termination plugin to your Route with a `condition` expression. 
+Add the Request Termination plugin to your Route with a [`condition` expression](/gateway/plugins/expressions/). 
 In this example, the plugin only triggers when the request includes the header `x-block: true`, and blocks the request. 
 Requests without this header are proxied to the upstream service.
 {% entity_examples %}
