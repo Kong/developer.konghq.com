@@ -208,6 +208,33 @@ rows:
                   description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client_side only and is not saved.
   - header:
       type: h2
+      text: "Custom forms"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Custom forms let you add configurable fields to the developer registration form or to a per-API application registration form, so you can capture the information you need to make approval decisions.
+
+                    There are two types of custom forms:
+                    * **Developer registration form**: One per {{site.dev_portal}}. Extends the default developer sign-up form with additional fields.
+                    * **API registration forms**: You can create multiple forms and assign one to each API publication. APIs without an assigned form use the default registration flow, with no extra fields.
+
+                    Use cases for custom forms include:
+                    {% include_cached sections/custom-form-use-cases.md %}
+
+                    The following field types are available when building a form:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {% include_cached sections/custom-form-field-types.md %}
+  - header:
+      type: h2
       text: "Developer email customization"
     columns:
       - blocks:

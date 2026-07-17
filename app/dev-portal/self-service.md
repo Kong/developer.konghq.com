@@ -237,6 +237,147 @@ To transfer ownership of an application to either a developer or team, navigate 
 For more information about how to configure {{site.dev_portal}} developer teams, see [{{site.dev_portal}} RBAC](/dev-portal/developer-rbac/).
 For more information about the developer experience, see [{{site.dev_portal}} developer sign-up](/dev-portal/developer-signup/#2-create-an-application).
 
+### Developer, API, and application registration forms
+
+By default, {{site.dev_portal}} collects the following information during registration:
+* **Developer registration**: Full name and email address.
+* **Application registration**: The application and API being registered. 
+
+If you need to capture more than this, for example a developer's team, company, job title, or their reason for wanting access to an API, you can create a custom form. 
+Custom forms let you create a new form with configurable fields to the developer registration form, or to a per-API application registration form.
+
+Use cases for custom forms include:
+{% include_cached sections/custom-form-use-cases.md %}
+
+The following field types are available when creating a custom form:
+{% include_cached sections/custom-form-field-types.md %}
+
+#### Create a custom form
+
+{% navtabs "create-custom-form" %}
+{% navtab "API" %}
+1. Create a form by sending a `POST` request to the [`/portals/{portalId}/forms` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-form). The following example creates a `developer_registration` form that extends the default sign-up form with a department dropdown and a terms acceptance checkbox:
+{% capture create-developer-form %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/forms
+method: POST
+status_code: 201
+body:
+  type: developer_registration
+  status: published
+  fields:
+    - type: content
+      value: "## Tell us about yourself\n\nThis information helps us route your request to the right team."
+    - type: text
+      name: full_name
+      label: Full Name
+      placeholder: Enter your full name
+      required: true
+    - type: email
+      name: email
+      label: Email Address
+      placeholder: you@example.com
+      required: true
+    - type: select
+      mode: single_select
+      name: department
+      label: Department
+      required: true
+      options:
+        - value: sales
+          label: Sales
+        - value: engineering
+          label: Engineering
+        - value: finance
+          label: Finance
+    - type: checkbox
+      name: agree_terms
+      label: I agree to the terms and conditions
+      description: "Click to view the [terms](https://example.com/terms)."
+      required: true
+    - type: submit
+      name: submit
+      value: Create account
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-developer-form | indent: 3}}
+   The `full_name`, `email`, and `submit` fields are required for every developer registration form.
+   To update a form later, send a `PUT` request to `/v3/portals/{portalId}/forms/{formId}`. This replaces the whole form, so any field omitted from the `fields` array is removed.
+
+1. To create an API registration form instead, set `type` to `api_registration`, supply a unique `name` for the form, and include a `text` field named `api_id`:
+{% capture create-api-form %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/forms
+method: POST
+status_code: 201
+body:
+  type: api_registration
+  name: payments-api-registration
+  status: published
+  fields:
+    - type: text
+      name: api_id
+      label: API
+      required: true
+    - type: text
+      name: company_name
+      label: Company Name
+      required: true
+    - type: select
+      mode: single_select
+      name: use_case
+      label: Use Case
+      required: true
+      options:
+        - value: analytics
+          label: Analytics
+        - value: monitoring
+          label: Monitoring
+    - type: submit
+      name: submit
+      value: Request access
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-api-form | indent: 3}}
+   The `api_id` and `submit` fields are required for every API registration form.
+
+1. Copy and export the form ID from the response:
+  ```sh
+  export FORM_ID='YOUR FORM ID'
+  ```
+
+1. Link the form to an API by sending a `PUT` request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal), setting `form_id` to the form's ID:
+{% capture link-api-form %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/publications/$PORTAL_ID
+method: PUT
+status_code: 200
+body:
+  form_id: $FORM_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ link-api-form | indent: 3}}
+   For the rest of the settings required to publish an API, see [Publish your API to {{site.dev_portal}}](/catalog/apis/#publish-your-api-to-dev-portal).
+{% endnavtab %}
+{% navtab "UI" %}
+Steps for creating and managing custom forms in the {{site.dev_portal}} UI are coming soon.
+{% endnavtab %}
+{% endnavtabs %}
+
+#### View collected form data
+
+Submitted form answers appear alongside the developer or application registration they belong to:
+* Developer registration answers are available on the developer's detail page under **Access and approvals > Developers** in {{site.konnect_short_name}}, and through the `additional_data` property on the [`/portals/{portalId}/developers`](/api/konnect/portal-management/v3/#/operations/list-portal-developers) and [`/portals/{portalId}/developers/{developerId}`](/api/konnect/portal-management/v3/#/operations/get-developer) endpoints.
+* API registration answers are available on the registration's detail page under **Access and approvals > App Registrations**, and through the `additional_data` property on the [`/portals/{portalId}/application-registrations`](/api/konnect/portal-management/v3/#/operations/list-registrations) endpoint.
+
+If you later edit or delete a field or form, previously collected answers aren't affected. Each submitted answer is stored with a snapshot of its field label and type from the moment it was submitted, so it stays visible on the response detail view even after the field or form it came from no longer exists.
+
 ### Limitations
 
 Keep the following limitations in mind for developers and applications:
