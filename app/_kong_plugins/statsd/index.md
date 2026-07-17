@@ -53,7 +53,7 @@ It should be less than 65507, according to UDP protocol. Consider the MTU of the
 
 {:.info}
 > **Note**: As of {{site.base_gateway}} 3.0.0.0, all capabilities of StatsD Advanced are bundled in the StatsD plugin.
-> StatsD Advanced will be removed in an upcoming major version.
+> StatsD Advanced has been deprecated and will be removed in 4.0.
 > If you're still using StatsD Advanced, the StatsD reference documentation also applies to that plugin.
 
 ## Metrics
