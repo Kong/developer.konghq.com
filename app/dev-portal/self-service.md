@@ -239,6 +239,12 @@ For more information about the developer experience, see [{{site.dev_portal}} de
 
 ### Developer, API, and application registration forms
 
+{:.success}
+> **Get started with custom forms:**<br><br>
+> For complete tutorials, see the following:
+> * [Review partner API access requests with Dev Portal custom forms](/how-to/review-partner-api-access-requests-for-dev-portal/)
+> * [Assign developers to a team with a Dev Portal custom sign-up form](/how-to/assign-developers-to-a-team-for-dev-portal/)
+
 By default, {{site.dev_portal}} collects the following information during registration:
 * **Developer registration**: Full name and email address.
 * **Application registration**: The application and API being registered. 
@@ -252,11 +258,13 @@ Use cases for custom forms include:
 The following field types are available when creating a custom form:
 {% include_cached sections/custom-form-field-types.md %}
 
+{% include_cached sections/custom-form-constraints.md %}
+
 #### Create a custom form
 
 {% navtabs "create-custom-form" %}
 {% navtab "API" %}
-1. Create a form by sending a `POST` request to the [`/portals/{portalId}/forms` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-form). The following example creates a `developer_registration` form that extends the default sign-up form with a department dropdown and a terms acceptance checkbox:
+1. Create a form by sending a `POST` request to the [`/portals/{portalId}/forms` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-form). The following example creates a `developer_registration` form that replaces the default sign-up form once published. It includes the required `full_name` and `email` fields, plus a department dropdown and a terms and conditions acceptance checkbox:
 {% capture create-developer-form %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -271,12 +279,12 @@ body:
       value: "## Tell us about yourself\n\nThis information helps us route your request to the right team."
     - type: text
       name: full_name
-      label: Full Name
+      label: Full name
       placeholder: Enter your full name
       required: true
     - type: email
       name: email
-      label: Email Address
+      label: Email address
       placeholder: you@example.com
       required: true
     - type: select
@@ -294,7 +302,7 @@ body:
     - type: checkbox
       name: agree_terms
       label: I agree to the terms and conditions
-      description: "Click to view the [terms](https://example.com/terms)."
+      description: "View the [terms](https://example.com/terms)."
       required: true
     - type: submit
       name: submit
@@ -324,12 +332,12 @@ body:
       required: true
     - type: text
       name: company_name
-      label: Company Name
+      label: Company name
       required: true
     - type: select
       mode: single_select
       name: use_case
-      label: Use Case
+      label: Use case
       required: true
       options:
         - value: analytics
@@ -354,7 +362,7 @@ body:
 {% capture link-api-form %}
 <!--vale off-->
 {% konnect_api_request %}
-url: /v3/apis/$API_ID/publications/$PORTAL_ID
+url: /v3/apis/$API_ID/publications/$DEV_PORTAL_ID
 method: PUT
 status_code: 200
 body:
@@ -366,7 +374,21 @@ body:
    For the rest of the settings required to publish an API, see [Publish your API to {{site.dev_portal}}](/catalog/apis/#publish-your-api-to-dev-portal).
 {% endnavtab %}
 {% navtab "UI" %}
-Steps for creating and managing custom forms in the {{site.dev_portal}} UI are coming soon.
+1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal > Portals**.
+1. Click your portal.
+1. Click the **Portal Editor** tab.
+1. In the Portal Editor sidebar, click the forms icon.
+1. Click **New form**.
+1. Select **API registration**.
+1. In the **Form name** field, enter a name for the form.
+1. Click **Create**.
+1. On the form's **Fields** page, click **Add field**, and select a field type.
+1. Configure the field's properties, then repeat for any additional fields you want to add.
+1. Click **Back to fields**.
+1. Click **Save**.
+1. When you want to publish the custom form, click **Publish**.
+
+Creating a developer registration form isn't currently supported in the {{site.dev_portal}} UI. Use the API instead.
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -375,6 +397,8 @@ Steps for creating and managing custom forms in the {{site.dev_portal}} UI are c
 Submitted form answers appear alongside the developer or application registration they belong to:
 * Developer registration answers are available on the developer's detail page under **Access and approvals > Developers** in {{site.konnect_short_name}}, and through the `additional_data` property on the [`/portals/{portalId}/developers`](/api/konnect/portal-management/v3/#/operations/list-portal-developers) and [`/portals/{portalId}/developers/{developerId}`](/api/konnect/portal-management/v3/#/operations/get-developer) endpoints.
 * API registration answers are available on the registration's detail page under **Access and approvals > App Registrations**, and through the `additional_data` property on the [`/portals/{portalId}/application-registrations`](/api/konnect/portal-management/v3/#/operations/list-registrations) endpoint.
+
+{{site.dev_portal}} doesn't have a webhook for new registrations or form submissions, so if you want to react to new submissions automatically, poll these endpoints on an interval instead, for example by filtering on `status=pending` and tracking the last submission you've already processed.
 
 If you later edit or delete a field or form, previously collected answers aren't affected. Each submitted answer is stored with a snapshot of its field label and type from the moment it was submitted, so it stays visible on the response detail view even after the field or form it came from no longer exists.
 
