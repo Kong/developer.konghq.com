@@ -118,6 +118,8 @@ next_steps:
 automated_tests: false
 ---
 
+{% include_cached /gateway/file-system-vault-cloud-unsupported.md %}
+
 ## Create a Vault entity for the file system vault
 
 Using decK, create a [Vault](/gateway/entities/vault/) entity that points to your secrets directory:
