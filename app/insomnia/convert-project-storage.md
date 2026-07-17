@@ -89,5 +89,5 @@ To convert a project’s storage type:
 > You must also:
 > 1. Select a Git provider.
 > 1. Authorize your account.
-> 1. Select a repository.
+> 1. Select a remote or local repository.
 > 1. Select a branch.

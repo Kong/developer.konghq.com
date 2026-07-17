@@ -219,7 +219,7 @@ This option is independent of cloud access and is suitable for users familiar wi
 Key features:
 * **Version control:** Leverage Git’s version control capabilities for your projects.
 * **Independence from Insomnia’s Cloud:** Uses external Git repositories for storage.
-* **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
+* **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, Bitbucket, or a local folder.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.
 * **Built-in conflict resolution**: Resolve conflicts in Insomnia when pulling or pushing changes.
 * **MCP clients feature**: Store MCP Client configuration in the Git repository as part of the project.
