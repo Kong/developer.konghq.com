@@ -1,11 +1,12 @@
 {% capture summary %}
-kongctl
+kongctl &nbsp; {% new_in site.data.kongctl_latest.version %}
 {% endcapture %}
 
 {% capture details_content %}
 {% assign product=page.products[0] %}
 {% if product == 'ai-gateway' %}
 This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
+We recommend keeping kongctl up to date with the latest version ({{site.data.kongctl_latest.version}}).
 
 1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
 1. Verify the installation:
