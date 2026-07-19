@@ -49,6 +49,10 @@ groups:
             description: Deploy {{ site.event_gateway }} on Kubernetes with {{ site.operator_product_name }}, {{site.konnect_short_name}}, and Event Gateway CRDs.
             url: /operator/get-started/event-gateway/install/
           - path: /operator/get-started/event-gateway/**/*
+          - title: "Deploy {{ site.ai_gateway_name }} on Kubernetes"
+            description: Deploy {{ site.ai_gateway_name }} on Kubernetes with {{ site.operator_product_name }} and AI Gateway CRDs.
+            url: /operator/get-started/ai-gateway/install/
+          - path: /operator/get-started/ai-gateway/**/*
       - title: Key Concepts
         items:
           - path: /operator/dataplanes/gateway-api/
@@ -56,6 +60,7 @@ groups:
           - path: /operator/dataplanes/managed-gateways/
           - path: /operator/dataplanes/faq/license/
           - path: /operator/konnect/event-gateway/
+          - path: /operator/konnect/ai-gateway/
       - title: How-To
         items:
           - path: /operator/dataplanes/how-to/set-dataplane-image/
