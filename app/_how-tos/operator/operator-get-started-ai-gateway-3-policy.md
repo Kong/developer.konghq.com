@@ -38,7 +38,7 @@ tldr:
   a: |
     Create an `AIGatewayPolicy` resource pointing to your `KonnectAIGateway` via `spec.aiGatewayRef`.
     Set `spec.apiSpec.global` to `Enabled` to apply the Policy to every model on the gateway, or `Disabled` to target a specific model.
-    Use a single Policy resource to combine `deny_patterns` (block injection attempts) and `allow_patterns` (restrict to a topic list). The gateway evaluates deny patterns first, then checks that the request matches at least one allow pattern.
+    Set `spec.apiSpec.config.type` to `inline` and nest the plugin configuration under `spec.apiSpec.config.value`. Use a single Policy resource to combine `deny_patterns` (block injection attempts) and `allow_patterns` (restrict to a topic list). The gateway evaluates deny patterns first, then checks that the request matches at least one allow pattern.
 
 next_steps:
   - text: Add AI Consumers and credentials
@@ -99,16 +99,18 @@ export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
        enabled: Enabled
        global: Enabled
        config:
-         deny_patterns:
-           - "(?i).*ignore (all )?previous instructions.*"
-           - "(?i).*you are now (DAN|jailbroken).*"
-           - "(?i).*disregard (your|all) (previous |prior )?instructions.*"
-           - "(?i).*what (is|was) your (system|initial) prompt.*"
-           - "(?i).*(reveal|show|print|repeat) (your )?(system prompt|instructions).*"
-         allow_patterns:
-           - "(?i).*(what is|how do i|how to|configure|install|troubleshoot|debug|explain|difference between).*"
-           - "(?i).*(kubernetes|docker|helm|terraform|kong|api|service|microservice|container|pod|namespace).*"
-           - "(?i).*(code|function|script|query|yaml|json|bash|python|go|javascript).*"
+         type: inline
+         value:
+           deny_patterns:
+             - "(?i).*ignore (all )?previous instructions.*"
+             - "(?i).*you are now (DAN|jailbroken).*"
+             - "(?i).*disregard (your|all) (previous |prior )?instructions.*"
+             - "(?i).*what (is|was) your (system|initial) prompt.*"
+             - "(?i).*(reveal|show|print|repeat) (your )?(system prompt|instructions).*"
+           allow_patterns:
+             - "(?i).*(what is|how do i|how to|configure|install|troubleshoot|debug|explain|difference between).*"
+             - "(?i).*(kubernetes|docker|helm|terraform|kong|api|service|microservice|container|pod|namespace).*"
+             - "(?i).*(code|function|script|query|yaml|json|bash|python|go|javascript).*"
    ' | kubectl apply -f -
    ```
 
