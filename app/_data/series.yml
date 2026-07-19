@@ -20,6 +20,9 @@ operator-get-started-dev-portal:
 operator-get-started-event-gateway:
   title: Deploy Kong Event Gateway on Kubernetes
   url: /operator/get-started/event-gateway/install/
+operator-get-started-ai-gateway:
+  title: Deploy {{ site.ai_gateway_name }} on Kubernetes
+  url: /operator/get-started/ai-gateway/install/
 mcp-traffic:
   title: Secure, govern and observe MCP traffic with {{site.ai_gateway}}
   url: /mcp/secure-mcp-traffic/
