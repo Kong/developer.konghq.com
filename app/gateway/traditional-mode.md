@@ -153,7 +153,7 @@ Admin API `/cache` endpoint.
 
 
 * Inspect a cached value: [`/cache/{key}`](/api/gateway/admin-ee/#/operations/get-cache-by-key)
-* Purge a cached value: [`/cache/{cache_key}`](/api/gateway/admin-ee/#/operations/deleteCacheByKey)
+* Purge a cached value: [`/cache/{key}`](/api/gateway/admin-ee/#/operations/deleteCacheByKey)
 * Purge a node's cache: [`/cache`](/api/gateway/admin-ee/#/operations/delete-cache-entries)
   
   {:.info}
