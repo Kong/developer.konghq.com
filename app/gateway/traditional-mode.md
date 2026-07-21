@@ -152,9 +152,9 @@ invalidate a value cached by {{site.base_gateway}} (a cached hit or miss), you c
 Admin API `/cache` endpoint.
 
 
-* Inspect a cached value: [`/cache/{key}`](/api/gateway/admin-ee/#/operations/getCacheByKey)
+* Inspect a cached value: [`/cache/{key}`](/api/gateway/admin-ee/#/operations/get-cache-by-key)
 * Purge a cached value: [`/cache/{cache_key}`](/api/gateway/admin-ee/#/operations/deleteCacheByKey)
-* Purge a node's cache: [`/cache`](/api/gateway/admin-ee/#/operations/purgeAllCache)
+* Purge a node's cache: [`/cache`](/api/gateway/admin-ee/#/operations/delete-cache-entries)
   
   {:.info}
   > **Note**: Be wary of using this endpoint on a node running in production with warm cache.
