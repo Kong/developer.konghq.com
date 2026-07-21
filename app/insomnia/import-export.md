@@ -147,7 +147,12 @@ Insomnia exports in the v5 file format and can still import legacy v4 JSON files
 {% navtabs "file-format" %}
 {% navtab "v5 (YAML)" %}
 
-The v5 file format is a native YAML format used when you export a collection, design document, environment, or mock server, and for the files stored in Git-backed repositories when you use [Git Sync](/insomnia/storage/#git-sync). Unlike the v4 JSON format, each v5 file represents a single entity and identifies itself with a top-level `type` field.
+The v5 file format is a native YAML format that Insomnia generates in the following cases:
+
+* When you export a collection, design document, environment, or mock server.
+* When you use [Git Sync](/insomnia/storage/#git-sync): Insomnia writes your project data to the Git repository as v5 files.
+
+Each v5 file represents a single entity and identifies itself with a top-level `type` field.
 
 **File types**
 
@@ -196,9 +201,9 @@ environments:
 
 **JSON Schema**
 
-Insomnia publishes a [JSON Schema](https://raw.githubusercontent.com/Kong/insomnia/develop/schemas/insomnia.schema.5.1.json) that describes the structure of v5 files. The schema describes the shape of the files; it doesn't contain any of your data.
+Insomnia publishes a [JSON Schema](https://raw.githubusercontent.com/Kong/insomnia/develop/schemas/insomnia.schema.5.1.json) that describes the structure of v5 files. The schema describes the shape of the files; it doesn't contain any data.
 
-Each schema version has its own file, named `insomnia.schema.<version>.json`. Old versions never change or disappear, so a URL you link to today always means the same thing.
+Each schema version has its own file, named `insomnia.schema.<version>.json`, with its own link.
 
 You can use the schema to:
 
@@ -212,7 +217,7 @@ You can use the schema to:
   }
   ```
 
-  Adjust the file glob to match the location of your Insomnia files.
+  In this mapping, the key is the schema URL and the value (`**/*.yaml`) is a file glob that selects which files the schema applies to. Adjust that glob to match only your Insomnia files, so the schema isn't applied to unrelated YAML in your workspace.
 
 * **Validate files in CI**: Because v5 files are stored in your Git repository when you use Git Sync, you can validate them in a pipeline so that a malformed edit fails the build:
 
