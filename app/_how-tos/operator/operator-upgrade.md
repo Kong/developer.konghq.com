@@ -29,7 +29,7 @@ prereqs:
         [`kubectl`](https://kubernetes.io/docs/tasks/tools/) installed and pointed at your cluster, and [`kustomize`](https://kubectl.docs.kubernetes.io/installation/kustomize/) installed for applying CRDs (or use `kubectl kustomize` with `kubectl` v1.14+ instead).
     - title: An existing {{ site.operator_product_name }} installation
       content: |
-        Deployed with the `kong/kong-operator` Helm chart. See [Install {{ site.operator_product_name }}](/operator/get-started/gateway-api/install/) if you haven't installed it yet.
+        This guide requires an existing {{ site.operator_product_name }} installation with the `kong/kong-operator` Helm chart. See [Install {{ site.operator_product_name }}](/operator/get-started/gateway-api/install/) if you haven't installed it yet.
 
 tldr:
   q: How do I upgrade {{ site.operator_product_name }} with Helm?
@@ -93,7 +93,7 @@ helm search repo kong/kong-operator --versions
 {:.warning}
 > Do this **before** upgrading the release. Helm does not update CRDs on `helm upgrade`, so new fields your target version depends on will be missing until you apply them manually.
 
-Apply the {{ site.operator_product_name }} CRDs for the version you're upgrading to. The command below uses the latest operator version (v{{ site.data.operator_latest.release }}); if you're upgrading to a different version, replace the ref:
+Apply the {{ site.operator_product_name }} CRDs for the version you're upgrading to. The command below uses the latest operator version (v{{ site.data.operator_latest.release }}); if you're upgrading to a different version, replace the `ref`:
 
 ```bash
 kustomize build "github.com/Kong/kong-operator/config/crd/gateway-operator?ref=v{{ site.data.operator_latest.release }}" | kubectl apply --server-side -f -
@@ -142,4 +142,4 @@ helm list -n kong-system
 kubectl -n kong-system get pods
 ```
 
-Your `DataPlane` gateways continue serving traffic during the upgrade; only the operator control plane restarts.
+Your `DataPlane` gateways continue serving traffic during the upgrade; only the {{ site.operator_product_name }} control plane restarts.
