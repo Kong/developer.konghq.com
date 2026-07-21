@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b73400e224a8f31d322b61fee28ce53a8b4e308b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b73400e224a8f31d322b61fee28ce53a8b4e308b'
+  x-oas-source: kong/platform-api@3038c0768ca507f21ad54d8d124577618eaaeb31
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3038c0768ca507f21ad54d8d124577618eaaeb31'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -2613,7 +2613,7 @@ components:
           example: Jane Doe
           maxLength: 256
           minLength: 1
-      additionalProperties: true
+      additionalProperties: false
       required:
         - full_name
         - email
