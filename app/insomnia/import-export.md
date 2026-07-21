@@ -91,7 +91,7 @@ In a workspace or document header, select **Import** and then specify your impor
 - Clipboard
 
 Insomnia supports the following formats:
-- **Import formats**: Insomnia YAML (v5), Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL
+- **Import formats**: Insomnia JSON (v4), Insomnia YAML (v5), Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL
 - **Export formats (UI)**: Insomnia v5 YAML and HAR
 - **Export formats (CLI)**: OpenAPI spec
 
@@ -140,11 +140,16 @@ An example of the key commands:
   
   Use `inso export spec "<Design Document Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
 
-## v5 file format
+## v4 and v5 file format
+
+Insomnia exports in the v5 file format and can still import legacy v4 JSON files. The two formats are structured differently, as described in the following tabs.
+
+{% navtabs "file-format" %}
+{% navtab "v5 (YAML)" %}
 
 The v5 file format is a native YAML format used when you export a collection, design document, environment, or mock server, and for the files stored in Git-backed repositories when you use [Git Sync](/insomnia/storage/#git-sync). Unlike the v4 JSON format, each v5 file represents a single entity and identifies itself with a top-level `type` field.
 
-### File types
+**File types**
 
 The `type` field at the top of each file tells you what kind of file it is:
 
@@ -169,9 +174,9 @@ rows:
 
 Alongside `type`, each file includes top-level fields such as `name`, `schema_version`, and `meta.id`, plus keys specific to the file type (for example, `collection`, `spec` and `testSuites`, or `server` and `routes`).
 
-The version in the `type` value (`5.0`) identifies the file format, while `schema_version` and the [JSON Schema](#json-schema) file name (for example, `5.1`) track revisions to the schema. These version numbers are independent and don't need to match.
+The version in the `type` value (`5.0`) identifies the file format, while `schema_version` and the JSON Schema file name (for example, `5.1`) track revisions to the schema. These version numbers are independent and don't need to match.
 
-### Example
+**Example**
 
 The following is a trimmed example of a request collection file. The top-level `type` marks it as a collection, and the `collection` key holds the requests:
 
@@ -189,7 +194,7 @@ environments:
   name: Base Environment
 ```
 
-### JSON Schema
+**JSON Schema**
 
 Insomnia publishes a [JSON Schema](https://raw.githubusercontent.com/Kong/insomnia/develop/schemas/insomnia.schema.5.1.json) that describes the structure of v5 files. The schema describes the shape of the files; it doesn't contain any of your data.
 
@@ -215,10 +220,11 @@ You can use the schema to:
 curl -O https://raw.githubusercontent.com/Kong/insomnia/develop/schemas/insomnia.schema.5.1.json && npx ajv-cli validate --spec=draft2020 -s insomnia.schema.5.1.json -d "**/*.yaml"
 ```
 
-## Legacy v4 (JSON) format
+{% endnavtab %}
+{% navtab "v4 (JSON)" %}
 
 {:.info}
-> The v4 (JSON) format is legacy. Insomnia exports in the [v5 file format](#v5-file-format), but you can still import v4 JSON files.
+> The v4 (JSON) format is legacy. Insomnia exports in the v5 file format, but you can still import v4 JSON files.
 
 The v4 format is a single JSON document with a flat `resources` array. Each object in the array carries a `_type` field (for example, `workspace`, `request`, `environment`, `folder`, `response`, `mock`, `plugin`, or `test`) that tells Insomnia what kind of entity it represents.
 
@@ -238,3 +244,6 @@ rows:
   - placeholder: "`__<NAME>_<NUMBER>__`"
     represents: "User-created entities, for example `__request_1__` or `__env_2__`."
 {% endtable %}
+
+{% endnavtab %}
+{% endnavtabs %}
