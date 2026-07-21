@@ -24352,5 +24352,89 @@
         "scope": "Plugin"
       }
     ]
+  },
+  "3.15.0.2": {
+    "kong-ee": [
+      {
+        "message": "Bumped kong-redis-cluster from 1.6.0 to 1.6.1. This accepts the `x.y` Redis version\nformat reported by some managed services (e.g. AWS ElastiCache Serverless Valkey) by\nmaking the patch component optional, and only warns on Redis version `9.0` or newer\ninstead of `8.0` or newer.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy**: Fixed OpenAI-compatible completions requests with string array prompts.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Clustering**: The `/status/sync` endpoint now returns an empty stat object instead of null before the first sync has run, keeping the response shape consistent.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed a race condition issue where the `tries` field of log serialization was not copied, causing data mutations when logs were generated concurrently via async timers.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where dynamic plugin ordering (`ordering`) leaked into the\ndownstream phases (`header_filter`, `body_filter`, `response`, `log`). Dynamic\nordering now again applies only to the `access` phase; downstream phases execute\nin static plugin-priority order.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where memory tracing didn't generate any events.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where streamed custom plugins were not recognized when configured in the `ordering` field of `plugins` on Data Planes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ip-restriction**: Fixed an issue where warn log messages did not\ninclude the plugin name, making it difficult to identify the source of\nblocked requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Konnect Only**. **datakit**: Added node source and runtime phase metadata to Datakit tracing events so Konnect Debugger can reconstruct the Datakit node graph from captured trace data.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an error that could occur under sustained\nHTTPS traffic.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an issue where the response body of the external HTTP call `httpc:request()` was not captured. This includes the following changes:\n    - Added a new span `kong.io.http.read_resp_body` to instrument to the `ready_body()` and `body_reader()` functions to capture the response body.\n    - Added a `kong.3p.external_request_id` span attribute to the new `kong.io.http.read_resp_body` span and the `kong.io.http.request` span.\n    - Added span linkage from the `kong.io.http.read_resp_body` span to the associated `kong.io.http.request` span.\n    - Added an `external_request_id` attribute to the captured request/response headers/body items.\n    - Skipped body capture upon low-level reading errors (e.g. network errors, timeouts, etc.) to avoid capturing corrupted data.\n    - Improved external I/O latency measurement by removing the creation time of spans.\n    - Moved capturing of request headers, body, and response headers from `kong.io.http.request_uri` span to the `kong.io.http.request` span.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an issue where instrumenting third-party HTTP client calls produced two indistinguishable `kong.io.http.request` spans for `httpc:request_uri()`.\nIt is now traced under a dedicated `kong.io.http.request_uri` span, and the `connect`, DNS, and internal `request` spans it triggers are nested beneath it.\nThe `kong.io.http.request` span now also reports the `http.url` attribute.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**otel**: Fixed an issue where OpenTelemetry metrics only supported integer values by adding support for floating-point values in the OTLP exporter.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Prometheus**: Histogram series are now emitted grouped by label set (all\nbuckets in ascending `le` order, then `_count`, then `_sum`) so the output\nfollows the OpenMetrics interleaving rule. Previously samples were grouped by\nsuffix, which caused strict consumers such as Google Managed Prometheus to\ndrop points.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved router update performance during incremental sync by updating service data in place instead of triggering a full router rebuild when only service attributes change.",
+        "type": "performance",
+        "scope": "Core"
+      },
+      {
+        "message": "**RBAC**: Improved PostgreSQL performance when deleting Admin API entities by adding an index used to clean up `rbac_role_entities` permissions.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ]
   }
 }

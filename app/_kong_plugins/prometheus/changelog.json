@@ -1,4 +1,11 @@
 {
+  "3.15.0.2": [
+    {
+      "message": "Histogram series are now emitted grouped by label set (all\nbuckets in ascending `le` order, then `_count`, then `_sum`) so the output\nfollows the OpenMetrics interleaving rule. Previously samples were grouped by\nsuffix, which caused strict consumers such as Google Managed Prometheus to\ndrop points.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.9": [
     {
       "message": "A histogram's series (its buckets, `_count` and `_sum`) is now\nread as one atomic group during a scrape. Previously, the exporter yielded and\nflushed output between individual samples, so an observation landing mid-scrape\ncould bump `_count`/`_sum` after the buckets were already read, producing an\ninternally inconsistent histogram in a single response.",

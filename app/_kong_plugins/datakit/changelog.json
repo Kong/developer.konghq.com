@@ -16,6 +16,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.2": [
+    {
+      "message": "Added node source and runtime phase metadata to Datakit tracing events so Konnect Debugger can reconstruct the Datakit node graph from captured trace data.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added more implicit node outputs:\n    * `request.path`\n    * `request.raw_path`\n    * `request.port`\n    * `request.method`\n    * `request.scheme`\n    * `request.version`\n    * `service_response.status`\n    * service_response.raw_body\n    * call.raw_body\n",
