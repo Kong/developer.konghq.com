@@ -9,7 +9,7 @@
 
 <h2>Details</h2>
 {% for group in groups %}
-<h3 id="{{ group.title | slugify }}" class="mt-8 mb-2">{{ group.title }} ({{ group.pages | size }})</h3>
+{% assign _group_id = group.title | slugify %}{% capture _group_text %}{{ group.title }} ({{ group.pages | size }}){% endcapture %}{% include anchor_heading.html tag="h3" id=_group_id text=_group_text class="mt-8 mb-2" %}
 <table>
   <tr>
     <th>Page</th>

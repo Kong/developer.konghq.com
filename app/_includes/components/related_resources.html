@@ -5,7 +5,7 @@
         <div class="flex gap-2">
           {% include mask_image.html image_url=related_resource.icon css_classes="w-5 h-5 shrink-0 !bg-icon" %}
         </div>
-        <a class="text-secondary" href="{{ related_resource.url | liquify }}">{{ related_resource.text | liquify }}</a>
+        <a class="text-secondary" href="{{ related_resource.url | liquify }}"{% if related_resource.url contains 'https://' %} target="_blank" rel="noopener nofollow noreferrer"{% endif %}>{{ related_resource.text | liquify }}</a>
       </div>
     {% endfor %}
   </div>
@@ -14,7 +14,7 @@
     {% for related_resource in related_resources.items %}
       <div class="flex gap-2">
         {% include mask_image.html image_url=related_resource.icon css_classes="w-5 h-5 shrink-0 !bg-icon" %}
-        <a class="text-secondary" href="{{ related_resource.url | liquify }}">{{ related_resource.text | liquify }}</a>
+        <a class="text-secondary" href="{{ related_resource.url | liquify }}"{% if related_resource.url contains 'https://' %} target="_blank" rel="noopener nofollow noreferrer"{% endif %}>{{ related_resource.text | liquify }}</a>
       </div>
     {% endfor %}
     </div>

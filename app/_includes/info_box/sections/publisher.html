@@ -4,14 +4,14 @@
   <div class="text-primary font-medium">Made by</div>
   <div class="flex gap-1.5">
     {% if include.third_party %}
-      <span><a href="{{include.support_url}}">{{ publisher.name }}</a></span>
+      <span><a href="{{include.support_url}}" target="_blank" rel="nofollow noopener noreferrer">{{ publisher.name }}</a></span>
     {% else %}
       <span> {{ publisher.name }}</span>
     {% endif %}
   </div>
   <div class="flex gap-1.5 flex-col">
     {% if include.source_code_url %}
-      <span><a href="{{include.source_code_url}}">GitHub repository</a></span>
+      <span><a href="{{include.source_code_url}}" target="_blank" rel="nofollow noopener noreferrer">GitHub repository</a></span>
     {% endif %}
   </div>
 </div>

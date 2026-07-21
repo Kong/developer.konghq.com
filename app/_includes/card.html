@@ -32,7 +32,7 @@
 {% if include.ctas %}
 <div class="flex flex-col w-full text-primary text-sm">
   {% for cta in include.ctas %}
-  <a class="no-icon flex justify-between py-3 text-primary {% unless forloop.last %}border-b border-primary{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ cta.url }}">{{ cta.text | liquify }} <span class="text-terciary">→</span></a>
+  <a class="no-icon flex justify-between py-3 text-primary {% unless forloop.last %}border-b border-primary{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ cta.url }}" {% if cta.url contains 'https://' %}target="_blank" rel="noopener nofollow noreferrer"{% endif %}>{{ cta.text | liquify }} <span class="text-terciary">→</span></a>
   {% endfor %}
 </div>
 {% endif %}
@@ -48,7 +48,7 @@
     {% endif %}
 
     {% if include.cta_url %}
-        <a href="{{include.cta_url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6 no-icon">
+        <a href="{{include.cta_url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6 no-icon" {% if include.cta_url contains 'https://' %}target="_blank" rel="noopener nofollow noreferrer"{% endif %}>
             {{ card_content }}
         </a>
     {% else %}

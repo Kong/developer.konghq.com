@@ -1,10 +1,10 @@
 {%- assign changelog = page.changelog -%}
 {%- for version in changelog.versions -%}
-<h2 id="{{version.number | slugify }}">{{version.number}}</h2>
+{% assign _version_slug = version.number | slugify %}{% include anchor_heading.html tag="h2" id=_version_slug text=version.number %}
 <p class="text-sm"><strong>Release date</strong> {{version.release_date}}</p>
 
 {% for type in version.entries_by_type %}
-<h3 id="{{ type[0] | slugify }}-{{ version.number | slugify }}">{{type[0] | capitalize | titleize}}</h3>
+{% assign _type_slug = type[0] | slugify %}{% assign _h3_id = _type_slug | append: "-" | append: _version_slug %}{% capture _type_text %}{{ type[0] | capitalize | titleize }}{% endcapture %}{% include anchor_heading.html tag="h3" id=_h3_id text=_type_text %}
 
 <ul>
 {% for entry in type[1] %}
