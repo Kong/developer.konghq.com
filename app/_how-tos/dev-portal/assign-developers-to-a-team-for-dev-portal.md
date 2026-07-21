@@ -5,8 +5,8 @@ description: Learn how to collect a developer's department at sign-up with a Dev
 content_type: how_to
 automated_tests: false
 products:
-    - gateway
     - dev-portal
+    - gateway
 works_on:
     - konnect
 tools:
@@ -38,6 +38,7 @@ prereqs:
     - title: Published API
       include_content: prereqs/publish-api
       icon_url: /assets/icons/dev-portal.svg
+  entities_product: gateway
   entities:
     services:
         - example-service
@@ -118,7 +119,8 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-The **API Consumer** role lets developers on the team make calls to the API. The Platform team is left without API access in this tutorial to show the difference in a developer's access depending on which team they are assigned to.
+The **API Consumer** role lets developers on the team make calls to the API. 
+The Platform team is left without API access in this tutorial to show the difference in a developer's access depending on which team they are assigned to.
 
 ## Turn off auto-approve for developers
 
@@ -240,8 +242,8 @@ body:
 
 ### Automation ideas
 
-Instead of reading each developer's answer and assigning their team by hand, you can:
-* Run this read-answer-and-assign-team logic on a schedule, or trigger it from an internal workflow tool whenever a new pending developer shows up.
+Instead of reading each developer's answer and assigning their team manually, you can:
+* Run this logic on a schedule, or trigger it from an internal workflow tool whenever a new pending developer registers.
 * Extend the form with more departments as your organization grows, and maintain a lookup table mapping each `department` value to a team ID.
 
-{{site.dev_portal}} doesn't have a webhook for new sign-ups, so this kind of automation needs to poll the {{site.konnect_short_name}} API on an interval, for example by [listing developers](/api/konnect/portal-management/v3/#/operations/list-portal-developers) filtered on `status=pending`.
+{{site.dev_portal}} doesn't have a webhook for new sign-ups, so this automation needs to poll the {{site.konnect_short_name}} API on an interval, for example by [listing developers](/api/konnect/portal-management/v3/#/operations/list-portal-developers) filtered on `status=pending`.

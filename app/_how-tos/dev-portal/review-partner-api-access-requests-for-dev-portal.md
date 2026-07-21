@@ -5,8 +5,8 @@ description: Learn how to collect company and business justification details fro
 content_type: how_to
 automated_tests: false
 products:
-    - gateway
     - dev-portal
+    - gateway
 works_on:
     - konnect
 tools:
@@ -37,6 +37,7 @@ prereqs:
     - title: Published API
       include_content: prereqs/publish-api
       icon_url: /assets/icons/dev-portal.svg
+  entities_product: gateway
   entities:
     services:
         - example-service
@@ -52,9 +53,9 @@ cleanup:
 related_resources:
   - text: Developer, API, and application registration forms
     url: /dev-portal/self-service/#developer-api-and-application-registration-forms
-  - text: "{{site.dev_portal}} customizations: Custom forms"
+  - text: "{{site.dev_portal}} custom forms"
     url: /dev-portal/customizations/dev-portal-customizations/#custom-forms
-  - text: Automate your API catalog with the Konnect API
+  - text: Automate your API catalog with the {{site.konnect_short_name}} API
     url: /how-to/automate-api-catalog/
   - text: Assign developers to a team with a {{site.dev_portal}} custom sign-up form
     url: /how-to/assign-developers-to-a-team-for-dev-portal/
@@ -66,7 +67,7 @@ Before a partner's developers get access, you may want to know their company nam
 
 ## Turn off auto-approve for developers and applications
 
-To review submitted answers before granting access, turn that auto-approve for new developers and application registrations by sending a `PATCH` request to the [`/portals/{portalId}` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal):
+To review submitted answers before granting access, turn off auto-approve for new developers and application registrations by sending a `PATCH` request to the [`/portals/{portalId}` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -79,7 +80,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-New developers and application registrations now are marked with a `pending` status until you approve them.
+New developers and application registrations now will have a `pending` status until you approve them.
 
 ## Create a developer registration form
 
@@ -120,7 +121,8 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-The `full_name`, `email`, and `submit` fields are required for every developer registration form. Once published, this form replaces the default sign-up form.
+The `full_name`, `email`, and `submit` fields are required for every developer registration form. 
+Once published, this form replaces the default sign-up form.
 
 ## Create an API registration form
 
@@ -153,11 +155,12 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Every API registration form must include a text field named `api_id`. Its value is populated from the API you're registering for, not from something the developer fills in, so don't mark it as required.
+Every API registration form must include a text field named `api_id`. Its value is populated from the API you're registering for, not from something the developer fills in, so don't make it required.
 
 ## Create an application auth strategy
 
-Partner applications need credentials to call the API. Configure a key auth application authentication strategy, and capture its ID as `$AUTH_STRATEGY_ID`, by sending a `POST` request to the [`/application-auth-strategies` endpoint](/api/konnect/application-auth-strategies/v2/#/operations/create-app-auth-strategy):
+Applications need credentials to call the API. 
+Configure a key auth application authentication strategy, and capture its ID as `$AUTH_STRATEGY_ID`, by sending a `POST` request to the [`/application-auth-strategies` endpoint](/api/konnect/application-auth-strategies/v2/#/operations/create-app-auth-strategy):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -258,11 +261,11 @@ capture:
 <!--vale on-->
 {% endcapture %}
 {{ register-application | indent: 3}}
-   This registration also lands as `pending`.
+   This registration also displays as `pending`.
 
-## Validate
+## Approve API applications based on developer data
 
-1. Review the submitted answers before approving. Get the developer to see their `additional_data`, by sending a `GET` request to the [`/portals/{portalId}/developers/{developerId}` endpoint](/api/konnect/portal-management/v3/#/operations/get-developer):
+1. Review the submitted answers before approving. View the developer's `additional_data` by sending a `GET` request to the [`/portals/{portalId}/developers/{developerId}` endpoint](/api/konnect/portal-management/v3/#/operations/get-developer):
 {% capture get-developer %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -313,11 +316,12 @@ body:
 {% endcapture %}
 {{ approve-registration | indent: 3}}
 
-### Ideas for using this data
+### Automation ideas
 
 Once you can see submitted company names, job titles, and business justifications, you can do the following:
-* Assign the developer to a {{site.dev_portal}} team based on their job title or company, so they are assigned with the right access as soon as they're approved.
+* Assign the developer to a {{site.dev_portal}} team based on their job title or company, so they are assigned the correct access as soon as they're approved.
 * Send a Slack notification to your partnerships channel whenever a registration references a new company.
 * Forward `additional_data` to an in-house approvals dashboard or CRM so your team can track and act on requests outside {{site.konnect_short_name}}.
 
-{{site.dev_portal}} doesn't have a webhook for new registrations or form submissions, so any of these integrations need to poll the {{site.konnect_short_name}} API on an interval. For example by filtering on `status=pending` and sorting by `created_at`, and tracking the last ID or timestamp you've already processed.
+{{site.dev_portal}} doesn't have a webhook for new registrations or form submissions, so any of these integrations need to poll the {{site.konnect_short_name}} API on an interval. 
+For example, you can filter on `status=pending` and sort by `created_at`, and then track the last ID or timestamp you've already processed.

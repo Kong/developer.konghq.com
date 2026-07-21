@@ -216,6 +216,8 @@ rows:
               blocks:
                 - type: text
                   text: |
+                    {% include_cached sections/custom-form-tutorials.md %}
+
                     Custom forms let you add configurable fields to the developer registration form or to a per-API application registration form, so you can capture the information you need to make approval decisions.
 
                     There are two types of custom forms:
