@@ -235,6 +235,7 @@ features:
     supports_konnect: true
     how_to: "--"
   - title: Konnect (Konnect Config Store)
+    url: '?tab=konnect#vault-provider-specific-configuration-parameters'
     oss: false
     enterprise: false
     supports_konnect: true
@@ -399,6 +400,38 @@ rows:
       * **kong.conf parameter:** `vault_env_decode_base64`
       * **Environment variable:** `KONG_VAULT_ENV_DECODE_BASE64`
     description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+
+The {{site.konnect_short_name}} Config Store vault lets you store and reference secrets directly in {{site.konnect_short_name}}, without connecting to a third-party vault backend. You can manage secrets using the [Control Planes Configuration API](/api/konnect/control-planes-config/) or the {{site.konnect_short_name}} UI.
+
+Because {{site.konnect_short_name}} resolves these secrets after {{site.base_gateway}} connects to the control plane, you can only configure the {{site.konnect_short_name}} Config Store vault using a Vault entity. It doesn't support `kong.conf` parameters or environment variables, and it can't be used to resolve secrets referenced in `kong.conf`.
+
+For a complete tutorial on how to set up a {{site.konnect_short_name}} Config Store as a Vault entity, see the following:
+* [Configure the {{site.konnect_short_name}} Config Store vault](/how-to/configure-the-konnect-config-store/)
+* [Store a Mistral API key as a secret in {{site.konnect_short_name}} Config Store](/how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/)
+
+If you're configuring via a Vault entity, set `vaults.name` to `konnect`.
+
+The following table lists the available configuration parameters for a {{site.konnect_short_name}} Config Store Vault:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Field name
+    key: field
+  - title: Parameter format
+    key: parameter
+  - title: Description
+    key: description
+rows:
+  - field: Config Store ID
+    parameter: |
+      * **Vault entity:** `vaults.config.config_store_id`
+    description: |
+      The ID of the {{site.konnect_short_name}} Config Store to use for this Vault. Create a Config Store by sending a `POST` request to the [`/config-stores` endpoint](/api/konnect/control-planes-config/#/operations/create-config-store), or by creating a Vault through the {{site.konnect_short_name}} UI, which creates the Config Store for you.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
