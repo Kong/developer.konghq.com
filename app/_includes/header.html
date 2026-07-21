@@ -267,7 +267,7 @@
               <ul class="navbar-item__menu gap-6" role="menu">
                 {% for item in site.data.top_navigation.support %}
                   <li class="flex">
-                    <a class="flex gap-2 text-primary text-base lg:text-sm w-full no-icon items-center" href="{{item.url}}" target="_blank" rel="noopener nofollow noreferrer">
+                    <a class="flex gap-2 text-primary text-base lg:text-sm w-full no-icon items-center" href="{{item.url}}"{% if item.url contains 'https://' %} target="_blank" rel="noopener nofollow noreferrer"{% endif %}>
                       <span class="navbar-item__icon">{% include_svg item.icon width="20" height="20"  %}</span>
                       {{item.text}}
                     </a>
