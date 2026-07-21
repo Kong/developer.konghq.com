@@ -405,9 +405,9 @@ rows:
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}}" %}
 
-The {{site.konnect_short_name}} Config Store vault lets you store and reference secrets directly in {{site.konnect_short_name}}, without connecting to a third-party vault backend. Secrets are managed using the [Control Planes Configuration API](/api/konnect/control-planes-config/) or the {{site.konnect_short_name}} UI.
+The {{site.konnect_short_name}} Config Store vault lets you store and reference secrets directly in {{site.konnect_short_name}}, without connecting to a third-party vault backend. You can manage secrets using the [Control Planes Configuration API](/api/konnect/control-planes-config/) or the {{site.konnect_short_name}} UI.
 
-Because {{site.konnect_short_name}} resolves these secrets after {{site.base_gateway}} connects to the control plane, the {{site.konnect_short_name}} Config Store vault can only be configured using a Vault entity. It doesn't support `kong.conf` parameters or environment variables, and it can't be used to resolve secrets referenced in `kong.conf`.
+Because {{site.konnect_short_name}} resolves these secrets after {{site.base_gateway}} connects to the control plane, you can only configure the {{site.konnect_short_name}} Config Store vault using a Vault entity. It doesn't support `kong.conf` parameters or environment variables, and it can't be used to resolve secrets referenced in `kong.conf`.
 
 For a complete tutorial on how to set up a {{site.konnect_short_name}} Config Store as a Vault entity, see the following:
 * [Configure the {{site.konnect_short_name}} Config Store vault](/how-to/configure-the-konnect-config-store/)
