@@ -32,13 +32,13 @@ This CRD has the following fields:
 You can refer to the Custom Resource [API](/operator/reference/custom-resources/#kongpluginbinding) to see all the available fields.
 
 {:.info}
-> **Note:** `KongPluginBinding` models Konnect's Plugin API 1:1, so it only supports Kong entities such as Service, Route, Consumer, and Consumer Group.
+> **Note:** `KongPluginBinding` models {{ site.konnect_short_name }}'s Plugin API 1:1, so it only supports Kong entities such as Service, Route, Consumer, and Consumer Group.
 > To attach a plugin to an `HTTPRoute`, see the supported methods in [this guide](/operator/dataplanes/how-to/configure-plugins-for-httproute/).
 
 ## Using an unmanaged `KongPluginBinding`
 
 You can directly create a `KongPluginBinding` to bind your plugin to a {{ site.konnect_short_name }} entity.
-For an end-to-end tutorial, see [Enable a Plugin with {{ site.operator_product_name_short }}](/operator/konnect/crd/gateway/plugin/).
+For an end-to-end tutorial, see [Enable a plugin with {{ site.operator_product_name_short }}](/operator/konnect/crd/gateway/plugin/).
 
 Assuming that you have an existing and programmed `KonnectGatewayControlPlane` with the name `cp` in the `default` namespace, first, create a Gateway Service and a plugin with the `KongService` and `KongPlugin` CRDs:
 
