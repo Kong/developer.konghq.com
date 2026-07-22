@@ -103,10 +103,10 @@ ai_gateways:
     display_name: "ai-quickstart"
 
 ai_gateway_models:
-  - ref: my-claude-openai
+  - ref: my-qwen-openai
     ai_gateway: ai-quickstart
-    name: my-claude-openai
-    display_name: "my-claude-openai"
+    name: my-qwen-openai
+    display_name: "my-qwen-openai"
     type: model
     formats:
       - type: anthropic
@@ -115,7 +115,7 @@ ai_gateway_models:
         paths:
           - /
       model:
-        alias: my-claude-openai
+        alias: my-qwen-openai
     targets:
       - name: gpt-5-mini
         provider: generic-openai
@@ -130,7 +130,7 @@ EOF
 In this example, we're setting up the AI Model with:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
-* `name: my-claude-openai`: A unique identifier for this model.
+* `name: my-qwen-openai`: A unique identifier for this model.
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively, even though the upstream model is OpenAI.
 * `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
 * `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
