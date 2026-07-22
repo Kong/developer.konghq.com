@@ -109,7 +109,7 @@ ai_gateway_models:
     display_name: "my-qwen-openai"
     type: model
     formats:
-      - type: anthropic
+      - type: openai
     config:
       route:
         paths:
@@ -145,7 +145,7 @@ content: |
   ```sh
   export OPENAI_BASE_URL="http://localhost:8000/anything"
   export OPENAI_API_KEY="YOUR OPENAI API KEY"
-  export OPENAI_MODEL="gpt-5"
+  export OPENAI_MODEL="my-qwen-openai"
   ```
 {% endon_prem %}
 
@@ -154,7 +154,7 @@ content: |
   ```sh
   export OPENAI_BASE_URL="http://localhost:8000/anything"
   export OPENAI_API_KEY="YOUR OPENAI API KEY"
-  export OPENAI_MODEL="gpt-5"
+  export OPENAI_MODEL="my-qwen-openai"
   ```
 
   If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
