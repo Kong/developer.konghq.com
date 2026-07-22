@@ -291,6 +291,28 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.9": [
+    {
+      "message": "Fixed an inconsistency where `credential_claim` resolved the same claim name to a different value than `upstream_headers_claims` because it consulted the id_token before the access_token, while the upstream headers resolver consulted the access_token first. With IdPs (e.g. Okta) that set distinct `sub` values in the two tokens, `authenticated_entity.id` did not match the upstream header the plugin set on the same request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Redis-backed session storage could fail when Redis connections were routed through a proxy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where consumer groups could not be resolved\nwhen the groups claim was only available from the user info endpoint, which\nresulted in a `500` error.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where caused IdP to report invalid redirect_uri errors when `config.redirect_uri` was not configured and the uri path contained spaces.",
