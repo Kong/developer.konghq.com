@@ -167,7 +167,7 @@ rows:
                   In short, use the Inso CLI to automate testing and linting yourself, and Koh CLI to let an AI agent work with your Insomnia data.
   - header:
       type: h2
-      text: Detailed usage
+      text: Related resources
     columns:
       - blocks:
           - type: related_resources
@@ -175,3 +175,7 @@ rows:
               - text: npm package documentation
                 type: blog
                 url: https://www.npmjs.com/package/koh-cli#detailed-usage
+              - text: |
+                  Insomnia’s Agent-Friendly CLI tool, Koh: A Standardized Interface Between Your Agent and Your API Context
+                type: blog
+                url: https://konghq.com/blog/product-releases/koh-cli-api-context-for-agents/
