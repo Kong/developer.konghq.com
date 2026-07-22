@@ -417,7 +417,7 @@ To link the form to an API:
 1. Click the **Published APIs** tab.
 1. Find the API, click its action menu, and click **Edit publication**.
 1. Click the **Require API registration form** checkbox.
-1. From the **Form** dropdown, then select your custom form. 
+1. From the **Form** dropdown menu, select your custom form.
 1. Click **Save**.
 {% endnavtab %}
 {% endnavtabs %}
