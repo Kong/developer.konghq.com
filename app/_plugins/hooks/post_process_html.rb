@@ -15,7 +15,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
   COMPOUND_ID_URLS = ['/gateway/changelog/', '/ai-gateway/changelog/',
                       '/operator/reference/custom-resources/'].freeze
   HEADING_SELECTOR = 'h2, h3, h4, h5, h6'
-  HEADING_TAG_RE = /h[2-6]/
+  HEADING_XPATH = './/*[self::h2 or self::h3 or self::h4 or self::h5 or self::h6]'
 
   ANCHOR_CLASS = 'flex items-center gap-2 link-anchor group w-full hover:no-underline text-primary'
 
@@ -27,6 +27,11 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
     doc = Nokolexbor::DocumentFragment.parse(@page_or_doc.content)
 
     ops = collect_heading_ops(doc)
+
+    if ops.empty?
+      @page_or_doc.data['_needs_heading_output_pass'] = true
+      return
+    end
 
     content = @page_or_doc.content
     content = apply_heading_rewrites(content, ops)
@@ -69,7 +74,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
     h2_id = nil
     h3_id = nil
 
-    doc.css(HEADING_SELECTOR).each do |heading|
+    doc.xpath(HEADING_XPATH).each do |heading|
       next if skip_heading?(heading)
 
       old_id = heading['id']
@@ -171,6 +176,6 @@ Jekyll::Hooks.register [:documents, :pages], :post_convert, priority: :low do |p
 end
 
 Jekyll::Hooks.register [:documents, :pages], :post_render do |page_or_doc|
-  AddLinksToHeadings.new(page_or_doc).process_output
+  AddLinksToHeadings.new(page_or_doc).process_output if page_or_doc.data['_needs_heading_output_pass']
   KongPluginsMetaInjector.new(page_or_doc).process
 end
