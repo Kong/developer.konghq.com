@@ -202,7 +202,7 @@ token usage on each request and control cost, {{ site.data.products.insomnia.nam
 lets you set a maximum number of tokens per request:
 
 1. Navigate to **Preferences** > **AI Settings** > **Activate an LLM**.
-1. Select **LLM URL**
+1. Select **LLM URL**.
 1. In the **LLM URL** field, enter your custom self-hosted URL or the provider URL, such as `https://api.openai.com/v1`.
 1. In the **API Token** field, enter your API token.
 1. Click **Advanced Options**.
