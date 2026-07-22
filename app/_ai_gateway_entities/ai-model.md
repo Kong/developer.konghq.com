@@ -69,7 +69,7 @@ faqs:
   - q: Can a client override the model name from the request body?
     a: |
       By default, no. The request `model` field must match the upstream model on one of the AI Model's targets, otherwise the runtime returns a `400` error.
-      To accept a client-side alias, set [`config.route.body`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-body), [`config.route.path_model_aliases`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-path-model-aliases), or both, to the same alias value. Clients can then send the alias in the request `model` field, in the request path, or both, instead of the upstream AI Provider model name. See [Request routing by model alias](/ai-gateway/load-balancing/#request-routing-by-model-alias) for details and examples.
+      To accept a client-side alias, set [`config.route.model`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model) to exactly one of [`body`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model-body), [`headers`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model-headers), or [`path_aliases`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model-path-aliases). Clients can then send the alias in the request body, a header, or the request path (matching whichever you configured) instead of the upstream AI Provider model name. See [Request routing by model alias](/ai-gateway/load-balancing/#request-routing-by-model-alias) for details and examples.
 
   - q: Can a client override `temperature`, `top_p`, or `top_k` from the request?
     a: |
@@ -624,9 +624,115 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Model aliasing
 
-By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, set [`config.route.body`](#schema-aigateway-model-config-route-body), [`config.route.path_model_aliases`](#schema-aigateway-model-config-route-path-model-aliases), or both, to the same alias value.
+By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, set [`config.route.model`](#schema-aigateway-model-config-route-model) to exactly one of:
 
-Set `config.route.body` to match a property in the request body (typically `model`) against the alias, and `config.route.path_model_aliases` to match the same alias against a segment of the request path. Clients can then reach this AI Model with the alias, in the body or the path, instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+* [`body`](#schema-aigateway-model-config-route-model-body): match a property in the request body (typically `model`) against the alias.
+* [`headers`](#schema-aigateway-model-config-route-model-headers): match a request header against the alias.
+* [`path_aliases`](#schema-aigateway-model-config-route-model-path-aliases): match a segment of the request path against the alias. Use this for providers like Gemini, Vertex, or Bedrock, where the model name is passed exclusively in the URL path.
+
+Clients can then reach this AI Model with the alias instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+
+{:.info}
+> [`config.route.model.headers`](#schema-aigateway-model-config-route-model-headers) is distinct from [`config.route.headers`](#schema-aigateway-model-config-route-headers): the latter is general route matching on any header, unrelated to model aliasing.
+
+{% navtabs "Model aliasing examples" %}
+
+{% navtab "Body" %}
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        body:
+          model:
+            - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% navtab "Headers" %}
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        headers:
+          X-Model-Name:
+            - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% navtab "Path aliases" %}
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        path_aliases:
+          - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% endnavtabs %}
 
 ## Access control
 
@@ -692,17 +798,16 @@ data:
     route:
       paths:
         - /
-      body:
-        model:
-          - my-gpt-4o
-      path_model_aliases:
-        - my-gpt-4o
+      model:
+        body:
+          model:
+            - my-gpt-4o
     logging:
       payloads: false
 {% endentity_example %}
 
 {:.info}
-> Because [`config.route.body`](#schema-aigateway-model-config-route-body) and [`config.route.path_model_aliases`](#schema-aigateway-model-config-route-path-model-aliases) are set here, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body, or reach this AI Model through a path containing the `my-gpt-4o` segment, instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
+> Because [`config.route.model.body`](#schema-aigateway-model-config-route-model-body) is set here, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
 
 
 ## Schema
