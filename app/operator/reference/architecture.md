@@ -78,11 +78,13 @@ flowchart LR
 2. Deploys a data plane: a {{site.base_gateway}} instance running in DB-less mode.
 3. Continuously pushes routing configuration from the in-memory {{site.kic_product_name_short}} to the data plane over mTLS via the Admin API.
 
-Routing rules are defined using Gateway API resources (`HTTPRoute`, `GRPCRoute`, `TCPRoute`, `UDPRoute`). The embedded {{site.kic_product_name_short}} instance translates these into Kong configuration and syncs them to the data plane.
+{{site.operator_product_name}} defines the routing rules using Gateway API resources (`HTTPRoute`, `GRPCRoute`, `TCPRoute`, `UDPRoute`). The embedded {{site.kic_product_name_short}} instance translates these into Kong configuration and syncs them to the data plane.
 
 Use a `GatewayConfiguration` resource, referenced via `GatewayClass.spec.parametersRef`, to customize the data plane container image, environment variables, and other deployment settings.
 
-To deploy multiple isolated gateways (for example, a public-facing and a private internal gateway), create a `GatewayConfiguration`, `GatewayClass`, and `Gateway` for each. Each `Gateway` results in one embedded {{site.kic_product_name_short}} instance (within the same {{site.operator_product_name}} Pod) and one separate data plane deployment.
+To deploy multiple isolated gateways (for example, a public-facing and a private internal gateway), create a `GatewayConfiguration`, `GatewayClass`, and `Gateway` for each. Each `Gateway` results in:
+- One embedded {{site.kic_product_name_short}} instance (within the same {{site.operator_product_name}} Pod).
+- One separate data plane deployment.
 
 ## {{site.konnect_short_name}}-hosted control plane
 
