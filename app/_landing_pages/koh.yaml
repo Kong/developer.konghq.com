@@ -1,0 +1,181 @@
+metadata:
+  title: Koh CLI, the agent-friendly CLI for Insomnia
+  content_type: landing_page
+  description: This page is an introduction to Koh CLI, an agent-friendly command line tool for Insomnia.
+  permalink: /insomnia/koh/
+  tech_preview: true
+  breadcrumbs:
+    - /insomnia/
+  products:
+    - insomnia
+  tags:
+    - design-apis
+    - test-apis
+
+rows:
+  - header:
+      type: h1
+      text: "Koh CLI"
+
+  - header:
+      type: h2
+      text: What is Koh CLI?
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            Koh CLI is an agent-friendly interface to Insomnia, allowing tools like Claude Code or Codex to interact directly with collections, requests, OpenAPI specs and other data stored in Insomnia.
+
+            Koh CLI isn't the same as [Inso CLI](/inso-cli/), see [the FAQ section](#frequently-asked-questions).
+            
+            Koh CLI only works with Insomnia [Git projects](/insomnia/storage/#git-sync). For the package and detailed usage, see [koh-cli on npm](https://www.npmjs.com/package/koh-cli#detailed-usage).
+            
+  - header:
+      type: h2
+      text: "Install Koh CLI"
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              1. Install with npm:
+                  ```bash
+                  npm install -g koh-cli
+                  ```
+              1. Check that Koh was properly installed:
+                  ```bash
+                  koh --version
+                  ```
+  - header:
+    columns:
+      - header:
+          type: h2
+          text: "How does Koh CLI work?"
+        blocks:
+        - type: text
+          config: |
+            Koh provides skills that teach AI agents how to operate on your Insomnia projects. Install the bundled skills into your agent's skills directory with:
+
+            ```bash
+            koh skills install [directory] --agent
+            ```
+
+            This installs globally the skills into your agents `/skills/` directory. Point Koh at a different base directory by passing it as an argument, and add `--force` to replace previously installed skill files.
+
+            Under the hood, Koh operates on a local Insomnia Git project when you enable [Git Sync](/insomnia/storage/#git-sync). Your collections, documents, and requests are stored as `.yaml` files that Koh reads and updates directly, so any changes are reflected in Insomnia without an import or export step.
+
+            By default, Koh uses the current working directory as the project. Use the `--project <path>` option to point to a different project directory:
+
+            ```bash
+            koh collection list --project /path/to/project
+            ```
+
+            To produce structured JSON that AI agents and LLM workflows can parse, add the `--agent` flag to any command:
+
+            ```bash
+            koh collection list --agent
+            ```
+
+            Koh currently supports Git projects only, so set up [Git Sync](/insomnia/storage/#git-sync) before running Koh commands.
+
+  - header:
+      text: "What can Koh CLI do?"
+      type: h2
+    columns:
+      - blocks:
+        - type: x_with_y
+          config:
+              border: true
+              type: h2
+              headers:
+                - Commonly used Koh CLI commands
+
+              items:
+                - text: |
+                    List all collections in the project
+                  action:
+                    type: command
+                    config:
+                      cmd: koh
+                      args:
+                        - collection
+                        - list
+                        - --agent
+                - text: |
+                    Show a collection's details
+                  action:
+                    type: command
+                    config:
+                      cmd: koh
+                      args:
+                        - collection
+                        - show
+                        - '"collection name"'
+                        - --agent
+                - text: |
+                    List the requests in a collection
+                  action:
+                    type: command
+                    config:
+                      cmd: koh
+                      args:
+                        - request
+                        - list
+                        - --collection
+                        - '"collection name"'
+                        - --agent
+                    
+                - text: |
+                    Import an OpenAPI spec as a new document
+                  action:
+                    type: command
+                    config:
+                      cmd: koh
+                      args:
+                        - import
+                        - oas
+                        - document
+                        - '"OpenAPI document name"'
+                        - --agent
+                - text: |
+                    List the operations defined in a document's OpenAPI spec
+                  action:
+                    type: command
+                    config:
+                      cmd: koh
+                      args:
+                        - document
+                        - spec
+                        - operation
+                        - list
+                        - --document
+                        - '"API name"'
+                        - --agent
+  - header:
+      type: h2
+      text: Frequently asked questions
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: What's the difference between Koh CLI and Inso CLI?
+                a: |
+                  Both are command line tools for Insomnia, but they're built for different use cases:
+
+                  * **[Inso CLI](/inso-cli/)** is designed for people and CI/CD pipelines. Use it in production to lint OpenAPI specs, run collections and tests, and automate Insomnia workflows in your terminal or continuous integration environment. Inso CLI can read Insomnia data from a Git project or from the local Insomnia app data directory.
+                  * **Koh CLI** is designed for both humans and AI agents, such as Claude Code or Codex. It exposes collections, requests, and OpenAPI specs as structured commands (use the `--agent` flag for JSON output) and installs skills that teach agents how to operate on your projects. Koh CLI is currently in [Tech Preview](/insomnia/release-policy/#release-types) and works only with Insomnia [Git projects](/insomnia/storage/#git-sync).
+
+                  In short, use the Inso CLI to automate testing and linting yourself, and Koh CLI to let an AI agent work with your Insomnia data.
+  - header:
+      type: h2
+      text: Related resources
+    columns:
+      - blocks:
+          - type: related_resources
+            config:
+              - text: npm package documentation
+                type: blog
+                url: https://www.npmjs.com/package/koh-cli#detailed-usage
+              - text: |
+                  Insomnia’s Agent-Friendly CLI tool, Koh: A Standardized Interface Between Your Agent and Your API Context
+                type: blog
+                url: https://konghq.com/blog/product-releases/koh-cli-api-context-for-agents/
