@@ -6,7 +6,7 @@
 
 1. Select the credentials for your Git repository. Insomnia supports two types of Git credentials:
 
-   * **Third-party authentication:** GitHub, GitLab, and access tokens
+   * **Third-party authentication:** GitHub, GitLab, and access tokens.
    * **Native Git credentials**: the credentials stored on your system, detected and applied automatically.
 
 {:.warning}
