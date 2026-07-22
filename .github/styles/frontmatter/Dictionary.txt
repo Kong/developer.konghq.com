@@ -53,3 +53,4 @@ crowdstrike
 aidr
 standalone_gateway
 skip_cert_manager
+entities_product

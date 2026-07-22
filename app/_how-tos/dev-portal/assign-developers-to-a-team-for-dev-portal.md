@@ -23,7 +23,7 @@ search_aliases:
 
 tldr:
     q: How do I automatically add new developers to the right {{site.dev_portal}} team based on their sign-up answers?
-    a: Create a custom developer registration form with custom field, turn off developer auto-approve, then read each new developer's `additional_data` and add them to the matching team using the `/v3/portals/{portalId}/teams/{teamId}/developers` endpoint before approving them.
+    a: Create a custom developer registration form with a custom field, turn off developer auto-approve, then read each new developer's `additional_data` and add them to the matching team using the `/v3/portals/{portalId}/teams/{teamId}/developers` endpoint before approving them.
 
 prereqs:
   inline:
