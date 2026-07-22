@@ -20,6 +20,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.9": [
+    {
+      "message": "Fixed an issue where warn log messages did not\ninclude the plugin name, making it difficult to identify the source of\nblocked requests.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.6.0.0": [
     {
       "message": "add support for consumer group scoping",

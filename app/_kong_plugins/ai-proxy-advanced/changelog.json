@@ -630,6 +630,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.9": [
+    {
+      "message": "Fixed an issue where unsafe batch id could cause upstream AI provider path traversal.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where an unsafe model name in native format adapters could cause upstream AI provider path traversal.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where unsafe model names could construct upstream AI provider paths.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Add `tried_targets` field in serialized analytics logs for record of all tried ai targets.\n",
