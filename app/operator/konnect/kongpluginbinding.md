@@ -32,8 +32,8 @@ This CRD has the following fields:
 You can refer to the Custom Resource [API](/operator/reference/custom-resources/#kongpluginbinding) to see all the available fields.
 
 {:.info}
-> **Note:** KongPluginBinding models 1:1 Konnect's Plugin API hence it only allows to interact with Kong entities like Service, Route, Consumer, and ConsumerGroup.
-> To attach a plugin to an HTTPRoute see the supported methods in [this guide](/operator/dataplanes/how-to/configure-plugins-for-httproute/).
+> **Note:** `KongPluginBinding` models Konnect's Plugin API 1:1, so it only supports Kong entities such as Service, Route, Consumer, and Consumer Group.
+> To attach a plugin to an `HTTPRoute`, see the supported methods in [this guide](/operator/dataplanes/how-to/configure-plugins-for-httproute/).
 
 ## Using an unmanaged `KongPluginBinding`
 
