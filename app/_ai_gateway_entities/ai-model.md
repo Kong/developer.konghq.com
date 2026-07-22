@@ -69,7 +69,7 @@ faqs:
   - q: Can a client override the model name from the request body?
     a: |
       By default, no. The request `model` field must match the upstream model on one of the AI Model's targets, otherwise the runtime returns a `400` error.
-      To accept a client-side alias, set [`config.model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-model-alias). Clients can then send the alias value in the request `model` field instead of the upstream AI Provider model name. See [Request routing by model alias](/ai-gateway/load-balancing/#request-routing-by-model-alias) for details and examples.
+      To accept a client-side alias, set [`config.route.body`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-body), [`config.route.path_model_aliases`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-path-model-aliases), or both, to the same alias value. Clients can then send the alias in the request `model` field, in the request path, or both, instead of the upstream AI Provider model name. See [Request routing by model alias](/ai-gateway/load-balancing/#request-routing-by-model-alias) for details and examples.
 
   - q: Can a client override `temperature`, `top_p`, or `top_k` from the request?
     a: |
@@ -325,9 +325,9 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Model aliasing
 
-By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, set [`config.model.alias`](#schema-aigateway-model-config-model-alias).
+By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, set [`config.route.body`](#schema-aigateway-model-config-route-body), [`config.route.path_model_aliases`](#schema-aigateway-model-config-route-path-model-aliases), or both, to the same alias value.
 
-When an alias is set, clients can send that alias in the request `model` field instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+Set `config.route.body` to match a property in the request body (typically `model`) against the alias, and `config.route.path_model_aliases` to match the same alias against a segment of the request path. Clients can then reach this AI Model with the alias, in the body or the path, instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
 ## Access control
 
@@ -353,7 +353,7 @@ Use the [`config.proxy`](#schema-aigateway-model-config-proxy) object to specify
 
 ## Logging and observability
 
-Enable [`statistics`](#schema-aigateway-model-config-logging-statistics) logging to track token consumption, request latency, and per-provider costs. This data flows into {{site.konnect_short_name}} analytics and any attached logging AI Policies, letting you monitor API spend, identify slow providers, and audit which AI Models drive the most usage.
+{{site.ai_gateway}} automatically records usage statistics, such as token consumption, request latency, and per-provider costs, for every AI Model. This data flows into {{site.konnect_short_name}} analytics and any attached logging AI Policies, letting you monitor API spend, identify slow providers, and audit which AI Models drive the most usage.
 
 Optionally enable [`payloads`](#schema-aigateway-model-config-logging-payloads) to capture full request and response bodies. This is useful for debugging model responses, auditing sensitive operations, or replaying requests.
 
@@ -367,7 +367,7 @@ For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service. 
 
 The following example:
-* Creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
+* Creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider.
 * References a provider named `my-openai-account`. Either see [Set up an AI Model Provider](/ai-gateway/entities/ai-model-provider/#set-up-an-ai-model-provider) to create it, or substitute the name of your own AI Model Provider in `targets[].provider`.
 
 {:.info}
@@ -393,15 +393,17 @@ data:
     route:
       paths:
         - /v1
+      body:
+        model:
+          - my-gpt-4o
+      path_model_aliases:
+        - my-gpt-4o
     logging:
-      statistics: true
       payloads: false
-    model:
-      alias: my-gpt-4o
 {% endentity_example %}
 
 {:.info}
-> Because [`config.model.alias`](#schema-aigateway-model-config-model-alias) is set here, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
+> Because [`config.route.body`](#schema-aigateway-model-config-route-body) and [`config.route.path_model_aliases`](#schema-aigateway-model-config-route-path-model-aliases) are set here, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body, or reach this AI Model through a path containing the `my-gpt-4o` segment, instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
 
 
 ## Schema
