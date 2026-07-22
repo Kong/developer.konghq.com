@@ -1,6 +1,6 @@
 ---
 title: Configure a plugin for a specific HTTPRoute
-description: "Learn how to attach plugins to HTTPRoute resources using KongPluginBinding, ExtensionRef, or annotations."
+description: "Learn how to attach plugins to HTTPRoute resources using ExtensionRef or annotations."
 content_type: how_to
 permalink: /operator/dataplanes/how-to/configure-plugins-for-httproute/
 breadcrumbs:
@@ -30,7 +30,7 @@ prereqs:
 tldr:
   q: How do I attach a plugin to an HTTPRoute with {{ site.operator_product_name }}?
   a: |
-    Use an `ExtensionRef`, the legacy `konghq.com/plugins` annotation, or the `KongPluginBinding` resource ({{site.konnect_short_name}} only).
+    Use an `ExtensionRef` or the legacy `konghq.com/plugins` annotation.
 ---
 
 ## Create a KongPlugin
@@ -54,38 +54,6 @@ config:
 ## Apply the plugin to the HTTPRoute
 
 {% navtabs "Methods" %}
-
-{% navtab "KongPluginBinding (Konnect only)" %}
-
-The `KongPluginBinding` resource can be used when managing entities in {{site.konnect_short_name}} or when using the Hybrid mode. 
-It allows you to bind a plugin to one or more entities without modifying those entities.
-
-For more details about the `KongPluginBinding` resources, see [Understanding KongPluginBinding](/operator/konnect/kongpluginbinding/).
-
-Use this method if you need to reuse the same plugin configuration across multiple Routes without editing each Route resource, or if you do not have permission to modify the Route.
-
-```bash
-echo '
-apiVersion: configuration.konghq.com/v1alpha1
-kind: KongPluginBinding
-metadata:
-  name: bind-rate-limit-to-route
-  namespace: kong
-spec:
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: gateway-control-plane
-  pluginRef:
-    name: rate-limit-example
-  targets:
-    routeRef:
-      group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: echo-route
-' | kubectl apply -f -
-```
-{% endnavtab %}
 
 {% navtab "ExtensionRef" %}
 

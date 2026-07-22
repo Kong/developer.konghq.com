@@ -20,7 +20,6 @@ related_resources:
 
 The `KongPluginBinding` is the CRD used to manage the binding relationship between plugins and attached {{site.konnect_short_name}} entities, including Services, Routes, Consumers, and Consumer Groups, or a supported combination of these entities.
 
-
 {% new_in 1.5 %} It can also be used to bind a plugin globally to a Control Plane when `spec.scope` is set to `GlobalInControlPlane`.
 
 Each `KongPluginBinding` represents a single plugin instance on {{ site.konnect_short_name }}.
@@ -32,10 +31,14 @@ This CRD has the following fields:
 
 You can refer to the Custom Resource [API](/operator/reference/custom-resources/#kongpluginbinding) to see all the available fields.
 
+{:.info}
+> **Note:** KongPluginBinding models 1:1 Konnect's Plugin API hence it only allows to interact with Kong entities like Service, Route, Consumer, and ConsumerGroup.
+> To attach a plugin to an HTTPRoute see the supported methods in [this guide](/operator/dataplanes/how-to/configure-plugins-for-httproute/).
+
 ## Using an unmanaged `KongPluginBinding`
 
-You can directly create a `KongPluginBinding` to bind your plugin to a Konnect entity. For a end-to-end tutorial, see [Enable a Plugin with KGO](/operator/konnect/crd/gateway/plugin/).
-
+You can directly create a `KongPluginBinding` to bind your plugin to a {{ site.konnect_short_name }} entity.
+For an end-to-end tutorial, see [Enable a Plugin with {{ site.operator_product_name_short }}](/operator/konnect/crd/gateway/plugin/).
 
 Assuming that you have an existing and programmed `KonnectGatewayControlPlane` with the name `cp` in the `default` namespace, first, create a Gateway Service and a plugin with the `KongService` and `KongPlugin` CRDs:
 
@@ -97,33 +100,6 @@ spec:
 ```
 
 Then the plugin will be successfully attached to the Service in {{ site.konnect_short_name }}.
-
-### Binding to an HTTPRoute
-
-You can also bind a plugin to a specific `HTTPRoute` resource. This is useful when you want to apply a plugin to a specific path or rule within your Gateway configuration:
-
-```shell
-echo '
-kind: KongPluginBinding
-apiVersion: configuration.konghq.com/v1alpha1
-metadata:
-  namespace: default
-  name: binding-route-example-rate-limiting
-spec:
-  pluginRef:
-    kind: KongPlugin
-    name: rate-limiting-minute-10
-  targets:
-    routeRef:
-      group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: my-route
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: cp
-' | kubectl apply -f -
-```
 
 ### Attaching plugins to multiple entities
 
