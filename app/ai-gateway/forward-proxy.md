@@ -267,6 +267,10 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
           route:
             paths:
               - /
+            model:
+              body:
+                model:
+                  - my-claude
           proxy:
             http_proxy:
               host: host.docker.internal
@@ -275,8 +279,6 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
               host: host.docker.internal
               port: 3128
             proxy_scheme: http
-          model:
-            alias: my-claude
         targets:
           - name: claude-opus-4-8
             provider: generic-anthropic
