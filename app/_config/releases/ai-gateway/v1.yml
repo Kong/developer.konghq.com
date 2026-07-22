@@ -294,8 +294,7 @@ app/_how-tos/ai-gateway/v1/use-gemini-3-thinking-config.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/gemini/
 app/_how-tos/ai-gateway/v1/use-gemini-cli-with-ai-gateway.md:
-  status: pending
-  canonical_url: /ai-gateway/ai-clis/
+  canonical_url: /ai-gateway/use-gemini-cli-with-ai-gateway/
 app/_how-tos/ai-gateway/v1/use-gemini-sdk-chat.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/gemini/
