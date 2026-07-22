@@ -201,7 +201,7 @@ By default, a request can consume as many tokens as the model allows. To cap
 token usage on each request and control cost, {{ site.data.products.insomnia.name }}
 lets you set a maximum number of tokens per request:
 
-1. Navigate to **Preferences** > **AI Settings** > **Activate an LLM**
+1. Navigate to **Preferences** > **AI Settings** > **Activate an LLM**.
 1. Select **LLM URL**
 1. In the **LLM URL** field, enter your custom self-hosted URL or the provider URL, such as `https://api.openai.com/v1`.
 1. In the **API Token** field, enter your API token.
