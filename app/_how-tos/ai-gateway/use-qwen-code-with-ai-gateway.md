@@ -23,7 +23,7 @@ tags:
 
 tldr:
   q: How do I run Qwen Code CLI through {{site.ai_gateway}}?
-  a: Create an AI Model PRovider and AI Model, then point Qwen Code CLI to the local proxy endpoint so all requests go through {{site.ai_gateway}} for monitoring and control.
+  a: Create an AI Model Provider and AI Model, then point Qwen Code CLI to the local proxy endpoint so all requests go through {{site.ai_gateway}} for monitoring and control.
 
 tools:
   - kongctl
@@ -131,93 +131,21 @@ In this example, we're setting up the AI Model with:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-qwen-openai`: A unique identifier for this model.
-* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively, even though the upstream model is OpenAI.
+* `formats: [type: openai]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively, even though the upstream model is OpenAI.
 * `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
-* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
+* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/chat/completions`.
 * `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-5-mini` specifies which OpenAI model to call upstream.
-
-## Export environment variables
-
-Open a new terminal window and export the variables that Qwen Code CLI will use. Point `OPENAI_BASE_URL` to the local proxy endpoint where LLM traffic from Qwen Code CLI will route:
-
-{% on_prem %}
-content: |
-  ```sh
-  export OPENAI_BASE_URL="http://localhost:8000/anything"
-  export OPENAI_API_KEY="YOUR OPENAI API KEY"
-  export OPENAI_MODEL="my-qwen-openai"
-  ```
-{% endon_prem %}
-
-{% konnect %}
-content: |
-  ```sh
-  export OPENAI_BASE_URL="http://localhost:8000/anything"
-  export OPENAI_API_KEY="YOUR OPENAI API KEY"
-  export OPENAI_MODEL="my-qwen-openai"
-  ```
-
-  If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
-{% endkonnect %}
-
-{:.info}
-> Make sure that `OPENAI_MODEL` variable points to the same model configured for the AI Proxy plugin.
-
 
 ## Validate the configuration
 
-Now you can test the Qwen Code CLI setup.
+Now you can start a Qwen Code CLI session that points it to the local {{site.ai_gateway}} endpoint:
 
-1. In the terminal where you exported your environment variables, run:
+```sh
+OPENAI_BASE_URL="http://localhost:8000/" OPENAI_API_KEY=$OPENAI_AUTH_HEADER qwen --model my-qwen-openai
+```
 
-   ```sh
-   qwen
-   ```
+You should see the Qwen Code CLI interface start up. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
 
-   You should see the Qwen Code CLI interface start up.
-
-2. Run a command to test the connection:
-
-   ```text
-   Explain the singleton pattern in Python.
-   ```
-
-   Expected output will show the model's response to your prompt.
-
-3. Check that LLM traffic went through {{site.ai_gateway}}:
-
-   ```sh
-   docker exec kong-quickstart-gateway cat /tmp/qwen.json | jq
-   ```
-
-   Look for entries similar to:
-
-   ```json
-   {
-     ...
-     "request": {
-       "size": 53534,
-       "uri": "/qwen/chat/completions",
-       "method": "POST",
-       "headers": {
-         "user-agent": "QwenCode/0.6.2 (darwin; arm64)",
-         "content-type": "application/json"
-       }
-     },
-     "response": {
-       "status": 200,
-       "size": 36922,
-       "headers": {
-         "x-kong-llm-model": "openai/gpt-5",
-         "content-type": "text/event-stream; charset=utf-8"
-       }
-     },
-     "latencies": {
-       "proxy": 8289,
-       "kong": 43,
-       "request": 9889
-     }
-     ...
-   }
-   ```
-{:.no-copy-code}
+```text
+Explain the singleton pattern in Python.
+```
