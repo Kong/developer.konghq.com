@@ -2,6 +2,7 @@ metadata:
   title: Koh CLI, the agent-friendly CLI for Insomnia
   content_type: landing_page
   description: This page is an introduction to Koh CLI, an agent-friendly command line tool for Insomnia.
+  permalink: /insomnia/koh/
   tech_preview: true
   breadcrumbs:
     - /insomnia/
