@@ -122,8 +122,10 @@ ai_gateway_models:
       route:
         paths:
           - /v1
-      model:
-        alias: my-gpt-4o
+        model:
+          body:
+            model:
+              - my-gpt-4o
     targets:
       - name: gpt-4o
         provider: generic-openai
@@ -145,7 +147,7 @@ In this example, we're setting up the AI Model with:
 * `formats: [type: openai]`: Declares that this model accepts requests in OpenAI-compatible format.
 * `config.route.paths: [/v1]`: Configures the custom base path where this model's Routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific Routes.
 * `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
-* `config.model.alias: my-gpt-4o`: Lets clients send `my-gpt-4o` in the request `model` field instead of the upstream model name.
+* `config.route.model.body: { model: [my-gpt-4o] }`: Lets clients send `my-gpt-4o` in the request `model` field instead of the upstream model name.
 * `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
 
 ## Validate

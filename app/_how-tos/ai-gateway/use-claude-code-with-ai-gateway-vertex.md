@@ -170,7 +170,7 @@ The AI Model uses:
 
  * `name`/`display_name: claude-code-vertex-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target ID, to select the model.
  * `formats: [type: anthropic]`: Accepts Anthropic-compatible requests (what {{ site.claude_code }} sends).
- * `config.model.name_header: true`: Lets {{ site.claude_code }} select this model by sending its `name` in the request, instead of requiring a separate `alias`.
+ * `config.model.name_header: true`: Lets {{ site.claude_code }} select this model by sending its `name` in the request, instead of requiring a separate routing rule.
  * `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API.
  * `policies`: Attaches the `claude-code-compat` policy defined above, via `!ref claude-code-compat#name`, so its body-stripping transformation applies to every request sent through this model.
  * `targets[0].provider: vertex-prod`: Routes upstream requests through the Vertex AI Provider created earlier.
