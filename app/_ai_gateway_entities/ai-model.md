@@ -635,6 +635,8 @@ Clients can then reach this AI Model with the alias instead of the upstream mode
 {:.info}
 > [`config.route.model.headers`](#schema-aigateway-model-config-route-model-headers) is distinct from [`config.route.headers`](#schema-aigateway-model-config-route-headers): the latter is general route matching on any header, unrelated to model aliasing.
 
+The following examples assume the `my-openai-account` [AI Model Provider](/ai-gateway/entities/ai-model-provider/) already exists.
+
 {% navtabs "Model aliasing examples" %}
 
 {% navtab "Body" %}
