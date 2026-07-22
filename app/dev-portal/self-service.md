@@ -246,7 +246,7 @@ By default, {{site.dev_portal}} collects the following information during regist
 * **Application registration**: The application and API being registered. 
 
 If you need to capture more than this, for example a developer's team, company, job title, or their reason for wanting access to an API, you can create a custom form. 
-Custom forms let you create a new form with configurable fields to the developer registration form, or to a per-API application registration form.
+Custom forms let you create a new form with configurable fields for developer registration or per-API application registration.
 
 Use cases for custom forms include:
 {% include_cached sections/custom-form-use-cases.md %}
