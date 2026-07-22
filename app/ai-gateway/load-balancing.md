@@ -13,8 +13,8 @@ products:
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -105,13 +105,13 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai-model/#algorithm-examples) in the [AI Model entity](/ai-gateway/entities/ai-model/) reference.
+For a worked `kongctl` example of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai-model/#algorithm-examples) in the [AI Model entity](/ai-gateway/entities/ai-model/) reference.
 
 ### Request routing by model alias
 
-Model aliases allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
+Model aliases allow clients to reach an AI Model using an alternate name instead of the actual upstream model name, sent in the request body, the request path, or both. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
 
-Each target in a Model entity can have an optional [`model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
+Set [`config.route.body`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-body) to match a property in the request body (typically `model`) against the alias, [`config.route.path_model_aliases`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-path-model-aliases) to match the same alias against a segment of the request path, or both. When a client sends the alias, {{site.ai_gateway}} routes the request to that AI Model. This feature works independently of load balancing algorithms: the alias determines which AI Model handles the request, and the configured load balancing algorithm selects the final target within that AI Model.
 
 ### Retry and fallback
 

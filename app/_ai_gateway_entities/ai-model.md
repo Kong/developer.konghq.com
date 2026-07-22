@@ -267,6 +267,305 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+### Algorithm examples
+
+The following examples configure [`config.balancer`](#schema-aigateway-model-config-balancer) for each algorithm, building on the AI Model created in [Set up an AI Model](#set-up-an-ai-model) with additional targets added for load balancing. They assume the `my-openai-account` [AI Model Provider](/ai-gateway/entities/ai-model-provider/) already exists.
+
+{% navtabs "Algorithm examples" %}
+
+{% navtab "Round-robin" %}
+
+[`weight`](#schema-aigateway-model-targets-weight) on each target controls the proportion of traffic it receives. This example routes 70% of traffic to `gpt-4o`, 25% to `gpt-4o-mini`, and 5% to `gpt-3.5-turbo`.
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      weight: 70
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-4o-mini
+      weight: 25
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-3.5-turbo
+      weight: 5
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+    balancer:
+      algorithm: round-robin
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% navtab "Consistent-hashing" %}
+
+[`hash_on_header`](#schema-aigateway-model-config-balancer-hash-on-header) determines which request header is hashed to keep matching requests on the same target, enabling sticky sessions. This example hashes on a custom `X-Hashing-Header` header instead of the default `X-Kong-LLM-Request-ID`.
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-4o-mini
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+    balancer:
+      algorithm: consistent-hashing
+      hash_on_header: X-Hashing-Header
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% navtab "Least-connections" %}
+
+No algorithm-specific fields are required. The balancer tracks in-flight requests per target and routes new requests to whichever target has the most spare capacity, adapting automatically as response times vary between targets.
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-4o-mini
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+    balancer:
+      algorithm: least-connections
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% navtab "Lowest-latency" %}
+
+[`latency_strategy`](#schema-aigateway-model-config-balancer-latency-strategy) selects the latency metric. This example sets it to `e2e` to balance on end-to-end response time; the default, `tpot` (time-per-output-token), is usually a better fit for streamed responses.
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-4o-mini
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+    balancer:
+      algorithm: lowest-latency
+      latency_strategy: e2e
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% navtab "Lowest-usage" %}
+
+[`tokens_count_strategy`](#schema-aigateway-model-config-balancer-tokens-count-strategy) selects the usage metric. This example counts only `prompt-tokens`; other options are `completion-tokens`, `total-tokens`, `cost`, and `llm-accuracy`.
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-4o-mini
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+    balancer:
+      algorithm: lowest-usage
+      tokens_count_strategy: prompt-tokens
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% navtab "Priority" %}
+
+Targets that share the same [`weight`](#schema-aigateway-model-targets-weight) form a priority tier. The balancer sends traffic only to the highest-weight tier, distributing it among that tier's targets, and only fails over to a lower-weight tier once every target in the higher tier is unavailable. This example groups `gpt-4o` and `gpt-4o-mini` into a primary tier (weight `70`), with `gpt-3.5-turbo` as a fallback tier (weight `25`).
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      weight: 70
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-4o-mini
+      weight: 70
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-3.5-turbo
+      weight: 25
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+    balancer:
+      algorithm: priority
+formats:
+  - kongctl
+{% endentity_example %}
+
+{% endnavtab %}
+
+{% navtab "Semantic" %}
+
+Routes by prompt similarity via [`embeddings`](#schema-aigateway-model-config-balancer-embeddings) and [`vectordb`](#schema-aigateway-model-config-balancer-vectordb) (Redis here). Each target's [`semantic_description`](#schema-aigateway-model-targets-semantic-description) is matched against the prompt; `CATCHALL` is the fallback.
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-3.5-turbo
+      semantic_description: Specialist in code completions.
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-4o
+      semantic_description: Requests related to IT support.
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: gpt-4o-mini
+      semantic_description: CATCHALL
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+    balancer:
+      algorithm: semantic
+      embeddings:
+        provider: my-openai-account
+        name: text-embedding-3-small
+        config:
+          type: openai
+      vectordb:
+        type: redis
+        dimensions: 1024
+        distance_metric: cosine
+        threshold: 0.7
+        host: $REDIS_HOST
+        port: 6379
+        ssl: false
+formats:
+  - kongctl
+{% endentity_example %}
+
+Replace `$REDIS_HOST` with your Redis instance's hostname.
+
+{% endnavtab %}
+
+{% endnavtabs %}
+
 ### Retry and fallback
 
 To add redundancy and failover, the load balancer supports configurable retries, timeouts, and failover to different targets when one is unavailable. Fallback works across targets with any supported format, so you can mix providers freely (for example, OpenAI and Mistral). For configuration details, see [Retry and fallback configuration](/ai-gateway/load-balancing/#retry-and-fallback).
@@ -371,7 +670,7 @@ The following example:
 * References a provider named `my-openai-account`. Either see [Set up an AI Model Provider](/ai-gateway/entities/ai-model-provider/#set-up-an-ai-model-provider) to create it, or substitute the name of your own AI Model Provider in `targets[].provider`.
 
 {:.info}
-> This AI Model proxies client requests to `/v1/chat/completions`. The base path `/v1` comes from [`config.route.paths`](#schema-aigateway-model-config-route-paths), and `/chat/completions` is appended by the `generate` capability automatically.
+> This AI Model proxies client requests to `/chat/completions`, appended automatically by the `generate` capability. [`config.route.paths`](#schema-aigateway-model-config-route-paths) is set to `/` so the AI Model matches every request path.
 
 {% entity_example %}
 type: model
@@ -392,7 +691,7 @@ data:
   config:
     route:
       paths:
-        - /v1
+        - /
       body:
         model:
           - my-gpt-4o
