@@ -303,8 +303,7 @@ app/_how-tos/ai-gateway/v1/use-langchain-with-ai-proxy.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/
 app/_how-tos/ai-gateway/v1/use-qwen-code-with-ai-gateway.md:
-  status: pending
-  canonical_url: /ai-gateway/ai-clis/
+  canonical_url: /ai-gateway/use-qwen-code-with-ai-gateway-openai/
 app/_how-tos/ai-gateway/v1/use-semantic-load-balancing-with-dynamic-vault-authentication.md:
   status: pending
   canonical_url: /ai-gateway/load-balancing/
