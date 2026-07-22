@@ -3,12 +3,12 @@ info:
   title: Konnect Analytics Dashboards
   description: |
     Konnect endpoint for creating, reading, updating, and deleting dashboards.  Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a chart to render the data.
-  version: 2.0.0
+  version: 2.0.1
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@2d298024e3105df6dbfeedf8c3b2364054dae3a3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2d298024e3105df6dbfeedf8c3b2364054dae3a3'
+  x-oas-source: kong/platform-api@468c2739fee796a7d12db794a8fe158a25500cd4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/468c2739fee796a7d12db794a8fe158a25500cd4'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -290,6 +290,11 @@ components:
           $ref: '#/components/schemas/Granularity'
         time_range:
           $ref: '#/components/schemas/TimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
       example:
         datasource: api_usage
         time_range:
@@ -352,6 +357,11 @@ components:
           $ref: '#/components/schemas/Granularity'
         time_range:
           $ref: '#/components/schemas/TimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
       example:
         datasource: llm_usage
         time_range:
@@ -425,6 +435,11 @@ components:
           $ref: '#/components/schemas/Granularity'
         time_range:
           $ref: '#/components/schemas/TimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
       example:
         datasource: agentic_usage
         time_range:
@@ -483,9 +498,8 @@ components:
         time_range:
           $ref: '#/components/schemas/PlatformTimeRange'
         limit:
-          description: 'Maximum number of group_by buckets to return. Defaults to 50, capped at 1000. Only applies when a group_by dimension is requested.'
+          description: Limits the number of distinct metric groups to return.
           type: number
-          example: 25
           default: 50
           maximum: 1000
       example:
