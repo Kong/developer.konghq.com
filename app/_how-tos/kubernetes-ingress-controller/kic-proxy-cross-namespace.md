@@ -44,7 +44,7 @@ cleanup:
    kubectl create namespace test-source
    kubectl create namespace test-destination
    ```
-1. Create a [`ReferenceGrant` resource](https://gateway-api.sigs.k8s.io/api-types/referencegrant/)
+1. Create a [`ReferenceGrant` resource](https://gateway-api.sigs.k8s.io/reference/api-types/referencegrant/)
    in the destination namespace:
 
    ```bash
