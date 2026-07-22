@@ -92,7 +92,7 @@ In this example:
  * `type: openai`: Connects to the OpenAI API.
  * `capabilities: [agentic]`: Routes requests to the OpenAI Responses API, which the Codex CLI uses.
  * `formats: [{ type: openai }]`: Accepts OpenAI-format requests.
- * `config.model.alias: gpt-5.4`: The model name the Codex CLI sends in each request.
+ * `config.route.model.body: { model: [gpt-5.4] }`: The model name the Codex CLI sends in each request.
  * `route.paths: [/codex]`: The base path Codex points at; the Responses API is served at `/codex/responses`.
 
 ## Verify the AI Model
