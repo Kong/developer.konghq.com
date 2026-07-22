@@ -21,3 +21,6 @@ In this example, we want to create a `/flights` route based on the [KongAir Flig
     ```
 1. Update the headers and status if needed. In this example we'll keep the default values.
 1. Click **Test** to send a request to the mock.
+
+{:.info}
+> You can't define multiple responses for the same route. If you want to mock another response, you need to create a different mock server.
