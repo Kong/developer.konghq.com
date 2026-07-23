@@ -114,13 +114,15 @@ rows:
     * Central US (`centralus`)
     * South Central US (`southcentralus`)
     * North Central US (`northcentralus`)
+    * Canada Central (`canadacentral`)
 * Europe:
     * Frankfurt (`germanywestcentral`)
     * UK South (`uksouth`)
     * Ireland (`northeurope`)
     * France (`francecentral`)
 * Asia Pacific:
-    * Australia East (`australiaeast`)    
+    * Australia East (`australiaeast`) 
+    * Japan East (`japaneast`)
 
 #### {{ site.google}}
 
