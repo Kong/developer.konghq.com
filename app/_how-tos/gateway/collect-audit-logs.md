@@ -14,8 +14,7 @@ related_resources:
     url: /how-to/collect-dev-portal-audit-logs/
 
 products:
-    - gateway
-    - ai-gateway
+    - konnect
 
 works_on:
     - konnect
@@ -36,6 +35,7 @@ tldr:
         This tutorial uses SumoLogic, but you can apply the same steps to your provider.
 
 prereqs:
+  skip_product: true
   inline:
     - title: SumoLogic SIEM provider
       include_content: /prereqs/sumologic-siem-for-konnect-api
@@ -51,6 +51,12 @@ cleanup:
 
 min_version:
     gateway: '3.4'
+
+faqs:
+  - q: |
+      {% include faqs/pull-audit-logs-api.md section='question' %}
+    a: |
+      {% include faqs/pull-audit-logs-api.md section='answer' %}
 ---
 
 ## Set up the audit log destination

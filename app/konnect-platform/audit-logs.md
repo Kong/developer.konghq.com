@@ -67,7 +67,8 @@ Audit logging provides the following benefits:
 * **Debugging**: Audit logs can help determine the root causes of efficiency or performance issues.
 * **Risk management**: Prevent issues or catch them early. 
 
-You can collect audit logs for both the {{site.konnect_short_name}} org and [{{site.dev_portal}}](/dev-portal/).
+You can collect audit logs for both the {{site.konnect_short_name}} org and [{{site.dev_portal}}](/dev-portal/) using a webhook you configure. 
+For {{site.konnect_short_name}} org audit logs, you can also use an [audit log pull](#audit-log-pull-using-the-konnect-api) to retrieve logs on demand from the API.
 
 ## Audit log events
 
@@ -606,9 +607,78 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+## Audit log pull using the {{site.konnect_short_name}} API
+
+Retrieve a list of organization audit logs with an audit log pull, by sending a `GET` request to the `/audit-logs` endpoint. 
+An audit log pull covers the same three event types as the audit log webhook: authentication, authorization, and access logs. 
+Because you initiate the request, you don't need to open inbound ports, expose a publicly accessible endpoint, or set up a proxy to relay logs.
+
+### Filter audit logs
+
+You can narrow the audit logs returned in the response using the `filter` query parameter:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Filter
+    key: filter
+  - title: Description
+    key: description
+rows:
+  - filter: "`filter[ts][gte]`"
+    description: "An RFC3339 lower bound (inclusive) on the audit log timestamp. Defaults to seven days before `filter[ts][lte]` when omitted."
+  - filter: "`filter[ts][lte]`"
+    description: "An RFC3339 upper bound (inclusive) on the audit log timestamp. Defaults to the current time when omitted."
+  - filter: "`filter[type]`"
+    description: "Filters audit logs by type. Can be one of `authentication`, `authorization`, or `gateway_access`. Omit this parameter to return all types."
+{% endtable %}
+<!--vale on-->
+
+{:.info}
+> {{site.konnect_short_name}} only retains audit logs for seven days, so you can only pull logs from the past seven days. 
+
+### Paginate results
+
+An audit log pull uses cursor-based pagination. Each response includes a `meta` object with `next` and `previous` cursors that you can use to page through results:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Description
+    key: description
+rows:
+  - parameter: "`page[size]`"
+    description: "The maximum number of items to include per page. Defaults to 20, with a maximum of 1000."
+  - parameter: "`page[after]`"
+    description: "Requests the next page of data, starting with the item after this cursor."
+  - parameter: "`page[before]`"
+    description: "Requests the previous page of data, starting with the item before this cursor."
+{% endtable %}
+<!--vale on-->
+
+To collect a full set of logs, make an initial request, then follow the `next` cursor from the `meta` object until no further pages remain.
+
+### Example audit log pull request
+
+The following example request pulls authentication logs, starting on March 21, 2023, in pages of 100 entries:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/audit-logs?filter%5Bts%5D%5Bgte%5D=2023-03-21T00:00:00Z&filter%5Btype%5D=authentication&page%5Bsize%5D=100
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Each entry in the response is signed in the `sig` field, just like logs delivered by the webhook.
+
 ## Recover audit logs
 
-You can use replay jobs in {{site.konnect_short_name}} to recover audit logs. These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook.
+You can use replay jobs in {{site.konnect_short_name}} to recover audit logs. 
+These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook. 
+If you just need to read past organizational audit logs, even ones a webhook never received, you can use an [audit log pull](#audit-log-pull-using-the-konnect-api) instead of configuring a replay job.
 
 You can use either the {{site.konnect_short_name}} UI or the {{site.konnect_short_name}} API to configure a replay job.
 
