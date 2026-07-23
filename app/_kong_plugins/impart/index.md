@@ -121,9 +121,3 @@ curl -i http://localhost:8000/your-route
 
 A request that matches one of your configured detection rules is blocked before it reaches the upstream, returning an HTTP `403` response by default (the status code and response body are configurable per rule from the Impart console).
 
-## Limitations
-
-* Response inspection detects but doesn't block or redact. It evaluates the response only after it has already been sent to the client, so the plugin never buffers or delays streaming responses (for example, LLM completions sent over SSE).
-* Request and response bodies are inspected up to a configurable size limit; bodies over the limit are truncated rather than rejected.
-* If the Impart Inspector is unreachable, the plugin fails open by default so your gateway stays available.
-
