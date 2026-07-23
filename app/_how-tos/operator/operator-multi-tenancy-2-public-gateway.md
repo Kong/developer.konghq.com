@@ -120,6 +120,12 @@ spec:
    kubectl wait --for=condition=Programmed=True gateway/gw-public -n kong-gw-public --timeout=120s
    ```
 
+1. This gateway's in-memory {{ site.kic_product_name_short }} is the first `ControlPlane` in the cluster, so it's the one that picks up the `KongLicense` you applied in the previous step. Confirm it reached the `Programmed` condition:
+
+   ```bash
+   kubectl wait --for=condition=Programmed=True konglicense/kong-license --timeout=60s
+   ```
+
 ## Validate
 
 Verify the public gateway was reconciled successfully:

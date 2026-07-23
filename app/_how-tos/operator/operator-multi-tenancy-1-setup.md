@@ -125,20 +125,14 @@ kubectl create namespace kong-gw-private
 
 Apply the license once in `kong-system`. It's shared by all gateways managed by this operator installation.
 
-1. Apply the `KongLicense`:
+```bash
+echo "
+apiVersion: configuration.konghq.com/v1alpha1
+kind: KongLicense
+metadata:
+  name: kong-license
+rawLicenseString: '$(cat ./license.json)'
+" | kubectl -n kong-system apply -f -
+```
 
-   ```bash
-   echo "
-   apiVersion: configuration.konghq.com/v1alpha1
-   kind: KongLicense
-   metadata:
-     name: kong-license
-   rawLicenseString: '$(cat ./license.json)'
-   " | kubectl -n kong-system apply -f -
-   ```
-
-1. Wait for {{ site.operator_product_name }} to pick up the license:
-
-   ```bash
-   kubectl wait --for=condition=Programmed=True konglicense/kong-license --timeout=60s
-   ```
+The `KongLicense` controller runs inside each gateway's in-memory {{ site.kic_product_name_short }}, so the license won't reach the `Programmed` condition until a `ControlPlane` — deployed on its own or as part of a `Gateway` — picks it up. You'll confirm this in [Deploy the public gateway](/operator/dataplanes/how-to/multi-tenancy/public-gateway/) after deploying the public gateway.
