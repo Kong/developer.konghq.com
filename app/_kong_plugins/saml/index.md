@@ -66,7 +66,11 @@ The minimum configuration required is:
 - An IdP certificate (`idp_certificate`): The SP needs to obtain the
   public certificate from the IdP to validate the signature. The
   certificate is stored on the SP and is used to verify that a response
-  is coming from the IdP.
+  is coming from the IdP. Configure this even when `validate_assertion_signature`
+  is set to `false`, so responses are still cryptographically validated (the
+  `samlp:Response` signature is checked instead of the assertion signature).
+  If `validate_assertion_signature` is `false` and no `idp_certificate` is set,
+  signature validation is skipped entirely, which is insecure.
 - The ACS Endpoint (`assertion_consumer_path`): This is the endpoint
   provided by the SP where SAML responses are posted. The SP needs
   to provide this information to the IdP.

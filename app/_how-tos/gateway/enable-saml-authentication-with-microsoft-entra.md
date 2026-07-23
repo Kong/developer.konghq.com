@@ -108,8 +108,9 @@ We also need to provide a value for [`config.session_secret`](/plugins/saml/refe
 
 {:.danger}
 > This example keeps [`validate_assertion_signature`](/plugins/saml/reference/#schema--config-validate-assertion-signature) set to its default value of `true`, which requires a valid `idp_certificate`.
-> If you only want to test the authentication flow without configuring a signing certificate, you can manually set `validate_assertion_signature` to `false`.
-> Disabling signature validation is **not secure**. **Do not disable signature validation in production.**
+> If you set `validate_assertion_signature` to `false`, still configure an `idp_certificate`: the plugin then validates the `samlp:Response` signature instead of the assertion signature, so responses remain cryptographically verified.
+> Setting `validate_assertion_signature` to `false` **without** an `idp_certificate` skips signature validation entirely — the plugin accepts unsigned responses (and logs a warning) and is vulnerable to user impersonation.
+> **Do not disable signature validation without a certificate, and do not disable it in production.**
 
 {% entity_examples %}
 entities:
