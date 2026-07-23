@@ -17,6 +17,7 @@ products:
 
 tools:
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -64,14 +65,9 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model P
 
 Here's a minimal configuration for chat completions:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: AWS Production
   name: my-aws-account
   type: bedrock
@@ -80,16 +76,6 @@ body:
       type: aws
       access_key_id: $AWS_ACCESS_KEY_ID
       secret_access_key: $AWS_SECRET_ACCESS_KEY
-{% endkonnect_api_request %}
-<!--vale on-->
+{% endentity_example %}
 
-## Authentication with AWS
-
-You can also use {{ provider.name }} with AWS credentials by setting `auth` to `aws` and specifying:
-
-* **`access_key_id`** (optional): AWS access key ID for static IAM user credentials. If omitted, the default AWS credentials provider chain is used (EC2 instance profiles, environment variables, etc.).
-* **`secret_access_key`** (optional): AWS secret access key paired with `access_key_id`. Required if `access_key_id` is set.
-* **`assume_role_arn`** (optional): IAM role ARN to assume for temporary credentials. Useful for cross-account access.
-* **`role_session_name`** (optional): Session name for the assumed role. Required if `assume_role_arn` is set.
-* **`sts_endpoint_url`** (optional): Custom STS endpoint for role assumption. Defaults to `https://sts.amazonaws.com`.
-* **`batch_role_arn`** (optional): Separate role ARN for Bedrock batch API calls.
+{% include md/ai-gateway/v2/aws-auth.md %}
