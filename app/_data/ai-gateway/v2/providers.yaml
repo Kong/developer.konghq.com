@@ -629,7 +629,7 @@ providers:
       embeddings:
         supported: true
         streaming: false
-        upstream_path: 'Uses `generateContent` API'
+        upstream_path: 'Uses `predict` API'
         model_example: 'text-embedding-004'
         min_version: '2.0'
       files:
@@ -691,11 +691,11 @@ providers:
     native_formats:
       - llm_format: 'gemini'
         supported_apis:
-          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:generateContent'
-          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:streamGenerateContent'
-          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:embedContent'
-          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:batchEmbedContent'
-          - '/v1/projects/{project_id}/locations/{location}/models/{model_name}:predictLongRunning'
+          - '/v1/projects/{project_id}/locations/{location}/publishers/{publisher}/models/{model_name}:generateContent'
+          - '/v1/projects/{project_id}/locations/{location}/publishers/{publisher}/models/{model_name}:streamGenerateContent'
+          - '/v1/projects/{project_id}/locations/{location}/publishers/{publisher}/models/{model_name}:embedContent'
+          - '/v1/projects/{project_id}/locations/{location}/publishers/{publisher}/models/{model_name}:predict'
+          - '/v1/projects/{project_id}/locations/{location}/publishers/{publisher}/models/{model_name}:predictLongRunning'
           - '/v1/projects/{project_id}/locations/{location}/rankingConfigs/{config_name}:rank'
           - '/v1/projects/{project_id}/locations/{location}/batchPredictionJobs'
     limitations:
