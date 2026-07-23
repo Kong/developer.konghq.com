@@ -600,9 +600,9 @@ providers:
           - '/v1beta/models/{model_name}:generateContent'
           - '/v1beta/models/{model_name}:streamGenerateContent'
           - '/v1beta/models/{model_name}:embedContent'
-          - '/v1beta/models/{model_name}:batchEmbedContent'
+          - '/v1beta/models/{model_name}:batchEmbedContents'
           - '/v1beta/batches'
-          - '/upload/{file_id}/files'
+          - '/upload/v1beta/files'
           - '/v1beta/files'
     limitations:
       provider_specific:
