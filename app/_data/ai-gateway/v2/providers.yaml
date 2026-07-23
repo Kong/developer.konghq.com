@@ -1099,7 +1099,7 @@ providers:
       video:
         supported: true
         streaming: false
-        upstream_path: 'Use the LLM `/v1/images/generations` upstream path'
+        upstream_path: '`/v1/videos`'
         model_example: 'sora-2'
         min_version: '2.0'
       rerank:
