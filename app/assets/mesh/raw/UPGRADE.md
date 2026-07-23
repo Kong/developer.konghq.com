@@ -10,6 +10,38 @@ with `x.y.z` being the version you are planning to upgrade to.
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
+### Legacy `ExternalService` resource removed
+
+The legacy `ExternalService` resource has been removed. Its CRD, API
+definition, and validating webhook no longer exist, and the control plane
+RBAC and admission webhooks no longer reference `externalservices`.
+
+**Action required**
+
+Migrate any remaining `ExternalService` resources to `MeshExternalService`
+before upgrading. Applying an `ExternalService` after the upgrade will fail
+because the CRD is gone.
+
+### Global control plane on Kubernetes is no longer supported
+
+A Kubernetes-native Global control plane is no longer supported. `kuma-cp` now
+rejects `mode=global` with `environment=kubernetes`, and it also rejects
+`mode=global` with `store.type=kubernetes`. A Global control plane must run
+with `environment=universal` backed by a non-Kubernetes store such as
+PostgreSQL, even if `kuma-cp` itself is deployed on Kubernetes. The Helm chart
+no longer renders the `Service`/config needed for the old Kubernetes-native
+setup. Zone and Standalone control planes on Kubernetes (`mode`
+`zone`/`standalone`) are unaffected.
+
+**Action required**
+
+If you currently run the Global control plane on Kubernetes, migrate it to
+Universal (non-Kubernetes) infrastructure before upgrading: deploy `kuma-cp`
+in `global` mode on Universal, backed by PostgreSQL, and keep your Kubernetes
+clusters as Zone control planes connecting to that Global control plane over
+KDS. Kubernetes clusters running `zone` or `standalone` mode require no
+changes.
+
 ### `meshServices` removed from the `Mesh` schema
 
 The `meshServices` field (and its `mode` enum) has been removed from the
@@ -254,6 +286,69 @@ Before upgrading, migrate every policy that uses one of these top-level
 
 After the migration, verify the intended policy coverage in every Zone before
 upgrading Zone control planes.
+
+### `from` removed from `MeshTimeout`
+
+The deprecated `spec.from` array has been removed from `MeshTimeout`. Timeouts
+for incoming traffic are now configured exclusively through `spec.rules`.
+`spec.from` is silently dropped on create/update: if `spec.rules` or `spec.to`
+is also set, the resource is accepted but `from` has no effect on inbound
+configuration; if `from` was the only field set, the resulting spec has
+neither `to` nor `rules`, so the request is rejected by validation.
+
+**Action required**
+
+Before upgrading, migrate every `MeshTimeout` that uses `spec.from` to
+`spec.rules`. A `from` entry targeting `kind: Mesh` (all clients) maps to a
+single catch-all rule:
+
+```yaml
+# before
+spec:
+  from:
+    - targetRef:
+        kind: Mesh
+      default:
+        idleTimeout: 1h
+# after
+spec:
+  rules:
+    - default:
+        idleTimeout: 1h
+```
+
+### `from` removed from `MeshCircuitBreaker`
+
+The deprecated `spec.from` array has been removed from `MeshCircuitBreaker`.
+Circuit breaking for incoming traffic is now configured exclusively through
+`spec.rules`. `spec.from` is silently dropped on create/update: if
+`spec.rules` or `spec.to` is also set, the resource is accepted but `from` has
+no effect on inbound configuration; if `from` was the only field set, the
+resulting spec has neither `to` nor `rules`, so the request is rejected by
+validation.
+
+**Action required**
+
+Before upgrading, migrate every `MeshCircuitBreaker` that uses `spec.from` to
+`spec.rules`. A `from` entry targeting `kind: Mesh` (all clients) maps to a
+single catch-all rule:
+
+```yaml
+# before
+spec:
+  from:
+    - targetRef:
+        kind: Mesh
+      default:
+        connectionLimits:
+          maxConnections: 1024
+# after
+spec:
+  rules:
+    - default:
+        connectionLimits:
+          maxConnections: 1024
+```
 
 ### Auto reachable services removed
 
@@ -515,6 +610,32 @@ with a fresh bootstrap. Once the control plane is upgraded to Kuma 3.0.0, any
 proxy still trying to use the removed SOTW stream cannot establish ADS and must
 be restarted with a Delta xDS bootstrap.
 
+### Legacy policy resources removed
+
+The 12 legacy policy resources superseded by the `Mesh*` targetRef policies
+have been removed from the resource registry: `TrafficPermission`,
+`TrafficRoute`, `TrafficLog`, `TrafficTrace`, `HealthCheck`,
+`CircuitBreaker`, `Retry`, `Timeout`, `RateLimit`, `FaultInjection`,
+`VirtualOutbound`, and `ProxyTemplate`. Each of these had
+already stopped affecting generated Envoy configuration in earlier releases
+(see the entries above); this change removes the resources themselves.
+
+For every one of these types: the REST API endpoints (including the generic
+`_resources`/`_dataplanes` inspect endpoints), `kumactl get`/`inspect`
+subcommands, KDS sync, and `MeshInsight`/`ServiceInsight` policy counters are
+gone, and the corresponding CRD is no longer installed on Kubernetes.
+
+The `ProxyTemplate` proto message and its default-profile machinery
+(`ProxyTemplateResolver`, profile imports) are unaffected — only the
+user-facing `ProxyTemplate` resource, API, and CRD are removed.
+
+**Action required**
+
+Delete any remaining resources of these types before upgrading — the control
+plane no longer accepts create/update requests for them, and stored resources
+of a removed type are not migrated. Remove any automation, dashboards, or
+kumactl scripts that reference these resource types, REST paths, or CRDs.
+
 ### Built-in gateway API and CRDs removed
 
 The built-in gateway API has been removed entirely. The `MeshGateway`,
@@ -548,6 +669,122 @@ admission and update. The `Dataplane.networking.gateway` message and the
   the validating webhook configuration no longer includes these types. If you
   manage RBAC or webhooks manually, remove these rules; if you keep them, they
   are harmless but unused.
+
+### Legacy HS256 signing keys no longer accepted
+
+The control plane no longer accepts JWT tokens signed with the symmetric
+HS256 algorithm. This algorithm was used to sign Dataplane Tokens in
+pre-1.4.x versions of Kuma; support for verifying such tokens was kept
+around for backwards compatibility long after RS256 became the default.
+`SigningKeyAccessor.GetLegacyKey` and the HS256 branch of token validation
+have been removed.
+
+**Action required**
+
+If any Dataplane Tokens issued by a pre-1.4.x control plane are still in
+use, rotate them (generate new tokens with the current control plane)
+before upgrading — they will be rejected as using an unsupported
+algorithm afterward.
+
+### `kuma.io/mesh` annotation no longer honored on Kubernetes
+
+The control plane no longer reads the deprecated `kuma.io/mesh` annotation on
+a Pod, Service, HTTPRoute, or Namespace to assign the resource's mesh. Only
+the `kuma.io/mesh` label is used: on the resource itself, or — for namespaced
+resources (Pod, Service, HTTPRoute) — on their Namespace. Resources without
+the label fall back to the `default` mesh.
+
+**Action required**
+
+If you still set `kuma.io/mesh` as an annotation, switch it to a label before
+upgrading. A resource that only carries the annotation will resolve to the
+`default` mesh after upgrading.
+
+### `MeshMetric` OpenTelemetry backend no longer accepts an inline `endpoint`
+
+The deprecated `default.backends[].openTelemetry.endpoint` field has been
+removed from the `MeshMetric` policy. `backendRef`, pointing at a
+`MeshOpenTelemetryBackend` resource, is now the only way to configure an
+OpenTelemetry metrics backend.
+
+**Action required**
+
+If any `MeshMetric` policy still sets `openTelemetry.endpoint`, create a
+`MeshOpenTelemetryBackend` resource with the equivalent endpoint and update
+the policy to reference it via `openTelemetry.backendRef` before upgrading.
+Policies that still set `openTelemetry.endpoint` will fail validation.
+
+### `MeshAccessLog` OpenTelemetry backend no longer accepts an inline `endpoint`
+
+The deprecated `default.backends[].openTelemetry.endpoint` /
+`rules[].default.backends[].openTelemetry.endpoint` field has been removed
+from the `MeshAccessLog` policy. `backendRef`, pointing at a
+`MeshOpenTelemetryBackend` resource, is now the only way to configure an
+OpenTelemetry access log backend.
+
+**Action required**
+
+If any `MeshAccessLog` policy still sets `openTelemetry.endpoint`, create a
+`MeshOpenTelemetryBackend` resource with the equivalent endpoint and update
+the policy to reference it via `openTelemetry.backendRef` before upgrading.
+Policies that still set `openTelemetry.endpoint` will fail validation.
+
+### `MeshLoadBalancingStrategy` load-balancer-specific `hashPolicies` removed
+
+The deprecated `spec.to[].default.loadBalancer.ringHash.hashPolicies` and
+`spec.to[].default.loadBalancer.maglev.hashPolicies` fields have been
+removed. `spec.to[].default.hashPolicies` is now the only place to configure
+hash policies.
+
+**Action required**
+
+Move any `hashPolicies` still configured under `loadBalancer.ringHash` or
+`loadBalancer.maglev` to `spec.to[].default.hashPolicies` before upgrading.
+After upgrading, policies that still set the removed nested fields may be
+rejected by validation or have those fields pruned by the API server, and they
+no longer affect the generated Envoy config.
+
+### `MeshTrace` OpenTelemetry backend no longer accepts an inline `endpoint`
+
+The deprecated `default.backends[].openTelemetry.endpoint` field has been
+removed from the `MeshTrace` policy. `backendRef`, pointing at a
+`MeshOpenTelemetryBackend` resource, is now the only way to configure an
+OpenTelemetry tracing backend.
+
+**Action required**
+
+If any `MeshTrace` policy still sets `openTelemetry.endpoint`, create a
+`MeshOpenTelemetryBackend` resource with the equivalent endpoint and update
+the policy to reference it via `openTelemetry.backendRef` before upgrading.
+Policies that still set `openTelemetry.endpoint` will fail validation.
+
+### `Mesh.spec.tracing` removed
+
+The inline `tracing` field (and its `Tracing`/`TracingBackend`/
+`DatadogTracingBackendConfig`/`ZipkinTracingBackendConfig` types) has been
+removed from the `Mesh` resource spec. The `MeshTrace` policy has been the GA
+replacement for configuring tracing and is unaffected by this change.
+
+**Action required**
+
+Migrate any `Mesh` resources that still configure `spec.tracing` to a
+`MeshTrace` policy before upgrading. A `Mesh` spec that still sets `tracing`
+continues to apply successfully; the field is silently ignored by the control
+plane.
+
+### `Mesh.spec.logging` removed
+
+The inline `logging` field (and its `Logging`/`LoggingBackend`/
+`FileLoggingBackendConfig`/`TcpLoggingBackendConfig` types) has been removed
+from the `Mesh` resource spec. The `MeshAccessLog` policy has been the GA
+replacement for configuring access logging and is unaffected by this change.
+
+**Action required**
+
+Migrate any `Mesh` resources that still configure `spec.logging` to a
+`MeshAccessLog` policy before upgrading. A `Mesh` spec that still sets
+`logging` continues to apply successfully; the field is silently ignored by
+the control plane.
 
 ## Upgrade to `2.14.x`
 
@@ -1200,18 +1437,20 @@ KUMA_RUNTIME_KUBERNETES_ALLOWED_USERS="system:serviceaccount:kuma-system:kuma-co
 
 This is already configured by default via Helm template with `KUMA_RUNTIME_KUBERNETES_ALLOWED_USERS`.
 
-### MeshTrust spec.origin Field Deprecated
+### MeshTrust spec.origin Field Removed
 
-The `spec.origin` field in MeshTrust resources has been moved to `status.origin`.
+The `spec.origin` field in MeshTrust resources has been removed. The origin is
+now reported through `status.origin`.
 
 **What changed:**
-- `spec.origin` is now deprecated and will be removed in a future release
+- `spec.origin` is no longer part of the MeshTrust API or Kubernetes CRD schema
+- Manifests and API requests that still set `spec.origin` can be rejected as unknown-field input
 - The field is automatically populated in `status.origin` by the MeshIdentity status updater
-- Setting `spec.origin` continues to work but emits a deprecation warning
 
 **Action required:**
 
-No immediate action required, but update any automation or tooling that references `spec.origin` to use `status.origin` instead.
+Before upgrading, remove `spec.origin` from MeshTrust manifests and update any
+automation or tooling that reads it to use `status.origin` instead.
 
 **Example:**
 
