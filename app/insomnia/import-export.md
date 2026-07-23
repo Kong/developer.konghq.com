@@ -90,7 +90,7 @@ In a workspace or document header, select **Import** and then specify your impor
 - URL
 - Clipboard
 
-Insomnia supports the following formats:
+Insomnia supports the following import formats:
 - **Import formats**: Insomnia JSON (v4), Insomnia YAML (v5), Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL
 - **Export formats (UI)**: Insomnia YAML (v5) and HAR
 - **Export formats (CLI)**: OpenAPI spec
