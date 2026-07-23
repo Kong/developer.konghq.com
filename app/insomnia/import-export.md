@@ -92,7 +92,7 @@ In a workspace or document header, select **Import** and then specify your impor
 
 Insomnia supports the following formats:
 - **Import formats**: Insomnia JSON (v4), Insomnia YAML (v5), Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL
-- **Export formats (UI)**: Insomnia v5 YAML and HAR
+- **Export formats (UI)**: Insomnia YAML (v5) and HAR
 - **Export formats (CLI)**: OpenAPI spec
 
 For more information on importing with the UI, go to [how to import an API spec as a document](/how-to/import-an-api-spec-as-a-document/).
