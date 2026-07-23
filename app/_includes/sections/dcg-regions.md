@@ -110,10 +110,7 @@ rows:
 * North America:
     * Virginia (`eastus2`)
     * Washington (`westus2`)
-    * West US (`westus`)
-    * Central US (`centralus`)
     * South Central US (`southcentralus`)
-    * North Central US (`northcentralus`)
     * Canada Central (`canadacentral`)
 * Europe:
     * Frankfurt (`germanywestcentral`)
