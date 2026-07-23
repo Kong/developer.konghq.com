@@ -110,10 +110,7 @@ kubectl create namespace kong-gw-private
      -n kong-system \
      --create-namespace \
      --set image.tag={{ site.data.operator_latest.release }} \
-     --values - <<EOF
-   env:
-     watch_namespace: kong-gw-public,kong-gw-private
-   EOF
+     --set env.watch_namespaces="kong-gw-public\,kong-gw-private"
    ```
 
 1. Wait for {{ site.operator_product_name }} to be ready:
