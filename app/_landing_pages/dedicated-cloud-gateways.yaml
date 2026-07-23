@@ -264,12 +264,14 @@ rows:
             config:
               title: Bot Detector (tech preview)
               description: |
-                Bot Detector helps identify automated or suspicious traffic using signals like IP addresses, ASN, JA4 fingerprints, user agents, and request paths. 
+                Bot Detector helps identify automated or suspicious traffic using signals like IP addresses, ASN, JA4 fingerprints, user agents, and request paths.
                 Use Bot Detector to monitor matching traffic in monitor mode, or block matching traffic with configurable rules.
               icon: /assets/icons/warning.svg
-              cta:
-                text: Enable Bot Detector in {{site.konnect_short_name}} Labs
-                url: https://cloud.konghq.com/global/organization/labs
+              ctas:
+                - text: Bot Detector reference
+                  url: /dedicated-cloud-gateways/bot-detector/
+                - text: Enable Bot Detector in {{site.konnect_short_name}} Labs
+                  url: https://cloud.konghq.com/global/organization/labs
   
   - header:
       type: h2
