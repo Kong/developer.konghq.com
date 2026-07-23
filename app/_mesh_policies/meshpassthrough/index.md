@@ -12,43 +12,51 @@ min_version:
 icon: policy.svg
 ---
 This policy enables {{site.mesh_product_name}} to configure traffic to external destinations that is allowed to pass outside the mesh.
-When using this policy, the [passthrough mode](/docs/{{ page.release }}/networking/non-mesh-traffic/#outgoing) flag is ignored.
+When using this policy, the passthrough mode flag is ignored.
 
 ## TargetRef support matrix
 
-{% tabs %}
-{% tab Sidecar %}
-{% if_version lte:2.9.x %}
-| `targetRef`           | Allowed kinds         |
-| --------------------- | --------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`  |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`           | Allowed kinds                                 |
-| --------------------- | --------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-{% endif_version %}
-{% endtab %}
-{% if_version gte:2.9.x %}
-{% tab Delegated Gateway %}
-| `targetRef`             | Allowed kinds        |
-| ----------------------- | -------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset` |
-{% endtab %}
-{% endif_version %}
-{% endtabs %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+{% navtab "Delegated Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+{% endnavtabs %}
 
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
+
 
 ## Configuration
 
-{% warning %}
-This policy doesn't work with sidecars without [transparent-proxy](/docs/{{ page.release }}/networking/transparent-proxying/#what-is-transparent-proxying).
-{% endwarning %}
+{:.warning}
+> This policy doesn't work with sidecars without [transparent-proxy](/mesh/transparent-proxying/).
 
 The following describes the default configuration settings of the `MeshPassthrough` policy:
 
-- **`passthroughMode`**: (Optional) Defines behaviour for handling traffic. Allowed values: `All`, `None` and `Matched`. Default: `None`
+- **`passthroughMode`**: (Optional) Defines behavior for handling traffic. Allowed values: `All`, `None` and `Matched`. Default: `None`
   - **`All`** enables all traffic to pass through.
   - **`Matched`** allows only the traffic defined in `appendMatch`.
   - **`None`** disallows all traffic.
@@ -62,38 +70,15 @@ The following describes the default configuration settings of the `MeshPassthrou
     - **`http`**
     - **`http2`**
     - **`grpc`**
-    {% if_version gte:2.10.x %}- **`mysql`**{% endif_version %}
+    - {% new_in 2.10 %} **`mysql`**
   
 ### Wildcard DNS matching
 
 `MeshPassthrough` policy allows you to create a match for a wildcard subdomain.
 
-{% warning %}
-Currently, support for partial subdomain matching is not implemented. For example, a match for `*w.example.com` will be rejected.
-{% endwarning %}
+{:.warning}
+> Currently, support for partial subdomain matching is not implemented. For example, a match for `*w.example.com` will be rejected.
 
-{% if_version eq:2.9.x %}
-{% policy_yaml %}
-```yaml
-type: MeshPassthrough
-name: wildcard-passthrough
-mesh: default
-spec:
-  targetRef:
-    kind: Mesh
-    proxyTypes: ["Sidecar"]
-  default:
-    passthroughMode: Matched
-    appendMatch:
-    - type: Domain
-      value: '*.cluster-1.kafka.aws.us-east-2.com'
-      protocol: tls
-      port: 443
-```
-{% endpolicy_yaml %}
-{% endif_version %}
-
-{% if_version gte:2.10.x %}
 {% policy_yaml %}
 ```yaml
 type: MeshPassthrough
@@ -111,11 +96,10 @@ spec:
       port: 443
 ```
 {% endpolicy_yaml %}
-{% endif_version %}
 
 ### Security
 
-It is advised that the Mesh Operator is responsible for managing the `MeshPassthrough` policy.
+We advise that the Mesh Operator is responsible for managing the `MeshPassthrough` policy.
 This policy can introduce traffic outside of the mesh or even the cluster, and the Mesh Operator should be aware of this.
 If you want to restrict access to `MeshPassthrough` to specific services, you must choose them manually.
 If you rely on tags in the top-level `targetRef` you might consider securing them by using one of the following techniques:
@@ -126,7 +110,7 @@ If you rely on tags in the top-level `targetRef` you might consider securing the
 ### Limitations
 
 * Due to the nature of some traffic, it is not possible to combine certain protocols on the same port. You can create a `MeshPassthrough` policy that handles `tcp`, `tls`, and one of `http`, `http2`, or `grpc` traffic on the same port. Layer 7 protocols cannot be distinguished, which could introduce unexpected behavior.
-* It isn't possible to route passthrough traffic through the [zone egress](/docs/{{ page.release }}/production/cp-deployment/zoneegress/#zone-egress).
+* It isn't possible to route passthrough traffic through the [zone egress](/mesh/zone-egress/#zone-egress).
 * Wildcard domains with L7 protocol and all ports is not supported.
-* {% if_version gte:2.9.x %}Builtin gateway is not supported.{% endif_version %}{% if_version lte:2.8.x %}Gateways are currently not supported.{% endif_version %}
-* Envoy prioritizes matches in the following order: [first by Port, second by Address IP, and third by SNI](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchainmatch). For example, if you have an HTTP domain match configured for a specific port (e.g., 80) and a CIDR match also configured for port 80, a request to this domain may match the CIDR configuration if the domain's address falls within the CIDR range. However, if the domain's address does not match the CIDR, the request might fail to match entirely due to the absence of an appropriate matcher for that IP. This behavior is a limitation and could potentially be addressed in the future with the adoption of the [Matcher API](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/advanced/matching/matching_api).
+* Built-in gateway is not supported.
+* Envoy prioritizes matches in the following order: [first by Port, second by Address IP, and third by SNI](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchainmatch). For example, if you have an HTTP domain match configured for a specific port (for example, 80) and a CIDR match also configured for port 80, a request to this domain may match the CIDR configuration if the domain's address falls within the CIDR range. However, if the domain's address does not match the CIDR, the request might fail to match entirely due to the absence of an appropriate matcher for that IP. This behavior is a limitation and could potentially be addressed in the future with the adoption of the [Matcher API](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/advanced/matching/matching_api).

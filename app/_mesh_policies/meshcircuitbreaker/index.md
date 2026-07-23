@@ -9,18 +9,16 @@ type: policy
 icon: meshcircuitbreaker.png
 ---
 
-This policy will look for errors in the live traffic being exchanged between our data plane proxies. It will mark a data
-proxy as unhealthy if certain conditions are met. The policy will ensure that no additional traffic can reach an
+This policy looks for errors in the live traffic being exchanged between our data plane proxies. It marks a data plane
+proxy as unhealthy if certain conditions are met. The policy ensures that no additional traffic can reach an
 unhealthy data plane proxy until it is healthy again.
 
 Circuit breakers - unlike active [MeshHealthChecks](/mesh/policies/meshhealthcheck/) - do not send
 additional traffic to our data plane proxies but they rather inspect the existing service traffic. They are also
 commonly used to prevent cascading failures.
 
-
 Like a real-world circuit breaker when the circuit is **closed** then traffic between a source and destination data
 plane proxy is allowed to freely flow through it. When it is **open** then the traffic is interrupted.
-
 
 The conditions that determine when a circuit breaker is closed or open are being configured on connection limits or
 outlier detection basis. For outlier detection to open circuit breaker you can configure what we call _detectors_.
@@ -29,145 +27,72 @@ behavior. All detectors could coexist on the same outbound interface.
 
 Once one of the detectors has been triggered the corresponding data plane proxy is ejected from the set of the load
 balancer for a period equal to [baseEjectionTime](#outlier-detection). Every further ejection of the same data plane
-proxy will further extend the [baseEjectionTime](#outlier-detection) multiplied by the number of ejections: for example
-the fourth ejection will be lasting for a period of time of `4 * baseEjectionTime`.
+proxy extends the [baseEjectionTime](#outlier-detection) multiplied by the number of ejections: for example
+the fourth ejection lasts for a period of `4 * baseEjectionTime`.
 
 This policy provides **passive** checks.
-If you want to configure **active** checks, please use the [MeshHealthCheck](/docs/{{ page.release }}/policies/meshhealthcheck)
+If you want to configure **active** checks, please use the [MeshHealthCheck](/mesh/policies/meshhealthcheck/)
 policy.
 Data plane proxies with **passive** checks won't explicitly send requests to other data plane proxies to determine if
 target proxies are healthy or not.
 
-
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
-{% navtabs "support matrix" %}
+{% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                         |
-{% endif_version %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
-
-{% navtab "Builtin Gateway" %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Delegated Gateway" %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+{% endtable %}
+<!-- vale on -->
 {% endnavtab %}
 {% endnavtabs %}
 
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ✅  | ✅   |
-| `MeshSubset`        | ✅        | ❌  | ❌   |
-| `MeshService`       | ✅        | ✅  | ❌   |
-| `MeshServiceSubset` | ✅        | ❌  | ❌   |
-
-{% endif_version %}
 
 
-
-## TargetRef support matrix
-
-{% if_version gte:2.6.x %}
-{% tabs %}
-{% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-| `from[].targetRef.kind` | `Mesh`                                                   |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                         |
-{% endif_version %}
-{% endtab %}
-
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endtab %}
-
-{% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% if_version gte:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind`   | `Mesh`, `MeshService`                                    |
-{% endif_version %}
-{% endtab %}
-{% endtabs %}
-
-{% endif_version %}
-{% if_version lte:2.5.x %}
-
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ✅  | ✅   |
-| `MeshSubset`        | ✅        | ❌  | ❌   |
-| `MeshService`       | ✅        | ✅  | ❌   |
-| `MeshServiceSubset` | ✅        | ❌  | ❌   |
-
-{% endif_version %}
-
-
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
 ## Configuration
 
@@ -187,11 +112,10 @@ To learn more about the information in this table, see the [matching docs](/docs
 
 ### Outlier detection
 
-Outlier detection can be configured for [HTTP, TCP or gRPC](/docs/{{ page.release }}/policies/protocol-support-in-kuma) traffic.
+Outlier detection can be configured for HTTP, TCP or gRPC traffic.
 
-{% warning %}
-For **gRPC** requests, the outlier detection will use the HTTP status mapped from the `grpc-status` response header.
-{% endwarning %}
+{:.warning}
+> For **gRPC** requests, the outlier detection will use the HTTP status mapped from the `grpc-status` response header.
 
 - **`disabled`** - (optional) When set to true, `outlierDetection` configuration won't take any effect.
 - **`interval`** - (optional) The time interval between ejection analysis sweeps. This can result in both new ejections
@@ -205,27 +129,23 @@ For **gRPC** requests, the outlier detection will use the HTTP status mapped fro
   account: `detectors.localOriginFailures.consecutive`.
 - **`detectors`** - Contains configuration for supported outlier detectors. At least one detector needs to be configured
   when policy is configured for outlier detection.
-{% if_version gte:2.10.x %}
-- **`healthyPanicThreshold`** - (optional) Allows to configure panic threshold for Envoy cluster. If not specified,
+- {% new_in 2.10 %} **`healthyPanicThreshold`** - (optional) Allows to configure panic threshold for Envoy cluster. If not specified,
   the default is 50%. To disable panic mode, set to 0%.
-{% endif_version %}
-
 
 #### Detectors configuration
 
 Configuration for supported outlier detectors. At least one detector needs to be configured when policy is configured for outlier detection.
 
-{% tabs %}
-{% tab detectors Total Failures %}
+{% navtabs "detectors" %}
+{% navtab "Total Failures" %}
 
 Depending on mode the outlier detection can take into account all or externally originated (transaction) errors only. 
 
-{% tabs %}
-{% tab totalFailures_modes Default Mode %}
+{% navtabs "totalFailures-modes" %}
+{% navtab "Default Mode" %}
 
-{% tip %}
-Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-{% endtip %}
+{:.info}
+> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
 This detection type takes into account all generated errors: **locally originated** and **externally originated** (transaction) errors.
 
@@ -253,23 +173,21 @@ spec:
             consecutive: 10
 ```
 
-{% endtab %}
+{% endnavtab %}
 
-{% tab totalFailures_modes Split Mode %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 This detection type takes into account only externally originated (transaction) errors, ignoring locally originated ones.
 
-[**HTTP**](/docs/{{ page.release }}/policies/protocol-support-in-kuma)
+**HTTP**
 
 If an upstream host is an HTTP-server, only 5xx types of error are taken into account (see Consecutive Gateway Failure for exceptions).
 
-{% warning %}
-Properly formatted responses, even when they carry an operational error (like index not found, access denied) are not taken into account.
-{% endwarning %}
+{:.warning}
+> Properly formatted responses, even when they carry an operational error (like index not found, access denied) are not taken into account.
 
 **Configuration**
 
@@ -295,22 +213,21 @@ spec:
             consecutive: 10
 ```
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
-{% endtab %}
-{% tab detectors Gateway Failures %}
+{% endnavtab %}
+{% navtab "Gateway Failures" %}
 
 Depending on mode the outlier detection can take into account gateway failures with locally originated failures (default mode) or gateway failures only (split mode).
 
-{% tabs %}
-{% tab gatewayFailures_modes Default Mode %}
+{% navtabs "gatewayFailures-modes" %}
+{% navtab "Default Mode" %}
 
-{% tip %}
-Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-{% endtip %}
+{:.info}
+> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
-This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code) and local origin failures, such as **timeout**, **TCP reset** etc.
+This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code) and local origin failures, such as **timeout**, **TCP reset** and so on
 
 **Configuration**
 
@@ -336,19 +253,17 @@ spec:
             consecutive: 10
 ```
 
-{% endtab %}
+{% endnavtab %}
 
-{% tab gatewayFailures_modes Split Mode %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code).
 
-{% warning %}
-This detector is supported only for HTTP traffic.
-{% endwarning %}
+{:.warning}
+> This detector is supported only for HTTP traffic.
 
 **Configuration**
 
@@ -375,26 +290,24 @@ spec:
             consecutive: 10
 ```
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
-{% endtab %}
-{% tab detectors Locally Originated Failures %}
+{% endnavtab %}
+{% navtab "Locally Originated Failures" %}
 
-{% warning %}
-This detection is supported only in Split Mode
-{% endwarning %}
+{:.warning}
+> This detection is supported only in Split Mode
 
 This detection takes into account only locally originated errors (timeout, reset, etc).
 
-If Envoy repeatedly cannot connect to an upstream host or communication with the upstream host is repeatedly interrupted, it will be ejected. Various locally originated problems are detected: timeout, TCP reset, ICMP errors, etc.
+If Envoy repeatedly cannot connect to an upstream host or communication with the upstream host is repeatedly interrupted, it will be ejected. Various locally originated problems are detected: timeout, TCP reset, ICMP errors, and so on
 
-{% tabs %}
-{% tab localOriginFailures_modes Split Mode %}
+{% navtabs "localOriginFailures-modes" %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 **Configuration**
 
@@ -419,44 +332,42 @@ spec:
           localOriginFailures:
             consecutive: 10
 ```
-{% endtab %}
-{% tab localOriginFailures_modes Default Mode %}
+{% endnavtab %}
+{% navtab "Default Mode" %}
 
 This detection is not supported in the Default Mode
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
-{% endtab %}
-{% tab detectors Success Rate %}
+{% endnavtab %}
+{% navtab "Success Rate" %}
 
 Success Rate based outlier detection aggregates success rate data from every host in an Envoy Cluster. Then at given intervals ejects hosts based on statistical outlier detection.
 
-Success Rate outlier detection will not be calculated for a host if its request volume over the aggregation interval is less than the value of `successRate.requestVolume`
+Success Rate outlier detection is not calculated for a host if its request volume over the aggregation interval is less than the value of `successRate.requestVolume`
 value.
 
-Moreover, detection will not be performed for a cluster if the number of hosts with the minimum required request volume in an interval is less than the `successRate.minimumHosts` value.
+Moreover, detection is not performed for a cluster if the number of hosts with the minimum required request volume in an interval is less than the `successRate.minimumHosts` value.
 
-{% tabs %}
-{% tab successRate_modes Default Mode %}
+{% navtabs "successRate-modes" %}
+{% navtab "Default Mode" %}
 
-{% tip %}
-Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-{% endtip %}
+{:.info}
+> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
 This detection type takes into account all types of errors: locally and externally originated.
 
-{% endtab %}
-{% tab successRate_modes Split Mode %}
+{% endnavtab %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 Locally originated errors and externally originated (transaction) errors are counted and treated separately.
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 **Configuration**
 
@@ -486,41 +397,39 @@ spec:
             standardDeviationFactor: "1.9"
 ```
 
-{% endtab %}
-{% tab detectors Failure Percentage %}
+{% endnavtab %}
+{% navtab "Failure Percentage" %}
 
 Failure Percentage based outlier detection functions similarly to success rate detection, in that it relies on success rate data from each host in an Envoy Cluster. However, rather than compare those values to the mean success rate of the Cluster as a whole, they are compared to a flat user-configured threshold. This threshold is configured via the [`failurePercentageThreshold`](#outlier-detection) field.
 
 The other configuration fields for failure percentage based detection are similar to the fields for success rate detection. As with success rate detection, detection will not be performed for a host if its request volume over the aggregation interval is less than the `failurePercentage.requestVolume` value.
 
-Detection also will not be performed for an Envoy Cluster if the number of hosts with the minimum required request volume in an interval is less than the `failurePercentage.minimumHosts` value.
+Detection is also not performed for an Envoy Cluster if the number of hosts with the minimum required request volume in an interval is less than the `failurePercentage.minimumHosts` value.
 
-{% tabs %}
-{% tab failurePercentage_modes Default Mode %}
+{% navtabs "failurePercentage-modes" %}
+{% navtab "Default Mode" %}
 
-{% tip %}
-Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-{% endtip %}
+{:.info}
+> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
 
 This detection type takes into account all types of errors: locally and externally originated.
 
-{% endtab %}
-{% tab failurePercentage_modes Split Mode %}
+{% endnavtab %}
+{% navtab "Split Mode" %}
 
-{% tip %}
-Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-{% endtip %}
+{:.info}
+> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
 
 Locally originated errors and externally originated (transaction) errors are counted and treated separately.
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 **Configuration**
 
-- **`failurePercentage.requestVolume`** - The minimum number of hosts in an Envoy Cluster in order to perform failure percentage-based ejection. If the total number of hosts in the Cluster is less than this value, failure percentage-based ejection will not be performed.
-- **`failurePercentage.minimumHosts`** - The minimum number of total requests that must be collected in one interval (as defined by the interval duration above) to perform failure percentage-based ejection for this host. If the volume is lower than this setting, failure percentage-based ejection will not be performed for this host.
-- **`failurePercentage.threshold`** - The failure percentage to use when determining failure percentage-based outlier detection. If the failure percentage of a given host is greater than or equal to this value, it will be ejected.
+- **`failurePercentage.requestVolume`** - The minimum number of hosts in an Envoy Cluster to perform failure percentage-based ejection. If the total number of hosts in the Cluster is less than this value, failure percentage-based ejection is not performed.
+- **`failurePercentage.minimumHosts`** - The minimum number of total requests that must be collected in one interval (as defined by the interval duration above) to perform failure percentage-based ejection for this host. If the volume is lower than this setting, failure percentage-based ejection is not performed for this host.
+- **`failurePercentage.threshold`** - The failure percentage to use when determining failure percentage-based outlier detection. If the failure percentage of a given host is greater than or equal to this value, it is ejected.
 
 **Example**
 
@@ -544,8 +453,8 @@ spec:
             threshold: 85
 ```
 
-{% endtab %}
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
 <hr />
