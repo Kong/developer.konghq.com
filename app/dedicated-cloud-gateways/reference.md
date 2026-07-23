@@ -94,6 +94,8 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
+  - text: Bot Detector
+    url: /dedicated-cloud-gateways/bot-detector/
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
@@ -487,6 +489,12 @@ body:
 
 {% include_cached /sections/managed-cache-intro.md %}
 For more information, see the [Managed cache for Redis reference](/dedicated-cloud-gateways/managed-cache/).
+
+## Bot Detector (tech preview) {% new_in 3.10 %}
+
+Bot Detector is a built-in Dedicated Cloud Gateway capability that identifies automated traffic using signals like user agents, request paths, and JA4 fingerprints, without requiring you to know which IPs or CIDR ranges to block in advance. 
+It runs in monitoring mode by default and is scoped per control plane.
+For more information, see the [Bot Detector reference](/dedicated-cloud-gateways/bot-detector/).
 
 ## Securing backend communication
 
