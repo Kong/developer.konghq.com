@@ -110,13 +110,16 @@ rows:
 * North America:
     * Virginia (`eastus2`)
     * Washington (`westus2`)
+    * South Central US (`southcentralus`)
+    * Canada Central (`canadacentral`)
 * Europe:
     * Frankfurt (`germanywestcentral`)
     * UK South (`uksouth`)
     * Ireland (`northeurope`)
     * France (`francecentral`)
 * Asia Pacific:
-    * Australia East (`australiaeast`)    
+    * Australia East (`australiaeast`) 
+    * Japan East (`japaneast`)
 
 #### {{ site.google}}
 
