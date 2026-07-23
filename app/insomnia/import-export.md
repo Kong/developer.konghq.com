@@ -125,7 +125,7 @@ In a workspace or document header, select **Export**  and then specify the file 
 - **All data**: Export everything in your workspace.
 
 The UI method supports the following formats:
-- Insomnia v5 (YAML)
+- Insomnia YAML (v5)
 - HAR
 
 ### CLI export
