@@ -171,8 +171,6 @@ ai_gateway_agents:
           - http
           - https
         strip_path: true
-      logging:
-        payloads: true
       max_request_body_size: 8388608
 EOF
 ```
@@ -187,7 +185,7 @@ In this example, you're setting up:
 * `config.traces_endpoint`: The OTLP HTTP endpoint that receives distributed traces, including the `kong.a2a` span for each A2A request.
 * `config.metrics.endpoint` and `config.metrics.enable_ai_metrics: true`: The OTLP HTTP endpoint that receives metrics, and the flag that enables `kong.gen_ai.a2a.*` metrics specifically.
 * `config.resource_attributes.service.name`: Identifies this {{site.ai_gateway}} instance in the collector output.
-* `policies: [!ref otel-a2a#name]` on the agent: Attaches the Policy so it applies to every request routed through `kongair-flight-booking-agent`. A2A span and metric emission works without a `logging` block on the agent; add `config.logging.payloads: true` if you also want request and response bodies captured.
+* `policies: [!ref otel-a2a#name]` on the agent: Attaches the Policy so it applies to every request routed through `kongair-flight-booking-agent`.
 
 ## Send an A2A request
 
