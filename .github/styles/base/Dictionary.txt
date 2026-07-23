@@ -410,6 +410,7 @@ jwts
 kafka
 kafkactl
 KAi
+Karpenter
 kbps
 kds
 keepalive
@@ -648,6 +649,7 @@ qwen
 ratelimit
 rbac
 reachability
+reactively
 readme
 readonly
 real_ip_header
