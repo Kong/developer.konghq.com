@@ -175,17 +175,9 @@ ai_gateway_agents:
 EOF
 ```
 
-{:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one. If you already completed [Get started with AI Agent](/ai-gateway/get-started-with-ai-agent/), this reapplies the same `kongair-flight-booking-agent` under the same namespace and only adds the `policies` reference.
+The `otel-a2a` Policy has `type: opentelemetry` and `global: false`, so it only applies where you explicitly attach it rather than to every resource on {{site.ai_gateway}}. Its `config.traces_endpoint` and `config.metrics.endpoint` point at your collector's OTLP receiver, and `config.metrics.enable_ai_metrics: true` turns on the `kong.gen_ai.a2a.*` metrics this guide validates. `config.resource_attributes.service.name` labels the exported data so you can tell which {{site.ai_gateway}} instance it came from.
 
-In this example, you're setting up:
-
-* `type: opentelemetry`: Specifies that this Policy exports traces and metrics over OTLP.
-* `global: false`: Scopes the Policy to only the entities it's explicitly attached to via `policies:`, rather than every resource on {{site.ai_gateway}}.
-* `config.traces_endpoint`: The OTLP HTTP endpoint that receives distributed traces, including the `kong.a2a` span for each A2A request.
-* `config.metrics.endpoint` and `config.metrics.enable_ai_metrics: true`: The OTLP HTTP endpoint that receives metrics, and the flag that enables `kong.gen_ai.a2a.*` metrics specifically.
-* `config.resource_attributes.service.name`: Identifies this {{site.ai_gateway}} instance in the collector output.
-* `policies: [!ref otel-a2a#name]` on the agent: Attaches the Policy so it applies to every request routed through `kongair-flight-booking-agent`.
+The agent attaches that Policy through `policies: [!ref otel-a2a#name]`, so every request routed through `kongair-flight-booking-agent` gets traced and measured.
 
 ## Send an A2A request
 
@@ -322,6 +314,6 @@ Value: 1
 ```
 {:.collapsible}
 
-`kong.route.name` carries a `-route` suffix because {{site.ai_gateway}} auto-generates a Route for the agent. `kong.konnect.cp.id` identifies the AI Gateway control plane the metric originated from.
+`kong.route.name` carries a `-route` suffix because {{site.ai_gateway}} auto-generates a Route for the agent. `kong.konnect.cp.id` identifies the {{site.ai_gateway}}  control plane the metric originated from.
 
 See [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics) for the full metric reference, including `kong.gen_ai.a2a.request.duration`, `kong.gen_ai.a2a.response.size`, `kong.gen_ai.a2a.ttfb`, and `kong.gen_ai.a2a.request.error.count`.
