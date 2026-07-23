@@ -90,7 +90,7 @@ In a workspace or document header, select **Import** and then specify your impor
 - URL
 - Clipboard
 
-Insomnia supports the following import formats:
+Insomnia supports the following formats:
 - **Import formats**: Insomnia JSON (v4), Insomnia YAML (v5), Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL
 - **Export formats (UI)**: Insomnia YAML (v5) and HAR
 - **Export formats (CLI)**: OpenAPI spec
@@ -179,7 +179,7 @@ rows:
 
 Alongside `type`, each file includes top-level fields such as `name`, `schema_version`, and `meta.id`, plus keys specific to the file type (for example, `collection`, `spec` and `testSuites`, or `server` and `routes`).
 
-The version in the `type` value (`5.0`) identifies the file format, while `schema_version` and the JSON Schema file name (for example, `5.1`) track revisions to the schema. These version numbers are independent and don't need to match.
+The version in the `type` value (`5.0`) identifies the file format, while `schema_version` and the JSON Schema filename (for example, `5.1`) track revisions to the schema. These version numbers are independent and don't need to match.
 
 **Example**
 
