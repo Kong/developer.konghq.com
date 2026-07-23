@@ -584,28 +584,310 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
 1.  Deploy the example application:
 
     ```sh
-    kubectl apply -f https://bit.ly/demokuma
+    echo "apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: kong-mesh-demo
+      labels:
+        kuma.io/sidecar-injection: enabled
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: postgres-master
+      namespace: kong-mesh-demo
+      labels:
+        app: postgres
+    spec:
+      selector:
+        matchLabels:
+          app: postgres
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: postgres
+        spec:
+          containers:
+          - name: master
+            image: kvn0218/postgres:latest
+            env:
+            - name: POSTGRES_USER
+              value: kumademo
+            - name: POSTGRES_PASSWORD
+              value: kumademo
+            - name: POSTGRES_DB
+              value: kumademo
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 150m
+                memory: 256Mi
+            ports:
+            - containerPort: 5432
+            volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pgdata
+          volumes:
+          - emptyDir: {}
+            name: pgdata
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: postgres
+      namespace: kong-mesh-demo
+      labels:
+        app: postgres
+    spec:
+      ports:
+      - protocol: TCP
+        port: 5432
+        targetPort: 5432
+      selector:
+        app: postgres
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: redis-master
+      namespace: kong-mesh-demo
+      labels:
+        app: redis
+    spec:
+      selector:
+        matchLabels:
+          app: redis
+          role: master
+          tier: backend
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: redis
+            role: master
+            tier: backend
+        spec:
+          containers:
+          - name: master
+            image: kvn0218/kuma-redis
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 150m
+                memory: 256Mi
+            ports:
+            - containerPort: 6379
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: redis
+      namespace: kong-mesh-demo
+      labels:
+        app: redis
+        role: master
+        tier: backend
+    spec:
+      ports:
+      - port: 6379
+        targetPort: 6379
+      selector:
+        app: redis
+        role: master
+        tier: backend
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: backend
+      namespace: kong-mesh-demo
+      annotations:
+        3001.service.kuma.io/protocol: \"http\"
+    spec:
+      selector:
+        app: kong-mesh-demo-backend
+      ports:
+      - name: api
+        port: 3001
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: kong-mesh-demo-backend-v0
+      namespace: kong-mesh-demo
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: kong-mesh-demo-backend
+          version: v0
+          env: prod
+      template:
+        metadata:
+          labels:
+            app: kong-mesh-demo-backend
+            version: v0
+            env: prod
+        spec:
+          containers:
+          - image: kvn0218/kuma-demo-be:latest
+            name: kuma-be
+            env:
+            - name: POSTGRES_HOST
+              value: postgres_kong-mesh-demo_svc_5432.mesh
+            - name: POSTGRES_PORT_NUM
+              value: \"80\"
+            - name: SPECIAL_OFFER
+              value: \"false\"
+            - name: REDIS_HOST
+              value: redis_kong-mesh-demo_svc_6379.mesh
+            - name: REDIS_PORT
+              value: \"80\"
+            imagePullPolicy: IfNotPresent
+            ports:
+            - containerPort: 3001
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: kong-mesh-demo-backend-v1
+      namespace: kong-mesh-demo
+    spec:
+      replicas: 0
+      selector:
+        matchLabels:
+          app: kong-mesh-demo-backend
+          version: v1
+          env: intg
+      template:
+        metadata:
+          labels:
+            app: kong-mesh-demo-backend
+            version: v1
+            env: intg
+        spec:
+          containers:
+          - image: kvn0218/kuma-demo-be:latest
+            name: kuma-be
+            env:
+            - name: POSTGRES_HOST
+              value: postgres_kong-mesh-demo_svc_5432.mesh
+            - name: POSTGRES_PORT_NUM
+              value: \"80\"
+            - name: REDIS_HOST
+              value: redis_kong-mesh-demo_svc_6379.mesh
+            - name: REDIS_PORT
+              value: \"80\"
+            imagePullPolicy: IfNotPresent
+            ports:
+            - containerPort: 3001
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: kong-mesh-demo-backend-v2
+      namespace: kong-mesh-demo
+    spec:
+      replicas: 0
+      selector:
+        matchLabels:
+          app: kong-mesh-demo-backend
+          version: v2
+          env: dev
+      template:
+        metadata:
+          labels:
+            app: kong-mesh-demo-backend
+            version: v2
+            env: dev
+        spec:
+          containers:
+          - image: kvn0218/kuma-demo-be:latest
+            name: kuma-be
+            env:
+            - name: POSTGRES_HOST
+              value: postgres_kong-mesh-demo_svc_5432.mesh
+            - name: POSTGRES_PORT_NUM
+              value: \"80\"
+            - name: TOTAL_OFFER
+              value: \"2\"
+            - name: REDIS_HOST
+              value: redis_kong-mesh-demo_svc_6379.mesh
+            - name: REDIS_PORT
+              value: \"80\"
+            imagePullPolicy: IfNotPresent
+            ports:
+            - containerPort: 3001
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: frontend
+      namespace: kong-mesh-demo
+      annotations:
+        8080.service.kuma.io/protocol: \"http\"
+        ingress.kubernetes.io/service-upstream: \"true\"
+    spec:
+      selector:
+        app: kong-mesh-demo-frontend
+      ports:
+      - name: http
+        port: 8080
+        targetPort: 8080
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: kong-mesh-demo-app
+      namespace: kong-mesh-demo
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: kong-mesh-demo-frontend
+          version: v8
+          env: prod
+      template:
+        metadata:
+          labels:
+            app: kong-mesh-demo-frontend
+            version: v8
+            env: prod
+        spec:
+          containers:
+          - name: kong-mesh-fe
+            image: kvn0218/kuma-demo-fe:latest
+            args: [\"-P\", \"http://backend_kong-mesh-demo_svc_3001.mesh\"]
+            imagePullPolicy: IfNotPresent
+            ports:
+            - containerPort: 8080" | kubectl apply -f -
     ```
+    {:.collapsible}
 
 1.  Make a request from the frontend to the backend:
 
     ```sh
     kubectl exec -i -t $(kubectl get pod -l "app=kong-mesh-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kong-mesh-demo) -n kong-mesh-demo -c kong-mesh-fe -- curl backend:3001 -v
     ```
-
+ 
     The output looks like:
-
+ 
     ```
-    Defaulting container name to kong-mesh-fe.
-    Use 'kubectl describe pod/kong-mesh-demo-app-6787b4f7f5-m428c -n kong-mesh-demo' to see all of the containers in this pod.
-    *   Trying 10.111.108.218:3001...
+    *   Trying 127.0.0.1:3001...
     * TCP_NODELAY set
-    * Connected to backend (10.111.108.218) port 3001 (#0)
+    * Connected to backend (127.0.0.1) port 3001 (#0)
     > GET / HTTP/1.1
     > Host: backend:3001
     > User-Agent: curl/7.67.0
     > Accept: */*
-    >
+    > 
     * Mark bundle as not supporting multiuse
     < HTTP/1.1 200 OK
     < x-powered-by: Express
@@ -617,16 +899,17 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
     < user-agent: curl/7.67.0
     < accept: */*
     < x-forwarded-proto: http
-    < x-request-id: 1717af9c-2587-43b9-897f-f8061bba5ad4
-    < content-length: 90
+    < x-request-id: cfbb5987-f534-44dc-97f3-e6edbe4b29ae
     < content-type: text/html; charset=utf-8
-    < date: Tue, 16 Mar 2021 15:33:18 GMT
-    < x-envoy-upstream-service-time: 1521
+    < content-length: 90
+    < date: Thu, 23 Jul 2026 11:12:36 GMT
+    < x-envoy-upstream-service-time: 17
     < server: envoy
-    <
+    < 
     * Connection #0 to host backend left intact
     Hello World! Marketplace with sales and reviews made with <3 by the OCTO team at Kong Inc.
     ```
+    {:.no-copy-code}
 
 1.  Apply a MeshOPA policy that requires a valid JWT token:
 
@@ -676,33 +959,32 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
     " | kubectl apply -f -
     ```
 
-1.  Make an invalid request from the frontend to the backend:
+1. Make an invalid request from the frontend to the backend:
 
     ```sh
     kubectl exec -i -t $(kubectl get pod -l "app=kong-mesh-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kong-mesh-demo) -n kong-mesh-demo -c kong-mesh-fe -- curl backend:3001 -v
     ```
     The output looks like:
-
+ 
     ```
-    Defaulting container name to kong-mesh-fe.
-    Use 'kubectl describe pod/kong-mesh-demo-app-6787b4f7f5-bwvnb -n kong-mesh-demo' to see all of the containers in this pod.
-    *   Trying 10.105.146.164:3001...
+    *   Trying 127.0.0.1:3001...
     * TCP_NODELAY set
-    * Connected to backend (10.105.146.164) port 3001 (#0)
+    * Connected to backend (127.0.0.1) port 3001 (#0)
     > GET / HTTP/1.1
     > Host: backend:3001
     > User-Agent: curl/7.67.0
     > Accept: */*
-    >
+    > 
     * Mark bundle as not supporting multiuse
     < HTTP/1.1 403 Forbidden
-    < date: Tue, 09 Mar 2021 16:50:40 GMT
+    < date: Thu, 23 Jul 2026 11:16:12 GMT
     < server: envoy
-    < x-envoy-upstream-service-time: 2
+    < x-envoy-upstream-service-time: 4
     < content-length: 0
-    <
+    < 
     * Connection #0 to host backend left intact
     ```
+    {:.no-copy-code}
 
     Note the `HTTP/1.1 403 Forbidden` message. The application doesn't allow a request without a valid token.
 
@@ -717,22 +999,20 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
 
     Make the request:
     ```sh
-    kubectl exec -i -t $(kubectl get pod -l "app=kong-mesh-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kong-mesh-demo) -n kong-mesh-demo -c kong-mesh-fe -- curl -H "Authorization: Bearer $ADMIN_TOKEN" backend:3001
+    kubectl exec -i -t $(kubectl get pod -l "app=kong-mesh-demo-frontend" -o jsonpath='{.items[0].metadata.name}' -n kong-mesh-demo) -n kong-mesh-demo -c kong-mesh-fe -- curl -H "Authorization: Bearer $ADMIN_TOKEN" backend:3001 -v
     ```
 
     The output looks like:
 
     ```
-    Defaulting container name to kong-mesh-fe.
-    Use 'kubectl describe pod/kong-mesh-demo-app-6787b4f7f5-m428c -n kong-mesh-demo' to see all of the containers in this pod.
-    *   Trying 10.111.108.218:3001...
+    *   Trying 127.0.0.1:3001...
     * TCP_NODELAY set
-    * Connected to backend (10.111.108.218) port 3001 (#0)
+    * Connected to backend (127.0.0.1) port 3001 (#0)
     > GET / HTTP/1.1
     > Host: backend:3001
     > User-Agent: curl/7.67.0
     > Accept: */*
-    >
+    > 
     * Mark bundle as not supporting multiuse
     < HTTP/1.1 200 OK
     < x-powered-by: Express
@@ -744,15 +1024,16 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
     < user-agent: curl/7.67.0
     < accept: */*
     < x-forwarded-proto: http
-    < x-request-id: 8fd7b398-1ba2-4c2e-b229-5159d04d782e
-    < content-length: 90
+    < x-request-id: eba9d07f-980b-46ff-a926-542c34615703
     < content-type: text/html; charset=utf-8
-    < date: Tue, 16 Mar 2021 17:26:00 GMT
-    < x-envoy-upstream-service-time: 261
+    < content-length: 90
+    < date: Thu, 23 Jul 2026 11:21:48 GMT
+    < x-envoy-upstream-service-time: 12
     < server: envoy
-    <
+    < 
     * Connection #0 to host backend left intact
     Hello World! Marketplace with sales and reviews made with <3 by the OCTO team at Kong Inc.
     ```
+    {:.no-copy-code}
 
-    The request is valid again because the token is signed with the `secret` private key, its payload includes the admin role, and it is not expired.
+   The request is valid again because the token is signed with the `secret` private key, its payload includes the admin role, and it is not expired.
