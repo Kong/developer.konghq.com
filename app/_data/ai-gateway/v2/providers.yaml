@@ -1561,3 +1561,77 @@ providers:
     limitations:
       provider_specific: []
       statistics_logging: []
+  - name: Amazon SageMaker
+    url_patterns:
+      - 'https://runtime.sagemaker.{region}.amazonaws.com'
+    min_version: '2.0'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/endpoints/{endpoint_name}/invocations` (or `/endpoints/{endpoint_name}/invocations-response-stream` for streaming)'
+        model_example: 'User-defined (the name of your SageMaker endpoint)'
+        min_version: '2.0'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
