@@ -57,6 +57,13 @@ rows:
       - blocks:
         - type: icon_card
           config:
+            title: Amazon SageMaker
+            icon: /assets/icons/sagemaker.svg
+            cta:
+              url: /ai-gateway/ai-providers/sagemaker/
+      - blocks:
+        - type: icon_card
+          config:
             title: Gemini
             icon: /assets/icons/gemini.svg
             cta:
