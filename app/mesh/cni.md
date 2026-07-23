@@ -242,6 +242,20 @@ spec:
           effect: NoSchedule
 ```
 
+{:.warning}
+> The control plane (and anything else that must run on these nodes before the CNI is ready) needs a matching toleration, otherwise it can't be scheduled to remove the taint and the cluster deadlocks. Add the toleration to `controlPlane.tolerations`, or scope the startup taint to data-plane node pools only.
+
+```yaml
+controlPlane:
+  tolerations:
+    - key: NodeReadiness
+      operator: Exists
+      effect: NoSchedule
+```
+
+{:.info}
+> Tainting only closes the fresh-scheduling gap. A node rebooted in place (Pods not evicted) recreates a Pod's sandbox without re-running the CNI, so it can still come up without the redirect. This bypasses the taint entirely.
+
 ## Merbridge CNI with eBPF
 
 {:.warning}
