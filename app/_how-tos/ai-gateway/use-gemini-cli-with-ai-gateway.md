@@ -63,6 +63,10 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+_defaults:
+  kongctl:
+    namespace: ai-gateway-get-started
+
 ai_gateways:
   - ref: ai-quickstart
     _external:
@@ -151,7 +155,7 @@ Now you can test the {{ site.gemini }} CLI setup.
 1. In the terminal where you exported your {{ site.gemini }} environment variables, run:
 
    ```sh
-   gemini --model gemini-2.5-flash
+   gemini --model my-gemini-model
    ```
 
    You should see the {{ site.gemini }} CLI interface start up.
