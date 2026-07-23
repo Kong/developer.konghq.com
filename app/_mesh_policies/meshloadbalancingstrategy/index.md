@@ -10,7 +10,7 @@ icon: policy.svg
 ---
 
 This policy enables {{site.mesh_product_name}} to configure the load balancing strategy for traffic between services in the mesh.
-When using this policy, the `localityAwareLoadBalancing` flag is ignored.
+When using this policy, {{site.mesh_product_name}} ignores the `localityAwareLoadBalancing` flag.
 
 ## TargetRef support matrix
 

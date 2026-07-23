@@ -223,7 +223,10 @@ It is possible to configure it at the `Mesh` level, for all the applications in 
 Here are reasons where you'd want to use this feature:
 - Application metrics are labelled with your mesh parameters (tags, mesh, data plane name...), this means that in mixed Universal and Kubernetes mode metrics are reported with the same types of labels.
 - Both application and sidecar metrics are scraped at the same time. This makes sure they are coherent (with 2 different scrapers they can end up scraping at different intervals and make metrics harder to correlate).
-- If you disable passthrough and your mesh uses mTLS and Prometheus is outside the mesh this is the only way to retrieve these metrics as the app is completely hidden behind the sidecar.
+ This is the only way to retrieve these metrics in case the app is completely hidden behind the sidecar when these conditions are met:
+ - You disable passthrough
+ - Your mesh uses mTLS
+ - Prometheus is outside the mesh
 
 Example section of the configuration:
 

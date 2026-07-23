@@ -506,7 +506,7 @@ The following example shows how to deploy and test a sample `MeshGlobalRateLimit
 
 1. Next, you need to create value files that will be used for control plane installation:
 
-    ```
+    
     echo "ratelimit:
       enabled: true
       exposeDebugPort: true
