@@ -140,7 +140,7 @@ An example of the key commands:
   
   Use `inso export spec "<Design Document Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
 
-## v4 and v5 file format
+## v4 and v5 file formats
 
 Insomnia exports in the v5 file format and can still import legacy v4 JSON files. The two formats are structured differently, as described in the following tabs.
 
