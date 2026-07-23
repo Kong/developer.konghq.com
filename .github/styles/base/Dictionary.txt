@@ -928,6 +928,7 @@ vpc
 vpcs
 VS Code
 Vue
+waf
 walkthrough
 Wallarm
 Wasm
