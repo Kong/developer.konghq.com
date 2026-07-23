@@ -51,7 +51,7 @@ Specifically, {{site.identity}} auth servers can be used for machine-to-machine 
 
 An {{site.identity}} authorization server is made up of clients, scopes, and claims:
 * **Auth server:** Issues OAuth 2.0 and OpenID Connect tokens that you can use to authenticate a client (machine) with your Gateway Services. Each auth server is unique to your organization and [{{site.konnect_short_name}} region](/konnect-platform/geos/). We recommend creating different auth servers for different environments or subsidiaries.
-* **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
+* **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts. They also configure the strategies by which those entities can authenticate to {{site.identity}} to retrieve access tokens (also called OAuth 2.0 grant types).
 * **Scopes:** Define what those clients are allowed to access.
 * **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services. 
 
