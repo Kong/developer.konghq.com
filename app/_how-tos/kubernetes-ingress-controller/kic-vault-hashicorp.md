@@ -61,6 +61,7 @@ related_resources:
 tags:
   - secrets-management
   - security
+  - hashicorp-vault
 
 ---
 
