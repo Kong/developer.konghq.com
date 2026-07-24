@@ -81,8 +81,7 @@ app/_how-tos/ai-gateway/v1/meter-llm-traffic.md:
   status: pending
   canonical_url: /ai-gateway/policies/ai-rate-limiting-advanced/
 app/_how-tos/ai-gateway/v1/protect-sensitive-information-output-with-ai.md:
-  status: pending
-  canonical_url: /ai-gateway/policies/ai-sanitizer/
+  canonical_url: /ai-gateway/protect-sensitive-information-output-with-ai/
 app/_how-tos/ai-gateway/v1/protect-sensitive-information-with-ai.md:
   status: pending
   canonical_url: /ai-gateway/policies/ai-sanitizer/
