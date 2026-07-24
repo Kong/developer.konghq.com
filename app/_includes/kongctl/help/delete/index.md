@@ -13,7 +13,8 @@ Examples:
   # Preview deletions before executing them
   kongctl delete -f config.yaml --dry-run
   
-  # Execute a reviewed delete plan without prompting
+  # Generate and execute a reviewed delete plan without prompting
+  kongctl plan --mode delete -f config.yaml --output-file delete-plan.json
   kongctl delete --plan delete-plan.json --auto-approve
 
 Available Commands:
@@ -71,7 +72,7 @@ Flags:
       --pat string                        Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                           Setting this value overrides tokens obtained from the login command.
                                           - Config path: [ konnect.pat ]
-      --plan string                       Path to existing delete plan file
+      --plan string                       Path to existing delete-mode plan file
   -p, --profile string                    Specify the profile to use for this command. (default "default")
   -R, --recursive                         Process the directory used in -f, --filename recursively
       --region string                     Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
