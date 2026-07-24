@@ -17,6 +17,7 @@ products:
 
 tools:
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -62,14 +63,9 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model P
 
 Here's a minimal configuration for chat completions:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: Gemini Production
   name: my-gemini-account
   type: gemini
@@ -79,8 +75,10 @@ body:
       headers:
         - name: x-goog-api-key
           value: $GEMINI_API_KEY
-{% endkonnect_api_request %}
-<!--vale on-->
+{% endentity_example %}
+
+Replace the following with your actual values:
+* `$GEMINI_API_KEY`: The API key used to connect to Gemini.
 
 ## Authentication with GCP IAM
 

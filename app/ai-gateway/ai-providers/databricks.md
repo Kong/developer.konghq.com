@@ -17,6 +17,7 @@ products:
 
 tools:
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -47,14 +48,9 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model P
 
 Here's a minimal configuration for chat completions:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: Databricks Production
   name: my-databricks-account
   type: databricks
@@ -63,9 +59,11 @@ body:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer $DATABRICKS_TOKEN
-{% endkonnect_api_request %}
-<!--vale on-->
+          value: $DATABRICKS_TOKEN
+{% endentity_example %}
+
+Replace the following with your actual values:
+* `$DATABRICKS_TOKEN`: The access token used to connect to Databricks. Include the `Bearer ` prefix, for example `Bearer <your-access-token>`.
 
 ## Configure a model target for {{ provider.name }}
 

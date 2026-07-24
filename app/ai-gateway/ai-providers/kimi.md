@@ -17,6 +17,7 @@ works_on:
 
 tools:
   - konnect-api
+  - kongctl
 
 products:
   - ai-gateway
@@ -46,14 +47,9 @@ related_resources:
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/) as follows:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: Kimi Production
   name: my-kimi-account
   type: kimi
@@ -62,6 +58,8 @@ body:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer $KIMI_TOKEN
-{% endkonnect_api_request %}
-<!--vale on-->
+          value: $KIMI_TOKEN
+{% endentity_example %}
+
+Replace the following with your actual values:
+* `$KIMI_TOKEN`: The API token used to connect to Kimi. Include the `Bearer ` prefix, for example `Bearer <your-api-token>`.

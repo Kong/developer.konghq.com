@@ -11,6 +11,7 @@ permalink: /ai-gateway/ai-providers/openai/
 
 tools:
   - konnect-api
+  - kongctl
 
 works_on:
  - konnect
@@ -47,14 +48,9 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model P
 
 Here's a minimal configuration for chat completions:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: OpenAI Production
   name: my-openai-account
   type: openai
@@ -63,6 +59,8 @@ body:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer $OPENAI_API_KEY
-{% endkonnect_api_request %}
-<!--vale on-->
+          value: $OPENAI_API_KEY
+{% endentity_example %}
+
+Replace the following with your actual values:
+* `$OPENAI_API_KEY`: The API key used to connect to OpenAI. Include the `Bearer ` prefix, for example `Bearer <your-api-key>`.

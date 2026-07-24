@@ -17,6 +17,7 @@ products:
 
 tools:
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -64,14 +65,9 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model P
 
 Here's a minimal configuration for chat completions:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: AWS Production
   name: my-aws-account
   type: bedrock
@@ -80,8 +76,11 @@ body:
       type: aws
       access_key_id: $AWS_ACCESS_KEY_ID
       secret_access_key: $AWS_SECRET_ACCESS_KEY
-{% endkonnect_api_request %}
-<!--vale on-->
+{% endentity_example %}
+
+Replace the following with your actual values:
+* `$AWS_ACCESS_KEY_ID`: Your AWS access key ID.
+* `$AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
 
 ## Authentication with AWS
 
