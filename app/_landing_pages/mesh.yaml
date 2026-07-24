@@ -16,6 +16,18 @@ rows:
 
   - columns:
       - blocks:
+          - type: card
+            config:
+              title: "Zero to hero learning path"
+              description: |
+                Follow our curriculum-style guide to mastering Kong Mesh, from basic concepts to advanced multi-zone operations.
+              featured: true
+              cta:
+                text: "Start the journey"
+                url: /mesh/scenarios/
+
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               blocks:
@@ -167,8 +179,10 @@ rows:
                   url: /mesh/policies/meshhealthcheck/
                 - text: Mesh Retry 
                   url: /mesh/policies/meshretry/
-                - text: Mesh Circuit Breaker 
+                - text: Mesh Circuit Breaker
                   url: /mesh/policies/meshcircuitbreaker/
+                - text: Chaos engineering
+                  url: /mesh/scenarios/chaos-engineering/
       - blocks:
           - type: card
             config:
