@@ -12,8 +12,8 @@ Examples:
   # Generate a plan using the explicit Konnect target form
   kongctl plan konnect -f api.yaml
   
-  # Save a plan artifact for review or later execution
-  kongctl plan -f config.yaml --output-file plan.json
+  # Save an apply-mode plan artifact for review or later execution
+  kongctl plan --mode apply -f config.yaml --output-file plan.json
 
 
 Flags:

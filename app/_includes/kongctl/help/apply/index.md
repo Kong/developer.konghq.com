@@ -19,7 +19,8 @@ Examples:
   -f https://get.konghq.com/api.yaml \
   -s ./kongctl-example
   
-  # Apply from a pre-generated plan
+  # Generate and apply a reviewed apply plan
+  kongctl plan --mode apply -f config.yaml --output-file plan.json
   kongctl apply --plan plan.json
 
 Available Commands:
@@ -73,7 +74,7 @@ Flags:
       --pat string                        Konnect Personal Access Token (PAT) used to authenticate the CLI. 
                                           Setting this value overrides tokens obtained from the login command.
                                           - Config path: [ konnect.pat ]
-      --plan string                       Path to existing plan file
+      --plan string                       Path to existing apply-mode plan file
   -p, --profile string                    Specify the profile to use for this command. (default "default")
   -R, --recursive                         Process the directory used in -f, --filename recursively
       --region string                     Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
