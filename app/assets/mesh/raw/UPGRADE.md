@@ -786,6 +786,14 @@ Migrate any `Mesh` resources that still configure `spec.logging` to a
 `logging` continues to apply successfully; the field is silently ignored by
 the control plane.
 
+## Upgrade to `3.0.x`
+
+### Legacy `OPAPolicy` API removed
+
+The legacy `OPAPolicy` resource (`config.kong-mesh.io/v1alpha1`, kind `OPAPolicy`) and its CRD have been removed. Use the `MeshOPA` targetRef policy instead.
+
+**Action required:** Before upgrading, migrate any `OPAPolicy` resources to `MeshOPA` and delete the old ones. After upgrading, the `OPAPolicy` CRD is no longer installed; leftover `OPAPolicy` objects will be rejected by the control plane.
+
 ## Upgrade to `2.14.x`
 
 ### cert-manager mesh identity: `list` verb added to RBAC Role
