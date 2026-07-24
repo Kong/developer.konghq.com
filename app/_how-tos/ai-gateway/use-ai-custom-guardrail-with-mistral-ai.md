@@ -1,6 +1,6 @@
 ---
 title: Use the AI Custom Guardrail plugin with the Mistral AI Moderation API
-permalink: /ai-gateway/use-ai-custom-guardrail-with-mistral/
+permalink: /ai-gateway/use-ai-custom-guardrail-with-mistral-ai/
 content_type: how_to
 
 related_resources:
@@ -39,22 +39,6 @@ prereqs:
     - title: Mistral
       include_content: prereqs/mistral
       icon_url: /assets/icons/mistral.svg
-  entities:
-    services:
-        - example-service
-    routes:
-        - example-route
-
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
-major_version:
-  ai-gateway: 1
 
 ---
 
@@ -96,15 +80,15 @@ ai_gateway_policies:
         text_source: "concatenate_all_content"
       
         params:
-          api_key: ${key}
+          api_key: !env MISTRAL_API_KEY
           model: mistral-moderation-2411
       
         request:
           url: https://api.mistral.ai/v1/moderations
           headers:
-            Authorization: "Bearer !env conf_params_api_key
+            Authorization: "Bearer $(conf.params.api_key)"
           body:
-            model: !env conf_params_model
+            model: !env MISTRAL_MODEL
             input: "$(content)"
       
         response:
@@ -161,9 +145,6 @@ ai_gateway_models:
 EOF
 ```
 
-
-## Configure the AI Custom Guardrail plugin
-
 Enable the [AI Custom Guardrail](/plugins/ai-custom-guardrail/) with the following data:
 
 * The [{{ site.mistral }} Moderation API](https://docs.mistral.ai/capabilities/guardrailing#moderation) URL
@@ -173,64 +154,6 @@ Enable the [AI Custom Guardrail](/plugins/ai-custom-guardrail/) with the followi
 * The function that defines how to parse the response
 
 In this example, the {{ site.mistral }} Moderation API response contains a `results` array containing a `categories` object with a list of different moderation categories. If the input matches one of the categories, its value will be `true`. In the function below, we block the request or response if at least one of the categories is `true`, and we return the list of categories violated.
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: ai-custom-guardrail
-      config: 
-        guarding_mode: BOTH
-        text_source: "concatenate_all_content"
-      
-        params:
-          api_key: ${key}
-          model: mistral-moderation-2411
-      
-        request:
-          url: https://api.mistral.ai/v1/moderations
-          headers:
-            Authorization: "Bearer $(conf.params.api_key)"
-          body:
-            model: "$(conf.params.model)"
-            input: "$(content)"
-      
-        response:
-          block: "$(check_response.block)"
-          block_message: "$(check_response.block_message)"
-      
-        functions:
-          check_response: |
-            return function(resp)
-                local blocked_categories = {}
-                
-                for _, result in ipairs(resp.results) do
-                    for category, is_flagged in pairs(result.categories) do
-                        if is_flagged then
-                            table.insert(blocked_categories, category)
-                        end
-                    end
-                end
-                
-                local block = #blocked_categories > 0
-                local reason
-      
-                if block then
-                  reason = "Content moderation failed in the following categories: " .. table.concat(blocked_categories, ", ")
-                else
-                  reason = "Content moderation passed"
-                end
-                
-                return {
-                    block = block,
-                    block_message = reason
-                }
-            end
-
-variables:
-  key:
-    value: $MISTRAL_API_KEY
-    description: The API key to access Mistral AI.
-{% endentity_examples %}
 
 ## Test the configuration
 
