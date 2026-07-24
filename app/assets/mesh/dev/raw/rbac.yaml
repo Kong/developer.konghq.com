@@ -216,7 +216,6 @@ rules:
   - apiGroups:
       - kuma.io
     resources:
-      - opapolicies
       - accessroles
       - accessrolebindings
       - accessaudits

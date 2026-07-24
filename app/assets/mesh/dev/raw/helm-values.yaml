@@ -22,20 +22,11 @@ kuma:
               - UPDATE
               - DELETE
             resources:
-              - opapolicies
               - accessaudits
               - accessroles
               - accessrolebindings
       ownerReference:
-        additionalRules: |
-          - apiGroups:
-              - kuma.io
-            apiVersions:
-              - v1alpha1
-            operations:
-              - CREATE
-            resources:
-              - opapolicies
+        additionalRules: ""
     konnect:
       # -- Control Plane Id of the control-plane in Mesh Konnect
       cpId: ""
