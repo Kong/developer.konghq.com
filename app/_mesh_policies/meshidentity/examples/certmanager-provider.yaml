@@ -1,0 +1,36 @@
+title: 'MeshIdentity with cert-manager'
+tools:
+  - kubernetes
+description: 'Issue workload certificates through a cert-manager ClusterIssuer.'
+min_version:
+  mesh: '2.14'
+weight: 820
+requirements:
+  - "A [MeshService](/mesh/meshservice/) resource must be configured in your mesh."
+  - "[cert-manager](https://cert-manager.io/) installed in the cluster with a CA `ClusterIssuer` named `ca-issuer`."
+  - "A {{site.mesh_product_name}} `Secret` named `meshidentity-certmanager-ca` holding the issuing CA certificate, used for `MeshTrust` auto-creation."
+namespace: kong-mesh-system
+config:
+  type: MeshIdentity
+  name: identity-certmanager
+  mesh: default
+  spec:
+    selector:
+      dataplane:
+        matchLabels: {}
+    provider:
+      type: Extension
+      extension:
+        name: certmanager
+        config:
+          issuerRef:
+            name: ca-issuer
+            kind: ClusterIssuer
+            group: cert-manager.io
+          caCert:
+            type: Secret
+            secretRef:
+              kind: Secret
+              name: meshidentity-certmanager-ca
+          certificateParameters:
+            expiry: 24h
