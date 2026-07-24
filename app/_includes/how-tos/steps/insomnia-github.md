@@ -1,3 +1,4 @@
+1. Click **Clone from remote**.
 1. If you have not connected Insomnia to your GitHub account yet, click **Authenticate with GitHub**.
 1. In the page that opens in your browser, click **Continue**, then click **Authorize Kong**.
 1. Click **Open Insomnia**.
@@ -12,3 +13,4 @@
     > If you use a managed GitHub account, you might not be able to install GitHub Apps. In this case, use the Git tab to configure the repository with the [generic Git workflow](./?tab=git). For more details, see the [GitHub docs](https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts#github-apps).
 
 1. If needed, select a branch.
+
