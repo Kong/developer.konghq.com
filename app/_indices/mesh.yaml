@@ -139,6 +139,33 @@ sections:
       - path: /mesh/vulnerability-patching-process/
       - path: /mesh/support-policy/
 
+  - title: Scenarios and learning paths
+    items:
+      - path: /mesh/scenarios/
+      - path: /mesh/scenarios/introduction/
+      - path: /mesh/scenarios/architecture-overview/
+      - path: /mesh/scenarios/getting-started-policy/
+      - path: /mesh/scenarios/using-policies/
+      - path: /mesh/scenarios/resource-scoping/
+      - path: /mesh/scenarios/traffic-splitting-meshservices/
+      - path: /mesh/scenarios/subsets-and-targeting/
+      - path: /mesh/scenarios/observability-in-practice/
+      - path: /mesh/scenarios/workload-identity/
+      - path: /mesh/scenarios/external-ca-vault/
+      - path: /mesh/scenarios/multi-zone-architecture/
+      - path: /mesh/scenarios/mesh-scoped-zone-proxies/
+      - path: /mesh/scenarios/global-routing/
+      - path: /mesh/scenarios/mesh-passthrough/
+      - path: /mesh/scenarios/meshexternalservice/
+      - path: /mesh/scenarios/chaos-engineering/
+
+  - title: Persona guides
+    items:
+      - path: /mesh/scenarios/persona/
+      - path: /mesh/scenarios/persona/developer/
+      - path: /mesh/scenarios/persona/operator/
+      - path: /mesh/scenarios/persona/security/
+
   - title: Hidden paths
     hidden: true
     items:
