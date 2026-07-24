@@ -111,6 +111,14 @@ rows:
 
     status: Not fixed.
   - issue: |
+      Distroless image fails to restart after unexpected termination
+    description: |
+      If {{site.base_gateway}} terminates unexpectedly, restarting it through the default entrypoint may fail because stale Unix socket files from the previous process aren't cleaned up.
+      The distroless entrypoint (`build/dockerfiles/distroless-entrypoint.lua`) runs `kong prepare` and execs Nginx directly, bypassing startup paths and skipping cleanup operations, which leaves behind stale socket files.
+      <br><br>
+      **Workaround:** Delete the affected container and start a new one.
+    status: Not fixed.
+  - issue: |
       Workspace names that conflict with Admin API routes block control plane startup
     description: |
       The schema validator rejects any Workspace names that conflict with Admin API router on create and update.
