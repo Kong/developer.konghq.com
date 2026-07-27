@@ -12,6 +12,11 @@ on:
         description: 'Dev site base branch, e.g. main'
         required: true
         type: string
+  # TEMP (remove before merge): lets reviewers run this end-to-end from the
+  # feature branch, since workflow_dispatch isn't available off the default branch.
+  push:
+    branches:
+      - koh-cli
 
 permissions:
   contents: write
@@ -40,7 +45,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           token: ${{ steps.app-token.outputs.token }}
-          ref: ${{ inputs.dev_site_base_branch }}
+          ref: ${{ inputs.dev_site_base_branch || github.ref_name }}  # TEMP fallback: remove `|| github.ref_name` with the push trigger
 
       - name: Checkout koh repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -48,7 +53,7 @@ jobs:
           repository: 'kong-insomnia/koh'
           token: ${{ steps.app-token.outputs.token }}
           path: 'insomnia'
-          ref: ${{ inputs.koh_branch }}
+          ref: ${{ inputs.koh_branch || 'main' }}  # TEMP fallback: remove `|| 'main'` with the push trigger
 
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
@@ -88,7 +93,7 @@ jobs:
           labels: skip-changelog,review:general
           token: ${{ steps.app-token.outputs.token }}
           branch: auto/generate-koh-cli-docs-${{ github.run_number }}
-          base: ${{ inputs.dev_site_base_branch }}
+          base: ${{ inputs.dev_site_base_branch || github.ref_name }}  # TEMP fallback: remove `|| github.ref_name` with the push trigger
           add-paths: |
             app/_references/koh/reference/**
 
