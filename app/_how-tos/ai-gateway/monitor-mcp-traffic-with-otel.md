@@ -76,9 +76,6 @@ cleanup:
       include_content: cleanup/products/ai-gateway
 
 ---
-
-This guide builds on [Map a RESTful API to MCP tools](/ai-gateway/map-api-to-mcp-tools/). Complete that guide first so the `marketplace-mcp` MCP Server entity, the mock API, and the `marketplace-mcp` connection in ChatWise already exist.
-
 ## Attach an OpenTelemetry Policy to the MCP Server entity
 
 By default, an AI Policy applies to every resource on your {{site.ai_gateway}}. Setting `global` to `false` changes that: the `otel-mcp` Policy now only takes effect on entities that explicitly list it, instead of applying gateway-wide.
