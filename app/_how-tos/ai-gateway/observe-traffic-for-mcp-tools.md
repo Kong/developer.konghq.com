@@ -153,7 +153,7 @@ scrape_configs:
  - job_name: 'kong'
    scrape_interval: 5s
    static_configs:
-     - targets: ['kong-quickstart-gateway:8100']
+     - targets: ['kong-ai-quickstart-gateway:8100']
 EOF
 ```
 
@@ -161,7 +161,7 @@ Run a Prometheus server, and pass it the configuration file created in the previ
 
 ```sh
 docker run -d --name kong-quickstart-prometheus \
-  --network=kong-quickstart-net -p 9090:9090 \
+  --network=kong-ai-quickstart-net -p 9090:9090 \
   -v $(PWD)/prometheus.yml:/etc/prometheus/prometheus.yml \
   prom/prometheus:latest
 ```
@@ -193,7 +193,7 @@ This should return something like the following:
       {
         "metric": {
           "__name__": "kong_ai_mcp_latency_ms_bucket",
-          "instance": "kong-quickstart-gateway:8100",
+          "instance": "kong-ai-quickstart-gateway:8100",
           "job": "kong",
           "le": "25.0",
           "method": "tools/call",
@@ -206,7 +206,7 @@ This should return something like the following:
       {
         "metric": {
           "__name__": "kong_ai_mcp_latency_ms_bucket",
-          "instance": "kong-quickstart-gateway:8100",
+          "instance": "kong-ai-quickstart-gateway:8100",
           "job": "kong",
           "le": "25.0",
           "method": "tools/call",
