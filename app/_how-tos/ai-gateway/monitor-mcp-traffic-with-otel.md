@@ -40,10 +40,11 @@ tags:
   - observability
 
 tldr:
-  q: How do I export OpenTelemetry metrics for MCP tool traffic in {{site.ai_gateway}}?
+  q: How do I monitor MCP tool traffic in {{site.ai_gateway}}?
   a: |
-    Attach an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) to an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity to export `kong.gen_ai.mcp.*` and `mcp.*` OTLP metrics for MCP tool traffic to a collector.
-    Set `config.metrics.endpoint` and `config.metrics.enable_ai_metrics` on the Policy to send this data to your observability backend.
+    Attach an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) to an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, and {{site.ai_gateway}} automatically sends metrics like tool call counts, response sizes, and request durations to your observability backend, no code changes required.
+
+    This tutorial shows you how to attach the Policy using kongctl, generate some MCP traffic, and see the resulting metrics in a local OpenTelemetry Collector.
 
 tools:
   - kongctl
@@ -163,6 +164,17 @@ Using the `marketplace-mcp` connection you already set up in ChatWise:
    ```text
    What did Fiona Clark order?
    ```
+
+  When the agent finishes reasoning, you should see a response like the following:
+
+  ```text
+  Fiona Clark ordered the following items:
+
+  Laundry Detergent (10L)
+  Trash Bags (100 ct)
+  Disinfectant Spray (5 bottles)
+  ```
+  {:.no-copy-code}
 
 ## Validate metrics
 

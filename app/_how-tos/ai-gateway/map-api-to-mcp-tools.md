@@ -32,9 +32,11 @@ tags:
   - mcp
 
 tldr:
-  q: How do I create an MCP API from an existing REST API?
+  q: How do I turn an existing REST API into MCP tools?
   a: |
-    Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity configured as a `conversion-listener` to map your REST API endpoints into MCP tools, allowing you to integrate them directly with {{site.ai_gateway}}.
+    Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity in {{site.ai_gateway}}, and it automatically converts your REST API endpoints into MCP tools that any MCP-compatible AI assistant can call, no custom server code required.
+
+    This tutorial shows you how to create an AI MCP Server entity using kongctl to expose a REST API as MCP tools, and how to call those tools from an MCP client.
 tools:
   - kongctl
 
