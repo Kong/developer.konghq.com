@@ -57,15 +57,8 @@ module Jekyll
 
             def build_config_hash
               if @example_drop.product == 'ai-gateway'
-                {
-                  'ai_gateways' => [
-                    {
-                      'ref' => ai_gateway_placeholder,
-                      'name' => ai_gateway_placeholder,
-                      child_key => [{ 'ref' => yaml_data['name'] }.merge(yaml_data)]
-                    }
-                  ]
-                }
+                entity_item = { 'ref' => yaml_data['name'], 'ai_gateway' => Utils::VariableReplacer::KongctlData::AI_GATEWAY_LOOKUP_SENTINEL }.merge(yaml_data.except('ref'))
+                { "ai_gateway_#{child_key}" => [entity_item] }
               else
                 {
                   'event_gateways' => [

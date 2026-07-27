@@ -111,6 +111,7 @@ module Jekyll
 
           class KongctlData
             SENTINEL_PATTERN = /__kongctl_env_([A-Z][A-Z0-9_]*)__/
+            AI_GATEWAY_LOOKUP_SENTINEL = '__kongctl_lookup_ai_gateway__'
             ENV_VAR_PATTERN = /\A\$([A-Z][A-Z0-9_]*)\z/
 
             def self.run(data:)
@@ -118,7 +119,9 @@ module Jekyll
             end
 
             def self.apply_tags(yaml)
-              yaml.gsub(SENTINEL_PATTERN, '!env \1')
+              yaml
+                .gsub(SENTINEL_PATTERN, '!env \1')
+                .gsub(AI_GATEWAY_LOOKUP_SENTINEL, '!lookup name:ai-gateway-name')
             end
 
             def process(data)
