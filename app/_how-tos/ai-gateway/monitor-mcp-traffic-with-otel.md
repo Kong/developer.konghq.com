@@ -150,6 +150,7 @@ ai_gateway_mcp_servers:
               type: string
 EOF
 ```
+{:.collapsible}
 
 ## Generate MCP traffic
 
