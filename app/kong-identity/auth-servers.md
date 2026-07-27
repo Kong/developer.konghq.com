@@ -127,6 +127,7 @@ sequenceDiagram
 You can have a maximum of two secrets active at a time.
 This allows you to rotate secrets without incurring downtime using the UI or API.
 
+{% comment %}
 
 ## {{site.identity}} authorization code flow
 
