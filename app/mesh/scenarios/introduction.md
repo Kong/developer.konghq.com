@@ -24,7 +24,7 @@ The Kong Air mesh is named **`kong-air-mesh`**. We chose a non-default name on p
 
 {% mermaid %}
 graph LR
-  BG["booking-gateway<br/>(Kong Gateway)"]
+  BG["booking-gateway<br/>({{site.base_gateway}})"]
   subgraph ZE["zone1"]
     PP_E["passenger-portal"]
     CI_E["check-in-api"]

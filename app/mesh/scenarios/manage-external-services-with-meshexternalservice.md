@@ -91,7 +91,7 @@ This keeps the application configuration simple while still aiming for encrypted
 
 The `flight-db` MeshExternalService is now reachable from any workload that routes through zone egress, too broad for a production database. Only `flight-control` should have direct access.
 
-With **mesh-scoped zone proxies** (Kong Mesh 2.14+), the zone egress Dataplane is **deny-all by default** for `MeshExternalService` traffic. Grant access per workload with `MeshTrafficPermission`:
+With **mesh-scoped zone proxies** ({{site.mesh_product_name}} 2.14+), the zone egress Dataplane is **deny-all by default** for `MeshExternalService` traffic. Grant access per workload with `MeshTrafficPermission`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -295,7 +295,7 @@ spec:
 ## Summary
 
 By using `MeshExternalService`, Kong Air has achieved:
-1. **Explicit outbound inventory**: External dependencies are represented as named resources instead of ad hoc passthrough destinations.
+1. **Explicit outbound inventory**: External dependencies are represented as named resources instead of unmanaged passthrough destinations.
 2. **Stable internal naming**: Developers use mesh-generated names such as `aeropay-api.extsvc.mesh.local`.
 3. **Access control at the egress**: `MeshTrafficPermission` on the zone egress Dataplane restricts which workloads can reach each external service, paired with the deny-all default in mesh-scoped zone proxies.
 4. **Centralized policy control**: Retries, timeouts, and TLS settings live in mesh policy rather than scattered application config.

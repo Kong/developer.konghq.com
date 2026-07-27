@@ -312,6 +312,7 @@ spec:
 
 The Kong Air platform team uses **color labels** to manage parallel tracks of services: `blu` represents the stable production ring, `grn` the canary ring. Here, each ring stays self-contained across zones, without any code changes in the services themselves. A request from a `color:blu` pod always reaches a `color:blu` backend, callers use a single agnostic hostname, and each color fails over to its own pool in another zone.
 
+<!-- vale off -->
 {% mermaid %}
 graph TD
     subgraph "Zone 1"
@@ -336,6 +337,7 @@ graph TD
     MMZS -.->|failover| FCBlu2
     MMZS --> FCGrn1
 {% endmermaid %}
+<!-- vale on -->
 
 ### Deploy the color-ring workloads
 
@@ -887,7 +889,7 @@ kubectl --context zone1 wait --for=delete pod -n kong-air-production \
   -l app=flight-control,color=blu --timeout=30s
 ```
 
-Re-run the affinity check from the blu caller (a zone1 pod):
+Re-run the affinity check from the `blu` caller (a zone1 pod):
 
 ```bash
 kubectl --context zone1 exec -n kong-air-production "$BLU_POD" -c check-in-api -- \

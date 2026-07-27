@@ -424,7 +424,7 @@ You can also download individual dashboards directly from the [Kuma GitHub repos
 
 1. Open Grafana → **Dashboards** → **New** → **Import**.
 2. Click **Upload JSON file** and select one of the six `.json` files.
-3. Choose your Prometheus datasource, then click **Import**.
+3. Choose your Prometheus data source, then click **Import**.
 4. Repeat for each dashboard.
 
 ### Option B, ConfigMap auto-provisioning (kube-prometheus-stack)
