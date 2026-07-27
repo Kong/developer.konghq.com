@@ -69,16 +69,9 @@ To observe traffic for MCP tools, enable [`logging.payloads`](/ai-gateway/entiti
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
     name: marketplace-mcp
     display_name: "Marketplace API"
     type: conversion-listener
@@ -127,7 +120,7 @@ ai_gateway_mcp_servers:
 
 ai_gateway_policies:
   - ref: mcp-prometheus
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
     name: mcp-prometheus
     display_name: "MCP Prometheus"
     type: prometheus

@@ -77,7 +77,7 @@ cleanup:
 
 ---
 
-This guide builds on [Map a RESTful API to MCP tools](/ai-gateway/map-api-to-mcp-tools/). Complete that guide first so the `marketplace-mcp` MCP Server entity and mock API already exist.
+This guide builds on [Map a RESTful API to MCP tools](/ai-gateway/map-api-to-mcp-tools/). Complete that guide first so the `marketplace-mcp` MCP Server entity, the mock API, and the `marketplace-mcp` connection in ChatWise already exist.
 
 ## Attach an OpenTelemetry Policy to the MCP Server entity
 
@@ -87,16 +87,9 @@ The `marketplace-mcp` entity does exactly that by referencing `otel-mcp` in its 
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
 ai_gateway_policies:
   - ref: otel-mcp
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
     name: otel-mcp
     display_name: "otel-mcp"
     type: opentelemetry
@@ -112,7 +105,7 @@ ai_gateway_policies:
 
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
     name: marketplace-mcp
     display_name: "Marketplace API"
     type: conversion-listener
@@ -163,18 +156,14 @@ EOF
 
 ## Generate MCP traffic
 
-1. In the ChatWise app, navigate to settings.
-1. Click **MCP** in the sidebar.
-1. Click the **+** button.
-1. Select "HTTP Server (http)".
-1. In the **Name** field, enter `marketplace-mcp`.
-1. In the **URL** field, enter `http://localhost:8000/marketplace`.
-1. Click **Verify (View Tools)** to confirm the connection, then close the settings window.
-1. Start a new chat, click the **hammer icon** to enable MCP tools, and enable your MCP server from the dropdown.
+Using the `marketplace-mcp` connection you already set up in ChatWise:
+
+1. Start a new chat.
+1. Click the **hammer icon** to enable MCP tools, and enable `marketplace-mcp` from the dropdown.
 1. Enter the following in the ChatWise chat:
 
    ```text
-   What users do you see in the API?
+   What did Fiona Clark order?
    ```
 
 ## Validate metrics
@@ -223,3 +212,12 @@ Sum: 0.037000
 
 {:.info}
 > See [MCP metrics](/ai-gateway/ai-otel-metrics/#mcp-metrics) for the full metric reference.
+
+{:.success}
+> **MCP Metrics in {{site.konnect_short_name}}**
+>
+> You can also view MCP traffic metrics without setting up a collector, using {{site.konnect_short_name}} Analytics:
+> 1. Go to **Observability > Dashboards**.
+> 1. Click **Create dashboard > Create from template**.
+> 1. Select the **Agentic analytics** dashboard. This dashboard highlights which tools are called most frequently, breaks down tool usage by consumer, and tracks average latency per tool over time, helping teams operating MCP-enabled services understand usage patterns and identify performance bottlenecks.
+> 1. Click **Use template** to see MCP tool usage, total MCP requests, total MCP errors, and other statisticss.

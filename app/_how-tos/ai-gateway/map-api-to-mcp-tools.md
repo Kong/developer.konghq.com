@@ -99,16 +99,9 @@ The following example maps the mock API operations to MCP tool definitions that 
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
     name: marketplace-mcp
     display_name: "Marketplace API"
     type: conversion-listener
@@ -204,7 +197,7 @@ I can see 10 users in the API:
 Now, we can check what Alice Johnson ordered by entering the following message in the ChatWise chat:
 
 ```text
-What did Alice Johnson order?
+What users do you see in the marketplace?
 ```
 
 You'll notice that ChatWise calls the tools exposed by the MCP Server entity:
