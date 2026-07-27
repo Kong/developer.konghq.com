@@ -1,5 +1,5 @@
 ---
-title: "{{site.konnect_short_name}} and Dev Portal audit logs"
+title: "{{site.konnect_short_name}} and {{site.dev_portal}} audit logs"
 content_type: reference
 layout: reference
 breadcrumbs: 
@@ -20,7 +20,7 @@ search_aliases:
   - auditing
   - Dev Portal audit logs
 
-description: "Review logs for system events in {{site.konnect_short_name}} and Dev Portal."
+description: "Review logs for system events in {{site.konnect_short_name}} and {{site.dev_portal}}."
 related_resources:
   - text: "Collect {{site.konnect_short_name}} audit logs"
     url: /how-to/collect-audit-logs/
@@ -38,7 +38,7 @@ related_resources:
 faqs:
   - q: How can I verify {{site.konnect_short_name}} audit log signatures?
     a: |
-      {{site.konnect_short_name}} and Dev Portal use an [ED25519 signature](https://ed25519.cr.yp.to/) on the audit logs they produce. You can verify the signature in your audit logs to confirm that it's from {{site.konnect_short_name}} instead of a bad actor.
+      {{site.konnect_short_name}} and {{site.dev_portal}} use an [ED25519 signature](https://ed25519.cr.yp.to/) on the audit logs they produce. You can verify the signature in your audit logs to confirm that it's from {{site.konnect_short_name}} instead of a bad actor.
 
       To do that:
       1. Retrieve the public key from the [audit log JWKS endpoint](/api/konnect/audit-logs/v2/#/operations/get-audit-log-jwks). The public key is stored in the `x` field.
@@ -55,9 +55,9 @@ faqs:
 {:.success}
 > This is a reference guide, you can also follow along with our tutorials: 
 >* [Collect audit logs for {{site.konnect_short_name}}](/how-to/collect-audit-logs/)
->* [Collect audit logs for Dev Portal](/how-to/collect-dev-portal-audit-logs/)
+>* [Collect audit logs for {{site.dev_portal}}](/how-to/collect-dev-portal-audit-logs/)
 >* [Recover {{site.konnect_short_name}} audit logs](/how-to/recover-konnect-org-audit-logs/)
->* [Recover Dev Portal audit logs](/how-to/recover-dev-portal-audit-logs/)
+>* [Recover {{site.dev_portal}} audit logs](/how-to/recover-dev-portal-audit-logs/)
 
 Audit logs can help you detect and respond to potential security incidents when they occur.
 
@@ -67,11 +67,12 @@ Audit logging provides the following benefits:
 * **Debugging**: Audit logs can help determine the root causes of efficiency or performance issues.
 * **Risk management**: Prevent issues or catch them early. 
 
-You can collect audit logs for both the {{site.konnect_short_name}} org and [Dev Portal](/dev-portal/).
+You can collect audit logs for both the {{site.konnect_short_name}} org and [{{site.dev_portal}}](/dev-portal/).
 
 ## Audit log events
 
-{{site.konnect_short_name}} captures three types of events:
+{{site.konnect_short_name}} captures three types of events.
+Use the `name` field to reliably identify which of the three event types a log entry belongs to:
 
 <!--vale off-->
 {% table %}
@@ -80,32 +81,47 @@ columns:
     key: event_type
   - title: Org audit logs
     key: org_audit_logs
-  - title: Dev Portal audit logs
+  - title: "{{site.dev_portal}} audit logs"
     key: dev_portal_audit_logs
+  - title: "`name` value"
+    key: name_value
 rows:
   - event_type: Authentication
     org_audit_logs: "This is triggered when a user attempts to log into the {{site.konnect_short_name}} web application or use the {{site.konnect_short_name}} API via a personal access token. Also triggered when a system account access token is used."
-    dev_portal_audit_logs: Triggered when a user logs in to the Dev Portal.
+    dev_portal_audit_logs: Triggered when a user logs in to the {{site.dev_portal}}.
+    name_value: "`AUTHENTICATION_OUTCOME_*`"
   - event_type: Authorization
     org_audit_logs: "Triggered when a permission check is made for a user or system account against a resource."
     dev_portal_audit_logs: Not collected, use the org audit log.
+    name_value: "`Authz.*`"
   - event_type: Access logs
     org_audit_logs: "Triggered when a request is made to the {{site.konnect_short_name}} API."
     dev_portal_audit_logs: Not collected, use the org audit log.
+    name_value: "`Ingress`"
 {% endtable %}
 <!--vale on-->
 
 {{site.konnect_short_name}} retains audit logs for 7 days. After 7 days, {{site.konnect_short_name}} permanently deletes them and you cannot recover them.
 
 {:.info}
-> Dev Portal audit logs don't collect authorization and access events by design. You can view Dev Portal entity creation, edits, and approved state changes from the {{site.konnect_short_name}} audit logs. 
+> * {{site.dev_portal}} audit logs don't collect authorization and access events by design. You can view {{site.dev_portal}} entity creation, edits, and approved state changes from the {{site.konnect_short_name}} audit logs. 
+> * Don't rely on `event_class_id` to identify the log type. Its meaning differs per event type, and for authorization logs it isn't a fixed enum, it's the name of whichever Kong platform service performed the authorization check.
+
+Every log entry, regardless of type, follows the same CEF header format:
+
+```
+{timestamp} konghq.com CEF:0|{Vendor}|{Product}|{Version}|{Event Class ID}|{Name}|{Severity}|{Extensions}
+```
+{:.no-copy-code.wrap}
+
+`Vendor` is always `KongInc` and `Version` is always `1.0`. `Product` is `Konnect` for {{site.konnect_short_name}} events and `Dev-Portal` for {{site.dev_portal}} events.
 
 ## Audit log webhook status
 
-You can view the webhook status in the UI or via [the API](/api/konnect/audit-logs/#/operations/get-audit-log-webhook-status) for the {{site.konnect_short_name}} org audit logs and Dev Portal audit logs:
+You can view the webhook status in the UI or via [the API](/api/konnect/audit-logs/#/operations/get-audit-log-webhook-status) for the {{site.konnect_short_name}} org audit logs and {{site.dev_portal}} audit logs:
 
 * To view the {{site.konnect_short_name}} org audit logs webhook status in the UI, navigate to **Organization > Audit Log Setup**, and click the **{{site.konnect_short_name}}** tab.
-* To view the Dev Portal audit log status in the UI, navigate to your Dev Portal, click **Settings**, and click the **Audit log** tab.
+* To view the {{site.dev_portal}} audit log status in the UI, navigate to your {{site.dev_portal}}, click **Settings**, and click the **Audit log** tab.
 
 The following table describes the webhook statuses:
 
@@ -187,20 +203,22 @@ rows:
     description: The originating organization ID.
   - property: "`principal_id`"
     description: The user ID of the user that performed the action.
-  - property: "~kong_initiated~"
-    description: Whether the action was performed by Kong
+  - property: "`principal_name`"
+    description: "The resolved display name of the principal. Present only when configured."
+  - property: "`kong_initiated`"
+    description: "Boolean indicating whether the action was performed by Kong internally. Present on access and authorization logs only, and omitted (not `false`) for user-initiated events."
   - property: "`trace_id`"
     description: The correlation ID of the request. Use this value to find all log entries for a given request.
   - property: "`user_agent`"
     description: "The user agent of the request: application, operating system, vendor, and version."
   - property: "`sig`"
-    description: An ED25519 signature.
+    description: An ED25519 signature. Present only when signing is configured.
 {% endtable %}
 <!--vale on-->
 
 ### Authentication logs
 
-Authentication attempts and their outcomes are logged whenever a user logs in to the {{site.konnect_short_name}} application or the Dev Portal either through the UI or the Konnect API.
+Authentication attempts and their outcomes are logged whenever a user logs in to the {{site.konnect_short_name}} application or the {{site.dev_portal}} either through the UI or the Konnect API.
 
 Example log entry:
 
@@ -301,21 +319,36 @@ columns:
   - title: Description
     key: description
 rows:
-  - property: "AUTHENTICATION_TYPE"
+  - property: "`AUTHENTICATION_TYPE`"
     description: |
       Can be one of the following:
+      <br> - `AUTHENTICATION_TYPE_INVALID`: Unknown or unset
       <br> - `AUTHENTICATION_TYPE_BASIC`: Basic email and password authentication
       <br> - `AUTHENTICATION_TYPE_SSO`: Authentication with single sign-on (SSO)
       <br> - `AUTHENTICATION_TYPE_PAT`: Authentication with a personal access token
-  - property: "AUTHENTICATION_OUTCOME"
+      <br> - `AUTHENTICATION_TYPE_SPAT`: Authentication with a system personal access token
+      <br> - `AUTHENTICATION_TYPE_GOOGLE`: Authentication with Google OAuth
+      <br> - `AUTHENTICATION_TYPE_GITHUB`: Authentication with GitHub OAuth
+      <br> - `AUTHENTICATION_TYPE_WINDOWSLIVE`: Authentication with Microsoft/Windows Live
+      <br> - `AUTHENTICATION_TYPE_FEDERATED`: Authentication with a federated identity provider
+  - property: "`AUTHENTICATION_OUTCOME`"
     description: |
       Can be one of the following:
       <br> - `AUTHENTICATION_OUTCOME_SUCCESS`: Authentication is successful
-      <br> - `AUTHENTICATION_OUTCOME_NOT_FOUND`: User was not found
+      <br> - `AUTHENTICATION_OUTCOME_NOT_FOUND`: User wasn't found
       <br> - `AUTHENTICATION_OUTCOME_INVALID_PASSWORD`: Invalid password specified
+      <br> - `AUTHENTICATION_OUTCOME_TOKEN_EXPIRED`: Token has expired
       <br> - `AUTHENTICATION_OUTCOME_LOCKED`: User account is locked
       <br> - `AUTHENTICATION_OUTCOME_DISABLED`: User account has been disabled
-  - property: "success"
+      <br> - `AUTHENTICATION_OUTCOME_INVALID`: Unknown or unset
+  - property: "`severity`"
+    description: |
+      Reflects the authentication outcome:
+      <br> - `0`: Authentication succeeded
+      <br> - `1`: Credential failure (user not found, invalid password, or expired token)
+      <br> - `6`: Account locked or disabled
+      <br> - `7`: Unknown or invalid authentication state
+  - property: "`success`"
     description: "`true` or `false`, depending on whether authentication was successful or not."
   - property: "`portal_id`"
     description: "The ID of the {{site.dev_portal}} the event occurred in. Only present in {{site.dev_portal}} authentication log entries."
@@ -325,6 +358,30 @@ rows:
 ### Authorization logs
 
 Authorization log entries are created for every permission check in {{site.konnect_short_name}}.
+
+The `name` field always starts with `Authz.` followed by the resource path that was checked:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: "`name` pattern"
+    key: name_pattern
+  - title: When
+    key: when
+rows:
+  - name_pattern: "`Authz.organization`"
+    when: Organization-level operation
+  - name_pattern: "`Authz.control-planes/*`"
+    when: Wildcard across all control planes
+  - name_pattern: "`Authz.control-planes/{id}`"
+    when: Specific control plane
+  - name_pattern: "`Authz.api-products/{id}`"
+    when: Specific API Product
+{% endtable %}
+<!--vale on-->
+
+For authorization logs, `event_class_id` is just the name of whichever Kong platform service performed the check, not a fixed enum.
+Use `name` to identify the checked resource.
 
 Example log entry:
 
@@ -383,10 +440,12 @@ columns:
   - title: Description
     key: description
 rows:
-  - property: "action"
+  - property: "`action`"
     description: "The type of action the user performed on the resource. For example, `retrieve`, `list`, or `edit`."
-  - property: "granted"
+  - property: "`granted`"
     description: "Boolean indicating whether the authorization was granted or not."
+  - property: "`severity`"
+    description: "`1` when `granted` is `true`, `6` when `granted` is `false`."
 {% endtable %}
 <!--vale on-->
 
@@ -462,6 +521,89 @@ rows:
     description: "The HTTP request method; for example, `POST`, `PATCH`, `PUT`, or `DELETE`."
   - property: "status"
     description: "The HTTP response code; for example, `200` or `403`."
+  - property: "`severity`"
+    description: |
+      Reflects the HTTP response:
+      <br> - `1`: Default
+      <br> - `6`: HTTP 401 or 403 (authentication failure at the gateway)
+      <br> - `10`: HTTP 500 (server error)
+{% endtable %}
+<!--vale on-->
+
+### JSON and CPS field mapping
+
+The same field values apply across CEF, JSON, and CPS. In JSON and CPS, the CEF header fields are mapped to flat top-level JSON keys:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: CEF header field
+    key: cef_field
+  - title: JSON key
+    key: json_key
+rows:
+  - cef_field: Timestamp
+    json_key: "`event_ts`"
+  - cef_field: Device vendor
+    json_key: "`event_vendor`"
+  - cef_field: Device product
+    json_key: "`event_product`"
+  - cef_field: Device version
+    json_key: "`event_version`"
+  - cef_field: Device event class ID
+    json_key: "`event_class_id`"
+  - cef_field: Name
+    json_key: "`name`"
+  - cef_field: Severity
+    json_key: "`severity`"
+{% endtable %}
+<!--vale on-->
+
+Extension values are typed in JSON: 
+* `rt`, `status`, and `severity` are `int64`
+* `success` and `granted` are `bool`
+* All other extensions are `string`
+
+CPS wraps the same object under `{"event": {...}}`.
+
+## Recommended alert conditions
+
+Use the following field conditions to build alerting and monitoring rules in your SIEM:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Log type
+    key: log_type
+  - title: Field condition
+    key: field_condition
+  - title: Signal
+    key: signal
+rows:
+  - log_type: Access
+    field_condition: "`severity` = `10`"
+    signal: HTTP 500, server error
+  - log_type: Access
+    field_condition: "`severity` = `6`"
+    signal: HTTP 401 or 403, authentication failure at the gateway
+  - log_type: Authentication
+    field_condition: "`name` = `AUTHENTICATION_OUTCOME_LOCKED`"
+    signal: Account locked
+  - log_type: Authentication
+    field_condition: "`name` = `AUTHENTICATION_OUTCOME_DISABLED`"
+    signal: Attempt on a disabled account
+  - log_type: Authentication
+    field_condition: "`severity` = `7`"
+    signal: Unknown or invalid authentication state
+  - log_type: Authentication
+    field_condition: "`success` = `false` at volume"
+    signal: Potential brute force or credential stuffing
+  - log_type: Authorization
+    field_condition: "`granted` = `false`"
+    signal: Authorization denial
+  - log_type: All
+    field_condition: "`kong_initiated` = `true`"
+    signal: System-generated event, exclude from user-action alerts
 {% endtable %}
 <!--vale on-->
 
@@ -487,9 +629,9 @@ You can use either the {{site.konnect_short_name}} UI or the {{site.konnect_shor
    1. Select a time frame from the **Replay Time Range** dropdown menu.
    1. Click **Send Replay**.
    {% endnavtab %}
-   {% navtab "Dev Portal" %}
-   1. Click the **Dev Portal** tab.
-   1. Click the Dev Portal you want to configure the replay job for.
+   {% navtab "{{site.dev_portal}}" %}
+   1. Click the **{{site.dev_portal}}** tab.
+   1. Click the {{site.dev_portal}} you want to configure the replay job for.
    1. Click the **Replay** tab.
    1. Select a time frame from the **Replay Time Range** dropdown menu.
    1. Click **Send Replay**.
@@ -510,7 +652,7 @@ body:
 <!--vale on-->
 
 {:.info}
-> **Note:** The replay job is always sent to the webhook that is currently configured for the organization or Dev Portal at the time the replay job is executed. There is one webhook configuration per region.
+> **Note:** The replay job is always sent to the webhook that is currently configured for the organization or {{site.dev_portal}} at the time the replay job is executed. There is one webhook configuration per region.
 {% endnavtab %}
 {% endnavtabs %}
 
