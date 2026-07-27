@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.0.2
+  version: 3.2.0
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@3c4f413f637524c5676b4019082ded212abe473d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3c4f413f637524c5676b4019082ded212abe473d'
+  x-oas-source: kong/platform-api@ca81b65280f5133ed000ab38ba98384d1eb25796
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ca81b65280f5133ed000ab38ba98384d1eb25796'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -2262,8 +2262,7 @@ components:
             - EXPIRED
           readOnly: true
         konnect_token:
-          description: The Konnect token used to authenticate with Konnect.
-          type: string
+          $ref: '#/components/schemas/KonnectToken'
         revoked_by:
           $ref: '#/components/schemas/RevokedBy'
         created_at:
@@ -2822,6 +2821,9 @@ components:
         - created_at
         - updated_at
         - expires_at
+    KonnectToken:
+      description: The Konnect token used to authenticate with Konnect.
+      type: string
   examples:
     400-request-format-is-invalid:
       value:

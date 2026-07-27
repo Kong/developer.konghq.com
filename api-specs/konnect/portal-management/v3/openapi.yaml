@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.7.1
+  version: 3.8.2
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@a618e5e337e2918b1df2c26a5faa3ef2b9f1c8c0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a618e5e337e2918b1df2c26a5faa3ef2b9f1c8c0'
+  x-oas-source: kong/platform-api@f57c82c75f18953fd4eb89f06dd983e755980162
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f57c82c75f18953fd4eb89f06dd983e755980162'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4904,6 +4904,7 @@ components:
         name: IDM - Developers
         description: The Identity Management (IDM) API team.
         can_own_applications: false
+      additionalProperties: false
       title: PortalUpdateTeamRequest
     PortalCreateTeamRequest:
       description: Details about a team to create.
@@ -4928,6 +4929,7 @@ components:
         name: IDM - Developers
         description: The Identity Management (IDM) team.
         can_own_applications: false
+      additionalProperties: false
       required:
         - name
       title: PortalCreateTeamRequest
@@ -4970,6 +4972,12 @@ components:
         created_at: '1992-02-07T17:46:57.52Z'
         updated_at: '2022-08-31T17:00:00.52Z'
         can_own_applications: false
+      required:
+        - id
+        - name
+        - description
+        - created_at
+        - updated_at
       title: PortalTeamResponse
     PortalTeamGroupMappingResponse:
       description: A paginated list of portal team group mappings.
