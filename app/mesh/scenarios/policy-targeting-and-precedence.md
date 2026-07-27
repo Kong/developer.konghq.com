@@ -1,5 +1,5 @@
 ---
-title: Use {{site.mesh_product_name}} policies
+title: Policy targeting and precedence
 content_type: reference
 layout: reference
 description: A guide to the {{site.mesh_product_name}} policy model, explaining how to target proxies with targetRef, define inbound traffic with rules, and manage policy precedence.
@@ -30,6 +30,7 @@ Whatever the policy does, mTLS, routing, rate limiting, timeouts, it has the sam
 
 At the **top level**, attach policies to one of these:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Target kind
@@ -49,6 +50,7 @@ rows:
     scope: "A built-in mesh gateway."
     use_case: "Policies that apply to a gateway Kong Air runs inside the mesh."
 {% endtable %}
+<!-- vale on -->
 
 `MeshService`, `MeshMultiZoneService`, and `MeshExternalService` are **destinations**, not attachment points. They belong inside `to[].targetRef` and `backendRefs`, not at the top level.
 
@@ -82,7 +84,7 @@ spec:
               value: <flight-control-spiffe-id>
 ```
 
-Replace `<flight-control-spiffe-id>` with the SPIFFE ID emitted by your `MeshIdentity` template (for example `spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control`). `spiffeID.type` supports `Exact` and `Prefix`. See [Workload Identity & Trust](/mesh/scenarios/workload-identity/) for how identities are issued.
+Replace `<flight-control-spiffe-id>` with the SPIFFE ID emitted by your `MeshIdentity` template (for example `spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control`). `spiffeID.type` supports `Exact` and `Prefix`. See [Manage workload identity and mTLS](/mesh/scenarios/manage-workload-identity-and-mtls/) for how identities are issued.
 
 The same `rules[]` shape is used by every inbound policy: `MeshTrafficPermission`, `MeshTLS`, `MeshFaultInjection`, `MeshAccessLog`, `MeshRateLimit`, `MeshCircuitBreaker`, and `MeshTimeout`.
 
@@ -95,6 +97,7 @@ The same `rules[]` shape is used by every inbound policy: `MeshTrafficPermission
 
 The policy model is stable. A few older shapes still parse but emit a deprecation warning on apply, and you should avoid them in new policies.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Use this
@@ -109,6 +112,7 @@ rows:
   - current: "`MeshHTTPRoute` inside `to[].targetRef`"
     old: "Top-level `targetRef.kind: MeshHTTPRoute`"
 {% endtable %}
+<!-- vale on -->
 
 {:.info}
 > `targetRef` and `to[]` are **not** going anywhere, they are the model. Only the older inbound shape (`from[]`) and a few top-level target kinds are deprecated. If you target proxies with `Mesh` / `Dataplane` and express inbound traffic with `rules[]`, you are on the supported path.

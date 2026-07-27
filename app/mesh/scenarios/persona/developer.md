@@ -48,6 +48,7 @@ Devin's services need predictable hostnames for the things they call. Both the i
 
 Ollie has applied a **custom** `HostnameGenerator` for the mesh (Kong Air's own naming scheme, the built-in default for zone-local services is `.svc.cluster.local` on Kubernetes). It generates a DNS name like `<service>.svc.kongair.mesh` for every `MeshService`. Devin just needs to know the convention:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Service
@@ -64,6 +65,7 @@ rows:
     hostname_devin_calls: |
       `flight-control.svc.kongair.mesh`
 {% endtable %}
+<!-- vale on -->
 
 If Devin wanted to look at the `HostnameGenerator` resource itself, it lives in the system namespace:
 
@@ -173,7 +175,7 @@ spec:
 ```
 
 {:.info}
-> {{site.mesh_product_name}} can generate baseline `MeshService` resources automatically for workloads, but Devin still models versions like `v1` and `v2` as distinct `MeshService` entries when he wants independent routing and metrics for a rollout. See [Architecture Overview](/mesh/scenarios/architecture-overview/) for the resource model used in these scenarios.
+> {{site.mesh_product_name}} can generate baseline `MeshService` resources automatically for workloads, but Devin still models versions like `v1` and `v2` as distinct `MeshService` entries when he wants independent routing and metrics for a rollout. See [Architecture overview](/mesh/scenarios/architecture-overview/) for the resource model used in these scenarios.
 
 {:.warning}
 > **The traffic hierarchy: routing vs. load balancing**
@@ -314,7 +316,7 @@ Finally, **booking-gateway** ({{site.base_gateway}}, owned by Ollie) is the entr
 *   **Ingress**: {{site.base_gateway}} terminates external HTTPS and forwards into the mesh. Passengers hit the gateway; the gateway routes to `passenger-portal`.
 *   **Bridge**: It translates external JWT authentication into the mesh identity, so Devin's services see which passenger is making the request.
 
-The gateway itself is Ollie's responsibility, see the [Operator persona guide](/mesh/scenarios/persona/operator/) for how the gateway is wired into the mesh.
+The gateway itself is Ollie's responsibility, see the [Ollie the Operator](/mesh/scenarios/persona/operator/) for how the gateway is wired into the mesh.
 
 ---
 

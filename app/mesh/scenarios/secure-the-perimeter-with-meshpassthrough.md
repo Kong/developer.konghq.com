@@ -2,7 +2,7 @@
 title: Secure the perimeter with MeshPassthrough
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/mesh-passthrough/
+permalink: /mesh/scenarios/secure-the-perimeter-with-meshpassthrough/
 description: Learn how to control outbound traffic to external services using the MeshPassthrough policy, moving from an open mesh to a zero-trust perimeter.
 breadcrumbs:
   - /mesh/
@@ -28,8 +28,8 @@ prereqs:
       content: |
         A client workload (e.g., `check-in-api`) to test outbound connectivity.
 next_steps:
-  - text: "First-Class Dependencies: MeshExternalService"
-    url: "/mesh/scenarios/meshexternalservice/"
+  - text: "Manage external services with MeshExternalService"
+    url: "/mesh/scenarios/manage-external-services-with-meshexternalservice/"
 ---
 
 ## The "open mesh" vs. "secure mesh"
@@ -45,7 +45,7 @@ Using `MeshPassthrough`, you explicitly define which outbound destinations are a
 *   **Auditability**: A single, declarative record of which external destinations workloads may reach, useful evidence for controls like PCI, HIPAA, or SOC 2.
 
 {:.info}
-> Interaction with mesh-scoped ZoneEgress. If you've enabled mesh-scoped ZoneEgress (the `meshes:` Helm list, see [Multi-Zone Architecture](/mesh/scenarios/multi-zone-architecture/)), `MeshExternalService` traffic flowing through that listener is **deny-by-default** at the ZE itself, SNI-matched per external service. A `MeshTrafficPermission` `Allow` for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-`MeshExternalService` egress.
+> Interaction with mesh-scoped ZoneEgress. If you've enabled mesh-scoped ZoneEgress (the `meshes:` Helm list, see [Multi-zone architecture](/mesh/scenarios/multi-zone-architecture/)), `MeshExternalService` traffic flowing through that listener is **deny-by-default** at the ZE itself, SNI-matched per external service. A `MeshTrafficPermission` `Allow` for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-`MeshExternalService` egress.
 
 ## Configure MeshPassthrough
 

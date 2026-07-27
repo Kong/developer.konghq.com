@@ -16,6 +16,7 @@ works_on:
 
 ## Core architecture pillars
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Pillar
@@ -51,6 +52,7 @@ rows:
       * **MeshIdentity**: The system of record for workload identity. Supports `Bundled`, `Spire`, and `Extension` providers.
       * **MeshTrust**: Declares trusted CA bundles per trust domain. By default, the control plane can generate a `MeshTrust` from a `MeshIdentity`, but operators can also manage it explicitly.
 {% endtable %}
+<!-- vale on -->
 
 {:.info}
 > These scenarios set **`meshServices.mode: Exclusive`** on the `kong-air-mesh` `Mesh` resource:
@@ -67,6 +69,7 @@ In Exclusive mode, the control plane generates a first-class `MeshService` resou
 
 Many teams arrive at {{site.mesh_product_name}} from an **Istio-style mesh**, the model built around multiple traffic-management CRDs (`VirtualService`, `DestinationRule`, `ServiceEntry`) on a Kubernetes-first control plane. These are mature, capable meshes, and most of what these scenarios cover (mTLS, traffic routing, observability) works well in either. Standing a mesh up on **day 1** is a solved problem either way. The differences that matter show up on **day 2**: once the mesh is in production, spanning regions, and being operated, upgraded, and debugged by a team. {{site.mesh_product_name}}'s design choices are aimed at reducing the operational surface area you carry through that phase.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Day-2 concern
@@ -86,6 +89,7 @@ rows:
     istio: "Kubernetes-native; VMs run through `WorkloadEntry` / `WorkloadGroup`."
     mesh: "Kubernetes and **Universal** (VMs, bare metal) use the same resource model, so one team operates one mesh across both, no separate paradigm for the legacy estate."
 {% endtable %}
+<!-- vale on -->
 
 It comes down to operational surface area: fewer resource types to reason about, multi-region as a deployment mode rather than a topology you build and maintain, and one model across Kubernetes and VMs. For a team that has to *run* the mesh, not just install it, that compounds over time.
 

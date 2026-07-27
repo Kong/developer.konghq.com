@@ -2,7 +2,7 @@
 title: Target workloads and services
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/subsets-and-targeting/
+permalink: /mesh/scenarios/target-workloads-and-services/
 description: How to scope policies in {{site.mesh_product_name}} using Dataplane labels for proxy groups and MeshService for explicit destinations.
 breadcrumbs:
   - /mesh/
@@ -23,16 +23,17 @@ prereqs:
   inline:
     - title: Kong Air demo deployment
       content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/scenarios/getting-started-policy/).
+        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/).
 next_steps:
-  - text: "Observability in Practice"
-    url: "/mesh/scenarios/observability-in-practice/"
+  - text: "Observe mesh traffic in practice"
+    url: "/mesh/scenarios/observe-mesh-traffic-in-practice/"
 ---
 
 {{site.mesh_product_name}} uses two targeting primitives: a **`Dataplane`** label selector for scoping a policy to a group of proxies, and explicit **`MeshService`** (and `MeshMultiZoneService`, `MeshExternalService`) resources for addressing destinations. The older `MeshSubset` / `MeshServiceSubset` virtual kinds are retained for compatibility, but will be removed in the near future.
 
 ## Targeting matrix
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Use case
@@ -58,6 +59,7 @@ rows:
     toplevel: "`Dataplane` with `labels:` (`kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress`) and optional `sectionName`"
     tochain: "Usually `Mesh`, `MeshExternalService`, or listener-scoped policy rules depending on the policy"
 {% endtable %}
+<!-- vale on -->
 
 
 ## Dataplane with labels: the cross-cutting proxy policy
@@ -127,7 +129,7 @@ With that setting, generated `MeshService` resources can match workloads by `dat
 By naming your subsets explicitly, your routing rules become clear, predictable, and easy to audit. This model moves away from implicit tag-matching and toward a first-class resource management system.
 
 {:.info}
-> For a step-by-step tutorial on implementing rollouts using this model, see [Traffic Splitting with MeshServices](/mesh/scenarios/traffic-splitting-meshservices/).
+> For a step-by-step tutorial on implementing rollouts using this model, see [Split traffic with MeshService resources](/mesh/scenarios/split-traffic-with-meshservice-resources/).
 
 
 ## Why use explicit MeshServices instead of legacy subsets?
