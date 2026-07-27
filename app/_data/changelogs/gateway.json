@@ -24650,5 +24650,114 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.13.0.8": {
+    "kong-ee": [
+      {
+        "message": "Bumped kong-redis-cluster from 1.5.7 to 1.6.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token-related 401 responses omitted the protected resource metadata URL when a token was given.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where non-managed MCP listeners advertised unsupported SSE streams.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where the ACL decision cache has collision.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsafe model names could construct upstream AI provider paths.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the configured auth header (`api-key` or `x-api-key`, for example) leaked the provider credential into access logs instead of being redacted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsafe batch IDs could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsafe model names in native format adaptors could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the Anthropic driver dropped the `top_p`, `top_k`, and `stop` parameters when translating OpenAI-format requests. The driver now also omits `temperature`, `top_p`, and `top_k` for models that reject them (Claude Opus 4.7, Opus 4.8, and Fable), preventing upstream 400 errors.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Azure OpenAI responses support in deployment style.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed Gemini driver dropping Gemini-native fields (`cachedContent` or `safetySettings`, for example) and Vertex AI-only fields (`labels`, for example) during OpenAI-to-Gemini request transformation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-request-transformer**: Fixed an issue where unsafe model names could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where data planes retried unrecoverable TLS certificate setup failures instead of loading their backup configuration.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where heavy packet loss may prevent the full sync from resuming.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**ip-restriction**: Fixed an issue where warn log messages didn't\ninclude the plugin name, making it difficult to identify the source of\nblocked requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an error that could occur under sustained\nHTTPS traffic.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where the OAS specification cache failed to distinguish between different values of `api_spec_encoded` for the same specification content.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where Consumer Groups couldn't be resolved\nwhen the groups claim was only available from the user info endpoint, which\nresulted in a `500` error.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**router**: Fixed an issue where WebSocket Routes (`ws`/`wss`) returned HTTP 404 when using `router_flavor=expressions` due to incorrect protocol matching expressions being generated.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Improved router update performance during incremental sync by updating service data in place instead of triggering a full router rebuild when only service attributes change.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ]
   }
 }

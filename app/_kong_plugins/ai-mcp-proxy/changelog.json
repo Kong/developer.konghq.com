@@ -270,6 +270,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.8": [
+    {
+      "message": "Fixed an issue where non-managed MCP listeners advertised unsupported SSE streams.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ACL decision cache has collision.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "The plugin now forwards client headers when calling the tool.\n",

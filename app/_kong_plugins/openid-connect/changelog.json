@@ -243,6 +243,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.8": [
+    {
+      "message": "Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Consumer Groups couldn't be resolved\nwhen the groups claim was only available from the user info endpoint, which\nresulted in a `500` error.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added support for session binding (IP, scheme, and/or User-Agent header).\n",
