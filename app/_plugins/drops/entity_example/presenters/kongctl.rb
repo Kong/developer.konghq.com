@@ -38,11 +38,21 @@ module Jekyll
             end
 
             def missing_variables
-              @missing_variables ||= if @example_drop.product == 'ai-gateway'
-                                       [formats['kongctl']['ai_gateway_variables']['ai_gateway']]
-                                     else
-                                       [formats['kongctl']['event_gateway_variables']['event_gateway']]
-                                     end
+              @missing_variables ||= begin
+                base = if @example_drop.product == 'ai-gateway'
+                         [formats['kongctl']['ai_gateway_variables']['ai_gateway']]
+                       else
+                         [formats['kongctl']['event_gateway_variables']['event_gateway']]
+                       end
+                base + variables.filter_map do |_key, var|
+                  next unless var['description']
+
+                  placeholder = Utils::VariableReplacer::KongctlData.apply_tags(
+                    Utils::VariableReplacer::KongctlData.run(data: var['value'])
+                  )
+                  { 'placeholder' => placeholder, 'description' => var['description'] }
+                end
+              end
             end
 
             def template_file
@@ -57,15 +67,8 @@ module Jekyll
 
             def build_config_hash
               if @example_drop.product == 'ai-gateway'
-                {
-                  'ai_gateways' => [
-                    {
-                      'ref' => ai_gateway_placeholder,
-                      'name' => ai_gateway_placeholder,
-                      child_key => [{ 'ref' => yaml_data['name'] }.merge(yaml_data)]
-                    }
-                  ]
-                }
+                entity_item = { 'ref' => yaml_data['name'], 'ai_gateway' => Utils::VariableReplacer::KongctlData::AI_GATEWAY_LOOKUP_SENTINEL }.merge(yaml_data.except('ref'))
+                { "ai_gateway_#{child_key}" => [entity_item] }
               else
                 {
                   'event_gateways' => [
@@ -101,7 +104,7 @@ module Jekyll
             end
 
             def yaml_data
-              @yaml_data ||= Utils::VariableReplacer::KongctlData.run(data: data)
+              @yaml_data ||= Utils::VariableReplacer::KongctlData.run(data: data, variables: variables)
             end
 
             def event_gateway_placeholder

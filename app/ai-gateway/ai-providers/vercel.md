@@ -17,6 +17,7 @@ products:
 
 tools:
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -48,14 +49,9 @@ Note that, {{ site.vercel }} hosts [models](https://vercel.com/ai-gateway/models
 
 Here's a minimal configuration for chat completions:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: Vercel Production
   name: my-vercel-account
   type: vercel
@@ -64,6 +60,9 @@ body:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer $VERCEL_API_KEY
-{% endkonnect_api_request %}
-<!--vale on-->
+          value: ${key}
+variables:
+  key:
+    value: $VERCEL_API_KEY
+    description: "The API key used to connect to Vercel. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
+{% endentity_example %}

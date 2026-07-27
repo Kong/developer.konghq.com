@@ -111,26 +111,42 @@ module Jekyll
 
           class KongctlData
             SENTINEL_PATTERN = /__kongctl_env_([A-Z][A-Z0-9_]*)__/
+            AI_GATEWAY_LOOKUP_SENTINEL = '__kongctl_lookup_ai_gateway__'
             ENV_VAR_PATTERN = /\A\$([A-Z][A-Z0-9_]*)\z/
 
-            def self.run(data:)
-              new.process(data)
+            def self.run(data:, variables: {})
+              new(variables:).process(data)
             end
 
             def self.apply_tags(yaml)
-              yaml.gsub(SENTINEL_PATTERN, '!env \1')
+              yaml
+                .gsub(SENTINEL_PATTERN, '!env \1')
+                .gsub(AI_GATEWAY_LOOKUP_SENTINEL, '!lookup name:ai-gateway-name')
+            end
+
+            def initialize(variables: {})
+              @variables = variables
             end
 
             def process(data)
               case data
               when Hash  then data.transform_values { |v| process(v) }
               when Array then data.map { |item| process(item) }
-              when String then transform_env_var(data)
+              when String then transform_env_var(substitute_variables(data))
               else data
               end
             end
 
             private
+
+            def substitute_variables(str)
+              return str if @variables.empty?
+
+              keys_pattern = @variables.keys.map { |k| Regexp.escape(k.to_s) }.join('|')
+              str.gsub(/\$\{(#{keys_pattern})\}/) do
+                @variables.dig(Regexp.last_match(1), 'value') || Regexp.last_match(0)
+              end
+            end
 
             def transform_env_var(str)
               str.gsub(ENV_VAR_PATTERN, '__kongctl_env_\1__')

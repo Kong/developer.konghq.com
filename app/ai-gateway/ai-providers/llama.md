@@ -17,6 +17,7 @@ products:
 
 tools:
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -47,25 +48,23 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model P
 
 Here's a minimal configuration for chat completions:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  display_name:  llama2 Production
+{% entity_example %}
+type: model-provider
+data:
+  display_name: Llama2 Production
   name: my-llama2-account
-  type:  llama2
+  type: llama2
   config:
     auth:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer $LLAMA_API_KEY
-{% endkonnect_api_request %}
-<!--vale on-->
+          value: ${key}
+variables:
+  key:
+    value: $LLAMA_API_KEY
+    description: "The API key used to connect to your Llama2 endpoint. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
+{% endentity_example %}
 
 ## Configure a model target for {{ provider.name }}
 

@@ -17,6 +17,7 @@ products:
 
 tools:
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -49,14 +50,9 @@ To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model P
 
 Here's a minimal configuration for chat completions:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: Huggingface Production
   name: my-huggingface-account
   type: huggingface
@@ -65,6 +61,9 @@ body:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer $HUGGINGFACE_TOKEN
-{% endkonnect_api_request %}
-<!--vale on-->
+          value: ${key}
+variables:
+  key:
+    value: $HUGGINGFACE_TOKEN
+    description: "The access token used to connect to Hugging Face. Include the `Bearer` prefix, for example `Bearer <your-access-token>`."
+{% endentity_example %}

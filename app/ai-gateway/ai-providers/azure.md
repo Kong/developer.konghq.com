@@ -17,6 +17,7 @@ products:
 
 tools:
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -54,14 +55,9 @@ Here's a minimal configuration for chat completions:
 {:.info}
 > Replace `kong-az-east` with your Azure OpenAI resource instance name (the subdomain in your resource's endpoint, for example the `kong-az-east` in `https://kong-az-east.openai.azure.com`).
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
+{% entity_example %}
+type: model-provider
+data:
   display_name: Azure Production
   name: my-azure-account
   type: azure
@@ -70,10 +66,13 @@ body:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer $AZURE_OPENAI_API_KEY
+          value: ${key}
     instance: kong-az-east
-{% endkonnect_api_request %}
-<!--vale on-->
+variables:
+  key:
+    value: $AZURE_OPENAI_API_KEY
+    description: "The API key used to connect to Azure OpenAI. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
+{% endentity_example %}
 
 ## Authentication with Azure IAM
 
