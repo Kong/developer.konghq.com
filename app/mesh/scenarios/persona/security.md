@@ -18,9 +18,9 @@ Sarah is the Lead Security Architect at **Kong Air**. In the airline industry, s
 
 ## Workload identity with `MeshIdentity`
 
-Sarah's foundation is **`MeshIdentity`**, the resource that issues a unique SPIFFE identity to every workload in the mesh. In practice, the exact SPIFFE ID comes from the `MeshIdentity` template Sarah chooses, and on Kubernetes the best-practice path is the ServiceAccount-based form described in [Workload Identity & Trust](/mesh/scenarios/workload-identity/). Downstream policies (mTLS, traffic permission, audit) all hang off that identity. `MeshIdentity` replaces older IP- and tag-based trust models.
+Sarah's foundation is **`MeshIdentity`**, the resource that issues a unique SPIFFE identity to every workload in the mesh. In practice, the exact SPIFFE ID comes from the `MeshIdentity` template Sarah chooses, and on Kubernetes the best-practice path is the ServiceAccount-based form described in [Manage workload identity and mTLS](/mesh/scenarios/manage-workload-identity-and-mtls/). Downstream policies (mTLS, traffic permission, audit) all hang off that identity. `MeshIdentity` replaces older IP- and tag-based trust models.
 
-For Kong Air, Sarah uses the `Bundled` provider with an external CA from HashiCorp Vault, see [External CA & Vault Integration](/mesh/scenarios/external-ca-vault/) for the Vault wiring.
+For Kong Air, Sarah uses the `Bundled` provider with an external CA from HashiCorp Vault, see [Integrate an external CA](/mesh/scenarios/integrate-an-external-ca/) for the Vault wiring.
 
 ## Strict mTLS with `MeshTLS`
 
@@ -87,7 +87,7 @@ This ties authorization to the caller's authenticated SPIFFE identity: the polic
 Replace `<flight-control-spiffe-id>` with the actual SPIFFE ID emitted by your `MeshIdentity` template. On the Kubernetes best-practice path, that is usually a ServiceAccount-based identity rather than a short `spiffe://<mesh>/<workload>` form.
 
 {:.info}
-> To allow communication between broad security zones (e.g., `zone: dmz` to `zone: internal`), Sarah uses a `Dataplane` selector with `labels:` at the top level. Top-level `MeshSubset` / `MeshServiceSubset` are older targeting shapes, see the [Targeting Guide](/mesh/scenarios/subsets-and-targeting/).
+> To allow communication between broad security zones (e.g., `zone: dmz` to `zone: internal`), Sarah uses a `Dataplane` selector with `labels:` at the top level. Top-level `MeshSubset` / `MeshServiceSubset` are older targeting shapes, see the [Target workloads and services](/mesh/scenarios/target-workloads-and-services/).
 
 ## External security and governance
 
@@ -126,7 +126,7 @@ spec:
               value: <generated-weather-api-sni>
 ```
 
-Replace `<check-in-api-spiffe-id>` with the actual SPIFFE ID emitted by your `MeshIdentity` template, and `<generated-weather-api-sni>` with the SNI for your `MeshExternalService`. In 2.14 the SNI format is `sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>`, see the [MeshExternalService scenario](/mesh/scenarios/meshexternalservice/) for how to derive it.
+Replace `<check-in-api-spiffe-id>` with the actual SPIFFE ID emitted by your `MeshIdentity` template, and `<generated-weather-api-sni>` with the SNI for your `MeshExternalService`. In 2.14 the SNI format is `sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>`, see the [Manage external services with MeshExternalService](/mesh/scenarios/manage-external-services-with-meshexternalservice/) for how to derive it.
 
 {:.warning}
 > Older `kind: MeshExternalService` targeting is gone in 2.14. Earlier releases allowed a `MeshTrafficPermission` to target the external service directly (top-level `targetRef.kind: MeshExternalService` with a `from[]` block naming the calling `MeshService`). That form is **rejected by the admission webhook in 2.14**. The listener-targeted form above is the only supported model for mesh-scoped ZoneEgress.

@@ -1,5 +1,5 @@
 ---
-title: Understand resource scoping
+title: Resource scoping
 content_type: reference
 layout: reference
 description: Learn why some {{site.mesh_product_name}} resources must be applied to the Global Control Plane, and why certain resources on Kubernetes must live in the system namespace. A foundational guide for operators new to the mesh.
@@ -59,6 +59,7 @@ Each resource type in {{site.mesh_product_name}} has a defined **owner**: the ti
 
 These resources define the **structure** of your mesh. Kong Air's network operations team controls them from a single point of authority.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Resource
@@ -75,6 +76,7 @@ rows:
     why_global_only: |
       Declares a service that spans multiple zones. The Global CP is the only entity with the full cross-zone topology picture.
 {% endtable %}
+<!-- vale on -->
 
 {:.warning}
 > Always apply `Mesh` and `MeshMultiZoneService` to the Global Control Plane. If your Global CP runs on Kubernetes, use `kubectl apply` against the Global CP kubeconfig and place the resource in the system namespace. On a Kubernetes-native Global CP you cannot use arbitrary namespaces or CRDs; only the system namespace ({{site.mesh_namespace}}) is supported. If it is Universal, use `kumactl apply` pointed at the Global CP API.
@@ -83,6 +85,7 @@ rows:
 
 These resources can be created at either tier and will be synced to the other via KDS. This gives teams flexibility: a security team might manage `MeshIdentity` centrally, while application teams manage `MeshTrafficPermission` locally in their zone.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Resource
@@ -129,6 +132,7 @@ rows:
     notes: |
       Any namespace
 {% endtable %}
+<!-- vale on -->
 
 ## The Kubernetes system namespace rule
 
@@ -144,6 +148,7 @@ Placing it in the system namespace enforces two key properties:
 
 ### Summary for Kubernetes users
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Resource
@@ -180,6 +185,7 @@ rows:
     namespace: |
       Any namespace
 {% endtable %}
+<!-- vale on -->
 
 ## Universal mode: simpler scoping
 
@@ -200,6 +206,7 @@ kumactl apply -f mesh-traffic-permission.yaml
 
 ## Quick reference
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Resource
@@ -258,12 +265,14 @@ rows:
     k8s_namespace: |
       Any namespace
 {% endtable %}
+<!-- vale on -->
 
 
 ## How this appears in the documentation
 
 Throughout the {{site.mesh_product_name}} scenario guides, code blocks use tabs to show both Kubernetes and Universal variations. The tab label tells you **which control plane tier** to target:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Tab Label
@@ -288,6 +297,7 @@ rows:
     meaning: |
       Run `kumactl apply` against any Universal zone CP or standalone deployment.
 {% endtable %}
+<!-- vale on -->
 
 {:.info}
 > When you see the **(Global CP)** qualifier on a tab, that is your signal that only the Global CP has authority over that resource. If you attempt to apply it to a Zone CP, the API or Admission Webhook will block the request with a `Forbidden` error.

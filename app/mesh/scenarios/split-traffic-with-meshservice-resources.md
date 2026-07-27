@@ -2,7 +2,7 @@
 title: Split traffic with MeshService resources
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/traffic-splitting-meshservices/
+permalink: /mesh/scenarios/split-traffic-with-meshservice-resources/
 description: Implement precise traffic splitting between different service versions using the modern MeshService resource model.
 breadcrumbs:
   - /mesh/
@@ -28,16 +28,17 @@ prereqs:
       content: |
         Multiple versions of a service (e.g., `passenger-portal`) deployed with identifying labels.
 next_steps:
-  - text: "Targeting Workloads and Services"
-    url: "/mesh/scenarios/subsets-and-targeting/"
+  - text: "Target workloads and services"
+    url: "/mesh/scenarios/target-workloads-and-services/"
 ---
 
 The Kong Air engineering team is launching a new **Passenger Portal v2**. To ensure a smooth transition, they want to route 90% of traffic to the stable `v1` and 10% to the new `v2` for a group of internal pilot users. 
 
-This guide demonstrates how to achieve this using **explicit `MeshService` versions** routed by a `MeshHTTPRoute`. If you want a refresher on the `targetRef` model and where `MeshService` fits in `to[]`/`backendRefs`, see [How to use policies](/mesh/scenarios/using-policies/); the [Targeting Workloads and Services](/mesh/scenarios/subsets-and-targeting/) guide that follows goes deeper on label-based targeting.
+This guide demonstrates how to achieve this using **explicit `MeshService` versions** routed by a `MeshHTTPRoute`. If you want a refresher on the `targetRef` model and where `MeshService` fits in `to[]`/`backendRefs`, see [Policy targeting and precedence](/mesh/scenarios/policy-targeting-and-precedence/); the [Target workloads and services](/mesh/scenarios/target-workloads-and-services/) guide that follows goes deeper on label-based targeting.
 
 ## What this proves
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Scenario Requirement
@@ -52,6 +53,7 @@ rows:
   - goal: Resource Stability
     outcome: Adding or removing pods in either version does not require updating the routing policy.
 {% endtable %}
+<!-- vale on -->
 
 ### The traffic split
 

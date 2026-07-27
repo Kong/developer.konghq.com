@@ -12,7 +12,7 @@ works_on:
   - on-prem
   - konnect
 ---
-{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Its policy-driven model works the same regardless of the underlying infrastructure, a deliberate focus on **day-2 operations**: running, upgrading, and troubleshooting the mesh in production, across regions and mixed infrastructure, not just standing it up on day 1. The [Architecture Overview](/mesh/scenarios/architecture-overview/) unpacks what that means in practice, including [how it compares to Istio-style meshes](/mesh/scenarios/architecture-overview/#day-2-operations-how-this-compares-to-istio-style-meshes).
+{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Its policy-driven model works the same regardless of the underlying infrastructure, a deliberate focus on **day-2 operations**: running, upgrading, and troubleshooting the mesh in production, across regions and mixed infrastructure, not just standing it up on day 1. The [Architecture overview](/mesh/scenarios/architecture-overview/) unpacks what that means in practice, including [how it compares to Istio-style meshes](/mesh/scenarios/architecture-overview/#day-2-operations-how-this-compares-to-istio-style-meshes).
 
 ## Meet Kong Air
 
@@ -58,6 +58,7 @@ Solid arrows are intra-mesh traffic. Dashed arrows are traffic to external depen
 
 The scenarios reference three personas. Each owns a different slice of Kong Air:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Persona
@@ -88,11 +89,13 @@ rows:
     consumes: |
       Reached from inside the mesh through `MeshExternalService`.
 {% endtable %}
+<!-- vale on -->
 
 Delivering these capabilities as a standardized, built-in layer means teams configure networking behavior through policies rather than implementing it in each service.
 
 ## Benefits by role
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Role
@@ -102,23 +105,24 @@ columns:
   - title: Key capabilities
     key: capabilities
 rows:
-  - role: "[Developers](/mesh/scenarios/persona/developer/)"
+  - role: "[Devin the Developer](/mesh/scenarios/persona/developer/)"
     focus: Resilience & Routing
     capabilities: |
       * **Traffic Routing**: Manage traffic flows like canary releases or A/B testing via `MeshHTTPRoute` without code changes.
       * **Resilience**: Protect apps from cascading failures with `MeshRetry`, `MeshTimeout`, and `MeshFaultInjection`.
-  - role: "[Operators](/mesh/scenarios/persona/operator/)"
+  - role: "[Ollie the Operator](/mesh/scenarios/persona/operator/)"
     focus: Scalability & Stability
     capabilities: |
       * **Self-Healing**: Automatically detect and remove unhealthy instances with `MeshHealthCheck` and `MeshCircuitBreaker`.
       * **Observability**: Gain instant visibility with `MeshMetric` and consistent telemetry across all clusters.
       * **Traffic Strategy**: Optimize distribution with `MeshLoadBalancingStrategy`, including locality-aware routing.
-  - role: "[Security](/mesh/scenarios/persona/security/)"
+  - role: "[Sarah the Security Architect](/mesh/scenarios/persona/security/)"
     focus: Zero Trust
     capabilities: |
       * **Encryption**: Enable Mutual TLS (mTLS) automatically with `MeshTLS`, including handled certificate rotation.
       * **Access Control**: Authorize traffic explicitly with `MeshTrafficPermission` to enforce a "deny-all" security posture.
 {% endtable %}
+<!-- vale on -->
 
 ## Scenario roadmap
 
@@ -141,6 +145,7 @@ Before starting the hands-on scenarios, familiarize yourself with these three co
 
 These acronyms appear throughout the scenarios, here's the short version:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Term
@@ -161,6 +166,7 @@ rows:
   - term: "**{{site.konnect_short_name}}**"
     meaning: "Kong's hosted control-plane platform. In a {{site.konnect_short_name}}-managed mesh the **Global CP** runs in {{site.konnect_short_name}} and you apply global resources with `kumactl` or the {{site.konnect_short_name}} UI; Zone CPs still run in your own clusters."
 {% endtable %}
+<!-- vale on -->
 
 {:.info}
-> Because {{site.mesh_product_name}} scales across clouds and data centers, knowing *where* each resource is applied (Global vs Zone CP, system namespace) matters. The [Understanding Resource Scoping](/mesh/scenarios/resource-scoping/) guide covers this in depth; it comes right after your first hands-on policies in the learning path below.
+> Because {{site.mesh_product_name}} scales across clouds and data centers, knowing *where* each resource is applied (Global vs Zone CP, system namespace) matters. The [Resource scoping](/mesh/scenarios/resource-scoping/) guide covers this in depth; it comes right after your first hands-on policies in the learning path below.

@@ -182,7 +182,7 @@ rows:
                 - text: Mesh Circuit Breaker
                   url: /mesh/policies/meshcircuitbreaker/
                 - text: Chaos engineering
-                  url: /mesh/scenarios/chaos-engineering/
+                  url: /mesh/scenarios/validate-resilience-with-fault-injection/
       - blocks:
           - type: card
             config:

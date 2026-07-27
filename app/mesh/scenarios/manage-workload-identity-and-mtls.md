@@ -2,7 +2,7 @@
 title: Manage workload identity and mTLS
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/workload-identity/
+permalink: /mesh/scenarios/manage-workload-identity-and-mtls/
 description: Discover the new Workload Identity model in {{site.mesh_product_name}}. Learn how to move beyond mesh-wide mTLS to a granular identity system supporting SPIRE, custom SPIFFE IDs, and decoupled trust management.
 breadcrumbs:
   - /mesh/
@@ -23,18 +23,19 @@ prereqs:
   inline:
     - title: Architecture
       content: |
-        A running {{site.mesh_product_name}} deployment. If you are new to the multi-tier control plane model, read the [Resource Scoping guide](/mesh/scenarios/resource-scoping/) first.
+        A running {{site.mesh_product_name}} deployment. If you are new to the multi-tier control plane model, read the [Resource scoping](/mesh/scenarios/resource-scoping/) first.
     - title: Mesh Mode
       content: |
         A Mesh configured in **Exclusive** mode (required for `MeshIdentity` support).
 next_steps:
-  - text: "Enterprise PKI: External CA Integration"
-    url: "/mesh/scenarios/external-ca-vault/"
+  - text: "Integrate an external CA"
+    url: "/mesh/scenarios/integrate-an-external-ca/"
 ---
 ## The core shift: from Mesh to workload
 
 In the previous model, the `Mesh` object was the source of all authority. In the new model, identity is a distinct lifecycle managed by two primary resources: `MeshIdentity` and `MeshTrust`.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Feature
@@ -69,6 +70,7 @@ rows:
     workload_identity: |
       Explicit trust via `MeshTrust` bundles
 {% endtable %}
+<!-- vale on -->
 
 ## Prerequisite: MeshServices mode
 
@@ -81,7 +83,7 @@ Before enabling Workload Identity, you must ensure your mesh is using the **Mesh
 {% navtab "Kubernetes Global CP (self-managed)" %}
 
 {:.warning}
-> `Mesh` is a **Global CP only** resource. Apply this against the kubeconfig of your **Global Control Plane**, not a Zone CP. See [Resource Scoping](/mesh/scenarios/resource-scoping/).
+> `Mesh` is a **Global CP only** resource. Apply this against the kubeconfig of your **Global Control Plane**, not a Zone CP. See [Resource scoping](/mesh/scenarios/resource-scoping/).
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
@@ -120,7 +122,7 @@ The recommended production pattern is:
 > On Kubernetes, the **synced copy** of `MeshIdentity` lives in the **system namespace** on each Zone CP. If your Global CP is also Kubernetes-backed, create the resource in the system namespace there as well. If your Global CP is Konnect or Universal-backed, apply it with `kumactl` and let {{site.mesh_product_name}} sync the generated copy down to each zone.
 
 {:.info}
-> The examples below are **targeted** identities, layered on top of the mesh-wide `kong-air-identity` from [Getting Started](/mesh/scenarios/getting-started-policy/). The control plane gives each workload its single *most-specific* `MeshIdentity` (the selector with the most `matchLabels` wins), so a targeted selector must be **more specific** than the mesh-wide default, that's why each one includes `kuma.io/mesh: kong-air-mesh` **plus** its workload label. The mesh-wide identity keeps covering everything else, including the zone proxies.
+> The examples below are **targeted** identities, layered on top of the mesh-wide `kong-air-identity` from [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/). The control plane gives each workload its single *most-specific* `MeshIdentity` (the selector with the most `matchLabels` wins), so a targeted selector must be **more specific** than the mesh-wide default, that's why each one includes `kuma.io/mesh: kong-air-mesh` **plus** its workload label. The mesh-wide identity keeps covering everything else, including the zone proxies.
 
 {% navtabs "mesh-identity" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}

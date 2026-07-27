@@ -2,7 +2,7 @@
 title: Integrate an external CA
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/external-ca-vault/
+permalink: /mesh/scenarios/integrate-an-external-ca/
 description: Move beyond the built-in CA. Learn how to integrate {{site.mesh_product_name}} with enterprise PKI solutions like HashiCorp Vault and cert-manager for automated certificate management.
 breadcrumbs:
   - /mesh/
@@ -22,15 +22,15 @@ prereqs:
   inline:
     - title: Kong Air demo deployment
       content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/scenarios/getting-started-policy/).
+        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/).
 next_steps:
-  - text: "Multi-Zone Architecture"
+  - text: "Multi-zone architecture"
     url: "/mesh/scenarios/multi-zone-architecture/"
 ---
 Using an external CA ensures that Kong Air's service identities are governed by the same corporate PKI standards as their physical servers and employee devices.
 
 {:.info}
-> The `MeshIdentity` and `MeshTrust` resources in this guide are **system-namespace** resources. On a Zone CP federated to a Global CP, create them in `{{site.mesh_namespace}}` with the `kuma.io/origin: zone` label (shown in every example below). See the [Resource Scoping guide](/mesh/scenarios/resource-scoping/) for which control plane to target.
+> The `MeshIdentity` and `MeshTrust` resources in this guide are **system-namespace** resources. On a Zone CP federated to a Global CP, create them in `{{site.mesh_namespace}}` with the `kuma.io/origin: zone` label (shown in every example below). See the [Resource scoping](/mesh/scenarios/resource-scoping/) for which control plane to target.
 
 ## Why use an external CA?
 
@@ -42,6 +42,7 @@ Using an external CA ensures that Kong Air's service identities are governed by 
 
 Both approaches are configured through `MeshIdentity`. They place the resource in the system namespace and issue SPIFFE certificates using the same `spiffeID.path` and `trustDomain` fields, only the `provider` block differs.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Approach
@@ -64,6 +65,7 @@ rows:
     when_to_use: |
       Enterprise PKI, where the CA key must stay in your existing system. Requires {{site.mesh_product_name}} enterprise.
 {% endtable %}
+<!-- vale on -->
 
 ## Bundled provider
 
@@ -416,6 +418,7 @@ Each CA model integrates with the control plane differently. Knowing the flow he
 
 In every model the **control plane** is the client that requests certificates from the CA, never the individual proxies. Workloads in private zones therefore need no direct network access to the CA, and no CA credentials are distributed to the data plane.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Feature
@@ -444,6 +447,7 @@ rows:
     hashicorp_vault: |
       Control Plane (via REST API)
 {% endtable %}
+<!-- vale on -->
 
 ### Built-in CA (for contrast)
 

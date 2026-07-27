@@ -2,7 +2,7 @@
 title: Route across zones with canary rollouts and color rings
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/global-routing/
+permalink: /mesh/scenarios/route-across-zones-with-canary-rollouts-and-color-rings/
 description: Route traffic across zones with MeshMultiZoneService and MeshHTTPRoute, weighted canary rollouts in a single zone, and permanent color rings with same-color cross-zone failover.
 breadcrumbs:
   - /mesh/
@@ -24,13 +24,13 @@ prereqs:
   inline:
     - title: Architecture
       content: |
-        A multi-zone {{site.mesh_product_name}} deployment with `spec.meshServices.mode: Exclusive` set on the `kong-air-mesh` `Mesh` resource. If you haven't set one up, start with [Multi-Zone Architecture](/mesh/scenarios/multi-zone-architecture/).
+        A multi-zone {{site.mesh_product_name}} deployment with `spec.meshServices.mode: Exclusive` set on the `kong-air-mesh` `Mesh` resource. If you haven't set one up, start with [Multi-zone architecture](/mesh/scenarios/multi-zone-architecture/).
     - title: Mesh foundation
       content: |
-        `MeshIdentity` and `MeshTLS` applied for `kong-air-mesh` (see [Getting Started with Policies](/mesh/scenarios/getting-started-policy/)). If you apply or change `MeshIdentity` on existing workloads, restart them before testing routes so they serve the new certificate.
+        `MeshIdentity` and `MeshTLS` applied for `kong-air-mesh` (see [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/)). If you apply or change `MeshIdentity` on existing workloads, restart them before testing routes so they serve the new certificate.
 next_steps:
-  - text: "Securing the Perimeter: MeshPassthrough"
-    url: "/mesh/scenarios/mesh-passthrough/"
+  - text: "Secure the perimeter with MeshPassthrough"
+    url: "/mesh/scenarios/secure-the-perimeter-with-meshpassthrough/"
 ---
 
 Once Kong Air spans multiple zones, two routing needs show up that look similar but solve different problems: rolling out a new version to a slice of traffic, and keeping parallel "colored" environments separate. Both are built from the same two resources, `MeshMultiZoneService` and `MeshHTTPRoute`, which is exactly why it's worth seeing them side by side.
@@ -44,6 +44,7 @@ Every pattern here rests on two resources:
 
 The difference between the two patterns is entirely in that routing decision:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: "&nbsp;"
@@ -66,6 +67,7 @@ rows:
     canary: "You want to ship a new version to a little traffic in one region first."
     color: "You want self-contained environments that each fail over within their own color."
 {% endtable %}
+<!-- vale on -->
 
 Pattern 1 covers the weighted canary. Pattern 2 covers color rings. They are independent, read whichever fits your need.
 

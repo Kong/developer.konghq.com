@@ -2,7 +2,7 @@
 title: Validate resilience with fault injection
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/chaos-engineering/
+permalink: /mesh/scenarios/validate-resilience-with-fault-injection/
 description: Learn how to use MeshFaultInjection to proactively test your service mesh resilience. Validate retries, timeouts, and circuit breakers by simulating real-world failures.
 breadcrumbs:
   - /mesh/
@@ -28,7 +28,7 @@ prereqs:
       content: |
         Workloads to target (e.g., `flight-control`) and a client (e.g., `check-in-api`) to generate traffic.
 next_steps:
-  - text: "Explore the Persona Guides"
+  - text: "Explore by role"
     url: "/mesh/scenarios/persona/"
 ---
 ## Why inject faults?

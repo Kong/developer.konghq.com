@@ -112,7 +112,7 @@ spec:
 Ollie provides "Observability as a Service" so Devin doesn't have to worry about where his logs and traces go.
 
 ### Distributed tracing (`MeshTrace`)
-Ollie sets up end-to-end tracing across all zones, exporting spans via OTLP/gRPC to a global collector. In 2.14, the recommended pattern is to define one `MeshOpenTelemetryBackend` and reference it from every observability policy, see [Observability in Practice](/mesh/scenarios/observability-in-practice/) for the full pattern. In 2.14 only the gRPC OTel transport is supported; the earlier HTTP/HTTPS OTel transports have been removed.
+Ollie sets up end-to-end tracing across all zones, exporting spans via OTLP/gRPC to a global collector. In 2.14, the recommended pattern is to define one `MeshOpenTelemetryBackend` and reference it from every observability policy, see [Observe mesh traffic in practice](/mesh/scenarios/observe-mesh-traffic-in-practice/) for the full pattern. In 2.14 only the gRPC OTel transport is supported; the earlier HTTP/HTTPS OTel transports have been removed.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -161,7 +161,7 @@ spec:
 ```
 
 {:.info}
-> To scope a policy to a slice of the fleet (a whole zone, an environment, a region), Ollie sets the top-level `targetRef` to **`Dataplane`** with a `labels:` selector, for example `kuma.io/zone: zone1` or `environment: production`. Top-level `MeshSubset`, `MeshServiceSubset`, and `MeshService` are older targeting shapes; use `Dataplane` with labels going forward. See the [Subsets & Targeting Guide](/mesh/scenarios/subsets-and-targeting/) for examples.
+> To scope a policy to a slice of the fleet (a whole zone, an environment, a region), Ollie sets the top-level `targetRef` to **`Dataplane`** with a `labels:` selector, for example `kuma.io/zone: zone1` or `environment: production`. Top-level `MeshSubset`, `MeshServiceSubset`, and `MeshService` are older targeting shapes; use `Dataplane` with labels going forward. See the [Target workloads and services](/mesh/scenarios/target-workloads-and-services/) for examples.
 
 ## Operational health and lifecycle
 

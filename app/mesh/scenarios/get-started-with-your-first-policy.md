@@ -2,7 +2,7 @@
 title: Get started with your first policy
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/getting-started-policy/
+permalink: /mesh/scenarios/get-started-with-your-first-policy/
 description: A hands-on guide to applying your first security policy with {{site.mesh_product_name}}, enabling mTLS and enforcing zero-trust traffic permissions.
 breadcrumbs:
   - /mesh/
@@ -30,8 +30,8 @@ prereqs:
       content: |
         A running {{site.mesh_product_name}} deployment with the **kong-air-production** namespace, sidecar injection enabled, and `meshServices.mode: Exclusive` set on the `kong-air-mesh` Mesh resource.
 next_steps:
-  - text: "How to Use {{site.mesh_product_name}} Policies"
-    url: "/mesh/scenarios/using-policies/"
+  - text: "Policy targeting and precedence"
+    url: "/mesh/scenarios/policy-targeting-and-precedence/"
 ---
 ## Issue workload identity with `MeshIdentity`
 
@@ -131,7 +131,7 @@ spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/passenger-portal
 {:.warning}
 > Multi-zone deployments need an extra cross-zone trust step. The `autogenerate: enabled: true` option lets each Zone CP generate its own CA independently. This is convenient but means zone1 and zone2 have different CAs. Due to a naming collision during KDS sync, each zone ends up trusting only its own CA. Cross-zone mTLS then fails at the ZoneIngress TLS handshake.
 >
-> To fix this, create a combined `MeshTrust` on each zone containing all zones' CA bundles. See the [Workload Identity guide](/mesh/scenarios/workload-identity/) for the full procedure and the production alternative (shared CA or SPIRE).
+> To fix this, create a combined `MeshTrust` on each zone containing all zones' CA bundles. See the [Manage workload identity and mTLS](/mesh/scenarios/manage-workload-identity-and-mtls/) for the full procedure and the production alternative (shared CA or SPIRE).
 
 ## Enforce strict mTLS with `MeshTLS`
 
@@ -182,7 +182,7 @@ The `allow-all` `MeshTrafficPermission` grants access from any workload in the m
 {% navtab "Kubernetes Global CP (self-managed)" %}
 
 {:.info}
-> Like the `MeshTLS` and `MeshIdentity` resources above, apply these permissions at the Global CP so they span every zone. You *can* apply policies directly to a Zone CP instead; see [Resource Scoping](/mesh/scenarios/resource-scoping/) for when you'd do that and the `kuma.io/origin: zone` label it requires.
+> Like the `MeshTLS` and `MeshIdentity` resources above, apply these permissions at the Global CP so they span every zone. You *can* apply policies directly to a Zone CP instead; see [Resource scoping](/mesh/scenarios/resource-scoping/) for when you'd do that and the `kuma.io/origin: zone` label it requires.
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1

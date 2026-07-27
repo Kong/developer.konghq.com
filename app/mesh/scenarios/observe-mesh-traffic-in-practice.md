@@ -2,7 +2,7 @@
 title: Observe mesh traffic in practice
 content_type: how_to
 layout: how-to
-permalink: /mesh/scenarios/observability-in-practice/
+permalink: /mesh/scenarios/observe-mesh-traffic-in-practice/
 description: A guide to mesh observability, collecting metrics, traces, and logs from Kong Air's services without changing application code.
 breadcrumbs:
   - /mesh/
@@ -23,13 +23,14 @@ prereqs:
   inline:
     - title: Kong Air demo deployment
       content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/scenarios/getting-started-policy/).
+        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/).
 next_steps:
-  - text: "Workload Identity & Trust"
-    url: "/mesh/scenarios/workload-identity/"
+  - text: "Manage workload identity and mTLS"
+    url: "/mesh/scenarios/manage-workload-identity-and-mtls/"
 ---
 ## The observability gap
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Challenge
@@ -52,6 +53,7 @@ rows:
     legacy: Siloed monitoring tools across clouds.
     solution: "**Unified Global View**: Multi-zone MADS aggregates service targets into a single source of truth for discovery."
 {% endtable %}
+<!-- vale on -->
 
 ## Architecture
 
@@ -381,8 +383,9 @@ Example output:
 
 ## Grafana dashboards
 
-{{site.mesh_product_name}} 2.14 ships six Grafana dashboards. Two are new in this release, **Zone Ingress** and **Zone Egress**, providing first-class observability for [mesh-scoped zone proxies](/mesh/scenarios/mesh-scoped-zone-proxies/).
+{{site.mesh_product_name}} 2.14 ships six Grafana dashboards. Two are new in this release, **Zone Ingress** and **Zone Egress**, providing first-class observability for [Configure mesh-scoped zone proxies](/mesh/scenarios/configure-mesh-scoped-zone-proxies/).
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: File
@@ -411,6 +414,7 @@ rows:
     title: Zone Egress *(new)*
     focus: Outbound traffic to remote zones and external services, MeshExternalService connection metrics
 {% endtable %}
+<!-- vale on -->
 
 ### Getting the dashboards
 
