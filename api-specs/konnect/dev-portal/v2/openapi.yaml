@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@72836541776245fc3fcf6719b92a75bd0db9ee4a
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/72836541776245fc3fcf6719b92a75bd0db9ee4a'
+  x-oas-source: kong/platform-api@a618e5e337e2918b1df2c26a5faa3ef2b9f1c8c0
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a618e5e337e2918b1df2c26a5faa3ef2b9f1c8c0'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -2258,7 +2258,6 @@ components:
           enum:
             - api_key
           readOnly: true
-          x-go-type-skip-optional-pointer: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
@@ -2292,7 +2291,6 @@ components:
           enum:
             - client_secret
           readOnly: true
-          x-go-type-skip-optional-pointer: true
         id:
           description: Credential identifier
           type: string
@@ -2326,9 +2324,6 @@ components:
       type: object
       discriminator:
         propertyName: type
-        mapping:
-          api_key: '#/components/schemas/ApiKeyCredentialListItem'
-          client_secret: '#/components/schemas/ClientSecretCredentialListItem'
       oneOf:
         - $ref: '#/components/schemas/ApiKeyCredentialListItem'
         - $ref: '#/components/schemas/ClientSecretCredentialListItem'
@@ -2361,7 +2356,6 @@ components:
           enum:
             - api_key
           readOnly: true
-          x-go-type-skip-optional-pointer: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
@@ -2399,7 +2393,6 @@ components:
           enum:
             - client_secret
           readOnly: true
-          x-go-type-skip-optional-pointer: true
         id:
           description: Credential identifier
           type: string
