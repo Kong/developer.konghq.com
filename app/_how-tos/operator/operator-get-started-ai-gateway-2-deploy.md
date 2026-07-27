@@ -142,7 +142,7 @@ The `AIGatewayModelProvider` resource configures authentication and connection d
 
 ## Create an AI Model
 
-The `AIGatewayModel` resource defines a route and maps it to one or more provider targets. Clients send inference requests to the path configured here.
+The `AIGatewayModel` resource defines a Route and maps it to one or more provider targets. Clients send inference requests to the path configured here.
 
 1. Create the `AIGatewayModel` resource:
 
@@ -242,8 +242,6 @@ export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo $AIGW_HOST
 ```
-
-## Smoke test with a chat completions request
 
 Send a request to the AI Model Route you configured:
 
