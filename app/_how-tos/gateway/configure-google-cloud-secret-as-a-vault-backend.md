@@ -29,6 +29,7 @@ tags:
     - security
     - secrets-management
     - google-cloud
+    - gcp-vault
 
 search_aliases:
   - GCP
