@@ -57,7 +57,7 @@ rows:
             icon: /assets/icons/ai.svg
             title: "Deploy {{ site.ai_gateway_name }} on Kubernetes"
             description: |
-              Provision AI Gateway control planes, model providers, policies, and consumers declaratively with AI Gateway CRDs.
+              Provision AI Gateway control planes, AI Model Providers, AI Policies, and AI Consumers declaratively with AI Gateway CRDs.
             cta:
               text: Deploy {{ site.ai_gateway_name }} in Kubernetes using {{site.konnect_short_name}} CRDs
               url: /operator/get-started/ai-gateway/install/

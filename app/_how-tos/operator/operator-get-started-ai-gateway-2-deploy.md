@@ -20,7 +20,7 @@ products:
   - operator
 
 min_version:
-  operator: '2.2'
+  operator: '2.3'
   ai-gateway: '2.0'
 
 works_on:
@@ -35,7 +35,7 @@ prereqs:
 
 tldr:
   q: How do I deploy {{ site.ai_gateway_name }} with {{site.operator_product_name}}?
-  a: Create a `KonnectAIGateway`, store your provider API key in a Kubernetes Secret, add an `AIGatewayModelProvider` and `AIGatewayModel`, then deploy an `AIGatewayDataPlane`. The operator provisions the mTLS certificate automatically.
+  a: Create a `KonnectAIGateway`, store your provider API key in a Kubernetes Secret, add an `AIGatewayModelProvider` and `AIGatewayModel`, then deploy an `AIGatewayDataPlane`. {{site.operator_product_name}} provisions the mTLS certificate automatically.
 
 next_steps:
   - text: Apply AI policies
@@ -196,7 +196,7 @@ The `AIGatewayModel` resource defines a route and maps it to one or more provide
 
 The `AIGatewayDataPlane` resource runs the {{ site.ai_gateway }} binary inside your Kubernetes cluster. It exposes a `LoadBalancer` Service on port `8000` for inference requests.
 
-The operator automatically provisions the mTLS certificate and registers it with the control plane — there is no need to create an `AIGatewayDataPlaneCertificate` manually.
+{{site.operator_product_name}} automatically provisions the mTLS certificate and registers it with the control plane — there is no need to create an `AIGatewayDataPlaneCertificate` manually.
 
 1. Deploy the `AIGatewayDataPlane`:
 
@@ -233,7 +233,9 @@ The operator automatically provisions the mTLS certificate and registers it with
      --timeout=10m
    ```
 
-## Export the `LoadBalancer` address
+## Validate
+
+Export the `LoadBalancer` address:
 
 ```bash
 export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
@@ -243,7 +245,7 @@ echo $AIGW_HOST
 
 ## Smoke test with a chat completions request
 
-Send a request to the model route you configured:
+Send a request to the AI Model Route you configured:
 
 ```bash
 curl -s http://$AIGW_HOST:8000/v1/chat/completions \

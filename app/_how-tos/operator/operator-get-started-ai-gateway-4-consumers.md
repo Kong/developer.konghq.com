@@ -20,7 +20,7 @@ products:
   - operator
 
 min_version:
-  operator: '2.2'
+  operator: '2.3'
   ai-gateway: '2.0'
 
 works_on:
@@ -62,12 +62,12 @@ With AI Consumers in place you can:
 
 - Issue API keys per team and revoke them independently
 - Enforce per-consumer `AIGatewayPolicy` rules such as different allowlists per team
-- Group AI Consumers with `AIGatewayConsumerGroup` to target shared Policies, model access controls, and analytics attribution at the group level
+- Group AI Consumers with `AIGatewayConsumerGroup` to target shared AI Policies, model access controls, and analytics attribution at the group level
 - Attribute usage and cost to a specific AI Consumer in the {{ site.konnect_short_name }} analytics dashboard
 
 ## Create an `AIGatewayIdentityProvider`
 
-The `AIGatewayIdentityProvider` resource configures the authentication scheme the gateway uses to verify downstream clients. This example uses API key authentication.
+The `AIGatewayIdentityProvider` resource configures the authentication scheme {{ site.ai_gateway_name }} uses to verify downstream clients. This example uses API key authentication.
 
 1. Create a key-auth AI Identity Provider:
 
@@ -103,9 +103,9 @@ The `AIGatewayIdentityProvider` resource configures the authentication scheme th
      --timeout=5m
    ```
 
-## Attach the AI Identity Provider to the model
+## Attach the AI Identity Provider to the AI Model
 
-An `AIGatewayIdentityProvider` takes effect only when it is attached to an AI Model via `spec.apiSpec.model.access.identityProviders`. Patch the model you created in the [deployment step](/operator/get-started/ai-gateway/deploy/) to enable authentication:
+An `AIGatewayIdentityProvider` takes effect only when it is attached to an AI Model via `spec.apiSpec.model.access.identityProviders`. Patch the AI Model you created in the [deployment step](/operator/get-started/ai-gateway/deploy/) to enable authentication:
 
 ```bash
 kubectl patch aigatewaymodel gpt-4o-mini -n kong \
@@ -156,7 +156,7 @@ The `AIGatewayConsumer` resource registers a downstream client with the {{ site.
 
 ## Attach an API key credential
 
-The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayConsumer`. Store the key in a Kubernetes Secret first; the operator reads the value from the Secret and never stores it in plain text.
+The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayConsumer`. Store the key in a Kubernetes Secret first; {{site.operator_product_name}} reads the value from the Secret and never stores it in plain text.
 
 1. Create the Secret:
 
@@ -213,7 +213,7 @@ export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
-Authenticated request using the API key:
+Send an authenticated request using the API key:
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" \
@@ -236,11 +236,11 @@ curl -s -o /dev/null -w "%{http_code}\n" \
 
 `AIGatewayConsumerGroup` is a named set of AI Consumers that you can target as a unit. Use groups to:
 
-- Apply shared Policies to a team via `spec.apiSpec.policies` on the group — each entry is an object with a `name` field referencing an `AIGatewayPolicy` by its Kubernetes resource name, useful for policies scoped with `global: Disabled`
+- Apply shared AI Policies to a team via `spec.apiSpec.policies` on the AI Consumer Group — each entry is an object with a `name` field referencing an `AIGatewayPolicy` by its Kubernetes resource name, which is useful for AI Policies scoped with `global: Disabled`
 - Restrict or allow group access to individual AI Models via `spec.apiSpec.model.access.acls` on the `AIGatewayModel`
-- Attribute usage across multiple AI Consumers to a single group in {{ site.konnect_short_name }} analytics
+- Attribute usage across multiple AI Consumers to a single AI Consumer Group in {{ site.konnect_short_name }} analytics
 
-Consumer membership is declared on the `AIGatewayConsumer`, not on the group. Use `spec.consumerGroups` on the AI Consumer to reference the groups it belongs to.
+AI Consumer membership is declared on the `AIGatewayConsumer`, not on the AI Consumer Group. Use `spec.consumerGroups` on the AI Consumer to reference the AI Consumer Groups it belongs to.
 
 1. Create an AI Consumer Group:
 
@@ -279,7 +279,7 @@ Consumer membership is declared on the `AIGatewayConsumer`, not on the group. Us
      -p '{"spec":{"consumerGroups":[{"name":"platform-team-group"}]}}'
    ```
 
-1. Wait for the AI Consumer to reconcile with the updated group membership:
+1. Wait for the AI Consumer to reconcile with the updated AI Consumer Group membership:
 
    ```bash
    kubectl wait aigatewayconsumer/team-platform -n kong \
