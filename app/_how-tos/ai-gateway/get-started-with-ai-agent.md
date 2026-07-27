@@ -84,42 +84,32 @@ faqs:
 
 Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent.
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
+{% entity_examples %}
+ai_gateway_agents:
+  - ref: kongair-flight-booking-agent
+    ai_gateway: !lookup name:ai-quickstart
+    display_name: "Kong Air Flight Booking Agent"
+    type: a2a
+    enabled: true
+    config:
+      url: http://host.docker.internal:10000
+      route:
+        paths:
+          - /a2a
+        methods:
+          - GET
+          - POST
+        protocols:
+          - http
+          - https
+        strip_path: true
+      logging:
+        payloads: true
+        statistics: true
+        max_payload_size: 1048576
+      max_request_body_size: 8388608
+{% endentity_examples %}
 
-ai_gateways:
-  - ref: ai-quickstart
-    name: ai-quickstart
-    display_name: "ai-quickstart"
-
-    agents:
-      - ref: kongair-flight-booking-agent
-        ai_gateway: "$AI_GATEWAY_ID"
-        display_name: "Kong Air Flight Booking Agent"
-        type: a2a
-        enabled: true
-        config:
-          url: http://host.docker.internal:10000
-          route:
-            paths:
-              - /a2a
-            methods:
-              - GET
-              - POST
-            protocols:
-              - http
-              - https
-            strip_path: true
-          logging:
-            payloads: true
-            statistics: true
-            max_payload_size: 1048576
-          max_request_body_size: 8388608
-EOF
-```
 
 The `ai_gateways` entry references your existing {{site.ai_gateway}} by its `name` (`ai-quickstart`, as set up by the [quickstart script](/ai-gateway/get-started/)), so `kongctl` manages the agent underneath it instead of creating a new gateway. Each nested agent still declares its own `ai_gateway` field, pointing at the gateway's ID, to link it to the parent.
 

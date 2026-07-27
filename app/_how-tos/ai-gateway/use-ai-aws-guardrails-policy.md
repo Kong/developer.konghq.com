@@ -71,22 +71,11 @@ Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and 
 You'll also configure the [AI AWS Guardrails Policy](/ai-gateway/policies/ai-aws-guardrails/) to filter LLM traffic based on an existing AWS Guardrail.
 
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl: { namespace: ai-gateway-get-started }
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: ai-quickstart
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
     name: generic-openai
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: openai
     config:
       auth:
@@ -94,11 +83,10 @@ ai_gateway_model_providers:
         headers:
           - name: Authorization
             value: !env OPENAI_AUTH_HEADER
-
 ai_gateway_policies:
   - ref: my-ai-aws-guardrails-policy
     name: my-ai-aws-guardrails-policy
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: ai-aws-guardrails
     enabled: true
     global: false
@@ -108,13 +96,11 @@ ai_gateway_policies:
       aws_region: !env AWS_REGION
       aws_access_key_id: !env AWS_ACCESS_KEY_ID
       aws_secret_access_key: !env AWS_SECRET_ACCESS_KEY
-      
-
 ai_gateway_models:
   - ref: my-gpt-4o
     display_name: my-gpt-4o
     name: my-gpt-4o
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: model
     enabled: true
     formats: [{ type: openai }]
@@ -128,8 +114,7 @@ ai_gateway_models:
         provider: generic-openai
         config:
           type: openai
-EOF
-```
+{% endentity_examples %}
 
 In this example, we're setting up the AI AWS Guardrail Policy with:
 

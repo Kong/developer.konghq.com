@@ -144,10 +144,12 @@ From here you can edit `ai-gateway.yaml`, commit it to source control, and manag
 
 ### Referencing external resources
 
-`_external` tells kongctl to look up a resource by selector without taking ownership of it in the current configuration.
-Use it when a resource exists in {{site.konnect_product_name}} but is managed by a different team or configuration file, and you need to reference it as a parent for child resources you do own.
+When a resource already exists in {{site.konnect_product_name}} but isn't managed by your current configuration file, you can reference it without taking ownership.
+kongctl provides two ways to do this: `_external` and `!lookup`.
+* Use `_external` when multiple child resources in the same file share the same parent, so you only need to write the lookup once and reference it by `ref`.
+* Use `!lookup` when you only need the parent's ID in a single field and want to keep the config concise.
 
-For example, here the {{site.ai_gateway}} exists in {{site.konnect_product_name}} but isn't managed by this configuration file:
+`_external` declares the resource as a named block with a `ref` you can reuse multiple times in the same file:
 
 ```yaml
 ai_gateways:
@@ -165,11 +167,28 @@ ai_gateway_model_providers:
     config:
       auth:
         type: basic
-        name: Authorization
-        value: "Bearer !env OPENAI_API_KEY"
+        headers:
+          - name: Authorization
+            value: Bearer !env OPENAI_API_KEY
 ```
 
-kongctl resolves the external resource's ID at plan time and uses it to scope the child resources.
+`!lookup` is a concise inline tag that performs the same lookup directly in a field value:
+
+```yaml
+ai_gateway_model_providers:
+  - ref: openai-primary
+    ai_gateway: !lookup name:my-ai-gateway
+    name: openai-primary
+    type: openai
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: Bearer !env OPENAI_API_KEY
+```
+
+In both situations, kongctl resolves the external resource's ID at plan time and uses it to scope the child resources.
 The external resource itself is not modified or deleted by `sync`.
 
 ### Commands reference

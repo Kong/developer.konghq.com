@@ -42,20 +42,10 @@ tldr:
 
 Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to OpenAI and store your authentication credentials:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
-
-ai_gateways:
-  - ref: ai-quickstart
-    name: ai-quickstart
-    display_name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: generic-openai
     display_name: "generic-openai"
     type: openai
@@ -65,8 +55,7 @@ ai_gateway_model_providers:
         headers:
         - name: Authorization
           value: !env OPENAI_AUTH_HEADER
-EOF
-```
+{% endentity_examples %}
 
 In this example, we're setting up the AI Model Provider with:
 
@@ -78,20 +67,10 @@ In this example, we're setting up the AI Model Provider with:
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
-
-ai_gateways:
-  - ref: ai-quickstart
-    name: ai-quickstart
-    display_name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_models:
   - ref: my-claude-openai
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: my-claude-openai
     display_name: "my-claude-openai"
     type: model
@@ -111,8 +90,7 @@ ai_gateway_models:
     policies: []
     capabilities:
       - generate
-EOF
-```
+{% endentity_examples %}
 
 In this example, we're setting up the AI Model with:
 
