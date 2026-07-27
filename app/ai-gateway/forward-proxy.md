@@ -15,6 +15,7 @@ works_on:
   - konnect
 
 tools:
+  - kongctl
   - konnect-api
 
 min_version:

@@ -27,6 +27,7 @@ entities:
   - ai-model
 
 tools:
+    - kongctl
     - konnect-api
 
 tags:
