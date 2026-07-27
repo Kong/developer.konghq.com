@@ -115,7 +115,7 @@ spec:
 
 ## Explicit MeshService: the standard
 
-In {{site.mesh_product_name}}, you manage rollout-oriented "subsets" (like Canary vs. Stable) by creating **distinct `MeshService` resources**. This is called **Explicit Subsetting**. The control plane can also generate baseline `MeshService` resources automatically for workloads. The explicit resources in this section are for the cases where you want named, independently routable destinations.
+In {{site.mesh_product_name}}, you manage rollout-oriented "subsets" (like Canary vs. Stable) by creating **distinct `MeshService` resources**. This is called **explicit subsetting**. The control plane can also generate baseline `MeshService` resources automatically for workloads. The explicit resources in this section are for the cases where you want named, independently routable destinations.
 
 In 2.14, this model becomes cleaner again if you enable:
 

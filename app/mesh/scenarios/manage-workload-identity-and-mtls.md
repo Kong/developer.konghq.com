@@ -430,7 +430,7 @@ spec:
 ## Benefits of the mesh identity
 
 1.  **Identity as a First-Class Citizen**: Identity is no longer an implementation detail of the mesh; it is a resource you can audit, version, and manage independently.
-2.  **SPIRE Native**: Direct integration with SPIRE allows you to use hardware-backed identity (like TPMs) and complex node attestation strategies.
+2.  **SPIRE Native**: Direct integration with SPIRE allows you to use hardware-backed identity (like Trusted Platform Modules) and complex node attestation strategies.
 3.  **Customizable SPIFFE IDs**: Align your service identities with your organizational taxonomy (e.g., `spiffe://acme.com/billing-dept/payment-service`) rather than being forced into a flat structure.
 4.  **Granular Migration**: Move from the legacy model to the new model one service at a time by using specific `selectors` in your `MeshIdentity` policies.
 

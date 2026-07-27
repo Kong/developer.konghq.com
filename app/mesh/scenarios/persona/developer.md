@@ -289,7 +289,7 @@ spec:
 
 ## Observability
 
-Devin needs to see what's happening inside his code. He uses **MeshMetric** to aggregate both sidecar metrics and custom application metrics (like "checkins_per_second").
+Devin needs to see what's happening inside his code. He uses **MeshMetric** to aggregate both sidecar metrics and custom application metrics (like `checkins_per_second`).
 
 ```yaml
 kind: MeshMetric

@@ -135,7 +135,7 @@ Inside a zone, every workload runs alongside an Envoy sidecar. Sidecars enforce 
 flowchart LR
     subgraph ZoneEast["zone1 (Kubernetes)"]
         ZECP["Zone CP"]
-        KG["Kong Gateway<br/>(booking-gateway)"]
+        KG["{{site.base_gateway}}<br/>(booking-gateway)"]
         subgraph PPSvc["passenger-portal pod"]
             PP_App["passenger-portal"]
             PP_Envoy["Envoy sidecar"]
