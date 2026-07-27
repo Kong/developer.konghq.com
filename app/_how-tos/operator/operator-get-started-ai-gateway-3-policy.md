@@ -69,12 +69,6 @@ By the end of this guide, you will have a single AI Prompt Guard policy that:
 
 The AI Prompt Guard Policy evaluates deny patterns first. If the prompt matches a deny pattern, the request is rejected immediately. If no deny pattern matches, the prompt must then match at least one allow pattern to proceed. This means both rules must be in the same AI Policy to work together correctly.
 
-Export the `AIGatewayDataPlane` address from the previous step if you no longer have it set:
-
-```bash
-export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
-  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-```
 
 ## Create the AI Prompt Guard Policy
 

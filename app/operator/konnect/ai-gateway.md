@@ -40,12 +40,11 @@ related_resources:
 
 {{ site.operator_product_name }} manages {{ site.ai_gateway_name }} using a set of Kubernetes Custom Resource Definitions (CRDs). Each CRD maps to a concept in the {{ site.ai_gateway }} control plane; you declare the desired state in Kubernetes, and {{site.operator_product_name}} reconciles it with {{ site.konnect_short_name }}.
 
-The operator manages three distinct layers:
+{{site.operator_product_name}} manages three distinct layers:
 
-**Control plane**: `KonnectAIGateway` provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}. All other resources reference it as their parent.
+- **Control plane**: `KonnectAIGateway` provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}. All other resources reference it as their parent.
 - **Configuration resources**: `AIGatewayModelProvider`, `AIGatewayModel`, `AIGatewayPolicy`, `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, `AIGatewayConsumerGroup`, and `AIGatewayAgent` declare what the gateway does: which LLM providers to connect to, which model routes to expose, what Policies to enforce, which authentication schemes to accept, and which clients may access it.
-
-**Data plane**: `AIGatewayDataPlaneCertificate` and `AIGatewayDataPlane` run the traffic-handling binary inside your cluster. When you create an `AIGatewayDataPlane`, the operator automatically provisions the mTLS certificate and registers it with the control plane.
+- **Data plane**: `AIGatewayDataPlaneCertificate` and `AIGatewayDataPlane` run the traffic-handling binary inside your cluster. When you create an `AIGatewayDataPlane`, {{site.operator_product_name}} automatically provisions the mTLS certificate and registers it with the control plane.
 
 ## Resource model
 
@@ -169,10 +168,10 @@ rows:
 
 Each resource type is covered end-to-end in the getting started series:
 
-- **Providers and models**: [Deploy {{ site.ai_gateway_name }}](/operator/get-started/ai-gateway/deploy/) covers `AIGatewayModelProvider`, `AIGatewayModel`, and `AIGatewayDataPlane`.
+- **AI Providers and AI Models**: [Deploy {{ site.ai_gateway_name }}](/operator/get-started/ai-gateway/deploy/) covers `AIGatewayModelProvider`, `AIGatewayModel`, and `AIGatewayDataPlane`.
 - **AI Policies**: [Apply AI Policies](/operator/get-started/ai-gateway/policy/) covers `AIGatewayPolicy`, including global and model-scoped enforcement.
 - **AI Identity Providers and AI Consumers**: [Add AI Consumers](/operator/get-started/ai-gateway/consumers/) covers `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, and `AIGatewayConsumerGroup`.
-- **Agents**: `AIGatewayAgent` supports `a2a` and `http` agent types. Set `spec.apiSpec.type` to the agent protocol and `spec.apiSpec.config.url` to the upstream agent URL.
+- **AI Agents**: `AIGatewayAgent` supports `a2a` and `http` agent types. Set `spec.apiSpec.type` to the agent protocol and `spec.apiSpec.config.url` to the upstream agent URL.
 
 ## AIGatewayIdentityProvider
 
@@ -210,6 +209,7 @@ kubectl create secret generic oidc-client-secret \
 kubectl label secret oidc-client-secret konghq.com/secret=true -n kong
 ```
 
+The following is an example OpenID Connect AI Identity Provider configuration:
 The following is an example OpenID Connect AI Identity Provider configuration:
 ```yaml
 apiVersion: konnect.konghq.com/v1alpha1
