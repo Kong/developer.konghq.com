@@ -20,7 +20,7 @@ products:
   - operator
 
 min_version:
-  operator: '2.2'
+  operator: '2.3'
   ai-gateway: '2.0'
 
 works_on:
@@ -62,7 +62,7 @@ This guide walks through a complete {{ site.ai_gateway_name }} setup using {{sit
 By the end of the series, you will have:
 
 - A {{site.konnect_short_name}} {{ site.ai_gateway_name }} control plane
-- An AI Model Provider (OpenAI) and an AI Model route
+- An AI Model Provider (OpenAI) and an AI Model
 - An {{ site.ai_gateway_name }} data plane running in Kubernetes
 - AI Prompt Guard Policies enforcing content governance
 - Authenticated AI Consumers with per-team API keys

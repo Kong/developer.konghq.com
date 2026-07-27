@@ -16,7 +16,7 @@ products:
   - operator
 
 min_version:
-  operator: '2.2'
+  operator: '2.3'
 
 related_resources:
   - text: Deploy {{ site.ai_gateway_name }} with {{ site.operator_product_name }}
@@ -38,13 +38,12 @@ related_resources:
 
 ---
 
-{{ site.operator_product_name }} manages {{ site.ai_gateway_name }} using a set of Kubernetes Custom Resource Definitions (CRDs). Each CRD maps to a concept in the {{ site.ai_gateway }} control plane; you declare the desired state in Kubernetes, and the operator reconciles it with {{ site.konnect_short_name }}.
+{{ site.operator_product_name }} manages {{ site.ai_gateway_name }} using a set of Kubernetes Custom Resource Definitions (CRDs). Each CRD maps to a concept in the {{ site.ai_gateway }} control plane; you declare the desired state in Kubernetes, and {{site.operator_product_name}} reconciles it with {{ site.konnect_short_name }}.
 
 The operator manages three distinct layers:
 
 **Control plane**: `KonnectAIGateway` provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}. All other resources reference it as their parent.
-
-**Configuration resources**: `AIGatewayModelProvider`, `AIGatewayModel`, `AIGatewayPolicy`, `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, `AIGatewayConsumerGroup`, and `AIGatewayAgent` declare what the gateway does: which LLM providers to connect to, which model routes to expose, what Policies to enforce, which authentication schemes to accept, and which clients may access it.
+- **Configuration resources**: `AIGatewayModelProvider`, `AIGatewayModel`, `AIGatewayPolicy`, `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, `AIGatewayConsumerGroup`, and `AIGatewayAgent` declare what the gateway does: which LLM providers to connect to, which model routes to expose, what Policies to enforce, which authentication schemes to accept, and which clients may access it.
 
 **Data plane**: `AIGatewayDataPlaneCertificate` and `AIGatewayDataPlane` run the traffic-handling binary inside your cluster. When you create an `AIGatewayDataPlane`, the operator automatically provisions the mTLS certificate and registers it with the control plane.
 
@@ -69,10 +68,10 @@ rows:
     purpose: Configures an upstream LLM provider (OpenAI, Anthropic, Azure, Gemini, etc.)
   - resource: "`AIGatewayModel`"
     api_group: "`konnect.konghq.com/v1alpha1`"
-    purpose: Defines a model route, its capabilities, and which provider targets it
+    purpose: Defines an AI Model Route, its capabilities, and which AI Provider targets it
   - resource: "`AIGatewayPolicy`"
     api_group: "`konnect.konghq.com/v1alpha1`"
-    purpose: "Applies a Policy to the gateway (for example: prompt guard, sanitizer, rate limiting)"
+    purpose: "Applies an AI Policy to the gateway (for example: prompt guard, sanitizer, rate limiting)"
   - resource: "`AIGatewayIdentityProvider`"
     api_group: "`konnect.konghq.com/v1alpha1`"
     purpose: Configures the gateway authentication scheme (`key-auth` or `openid-connect`)
@@ -84,7 +83,7 @@ rows:
     purpose: Attaches an API key credential to an `AIGatewayConsumer`
   - resource: "`AIGatewayConsumerGroup`"
     api_group: "`konnect.konghq.com/v1alpha1`"
-    purpose: Groups AI Consumers together and applies shared Policies at the group level
+    purpose: Groups AI Consumers together and applies shared AI Policies at the group level
   - resource: "`AIGatewayAgent`"
     api_group: "`konnect.konghq.com/v1alpha1`"
     purpose: Configures an agent endpoint for A2A or HTTP agent traffic
@@ -171,8 +170,8 @@ rows:
 Each resource type is covered end-to-end in the getting started series:
 
 - **Providers and models**: [Deploy {{ site.ai_gateway_name }}](/operator/get-started/ai-gateway/deploy/) covers `AIGatewayModelProvider`, `AIGatewayModel`, and `AIGatewayDataPlane`.
-- **Policies**: [Apply AI Policies](/operator/get-started/ai-gateway/policy/) covers `AIGatewayPolicy`, including global and model-scoped enforcement.
-- **Identity providers and consumers**: [Add AI Consumers](/operator/get-started/ai-gateway/consumers/) covers `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, and `AIGatewayConsumerGroup`.
+- **AI Policies**: [Apply AI Policies](/operator/get-started/ai-gateway/policy/) covers `AIGatewayPolicy`, including global and model-scoped enforcement.
+- **AI Identity Providers and AI Consumers**: [Add AI Consumers](/operator/get-started/ai-gateway/consumers/) covers `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, and `AIGatewayConsumerGroup`.
 - **Agents**: `AIGatewayAgent` supports `a2a` and `http` agent types. Set `spec.apiSpec.type` to the agent protocol and `spec.apiSpec.config.url` to the upstream agent URL.
 
 ## AIGatewayIdentityProvider
@@ -201,7 +200,6 @@ spec:
         hideCredentials: Enabled
 ```
 
-The following is an example OpenID Connect AI Identity Provider configuration:
 
 OIDC client secrets use a `SensitiveDataSource` value in a list. Store the secret in Kubernetes and reference it:
 
@@ -212,6 +210,7 @@ kubectl create secret generic oidc-client-secret \
 kubectl label secret oidc-client-secret konghq.com/secret=true -n kong
 ```
 
+The following is an example OpenID Connect AI Identity Provider configuration:
 ```yaml
 apiVersion: konnect.konghq.com/v1alpha1
 kind: AIGatewayIdentityProvider
@@ -277,11 +276,11 @@ kubectl describe konnectaigateway/my-ai-gateway-cp -n kong
 
 ## Troubleshooting
 
-**Provider not reconciling**
+###  AI Provider not reconciling
 
 The provider depends on the `KonnectAIGateway` being `Programmed=True` first. Check the control plane status, then verify the {{site.konnect_short_name}} auth Secret it references is correctly formed.
 
-**Model route unreachable**
+### AI Model Route unreachable
 
 Confirm the `AIGatewayDataPlane` pod is running and the `LoadBalancer` address is assigned:
 
@@ -289,17 +288,17 @@ Confirm the `AIGatewayDataPlane` pod is running and the `LoadBalancer` address i
 kubectl get pods,svc -n kong -l app.kubernetes.io/name=my-ai-gateway-dp
 ```
 
-**Policy not taking effect**
+### AI Policy not taking effect
 
-Verify `spec.aiGatewayRef.namespacedRef.name` matches your `KonnectAIGateway` name exactly. Describe the Policy to surface any reconciliation errors:
+Verify `spec.aiGatewayRef.namespacedRef.name` matches your `KonnectAIGateway` name exactly. Describe the AI Policy to surface any reconciliation errors:
 
 ```bash
 kubectl describe aigatewaypolicy -n kong
 ```
 
-**Operator logs**
+### {{site.operator_product_name}} LOGS
 
-For any resource stuck in a non-`Programmed` state, check the operator logs:
+For any resource stuck in a non-`Programmed` state, check the {{site.operator_product_name}} logs:
 
 ```bash
 kubectl logs -n kong-system \
