@@ -218,4 +218,4 @@ Sum: 0.037000
 > 1. Go to **Observability > Dashboards**.
 > 1. Click **Create dashboard > Create from template**.
 > 1. Select the **Agentic analytics** dashboard. This dashboard highlights which tools are called most frequently, breaks down tool usage by consumer, and tracks average latency per tool over time, helping teams operating MCP-enabled services understand usage patterns and identify performance bottlenecks.
-> 1. Click **Use template** to see MCP tool usage, total MCP requests, total MCP errors, and other statisticss.
+> 1. Click **Use template** to see MCP tool usage, total MCP requests, total MCP errors, and other statistics.
