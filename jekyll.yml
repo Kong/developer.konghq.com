@@ -104,6 +104,11 @@ reference_metadata:
     tools:
       - inso-cli
 
+  koh:
+    products:
+      - koh
+      - insomnia
+
   gateway:
     pdk:
       products:
