@@ -123,9 +123,8 @@ sequenceDiagram
 {:.info}
 > **Note:** {{site.konnect_short_name}} doesn't store the client's secrets. Make sure to copy and to securely store theirs values when they're generated at creation.
 
-### Secrets rotation
 
-You can have two secrets active at a time.
+You can have a maximum of two secrets active at a time.
 This allows you to rotate secrets without incurring downtime using the UI or API.
 
 
