@@ -128,18 +128,11 @@ _defaults:
   kongctl:
     namespace: ai-gateway-get-started
 
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
 ai_gateway_policies:
   - ref: otel-a2a
     name: otel-a2a
     display_name: "otel-a2a"
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
     type: opentelemetry
     enabled: true
     global: false
@@ -153,7 +146,7 @@ ai_gateway_policies:
 
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
     name: kongair-flight-booking-agent
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
@@ -175,9 +168,9 @@ ai_gateway_agents:
 EOF
 ```
 
-The `otel-a2a` Policy has `type: opentelemetry` and `global: false`, so it only applies where you explicitly attach it rather than to every resource on {{site.ai_gateway}}. Its `config.traces_endpoint` and `config.metrics.endpoint` point at your collector's OTLP receiver, and `config.metrics.enable_ai_metrics: true` turns on the `kong.gen_ai.a2a.*` metrics this guide validates. `config.resource_attributes.service.name` labels the exported data so you can tell which {{site.ai_gateway}} instance it came from.
+By default, an AI Policy applies to every resource on your {{site.ai_gateway}}. Setting `global` to `false` changes that: the `otel-a2a` Policy now only takes effect on entities that explicitly list it, instead of applying gateway-wide.
 
-The agent attaches that Policy through `policies: [!ref otel-a2a#name]`, so every request routed through `kongair-flight-booking-agent` gets traced and measured.
+The `kongair-flight-booking-agent` entity does exactly that by referencing `otel-a2a` in its `policies` list. As a result, every request that goes through the agent is traced and measured, and that data is exported to the collector you started earlier. The `service.name` value under `resource_attributes` is just a label attached to that exported data, so if you're running multiple {{site.ai_gateway}}s or services into the same collector, you can tell which one a given trace or metric came from.
 
 ## Send an A2A request
 
@@ -317,3 +310,10 @@ Value: 1
 `kong.route.name` carries a `-route` suffix because {{site.ai_gateway}} auto-generates a Route for the agent. `kong.konnect.cp.id` identifies the {{site.ai_gateway}}  control plane the metric originated from.
 
 See [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics) for the full metric reference, including `kong.gen_ai.a2a.request.duration`, `kong.gen_ai.a2a.response.size`, `kong.gen_ai.a2a.ttfb`, and `kong.gen_ai.a2a.request.error.count`.
+
+{:.success}
+> You can also view A2A traffic metrics without setting up a collector, using {{site.konnect_short_name}} Analytics:
+> 1. Go to **Observability > Dashboards**.
+> 1. Click **Create dashboard > Create from template**.
+> 1. Select the **Agentic analytics** dashboard. This dashboard highlights which tools are called most frequently, breaks down tool usage by consumer, and tracks average latency per tool over time, helping teams operating agentic services understand usage patterns and identify performance bottlenecks.
+> 1. Click **Use template** to see agent traffic volume, error rates, and other stats.
