@@ -17,7 +17,7 @@ tldr:
   a: |
     By default, {{site.mesh_product_name}} allows all outbound traffic. Use **MeshPassthrough** to:
     1. **Restrict access** by setting `passthroughMode: None`.
-    2. **Whitelist destinations** by matching specific domains (e.g., `*.google.com`).
+    2. **Allowlist destinations** by matching specific domains (for example, `*.google.com`).
     3. **Enable visibility** by managing the mesh perimeter explicitly.
 prereqs:
   inline:
