@@ -51,9 +51,9 @@ Here's a minimal configuration for chat completions:
 {% entity_example %}
 type: model-provider
 data:
-  display_name:  llama2 Production
+  display_name: Llama2 Production
   name: my-llama2-account
-  type:  llama2
+  type: llama2
   config:
     auth:
       type: basic
