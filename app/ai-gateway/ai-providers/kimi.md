@@ -58,8 +58,9 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: $KIMI_TOKEN
+          value: ${key}
+variables:
+  key:
+    value: $KIMI_TOKEN
+    description: "The API token used to connect to Kimi. Include the `Bearer` prefix, for example `Bearer <your-api-token>`."
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$KIMI_TOKEN`: The API token used to connect to Kimi. Include the `Bearer ` prefix, for example `Bearer <your-api-token>`.

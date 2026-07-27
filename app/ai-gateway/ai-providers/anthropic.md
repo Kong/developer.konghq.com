@@ -61,9 +61,9 @@ data:
       type: basic
       headers:
         - name: x-api-key
-          value: $ANTHROPIC_API_KEY
+          value: ${key}
+variables:
+  key:
+    value: $ANTHROPIC_API_KEY
+    description: The API key to use to connect to Anthropic.
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$ANTHROPIC_API_KEY`: The API key used to connect to Anthropic.
- 

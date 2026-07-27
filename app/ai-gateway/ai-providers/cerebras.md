@@ -58,8 +58,9 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: $CEREBRAS_API_KEY
+          value: ${key}
+variables:
+  key:
+    value: $CEREBRAS_API_KEY
+    description: "The API key used to connect to Cerebras. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$CEREBRAS_API_KEY`: The API key used to connect to Cerebras. Include the `Bearer ` prefix, for example `Bearer <your-api-key>`.

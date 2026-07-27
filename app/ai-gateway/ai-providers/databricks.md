@@ -59,11 +59,12 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: $DATABRICKS_TOKEN
+          value: ${key}
+variables:
+  key:
+    value: $DATABRICKS_TOKEN
+    description: "The access token used to connect to Databricks. Include the `Bearer` prefix, for example `Bearer <your-access-token>`."
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$DATABRICKS_TOKEN`: The access token used to connect to Databricks. Include the `Bearer ` prefix, for example `Bearer <your-access-token>`.
 
 ## Configure a model target for {{ provider.name }}
 

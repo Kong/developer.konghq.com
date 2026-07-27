@@ -59,8 +59,9 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: $DASHSCOPE_API_KEY
+          value: ${key}
+variables:
+  key:
+    value: $DASHSCOPE_API_KEY
+    description: "The API key used to connect to Dashscope. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$DASHSCOPE_API_KEY`: The API key used to connect to Dashscope. Include the `Bearer ` prefix, for example `Bearer <your-api-key>`.

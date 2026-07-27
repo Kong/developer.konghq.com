@@ -74,13 +74,16 @@ data:
   config:
     auth:
       type: aws
-      access_key_id: $AWS_ACCESS_KEY_ID
-      secret_access_key: $AWS_SECRET_ACCESS_KEY
+      access_key_id: ${key_id}
+      secret_access_key: ${access_key}
+variables:
+  key_id:
+    value: $AWS_ACCESS_KEY_ID
+    description: Your AWS access key ID.
+  access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+    description: Your AWS secret access key.
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$AWS_ACCESS_KEY_ID`: Your AWS access key ID.
-* `$AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
 
 ## Authentication with AWS
 

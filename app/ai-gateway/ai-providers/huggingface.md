@@ -61,8 +61,9 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: $HUGGINGFACE_TOKEN
+          value: ${key}
+variables:
+  key:
+    value: $HUGGINGFACE_TOKEN
+    description: "The access token used to connect to Hugging Face. Include the `Bearer` prefix, for example `Bearer <your-access-token>`."
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$HUGGINGFACE_TOKEN`: The access token used to connect to Hugging Face. Include the `Bearer ` prefix, for example `Bearer <your-access-token>`.

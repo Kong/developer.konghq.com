@@ -59,8 +59,9 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: $OPENAI_API_KEY
+          value: ${key}
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: "The API key used to connect to OpenAI. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$OPENAI_API_KEY`: The API key used to connect to OpenAI. Include the `Bearer ` prefix, for example `Bearer <your-api-key>`.

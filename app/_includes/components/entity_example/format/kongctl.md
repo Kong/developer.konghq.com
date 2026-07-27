@@ -23,6 +23,6 @@ Add this snippet to a kongctl declarative configuration file, and then [manage i
 
 {% include components/entity_example/format/snippets/kongctl.md presenter=include.presenter %}
 
-{% if include.render_context %}
+{% if include.render_context or include.presenter.product == 'ai-gateway' %}
 {% include components/entity_example/replace_variables.md missing_variables=include.presenter.missing_variables %}
 {% endif %}

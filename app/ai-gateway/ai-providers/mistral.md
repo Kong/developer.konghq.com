@@ -59,11 +59,12 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: $MISTRAL_API_KEY
+          value: ${key}
+variables:
+  key:
+    value: $MISTRAL_API_KEY
+    description: "The API key used to connect to Mistral. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$MISTRAL_API_KEY`: The API key used to connect to Mistral. Include the `Bearer ` prefix, for example `Bearer <your-api-key>`.
 
 ## Configure a model target for {{ provider.name }}
 

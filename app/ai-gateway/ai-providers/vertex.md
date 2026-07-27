@@ -59,11 +59,12 @@ data:
     auth:
       type: gcp
       use_gcp_service_account: true
-      service_account_json: $GCP_ACCOUNT_JSON
+      service_account_json: ${account}
+variables:
+  account:
+    value: $GCP_ACCOUNT_JSON
+    description: The contents of your GCP service account JSON key file.
 {% endentity_example %}
-
-Replace the following with your actual values:
-* `$GCP_ACCOUNT_JSON`: The contents of your GCP service account JSON key file.
 
 ## Authentication with GCP IAM
 
