@@ -36,7 +36,7 @@ prereqs:
 tldr:
   q: How do I add AI consumers with {{site.operator_product_name}}?
   a: |
-    Create an `AIGatewayIdentityProvider` and attach it to your AI Model via `spec.apiSpec.model.access.identityProviders`. Then create an `AIGatewayConsumer` with `spec.apiSpec.type: api-key`, store the key in a Kubernetes Secret, and create an `AIGatewayConsumerCredential` referencing it. Use `AIGatewayConsumerGroup` to target shared Policies, model access controls, and analytics attribution at the group level.
+    Create an `AIGatewayIdentityProvider` and attach it to your AI Model via `spec.apiSpec.model.access.identityProviders`. Then create an `AIGatewayConsumer` with `spec.apiSpec.type: api-key`, store the key in a Kubernetes Secret, and create an `AIGatewayConsumerCredential` referencing it. Use `AIGatewayConsumerGroup` to target shared AI Policies, model access controls, and analytics attribution at the group level.
 
 next_steps:
   - text: "{{ site.ai_gateway_name }} resource reference"
@@ -206,12 +206,6 @@ The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayC
 
 ## Test authentication
 
-Export the data plane address if you no longer have it set from the previous step:
-
-```bash
-export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
-  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-```
 
 Send an authenticated request using the API key:
 
@@ -223,7 +217,7 @@ curl -s -o /dev/null -w "%{http_code}\n" \
   -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"How do I configure a Kong service?"}]}'
 ```
 
-For the following unauthenticated request, you should get a `401 Unauthorized`:
+Send an unauthenticated request:
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" \
@@ -232,9 +226,11 @@ curl -s -o /dev/null -w "%{http_code}\n" \
   -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"How do I configure a Kong service?"}]}'
 ```
 
+You should get a `401 Unauthorized`.
+
 ## Group AI Consumers with an AI Consumer Group
 
-`AIGatewayConsumerGroup` is a named set of AI Consumers that you can target as a unit. Use groups to:
+`AIGatewayConsumerGroup` is a named set of AI Consumers that you can target as a unit. Use AI Consumer Groups to:
 
 - Apply shared AI Policies to a team via `spec.apiSpec.policies` on the AI Consumer Group — each entry is an object with a `name` field referencing an `AIGatewayPolicy` by its Kubernetes resource name, which is useful for AI Policies scoped with `global: Disabled`
 - Restrict or allow group access to individual AI Models via `spec.apiSpec.model.access.acls` on the `AIGatewayModel`
@@ -271,7 +267,7 @@ AI Consumer membership is declared on the `AIGatewayConsumer`, not on the AI Con
      --timeout=5m
    ```
 
-1. Enroll the AI Consumer in the group by patching the consumer resource:
+1. Enroll the AI Consumer in the AI Consumer Group by patching the consumer resource:
 
    ```bash
    kubectl patch aigatewayconsumer team-platform -n kong \
