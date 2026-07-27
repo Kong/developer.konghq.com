@@ -40,8 +40,8 @@ tools:
 
 prereqs:
   konnect:
-    - name: KONG_STATUS_LISTEN
-      value: '0.0.0.0:8100'
+    - name: KONG_TRACING_INSTRUMENTATIONS
+    - name: KONG_TRACING_SAMPLING_RATE
   inline:
     - title: OpenAI API key
       content: |
