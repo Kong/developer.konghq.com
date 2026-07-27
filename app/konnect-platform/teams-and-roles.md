@@ -513,7 +513,7 @@ rows:
       * Create, read, list and delete debug sessions.
       * Read and list control planes and all configurations within them.
   - role: "`Deployer`"
-    description: "This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Catalog."
+    description: "This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Catalog. This role cannot write partials."
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list plugins and custom plugins.
