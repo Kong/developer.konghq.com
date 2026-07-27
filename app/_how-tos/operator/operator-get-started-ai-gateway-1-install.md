@@ -77,32 +77,7 @@ kubectl create namespace kong
 
 ## Install {{site.operator_product_name}}
 
-Install {{site.operator_product_name}} with the {{ site.ai_gateway }} data plane controller enabled:
-
-<!-- TEMPORARY: pinned to a preview build for docs review. Revert to
-     {% include prereqs/products/operator.md raw=true v_maj=2 %}
-     once {{site.operator_product_name}} 1.4.0 is released. -->
-
-1. Add the Kong Helm charts:
-
-   ```bash
-   helm repo add kong https://charts.konghq.com
-   helm repo update
-   ```
-
-1. Install {{ site.operator_product_name }} using Helm:
-
-   ```bash
-   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-     --create-namespace \
-     --version 1.4.0-rc.1 \
-     --set env.ENABLE_CONTROLLER_KONNECT=true \
-     --set env.ENABLE_CONTROLLER_AIGATEWAYDATAPLANE=true
-   ```
-
-{% include k8s/cert-manager.md %}
-
-{% include k8s/ca-cert.md %}
+{% include prereqs/products/operator.md raw=true v_maj=2 %}
 
 ## Verify {{ site.ai_gateway }} CRDs
 
