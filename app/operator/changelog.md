@@ -14,7 +14,7 @@ breadcrumbs:
 
 Changelog for supported {{ site.operator_product_name }} versions.
 
-## [v2.2.1]
+## 2.2.1
 
 > Release date: 2026-07-01
 
