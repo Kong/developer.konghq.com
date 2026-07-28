@@ -65,6 +65,8 @@ If it detects a conflict, {{site.base_gateway}} exits with an error listing the 
 Existing Workspaces created before this check was introduced must be renamed manually.
 To find reserved segments, call `GET /endpoints` and review the first path component of each route.
 
+For more information and step-by-step instructions, see the [workspace name migration guide](/gateway/entities/workspace/#resolve-workspace-name-conflicts).
+
 #### Known issues in 3.15.0.0
 
 The following is a list of known issues in 3.15.0.0 that may be fixed in a future release.
