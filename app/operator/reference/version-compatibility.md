@@ -90,7 +90,7 @@ compatible_versions:
 {% endversion_compatibility_table %}
 
 [gateway-api]: https://github.com/kubernetes-sigs/gateway-api
-[gateway-api-supported-versions]:https://gateway-api.sigs.k8s.io/concepts/versioning/#supported-versions
+[gateway-api-supported-versions]:https://gateway-api.sigs.k8s.io/docs/concepts/versioning/#supported-versions
 
 ### `kubernetes-configuration` CRDs
 
