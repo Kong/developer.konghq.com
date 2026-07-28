@@ -44,3 +44,6 @@ mesh-get-started-universal:
 mesh-scoped-zone-proxy:
   title: Deploy and configure mesh-scoped zone proxies
   url: /mesh/zone-proxies/
+mcp-conversion-2-0:
+  title: Map a RESTful API to MCP tools and observe MCP traffic
+  url: /ai-gateway/map-api-to-mcp-tools/

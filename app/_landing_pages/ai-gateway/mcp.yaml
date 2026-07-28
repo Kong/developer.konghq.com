@@ -43,33 +43,64 @@ rows:
             config:
               header:
                 type: h2
-                text: "Generate, secure, and govern MCP servers"
+                text: "Map APIs to MCP servers using {{site.ai_gateway}}"
               blocks:
                 - type: text
                   text: |
-                    {{site.ai_gateway}} {% new_in 2.0 %} manages traffic through the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity.
-                    Generate an AI MCP Server from an API spec to expose MCP tools and services, then attach AI Policies for authentication, access control, and observability.
+                    Turn any API into an MCP server using the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity. This approach does not require an LLM and provides full control over production workloads.
 
-                    Attach AI Policies to your AI MCP Server entities to apply security, governance, and observability controls across your MCP infrastructure.
-
-                    Use AI Policies to:
-                    - Secure access with the MCP OAuth2 AI Policy or other authentication methods
-                    - Monitor MCP traffic using AI metrics and AI audit logs
-                    - Enforce access controls for MCP tool usage
-                    - Govern usage with rate limiting and traffic control
+                    The AI MCP Server entity:
+                    - Maps REST API endpoints into MCP-compatible tool definitions.
+                    - Aggregates multiple MCP Servers into a single MCP endpoint.
+                    - Integrates with AI assistants like Claude Desktop, Cursor, ChatWise, and other MCP clients.
       - blocks:
           - type: structured_text
             config:
               header:
                 type: h3
-                text: "Security and governance with AI Policies"
+                text: "Apply security, governance, and observability controls to MCP servers"
               blocks:
                 - type: text
                   text: |
-                    Secure MCP servers and govern traffic with AI Policies:
-                    - [MCP OAuth2 policy](/ai-gateway/policies/ai-mcp-oauth2/)
-                    - [Rate Limiting](/ai-gateway/policies/rate-limiting/)
-                    - [Observability](/ai-gateway/monitor-ai-llm-metrics/)
+                    Use AI Policies to:
+                    - Secure access with the [MCP OAuth2 policy](/ai-gateway/policies/ai-mcp-oauth2/), [OIDC policy](/ai-gateway/policies/openid-connect/), or [Key Auth policy](/ai-gateway/policies/key-auth/).
+                    - Monitor MCP traffic using [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
+                    - Enforce access controls for MCP tool usage.
+                    - Govern usage with the [Rate Limiting policy](/ai-gateway/policies/rate-limiting/) and other traffic control policies.
+
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/mcp.svg
+              title: Convert REST APIs into MCP servers using {{site.ai_gateway}}
+              description: |
+                Explore guides to map REST API endpoints into MCP tools without writing custom code.
+              ctas:
+                - text: AI MCP Server entity
+                  url: /ai-gateway/entities/ai-mcp-server/
+                - text: Map the WeatherAPI to an MCP Server
+                  url: /ai-gateway/get-started-with-mcp-server/
+                - text: Map a RESTful API to MCP tools
+                  url: /ai-gateway/map-api-to-mcp-tools/
+                - text: Monitor MCP traffic with OpenTelemetry
+                  url: /ai-gateway/monitor-mcp-traffic-with-otel/
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/lock.svg
+              title: Secure and govern your MCP traffic
+              description: |
+                Apply security, governance, and observability to MCP servers with AI Policies.
+              ctas:
+                - text: MCP OAuth2 policy
+                  url: /ai-gateway/policies/ai-mcp-oauth2/
+                - text: OIDC policy
+                  url: /ai-gateway/policies/openid-connect/
+                - text: Key Auth policy
+                  url: /ai-gateway/policies/key-auth/
+                - text: Rate Limiting policy
+                  url: /ai-gateway/policies/rate-limiting/
 
   - header:
       type: h2
