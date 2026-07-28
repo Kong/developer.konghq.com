@@ -42,7 +42,7 @@ resource "konnect_cloud_gateway_network" "my_cloudgatewaynetwork" {
     "eastus2-az3"
   ]
 
-  cidr_block      = "10.99.98.0/23"
+  cidr_block      = "10.99.98.0/21"
 
   cloud_gateway_provider_account_id = "d53d2872-514f-4fb9-819e-43bd792b4759"
 }

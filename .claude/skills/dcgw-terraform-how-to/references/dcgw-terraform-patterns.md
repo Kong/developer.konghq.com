@@ -237,7 +237,7 @@ The include does the full setup in sequence:
        "eastus2-az2",
        "eastus2-az3"
      ]
-     cidr_block                        = "10.99.98.0/23"
+     cidr_block                        = "10.99.98.0/21"
      cloud_gateway_provider_account_id = "YOUR_PROVIDER_ACCOUNT_ID"
    }
 
