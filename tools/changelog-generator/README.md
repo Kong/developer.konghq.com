@@ -82,7 +82,7 @@ Reads `./tmp/gateway/*`, `./missing_changelogs/*`, and `./missing_entries/`, wri
 ### 1. Generate yml entries from the changelog file
 
 ```bash
-node md-to-yml.js --path='../../../ai-gateway' --version='1.2.3' --product=ai-gateway
+node md-to-yml.js --path='../../../kong-ee' --version='1.2.3' --product=ai-gateway
 ```
 
 Reads `<ai-gateway>/changelog/aigw-1.2.3/aigw-1.2.3.md`, writes YAML files to `./tmp/ai-gateway/changelog/1.2.3/<component>/`.
