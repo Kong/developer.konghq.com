@@ -2,7 +2,7 @@
 title: Monitor AI Agent traffic with OpenTelemetry
 content_type: how_to
 permalink: /ai-gateway/monitor-ai-agent-with-opentelemetry/
-description: Attach an OpenTelemetry Policy to an AI Agent entity to export A2A traces and metrics to an OTLP collector
+description: Attach an OpenTelemetry AI Policy to an AI Agent entity to export A2A traces and metrics to an OTLP collector
 products:
   - ai-gateway
 
@@ -94,10 +94,10 @@ cleanup:
       include_content: cleanup/products/ai-gateway
 
 faqs:
-  - q: Does the AI Agent need any logging configuration to emit A2A traces and metrics?
+  - q: What logging configuration does the AI Agent need to emit A2A traces and metrics?
     a: |
-      Set `config.logging.payloads` to `true` on the [AI Agent](/ai-gateway/entities/ai-agent/) if you also want request and response bodies captured alongside the telemetry.
       A2A span and metric emission itself doesn't depend on a separate flag on the agent. The OpenTelemetry Policy's `traces_endpoint` and `metrics.endpoint` control where that data is exported.
+      Set `config.logging.payloads` to `true` on the [AI Agent](/ai-gateway/entities/ai-agent/) if you also want request and response bodies captured alongside the telemetry.
 
   - q: Can one OpenTelemetry Policy cover multiple AI Agents or AI Models?
     a: |
@@ -307,7 +307,7 @@ Value: 1
 ```
 {:.collapsible}
 
-`kong.route.name` carries a `-route` suffix because {{site.ai_gateway}} auto-generates a Route for the agent. `kong.konnect.cp.id` identifies the {{site.ai_gateway}}  control plane the metric originated from.
+`kong.route.name` carries a `-route` suffix because {{site.ai_gateway}} auto-generates a Route for the agent. `kong.konnect.cp.id` identifies the {{site.ai_gateway}} control plane the metric originated from.
 
 See [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics) for the full metric reference, including `kong.gen_ai.a2a.request.duration`, `kong.gen_ai.a2a.response.size`, `kong.gen_ai.a2a.ttfb`, and `kong.gen_ai.a2a.request.error.count`.
 
