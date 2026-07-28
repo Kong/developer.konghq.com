@@ -5,10 +5,55 @@ This document guides you through the process of upgrading Kong Mesh.
 First, check if a section named `Upgrade to x.y.z` exists,
 with `x.y.z` being the version you are planning to upgrade to.
 
+## Upgrade to `3.0.x`
+
+### Legacy `OPAPolicy` API removed
+
+The legacy `OPAPolicy` resource (`config.kong-mesh.io/v1alpha1`, kind `OPAPolicy`) and its CRD have been removed. Use the `MeshOPA` targetRef policy instead.
+
+**Action required:** Before upgrading, migrate any `OPAPolicy` resources to `MeshOPA` and delete the old ones. After upgrading, the `OPAPolicy` CRD is no longer installed; leftover `OPAPolicy` objects will be rejected by the control plane.
+
 ## Upgrade to `3.0.0`
 
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+### `from` removed from `MeshTLS`
+
+The deprecated `from` field has been removed from the `MeshTLS` policy. Use the `rules` field instead.
+
+**Action required**
+
+Migrate any `MeshTLS` resources using `from` to use `rules` before upgrading.
+
+**Warning**: Un-migrated `from` configurations are silently ignored after upgrade — the `from` field no longer exists in the schema and the data is discarded during deserialization. The impact depends on your CA backend configuration:
+- **CA backend mode `PERMISSIVE`**: workloads fall back to permissive TLS when you intended strict
+- **CA backend mode `STRICT` or workload has identity**: workloads default to strict mTLS, potentially breaking connectivity if the `from` policy was intentionally permissive
+
+Before upgrading, audit your cluster for affected resources:
+```bash
+kubectl get meshtls -A -o yaml | grep -B5 'from:'
+```
+
+```yaml
+# Before (deprecated)
+spec:
+  targetRef:
+    kind: Mesh
+  from:
+    - targetRef:
+        kind: Mesh
+      default:
+        mode: Strict
+
+# After
+spec:
+  targetRef:
+    kind: Mesh
+  rules:
+    - default:
+        mode: Strict
+```
 
 ### Legacy `ExternalService` resource removed
 
@@ -53,6 +98,19 @@ regardless of what the mesh's former `meshServices.mode` was set to.
 
 None. A `Mesh` spec that still sets `meshServices` continues to apply
 successfully; the field is silently ignored by the control plane.
+
+### `routing.zoneEgress` removed from the `Mesh` schema
+
+The `routing.zoneEgress` boolean has been removed from the `Mesh` resource
+spec. Cross-zone and `MeshExternalService` traffic now uses ZoneEgress based on
+actual zone egress topology plus mTLS, rather than an explicit mesh-level
+toggle.
+
+**Action required**
+
+Remove any `routing.zoneEgress` entries from stored `Mesh` resources and
+manifests before upgrading. After the upgrade, that field no longer exists in
+the schema and is ignored during deserialization.
 
 ### MeshService mode no longer disables zone proxy listeners, inspect endpoints, or MeshIdentity initialization
 
@@ -350,6 +408,66 @@ spec:
           maxConnections: 1024
 ```
 
+### `from` removed from `MeshAccessLog`
+
+The deprecated `spec.from` array has been removed from `MeshAccessLog`. Access logging for incoming traffic is now configured exclusively through `spec.rules`. `spec.from` is silently dropped on create/update: if `spec.rules` or `spec.to` is also set, the resource is accepted but `from` has no effect on inbound configuration; if `from` was the only field set, the resulting spec has neither `to` nor `rules`, so the request is rejected by validation.
+
+**Action required**
+
+Before upgrading, migrate every `MeshAccessLog` that uses `spec.from` to `spec.rules`. A `from` entry targeting `kind: Mesh` (all clients) maps to a single catch-all rule:
+
+```yaml
+# before
+spec:
+  from:
+    - targetRef:
+        kind: Mesh
+      default:
+        backends:
+          - type: File
+            file:
+              path: /tmp/access.log
+# after
+spec:
+  rules:
+    - default:
+        backends:
+          - type: File
+            file:
+              path: /tmp/access.log
+```
+
+### `from` removed from `MeshRateLimit`
+
+The deprecated `spec.from` array has been removed from `MeshRateLimit`. Rate limiting for incoming traffic is now configured exclusively through `spec.rules`. `spec.from` is silently dropped on create/update: if `spec.rules` or `spec.to` is also set, the resource is accepted but `from` has no effect on inbound configuration; if `from` was the only field set, the resulting spec has neither `to` nor `rules`, so the request is rejected by validation.
+
+**Action required**
+
+Before upgrading, migrate every `MeshRateLimit` that uses `spec.from` to `spec.rules`. A `from` entry targeting `kind: Mesh` (all clients) maps to a single catch-all rule:
+
+```yaml
+# before
+spec:
+  from:
+    - targetRef:
+        kind: Mesh
+      default:
+        local:
+          http:
+            requestRate:
+              num: 100
+              interval: 10s
+# after
+spec:
+  rules:
+    - default:
+        local:
+          http:
+            requestRate:
+              num: 100
+              interval: 10s
+```
+
 ### Auto reachable services removed
 
 The experimental auto reachable services feature has been removed. The control
@@ -367,13 +485,31 @@ Remove the setting above from your control plane config. Setting
 `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES` no longer has any effect in Kuma
 3.0.0.
 
-To trim the outbound clusters a proxy receives, configure reachable services or
-reachable backends explicitly on the `Dataplane` (the
-`kuma.io/transparent-proxying-reachable-services` and `kuma.io/reachable-backends`
-annotations on Kubernetes). Traffic that is not permitted by a
-`MeshTrafficPermission` is still denied at the proxy; it is simply no longer
-pruned from the proxy configuration.
+To trim the outbound clusters a proxy receives, configure reachable backends
+explicitly on the `Dataplane` (the `kuma.io/reachable-backends` annotation on
+Kubernetes). Traffic that is not permitted by a `MeshTrafficPermission` is
+still denied at the proxy; it is simply no longer pruned from the proxy
+configuration.
 
+### `reachableServices` / `kuma.io/transparent-proxying-reachable-services` removed
+
+The legacy `kuma.io/service`-based reachable services mechanism has been
+removed in favor of `reachableBackends` (`kuma.io/reachable-backends` on
+Kubernetes), which targets `MeshService`/`MeshExternalService`/
+`MeshMultiZoneService` resources instead of the `kuma.io/service` tag.
+
+The following have been removed:
+
+- `Dataplane.spec.networking.transparentProxying.reachableServices`
+- The `kuma.io/transparent-proxying-reachable-services` annotation on
+  Kubernetes.
+
+**Action required**
+
+Migrate any usage of the annotation or field above to `reachableBackends` /
+`kuma.io/reachable-backends`, referencing the target `MeshService`,
+`MeshExternalService`, or `MeshMultiZoneService` by name/namespace/port
+instead of the `kuma.io/service` tag value.
 
 ### `kumactl install observability` removed
 
@@ -772,6 +908,21 @@ Migrate any `Mesh` resources that still configure `spec.tracing` to a
 continues to apply successfully; the field is silently ignored by the control
 plane.
 
+### `Mesh.spec.routing.localityAwareLoadBalancing` removed
+
+The inline `routing.localityAwareLoadBalancing` field has been removed from
+the `Mesh` resource spec. The `MeshLoadBalancingStrategy` policy has been the
+GA replacement for configuring locality-aware load balancing and is
+unaffected by this change.
+
+**Action required**
+
+Migrate any `Mesh` resources that still configure
+`spec.routing.localityAwareLoadBalancing` to a `MeshLoadBalancingStrategy`
+policy before upgrading. A `Mesh` spec that still sets
+`routing.localityAwareLoadBalancing` continues to apply successfully; the
+field is silently ignored by the control plane.
+
 ### `Mesh.spec.logging` removed
 
 The inline `logging` field (and its `Logging`/`LoggingBackend`/
@@ -786,13 +937,93 @@ Migrate any `Mesh` resources that still configure `spec.logging` to a
 `logging` continues to apply successfully; the field is silently ignored by
 the control plane.
 
-## Upgrade to `3.0.x`
+### Per-zone MeshExternalService routing removed
 
-### Legacy `OPAPolicy` API removed
+A `MeshExternalService` labeled with `kuma.io/zone` is no longer restricted to
+being reached only from that zone via a routing path through the remote
+zone's ingress and egress. It is now reachable directly through the local
+zone egress from every zone, the same as an unlabeled `MeshExternalService`.
 
-The legacy `OPAPolicy` resource (`config.kong-mesh.io/v1alpha1`, kind `OPAPolicy`) and its CRD have been removed. Use the `MeshOPA` targetRef policy instead.
+**Action required**
 
-**Action required:** Before upgrading, migrate any `OPAPolicy` resources to `MeshOPA` and delete the old ones. After upgrading, the `OPAPolicy` CRD is no longer installed; leftover `OPAPolicy` objects will be rejected by the control plane.
+None for typical usage; existing `kuma.io/zone` labels on `MeshExternalService`
+resources are no longer used to gate reachability and can be removed. If you
+relied on the label to force all traffic through a specific zone's egress
+(for example, because only that zone has network-level access to the
+external endpoint), that forwarding no longer happens: every zone's local
+egress now dials the external endpoint directly, so make sure each zone's
+network path to the endpoint is in place before upgrading.
+
+### `MeshInsight.policies` removed in favor of `resources`
+
+The deprecated `policies` field (a map of policy type to a `total` count) has
+been removed from `MeshInsight`. The `resources` field, which reports a
+`total` count for every resource type (policies included), has been the
+replacement since it was introduced and is unaffected by this change.
+
+**Action required**
+
+Update any automation or dashboards that read `MeshInsight.policies` (via the
+REST API or `kumactl inspect meshes`) to read the equivalent entry from
+`MeshInsight.resources` instead, keyed by the same resource type name.
+
+### `Mesh.spec.networking.outbound.passthrough` removed
+
+The inline `networking.outbound.passthrough` field has been removed from the
+`Mesh` resource spec. The `MeshPassthrough` policy is the replacement for
+controlling the default outbound passthrough cluster and is unaffected by
+this change. After upgrading, the control plane always behaves as if
+`passthrough` was `true` (its previous default) unless a `MeshPassthrough`
+policy says otherwise.
+
+**Action required**
+
+Migrate any `Mesh` resources that still set `networking.outbound.passthrough`
+to `false` to a `MeshPassthrough` policy with `targetRef.kind: Mesh` and
+`default.passthroughMode: None` before upgrading. A `Mesh` spec that still
+sets `networking.outbound.passthrough` continues to apply successfully; the
+field is silently ignored by the control plane.
+
+### `MeshTrafficPermission.spec.from` removed
+
+The `from` field (and its legacy client-targetRef-based `Allow`/`Deny`/
+`AllowWithShadowDeny` matching) has been removed from the
+`MeshTrafficPermission` resource spec. The `rules` field, which matches
+clients by `MeshIdentity` (`spiffeID`) or SNI instead of by dataplane tag
+subsets, is now the only supported way to configure traffic permissions and
+is unaffected by this change. A `MeshTrafficPermission` must now define at
+least one entry in `rules`; a spec with only `from` (or with neither `from`
+nor `rules`) fails validation with `policy must define rules`.
+
+**Action required**
+
+Migrate any `MeshTrafficPermission` resources that still configure `from` to
+use `rules` with `MeshIdentity` (`spiffeID`) matches before upgrading.
+Dataplane proxies still on legacy mTLS (no `MeshIdentity`/SPIFFE identity)
+that are matched only by a `from`-based `MeshTrafficPermission` will
+default-deny once that policy is migrated or removed, unless a `rules`-based
+policy is added to allow the same traffic.
+
+### Legacy dataplane inspect rules endpoint removed
+
+The legacy `GET /meshes/{mesh}/dataplanes/{dataplane}/rules` endpoint has
+been removed.
+
+**Action required**
+
+Use `GET /meshes/{mesh}/dataplanes/{name}/_policies` instead (or the
+per-inbound/outbound scoped variants — see below).
+
+`kumactl inspect dataplane --type=policies` now calls
+`GET /meshes/{mesh}/dataplanes/{name}/_policies` (and the
+`_inbounds/{inbound_kri}/_policies`, `_outbounds/{outbound_kri}/_policies`,
+and `_outbounds/{outbound_kri}/_routes/{route_kri}/_policies` variants for
+per-inbound/outbound scoping) and requires no changes to invocation. The
+underlying `GET /meshes/{mesh}/dataplanes/{dataplane}/policies` HTTP
+endpoint it used to call is still registered — the vendored GUI bundle
+(`app/kuma-ui`) still calls it directly and is re-vendored on its own
+release cadence — but it is deprecated; new integrations should call
+`_policies` instead.
 
 ## Upgrade to `2.14.x`
 
