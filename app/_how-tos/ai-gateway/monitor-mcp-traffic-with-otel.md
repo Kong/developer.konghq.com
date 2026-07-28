@@ -53,17 +53,14 @@ prereqs:
   inline:
     - title: OpenTelemetry Collector
       content: |
-        Launch a local OpenTelemetry Collector that listens on port 4318 and writes received data to a text file:
+        Launch a local OpenTelemetry Collector in the background, listening on port 4318:
 
         ```sh
-        docker run \
+        docker run -d \
           --name otel-collector \
           -p 127.0.0.1:4318:4318 \
-          otel/opentelemetry-collector:0.141.0 \
-          2>&1 | tee collector-output.txt
+          otel/opentelemetry-collector:0.141.0
         ```
-
-        In a new terminal, keep the container running so it can receive metrics from {{site.ai_gateway}}.
       icon_url: /assets/icons/opentelemetry.svg
 
 cleanup:
@@ -178,7 +175,13 @@ Using the `marketplace-mcp` connection you already set up in ChatWise:
 
 ## Validate metrics
 
-Search `collector-output.txt` for `kong.gen_ai.mcp` to find the emitted metrics. You should see data like the following:
+Check the collector's logs for `kong.gen_ai.mcp` to find the emitted metrics:
+
+```sh
+docker logs otel-collector 2>&1 | grep -A 15 kong.gen_ai.mcp
+```
+
+You should see data like the following:
 
 ```
 Metric #8
