@@ -111,9 +111,7 @@ body:
     keepalive_pool_size: 256
     connection_is_proxied: false
     cloud_authentication:
-      auth_provider: "azure"
-      azure_client_id: "{vault://env/ADDON_MANAGED_CACHE_AZURE_CLIENT_ID}"
-      azure_client_secret: "{vault://env/ADDON_MANAGED_CACHE_AZURE_CLIENT_SECRET}"
+      auth_provider: "{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}"
       azure_tenant_id: "{vault://env/ADDON_MANAGED_CACHE_AZURE_TENANT_ID}"
 {% endkonnect_api_request %}
 <!--vale on-->
