@@ -37,22 +37,11 @@ tldr:
 
 ## Create an AI Model Provider entity
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl: { namespace: ai-gateway-get-started }
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: ai-quickstart
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: azure-claude
     name: azure-claude
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: anthropic
     config:
       auth:
@@ -60,8 +49,7 @@ ai_gateway_model_providers:
         headers:
           - name: x-api-key
             value: !env AZURE_AI_FOUNDRY_TOKEN
-EOF
-```
+{% endentity_examples %}
 
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
@@ -73,23 +61,11 @@ The AI Model Provider uses:
 
 ## Create an AI Policy and AI Model
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_policies:
   - ref: claude-code-compat
     name: claude-code-compat
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: request-transformer-advanced
     enabled: true
     global: false
@@ -108,12 +84,11 @@ ai_gateway_policies:
           - mcp_servers
           - container
           - service_tier
-
 ai_gateway_models:
   - ref: claude-code-azure-sonnet
     display_name: claude-code-azure-sonnet
     name: claude-code-azure-sonnet
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: model
     enabled: true
     formats:
@@ -134,10 +109,7 @@ ai_gateway_models:
         config:
           type: anthropic
           upstream_url: !env AZURE_AI_FOUNDRY_UPSTREAM_URL
-
-EOF
-```
-{:.collapsible}
+{% endentity_examples %}
 
 We create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Azure AI Foundry's Claude endpoint does not support. 
 

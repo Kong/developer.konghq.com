@@ -65,31 +65,18 @@ prereqs:
 
 Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Vertex AI and store your API key:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: vertex-prod
     name: vertex-prod
     display_name: "Google Vertex Prod"
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: vertex
     config:
       auth:
         type: gcp
         service_account_json: !env GCP_SERVICE_ACCOUNT_JSON
-EOF
-```
+{% endentity_examples %}
 
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
@@ -107,23 +94,11 @@ Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request tra
 {:.warning}
 > Apply the Policy and the AI Model together, in the same `kongctl apply` call, as shown below. The AI Model's `policies` field references the Policy via `!ref`, and `ref` values are local to a single `kongctl apply` call. They're never written to {{site.konnect_short_name}}. If you split this into two separate `kongctl apply` calls, the second one fails with `resource not found: claude-code-compat`, even though the Policy already exists.
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_policies:
   - ref: claude-code-compat
     name: claude-code-compat
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: request-transformer-advanced
     enabled: true
     global: false
@@ -132,12 +107,11 @@ ai_gateway_policies:
         headers: [anthropic-beta]
         querystring: [beta]
         body: [output_config, context_management, mcp_servers, container, service_tier, thinking]
-
 ai_gateway_models:
   - ref: claude-code-vertex-sonnet
     name: claude-code-vertex-sonnet
     display_name: "Claude Code - Vertex - Sonnet 4.6"
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: model
     enabled: true
     formats: [{ type: anthropic }]
@@ -152,8 +126,7 @@ ai_gateway_models:
         config:
           type: vertex
           upstream_url: !env VERTEX_UPSTREAM_URL
-EOF
-```
+{% endentity_examples %}
 
 {:.info}
 > Replace `claude-sonnet-4-5@20250929` with the id of your own enabled model in Vertex AI Model Garden.

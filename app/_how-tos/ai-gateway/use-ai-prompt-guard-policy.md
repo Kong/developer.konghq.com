@@ -56,22 +56,11 @@ Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and 
 
 You'll also configure the [AI Prompt Guard Policy](/ai-gateway/policies/ai-prompt-guard/) to filter LLM traffic based on regex rules that allow general IT questions and deny unsafe or off-topic content.
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl: { namespace: ai-gateway-get-started }
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: ai-quickstart
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
     name: generic-openai
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: openai
     config:
       auth:
@@ -79,11 +68,10 @@ ai_gateway_model_providers:
         headers:
           - name: Authorization
             value: !env OPENAI_AUTH_HEADER
-
 ai_gateway_policies:
   - ref: my-ai-prompt-guard-policy
     name: my-ai-prompt-guard-policy
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: ai-prompt-guard
     enabled: true
     global: false
@@ -110,12 +98,11 @@ ai_gateway_policies:
           "(?i).*impersonate.*",
           "(?i).*dating.*"
         ]
-
 ai_gateway_models:
   - ref: my-gpt-4o
     display_name: my-gpt-4o
     name: my-gpt-4o
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     type: model
     enabled: true
     formats: [{ type: openai }]
@@ -129,8 +116,7 @@ ai_gateway_models:
         provider: generic-openai
         config:
           type: openai
-EOF
-```
+{% endentity_examples %}
 
 In this example, we're setting up the AI Prompt Guard Policy with:
 

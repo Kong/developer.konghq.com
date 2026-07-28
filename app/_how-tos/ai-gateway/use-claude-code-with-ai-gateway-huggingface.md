@@ -45,18 +45,10 @@ tldr:
 
 Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Hugging Face and store your access token:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-huggingface-account
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: my-huggingface-account
     display_name: "Hugging Face"
     type: huggingface
@@ -66,25 +58,16 @@ ai_gateway_model_providers:
         headers:
           - name: Authorization
             value: !env HUGGINGFACE_AUTH_HEADER
-EOF
-```
+{% endentity_examples %}
 
 ## Create an AI Policy entity
 
 {{ site.claude_code }} sends beta headers and fields that Hugging Face's API rejects. Create an [AI Policy](/ai-gateway/entities/ai-policy/) with a `request-transformer-advanced` config that strips the `anthropic-beta` header, `beta` query string parameter, and `model`/`output_config` body fields before the request reaches Hugging Face:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: strip-claude-beta-info
     display_name: "Strip Claude beta info"
     type: request-transformer-advanced
@@ -100,8 +83,7 @@ ai_gateway_policies:
           - mcp_servers
           - container
           - service_tier
-EOF
-```
+{% endentity_examples %}
 
 {:.info}
 > {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see a `400` error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
@@ -110,18 +92,10 @@ EOF
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream model is available and how client requests are routed. `formats: [type: anthropic]` accepts requests in Anthropic format even though the upstream is Hugging Face:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-huggingface-account
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: my-huggingface-account
     display_name: "Hugging Face"
     type: huggingface
@@ -131,10 +105,9 @@ ai_gateway_model_providers:
         headers:
           - name: Authorization
             value: !env HUGGINGFACE_AUTH_HEADER
-
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: strip-claude-beta-info
     display_name: "Strip Claude beta info"
     type: request-transformer-advanced
@@ -151,10 +124,9 @@ ai_gateway_policies:
           - container
           - service_tier
           - reasoning_effort
-
 ai_gateway_models:
   - ref: my-huggingface
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: my-huggingface
     display_name: "my-huggingface"
     type: model
@@ -177,8 +149,7 @@ ai_gateway_models:
       - !ref strip-claude-beta-info#name
     capabilities:
       - generate
-EOF
-```
+{% endentity_examples %}
 
 ## Validate the AI Model
 

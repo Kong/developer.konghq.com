@@ -56,22 +56,10 @@ export OPENAI_AUTH_HEADER="Bearer $OPENAI_API_KEY"
 
 Then, apply the configuration using `kongctl`:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: generic-openai
     display_name: "generic-openai"
     type: openai
@@ -81,11 +69,10 @@ ai_gateway_model_providers:
         headers:
         - name: Authorization
           value: !env OPENAI_AUTH_HEADER
-EOF
-```
+{% endentity_examples %}
 
 {:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the [prerequisites](#prerequisites), instead of creating a new one.
 
 In this example, we're setting up the AI Provider with:
 
@@ -97,22 +84,10 @@ In this example, we're setting up the AI Provider with:
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: ai-gateway-get-started
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_models:
   - ref: my-gpt-4o
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: my-gpt-4o
     display_name: "my-gpt-4o"
     type: model
@@ -134,8 +109,7 @@ ai_gateway_models:
     policies: []
     capabilities:
       - generate
-EOF
-```
+{% endentity_examples %}
 
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script, same as in the previous step.
@@ -151,7 +125,6 @@ In this example, we're setting up the AI Model with:
 * `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
 
 ## Validate
-
 
 Send a chat request to verify your setup:
 
