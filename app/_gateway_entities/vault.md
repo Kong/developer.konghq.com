@@ -366,13 +366,7 @@ For more information, see [Secret management](/gateway/secrets-management/).
 
 When you set up a Vault, each provider has specific parameters that you can or must configure to integrate the Vault with a provider. For the entire Vault configuration schema, see the [schema reference](#schema).
 
-You can set up a Vault in one of the following ways:
-* Using the Vault entity
-* Using environment variables, set at {{site.base_gateway}} startup
-* Using parameters in `kong.conf`, set at {{site.base_gateway}} startup
-
-The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
-
+{% include_cached /gateway/vault-provider-intro.md %}
 
 ### Set up a Vault entity
 

@@ -43,12 +43,8 @@ related_resources:
 ---
 
 You can set up an [Azure Key Vault](https://learn.microsoft.com/azure/key-vault/) vault in one of the following ways:
-* Using the [Vault entity](/gateway/entities/vault/)
-* Using [environment variables](/gateway/manage-kong-conf/#environment-variables), set at {{site.base_gateway}} startup
-* Using parameters in [`kong.conf`](/gateway/configuration/), set at {{site.base_gateway}} startup
 
-The Vault entity can only be used once the database is initialized.
-Secrets for values that are used before the database is initialized can't make use of the Vaults entity.
+{% include_cached /gateway/vault-provider-intro.md %}
 
 ## Azure Key Vault authentication
 
