@@ -23,13 +23,6 @@ tags:
 works_on:
   - konnect
 
-# schema:
-#     api: event-gateway/
-#     path: /schemas/
-
-# api_specs:
-#     - konnect/event-gateway
-
 products:
     - event-gateway
 api_specs:
@@ -59,10 +52,8 @@ Multiple Kafka clusters can be proxied through a single {{site.event_gateway}}. 
 
 ## Authentication
 
-Authentication on the backend cluster defines how the proxy connects to the backend for capturing metadata (topics, consumer groups, and so on).
-
-The backend cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters. 
-See [Virtual cluster authentication](/event-gateway/entities/virtual-cluster/#authentication) to learn more.
+Authentication on the backend cluster defines the credentials the {{site.event_gateway_short}} uses when connecting to Kafka on behalf of clients.
+The supported types reflect what your Kafka cluster accepts.
 
 Backend clusters support the following auth methods:
 
@@ -96,6 +87,11 @@ rows:
     credential: |
       `passthrough`
 {% endtable %}
+
+Depending on what your Kafka cluster supports, you'll need to configure authentication on the associated virtual cluster:
+* If your Kafka cluster only accepts SASL/PLAIN or SASL/SCRAM credentials, configure [`terminate` mediation on the virtual cluster](/event-gateway/entities/virtual-cluster/#credential-mediation) so the {{site.event_gateway_short}} translates client credentials into the backend's accepted mechanism.
+* If your backend Kafka cluster supports SASL/OAUTHBEARER natively, use [`passthrough` or `validate_forward` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation) on the virtual cluster.
+In that case, the client's OAuth bearer token is forwarded directly to the backend, and the backend cluster entity doesn't need to store separate credentials.
 
 ## Set up a backend cluster
 
