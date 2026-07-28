@@ -53,54 +53,40 @@ DashScope serves the Qwen model family through a native Anthropic-compatible Mes
 
 Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and an [AI Model](/ai-gateway/entities/ai-model/) with a single `kongctl` apply command:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: dashscope-qwen
-
-ai_gateways:
-  # Reference your existing gateway by name without managing it (its control
-  # plane and data plane are owned by the AI Gateway quickstart).
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: ai-quickstart
-
-    model_providers:
-      - ref: dashscope
-        name: dashscope
-        type: dashscope
-        display_name: "Alibaba Cloud DashScope"
+{% entity_examples %}
+ai_gateway_model_providers:
+  - ref: dashscope
+    ai_gateway: !lookup name:ai-quickstart
+    name: dashscope
+    type: dashscope
+    display_name: "Alibaba Cloud DashScope"
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !env DASHSCOPE_AUTH_HEADER
+ai_gateway_models:
+  - ref: claude-code-qwen
+    ai_gateway: !lookup name:ai-quickstart
+    name: claude-code-qwen
+    display_name: "Claude Code - DashScope Qwen"
+    type: model
+    enabled: true
+    formats: [{ type: anthropic }]
+    config:
+      route: { paths: [/], methods: [GET, POST] }
+      model: { alias: qwen-plus, name_header: true }
+    capabilities: [generate]
+    targets:
+      - name: qwen-plus
+        provider: dashscope
         config:
-          auth:
-            type: basic
-            headers:
-              - name: Authorization
-                value: !env DASHSCOPE_AUTH_HEADER
-
-    models:
-      - ref: claude-code-qwen
-        name: claude-code-qwen
-        display_name: "Claude Code - DashScope Qwen"
-        type: model
-        enabled: true
-        formats: [{ type: anthropic }]
-        config:
-          route: { paths: [/], methods: [GET, POST] }
-          model: { alias: qwen-plus, name_header: true }
-        capabilities: [generate]
-        targets:
-          - name: qwen-plus
-            provider: dashscope
-            config:
-              type: dashscope
-              international: true
-              max_tokens: 8192
-              temperature: 1.0
-EOF
-```
+          type: dashscope
+          international: true
+          max_tokens: 8192
+          temperature: 1.0
+{% endentity_examples %}
 
 In this example we set:
 

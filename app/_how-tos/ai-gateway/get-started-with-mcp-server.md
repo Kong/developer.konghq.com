@@ -58,18 +58,10 @@ cleanup:
 
 Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool called `get-current-weather`, mapped from the WeatherAPI `/v1/current.json` endpoint. `tools[].query.key` injects your WeatherAPI credentials automatically, so clients never handle the API key:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: "ai-quickstart"
-
+{% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: weather-mcp
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup name:ai-quickstart
     name: weather-mcp
     display_name: "Weather API"
     type: conversion-listener
@@ -106,8 +98,7 @@ ai_gateway_mcp_servers:
             schema:
               type: string
             description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
-EOF
-```
+{% endentity_examples %}
 
 ## Validate the MCP Server
 
