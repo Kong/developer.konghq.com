@@ -54,50 +54,38 @@ prereqs:
 
 Codex speaks OpenAI's native format and calls the [Responses API](https://platform.openai.com/docs/api-reference/responses), so no request-transformer policy is needed. Create both the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and the [AI Model](/ai-gateway/entities/ai-model/) in a single `kongctl` apply command so the model can reference the provider:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl:
-    namespace: codex-openai
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: ai-quickstart
-
-    model_providers:
-      - ref: openai
-        name: openai
-        type: openai
-        display_name: "OpenAI"
+{% entity_examples %}
+ai_gateway_model_providers:
+  - ref: openai
+    ai_gateway: !lookup name:ai-quickstart
+    name: openai
+    type: openai
+    display_name: "OpenAI"
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !env OPENAI_AUTH_HEADER
+ai_gateway_models:
+  - ref: codex-openai
+    ai_gateway: !lookup name:ai-quickstart
+    name: codex-openai
+    display_name: "Codex - OpenAI Responses API"
+    type: model
+    enabled: true
+    formats: [{ type: openai }]
+    config:
+      route: { paths: [/codex], methods: [GET, POST], model: { body: { model: [gpt-5.4] } } }
+      model: { name_header: true }
+    capabilities: [agentic]
+    targets:
+      - name: gpt-5.4
+        provider: openai
         config:
-          auth:
-            type: basic
-            headers:
-              - name: Authorization
-                value: !env OPENAI_AUTH_HEADER
-
-    models:
-      - ref: codex-openai
-        name: codex-openai
-        display_name: "Codex - OpenAI Responses API"
-        type: model
-        enabled: true
-        formats: [{ type: openai }]
-        config:
-          route: { paths: [/codex], methods: [GET, POST], model: { body: { model: [gpt-5.4] } } }
-          model: { name_header: true }
-        capabilities: [agentic]
-        targets:
-          - name: gpt-5.4
-            provider: openai
-            config:
-              type: openai
-              upstream_url: "https://api.openai.com/v1/responses"
-EOF
-```
+          type: openai
+          upstream_url: "https://api.openai.com/v1/responses"
+{% endentity_examples %}
 
 In this example:
 

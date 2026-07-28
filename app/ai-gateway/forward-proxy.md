@@ -15,6 +15,7 @@ works_on:
   - konnect
 
 tools:
+  - kongctl
   - konnect-api
 
 min_version:
@@ -214,82 +215,67 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
 
 ### AI Model
 
-1. Create an [AI Provider](/ai-gateway/entities/ai-model-provider/) entity to define your LLM service and store authentication credentials:
+#### Create a model and provider
 
-    ```
-    kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-    _defaults:
-      kongctl:
-        namespace: ai-gateway-get-started
+Create an [AI Provider](/ai-gateway/entities/ai-model-provider/) entity to define your LLM service and store authentication credentials:
 
-    ai_gateways:
-      - ref: ai-quickstart
-        name: ai-quickstart
-        display_name: "ai-quickstart"
+{% entity_examples %}
+formats:
+  - kongctl
+ai_gateway_model_providers:
+  - ref: generic-anthropic
+    ai_gateway: !lookup name:ai-quickstart
+    name: generic-anthropic
+    display_name: "generic-anthropic"
+    type: anthropic
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: x-api-key
+            value: !env ANTHROPIC_API_KEY
+{% endentity_examples %}
 
-    ai_gateway_model_providers:
-      - ref: generic-anthropic
-        ai_gateway: ai-quickstart
-        name: generic-anthropic
-        display_name: "generic-anthropic"
-        type: anthropic
-        config:
-          auth:
-            type: basic
-            headers:
-              - name: x-api-key
-                value: !env ANTHROPIC_API_KEY
-    EOF
-    ```
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
 
-1. Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
-
-    ```
-    kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-    _defaults:
-      kongctl:
-        namespace: ai-gateway-get-started
-
-    ai_gateways:
-      - ref: ai-quickstart
-        name: ai-quickstart
-        display_name: "ai-quickstart"
-
-    ai_gateway_models:
-      - ref: my-claude
-        ai_gateway: ai-quickstart
-        name: my-claude
-        display_name: "my-claude"
-        type: model
-        formats:
-          - type: anthropic
-        config:
-          route:
-            paths:
-              - /
+{% entity_examples %}
+formats:
+  - kongctl
+ai_gateway_models:
+  - ref: my-claude
+    ai_gateway: !lookup name:ai-quickstart
+    name: my-claude
+    display_name: "my-claude"
+    type: model
+    formats:
+      - type: anthropic
+    config:
+      route:
+        paths:
+          - /
+        model:
+          body:
             model:
-              body:
-                model:
-                  - my-claude
-          proxy:
-            http_proxy:
-              host: host.docker.internal
-              port: 3128
-            https_proxy:
-              host: host.docker.internal
-              port: 3128
-            proxy_scheme: http
-        targets:
-          - name: claude-opus-4-8
-            provider: generic-anthropic
-            config:
-              type: anthropic
-        policies: []
-        capabilities:
-          - generate
-    EOF
-    ```
+              - my-claude
+      proxy:
+        http_proxy:
+          host: host.docker.internal
+          port: 3128
+        https_proxy:
+          host: host.docker.internal
+          port: 3128
+        proxy_scheme: http
+    targets:
+      - name: claude-opus-4-8
+        provider: generic-anthropic
+        config:
+          type: anthropic
+    policies: []
+    capabilities:
+      - generate
+{% endentity_examples %}
 
+#### Validate
 1. Send a chat request. This will be forwarded through your proxy service to Anthropic:
 
    <!-- vale off -->
