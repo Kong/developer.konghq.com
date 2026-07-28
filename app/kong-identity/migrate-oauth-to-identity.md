@@ -11,6 +11,7 @@ products:
     - identity
 
 works_on:
+    - on-prem
     - konnect
 
 description: This guide walks you through migrating from the Oauth2 plugin to Kong Identity with OIDC or OAuth Introspection.
@@ -107,4 +108,71 @@ curl -s -X POST "https://us.api.konghq.tech/v1/auth-servers/$AUTH_SERVER_ID/clai
     "include_in_all_scopes": true,
     "enabled": true
   }' | jq
+```
+
+## Configure the OIDC plugin on the service
+
+```sh
+curl -s "https://us.api.konghq.tech/v1/auth-servers/$AUTH_SERVER_ID" \
+  -H "Authorization: Bearer $KONNECT_TOKEN" | jq -r '.issuer'
+```
+
+Save the `$ISSUER` environment variable.
+
+
+Attach the plugin to the service:
+
+```sh
+curl -s -X POST localhost:8001/services/demo-service/plugins \
+  -d "name=openid-connect" \
+  -d "config.issuer=$ISSUER" \
+  -d "config.client_id=acme-app-client-id" \
+  -d "config.client_secret=acme-app-client-secret" \
+  -d "config.auth_methods=client_credentials" \
+  -d "config.consumer_claim=consumer_name" \
+  -d "config.consumer_by=username" | jq
+```
+
+**Version warnings**
+
+- `consumer_claim` vs `consumer_claims`: Kong Gateway ≥3.14 uses the plural `consumer_claims` (array). Older versions use singular `consumer_claim`: include two versions of the snippet?
+- `consumer_by: username`: this tells the plugin to match the claim value against the Consumer's `username` field.
+
+## Verify
+
+Pull the token endpoint path: 
+
+```sh
+curl -s "$ISSUER/.well-known/openid-configuration" | jq -r '.token_endpoint'
+```
+
+Request a token from the new endpoint:
+
+```sh
+curl -s -X POST "$TOKEN_ENDPOINT" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=acme-app-client-id" \
+  -d "client_secret=acme-app-client-secret" | jq
+```
+
+Confirm the service accepts the token: 
+
+```sh
+curl -sk https://localhost:8443/demo/anything \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq
+```
+
+## Deactivate the OAuth 2.0 plugin
+
+```sh
+PLUGIN_ID=$(curl -s localhost:8001/services/demo-service/plugins | jq -r '.data[] | select(.name=="oauth2") | .id')
+
+curl -s -X PATCH localhost:8001/plugins/$PLUGIN_ID \
+  -d "enabled=false" | jq
+```
+
+## Delete the OAuth 2.0 plugin
+
+```sh
+curl -s -X DELETE localhost:8001/plugins/$PLUGIN_ID
 ```
