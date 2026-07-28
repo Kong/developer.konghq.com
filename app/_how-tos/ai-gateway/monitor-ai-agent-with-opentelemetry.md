@@ -29,7 +29,7 @@ tldr:
     Attach an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) to an [AI Agent](/ai-gateway/entities/ai-agent/) entity to export distributed traces and OTLP metrics for A2A traffic to a collector.
     Configure `traces_endpoint` and `metrics.endpoint` on the Policy to send A2A span and metric data to your observability backend.
 
-    This tutorial shows you how to create an AI Agent alongside an OpenTelemetry Policy using kongctl, send an A2A request, and validate both the resulting trace span and OTLP metrics in a local OpenTelemetry Collector.
+    This tutorial shows you how to create an AI Agent alongside an OpenTelemetry Policy using [kongctl](/kongctl/), send an A2A request, and validate both the resulting trace span and OTLP metrics in a local OpenTelemetry Collector.
 
 tools:
   - kongctl
@@ -45,7 +45,7 @@ prereqs:
         1. [Get an API key](https://platform.openai.com/api-keys).
         1. Export your key:
            ```bash
-           export OPENAI_API_KEY='YOUR_OPENAI_API_KEY'
+           export OPENAI_API_KEY='OPENAI_API_KEY'
            ```
       icon_url: /assets/icons/openai.svg
 
@@ -54,18 +54,7 @@ prereqs:
       icon_url: /assets/icons/ai.svg
 
     - title: OpenTelemetry Collector
-      content: |
-        Launch a local OpenTelemetry Collector that listens on port 4318 and writes received data to a text file:
-
-        ```sh
-        docker run \
-          --name otel-collector \
-          -p 127.0.0.1:4318:4318 \
-          otel/opentelemetry-collector:0.141.0 \
-          2>&1 | tee collector-output.txt
-        ```
-
-        In a new terminal, keep the container running so it can receive traces and metrics from {{site.ai_gateway}}.
+      include_content: md/ai-gateway/v2/prereqs/opentelemetry-collector
       icon_url: /assets/icons/opentelemetry.svg
 
 related_resources:
@@ -120,7 +109,7 @@ automated_tests: false
 
 ## Create an AI Agent and OpenTelemetry Policy
 
-Create an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) that exports traces and metrics to your collector, and an [AI Agent](/ai-gateway/entities/ai-agent/) that attaches it:
+Create an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) that exports traces and metrics to your collector, and an [AI Agent](/ai-gateway/entities/ai-agent/) that attaches it. Setting `global` to `false` on the Policy means it only applies to entities that reference it instead of every resource on your {{site.ai_gateway}}, so the `kongair-flight-booking-agent` entity lists `otel-a2a` in its `policies` field to opt in. The `service.name` value under `resource_attributes` labels the exported data, which is useful if multiple gateways or services send to the same collector.
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -168,10 +157,6 @@ ai_gateway_agents:
 EOF
 ```
 
-By default, an AI Policy applies to every resource on your {{site.ai_gateway}}. Setting `global` to `false` changes that: the `otel-a2a` Policy now only takes effect on entities that explicitly list it, instead of applying gateway-wide.
-
-The `kongair-flight-booking-agent` entity does exactly that by referencing `otel-a2a` in its `policies` list. As a result, every request that goes through the agent is traced and measured, and that data is exported to the collector you started earlier. The `service.name` value under `resource_attributes` is just a label attached to that exported data, so if you're running multiple {{site.ai_gateway}}s or services into the same collector, you can tell which one a given trace or metric came from.
-
 ## Send an A2A request
 
 Send a `message/send` JSON-RPC request to test the agent:
@@ -203,7 +188,13 @@ A successful response (status 200) contains the agent's reply.
 
 ## Validate traces
 
-Search `collector-output.txt` for `kong.a2a` to find the emitted span. You should see the following data:
+Search the collector's logs for `kong.a2a` to find the emitted span:
+
+```sh
+docker logs otel-collector 2>&1 | grep -A 15 kong.a2a
+```
+
+You should see a `kong.a2a` span with the same shape. The `Trace ID`, `Parent ID`, `ID`, `Start time`, `End time`, `kong.a2a.task.id`, and `kong.a2a.context.id` values are generated per request, so yours will differ from the example:
 
 ```
 Span #3
@@ -227,11 +218,17 @@ Attributes:
 ```
 {:.collapsible}
 
-`kong.a2a.protocol.version` is `unknown` because the request didn't carry an `A2A-Version` header. See [AI Agent OpenTelemetry span attributes](/ai-gateway/entities/ai-agent/#opentelemetry-span-attributes) for the full attribute list.
+The remaining attributes are fixed values you can match against directly. `rpc.system` is always `jsonrpc`, and `rpc.method` and `kong.a2a.operation` reflect the JSON-RPC method you sent, `message/send` in this example. `kong.a2a.task.state` reflects the task's outcome, `completed` for a successful response. `kong.a2a.protocol.version` is `unknown` because the request didn't carry an `A2A-Version` header. See [AI Agent OpenTelemetry span attributes](/ai-gateway/entities/ai-agent/#opentelemetry-span-attributes) for the full attribute list.
 
 ## Validate metrics
 
-Search `collector-output.txt` for `kong.gen_ai.a2a` to find the emitted metrics. You should see data like the following:
+Search the collector's logs for `kong.gen_ai.a2a` to find the emitted metrics:
+
+```sh
+docker logs otel-collector 2>&1 | grep -A 15 kong.gen_ai.a2a
+```
+
+You should see metrics with the same shape. `kong.konnect.cp.id` identifies your {{site.ai_gateway}} control plane and is unique to your environment, and the `Count`, `Sum`, and `Value` fields depend on how many requests you sent and their actual duration or size, so match on the overall structure rather than the exact numbers:
 
 ```
 Metric #0
@@ -307,7 +304,7 @@ Value: 1
 ```
 {:.collapsible}
 
-`kong.route.name` carries a `-route` suffix because {{site.ai_gateway}} auto-generates a Route for the agent. `kong.konnect.cp.id` identifies the {{site.ai_gateway}} control plane the metric originated from.
+The rest of the attributes are fixed values you can match against directly. `kong.service.name` and `kong.route.name` match the entity names you created (`kong.route.name` carries a `-route` suffix because {{site.ai_gateway}} auto-generates a Route for the agent). `kong.workspace.name`, `kong.gen_ai.a2a.binding`, and `kong.gen_ai.a2a.method` reflect your configuration and the request you sent.
 
 See [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics) for the full metric reference, including `kong.gen_ai.a2a.request.duration`, `kong.gen_ai.a2a.response.size`, `kong.gen_ai.a2a.ttfb`, and `kong.gen_ai.a2a.request.error.count`.
 
