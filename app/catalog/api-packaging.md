@@ -17,7 +17,7 @@ min_version:
 works_on:
     - konnect
 api_specs:
-  - konnect/api-catalog
+  - konnect/api-builder
 search_aliases:
   - publish API specs
   - API catalog
