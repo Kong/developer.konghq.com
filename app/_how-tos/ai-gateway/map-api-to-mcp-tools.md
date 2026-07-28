@@ -170,13 +170,14 @@ EOF
 1. Enter the following in the ChatWise chat:
 
 ```text
-What users do you see in the API?
+What users do you see in the marketplace API?
 ```
 
 ```
 I'll query the marketplace service for the list of users
 > Called get-users
 ```
+When prompted approve using the MCP tools you created.
 
 When the agent finishes reasoning, You should see the following output:
 
@@ -199,10 +200,10 @@ I can see 10 users in the API:
 Now, we can check what Alice Johnson ordered by entering the following message in the ChatWise chat:
 
 ```text
-What users do you see in the marketplace?
+What has Alice Johnson ordered?
 ```
 
-You'll notice that ChatWise calls the tools exposed by the MCP Server entity:
+You'll notice that ChatWise calls the tools exposed by the MCP Server entity. First to get-users to find Alice then to get-orders-for-user.
 
 ```text
 I'll look up the list of users to find Alice's user ID. Then I'll fetch her orders.

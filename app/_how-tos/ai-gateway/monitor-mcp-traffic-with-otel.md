@@ -79,9 +79,9 @@ cleanup:
 ---
 ## Attach an OpenTelemetry Policy to the MCP Server entity
 
-By default, an AI Policy applies to every resource on your {{site.ai_gateway}}. Setting `global` to `false` changes that: the `otel-mcp` Policy now only takes effect on entities that explicitly list it, instead of applying gateway-wide.
+By default, an AI Policy applies to every resource on your {{site.ai_gateway}}. Setting `global` to `false` changes that: the `otel-mcp` Policy now only takes effect on entities that explicitly list it, instead of applying to all entities.
 
-The `marketplace-mcp` entity does exactly that by referencing `otel-mcp` in its `policies` list. As a result, every request that goes through `marketplace-mcp` is measured and exported as metrics to the collector you started earlier. The `service.name` value under `resource_attributes` is just a label attached to that exported data, so if you're running multiple {{site.ai_gateway}}s or services into the same collector, you can tell which one a given metric came from.
+The `marketplace-mcp` entity does this by referencing `otel-mcp` in its `policies` list. As a result, every request that goes through `marketplace-mcp` is measured and exported as metrics to the collector you started earlier. The `service.name` value under `resource_attributes` is a label attached to that exported data, so if you're running multiple {{site.ai_gateway}}s or services into the same collector, you can tell which one a given metric came from.
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
