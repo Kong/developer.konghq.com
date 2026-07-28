@@ -94,9 +94,10 @@ rows:
               - q: Once I create a dashboard from a template, can I customize it?
                 a: |
                   Yes. Templates are intended as starting points. Once you create a dashboard from a template, you can modify tiles, filters, and layouts as needed.
-              - q: Can I download dashboards as PDF?
+              - q: |
+                  {% include faqs/download-dashboard-pdf.md section='question' %}
                 a: |
-                  PDF export is not yet available, but may be considered in a future release.
+                  {% include faqs/download-dashboard-pdf.md section='answer' %}
               - q: Can I upload my own template?
                 a: |
                   Uploading your own template is not yet available, but may be considered in a future release.

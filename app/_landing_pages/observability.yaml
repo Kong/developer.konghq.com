@@ -107,6 +107,8 @@ rows:
                     {{site.observability}} includes the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
                     You can create them from scratch or use existing templates. The functionality is powered by a robust [API](/api/konnect/analytics-dashboards/), and [Terraform integration](/how-to/automate-dashboard-terraform/).
 
+                    You can download any dashboard as a PDF from its action menu. This is useful for sharing insights with people who don't have a {{site.konnect_short_name}} account.
+
   - header:
       type: h2
       text: "Access and permissions"
