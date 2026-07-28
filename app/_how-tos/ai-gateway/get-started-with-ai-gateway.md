@@ -68,7 +68,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
         - name: Authorization
-          value: !env $OPENAI_AUTH_HEADER
+          value: !env OPENAI_AUTH_HEADER
 {% endentity_examples %}
 
 {:.info}

@@ -111,7 +111,7 @@ ai_gateway_agents:
 {% endentity_examples %}
 
 
-The `ai_gateways` entry references your existing {{site.ai_gateway}} by its `name` (`ai-quickstart`, as set up by the [quickstart script](/ai-gateway/get-started/)), so `kongctl` manages the agent underneath it instead of creating a new gateway. Each nested agent still declares its own `ai_gateway` field, pointing at the gateway's ID, to link it to the parent.
+The `ai_gateway_agents` entry references your existing {{site.ai_gateway}} by its `name` (`ai-quickstart`, as set up by the [quickstart script](/ai-gateway/get-started/)), so `kongctl` manages the agent underneath it instead of creating a new gateway. Each nested agent still declares its own `ai_gateway` field, pointing at the gateway's ID, to link it to the parent.
 
 The agent is now accessible at the `/a2a` route and proxies A2A JSON-RPC requests to the upstream agent running at `http://host.docker.internal:10000`.
 

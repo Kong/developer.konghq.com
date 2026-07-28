@@ -122,12 +122,14 @@ module Jekyll
       # then convert bare $VAR_NAME to the kongctl env sentinel so apply_tags
       # can convert them to !env VAR_NAME.
       def substitute_variables(str)
-        return str if variables.empty?
-
-        keys_pattern = variables.keys.map { |k| Regexp.escape(k.to_s) }.join('|')
-        result = str.gsub(/\$\{(#{keys_pattern})\}/) do
-          variables.dig(Regexp.last_match(1), 'value') || Regexp.last_match(0)
-        end
+        result = if variables.empty?
+                   str
+                 else
+                   keys_pattern = variables.keys.map { |k| Regexp.escape(k.to_s) }.join('|')
+                   str.gsub(/\$\{(#{keys_pattern})\}/) do
+                     variables.dig(Regexp.last_match(1), 'value') || Regexp.last_match(0)
+                   end
+                 end
         # Convert bare $UPPER_CASE_VAR to sentinel (mirrors KongctlData#transform_env_var)
         result.gsub(/(?<!\w)\$([A-Z][A-Z0-9_]*)(?!\w)/, '__kongctl_env_\1__')
       end

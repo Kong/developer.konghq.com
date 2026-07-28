@@ -14,17 +14,27 @@ module Jekyll
 
       contents = super
 
-      formats = detect_formats(contents)
+      formats, from_block = detect_formats(contents)
 
       unless formats
         raise ArgumentError,
               "Missing key `tools` in metadata, or `formats` in entity_examples block on page #{@page['path']}"
       end
 
-      format = formats.first
-      unless SUPPORTED_FORMATS.include?(format)
-        raise ArgumentError,
-              "entity_examples only supports #{SUPPORTED_FORMATS.join(', ')}, got `#{format}` on page #{@page['path']}"
+      if from_block
+        format = formats.find { |f| SUPPORTED_FORMATS.include?(f) }
+        unless format
+          raise ArgumentError,
+                "entity_examples only supports #{SUPPORTED_FORMATS.join(', ')}, got `#{formats.join(', ')}` on page #{@page['path']}"
+        end
+      else
+        supported = formats.select { |f| SUPPORTED_FORMATS.include?(f) }
+        if supported.size != 1
+          raise ArgumentError,
+                "entity_examples block on page #{@page['path']} requires an explicit `formats:` key " \
+                "because `tools` contains #{supported.empty? ? 'no supported formats' : 'multiple supported formats'}: #{formats.join(', ')}"
+        end
+        format = supported.first
       end
 
       if format == 'kongctl'
@@ -51,21 +61,23 @@ module Jekyll
 
     # Extract the format list from the raw block body without YAML.load,
     # since kongctl blocks may contain !env / !lookup tags that Psych rejects.
+    # Returns [formats, from_block] where from_block is true if formats came
+    # from an explicit `formats:` key in the block body, false if from page tools.
     def detect_formats(contents)
       # Inline: `formats: [deck]` or `formats: [kongctl]`
       if (m = contents.match(/^formats:\s*\[([^\]]+)\]/))
-        return m[1].split(',').map { |s| s.strip.delete("'\"") }
+        return [m[1].split(',').map { |s| s.strip.delete("'\"") }, true]
       end
 
       # Block sequence:
       #   formats:
       #     - kongctl
       if (m = contents.match(/^formats:\n((?:[ \t]*-[ \t]+\S+\n?)+)/))
-        return m[1].scan(/\S+$/).map(&:strip)
+        return [m[1].scan(/\S+$/).map(&:strip), true]
       end
 
       # Fall back to page-level `tools:` frontmatter
-      @page['tools']
+      [@page['tools'], false]
     end
 
     def render_deck(context, contents)

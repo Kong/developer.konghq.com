@@ -169,7 +169,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: Bearer !env OPENAI_API_KEY
+            value: !env OPENAI_API_KEY
 ```
 
 `!lookup` is a concise inline tag that performs the same lookup directly in a field value:
@@ -185,7 +185,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: Bearer !env OPENAI_API_KEY
+            value: !env OPENAI_API_KEY
 ```
 
 In both situations, kongctl resolves the external resource's ID at plan time and uses it to scope the child resources.
