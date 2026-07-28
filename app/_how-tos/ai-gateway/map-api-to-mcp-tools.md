@@ -165,7 +165,7 @@ EOF
 ## Validate the configuration
 
 1. In ChatWise, start a new chat.
-1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
+1. Click the overflow (**...**) menu next to the chat input, then click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
 1. From the hammer dropdown menu, enable your MCP server.
 1. Enter the following in the ChatWise chat:
 
@@ -173,13 +173,15 @@ EOF
 What users do you see in the marketplace API?
 ```
 
+ChatWise prompts you to approve the `get-users` tool call before it runs. Approve it:
+
 ```
 I'll query the marketplace service for the list of users
 > Called get-users
 ```
-When prompted approve using the MCP tools you created.
+{:.no-copy-code}
 
-When the agent finishes reasoning, You should see the following output:
+When the agent finishes reasoning, you should see the following output:
 
 ```text
 Let me check what users are available in the API:
@@ -203,7 +205,7 @@ Now, we can check what Alice Johnson ordered by entering the following message i
 What has Alice Johnson ordered?
 ```
 
-You'll notice that ChatWise calls the tools exposed by the MCP Server entity. First to get-users to find Alice then to get-orders-for-user.
+ChatWise calls two tools exposed by the MCP Server entity in sequence: `get-users` to find Alice's ID, then `get-orders-for-user` to fetch her orders. Approve each tool call when prompted:
 
 ```text
 I'll look up the list of users to find Alice's user ID. Then I'll fetch her orders.
