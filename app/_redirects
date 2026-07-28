@@ -149,7 +149,6 @@
 /gateway/latest/plan-and-deploy/security/secrets-management/reference-format /gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault
 /gateway/:version/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
 /gateway/:version/plan-and-deploy/security/secrets-management/reference-format /gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault
-/api/konnect/metrics/* /api/konnect/analytics-metrics/:splat
 
 ## How-to renames
 /how-to/collect-dev-portal-audit-logs-with-sumologic/ /how-to/collect-dev-portal-audit-logs/
@@ -373,5 +372,5 @@
 /konnect-platform/kai/changelog/    /konnect-platform/kai/
 
 # Spec renames
-/api/konnect/api-builder/v3/ /api/konnect/api-catalog/v3/   301
-/api/konnect/api-builder/ /api/konnect/api-catalog/   301
+/api/konnect/metrics/*      /api/konnect/analytics-metrics/:splat  301
+/api/konnect/api-catalog/*  /api/konnect/api-builder/:splat  301
