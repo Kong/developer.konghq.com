@@ -35,6 +35,15 @@ prereqs:
     - title: "{{site.dev_portal}}"
       include_content: prereqs/dev-portal-configure
       icon_url: /assets/icons/dev-portal.svg
+    - title: Published API
+      include_content: prereqs/publish-api
+      icon_url: /assets/icons/dev-portal.svg
+  entities_product: gateway
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
 
 cleanup:
   inline:
@@ -238,3 +247,5 @@ Instead of reading each developer's answer and assigning their team manually, yo
 * Extend the form with more departments as your organization grows, and maintain a lookup table mapping each `department` value to a team ID.
 
 {{site.dev_portal}} doesn't have a webhook for new sign-ups, so this automation needs to poll the {{site.konnect_short_name}} API on an interval, for example by [listing developers](/api/konnect/portal-management/v3/#/operations/list-portal-developers) filtered on `status=pending`.
+
+## Validate
