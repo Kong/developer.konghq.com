@@ -372,5 +372,5 @@
 /konnect-platform/kai/changelog/    /konnect-platform/kai/
 
 # Spec renames
-/api/konnect/api-builder/v3/ /api/konnect/api-catalog/v3/   301
-/api/konnect/api-builder/ /api/konnect/api-catalog/   301
+/api/konnect/metrics/*      /api/konnect/analytics-metrics/:splat  301
+/api/konnect/api-catalog/*  /api/konnect/api-builder/:splat  301
