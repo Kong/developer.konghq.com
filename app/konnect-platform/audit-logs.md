@@ -105,7 +105,8 @@ rows:
 
 {:.info}
 > * {{site.dev_portal}} audit logs don't collect authorization and access events by design. You can view {{site.dev_portal}} entity creation, edits, and approved state changes from the {{site.konnect_short_name}} audit logs. 
-> * Don't rely on `event_class_id` to identify the log type. Its meaning differs per event type, and for authorization logs it isn't a fixed enum, it's the name of whichever Kong platform service performed the authorization check.
+> * Don't rely on `event_class_id` to identify the log type. Its meaning differs per event type.
+> For authorization logs, it's the name of whichever Kong platform service performed the authorization check, not a fixed enum value.
 
 Every log entry, regardless of type, follows the same CEF header format:
 
@@ -375,8 +376,6 @@ rows:
     when: Wildcard across all control planes
   - name_pattern: "`Authz.control-planes/{id}`"
     when: Specific control plane
-  - name_pattern: "`Authz.api-products/{id}`"
-    when: Specific API Product
 {% endtable %}
 <!--vale on-->
 
