@@ -17,7 +17,6 @@ products:
   - gateway
 
 tools:
-  - admin-api
   - konnect-api
   - deck
   - kic

@@ -57,7 +57,7 @@ with the [Azure Key Vaults API](https://learn.microsoft.com/en-us/rest/api/keyva
 If you're using a client secret for authentication, set the following environment variable on your data plane to connect with an Azure Key Vault:
 
 ```bash
-export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
+export AZURE_CLIENT_SECRET='YOUR_CLIENT_SECRET'
 ```
 If you're using an Instance Managed Identity Token, you don't need to set the client secret env variable.
 
@@ -66,9 +66,9 @@ If you're using an Instance Managed Identity Token, you don't need to set the cl
 At minimum, you'll also need to set the following values on your data plane.
 
 ```sh
-export KONG_VAULT_AZURE_VAULT_URI=https://your-vault.vault.azure.com
-export KONG_VAULT_AZURE_TENANT_ID=YOUR_TENANT_ID
-export KONG_VAULT_AZURE_CLIENT_ID=YOUR_CLIENT_ID
+export KONG_VAULT_AZURE_VAULT_URI='https://your-vault.vault.azure.com'
+export KONG_VAULT_AZURE_TENANT_ID='YOUR_TENANT_ID'
+export KONG_VAULT_AZURE_CLIENT_ID='YOUR_CLIENT_ID'
 ```
 
 ## Create an Azure Key Vault
@@ -124,7 +124,7 @@ rows:
       * **kong.conf parameter:** `vault_azure_tenant_id`
       * **Environment variable:** `KONG_VAULT_AZURE_TENANT_ID`
     description: |
-      The `DirectoryId` and `TenantId` are the same: both refer to the GUID representing your Azure Active Directory tenant. Microsoft documentation and products may use either term depending on context.
+      The `DirectoryId` and `TenantId` are the same: both refer to the GUID representing your Azure Entra tenant. Microsoft documentation and products may use either term depending on context.
   - field: Location
     parameter: |
       * **Vault entity:** `vaults.config.location`

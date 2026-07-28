@@ -60,7 +60,7 @@ with the [Azure Key Vaults API](https://learn.microsoft.com/en-us/rest/api/keyva
 If you're using a client secret for authentication, set the following environment variable on your data plane to connect with an Azure Key Vault:
 
 ```bash
-export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
+export AZURE_CLIENT_SECRET='YOUR_CLIENT_SECRET'
 ```
 By default, the vault looks for `AZURE_CLIENT_SECRET`, but you can customize this with the `credentials_prefix` field.
 
@@ -77,9 +77,9 @@ export KONG_LUA_SSL_VERIFY_DEPTH=3
 At minimum, you'll also need to set the following values on your data plane:
 
 ```sh
-export KONG_VAULT_AZURE_CERTS_VAULT_URI=https://your-vault.vault.azure.com
-export KONG_VAULT_AZURE_CERTS_TENANT_ID=YOUR_TENANT_ID
-export KONG_VAULT_AZURE_CERTS_CLIENT_ID=YOUR_CLIENT_ID
+export KONG_VAULT_AZURE_CERTS_VAULT_URI='https://your-vault.vault.azure.com'
+export KONG_VAULT_AZURE_CERTS_TENANT_ID='YOUR_TENANT_ID'
+export KONG_VAULT_AZURE_CERTS_CLIENT_ID='YOUR_CLIENT_ID'
 ```
 
 ## Create an Azure Key Vault (Certificates) vault
@@ -145,8 +145,8 @@ rows:
       * **kong.conf parameter:** `vault_azure_certs_tenant_id`
       * **Environment variable:** `KONG_VAULT_AZURE_CERTS_TENANT_ID`
     description: |
-      The `DirectoryId` and `TenantId` both equate to the GUID representing the `ActiveDirectory` Tenant.
-      Depending on context, either term may be used by Microsoft documentation and products, which can be confusing.
+      The `DirectoryId` and `TenantId` are the same: both refer to the GUID representing your Azure Entra tenant.
+      Depending on context, either term may be used by Microsoft documentation and products.
       In other words, the "Tenant ID" IS the "Directory ID".
   - field: |
       TTL <br>{% new_in 3.15 %}
@@ -174,7 +174,7 @@ rows:
       * **Environment variable:** `KONG_VAULT_AZURE_CERTS_RESURRECT_TTL`
     description: |
       Time (in seconds) for which stale certificates from the Azure Key Vault should be resurrected
-      for when they cannot be refreshed (e.g., the vault is unreachable).
+      when they can't be refreshed (for example, if the vault is unreachable).
       When this TTL expires, a new attempt to refresh the stale certificates will be made.
 {% endtable %}
 <!--vale on-->

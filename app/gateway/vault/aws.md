@@ -88,7 +88,6 @@ data:
     region: us-east-1
 {% endentity_example %}
 
-The name **must** be `aws`. The prefix is your own custom prefix.
 
 ## Vault configuration options
 

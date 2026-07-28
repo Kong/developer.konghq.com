@@ -373,7 +373,6 @@ You can set up a Vault in one of the following ways:
 
 The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
 
-You can set up a Vault in one of the following ways.
 
 ### Set up a Vault entity
 
