@@ -8,7 +8,7 @@ related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/
   - text: Google Cloud Vault configuration parameters
-    url: /gateway/entities/vault/?tab=google-cloud#vault-provider-specific-configuration-parameters
+    url: /gateway/entities/vault/google/
   - text: Configure Google Cloud Secret Manager as a Vault entity with {{ site.kic_product_name }}
     url: "/kubernetes-ingress-controller/vault/gcp/"
 description: Learn how to store a secret in Google Cloud Secret Manager, configure GCP as a Vault entity, and reference the stored secret in {{site.base_gateway}}.
@@ -28,6 +28,8 @@ entities:
 tags:
     - security
     - secrets-management
+    - google-cloud
+    - gcp-vault
 
 search_aliases:
   - GCP

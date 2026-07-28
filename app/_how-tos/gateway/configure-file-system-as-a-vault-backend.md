@@ -10,7 +10,7 @@ related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/
   - text: Configuration parameters for the file system vault
-    url: /gateway/entities/vault/?tab=file-system#vault-provider-specific-configuration-parameters
+    url: /gateway/entities/vault/file-system/
 
 works_on:
     - on-prem
@@ -25,6 +25,7 @@ entities:
 tags:
     - secrets-management
     - security
+    - file-system-vault
 
 search_aliases:
   - filesystem vault

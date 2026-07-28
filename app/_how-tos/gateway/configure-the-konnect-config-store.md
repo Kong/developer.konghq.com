@@ -23,6 +23,7 @@ entities:
 tags:
     - security
     - secrets-management
+    - konnect-config-store
 
 tldr:
     q: How do I use a {{site.konnect_short_name}}-native Vault?

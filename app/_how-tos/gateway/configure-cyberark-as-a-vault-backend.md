@@ -10,7 +10,7 @@ related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/
   - text: Configuration parameters for CyberArk Secrets Manager vaults
-    url: /gateway/entities/vault/?tab=conjur#vault-provider-specific-configuration-parameters
+    url: /gateway/entities/vault/cyberark/
 works_on:
     - on-prem
 

@@ -6,7 +6,7 @@ related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/
   - text: Azure Vault configuration parameters
-    url: "/gateway/entities/vault/?tab=azure#vault-provider-specific-configuration-parameters"
+    url: /gateway/entities/vault/azure/
   - text: Azure Key Vault documentation
     url: https://learn.microsoft.com/azure/key-vault/
 description: Learn how to set up Azure Key Vaults as a Vault in {{site.base_gateway}} and reference a secret stored there.
