@@ -95,9 +95,15 @@ rows:
                 a: |
                   Yes. Templates are intended as starting points. Once you create a dashboard from a template, you can modify tiles, filters, and layouts as needed.
               - q: |
-                  {% include faqs/download-dashboard-pdf.md section='question' %}
+                  Can I import a dashboard?
                 a: |
-                  {% include faqs/download-dashboard-pdf.md section='answer' %}
+                  Yes. From the **Create dashboard** dropdown, select "Import JSON definition", then upload a previously exported dashboard JSON file (from the **Export JSON definition** action) and optionally name the new dashboard.
+                  Importing creates a new dashboard that you access the same way as any other dashboard, so once it's created, it's available to anyone in your org who has access to dashboards.
+              - q: |
+                  Can I download a dashboard as a PDF?
+                a: |
+                  Yes. Open any dashboard, click the action menu icon, and select "Download as PDF".
+                  The PDF reflects the dashboard's current time range and filters, and anyone with the file can view it, even without a {{site.konnect_short_name}} account. This is useful for sharing insights with stakeholders outside {{site.konnect_short_name}}.
               - q: Can I upload my own template?
                 a: |
                   Uploading your own template is not yet available, but may be considered in a future release.
