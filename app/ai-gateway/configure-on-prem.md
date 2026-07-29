@@ -162,7 +162,7 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
 1. Convert the {{site.ai_gateway}} entity config to {{site.base_gateway}} 3.x config:
 
    ```sh
-   deck file ai2kong --state ai.yaml --output-file kong.yaml
+   deck file ai2kong --source ai.yaml --output-file kong.yaml
    ```
    For this example AI Model, {{site.ai_gateway}} generates a Service, a Route, and an `ai-proxy-advanced` plugin on that Route. `kong.yaml` contains:
 
