@@ -164,17 +164,3 @@ status_code: 204
 {{delete-client-secret | indent: 3}}
 
 
-{% comment %}
-## {{site.identity}} authorization code flow
-
-In the authorization code flow:
-1. (Optional) The client application displays the user consent page and authenticates the user (this part is handled outside {{site.base_gateway}}). When the user clicks **Authorize**, the client app calls the `/authorize` endpoint created by attaching the OAuth2 plugin to a service.
-
-   {:.info}
-   > If an app requires user authentication, the authorization step must happen outside of {{site.konnect_short_name}}.
-   
-3. The client makes a request that includes the client ID, secret, and scopes the user consented to.
-4. The authorization server ({{site.base_gateway}} with OAuth2 plugin) validates the client credentials and returns an authorization code.
-5. The client exchanges this code at the `/oauth/token` endpoint for access tokens.
-6. The client uses the access token to call protected APIs.
-{% endcomment %}
