@@ -50,6 +50,10 @@ related_resources:
     url: /ai-gateway/
   - text: AI Agent entity reference
     url: /ai-gateway/entities/ai-agent/
+  - text: Secure AI Agent traffic with OpenID Connect and Okta
+    url: /ai-gateway/secure-ai-agent-with-oidc/
+  - text: Monitor AI Agent traffic with OpenTelemetry
+    url: /ai-gateway/monitor-ai-agent-with-opentelemetry/
   - text: A2A protocol specification
     url: https://a2a-protocol.org/latest/
 
