@@ -125,7 +125,7 @@ sequenceDiagram
 
 
 You can have a maximum of two secrets active at a time.
-This allows you to rotate secrets without incurring downtime using the UI or API.
+This allows you to [rotate secrets](/how-to/rotate-auth-server-client-secrets/) without incurring downtime using the UI or API.
 
 ## Claim configuration
 
