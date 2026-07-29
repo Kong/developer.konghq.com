@@ -31,8 +31,6 @@ prereqs:
   skip_product: true
   operator:
     controllers: [AIGATEWAYDATAPLANE]
-    konnect:
-      auth: true
 
 tldr:
   q: How do I install {{site.operator_product_name}} for {{ site.ai_gateway_name }}?

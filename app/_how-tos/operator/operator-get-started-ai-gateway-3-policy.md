@@ -27,11 +27,7 @@ works_on:
   - konnect
 
 prereqs:
-  show_works_on: true
   skip_product: true
-  operator:
-    konnect:
-      auth: true
 
 tldr:
   q: How do I apply AI policies with {{site.operator_product_name}}?
@@ -129,7 +125,7 @@ curl -s http://$AIGW_HOST:8000/v1/chat/completions \
   }' | jq .choices[0].message.content
 ```
 
-Send an off-topic prompt. It should be rejected because it does not match the allow list:
+Send an off-topic prompt. It should be rejected because it doesn't match the allow list:
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" \

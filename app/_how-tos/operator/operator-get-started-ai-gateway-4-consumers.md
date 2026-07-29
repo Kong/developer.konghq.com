@@ -27,11 +27,7 @@ works_on:
   - konnect
 
 prereqs:
-  show_works_on: true
   skip_product: true
-  operator:
-    konnect:
-      auth: true
 
 tldr:
   q: How do I add AI consumers with {{site.operator_product_name}}?
