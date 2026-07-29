@@ -58,6 +58,7 @@ related_resources:
 tags:
   - secrets-management
   - security
+  - gcp-vault
 ---
 
 

@@ -60,10 +60,12 @@ versions:
   - "1.33"
   - "1.34"
   - "1.35"
+  - "1.36"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   "2.0.x": ["1.28", "1.29", "1.30", "1.31", "1.32", "1.33"]
   "2.1.x": ["1.30", "1.31", "1.32", "1.33", "1.34", "1.35"]
+  "2.2.x": ["1.30", "1.31", "1.32", "1.33", "1.34", "1.35", "1.36"]
 {% endversion_compatibility_table %}
 
 ### Gateway API
@@ -88,7 +90,7 @@ compatible_versions:
 {% endversion_compatibility_table %}
 
 [gateway-api]: https://github.com/kubernetes-sigs/gateway-api
-[gateway-api-supported-versions]:https://gateway-api.sigs.k8s.io/concepts/versioning/#supported-versions
+[gateway-api-supported-versions]:https://gateway-api.sigs.k8s.io/docs/concepts/versioning/#supported-versions
 
 ### `kubernetes-configuration` CRDs
 

@@ -57,6 +57,7 @@ related_resources:
 tags:
   - secrets-management
   - security
+  - aws-vault
 ---
 
 

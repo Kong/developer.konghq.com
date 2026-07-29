@@ -32,7 +32,7 @@ If you experience compatibility errors, [upgrade your data plane nodes](/gateway
 
 ## Compatibility status
 
-{{site.konnect_short_name}} Gateway Manager displays a **Compatibility status** badge for each data plane node. 
+The {{site.konnect_short_name}} API Gateway page displays a **Compatibility status** badge for each data plane node. 
 To see it, go to **API Gateway**, select a control plane, and click the **Data plane nodes** tab. 
 The **Compatibility status** column shows one of the following statuses:
 

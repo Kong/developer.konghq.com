@@ -25,7 +25,7 @@ entities:
 tags:
   - security
   - secrets-management
-  - aws
+  - aws-vault
 
 tldr:
     q: How can I access AWS Secrets Manager secrets in {{site.base_gateway}}?

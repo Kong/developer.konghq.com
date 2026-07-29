@@ -15,21 +15,10 @@ search_aliases:
 
 description: Learn how to import and export data in Insomnia using the UI and the Inso CLI, and which formats are supported.
 faqs:
-  - q: What are special resource IDs in Insomnia exports?
-    a: |
-      Special resource IDs are placeholder values used during a workspace export. 
-      When Insomnia serializes data, it replaces actual UUIDs with these placeholders to mark important entities for later resolution.
-      During import or sync, these placeholders are automatically mapped to real or newly generated IDs to preserve object relationships and workspace structure.
-
   - q: Why aren’t all environment variables visible in the table view?
     a: |
       Nested environment variables may not appear in the table view. 
       If this happens, switch to the **JSON** view to see the full environment variable structure.
-
-  - q: Why is my exported file missing the `.json` extension?
-    a: |
-      In some environments—especially Linux with Flatpak—exported files may be missing the `.json` extension. 
-      If this happens, you can manually add the extension.
 
   - q: What’s the difference between "Export all data" and scoped export options?
     a: |
@@ -87,10 +76,6 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-During imports and exports, Insomnia serializes workspace data by replacing real UUIDs with special resource IDs and classifying each item by resource type:
-- **Resource Type**: An object that specifies the type of information in the request. Insomnia includes only supported entities in exports; indicated by the `_type` field in each resource object. Deprecated or unsupported types are excluded. 
-- **Special Resource ID**: A placeholder identifier that Insomnia uses to preserve workspace structure, prevent identifier collisions, enable cross-environment reuse, and obscure storage-layer IDs. Insomnia replaces real UUIDs with placeholders like `__WORKSPACE_ID__`, `__BASE_ENVIRONMENT_ID__`, or `__<NAME>_<NUMBER>__`. These placeholders are resolved on import.
-
 ## Import methods
 
 Depending on your workflow requirements, you can import into Insomnia with either of the following methods:
@@ -106,8 +91,8 @@ In a workspace or document header, select **Import** and then specify your impor
 - Clipboard
 
 Insomnia supports the following formats:
-- **Import formats**: Insomnia JSON, Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL
-- **Export formats (UI)**: Insomnia JSON (v4/v5) and  HAR
+- **Import formats**: Insomnia JSON (v4), Insomnia YAML (v5), Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL
+- **Export formats (UI)**: Insomnia YAML (v5) and HAR
 - **Export formats (CLI)**: OpenAPI spec
 
 For more information on importing with the UI, go to [how to import an API spec as a document](/how-to/import-an-api-spec-as-a-document/).
@@ -140,7 +125,7 @@ In a workspace or document header, select **Export**  and then specify the file 
 - **All data**: Export everything in your workspace.
 
 The UI method supports the following formats:
-- Insomnia JSON (v4/v5)
+- Insomnia YAML (v5)
 - HAR
 
 ### CLI export
@@ -155,50 +140,100 @@ An example of the key commands:
   
   Use `inso export spec "<Design Document Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
 
-## Resource types
+## v4 and v5 file formats
 
-Resource types specify what each object in the resources array represents in workspace data that you exported and synced. Each object contains a `_type` field that Insomnia uses to interpret and reconstruct the data.
+Insomnia exports in the v5 file format and can still import legacy v4 JSON files. The two formats are structured differently, as described in the following tabs.
 
-Supported resource types ensure that only valid entities appear in exports, unsupported, or deprecated types are omitted. 
- 
-Resource types are used whenever you export data, sync across devices, or integrate Insomnia exports with Git or automation workflows. 
+{% navtabs "file-format" %}
+{% navtab "v5 (YAML)" %}
 
-### Supported resource types
+The v5 file format is a native YAML format that Insomnia generates in the following cases:
 
-Insomnia defines a set of core resource types that the system recognizes when exporting or syncing workspace data. Each object in the resources array features a `_type` value that tells Insomnia what kind of entity it represents. 
+* When you export a collection, design document, environment, or mock server.
+* When you use [Git Sync](/insomnia/storage/#git-sync): Insomnia writes your project data to the Git repository as v5 files.
 
-Use the following table to view the list of core types and descriptions of their role in workspace structure and import logic:
+Each v5 file represents a single entity and identifies itself with a top-level `type` field.
+
+**File types**
+
+The `type` field at the top of each file tells you what kind of file it is:
 
 {% table %}
 columns:
-  - title: Resource type (`_type`)
+  - title: "`type` value"
     key: type
-  - title: Description
-    key: description
+  - title: File
+    key: file
 rows:
-  - type: "`workspace`"
-    description: The top‑level container for all project data, that groups requests, environments, folders, and mocks.
-  - type: "`environment`"
-    description: A set of variables used to parameterize requests, including base or nested environments.
-  - type: "`request`"
-    description: An individual API call that may use HTTP GraphQL WebSocket or gRPC protocols.
-  - type: "`response`"
-    description: A sample or a saved response that is tied to a request.
-  - type: "`folder`"
-    description: A logical grouping of related entities, for example requests and environments.
-  - type: "`mock`"
-    description: A local mock endpoint definitions and behaviors for testing.
-  - type: "`plugin`"
-    description: A workspace-level plugin configuration or metadata.
-  - type: "`test`"
-    description: A script or test suite associated with requests or collections.
+  - type: "`collection.insomnia.rest/5.0`"
+    file: Request collection
+  - type: "`spec.insomnia.rest/5.0`"
+    file: API spec / design document
+  - type: "`mock.insomnia.rest/5.0`"
+    file: Mock server
+  - type: "`environment.insomnia.rest/5.0`"
+    file: Global environment
+  - type: "`mcpClient.insomnia/5.0`"
+    file: MCP client
 {% endtable %}
 
-## Resource IDs
+Alongside `type`, each file includes top-level fields such as `name`, `schema_version`, and `meta.id`, plus keys specific to the file type (for example, `collection`, `spec` and `testSuites`, or `server` and `routes`).
 
-Insomnia replaces real UUIDs with special resource IDs when you export, import, or sync workspace data. Insomnia then resolves placeholder special resource IDs automatically when you import exported JSON.
+The version in the `type` value (`5.0`) identifies the file format, while `schema_version` and the JSON Schema filename (for example, `5.1`) track revisions to the schema. These version numbers are independent and don't need to match.
 
-The following table explains Insomnia resource IDs: 
+**Example**
+
+The following is a trimmed example of a request collection file. The top-level `type` marks it as a collection, and the `collection` key holds the requests:
+
+```yaml
+type: collection.insomnia.rest/5.0   # Identifies the file as a request collection
+schema_version: "5.1"                # Schema revision the file conforms to
+name: Requests
+meta:
+  id: wrk_abfeee3c2bf2424bbbff129034019aa9
+collection:                          # Type-specific key: the requests in the collection
+  - name: List pets
+    url: https://api.example.com/pets
+    method: GET
+environments:
+  name: Base Environment
+```
+
+**JSON Schema**
+
+Insomnia publishes a [JSON Schema](https://raw.githubusercontent.com/Kong/insomnia/develop/schemas/insomnia.schema.5.1.json) that describes the structure of v5 files. The schema describes the shape of the files; it doesn't contain any data.
+
+Each schema version has its own file, named `insomnia.schema.<version>.json`, with its own link.
+
+You can use the schema to:
+
+* **Validate and autocomplete while editing**: Point your editor at the schema to get autocompletion, inline documentation, and validation as you hand-edit v5 files. For example, in VS Code with the YAML extension, map the schema to your Insomnia files in `settings.json`:
+
+  ```json
+  {
+    "yaml.schemas": {
+      "https://raw.githubusercontent.com/Kong/insomnia/develop/schemas/insomnia.schema.5.1.json": "**/*.yaml"
+    }
+  }
+  ```
+
+  In this mapping, the key is the schema URL and the value (`**/*.yaml`) is a file glob that selects which files the schema applies to. Adjust that glob to match only your Insomnia files, so the schema isn't applied to unrelated YAML in your workspace.
+
+* **Validate files in CI**: Because v5 files are stored in your Git repository when you use Git Sync, you can validate them in a pipeline so that a malformed edit fails the build:
+
+```sh
+curl -O https://raw.githubusercontent.com/Kong/insomnia/develop/schemas/insomnia.schema.5.1.json && npx ajv-cli validate --spec=draft2020 -s insomnia.schema.5.1.json -d "**/*.yaml"
+```
+
+{% endnavtab %}
+{% navtab "v4 (JSON)" %}
+
+{:.info}
+> The v4 (JSON) format is legacy. Insomnia exports in the v5 file format, but you can still import v4 JSON files.
+
+The v4 format is a single JSON document with a flat `resources` array. Each object in the array carries a `_type` field (for example, `workspace`, `request`, `environment`, `folder`, `response`, `mock`, `plugin`, or `test`) that tells Insomnia what kind of entity it represents.
+
+Real UUIDs are replaced with special resource IDs that preserve workspace structure, prevent identifier collisions, and keep the export portable. Insomnia resolves these placeholders automatically on import:
 
 {% table %}
 columns:
@@ -206,24 +241,14 @@ columns:
     key: placeholder
   - title: Represents
     key: represents
-  - title: Description
-    key: description
 rows:
   - placeholder: "`__WORKSPACE_ID__`"
-    represents: Active workspace identity
-    description: Abstract placeholder for the workspace in JSON instead of exposing genuine storage IDs.
+    represents: The active workspace.
   - placeholder: "`__BASE_ENVIRONMENT_ID__`"
-    represents: Workspace’s base environment
-    description: Abstract placeholder for the workspace’s default environment in exported data.
+    represents: The workspace's base environment.
   - placeholder: "`__<NAME>_<NUMBER>__`"
-    represents: Random user-created entities
-    description: "Placeholder ID formats that prevent collisions and support consistent ID mapping during imports. For example: `__request_1__`, `__env_2__`"
+    represents: "User-created entities, for example `__request_1__` or `__env_2__`."
 {% endtable %}
 
-### Special resource IDs
-
-Special resource IDs serve specific internal purposes:
-- **Preserve workspace structure**: Maintains logical relationships between workspaces, environments, folders, and requests.
-- **Enable safe ID regeneration**: Prevents collisions by replacing fixed IDs with deterministic patterns during import.
-- **Support cross-environment reuse**: Makes exported JSON portable across machines or team members without ID conflicts.
-- **Obscure internal identifiers**: References entities generically to avoid exposing actual storage-layer IDs.
+{% endnavtab %}
+{% endnavtabs %}

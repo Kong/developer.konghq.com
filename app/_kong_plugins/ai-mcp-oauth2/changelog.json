@@ -130,6 +130,13 @@
       "type": "bugfix"
     }
   ],
+  "3.13.0.8": [
+    {
+      "message": "Fixed an issue where token-related 401 responses omitted the protected resource metadata URL when a token was given.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Introduced the AI MCP OAuth2 plugin, which protects the MCP traffic with OAuth2.\n",

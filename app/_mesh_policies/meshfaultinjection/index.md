@@ -9,93 +9,59 @@ type: policy
 icon: meshfaultinjection.png
 ---
 
-
-{% warning %}
-This policy uses a new policy matching algorithm.
-Do **not** combine with the now deprecated [FaultInjection](/docs/{{ page.release }}/policies/fault-injection).
-{% endwarning %}
+{:.warning}
+> This policy uses a new policy matching algorithm.
+> Do **not** combine with the now deprecated FaultInjection policy.
 
 ## `targetRef` support matrix
 
-{% if_version gte:2.7.x %}
-{% tabs %}
-{% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshServiceSubset`                |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`                                     |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshServiceSubset`                |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`             | Allowed kinds                                 |
-| ----------------------- | --------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshServiceSubset`     |
-{% endif_version %}
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`from[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`, `MeshServiceSubset`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`                                                   |
-{% endtab %}
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-
-`MeshFaultInjection` isn't supported on delegated gateways.
-
-{% endtab %}
-{% endtabs %}
-
-{% endif_version %}
-
-{% if_version eq:2.6.x %}
-{% tabs %}
-{% tab Sidecar %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `from[].targetRef.kind` | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-{% endtab %}
-
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`                                                   |
-{% endtab %}
-
-{% tab Delegated Gateway %}
+{% navtab "Delegated Gateway" %}
 
 `MeshFaultInjection` isn't supported on delegated gateways.
 
-{% endtab %}
-{% endtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
-{% endif_version %}
-{% if_version lte:2.5.x %}
 
-| `targetRef.kind`    | top level | to  | from |
-| ------------------- | --------- | --- | ---- |
-| `Mesh`              | ✅        | ❌  | ✅   |
-| `MeshSubset`        | ✅        | ❌  | ✅   |
-| `MeshService`       | ✅        | ❌  | ✅   |
-| `MeshServiceSubset` | ✅        | ❌  | ✅   |
-
-{% endif_version %}
-
-To learn more about the information in this table, see the [matching docs](/docs/{{ page.release }}/policies/introduction).
 
 ## Configuration
 
-`MeshFaultInjection` allows configuring a list of HTTP faults. They execute in the same order as they were defined.
+`MeshFaultInjection` lets you configure a list of HTTP faults. They execute in the same order as they were defined.
 
 ```yaml
 default:
@@ -135,14 +101,14 @@ That means that for 70% of requests, it returns 500 and for 50% of the 30% that 
 Abort defines a configuration of not delivering requests to destination service and replacing the responses from destination data plane by
 predefined status code.
 
-- `httpStatus` - HTTP status code which will be returned to source side, has to be in [100 - 599] range
+- `httpStatus` - HTTP status code returned to the source side, in the [100 - 599] range
 - `percentage` - a percentage of requests on which abort will be injected, has to be in [0.0 - 100.0] range. If the value is a double number, put it in quotes.
 
 ### Delay
 
 Delay defines a configuration of delaying a response from a destination.
 
-- `value` - the duration during which the response will be delayed
+- `value` - the duration during which the response is delayed
 - `percentage` - a percentage of requests on which abort will be injected, has to be in [0.0 - 100.0] range. If the value is a double number, put it in quotes.
 
 ### ResponseBandwidth limit

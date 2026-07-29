@@ -41,7 +41,7 @@ To enable mTLS, configure the `mtls` property in a `Mesh` resource. You can have
 
 A missing or empty `enabledBackend` property deactivates mTLS for the entire mesh.
 
-## Using a builtin CA
+## Using a built-in CA
 
 A `builtin` CA is the fastest and simplest way to enable mTLS in {{site.mesh_product_name}}.
 

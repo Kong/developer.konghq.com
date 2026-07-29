@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.15.0
-  x-oas-source: kong/platform-api@0898b802d507527708e86f2b2dedd61c2c140699
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0898b802d507527708e86f2b2dedd61c2c140699'
+  x-oas-source: kong/platform-api@2d298024e3105df6dbfeedf8c3b2364054dae3a3
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2d298024e3105df6dbfeedf8c3b2364054dae3a3'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -9111,44 +9111,6 @@ components:
             - required:
                 - cert
                 - key
-    KonnectCPLegacyBaseError:
-      description: standard error
-      type: object
-      properties:
-        message:
-          description: |
-            A short summary of the problem.
-          type: string
-          readOnly: true
-      title: Error
-    KonnectCPLegacyUnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Unauthorized
-    KonnectCPLegacyForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Forbidden
-    KonnectCPLegacyNotFoundError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Not Found
-    KonnectCPLegacyBadRequestError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Bad Request
     BaseError:
       description: standard error
       type: object
@@ -9426,6 +9388,44 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
+    KonnectCPLegacyBaseError:
+      description: standard error
+      type: object
+      properties:
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          readOnly: true
+      title: Error
+    KonnectCPLegacyUnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
+        - type: object
+          properties:
+            message:
+              example: Unauthorized
+    KonnectCPLegacyForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
+        - type: object
+          properties:
+            message:
+              example: Forbidden
+    KonnectCPLegacyNotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
+        - type: object
+          properties:
+            message:
+              example: Not Found
+    KonnectCPLegacyBadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
+        - type: object
+          properties:
+            message:
+              example: Bad Request
     NotFoundError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -9575,18 +9575,6 @@ components:
             rule: required
             reason: This Config Store has 4 secrets. These must be individually removed before deletion or the force=true query param can be used to automatically delete associated entities.”
             source: query
-    KonnectCPLegacyUnauthorizedExample:
-      value:
-        message: Unauthorized
-    KonnectCPLegacyForbiddenExample:
-      value:
-        message: Forbidden
-    KonnectCPLegacyNotFoundExample:
-      value:
-        message: Not Found
-    KonnectCPLegacyBadRequestExample:
-      value:
-        message: Bad Request
     UnauthorizedExample:
       value:
         status: 401
@@ -9599,6 +9587,18 @@ components:
         title: Forbidden
         instance: 'kong:trace:2723154947768991354'
         detail: You do not have permission to perform this action
+    KonnectCPLegacyUnauthorizedExample:
+      value:
+        message: Unauthorized
+    KonnectCPLegacyForbiddenExample:
+      value:
+        message: Forbidden
+    KonnectCPLegacyNotFoundExample:
+      value:
+        message: Not Found
+    KonnectCPLegacyBadRequestExample:
+      value:
+        message: Bad Request
     NotFoundExample:
       value:
         status: 404
@@ -10092,6 +10092,30 @@ components:
             properties:
               message:
                 type: string
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
     KonnectCPLegacyUnauthorized:
       description: Unauthorized
       content:
@@ -10128,30 +10152,6 @@ components:
           examples:
             UnauthorizedExample:
               $ref: '#/components/examples/KonnectCPLegacyBadRequestExample'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/BadRequestError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/UnauthorizedError'
-          examples:
-            UnauthorizedExample:
-              $ref: '#/components/examples/UnauthorizedExample'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ForbiddenError'
-          examples:
-            UnauthorizedExample:
-              $ref: '#/components/examples/ForbiddenExample'
     KonnectCPLegacyConflict:
       description: Forbidden
       content:

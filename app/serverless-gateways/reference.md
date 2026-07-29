@@ -295,4 +295,6 @@ The Serverless V1 egress IPs are:
 Serverless Gateways have the following limits:
 * Request rate limit: Serverless Gateways support up to 100 requests per second (RPS) per gateway.
 * Maximum request size: Incoming requests are limited to a maximum payload size of 10MB.
+* File system vault: The file system vault backend is not supported on Serverless Gateways.
+* Custom plugin streaming: Custom plugin streaming is not supported on Serverless Gateways.
 For workloads that exceed these limits, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) for higher throughput and larger request sizes.

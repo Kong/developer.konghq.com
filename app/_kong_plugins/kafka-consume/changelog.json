@@ -44,6 +44,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.9": [
+    {
+      "message": "Fixed Kafka keepalive pools leaking connections across different SASL credentials and TLS verification settings.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed Kafka broker returning failed connections to the keepalive pool, added SSL handshake retry, and improved error propagation.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added WebSocket support to the kafka-consume plugin for consuming Kafka messages.",

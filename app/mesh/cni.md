@@ -229,6 +229,33 @@ To disable the taint controller, use the following env variable:
 KUMA_RUNTIME_KUBERNETES_NODE_TAINT_CONTROLLER_ENABLED="false"
 ```
 
+{:.info}
+> Because the controller taints nodes reactively, after they register, a busy or fast-scaling cluster can schedule Pods onto a new node before the taint is applied. To close this gap, taint nodes preemptively at registration so the taint is present before any Pod is scheduled; the taint controller removes it once the CNI is ready. For example, with Karpenter `startupTaints`:
+
+```yaml
+# Karpenter NodePool
+spec:
+  template:
+    spec:
+      startupTaints:
+        - key: NodeReadiness
+          effect: NoSchedule
+```
+
+{:.warning}
+> The control plane (and anything else that must run on these nodes before the CNI is ready) needs a matching toleration, otherwise it can't be scheduled to remove the taint and the cluster deadlocks. Add the toleration to `controlPlane.tolerations`, or scope the startup taint to data-plane node pools only.
+
+```yaml
+controlPlane:
+  tolerations:
+    - key: NodeReadiness
+      operator: Exists
+      effect: NoSchedule
+```
+
+{:.info}
+> Tainting only closes the fresh-scheduling gap. A node rebooted in place (Pods not evicted) recreates a Pod's sandbox without re-running the CNI, so it can still come up without the redirect. This bypasses the taint entirely.
+
 ## Merbridge CNI with eBPF
 
 {:.warning}

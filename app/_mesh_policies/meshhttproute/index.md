@@ -9,72 +9,66 @@ type: policy
 icon: meshhttproute.png
 ---
 
-
 The `MeshHTTPRoute` policy allows altering and redirecting HTTP requests
 depending on where the request is coming from and where it's going to.
 
 ## TargetRef support matrix
 
-{% if_version gte:2.6.x %}
-{% tabs %}
-{% tab Sidecar %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `MeshService`                                            |
-{% endif_version %}
-{% if_version eq:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `MeshService`                                            |
-{% endif_version %}
-{% if_version gte:2.10.x %}
-| `targetRef`           | Allowed kinds                                 |
-| --------------------- | --------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `Dataplane`, `MeshSubset(deprecated)` |
-| `to[].targetRef.kind` | `MeshService`                                 |
-{% endif_version %}
-{% endtab %}
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`MeshService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Builtin Gateway %}
-| `targetRef`             | Allowed kinds                                            |
-| ----------------------- | -------------------------------------------------------- |
-| `targetRef.kind`        | `Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`|
-| `to[].targetRef.kind`   | `Mesh`                                                   |
-{% endtab %}
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% tab Delegated Gateway %}
-{% if_version lte:2.8.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`, `MeshService`, `MeshServiceSubset` |
-| `to[].targetRef.kind` | `MeshService`                                            |
-{% endif_version %}
-{% if_version gte:2.9.x %}
-| `targetRef`           | Allowed kinds                                            |
-| --------------------- | -------------------------------------------------------- |
-| `targetRef.kind`      | `Mesh`, `MeshSubset`                                     |
-| `to[].targetRef.kind` | `MeshService`                                            |
-{% endif_version %}
-{% endtab %}
+{% navtab "Delegated Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`MeshService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
 
-{% endtabs %}
+{% endnavtabs %}
 
-{% endif_version %}
-{% if_version lte:2.5.x %}
 
-| TargetRef type    | top level | to  | from |
-| ----------------- | --------- | --- | ---- |
-| Mesh              | ✅        | ❌  | ❌   |
-| MeshSubset        | ✅        | ❌  | ❌   |
-| MeshService       | ✅        | ✅  | ❌   |
-| MeshServiceSubset | ✅        | ❌  | ❌   |
-
-{% endif_version %}
-
-If you don't understand this table you should read [matching docs](/docs/{{ page.release }}/policies/introduction).
 
 ## Configuration
 
@@ -92,14 +86,13 @@ spec:
             backendRefs: [...]
 ```
 
-{% tip %}
-Remember to tag your `Service` ports with `appProtocol: http` to use
-them in a `MeshHTTPRoute`!
-{% endtip %}
+{:.info}
+> Remember to tag your `Service` ports with `appProtocol: http` to use
+> them in a `MeshHTTPRoute`!
 
 ### Gateways
 
-In order to route HTTP traffic for a MeshGateway, you need to target the
+To route HTTP traffic for a MeshGateway, you need to target the
 MeshGateway in `spec.targetRef` and set `spec.to[].targetRef.kind: Mesh`.
 
 ### Interactions with `MeshTCPRoute`
@@ -110,17 +103,17 @@ MeshGateway in `spec.targetRef` and set `spec.to[].targetRef.kind: Mesh`.
 
 `MeshHTTPRoute` takes priority over [`TrafficRoute`](../traffic-route) when a proxy is targeted by both policies.
 
-All legacy policies like `Retry`, `TrafficLog`, `Timeout` etc. only match on routes defined by `TrafficRoute`.
-All new recommended policies like `MeshRetry`, `MeshAccessLog`, `MeshTimeout` etc. match on routes defined by `MeshHTTPRoute` and `TrafficRoute`.
+All legacy policies like `Retry`, `TrafficLog`, `Timeout` and so on only match on routes defined by `TrafficRoute`.
+All new recommended policies like `MeshRetry`, `MeshAccessLog`, `MeshTimeout` and so on match on routes defined by `MeshHTTPRoute` and `TrafficRoute`.
 
-If you don't use legacy policies, it's recommended to remove any existing `TrafficRoute`.
-Otherwise, it's recommended to migrate to new policies and then removing `TrafficRoute`.  
+If you don't use legacy policies, we recommend removing any existing `TrafficRoute`.
+Otherwise, we recommend migrating to new policies and then removing `TrafficRoute`.  
 
 ## Merging
 
 When several `MeshHTTPRoute` policies target the same data plane proxy they're merged.
 Similar to the new policies the merging order is determined by
-[the top level targetRef](/docs/{{ page.release }}/policies/introduction).
+[the top level targetRef](/mesh/policies-introduction/).
 The difference is in `spec.to[].rules`.
 {{site.mesh_product_name}} treats `rules` as a key-value map
 where `matches` is a key and `default` is a value. For example MeshHTTPRoute policies:
@@ -180,7 +173,7 @@ rules:
 ### Matches
 
 - **`path`** - (optional) - HTTP path to match the request on
-  - **`type`** - one of `Exact`, {% if_version gte:2.3.x %}`PathPrefix`{% endif_version %}{% if_version lte:2.2.x %}`Prefix`{% endif_version %}, `RegularExpression`
+  - **`type`** - one of `Exact`, `PathPrefix`, `RegularExpression`
   - **`value`** - actual value that's going to be matched depending on the `type`
 - **`method`** - (optional) - HTTP2 method, available values are
   `CONNECT`, `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`, `POST`, `PUT`, `TRACE`
@@ -231,7 +224,7 @@ rules:
 
 ### Backends
 
-- **`kind`** - one of `MeshService`, `MeshServiceSubset`{% if_version gte:2.9.x %}, `MeshExtenalService`{% endif_version %}
+- **`kind`** - one of `MeshService`, `MeshServiceSubset`, `MeshExternalService`
 - **`name`** - service name
 - **`tags`** - service tags, must be specified if the `kind` is `MeshServiceSubset`
 - **`weight`** - when a request matches the route, the choice of an upstream cluster

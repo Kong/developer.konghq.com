@@ -73,6 +73,8 @@ In this guide, you'll define two plugins inline to demonstrate how streaming wor
 
 You'll apply `replaceme` globally with a condition so it only runs when the request path does not contain the word `skip`, then validate both cases.
 
+{% include_cached /gateway/custom-plugin-streaming-serverless-unsupported.md %}
+
 ## Create the first plugin
 
 The `replaceme` plugin reads the raw request body, performs a global text substitution, and writes the modified body back before the request is proxied upstream.

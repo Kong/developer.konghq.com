@@ -21,6 +21,7 @@ groups:
   - title: Reference
     sections:
       - items:
+          - path: /operator/reference/architecture/
           - path: /operator/reference/configuration-options/
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
@@ -67,6 +68,7 @@ groups:
           - path: /operator/dataplanes/how-to/set-timeouts-and-retries/
           - path: /operator/dataplanes/how-to/set-host-header/
           - path: /operator/dataplanes/how-to/configure-upstream-policy/
+          - path: /operator/dataplanes/how-to/upgrade-operator/
       - title: Observability
         items:
           - path: /operator/dataplanes/reference/metrics/operator/

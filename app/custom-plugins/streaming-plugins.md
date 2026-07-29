@@ -33,6 +33,8 @@ related_resources:
 
 You can define a custom plugin directly in Kong entity configuration.
 
+{% include_cached /gateway/custom-plugin-streaming-serverless-unsupported.md %}
+
 ## How does custom plugin streaming work? 
 
 {{site.base_gateway}} can stream custom plugins from the control plane to the data plane. 

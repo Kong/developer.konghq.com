@@ -12,7 +12,8 @@ Examples:
   # Synchronize using the explicit Konnect target form
   kongctl sync konnect -f api.yaml
   
-  # Execute a reviewed plan without prompting
+  # Generate and execute a reviewed sync plan without prompting
+  kongctl plan --mode sync -f config.yaml --output-file plan.json
   kongctl sync --plan plan.json --auto-approve
 
 
@@ -63,7 +64,7 @@ Flags:
       --pat string                        Konnect Personal Access Token (PAT) used to authenticate the CLI. 
                                           Setting this value overrides tokens obtained from the login command.
                                           - Config path: [ konnect.pat ]
-      --plan string                       Path to existing plan file
+      --plan string                       Path to existing sync-mode plan file
   -p, --profile string                    Specify the profile to use for this command. (default "default")
   -R, --recursive                         Process the directory used in -f, --filename recursively
       --region string                     Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.

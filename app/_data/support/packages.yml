@@ -7,9 +7,11 @@ amazonlinux1:
 amazonlinux2:
   os: Amazon Linux
   version: 2
+  docker_tag: amazonlinux-2
 amazonlinux2023:
   os: Amazon Linux
   version: 2023
+  docker_tag: amazonlinux-2023
 centos7:
   os: CentOS
   version: 7
@@ -32,16 +34,19 @@ debian11:
   os: Debian
   version: 11
   codename: bullseye
+  docker_tag: debian
 debian12:
   os: Debian
   version: 12
   codename: bookworm
+  docker_tag: debian
 debian-stable:
   os: Debian
   version: stable
 distroless:
   os: Distroless
   version: N/A
+  docker_tag: distroless
 rhel7:
   os: RHEL
   version: 7.x
@@ -50,10 +55,12 @@ rhel8:
   os: RHEL
   version: 8.x
   codename: 8
+  docker_tag: rhel
 rhel9:
   os: RHEL
   version: 9.x
   codename: 9
+  docker_tag: rhel
 ubuntu1604:
   os: Ubuntu
   version: 16.04
@@ -68,7 +75,9 @@ ubuntu2204:
   os: Ubuntu
   version: 22.04
   codename: jammy
+  docker_tag: ubuntu
 ubuntu2404:
   os: Ubuntu
   version: 24.04
   codename: noble
+  docker_tag: ubuntu

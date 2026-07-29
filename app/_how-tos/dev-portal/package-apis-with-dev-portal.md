@@ -290,7 +290,8 @@ Operations from your API's OpenAPI spec should overlap with Routes to ensure req
 
 ## Assign operations to API packages
 
-Now, you can create an API package by picking operations from your API. Operations are automatically mapped to Routes using your API's OpenAPI spec. The Gateway configuration isn't directly modified – any unmatched operations will be highlighted to indicate that a user needs Gateway Manager permissions to perform an action.
+Now, you can create an API package by picking operations from your API. Operations are automatically mapped to Routes using your API's OpenAPI spec. 
+The Gateway configuration isn't directly modified, so any unmatched operations will be highlighted to indicate that a user needs API Gateway permissions to perform an action.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.

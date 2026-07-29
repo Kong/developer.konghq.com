@@ -3,12 +3,12 @@ info:
   title: Konnect Analytics Dashboards
   description: |
     Konnect endpoint for creating, reading, updating, and deleting dashboards.  Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a chart to render the data.
-  version: 2.0.0
+  version: 2.0.1
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c6fc548c13b370a653ae0e25d674adedb09ddaf6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c6fc548c13b370a653ae0e25d674adedb09ddaf6'
+  x-oas-source: kong/platform-api@468c2739fee796a7d12db794a8fe158a25500cd4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/468c2739fee796a7d12db794a8fe158a25500cd4'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -290,6 +290,11 @@ components:
           $ref: '#/components/schemas/Granularity'
         time_range:
           $ref: '#/components/schemas/TimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
       example:
         datasource: api_usage
         time_range:
@@ -352,6 +357,11 @@ components:
           $ref: '#/components/schemas/Granularity'
         time_range:
           $ref: '#/components/schemas/TimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
       example:
         datasource: llm_usage
         time_range:
@@ -425,6 +435,11 @@ components:
           $ref: '#/components/schemas/Granularity'
         time_range:
           $ref: '#/components/schemas/TimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
       example:
         datasource: agentic_usage
         time_range:
@@ -471,6 +486,10 @@ components:
               - plugin_name
               - plugin_scope
               - data_plane_node_version
+              - env
+              - team
+              - region
+              - hostname
           maxItems: 2
         filters:
           $ref: '#/components/schemas/PlatformFilters'
@@ -479,9 +498,8 @@ components:
         time_range:
           $ref: '#/components/schemas/PlatformTimeRange'
         limit:
-          description: 'Maximum number of group_by buckets to return. Defaults to 50, capped at 1000. Only applies when a group_by dimension is requested.'
+          description: Limits the number of distinct metric groups to return.
           type: number
-          example: 25
           default: 50
           maximum: 1000
       example:
@@ -2572,12 +2590,16 @@ components:
           enum:
             - control_plane
             - data_plane_node_version
+            - env
             - gateway_service
+            - hostname
             - plugin
             - plugin_name
             - plugin_scope
             - realm
+            - region
             - route
+            - team
         operator:
           type: string
           enum:
@@ -2814,6 +2836,150 @@ components:
         - $ref: '#/components/schemas/TopNChart'
         - $ref: '#/components/schemas/SingleValueChart'
         - $ref: '#/components/schemas/ChoroplethMapChart'
+    MetricsEnvFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - env
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - env
+          required:
+            - operator
+            - field
+      title: Filter by env
+    MetricsHostnameFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - hostname
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - hostname
+          required:
+            - operator
+            - field
+      title: Filter by hostname
+    MetricsRegionFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - region
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - region
+          required:
+            - operator
+            - field
+      title: Filter by region
+    MetricsTeamFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - team
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - team
+          required:
+            - operator
+            - field
+      title: Filter by team
     AllFilterItems:
       discriminator:
         propertyName: field
@@ -2837,7 +3003,9 @@ components:
           country_code: '#/components/schemas/MetricsCountryCodeFilterByField'
           data_plane_node: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
           data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
+          env: '#/components/schemas/MetricsEnvFilterByField'
           gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
+          hostname: '#/components/schemas/MetricsHostnameFilterByField'
           llm_cache_status: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
           llm_embeddings_model: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
           llm_embeddings_provider: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
@@ -2847,10 +3015,12 @@ components:
           mcp_tool_name: '#/components/schemas/MetricsMcpToolNameFilterByField'
           portal: '#/components/schemas/MetricsPortalFilterByField'
           realm: '#/components/schemas/MetricsRealmFilterByField'
+          region: '#/components/schemas/MetricsRegionFilterByField'
           response_source: '#/components/schemas/MetricsResponseSourceFilterByField'
           route: '#/components/schemas/MetricsRouteFilterByField'
           status_code: '#/components/schemas/MetricsStatusCodeFilterByField'
           status_code_grouped: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+          team: '#/components/schemas/MetricsTeamFilterByField'
           upstream_status_code: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
           upstream_status_code_grouped: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
       oneOf:
@@ -2873,7 +3043,9 @@ components:
         - $ref: '#/components/schemas/MetricsCountryCodeFilterByField'
         - $ref: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
         - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
+        - $ref: '#/components/schemas/MetricsEnvFilterByField'
         - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
+        - $ref: '#/components/schemas/MetricsHostnameFilterByField'
         - $ref: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
         - $ref: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
         - $ref: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
@@ -2884,10 +3056,12 @@ components:
         - $ref: '#/components/schemas/MetricsPortalFilterByField'
         - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
         - $ref: '#/components/schemas/MetricsRealmFilterByField'
+        - $ref: '#/components/schemas/MetricsRegionFilterByField'
         - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'
         - $ref: '#/components/schemas/MetricsRouteFilterByField'
         - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
         - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+        - $ref: '#/components/schemas/MetricsTeamFilterByField'
         - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
         - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
     Labels:
