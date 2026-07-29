@@ -122,8 +122,10 @@ ai_gateway_models:
       route:
         paths:
           - /
-      model:
-        alias: my-gemini-model
+        model:
+          body:
+            model:
+              - my-gemini-model
     targets:
       - name: gemini-2.5-flash
         provider: my-gemini-account
