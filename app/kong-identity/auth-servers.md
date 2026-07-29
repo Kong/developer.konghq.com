@@ -90,7 +90,7 @@ rows:
 
 The client credentials flow is a [standard OAuth flow](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) where a client authenticates to {{site.identity}} using credentials (such as a `client_id` and `client_secret`) that you've issued beforehand. This can be useful when only the client needs to authenticate, such as: 
 - Machine-to-Machine (M2M) use cases
-- A microservice authenticating to {{site.base_gateway}}.
+- A microservice authenticating to {{site.base_gateway}}
 
 The following diagram shows how authentication works with {{site.identity}}:
 
