@@ -170,7 +170,7 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
    _format_version: "3.0"
    _info:
      select_tags:
-     - 'managed-by: deck-ai'
+     - 'managed_by: deck-ai'
    ai_models:
    - alias: '@openai/gpt-5.2'
      name: gpt-5-2
