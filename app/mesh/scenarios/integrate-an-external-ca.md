@@ -32,11 +32,12 @@ Using an external CA ensures that Kong Air's service identities are governed by 
 {:.info}
 > The `MeshIdentity` and `MeshTrust` resources in this guide are **system-namespace** resources. On a Zone CP federated to a Global CP, create them in `{{site.mesh_namespace}}` with the `kuma.io/origin: zone` label (shown in every example below). See the [Resource scoping](/mesh/scenarios/resource-scoping/) for which control plane to target.
 
+{:.info}
+> This guide roots the mesh CA through the `MeshIdentity` Extension model. The legacy CA pages document the older `Mesh.mtls.backends` model instead: [HashiCorp Vault CA](/mesh/vault/), [cert-manager](/mesh/cert-manager/), and [AWS Certificate Manager Private CA](/mesh/acm-private-ca-policy/).
+
 ## Why use an external CA?
 
-*   **Compliance**: Many organizations mandate that all certificates must be issued by a specific authority (for example HashiCorp Vault or a corporate Sub-CA).
-*   **Hardened Security**: External CAs often live on hardware security modules or in highly restricted environments.
-*   **Auditability**: Centralize all certificate issuance logs in a single location rather than having them scattered across local clusters.
+An external CA lets Kong Air govern service identities under the same corporate PKI it already uses for compliance, hardware-backed key storage, and centralized issuance auditing.
 
 ## Two ways to bring your own CA
 
@@ -72,7 +73,7 @@ rows:
 You provide an externally-managed CA certificate and private key as {{site.mesh_product_name}} Secrets, and the control plane signs all workload certificates from them.
 
 {:.warning}
-> The CA cert and key are referenced as **{{site.mesh_product_name}} Secrets**, not native Kubernetes TLS Secrets. A {{site.mesh_product_name}} Secret is a standard Kubernetes `Secret` with `type: system.kuma.io/secret` and a single `value` key holding the raw PEM (it is **not** a `kubernetes.io/tls` Secret). Create them in the system namespace (`{{site.mesh_namespace}}`) with the `kuma.io/mesh` label, the same namespace the `MeshIdentity` lives in.
+> The CA cert and key are referenced as **{{site.mesh_product_name}} Secrets** in the system namespace (`{{site.mesh_namespace}}`) with the `kuma.io/mesh` label, not native Kubernetes TLS Secrets. For how these Secrets are structured and created, see [Manage secrets](/mesh/manage-secrets/).
 
 ### Step 1: create the {{site.mesh_product_name}} Secrets containing your CA cert and key
 

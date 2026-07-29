@@ -17,8 +17,8 @@ tldr:
   a: |
     Give the mesh its own dedicated zone proxies instead of sharing one global pair:
     1. Put the mesh in `spec.meshServices.mode: Exclusive`.
-    2. Add a `meshes:` entry for it in your zone Helm values.
-    3. Apply any mesh-scoped policy to the proxies with `targetRef.labels: {kuma.io/listener-zoneingress: enabled}` (or `...-zoneegress: enabled`).
+    2. Deploy a dedicated ingress and egress pair for it (see [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/)).
+    3. Target the proxies with mesh-scoped policy using the `kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress` labels (see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/)).
     4. Cross-zone traffic now carries the mesh's own SPIFFE identity, honors its policies, and reports its own metrics.
 prereqs:
   inline:
@@ -129,38 +129,7 @@ rows:
 {:.info}
 > The two models can coexist during a migration window. The old `kuma.ingress.enabled: true` key and the new `kuma.meshes:` key are both honored in 2.14, so you can stand up the dedicated proxies before retiring the shared ones. See [Migrating from global zone proxies](#migrating-from-global-zone-proxies).
 
-Add a `meshes:` entry to each zone CP's Helm values, naming the mesh and choosing separate ingress/egress deployments or a combined proxy:
-
-```yaml
-# Zone Helm values (values-zone1.yaml)
-kuma:
-  # Remove or leave the old global ingress/egress keys during migration:
-  # ingress:
-  #   enabled: true
-  # egress:
-  #   enabled: true
-
-  meshes:
-    - name: kong-air-mesh
-      ingress:
-        enabled: true
-      egress:
-        enabled: true
-```
-
-Apply the upgrade:
-
-```bash
-helm upgrade kong-mesh kong-mesh/kong-mesh \
-  --namespace kong-mesh-system \
-  --reuse-values \
-  --set "kuma.meshes[0].name=kong-air-mesh" \
-  --set "kuma.meshes[0].ingress.enabled=true" \
-  --set "kuma.meshes[0].egress.enabled=true" \
-  --version 2.14.0
-```
-
-This gives `kong-air-mesh` its own ingress and egress Deployment (each with its own Service and ServiceAccount).
+You request a dedicated pair per mesh by adding a `meshes:` entry to each zone CP's Helm values, naming the mesh and enabling its `ingress` and `egress`, then running `helm upgrade`. This gives `kong-air-mesh` its own ingress and egress Deployment, each with its own Service and ServiceAccount. For the full Helm `kuma.meshes[]` values and upgrade commands, see [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/).
 
 {:.info}
 > Use `combinedProxies` instead of separate `ingress` and `egress` entries when you want a single lower-footprint Deployment for a small or staging environment. The two shapes are mutually exclusive per mesh entry.
@@ -237,244 +206,15 @@ If you scale the zone ingress to zero, its `MeshZoneAddress` is withdrawn automa
 
 ## Apply per-mesh identity, policy, and observability
 
-As the proxies are ordinary `Dataplane` resources in `kong-air-mesh`, every mesh-scoped policy can now target them, the controls that were impossible with a shared global proxy.
+Because the proxies are ordinary `Dataplane` resources in `kong-air-mesh`, every mesh-scoped policy can now target them, the controls that were impossible with a shared global proxy. You select them with `targetRef.kind: Dataplane` and the `kuma.io/listener-zoneingress: enabled` or `kuma.io/listener-zoneegress: enabled` labels, adding a `sectionName` to target one specific listener by name.
 
-Two ways to select the proxies:
-
-```yaml
-# All zone ingress proxies in this mesh
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      kuma.io/listener-zoneingress: enabled
-```
-
-```yaml
-# Only one specific listener, matched by its name (the port string from step 3)
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      kuma.io/listener-zoneingress: enabled
-    sectionName: "10001"
-```
-
-Use `sectionName` when a Dataplane mixes application inbounds with zone proxy listeners (for example a combined proxy co-located with an application). For dedicated zone proxy Deployments, the label is usually enough.
-
-### Give cross-zone traffic a verifiable identity
-
-This is the requirement that started Kong Air's journey. With a dedicated proxy, the control plane can issue each zone's ingress and egress its own SPIFFE certificate, so cross-zone traffic is provably `kong-air-mesh`:
-
-```bash
-kubectl apply -f - <<'EOF'
-apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: kong-air-zone-proxy-identity
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      kuma.io/listener-zoneingress: enabled
-  default:
-    spiffeId:
-      type: Path
-      value: /zone/{% raw %}{{ .Zone }}{% endraw %}/type/zone-ingress
-EOF
-```
-
-Confirm the identity reached the zone ingress proxy:
-
-```bash
-ZINAME=$(kubectl get dataplanes -n kong-mesh-system \
-  -l "kuma.io/listener-zoneingress=enabled,kuma.io/mesh=kong-air-mesh" \
-  -o jsonpath='{.items[0].metadata.name}')
-
-kumactl inspect dataplane "${ZINAME}" \
-  --mesh kong-air-mesh --type policies | grep MeshIdentity
-```
-
-### Report observability for just this mesh
-
-The shared proxy blended telemetry from every mesh onto one Prometheus path. A dedicated egress reports metrics for `kong-air-mesh` alone:
-
-```bash
-kubectl apply -f - <<'EOF'
-apiVersion: kuma.io/v1alpha1
-kind: MeshMetric
-metadata:
-  name: kong-air-zone-egress-metrics
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      kuma.io/listener-zoneegress: enabled
-  default:
-    backends:
-      - type: Prometheus
-        prometheus:
-          port: 5670
-          path: /metrics
-          tls:
-            mode: Disabled
-EOF
-```
-
-Confirm the egress is serving its own metrics on port 5670:
-
-```bash
-ZEPOD=$(kubectl get pods -n kong-mesh-system \
-  -l "k8s.kuma.io/zone-proxy-type=egress" \
-  -o jsonpath='{.items[0].metadata.name}')
-PODIP=$(kubectl get pod -n kong-mesh-system "$ZEPOD" \
-  -o jsonpath='{.status.podIP}')
-
-kubectl exec -n kong-mesh-system "$ZEPOD" -c kuma-sidecar -- \
-  wget -qO- "http://${PODIP}:5670/metrics" | grep -c "envoy_"
-```
-
-### Set timeouts and audit logs on cross-zone traffic
-
-Tune resilience and capture an audit trail on the proxies directly. An idle timeout on incoming cross-zone connections:
-
-```bash
-kubectl apply -f - <<'EOF'
-apiVersion: kuma.io/v1alpha1
-kind: MeshTimeout
-metadata:
-  name: kong-air-zone-ingress-timeout
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      kuma.io/listener-zoneingress: enabled
-  rules:
-    - default:
-        idleTimeout: 30s
-EOF
-```
-
-Confirm the timeout landed on the zone ingress listener:
-
-```bash
-ZIPOD=$(kubectl get pods -n kong-mesh-system \
-  -l "k8s.kuma.io/zone-proxy-type=ingress" \
-  -o jsonpath='{.items[0].metadata.name}')
-PODIP=$(kubectl get pod -n kong-mesh-system "$ZIPOD" \
-  -o jsonpath='{.status.podIP}')
-
-kubectl exec -n kong-mesh-system "$ZIPOD" -c kuma-sidecar -- \
-  wget -qO- "http://${PODIP}:9902/config_dump" \
-  | grep -A2 "self_zoneingress_dp_10001" \
-  | grep -o '"idle_timeout": "[^"]*"' | head -1
-# Expected: "idle_timeout": "30s"
-```
-
-For a compliance audit trail, emit access logs on just the ZoneIngress listener with `sectionName`:
-
-```bash
-kubectl apply -f - <<'EOF'
-apiVersion: kuma.io/v1alpha1
-kind: MeshAccessLog
-metadata:
-  name: kong-air-zone-ingress-audit
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      kuma.io/listener-zoneingress: enabled
-    sectionName: "10001"
-  rules:
-    - default:
-        backends:
-          - type: File
-            file:
-              path: /tmp/zone-ingress-audit.log
-              format:
-                type: Plain
-                plain: "[%START_TIME%] %UPSTREAM_HOST%"
-EOF
-```
-
-Confirm the access log is configured on the ingress listener:
-
-```bash
-ZIPOD=$(kubectl get pods -n kong-mesh-system \
-  -l "k8s.kuma.io/zone-proxy-type=ingress" \
-  -o jsonpath='{.items[0].metadata.name}')
-PODIP=$(kubectl get pod -n kong-mesh-system "$ZIPOD" \
-  -o jsonpath='{.status.podIP}')
-
-kubectl exec -n kong-mesh-system "$ZIPOD" -c kuma-sidecar -- \
-  wget -qO- "http://${PODIP}:9902/config_dump" \
-  | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-for c in d.get('configs', []):
-  for l in c.get('dynamic_listeners', []):
-    if '10001' in l.get('name', ''):
-      data = json.dumps(l)
-      if 'access_log' in data:
-        print('Access log configured on zone ingress listener')
-"
-```
+For the full policy-targeting recipes, giving cross-zone traffic a verifiable `MeshIdentity`, scoping `MeshMetric` observability to one mesh, and setting `MeshTimeout` and `MeshAccessLog` on the proxies, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
 
 ## A deny-by-default egress perimeter
 
 The shared egress forwarded any traffic that reached it. A mesh-scoped egress is closed by default: every `MeshExternalService` is SNI-matched at the listener and refused unless a `MeshTrafficPermission` explicitly allows the caller's SPIFFE identity. You decide exactly what may leave the mesh.
 
-Grant the access each caller needs:
-
-```bash
-kubectl apply -f - <<'EOF'
-apiVersion: kuma.io/v1alpha1
-kind: MeshTrafficPermission
-metadata:
-  name: kong-air-external-allow
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      kuma.io/listener-zoneegress: enabled
-  rules:
-    - default:
-        allow:
-          # SNI format: sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>
-          # See the MeshExternalService scenario for how to derive it.
-          - spiffeID:
-              type: Exact
-              value: spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control
-            sni:
-              type: Exact
-              value: sni.extsvc.kong-air-mesh.zone1.kong-mesh-system.weather-api.443
-EOF
-```
-
-{:.info}
-> On mesh-scoped ZoneEgress, `MeshTrafficPermission` targets the **zone-egress `Dataplane`** and matches the caller's `spiffeID` together with the destination `sni`. The older `targetRef.kind: MeshExternalService` + `from[]` form is **rejected by the admission webhook in 2.14**.
-
-Without an allow rule, the egress refuses the request with a `503` before `MeshPassthrough` or any other policy evaluates, so add the permissions before you route real traffic through it.
+Grant each caller the access it needs with a `MeshTrafficPermission` that targets the zone-egress `Dataplane` and matches the caller's `spiffeID` together with the destination `sni`. Without an allow rule, the egress refuses the request with a `503` before `MeshPassthrough` or any other policy evaluates, so add the permissions before you route real traffic through it. For the policy YAML and the SNI format, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
 
 ## Migrating from global zone proxies
 

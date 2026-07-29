@@ -135,38 +135,7 @@ The Kong Air modernization is divided into four stages. We recommend following t
 
 ## Technical foundation
 
-Before starting the hands-on scenarios, familiarize yourself with these three core components:
-
-* **Dataplane (DP)**: The sidecar component that runs alongside your application workload to manage all incoming and outgoing traffic. It provides your service with a secure identity and enforces the networking rules defined by your policies.
-* **Control Plane (CP)**: The authoritative management layer responsible for discovering workloads and distributing configuration updates to every Dataplane in the mesh.
-* **Kuma Discovery Service (KDS)**: A generalization of Envoy's [xDS protocol](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol) used to synchronize policies and service state between a **Global CP** and its **Zone CPs**.
-
-### Key terms you'll see
-
-These acronyms appear throughout the scenarios, here's the short version:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Term
-    key: term
-  - title: What it means
-    key: meaning
-rows:
-  - term: "**xDS**"
-    meaning: "The family of discovery APIs Envoy uses to receive its configuration (listeners, clusters, routes, secrets) from a control plane. The {{site.mesh_product_name}} Zone CP serves xDS to every sidecar."
-  - term: "**SPIFFE ID**"
-    meaning: "A workload's cryptographic identity, expressed as a URI like `spiffe://kong-air-mesh.mesh.local/ns/<namespace>/sa/<service-account>`. Issued via `MeshIdentity` and used by `MeshTrafficPermission` to authorize traffic."
-  - term: "**SNI**"
-    meaning: "*Server Name Indication*, the hostname a TLS client requests. {{site.mesh_product_name}} uses it to match traffic to a specific destination (notably `MeshExternalService`) at the zone egress."
-  - term: "**KRI**"
-    meaning: "*Kuma Resource Identifier*, the canonical `kri_...` name for a resource, seen in fields like a Dataplane's `issuedBackend` (for example `kri_mid_kong-air-mesh___kong-air-identity_`) and in 2.14 Envoy stat names."
-  - term: "**DataplaneInsight**"
-    meaning: "A read-only status resource the control plane maintains per dataplane. It reports live state such as the mTLS `issuedBackend` and certificate expiry, the go-to object for verifying identity is active."
-  - term: "**{{site.konnect_short_name}}**"
-    meaning: "Kong's hosted control-plane platform. In a {{site.konnect_short_name}}-managed mesh the **Global CP** runs in {{site.konnect_short_name}} and you apply global resources with `kumactl` or the {{site.konnect_short_name}} UI; Zone CPs still run in your own clusters."
-{% endtable %}
-<!-- vale on -->
+These scenarios assume familiarity with the core service mesh building blocks: the **control plane** that manages mesh state and policy, the **data plane** sidecar that enforces it, and the **Kuma Discovery Service (KDS)** that syncs a Global CP with its Zone CPs. For a refresher on what a service mesh is and the problems it solves, see [Service meshes](/mesh/service-mesh/). For component definitions and the terminology used throughout these scenarios (xDS, SPIFFE ID, SNI, KRI, and more), see [Concepts](/mesh/concepts/).
 
 {:.info}
 > Because {{site.mesh_product_name}} scales across clouds and data centers, knowing *where* each resource is applied (Global vs Zone CP, system namespace) matters. The [Resource scoping](/mesh/scenarios/resource-scoping/) guide covers this in depth; it comes right after your first hands-on policies in the learning path below.

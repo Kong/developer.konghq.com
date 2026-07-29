@@ -15,14 +15,14 @@ works_on:
 {{site.mesh_product_name}} can be deployed in two main architectures:
 
 ### Non-federated zone (single CP)
-A **non-federated zone** is a Zone CP that is not connected to a Global CP. This is common for single Kubernetes clusters or single-site Universal deployments.
+A **non-federated zone** is a Zone CP that is not connected to a Global CP. This is common for single Kubernetes clusters or single-site Universal deployments; see [Single-zone deployment](/mesh/single-zone/) for how to set one up.
 *   **The Zone CP is the only authority.**
 *   **All resources** (Meshes, Policies, etc.) are applied directly to this one CP.
 *   Scoping rules (Global vs Zone) do not apply because there is only one tier.
 *   You can later [federate the zone](/mesh/federate-zone/) into a Global CP without redeploying.
 
 ### Federated multi-zone (production/scale)
-In a **federated multi-zone deployment**, the architecture is split into two distinct tiers:
+In a **federated multi-zone deployment**, the architecture is split into two distinct tiers. See [Multi-zone deployment](/mesh/mesh-multizone-service-deployment/) for how to connect zones, and [Federate a zone Control Plane](/mesh/federate-zone/) for joining an existing zone to a Global CP.
 
 {% mermaid %}
 flowchart TD

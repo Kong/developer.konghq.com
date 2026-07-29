@@ -53,36 +53,7 @@ For a mesh-per-tenant model, Ollie deploys dedicated zone proxies per mesh using
 *   The new embedded **ZoneEgress listeners are deny-by-default**. Every `MeshExternalService` is SNI-matched; Ollie needs to coordinate with Sarah on `MeshTrafficPermission` `Allow` rules tied to the caller's SPIFFE identity before any external call works.
 *   The mesh-scoped model is the preferred operational shape for new deployments.
 
-The recommended Helm shape for `kong-air-mesh` is:
-
-```yaml
-meshes:
-  - name: kong-air-mesh
-    ingress:
-      enabled: true
-    egress:
-      enabled: true
-```
-
-Ollie only enables this after he confirms that `kong-air-mesh` is running with `spec.meshServices.mode: Exclusive`; otherwise the control plane skips zone proxy listener generation.
-
-### How Ollie targets mesh-scoped zone proxies
-
-Once the mesh-scoped proxies exist, Ollie works with them as ordinary `Dataplane` targets rather than as a special policy type:
-
-- `kuma.io/listener-zoneingress: enabled` selects all mesh-scoped zone ingress proxies
-- `kuma.io/listener-zoneegress: enabled` selects all mesh-scoped zone egress proxies
-- `sectionName` narrows a policy to a single listener, for example `ze-port`
-
-```yaml
-targetRef:
-  kind: Dataplane
-  labels:
-    kuma.io/listener-zoneegress: enabled
-  sectionName: ze-port
-```
-
-That is the standard shape for policies such as `MeshTrace` or zone-egress-specific traffic controls.
+Ollie only enables this after he confirms that `kong-air-mesh` is running with `spec.meshServices.mode: Exclusive`; otherwise the control plane skips zone proxy listener generation. See [Configure mesh-scoped zone proxies](/mesh/scenarios/configure-mesh-scoped-zone-proxies/) for the Helm `meshes:` shape and for how Ollie targets the proxies as ordinary `Dataplane` targets, using the `kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress` labels and `sectionName` for policies such as `MeshTrace`.
 
 ### Envoy admin API on UDS
 
@@ -90,75 +61,17 @@ Sidecar Envoy admin uses a **Unix domain socket by default**. A readiness revers
 
 ## High-availability gateway infrastructure
 
-Ollie manages the **MeshGatewayInstance** resources that surface Devin's services to the outside world. He ensures they are scaled for peak travel season. The `tags` block below defines the gateway's own identity. When a *policy* needs to target this gateway, address it as a `MeshService` rather than a `kuma.io/service` tag selector, that label-selected model is the modern targeting story used throughout these scenarios.
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshGatewayInstance
-metadata:
-  name: booking-gateway-ha
-  namespace: kong-air-gateways
-  labels:
-    kuma.io/mesh: kong-air-mesh
-spec:
-  replicas: 5 # Ensuring plenty of capacity for peak travel season
-  serviceType: LoadBalancer
-  tags:
-    kuma.io/service: booking-gateway
-```
+Ollie manages the `MeshGatewayInstance` resources that surface Devin's services to the outside world, scaling replicas for peak travel season. When a policy needs to target this gateway, address it as a `MeshService` rather than a `kuma.io/service` tag selector, which is the modern label-selected targeting model used throughout these scenarios.
 
 ## Global observability policies
 
 Ollie provides "Observability as a Service" so Devin doesn't have to worry about where his logs and traces go.
 
 ### Distributed tracing (`MeshTrace`)
-Ollie sets up end-to-end tracing across all zones, exporting spans via OTLP/gRPC to a global collector. In 2.14, the recommended pattern is to define one `MeshOpenTelemetryBackend` and reference it from every observability policy, see [Observe mesh traffic in practice](/mesh/scenarios/observe-mesh-traffic-in-practice/) for the full pattern. In 2.14 only the gRPC OTel transport is supported; the earlier HTTP/HTTPS OTel transports have been removed.
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshTrace
-metadata:
-  name: global-flight-trace
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          backendRef:
-            kind: MeshOpenTelemetryBackend
-            name: kong-air-otel
-    sampling:
-      overall: 100 # High sampling for mission-critical logistics
-```
+Ollie sets up end-to-end tracing across all zones, exporting spans via OTLP/gRPC to a global collector. In 2.14, the recommended pattern is to define one `MeshOpenTelemetryBackend` and reference it from every observability policy; only the gRPC OTel transport is supported, as the earlier HTTP/HTTPS OTel transports have been removed.
 
 ### Log aggregation (`MeshAccessLog`)
-To maintain a historical record of all flight search requests, Ollie streams access logs to a central logging server.
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshAccessLog
-metadata:
-  name: global-audit-logs
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    backends:
-      - type: Tcp
-        tcp:
-          address: log-aggregator.internal.kongair:5000
-          format:
-            type: Plain
-            plain: '[%START_TIME%] %KUMA_SOURCE_SERVICE% -> %KUMA_DESTINATION_SERVICE% (%RESPONSE_CODE%)'
-```
+To maintain a historical record of all flight search requests, Ollie streams access logs to a central logging server through a `Tcp` backend. See [Observe mesh traffic in practice](/mesh/scenarios/observe-mesh-traffic-in-practice/) for the full `MeshTrace` and `MeshAccessLog` configuration.
 
 {:.info}
 > To scope a policy to a slice of the fleet (a whole zone, an environment, a region), Ollie sets the top-level `targetRef` to **`Dataplane`** with a `labels:` selector, for example `kuma.io/zone: zone1` or `environment: production`. Top-level `MeshSubset`, `MeshServiceSubset`, and `MeshService` are older targeting shapes; use `Dataplane` with labels going forward. See the [Target workloads and services](/mesh/scenarios/target-workloads-and-services/) for examples.

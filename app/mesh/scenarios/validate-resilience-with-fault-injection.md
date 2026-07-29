@@ -16,7 +16,7 @@ tldr:
   q: How do I test my microservices for resilience?
   a: |
     Use **MeshFaultInjection** to proactively test your "sad paths":
-    1. **Simulate Errors** by aborting requests with specific HTTP status codes (e.g., 503).
+    1. **Simulate Errors** by aborting requests with specific HTTP status codes (for example, 503).
     2. **Simulate Latency** by injecting fixed delays into requests.
     3. **Validate Defenses** like `MeshRetry` and `MeshCircuitBreaker` before they are needed in production.
 prereqs:
@@ -26,7 +26,7 @@ prereqs:
         A running {{site.mesh_product_name}} deployment.
     - title: Resources
       content: |
-        Workloads to target (e.g., `flight-control`) and a client (e.g., `check-in-api`) to generate traffic.
+        Workloads to target (for example, `flight-control`) and a client (for example, `check-in-api`) to generate traffic.
 next_steps:
   - text: "Explore by role"
     url: "/mesh/scenarios/persona/"
@@ -43,7 +43,7 @@ Traditional testing usually focuses on the "Happy Path." Fault injection allows 
 The `MeshFaultInjection` policy allows you to introduce three types of failure during a request:
 
 ### HTTP abort (error simulation)
-Immediately return a specific HTTP status code for a percentage of requests.
+Immediately return a specific HTTP status code for a percentage of requests. See [MeshFaultInjection](/mesh/policies/meshfaultinjection/) for the full `abort` field definitions.
 
 {:.info}
 > Use `kind: Dataplane` with `labels` in `targetRef` to select the workloads being faulted. The `rules` block then names the callers whose requests should be faulted, using their SPIFFE identities. A `Prefix` match against the trust domain faults every caller; an `Exact` match faults one specific caller. (The older top-level `kind: MeshService` / `MeshSubset` selectors and the `spec.from` block are legacy forms, see the compatibility note after the example.)
@@ -137,7 +137,7 @@ spec:
 That lets Kong Air inject failures for one external dependency without disturbing every other destination sharing the same zone egress proxy.
 
 ### HTTP delay (latency simulation)
-Introduce a fixed delay before the request is processed, simulating a slow dependency.
+Introduce a fixed delay before the request is processed, simulating a slow dependency. See [MeshFaultInjection](/mesh/policies/meshfaultinjection/) for the full `delay` field definitions.
 
 {% navtabs "fault-delay" %}
 {% navtab "Kubernetes (Zone CP)" %}
@@ -190,11 +190,8 @@ spec:
 {% endnavtab %}
 {% endnavtabs %}
 
-{:.info}
-> The delay duration field is named `value` (not `fixedDelay`). The `percentage` field accepts an integer or decimal string (e.g., `10` or `"10.0"`).
-
 ### Response rate limit (throttling simulation)
-Limit the speed at which the response body is delivered to the client.
+Limit the speed at which the response body is delivered to the client. See [MeshFaultInjection](/mesh/policies/meshfaultinjection/) for the full `responseBandwidth` field definitions.
 
 {% navtabs "fault-rate-limit" %}
 {% navtab "Kubernetes (Zone CP)" %}
@@ -218,8 +215,8 @@ spec:
             value: spiffe://kong-air-mesh.mesh.local
       default:
         http:
-          - responseRateLimit:
-              bandwidth: "1kbps"
+          - responseBandwidth:
+              limit: "1kbps"
               percentage: 100
 ```
 {% endnavtab %}
@@ -240,8 +237,8 @@ spec:
             value: spiffe://kong-air-mesh.mesh.local
       default:
         http:
-          - responseRateLimit:
-              bandwidth: "1kbps"
+          - responseBandwidth:
+              limit: "1kbps"
               percentage: 100
 ```
 {% endnavtab %}
@@ -251,6 +248,6 @@ spec:
 
 One of the biggest risks of chaos engineering is accidentally breaking things for real users. Use the **`targetRef`** system to limit the "Blast Radius":
 
-1.  **Start with Header Matches**: Only inject faults if a specific header (e.g., `x-chaos: true`) is present. This allows developers to test in production without affecting customers.
+1.  **Start with Header Matches**: Only inject faults if a specific header (for example, `x-chaos: true`) is present. This allows developers to test in production without affecting customers.
 2.  **Target Non-Critical Zones**: Run tests in `zone: dev` or `env: staging` before moving to production.
 3.  **Low Percentages**: Start with a `1%` failure rate and slowly increase it as your confidence grows.

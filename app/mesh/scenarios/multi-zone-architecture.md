@@ -26,17 +26,9 @@ This guide explores the components and patterns specific to running {{site.mesh_
 
 In a multi-zone deployment, traffic doesn't just flow between sidecars; it often needs to cross network boundaries. {{site.mesh_product_name}} uses specialized proxies to manage this transition.
 
-### ZoneIngress: the entry point
-The **ZoneIngress** is a dedicated proxy that handles traffic entering a zone from other zones.
-*   **Encapsulation**: It receives encrypted and authenticated mTLS traffic from other zones and routes it to the correct local service instance.
-*   **Service Discovery**: It advertises the services available in its local zone to the Global Control Plane, which then informs other zones.
-*   **Automatic Setup**: In most environments, {{site.mesh_product_name}} can automatically deploy and manage ZoneIngress instances.
+### Zone ingress and zone egress
 
-### ZoneEgress: the exit point (optional but recommended)
-The **ZoneEgress proxy** provides a centralized way for all traffic to leave a zone.
-*   **Centralized Control**: Routes all outgoing traffic (to other zones or external services) through a single point, enabling strict firewall rules.
-*   **Unified Egress Visibility**: Provides a single vantage point to monitor and audit all traffic leaving the zone, simplifying global traffic analysis.
-*   **Isolation**: Ensures that sidecars don't need direct routable access to every other zone; they only need to reach their local ZoneEgress.
+Cross-zone traffic passes through two dedicated proxies. The **zone ingress** receives encrypted, authenticated mTLS traffic from other zones and routes it to the correct local service instance, and advertises its local services to the Global Control Plane. The **zone egress** (optional but recommended) funnels all outgoing traffic (to other zones or external services) through a single point, which enables strict firewall rules, centralized audit, and means sidecars never need direct routable access to every other zone. {{site.mesh_product_name}} can deploy and manage both automatically. For configuration and behavior details, see [zone ingress](/mesh/zone-ingress/) and [zone egress](/mesh/zone-egress/).
 
 ### Mesh-scoped zone proxies
 
@@ -46,13 +38,7 @@ The dedicated [Configure mesh-scoped zone proxies](/mesh/scenarios/configure-mes
 
 ## Service federation
 
-Service Federation is the mechanism that allows services to discover and communicate with each other across zone boundaries.
-
-### Automatic cross-zone discovery
-{{site.mesh_product_name}} automatically synchronizes service information across zones via the Global Control Plane.
-*   **Per-zone service import**: In an `Exclusive` mesh, each zone receives synced copies of remote `MeshService` resources. The built-in `HostnameGenerator` gives those imported services zone-qualified hostnames such as `flight-control.kong-air-production.svc.zone2.mesh.local`.
-*   **Generated VIPs**: Imported cross-zone services are assigned {{site.mesh_product_name}} VIPs from the multi-zone range (for example `241.0.0.0`). Clients talk to the VIP or generated hostname, and the local zone routes through ZoneIngress / ZoneEgress as needed.
-*   **Locality-aware by design**: A direct zonal hostname points at a specific remote zone. Use it when Kong Air knows exactly which remote zone should serve the request.
+Service federation is the mechanism that lets services discover and communicate with each other across zone boundaries. {{site.mesh_product_name}} automatically synchronizes service information across zones through the Global Control Plane: in an `Exclusive` mesh, each zone receives synced copies of remote `MeshService` resources with generated zone-qualified hostnames and multi-zone VIPs, and the local zone routes to them through zone ingress and egress as needed. For the end-to-end setup and verification of cross-zone service discovery, see [Multi-zone deployment](/mesh/mesh-multizone-service-deployment/).
 
 {:.info}
 > Use zone-qualified hostnames such as `flight-control.kong-air-production.svc.zone2.mesh.local` when you want to pin traffic to a specific remote zone. Plain names such as `flight-control.mesh` or `flight-control.kong-air-production.svc.mesh.local` are not the same thing and should not be treated as interchangeable.
