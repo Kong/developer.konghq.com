@@ -7,7 +7,7 @@ The following example shows how you can pull audit logs:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v3/audit-logs?filter%5Bts%5D%5Bgte%5D=2023-03-21T00:00:00Z&filter%5Btype%5D=authentication&page%5Bsize%5D=100
+url: /v3/audit-logs
 method: GET
 status_code: 200
 {% endkonnect_api_request %}

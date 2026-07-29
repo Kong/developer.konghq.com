@@ -622,14 +622,19 @@ You can narrow the audit logs returned in the response using the `filter` query 
 columns:
   - title: Filter
     key: filter
+  - title: Example
+    key: example
   - title: Description
     key: description
 rows:
   - filter: "`filter[ts][gte]`"
+    example: "`?filter%5Bts%5D%5Bgte%5D=2026-07-21T00:00:00Z`"
     description: "An RFC3339 lower bound (inclusive) on the audit log timestamp. Defaults to seven days before `filter[ts][lte]` when omitted."
   - filter: "`filter[ts][lte]`"
+    example: "`?filter%5Bts%5D%5Blte%5D=2026-07-28T00:00:00Z`"
     description: "An RFC3339 upper bound (inclusive) on the audit log timestamp. Defaults to the current time when omitted."
   - filter: "`filter[type]`"
+    example: "`?filter%5Btype%5D=authentication`"
     description: "Filters audit logs by type. Can be one of `authentication`, `authorization`, or `gateway_access`. Omit this parameter to return all types."
 {% endtable %}
 <!--vale on-->
@@ -662,27 +667,33 @@ To collect a full set of logs, make an initial request, then follow the `next` c
 
 ### Example audit log pull request
 
-The following example request pulls authentication logs, starting on March 21, 2023, in pages of 100 entries:
+The following example request pulls authentication logs, starting on July 21, 2026, in pages of 100 entries:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v3/audit-logs?filter%5Bts%5D%5Bgte%5D=2023-03-21T00:00:00Z&filter%5Btype%5D=authentication&page%5Bsize%5D=100
+url: /v3/audit-logs?filter%5Bts%5D%5Bgte%5D=2026-07-21T00:00:00Z&filter%5Btype%5D=authentication&page%5Bsize%5D=100
 method: GET
 status_code: 200
 {% endkonnect_api_request %}
+{:.wrap}
 <!--vale on-->
 
 Each entry in the response is signed in the `sig` field, just like logs delivered by the webhook.
 
-## Recover audit logs
+## View past audit logs
+
+You can view past audit logs in two ways:
+* **Using the webhook:** Create a [replay job](#konnect-replay-job) to recover audit logs that were collected up to 7 days ago via the webhook. You can replay {{site.konnect_short_name}} and {{site.dev_portal}} audit logs.
+* **Using an audit log API poll:** If you just need to read past organizational audit logs that were collected up to 7 days ago, even ones a webhook never received, you can use an [audit log pull](#audit-log-pull-using-the-konnect-api). 
+
+### Recover audit logs
 
 You can use replay jobs in {{site.konnect_short_name}} to recover audit logs. 
-These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook. 
-If you just need to read past organizational audit logs, even ones a webhook never received, you can use an [audit log pull](#audit-log-pull-using-the-konnect-api) instead of configuring a replay job.
+These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook.
 
 You can use either the {{site.konnect_short_name}} UI or the {{site.konnect_short_name}} API to configure a replay job.
 
-### {{site.konnect_short_name}} replay job
+#### {{site.konnect_short_name}} replay job
 
 {% navtabs "replay-job" %}
 {% navtab "UI" %}
@@ -725,7 +736,7 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
-### Replay job status
+#### Replay job status
 
 Once you configure a replay job, it displays one of the following statuses. 
 
