@@ -120,8 +120,10 @@ ai_gateway_models:
       route:
         paths:
           - /
-      model:
-        alias: my-qwen-dashscope
+        model:
+          body:
+            model:
+              - my-qwen-dashscope
     targets:
       - name: qwen-plus
         provider: generic-dashscope
