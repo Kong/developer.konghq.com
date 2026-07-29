@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.10": [
+    {
+      "message": "Fixed an issue where warn log messages did not\ninclude the plugin name, making it difficult to identify the source of\nblocked requests.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where blocking an IP over TCP would log error: \"function cannot be called in preread phase\" (#14749)\n",

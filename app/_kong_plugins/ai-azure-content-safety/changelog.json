@@ -30,6 +30,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.10": [
+    {
+      "message": "Fixed a bug where the plugin returned HTTP 500 when the LLM response content was empty. Empty content now skips the content-safety check and passes through.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Enabled at-rest keyring encryption for sensitive fields in AI Azure Content Safety plugin.",
