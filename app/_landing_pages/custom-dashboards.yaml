@@ -94,7 +94,7 @@ rows:
               - q: |
                   Can I import a dashboard?
                 a: |
-                  Yes. From the **Create dashboard** dropdown, select "Import", then upload a previously exported dashboard JSON file (from the **Export JSON definition** action) and optionally name the new dashboard.
+                  Yes. From the **Create dashboard** dropdown, select "Import JSON definition", then upload a previously exported dashboard JSON file (from the **Export JSON definition** action) and optionally name the new dashboard.
                   Importing creates a new dashboard that you access the same way as any other dashboard, so once it's created, it's available to anyone in your org who has access to dashboards.
               - q: Once I create a dashboard from a template, can I customize it?
                 a: |

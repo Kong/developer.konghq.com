@@ -107,7 +107,7 @@ rows:
                     {{site.observability}} includes the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
                     You can create them from scratch or use existing templates. The functionality is powered by a robust [API](/api/konnect/analytics-dashboards/), and [Terraform integration](/how-to/automate-dashboard-terraform/).
 
-                    You can also import a dashboard from a previously exported JSON file using the **Import** option in the Create dashboard dropdown. 
+                    You can also import a dashboard from a previously exported JSON file by selecting "Import JSON definition" from the **Create dashboard** dropdown.
                     This is useful for reusing dashboards and templates across organizations.
 
   - header:
