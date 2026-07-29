@@ -102,7 +102,6 @@ The disable and delete operations identify a secret by its ID, not its value.
 List the client's secrets and store the current secret's ID as `$OLD_SECRET_ID`.
 Do this before you create the new secret, while the client still has only one secret:
 
-{% capture list-client-secrets %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$CLIENT_ID/secrets
@@ -113,17 +112,13 @@ capture:
     jq: ".data[0].id"
 {% endkonnect_api_request %}
 <!--vale on-->
-{% endcapture %}
-{{list-client-secrets | indent: 3}}
 
 ## Create a new secret
 
 Send a POST request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets` endpoint with the secret value you want to use. In this example, you:
 
-1. Create a new client secret with the value `new-secret`
-1. Store the value as `$NEW_SECRET`
+Create a new client secret with the value `new-secret` and store the value as `$NEW_SECRET`:
 
-{% capture create-client-secret %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$CLIENT_ID/secrets
@@ -137,14 +132,12 @@ capture:
     jq: ".secret"
 {% endkonnect_api_request %}
 <!--vale on-->
-{% endcapture %}
-{{create-client-secret | indent: 3}}
 
 This adds a new active secret along to the existing secret. The previous secret is still active.
 
 ## Validate the new secret
 
-with the new secret (`$NEW_SECRET`) to confirm the rotated secret authenticates before you disable the old one.
+Send a request with the new secret (`$NEW_SECRET`) to confirm the rotated secret authenticates before you disable the old one.
 A successful response returns an `access_token`:
 
 ```sh
