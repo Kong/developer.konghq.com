@@ -1,0 +1,221 @@
+{
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "Whether to verify the SSL certificate of the guardrail service endpoint.",
+          "default": true
+        },
+        "log_blocked_content": {
+          "type": "boolean",
+          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
+          "default": false
+        },
+        "content_safety_url": {
+          "type": "string",
+          "description": "Full URL, inc protocol, of the Azure Content Safety instance.",
+          "x-referenceable": true
+        },
+        "content_safety_key": {
+          "type": "string",
+          "description": "If `azure_use_managed_identity` is true, set the API key to call Content Safety.",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "guarding_mode": {
+          "type": "string",
+          "enum": [
+            "BOTH",
+            "INPUT",
+            "OUTPUT"
+          ],
+          "description": "The guardrail mode to use for the request.",
+          "default": "INPUT"
+        },
+        "azure_api_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Sets the ?api-version URL parameter, used for defining the Azure Content Services interchange format.",
+          "default": "2023-10-01"
+        },
+        "azure_use_managed_identity": {
+          "type": "boolean",
+          "description": "If checked, uses (if set) `azure_client_id`, `azure_client_secret`, and/or `azure_tenant_id` for Azure authentication, via Managed or User-assigned identity",
+          "default": false
+        },
+        "azure_tenant_id": {
+          "type": "string",
+          "description": "If `azure_use_managed_identity` is true, set the tenant ID if required."
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "rejection_level": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "name",
+              "rejection_level"
+            ]
+          },
+          "description": "Array of categories, and their thresholds, to measure on."
+        },
+        "blocklist_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Use these configured blocklists (in Azure Content Services) when inspecting content."
+        },
+        "halt_on_blocklist_hit": {
+          "type": "boolean",
+          "description": "Tells Azure to reject the request if any blocklist filter is hit.",
+          "default": true
+        },
+        "response_buffer_size": {
+          "type": "number",
+          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrail service. This only applies to the response content guard.",
+          "default": 100
+        },
+        "azure_client_id": {
+          "type": "string",
+          "description": "If `azure_use_managed_identity` is true, set the client ID if required."
+        },
+        "azure_client_secret": {
+          "type": "string",
+          "description": "If `azure_use_managed_identity` is true, set the client secret if required.",
+          "x-encrypted": true
+        },
+        "reveal_failure_reason": {
+          "type": "boolean",
+          "description": "Set true to tell the caller why their request was rejected, if so.",
+          "default": true
+        },
+        "output_type": {
+          "type": "string",
+          "enum": [
+            "EightSeverityLevels",
+            "FourSeverityLevels"
+          ],
+          "description": "See https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/content-filter#content-filtering-categories",
+          "default": "FourSeverityLevels"
+        },
+        "stop_on_error": {
+          "type": "boolean",
+          "description": "Stop processing if an error occurs.",
+          "default": true
+        },
+        "text_source": {
+          "type": "string",
+          "enum": [
+            "concatenate_all_content",
+            "concatenate_user_content"
+          ],
+          "description": "Select where to pick the 'text' for the guardrail service request.",
+          "default": "concatenate_all_content"
+        },
+        "proxy_config": {
+          "type": "object",
+          "properties": {
+            "auth_username": {
+              "type": "string",
+              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true
+            },
+            "auth_password": {
+              "type": "string",
+              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
+            },
+            "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "http_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "https_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "proxy_scheme": {
+              "type": "string",
+              "enum": [
+                "http"
+              ],
+              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+              "default": "http"
+            }
+          }
+        }
+      },
+      "required": [
+        "content_safety_url"
+      ]
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

@@ -13,7 +13,11 @@ module Jekyll
             end
 
             def template_file
-              '/components/entity_example/format/ui.md'
+              if @example_drop.product == 'ai-gateway'
+                '/components/entity_example/format/ui_ai.md'
+              else
+                '/components/entity_example/format/ui.md'
+              end
             end
           end
 

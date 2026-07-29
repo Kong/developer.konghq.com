@@ -10,85 +10,58 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/openai/
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
+  - kongctl
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.6'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: OpenAI tutorials
-    url: /how-to/?tags=openai
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
-
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - openai
-    description: true
-    view_more: false
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 ---
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="OpenAI" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="OpenAI" %}
 
-## Configure {{ provider.name }} with AI Proxy
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+## Configure {{ provider.name }}
+
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
 {% entity_example %}
-type: plugin
+type: model-provider
 data:
-  name: ai-proxy
+  display_name: OpenAI Production
+  name: my-openai-account
+  type: openai
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${key}
-    model:
-      provider: openai
-      name: gpt-5.1
-      options:
-        max_tokens: 512
-        temperature: 1.0
+      type: basic
+      headers:
+        - name: Authorization
+          value: ${key}
 variables:
   key:
     value: $OPENAI_API_KEY
-    description: The API key to use to connect to OpenAI.
+    description: "The API key used to connect to OpenAI. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
-
-{% include plugins/ai-proxy/providers/how-tos.md %}
-
-

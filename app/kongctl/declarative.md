@@ -271,6 +271,7 @@ of them support child resources underneath them.
 - `analytics.dashboards`
 - `organization.teams`
 - `event_gateways`
+- `ai_gateways`
 
 **Child resource examples**:
 
@@ -284,6 +285,12 @@ of them support child resources underneath them.
 - `portal.custom_domain`
 - `portal.email_config`
 - `portal.email_templates`
+- `ai_gateway.model_providers`
+- `ai_gateway.models`
+- `ai_gateway.policies`
+- `ai_gateway.consumers`
+- `ai_gateway.mcp_servers`
+- `ai_gateway.agents`
 
 See the [kongctl declarative resource reference](/kongctl/supported-resources/) for more details on supported resources.
 
@@ -708,61 +715,7 @@ not provide a safe observable signal for that update.
 kongctl includes many commands for declarative configuration management.
 Start with the following commands for most use cases:
 
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-  - title: When to use
-    key: when
-rows:
-  - command: |
-      [`adopt`](/kongctl/adopt/)
-    description: |
-      Adds a namespace label to an existing {{site.konnect_short_name}} resource that was created outside of kongctl, bringing it under declarative management without modifying any other fields.
-    when: |
-      Use before your first `dump` or `plan`, when you need to bring manually-created or UI-created resources into your configuration set.
-  - command: |
-      [`dump`](/kongctl/dump/)
-    description: |
-      Exports the current state of {{site.konnect_short_name}} resources to a declarative YAML configuration file.
-    when: |
-      Use when bootstrapping a new declarative configuration from existing live resources, or when generating a starting point for a new configuration file.
-  - command: |
-      [`plan`](/kongctl/plan/)
-    description: |
-      Compares your local configuration files against live {{site.konnect_short_name}} state and generates a JSON plan artifact describing the changes to be made.
-    when: |
-      Use before applying changes, especially in CI/CD pipelines, to produce a reviewable and reusable plan artifact.
-  - command: |
-      [`diff`](/kongctl/diff/)
-    description: |
-      Displays a human-readable preview of the changes between the current live state and the desired state in your configuration files, or from a saved plan artifact.
-    when: |
-      Use during development or code review to inspect what `plan` or `sync` would change before committing changes.
-  - command: |
-      [`apply`](/kongctl/apply/)
-    description: |
-      Creates and updates resources to match the desired state. Doesn't delete any resources.
-    when: |
-      Use when you want to incrementally apply configuration without risk of deleting anything. 
-      Use `sync` instead when you want to apply deletes as well.
-  - command: |
-      [`sync`](/kongctl/sync/)
-    description: |
-      Applies the full desired state from your configuration files. Creates, updates, and deletes resources.
-    when: |
-      Use when you want full reconciliation between your configuration and live state, including deletions. 
-      Use `apply` instead if you only want creates and updates.
-  - command: |
-      [`delete`](/kongctl/delete/)
-    description: |
-      Plans and executes deletion of all resources defined in the input configuration files.
-    when: |
-      Use for tearing down a known set of resources, such as resetting a test environment. 
-      Not a typical step in the day-to-day declarative workflow.
-{% endtable %}
+{% include_cached /kongctl/commands-reference-table.md %}
 
 See the CLI help at `kongctl --help` for all possible commands, or check out the [kongctl CLI reference](/index/kongctl/#cli-reference) documentation.
 

@@ -1,0 +1,108 @@
+metadata:
+  title: "{{site.ai_gateway}} entities"
+  content_type: landing_page
+  description: This page lists the entities that make up {{site.ai_gateway}}.
+  breadcrumbs:
+    - /ai-gateway/
+  products:
+    - ai-gateway
+  works_on:
+    - konnect
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.ai_gateway}} entities"
+      sub_text: "Entities are the components and objects for building your {{site.ai_gateway}}."
+
+  - header:
+      type: h2
+      text: "Core entities"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "AI Model Provider"
+              description: Register upstream LLM providers with authentication and configuration. Reusable across AI Models.
+              cta:
+                text: AI Model Provider entity
+                url: /ai-gateway/entities/ai-model-provider/
+      - blocks:
+          - type: card
+            config:
+              title: AI Model
+              description: Define how to reach and interact with a specific LLM, including routing, load balancing, LLM capabilities, and AI Policies.
+              cta:
+                text: AI Model entity
+                url: /ai-gateway/entities/ai-model/
+      - blocks:
+          - type: card
+            config:
+              title: AI Agent
+              description: Expose, observe, and secure autonomous agents through {{site.ai_gateway}} for tool-calling and decision-making workflows.
+              cta:
+                text: AI Agent entity
+                url: /ai-gateway/entities/ai-agent/
+      - blocks:
+          - type: card
+            config:
+              title: AI MCP Server
+              description: Proxy MCP servers to secure, govern, and observe tool-calling workflows.
+              cta:
+                text: AI MCP Server entity
+                url: /ai-gateway/entities/ai-mcp-server/
+      - blocks:
+          - type: card
+            config:
+              title: AI Policy
+              description: Control security, rate-limiting, and guardrails across AI Models, AI Agents, and AI Consumers.
+              cta:
+                text: AI Policy entity
+                url: /ai-gateway/entities/ai-policy/
+      - blocks:
+          - type: card
+            config:
+              title: AI Consumer
+              description: Manage downstream client authentication and access control to your AI APIs.
+              cta:
+                text: AI Consumer entity
+                url: /ai-gateway/entities/ai-consumer/
+      - blocks:
+          - type: card
+            config:
+              title: AI Consumer Group
+              description: Group AI Consumers together to apply shared rate limits, policies, and access rules.
+              cta:
+                text: AI Consumer Group entity
+                url: /ai-gateway/entities/ai-consumer-group/
+
+  - header:
+      type: h2
+      text: "Security"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: AI Vault
+              description: Securely store and reference API keys, tokens, and credentials across all {{site.ai_gateway}} entities.
+              cta:
+                text: AI Vault entity
+                url: /ai-gateway/entities/ai-vault/
+      - blocks:
+          - type: card
+            config:
+              title: AI Identity Provider
+              description: Configure inbound authentication for AI Consumers calling AI Models. Supports API key and OIDC token authentication.
+              cta:
+                text: AI Identity Provider entity
+                url: /ai-gateway/entities/ai-identity-provider/
+      - blocks:
+          - type: card
+            config:
+              title: AI Data Plane Certificate
+              description: Authorize data planes to connect securely with mTLS certificates.
+              cta:
+                text: AI Data Plane Certificate entity
+                url: /ai-gateway/entities/ai-data-plane-certificate/

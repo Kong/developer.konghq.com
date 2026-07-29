@@ -1,124 +1,112 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and OpenAI
-permalink: /how-to/use-claude-code-with-ai-gateway-openai/
 content_type: how_to
+permalink: /ai-gateway/use-claude-code-with-ai-gateway-openai/
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
-  - text: File Log
-    url: /plugins/file-log/
+  - text: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
+    url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
 
-description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic using OpenAI models
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an OpenAI model
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
+tools:
+  - kongctl
+
+prereqs:
+  inline:
+    - title: OpenAI API key
+      include_content: md/ai-gateway/v2/prereqs/openai-kongctl
+
 min_version:
-  gateway: '3.13'
-
-plugins:
-  - ai-proxy-advanced
-  - file-log
-
-entities:
-  - service
-  - route
-  - plugin
+  ai-gateway: '2.0'
 
 tags:
   - ai
   - openai
 
 tldr:
-  q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable the File Log plugin to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
+  q: How do I run Claude CLI through {{site.ai_gateway}} against an OpenAI model?
+  a: Create an AI Provider entity to store your OpenAI API key, create an AI Model entity with an Anthropic-compatible format that routes to OpenAI through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
-tools:
-  - deck
-
-prereqs:
-  inline:
-    - title: OpenAI
-      include_content: prereqs/openai
-      icon_url: /assets/icons/openai.svg
-    - title: Claude Code CLI
-      icon_url: /assets/icons/third-party/claude.svg
-      include_content: prereqs/claude-code
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
-
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
 ---
 
-## Configure the AI Proxy plugin
+## Create an AI Provider entity
 
-First, configure the AI Proxy plugin for the [OpenAI provider](/ai-gateway/ai-providers/#openai):
- * This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
- * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
-
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude }}'s native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when {{ site.claude_code }} communicates with the OpenAI endpoint.
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to OpenAI and store your authentication credentials:
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        llm_format: anthropic
-        route_type: llm/v1/chat
-        logging:
-          log_statistics: true
-          log_payloads: false
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${openai_key}
-          allow_override: false
-        model:
-          provider: openai
-          name: gpt-5-mini
-        max_request_body_size: 524288
-variables:
-  openai_key:
-    value: "$OPENAI_API_KEY"
+ai_gateway_model_providers:
+  - ref: generic-openai
+    ai_gateway: !lookup name:ai-quickstart
+    name: generic-openai
+    display_name: "generic-openai"
+    type: openai
+    config:
+      auth:
+        type: basic
+        headers:
+        - name: Authorization
+          value: !env OPENAI_AUTH_HEADER
 {% endentity_examples %}
 
-## Configure the File Log plugin
+In this example, we're setting up the AI Model Provider with:
 
-Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
+* `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
+* `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
+* `config.auth`: Stores your OpenAI API key. `header_value: !env OPENAI_AUTH_HEADER` loads the value from your environment at apply time instead of embedding it in the YAML, and `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+
+## Create an AI Model entity
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: "/tmp/claude.json"
+ai_gateway_models:
+  - ref: my-claude-openai
+    ai_gateway: !lookup name:ai-quickstart
+    name: my-claude-openai
+    display_name: "my-claude-openai"
+    type: model
+    formats:
+      - type: anthropic
+    config:
+      route:
+        paths:
+          - /
+      model:
+        alias: my-claude-openai
+    targets:
+      - name: gpt-5-mini
+        provider: generic-openai
+        config:
+          type: openai
+    policies: []
+    capabilities:
+      - generate
 {% endentity_examples %}
 
-## Verify traffic through {{site.ai_gateway}}
+In this example, we're setting up the AI Model with:
+
+* `type: model`: Specifies this is a synchronous model for request/response workloads.
+* `name: my-claude-openai`: A unique identifier for this model.
+* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively, even though the upstream model is OpenAI.
+* `config.route.paths: [/]`: Configures the custom base path where this model's Routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
+* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
+* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-5-mini` specifies which OpenAI model to call upstream.
+
+## Verify traffic through Kong
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
 ```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=gpt-5-mini \
-claude
+ANTHROPIC_BASE_URL=http://localhost:8000/ ANTHROPIC_MODEL=my-claude-openai claude
 ```
 
 {{ site.claude_code }} asks for permission before it runs tools or interacts with files:
@@ -141,72 +129,8 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 
 Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
 
-
 ```text
 Tell me about Procopius' Secret History.
 ```
 
-{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
-
-```text
-Procopius’ Secret History (Greek: Ἀνέκδοτα, Anekdota) is a fascinating and
-notorious work of Byzantine literature written in the 6th century by the
-court historian Procopius of Caesarea. Unlike his official histories
-(“Wars” and “Buildings”), which paint the Byzantine Emperor Justinian I
-and his wife Theodora in a generally positive and conventional manner, the
-Secret History offers a scandalous, behind-the-scenes account that
-sharply criticizes and even vilifies the emperor, the empress, and other
-key figures of the time.
-```
-{:.no-copy-code}
-
-Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
-
-```sh
-docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
-```
-
-You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
-
-```json
-{
-  ...
-  "method": "POST",
-  "headers": {
-    "user-agent": "claude-cli/2.0.37 (external, cli)",
-    "content-type": "application/json"
-  },
-  "ai": {
-    "meta": {
-      "request_model": "gpt-5-mini",
-      "request_mode": "oneshot",
-      "response_model": "gpt-5-mini-2025-08-07",
-      "provider_name": "openai",
-      "llm_latency": 6786,
-      "plugin_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    },
-    "usage": {
-      "completion_tokens": 456,
-      "completion_tokens_details": {
-        "accepted_prediction_tokens": 0,
-        "audio_tokens": 0,
-        "rejected_prediction_tokens": 0,
-        "reasoning_tokens": 256
-      },
-      "total_tokens": 481,
-      "cost": 0,
-      "time_per_token": 14.881578947368,
-      "time_to_first_token": 6785,
-      "prompt_tokens": 25,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
-      }
-    }
-  }
-  ...
-}
-```
-{:.no-copy-code}
-
-This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using the `gpt-5-mini` model we selected while starting the {{ site.claude_code }} session.
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request, proxied through {{site.ai_gateway}} to the OpenAI model configured in the AI Model entity's `targets`.

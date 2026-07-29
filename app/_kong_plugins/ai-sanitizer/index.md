@@ -21,6 +21,8 @@ works_on:
 min_version:
     gateway: '3.10'
 
+ai_gateway_url: "/ai-gateway/policies/ai-sanitizer/"
+
 topologies:
   on_prem:
     - hybrid

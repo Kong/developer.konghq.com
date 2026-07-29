@@ -182,10 +182,12 @@ function deriveProduct(setup, products) {
   // String value
   if (setupEntry === "konnect") {
     // For konnect, determine the product from the products list
-    if (products.includes("ai-gateway")) {
+    // Special case for ai-gateway v1
+    if (products.includes("ai-gateway") && products.includes("gateway")) {
+      return "gateway";
+    } else if (products.includes("ai-gateway")) {
       return "ai-gateway";
-    }
-    if (products.includes("event-gateway")) {
+    } else if (products.includes("event-gateway")) {
       return "event-gateway";
     }
     return "gateway";

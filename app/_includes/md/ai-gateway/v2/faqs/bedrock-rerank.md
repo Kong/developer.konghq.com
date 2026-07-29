@@ -1,0 +1,1 @@
+Configure an [AI Model](/ai-gateway/entities/ai-model/) with a Bedrock [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and set up AWS authentication using IAM credentials or assumed roles.

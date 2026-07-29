@@ -1,0 +1,73 @@
+{
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "logging": {
+          "type": "object",
+          "properties": {
+            "log_statistics": {
+              "type": "boolean",
+              "description": "If enabled, adds A2A metrics to Kong log plugin(s) output.",
+              "default": false
+            },
+            "log_payloads": {
+              "type": "boolean",
+              "description": "If enabled, logs request/response bodies to Kong log plugin(s) output. Requires log_statistics to be enabled.",
+              "default": false
+            },
+            "max_payload_size": {
+              "type": "integer",
+              "description": "Maximum size in bytes for logged request/response payloads. Payloads exceeding this size will be truncated.",
+              "default": 1048576
+            }
+          }
+        },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+    }
+  }
+}

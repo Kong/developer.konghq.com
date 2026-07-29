@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
 require 'json'
-require 'pathname'
-require_relative '../../lib/site_accessor'
 
 module Jekyll
   module Drops
     module Plugins
       class Schema < Liquid::Drop # rubocop:disable Style/Documentation
-        include Jekyll::SiteAccessor
+        SCHEMAS_BASE = File.expand_path('../../../_schemas/gateway/plugins', __dir__).freeze
+
+        FILE_INDEX = Hash.new do |h, dir|
+          h[dir] = Dir.glob(File.join(dir, '*.json'))
+                      .to_h { |f| [File.basename(f).downcase, f] }
+                      .freeze
+        end
 
         def self.all(plugin:)
           plugin.releases.map do |release|
@@ -46,25 +50,14 @@ module Jekyll
         end
 
         def file_path
-          @file_path ||= if @plugin.third_party?
-                           third_party_file_path
-                         else
-                           kong_schema_file_path
-                         end
+          @file_path ||= @plugin.third_party? ? third_party_file_path : kong_schema_file_path
         end
 
         def kong_schema_file_path
           @kong_schema_file_path ||= begin
-            path = File.join(
-              site.config['plugin_schemas_path'],
-              release.number,
-              "#{plugin_slug.split('-').map(&:capitalize).join}.json"
-            )
-            dir = File.dirname(path)
-            filename = File.basename(path)
-            Dir.glob("#{dir}/*", File::FNM_CASEFOLD).find do |file|
-              File.basename(file).downcase == filename.downcase
-            end
+            dir = File.join(SCHEMAS_BASE, release.number)
+            FILE_INDEX[dir]["#{plugin_slug.delete('-')}.json"] ||
+              raise(ArgumentError, "Schema file not found for plugin `#{plugin_slug}` release `#{release.number}`")
           end
         end
 
