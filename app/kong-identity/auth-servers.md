@@ -88,7 +88,7 @@ rows:
 
 ## {{site.identity}} client credential authentication flow
 
-The client credentials flow is a [standard OAuth flow](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) where a client authenticates to {{site.identity}} using credentials (such as a `client_id` and secret) that you've issued beforehand. This flow suits situations where only the client needs to authenticate, such as: 
+The client credentials flow is a [standard OAuth flow](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) where a client authenticates to {{site.identity}} using credentials (such as a `client_id` and `client_secret`) that you've issued beforehand. This can be useful when only the client needs to authenticate, such as: 
 - Machine-to-Machine (M2M) use cases
 - A microservice authenticating to {{site.base_gateway}}.
 
