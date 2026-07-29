@@ -152,7 +152,6 @@ curl -s -X POST "$ISSUER_URL/oauth/token" \
 
 After you've verified the new secret works as expected, you can delete the old secret in the API by sending a DELETE request: 
 
-{% capture delete-client-secret %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$CLIENT_ID/secrets/$OLD_SECRET_ID
@@ -160,7 +159,5 @@ method: DELETE
 status_code: 204
 {% endkonnect_api_request %}
 <!--vale on-->
-{% endcapture %}
-{{delete-client-secret | indent: 3}}
 
 
