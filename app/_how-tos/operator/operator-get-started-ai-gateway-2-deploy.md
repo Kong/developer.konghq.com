@@ -32,7 +32,11 @@ prereqs:
   operator:
     konnect:
       auth: true
-
+  inline:
+    - title: OpenAI API Key
+      include_content: /md/ai-gateway/v2/prereqs/openai
+      icon_url: /assets/icons/openai.svg
+ 
 tldr:
   q: How do I deploy {{ site.ai_gateway_name }} with {{site.operator_product_name}}?
   a: Create a `KonnectAIGateway`, store your provider API key in a Kubernetes Secret, add an `AIGatewayModelProvider` and `AIGatewayModel`, then deploy an `AIGatewayDataPlane`. {{site.operator_product_name}} provisions the mTLS certificate automatically.
