@@ -121,7 +121,7 @@ sequenceDiagram
 
 
 {:.info}
-> **Note:** {{site.konnect_short_name}} doesn't store the client's secrets. Make sure to copy and to securely store theirs values when they're generated at creation.
+> **Note:** {{site.konnect_short_name}} doesn't store the client's secrets. Make sure to copy and securely store their values when they're generated.
 
 
 You can have a maximum of two secrets active at a time.
