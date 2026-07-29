@@ -8,7 +8,7 @@ The CIDR block must also be large enough to accommodate all Kong-managed infrast
 
 Keep the following requirements in mind when choosing your network CIDR range:
 * **Prefix length:** The CIDR block prefix length depends on which cloud provider you're using:
-  * AWS and GCP: Between `/16` and `/23`. `/23` blocks support a maximum of 2 availability zones.
+  * AWS and GCP: Between `/16` and `/23`. `/23` blocks support a maximum of 3 availability zones.
   * Azure: Between `/16` and `/21`
 * **Private IP Range:** The entire CIDR block must fall within one of these private IP ranges:
   * 10.0.0.0/8
@@ -46,7 +46,7 @@ columns:
     key: cidr
 
 rows:
-  - az_count: 2
+  - az_count: 3
     cidr: "/23 (512 IPs)"
   - az_count: 3
     cidr: "/22 (1,024 IPs)"
