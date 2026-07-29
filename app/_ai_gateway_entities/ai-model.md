@@ -335,6 +335,96 @@ By default, applications or services making requests to the AI Model endpoint mu
 
 When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
+The following examples assume the `my-openai-account` [AI Model Provider](/ai-gateway/entities/ai-model-provider/) already exists.
+{% navtabs "Model aliasing examples" %}
+{% navtab "Body" %}
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        body:
+          model:
+            - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+{% endnavtab %}
+{% navtab "Headers" %}
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        headers:
+          X-Model-Name:
+            - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+{% endnavtab %}
+{% navtab "Path aliases" %}
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        path_aliases:
+          - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+{% endnavtab %}
+{% endnavtabs %}
+
 ## Access control
 
 To limit which teams or applications can call an AI Model, use the [`access.acls`](#schema-aigateway-model-access) field to set an allow list or a deny list. Reference [AI Consumers](/ai-gateway/entities/ai-consumer/) (individual applications), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (teams), or Authenticated Groups (all consumers authenticated via a specific OAuth2 scope or claim) by name.
@@ -358,19 +448,19 @@ When your data plane sits behind a corporate firewall or security boundary, conf
 Use the [`config.proxy`](#schema-aigateway-model-config-proxy) object to specify the proxy endpoint with [`http_proxy`](#schema-aigateway-model-config-proxy-http-proxy) or [`https_proxy`](#schema-aigateway-model-config-proxy-https-proxy), and optionally add [`auth`](#schema-aigateway-model-config-proxy-auth) credentials if the proxy requires authentication. Use [`no_proxy`](#schema-aigateway-model-config-proxy-no-proxy) to bypass the proxy for specific hosts that are already inside your trusted network.
 
 ## Logging and observability
-
-Enable [`statistics`](#schema-aigateway-model-config-logging-statistics) logging to track token consumption, request latency, and per-provider costs. This data flows into {{site.konnect_short_name}} analytics and any attached logging AI Policies, letting you monitor API spend, identify slow providers, and audit which AI Models drive the most usage.
-
+{{site.ai_gateway}} automatically records usage statistics, such as token consumption, request latency, and per-provider costs, for every AI Model. This data flows into [LLM traffic metrics](/ai-gateway/monitor-ai-llm-metrics/#llm-traffic-metrics-overview), [audit log entries](/ai-gateway/ai-audit-log-reference/#core-logs), and any attached logging AI Policies, letting you monitor API spend, identify slow providers, and audit which AI Models drive the most usage.
 Optionally enable [`payloads`](#schema-aigateway-model-config-logging-payloads) to capture full request and response bodies. This is useful for debugging model responses, auditing sensitive operations, or replaying requests.
 
 {:.warning}
 > Payload logging may expose sensitive data in your logging destination. Only enable it when your logging pipeline is prepared to handle request and response bodies, and verify that logging destinations comply with your data residency and privacy policies.
 
+[AI Model analytics](/ai-gateway/monitor-ai-llm-metrics/#llm-traffic-metrics-overview) display in {{site.konnect_short_name}} [Explorer](https://cloud.konghq.com/analytics/explorer) and [Dashboards](https://cloud.konghq.com/analytics/dashboards) alongside other {{site.ai_gateway}} traffic, and export through [OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/).
+
 For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 
 ## Set up an AI Model
 
-Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service. 
+Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service.
 
 The following example:
 * Creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
