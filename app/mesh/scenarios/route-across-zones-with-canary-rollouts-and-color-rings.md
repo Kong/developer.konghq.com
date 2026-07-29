@@ -39,7 +39,7 @@ Once Kong Air spans multiple zones, two routing needs show up that look similar 
 
 Every pattern here rests on two resources:
 
-- **`MeshMultiZoneService` (MMZS)** aggregates the zone-local `MeshService` objects for a workload behind a single stable hostname, and provides the boundary for cross-zone failover. It is a **Global CP** resource; the synced zone copies receive a hash suffix in `metadata.name`, so zone-local policies reference them by their `kuma.io/display-name` label, not by name.
+- **`MeshMultiZoneService` (MMZS)** aggregates the zone-local `MeshService` objects for a workload behind a single stable hostname, and provides the boundary for cross-zone failover. For where it must be applied, how synced zone copies are named, and how it generates `*.mzsvc.mesh.local` hostnames, see [MeshMultiZoneService](/mesh/meshmultizoneservice/).
 - **`MeshHTTPRoute`** decides how callers reach those MMZS pools, by **weight** or by the **caller's identity**.
 
 The difference between the two patterns is entirely in that routing decision:
@@ -279,7 +279,7 @@ The split is validated: a `90/10` route returned `54` stable and `6` canary resp
 
 ### Optional: locality-aware failover for the stable pool
 
-`MeshLoadBalancingStrategy` controls locality-aware failover. The stable pool is a good fit because `check-in-api-global` spans multiple zones.
+`MeshLoadBalancingStrategy` controls locality-aware failover. The stable pool is a good fit because `check-in-api-global` spans multiple zones. For the meaning of each field, see [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/).
 
 ```yaml
 apiVersion: kuma.io/v1alpha1

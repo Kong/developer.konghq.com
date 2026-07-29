@@ -14,45 +14,9 @@ works_on:
 ---
 {{site.mesh_product_name}} separates the **Control Plane** (the brain) from the **Data Plane** (the muscle) and introduces a multi-zone model for distributed environments. For an organization like **Kong Air**, this architecture enables a unified management layer that spans from legacy booking systems to modern cloud-native APIs.
 
-## Core architecture pillars
+## Core architecture
 
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Pillar
-    key: pillar
-  - title: Role
-    key: role
-  - title: Key components
-    key: components
-rows:
-  - pillar: Control Plane
-    role: "Manages mesh state and policy distribution."
-    components: |
-      * **Global CP**: Central authority for policies and resource registry.
-      * **Zone CP**: Discovers local services and distributes xDS config to Envoy.
-  - pillar: Data Plane
-    role: "Enforces policies and intercepts traffic."
-    components: |
-      * **Envoy Proxy**: Sidecar proxy running alongside application instances. Enforces mTLS, retries, and rate limits.
-  - pillar: Networking
-    role: "Enables secure cross-zone communication."
-    components: |
-      * **ZoneIngress**: Entry point for cross-zone traffic.
-      * **ZoneEgress**: Exit point for outgoing mesh traffic.
-  - pillar: Service Model
-    role: "Standardized service discovery."
-    components: |
-      * **MeshService**: Defines services within a single zone. These may be generated automatically for workloads, or authored explicitly when Kong Air needs stable, named rollout targets like `passenger-portal-v1` and `passenger-portal-v2`.
-      * **MeshMultiZoneService**: Aggregates services across zones for failover.
-      * **MeshExternalService**: Manages traffic to services outside the mesh.
-  - pillar: Workload Identity
-    role: "Issues and validates SPIFFE identities for every workload."
-    components: |
-      * **MeshIdentity**: The system of record for workload identity. Supports `Bundled`, `Spire`, and `Extension` providers.
-      * **MeshTrust**: Declares trusted CA bundles per trust domain. By default, the control plane can generate a `MeshTrust` from a `MeshIdentity`, but operators can also manage it explicitly.
-{% endtable %}
-<!-- vale on -->
+{{site.mesh_product_name}} is built from a **control plane** (a Global CP that owns policy and the resource registry, and per-zone Zone CPs that discover local services and serve xDS to Envoy), an Envoy-based **data plane** that enforces policy and intercepts traffic, **networking proxies** (zone ingress and egress) for cross-zone communication, a standardized **service model** (`MeshService`, `MeshMultiZoneService`, `MeshExternalService`), and **workload identity** (`MeshIdentity`, `MeshTrust`). For the definition of each component and its configuration options, see the [{{site.mesh_product_name}} architecture](/mesh/architecture/) reference.
 
 {:.info}
 > These scenarios set **`meshServices.mode: Exclusive`** on the `kong-air-mesh` `Mesh` resource:
@@ -129,7 +93,7 @@ Everything in this diagram is a **control-plane** channel, no application traffi
 
 ### Zone-level: how a request flows
 
-Inside a zone, every workload runs alongside an Envoy sidecar. Sidecars enforce mTLS, retries, timeouts, and access policy. Cross-zone calls go through ZoneIngress and ZoneEgress.
+Inside a zone, every workload runs alongside an Envoy sidecar that enforces mTLS, retries, timeouts, and access policy, while cross-zone calls route through zone ingress and egress. For the canonical mechanics of cross-zone service discovery and routing, see [Multi-zone deployment](/mesh/mesh-multizone-service-deployment/).
 
 {% mermaid %}
 flowchart LR

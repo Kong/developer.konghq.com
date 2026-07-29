@@ -16,7 +16,7 @@ tldr:
   q: How do I split traffic between different versions of my service?
   a: |
     Use **Explicit Subsetting** by:
-    1. **Defining distinct versioned destinations** for each version you want to route independently (e.g., `v1` and `v2`).
+    1. **Defining distinct versioned destinations** for each version you want to route independently (for example, `v1` and `v2`).
     2. **Using MeshHTTPRoute** to assign `weights` to each `backendRef`.
     3. **Verifying the split** by monitoring the distribution of requests across the named services.
 prereqs:
@@ -26,7 +26,7 @@ prereqs:
         A {{site.mesh_product_name}} deployment with `meshServices.mode: Exclusive` enabled.
     - title: Workloads
       content: |
-        Multiple versions of a service (e.g., `passenger-portal`) deployed with identifying labels.
+        Multiple versions of a service (for example, `passenger-portal`) deployed with identifying labels.
 next_steps:
   - text: "Target workloads and services"
     url: "/mesh/scenarios/target-workloads-and-services/"
@@ -69,19 +69,9 @@ graph TD
 
 ### Define explicit MeshServices
 
-{{site.mesh_product_name}} can generate baseline `MeshService` resources automatically for workloads. For rollout patterns like canary and blue/green, though, you still want version-specific destinations that the route can name directly.
+For rollout patterns like canary and blue/green, you want version-specific destinations that the route can name directly. For how {{site.mesh_product_name}} generates `MeshService` resources, how label-based matching works, and what `meshServices.mode: Exclusive` changes, see [MeshService](/mesh/meshservice/).
 
 On **Kubernetes**, create **versioned Services** (`passenger-portal-v1`, `passenger-portal-v2`) and let {{site.mesh_product_name}} generate the matching `MeshService` resources from them. On **Universal**, define the `MeshService` resources directly.
-
-{:.info}
-> For deployments using label-based `MeshService` matching, enable the following:
-
-```yaml
-experimental:
-  inboundTagsDisabled: true
-```
-
-Generated `MeshService` resources then move away from inbound-tag selection and instead match dataplanes by labels. That is the cleaner model for both Kubernetes and Universal, and it aligns better with the rest of the targeting story.
 
 {:.info}
 > Why `appProtocol: http`? The Kubernetes `Service` examples below set `appProtocol: http` on the port. In `Exclusive` mode, {{site.mesh_product_name}} reads this field to set the protocol on the generated `MeshService`. Without it, the `MeshService` defaults to `tcp`, and HTTP-aware policies, `MeshHTTPRoute`, weighted splits, retries on `5xx`, silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
@@ -145,29 +135,9 @@ spec:
 {% endnavtab %}
 {% endnavtabs %}
 
-For example, a generated label-selected `MeshService` can look like:
-
-```yaml
-type: MeshService
-name: passenger-portal-v1
-mesh: kong-air-mesh
-spec:
-  selector:
-    dataplaneLabels:
-      matchLabels:
-        app: passenger-portal
-        version: v1
-        k8s.kuma.io/namespace: kong-air-production
-  ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
-      appProtocol: http
-```
-
 ### Configure the weighted route
 
-Now, create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to **every client that calls `passenger-portal`**; the destination is the shared `MeshService`, and `backendRefs` weight traffic across the two versions. (To roll the split out to only some clients first, narrow the top level to `Dataplane` with a `labels:` selector.)
+Now, create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to **every client that calls `passenger-portal`**. For how `backendRefs` and `weight` divide traffic across the two versions, see [MeshHTTPRoute](/mesh/policies/meshhttproute/). (To roll the split out to only some clients first, narrow the top level to `Dataplane` with a `labels:` selector.)
 
 {% navtabs "weighted-route" %}
 {% navtab "Kubernetes (Zone CP)" %}

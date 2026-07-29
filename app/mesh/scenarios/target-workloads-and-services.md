@@ -29,42 +29,11 @@ next_steps:
     url: "/mesh/scenarios/observe-mesh-traffic-in-practice/"
 ---
 
-{{site.mesh_product_name}} uses two targeting primitives: a **`Dataplane`** label selector for scoping a policy to a group of proxies, and explicit **`MeshService`** (and `MeshMultiZoneService`, `MeshExternalService`) resources for addressing destinations. The older `MeshSubset` / `MeshServiceSubset` virtual kinds are retained for compatibility, but will be removed in the near future.
-
-## Targeting matrix
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Use case
-    key: feature
-  - title: Use this at the top level
-    key: toplevel
-  - title: Use this in `to[].targetRef` / `backendRefs`
-    key: tochain
-rows:
-  - feature: "Scope a policy to a slice of the fleet (zone, environment, team)"
-    toplevel: "`Dataplane` with `labels:` (e.g. `kuma.io/zone: zone1`)"
-    tochain: "Usually `Mesh`"
-  - feature: "Apply a policy to every proxy in the mesh"
-    toplevel: "`Mesh`"
-    tochain: "Specific `MeshService` / `MeshMultiZoneService` / `MeshExternalService`"
-  - feature: "Route or split traffic to a named destination"
-    toplevel: "`Mesh` (or `Dataplane` to scope which clients see the route)"
-    tochain: "`MeshService` (named, e.g. `passenger-portal-v1` vs `passenger-portal-v2`)"
-  - feature: "Address a built-in gateway"
-    toplevel: "`MeshGateway`"
-    tochain: "n/a"
-  - feature: "Target mesh-scoped zone proxies"
-    toplevel: "`Dataplane` with `labels:` (`kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress`) and optional `sectionName`"
-    tochain: "Usually `Mesh`, `MeshExternalService`, or listener-scoped policy rules depending on the policy"
-{% endtable %}
-<!-- vale on -->
-
+{{site.mesh_product_name}} uses two targeting primitives: a **`Dataplane`** label selector for scoping a policy to a group of proxies, and explicit **`MeshService`** (and `MeshMultiZoneService`, `MeshExternalService`) resources for addressing destinations. For the full targeting model and the per-policy `targetRef` support matrices, see [Policies](/mesh/policies-introduction/) and [MeshService](/mesh/meshservice/). This page focuses on how Kong Air applies those primitives.
 
 ## Dataplane with labels: the cross-cutting proxy policy
 
-Use a top-level `targetRef` of **`Dataplane`** with a `labels:` selector when you want to apply a policy to a group of proxies based on shared environmental traits, rather than their specific service identity. This replaces the older `MeshSubset` / `MeshServiceSubset` top-level kinds.
+Use a top-level `targetRef` of **`Dataplane`** with a `labels:` selector when you want to apply a policy to a group of proxies based on shared environmental traits, rather than their specific service identity.
 
 ### Example: regional timeouts
 
@@ -115,16 +84,7 @@ spec:
 
 ## Explicit MeshService: the standard
 
-In {{site.mesh_product_name}}, you manage rollout-oriented "subsets" (like Canary vs. Stable) by creating **distinct `MeshService` resources**. This is called **explicit subsetting**. The control plane can also generate baseline `MeshService` resources automatically for workloads. The explicit resources in this section are for the cases where you want named, independently routable destinations.
-
-In 2.14, this model becomes cleaner again if you enable:
-
-```yaml
-experimental:
-  inboundTagsDisabled: true
-```
-
-With that setting, generated `MeshService` resources can match workloads by `dataplaneLabels` instead of inbound tags such as `kuma.io/service`.
+In {{site.mesh_product_name}}, you manage rollout-oriented "subsets" (like Canary vs. Stable) by creating **distinct `MeshService` resources**. This is called **explicit subsetting**. The control plane can also generate baseline `MeshService` resources automatically for workloads; the explicit resources in this section are for the cases where you want named, independently routable destinations. For how generated `MeshService` resources match workloads, see [MeshService](/mesh/meshservice/).
 
 By naming your subsets explicitly, your routing rules become clear, predictable, and easy to audit. This model moves away from implicit tag-matching and toward a first-class resource management system.
 
@@ -140,5 +100,4 @@ By naming your subsets explicitly, your routing rules become clear, predictable,
 
 ## Deprecation note: MeshSubset and MeshServiceSubset
 
-{:.danger}
-> `MeshSubset` and `MeshServiceSubset` are older "virtual kinds" used before explicit `MeshService` resources existed. These scenarios use `Dataplane` with `labels:` at the top level, and `MeshService` (or `MeshMultiZoneService` / `MeshExternalService`) in `to[].targetRef` / `backendRefs`.
+`MeshSubset` and `MeshServiceSubset` are legacy "virtual kinds" that predate explicit `MeshService` resources. Use `Dataplane` with `labels:` at the top level and `MeshService` (or `MeshMultiZoneService` / `MeshExternalService`) in `to[].targetRef` / `backendRefs` instead. See [Policies](/mesh/policies-introduction/) for the deprecation details.

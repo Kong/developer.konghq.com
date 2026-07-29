@@ -26,7 +26,7 @@ prereqs:
         A running {{site.mesh_product_name}} deployment.
     - title: Resources
       content: |
-        A client workload (e.g., `check-in-api`) to test outbound connectivity.
+        A client workload (for example, `check-in-api`) to test outbound connectivity.
 next_steps:
   - text: "Manage external services with MeshExternalService"
     url: "/mesh/scenarios/manage-external-services-with-meshexternalservice/"
@@ -49,13 +49,10 @@ Using `MeshPassthrough`, you explicitly define which outbound destinations are a
 
 ## Configure MeshPassthrough
 
-The `MeshPassthrough` policy defines how the proxy handles traffic that doesn't match any known `MeshService` or `MeshExternalService`.
+The `MeshPassthrough` policy defines how the proxy handles traffic that doesn't match any known `MeshService` or `MeshExternalService`. For the full field reference (`passthroughMode` and its defaults, `appendMatch`, supported match types, and protocol rules), see [MeshPassthrough](/mesh/policies/meshpassthrough/).
 
 ### Step 1: Broad "allow" (default behavior)
 With no `MeshPassthrough` policy in place, the mesh allows all outbound passthrough, so the effective behavior matches `passthroughMode: All`. The example below makes that explicit.
-
-{:.info}
-> If you create a `MeshPassthrough` but omit `passthroughMode`, the field defaults to **`Matched`**, not `All`, only destinations in `appendMatch` pass through. Set `passthroughMode: All` explicitly when you want the open-mesh behavior.
 
 {% navtabs "passthrough-allow-all" %}
 {% navtab "Kubernetes (Zone CP)" %}
@@ -123,7 +120,7 @@ spec:
 {% endnavtabs %}
 
 ### Step 3: Selective passthrough
-You can allow specific destinations even without defining a formal `MeshExternalService`. Each `appendMatch` entry takes a `type` (`Domain`, `IP`, or `CIDR`), a `value`, an optional `port`, and a `protocol`.
+You can allow specific destinations even without defining a formal `MeshExternalService` by listing them under `appendMatch`, as shown below. For the match field semantics and validation rules, see [MeshPassthrough](/mesh/policies/meshpassthrough/).
 
 {% navtabs "passthrough-matched" %}
 {% navtab "Kubernetes (Zone CP)" %}
@@ -181,12 +178,6 @@ spec:
 ```
 {% endnavtab %}
 {% endnavtabs %}
-
-{:.info}
-> `protocol` defaults to `tcp`, but a `Domain` match does **not** support `tcp` (or `mysql`). So every `Domain` entry must set an explicit L7 or TLS protocol (`tls`, `http`, `http2`, or `grpc`), otherwise the API rejects it. Only full-label wildcards are allowed (`*.google.com`), not partial ones like `*google.com`.
-
-{:.info}
-> Use the match `type` that fits the destination: `type: IP` takes a **bare IP** (`1.2.3.4`, no mask), and `type: CIDR` takes a **range** (`10.0.0.0/8`). They are validated accordingly, an IP value with a `/mask` or a CIDR value without one is rejected.
 
 ## Interaction with egress gateways
 

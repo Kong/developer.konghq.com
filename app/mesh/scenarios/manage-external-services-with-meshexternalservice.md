@@ -43,14 +43,7 @@ We want these dependencies to feel like internal services:
 
 ## Set the naming standard
 
-On Kubernetes, {{site.mesh_product_name}} already ships with a default `HostnameGenerator` for zone-local `MeshExternalService` resources. That generator produces hostnames in the form:
-
-```text
-<display-name>.extsvc.mesh.local
-```
-
-{:.info}
-> For example, a zone-local `MeshExternalService` named `aeropay-api` is assigned the hostname `aeropay-api.extsvc.mesh.local` and a VIP from the external-service CIDR (`242.0.0.0/8`).
+On Kubernetes, {{site.mesh_product_name}} ships with a default `HostnameGenerator` that assigns each zone-local `MeshExternalService` a generated hostname and a virtual IP. For the hostname format, the VIP CIDR, and how sidecar TLS origination works, see [MeshExternalService](/mesh/meshexternalservice/).
 
 If Kong Air wants a custom naming scheme, that is an **operator-level customization** of `HostnameGenerator`, not something each application team should redefine in every scenario.
 

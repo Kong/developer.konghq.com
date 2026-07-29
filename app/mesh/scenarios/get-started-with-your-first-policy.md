@@ -35,7 +35,7 @@ next_steps:
 ---
 ## Issue workload identity with `MeshIdentity`
 
-In {{site.mesh_product_name}} 2.14+, workload identity is managed by the `MeshIdentity` resource, not the `Mesh` object's legacy `mtls` block. `MeshIdentity` decouples certificate issuance from the Mesh resource, letting you target specific workloads, customize SPIFFE ID paths, and integrate with SPIRE. The `Bundled` provider with `autogenerate` is the recommended starting point.
+In {{site.mesh_product_name}} 2.14+, workload identity is issued by the `MeshIdentity` resource, and the `Bundled` provider with `autogenerate` is the recommended starting point. For the full identity walkthrough, including provider options and verification, see [Issue identity with MeshIdentity](/mesh/issue-identity-with-meshidentity/).
 
 {% navtabs "mesh-identity" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}

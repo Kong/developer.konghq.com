@@ -65,28 +65,13 @@ rows:
 
 ## Install the observability stack
 
-Install the observability tools with their own community Helm charts and then wire {{site.mesh_product_name}} into them with `MeshMetric`, `MeshTrace`, and `MeshAccessLog`.
-
-A minimal install for Kong Air:
-
-```bash
-# Prometheus + Grafana (kube-prometheus-stack bundles both)
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
-  --namespace mesh-observability --create-namespace
-
-# Tempo, Jaeger, or any OTLP-capable backend for traces
-helm upgrade --install tempo grafana/tempo --namespace mesh-observability
-
-# Loki (or your existing log backend) for access logs
-helm upgrade --install loki grafana/loki --namespace mesh-observability
-```
+Install and wire up the Prometheus, Grafana, and tracing backends by following the canonical [mesh observability](/mesh/observability/) reference. To collect traces and OTel-based logs, deploy a collector as described in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). Once the stack is running, wire {{site.mesh_product_name}} into it with the `MeshMetric`, `MeshTrace`, and `MeshAccessLog` policies below.
 
 {:.warning}
 > Prometheus metric format change in 2.14. Control-plane metrics moved from **Summary** to **Histogram**. Any dashboard or alert that uses `quantile="0.5"` / `"0.9"` / `"0.99"` series on {{site.mesh_product_name}} CP metrics will break, switch to `histogram_quantile()` against `_bucket` series. Data-plane sidecar metrics are unaffected by this change.
 
 {:.info}
-> Stat name format change (KRI). A feature flag in 2.14 (`KUMA_DATAPLANE_RUNTIME_METRICS_KRI_STATS` on the DP, `KUMA_MESH_SERVICE_KRI_STATS_ENABLED` on the CP) renames Envoy cluster, listener, and stat names to the **KRI** format, `kri_wl_<mesh>_<zone>_<namespace>_<name>_<section>`. If you enable it, expect dashboard panels that hard-code old stat names (e.g. `cluster.outbound:check-in-api_kong-air-production_svc_8080.upstream_rq_total`) to need updating.
+> Stat name format change (KRI). A feature flag in 2.14 (`KUMA_DATAPLANE_RUNTIME_METRICS_KRI_STATS` on the DP, `KUMA_MESH_SERVICE_KRI_STATS_ENABLED` on the CP) renames Envoy cluster, listener, and stat names to the **KRI** format, `kri_wl_<mesh>_<zone>_<namespace>_<name>_<section>`. If you enable it, expect dashboard panels that hard-code old stat names (for example, `cluster.outbound:check-in-api_kong-air-production_svc_8080.upstream_rq_total`) to need updating.
 
 ## Metrics with `MeshMetric`
 
@@ -265,31 +250,7 @@ kubectl port-forward -n mesh-observability svc/tempo-query-frontend 3200:3200
 
 ### Sharing one OTel backend across policies (`MeshOpenTelemetryBackend`)
 
-If you also configure access logs or metrics over OTel, repeating the same collector endpoint in every policy is brittle. 2.14 adds a new resource, **`MeshOpenTelemetryBackend`**, that you can reference from `MeshMetric`, `MeshTrace`, and `MeshAccessLog` via `backendRef`. This is the recommended pattern going forward:
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshOpenTelemetryBackend
-metadata:
-  name: kong-air-otel
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-spec:
-  endpoint: otel-collector.mesh-observability:4317
-  protocol: grpc
-```
-
-`MeshTrace` then refers to it by name instead of embedding the endpoint inline:
-
-```yaml
-backends:
-  - type: OpenTelemetry
-    openTelemetry:
-      backendRef:
-        kind: MeshOpenTelemetryBackend
-        name: kong-air-otel
-```
+If you also configure access logs or metrics over OTel, repeating the same collector endpoint in every policy is brittle. 2.14 adds the `MeshOpenTelemetryBackend` resource, which you can reference from `MeshMetric`, `MeshTrace`, and `MeshAccessLog` via `backendRef` instead of embedding the endpoint inline. This is the recommended pattern going forward. See [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) for the resource fields and configuration examples.
 
 ## Logging with `MeshAccessLog`
 
@@ -379,7 +340,7 @@ Example output:
 {:.info}
 > On Kubernetes, the file-backed access log showed up on the **source sidecar** after traffic was generated.
 >
-> For production, use a TCP backend pointing to your Loki or Fluentd instance instead of a file, or share the `MeshOpenTelemetryBackend` defined above to ship logs over OTLP gRPC. In 2.14, the `KUMA_SOURCE_SERVICE` / `KUMA_DESTINATION_SERVICE` format codes will return KRI-format identifiers if you enable the KRI stat-name feature flag, adjust downstream log parsing accordingly.
+> For production, use a TCP backend pointing to your Loki or Fluentd instance instead of a file, or share a `MeshOpenTelemetryBackend` to ship logs over OTLP gRPC. In 2.14, the `KUMA_SOURCE_SERVICE` / `KUMA_DESTINATION_SERVICE` format codes will return KRI-format identifiers if you enable the KRI stat-name feature flag, adjust downstream log parsing accordingly.
 
 ## Grafana dashboards
 
@@ -443,72 +404,10 @@ The sidecar detects the ConfigMaps within seconds and provisions the dashboards 
 
 ## Prometheus scrape jobs
 
-The dashboards filter metrics by `job` label. Three scrape jobs are required. Add them under `prometheus.prometheusSpec.additionalScrapeConfigs` in your kube-prometheus-stack Helm values.
+The dashboards filter metrics by `job` label and rely on three scrape jobs added under `prometheus.prometheusSpec.additionalScrapeConfigs`:
 
-### `kuma-dataplanes`, sidecar metrics via MADS
+- `kuma-dataplanes`: sidecar metrics discovered automatically through {{site.mesh_product_name}}'s native MADS service discovery (`kuma_sd_configs`). Feeds the **Workload Health**, **Workload Debug**, and **Mesh Drilldown** dashboards.
+- `kuma-control-plane`: the Control Plane's own `/metrics` endpoint. Feeds the **Control Plane** dashboard.
+- `kuma-zone-proxies`: zone ingress and egress metrics scraped from zone proxy pods on port `9902` (new in 2.14). Feeds the new **Zone Ingress** and **Zone Egress** dashboards.
 
-This job uses {{site.mesh_product_name}}'s native Prometheus service discovery (**MADS**) to discover sidecar scrape targets automatically. MADS runs on the Zone Control Plane at port `5676` and acts as the authoritative catalog of all Dataplane proxies in the zone, no manual target configuration needed.
-
-This feeds the **Workload Health**, **Workload Debug**, and **Mesh Drilldown** dashboards.
-
-```yaml
-- job_name: kuma-dataplanes
-  scrape_interval: 5s
-  metrics_path: /metrics
-  kuma_sd_configs:
-    - server: http://kong-mesh-control-plane.{{site.mesh_namespace}}:5676
-  relabel_configs:
-    - source_labels: [__meta_kuma_mesh]
-      target_label: mesh
-    - source_labels: [__meta_kuma_dataplane]
-      target_label: dataplane
-    - action: labelmap
-      regex: __meta_kuma_label_(.+)
-    - source_labels: [k8s_kuma_io_name]
-      target_label: pod
-    - source_labels: [k8s_kuma_io_namespace]
-      target_label: namespace
-```
-
-### `kuma-control-plane`, CP metrics
-
-Scrapes the Control Plane's own `/metrics` endpoint. Feeds the **Control Plane** dashboard.
-
-```yaml
-- job_name: kuma-control-plane
-  metrics_path: /metrics
-  static_configs:
-    - targets:
-        - kong-mesh-control-plane.{{site.mesh_namespace}}:5680
-```
-
-### `kuma-zone-proxies`, zone ingress and egress metrics (new in 2.14)
-
-Scrapes zone proxy pods using Kubernetes pod SD. Zone proxies expose Envoy stats at port `9902` (the readiness proxy, which also serves `/stats/prometheus`). This job feeds the new **Zone Ingress** and **Zone Egress** dashboards.
-
-```yaml
-- job_name: kuma-zone-proxies
-  metrics_path: /stats/prometheus
-  kubernetes_sd_configs:
-    - role: pod
-      namespaces:
-        names: [{{site.mesh_namespace}}]
-  relabel_configs:
-    - source_labels: [__meta_kubernetes_pod_label_k8s_kuma_io_zone_proxy_type]
-      regex: ingress|egress
-      action: keep
-    - source_labels: [__meta_kubernetes_pod_label_k8s_kuma_io_zone_proxy_type]
-      target_label: proxy
-    - source_labels: [__meta_kubernetes_pod_label_kuma_io_mesh]
-      target_label: mesh
-    - source_labels: [__meta_kubernetes_namespace]
-      target_label: namespace
-    - source_labels: [__address__]
-      regex: '(.+?)(:[0-9]+)?$'
-      target_label: __address__
-      replacement: '${1}:9902'
-    - source_labels: [__meta_kubernetes_pod_name]
-      target_label: pod
-    - target_label: zone
-      replacement: zone1  # replace with the zone name for this Prometheus instance
-```
+For the full `additionalScrapeConfigs` values and MADS `kuma_sd_configs` setup, see the canonical [mesh observability](/mesh/observability/) reference.

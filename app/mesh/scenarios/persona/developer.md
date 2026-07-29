@@ -67,247 +67,55 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-If Devin wanted to look at the `HostnameGenerator` resource itself, it lives in the system namespace:
-
-```yaml
-# Applied by Ollie, not Devin. Shown here for reference only.
-apiVersion: kuma.io/v1alpha1
-kind: HostnameGenerator
-metadata:
-  name: kong-air-dns
-  namespace: {{site.mesh_namespace}}
-spec:
-  template: "{% raw %}{{ .DisplayName }}.svc.kongair.mesh{% endraw %}"
-  selector:
-    meshService:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh
-```
+The `HostnameGenerator` resource itself is applied by Ollie and lives in the system namespace. See [Multi-zone architecture](/mesh/scenarios/multi-zone-architecture/) for how the naming scheme is configured.
 
 {:.info}
-> On Kubernetes, Devin can call other in-cluster services directly by their Kubernetes service address (e.g. `check-in-api.kong-air-production.svc.cluster.local`), the mesh transparently proxies that traffic. The HostnameGenerator just gives him a stable, mesh-native name that works the same in every zone.
+> On Kubernetes, Devin can call other in-cluster services directly by their Kubernetes service address (for example, `check-in-api.kong-air-production.svc.cluster.local`), the mesh transparently proxies that traffic. The HostnameGenerator just gives him a stable, mesh-native name that works the same in every zone.
 
 ### Devin's view of cross-zone services
 
-When `passenger-portal` (running in zone1) needs to call `flight-control` (which may be in zone1 *or* zone2), Ollie has defined a `MeshMultiZoneService` that aggregates both zones into one logical service. Devin calls a single hostname and the mesh handles locality and failover.
-
-```yaml
-# Applied by Ollie. Devin consumes the resulting hostname.
-apiVersion: kuma.io/v1alpha1
-kind: MeshMultiZoneService
-metadata:
-  name: flight-control
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: global
-spec:
-  selector:
-    meshService:
-      matchLabels:
-        kuma.io/display-name: flight-control
-  ports:
-    - port: 80
-      targetPort: 8080
-      appProtocol: http
-```
+When `passenger-portal` (running in zone1) needs to call `flight-control` (which may be in zone1 *or* zone2), Ollie has defined a `MeshMultiZoneService` that aggregates both zones into one logical service. Devin calls a single hostname and the mesh handles locality and failover. The `MeshMultiZoneService` is applied by Ollie, see [Multi-zone architecture](/mesh/scenarios/multi-zone-architecture/) for how it is defined.
 
 ### External services
 
-For the SaaS weather feed, Ollie has registered a `MeshExternalService`. Devin calls it like any other in-mesh service.
-
-```yaml
-# Applied by Ollie. Devin's check-in-api calls the mesh-generated name weather-api.extsvc.mesh.local.
-apiVersion: kuma.io/v1alpha1
-kind: MeshExternalService
-metadata:
-  name: weather-api
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-spec:
-  match:
-    type: HostnameGenerator
-    port: 443
-    protocol: tls
-  endpoints:
-    - address: api.weather.com
-      port: 443
-  tls:
-    enabled: true
-    verification:
-      mode: Secured
-      serverName: api.weather.com
-```
+For the SaaS weather feed, Ollie has registered a `MeshExternalService`, which Devin's `check-in-api` calls by its mesh-generated name like any other in-mesh service. The `MeshExternalService` is applied by Ollie, see [Manage external services with MeshExternalService](/mesh/scenarios/manage-external-services-with-meshexternalservice/) for how it is registered.
 
 ## Traffic management
 
 Devin needs full control over how requests land on his services.
 
 ### Canary routing with `MeshHTTPRoute`
-Launching v2 of the passenger portal? Devin shifts 10% of traffic to verify its performance. The route applies to every client in the mesh, so the top-level `targetRef` is `Mesh`. (To roll out to a subset of clients first, swap the top level for `Dataplane` with a `labels:` selector, that's the modern way to scope a policy to a slice of the fleet. `MeshService`, `MeshServiceSubset`, and `MeshSubset` are no longer valid at the top level.)
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshHTTPRoute
-metadata:
-  name: passenger-portal-canary
-  namespace: kong-air-production
-  labels:
-    kuma.io/mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: MeshService
-        name: passenger-portal
-      rules:
-        - matches: [{ path: { type: PathPrefix, value: / } }]
-          default:
-            backendRefs:
-              - kind: MeshService
-                name: passenger-portal-v1
-                weight: 90
-              - kind: MeshService
-                name: passenger-portal-v2
-                weight: 10
-```
-
-{:.info}
-> {{site.mesh_product_name}} can generate baseline `MeshService` resources automatically for workloads, but Devin still models versions like `v1` and `v2` as distinct `MeshService` entries when he wants independent routing and metrics for a rollout. See [Architecture overview](/mesh/scenarios/architecture-overview/) for the resource model used in these scenarios.
+Launching v2 of the passenger portal? Devin shifts a percentage of traffic to the new version with a `MeshHTTPRoute` to verify its performance before a full rollout. See [Split traffic with MeshService resources](/mesh/scenarios/split-traffic-with-meshservice-resources/) for weighted canary routing, and [Route across zones with canary rollouts and color rings](/mesh/scenarios/route-across-zones-with-canary-rollouts-and-color-rings/) for progressive cross-zone rollouts.
 
 {:.warning}
-> **The traffic hierarchy: routing vs. load balancing**
+> The traffic hierarchy: routing versus load balancing.
 >
-> It is easy to confuse `weight` in a route with load balancing, but they happen at different "layers":
-> 1. **Selection (the route)**: `MeshHTTPRoute` uses `weight` to decide which **subset** (e.g., `v1` or `v2`) the request belongs to.
-> 2. **Distribution (the strategy)**: Once a subset is chosen, `MeshLoadBalancingStrategy` decides which **specific instance (Pod)** within that subset receives the traffic.
+> It is easy to confuse `weight` in a route with load balancing, but they happen at different layers:
+> 1. **Selection (the route)**: `MeshHTTPRoute` uses `weight` to decide which subset (`v1` or `v2`) the request belongs to.
+> 2. **Distribution (the strategy)**: Once a subset is chosen, `MeshLoadBalancingStrategy` decides which specific instance (Pod) within that subset receives the traffic.
 
 ### Advanced load balancing
-To ensure fair distribution across his backend instances, Devin configures the **MeshLoadBalancingStrategy**.
-
-```yaml
-kind: MeshLoadBalancingStrategy
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: MeshService
-        name: check-in-api
-      default:
-        loadBalancer:
-          type: LeastRequest # Send traffic to the least busy instance
-```
+To ensure fair distribution across his backend instances, Devin configures a `MeshLoadBalancingStrategy` (for example, a `LeastRequest` load balancer that sends traffic to the least busy instance). See [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/) for the policy fields.
 
 ### Safety with `MeshRateLimit`
-To prevent a misbehaving client from overwhelming the check-in service during peak boarding times, Devin applies a rate limit.
-
-```yaml
-kind: MeshRateLimit
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: check-in-api
-  rules:
-    - default:
-        local:
-          http:
-            requestRate:
-              numRequests: 100
-              interval: 1s
-            onRateLimit:
-              status: 429
-```
-
-{:.info}
-> `MeshRateLimit` is an inbound policy, so the top-level `targetRef` selects the receiving proxies (here, `check-in-api`) and `rules` configures the limit. The older `spec.from` form still works for backward compatibility, but prefer `rules` for new policies.
+To prevent a misbehaving client from overwhelming the check-in service during peak boarding times, Devin applies a `MeshRateLimit` to the `check-in-api` proxies (an inbound policy, so the top-level `targetRef` selects the receiving workloads and `rules` configures the limit). See [MeshRateLimit](/mesh/policies/meshratelimit/) for the policy fields.
 
 ## Deep resilience
 
-Devin knows that failure is inevitable. He builds multiple layers of defense.
+Devin knows that failure is inevitable. He builds multiple layers of defense, then proves they work with fault injection. See [Validate resilience with fault injection](/mesh/scenarios/validate-resilience-with-fault-injection/) for how these policies are exercised together.
 
 ### Active health checks (`MeshHealthCheck`)
-The mesh actively pings Devin's services to ensure they are ready to receive traffic.
-
-```yaml
-kind: MeshHealthCheck
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: MeshService
-        name: check-in-api
-      default:
-        http:
-          path: /health
-          interval: 5s
-          unhealthyThreshold: 3
-```
+The mesh actively pings Devin's services to ensure they are ready to receive traffic. See [MeshHealthCheck](/mesh/policies/meshhealthcheck/) for the policy fields.
 
 ### Passive health checks (`MeshCircuitBreaker`)
-If a specific instance of `check-in-api` starts returning 500s unexpectedly, the **Circuit Breaker** will temporarily eject it.
-
-```yaml
-kind: MeshCircuitBreaker
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: MeshService
-        name: check-in-api
-      default:
-        outlierDetection:
-          splitExternalAndLocalErrors: true
-          baseEjectionTime: 30s
-          detectors:
-            totalFailures:
-              consecutive: 5
-```
+If a specific instance of `check-in-api` starts returning 500s unexpectedly, the circuit breaker temporarily ejects it. See [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) for the policy fields.
 
 ### Self-healing with `MeshRetry`
-Transient network blips shouldn't reach the passenger. Devin configures automatic retries.
-
-```yaml
-kind: MeshRetry
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: MeshService
-        name: check-in-api
-      default:
-        http:
-          numRetries: 3
-          retryOn: [ "5xx", "connect_failure" ]
-```
+Transient network blips should not reach the passenger, so Devin configures automatic retries. See [MeshRetry](/mesh/policies/meshretry/) for the policy fields.
 
 ## Observability
 
-Devin needs to see what's happening inside his code. He uses **MeshMetric** to aggregate both sidecar metrics and custom application metrics (like `checkins_per_second`).
-
-```yaml
-kind: MeshMetric
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: check-in-api
-  default:
-    applications:
-      - name: check-in-api
-        path: /internal/prometheus
-        port: 9090 # The application's custom metrics port
-    backends:
-      - type: Prometheus
-        prometheus:
-          port: 5670
-```
+Devin needs to see what is happening inside his code. He uses `MeshMetric` to aggregate both sidecar metrics and custom application metrics (like `checkins_per_second`). See [Observe mesh traffic in practice](/mesh/scenarios/observe-mesh-traffic-in-practice/) for how metrics, traces, and logs are collected across Kong Air.
 
 ## Gateway integration
 
