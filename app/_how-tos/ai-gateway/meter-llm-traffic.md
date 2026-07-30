@@ -186,7 +186,7 @@ In this guide, you'll create a feature for the `example-service` you created in 
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `ai-token`.
-1. From the **Meter** dropdown menu, select "{{site.ai_gateway}} Tokens".
+1. From the **Meter** dropdown menu, select "LLM Tokens".
 1. Click **Add group by filter**.
    The group by filter ensures you only bill for LLM tokens from a specific provider.
 1. From the **Group by** dropdown menu, select "Provider".
