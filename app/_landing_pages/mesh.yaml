@@ -82,7 +82,7 @@ rows:
             featured: true
             cta:
                 text: See the quickstart 
-                url: /mesh/deploy-mesh-on-konnect
+                url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api
 
       - blocks:
           - type: card

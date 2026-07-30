@@ -52,6 +52,10 @@ faqs:
       {% include faqs/mesh-configure-kumactl.md %}
 ---
 
+Using the {{site.konnect_short_name}} API, you can create a global control plane, connect a Kubernetes zone, and manage your {{site.mesh_product_name}} mesh. This guide creates a global control plane, provisions a zone token, deploys a zone control plane and the demo application, and validates traffic through the mesh.
+
+To run your zone control plane on a VM or bare metal instead, see [Configure a {{site.mesh_product_name}} global control plane on Universal with the {{site.konnect_short_name}} API](/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/).
+
 ## Create a global control plane in {{site.konnect_short_name}}
 
 {% include how-tos/mesh/create-global-control-plane-api.md %}

@@ -50,6 +50,10 @@ faqs:
       {% include faqs/mesh-configure-kumactl.md %}
 ---
 
+Using the {{site.konnect_short_name}} UI, you can create a global control plane, connect a Kubernetes zone, and manage your {{site.mesh_product_name}} mesh. This guide creates a global control plane, adds a zone, creates a mesh, deploys the demo application, and validates traffic through the mesh using the {{site.konnect_short_name}} UI.
+
+To run your zone control plane on a VM or bare metal instead, see [Configure a {{site.mesh_product_name}} global control plane on Universal with the {{site.konnect_short_name}} UI](/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/).
+
 ## Create a global control plane in {{site.konnect_short_name}}
 
 {% include how-tos/mesh/create-global-control-plane-ui.md %}
