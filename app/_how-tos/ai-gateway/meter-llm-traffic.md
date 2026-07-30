@@ -235,6 +235,7 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
+1. In the **Key** field, enter `kong-air`.
 1. In the **Include usage from** dropdown, select "kong-air".
 1. Click **Save**.
 1. Click the **Subscriptions** tab.
