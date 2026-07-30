@@ -139,8 +139,8 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
          route:
            paths:
              - /ai
-         model:
-           alias: "@openai/gpt-5.2"
+           model:
+             path_aliases: ["@openai/gpt-5.2"]
        targets:
          - name: gpt-5.2
            provider: openai-prod
@@ -148,7 +148,7 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
              type: openai
              temperature: 1.0
              max_tokens: 1024
-   providers:
+   model_providers:
      - name: openai-prod
        type: openai
        config:
@@ -170,7 +170,7 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
    _format_version: "3.0"
    _info:
      select_tags:
-     - 'managed_by: deck-ai'
+     - 'managed_by:deck-ai'
    ai_models:
    - alias: '@openai/gpt-5.2'
      name: gpt-5-2
@@ -191,6 +191,9 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
            header_name: Authorization
            header_value: '{vault://ai/openai-token}'
          description: gpt-5.2
+         logging:
+            log_payloads: false
+            log_statistics: true
          model:
            model_alias: '@openai/gpt-5.2'
            name: gpt-5.2
@@ -199,8 +202,7 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
              temperature: 1
            provider: openai
          route_type: llm/v1/chat
-     model:
-       name: gpt-5-2
+     model: gpt-5-2
      name: ai-proxy-advanced
      route: openai-chat
    services:
