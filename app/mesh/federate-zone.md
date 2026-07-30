@@ -23,7 +23,7 @@ This guide explains how to federate a zone Control Plane to {{site.konnect_short
 
 * A universal or Kubernetes cluster with a running zone Control Plane that's not yet connected to a global Control Plane
 * The latest version of [`kumactl`](/mesh/#install-kong-mesh) installed and configured
-* A [{{site.mesh_product_name}} global control plane in {{site.konnect_short_name}}](/mesh/konnect-global-control-plane/#create-a-zone-in-the-global-control-plane)
+* A [{{site.mesh_product_name}} global control plane in {{site.konnect_short_name}}](/mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/#create-a-zone-in-the-global-control-plane)
 
 ## Transfer resources from the zone control plane to {{site.konnect_short_name}}
 
