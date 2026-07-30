@@ -20,19 +20,17 @@ tags:
 
 tldr:
   q: "How do I rate limit A2A traffic in {{site.ai_gateway}}?"
-  a: "Enable the Rate Limiting Advanced plugin on the same service or route as the AI A2A Proxy plugin. Combined with an authentication plugin, rate limits apply per consumer. Requests that exceed the limit are rejected with 429."
+  a: "Create a Rate Limiting Advanced AI Policy and attach it to an AI Agent. Requests that exceed the limit are rejected with 429. You can combine this with an authentication policy so that rate limits apply per consumer."
 tools:
   - kongctl
 
 related_resources:
-  - text: AI A2A Proxy plugin reference
-    url: /plugins/ai-a2a-proxy/
-  - text: Rate Limiting Advanced plugin reference
-    url: /plugins/rate-limiting-advanced/
+  - text: AI Agent
+    url: /ai-gateway/entities/ai-agent/
+  - text: Rate Limiting Advanced policy
+    url: /ai-gateway/policies/ai-rate-limiting-advanced/
   - text: "Proxy A2A agents through {{site.ai_gateway}}"
-    url: /ai-gateway/v1/how-to/proxy-a2a-agents/
-  - text: Secure A2A endpoints with key authentication
-    url: /ai-gateway/v1/how-to/secure-a2a-endpoints/
+    url: /ai-gateway/get-started-with-ai-agent/
 prereqs:
   inline:
   - title: OpenAI API key
@@ -45,21 +43,18 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
 
 faqs:
   - q: Can I rate limit A2A traffic without authentication?
     a: |
-      Yes. Without an authentication plugin, the Rate Limiting Advanced plugin falls back to rate limiting by IP address. Add an authentication plugin if you need per-consumer
+      Yes. Without an authentication policy, the Rate Limiting Advanced policy falls back to rate limiting by IP address. Add an authentication policy if you need per-consumer
       limits.
   - q: Does rate limiting affect A2A streaming responses?
     a: |
       Rate limiting applies at request time, before the upstream responds. A streaming SSE response that is already in progress is not interrupted. The rate limit check happens when the client sends the next request.
   - q: Can I use AI Rate Limiting Advanced instead?
     a: |
-      AI Rate Limiting Advanced limits based on LLM token consumption (prompt and completion tokens). The AI A2A Proxy plugin does not extract token counts from A2A responses, so AI Rate Limiting Advanced has no token data to act on. Use the standard Rate Limiting Advanced plugin for A2A traffic.
+      AI Rate Limiting Advanced limits based on LLM token consumption (prompt and completion tokens). The AI A2A Proxy policy does not extract token counts from A2A responses, so AI Rate Limiting Advanced has no token data to act on. Use the standard Rate Limiting Advanced policy for A2A traffic.
 
 automated_tests: false
 
@@ -67,7 +62,7 @@ automated_tests: false
 
 ## Create an AI Agent and attach a rate limiting AI Policy
 
-Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent and a [Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/) that counts requests per consumer and rejects requests that exceed the configured limit. 
+Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent and a [Rate Limiting Advanced Policy](/ai-gateway/policies/rate-limiting-advanced/) that counts requests per consumer and rejects requests that exceed the configured limit. 
 
 This configuration allows 5 requests per 30 seconds, intentionally low to make it easy to trigger during testing. The AI Policy is attached to the AI Agent by using  `!ref rate-limit-bookings-agent#name` to refer to it by name.
 
@@ -149,7 +144,7 @@ x-ratelimit-remaining-30: 4
 
 ## Validate rate limit enforcement
 
-Send 6 requests to the agent card endpoint in a loop to exceed the limit. The AI A2A Proxy plugin detects each request as an A2A `GetAgentCard` operation, so the rate limit applies the same way it does for `message/send` or any other A2A method.
+Send 6 requests to the agent card endpoint in a loop to exceed the limit. The AI Agent detects each request as an A2A `GetAgentCard` operation, so the rate limit applies the same way it does for `message/send` or any other A2A method.
 
 {% on_prem %}
 content: |
