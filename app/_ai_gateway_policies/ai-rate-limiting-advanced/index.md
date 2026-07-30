@@ -93,7 +93,7 @@ rows:
   - field: "`period`"
     description: "`month` or `week`."
   - field: "`month_day`"
-    description: Day of the month (1-31) a monthly window starts. Only applies when `period` is `month`.
+    description: Required when `period` is `month`; day of the month (1-31) a monthly window starts.
   - field: "`week_start_day`"
     description: Day of the week a weekly window starts, such as `monday`. Only applies when `period` is `week`.
 {% endtable %}
@@ -122,7 +122,7 @@ formats:
 This policy grants the `premium` AI Consumer Group 2,000,000 tokens per calendar month, resetting at local midnight on the 1st in `America/New_York`.
 
 {:.info}
-> For calendar windows, `X-AI-RateLimit-Reset` and `Retry-After` point to the next calendar boundary (the start of the next week or month in the configured timezone), not `now + window_size`.
+> For calendar windows, `X-AI-RateLimit-Reset` and `X-AI-RateLimit-Retry-After` point to the next calendar boundary (the start of the next week or month in the configured timezone), not `now + window_size`.
 
 ### Known issues
 
