@@ -208,7 +208,7 @@ Kong must be started with the custom vault registered. This requires setting `KO
 
 2. Create `docker-compose.yml`:
 
-```bash
+   ```bash
    echo '
    services:
      secret-store:
@@ -281,11 +281,11 @@ Kong must be started with the custom vault registered. This requires setting `KO
          timeout: 5s
          retries: 10
        restart: unless-stopped' > docker-compose.yml
-   ```
+      ```
 
-   The two key environment variables for custom vaults are:
-   - `KONG_VAULTS: bundled,http`: Registers the built-in Vaults plus the custom `http` vault
-   - `KONG_LUA_PACKAGE_PATH: /custom-code/?.lua;;`: Tells {{site.base_gateway}} where to find the Lua modules
+    The two key environment variables for custom vaults are:
+    - `KONG_VAULTS: bundled,http`: Registers the built-in Vaults plus the custom `http` vault
+    - `KONG_LUA_PACKAGE_PATH: /custom-code/?.lua;;`: Tells {{site.base_gateway}} where to find the Lua modules
 
 3. Start all services:
 
