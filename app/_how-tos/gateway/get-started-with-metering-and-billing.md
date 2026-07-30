@@ -225,12 +225,12 @@ In this guide, you'll create a feature for the `example-service` you created in 
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `example-service`.
-1. From the **Meter** dropdown menu, select "API Gateway Requests".
+1. From the **Meter** dropdown menu, select "API requests".
 1. Click **Add group by filter**.
    The group by filter ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic. This lets you offer different pricing for different APIs.
 1. From the **Group by** dropdown menu, select "service_name".
 1. From the **Operator** dropdown menu, select "Equals".
-1. From the **Value** dropdown menu, select "example-service".
+1. In the **Value** dropdown menu, enter "example-service".
 1. Click **Save**.
 
 ## Create a Premium plan
