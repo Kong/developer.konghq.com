@@ -125,7 +125,10 @@ sequenceDiagram
 
 
 You can have a maximum of two secrets active at a time.
-This allows you to [rotate secrets](/how-to/rotate-auth-server-client-secrets/) without incurring downtime using the UI or API.
+This allows you to [rotate secrets](/how-to/rotate-auth-server-client-secrets/) without incurring downtime using the API by sending a POST request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets` endpoint. When creating a new secret, you can either:
+
+- Input the value of the new secret with the `"secret"` field.
+- Let {{site.identity}} automatically generate a new secret and save the value returned by the API response.
 
 ## Claim configuration
 
