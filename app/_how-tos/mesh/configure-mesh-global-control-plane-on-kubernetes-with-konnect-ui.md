@@ -31,6 +31,14 @@ related_resources:
 next_steps:
   - text: Enable traffic permissions with the MeshTrafficPermission policy
     url: /mesh/policies/meshtrafficpermission/
+cleanup:
+  inline:
+    - title: Remove the demo application
+      include_content: cleanup/mesh/remove-demo-app
+    - title: Uninstall the zone control plane
+      include_content: cleanup/mesh/uninstall-zone-cp
+    - title: Delete the control plane in {{site.konnect_short_name}}
+      include_content: cleanup/mesh/delete-konnect-control-plane-ui
 faqs:
   - q: How does a zone authenticate to the global control plane?
     a: |
