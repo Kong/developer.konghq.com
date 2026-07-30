@@ -20,56 +20,109 @@ related_resources:
   - text: "{{site.identity}} authorization servers"
     url: /identity/auth-servers/
 tags:
-  - auth
+  - authentication
   - migration
 
 min_version:
   gatway: '3.15' 
 ---
 
-Describe existing setup with legacy OAuth plugin
+This guide shows you how to migrate from the OAuth 2.0 legacy plugin to Kong Identity for an on-prem Kong Gateway Enterprise setup.
 
-## Retrieve the existing credentials
+## Requirements
 
-Stored in PG, in the in the `oauth2_credentials` table. 
+- An on-prem EE setup
+- Access to the Kong Admin API
+- The OAuth 2.0 legacy plugin for authentication wrokflows
+- Admin access to the PostgreSQL database connected to the plugin
+- A Konnect account
+- Personal Access Token (PAT) linked to your account
 
-### Per Consumer
+## Migration overview
+
+The migration follows this order:
+
+1. Getting the existing credentials
+1. Uploading the credentials to Kong Identity
+1. Deactivating and deleting the OAuth 2.0 plugin
+
+Check the folllowing sections to get the information that suit best your configuration. 
+
+## Set up the Admin API URL
+
+To call your Kong on-prem instance, use your Kong Admin API. When you run it locally, the default Admin API URL is `localhost:8001`. The command examples assume you run the commands from a local setup. If you're calling your Admin API from a different location, replace the  value by you're actual URL.
 
 ```sh
-curl -s localhost:8001/consumers/acme-app/oauth2 | jq
+export KONG_ADMIN_API='localhost:8001'
 ```
 
-### Retrieve all Consumers credentials
+## Get the Consumer credentials
+
+The OAuth 2.0 plugin uses a PostgreSQL database to store credentials in the `oauth2_credentials` table. If they're hashed and you aren't stored anywhere else in plain text, you might need to create new unhashed credentials for this migration.
+
+### List the existing Consumers
 
 ```sh
-for consumer in $(curl -s localhost:8001/consumers | jq -r '.data[].username'); do
+curl -s $KONG_ADMIN_API/consumers | jq
+```
+
+### Get the Consumer credentials
+To get the existing credentials, run
+
+{% navtabs "retrieve-credentials" %}
+{% navtab "Per Consumer" %}
+
+This commands gets the secrets from a single Consumer:
+
+```sh
+curl -s $KONG_ADMIN_API/consumers/acme-app/oauth2 | jq
+```
+
+{% endnavtab %}
+{% navtab "All Consumers" %}
+
+This command gets the secrets for all existing Consumers:
+
+```sh
+for consumer in $(curl -s $KONG_ADMIN_API/consumers | jq -r '.data[].username'); do
   echo "=== $consumer ==="
-  curl -s "localhost:8001/consumers/$consumer/oauth2" | jq '.data[] | {name, client_id, client_secret, hash_secret}'
+  curl -s "$KONG_ADMIN_API/consumers/$consumer/oauth2" | jq '.data[] | {name, client_id, client_secret, hash_secret}'
 done
 ```
 
+{% endnavtab %}
+{% endnavtabs %}
+
 ## Create a {{site.identity}} authorization server
 
-```sh
-_response=$(curl -X POST "https://us.api.konghq.com/v1/auth-servers" \
-     --no-progress-meter --fail-with-body  \
-     -H "Authorization: Bearer $KONNECT_TOKEN"\
-     -H "Content-Type: application/json" \
-     --json '{
-       "name": "Auth server example",
-       "description": "Auth server example",
-       "audience": "api://default"
-     }')
-```
+Create an authorization server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer), and save the `AUTH_SERVER_ID` variable:
 
-Export the environment variables:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "Auth server example"
+  description: "Auth server example"
+  audience: "api://default"
+capture:
+  - variable: AUTH_SERVER_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the environment variable:
 
 ```sh
 export AUTH_SERVER_ID=$(echo "$_response" | jq -r ".id")
-export ISSUER_URL=$(echo "$_response" | jq -r ".issuer")
 ```
 
 ## Create a client and upload the existing credentials
+
+Create a client in the authorization server using the [`/v1/auth-servers/{authServerId}/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient), and save the `CLIENT_ID` and `CLIENT_SECRET` variables:
 
 ```sh
 curl -s -X PUT "https://us.api.konghq.tech/v1/auth-servers/$AUTH_SERVER_ID/clients/acme-app-client-id" \
@@ -81,11 +134,11 @@ curl -s -X PUT "https://us.api.konghq.tech/v1/auth-servers/$AUTH_SERVER_ID/clien
     "grant_types": ["client_credentials"],
     "response_types": ["token"]
   }' | jq
-  ```
+```
 
-  Export the environment variables:
+Export the environment variables:
 
-  ```sh
+```sh
 export CLIENT_ID=$(echo "$_response" | jq -r ".id")
 export CLIENT_SECRET=$(echo "$_response" | jq -r ".client_secret")
 ```
