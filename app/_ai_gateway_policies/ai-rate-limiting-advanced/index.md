@@ -75,13 +75,14 @@ Each policy sets a [`window_type`](./reference/#schema--config-policies-window-t
 
 * `sliding` (default): Weighs the current window against the previous one to produce a dynamically calculated rate.
 * `fixed`: Assigns each request to a single time bucket based on its timestamp.
-* `calendar`: Aligns the window to a real calendar boundary in a specific timezone, instead of a rolling `window_size`.
+* `calendar`: Aligns the window to a real calendar boundary in a specific time zone, instead of a rolling `window_size`.
 
 #### Calendar windows
 
 Calendar windows budget tokens against the same period your billing already uses, such as a monthly allowance that resets on the 1st, instead of a rolling window that drifts from the billing cycle.
 
-Set `window_type: calendar` on the policy and [`timezone`](./reference/#schema--config-policies-timezone) to an IANA timezone, such as `America/New_York`. Each limit then sets a [`period`](./reference/#schema--config-policies-limits-period) instead of `window_size`:
+Set `window_type: calendar` on the policy and [`timezone`](./reference/#schema--config-policies-timezone) to an IANA time zone, such as `America/New_York`. Each limit then sets a [`period`](./reference/#schema--config-policies-limits-period) instead of `window_size`:
+
 
 {% table %}
 columns:
@@ -116,13 +117,13 @@ data:
           month_day: 1
           tokens_count_strategy: total_tokens
 formats:
-  - kongctl
+  - konnect-api
 {% endentity_example %}
 
 This policy grants the `premium` AI Consumer Group 2,000,000 tokens per calendar month, resetting at local midnight on the 1st in `America/New_York`.
 
 {:.info}
-> For calendar windows, `X-AI-RateLimit-Reset` and `X-AI-RateLimit-Retry-After` point to the next calendar boundary (the start of the next week or month in the configured timezone), not `now + window_size`.
+> For calendar windows, `X-AI-RateLimit-Reset` and `X-AI-RateLimit-Retry-After` point to the next calendar boundary (the start of the next week or month in the configured time zone), not `now + window_size`.
 
 ### Known issues
 
