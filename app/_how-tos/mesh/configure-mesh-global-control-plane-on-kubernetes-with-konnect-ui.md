@@ -26,6 +26,8 @@ related_resources:
     url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
   - text: Configure a Mesh global control plane on Universal with the {{site.konnect_short_name}} API
     url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+  - text: Configure a Mesh global control plane on Universal with the {{site.konnect_short_name}} UI
+    url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
   - text: Deploy {{site.mesh_product_name}} using Terraform and {{site.konnect_short_name}}
     url: /mesh/deploy-kong-mesh-using-terraform-and-konnect/
 next_steps:
@@ -50,33 +52,11 @@ faqs:
 
 ## Create a global control plane in {{site.konnect_short_name}}
 
-Before you can add services or apply configurations, you must create a global control plane.
-
-1. In the {{site.konnect_short_name}} sidebar, click [**Service Mesh**](https://cloud.konghq.com/mesh-manager).
-1. Click **Create a service mesh**.
-1. In the **Name** field, enter `example-cp`.
-1. Click **Save**.
-
-The global control plane is now created but has no functionality until you connect a zone.
+{% include how-tos/mesh/create-global-control-plane-ui.md %}
 
 ## Create a zone in the global control plane
 
-Add a zone to connect services and receive configuration updates.
-
-1. In the {{site.konnect_short_name}} sidebar, click [**Service Mesh**](https://cloud.konghq.com/mesh-manager).
-1. Click **example-cp**.
-1. Click **Create zone**.
-1. Select **Kubernetes** as the configuration type.
-1. In the **Name** field, enter `zone-1`.
-
-   {:.info}
-   > The zone name must use lowercase alphanumeric characters or hyphens, and start and end with an alphanumeric character.
-
-1. In the **Token** field, enter your {{site.konnect_short_name}} personal access token.
-1. Follow the Helm and token setup instructions shown in the UI to deploy the zone control plane on your Kubernetes cluster.
-
-   {{site.konnect_short_name}} automatically provisions a [system account access token](#how-does-a-zone-authenticate-to-the-global-control-plane) for the zone and injects it, along with the control plane ID and address, into the deployment instructions. You don't need to create a token manually.
-1. Once the zone is connected, click **Continue**.
+{% include how-tos/mesh/create-zone-ui.md config_type="Kubernetes" deploy_instruction="Follow the Helm and token setup instructions shown in the UI to deploy the zone control plane on your Kubernetes cluster." %}
 
 ## Create a mesh
 

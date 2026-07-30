@@ -28,6 +28,8 @@ related_resources:
     url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
   - text: Configure a Mesh global control plane on Universal with the {{site.konnect_short_name}} API
     url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+  - text: Configure a Mesh global control plane on Universal with the {{site.konnect_short_name}} UI
+    url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
   - text: Deploy {{site.mesh_product_name}} using Terraform and {{site.konnect_short_name}}
     url: /mesh/deploy-kong-mesh-using-terraform-and-konnect/
 next_steps:
