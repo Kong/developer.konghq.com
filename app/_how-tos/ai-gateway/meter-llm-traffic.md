@@ -133,12 +133,21 @@ url: /v3/openmeter/meters
 status_code: 201
 method: POST
 body:
-    key: tokens_total
-    name: AI Token Usage
-    event_type: prompt
+    name: LLM Tokens
+    key: llm_tokens_total
+    description: Number of input and output tokens across models
+    event_type: kong.llm_request
     aggregation: sum
     value_property: $.tokens
-    dimensions: {"model": "$.model", "type": "$.type"}
+    dimensions:
+        http_status: $.http_status
+        model: $.model
+        provider: $.provider
+        type: $.type
+        control_plane_id: $.control_plane_id
+        service_id: $.service_id
+        route_id: $.route_id
+        ai_plugin_id: $.ai_plugin_id
 {% endkonnect_api_request %}
 <!--vale on-->
 
