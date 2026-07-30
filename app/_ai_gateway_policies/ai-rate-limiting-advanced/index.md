@@ -59,7 +59,7 @@ data:
         - limit: 1000
           window_size: 3600
 formats:
-  - konnect-api
+  - kongctl
 {% endentity_example %}
 
 In this example, the limits will apply only to requests made by the specified AI Consumer to the `gpt-4o` model.
@@ -117,7 +117,7 @@ data:
           month_day: 1
           tokens_count_strategy: total_tokens
 formats:
-  - konnect-api
+  - kongctl
 {% endentity_example %}
 
 This policy grants the `premium` AI Consumer Group 2,000,000 tokens per calendar month, resetting at local midnight on the 1st in `America/New_York`.
