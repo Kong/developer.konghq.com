@@ -22,7 +22,7 @@ tldr:
   q: "How do I rate limit A2A traffic in {{site.ai_gateway}}?"
   a: "Enable the Rate Limiting Advanced plugin on the same service or route as the AI A2A Proxy plugin. Combined with an authentication plugin, rate limits apply per consumer. Requests that exceed the limit are rejected with 429."
 tools:
-  - deck
+  - kongctl
 
 related_resources:
   - text: AI A2A Proxy plugin reference
@@ -34,18 +34,12 @@ related_resources:
   - text: Secure A2A endpoints with key authentication
     url: /ai-gateway/v1/how-to/secure-a2a-endpoints/
 prereqs:
-  entities:
-    services:
-      - a2a-kongair-agent
-    routes:
-      - a2a-kongair-route
   inline:
   - title: OpenAI API key
     include_content: prereqs/openai
     icon_url: /assets/icons/openai.svg
   - title: A2A agent
-    include_content: prereqs/a2a-kongair-agent
-    icon_url: /assets/icons/ai.svg
+    include_content: md/ai-gateway/v2/prereqs/a2a-agent
 
 cleanup:
   inline:
@@ -72,42 +66,62 @@ automated_tests: false
 
 ---
 
-## Enable the AI A2A Proxy plugin
+## Set up a rate limiting AI Policy
 
-The AI A2A Proxy plugin parses A2A JSON-RPC requests and proxies them to the upstream agent.
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: ai-a2a-proxy
-      config:
-        logging:
-          log_statistics: true
-          log_payloads: true
-{% endentity_examples %}
-
-
-## Enable the Rate Limiting Advanced plugin
-
-The [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) counts requests per consumer and rejects requests that exceed the configured limit. This configuration allows 5 requests per 30 seconds, intentionally low to make it easy to trigger during testing.
+The [Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/) counts requests per consumer and rejects requests that exceed the configured limit. This configuration allows 5 requests per 30 seconds, intentionally low to make it easy to trigger during testing.
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: rate-limiting-advanced
-      config:
-        limit:
-          - 5
-        window_size:
-          - 30
-        sync_rate: -1
-        namespace: a2a-kongair-agent
-        strategy: local
+ai_gateway_policies:
+  - ref: rate-limit-bookings-agent
+    ai_gateway: !lookup name:ai-quickstart
+    name: rate-limit-bookings-agent
+    display_name: "Rate limit Kong Air Flight Booking Agent"
+    type: rate-limiting-advanced
+    config:
+      limit:
+        - 5
+      window_size:
+        - 30
+      sync_rate: -1
+      namespace: a2a-kongair-agent
+      strategy: local
 {% endentity_examples %}
 
 {:.info}
-> Set `limit` and `window_size` to values appropriate for your production workload.
-> The values in this guide are intentionally low for testing.
+> The `limit` and `window_size` are intentionally set low for testing.
+> You should adjust these to appropriate values for production workloads.
+
+## Create an AI Agent and attach the rate limiting policy
+
+Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent.
+
+{% entity_examples %}
+ai_gateway_agents:
+  - ref: kongair-flight-booking-agent
+    ai_gateway: !lookup name:ai-quickstart
+    display_name: "Kong Air Flight Booking Agent"
+    type: a2a
+    enabled: true
+    policies:
+      - !ref rate-limit-bookings-agent#name
+    config:
+      url: http://host.docker.internal:10000
+      route:
+        paths:
+          - /a2a
+        methods:
+          - GET
+          - POST
+        protocols:
+          - http
+          - https
+        strip_path: true
+      logging:
+        payloads: true
+        statistics: true
+        max_payload_size: 1048576
+      max_request_body_size: 8388608
+{% endentity_examples %}
 
 ## Validate rate limit headers
 
