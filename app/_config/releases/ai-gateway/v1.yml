@@ -42,7 +42,7 @@ app/_how-tos/ai-gateway/v1/get-started-with-ai-gateway.md:
   canonical_url: /ai-gateway/get-started/
 app/_how-tos/ai-gateway/v1/limit-a2a-body-size.md:
   status: pending
-  canonical_url: /ai-gateway/a2a/
+  canonical_url: /ai-gateway/limit-a2a-body-size/
 app/_how-tos/ai-gateway/v1/mcp/aggregate-mcp-tools.md:
   status: pending
   canonical_url: /ai-gateway/mcp/
