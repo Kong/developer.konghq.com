@@ -46,7 +46,7 @@ columns:
     key: cidr
 
 rows:
-  - az_count: 3
+  - az_count: 2
     cidr: "/23 (512 IPs)"
   - az_count: 3
     cidr: "/22 (1,024 IPs)"
