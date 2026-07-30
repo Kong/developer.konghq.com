@@ -25,7 +25,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    As AI systems grow from basic LLM calls to complex architectures with agents and tool servers, infrastructure must keep pace with challenges around authentication, governance, and observability. 
+                    As AI systems grow from basic LLM calls to complex architectures with agents and tool servers, infrastructure must keep pace with challenges around authentication, governance, and observability.
                     {{site.ai_gateway}} provides a unified control plane that secures and governs all AI traffic through first-class AI Entities and AI Policies.
           - type: text
             config: |
@@ -60,7 +60,7 @@ rows:
                 All licensing is handled automatically by {{site.konnect_short_name}}.
             - title: Konnect UI
               content: |
-                To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/), 
+                To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/),
                 then navigate to **{{site.ai_gateway}}** and click **New {{site.ai_gateway}}**.
 
   - header:
@@ -206,6 +206,32 @@ rows:
             icon: /assets/icons/dots.svg
             cta:
               url: /ai-gateway/ai-providers/
+
+  - header:
+      type: h2
+      text: "Other traffic types"
+      description: |
+        {{site.ai_gateway}} governs more than LLM traffic. It also secures and observes Model Context Protocol (MCP) and Agent-to-Agent (A2A) communication.
+    column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: MCP
+            description: Expose and govern tools from MCP servers, with authentication, rate limiting, and observability.
+            icon: /assets/icons/mcp.svg
+            cta:
+              url: /ai-gateway/mcp/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: A2A
+            description: Route and secure Agent-to-Agent traffic between AI agents with protocol-aware visibility.
+            icon: /assets/icons/a2a-quickstart.svg
+            cta:
+              url: /ai-gateway/a2a/
+              align: end
 
   - header:
       type: h2
@@ -524,28 +550,6 @@ rows:
             icon: /assets/icons/opentelemetry.svg
             cta:
               url: /ai-gateway/ai-otel-metrics/
-              align: end
-
-  - header:
-      type: h2
-      text: "Core concepts in {{site.ai_gateway}}"
-    column_count: 3
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Policies
-            description: Attach governance behavior for authentication, guardrails, transformations, and more.
-            cta:
-              url: /ai-gateway/entities/ai-policy/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: AI Entities
-            description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Model Providers, AI Identity Providers, AI Agents, AI MCP Servers, and AI Consumers.
-            cta:
-              url: /ai-gateway/entities/
               align: end
 
   - header:
