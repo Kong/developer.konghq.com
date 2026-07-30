@@ -69,6 +69,61 @@ Policies without match conditions act as fallback and match all requests.
 {:.warning}
 > When defining rate limits for a specific model, these limits apply to the **requested** model. If a request is redirected to a different model after a failover, the request may succeed even if the final model has reached its limit.
 
+### Window types
+
+Each policy sets a [`window_type`](./reference/#schema--config-policies-window-type): `fixed`, `sliding`, or `calendar`.
+
+* `sliding` (default): Weighs the current window against the previous one to produce a dynamically calculated rate.
+* `fixed`: Assigns each request to a single time bucket based on its timestamp.
+* `calendar`: Aligns the window to a real calendar boundary in a specific timezone, instead of a rolling `window_size`.
+
+#### Calendar windows
+
+Calendar windows budget tokens against the same period your billing already uses, such as a monthly allowance that resets on the 1st, instead of a rolling window that drifts from the billing cycle.
+
+Set `window_type: calendar` on the policy and [`timezone`](./reference/#schema--config-policies-timezone) to an IANA timezone, such as `America/New_York`. Each limit then sets a [`period`](./reference/#schema--config-policies-limits-period) instead of `window_size`:
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`period`"
+    description: "`month` or `week`."
+  - field: "`month_day`"
+    description: Day of the month (1-31) a monthly window starts. Only applies when `period` is `month`.
+  - field: "`week_start_day`"
+    description: Day of the week a weekly window starts, such as `monday`. Only applies when `period` is `week`.
+{% endtable %}
+
+{% entity_example %}
+type: policy
+data:
+  name: ai-rate-limiting-advanced
+  config:
+    policies:
+    - window_type: calendar
+      timezone: America/New_York
+      match:
+      - type: consumer_group
+        values:
+        - premium
+      limits:
+        - limit: 2000000
+          period: month
+          month_day: 1
+          tokens_count_strategy: total_tokens
+formats:
+  - kongctl
+{% endentity_example %}
+
+This policy grants the `premium` AI Consumer Group 2,000,000 tokens per calendar month, resetting at local midnight on the 1st in `America/New_York`.
+
+{:.info}
+> For calendar windows, `X-AI-RateLimit-Reset` and `Retry-After` point to the next calendar boundary (the start of the next week or month in the configured timezone), not `now + window_size`.
+
 ### Known issues
 
 * When defining a policy matching a model and/or a provider, you must set the [`config.policies.match.partition_by`](./reference/#schema--config-policies-match-partition-by) field to `true`, otherwise the policy is not enforced.
