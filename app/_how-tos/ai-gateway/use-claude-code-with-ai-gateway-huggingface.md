@@ -136,8 +136,10 @@ ai_gateway_models:
       route:
         paths:
           - /
-      model:
-        alias: my-huggingface
+        model:
+          body:
+            model:
+              - my-huggingface
     targets:
       - name: meta-llama/Llama-3.3-70B-Instruct
         provider: !ref my-huggingface-account#name

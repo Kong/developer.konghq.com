@@ -151,8 +151,10 @@ ai_gateway_models:
       route:
         paths:
           - /
-      model:
-        alias: my-claude-gemini
+        model:
+          body:
+            model:
+              - my-claude-gemini
     targets:
       - name: gemini-2.5-flash
         provider: !ref my-gemini-account#name

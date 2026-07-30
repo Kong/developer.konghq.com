@@ -139,8 +139,10 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
          route:
            paths:
              - /ai
-         model:
-           alias: "@openai/gpt-5.2"
+           model:
+             body:
+               model:
+                 - "@openai/gpt-5.2"
        targets:
          - name: gpt-5.2
            provider: openai-prod
@@ -165,6 +167,9 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
    deck file ai2kong --source ai.yaml --output-file kong.yaml
    ```
    For this example AI Model, {{site.ai_gateway}} generates a Service, a Route, and an `ai-proxy-advanced` plugin on that Route. `kong.yaml` contains:
+
+   {:.info}
+   > This converted output still shows the `alias`/`model_alias` fields used by the self-hosted `ai-proxy-advanced` plugin schema. Verify with the `deck file ai2kong` conversion tool for the current output once it supports the `config.route.model` routing rule shown in the input above.
 
    ```yaml
    _format_version: "3.0"

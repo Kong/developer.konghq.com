@@ -69,7 +69,7 @@ faqs:
   - q: Can a client override the model name from the request body?
     a: |
       By default, no. The request `model` field must match the upstream model on one of the AI Model's targets, otherwise the runtime returns a `400` error.
-      To accept a client-side alias, set [`config.model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-model-alias). Clients can then send the alias value in the request `model` field instead of the upstream AI Provider model name. See [Request routing by model alias](/ai-gateway/load-balancing/#request-routing-by-model-alias) for details and examples.
+      To accept a client-side alias, set [`config.route.model.body`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model). Clients can then send the alias value in the request body field instead of the upstream AI Provider model name. See [Request routing rules](/ai-gateway/load-balancing/#request-routing-rules) for details and examples.
 
   - q: Can a client override `temperature`, `top_p`, or `top_k` from the request?
     a: |
@@ -323,11 +323,107 @@ Substitution applies to the [`name`](#schema-aigateway-model-targets-name) of ea
 
 For examples of using templating, consult the {{site.ai_gateway}} documentation and API reference.
 
-## Model aliasing
+## Request routing rules
 
-By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, set [`config.model.alias`](#schema-aigateway-model-config-model-alias).
+By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, configure [`config.route.model`](#schema-aigateway-model-config-route-model) with a routing rule.
 
-When an alias is set, clients can send that alias in the request `model` field instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+`config.route.model` accepts one of the following match strategies:
+
+* [`body`](#schema-aigateway-model-config-route-model): matches a value in the request body, indexed by property name. For example, `body: { model: [my-gpt-4o] }` matches when the client sends `"model": "my-gpt-4o"` in the request body.
+* [`headers`](#schema-aigateway-model-config-route-model): matches a value in the request headers, indexed by header name.
+* [`path_aliases`](#schema-aigateway-model-config-route-model): matches a value present in the request path.
+
+When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+
+The following examples assume the `my-openai-account` [AI Model Provider](/ai-gateway/entities/ai-model-provider/) already exists.
+{% navtabs "Model aliasing examples" %}
+{% navtab "Body" %}
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        body:
+          model:
+            - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+{% endnavtab %}
+{% navtab "Headers" %}
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        headers:
+          X-Model-Name:
+            - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+{% endnavtab %}
+{% navtab "Path aliases" %}
+{% entity_example %}
+type: model
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /
+      model:
+        path_aliases:
+          - my-gpt-4o
+formats:
+  - kongctl
+{% endentity_example %}
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Access control
 
@@ -352,19 +448,19 @@ When your data plane sits behind a corporate firewall or security boundary, conf
 Use the [`config.proxy`](#schema-aigateway-model-config-proxy) object to specify the proxy endpoint with [`http_proxy`](#schema-aigateway-model-config-proxy-http-proxy) or [`https_proxy`](#schema-aigateway-model-config-proxy-https-proxy), and optionally add [`auth`](#schema-aigateway-model-config-proxy-auth) credentials if the proxy requires authentication. Use [`no_proxy`](#schema-aigateway-model-config-proxy-no-proxy) to bypass the proxy for specific hosts that are already inside your trusted network.
 
 ## Logging and observability
-
-Enable [`statistics`](#schema-aigateway-model-config-logging-statistics) logging to track token consumption, request latency, and per-provider costs. This data flows into {{site.konnect_short_name}} analytics and any attached logging AI Policies, letting you monitor API spend, identify slow providers, and audit which AI Models drive the most usage.
-
+{{site.ai_gateway}} automatically records usage statistics, such as token consumption, request latency, and per-provider costs, for every AI Model. This data flows into [LLM traffic metrics](/ai-gateway/monitor-ai-llm-metrics/#llm-traffic-metrics-overview), [audit log entries](/ai-gateway/ai-audit-log-reference/#core-logs), and any attached logging AI Policies, letting you monitor API spend, identify slow providers, and audit which AI Models drive the most usage.
 Optionally enable [`payloads`](#schema-aigateway-model-config-logging-payloads) to capture full request and response bodies. This is useful for debugging model responses, auditing sensitive operations, or replaying requests.
 
 {:.warning}
 > Payload logging may expose sensitive data in your logging destination. Only enable it when your logging pipeline is prepared to handle request and response bodies, and verify that logging destinations comply with your data residency and privacy policies.
 
+[AI Model analytics](/ai-gateway/monitor-ai-llm-metrics/#llm-traffic-metrics-overview) display in {{site.konnect_short_name}} [Explorer](https://cloud.konghq.com/analytics/explorer) and [Dashboards](https://cloud.konghq.com/analytics/dashboards) alongside other {{site.ai_gateway}} traffic, and export through [OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/).
+
 For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 
 ## Set up an AI Model
 
-Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service. 
+Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service.
 
 The following example:
 * Creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
@@ -393,15 +489,17 @@ data:
     route:
       paths:
         - /v1
+      model:
+        body:
+          model:
+            - my-gpt-4o
     logging:
       statistics: true
       payloads: false
-    model:
-      alias: my-gpt-4o
 {% endentity_example %}
 
 {:.info}
-> Because [`config.model.alias`](#schema-aigateway-model-config-model-alias) is set here, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
+> Because [`config.route.model.body`](#schema-aigateway-model-config-route-model) is set here, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
 
 
 ## Schema
