@@ -26,7 +26,7 @@ related_resources:
   - text: Configure a Mesh global control plane on Universal with the {{site.konnect_short_name}} UI
     url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
   - text: Deploy {{site.mesh_product_name}} using Terraform and {{site.konnect_short_name}}
-    url: /mesh/deploy-kong-mesh-using-terraform-and-konnect/
+    url: /mesh/deploy-with-terraform-konnect/
 next_steps:
   - text: Explore {{site.mesh_product_name}} policies
     url: /mesh/policies/
