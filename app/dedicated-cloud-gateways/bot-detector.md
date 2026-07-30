@@ -27,8 +27,7 @@ tags:
 
 Bot Detector is a built-in Dedicated Cloud Gateway capability that identifies automated traffic using signals like user agents, request paths, and JA4 fingerprints. Unlike the [IP Restriction plugin](/plugins/ip-restriction/), which requires you to know the specific IPs or CIDR ranges you want to allow or deny, Bot Detector identifies bot traffic from the shape of the request itself, so you don't need to enumerate bad actors in advance.
 
-Bot Detector isn't a installable plugin. 
-It's a built-in capability that an Org Admin can enable or disable for the {{site.konnect_short_name}} org in the [Labs](https://cloud.konghq.com/global/organization/labs) UI and then Dedicated Cloud Gateway control planes can decide to enable it on a per control plane basis.
+Bot Detector is a built-in capability, not a plugin, that an Org Admin can enable or disable for the {{site.konnect_short_name}} org in the [Labs](https://cloud.konghq.com/global/organization/labs) UI and then Dedicated Cloud Gateway control planes can decide to enable it on a per control plane basis.
 
 Use Bot Detector to:
 
@@ -40,9 +39,17 @@ Use Bot Detector to:
 
 ## How it works
 
+MAKE IT CLEAR THAT IT HAS BUILT IN RULES AND THEN YOU CAN LAYER YOUR OWN RULES ON TOP
+
+Bot Detector supports two kinds of rules:
+
+* **Kong-managed rules**: Maintained and updated by Kong. You can't view or edit the individual rules, but you can enable, disable, or set the mode (monitoring or block) for the ruleset as a whole.
+* **Passthrough rules**: The only rule type you can author yourself. A passthrough rule matches on a single condition (IP, path, user agent, or JA4 fingerprint) and takes precedence over Kong-managed rules, guaranteeing that matching traffic is never blocked.
+
 Bot Detector runs in one of two modes:
 
 * **Monitoring (default)**: Bot Detector evaluates every request to your Dedicated Cloud Gateway control plane and records what it would have done, without affecting traffic. Use this mode to review detections and build confidence before blocking anything.
+* **Passthrough:** ?
 * **Block**: Requests that match a block rule are rejected with a `403` response.
 
 Bot Detector is scoped to the control plane, not the organization. 
@@ -52,7 +59,7 @@ While Bot Detector is enabled, you can switch between monitoring and block mode 
 Mode changes propagate to data planes on their next pull cycle (up to five minutes). 
 No data plane restart or redeploy is required.
 
-## What Bot Detector detects
+### What Bot Detector detects
 
 In tech preview, Bot Detector monitors and blocks based on Kong-managed rules.
 Kong-managed rules cover four broad categories of detection:
@@ -67,13 +74,6 @@ Kong maintains and updates these rules as threat patterns evolve.
 
 {% comment %}
 Notes: Will need answers on some of the rule specifics. How do you know you need to create a rule? Detections will also need answers, like when to switch, what you're looking for, how to interpret, etc. Limitations will need answers to the rules (are customer blocking rules allowed?) and a general look over for accuracy.
-
-## Rules
-
-Bot Detector supports two kinds of rules:
-
-* **Kong-managed rules**: Maintained and updated by Kong. You can't view or edit the individual rules, but you can enable, disable, or set the mode (monitoring or block) for the ruleset as a whole.
-* **Passthrough rules**: The only rule type you can author yourself. A passthrough rule matches on a single condition (IP, path, user agent, or JA4 fingerprint) and takes precedence over Kong-managed rules, guaranteeing that matching traffic is never blocked.
 
 ## Detections and monitoring
 
@@ -90,7 +90,11 @@ The following aren't supported in this tech preview:
 * Behavior-based rules, such as rate or sequence detection
 {% endcomment %}
 
-## Enable and configure Bot Detector
+## Configure Bot Detector
+
+blah
+
+### Enable Bot Detector
 
 {% navtabs "bot-detector" %}
 {% navtab "API" %}
@@ -111,5 +115,16 @@ Bot Detector is enabled first at the organization level through {{site.konnect_s
 
 Once enabled, a control plane's Bot Detector page starts in monitoring mode. To switch modes, click **Enable blocking**.
 To turn Bot Detector off entirely, from the **Actions** dropdown menu, select "Disable bot detector".
+{% endnavtab %}
+{% endnavtabs %}
+
+### Configure rules
+
+{% navtabs "rules" %}
+{% navtab "API" %}
+<!-- TODO: fill in API steps once endpoint links are available -->
+{% endnavtab %}
+{% navtab "UI" %}
+placeholder
 {% endnavtab %}
 {% endnavtabs %}
