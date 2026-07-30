@@ -131,13 +131,14 @@ status_code: 201
 method: POST
 body:
    role_name: API Viewer
-   entity_id: $API_ID
-   entity_type_name: $API_NAME
+   entity_id: $SERVICE_ID
+   entity_type_name: Services
    entity_region: us
 {% endkonnect_api_request %}
 {% endcapture %}
 {{ role | indent: 3}}
 <!--vale on-->
+   `entity_id` and `entity_type_name` refer to the Gateway Service associated with the API, not the API entity itself.
    The following roles are available:
       * **API Consumer**: This role allows developers on the team to make calls to the selected APIs.
       * **API Viewer**: This role gives developers on the team read-only access to the selected APIs' documentation.
