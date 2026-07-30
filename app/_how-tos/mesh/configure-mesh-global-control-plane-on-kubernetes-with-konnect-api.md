@@ -4,7 +4,7 @@ content_type: how_to
 permalink: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
 breadcrumbs:
   - /mesh/
-description: 'Use the Konnect API to create a global control plane, provision a zone token, deploy the Kubernetes demo app, and test your Kong Mesh mesh.'
+description: 'Use the {{site.konnect_short_name}} API to create a global control plane, provision a zone token, deploy the Kubernetes demo app, and test your {{site.mesh_product_name}} mesh.'
 products:
   - mesh
 works_on:
