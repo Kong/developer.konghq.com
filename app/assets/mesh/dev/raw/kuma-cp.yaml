@@ -845,7 +845,6 @@ policies:
     - meshaccesslogs
     - meshcircuitbreakers
     - meshfaultinjections
-    - meshglobalratelimits
     - meshhealthchecks
     - meshhttproutes
     - meshloadbalancingstrategies
@@ -994,19 +993,6 @@ kmesh:
       #            maxSizeMb: 100
       #            # Maximum number of days to retain old log files based on the timestamp encoded in their filename
       #            maxAgeDays: 30
-  globalRateLimit:
-    # Interval for re-generating global rate limit configuration for ratelimit service connected to the Control Plane
-    configurationRefreshInterval: 1s # ENV: KMESH_GLOBAL_RATE_LIMIT_CONFIGURATION_REFRESH_INTERVAL
-    # Service account name of rate limit service which will be used in
-    # authentication process of communication between rate limit service and
-    # control plane.
-    # The value can take two forms:
-    # - "system:serviceaccount:[namespace]:[service_account_name]" (example:
-    #   system:serviceaccount:kong-mesh-system:default)
-    # - "[service_account_name]" - in this form, the namespace of the service
-    #   account will be implicitly assumed as the same as control plane's system
-    #   namespace (example: default)
-    serviceAccountName: system:serviceaccount:kong-mesh-system:default # ENV: KMESH_GLOBAL_RATE_LIMIT_CONFIGURATION_SERVICE_ACCOUNT_NAME
   ca:
     vault:
       # Interval for checking whether any referenced Vault tokens have changed.
