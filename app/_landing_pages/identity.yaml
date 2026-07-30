@@ -212,3 +212,14 @@ rows:
               - text: "{{site.identity}} API reference"
                 url: /api/konnect/kong-identity/v1/#/
                 align: end
+
+  - header:
+      type: h2
+      text: Frequently asked questions
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: I'm getting connection errors when accessing {{site.konnect_short_name}} Identity. What should I check?
+              a: |
+                {% include_cached faqs/konnect-connection-errors.md %}
