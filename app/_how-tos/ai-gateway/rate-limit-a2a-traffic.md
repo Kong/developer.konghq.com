@@ -36,8 +36,7 @@ related_resources:
 prereqs:
   inline:
   - title: OpenAI API key
-    include_content: prereqs/openai
-    icon_url: /assets/icons/openai.svg
+    include_content: md/ai-gateway/v2/prereqs/openai-kongctl
   - title: A2A agent
     include_content: md/ai-gateway/v2/prereqs/a2a-agent
 
@@ -66,9 +65,11 @@ automated_tests: false
 
 ---
 
-## Set up a rate limiting AI Policy
+## Create an AI Agent and attach a rate limiting AI Policy
 
-The [Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/) counts requests per consumer and rejects requests that exceed the configured limit. This configuration allows 5 requests per 30 seconds, intentionally low to make it easy to trigger during testing.
+Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent and a [Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/) that counts requests per consumer and rejects requests that exceed the configured limit. 
+
+This configuration allows 5 requests per 30 seconds, intentionally low to make it easy to trigger during testing. The AI Policy is attached to the AI Agent by using  `!ref rate-limit-bookings-agent#name` to refer to it by name.
 
 {% entity_examples %}
 ai_gateway_policies:
@@ -85,17 +86,6 @@ ai_gateway_policies:
       sync_rate: -1
       namespace: a2a-kongair-agent
       strategy: local
-{% endentity_examples %}
-
-{:.info}
-> The `limit` and `window_size` are intentionally set low for testing.
-> You should adjust these to appropriate values for production workloads.
-
-## Create an AI Agent and attach the rate limiting policy
-
-Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent.
-
-{% entity_examples %}
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
     ai_gateway: !lookup name:ai-quickstart
@@ -122,6 +112,10 @@ ai_gateway_agents:
         max_payload_size: 1048576
       max_request_body_size: 8388608
 {% endentity_examples %}
+
+{:.info}
+> The `limit` and `window_size` are intentionally set low for testing.
+> You should adjust these to appropriate values for production workloads.
 
 ## Validate rate limit headers
 
