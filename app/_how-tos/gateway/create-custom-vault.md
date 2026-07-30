@@ -93,6 +93,9 @@ faqs:
 You can build a custom vault backend when your secrets live in a store that isn't one of the provided  [{{site.base_gateway}} Vaults](/gateway/entities/vault/#supported-vault-backends). 
 For example, if your secrets live in an internal secrets service, a proprietary HTTP-based secret manager, or a legacy system that exposes secrets over an API only your organization uses.
 
+{:.warning}
+> **Important:** This guide uses a plaintext HTTP secret store for simplicity. In production, serve your vault backend over HTTPS (or mTLS), since a custom vault backend receives secrets in the response body and an unencrypted connection exposes them in transit.
+
 A custom vault backend is a Lua module with two required functions:
 
 <!--vale off-->
