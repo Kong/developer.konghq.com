@@ -1,3 +1,9 @@
+1. Create and enter a working directory for this guide:
+
+   ```sh
+   mkdir -p ~/mesh-konnect && cd ~/mesh-konnect
+   ```
+
 {% if include.show_exports -%}
 1. Export the KDS global address for your region:
 
@@ -42,7 +48,7 @@
 1. Create the Helm values file:
 
    ```sh
-   echo "
+   cat <<EOF > values.yaml
    kuma:
      controlPlane:
        mode: zone
@@ -58,7 +64,7 @@
        enabled: true
      egress:
        enabled: true
-   " > values.yaml
+   EOF
    ```
 
 1. Install {{site.mesh_product_name}}:

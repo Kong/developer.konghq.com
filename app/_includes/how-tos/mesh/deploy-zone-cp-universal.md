@@ -1,3 +1,9 @@
+1. Create and enter a working directory for this guide:
+
+   ```sh
+   mkdir -p ~/mesh-konnect && cd ~/mesh-konnect
+   ```
+
 {% if include.show_exports -%}
 1. Export the KDS global address for your region:
 
@@ -9,15 +15,13 @@
 1. Save the control plane token to a file:
 
    ```sh
-   mkdir -p ~/kuma-cp \
-     && echo $CONTROL_PLANE_TOKEN > ~/kuma-cp/cpTokenFile \
-     && chmod 600 ~/kuma-cp/cpTokenFile
+   echo $CONTROL_PLANE_TOKEN > cpTokenFile && chmod 600 cpTokenFile
    ```
 
 1. Create the zone configuration file:
 
    ```sh
-   echo "
+   cat <<EOF > config.yaml
    environment: universal
    mode: zone
    multizone:
@@ -31,7 +35,7 @@
            cpId: $CONTROL_PLANE_ID
    experimental:
      kdsDeltaEnabled: true
-   " > config.yaml
+   EOF
    ```
 
 1. Download and install {{site.mesh_product_name}}:
@@ -43,7 +47,7 @@
 1. Start the zone control plane in the background, so you can keep using the same terminal (and its exported variables) for the following steps:
 
    ```sh
-   KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_PATH=~/kuma-cp/cpTokenFile kong-mesh-*/bin/kuma-cp run --config-file config.yaml > kuma-cp.log 2>&1 &
+   KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_PATH=cpTokenFile kong-mesh-*/bin/kuma-cp run --config-file config.yaml > kuma-cp.log 2>&1 &
    ```
 
    {:.info}

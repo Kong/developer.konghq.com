@@ -41,12 +41,12 @@ cleanup:
         ```
     - title: Delete the {{site.konnect_short_name}} control plane
       include_content: cleanup/mesh/delete-konnect-control-plane-api
-    - title: Remove local files
+    - title: Remove the working directory
       content: |
-        Remove the files and binaries created during setup:
+        Delete the working directory, files, and binaries created during setup:
 
         ```sh
-        rm -rf ~/kuma-cp kong-mesh-*
+        rm -rf ~/mesh-konnect
         ```
 faqs:
   - q: How does a zone authenticate to the global control plane?
