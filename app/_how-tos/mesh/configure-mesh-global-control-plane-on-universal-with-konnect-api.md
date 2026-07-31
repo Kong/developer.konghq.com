@@ -19,6 +19,8 @@ tldr:
   q: How do I configure a {{site.mesh_product_name}} global control plane and a Universal zone with the {{site.konnect_short_name}} API?
   a: Create a global control plane and a system account zone token with the {{site.konnect_short_name}} API, then deploy a Universal (VM or bare metal) zone control plane that connects to the {{site.konnect_short_name}}-managed global control plane.
 related_resources:
+  - text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+    url: /mesh/konnect/
   - text: Configure a Mesh global control plane on Kubernetes with the {{site.konnect_short_name}} UI
     url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
   - text: Configure a Mesh global control plane on Kubernetes with the {{site.konnect_short_name}} API

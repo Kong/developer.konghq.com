@@ -33,7 +33,7 @@ prereqs:
       content: |
         This tutorial requires a {{site.konnect_short_name}} Plus account. If you don't have one, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs).
 
-        After creating your {{site.konnect_short_name}} account, [create the Kong Mesh Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
+        After creating your {{site.konnect_short_name}} account, [create the Kong Mesh Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster. To learn how {{site.mesh_product_name}} works with {{site.konnect_short_name}}, see [{{site.mesh_product_name}} in {{site.konnect_short_name}}](/mesh/konnect/).
     - title: Helm
       include_content: prereqs/helm
     - title: A running Kubernetes cluster

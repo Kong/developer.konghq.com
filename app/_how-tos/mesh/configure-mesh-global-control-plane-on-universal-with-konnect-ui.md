@@ -15,6 +15,8 @@ tldr:
   q: How do I configure a {{site.mesh_product_name}} global control plane and a Universal zone with the {{site.konnect_short_name}} UI?
   a: In the {{site.konnect_short_name}} UI, create a global control plane from **Service Mesh**, then create a zone with the **Universal** configuration type and follow the steps shown in the UI to deploy the zone control plane on your VM or bare metal machine.
 related_resources:
+  - text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+    url: /mesh/konnect/
   - text: Configure a Mesh global control plane on Kubernetes with the {{site.konnect_short_name}} UI
     url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
   - text: Configure a Mesh global control plane on Kubernetes with the {{site.konnect_short_name}} API

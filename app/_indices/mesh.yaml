@@ -5,6 +5,7 @@ sections:
     items:
       - path: /mesh/
       - path: /mesh/service-mesh/
+      - path: /mesh/konnect/
       - title: Mesh policies
         description: Bundled features for your service traffic and network configuration.
         url: /mesh/policies/
@@ -15,13 +16,13 @@ sections:
 
   - title: Install & Configure
     items:
-      - path: /mesh/requirements/
+      - path: /mesh/validated-versions/
       - path: /mesh/get-started/universal/install/
       - path: /mesh/kubernetes/
       - path: /mesh/ecs/
       - path: /mesh/openshift-quickstart/
       - path: /mesh/ubi-images/
-      - path: /mesh/deploy-with-terraform-konnect/
+      - path: /mesh/deploy-mesh-using-terraform-and-konnect/
       - path: /mesh/import-konnect-deployment-to-terraform/
 
   - title: Mesh guides
@@ -30,6 +31,8 @@ sections:
       - path: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
       - path: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
       - path: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+      - path: /mesh/federate-zone-control-plane-to-konnect/
+      - path: /mesh/migrate-self-managed-zone-to-konnect/
       - path: /mesh/deploy-mesh-self-managed/
       - path: /mesh/deploy-universal-self-managed/
       - path: /mesh/deploy-multi-zone-global-control-plane-universal-docker/

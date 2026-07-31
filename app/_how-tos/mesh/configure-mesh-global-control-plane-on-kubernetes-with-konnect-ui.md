@@ -22,6 +22,8 @@ prereqs:
       content: |
         Install and configure [`kubectl`](https://kubernetes.io/docs/tasks/tools/) to connect to your cluster.
 related_resources:
+  - text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+    url: /mesh/konnect/
   - text: Configure a Mesh global control plane on Kubernetes with the {{site.konnect_short_name}} API
     url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
   - text: Configure a Mesh global control plane on Universal with the {{site.konnect_short_name}} API
