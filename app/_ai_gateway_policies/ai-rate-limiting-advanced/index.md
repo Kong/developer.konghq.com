@@ -94,7 +94,7 @@ rows:
   - field: "`period`"
     description: "`month` or `week`."
   - field: "`month_day`"
-    description: Required when `period` is `month`; day of the month (1-31) a monthly window starts.
+    description: Required when `period` is `month`. This is the day of the month (1-31) that a monthly window starts.
   - field: "`week_start_day`"
     description: Day of the week a weekly window starts, such as `monday`. Only applies when `period` is `week`.
 {% endtable %}
