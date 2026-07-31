@@ -120,39 +120,48 @@ When viewing a trace, you can click **Analyze with KAi** to send the trace to [K
 
 ## Payload capture
 
-In critical scenarios, having access to payload details can help identify and pinpoint failures. With payload capture feature, a debug session can be configured to capture header and/or body for requests and response. However due to the nature of this telemetry, this feature requires customers to explicitly opt-in with a prior agreement called the Advanced Features Addendum. Once the agreement is in place, the feature is enabled in debugger.
+In critical scenarios, having access to payload details can help identify and pinpoint failures.
+Payload capture lets you configure a debug session to capture headers and/or body for requests and responses.
 
 {:.info}
-> Payload capture is an opt-in feature that can be enabled with prior agreement. Please contact your organization admin or reach out to your Kong representative
+> Due to the nature of this telemetry, you must explicitly opt in by signing the Advanced Features Addendum.
+> Contact your organization admin or your Kong representative to get started.
 
 ### Prerequisites
-* Your organization has opted-in to use debugger's payload capture feature and signed the Advanced Features Addendum
-* Data plane nodes are deployed with new telemetry endpoints that support the payload capture feature
-* Customer firewall rules updated to allow for the new telemetry endpoints
+* Your organization has opted in to the Debugger payload capture feature and signed the Advanced Features Addendum.
+* Your data plane nodes are deployed with the following telemetry endpoints:
 
-{:.info}
-> To use the payload capture during a debugging session, the data plane nodes have to be deployed with the following new telemetry endpoints:
-```
-* `KONG_CLUSTER_CONTROL_PLANE=xxx.us.cp.konghq.com:443` 
-* `KONG_CLUSTER_SERVER_NAME=xxx.us.cp.konghq.com`
-* `KONG_CLUSTER_TELEMETRY_ENDPOINT=xxx.us.tp.konghq.com:443` 
-* `KONG_CLUSTER_TELEMETRY_SERVER_NAME=xxx.us.tp.konghq.com`
-```
+   ```sh
+   KONG_CLUSTER_CONTROL_PLANE=xxx.us.cp.konghq.com:443
+   KONG_CLUSTER_SERVER_NAME=xxx.us.cp.konghq.com
+   KONG_CLUSTER_TELEMETRY_ENDPOINT=xxx.us.tp.konghq.com:443
+   KONG_CLUSTER_TELEMETRY_SERVER_NAME=xxx.us.tp.konghq.com
+   ```
+* Your firewall rules allow traffic to the telemetry endpoints.
 
 ### Payload collection and sanitization
-When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching sampling criteria. Sampling filters and sanitization occur on the data plane before any data is transmitted to {{site.konnect_short_name}}. Transactions are scrubbed using the log sanitizer, and sensitive data such as credit card numbers are redacted from the payload. Authentication and identity headers (for example, `Authorization`, API key header values, and consumer ID header fields) are also masked by default.
 
-{% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`) are automatically decompressed before capture, so they appear as readable text in the debugger.
+When you start a debug session with payload capture enabled, the Debugger captures headers and/or body for all requests matching the sampling criteria.
+Sampling filters and sanitization run on the data plane before any data is transmitted to {{site.konnect_short_name}}.
+
+The log sanitizer scrubs transactions and redacts sensitive data like credit card numbers from the payload.
+Authentication and identity headers (for example, `Authorization`, API key header values, and Consumer ID header fields) are also masked by default.
+
+Payload capture records the following:
+
+* The client request and response.
+* {% new_in 3.14 %} The upstream request and response.
+* {% new_in 3.14 %} Headers and body before and after each plugin runs, including custom plugins.
+* {% new_in 3.14 %} The contents of calls {{site.base_gateway}} makes to dependencies during request processing, such as Redis for rate limiting, an identity provider for token validation, or DNS for resolution.
+* {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`), automatically decompressed so they appear as readable text.
 
 {:.info}
-> Log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with `*`
+> **Note:** The log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. Matched characters are replaced with `*`.
 
 #### Custom masking rules {% new_in 3.14 %}
 
-You can define custom payload masking rules to target specific sensitive data in your requests and responses. Custom rules allow you to redact data in both headers and body content.
-
-{:.info}
-> Custom masking rules require {{site.base_gateway}} version 3.14 or later.
+You can define custom payload masking rules to target specific sensitive data in your requests and responses.
+Custom rules let you redact data in both headers and body content.
 
 #### Header rules
 
@@ -165,15 +174,31 @@ Body masking rules support two strategies:
 * **JSONPath ([RFC 9535](https://www.rfc-editor.org/rfc/rfc9535)):** Target specific fields in JSON payloads using standard JSONPath expressions. This includes support for dot notation (`$.field`), bracket notation, wildcards (`[*]`), recursive descent (`$..`), array slicing, and filter expressions.
 * **Regex ([PCRE](https://www.pcre.org/current/doc/html/pcre2pattern.html)):** Match and redact patterns in the raw body content using PCRE-compatible regular expressions.
 
-The redaction is done by replacing the matched content with `*`.
+Matched content is replaced with `*`.
 
 {:.info}
-> Custom masking rules are applied in addition to the built-in credit card redaction. The built-in Luhn algorithm-based redaction is always active and cannot be disabled.
+> **Note:** Custom masking rules are applied in addition to the built-in credit card redaction. The built-in Luhn algorithm-based redaction is always active and cannot be disabled.
 
-### Payload ingestion, storage and retention
-By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services (KMS). 
+### AI Gateway {% new_in 3.14 %}
 
-Debug session with payload data is retained for up to 3 days, after which they are purged from {{site.konnect_short_name}}.
+When a Route has AI plugins configured, payload capture gives you an AI-aware view of the request.
+In addition to the standard payloads, the AI Gateway deep dive shows the prompt at each stage of the pipeline:
+
+* What the client sent.
+* What each AI plugin did to the prompt, for example PII sanitization or content filtering.
+* The final prompt sent to the model provider, after all plugins have run.
+* What the model returned, and how any response plugins transformed it.
+
+Use this to confirm guardrails fired, policies were enforced, and transformations produced the prompt you expected.
+You can also diagnose why a semantic cache hit or missed, or inspect what a guardrail service returned.
+
+### Payload ingestion, storage, and retention
+
+By default, {{site.konnect_short_name}} encrypts captured payloads with a default encryption key provisioned for your org.
+You can also configure {{site.konnect_short_name}} to use [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/).
+{{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Service (KMS).
+
+Debug sessions with payload data are retained for up to 3 days, after which they are purged from {{site.konnect_short_name}}.
 
 ## Data Security with Customer-Managed Encryption Keys (CMEK)
 By default, logs are automatically encrypted using encryption keys that are owned and managed by {{site.konnect_short_name}}. However if you have a specific compliance and regulatory requirements related to the keys that protect your data, you can use the customer-managed encryption keys. This ensures that sensitive data are secured for each organization with their own key and nobody, including {{site.konnect_short_name}}, has access to that data. For more information about how to create and manage CMEK keys, see [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/).
