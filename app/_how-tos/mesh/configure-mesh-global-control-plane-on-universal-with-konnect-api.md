@@ -42,12 +42,7 @@ cleanup:
     - title: Delete the {{site.konnect_short_name}} control plane
       include_content: cleanup/mesh/delete-konnect-control-plane-api
     - title: Remove the working directory
-      content: |
-        Delete the working directory, files, and binaries created during setup:
-
-        ```sh
-        rm -rf ~/mesh-konnect
-        ```
+      include_content: cleanup/mesh/remove-working-directory
 faqs:
   - q: How does a zone authenticate to the global control plane?
     a: |

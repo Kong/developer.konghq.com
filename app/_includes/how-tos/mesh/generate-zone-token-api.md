@@ -1,11 +1,5 @@
 A zone isn't a standalone {{site.konnect_short_name}} resource. To provision one through the API, create a [system account access token](#how-does-a-zone-authenticate-to-the-global-control-plane) with the `Connector` role scoped to your control plane, then connect a zone control plane with that token. This is the same model that the [Terraform guide](/mesh/deploy-mesh-using-terraform-and-konnect/) automates.
 
-1. Export your region:
-
-   ```sh
-   export KONNECT_REGION='us'
-   ```
-
 1. Create a system account:
 
    ```sh
@@ -53,11 +47,8 @@ A zone isn't a standalone {{site.konnect_short_name}} resource. To provision one
 
    The response includes the `token` value, which is shown only once. Copy it now.
 
-1. Export the token, replacing `YOUR_ZONE_TOKEN` with the actual `token` value returned in the previous step:
+1. Export the token:
 
    ```sh
    export CONTROL_PLANE_TOKEN='YOUR_ZONE_TOKEN'
    ```
-
-   {:.warning}
-   > `YOUR_ZONE_TOKEN` is a placeholder. If you deploy the zone control plane with this literal value, it can't authenticate to {{site.konnect_short_name}} and the zone won't connect.

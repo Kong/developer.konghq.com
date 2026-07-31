@@ -36,13 +36,7 @@ cleanup:
         terraform destroy
         ```
     - title: Remove the working directory
-      content: |
-        Delete the working directory and the Terraform files created by this guide:
-
-        ```sh
-        cd ../
-        rm -rf ~/mesh-konnect
-        ```
+      include_content: cleanup/mesh/remove-working-directory
 related_resources:
   - text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
     url: /mesh/konnect/

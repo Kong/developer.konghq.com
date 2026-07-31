@@ -20,4 +20,10 @@ body:
    export CONTROL_PLANE_ID='YOUR_CONTROL_PLANE_ID'
    ```
 
+1. Export your region:
+
+   ```sh
+   export KONNECT_REGION='us'
+   ```
+
 The global control plane is now created but has no functionality until you connect a zone.
