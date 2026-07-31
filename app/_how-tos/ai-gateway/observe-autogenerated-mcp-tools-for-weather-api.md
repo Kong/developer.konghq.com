@@ -244,7 +244,7 @@ You can validate that the HTTP Logs plugin is collecting metrics by generating M
 what has bob ordered ?
 ```
 
-Once Cursor agent has finished reasoning, you will see the following MCP audit log entries logged by the HTTP plugin in your terminal:
+Once Chatwise has finished reasoning, you will see MCP audit log entries logged by the HTTP plugin in your terminal similar to the following:
 
 
 ```sh
