@@ -89,7 +89,6 @@ app/_how-tos/ai-gateway/v1/protect-sensitive-information-with-ai.md:
 app/_how-tos/ai-gateway/v1/proxy-a2a-agents.md:
   canonical_url: /ai-gateway/get-started-with-ai-agent/
 app/_how-tos/ai-gateway/v1/rate-limit-a2a-traffic.md:
-  status: pending
   canonical_url: /ai-gateway/rate-limit-a2a-traffic/
 app/_how-tos/ai-gateway/v1/rotate-secrets-in-google-cloud-secret.md:
   status: pending
