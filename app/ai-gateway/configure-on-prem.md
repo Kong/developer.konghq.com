@@ -413,7 +413,7 @@ An AI Policy generates no object of its own. It must be attached to another enti
    policies:
      - ref: ai-gw-prompt-guard
        name: ai-gw-prompt-guard
-       display_name: "AI Gateway Prompt Guard"
+       display_name: "AI Prompt Guard"
        type: ai-prompt-guard
        enabled: true
        config:
