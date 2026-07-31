@@ -436,7 +436,6 @@ An AI Policy generates no object of its own. It must be attached to another enti
      name: ai-prompt-guard
      route: openai-chat
    ```
-   {: .no-copy-code .collapsible }
 
    The `model` and `route` fields on the plugin are what scope it to that AI Model's traffic instead of applying globally.
 1. Sync the converted config to your self-hosted {{site.base_gateway}}:
