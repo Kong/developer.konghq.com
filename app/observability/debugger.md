@@ -179,10 +179,10 @@ Matched content is replaced with `*`.
 {:.info}
 > **Note:** Custom masking rules are applied in addition to the built-in credit card redaction. The built-in Luhn algorithm-based redaction is always active and cannot be disabled.
 
-### AI Gateway {% new_in 3.14 %}
+### {{site.ai_gateway}} {% new_in 3.14 %}
 
 When a Route has AI plugins configured, payload capture gives you an AI-aware view of the request.
-In addition to the standard payloads, the AI Gateway deep dive shows the prompt at each stage of the pipeline:
+In addition to the standard payloads, the {{site.ai_gateway}} details view shows the prompt at each stage of the pipeline:
 
 * What the client sent.
 * What each AI plugin did to the prompt, for example PII sanitization or content filtering.
