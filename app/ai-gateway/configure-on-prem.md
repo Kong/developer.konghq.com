@@ -123,7 +123,8 @@ Access control and secret management on-prem use the same {{site.base_gateway}} 
 ## Convert {{site.ai_gateway}} 2.0 entities to self-hosted {{site.base_gateway}} config
 
 Use `deck file ai2kong` to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities.
-AI Models, AI MCP Servers, AI Agents, and AI Policies are the entities that need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins.
+
+AI Model, AI MCP Server, AI Agent, and AI Policy entities need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins.
 AI Consumers, AI Consumer Groups, and AI Vaults pass through `deck file ai2kong` unchanged, since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-and-vaults).
 
 The following examples walk through converting a decK `ai.yaml` file for a single AI Model, AI MCP Server, AI Agent, and AI Policy.
@@ -231,7 +232,7 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
 
 ### Convert an AI MCP Server
 
-1. Write a decK `ai.yaml` configuration file that defines an AI MCP Server in [conversion-listener mode](/ai-gateway/entities/ai-mcp-server/#server-modes), which converts a REST endpoint into an MCP tool. For example, the following AI MCP Server, `demo-mcp`, exposes a single `get-item` tool that proxies a REST `GET` request:
+1. Write a decK `ai.yaml` configuration file using the AI Gateway 2.0 entity model that defines an AI MCP Server in [conversion-listener mode](/ai-gateway/entities/ai-mcp-server/#server-modes), which converts a REST endpoint into an MCP tool. For example, the following AI MCP Server, `demo-mcp`, exposes a single `get-item` tool that proxies a REST `GET` request:
 
    ```sh
    echo '
