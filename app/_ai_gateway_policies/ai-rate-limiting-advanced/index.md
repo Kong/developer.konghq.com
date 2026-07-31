@@ -103,6 +103,7 @@ rows:
 type: policy
 data:
   name: ai-rate-limiting-advanced
+  type: ai-rate-limiting-advanced
   config:
     policies:
     - window_type: calendar
