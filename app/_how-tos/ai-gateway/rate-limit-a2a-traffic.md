@@ -1,7 +1,7 @@
 ---
 title: "Rate limit A2A traffic"
 content_type: how_to
-description: "Apply per-consumer rate limits to A2A routes proxied through {{site.ai_gateway}}"
+description: "Apply rate limits to A2A routes proxied through {{site.ai_gateway}}"
 permalink: /ai-gateway/rate-limit-a2a-traffic/
 
 products:
@@ -33,16 +33,27 @@ related_resources:
     url: /ai-gateway/get-started-with-ai-agent/
 prereqs:
   inline:
-  - title: OpenAI API key
-    include_content: md/ai-gateway/v2/prereqs/openai-kongctl
-  - title: A2A agent
-    include_content: md/ai-gateway/v2/prereqs/a2a-agent
+    - title: OpenAI API key
+      content: |
+        1. [Create an OpenAI account](https://auth.openai.com/create-account).
+        2. [Get an API key](https://platform.openai.com/api-keys).
+        3. Export your key:
+           ```bash
+           export OPENAI_API_KEY='YOUR_OPENAI_API_KEY'
+           ```
+    - title: A2A agent
+      include_content: md/ai-gateway/v2/prereqs/a2a-agent
 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
+    - title: Stop the A2A agent
+      content: |
+        ```bash
+        docker compose down
+        docker rm -f a2a-kongair-agent
+        ```
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
 
 faqs:
   - q: Can I rate limit A2A traffic without authentication?
@@ -54,7 +65,7 @@ faqs:
       Rate limiting applies at request time, before the upstream responds. A streaming SSE response that is already in progress is not interrupted. The rate limit check happens when the client sends the next request.
   - q: Can I use AI Rate Limiting Advanced instead?
     a: |
-      AI Rate Limiting Advanced limits based on LLM token consumption (prompt and completion tokens). The AI A2A Proxy policy does not extract token counts from A2A responses, so AI Rate Limiting Advanced has no token data to act on. Use the standard Rate Limiting Advanced policy for A2A traffic.
+      AI Rate Limiting Advanced limits based on LLM token consumption (prompt and completion tokens). The AI Agent doesn't extract token counts from A2A responses, so an AI Rate Limiting Advanced Policy has no token data to act on. Use the standard Rate Limiting Advanced Policy for A2A traffic.
 
 automated_tests: false
 
