@@ -14,6 +14,9 @@ works_on:
 min_version:
   gateway: '3.4'
 
+automated_tests:
+  standalone_gateway: true
+
 entities:
   - vault
   - service
@@ -58,6 +61,7 @@ cleanup:
         ```bash
         docker compose down -v
         ```
+        {: data-test-cleanup="block" }
       icon_url: /assets/icons/gateway.svg
 
 related_resources:
@@ -118,6 +122,7 @@ Create the directory structure:
 ```bash
 mkdir -p kong/vaults/http
 ```
+{:data-test-step="block" }
 
 Create `kong/vaults/http.lua`:
 
@@ -166,6 +171,7 @@ return {
   get = get,
 }' > kong/vaults/http.lua
 ```
+{: data-test-step="block" }
 
 The module fetches `<base_url>/<resource>` and returns the `value` field from the JSON response body.
 
@@ -194,6 +200,7 @@ echo 'return {
   },
 }' > kong/vaults/http/schema.lua
 ```
+{: data-test-step="block" }
 
 ## Start Kong with the custom vault
 
@@ -205,6 +212,7 @@ Kong must be started with the custom vault registered. This requires setting `KO
    mkdir -p secrets/sekretz
    echo '{"value":"X-From-Vault:top-secret-value"}' > secrets/sekretz/x-from-vault
    ```
+   {: data-test-step="block" }
 
 2. Create `docker-compose.yml`:
 
@@ -282,6 +290,7 @@ Kong must be started with the custom vault registered. This requires setting `KO
          retries: 10
        restart: unless-stopped' > docker-compose.yml
       ```
+      {: data-test-step="block" }
 
     The two key environment variables for custom vaults are:
     - `KONG_VAULTS: bundled,http`: Registers the built-in Vaults plus the custom `http` vault
@@ -290,8 +299,9 @@ Kong must be started with the custom vault registered. This requires setting `KO
 3. Start all services:
 
    ```bash
-   docker compose up -d
+   docker compose up -d --wait
    ```
+   {: data-test-step="block" }
 
 ## Create the Vault entity
 
