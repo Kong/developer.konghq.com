@@ -132,35 +132,6 @@ done
 {% endnavtab %}
 {% endnavtabs %}
 
-### Get the Consumer credentials
-
-To get the existing credentials, run the following command:
-
-{% navtabs "retrieve-credentials" %}
-{% navtab "Single Consumer" %}
-
-This commands gets the secrets from a single Consumer and saves them as `LEGACY_CLIENT_ID` and `LEGACY_CLIENT_SECRET` environment variables:
-
-```sh
-export LEGACY_CLIENT_ID=$(curl -s $KONG_ADMIN_API/consumers/$CONSUMER/oauth2 | jq -r '.data[0].client_id')
-export LEGACY_CLIENT_SECRET=$(curl -s $KONG_ADMIN_API/consumers/$CONSUMER/oauth2 | jq -r '.data[0].client_secret')
-```
-
-{% endnavtab %}
-{% navtab "Multiple Consumers" %}
-
-This command gets the secrets for all existing Consumers:
-
-```sh
-for consumer in $(curl -s $KONG_ADMIN_API/consumers | jq -r '.data[].username'); do
-  echo "=== $consumer ==="
-  curl -s "$KONG_ADMIN_API/consumers/$consumer/oauth2" | jq '.data[] | {name, client_id, client_secret, hash_secret}'
-done
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
 ## Create a {{site.identity}} authorization server
 
 Create an authorization server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer), and save the `AUTH_SERVER_ID` variable:
@@ -184,32 +155,45 @@ capture:
 
 ## Create a client and upload the existing credentials
 
-{% navtabs "upload-credentials" %}
+To use the Consumers credentials in {{site.identity}}, you create a client per pair of credentials, then upload the secrets to match `client_id` and `client_secret`.
+
+{% navtabs "create-client" %}
 {% navtab "Single Consumer" %}
 
-Create a client in the authorization server using the [`/v1/auth-servers/{authServerId}/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient), and save the `CLIENT_ID` and `CLIENT_SECRET` variables:
+Get a single credentials from one Consumer and save them as `CLIENT_ID` and `CLIENT_SECRET` environment variables:
+
+```sh
+export CLIENT_ID=$(curl -s $KONG_ADMIN_API/consumers/$CONSUMER/oauth2 | jq -r '.data[0].client_id')
+export CLIENT_SECRET=$(curl -s $KONG_ADMIN_API/consumers/$CONSUMER/oauth2 | jq -r '.data[0].client_secret')
+```
+
+Create a client in the authorization server using the [`/v1/auth-servers/{authServerId}/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient) and upload the credentials:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$LEGACY_CLIENT_ID
-status_code: 200
+url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$CLIENT_ID
+status_code: 201
 method: PUT
 headers:
   - 'Content-Type: application/json'
 body:
   name: "$CONSUMER"
-  client_secret: "$LEGACY_CLIENT_SECRET"
+  client_secret: "$CLIENT_SECRET"
   grant_types:
     - "client_credentials"
   response_types:
     - "token"
-capture:
-  - variable: CLIENT_ID
-    jq: ".id"
-  - variable: CLIENT_SECRET
-    jq: ".client_secret"
 {% endkonnect_api_request %}
 <!--vale on-->
+
+Map the Consumer to this client by setting `custom_id` to match the client's ID:
+
+```sh
+curl -s -X PATCH "$KONG_ADMIN_API/consumers/$CONSUMER" \
+  -d "custom_id=$CLIENT_ID" | jq -c '{username: .username, custom_id: .custom_id}'
+```
+
+If your Consumer contains multiple credentials, use the Multiple Consumers method.
 
 **Warn about**
 
@@ -219,21 +203,66 @@ capture:
 
 {% endnavtab %}
 {% navtab "Multiple Consumers" %}
+Migrating Consumers credentials to Kong Identity clients requires preventing two collision risks that this section solves:
 
-To migrate more than one Consumer, use the `custom_id` field. Set each Consumer's `custom_id` to match its Client's `client_id`:
+- **Name collision:** Each client needs a unique name. A Consumer containing multiple credentials is the equivalent of multiple clients with the same name containing the credentials. Trying to migrate this configuration will fail, because client names can't be duplicate. To avoid that, this section sets the `name` value of every client to its `client_id`.
+- **`custom_id` collision:** Every client metadate contains a unique `custom_id` value that you can set, useful for mapping Consumers to services and plugins. We extract this value from the Consumer's `id` and pass it to the client. However if a Consumer contains multiple credentials, the same ID can't be set to the same client. To avoid `custom_id` collisions, this section shows you how to group Consumers into sub-Consumers, each with their own `custom_id`.
+
+Rename every Consumer:
+
+```sh
+name="${consumer}-${client_id}"
+```
+
+Run the migration script:
 
 ```sh
 for consumer in $(curl -s $KONG_ADMIN_API/consumers | jq -r '.data[].username'); do
-  client_id=$(curl -s "$KONG_ADMIN_API/consumers/$consumer/oauth2" | jq -r '.data[0].client_id')
-  curl -s -X PATCH "$KONG_ADMIN_API/consumers/$consumer" \
-    -d "custom_id=$client_id" | jq -c '{username: .username, custom_id: .custom_id}'
+  creds=$(curl -s "$KONG_ADMIN_API/consumers/$consumer/oauth2" | jq -c '.data')
+  count=$(echo "$creds" | jq 'length')
+
+  if [ "$count" -gt 1 ]; then
+    curl -s -X POST "$KONG_ADMIN_API/consumer_groups" -d "name=$consumer" > /dev/null
+
+    echo "$creds" | jq -c '.[]' | while read -r cred; do
+      client_id=$(echo "$cred" | jq -r '.client_id')
+      client_secret=$(echo "$cred" | jq -r '.client_secret')
+      sub_consumer="${consumer}-${client_id}"
+
+      # Each sub-Consumer gets its own custom_id, matching its own client_id
+      curl -s -X POST "$KONG_ADMIN_API/consumers" \
+        -d "username=$sub_consumer" \
+        -d "custom_id=$client_id" > /dev/null
+
+      # The group records "these sub-Consumers are really one app"
+      curl -s -X POST "$KONG_ADMIN_API/consumer_groups/$consumer/consumers" \
+        -d "consumer=$sub_consumer" > /dev/null
+
+      curl -s -X PUT "$KONNECT_API_URL/v1/auth-servers/$AUTH_SERVER_ID/clients/$client_id" \
+        -H "Authorization: Bearer $KONNECT_TOKEN" \
+        --json "{
+          \"name\": \"$sub_consumer\",
+          \"client_secret\": \"$client_secret\",
+          \"grant_types\": [\"client_credentials\"],
+          \"response_types\": [\"token\"]
+        }" | jq -c '{client_id: .id, name: .name}'
+    done
+  fi
 done
 ```
+The preceding script:
+
+- Retrieves the credentials for every Consumer.
+- Splits Consumers with multiple credentials into one sub-Consumer per credential, then group them.
+
+Your current setup with the Auth 2.0 plugin stills maps the old Consumer. To finish the migration, configure the OIDC or Instropection plugin to start usin tokens issued by the {{site.identity}} authorization server.
 
 {% endnavtab %}
 {% endnavtabs %}
 
 ## Configure the OIDC plugin on the service
+
+Activate the OIDC plugin:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -247,31 +276,65 @@ capture:
 <!--vale on-->
 
 
-## Attach the plugin to a service
+### Attach the plugin to services
 
-- List the services
+{% navtabs "Attach the plugin" %}
+{% navtab "Attach to a single service" %}
+
+List the services:
 
 ```sh
 curl -s $KONG_ADMIN_API/services | jq -r '.data[] | {name, id, host, path}'
 ```
 
-- 2 options:
-  - pick a service and save it as `$SERVICE`
-  - attach the plugin to all services
-
+Pick a service and save it as a `$SERVICE` environment variable:
 
 ```sh
-curl -s -X POST $KONG_ADMIN_API/services/$SERVICE/plugins \
-  -d "name=openid-connect" \
-  -d "config.issuer=$ISSUER" \
-  -d "config.client_id=$CLIENT_ID" \
-  -d "config.client_secret=$CLIENT_SECRET" \
-  -d "config.auth_methods=client_credentials" \
-  -d "config.consumer_claim=consumer_name" \
-  -d "config.consumer_by=username" | jq
+export SERVICE='<your-service-name-or-id>'
 ```
 
-**Version warnings**
+Attach the plugin to the chosen service:
+
+```sh
+curl -s -X POST "$KONG_ADMIN_API/services/$SERVICE/plugins" \
+  -H "Content-Type: application/json" \
+  --json '{
+    "name": "openid-connect",
+    "config": {
+      "issuer": "'"$ISSUER"'",
+      "auth_methods": ["client_credentials"],
+      "consumer_claims": [["client_id"]],
+      "consumer_by": ["custom_id"]
+    }
+  }'
+```
+
+{% endnavtab %}
+{% navtab "Attach to all services" %}
+
+Attach the OIDC plugin to all your services:
+
+```sh
+curl -s $KONG_ADMIN_API/services | jq -r '.data[].id' | \
+while read -r service_id; do
+  curl -s -X POST "$KONG_ADMIN_API/services/$service_id/plugins" \
+    -H "Content-Type: application/json" \
+    --json '{
+      "name": "openid-connect",
+      "config": {
+        "issuer": "'"$ISSUER"'",
+        "auth_methods": ["client_credentials"],
+        "consumer_claims": [["client_id"]],
+        "consumer_by": ["custom_id"]
+      }
+    }' | jq -c --arg sid "$service_id" '{service: $sid, plugin_id: .id}'
+done
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+**Warnings**
+Unlike single-tenant OIDC examples, this plugin config intentionally omits client_id/client_secret. Each migrated app authenticates using its own credentials against the Auth Server's token endpoint; the plugin only needs to validate the resulting token and resolve it to a Consumer via consumer_claims
 
 - `consumer_claim` vs `consumer_claims`: Kong Gateway ≥3.14 uses the plural `consumer_claims` (array). Older versions use singular `consumer_claim`: include two versions of the snippet?
 - `consumer_by: username`: this tells the plugin to match the claim value against the Consumer's `username` field.
@@ -314,3 +377,10 @@ curl -s -X PATCH $KONG_ADMIN_API/plugins/$PLUGIN_ID \
 ```sh
 curl -s -X DELETE $KONG_ADMIN_API/plugins/$PLUGIN_ID
 ```
+
+**Warn about**
+
+- Same constraints as the single-Consumer case: `client_id` ≤36 chars matching `[-_\w]+`, and `grant_types` only supports `implicit` or `client_credentials`.
+- If `client_id` needed sanitizing, the app must be updated with the new sanitized ID, not just the new token endpoint — this isn't a transparent cutover for that Consumer.
+- Consumers with `hash_secret: true` need to go through the new-credential flow first (see [Get the Consumer credentials](#get-the-consumer-credentials)) — this loop assumes plaintext secrets are already retrievable.
+- `custom_id` here is set to the *sanitized* client_id, not the legacy one — the OIDC plugin's `consumer_by: custom_id` mapping depends on this matching exactly.
