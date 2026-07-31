@@ -3,6 +3,7 @@ export async function processSetup(setup) {
   let version;
   let rbac;
   let wasm;
+  let standaloneGateway;
   let env_variables = {};
   if (typeof setup === "object") {
     // It should be one key/value pair, e.g. { gateway: 'x.y' }
@@ -10,8 +11,9 @@ export async function processSetup(setup) {
     version = setup[runtime];
     rbac = setup.rbac;
     wasm = setup.wasm;
+    standaloneGateway = setup.standalone_gateway;
 
-    const knownKeys = new Set([runtime, "rbac", "wasm"]);
+    const knownKeys = new Set([runtime, "rbac", "wasm", "standalone_gateway"]);
     env_variables = Object.fromEntries(
       Object.entries(setup).filter(([key]) => !knownKeys.has(key)),
     );
@@ -19,7 +21,7 @@ export async function processSetup(setup) {
     // Not an object, for products/platforms that don't have versions.
     runtime = setup;
   }
-  return { runtime, version, rbac, wasm, env_variables };
+  return { runtime, version, rbac, wasm, standaloneGateway, env_variables };
 }
 
 export async function getSetupConfig(setup) {
