@@ -20,7 +20,7 @@ tags:
 
 tldr:
   q: "How do I rate limit A2A traffic in {{site.ai_gateway}}?"
-  a: "Create a Rate Limiting Advanced Policy and attach it to an AI Agent. Requests that exceed the limit are rejected with 429. You can combine this with an authentication policy so that rate limits apply per consumer."
+  a: "Create a Rate Limiting Advanced Policy and attach it to an AI Agent. Requests that exceed the limit are rejected with 429. By default rate limits apply per IP address. However, you can combine this with an authentication policy so that rate limits apply per consumer."
 tools:
   - kongctl
 
@@ -73,7 +73,7 @@ automated_tests: false
 
 ## Create an AI Agent and attach a rate limiting AI Policy
 
-Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent and a [Rate Limiting Advanced Policy](/ai-gateway/policies/rate-limiting-advanced/) that counts requests per consumer and rejects requests that exceed the configured limit. 
+Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent and a [Rate Limiting Advanced Policy](/ai-gateway/policies/rate-limiting-advanced/) that counts requests per IP and rejects requests that exceed the configured limit.
 
 This configuration allows 5 requests per 30 seconds. 
 These settings are intentionally low to make it easy to trigger during testing. 
