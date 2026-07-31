@@ -117,15 +117,28 @@ export async function setupRuntime(runtimeConfig, docker) {
   );
   const filesHostPath = path.resolve(__dirname, "../../app/_includes/_files");
 
+  // The container talks to the host's Docker daemon over the bind-mounted
+  // socket (Docker-outside-of-Docker). When a step runs `docker compose up`
+  // with a relative volume (e.g. `./secrets:/www`), compose resolves it to an
+  // absolute path using the *container's* cwd, then sends that literal path
+  // to the daemon as the bind source. The daemon resolves bind sources
+  // against its own filesystem, so the source only exists if the container's
+  // cwd is bind-mounted at that exact same path on the host — hence mounting
+  // workspaceHostPath onto itself rather than onto an arbitrary container path.
+  const workspaceHostPath = path.resolve(__dirname, ".workspace");
+  await fs.mkdir(workspaceHostPath, { recursive: true });
+
   const container = await docker.createContainer({
     Image: runtimeConfig.imageName,
     Tty: true,
     ENV: env,
+    WorkingDir: workspaceHostPath,
     HostConfig: {
       Binds: [
         "/var/run/docker.sock:/var/run/docker.sock",
         `${exportedRealmHostPath}:/realms`,
         `${filesHostPath}:/files`,
+        `${workspaceHostPath}:${workspaceHostPath}`,
       ],
       NetworkMode: "host",
     },
@@ -143,14 +156,16 @@ export async function setupRuntime(runtimeConfig, docker) {
     await setEnvVariable(container, name, value);
   }
 
+  return container;
+}
+
+export async function startBaseline(runtimeConfig, container) {
   log("Setting things up...");
   if (runtimeConfig.setup.commands) {
     for (const command of runtimeConfig.setup.commands) {
       await executeCommand(container, command);
     }
   }
-
-  return container;
 }
 
 export async function cleanupRuntime(runtimeConfig, container) {
