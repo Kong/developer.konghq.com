@@ -78,7 +78,7 @@ rows:
             icon: /assets/logos/Konnect-logo.svg
             title: Managed global control plane
             description: |
-              Use Konnect to host and manage your {{site.mesh_product_name}} global control plane. Your data plane can be deployed on Kubernetes, Virtual Machines or Bare Metal.
+              Use Konnect to host and manage your {{site.mesh_product_name}} global control plane. Your data plane can be deployed on Kubernetes, virtual machines, or bare metal.
             featured: true
             cta:
                 text: See the quickstart

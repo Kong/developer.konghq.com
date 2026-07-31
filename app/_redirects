@@ -121,7 +121,7 @@
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone-control-plane-to-konnect/
 /mesh/federate-zone/    /mesh/federate-zone-control-plane-to-konnect/
-/mesh-manager/migrate-zone/  /mesh/federate-zone-control-plane-to-konnect/
+/mesh-manager/migrate-zone/  /mesh/migrate-self-managed-zone-to-konnect/
 /mesh/migrate-zone/ /mesh/migrate-self-managed-zone-to-konnect/
 /mesh-manager/service-mesh/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
 /mesh/konnect-global-control-plane/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
