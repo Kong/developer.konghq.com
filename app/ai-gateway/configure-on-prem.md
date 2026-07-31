@@ -232,7 +232,7 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
 
 ### Convert an AI MCP Server
 
-1. Write a decK `ai.yaml` configuration file using the AI Gateway 2.0 entity model that defines an AI MCP Server in [conversion-listener mode](/ai-gateway/entities/ai-mcp-server/#server-modes), which converts a REST endpoint into an MCP tool. For example, the following AI MCP Server, `demo-mcp`, exposes a single `get-item` tool that proxies a REST `GET` request:
+1. Write a decK `ai.yaml` configuration file using the {{site.ai_gateway}} 2.0 entity model that defines an AI MCP Server in [conversion-listener mode](/ai-gateway/entities/ai-mcp-server/#server-modes), which converts a REST endpoint into an MCP tool. For example, the following AI MCP Server, `demo-mcp`, exposes a single `get-item` tool that proxies a REST `GET` request:
 
    ```sh
    echo '
