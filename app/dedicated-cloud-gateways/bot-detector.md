@@ -25,9 +25,9 @@ tags:
   - dedicated-cloud-gateways
 faqs:
   - q: Does Bot Detector replace my WAF?
-    a: No. Bot Detector is meant to handle bot traffic while WAFs complement it by _____.
+    a: No. Bot Detector is meant to handle bot traffic while WAF complements it by _____.
   - q: Does Bot Detector replace the IP Restriction plugin?
-    a: No. Bot Detector is a complement to the [IP Restriction plugin](/plugins/ip-restriction/). Bot Dectector can block bot traffic from the shape of the request whereas the IP Restriction plugin can be used when you know the exact IPs or CIDR ranges you want to allow list.
+    a: No. Bot Detector is a complement to the [IP Restriction plugin](/plugins/ip-restriction/). Bot Detector can block bot traffic from the shape of the request whereas the IP Restriction plugin can be used when you know the exact IPs or CIDR ranges you want to allow list.
 ---
 
 Bot Detector is a built-in Dedicated Cloud Gateway capability that identifies automated traffic using signals like user agents, request paths, and JA4 fingerprints. 
