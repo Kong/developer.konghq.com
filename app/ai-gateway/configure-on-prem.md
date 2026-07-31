@@ -316,7 +316,7 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
 
 ### Convert an AI Agent
 
-1. Write a decK `ai.yaml` configuration file that defines an AI Agent using the A2A protocol. For example, the following AI Agent, `demo-agent`, proxies Agent-to-Agent traffic to an upstream agent:
+1. Write a decK `ai.yaml` configuration file using the AI Gateway 2.0 entity model that defines an AI Agent using the A2A protocol. For example, the following AI Agent, `demo-agent`, proxies Agent-to-Agent traffic to an upstream agent:
 
    ```sh
    echo '
