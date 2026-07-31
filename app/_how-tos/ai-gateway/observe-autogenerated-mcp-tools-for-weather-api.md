@@ -56,7 +56,8 @@ automated_tests: false
 
 To observe traffic for MCP tools, you first must **enable logging and statistics** on the AI MCP. Apply the below configuration to reconfigure the AI MCP to log full payloads:
 
-{% entity_examples %}
+```sh
+kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
     ai_gateway: !lookup {id: $AI_GATEWAY_ID}
@@ -104,7 +105,8 @@ ai_gateway_mcp_servers:
             required: true
             schema:
               type: string
-{% endentity_examples %}
+EOF
+```
 
 
 ## Log MCP traffic
@@ -113,7 +115,8 @@ Before we send tool calls, we need to set up the a HTTP Logs Policy to check how
 
 Apply the below config to create an HTTP logs Policy and attach it to the AI MCP entity:
 
-{% entity_examples%}
+```sh
+kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
 ai_gateway_policies:
   - ref: my-http-log-policy
     name: my-http-log-policy
@@ -127,6 +130,7 @@ ai_gateway_policies:
         Authorization: Bearer some-token
       method: POST
       timeout: 3000
+
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
     ai_gateway: !lookup {id: $AI_GATEWAY_ID}
@@ -174,7 +178,8 @@ ai_gateway_mcp_servers:
             required: true
             schema:
               type: string
-{% endentity_examples%}
+EOF
+```
 
 Let's run a simple log collector script which collect logs at `9999` port. Copy and run this snippet in your terminal:
 
@@ -219,10 +224,10 @@ if __name__ == '__main__':
 EOF
 ```
 
-Now, run this script with Python:
+Now, run this script with Python and UV:
 
 ```sh
-python3 log_server.py
+uv run log_server.py
 ```
 
 If the script is successful, you'll receive the following prompt in your terminal:
@@ -233,35 +238,136 @@ Starting log server on http://0.0.0.0:9999
 
 ## Validate MCP tools configuration
 
-You can validate that the HTTP Logs plugin is collecting metrics by generating MCP traffic to the `weather-service`. Enter the following question in the Cursor chat:
+You can validate that the HTTP Logs plugin is collecting metrics by generating MCP traffic to the mock API server. Enter the following question in Chatwise:
 
 ```text
-What is the current weather in New York?
+what has bob ordered ?
 ```
 
 Once Cursor agent has finished reasoning, you will see the following MCP audit log entries logged by the HTTP plugin in your terminal:
 
 
-```json
+```sh
+Received POST request at 2026-07-31T15:56:28.232507
+Path: /
+Headers:
+  Content-Length: 5145
+  Authorization: Bearer some-token
+  Content-Type: application/json
+  Host: host.docker.internal:9999
+  User-Agent: lua-resty-http/0.17.2 (Lua) ngx_lua/10028
+Body:
 {
-  "..."
-  "ai": {
-    "mcp": {
-      "mcp_session_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "rpc": [
-        {
-          "tool_name": "weather-route-1",
-          "id": "19",
-          "latency": 200,
-          "response_body_size": 1053,
-          "payload": {
-            "request": "{\"params\":{\"name\":\"weather-route-1\",\"arguments\":{\"query_key\":\"02e7c45e34024e6ca7e52559251908\",\"query_q\":\"New York\"},\"_meta\":{\"progressToken\":19}},\"id\":19,\"jsonrpc\":\"2.0\",\"method\":\"tools/call\"}",
-            "response": "{\"result\":{\"isError\":false,\"content\":[{\"type\":\"text\",\"text\":\"{\\\"location\\\":{\\\"name\\\":\\\"New York\\\",\\\"region\\\":\\\"New York\\\",\\\"country\\\":\\\"United States of America\\\",\\\"lat\\\":40.7142,\\\"lon\\\":-74.0064,\\\"tz_id\\\":\\\"America/New_York\\\",\\\"localtime_epoch\\\":1755764969,\\\"localtime\\\":\\\"2025-08-21 04:29\\\"},\\\"current\\\":{\\\"temp_c\\\":15.4,\\\"temp_f\\\":59.7,\\\"condition\\\":{\\\"text\\\":\\\"Light rain\\\"}}}]}},\"id\":19,\"jsonrpc\":\"2.0\"}"
-          },
-          "method": "tools/call"
+    "upstream_uri": "/",
+    "latencies": {
+        "redis": 0,
+        "socket": 0,
+        "request": 15,
+        "kong": 14,
+        "proxy": -1,
+        "third_party": 5.936128,
+        "client": 0.7616,
+        "receive": 0,
+        "http_client": 5.936128,
+        "kong_internal": 8.50176,
+        "dns": 0
+    },
+    "request": {
+        "headers": {
+            "mcp-protocol-version": "2025-11-25",
+            "content-length": "126",
+            "accept": "application/json, text/event-stream",
+            "connection": "keep-alive",
+            "accept-language": "en-GB",
+            "mcp-session-id": "8b2d1534-3ef9-4708-9baf-5cf36b4f5b1f",
+            "content-type": "application/json",
+            "host": "localhost:8000",
+            "user-agent": "ChatWise/26.7.4"
+        },
+        "size": 483,
+        "method": "POST",
+        "url": "http://localhost:8000/marketplace",
+        "id": "cc054f73a6b04f3573cdf02883d92f53",
+        "uri": "/marketplace",
+        "querystring": {}
+    },
+    "route": {
+        "service": {
+            "id": "c16f08e6-4cfe-5c39-8627-f744f091e592"
+        },
+        "regex_priority": 0,
+        "preserve_host": false,
+        "protocols": [
+            "http",
+            "https"
+        ],
+        "path_handling": "v0",
+        "name": "marketplace-mcp-route",
+        "id": "a878697a-8bbc-591b-8640-e1bd5aba261c",
+        "ws_id": "17dadd2f-94c5-4ba4-86bb-8d2d4e6e22cd",
+        "paths": [
+            "/marketplace"
+        ],
+        "updated_at": 1785509686,
+        "strip_path": true,
+        "https_redirect_status_code": 426,
+        "response_buffering": true,
+        "request_buffering": true,
+        "created_at": 1785509686
+    },
+    "started_at": 1785509788214,
+    "client_ip": "192.168.165.1",
+    "workspace": "17dadd2f-94c5-4ba4-86bb-8d2d4e6e22cd",
+    "workspace_name": "default",
+    "ai": {
+        "mcp": {
+            "mcp_session_id": "8b2d1534-3ef9-4708-9baf-5cf36b4f5b1f",
+            "rpc": [
+                {
+                    "id": "2",
+                    "method": "tools/call",
+                    "response_body_size": 2175,
+                    "tool_name": "get-orders-for-user",
+                    "latency": 15,
+                    "payload": {
+                        "request": "{\"id\":2,\"params\":{\"name\":\"get-orders-for-user\",\"arguments\":{\"query_userid\":\"e5f6g7h8\"}},\"jsonrpc\":\"2.0\",\"method\":\"tools/call\"}",
+                        "response": "{\"id\":2,\"jsonrpc\":\"2.0\",\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"[{\\\"id\\\":\\\"ord001\\\",\\\"name\\\":\\\"Sugar (50kg)\\\",\\\"userId\\\":\\\"a1b2c3d4\\\"},{\\\"id\\\":\\\"ord002\\\",\\\"name\\\":\\\"Cleaning Supplies Pack\\\",\\\"userId\\\":\\\"a1b2c3d4\\\"},{\\\"id\\\":\\\"ord003\\\",\\\"name\\\":\\\"Canned Tomatoes (100 cans)\\\",\\\"userId\\\":\\\"a1b2c3d4\\\"},{\\\"id\\\":\\\"ord004\\\",\\\"name\\\":\\\"Flour (100kg)\\\",\\\"userId\\\":\\\"e5f6g7h8\\\"},{\\\"id\\\":\\\"ord005\\\",\\\"name\\\":\\\"Dish Soap (10 bottles)\\\",\\\"userId\\\":\\\"e5f6g7h8\\\"},{\\\"id\\\":\\\"ord006\\\",\\\"name\\\":\\\"Salt (25kg)\\\",\\\"userId\\\":\\\"e5f6g7h8\\\"},{\\\"id\\\":\\\"ord007\\\",\\\"name\\\":\\\"Olive Oil (20L)\\\",\\\"userId\\\":\\\"i9j0k1l2\\\"},{\\\"id\\\":\\\"ord008\\\",\\\"name\\\":\\\"Baking Powder (10kg)\\\",\\\"userId\\\":\\\"i9j0k1l2\\\"},{\\\"id\\\":\\\"ord009\\\",\\\"name\\\":\\\"Rice (200kg)\\\",\\\"userId\\\":\\\"m3n4o5p6\\\"},{\\\"id\\\":\\\"ord010\\\",\\\"name\\\":\\\"Vegetable Oil (15L)\\\",\\\"userId\\\":\\\"m3n4o5p6\\\"},{\\\"id\\\":\\\"ord011\\\",\\\"name\\\":\\\"Pasta (80kg)\\\",\\\"userId\\\":\\\"m3n4o5p6\\\"},{\\\"id\\\":\\\"ord012\\\",\\\"name\\\":\\\"Canned Beans (50 cans)\\\",\\\"userId\\\":\\\"m3n4o5p6\\\"},{\\\"id\\\":\\\"ord013\\\",\\\"name\\\":\\\"Toilet Paper (Case of 48)\\\",\\\"userId\\\":\\\"q7r8s9t0\\\"},{\\\"id\\\":\\\"ord014\\\",\\\"name\\\":\\\"Hand Sanitizer (20 bottles)\\\",\\\"userId\\\":\\\"q7r8s9t0\\\"},{\\\"id\\\":\\\"ord015\\\",\\\"name\\\":\\\"Laundry Detergent (10L)\\\",\\\"userId\\\":\\\"u1v2w3x4\\\"},{\\\"id\\\":\\\"ord016\\\",\\\"name\\\":\\\"Trash Bags (100 ct)\\\",\\\"userId\\\":\\\"u1v2w3x4\\\"},{\\\"id\\\":\\\"ord017\\\",\\\"name\\\":\\\"Disinfectant Spray (5 bottles)\\\",\\\"userId\\\":\\\"u1v2w3x4\\\"},{\\\"id\\\":\\\"ord018\\\",\\\"name\\\":\\\"Coffee Beans (30kg)\\\",\\\"userId\\\":\\\"k7l8m9n0\\\"},{\\\"id\\\":\\\"ord019\\\",\\\"name\\\":\\\"Tea Bags (500ct)\\\",\\\"userId\\\":\\\"k7l8m9n0\\\"},{\\\"id\\\":\\\"ord020\\\",\\\"name\\\":\\\"Condensed Milk (40 cans)\\\",\\\"userId\\\":\\\"k7l8m9n0\\\"},{\\\"id\\\":\\\"ord021\\\",\\\"name\\\":\\\"Paper Towels (24 rolls)\\\",\\\"userId\\\":\\\"g3h4i5j6\\\"},{\\\"id\\\":\\\"ord022\\\",\\\"name\\\":\\\"Broom & Mop Set\\\",\\\"userId\\\":\\\"g3h4i5j6\\\"},{\\\"id\\\":\\\"ord023\\\",\\\"name\\\":\\\"Cereal (20 boxes)\\\",\\\"userId\\\":\\\"c9d0e1f2\\\"},{\\\"id\\\":\\\"ord024\\\",\\\"name\\\":\\\"Powdered Milk (10kg)\\\",\\\"userId\\\":\\\"c9d0e1f2\\\"},{\\\"id\\\":\\\"ord025\\\",\\\"name\\\":\\\"Snacks Variety Pack\\\",\\\"userId\\\":\\\"c9d0e1f2\\\"},{\\\"id\\\":\\\"ord026\\\",\\\"name\\\":\\\"Cooking Gas Cylinder\\\",\\\"userId\\\":\\\"y5z6a7b8\\\"},{\\\"id\\\":\\\"ord027\\\",\\\"name\\\":\\\"Napkins (1000ct)\\\",\\\"userId\\\":\\\"y5z6a7b8\\\"}]\"}],\"isError\":false}}"
+                    }
+                }
+            ]
         }
-      ]
-    }
-  }
+    },
+    "tries": [],
+    "response": {
+        "status": 200,
+        "headers": {
+            "connection": "close",
+            "cache-control": "no-store, no-transform",
+            "transfer-encoding": "chunked",
+            "x-kong-request-id": "cc054f73a6b04f3573cdf02883d92f53",
+            "server": "kong/2.0.1-ai-gateway",
+            "content-type": "text/event-stream",
+            "x-kong-response-latency": "14"
+        },
+        "size": 2503
+    },
+    "service": {
+        "name": "marketplace-mcp",
+        "ws_id": "17dadd2f-94c5-4ba4-86bb-8d2d4e6e22cd",
+        "host": "host.docker.internal",
+        "write_timeout": 60000,
+        "connect_timeout": 60000,
+        "updated_at": 1785509686,
+        "read_timeout": 60000,
+        "retries": 5,
+        "id": "c16f08e6-4cfe-5c39-8627-f744f091e592",
+        "created_at": 1785509686,
+        "port": 3000,
+        "enabled": true,
+        "protocol": "http"
+    },
+    "source": "kong",
+    "upstream_status": ""
 }
+
 ```
