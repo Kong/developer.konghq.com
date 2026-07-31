@@ -91,7 +91,7 @@ automated_tests: false
 
 ## Create an AI Agent and OpenID Connect Policy
 
-Create an [OpenID Connect Policy](/ai-gateway/policies/openid-connect/) scoped to this Agent (`global: false`) that validates Okta bearer tokens, and an [AI Agent](/ai-gateway/entities/ai-agent/) that attaches it via `policies:`.
+Create an [OpenID Connect Policy](/ai-gateway/policies/openid-connect/) scoped to this Agent (`global: false`) that validates Okta bearer tokens, and an [AI Agent](/ai-gateway/entities/ai-agent/) that attaches to it via `policies:`.
 
 {% entity_examples %}
 ai_gateway_policies:

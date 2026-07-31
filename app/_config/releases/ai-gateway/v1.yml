@@ -107,7 +107,6 @@ app/_how-tos/ai-gateway/v1/secure-a2a-traffic.md:
   status: pending
   canonical_url: /ai-gateway/a2a/
 app/_how-tos/ai-gateway/v1/secure-a2a-with-oidc.md:
-  status: pending
   canonical_url: /ai-gateway/secure-ai-agent-with-oidc/
 app/_how-tos/ai-gateway/v1/send-asynchronous-llm-requests.md:
   status: pending
