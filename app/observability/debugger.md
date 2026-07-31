@@ -149,11 +149,11 @@ Authentication and identity headers (for example, `Authorization`, API key heade
 
 Payload capture records the following:
 
-* The client request and response.
-* {% new_in 3.14 %} The upstream request and response.
-* {% new_in 3.14 %} Headers and body before and after each plugin runs, including custom plugins.
-* {% new_in 3.14 %} The contents of calls {{site.base_gateway}} makes to dependencies during request processing, such as Redis for rate limiting, an identity provider for token validation, or DNS for resolution.
-* {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`), automatically decompressed so they appear as readable text.
+* The client request and response
+* {% new_in 3.14 %} The upstream request and response
+* {% new_in 3.14 %} Headers and body before and after each plugin runs, including custom plugins
+* {% new_in 3.14 %} The contents of calls {{site.base_gateway}} makes to dependencies during request processing, such as Redis for rate limiting, an identity provider for token validation, or DNS for resolution
+* {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`), automatically decompressed so they appear as readable text
 
 {:.info}
 > **Note:** The log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. Matched characters are replaced with `*`.
@@ -181,13 +181,12 @@ Matched content is replaced with `*`.
 
 ### {{site.ai_gateway}} {% new_in 3.14 %}
 
-When a Route has AI plugins configured, payload capture gives you an AI-aware view of the request.
-In addition to the standard payloads, the {{site.ai_gateway}} details view shows the prompt at each stage of the pipeline:
+When a Route has AI plugins configured, payload capture shows the standard payloads in addition to the {{site.ai_gateway}} details view that shows the prompt at each stage of the pipeline:
 
-* What the client sent.
-* What each AI plugin did to the prompt, for example PII sanitization or content filtering.
-* The final prompt sent to the model provider, after all plugins have run.
-* What the model returned, and how any response plugins transformed it.
+* What the client sent
+* What each AI plugin did to the prompt, for example PII sanitization or content filtering
+* The final prompt sent to the model provider, after all plugins have run
+* What the model returned, and how any response plugins transformed it
 
 Use this to confirm guardrails fired, policies were enforced, and transformations produced the prompt you expected.
 You can also diagnose why a semantic cache hit or missed, or inspect what a guardrail service returned.
