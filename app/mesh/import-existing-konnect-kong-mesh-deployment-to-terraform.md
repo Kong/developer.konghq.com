@@ -17,7 +17,7 @@ tags:
 permalink: /mesh/import-konnect-deployment-to-terraform/
 related_resources:
   - text: "Deploy {{site.mesh_product_name}} using Terraform and {{site.konnect_short_name}}"
-    url: /mesh/deploy-with-terraform-konnect/
+    url: /mesh/deploy-mesh-using-terraform-and-konnect/
   - text: "Terraform provider (Beta)"
     url: https://registry.terraform.io/providers/kong/konnect-beta/latest
   - text: "Mesh Policy Catalog"
