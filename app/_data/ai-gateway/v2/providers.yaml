@@ -1569,6 +1569,8 @@ providers:
       generate:
         supported: true
         streaming: true
+        paths:
+          - '/chat/completions'
         upstream_path: '`/endpoints/{endpoint_name}/invocations` (or `/endpoints/{endpoint_name}/invocations-response-stream` for streaming)'
         model_example: 'User-defined (the name of your SageMaker endpoint)'
         min_version: '2.0'
