@@ -209,32 +209,6 @@ rows:
 
   - header:
       type: h2
-      text: "Other traffic types"
-      description: |
-        {{site.ai_gateway}} governs more than LLM traffic. It also secures and observes Model Context Protocol (MCP) and Agent-to-Agent (A2A) communication.
-    column_count: 2
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: MCP
-            description: Expose and govern tools from MCP servers, with authentication, rate limiting, and observability.
-            icon: /assets/icons/mcp.svg
-            cta:
-              url: /ai-gateway/mcp/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: A2A
-            description: Route and secure Agent-to-Agent traffic between AI agents with protocol-aware visibility.
-            icon: /assets/icons/a2a-quickstart.svg
-            cta:
-              url: /ai-gateway/a2a/
-              align: end
-
-  - header:
-      type: h2
       text: Proxy AI CLI tools
       description: |
         {{site.ai_gateway}} can proxy requests from AI command-line tools to LLM providers. This gives you centralized control over AI traffic, including authentication, governance, and observability.
@@ -332,6 +306,27 @@ rows:
           config:
             url: /assets/images/gateway/universal-api.svg
             alt_text: Overview of AI gateway
+
+  - column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic gateway
+            description: Expose and govern tools from MCP servers, with authentication, rate limiting, and observability.
+            icon: /assets/icons/mcp.svg
+            cta:
+              url: /ai-gateway/mcp/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: A2A traffic gateway
+            description: Route and secure Agent-to-Agent traffic between AI agents with protocol-aware visibility.
+            icon: /assets/icons/a2a-quickstart.svg
+            cta:
+              url: /ai-gateway/a2a/
+              align: end
 
   - header:
       type: h2
