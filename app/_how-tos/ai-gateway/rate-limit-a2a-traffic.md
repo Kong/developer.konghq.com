@@ -20,7 +20,7 @@ tags:
 
 tldr:
   q: "How do I rate limit A2A traffic in {{site.ai_gateway}}?"
-  a: "Create a Rate Limiting Advanced AI Policy and attach it to an AI Agent. Requests that exceed the limit are rejected with 429. You can combine this with an authentication policy so that rate limits apply per consumer."
+  a: "Create a Rate Limiting Advanced Policy and attach it to an AI Agent. Requests that exceed the limit are rejected with 429. You can combine this with an authentication policy so that rate limits apply per consumer."
 tools:
   - kongctl
 
@@ -64,7 +64,9 @@ automated_tests: false
 
 Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A traffic to your upstream agent and a [Rate Limiting Advanced Policy](/ai-gateway/policies/rate-limiting-advanced/) that counts requests per consumer and rejects requests that exceed the configured limit. 
 
-This configuration allows 5 requests per 30 seconds, intentionally low to make it easy to trigger during testing. The AI Policy is attached to the AI Agent by using  `!ref rate-limit-bookings-agent#name` to refer to it by name.
+This configuration allows 5 requests per 30 seconds. 
+These settings are intentionally low to make it easy to trigger during testing. 
+The AI Policy is attached to the AI Agent by using  `!ref rate-limit-bookings-agent#name` to refer to it by name.
 
 {% entity_examples %}
 ai_gateway_policies:
@@ -146,17 +148,6 @@ x-ratelimit-remaining-30: 4
 
 Send 6 requests to the agent card endpoint in a loop to exceed the limit. The AI Agent detects each request as an A2A `GetAgentCard` operation, so the rate limit applies the same way it does for `message/send` or any other A2A method.
 
-{% on_prem %}
-content: |
-  ```sh
-  for i in $(seq 1 6); do
-    echo "--- Request $i ---"
-    curl -s -o /dev/null -w "HTTP status: %{http_code}\n"\
-      http://localhost:8000/a2a/.well-known/agent-card.json \
-      -H "apikey: a2a-secret-key-1"
-  done
-  ```
-{% endon_prem %}
 
 {% konnect %}
 content: |
@@ -170,7 +161,7 @@ content: |
   ```
 {% endkonnect %}
 
-The first 5 requests return `HTTP status: 200`. The 6th request returns `HTTP status: 429`:
+The first four requests return `HTTP status: 200`. The 5th request returns `HTTP status: 429`:
 
 ```
 --- Request 1 ---
@@ -182,7 +173,7 @@ HTTP status: 200
 --- Request 4 ---
 HTTP status: 200
 --- Request 5 ---
-HTTP status: 200
+HTTP status: 429
 --- Request 6 ---
 HTTP status: 429
 ```
