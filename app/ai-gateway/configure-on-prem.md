@@ -123,7 +123,13 @@ Access control and secret management on-prem use the same {{site.base_gateway}} 
 ## Convert {{site.ai_gateway}} 2.0 entities to self-hosted {{site.base_gateway}} config
 
 Use `deck file ai2kong` to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities.
-The following steps walk through converting a decK `ai.yaml` file for a single AI Model.
+
+AI Model, AI MCP Server, AI Agent, and AI Policy entities need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins.
+AI Consumers, AI Consumer Groups, and AI Vaults pass through `deck file ai2kong` unchanged, since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-and-vaults).
+
+The following examples walk through converting a decK `ai.yaml` file for a single AI Model, AI MCP Server, AI Agent, and AI Policy.
+
+### Convert an AI Model
 
 1. Write a decK `ai.yaml` configuration file using the {{site.ai_gateway}} 2.0 entity model. For example, the following AI Model, `gpt-5-2`, exposes the `generate` capability on `/ai` and routes to a single target backed by the `openai-prod` AI Provider:
 
@@ -219,6 +225,219 @@ The following steps walk through converting a decK `ai.yaml` file for a single A
    {: .no-copy-code .collapsible }
 
    The AI Provider generates no object of its own. Its `type` becomes the target's `model.provider`, and its `auth` is materialized into the same `ai-proxy-advanced` target.
+1. Sync the converted config to your self-hosted {{site.base_gateway}}:
+   ```sh
+   deck gateway sync kong.yaml
+   ```
+
+### Convert an AI MCP Server
+
+1. Write a decK `ai.yaml` configuration file using the {{site.ai_gateway}} 2.0 entity model that defines an AI MCP Server in [conversion-listener mode](/ai-gateway/entities/ai-mcp-server/#server-modes), which converts a REST endpoint into an MCP tool. For example, the following AI MCP Server, `demo-mcp`, exposes a single `get-item` tool that proxies a REST `GET` request:
+
+   ```sh
+   echo '
+   mcp_servers:
+     - ref: demo-mcp
+       name: demo-mcp
+       display_name: "Demo MCP Server"
+       type: conversion-listener
+       enabled: true
+       access:
+         acl_attribute_type: consumer
+       config:
+         url: https://mock.example.com
+         route:
+           paths:
+             - /demo-mcp
+       tools:
+         - name: get-item
+           description: Fetch an item by id
+           annotations:
+             title: Fetch an item by id
+           method: GET
+           path: /items/{itemId}
+           parameters:
+             - name: itemId
+               in: path
+               description: The item id
+               required: true
+               schema:
+                 type: string
+   ' > ai.yaml
+   ```
+1. Convert the {{site.ai_gateway}} entity config to {{site.base_gateway}} 3.x config:
+
+   ```sh
+   deck file ai2kong --source ai.yaml --output-file kong.yaml
+   ```
+   For this example AI MCP Server, {{site.ai_gateway}} generates a Service, a Route, and an `ai-mcp-proxy` plugin carrying the tool definition. `kong.yaml` contains:
+
+   ```yaml
+   _format_version: "3.0"
+   _info:
+     select_tags:
+     - 'managed_by:deck-ai'
+   services:
+   - host: localhost
+     name: demo-mcp
+     routes:
+     - name: demo-mcp-route
+       paths:
+       - /demo-mcp
+       plugins:
+       - config:
+           include_consumer_groups: true
+           logging:
+             log_audits: false
+             log_payloads: false
+             log_statistics: true
+           mode: conversion-listener
+           tools:
+           - annotations:
+               title: Fetch an item by id
+             description: Fetch an item by id
+             method: GET
+             name: get-item
+             parameters:
+             - description: The item id
+               in: path
+               name: itemId
+               required: true
+               schema:
+                 type: string
+             path: /items/{itemId}
+         name: ai-mcp-proxy
+   ```
+   {: .no-copy-code .collapsible }
+1. Sync the converted config to your self-hosted {{site.base_gateway}}:
+   ```sh
+   deck gateway sync kong.yaml
+   ```
+
+### Convert an AI Agent
+
+1. Write a decK `ai.yaml` configuration file using the {{site.ai_gateway}} 2.0 entity model that defines an AI Agent using the A2A protocol. For example, the following AI Agent, `demo-agent`, proxies Agent-to-Agent traffic to an upstream agent:
+
+   ```sh
+   echo '
+   agents:
+     - ref: demo-agent
+       name: demo-agent
+       type: a2a
+       display_name: "Demo Agent"
+       enabled: true
+       labels:
+         team: demo
+       config:
+         url: https://agent.example.com
+         route:
+           paths:
+             - /agents/demo
+         logging:
+           max_payload_size: 524288
+   ' > ai.yaml
+   ```
+1. Convert the {{site.ai_gateway}} entity config to {{site.base_gateway}} 3.x config:
+
+   ```sh
+   deck file ai2kong --source ai.yaml --output-file kong.yaml
+   ```
+   For this example AI Agent, {{site.ai_gateway}} generates a Service, a Route, and an `ai-a2a-proxy` plugin on that Route. `kong.yaml` contains:
+
+   ```yaml
+   _format_version: "3.0"
+   _info:
+     select_tags:
+     - 'managed_by:deck-ai'
+   services:
+   - name: demo-agent
+     routes:
+     - name: demo-agent-route
+       paths:
+       - /agents/demo
+       plugins:
+       - config:
+           logging:
+             log_payloads: false
+             log_statistics: true
+             max_payload_size: 524288
+         name: ai-a2a-proxy
+     tags:
+     - team:demo
+     url: https://agent.example.com
+   ```
+   {: .no-copy-code .collapsible }
+1. Sync the converted config to your self-hosted {{site.base_gateway}}:
+   ```sh
+   deck gateway sync kong.yaml
+   ```
+
+### Convert an AI Policy
+
+An AI Policy generates no object of its own. It must be attached to another entity, such as an AI Model, AI Agent, or AI MCP Server, and converts into the {{site.base_gateway}} plugin named by the policy `type`, scoped to that entity's Route.
+
+1. Add a `policies` entry to the `ai.yaml` from the [AI Model example](#convert-an-ai-model), and reference it from the model's `policies` field. For example, the following `ai-gw-prompt-guard` policy attaches to the `gpt-5-2` model:
+
+   ```sh
+   echo '
+   models:
+     - name: gpt-5-2
+       capabilities:
+         - generate
+       formats:
+         - type: openai
+       config:
+         route:
+           paths:
+             - /ai
+           model:
+             path_aliases: ["@openai/gpt-5.2"]
+       policies:
+         - ai-gw-prompt-guard
+       targets:
+         - name: gpt-5.2
+           provider: openai-prod
+           config:
+             type: openai
+             temperature: 1.0
+             max_tokens: 1024
+   model_providers:
+     - name: openai-prod
+       type: openai
+       config:
+         auth:
+           type: basic
+           headers:
+             - name: Authorization
+               value: "{vault://ai/openai-token}"
+   policies:
+     - ref: ai-gw-prompt-guard
+       name: ai-gw-prompt-guard
+       display_name: "AI Prompt Guard"
+       type: ai-prompt-guard
+       enabled: true
+       config:
+         deny_patterns:
+           - ".*(W|w)ar.*"
+   ' > ai.yaml
+   ```
+1. Convert the {{site.ai_gateway}} entity config to {{site.base_gateway}} 3.x config:
+
+   ```sh
+   deck file ai2kong --source ai.yaml --output-file kong.yaml
+   ```
+   {{site.ai_gateway}} generates the same Service, Route, `ai-model-selector`, and `ai-proxy-advanced` plugins as the AI Model example, plus an `ai-prompt-guard` plugin on the same Route, scoped to the `gpt-5-2` model:
+
+   ```yaml
+   - config:
+       deny_patterns:
+       - .*(W|w)ar.*
+     model: gpt-5-2
+     name: ai-prompt-guard
+     route: openai-chat
+   ```
+
+   The `model` and `route` fields on the plugin are what scope it to that AI Model's traffic instead of applying globally.
 1. Sync the converted config to your self-hosted {{site.base_gateway}}:
    ```sh
    deck gateway sync kong.yaml
