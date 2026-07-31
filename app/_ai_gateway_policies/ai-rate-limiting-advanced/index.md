@@ -59,7 +59,7 @@ data:
         - limit: 1000
           window_size: 3600
 formats:
-  - konnect-api
+  - kongctl
 {% endentity_example %}
 
 In this example, the limits will apply only to requests made by the specified AI Consumer to the `gpt-4o` model.
@@ -68,6 +68,63 @@ Policies without match conditions act as fallback and match all requests.
 
 {:.warning}
 > When defining rate limits for a specific model, these limits apply to the **requested** model. If a request is redirected to a different model after a failover, the request may succeed even if the final model has reached its limit.
+
+### Window types
+
+Each policy sets a [`window_type`](./reference/#schema--config-policies-window-type): `fixed`, `sliding`, or `calendar`.
+
+* `sliding` (default): Weighs the current window against the previous one to produce a dynamically calculated rate.
+* `fixed`: Assigns each request to a single time bucket based on its timestamp.
+* `calendar`: Aligns the window to a real calendar boundary in a specific time zone, instead of a rolling `window_size`.
+
+#### Calendar windows
+
+Calendar windows budget tokens against the same period your billing already uses, such as a monthly allowance that resets on the 1st, instead of a rolling window that drifts from the billing cycle.
+
+Set `window_type: calendar` on the policy and [`timezone`](./reference/#schema--config-policies-timezone) to an IANA time zone, such as `America/New_York`. Each limit then sets a [`period`](./reference/#schema--config-policies-limits-period) instead of `window_size`:
+
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`period`"
+    description: "`month` or `week`."
+  - field: "`month_day`"
+    description: Required when `period` is `month`. This is the day of the month (1-31) that a monthly window starts.
+  - field: "`week_start_day`"
+    description: Day of the week a weekly window starts, such as `monday`. Only applies when `period` is `week`.
+{% endtable %}
+
+{% entity_example %}
+type: policy
+data:
+  name: ai-rate-limiting-advanced
+  type: ai-rate-limiting-advanced
+  config:
+    policies:
+    - window_type: calendar
+      timezone: America/New_York
+      match:
+      - type: consumer_group
+        values:
+        - premium
+      limits:
+        - limit: 2000000
+          period: month
+          month_day: 1
+          tokens_count_strategy: total_tokens
+formats:
+  - kongctl
+{% endentity_example %}
+
+This policy grants the `premium` AI Consumer Group 2,000,000 tokens per calendar month, resetting at local midnight on the 1st in `America/New_York`.
+
+{:.info}
+> For calendar windows, `X-AI-RateLimit-Reset` and `X-AI-RateLimit-Retry-After` point to the next calendar boundary (the start of the next week or month in the configured time zone), not `now + window_size`.
 
 ### Known issues
 
