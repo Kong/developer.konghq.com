@@ -115,21 +115,7 @@ Federating a zone control plane moves {{site.mesh_product_name}} from a single-z
    kumactl export --profile=federation --format=universal > resources.yaml
    ```
 
-1. Configure `kumactl` to target the {{site.konnect_short_name}}-managed global control plane. This points `kumactl` at your control plane's API and authenticates with your {{site.konnect_short_name}} token:
-
-   ```bash
-   kumactl config control-planes add \
-     --name konnect \
-     --address https://$KONNECT_REGION.api.konghq.com/v1/mesh/control-planes/$CONTROL_PLANE_ID/api \
-     --headers "authorization=Bearer $KONNECT_TOKEN" \
-     --overwrite
-   ```
-
-1. Apply the exported resources to the {{site.konnect_short_name}} global control plane:
-
-   ```bash
-   kumactl apply -f resources.yaml
-   ```
+{% include how-tos/mesh/apply-resources-to-konnect.md %}
 
 ## Connect the zone control plane to {{site.konnect_short_name}}
 
@@ -137,50 +123,7 @@ Generate a zone token from the {{site.konnect_short_name}}-managed global contro
 
 {% include how-tos/mesh/generate-zone-token-api.md %}
 
-1. Store the zone token in a Kubernetes secret:
-
-   ```sh
-   echo "
-   apiVersion: v1
-   kind: Secret
-   metadata:
-     name: cp-token
-     namespace: {{site.mesh_namespace}}
-   type: Opaque
-   stringData:
-     token: $CONTROL_PLANE_TOKEN
-   " | kubectl apply -f -
-   ```
-
-1. Create a Helm values file that connects the zone to {{site.konnect_short_name}}:
-
-   ```sh
-   cat <<EOF > values.yaml
-   kuma:
-     controlPlane:
-       mode: zone
-       zone: zone-1
-       kdsGlobalAddress: grpcs://$KONNECT_REGION.mesh.sync.konghq.com:443
-       konnect:
-         cpId: $CONTROL_PLANE_ID
-       secrets:
-         - Env: KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_INLINE
-           Secret: cp-token
-           Key: token
-     ingress:
-       enabled: true
-     egress:
-       enabled: true
-   EOF
-   ```
-
-1. Apply the new configuration to the existing zone control plane:
-
-   ```sh
-   helm upgrade --namespace {{site.mesh_namespace}} {{site.mesh_helm_install_name}} {{site.mesh_helm_repo}} -f values.yaml
-   ```
-
-   {{site.konnect_short_name}} automatically detects and displays the zone once it reconnects.
+{% include how-tos/mesh/reconnect-zone-to-konnect.md %}
 
 ## Validate
 
