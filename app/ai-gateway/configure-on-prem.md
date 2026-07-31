@@ -123,7 +123,10 @@ Access control and secret management on-prem use the same {{site.base_gateway}} 
 ## Convert {{site.ai_gateway}} 2.0 entities to self-hosted {{site.base_gateway}} config
 
 Use `deck file ai2kong` to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities.
-The following examples walk through converting a decK `ai.yaml` file for a single AI Model, AI MCP Server, and AI Agent.
+AI Models, AI MCP Servers, AI Agents, and AI Policies are the entities that need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins.
+AI Consumers, AI Consumer Groups, and AI Vaults pass through `deck file ai2kong` unchanged, since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-and-vaults).
+
+The following examples walk through converting a decK `ai.yaml` file for a single AI Model, AI MCP Server, AI Agent, and AI Policy.
 
 ### Convert an AI Model
 
