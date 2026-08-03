@@ -58,9 +58,10 @@ data:
   type: sagemaker
   config:
     auth:
-      type: aws
-      access_key_id: $AWS_ACCESS_KEY_ID
-      secret_access_key: $AWS_SECRET_ACCESS_KEY
+      type: sagemaker
+      aws:
+        access_key_id: $AWS_ACCESS_KEY_ID
+        secret_access_key: $AWS_SECRET_ACCESS_KEY
 {% endentity_example %}
 
 {% include md/ai-gateway/v2/aws-auth.md %}
