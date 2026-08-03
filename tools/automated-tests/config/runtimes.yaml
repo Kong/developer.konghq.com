@@ -157,6 +157,9 @@ konnect:
       commands:
         - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
         - docker compose -f /files/event-gateway/docker-compose.yaml down
+        - |
+          AUTH_SERVER_ID=$(curl -s -X GET "https://us.api.konghq.com/v1/auth-servers?filter%5Bname%5D%5Beq%5D=Appointments%20Dev" -H "Authorization: Bearer $KONNECT_TOKEN" | jq -r '.data[0].id') &&
+            curl -s -X DELETE "https://us.api.konghq.com/v1/auth-servers/$AUTH_SERVER_ID?force=true" -H "Authorization: Bearer $KONNECT_TOKEN"
 
     reset:
       commands:
