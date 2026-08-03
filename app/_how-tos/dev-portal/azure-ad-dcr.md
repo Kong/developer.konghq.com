@@ -99,7 +99,7 @@ In Azure, create the main application:
 
 1. Click **Microsoft Graph**.
 
-1. Select the the following permissions:
+1. Select the following permissions:
    * **User.Read** under **Delegated permissions**
    * **Application.ReadWrite.OwnedBy** under **Appilcation permissions**
 
