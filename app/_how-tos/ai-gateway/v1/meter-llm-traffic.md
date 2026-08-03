@@ -175,6 +175,8 @@ variables:
 {% endentity_examples %}
 <!--vale on-->
 
+This example meters a few representative dimensions. For every field the plugin can emit, see [Captured event dimensions](/plugins/metering-and-billing/#captured-event-dimensions).
+
 ## Create a feature
 
 Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering LLM token usage, you need to label that as something you want to price or govern.
