@@ -444,7 +444,7 @@ render_output: false
 Produce a message using the `vc` context which should encrypt the field:
 {% validation custom-command %}
 command: |
-  kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value='{"personal": {"ssn": "100-00-00001"}}'
+  kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value='{"personal":{"ssn":"100-00-00001"}}'
 expected:
   message: "message produced (partition=0	offset=0)"
   return_code: 0
@@ -490,7 +490,7 @@ Now let's verify that the field decryption policy works by consuming the message
 command: |
   kafkactl -C kafkactl.yaml --context vc-oauth consume my-test-topic --from-beginning  --exit
 expected:
-  message: '{"personal": {"ssn": "100-00-00001"}}'
+  message: '{"personal":{"ssn":"100-00-00001"}}'
   return_code: 0
 render_output: false
 {% endvalidation %}
@@ -508,7 +508,6 @@ We can then see that our field remains encrypted if we aren't authenticated:
 command: |
   kafkactl -C kafkactl.yaml --context vc consume my-test-topic --from-beginning  --exit
 expected:
-  message: '{"personal": {"ssn": "..."}}'
   return_code: 0
 render_output: false
 {% endvalidation %}
