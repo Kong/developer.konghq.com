@@ -113,7 +113,11 @@ To get started configuring Auth0, log in to your Auth0 dashboard and complete th
    ```sh
    export CLIENT_ID='YOUR-AUTH0-CLIENT-ID'
    export CLIENT_SECRET='YOUR-AUTH0-CLIENT-SECRET'
-   export ISSUER_URL='https://AUTH0_TENANT_SUBDOMAIN.us.auth0.com'
+
+8. Under **Settings** > **General**, locate your tenant name and export the corresponding issuer URL:
+
+   ```sh
+   export ISSUER_URL='https://AUTH0_TENANT_NAME.us.auth0.com'
    ```
 
 ## Configure the API audience
@@ -133,7 +137,7 @@ To create a new API audience in Auth0:
 
 5. Click **Create**.
 
-6. Make a note of the **Identifier** value (also known as the **Audience**), then export it:
+6. Make a note of the **Identifier** value (also known as the **Audience**), then export it to your environment:
 
    ```sh
    export AUDIENCE='YOUR-AUTH0-API-IDENTIFIER'
@@ -145,6 +149,7 @@ After configuring Auth0, you can integrate it with the Dev Portal for Dynamic Cl
 
 1. [Create a DCR provider](/api/konnect/application-auth-strategies/v2/#/operations/create-dcr-provider) using the `/v2/dcr-providers` endpoint:
 
+{% capture request %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/dcr-providers
@@ -159,9 +164,12 @@ body:
     initial_client_secret: "$CLIENT_SECRET"
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endcapture %}
+
+{{request | indent}}
 
    {:.info}
-   > **Note:** If you're using a custom domain for Auth0, add `initial_client_audience: "$CLIENT_AUDIENCE"` to the `dcr_config`. If you're using Developer Managed Scopes, add `use_developer_managed_scopes: true` to the `dcr_config`.
+   > **Note:** If you're using a custom domain for Auth0, add `initial_client_audience: "$AUDIENCE"` to the `dcr_config`. If you're using Developer Managed Scopes, add `use_developer_managed_scopes: true` to the `dcr_config`.
 
 1. Export the DCR provider ID from the response:
 
@@ -171,6 +179,7 @@ body:
 
 1. [Create an authentication strategy](/api/konnect/application-auth-strategies/v2/#/operations/create-app-auth-strategy) using the `/v2/application-auth-strategies` endpoint:
 
+{% capture request %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/application-auth-strategies
@@ -198,6 +207,9 @@ body:
   dcr_provider_id: "$DCR_PROVIDER_ID"
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endcapture %}
+
+{{request | indent}}
 
    {:.info}
    > **Note:** The `azp` credential claim matches the client ID of each Auth0 application. Add any additional scopes your developers may need. If you're using Developer Managed Scopes, these will be the scopes developers can select in the Dev Portal.
