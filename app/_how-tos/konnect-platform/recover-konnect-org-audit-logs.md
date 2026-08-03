@@ -86,6 +86,10 @@ faqs:
   - q: How many days of {{site.konnect_short_name}} org audit logs can I recover?
     a: |
       {{site.konnect_short_name}} only collects audit logs from the past seven days, so you can only recover up to seven days of logs from the current date.
+  - q: |
+      {% include faqs/pull-audit-logs-api.md section='question' %}
+    a: |
+      {% include faqs/pull-audit-logs-api.md section='answer' %}
 ---
 
 ## Configure a replay job
