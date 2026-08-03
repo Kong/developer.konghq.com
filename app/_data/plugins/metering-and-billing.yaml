@@ -1,0 +1,116 @@
+# Event dimensions emitted by the Metering & Billing plugin.
+# Source of truth: kong-ee/kong/plugins/metering-and-billing/cloudevent.lua
+# Operator-configured `attributes` add custom fields that are not listed here.
+events:
+  - type: kong.api_request
+    when: "Emitted for each proxied API request when `meter_api_requests` is enabled on the plugin."
+    fields:
+      - field: client_ip
+        type: string
+        description: "Client IP address that made the request."
+      - field: control_plane_id
+        type: string
+        description: "ID of the control plane that produced the event."
+      - field: request_host
+        type: string
+        description: "Host of the request."
+      - field: request_method
+        type: string
+        description: "HTTP method of the request."
+      - field: request_uri
+        type: string
+        description: "URI path of the request."
+      - field: request_size_bytes
+        type: integer
+        description: "Size of the request in bytes."
+      - field: request_user_agent
+        type: string
+        description: "User agent of the request."
+      - field: response_size_bytes
+        type: integer
+        description: "Size of the response in bytes."
+      - field: response_http_status
+        type: integer
+        description: "HTTP status code of the response."
+      - field: route_id
+        type: string
+        description: "ID of the matched Route."
+      - field: route_name
+        type: string
+        description: "Name of the matched Route."
+      - field: service_id
+        type: string
+        description: "ID of the Gateway Service."
+      - field: service_name
+        type: string
+        description: "Name of the Gateway Service."
+      - field: service_port
+        type: integer
+        description: "Port of the Gateway Service."
+      - field: service_protocol
+        type: string
+        description: "Protocol of the Gateway Service."
+      - field: subject_type
+        type: string
+        description: "Type of the resolved subject, for example consumer_id."
+      - field: upstream_status
+        type: integer
+        description: "HTTP status code returned by the upstream service."
+  - type: kong.llm_request
+    when: "Emitted for AI traffic when `meter_ai_token_usage` is enabled. A separate event is produced for the request and the response."
+    fields:
+      - field: type
+        type: string
+        description: "Phase of the interaction, either request or response."
+      - field: control_plane_id
+        type: string
+        description: "ID of the control plane that produced the event."
+      - field: service_id
+        type: string
+        description: "ID of the Gateway Service."
+      - field: route_id
+        type: string
+        description: "ID of the matched Route."
+      - field: http_status
+        type: integer
+        description: "HTTP status code of the response."
+      - field: api_request_id
+        type: string
+        description: "Identifier that correlates the request and response events."
+      - field: ai_plugin_id
+        type: string
+        description: "ID of the AI plugin that handled the request."
+      - field: ai_plugin_name
+        type: string
+        description: "Name of the AI plugin that handled the request."
+      - field: model
+        type: string
+        description: "LLM model name. Reflects the request or response model depending on the type."
+      - field: provider
+        type: string
+        description: "LLM provider name, for example openai."
+      - field: tokens
+        type: integer
+        description: "Token count. Prompt tokens for request events and completion tokens for response events."
+      - field: cache_status
+        type: string
+        description: "Cache status of the AI response."
+      - field: subject_type
+        type: string
+        description: "Type of the resolved subject, for example consumer_id."
+portal_fields:
+  - field: application_id
+    type: string
+    description: "ID of the associated application."
+  - field: portal_id
+    type: string
+    description: "ID of the associated Dev Portal."
+  - field: api_product_version_id
+    type: string
+    description: "ID of the associated API product version."
+  - field: api_id
+    type: string
+    description: "ID of the associated API."
+  - field: api_package_id
+    type: string
+    description: "ID of the associated API package."
