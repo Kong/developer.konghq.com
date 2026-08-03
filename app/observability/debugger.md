@@ -123,6 +123,16 @@ When viewing a trace, you can click **Analyze with KAi** to send the trace to [K
 In critical scenarios, having access to payload details can help identify and pinpoint failures.
 Payload capture lets you configure a debug session to capture headers and/or body for requests and responses.
 
+Payload capture records the following:
+
+* The client request and response
+* {% new_in 3.14 %} The upstream request and response
+* {% new_in 3.14 %} Headers and body before and after each plugin runs, including custom plugins
+* {% new_in 3.14 %} The contents of calls {{site.base_gateway}} makes to third-party dependencies during request processing, such as Redis for rate limiting, an identity provider for token validation, or DNS for resolution
+* {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`), automatically decompressed so they appear as readable text
+
+You can use this information to compare the sent request with the received request, and the sent response with the received response, to identify where a failure occurred.
+
 {:.info}
 > Due to the nature of this telemetry, you must explicitly opt in by signing the Advanced Features Addendum.
 > Contact your organization admin or your Kong representative to get started.
@@ -146,14 +156,6 @@ Sampling filters and sanitization run on the data plane before any data is trans
 
 The log sanitizer scrubs transactions and redacts sensitive data like credit card numbers from the payload.
 Authentication and identity headers (for example, `Authorization`, API key header values, and Consumer ID header fields) are also masked by default.
-
-Payload capture records the following:
-
-* The client request and response
-* {% new_in 3.14 %} The upstream request and response
-* {% new_in 3.14 %} Headers and body before and after each plugin runs, including custom plugins
-* {% new_in 3.14 %} The contents of calls {{site.base_gateway}} makes to dependencies during request processing, such as Redis for rate limiting, an identity provider for token validation, or DNS for resolution
-* {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`), automatically decompressed so they appear as readable text
 
 {:.info}
 > **Note:** The log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. Matched characters are replaced with `*`.
