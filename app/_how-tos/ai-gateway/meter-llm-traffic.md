@@ -140,14 +140,9 @@ body:
     aggregation: sum
     value_property: $.tokens
     dimensions:
-        http_status: $.http_status
         model: $.model
         provider: $.provider
         type: $.type
-        control_plane_id: $.control_plane_id
-        service_id: $.service_id
-        route_id: $.route_id
-        ai_plugin_id: $.ai_plugin_id
 {% endkonnect_api_request %}
 <!--vale on-->
 

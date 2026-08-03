@@ -173,19 +173,9 @@ body:
   event_type: kong.api_request
   aggregation: count
   dimensions:
-    request_host: $.request_host
     request_method: $.request_method
-    request_uri: $.request_uri
-    response_http_status: $.response_http_status
     route_name: $.route_name
-    client_ip: $.client_ip
-    upstream_status: $.upstream_status
-    route_id: $.route_id
-    control_plane_id: $.control_plane_id
-    service_id: $.service_id
     service_name: $.service_name
-    service_port: $.service_port
-    service_protocol: $.service_protocol
 {% endkonnect_api_request %}
 <!--vale on-->
 
