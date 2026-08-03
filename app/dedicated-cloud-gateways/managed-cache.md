@@ -20,11 +20,15 @@ related_resources:
     url: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
   - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane
     url: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
+  - text: Flush a Dedicated Cloud Gateway managed cache using Terraform
+    url: /dedicated-cloud-gateways/flush-managed-cache/
 next_steps:
   - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane
     url: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
   - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane
     url: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
+  - text: Flush a Dedicated Cloud Gateway managed cache using Terraform
+    url: /dedicated-cloud-gateways/flush-managed-cache/
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
 tags:
@@ -38,6 +42,7 @@ tags:
 > * [Configure an AWS managed cache for a Dedicated Cloud Gateway control plane group](/dedicated-cloud-gateways/aws-managed-cache-control-plane-group/)
 > * [Configure an Azure managed cache for a Dedicated Cloud Gateway control plane](/dedicated-cloud-gateways/azure-managed-cache-control-plane/)
 > * [Configure an Azure managed cache for a Dedicated Cloud Gateway control plane group](/dedicated-cloud-gateways/azure-managed-cache-control-plane-group/)
+> * [Flush a Dedicated Cloud Gateway managed cache using Terraform](/dedicated-cloud-gateways/flush-managed-cache/)
 
 {% include_cached /sections/managed-cache-intro.md %}
 
@@ -109,7 +114,6 @@ rows:
       `micro` fails at 10,000 RPS.
       <br>
       `small` handles a 1,000 RPS baseline cleanly.
-
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
@@ -122,7 +126,6 @@ rows:
     instance: "`xlarge`"
     sync: "0.5–1.0"
     notes: Large tiers are overwhelmed at a 0.1 sync rate with this entity count. The `xlarge` tier provides headroom.
-
   - profile: High-scale enterprise
     entities: "≤5,000 × ≤3,000 × 3 windows"
     rps: "≤20,000"
@@ -443,6 +446,11 @@ body:
       tier: small
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Flush a managed cache
+
+A managed cache doesn't expose a built-in way to clear its contents on demand.
+To flush a managed cache, see [Flush a Dedicated Cloud Gateway managed cache using Terraform](/dedicated-cloud-gateways/flush-managed-cache/), which deploys a custom plugin that exposes a flush endpoint on your gateway.
 
 ## Use a Dedicated Cloud Gateway managed cache in a custom plugin
 
