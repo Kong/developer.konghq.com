@@ -101,7 +101,7 @@ In Azure, create the main application:
 
 1. Select the following permissions:
    * **User.Read** under **Delegated permissions**
-   * **Application.ReadWrite.OwnedBy** under **Appilcation permissions**
+   * **Application.ReadWrite.OwnedBy** under **Application permissions**
 
 1. Click **Add permissions**.
    
