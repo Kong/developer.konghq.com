@@ -8,6 +8,8 @@ bread-crumbs:
 related_resources:
   - text: "{{site.mesh_product_name}}"
     url: /mesh/overview/
+  - text: Use cert-manager for control plane certificates
+    url: /mesh/use-cert-manager-for-control-plane-certificates/
 
 products:
   - mesh
