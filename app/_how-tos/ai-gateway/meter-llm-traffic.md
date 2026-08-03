@@ -148,7 +148,7 @@ body:
 
 ## Configure the Metering & Billing plugin
 
-Next, configure the Metering & Billing plugin to emit LLM token usage events from {{site.ai_gateway}} to {{site.metering_and_billing}}:
+Next, configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to emit LLM token usage events from {{site.ai_gateway}} to {{site.metering_and_billing}}:
 
 <!--vale off-->
 {% entity_examples %}
