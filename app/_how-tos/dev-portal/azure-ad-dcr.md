@@ -90,20 +90,26 @@ In Azure, create the main application:
 
 1. In Azure Active Directory, click [**App registrations**](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade) and then click **New registration**.
 
-2. Enter a name for the application.
-3. Ensure **Accounts in this organizational directory only** is selected for **Supported account types**.
+1. Enter a name for the application.
+1. Ensure **Single tenant only** is selected for **Supported account types**.
 
-4. Click **Register**.
+1. Click **Register**.
 
-5. On the application view, go to **API permissions**, click **Add permissions > Microsoft Graph** and select the following:
-   * **Application.ReadWrite.OwnedBy**
-   * **User.Read**
+1. On the application view, go to **Manage** > **API permissions** and click **Add a permission**.
 
-6. Once added, click **Grant admin consent**. An administrator with Global Admin rights is required for this step.
+1. Click **Microsoft Graph**.
 
-7. Select **Certificates & secrets** and then create a client secret and save it in a secure location. You can only view the secret once.
+1. Select the the following permissions:
+   * **User.Read** under **Delegated permissions**
+   * **Application.ReadWrite.OwnedBy** under **Appilcation permissions**
 
-8. In the **Overview** view, copy your Directory (tenant) ID and Application (client) ID, then export them:
+1. Click **Add permissions**.
+   
+1. Once added, click **Grant admin consent**. An administrator with Global Admin rights is required for this step.
+
+1. Select **Certificates & secrets** and then create a client secret and save it in a secure location. You can only view the secret once.
+
+1. In the **Overview** view, copy your Directory (tenant) ID and Application (client) ID, then export them:
 
    ```sh
    export TENANT_ID='YOUR-AZURE-TENANT-ID'
@@ -118,6 +124,7 @@ After configuring Azure, you can integrate it with the Dev Portal for Dynamic Cl
 
 1. [Create a DCR provider](/api/konnect/application-auth-strategies/v2/#/operations/create-dcr-provider) using the `/v2/dcr-providers` endpoint:
 
+{% capture request %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/dcr-providers
@@ -132,6 +139,9 @@ body:
     initial_client_secret: "$CLIENT_SECRET"
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endcapture %}
+
+{{request | indent}}
 
 1. Export the DCR provider ID from the response:
 
@@ -141,6 +151,7 @@ body:
 
 1. [Create an authentication strategy](/api/konnect/application-auth-strategies/v2/#/operations/create-app-auth-strategy) using the `/v2/application-auth-strategies` endpoint:
 
+{% capture request %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/application-auth-strategies
@@ -164,6 +175,9 @@ body:
   dcr_provider_id: "$DCR_PROVIDER_ID"
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endcapture %}
+
+{{request | indent}}
 
 1. Export the auth strategy ID from the response:
 
