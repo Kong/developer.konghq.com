@@ -151,8 +151,10 @@ ai_gateway_models:
       route:
         paths:
           - /
-      model:
-        alias: my-claude-bedrock
+        model:
+          body_param: model
+          values:
+            - my-claude-bedrock
     targets:
       - name: us.anthropic.claude-haiku-4-5-20251001-v1:0
         provider: my-aws-account

@@ -80,8 +80,10 @@ ai_gateway_models:
       route:
         paths:
           - /
-      model:
-        alias: my-claude-openai
+        model:
+          body_param: model
+          values:
+            - my-claude-openai
     targets:
       - name: gpt-5-mini
         provider: generic-openai

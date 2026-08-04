@@ -27,6 +27,8 @@ related_resources:
     url: /ai-gateway/entities/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
+  - text: AI Identity Provider entity
+    url: /ai-gateway/entities/ai-identity-provider/
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
   - text: A2A protocol specification
@@ -64,6 +66,13 @@ faqs:
     a: |
       Set the [`access.acls`](#schema-aigateway-agent-access) field on the AI Agent with an allow list or a deny list. Each entry is a string that
       references an AI Consumer, AI Consumer Group, or Authenticated Group by name.
+
+  - q: How do I authenticate requests to an AI Agent?
+    a: |
+      Reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) by name or id in the AI Agent's
+      [`access.identity_providers`](#schema-aigateway-agent-access) array, the same field used on AI Models. An AI Agent
+      currently accepts up to one AI Identity Provider reference. Attaching an authentication AI Policy directly to an
+      AI Agent's `policies` field isn't supported.
 
   - q: How do I attach AI Policies to an AI Agent?
     a: |
@@ -140,7 +149,7 @@ rows:
 
 When an Agent has type `a2a`, proxied traffic is processed in four phases:
 
-1. **Access**. Detects whether the request is an A2A operation (JSON-RPC or REST binding). When statistics logging is enabled, this starts an OpenTelemetry span and records the request body for payload logging if that's also enabled.
+1. **Access**. Detects whether the request is an A2A operation (JSON-RPC or REST binding). This starts an OpenTelemetry span, and records the request body for payload logging if that's enabled.
 1. **Header filter**. Detects streaming responses (`Content-Type: text/event-stream`) and records time to first byte. Buffers agent-card responses for URL rewriting.
 1. **Body filter**. Streams SSE chunks through to the client without buffering. Buffers non-streaming responses to extract task metadata. Rewrites agent-card URLs to the gateway address. Emits analytics at end of response.
 1. **Log**. Finalizes the OpenTelemetry span with task state, task ID, and any error information.
@@ -282,14 +291,14 @@ When an upstream agent returns an agent card, the runtime rewrites the [`url`](#
 
 ## Logging and observability
 
-To track agent performance, debug issues, and monitor A2A traffic patterns, enable statistics logging. {{site.ai_gateway}} emits structured A2A telemetry that flows to {{site.konnect_short_name}} analytics, logging plugins, and OpenTelemetry for full visibility into agent operations.
+For `a2a` type Agents, {{site.ai_gateway}} automatically emits structured A2A telemetry to track agent performance, debug issues, and monitor A2A traffic patterns. This telemetry flows to {{site.konnect_short_name}} analytics, logging plugins, and OpenTelemetry for full visibility into agent operations, with no separate toggle required.
 
 The telemetry data is emitted into the `ai.a2a` namespace (consumed by {{site.konnect_short_name}} analytics and logging AI Policies) and creates a `kong.a2a` child span when you've configured [{{site.base_gateway}} tracing](/gateway/tracing/). For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
 
 {:.info}
-> When statistics logging is enabled, the runtime removes the `Accept-Encoding` request header
-> before forwarding to the upstream. This prevents compressed responses that the runtime can't
-> parse for metadata extraction.
+> For `a2a` type Agents, the runtime removes the `Accept-Encoding` request header before forwarding
+> to the upstream. This prevents compressed responses that the runtime can't parse for metadata
+> extraction.
 
 Payload logging additionally captures request and response bodies. Payloads are truncated at the configured payload size limit.
 
@@ -305,7 +314,7 @@ You can view A2A analytics in {{site.konnect_short_name}} Explorer and Dashboard
 
 ### OpenTelemetry span attributes
 
-When statistics logging is enabled and {{site.base_gateway}} tracing is configured, the runtime creates a `kong.a2a` child span with the following attributes:
+For `a2a` type Agents, when {{site.base_gateway}} tracing is configured, the runtime creates a `kong.a2a` child span with the following attributes:
 
 {% include md/ai-gateway/v2/otel-span-attributes.md %}
 
@@ -313,7 +322,9 @@ When statistics logging is enabled and {{site.base_gateway}} tracing is configur
 
 To restrict which AI Consumers or teams can reach a specific agent, use ACLs. The [`access.acls`](#schema-aigateway-agent-access) field defines either an `allow` or a `deny` list of identities that can access the agent. Each entry references an [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or Authenticated Group by name. An Authenticated Group is a dynamic group representing all consumers authenticated via a specific OAuth2 scope or claim. Access is enforced before traffic reaches the upstream agent.
 
-For per-request authentication and identity validation, attach an authentication AI Policy to the AI Agent.
+For per-request authentication and identity validation, reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) in the [`access.identity_providers`](#schema-aigateway-agent-access) array, the same way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control). Attaching an authentication AI Policy directly to the AI Agent's `policies` field isn't supported; authentication for AI Agents is configured exclusively through AI Identity Providers.
+
+An AI Agent currently accepts up to one AI Identity Provider reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
 
 ## Attach AI Policies
 
@@ -326,7 +337,7 @@ For available policy types and configuration, see the [AI Policy entity](/ai-gat
 Before creating an AI Agent with access restrictions, create an AI Consumer Group to reference in [`access.acls`](#schema-aigateway-agent-access). 
 This example references a group named `internal-teams`. See [Set up an AI Consumer Group](/ai-gateway/entities/ai-consumer-group/#set-up-an-ai-consumer-group) to create it, or substitute the name of your own AI Consumer, AI Consumer Group, or Authenticated Group in `access.acls.allow`.
 
-The following example creates an `a2a` Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with statistics logging enabled and access restricted to the `internal-teams` Consumer Group.
+The following example creates an `a2a` Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with access restricted to the `internal-teams` Consumer Group.
 
 {:.info}
 > This example proxies to a placeholder upstream at `https://booking-agent.internal.kongair.com`. Substitute the URL of your own running A2A agent in [`config.url`](#schema-aigateway-agent-config-url). Because this Agent has `type: a2a`, requests must use the A2A JSON-RPC envelope (`jsonrpc: "2.0"`, `id`, `method: "message/send"`, `params.message` with `kind` and `messageId`). A flat `{"message": {...}}` body without that envelope is rejected by the upstream agent itself (for example, `"Invalid Request: jsonrpc must be 2.0"`), not by {{site.ai_gateway}}.
@@ -348,7 +359,6 @@ data:
       paths:
         - /kongair-flight-booking
     logging:
-      statistics: true
       payloads: false
       max_payload_size: 1048576
 {% endentity_example %}

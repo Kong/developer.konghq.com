@@ -74,8 +74,10 @@ ai_gateway_models:
       route:
         paths:
           - /
-      model:
-        alias: my-claude
+        model:
+          body_param: model
+          values:
+            - my-claude
     targets:
       - name: claude-opus-4-8
         provider: generic-anthropic
