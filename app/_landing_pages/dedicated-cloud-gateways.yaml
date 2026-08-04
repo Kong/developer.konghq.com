@@ -270,8 +270,6 @@ rows:
               ctas:
                 - text: Bot Detector reference
                   url: /dedicated-cloud-gateways/bot-detector/
-                - text: Enable Bot Detector in {{site.konnect_short_name}} Labs
-                  url: https://cloud.konghq.com/global/organization/labs
   
   - header:
       type: h2

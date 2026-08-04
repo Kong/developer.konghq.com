@@ -33,7 +33,7 @@ faqs:
 Bot Detector is a built-in Dedicated Cloud Gateway capability that identifies automated traffic using signals like user agents, request paths, and JA4 fingerprints. 
 Unlike the [IP Restriction plugin](/plugins/ip-restriction/), which requires you to know the specific IPs or CIDR ranges you want to allow or deny, Bot Detector identifies bot traffic from the shape of the request itself, so you don't need to enumerate bad actors in advance.
 
-Bot Detector is a built-in capability, not a plugin, that an Org Admin can enable or disable for the {{site.konnect_short_name}} org in the [Labs](https://cloud.konghq.com/global/organization/labs) UI and then Dedicated Cloud Gateway control planes can decide to enable it on a per control plane basis.
+Bot Detector is a built-in capability, not a plugin, that you can enable on a per control plane basis for public Dedicated Cloud Gateway control planes.
 
 Use Bot Detector to:
 * **Reduce cost from automated traffic**: Block traffic identified as bots before it reaches your upstream services and inflates your Dedicated Cloud Gateway usage. Requests blocked by Bot Detector aren't counted toward your usage. Detections recorded in monitoring mode are counted normally.
@@ -68,7 +68,7 @@ You decide when you want to switch from monitoring to blocking after you've esta
 
 The following are an overview of the general steps you should take to enable, monitor, and use Bot Detector:
 
-1. Enable it in Labs and on a public Dedicated Cloud Gateway control plane. 
+1. Enable it on a public Dedicated Cloud Gateway control plane. 
 1. Monitor detections for any false positives or valid traffic that is marked as blocked.
 1. (Optional) Allow list IPs with the IP Restrictions plugin as a complement to Bot Detector.
 1. Create any custom rules from your observations while Bot Detector is in monitoring mode.
@@ -76,20 +76,17 @@ The following are an overview of the general steps you should take to enable, mo
 
 ### Prerequisites
 
-* To enable Bot Detector in Labs, you need the ___ role.
 * To enable Bot Detector for a Dedicated Cloud Gateway control plane, you need the ___ role.
 * A public Dedicated Cloud Gateway with a network configured.
 
 ### Enable Bot Detector
 
-Bot Detector is enabled first at the organization level through {{site.konnect_short_name}} Labs, and then per control plane.
+Bot Detector is enabled per control plane.
 Because Bot Detector is scoped to the control plane, not the organization, this allows you to enable it on a single control plane to evaluate it, leave your other control planes untouched, and expand once you're satisfied with the results.
 
 {% navtabs "bot-detector" %}
 {% navtab "API" %}
-Enabling Bot Detector for your organization in {{site.konnect_short_name}} Labs is only available in the UI. See the **UI** tab for this step.
-
-Once Bot Detector is enabled for your organization, enable it for a control plane by sending a `POST` request to the `/waap/{cpId}/enabled` endpoint:
+Enable Bot Detector for a control plane by sending a `POST` request to the `/waap/{cpId}/enabled` endpoint:
 
 ```sh
 curl -X POST https://us.api.konghq.tech/bot-gline-manager/waap/$CONTROL_PLANE_ID/enabled \
@@ -101,10 +98,6 @@ curl -X POST https://us.api.konghq.tech/bot-gline-manager/waap/$CONTROL_PLANE_ID
 Setting `block_mode` to `false` starts the control plane in monitoring mode.
 {% endnavtab %}
 {% navtab "UI" %}
-1. From the organization dropdown, click **Manage organization**.
-1. Click the **Labs** tab.
-1. Click **Bot Detector**.
-1. Click **Enable feature**.
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click **Control planes**.
 1. Click the Dedicated Cloud Gateway control plane you want to enable Bot Detector for.
