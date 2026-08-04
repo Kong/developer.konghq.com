@@ -72,6 +72,9 @@ The platform reserves around 25% of each managed cache instance for operational 
 To choose the right cache size, you'll need to know your Redis key count, which determines your cache pressure.
 This is driven by the following equation:
 
+```
+Key Count ≈ Unique Consumers × Unique Routes × Rate limit windows × Kong data plane pods
+```
 
 For example, if you have 5,000 Consumers, 3,000 Routes, and 3 windows, this produces a theoretical key space of **45 million counters** per window cycle, each needing a periodic sync to Redis. 
 The sync rate determines how aggressively these counters are pushed, and the cache instance must absorb both the read (fetch counters) and write (push diffs) load.
@@ -102,8 +105,10 @@ rows:
     notes: |
       Appropriate for development, testing, and other low-load or low-performance environments.
       These are burstable tiers, so performance may vary.
-      `micro` fails at 10,000 RPS.
-      `small` handles a 1,000 RPS baseline cleanly.
+      `micro` fails at 10,000 RPS.
+
+      `small` handles a 1,000 RPS baseline cleanly.
+
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
@@ -115,7 +120,8 @@ rows:
     rps: "≤10,000"
     instance: "`xlarge`"
     sync: "0.5–1.0"
-    notes: Large tiers are overwhelmed at a 0.1 sync rate with this entity count. The `xlarge` tier provides headroom.
+    notes: Large tiers are overwhelmed at a 0.1 sync rate with this entity count. The `xlarge` tier provides headroom.
+
   - profile: High-scale enterprise
     entities: "≤5,000 × ≤3,000 × 3 windows"
     rps: "≤20,000"
@@ -170,6 +176,7 @@ rows:
       Only use for non-critical or approximate rate limiting at very low entity counts.
 {% endtable %}
 <!--vale on-->
+
 ## Configure a managed cache
 
 Managed caches are either created at the control plane or control plane group-level. 
@@ -297,6 +304,87 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 {:.info}
 > You can’t use the Redis partial configuration in [custom plugins](#use-a-dedicated-cloud-gateway-managed-cache-in-a-custom-plugin). Instead, use [env referenceable fields](/gateway/entities/vault/#store-secrets-as-environment-variables) directly.
 
+## Managed cache health
+
+You can use metrics to determine the health of your managed cache.
+{{site.konnect_short_name}} exposes the following metrics for each managed cache:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Metric
+    key: metric
+  - title: Description
+    key: description
+  - title: What to watch for
+    key: watch
+rows:
+  - metric: "Cache eviction rate (`cache_eviction_rate`)"
+    description: "The rate at which keys are removed from the cache because it's out of memory capacity."
+    watch: "A sustained high eviction rate combined with high memory utilization means your cache no longer has enough headroom."
+  - metric: "Cache expiration rate (`cache_expiration_rate`)"
+    description: "The rate at which keys are removed from the cache because their TTL (time to live) elapsed."
+    watch: "Expirations are expected, ordinary cache turnover.
+      A high expiration rate on its own isn't a problem."
+  - metric: "Cache memory utilization(`cache_memory_utilization_max`)"
+    description: "The highest percentage of provisioned cache memory in use during the selected time window."
+    watch: "High utilization with zero evictions is healthy.
+      High utilization combined with a rising eviction rate means you should resize."
+  - metric: "Cache items count (`cache_items_average`)"
+    description: "The average number of items stored in the cache during the selected time window."
+    watch: "Confirms the cache is actually being used.
+      A count that keeps growing without a corresponding resize can point to a configuration issue."
+{% endtable %}
+<!--vale on-->
+
+These metrics are most useful read together, rather than in isolation:
+* If rate limits are being enforced inconsistently, check whether `cache_eviction_rate` is nonzero.
+  Rate limiting counters are cache keys, and if they're evicted due to memory pressure before their window ends, the counters reset.
+  This can let requests through that should have been blocked.
+* If `cache_memory_utilization_max` is high but `cache_eviction_rate` stays at zero, your cache is healthy and doesn't need action.
+* If `cache_memory_utilization_max` is high and `cache_eviction_rate` is rising, it's time to [resize your cache](#resize-a-managed-cache).
+* If `cache_items_average` keeps growing without a corresponding resize, check whether TTLs are configured on the keys your plugins are creating.
+  Growth without a matching `cache_expiration_rate` can mean data is being added but never expiring.
+
+You can view these metrics in the following ways:
+
+{% navtabs "managed-cache-health" %}
+{% navtab "UI" %}
+In the {{site.konnect_short_name}} UI, go to [Observability > Explorer](https://cloud.konghq.com/analytics/explorer). 
+Select "Managed cache usage" from the dropdown menu.
+{% endnavtab %}
+{% navtab "API" %}
+Retrieve metrics programmatically, by sending a `POST` request to the [`/metrics` endpoint](/api/konnect/analytics-metrics/v2/#/operations/metrics):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/metrics
+status_code: 200
+method: POST
+region: global
+body:
+    datasource: managed_cache
+    time_range:
+        type: relative
+        time_range: 24h
+    dimensions:
+        - time
+        - managed_cache
+    filters:
+        - operator: in
+          field: managed_cache
+          value:
+              - $MANAGED_CACHE_ID
+    granularity: hourly
+    metrics:
+        - cache_eviction_rate
+        - cache_expiration_rate
+        - cache_memory_utilization_max
+        - cache_items_average
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Resize a managed cache
 
@@ -305,6 +393,9 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 >
 > You can only upgrade the size of a managed cache, you can't downsize one. 
 > If you want to downsize a cache, you must delete and recreate it.
+
+Use your [managed cache metrics](#managed-cache-health) to determine when to resize.
+A sustained high `cache_eviction_rate` alongside a high `cache_memory_utilization_max` means your current tier no longer has enough headroom and you should move to a larger tier.
 
 Before you resize a managed cache, consider the following:
 * Resizes happen immediately.
@@ -485,3 +576,4 @@ end
 ```
 
 This configuration is an example and isn't directly executable. Adjust it as needed for your custom plugin.
+
