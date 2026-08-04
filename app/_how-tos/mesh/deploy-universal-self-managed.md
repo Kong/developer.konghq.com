@@ -77,11 +77,14 @@ kumactl generate dataplane-token --tag kuma.io/service=app --valid-for=720h > ku
 
 ## Create a data plane proxy for each service
 
+{% include /mesh/skip-verify.md %}
+
 For Redis:
 
 ```sh
 kuma-dp run \
   --cp-address=https://localhost:5678/ \
+  --skip-verify \
   --dns-enabled=false \
   --dataplane-token-file=kuma-token-redis \
   --dataplane="
@@ -106,6 +109,7 @@ And for the demo app:
 ```sh
 kuma-dp run \
   --cp-address=https://localhost:5678/ \
+  --skip-verify \
   --dns-enabled=false \
   --dataplane-token-file=kuma-token-app \
   --dataplane="
