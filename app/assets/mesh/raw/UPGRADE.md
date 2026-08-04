@@ -7,6 +7,14 @@ with `x.y.z` being the version you are planning to upgrade to.
 
 ## Upgrade to `3.0.x`
 
+### `MeshGlobalRateLimit` policy removed
+
+The `MeshGlobalRateLimit` policy and all of its control-plane support have been removed, along with the rate-limit service deployment shipped by the Helm chart (`ratelimit.*` and `global.ratelimit.*` values, the `KMESH_GLOBAL_RATE_LIMIT_*` env vars and the `kmesh.globalRateLimit` control-plane config).
+
+**Action required:** Delete any `MeshGlobalRateLimit` resources and remove the `ratelimit.*` / `global.ratelimit.*` Helm overrides before upgrading.
+After upgrading, the control plane no longer registers, reconciles or serves the policy, so any leftover objects just become inert - they produce no Envoy or rate-limit configuration and are not rejected.
+Helm does not delete CRDs, so the `meshglobalratelimits.kuma.io` CRD stays on existing clusters until you remove it manually with `kubectl delete crd meshglobalratelimits.kuma.io`.
+
 ### Legacy `OPAPolicy` API removed
 
 The legacy `OPAPolicy` resource (`config.kong-mesh.io/v1alpha1`, kind `OPAPolicy`) and its CRD have been removed. Use the `MeshOPA` targetRef policy instead.
@@ -111,6 +119,21 @@ toggle.
 Remove any `routing.zoneEgress` entries from stored `Mesh` resources and
 manifests before upgrading. After the upgrade, that field no longer exists in
 the schema and is ignored during deserialization.
+
+### `routing.defaultForbidMeshExternalServiceAccess` removed from the `Mesh` schema
+
+The `routing.defaultForbidMeshExternalServiceAccess` boolean has been removed
+from the `Mesh` resource spec. Zone egress no longer reads a mesh-level toggle
+to block `MeshExternalService` traffic by default.
+
+**Action required**
+
+Remove any `routing.defaultForbidMeshExternalServiceAccess` entries from stored
+`Mesh` resources and manifests before upgrading. After the upgrade, that field
+no longer exists in the schema and is ignored during deserialization. Use
+`MeshTrafficPermission` to express explicit access control for
+`MeshExternalService` traffic instead of relying on the removed mesh-wide
+default-deny toggle.
 
 ### MeshService mode no longer disables zone proxy listeners, inspect endpoints, or MeshIdentity initialization
 

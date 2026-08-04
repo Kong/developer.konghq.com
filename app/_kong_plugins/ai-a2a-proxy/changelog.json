@@ -5,5 +5,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.14.0.10": [
+    {
+      "message": "now rewrites the URL for all `supportedInterfaces` in the agent card.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
   ]
 }

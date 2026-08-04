@@ -20,6 +20,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.10": [
+    {
+      "message": "Fixed an issue where the input field for the llm/v1/responses route was not recognized.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added a `skip_logging_sanitized_items` option to control whether to log the sanitized items, which may contain sensitive data.\n",

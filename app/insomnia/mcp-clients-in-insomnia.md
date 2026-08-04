@@ -194,3 +194,16 @@ Insomnia supports **MCP Sampling**. Sampling is a workflow where an MCP server r
 > When supported by the server, this process can continue across additional turns.
 
 For more information about sampling, go to the MCP [Sampling](https://modelcontextprotocol.io/specification/draft/client/sampling) documentation.
+
+## Set a token limit per request
+
+By default, a request can consume as many tokens as the model allows. To cap
+token usage on each request and control cost, {{ site.data.products.insomnia.name }}
+lets you set a maximum number of tokens per request:
+
+1. Navigate to **Preferences** > **AI Settings** > **Activate an LLM**.
+1. Select **LLM URL**.
+1. In the **LLM URL** field, enter your custom self-hosted URL or the provider URL, such as `https://api.openai.com/v1`.
+1. In the **API Token** field, enter your API token.
+1. Click **Advanced Options**.
+1. In the **Max Tokens** field, enter the maximum number of tokens allowed per request.

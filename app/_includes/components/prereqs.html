@@ -42,7 +42,7 @@
 
   {% if prereqs.skip_product == true %}
     {% if page.products contains 'gateway' %}
-    <div class="invisible" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" {% if page.rbac %}, "rbac": true {% endif %} {% if page.wasm %}, "wasm": true {% endif %}  }'></div>
+    <div class="invisible" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" {% if page.rbac %}, "rbac": true {% endif %} {% if page.wasm %}, "wasm": true {% endif %} {% if page.automated_tests.standalone_gateway %}, "standalone_gateway": true {% endif %}  }'></div>
     {% endif %}
   {% else %}
     {% if page.products and prereqs.render_works_on? %}

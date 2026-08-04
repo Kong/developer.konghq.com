@@ -206,13 +206,17 @@ export async function runInstructions(instructions, runtimeConfig, container) {
     }
   }
 
-  if ((rbac || wasm) && runtimeConfig.setup?.commands) {
-    for (const command of runtimeConfig.setup.commands) {
-      await executeCommand(container, command);
+  try {
+    if ((rbac || wasm) && runtimeConfig.setup?.commands) {
+      for (const command of runtimeConfig.setup.commands) {
+        await executeCommand(container, command);
+      }
     }
-  }
 
-  await runCleanup(instructions.cleanup, container);
+    await runCleanup(instructions.cleanup, container);
+  } catch (err) {
+    log(`   cleanup ❌. ${err.message}`);
+  }
 
   return result;
 }
