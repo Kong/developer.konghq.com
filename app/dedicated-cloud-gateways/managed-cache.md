@@ -305,7 +305,8 @@ region: global
 1. Click the **Redis** tab.
 1. Click **New Redis**.
 1. Click **Konnect-managed Redis**.
-1. In the **Name** field, enter a name for your managed cache.
+1. From the **Redis cache size** dropdown, select the cache size you need.
+2. In the **Name** field, enter a name for your managed cache.
 1. Click **Save**.
 {% endnavtab %}
 {% endnavtabs %}
