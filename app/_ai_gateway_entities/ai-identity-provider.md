@@ -11,7 +11,7 @@ permalink: /ai-gateway/entities/ai-identity-provider/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-description: Configure inbound AI Consumer authentication for AI Models in {{site.ai_gateway}}.
+description: Configure inbound AI Consumer authentication for AI Models and AI Agents in {{site.ai_gateway}}.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayIdentityProvider
@@ -27,6 +27,8 @@ related_resources:
     url: /ai-gateway/entities/ai-model/
   - text: AI Model Provider entity
     url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Agent entity
+    url: /ai-gateway/entities/ai-agent/
   - text: AI Consumer entity
     url: /ai-gateway/entities/ai-consumer/
   - text: AI Consumer Group entity
@@ -48,16 +50,23 @@ faqs:
       AI Identity Provider simultaneously. An AI Consumer's request is authenticated
       if it satisfies either provider.
 
+  - q: Can an AI Agent use an AI Identity Provider too?
+    a: |
+      Yes. Reference an AI Identity Provider by `name` or `id` in the AI Agent's `access.identity_providers`
+      array, the same field used on AI Models. An AI Agent currently accepts up to one AI Identity Provider
+      reference. Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't
+      supported; AI Identity Providers are the only supported way to authenticate AI Agent traffic.
+
   - q: What happens when a request carries no valid credentials?
     a: |
       {{site.ai_gateway}} treats the request as an anonymous AI Consumer. A request-termination
       policy on that anonymous AI Consumer returns `401 Unauthorized` before the request reaches
-      the AI Model.
+      the AI Model or AI Agent.
 
-  - q: Can I reuse the same AI Identity Provider across multiple AI Models?
+  - q: Can I reuse the same AI Identity Provider across multiple AI Models or AI Agents?
     a: |
       Yes. Create an AI Identity Provider once and reference it by `name` or `id` in the
-      `access.identity_providers` array of any AI Model in the same gateway.
+      `access.identity_providers` array of any AI Model or AI Agent in the same gateway.
 
   - q: Which OIDC flows does the openid-connect type support?
     a: |
@@ -69,14 +78,14 @@ faqs:
 
 ## What is an AI Identity Provider?
 
-Your [AI Models](/ai-gateway/entities/ai-model/) often need access control: some teams should reach certain AI Models and others should not, and you need a way to verify who is calling before a request consumes tokens or touches sensitive data. An AI Identity Provider lets you declare an inbound authentication mechanism at the gateway level and attach it to specific AI Models.
+Your [AI Models](/ai-gateway/entities/ai-model/) and [AI Agents](/ai-gateway/entities/ai-agent/) often need access control: some teams should reach certain AI Models or AI Agents and others should not, and you need a way to verify who is calling before a request consumes tokens or touches sensitive data. An AI Identity Provider lets you declare an inbound authentication mechanism at the gateway level and attach it to specific AI Models or AI Agents.
 
 Use AI Identity Providers to:
 * Authenticate API keys and map them to [AI Consumers](/ai-gateway/entities/ai-consumer/)
 * Authenticate enterprise users through an existing identity provider (Okta, Azure AD, Google, or any OIDC-compliant IdP) without managing keys manually
-* Apply different authentication to different models. For example, API keys for internal automation and OIDC bearer tokens for user-facing applications.
+* Apply different authentication to different models or agents. For example, API keys for internal automation and OIDC bearer tokens for user-facing applications.
 
-An AI Identity Provider manages inbound authentication, which is distinct from the outbound credentials managed by an [AI Model Provider](/ai-gateway/entities/ai-model-provider/). When an AI Consumer calls an AI Model, the AI Identity Provider checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream.
+An AI Identity Provider manages inbound authentication, which is distinct from the outbound credentials managed by an [AI Model Provider](/ai-gateway/entities/ai-model-provider/). When an AI Consumer calls an AI Model or AI Agent, the AI Identity Provider checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream; an AI Agent proxies the now-authenticated request directly to its upstream agent.
 
 The following diagram shows where authentication fits in the request pipeline:
 
@@ -178,12 +187,14 @@ The default `config.auth_methods` are `bearer` and `client_credentials`. If your
 
 To map the token to an existing AI Consumer, set `config.consumer_claims` to an array of path segments locating the claim in the token that carries the AI Consumer identifier (for example, `[["user", "info", "id"]]` to map to a nested `user.info.id` claim). If no mapping is needed, set `config.consumer_optional: true` to allow unauthenticated token holders through ACL checks.
 
+`config.cache_tokens_salt` is required for `openid-connect` AI Identity Providers. It's a string used to generate the cache key for token endpoint request caching; set it to any unique value for this provider instance.
+
 {:.warning}
 > All AI Models in the same {{site.ai_gateway}} that use OIDC authentication must reference the same `openid-connect` AI Identity Provider. Using different OIDC providers across models in the same {{site.ai_gateway}} is not supported.
 
-## Assigning an AI Identity Provider to an AI Model
+## Assigning an AI Identity Provider
 
-An AI Identity Provider takes effect only when assigned to an [AI Model](/ai-gateway/entities/ai-model/). Reference the provider by `name` or `id` in the `access.identity_providers` array on the AI Model:
+An AI Identity Provider takes effect only when assigned to an [AI Model](/ai-gateway/entities/ai-model/) or [AI Agent](/ai-gateway/entities/ai-agent/). Reference the provider by `name` or `id` in the entity's `access.identity_providers` array:
 
 ```yaml
 access:
@@ -196,8 +207,9 @@ access:
 
 {:.info}
 > **Assignment rules**
-> * Each AI Model supports one `key-auth` identity provider and one `openid-connect` identity provider.
-> * You can assign both types to the same AI Model. A request is authenticated if it satisfies either provider.
+> * Each AI Model supports one `key-auth` identity provider and one `openid-connect` identity provider. You can assign both types to the same AI Model; a request is authenticated if it satisfies either provider.
+> * Each AI Agent currently supports up to one AI Identity Provider reference.
+> * Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't supported. AI Identity Providers are the only supported way to authenticate AI Agent traffic.
 
 If you plan to rename the AI Identity Provider later, reference it by `id` rather than name. The ID is stable across renames.
 
@@ -241,6 +253,7 @@ data:
       - bearer
     scopes:
       - openid
+    cache_tokens_salt: okta-ai-se-cache-salt
 {% endentity_example %}
 
 ## Schema

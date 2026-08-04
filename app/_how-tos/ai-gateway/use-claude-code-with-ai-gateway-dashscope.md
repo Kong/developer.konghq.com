@@ -75,8 +75,8 @@ ai_gateway_models:
     enabled: true
     formats: [{ type: anthropic }]
     config:
-      route: { paths: [/], methods: [GET, POST] }
-      model: { alias: qwen-plus, name_header: true }
+      route: { paths: [/], methods: [GET, POST], model: { body_param: model, values: [qwen-plus] } }
+      model: { name_header: true }
     capabilities: [generate]
     targets:
       - name: qwen-plus
@@ -93,7 +93,7 @@ In this example we set:
  * `type: dashscope`: Connects to the Alibaba Cloud DashScope API as an AI Model Provider.
  * `capabilities: [generate]`: For a model using the `anthropic` format, `generate` creates a `/v1/messages` endpoint matching Anthropic's native Messages API.
  * `formats: [{ type: anthropic }]`: Accepts Anthropic-format requests to the AI Model entity, matching what {{ site.claude_code }} sends.
- * `config.model.alias: qwen-plus`: The model name {{ site.claude_code }} should send in each request, which you can set with the `ANTHROPIC_MODEL` variable or `--model` option.
+ * `config.route.model: { body_param: model, values: [qwen-plus] }`: The model name {{ site.claude_code }} should send in each request, which you can set with the `ANTHROPIC_MODEL` variable or `--model` option.
  * `route.paths: [/]`: Configures the custom base path where this model's routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
  * `targets[0].config.international: true`: Uses DashScope's international endpoint (`dashscope-intl.aliyuncs.com`). This is the default. If your DashScope key belongs to a mainland China account, set this to `false` so requests reach `dashscope.aliyuncs.com` instead.
 

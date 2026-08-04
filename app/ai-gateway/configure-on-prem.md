@@ -146,7 +146,8 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
            paths:
              - /ai
            model:
-             path_aliases: ["@openai/gpt-5.2"]
+             body_param: model
+             values: ["@openai/gpt-5.2"]
        targets:
          - name: gpt-5.2
            provider: openai-prod
@@ -225,6 +226,9 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
    {: .no-copy-code .collapsible }
 
    The AI Provider generates no object of its own. Its `type` becomes the target's `model.provider`, and its `auth` is materialized into the same `ai-proxy-advanced` target.
+
+   {:.info}
+   > The converted output uses the `alias` and `model_alias` field names from the self-hosted `ai-model-selector` and `ai-proxy-advanced` plugin schemas. These are distinct from `config.route.model` on the {{site.ai_gateway}} entity shown in the input above; `deck file ai2kong` handles the translation between the two.
 1. Sync the converted config to your self-hosted {{site.base_gateway}}:
    ```sh
    deck gateway sync kong.yaml
@@ -391,7 +395,8 @@ An AI Policy generates no object of its own. It must be attached to another enti
            paths:
              - /ai
            model:
-             path_aliases: ["@openai/gpt-5.2"]
+             body_param: model
+             values: ["@openai/gpt-5.2"]
        policies:
          - ai-gw-prompt-guard
        targets:
