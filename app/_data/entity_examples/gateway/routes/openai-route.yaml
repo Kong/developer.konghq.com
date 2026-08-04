@@ -1,0 +1,9 @@
+name: openai-route
+paths:
+  - /openai
+strip_path: true
+service:
+  name: openai
+protocols:
+  - http
+  - https
