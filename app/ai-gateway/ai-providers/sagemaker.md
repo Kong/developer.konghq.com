@@ -111,7 +111,7 @@ rows:
     description: "The container hostname to invoke on a multi-container endpoint. Sets the `X-Amzn-SageMaker-Target-Container-Hostname` header."
 {% endtable %}
 
-All fields in this table are optional.
+The following target routes to a SageMaker endpoint in `us-east-1` and selects a specific model, variant, and container on a multi-model endpoint:
 
 ```yaml
 targets:
