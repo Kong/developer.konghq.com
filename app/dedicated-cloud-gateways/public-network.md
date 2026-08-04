@@ -113,7 +113,7 @@ rows:
     control: OIDC/JWT validation
     protects: Unauthorized callers
   - layer: Application
-    control: Bot Detector (tech preview)
+    control: Bot Detector (beta)  {% new_in 3.10 %}
     protects: Automated and bot traffic
 {% endtable %}
 
@@ -204,9 +204,9 @@ The sections in this guide describe how to configure a WAF in AWS, but they can 
 
 For more information about all {{site.base_gateway}} WAF configurations and plugins, see [{{site.base_gateway}} WAF capabilities](/waf/).
 
-### Bot Detector (tech preview)
+### Bot Detector (beta) {% new_in 3.10 %}
 
-{% new_in 3.10 %} In addition to a WAF, you can enable [Bot Detector](/dedicated-cloud-gateways/bot-detector/) (tech preview), a built-in Dedicated Cloud Gateway capability that identifies automated traffic using signals like user agents, request paths, and JA4 fingerprints. 
+In addition to a WAF, you can enable [Bot Detector](/dedicated-cloud-gateways/bot-detector/) (beta), a built-in Dedicated Cloud Gateway capability that identifies automated traffic using signals like user agents, request paths, and JA4 fingerprints. 
 Unlike the [IP Restriction plugin](/plugins/ip-restriction/), Bot Detector doesn't require you to know which IPs or CIDR ranges to block in advance.
 
 Bot Detector runs in monitoring mode by default, so you can review detections before switching to block mode. 
@@ -242,7 +242,7 @@ To ensure all traffic passes through CloudFront, configure origin validation bet
 {:.warning}
 > **Note:** Origin validation and IP allowlisting only prevent origin-bypass attacks, where a client skips your CDN and hits the Dedicated Cloud Gateway's public FQDN directly.
 > They don't inspect request content, so SQL injection, cross-site scripting, bot traffic, and other L7 attacks that arrive through the CDN pass through untouched.
-> Do not treat this combination as a substitute for AWS WAF managed rules in production. For bot traffic specifically, [Bot Detector](/dedicated-cloud-gateways/bot-detector/) (tech preview) is a Dedicated Cloud Gateway-native option that runs after the CDN/WAF layer.
+> Do not treat this combination as a substitute for AWS WAF managed rules in production. For bot traffic specifically, [Bot Detector](/dedicated-cloud-gateways/bot-detector/) (beta) is a Dedicated Cloud Gateway-native option that runs after the CDN/WAF layer.
 
 ### Egress IP allowlisting
 

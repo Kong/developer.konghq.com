@@ -2,7 +2,7 @@
 title: "Bot Detector"
 content_type: reference
 layout: reference
-tech_preview: true
+beta: true
 description: "Learn how Bot Detector identifies and manages automated bot traffic on Dedicated Cloud Gateways."
 
 products:
@@ -25,7 +25,7 @@ tags:
   - dedicated-cloud-gateways
 faqs:
   - q: Does Bot Detector replace my WAF?
-    a: No. Bot Detector is meant to handle bot traffic while WAF complements it by _____.
+    a: No. Bot Detector is meant to handle bot traffic while WAF complements it with other security measures. For more information, see the [{{site.base_gateway}} WAF capabilities](/waf/).
   - q: Does Bot Detector replace the IP Restriction plugin?
     a: No. Bot Detector is a complement to the [IP Restriction plugin](/plugins/ip-restriction/). Bot Detector can block bot traffic from the shape of the request whereas the IP Restriction plugin can be used when you know the exact IPs or CIDR ranges you want to allow list.
 ---
@@ -123,14 +123,12 @@ Bot Detector provides two views for reviewing traffic:
 * **Overview**: An aggregate dashboard showing status, mode, active rules, and request totals (monitored and blocked) over a selectable time range.
 * **Detections**: A filterable log of every evaluated request, including the path, action taken, timestamp, IP, user agent, and matched rule. You can promote any detection directly into a passthrough rule using the action menu if it turns out to be a false positive.
 
-TODO: Detections will also need answers, like when to switch, what you're looking for, how to interpret, etc.
-
 ### Configure rules
 
-If while you are in monitoring mode, you see traffic that is marked incorrectly as `Block` or `Passthrough`, you can create custom rules to block or allow that traffic.
+If while you are in monitoring mode, you see traffic that is marked incorrectly as `Block` or `Passthrough`, you can create custom rules to block, monitor, or allow (passthrough) that traffic.
 Additionally, if there are certain IPs you know need to passthrough (for example, an IP of a partner company), you can create rules for those.
 
-These rules match on a single condition (IP, path, user agent, or JA4 fingerprint) and take precedence over Kong-managed rules. 
+These rules match on one or more conditions (IP, path, user agent, or JA4 fingerprint) and take precedence over Kong-managed rules. 
 You can specify multiple match types per rule, but all conditions on a rule must match for the rule to apply.
 
 The following table describes which match types you can set and some example values:
@@ -169,6 +167,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+Path, user agent, and JA4 conditions also have an Operator setting to choose whether the value should match exactly or by regular expression. 
+IP address and CIDR range conditions only support exact matches.
+
 {% navtabs "rules" %}
 {% navtab "API" %}
 1. List your existing rules by sending a `GET` request to the `/waap/{cpId}/rules` endpoint:
@@ -198,32 +199,36 @@ rows:
      }'
    ```
 
-   * Set `"action"` to `"block"` to create a block rule instead.
+   * Set `"action"` to `"block"` or `"monitor"` to create those rule types instead.
    * Set `"match"` to `"regex"` to match a path, user agent, or JA4 fingerprint using a regular expression instead of an exact match.
    * To match on an IP address or CIDR range, use `"network_rules"` with `"ips"` or `"cidrs"` instead of `"application_rules"`.
    * Add more entries to `paths`, `user_agents`, `ja4`, `ips`, or `cidrs` to require multiple conditions on the same rule. All conditions on a rule must match for the rule to apply.
    * `"priority"` determines the order your rules are evaluated in relative to each other (higher integers runs sooner). It doesn't affect the position of Kong-managed rules, which always run after all your rules.
 {% endnavtab %}
 {% navtab "UI" %}
-TODO:
-Integer priority setting.
-
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click **Control planes**.
 1. Click the Dedicated Cloud Gateway control with Bot Detector enabled.
 1. From the **More** tab, select **Bot Detector**.
 1. Click the **Rules** tab.
 1. Click **New rule**.
-1. For the Rule action settings, select one of the following:
+1. For the General settings, do the following:
+   1. In the **Name** field, enter a name for the rule.
+   1. In the **Priority** field, enter a priority. Higher-priority rules are evaluated first, and the first matching rule takes precedence. For example, a rule with a priority of `100` will run before a rule with a priority of `50`. Kong-managed rules always run after your rules.
+1. For the Action settings, select one of the following:
    * **Block**: Denies requests that match the conditions.
+   * **Monitor**: Records matching requests for analytics without blocking them.
    * **Passthrough**: Allows requests that match the conditions.
-1. For the Match conditions settings, do the following:
-   1. From the **Match type** dropdown menu, select a match type.
-   1. In the **Value** field, enter the value you want to match.
-   1. (Optional) To add more match conditions to a rule, click **Add another condition** and repeat the previous two steps.
-      
-      {:.warning}
-      > When multiple conditions are configured on a rule, **all conditions** must match for a rule to apply.
+1. For the Match conditions settings, select one of the following:
+   * **Basic**: Build conditions using IP, CIDR, user agent, path, and JA4 matches. Do the following:
+     1. From the **Match type** dropdown menu, select a match type.
+     1. From the **Operator** dropdown menu, select whether to match the value exactly or by regular expression. This option isn't available for IP address or CIDR range match types.
+     1. In the **Value** field, enter the value you want to match.
+     1. (Optional) To add more match conditions to a rule, click **Add another condition** and repeat the previous three steps.
+
+        {:.warning}
+        > When multiple conditions are configured on a rule, **all conditions** must match for a rule to apply.
+   * **Advanced**: Write a custom expression using the Kong expression language in the **Rule expression** field.
 1. Click **Save**.
 {% endnavtab %}
 {% endnavtabs %}
@@ -260,9 +265,15 @@ curl -X POST https://us.api.konghq.tech/bot-gline-manager/waap/$CONTROL_PLANE_ID
 {% endnavtab %}
 {% navtab "UI" %}
 Once enabled, a control plane's Bot Detector starts in monitoring mode. 
-To switch modes, click **Enable blocking**.
-To turn Bot Detector off entirely, from the **Actions** dropdown menu, select "Disable bot detector".
+To switch the mode to blocking, click **Enable blocking**.
+To turn Bot Detector off entirely, select "Disable bot detector" from the **Actions** dropdown menu.
 {% endnavtab %}
 {% endnavtabs %}
 
 Continue monitoring traffic to ensure traffic is flowing in the way you expect. 
+
+## Limitation
+
+When you are configuring Bot Detector, keep the following limitations in mind:
+* Rules with same condition and priority are valid, but the order of execution will be undefined. For example, you could configure a block and a passthrough rule with the `path` condition and a value of `/health` and both rules will be valid, but neither will run.
+* Paths with `/` will always be passthrough. They cannot be blocked.

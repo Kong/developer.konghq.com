@@ -49,7 +49,7 @@ min_version:
 The IP Restriction plugin restricts access to a Gateway Service or a Route by either allowing or denying IP addresses. This can help block malicious activity, such as spam or access to certain websites. Single IPs, multiple IPs, or ranges in [Classless Inter-Domain Routing (CIDR) notation](https://datatracker.ietf.org/doc/html/rfc4632) like 10.10.10.0/24 can be used. The plugin supports IPv4 and IPv6 addresses.
 
 {:.info}
-> **Public Dedicated Cloud Gateways:** If you don't already know which IPs to allow or deny, you can use [Bot Detector](/dedicated-cloud-gateways/bot-detector/) (tech preview) as an alternative. It identifies automated traffic from the shape of the request itself instead of requiring a known IP or CIDR list.
+> **Public Dedicated Cloud Gateways:** If you don't already know which IPs to allow or deny, you can use [Bot Detector](/dedicated-cloud-gateways/bot-detector/) (beta) as an complement to the IP Restriction plugin. It identifies automated traffic from the shape of the request itself instead of requiring a known IP or CIDR list.
 
 ## How does the IP Restriction plugin work?
 
