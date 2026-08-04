@@ -213,6 +213,100 @@ rows:
 
 The following plugin configuration applies the ACL rules for the MCP tools shown in the table above:
 
+
+```sh
+kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+ai_gateway_mcp_servers:
+  - ref: marketplace-mcp
+    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    name: marketplace-mcp
+    display_name: "Marketplace API"
+    type: passthrough-listener
+    enabled: true
+    policies: []
+    access:
+      acl_attribute_type: consumer
+      acls:
+        allow: []
+      default_tool_acls:
+        deny: []
+        allow:
+          - admin
+    config:
+      url: http://localhost:3001
+      route:
+        paths:
+          - /mcp
+      logging:
+        payloads: false
+        statistics: true
+      server:
+        timeout: 60000
+    tools:
+      - name: get_users
+        description: Get user
+        method: GET
+        path: /mcp/get_user
+        parameters:
+          - name: id
+            in: query
+            required: false
+            schema:
+              type: string
+            description: Optional user ID
+        access:
+          acls:
+            allow:
+              - admin
+              - eason
+            deny:
+              - developer
+      - name: list_users
+        description: List users
+        method: GET
+        path: /mcp/list_users
+        parameters: []
+        access:
+          acls:
+            allow:
+              - admin
+              - eason
+            deny:
+              - developer
+      - name: list_orders
+        description: List orders
+        method: GET
+        path: /mcp/list_orders
+        parameters: []
+        access:
+          acls:
+            allow:
+              - admin
+              - developer
+      - name: list_orders_for_user
+        description: List order for user
+        method: GET
+        path: /mcp/list_orders_for_user
+        parameters: []
+        access:
+          acls:
+            allow:
+              - admin
+              - developer
+      - name: search_orders
+        description:search orders
+        method: GET
+        path: /mcp/search_orders
+        parameters: []
+        access:
+          acls:
+            allow:
+              - admin
+            deny:
+              - developer
+EOF
+```
+
 {% entity_examples %}
 entities:
   plugins:
