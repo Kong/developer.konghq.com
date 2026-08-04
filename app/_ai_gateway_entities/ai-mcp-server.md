@@ -42,7 +42,7 @@ faqs:
   - q: What's the difference between the server types?
     a: |
       `passthrough-listener` proxies MCP traffic to an upstream MCP server without converting tools.
-      `conversion-listener` converts a RESTful API into MCP tools and accepts MCP requests on one route path. `conversion-only` defines a tool library that a `listener` AI MCP Server aggregates by matching label
+      `conversion-listener` converts a RESTful API into MCP tools and accepts MCP requests on one route path. `conversion-only` defines a tool library that a `listener` AI MCP Server aggregates by matching labels
       but doesn't accept incoming MCP traffic itself. `listener` aggregates tools from one or more
       `conversion-only` AI MCP Servers into a single MCP endpoint. `upstream-server` registers a real
       MCP server into an aggregation pool, dynamically fetching its tools for a `listener` to aggregate.
@@ -161,7 +161,7 @@ rows:
     pattern: Generate from REST API and feeds aggregate
     description: |
       Converts RESTful API paths into MCP tools but does not accept incoming MCP requests.
-      Since `conversion-only` has no `config.server` block, it marks itself for aggregation using the
+      Since a `conversion-only` AI MCP Server has no `config.server` block, it marks itself for aggregation using the
       top-level [`labels`](#schema-aigateway-mcpserver-labels) field instead (for example,
       `labels: {ai-gateway-mcp-aggregation: payments}`). A `listener` AI MCP Server then references it by
       matching label. This mode must be used together with one or more AI MCP Servers configured with
