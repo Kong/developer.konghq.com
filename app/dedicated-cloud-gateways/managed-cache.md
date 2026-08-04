@@ -418,7 +418,8 @@ A sustained high `cache_eviction_rate` alongside a high `cache_memory_utilizatio
 Before you resize a managed cache, consider the following:
 * Resizes happen immediately.
 * Schedule cache resizes during low traffic hours.
-* Caches remain online during a resize, but you may experience brief interruptions of a few seconds. 
+* Caches remain online during a resize, but you may experience brief interruptions of a few seconds.
+* If you increase the size of your cache, data will be retained. If you downsize your cache, data will be deleted because you must delete and recreate the cache.
 
 You can resize a managed cache by sending a PATCH request to the [`/cloud-gateways/add-ons/{addOnId}` endpoint](/api/konnect/cloud-gateways/v2/#/operations/update-add-on):
 
