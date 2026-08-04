@@ -33,13 +33,6 @@ rows:
 
                     {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. 
                     Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
-
-                    Define a single endpoint for any traffic type: LLM, MCP, or A2A. Configure these entities once, then govern them from a unified control plane with built-in auth, policy enforcement, and observability:
-
-                    * [Routing and load balancing](/ai-gateway/load-balancing/) across AI providers
-                    * [Streaming and authentication](/ai-gateway/streaming/) 
-                    * Control user access and ACLs
-                    * See [usage analytics](/ai-gateway/monitor-ai-llm-metrics/) for requests, tokens, errors, and latency
           - type: text
             config: |
               [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to configure {{site.ai_gateway}} using {{site.konnect_short_name}}.
@@ -104,6 +97,37 @@ rows:
               url: /ai-gateway/get-started-with-ai-agent/
               align: end
 
+  
+  - header:
+    columns:
+      - header:
+          type: h2
+          text: Three traffic types, unified control
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Define a single endpoint for any traffic type: LLM, MCP, or A2A. Configure these entities once, then govern them from a unified control plane with built-in auth, policy enforcement, and observability:
+
+                    * [Routing and load balancing](/ai-gateway/load-balancing/) across AI providers
+                    * [Streaming and authentication](/ai-gateway/streaming/) 
+                    * Control user access and ACLs
+                    * See [usage analytics](/ai-gateway/monitor-ai-llm-metrics/) for requests, tokens, errors, and latency
+      - header:
+          type: h2
+          text: "Tools to manage {{site.ai_gateway}}"
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    You can manage these resources through multiple interfaces:
+                    - [{{site.ai_gateway}} manager](https://cloud.konghq.com/ai-manager): Manage all your {{site.ai_gateway}} resources from {{site.konnect_short_name}}.
+                    - [Control Plane Config API](/api/konnect/control-planes-config/): Manage resources in {{site.konnect_short_name}} control planes via the API.
+                    - [kongctl](/kongctl/): Manage resources and configuration from the command line.
   - header:
       type: h2
       text: "{{site.ai_gateway}} providers"
