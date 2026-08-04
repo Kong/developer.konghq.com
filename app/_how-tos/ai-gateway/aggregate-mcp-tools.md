@@ -259,7 +259,8 @@ You can now test tools from each source through the single aggregated endpoint.
 
 1. In ChatWise, start a new chat.
 1. Click the overflow (**...**) menu next to the chat input, then click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
-1. From the hammer dropdown menu, enable `mcp-aggregation`.
+1. From the hammer dropdown menu, enable `mcp-aggregation`, you should see 6 tools associated with it.
+
 
 {% navtabs "validate-aggregated-mcp-tools" %}
 {% navtab "Marketplace tools" %}
