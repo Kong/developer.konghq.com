@@ -94,6 +94,7 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="databricks.svg" title="Databricks" cta_url="/ai-gateway/ai-providers/databricks/" %}
 {% icon_card icon="vercel.svg" title="Vercel" cta_url="/ai-gateway/ai-providers/vercel/" %}
 {% icon_card icon="vllm.svg" title="vLLM" cta_url="/ai-gateway/ai-providers/vllm/" %}
+{% icon_card icon="sagemaker.svg" title="AWS SageMaker" cta_url="/ai-gateway/ai-providers/sagemaker/" %}
 {% endhtml_tag %}
 
 ## Outbound authentication
