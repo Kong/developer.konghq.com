@@ -83,7 +83,8 @@ For {{ provider.name }}, set `auth` to `sagemaker` and provide static IAM user c
 
 ## Configure a model target for {{ provider.name }}
 
-Only the `generate` capability is supported for {{ provider.name }} targets.
+{:.info}
+> Only the `generate` capability is supported for {{ provider.name }} targets.
 
 A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. The target `name` is the name of your SageMaker endpoint. Beyond the common target options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} supports these `config` fields, grouped under `aws` and `target`:
 
