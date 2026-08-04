@@ -102,8 +102,10 @@ rows:
     notes: |
       Appropriate for development, testing, and other low-load or low-performance environments.
       These are burstable tiers, so performance may vary.
-      `micro` fails at 10,000 RPS.
-      `small` handles a 1,000 RPS baseline cleanly.
+      `micro` fails at 10,000 RPS.
+
+      `small` handles a 1,000 RPS baseline cleanly.
+
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
@@ -115,7 +117,8 @@ rows:
     rps: "≤10,000"
     instance: "`xlarge`"
     sync: "0.5–1.0"
-    notes: Large tiers are overwhelmed at a 0.1 sync rate with this entity count. The `xlarge` tier provides headroom.
+    notes: Large tiers are overwhelmed at a 0.1 sync rate with this entity count. The `xlarge` tier provides headroom.
+
   - profile: High-scale enterprise
     entities: "≤5,000 × ≤3,000 × 3 windows"
     rps: "≤20,000"
@@ -322,7 +325,8 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 Before you resize a managed cache, consider the following:
 * Resizes happen immediately.
 * Schedule cache resizes during low traffic hours.
-* Caches remain online during a resize, but you may experience brief interruptions of a few seconds. 
+* Caches remain online during a resize, but you may experience brief interruptions of a few seconds.
+* If you increase the size of your cache, data will be retained. If you downsize your cache, data will be deleted because you must delete and recreate the cache.
 
 You can resize a managed cache by sending a PATCH request to the [`/cloud-gateways/add-ons/{addOnId}` endpoint](/api/konnect/cloud-gateways/v2/#/operations/update-add-on):
 
