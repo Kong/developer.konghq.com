@@ -490,7 +490,7 @@ body:
 {% include_cached /sections/managed-cache-intro.md %}
 For more information, see the [Managed cache for Redis reference](/dedicated-cloud-gateways/managed-cache/).
 
-## Bot Detector (tech preview) {% new_in 3.10 %}
+## Bot Detector (beta) {% new_in 3.10 %}
 
 Bot Detector is a built-in Dedicated Cloud Gateway capability that identifies automated traffic using signals like user agents, request paths, and JA4 fingerprints, without requiring you to know which IPs or CIDR ranges to block in advance. 
 It runs in monitoring mode by default and is scoped per control plane.

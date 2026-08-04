@@ -262,7 +262,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Bot Detector (tech preview)
+              title: Bot Detector (beta) {% new_in 3.10 %}
               description: |
                 Bot Detector helps identify automated or suspicious traffic using signals like IP addresses, ASN, JA4 fingerprints, user agents, and request paths.
                 Use Bot Detector to monitor matching traffic in monitor mode, or block matching traffic with configurable rules.
