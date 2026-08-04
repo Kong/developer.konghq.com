@@ -7,7 +7,7 @@ related_resources:
   - text: AI MCP Server entity
     url: /ai-gateway/entities/ai-mcp-server/
 
-description: Learn how to create an MCP Server entity in {{site.ai_gateway}} to convert any RESTful API into MCP tools, including setting up a mock Node.js server for testing.
+description: Learn how to create an AI MCP Server entity in {{site.ai_gateway}} to convert any RESTful API into MCP tools, including setting up a mock Node.js server for testing.
 products:
   - ai-gateway
 

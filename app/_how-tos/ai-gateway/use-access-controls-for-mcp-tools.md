@@ -7,10 +7,9 @@ related_resources:
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
 
-description: Learn how to use the AI MCP Proxy plugin to restrict access to specific MCP tools based on Kong Consumers and Consumer Groups. Configure global and per-tool ACLs, define user roles, and validate access behavior using Insomnia’s MCP Client.
+description: Learn how to create an AI MCP Server entity in {{site.ai_gateway}} to restrict access to specific MCP tools based on AI Consumers and AI Consumer Groups. Configure global and per-tool ACLs, define user roles, and validate access behavior using Insomnia’s MCP Client.
 
 products:
-  - gateway
   - ai-gateway
   - insomnia
 
@@ -34,8 +33,8 @@ tags:
 tldr:
   q: How do I enforce control access to MCP tools using {{site.ai_gateway}}?
   a: |
-    Use the AI MCP Proxy plugin to control access to MCP tools with global and
-    per-tool ACLs based on Consumers and Consumer Groups. Use Insomnia’s MCP
+    Use the AI MCP Server to control access to MCP tools with global and
+    per-tool ACLs based on AI Consumers and AI Consumer Groups. Use Insomnia’s MCP
     Client feature to test and validate which tools each user can access.
 
 tools:
@@ -45,7 +44,7 @@ prereqs:
   inline:
     - title: Mock API Server
       content: |
-        Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you need an upstream MCP-compatible HTTP server to expose. For this tutorial, we’ll use a simple Express-based MCP server that simulates a marketplace system. It provides read-only access to sample users and their orders.
+        Before creating an AI MCP Server, you need an upstream MCP-compatible HTTP server to expose. For this tutorial, we’ll use a simple Express-based MCP server that simulates a marketplace system. It provides read-only access to sample users and their orders.
 
         The server exposes a single `/mcp` endpoint and registers tools instead of REST routes, including:
 
@@ -76,12 +75,6 @@ prereqs:
   konnect:
     - name: KONG_STATUS_LISTEN
       value: '0.0.0.0:8100'
-
-faqs:
-  - q: "Why do I see the error code `INVALID_PARAMS -32602` on failed requests instead of `HTTP 403 Forbidden`?"
-    a: |
-      Prior to {{site.ai_gateway}} 3.14, requests that matched an MCP ACL deny rule or failed to match an allow list returned the JSON-RPC error code `INVALID_PARAMS -32602`.
-      This has now changed to match the [MCP 2025-11-25 authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#error-handling) and returns `HTTP 403 Forbidden`.
 
 ---
 
@@ -116,11 +109,11 @@ ai_gateway_consumer_groups:
 
 ## Create Consumers
 
-Let's configure individual AI Consumers and assign them to groups. 
+Configure individual AI Consumers and assign them to groups. 
 
 We'll use the [Key Auth](/ai-gateway/policies/key-auth/) AI Policy so that each AI Consumer presents an API key in their requests that is used for `api-key` authentication.
 
-Each AI Consumer inherits group permissions which will govern access to MCP tools:
+Each AI Consumer inherits group permissions that govern access to MCP tools:
 
 {% entity_examples %}
 ai_gateway_consumers:
@@ -164,7 +157,7 @@ ai_gateway_policies:
 
 ## Configure the AI MCP Proxy plugin
 
-Now, let's configure the AI MCP Proxy plugin to apply tool-level access rules. The plugin controls which users or AI agents can see or call each MCP tool. Access is determined by Consumer Groups and individual Consumers using allow and deny lists. A tool ACL replaces the default rule when present.
+Configure the AI MCP Server to apply tool-level access rules. The AI MCP Server controls which users or AI agents can see or call each MCP tool. Access is determined by AI Consumer Groups and individual AI Consumers using allow and deny lists. A tool ACL replaces the default rule when present.
 
 The table below shows the effective permissions for the configuration:
 
@@ -306,61 +299,6 @@ ai_gateway_mcp_servers:
               - developer
 EOF
 ```
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: ai-mcp-proxy
-      route: mcp-acl-route
-      config:
-        mode: passthrough-listener
-        include_consumer_groups: true
-        default_acl:
-          - scope: tools
-            allow:
-              - developer
-              - admin
-            deny:
-              - suspended
-        logging:
-          log_payloads: false
-          log_statistics: true
-          log_audits: true
-        tools:
-          - description: List users
-            name: list_users
-            acl:
-              allow:
-                - admin
-                - eason
-              deny:
-                - developer
-          - description: Get user
-            name: get_user
-            acl:
-              allow:
-                - admin
-                - developer
-          - description: List orders
-            name: list_orders
-            acl:
-              allow:
-                - admin
-                - developer
-          - description: List orders for users
-            name: list_orders_for_user
-            acl:
-              allow:
-                - admin
-                - developer
-          - description: Search orders by name (case-insensitive substring)
-            name: search_orders
-            acl:
-              allow:
-                - admin
-              deny:
-                - developer
-{% endentity_examples %}
 
 ## Validate the configuration
 
