@@ -116,7 +116,7 @@ rows:
 
 ## Hostnames
 
-Depending on the regions your organization uses, you'll need to allowlist specific hostnames.
+Depending on the regions your organization uses, you'll need to add specific hostnames to an allowlist.
 Replace `REGION` with the region identifier for your geo.
 The specific hostnames depend on your runtime or application.
 
@@ -131,7 +131,7 @@ The following [geographic regions](/konnect-platform/geos/) and their hostname r
 {:.warning}
 > **Important:** Visit [https://ip-addresses.origin.konghq.com/ip-addresses.json](https://ip-addresses.origin.konghq.com/ip-addresses.json) for a full list of regional and service ingress IPs. The `ingressIPs` section contains a list of all ingress IPs per geo and consolidated IPs per service. 
 > <br><br>
-> To avoid coupling firewall rules to specific services or DNS suffixes (such as `cp`, `tp`), we recommend allowlisting the values in the `ingressIPs` block for each region. 
+> To avoid coupling firewall rules to specific services or DNS suffixes (such as `cp`, `tp`), we recommend adding the values in the `ingressIPs` block for each region to an allowlist. 
 > This ensures your setup is more resilient to future infrastructure or DNS changes. You can also subscribe to [https://ip-addresses.origin.konghq.com/rss](https://ip-addresses.origin.konghq.com/rss) for updates.
 
 ### Shared hostnames
@@ -154,7 +154,7 @@ rows:
 
 ### API Gateway hostnames in {{site.konnect_short_name}}
 
-In addition to the [shared hostnames](#shared-hostnames), add the following {{site.base_gateway}} hostnames to your firewall allow list:
+In addition to the [shared hostnames](#shared-hostnames), add the following {{site.base_gateway}} hostnames to your firewall allowlist:
 <!--vale off-->
 {% table %}
 columns:
@@ -174,7 +174,7 @@ rows:
 
 ### {{site.event_gateway_short}} hostnames in {{site.konnect_short_name}}
 
-In addition to the [shared hostnames](#shared-hostnames), add the following {{site.event_gateway_short}} hostnames to your firewall allow list:
+In addition to the [shared hostnames](#shared-hostnames), add the following {{site.event_gateway_short}} hostnames to your firewall allowlist:
 <!--vale off-->
 {% table %}
 columns:
@@ -192,7 +192,7 @@ rows:
 
 ### Mesh hostnames in {{site.konnect_short_name}}
 
-In addition to the [shared hostnames](#shared-hostnames), add the following {{site.mesh_product_name}} hostnames to your firewall allow list:
+In addition to the [shared hostnames](#shared-hostnames), add the following {{site.mesh_product_name}} hostnames to your firewall allowlist:
 
 <!--vale off-->
 {% table %}
@@ -209,7 +209,7 @@ rows:
 
 ### {{site.konnect_short_name}} application hostnames
 
-In addition to the [shared hostnames](#shared-hostnames), add the following {{site.konnect_short_name}} application hostnames to your firewall allow list:
+In addition to the [shared hostnames](#shared-hostnames), add the following {{site.konnect_short_name}} application hostnames to your firewall allowlist:
 
 <!--vale off-->
 {% table %}
@@ -230,14 +230,14 @@ rows:
 
 Org Admins can specify an IP address or a range of IP addresses that are allowed to connect to {{site.konnect_short_name}} through its supported interfaces. This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin API](/admin-api/), [decK](/decK/), [kongctl](/kongctl/), and [Terraform](/terraform/).
 
-This IP allow list applies to all {{site.konnect_short_name}} communication that goes through the Admin API.
+This IP allowlist applies to all {{site.konnect_short_name}} communication that goes through the Admin API.
 
 {:.warning}
 > **Important:**
-> * If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to {{site.konnect_short_name}} will be blocked.
-> * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after five minutes.
+> * If the source IP address you have added to an allowlist is no longer reachable and IP allowlist enforcement is enabled, access to {{site.konnect_short_name}} will be blocked.
+> * If you're configuring an IP allowlist for the first time, it takes effect immediately. If you're editing existing IP allowlist values, the changes will take effect after five minutes.
 
-To configure IP allow list for {{site.konnect_short_name}}, send a PUT request to the `/organizations/$ORG_ID/ip-allow-list` endpoint:
+To configure an IP allowlist for {{site.konnect_short_name}}, send a PUT request to the `/organizations/$ORG_ID/ip-allow-list` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
