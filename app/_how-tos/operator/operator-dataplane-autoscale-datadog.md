@@ -31,6 +31,9 @@ prereqs:
       - command-service
     routes:
       - command
+  inline:
+    - title: Get Datadog API and application keys
+      include_content: /prereqs/operator/datadog-account
 
 tldr:
   q: How can I autoscale {{site.base_gateway}} workloads using Datadog metrics?
@@ -104,18 +107,6 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
 {{ site.operator_product_name }} can be integrated with [Datadog Metrics](https://docs.datadoghq.com/metrics/) in order to use {{ site.base_gateway }} latency metrics to autoscale workloads based on their metrics.
 
 ## Install Datadog in your Kubernetes cluster
-
-To install Datadog agents in your cluster you will need:
-* An [API key](https://docs.datadoghq.com/account_management/api-app-keys/#api-keys)
-* An [application key](https://docs.datadoghq.com/account_management/api-app-keys/#application-keys)
-* The Datadog site for your region (for example `datadoghq.com` for the US1 region or `datadoghq.eu` for the EU region). 
-
-1. Export these to your environment:
-   ```bash
-   export DD_SITE='YOUR DATADOG SITE'
-   export DD_API_KEY='YOUR DATADOG API KEY'
-   export DD_APP_KEY='YOUR DATADOG APPLICATION KEY'
-   ```
 
 1. Create the following configuration file:
 
