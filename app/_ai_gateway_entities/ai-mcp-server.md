@@ -42,8 +42,8 @@ faqs:
   - q: What's the difference between the server types?
     a: |
       `passthrough-listener` proxies MCP traffic to an upstream MCP server without converting tools.
-      `conversion-listener` converts a RESTful API into MCP tools and accepts MCP requests on one route path. `conversion-only` defines a tool library that a `listener` AI MCP Server aggregates by matching labels
-      but doesn't accept incoming MCP traffic itself. `listener` aggregates tools from one or more
+      `conversion-listener` converts a RESTful API into MCP tools and accepts MCP requests on one route path. `conversion-only` converts a RESTful API into MCP tools that a `listener` AI MCP Server
+      aggregates by matching labels, but doesn't accept incoming MCP traffic itself. `listener` aggregates tools from one or more
       `conversion-only` AI MCP Servers into a single MCP endpoint. `upstream-server` registers a real
       MCP server into an aggregation pool, dynamically fetching its tools for a `listener` to aggregate.
 
@@ -182,7 +182,7 @@ rows:
   - usecase: |
       Expose an existing upstream MCP server's tools alongside others through a single `listener`
       endpoint. The listener aggregates all matching upstreams, so adding a new upstream is just
-      deploying a new `upstream-server` with a matching label.
+      deploying a new `upstream-server` AI MCP Server with a matching label.
     pattern: Existing MCP server and feeds aggregate
     description: |
       Registers a real MCP server into an aggregation pool and tells the `listener` MCP Server
@@ -239,7 +239,7 @@ sequenceDiagram
 
 ## Tool aggregation with upstream-server
 
-You can use a `listener` to pull tools from multiple `upstream-server` MCP Servers and expose them through a single endpoint. The listener discovers and aggregates tools based on a matching label, so clients see one unified tool catalog while your services remain independent.
+You can use a `listener` AI MCP Server to pull tools from multiple `upstream-server` AI MCP Servers and expose them through a single endpoint. The listener discovers and aggregates tools based on a matching label, so clients see one unified tool catalog while your services remain independent.
 
 ### How aggregation works
 
