@@ -23,7 +23,7 @@ works_on:
   - on-prem
   - konnect
 min_version:
-  gateway: '3.15'
+  gateway: '3.13'
 
 tldr:
   q: How do I run {{site.base_gateway}} using the distroless image?
@@ -65,6 +65,10 @@ faqs:
 
       If you need a database-backed deployment, start a Postgres container first and run `kong migrations bootstrap` before starting the Gateway.
       See [Install {{site.base_gateway}} using Docker Compose](/gateway/install/docker/) for a database-backed example.
+  - q: Which versions of {{site.base_gateway}} are available as distroless images?
+    a: |
+      Distroless images were introduced in {{site.base_gateway}} 3.15.0.0 and are also available for select earlier releases.
+      For the latest list of supported versions, see the [{{site.base_gateway}} version support policy](/gateway/version-support-policy/#supported-versions), or look for your version on [Docker Hub](https://hub.docker.com/r/kong/kong-gateway/tags?name=distroless).
 
 tags:
   - install
