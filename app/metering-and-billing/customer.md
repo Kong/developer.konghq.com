@@ -140,29 +140,27 @@ To create a customer in {{site.konnect_short_name}}, do the following:
 {% endnavtab %}
 {% navtab "Subject" %}
 
-{:.warning}
-> **Important:** During the billing beta, customers are limited to **one subject**. Support for multiple subjects will be available in the future.
-
-Subjects are created when you create the customer. To create a customer associated with a subject, send a `POST` request to the `/openmeter/customers` endpoint:
+Subjects are created when you create the customer.
+To create a customer associated with a subject:
 
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/customers
-status_code: 201
 method: POST
+status_code: 201
 body:
-    name: "ACME Inc."
-    key: "019ae40f-4258-7f15-9491-842f42a7d6ac"
-    usageAttribution:
-      subjectKeys:
-      - "YOUR-SUBJECT-KEY"
+  name: ACME Inc.
+  key: acme-inc
+  usage_attribution:
+    subject_keys:
+      - YOUR-SUBJECT-KEY
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Replace `$KONNECT_TOKEN` with your [{{site.konnect_short_name}} personal or system access token](/konnect-api/#system-accounts-and-access-tokens) and `YOUR-SUBJECT-KEY` with the subject key from events that are associated with the customer.
+Replace `YOUR-SUBJECT-KEY` with the subject key from events that you want to attribute to this customer.
 
 {:.info}
-> {{site.konnect_short_name}} {{site.metering_and_billing}} will also automatically create a subject for you when you ingest an usage event for a new subject.
+> **Note:** {{site.metering_and_billing}} also automatically creates a subject when you ingest a usage event for a new subject.
 
 {% endnavtab %}
 {% endnavtabs %}
