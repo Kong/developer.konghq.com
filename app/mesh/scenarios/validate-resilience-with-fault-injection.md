@@ -41,9 +41,9 @@ related_resources:
 ## Why inject faults?
 
 Traditional testing usually focuses on the "Happy Path." Fault injection allows you to test the "Sad Path":
-*   **Validate Retries**: Does your `MeshRetry` policy actually recover from a 503 error?
-*   **Test Timeouts**: How does your UI react when the API takes 30 seconds to respond?
-*   **Verify Circuit Breakers**: Does the circuit trip and stop traffic when a service is flooded with errors?
+*   Validate Retries: Does your `MeshRetry` policy actually recover from a 503 error?
+*   Test Timeouts: How does your UI react when the API takes 30 seconds to respond?
+*   Verify Circuit Breakers: Does the circuit trip and stop traffic when a service is flooded with errors?
 
 ## Using MeshFaultInjection
 
@@ -112,7 +112,7 @@ To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match 
 > Legacy `spec.from` form. Older policies select callers with a `spec.from[].targetRef` (for example `kind: Mesh`) instead of `rules[].matches[].spiffeID`. It still works for backward compatibility, but prefer `rules` with SPIFFE matchers for new policies.
 
 {:.info}
-> ZoneEgress-specific chaos in 2.14. The same rules model can fault a single external destination flowing through mesh-scoped zone egress by matching on **SNI**:
+> ZoneEgress-specific chaos in 2.14. The same rules model can fault a single external destination flowing through mesh-scoped zone egress by matching on SNI:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -253,8 +253,8 @@ spec:
 
 ## Strategic chaos: the blast radius
 
-One of the biggest risks of chaos engineering is accidentally breaking things for real users. Use the **`targetRef`** system to limit the "Blast Radius":
+One of the biggest risks of chaos engineering is accidentally breaking things for real users. Use the `targetRef` system to limit the "Blast Radius":
 
-1.  **Start with Header Matches**: Only inject faults if a specific header (for example, `x-chaos: true`) is present. This allows developers to test in production without affecting customers.
-2.  **Target Non-Critical Zones**: Run tests in `zone: dev` or `env: staging` before moving to production.
-3.  **Low Percentages**: Start with a `1%` failure rate and slowly increase it as your confidence grows.
+1.  Start with Header Matches: Only inject faults if a specific header (for example, `x-chaos: true`) is present. This allows developers to test in production without affecting customers.
+2.  Target Non-Critical Zones: Run tests in `zone: dev` or `env: staging` before moving to production.
+3.  Low Percentages: Start with a `1%` failure rate and slowly increase it as your confidence grows.

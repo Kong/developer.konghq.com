@@ -25,7 +25,7 @@ related_resources:
 This guide explores the components and patterns specific to running {{site.mesh_product_name}} across multiple zones.
 
 {:.info}
-> **This is where the scenarios go multi-zone.** Everything up to here runs on a single zone. From this point on (cross-zone routing, canary and color releases, and mesh-scoped zone proxies) you need a **Global Control Plane with at least two Zone CPs federated to it** (the Kong Air examples use `zone1` and `zone2`).
+> This is where the scenarios go multi-zone. Everything up to here runs on a single zone. From this point on (cross-zone routing, canary and color releases, and mesh-scoped zone proxies) you need a Global Control Plane with at least two Zone CPs federated to it (the Kong Air examples use `zone1` and `zone2`).
 >
 > If you don't have a multi-zone deployment yet, set one up before continuing:
 > 1. Stand up the Global CP, [Konnect-managed](/mesh/deploy-mesh-on-konnect/) or [self-managed](/mesh/deploy-mesh-self-managed/).
@@ -38,11 +38,11 @@ In a multi-zone deployment, traffic doesn't just flow between sidecars; it often
 
 ### Zone ingress and zone egress
 
-Cross-zone traffic passes through two dedicated proxies. The **zone ingress** receives encrypted, authenticated mTLS traffic from other zones and routes it to the correct local service instance, and advertises its local services to the Global Control Plane. The **zone egress** (optional but recommended) funnels all outgoing traffic (to other zones or external services) through a single point, which enables strict firewall rules, centralized audit, and means sidecars never need direct routable access to every other zone. {{site.mesh_product_name}} can deploy and manage both automatically. For configuration and behavior details, see [zone ingress](/mesh/zone-ingress/) and [zone egress](/mesh/zone-egress/).
+Cross-zone traffic passes through two dedicated proxies. The zone ingress receives encrypted, authenticated mTLS traffic from other zones and routes it to the correct local service instance, and advertises its local services to the Global Control Plane. The zone egress (optional but recommended) funnels all outgoing traffic (to other zones or external services) through a single point, which enables strict firewall rules, centralized audit, and means sidecars never need direct routable access to every other zone. {{site.mesh_product_name}} can deploy and manage both automatically. For configuration and behavior details, see [zone ingress](/mesh/zone-ingress/) and [zone egress](/mesh/zone-egress/).
 
 ### Mesh-scoped zone proxies
 
-{{site.mesh_product_name}} 2.14 adds a **mesh-scoped zone proxy** model: instead of a single fleet-wide ZoneIngress / ZoneEgress, you deploy a dedicated pair *per mesh* (via the Helm `meshes:` list). This gives multi-tenant deployments isolation between mesh boundaries, and, because the proxies are now regular `Dataplane` resources, lets you target them with the standard policy model. One behavior change to note up front: the embedded ZoneEgress is **deny-by-default**, so `MeshExternalService` traffic needs an explicit `MeshTrafficPermission` allow.
+{{site.mesh_product_name}} 2.14 adds a mesh-scoped zone proxy model: instead of a single fleet-wide ZoneIngress / ZoneEgress, you deploy a dedicated pair per mesh (via the Helm `meshes:` list). This gives multi-tenant deployments isolation between mesh boundaries, and, because the proxies are now regular `Dataplane` resources, lets you target them with the standard policy model. One behavior change to note up front: the embedded ZoneEgress is deny-by-default, so `MeshExternalService` traffic needs an explicit `MeshTrafficPermission` allow.
 
 The dedicated [Configure mesh-scoped zone proxies](/mesh/scenarios/configure-mesh-scoped-zone-proxies/) scenario (next in the path) covers the Helm configuration, policy targeting, and migration in full.
 
@@ -54,15 +54,15 @@ Service federation is the mechanism that lets services discover and communicate 
 > Use zone-qualified hostnames such as `flight-control.kong-air-production.svc.zone2.mesh.local` when you want to pin traffic to a specific remote zone. Plain names such as `flight-control.mesh` or `flight-control.kong-air-production.svc.mesh.local` are not the same thing and should not be treated as interchangeable.
 
 ### MeshMultiZoneService
-The **MeshMultiZoneService** (MMZS) resource allows Kong Air to explicitly define services that span multiple zones, such as the `flight-control` system.
-*   **Unified Identity**: It groups instances of `flight-control` across different clusters into a single logical entity.
-*   **Failover**: If the `flight-control` instances in the `zone1` fail, traffic is automatically rerouted to `zone2`.
-*   **Load Balancing**: Kong Air can customize how traffic is weighted across zones to support global active-active flight registries.
+The MeshMultiZoneService (MMZS) resource allows Kong Air to explicitly define services that span multiple zones, such as the `flight-control` system.
+*   Unified identity: It groups instances of `flight-control` across different clusters into a single logical entity.
+*   Failover: If the `flight-control` instances in the `zone1` fail, traffic is automatically rerouted to `zone2`.
+*   Load balancing: Kong Air can customize how traffic is weighted across zones to support global active-active flight registries.
 
 The important distinction is:
 
-*   Use the **synced per-zone `MeshService` hostname** when you want a specific remote zone and you have separately confirmed that direct cross-zone path in your environment, for example `flight-control.kong-air-production.svc.zone2.mesh.local`.
-*   Use **`MeshMultiZoneService`** when you want a single mesh-wide service name that can represent one or more zones, for example `flight-control-global.mzsvc.mesh.local`.
+*   Use the synced per-zone `MeshService` hostname when you want a specific remote zone and you have separately confirmed that direct cross-zone path in your environment, for example `flight-control.kong-air-production.svc.zone2.mesh.local`.
+*   Use `MeshMultiZoneService` when you want a single mesh-wide service name that can represent one or more zones, for example `flight-control-global.mzsvc.mesh.local`.
 
 {% navtabs "mmzs-example" %}
 {% navtab "Konnect / Universal Global CP" %}
@@ -103,16 +103,16 @@ Observability in a multi-zone mesh requires consolidating data from many distrib
 
 ### Consolidated metrics
 While each Zone Control Plane collects metrics from its local proxies, {{site.mesh_product_name}} allows you to aggregate these at a global level.
-*   **MeshMetric Policy**: Define how metrics (Prometheus/OpenTelemetry) are collected across the entire mesh.
-*   **Global Dashboarding**: Use one Grafana instance to view the health of your services, regardless of which cloud or data center they are running in.
+*   MeshMetric policy: Define how metrics (Prometheus/OpenTelemetry) are collected across the entire mesh.
+*   Global dashboarding: Use one Grafana instance to view the health of your services, regardless of which cloud or data center they are running in.
 
 ### Distributed tracing
 {{site.mesh_product_name}} supports end-to-end distributed tracing across zone boundaries.
-*   **MeshTrace Policy**: Configure tracing backends (like Jaeger, Zipkin, or Datadog) globally.
-*   **Context Propagation**: Tracing headers are automatically propagated as requests move from a sidecar in Zone A, through ZoneIngress, into Zone B, and finally to the destination sidecar.
+*   MeshTrace policy: Configure tracing backends (like Jaeger, Zipkin, or Datadog) globally.
+*   Context propagation: Tracing headers are automatically propagated as requests move from a sidecar in Zone A, through ZoneIngress, into Zone B, and finally to the destination sidecar.
 
 ### Traffic logging
-Using the **MeshAccessLog** policy, you can send logs from every zone to a centralized logging server (like Splunk or ELK). This ensures you have a complete audit trail for all cross-zone interactions.
+Using the MeshAccessLog policy, you can send logs from every zone to a centralized logging server (like Splunk or ELK). This ensures you have a complete audit trail for all cross-zone interactions.
 
 ---
 

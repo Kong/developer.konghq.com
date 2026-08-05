@@ -41,16 +41,16 @@ related_resources:
 
 ### Open mesh (default)
 Sidecars allow all traffic to any external destination. This is handled by the Envoy "Original Destination" cluster.
-*   **Risk**: If a workload is compromised, it can exfiltrate data to any server on the internet.
-*   **Visibility**: No centralized logging or control over what external services are being consumed.
+*   Risk: If a workload is compromised, it can exfiltrate data to any server on the internet.
+*   Visibility: No centralized logging or control over what external services are being consumed.
 
 ### Secure mesh (zero-trust)
 Using `MeshPassthrough`, you explicitly define which outbound destinations are allowed.
-*   **Benefit**: Policy-driven control and an explicit allowlist for traffic leaving the mesh.
-*   **Auditability**: A single, declarative record of which external destinations workloads may reach, useful evidence for controls like PCI, HIPAA, or SOC 2.
+*   Benefit: Policy-driven control and an explicit allowlist for traffic leaving the mesh.
+*   Auditability: A single, declarative record of which external destinations workloads may reach, useful evidence for controls like PCI, HIPAA, or SOC 2.
 
 {:.info}
-> Interaction with mesh-scoped ZoneEgress. If you've enabled mesh-scoped ZoneEgress (the `meshes:` Helm list, see [Multi-zone architecture](/mesh/scenarios/multi-zone-architecture/)), `MeshExternalService` traffic flowing through that listener is **deny-by-default** at the ZE itself, SNI-matched per external service. A `MeshTrafficPermission` `Allow` for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-`MeshExternalService` egress.
+> Interaction with mesh-scoped ZoneEgress. If you've enabled mesh-scoped ZoneEgress (the `meshes:` Helm list, see [Multi-zone architecture](/mesh/scenarios/multi-zone-architecture/)), `MeshExternalService` traffic flowing through that listener is deny-by-default at the ZE itself, SNI-matched per external service. A `MeshTrafficPermission` `Allow` for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-`MeshExternalService` egress.
 
 ## Configure MeshPassthrough
 
@@ -186,9 +186,9 @@ spec:
 
 ## Interaction with egress gateways
 
-For maximum security, combine `MeshPassthrough` with a **ZoneEgress**.
-1.  **Direct Mode**: Sidecar tries to call the external service directly. `MeshPassthrough` logic happens in the sidecar.
-2.  **Egress Mode**: Sidecar is forced to route external traffic to the `ZoneEgress`. Once the destination is a `MeshExternalService`, the mesh-scoped ZoneEgress listener is deny-by-default and needs a matching `MeshTrafficPermission` allow before `MeshPassthrough` ever evaluates.
+For maximum security, combine `MeshPassthrough` with a ZoneEgress.
+1.  Direct mode: Sidecar tries to call the external service directly. `MeshPassthrough` logic happens in the sidecar.
+2.  Egress mode: Sidecar is forced to route external traffic to the `ZoneEgress`. Once the destination is a `MeshExternalService`, the mesh-scoped ZoneEgress listener is deny-by-default and needs a matching `MeshTrafficPermission` allow before `MeshPassthrough` ever evaluates.
 
 {:.info}
 > Use `MeshPassthrough` at the `Mesh` level to set a global security baseline, then use more specific `Dataplane` selectors (by `labels:`) to grant exceptions to the workloads that need broader internet access.

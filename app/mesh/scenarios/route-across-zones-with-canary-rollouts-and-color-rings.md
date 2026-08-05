@@ -44,8 +44,8 @@ Once Kong Air spans multiple zones, two routing needs show up that look similar 
 
 Every pattern here rests on two resources:
 
-- **`MeshMultiZoneService` (MMZS)** aggregates the zone-local `MeshService` objects for a workload behind a single stable hostname, and provides the boundary for cross-zone failover. For where it must be applied, how synced zone copies are named, and how it generates `*.mzsvc.mesh.local` hostnames, see [MeshMultiZoneService](/mesh/meshmultizoneservice/).
-- **`MeshHTTPRoute`** decides how callers reach those MMZS pools, by **weight** or by the **caller's identity**.
+- `MeshMultiZoneService` (MMZS) aggregates the zone-local `MeshService` objects for a workload behind a single stable hostname, and provides the boundary for cross-zone failover. For where it must be applied, how synced zone copies are named, and how it generates `*.mzsvc.mesh.local` hostnames, see [MeshMultiZoneService](/mesh/meshmultizoneservice/).
+- `MeshHTTPRoute` decides how callers reach those MMZS pools, by weight or by the caller's identity.
 
 The difference between the two patterns is entirely in that routing decision:
 
@@ -59,16 +59,16 @@ columns:
   - title: Color rings
     key: color
 rows:
-  - aspect: "**How traffic splits**"
+  - aspect: "How traffic splits"
     canary: "By weight, for example 90% stable / 10% canary."
     color: "By the caller, blue callers reach the blue pool, green the green pool, 100% each."
-  - aspect: "**Lifetime**"
+  - aspect: "Lifetime"
     canary: "Temporary, a progressive rollout you ramp up, then retire."
     color: "Permanent, parallel rings that always exist."
-  - aspect: "**Where the route applies**"
+  - aspect: "Where the route applies"
     canary: "Only in the rollout zone."
     color: "Everywhere; the pin follows the caller's `color` label."
-  - aspect: "**Use it when**"
+  - aspect: "Use it when"
     canary: "You want to ship a new version to a little traffic in one region first."
     color: "You want self-contained environments that each fail over within their own color."
 {% endtable %}
@@ -78,19 +78,19 @@ Pattern 1 covers the weighted canary. Pattern 2 covers color rings. They are ind
 
 ## Pattern 1: weighted canary rollout
 
-The Kong Air engineering team wants to test a new **Baggage Tracking API** in one zone without changing the routing policy everywhere else. The shape is: create global `MeshMultiZoneService` resources on the Global CP, then apply a **zone-local** `MeshHTTPRoute` only in the rollout zone.
+The Kong Air engineering team wants to test a new Baggage Tracking API in one zone without changing the routing policy everywhere else. The shape is: create global `MeshMultiZoneService` resources on the Global CP, then apply a zone-local `MeshHTTPRoute` only in the rollout zone.
 
-This pattern needs a **stable** `MeshService` in every zone you want to fail over between, plus a separate **canary** `MeshService` in the rollout zone.
+This pattern needs a stable `MeshService` in every zone you want to fail over between, plus a separate canary `MeshService` in the rollout zone.
 
 {:.info}
-> On the live mesh, the `MeshMultiZoneService` resources synced correctly from Global to each zone, including generated hostnames such as `check-in-api-global.mzsvc.mesh.local`. A zone-local `MeshHTTPRoute` targeting those synced MMZS resources worked when the route referenced them by **`kuma.io/display-name` labels** and included an explicit backend `port`.
+> On the live mesh, the `MeshMultiZoneService` resources synced correctly from Global to each zone, including generated hostnames such as `check-in-api-global.mzsvc.mesh.local`. A zone-local `MeshHTTPRoute` targeting those synced MMZS resources worked when the route referenced them by `kuma.io/display-name` labels and included an explicit backend `port`.
 
 ### Define the global MeshMultiZoneService resources
 
-Create the MMZS resources on the **Global Control Plane**, selecting the generated `MeshService` objects by their service-name labels.
+Create the MMZS resources on the Global Control Plane, selecting the generated `MeshService` objects by their service-name labels.
 
 {:.warning}
-> `MeshMultiZoneService` is a **Global CP** resource. On Konnect or a Universal-backed Global CP, create it with `kumactl`. The synced zone copies receive a hash suffix in `metadata.name`, so **zone-local policies should reference them by labels, not by name**.
+> `MeshMultiZoneService` is a Global CP resource. On Konnect or a Universal-backed Global CP, create it with `kumactl`. The synced zone copies receive a hash suffix in `metadata.name`, so zone-local policies should reference them by labels, not by name.
 
 {% navtabs "canary-mmzs" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}
@@ -257,7 +257,7 @@ spec:
 {% endnavtabs %}
 
 {:.info}
-> This route is **zone-local**. Other zones keep using their existing stable path unless they add their own override or you apply a broader global route.
+> This route is zone-local. Other zones keep using their existing stable path unless they add their own override or you apply a broader global route.
 
 ### Verify the split
 
@@ -269,8 +269,8 @@ kubectl get meshmultizoneservices -n {{site.mesh_namespace}} -o yaml
 
 On the mesh:
 
-- `check-in-api-global` matched **2 MeshServices** (zone1 stable + zone2 stable)
-- `check-in-api-canary-global` matched **1 MeshService** (zone1 canary)
+- `check-in-api-global` matched 2 MeshServices (zone1 stable + zone2 stable)
+- `check-in-api-canary-global` matched 1 MeshService (zone1 canary)
 
 Then test from a pod in the rollout zone:
 
@@ -315,7 +315,7 @@ spec:
 
 ## Pattern 2: color rings
 
-The Kong Air platform team uses **color labels** to manage parallel tracks of services: `blu` represents the stable production ring, `grn` the canary ring. Here, each ring stays self-contained across zones, without any code changes in the services themselves. A request from a `color:blu` pod always reaches a `color:blu` backend, callers use a single agnostic hostname, and each color fails over to its own pool in another zone.
+The Kong Air platform team uses color labels to manage parallel tracks of services: `blu` represents the stable production ring, `grn` the canary ring. Here, each ring stays self-contained across zones, without any code changes in the services themselves. A request from a `color:blu` pod always reaches a `color:blu` backend, callers use a single agnostic hostname, and each color fails over to its own pool in another zone.
 
 <!-- vale off -->
 {% mermaid %}
@@ -349,9 +349,9 @@ graph TD
 This pattern uses `nginx:alpine` with per-color ConfigMaps to simulate services that return their own identity. No custom container image is required.
 
 {:.info}
-> These color workloads are **additive** to the base Kong Air demo. The caller pods (`check-in-api-blu`/`-grn`) carry `app: check-in-api` plus a `color` label so the color-based `MeshHTTPRoute` can select them, and they reuse the `check-in-api` service account. If your base demo's `check-in-api` Service selects all `app: check-in-api` pods, it will also pick up these `nginx` variants, fine for this self-contained walkthrough, but give them a distinct `app` label (or use a separate namespace) if you need the base service kept isolated.
+> These color workloads are additive to the base Kong Air demo. The caller pods (`check-in-api-blu`/`-grn`) carry `app: check-in-api` plus a `color` label so the color-based `MeshHTTPRoute` can select them, and they reuse the `check-in-api` service account. If your base demo's `check-in-api` Service selects all `app: check-in-api` pods, it will also pick up these `nginx` variants, fine for this self-contained walkthrough, but give them a distinct `app` label (or use a separate namespace) if you need the base service kept isolated.
 
-Apply the following to **each zone**:
+Apply the following to each zone:
 
 {% navtabs "color-workloads" %}
 {% navtab "Kubernetes (each zone)" %}
@@ -573,13 +573,13 @@ kubectl get pods -n kong-air-production -l app=check-in-api
 
 ### Create the per-color MeshMultiZoneService resources
 
-Create three MMZS resources on the **Global CP**:
+Create three MMZS resources on the Global CP:
 - `flight-control-all`, the agnostic hostname clients call
 - `flight-control-blu`, the blue pool, spanning all zones
 - `flight-control-grn`, the green pool, spanning all zones
 
 {:.warning}
-> `MeshMultiZoneService` must be applied to the **Global Control Plane**. Zone-synced copies receive a hash suffix in `metadata.name`; reference them by `kuma.io/display-name` label in zone-local policies.
+> `MeshMultiZoneService` must be applied to the Global Control Plane. Zone-synced copies receive a hash suffix in `metadata.name`; reference them by `kuma.io/display-name` label in zone-local policies.
 
 {% navtabs "color-mmzs" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}
@@ -707,9 +707,9 @@ Each MMZS generates a stable hostname:
 
 ### Apply color-pinning routes
 
-Clients call the color-agnostic hostname `flight-control-all.mzsvc.mesh.local`. `MeshHTTPRoute` intercepts those calls based on the **caller's** `color` label and redirects to the matching color pool. No client code changes are required.
+Clients call the color-agnostic hostname `flight-control-all.mzsvc.mesh.local`. `MeshHTTPRoute` intercepts those calls based on the caller's `color` label and redirects to the matching color pool. No client code changes are required.
 
-Apply these routes via the **Global CP** so they take effect in all zones:
+Apply these routes via the Global CP so they take effect in all zones:
 
 {% navtabs "color-pinning" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}
@@ -880,7 +880,7 @@ Expected output, all responses from the green pool:
 
 ### Verify cross-zone failover
 
-The `flight-control-blu` MMZS aggregates blue pods from **all** zones, so this step only works if **zone2 is also running the blue pool**, repeat the step-1 deployment against your zone2 cluster first. Then scale zone1's blue pool to zero and confirm zone1's caller fails over to zone2's blue pods.
+The `flight-control-blu` MMZS aggregates blue pods from all zones, so this step only works if zone2 is also running the blue pool, repeat the step-1 deployment against your zone2 cluster first. Then scale zone1's blue pool to zero and confirm zone1's caller fails over to zone2's blue pods.
 
 {:.warning}
 > These commands target a specific zone, so they use `--context zone1` (replace with your actual kube-context names). If zone1 is your only zone, scaling its blue pool to zero leaves nowhere to fail over to and the check will fail.
@@ -901,7 +901,7 @@ kubectl --context zone1 exec -n kong-air-production "$BLU_POD" -c check-in-api -
   sh -c 'for i in $(seq 1 10); do wget -qO- http://flight-control-all.mzsvc.mesh.local:8080; echo; done'
 ```
 
-Traffic continues to return `"color":"blu"`, now served from **zone2's** blue pool. Restore zone1 when done:
+Traffic continues to return `"color":"blu"`, now served from zone2's blue pool. Restore zone1 when done:
 
 ```bash
 kubectl --context zone1 scale deploy/flight-control-blu -n kong-air-production --replicas=1
@@ -909,8 +909,8 @@ kubectl --context zone1 scale deploy/flight-control-blu -n kong-air-production -
 
 ## Key takeaways
 
-- **Both patterns share one foundation.** `MeshMultiZoneService` aggregates pools across zones and owns the failover boundary; `MeshHTTPRoute` decides who reaches which pool.
-- **Canary splits by weight; color rings split by caller.** Use canary for a temporary percentage rollout in one zone, use color rings for permanent parallel environments.
-- **Clients stay decoupled from topology.** Callers use a single MMZS hostname; the route and MMZS handle version or color resolution and zone selection, no client code changes.
-- **Routing is enforced by policy, not by code.** Change a weight or a `color` label and the mesh re-resolves on the next reconciliation.
-- **Each MMZS is its own failover boundary.** The stable pool fails over independently of the canary; each color ring fails over within its own color.
+- Both patterns share one foundation. `MeshMultiZoneService` aggregates pools across zones and owns the failover boundary; `MeshHTTPRoute` decides who reaches which pool.
+- Canary splits by weight; color rings split by caller. Use canary for a temporary percentage rollout in one zone, use color rings for permanent parallel environments.
+- Clients stay decoupled from topology. Callers use a single MMZS hostname; the route and MMZS handle version or color resolution and zone selection, no client code changes.
+- Routing is enforced by policy, not by code. Change a weight or a `color` label and the mesh re-resolves on the next reconciliation.
+- Each MMZS is its own failover boundary. The stable pool fails over independently of the canary; each color ring fails over within its own color.

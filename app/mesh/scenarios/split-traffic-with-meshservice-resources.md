@@ -15,10 +15,10 @@ works_on:
 tldr:
   q: How do I split traffic between different versions of my service?
   a: |
-    Use **Explicit Subsetting** by:
-    1. **Defining distinct versioned destinations** for each version you want to route independently (for example, `v1` and `v2`).
-    2. **Using MeshHTTPRoute** to assign `weights` to each `backendRef`.
-    3. **Verifying the split** by monitoring the distribution of requests across the named services.
+    Use Explicit Subsetting by:
+    1. Defining distinct versioned destinations for each version you want to route independently (for example, `v1` and `v2`).
+    2. Using MeshHTTPRoute to assign `weights` to each `backendRef`.
+    3. Verifying the split by monitoring the distribution of requests across the named services.
 prereqs:
   inline:
     - title: Architecture
@@ -39,9 +39,9 @@ related_resources:
     url: /mesh/scenarios/policy-targeting-and-precedence/
 ---
 
-The Kong Air engineering team is launching a new **Passenger Portal v2**. To ensure a smooth transition, they want to route 90% of traffic to the stable `v1` and 10% to the new `v2` for a group of internal pilot users. 
+The Kong Air engineering team is launching a new Passenger Portal v2. To ensure a smooth transition, they want to route 90% of traffic to the stable `v1` and 10% to the new `v2` for a group of internal pilot users. 
 
-This guide demonstrates how to achieve this using **explicit `MeshService` versions** routed by a `MeshHTTPRoute`. If you want a refresher on the `targetRef` model and where `MeshService` fits in `to[]`/`backendRefs`, see [Policy targeting and precedence](/mesh/scenarios/policy-targeting-and-precedence/); the [Target workloads and services](/mesh/scenarios/target-workloads-and-services/) guide that follows goes deeper on label-based targeting.
+This guide demonstrates how to achieve this using explicit `MeshService` versions routed by a `MeshHTTPRoute`. If you want a refresher on the `targetRef` model and where `MeshService` fits in `to[]`/`backendRefs`, see [Policy targeting and precedence](/mesh/scenarios/policy-targeting-and-precedence/); the [Target workloads and services](/mesh/scenarios/target-workloads-and-services/) guide that follows goes deeper on label-based targeting.
 
 ## What this proves
 
@@ -78,7 +78,7 @@ graph TD
 
 For rollout patterns like canary and blue/green, you want version-specific destinations that the route can name directly. For how {{site.mesh_product_name}} generates `MeshService` resources, how label-based matching works, and what `meshServices.mode: Exclusive` changes, see [MeshService](/mesh/meshservice/).
 
-On **Kubernetes**, create **versioned Services** (`passenger-portal-v1`, `passenger-portal-v2`) and let {{site.mesh_product_name}} generate the matching `MeshService` resources from them. On **Universal**, define the `MeshService` resources directly.
+On Kubernetes, create versioned Services (`passenger-portal-v1`, `passenger-portal-v2`) and let {{site.mesh_product_name}} generate the matching `MeshService` resources from them. On Universal, define the `MeshService` resources directly.
 
 {:.info}
 > Why `appProtocol: http`? The Kubernetes `Service` examples below set `appProtocol: http` on the port. In `Exclusive` mode, {{site.mesh_product_name}} reads this field to set the protocol on the generated `MeshService`. Without it, the `MeshService` defaults to `tcp`, and HTTP-aware policies, `MeshHTTPRoute`, weighted splits, retries on `5xx`, silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
@@ -144,7 +144,7 @@ spec:
 
 ### Configure the weighted route
 
-Now, create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to **every client that calls `passenger-portal`**. For how `backendRefs` and `weight` divide traffic across the two versions, see [MeshHTTPRoute](/mesh/policies/meshhttproute/). (To roll the split out to only some clients first, narrow the top level to `Dataplane` with a `labels:` selector.)
+Now, create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to every client that calls `passenger-portal`. For how `backendRefs` and `weight` divide traffic across the two versions, see [MeshHTTPRoute](/mesh/policies/meshhttproute/). (To roll the split out to only some clients first, narrow the top level to `Dataplane` with a `labels:` selector.)
 
 {% navtabs "weighted-route" %}
 {% navtab "Kubernetes (Zone CP)" %}
@@ -209,7 +209,7 @@ spec:
 
 ## Verification
 
-To verify the split, exec into any in-mesh pod (here `check-in-api` acts as a test client) and run a loop against `passenger-portal`, counting which version responds. **This body-matching check only works if your app echoes its version**, the Kong Air demo apps prefix responses with `v2:`; adapt the `case` matching to whatever your real versions return:
+To verify the split, exec into any in-mesh pod (here `check-in-api` acts as a test client) and run a loop against `passenger-portal`, counting which version responds. This body-matching check only works if your app echoes its version, the Kong Air demo apps prefix responses with `v2:`; adapt the `case` matching to whatever your real versions return:
 
 ```bash
 kubectl exec -n kong-air-production deploy/check-in-api -c check-in-api -- sh -c '

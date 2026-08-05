@@ -49,11 +49,11 @@ rows:
 <!-- vale on -->
 
 {:.info}
-> **Zone proxies are targetable too (2.14).** You can attach `MeshTrafficPermission`, `MeshTimeout`, `MeshRateLimit`, `MeshFaultInjection`, `MeshCircuitBreaker`, `MeshHealthCheck`, `MeshMetric`, `MeshTrace`, and `MeshAccessLog` directly to zone ingress or zone egress with `targetRef.kind: Dataplane` plus the computed listener labels (for example `kuma.io/listener-zoneegress: enabled`).
+> Zone proxies are targetable too (2.14). You can attach `MeshTrafficPermission`, `MeshTimeout`, `MeshRateLimit`, `MeshFaultInjection`, `MeshCircuitBreaker`, `MeshHealthCheck`, `MeshMetric`, `MeshTrace`, and `MeshAccessLog` directly to zone ingress or zone egress with `targetRef.kind: Dataplane` plus the computed listener labels (for example `kuma.io/listener-zoneegress: enabled`).
 
 ## MeshTrafficPermission precedence caveat
 
 Most policies follow most-specific-wins, but `MeshTrafficPermission` does not.
 
 {:.warning}
-> `MeshTrafficPermission` evaluates **all** matching rules for a request, and if any matched rule produces a `Deny`, the deny wins. To enforce a default-deny posture cleanly, delete the permissive `allow-all` policy first, then layer narrower allows on top. Treat it as an RBAC-style allow/deny pass rather than a most-specific-wins override.
+> `MeshTrafficPermission` evaluates all matching rules for a request, and if any matched rule produces a `Deny`, the deny wins. To enforce a default-deny posture cleanly, delete the permissive `allow-all` policy first, then layer narrower allows on top. Treat it as an RBAC-style allow/deny pass rather than a most-specific-wins override.

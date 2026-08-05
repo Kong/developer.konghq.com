@@ -14,7 +14,7 @@ works_on:
   - konnect
 ---
 
-The security architect is the Lead Security Architect at **Kong Air**. In the airline industry, security is not just about data; it's about passenger safety and global regulatory compliance. The security architect uses {{site.mesh_product_name}} to implement a **Zero-Trust** security model that protects passenger PII, the booking gateway, and internal flight control APIs.
+The security architect is the Lead Security Architect at Kong Air. In the airline industry, security is not just about data; it's about passenger safety and global regulatory compliance. The security architect uses {{site.mesh_product_name}} to implement a Zero-Trust security model that protects passenger PII, the booking gateway, and internal flight control APIs.
 
 ## Workload identity and strict mTLS
 
@@ -24,7 +24,7 @@ See [Manage workload identity and mTLS](/mesh/scenarios/manage-workload-identity
 
 ## Fine-grained authorization
 
-The security architect implements a "Default Deny" policy. No service can communicate with another unless the security architect explicitly authorizes it using **MeshTrafficPermission**.
+The security architect implements a "Default Deny" policy. No service can communicate with another unless the security architect explicitly authorizes it using MeshTrafficPermission.
 
 ### Protecting the flight database
 The security architect ensures that only `flight-control` can access the sensitive `flight-db`.
@@ -68,19 +68,19 @@ The security architect's security posture extends beyond the mesh boundaries.
 External requests from passengers enter through `booking-gateway` ({{site.base_gateway}}, operated by the operator). The security architect configures the gateway to validate passenger JWTs (OpenID Connect) before translating that identity into the mesh.
 
 ### Egress control and filtering
-When internal services need to fetch weather data from `weather-api` (a SaaS provider), the security architect uses **ZoneEgress** and `MeshExternalService` (defined by the operator) to strictly control and log these outbound connections.
+When internal services need to fetch weather data from `weather-api` (a SaaS provider), the security architect uses ZoneEgress and `MeshExternalService` (defined by the operator) to strictly control and log these outbound connections.
 
-`MeshExternalService` traffic is **deny-by-default** at the ZoneEgress listener itself, so the security architect's `MeshTrafficPermission` targets the **zone-proxy `Dataplane`** (the computed label `kuma.io/listener-zoneegress: enabled`, narrowed with `sectionName`) and its `Allow` rule matches both the caller's authenticated identity (`spiffeID`) and the destination external service (`sni`). In 2.14 the SNI format is `sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>`. See [Manage external services with MeshExternalService](/mesh/scenarios/manage-external-services-with-meshexternalservice/) for the full egress `MeshTrafficPermission` and how to derive the SNI.
+`MeshExternalService` traffic is deny-by-default at the ZoneEgress listener itself, so the security architect's `MeshTrafficPermission` targets the zone-proxy `Dataplane` (the computed label `kuma.io/listener-zoneegress: enabled`, narrowed with `sectionName`) and its `Allow` rule matches both the caller's authenticated identity (`spiffeID`) and the destination external service (`sni`). In 2.14 the SNI format is `sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>`. See [Manage external services with MeshExternalService](/mesh/scenarios/manage-external-services-with-meshexternalservice/) for the full egress `MeshTrafficPermission` and how to derive the SNI.
 
 {:.warning}
-> Older `kind: MeshExternalService` targeting is gone in 2.14. Earlier releases allowed a `MeshTrafficPermission` to target the external service directly (top-level `targetRef.kind: MeshExternalService` with a `from[]` block naming the calling `MeshService`). That form is **rejected by the admission webhook in 2.14**. The listener-targeted form is the only supported model for mesh-scoped ZoneEgress.
+> Older `kind: MeshExternalService` targeting is gone in 2.14. Earlier releases allowed a `MeshTrafficPermission` to target the external service directly (top-level `targetRef.kind: MeshExternalService` with a `from[]` block naming the calling `MeshService`). That form is rejected by the admission webhook in 2.14. The listener-targeted form is the only supported model for mesh-scoped ZoneEgress.
 
 ## Governance and audit trails
 
 To comply with aviation audits, the security architect must be able to prove who talked to what and when.
 
-- **Immutable Logs**: The security architect uses **MeshAccessLog** (configured by the operator) to ensure every authorization decision is logged to a tamper-proof backend.
-- **Policy Ownership**: The security architect manages security policies in a dedicated `kong-air-sec` namespace, using Kubernetes RBAC to ensure that only the security team can modify mTLS or Traffic Permissions, even if the developer's team manages their own routes.
+- Immutable Logs: The security architect uses MeshAccessLog (configured by the operator) to ensure every authorization decision is logged to a tamper-proof backend.
+- Policy Ownership: The security architect manages security policies in a dedicated `kong-air-sec` namespace, using Kubernetes RBAC to ensure that only the security team can modify mTLS or Traffic Permissions, even if the developer's team manages their own routes.
 
 ## The security architect's result
-By implementing {{site.mesh_product_name}}, the security architect has achieved a higher level of security than traditional perimeter-based models. The security architect has cryptographic proof of every service identity, granular control over every data flow, and a complete audit trail for the entire **Kong Air** digital ecosystem.
+By implementing {{site.mesh_product_name}}, the security architect has achieved a higher level of security than traditional perimeter-based models. The security architect has cryptographic proof of every service identity, granular control over every data flow, and a complete audit trail for the entire Kong Air digital ecosystem.

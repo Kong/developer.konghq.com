@@ -14,7 +14,7 @@ works_on:
   - konnect
 ---
 
-The developer is a Senior Software Engineer at **Kong Air**, on the **Passenger Experience** team. The developer owns the services that the airline's passengers see and interact with, `passenger-portal` (the booking and check-in UI) and `check-in-api` (the back-end that processes seat assignments and boarding passes). The developer does **not** own the operational core (`flight-control`), the ingress gateway (`booking-gateway`), or the underlying databases (`flight-db`); those belong to other teams. The developer's job is to make these services fast, resilient, and observable while consuming everyone else's services safely.
+The developer is a Senior Software Engineer at Kong Air, on the Passenger Experience team. The developer owns the services that the airline's passengers see and interact with, `passenger-portal` (the booking and check-in UI) and `check-in-api` (the back-end that processes seat assignments and boarding passes). The developer does not own the operational core (`flight-control`), the ingress gateway (`booking-gateway`), or the underlying databases (`flight-db`); those belong to other teams. The developer's job is to make these services fast, resilient, and observable while consuming everyone else's services safely.
 
 ### What the developer owns at Kong Air
 
@@ -42,11 +42,11 @@ The dashed arrow to `weather-api` is an external SaaS, the developer reaches it 
 
 ## Service discovery and consuming services the developer doesn't own
 
-The developer's services need predictable hostnames for the things they call. Both the in-zone DNS naming (via `HostnameGenerator`) and the cross-zone abstraction (via `MeshMultiZoneService`) are typically set up by the **operator**, they're cluster-wide concerns that live in the system namespace and apply to every service. The developer's job is to use them.
+The developer's services need predictable hostnames for the things they call. Both the in-zone DNS naming (via `HostnameGenerator`) and the cross-zone abstraction (via `MeshMultiZoneService`) are typically set up by the operator, they're cluster-wide concerns that live in the system namespace and apply to every service. The developer's job is to use them.
 
 ### The developer's view of in-zone DNS
 
-The operator has applied a **custom** `HostnameGenerator` for the mesh (Kong Air's own naming scheme, the built-in default for zone-local services is `.svc.cluster.local` on Kubernetes). It generates a DNS name like `<service>.svc.kongair.mesh` for every `MeshService`. The developer just needs to know the convention:
+The operator has applied a custom `HostnameGenerator` for the mesh (Kong Air's own naming scheme, the built-in default for zone-local services is `.svc.cluster.local` on Kubernetes). It generates a DNS name like `<service>.svc.kongair.mesh` for every `MeshService`. The developer just needs to know the convention:
 
 <!-- vale off -->
 {% table %}
@@ -74,7 +74,7 @@ The `HostnameGenerator` resource itself is applied by the operator and lives in 
 
 ### The developer's view of cross-zone services
 
-When `passenger-portal` (running in zone1) needs to call `flight-control` (which may be in zone1 *or* zone2), the operator has defined a `MeshMultiZoneService` that aggregates both zones into one logical service. The developer calls a single hostname and the mesh handles locality and failover. The `MeshMultiZoneService` is applied by the operator, see [Multi-zone architecture](/mesh/scenarios/multi-zone-architecture/) for how it is defined.
+When `passenger-portal` (running in zone1) needs to call `flight-control` (which may be in zone1 or zone2), the operator has defined a `MeshMultiZoneService` that aggregates both zones into one logical service. The developer calls a single hostname and the mesh handles locality and failover. The `MeshMultiZoneService` is applied by the operator, see [Multi-zone architecture](/mesh/scenarios/multi-zone-architecture/) for how it is defined.
 
 ### External services
 
@@ -91,8 +91,8 @@ Launching v2 of the passenger portal? The developer shifts a percentage of traff
 > The traffic hierarchy: routing versus load balancing.
 >
 > It is easy to confuse `weight` in a route with load balancing, but they happen at different layers:
-> 1. **Selection (the route)**: `MeshHTTPRoute` uses `weight` to decide which subset (`v1` or `v2`) the request belongs to.
-> 2. **Distribution (the strategy)**: Once a subset is chosen, `MeshLoadBalancingStrategy` decides which specific instance (Pod) within that subset receives the traffic.
+> 1. Selection (the route): `MeshHTTPRoute` uses `weight` to decide which subset (`v1` or `v2`) the request belongs to.
+> 2. Distribution (the strategy): Once a subset is chosen, `MeshLoadBalancingStrategy` decides which specific instance (Pod) within that subset receives the traffic.
 
 ### Advanced load balancing
 To ensure fair distribution across the backend instances, the developer configures a `MeshLoadBalancingStrategy` (for example, a `LeastRequest` load balancer that sends traffic to the least busy instance). See [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/) for the policy fields.
@@ -119,13 +119,13 @@ The developer needs to see what is happening inside the code. The developer uses
 
 ## Gateway integration
 
-Finally, **booking-gateway** ({{site.base_gateway}}, owned by the operator) is the entry point into the developer's services. The developer doesn't operate the gateway itself, but just makes sure these services play well with it:
+Finally, booking-gateway ({{site.base_gateway}}, owned by the operator) is the entry point into the developer's services. The developer doesn't operate the gateway itself, but just makes sure these services play well with it:
 
-*   **Ingress**: {{site.base_gateway}} terminates external HTTPS and forwards into the mesh. Passengers hit the gateway; the gateway routes to `passenger-portal`.
-*   **Bridge**: It translates external JWT authentication into the mesh identity, so the developer's services see which passenger is making the request.
+*   Ingress: {{site.base_gateway}} terminates external HTTPS and forwards into the mesh. Passengers hit the gateway; the gateway routes to `passenger-portal`.
+*   Bridge: It translates external JWT authentication into the mesh identity, so the developer's services see which passenger is making the request.
 
 The gateway itself is the operator's responsibility, see the [Operator](/mesh/scenarios/persona/operator/) for how the gateway is wired into the mesh.
 
 ---
 
-By mastering these policies, the developer has turned **Kong Air** into a resilient, high-scale digital airline. The developer spends less time worrying about the network and more time building features that get passengers where they need to go.
+By mastering these policies, the developer has turned Kong Air into a resilient, high-scale digital airline. The developer spends less time worrying about the network and more time building features that get passengers where they need to go.

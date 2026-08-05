@@ -16,9 +16,9 @@ tldr:
   q: What is workload identity in {{site.mesh_product_name}}?
   a: |
     Workload Identity decouples identity from the `Mesh` resource. It allows you to:
-    1. **Define granular identity** per workload via `MeshIdentity`.
-    2. **Manage Trust** explicitly using `MeshTrust` CA bundles.
-    3. **Customize SPIFFE IDs** while migrating safely from legacy mesh-wide identities.
+    1. Define granular identity per workload via `MeshIdentity`.
+    2. Manage Trust explicitly using `MeshTrust` CA bundles.
+    3. Customize SPIFFE IDs while migrating safely from legacy mesh-wide identities.
 prereqs:
   inline:
     - title: Architecture
@@ -26,7 +26,7 @@ prereqs:
         A running {{site.mesh_product_name}} deployment. If you are new to the multi-tier control plane model, read the [Resource scoping](/mesh/scenarios/resource-scoping/) first.
     - title: Mesh Mode
       content: |
-        A Mesh configured in **Exclusive** mode (required for `MeshIdentity` support).
+        A Mesh configured in Exclusive mode (required for `MeshIdentity` support).
 next_steps:
   - text: "Integrate an external CA"
     url: "/mesh/scenarios/integrate-an-external-ca/"
@@ -44,7 +44,7 @@ In the previous model, the `Mesh` object was the source of all authority. {{site
 
 ## Prerequisite: MeshServices mode
 
-Before enabling Workload Identity, you must ensure your mesh is using the **MeshService** resource model.
+Before enabling Workload Identity, you must ensure your mesh is using the MeshService resource model.
 
 {:.warning}
 > `MeshIdentity` becomes active only when `meshServices.mode: Exclusive` is set on the `Mesh`. The control plane accepts the `MeshIdentity` resource before that point, but does not initialize it until MeshServices are enabled on the mesh.
@@ -53,7 +53,7 @@ Before enabling Workload Identity, you must ensure your mesh is using the **Mesh
 {% navtab "Kubernetes Global CP (self-managed)" %}
 
 {:.warning}
-> `Mesh` is a **Global CP only** resource. Apply this against the kubeconfig of your **Global Control Plane**, not a Zone CP. See [Resource scoping](/mesh/scenarios/resource-scoping/).
+> `Mesh` is a Global CP only resource. Apply this against the kubeconfig of your Global Control Plane, not a Zone CP. See [Resource scoping](/mesh/scenarios/resource-scoping/).
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
@@ -68,7 +68,7 @@ spec:
 {% navtab "Konnect / Universal Global CP" %}
 
 {:.warning}
-> Run this against your **Global CP**. Use `kumactl config control-planes use <global-cp>` first.
+> Run this against your Global CP. Use `kumactl config control-planes use <global-cp>` first.
 
 ```bash
 echo 'type: Mesh
@@ -83,16 +83,16 @@ meshServices:
 
 The recommended production pattern is:
 
-1. Apply the `MeshIdentity` on the **Global CP**
-2. Use the **Bundled** provider with `autogenerate.enabled: true`
+1. Apply the `MeshIdentity` on the Global CP
+2. Use the Bundled provider with `autogenerate.enabled: true`
 3. Use a workload-oriented SPIFFE path
 4. Let {{site.mesh_product_name}} automatically create the matching `MeshTrust`
 
 {:.warning}
-> On Kubernetes, the **synced copy** of `MeshIdentity` lives in the **system namespace** on each Zone CP. If your Global CP is also Kubernetes-backed, create the resource in the system namespace there as well. If your Global CP is Konnect or Universal-backed, apply it with `kumactl` and let {{site.mesh_product_name}} sync the generated copy down to each zone.
+> On Kubernetes, the synced copy of `MeshIdentity` lives in the system namespace on each Zone CP. If your Global CP is also Kubernetes-backed, create the resource in the system namespace there as well. If your Global CP is Konnect or Universal-backed, apply it with `kumactl` and let {{site.mesh_product_name}} sync the generated copy down to each zone.
 
 {:.info}
-> The examples below are **targeted** identities, layered on top of the mesh-wide `kong-air-identity` from [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/). The control plane gives each workload its single *most-specific* `MeshIdentity` (the selector with the most `matchLabels` wins), so a targeted selector must be **more specific** than the mesh-wide default, that's why each one includes `kuma.io/mesh: kong-air-mesh` **plus** its workload label. The mesh-wide identity keeps covering everything else, including the zone proxies.
+> The examples below are targeted identities, layered on top of the mesh-wide `kong-air-identity` from [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/). The control plane gives each workload its single most-specific `MeshIdentity` (the selector with the most `matchLabels` wins), so a targeted selector must be more specific than the mesh-wide default, that's why each one includes `kuma.io/mesh: kong-air-mesh` plus its workload label. The mesh-wide identity keeps covering everything else, including the zone proxies.
 
 {% navtabs "mesh-identity" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}
@@ -186,7 +186,7 @@ kubectl exec -n kong-air-production <pod> -c kuma-sidecar -- \
 
 ### Example: using the SPIRE provider
 
-For higher-assurance environments, you can delegate identity to **SPIRE** (the SPIFFE Runtime Environment) by setting `provider.type: Spire` on the `MeshIdentity`. For the full configuration and setup steps, see [Issue identity with MeshIdentity and SPIRE](/mesh/issue-identity-with-meshidentity-spire/).
+For higher-assurance environments, you can delegate identity to SPIRE (the SPIFFE Runtime Environment) by setting `provider.type: Spire` on the `MeshIdentity`. For the full configuration and setup steps, see [Issue identity with MeshIdentity and SPIRE](/mesh/issue-identity-with-meshidentity-spire/).
 
 ## Managing trust with `MeshTrust`
 
@@ -197,9 +197,9 @@ For higher-assurance environments, you can delegate identity to **SPIRE** (the S
 {:.warning}
 > Multi-zone deployments with `autogenerate: enabled: true` require a manual cross-zone trust step. When each Zone CP generates its own CA, the two zones' `MeshTrust` resources share the same base name after KDS syncs them back. One overwrites the other, leaving each zone trusting only its own CA. Cross-zone mTLS then fails at the ZoneIngress TLS handshake (`cx_connect_fail` on every attempt).
 
-To establish mutual trust, create a combined `MeshTrust` on **each zone** that includes every zone's CA bundle.
+To establish mutual trust, create a combined `MeshTrust` on each zone that includes every zone's CA bundle.
 
-**Step 1: Find the auto-generated `MeshTrust` name on each zone**
+Step 1: Find the auto-generated `MeshTrust` name on each zone
 
 The `Bundled` provider creates one `MeshTrust` per zone. List them to get the name:
 
@@ -207,7 +207,7 @@ The `Bundled` provider creates one `MeshTrust` per zone. List them to get the na
 kubectl --kubeconfig=<zone1-config> get meshtrusts -n {{site.mesh_namespace}}
 ```
 
-**Step 2: Extract each zone's CA bundle**
+Step 2: Extract each zone's CA bundle
 
 Fill in `<zone-n-config>` and the `<meshtrust-name>` from Step 1:
 
@@ -220,7 +220,7 @@ ZONE2_CA=$(kubectl --kubeconfig=<zone2-config> \
   -o jsonpath='{.spec.caBundles[0].pem.value}')
 ```
 
-**Step 3: Apply a combined `MeshTrust` to every zone**
+Step 3: Apply a combined `MeshTrust` to every zone
 
 Run this once per zone, swapping `--kubeconfig` for each. The `$(... | sed ...)` substitution indents each PEM line to sit under `value: |`:
 
@@ -251,7 +251,7 @@ EOF
 Once the combined `MeshTrust` is applied on every zone, cross-zone mTLS connections succeed.
 
 {:.info}
-> For production multi-zone deployments, avoid this manual step entirely by using a **shared CA** (provide the same cert/key to every zone in the `Bundled` provider configuration rather than using `autogenerate`), or by using **SPIRE**, which manages cross-zone trust natively.
+> For production multi-zone deployments, avoid this manual step entirely by using a shared CA (provide the same cert/key to every zone in the `Bundled` provider configuration rather than using `autogenerate`), or by using SPIRE, which manages cross-zone trust natively.
 
 This separation allows you to:
 - Rotate CAs without re-issuing identity certificates immediately.
@@ -314,7 +314,7 @@ spec:
 
 ## Enforcing security with `MeshTLS`
 
-Once workloads have an identity, you use the `MeshTLS` policy to enforce how that identity is used during communication. Apply it at the **Global CP**, like the `MeshIdentity` and `MeshTrust` above, so it syncs to every zone.
+Once workloads have an identity, you use the `MeshTLS` policy to enforce how that identity is used during communication. Apply it at the Global CP, like the `MeshIdentity` and `MeshTrust` above, so it syncs to every zone.
 
 {% navtabs "mesh-tls" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}
