@@ -70,7 +70,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
     ' | kubectl apply -f -
     ```
 
-1. Create a GatewayConfiguration that uses it:
+1. Create a `GatewayConfiguration` that uses it:
 
     ```bash
     echo '
@@ -87,7 +87,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
     ' | kubectl apply -f -
     ```
 
-1. Patch the GatewayClass to use the config:
+1. Patch the `GatewayClass` to use the config:
 
     ```bash
     kubectl patch -n kong --type=json gatewayclass kong -p='[
@@ -104,7 +104,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
     ]'
     ```
 
-{{ site.operator_product_name }} can be integrated with [Datadog Metrics](https://docs.datadoghq.com/metrics/) in order to use {{ site.base_gateway }} latency metrics to autoscale workloads based on their metrics.
+You can integrate {{ site.operator_product_name }} with [Datadog Metrics](https://docs.datadoghq.com/metrics/) to use {{ site.base_gateway }} latency metrics to autoscale workloads based on their metrics.
 
 ## Install Datadog in your Kubernetes cluster
 
@@ -162,7 +162,7 @@ To trigger autoscaling, run the following command in a new terminal window. This
 while curl -k "http://$(kubectl get gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers -n kong)/command/shell?cmd=sleep%200.1" ; do sleep 1; done
 ```
 
-Keep this running while we move on to next steps.
+Keep this running while you move on to the next steps.
 
 ## Annotate {{ site.operator_product_name }} with Datadog checks config
 
@@ -209,7 +209,7 @@ spec:
 ```
 
 {:.info}
-> **Note:** The Datadog Cluster Agent only starts refreshing a `DatadogMetric`'s status once it's referenced by a `HorizontalPodAutoscaler`. Its `ACTIVE`/`VALID`/`VALUE` fields will stay empty until you create the HPA in the next section — that's expected, not an error.
+> **Note:** The Datadog Cluster Agent only starts refreshing a `DatadogMetric`'s status once it's referenced by a `HorizontalPodAutoscaler`. Its `ACTIVE`/`VALID`/`VALUE` fields will stay empty until you create the HPA in the next section.
 
 ### Use `DatadogMetric` in `HorizontalPodAutoscaler`
 
