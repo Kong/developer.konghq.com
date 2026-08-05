@@ -167,14 +167,15 @@ Create a meter to count API requests:
 url: /v3/openmeter/meters
 method: POST
 body:
-  name: Total API requests
+  name: API requests
   key: api_requests_total
-  description: API Requests
-  event_type: request
+  description: Number of API requests
+  event_type: kong.api_request
   aggregation: count
   dimensions:
-    method: $.method
-    route: $.route
+    request_method: $.request_method
+    route_name: $.route_name
+    service_name: $.service_name
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -214,12 +215,12 @@ In this guide, you'll create a feature for the `example-service` you created in 
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `example-service`.
-1. From the **Meter** dropdown menu, select "API Gateway Requests".
+1. From the **Meter** dropdown menu, select "API requests".
 1. Click **Add group by filter**.
    The group by filter ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic. This lets you offer different pricing for different APIs.
 1. From the **Group by** dropdown menu, select "service_name".
 1. From the **Operator** dropdown menu, select "Equals".
-1. From the **Value** dropdown menu, select "example-service".
+1. In the **Value** dropdown menu, enter "example-service".
 1. Click **Save**.
 
 ## Create a Premium plan
@@ -254,13 +255,14 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
+1. In the **Key** field, enter `kong-air`.
 1. In the **Include usage from** dropdown, select "kong-air".
 1. Click **Save**.
 1. Click the **Subscriptions** tab.
 1. Click **Create a Subscription**.
 1. From the **Subscribed Plan** dropdown, select "Premium".
 1. Click **Next Step**.
-1. Click **Create Subscription**.
+1. Click **Start Subscription**.
 
 <!--Note: Want to delete a customer? Cancel their subscription first and then you can delete them.-->
 
