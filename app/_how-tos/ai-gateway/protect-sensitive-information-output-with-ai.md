@@ -104,8 +104,13 @@ ai_gateway_models:
     enabled: true
     formats: [{ type: openai }]
     config:
-      route: { paths: [/] }
-      model: { name_header: true }
+      route:
+        paths:
+          - /
+        model:
+          body_param: model
+          values:
+            - my-gpt-4o
     capabilities: [generate]
     policies: [ !ref my-ai-sanitizer-policy#name ]
     targets:
