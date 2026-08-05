@@ -24,7 +24,7 @@ This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisio
 ```bash
 export AI_GATEWAY_ID=your-gateway-id
 export KONNECT_TOKEN=$KONNECT_TOKEN
-export KONNECT_CONTROL_PLANE_NAME=quickstart
+export KONNECT_CONTROL_PLANE_NAME=ai-quickstart
 export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
 export KONNECT_PROXY_URL='http://localhost:8000'
 ```
