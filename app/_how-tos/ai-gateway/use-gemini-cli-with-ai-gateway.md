@@ -123,9 +123,9 @@ ai_gateway_models:
         paths:
           - /
         model:
-          body:
-            model:
-              - my-gemini-model
+          body_param: model
+          values:
+            - my-gemini-model
     targets:
       - name: gemini-2.5-flash
         provider: my-gemini-account
