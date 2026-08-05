@@ -359,6 +359,9 @@ Check whether an `openid-connect` plugin instance already exists on this Service
 OIDC_PLUGIN_ID=$(curl -s "$KONG_ADMIN_API/services/$SERVICE/plugins" | jq -r '.data[] | select(.name=="openid-connect") | .id')
 ```
 
+{% navtabs "config-plugin" %}
+{% navtab "Create the plugin" %}
+
 If `$OIDC_PLUGIN_ID` is empty, create the plugin:
 
 ```sh
@@ -375,8 +378,9 @@ curl -s -X POST "$KONG_ADMIN_API/services/$SERVICE/plugins" \
     }
   }' | jq -c '{name, enabled, issuer: .config.issuer}'
 ```
-
-If `$OIDC_PLUGIN_ID` already has a value (for example, if you're re-running this guide or switching to a different authorization server), update the existing instance instead. A `POST` fails with a `unique constraint violation` if a plugin of the same name already exists on this Service:
+{% endnavtab %}
+{% navtab "Use existing plugin" %}
+If `$OIDC_PLUGIN_ID` already has a value, update the existing instance instead. A `POST` fails with a `unique constraint violation` if a plugin of the same name already exists on this Service:
 
 ```sh
 curl -s -X PATCH "$KONG_ADMIN_API/plugins/$OIDC_PLUGIN_ID" \
@@ -392,7 +396,8 @@ curl -s -X PATCH "$KONG_ADMIN_API/plugins/$OIDC_PLUGIN_ID" \
     }
   }' | jq -c '{name, enabled, issuer: .config.issuer}'
 ```
-
+{% endnavtab %}
+{% endnavtabs %}
 {% endnavtab %}
 {% navtab "Attach to all Services" %}
 
@@ -432,6 +437,8 @@ while read -r service_id; do
   fi
 done
 ```
+
+This script checks if an existing plugin already exists, and either use it or create it before attaching it to all your Services.
 
 {% endnavtab %}
 {% endnavtabs %}
