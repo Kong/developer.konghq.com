@@ -70,6 +70,38 @@ The migration follows this order:
 1. Verify.
 1. Deactivate and delete the OAuth 2.0 plugin.
 
+Your apps keep using the credentials already set up with the Consumers. The migration only changes your auth workflows, as follows:
+
+{% table %}
+columns:
+  - title: What changes
+    key: aspect
+  - title: Before (OAuth 2.0 plugin)
+    key: before
+  - title: After ({{site.identity}} + OIDC)
+    key: after
+rows:
+  - aspect: Authorization server
+    before: Hosted on {{site.base_gateway}} by the OAuth 2.0 plugin.
+    after: Hosted on {{site.konnect_short_name}} as a {{site.identity}} authorization server.
+  - aspect: Credential storage
+    before: |
+      Stored in the Gateway's PostgreSQL `oauth2_credentials` table by the OAuth 2.0 plugin, one or more per Consumer.
+    after: |
+      Stored as clients on the authorization server, one client per credential pair.
+  - aspect: Token endpoint
+    before: "`/$SERVICE/oauth2/token`, where `$SERVICE` is your {{site.base_gateway}} Service name or ID."
+    after: "`$ISSUER/oauth/token`, where `$ISSUER` is the authorization server's issuer URL."
+  - aspect: Gateway's role
+    before: Issues and validates tokens.
+    after: Only validates tokens, using the OIDC plugin.
+  - aspect: Consumer identity
+    before: Consumer mapped to its OAuth 2.0 credentials.
+    after: |
+      Consumer mapped by `custom_id` to the client's `client_id`.
+{% endtable %}
+
+
 Read the following sections to get the information that best suits your configuration.
 
 ## Set up the Admin API URL
