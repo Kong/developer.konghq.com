@@ -40,11 +40,11 @@ prereqs:
         * A [resource gateway](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-gateway.html)
         * A [resource configuration group](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-configuration.html)
 
-        Copy and save the resource configuration ID and resource definition domain name for each resource configuration. {{site.konnect_short_name}} will use these to create a mapping of upstream domain names and resource configuration IDs.
+        Copy and save the resource configuration ID and [upstream service domain name](https://docs.aws.amazon.com/vpc-lattice/latest/ug/service-custom-domain-name.html) (generated or custom) for each resource configuration. {{site.konnect_short_name}} will use these to create a mapping of upstream domain names and resource configuration IDs.
 
-        Export your AWS resource configuration domain name:
+        Export your AWS upstream service domain name:
         ```sh
-        export RESOURCE_DOMAIN_NAME='http://YOUR-RESOURCE-DOMAIN-NAME/anything'
+        export UPSTREAM_SERVICE_DOMAIN_NAME='http://YOUR-UPSTREAM-SERVICE-DOMAIN-NAME/anything'
         ```
         We'll use this to connect to our Dedicated Cloud Gateway service.
       icon_url: /assets/icons/aws.svg
@@ -56,7 +56,7 @@ prereqs:
         1. Click your Dedicated Cloud Gateway.
         1. Click the **Gateway Services** tab.
         1. Click **New gateway service**.
-        1. In the **Full URL** field, enter your resource domain, appended with `/anything`. For example: `http://YOUR-RESOURCE-DOMAIN-NAME/anything`
+        1. In the **Full URL** field, enter your upstream service domain, appended with `/anything`. For example: `http://YOUR-UPSTREAM-SERVICE-DOMAIN-NAME/anything`
         1. In the **Name** field, enter `example-service`.
         1. Click **Save**.
         1. Click the **Routes** tab.
@@ -153,7 +153,7 @@ Once the resource configuration mapping displays as `Ready`, your resource endpo
 Additionally, you can validate that the resource endpoint connections in {{site.konnect_short_name}} are working correctly by navigating to your [Gateway Service configured in the prerequisites](/dedicated-cloud-gateways/aws-resource-endpoints/#required-entities):
 
 ```sh
-curl -i -X GET "$RESOURCE_DOMAIN_NAME"
+curl -i -X GET "$UPSTREAM_SERVICE_DOMAIN_NAME"
 ```
 
 ## Configure VPC security group inbound rules
