@@ -121,9 +121,9 @@ ai_gateway_models:
         paths:
           - /
         model:
-          body:
-            model:
-              - my-qwen-dashscope
+          body_param: model
+          values:
+            - my-qwen-dashscope
     targets:
       - name: qwen-plus
         provider: generic-dashscope

@@ -115,9 +115,9 @@ ai_gateway_models:
         paths:
           - /
         model:
-          body:
-            model:
-              - my-qwen-openai
+          body_param: model
+          values:
+            - my-qwen-openai
     targets:
       - name: gpt-5-mini
         provider: generic-openai
