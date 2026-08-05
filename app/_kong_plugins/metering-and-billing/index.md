@@ -87,7 +87,7 @@ For each request it meters, the plugin captures a set of standard fields on the 
 
 {% include plugins/metering-and-billing/event_dimensions.md %}
 
-In addition to these standard fields, you can attach operator-defined custom fields to events. See [Filtering traffic and custom dimensions](#filtering-traffic-and-custom-dimensions) below.
+In addition to these standard fields, you can attach operator-defined custom fields to events. See [Filtering traffic and custom dimensions](#filtering-traffic-and-custom-dimensions) for more information.
 
 ### Filtering traffic and custom dimensions
 
