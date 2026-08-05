@@ -16,9 +16,9 @@ tldr:
   q: How do I gain visibility into my service mesh?
   a: |
     {{site.mesh_product_name}} enables "zero-code instrumentation" for full stack observability:
-    1. **Collect Metrics** via Prometheus and visualize with Grafana.
-    2. **Capture Traces** for service-to-service calls using OpenTelemetry.
-    3. **Gather Logs** for all mesh traffic with structured logging backends.
+    1. Collect Metrics via Prometheus and visualize with Grafana.
+    2. Capture Traces for service-to-service calls using OpenTelemetry.
+    3. Gather Logs for all mesh traffic with structured logging backends.
 prereqs:
   inline:
     - title: Kong Air demo deployment
@@ -49,36 +49,36 @@ columns:
 rows:
   - challenge: Consistency
     legacy: Different languages and frameworks use different libraries and formats.
-    solution: "**Uniform Data Collection**: Every service produces data in the same format via the sidecar."
+    solution: "Uniform Data Collection: Every service produces data in the same format via the sidecar."
   - challenge: Effort
     legacy: Manual instrumentation and SDK maintenance.
-    solution: "**Zero-Code Instrumentation**: Capture metrics and traces automatically at the proxy level."
+    solution: "Zero-Code Instrumentation: Capture metrics and traces automatically at the proxy level."
   - challenge: Context
     legacy: Manual header propagation (`x-request-id`) is error-prone.
-    solution: "**Automated Propagation**: The mesh handles span generation and context preservation."
+    solution: "Automated Propagation: The mesh handles span generation and context preservation."
   - challenge: Visibility
     legacy: Siloed monitoring tools across clouds.
-    solution: "**Unified Global View**: Multi-zone MADS aggregates service targets into a single source of truth for discovery."
+    solution: "Unified Global View: Multi-zone MADS aggregates service targets into a single source of truth for discovery."
 {% endtable %}
 <!-- vale on -->
 
 ## Architecture
 
-{{site.mesh_product_name}} follows a **decentralized, push-and-pull hybrid** architecture:
+{{site.mesh_product_name}} follows a decentralized, push-and-pull hybrid architecture:
 
-- **Data Plane Collection**: Every Envoy sidecar generates telemetry for the traffic it handles.
-- **Policy-Driven Configuration**: `MeshMetric`, `MeshTrace`, and `MeshAccessLog` define where and how telemetry is sent.
-- **Control Plane Orchestration**: The Control Plane configures sidecars but does **not** sit in the telemetry data path.
+- Data Plane Collection: Every Envoy sidecar generates telemetry for the traffic it handles.
+- Policy-Driven Configuration: `MeshMetric`, `MeshTrace`, and `MeshAccessLog` define where and how telemetry is sent.
+- Control Plane Orchestration: The Control Plane configures sidecars but does not sit in the telemetry data path.
 
 ## Install the observability stack
 
 Install and wire up the Prometheus, Grafana, and tracing backends by following the canonical [mesh observability](/mesh/observability/) reference. To collect traces and OTel-based logs, deploy a collector as described in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). Once the stack is running, wire {{site.mesh_product_name}} into it with the `MeshMetric`, `MeshTrace`, and `MeshAccessLog` policies below.
 
 {:.warning}
-> Prometheus metric format change in 2.14. Control-plane metrics moved from **Summary** to **Histogram**. Any dashboard or alert that uses `quantile="0.5"` / `"0.9"` / `"0.99"` series on {{site.mesh_product_name}} CP metrics will break, switch to `histogram_quantile()` against `_bucket` series. Data-plane sidecar metrics are unaffected by this change.
+> Prometheus metric format change in 2.14. Control-plane metrics moved from Summary to Histogram. Any dashboard or alert that uses `quantile="0.5"` / `"0.9"` / `"0.99"` series on {{site.mesh_product_name}} CP metrics will break, switch to `histogram_quantile()` against `_bucket` series. Data-plane sidecar metrics are unaffected by this change.
 
 {:.info}
-> Stat name format change (KRI). A feature flag in 2.14 (`KUMA_DATAPLANE_RUNTIME_METRICS_KRI_STATS` on the DP, `KUMA_MESH_SERVICE_KRI_STATS_ENABLED` on the CP) renames Envoy cluster, listener, and stat names to the **KRI** format, `kri_wl_<mesh>_<zone>_<namespace>_<name>_<section>`. If you enable it, expect dashboard panels that hard-code old stat names (for example, `cluster.outbound:check-in-api_kong-air-production_svc_8080.upstream_rq_total`) to need updating.
+> Stat name format change (KRI). A feature flag in 2.14 (`KUMA_DATAPLANE_RUNTIME_METRICS_KRI_STATS` on the DP, `KUMA_MESH_SERVICE_KRI_STATS_ENABLED` on the CP) renames Envoy cluster, listener, and stat names to the KRI format, `kri_wl_<mesh>_<zone>_<namespace>_<name>_<section>`. If you enable it, expect dashboard panels that hard-code old stat names (for example, `cluster.outbound:check-in-api_kong-air-production_svc_8080.upstream_rq_total`) to need updating.
 
 ## Metrics with `MeshMetric`
 
@@ -137,11 +137,11 @@ spec:
 {% endnavtabs %}
 
 {:.info}
-> On a **Zone CP**, mesh-scoped observability policies created in the system namespace need `kuma.io/origin: zone`, just like `MeshExternalService`.
+> On a Zone CP, mesh-scoped observability policies created in the system namespace need `kuma.io/origin: zone`, just like `MeshExternalService`.
 >
-> `MeshMetric` opens port `5670` on each sidecar for Prometheus to scrape. This requires a **pod restart** to take effect, as the sidecar must bind the new port on startup.
+> `MeshMetric` opens port `5670` on each sidecar for Prometheus to scrape. This requires a pod restart to take effect, as the sidecar must bind the new port on startup.
 >
-> Prometheus uses the **Monitoring Assignment Discovery Service (MADS)** a native HTTP Service Discovery endpoint provided by the Zone Control Plane to automatically discover all sidecars, requiring no manual scrape config.
+> Prometheus uses the Monitoring Assignment Discovery Service (MADS) a native HTTP Service Discovery endpoint provided by the Zone Control Plane to automatically discover all sidecars, requiring no manual scrape config.
 
 Verify the metrics endpoint after pod restart (using `check-in-api` as the example workload):
 ```bash
@@ -152,7 +152,7 @@ kubectl exec -n kong-air-production "$POD" -c check-in-api -- \
 ```
 
 {:.info}
-> Envoy binds the metrics listener on the **pod IP**, not `127.0.0.1`. `http://localhost:5670/metrics` returns `connection refused`, while `http://$POD_IP:5670/metrics` works.
+> Envoy binds the metrics listener on the pod IP, not `127.0.0.1`. `http://localhost:5670/metrics` returns `connection refused`, while `http://$POD_IP:5670/metrics` works.
 
 ### Observing mesh-scoped zone egress
 
@@ -345,13 +345,13 @@ Example output:
 ```
 
 {:.info}
-> On Kubernetes, the file-backed access log showed up on the **source sidecar** after traffic was generated.
+> On Kubernetes, the file-backed access log showed up on the source sidecar after traffic was generated.
 >
 > For production, use a TCP backend pointing to your Loki or Fluentd instance instead of a file, or share a `MeshOpenTelemetryBackend` to ship logs over OTLP gRPC. In 2.14, the `KUMA_SOURCE_SERVICE` / `KUMA_DESTINATION_SERVICE` format codes will return KRI-format identifiers if you enable the KRI stat-name feature flag, adjust downstream log parsing accordingly.
 
 ## Grafana dashboards
 
-{{site.mesh_product_name}} 2.14 ships six Grafana dashboards. Two are new in this release, **Zone Ingress** and **Zone Egress**, providing first-class observability for [Configure mesh-scoped zone proxies](/mesh/scenarios/configure-mesh-scoped-zone-proxies/).
+{{site.mesh_product_name}} 2.14 ships six Grafana dashboards. Two are new in this release, Zone Ingress and Zone Egress, providing first-class observability for [Configure mesh-scoped zone proxies](/mesh/scenarios/configure-mesh-scoped-zone-proxies/).
 
 <!-- vale off -->
 {% table %}
@@ -376,10 +376,10 @@ rows:
     title: Workload Debug
     focus: Envoy-level retries, circuit-breaker state, connection pool saturation, DNS
   - file: "`kuma-zone-ingress.json`"
-    title: Zone Ingress *(new)*
+    title: Zone Ingress (new)
     focus: Cross-zone inbound traffic, mTLS handshakes, upstream cluster health, xDS delivery
   - file: "`kuma-zone-egress.json`"
-    title: Zone Egress *(new)*
+    title: Zone Egress (new)
     focus: Outbound traffic to remote zones and external services, MeshExternalService connection metrics
 {% endtable %}
 <!-- vale on -->
@@ -413,8 +413,8 @@ The sidecar detects the ConfigMaps within seconds and provisions the dashboards 
 
 The dashboards filter metrics by `job` label and rely on three scrape jobs added under `prometheus.prometheusSpec.additionalScrapeConfigs`:
 
-- `kuma-dataplanes`: sidecar metrics discovered automatically through {{site.mesh_product_name}}'s native MADS service discovery (`kuma_sd_configs`). Feeds the **Workload Health**, **Workload Debug**, and **Mesh Drilldown** dashboards.
-- `kuma-control-plane`: the Control Plane's own `/metrics` endpoint. Feeds the **Control Plane** dashboard.
-- `kuma-zone-proxies`: zone ingress and egress metrics scraped from zone proxy pods on port `9902` (new in 2.14). Feeds the new **Zone Ingress** and **Zone Egress** dashboards.
+- `kuma-dataplanes`: sidecar metrics discovered automatically through {{site.mesh_product_name}}'s native MADS service discovery (`kuma_sd_configs`). Feeds the Workload Health, Workload Debug, and Mesh Drilldown dashboards.
+- `kuma-control-plane`: the Control Plane's own `/metrics` endpoint. Feeds the Control Plane dashboard.
+- `kuma-zone-proxies`: zone ingress and egress metrics scraped from zone proxy pods on port `9902` (new in 2.14). Feeds the new Zone Ingress and Zone Egress dashboards.
 
 For the full `additionalScrapeConfigs` values and MADS `kuma_sd_configs` setup, see the canonical [mesh observability](/mesh/observability/) reference.

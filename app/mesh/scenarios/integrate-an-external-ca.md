@@ -16,8 +16,8 @@ tldr:
   q: How do I integrate my mesh with an enterprise certificate authority?
   a: |
     Root your mesh identity in an external CA through `MeshIdentity`, in one of two ways:
-    1. **Bundled provider**: you supply the CA cert and key, and {{site.mesh_product_name}} signs from it.
-    2. **Extension providers**: {{site.mesh_product_name}} delegates signing to cert-manager, HashiCorp Vault, or AWS Private CA, so the CA key never leaves that system.
+    1. Bundled provider: you supply the CA cert and key, and {{site.mesh_product_name}} signs from it.
+    2. Extension providers: {{site.mesh_product_name}} delegates signing to cert-manager, HashiCorp Vault, or AWS Private CA, so the CA key never leaves that system.
 prereqs:
   inline:
     - title: Kong Air demo deployment
@@ -39,7 +39,7 @@ related_resources:
 Using an external CA ensures that Kong Air's service identities are governed by the same corporate PKI standards as their physical servers and employee devices.
 
 {:.info}
-> The `MeshIdentity` and `MeshTrust` resources in this guide are **system-namespace** resources. On a Zone CP federated to a Global CP, create them in `{{site.mesh_namespace}}` with the `kuma.io/origin: zone` label (shown in every example below). See the [Resource scoping](/mesh/scenarios/resource-scoping/) for which control plane to target.
+> The `MeshIdentity` and `MeshTrust` resources in this guide are system-namespace resources. On a Zone CP federated to a Global CP, create them in `{{site.mesh_namespace}}` with the `kuma.io/origin: zone` label (shown in every example below). See the [Resource scoping](/mesh/scenarios/resource-scoping/) for which control plane to target.
 
 {:.info}
 > This guide roots the mesh CA through the `MeshIdentity` Extension model. The legacy CA pages document the older `Mesh.mtls.backends` model instead: [HashiCorp Vault CA](/mesh/vault/), [cert-manager](/mesh/cert-manager/), and [AWS Certificate Manager Private CA](/mesh/acm-private-ca-policy/).
@@ -63,13 +63,13 @@ columns:
     key: when_to_use
 rows:
   - approach: |
-      **Bundled provider**
+      Bundled provider
     how_it_works: |
       You hand {{site.mesh_product_name}} the CA certificate and private key. The control plane holds the key and signs every workload certificate from it.
     when_to_use: |
       The simplest path. Good when you already have CA material you can place in the cluster.
   - approach: |
-      **Extension providers**
+      Extension providers
     how_it_works: |
       The control plane delegates signing to an external system (cert-manager, HashiCorp Vault, AWS Private CA) on each rotation. The CA private key never leaves that system.
     when_to_use: |
@@ -82,14 +82,14 @@ rows:
 You provide an externally-managed CA certificate and private key as {{site.mesh_product_name}} Secrets, and the control plane signs all workload certificates from them.
 
 {:.warning}
-> The CA cert and key are referenced as **{{site.mesh_product_name}} Secrets** in the system namespace (`{{site.mesh_namespace}}`) with the `kuma.io/mesh` label, not native Kubernetes TLS Secrets. For how these Secrets are structured and created, see [Manage secrets](/mesh/manage-secrets/).
+> The CA cert and key are referenced as {{site.mesh_product_name}} Secrets in the system namespace (`{{site.mesh_namespace}}`) with the `kuma.io/mesh` label, not native Kubernetes TLS Secrets. For how these Secrets are structured and created, see [Manage secrets](/mesh/manage-secrets/).
 
 ### Step 1: create the {{site.mesh_product_name}} Secrets containing your CA cert and key
 
 This example uses cert-manager to mint a self-signed CA, but any CA material works, substitute your corporate Sub-CA cert and key instead.
 
 {:.info}
-> This is **not** the same as the cert-manager *extension* in the next section. Here, cert-manager only generates a CA certificate that you then hand to the `Bundled` provider. The extension delegates live signing to cert-manager on every rotation.
+> This is not the same as the cert-manager extension in the next section. Here, cert-manager only generates a CA certificate that you then hand to the `Bundled` provider. The extension delegates live signing to cert-manager on every rotation.
 
 ```bash
 # Bootstrap a self-signed root issuer
@@ -244,7 +244,7 @@ EOF
 {% endnavtab %}
 {% endnavtabs %}
 
-**Verify:** After restarting the targeted workloads, check that the MeshService shows the new trust domain:
+Verify: After restarting the targeted workloads, check that the MeshService shows the new trust domain:
 
 ```bash
 kubectl get meshservice flight-control -n kong-air-production \
@@ -260,7 +260,7 @@ All three providers below share the same `spiffeID.path` and `trustDomain`, so t
 
 ### cert-manager
 
-**Prerequisites:** cert-manager installed with a `ClusterIssuer` or `Issuer` for the mesh CA.
+Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the mesh CA.
 
 ```bash
 # Install cert-manager
@@ -343,9 +343,9 @@ spec:
 EOF
 ```
 
-**How it works:** {{site.mesh_product_name}} creates a `CertificateRequest` in `{{site.mesh_namespace}}` for each sidecar that needs a new identity cert. cert-manager approves and signs it using the configured `Issuer`, and the signed cert is delivered to the sidecar via xDS. CertificateRequests are cleaned up after use.
+How it works: {{site.mesh_product_name}} creates a `CertificateRequest` in `{{site.mesh_namespace}}` for each sidecar that needs a new identity cert. cert-manager approves and signs it using the configured `Issuer`, and the signed cert is delivered to the sidecar via xDS. CertificateRequests are cleaned up after use.
 
-**Verify:**
+Verify:
 
 ```bash
 # Watch for CertificateRequests being created and signed as workloads connect
@@ -426,7 +426,7 @@ spec:
 
 Each CA model integrates with the control plane differently. Knowing the flow helps you choose a provider and reason about where the CA private key lives.
 
-In every model the **control plane** is the client that requests certificates from the CA, never the individual proxies. Workloads in private zones therefore need no direct network access to the CA, and no CA credentials are distributed to the data plane.
+In every model the control plane is the client that requests certificates from the CA, never the individual proxies. Workloads in private zones therefore need no direct network access to the CA, and no CA credentials are distributed to the data plane.
 
 <!-- vale off -->
 {% table %}
@@ -439,19 +439,19 @@ columns:
     key: hashicorp_vault
 rows:
   - feature: |
-      **Platform**
+      Platform
     cert_manager: |
       Kubernetes-native
     hashicorp_vault: |
       External API
   - feature: |
-      **Authentication**
+      Authentication
     cert_manager: |
       Kubernetes RBAC
     hashicorp_vault: |
       Vault token / Kubernetes auth
   - feature: |
-      **Client**
+      Client
     cert_manager: |
       Control Plane (via K8s API)
     hashicorp_vault: |

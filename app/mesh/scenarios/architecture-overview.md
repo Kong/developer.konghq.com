@@ -20,14 +20,14 @@ related_resources:
   - text: Multi-zone deployment
     url: /mesh/mesh-multizone-service-deployment/
 ---
-{{site.mesh_product_name}} separates the **Control Plane** (the brain) from the **Data Plane** (the muscle) and introduces a multi-zone model for distributed environments. For an organization like **Kong Air**, this architecture enables a unified management layer that spans from legacy booking systems to modern cloud-native APIs.
+{{site.mesh_product_name}} separates the control plane (the brain) from the Data Plane (the muscle) and introduces a multi-zone model for distributed environments. For an organization like Kong Air, this architecture enables a unified management layer that spans from legacy booking systems to modern cloud-native APIs.
 
 ## Core architecture
 
-{{site.mesh_product_name}} is built from a **control plane** (a Global CP that owns policy and the resource registry, and per-zone Zone CPs that discover local services and serve xDS to Envoy), an Envoy-based **data plane** that enforces policy and intercepts traffic, **networking proxies** (zone ingress and egress) for cross-zone communication, a standardized **service model** (`MeshService`, `MeshMultiZoneService`, `MeshExternalService`), and **workload identity** (`MeshIdentity`, `MeshTrust`). For the definition of each component and its configuration options, see the [{{site.mesh_product_name}} architecture](/mesh/architecture/) reference.
+{{site.mesh_product_name}} is built from a control plane (a Global CP that owns policy and the resource registry, and per-zone Zone CPs that discover local services and serve xDS to Envoy), an Envoy-based data plane that enforces policy and intercepts traffic, networking proxies (zone ingress and egress) for cross-zone communication, a standardized service model (`MeshService`, `MeshMultiZoneService`, `MeshExternalService`), and workload identity (`MeshIdentity`, `MeshTrust`). For the definition of each component and its configuration options, see the [{{site.mesh_product_name}} architecture](/mesh/architecture/) reference.
 
 {:.info}
-> These scenarios set **`meshServices.mode: Exclusive`** on the `kong-air-mesh` `Mesh` resource:
+> These scenarios set `meshServices.mode: Exclusive` on the `kong-air-mesh` `Mesh` resource:
 
 ```yaml
 spec:
@@ -39,7 +39,7 @@ In Exclusive mode, the control plane generates a first-class `MeshService` resou
 
 ## Day-2 operations: how this compares to Istio-style meshes
 
-Many teams arrive at {{site.mesh_product_name}} from an **Istio-style mesh**, the model built around multiple traffic-management CRDs (`VirtualService`, `DestinationRule`, `ServiceEntry`) on a Kubernetes-first control plane. These are mature, capable meshes, and most of what these scenarios cover (mTLS, traffic routing, observability) works well in either. Standing a mesh up on **day 1** is a solved problem either way. The differences that matter show up on **day 2**: once the mesh is in production, spanning regions, and being operated, upgraded, and debugged by a team. {{site.mesh_product_name}}'s design choices are aimed at reducing the operational surface area you carry through that phase.
+Many teams arrive at {{site.mesh_product_name}} from an Istio-style mesh, the model built around multiple traffic-management CRDs (`VirtualService`, `DestinationRule`, `ServiceEntry`) on a Kubernetes-first control plane. These are mature, capable meshes, and most of what these scenarios cover (mTLS, traffic routing, observability) works well in either. Standing a mesh up on day 1 is a solved problem either way. The differences that matter show up on day 2: once the mesh is in production, spanning regions, and being operated, upgraded, and debugged by a team. {{site.mesh_product_name}}'s design choices are aimed at reducing the operational surface area you carry through that phase.
 
 <!-- vale off -->
 {% table %}
@@ -56,26 +56,26 @@ rows:
     mesh: "One policy per concern, all sharing the same `targetRef` structure, fewer interacting resource types to reason about when you're troubleshooting a production issue."
   - concern: Running across regions
     istio: "Multi-cluster is assembled from topologies you choose and maintain (multi-primary, primary-remote)."
-    mesh: "A built-in **Global / Zone** model with automatic KDS sync. Adding a region means adding a Zone CP, not redesigning a topology, and if the Global CP is offline, each Zone CP keeps serving its last-known config, so data-plane traffic is unaffected."
+    mesh: "A built-in Global / Zone model with automatic KDS sync. Adding a region means adding a Zone CP, not redesigning a topology, and if the Global CP is offline, each Zone CP keeps serving its last-known config, so data-plane traffic is unaffected."
   - concern: Hybrid estate (VMs + Kubernetes)
     istio: "Kubernetes-native; VMs run through `WorkloadEntry` / `WorkloadGroup`."
-    mesh: "Kubernetes and **Universal** (VMs, bare metal) use the same resource model, so one team operates one mesh across both, no separate paradigm for the legacy estate."
+    mesh: "Kubernetes and Universal (VMs, bare metal) use the same resource model, so one team operates one mesh across both, no separate paradigm for the legacy estate."
 {% endtable %}
 <!-- vale on -->
 
-It comes down to operational surface area: fewer resource types to reason about, multi-region as a deployment mode rather than a topology you build and maintain, and one model across Kubernetes and VMs. For a team that has to *run* the mesh, not just install it, that compounds over time.
+It comes down to operational surface area: fewer resource types to reason about, multi-region as a deployment mode rather than a topology you build and maintain, and one model across Kubernetes and VMs. For a team that has to run the mesh, not just install it, that compounds over time.
 
 ---
 
 ## {{site.mesh_product_name}} architecture
 
-We use two diagrams: a **high-level view** of how the control plane is distributed, and a **zone-level view** of how data plane traffic flows.
+We use two diagrams: a high-level view of how the control plane is distributed, and a zone-level view of how data plane traffic flows.
 
-**Legend (used in both diagrams):**
+Legend (used in both diagrams):
 
-- **Solid arrow** → data-plane traffic (encrypted with mTLS between sidecars).
-- **Dashed arrow** ⇢ control-plane channel (xDS, KDS, admin API).
-- **Box border** indicates the control plane that owns the resource (Global CP or a specific Zone CP).
+- Solid arrow → data-plane traffic (encrypted with mTLS between sidecars).
+- Dashed arrow ⇢ control-plane channel (xDS, KDS, admin API).
+- Box border indicates the control plane that owns the resource (Global CP or a specific Zone CP).
 
 ### High-level: Global CP and Zone CPs
 
@@ -97,7 +97,7 @@ flowchart TD
     Z2CP -.->|xDS| DP2
 {% endmermaid %}
 
-Everything in this diagram is a **control-plane** channel, no application traffic crosses these links. If the Global CP goes offline, Zone CPs continue to serve their last-known config to local data planes; the mesh stays operational.
+Everything in this diagram is a control-plane channel, no application traffic crosses these links. If the Global CP goes offline, Zone CPs continue to serve their last-known config to local data planes; the mesh stays operational.
 
 ### Zone-level: how a request flows
 

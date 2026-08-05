@@ -78,7 +78,7 @@ spec:
 {% navtab "Konnect / Universal Global CP" %}
 
 {:.warning}
-> Run this against your **Global CP**. Use `kumactl config control-planes use <global-cp>` first.
+> Run this against your Global CP. Use `kumactl config control-planes use <global-cp>` first.
 
 ```bash
 echo 'type: MeshIdentity
@@ -103,7 +103,7 @@ spec:
 {% endnavtab %}
 {% endnavtabs %}
 
-After applying, **restart your workloads** so each sidecar picks up a new certificate under the `MeshIdentity` backend:
+After applying, restart your workloads so each sidecar picks up a new certificate under the `MeshIdentity` backend:
 
 ```bash
 kubectl rollout restart deployment -n kong-air-production
@@ -122,7 +122,7 @@ mTLS:
   issuedBackend: kri_mid_kong-air-mesh___kong-air-identity_
 ```
 
-This `MeshIdentity` gives **every workload in the mesh** a SPIFFE certificate with its Kubernetes service account encoded in the path:
+This `MeshIdentity` gives every workload in the mesh a SPIFFE certificate with its Kubernetes service account encoded in the path:
 
 ```
 spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/check-in-api
@@ -131,9 +131,9 @@ spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/passenger-portal
 ```
 
 {:.info}
-> Mesh-wide does not mean "one shared identity." A `MeshIdentity` is an *issuer*, not an identity: it sets the CA/provider, the SPIFFE ID **path template**, and the trust domain. The actual SPIFFE ID is rendered **per workload** from that template, so every workload still gets a **unique** identity (as the three distinct IDs above show), and `MeshTrafficPermission` keeps full per-workload granularity even with one mesh-wide identity.
+> Mesh-wide does not mean "one shared identity." A `MeshIdentity` is an issuer, not an identity: it sets the CA/provider, the SPIFFE ID path template, and the trust domain. The actual SPIFFE ID is rendered per workload from that template, so every workload still gets a unique identity (as the three distinct IDs above show), and `MeshTrafficPermission` keeps full per-workload granularity even with one mesh-wide identity.
 >
-> Add *more* `MeshIdentity` resources only when a group of workloads needs different **issuance** (a different CA/provider, path scheme, or rotation policy), not to authorize app-to-app traffic.
+> Add more `MeshIdentity` resources only when a group of workloads needs different issuance (a different CA/provider, path scheme, or rotation policy), not to authorize app-to-app traffic.
 
 {:.warning}
 > Multi-zone deployments need an extra cross-zone trust step. The `autogenerate: enabled: true` option lets each Zone CP generate its own CA independently. This is convenient but means zone1 and zone2 have different CAs. Due to a naming collision during KDS sync, each zone ends up trusting only its own CA. Cross-zone mTLS then fails at the ZoneIngress TLS handshake.
@@ -144,7 +144,7 @@ spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/passenger-portal
 
 `MeshIdentity` issues certificates but does not enforce that they are used. Apply a `MeshTLS` policy to reject any unencrypted or unauthenticated traffic across the mesh.
 
-Apply it at the **Global CP**, alongside the `MeshIdentity` from step 1. KDS syncs it to every zone, so strict mTLS is enforced across the whole mesh from a single resource.
+Apply it at the Global CP, alongside the `MeshIdentity` from step 1. KDS syncs it to every zone, so strict mTLS is enforced across the whole mesh from a single resource.
 
 {% navtabs "mesh-tls-strict" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}
@@ -189,7 +189,7 @@ The `allow-all` `MeshTrafficPermission` grants access from any workload in the m
 {% navtab "Kubernetes Global CP (self-managed)" %}
 
 {:.info}
-> Like the `MeshTLS` and `MeshIdentity` resources above, apply these permissions at the Global CP so they span every zone. You *can* apply policies directly to a Zone CP instead; see [Resource scoping](/mesh/scenarios/resource-scoping/) for when you'd do that and the `kuma.io/origin: zone` label it requires.
+> Like the `MeshTLS` and `MeshIdentity` resources above, apply these permissions at the Global CP so they span every zone. You can apply policies directly to a Zone CP instead; see [Resource scoping](/mesh/scenarios/resource-scoping/) for when you'd do that and the `kuma.io/origin: zone` label it requires.
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
@@ -233,7 +233,7 @@ spec:
 Kong Air's security team requires that only authorized services can access the check-in APIs. Start by removing the permissive `allow-all` policy:
 
 {:.warning}
-> `MeshTrafficPermission` is a special case in {{site.mesh_product_name}}. Unlike most inbound policies, it does **not** use a simple "most specific match wins" rule. The control plane evaluates every matching traffic-permission rule, and if any matched rule produces a `Deny`, that deny takes precedence. To enforce a default-deny posture cleanly, **remove the existing `allow-all` policy first**, then layer narrower allows on top of the default deny.
+> `MeshTrafficPermission` is a special case in {{site.mesh_product_name}}. Unlike most inbound policies, it does not use a simple "most specific match wins" rule. The control plane evaluates every matching traffic-permission rule, and if any matched rule produces a `Deny`, that deny takes precedence. To enforce a default-deny posture cleanly, remove the existing `allow-all` policy first, then layer narrower allows on top of the default deny.
 
 {% navtabs "delete-allow-all" %}
 {% navtab "Kubernetes Global CP (self-managed)" %}
@@ -248,7 +248,7 @@ kumactl delete meshtrafficpermission allow-all --mesh kong-air-mesh
 {% endnavtab %}
 {% endnavtabs %}
 
-With no `MeshTrafficPermission` in place, all inter-service traffic returns `403 Forbidden`. This is your **default-deny** baseline.
+With no `MeshTrafficPermission` in place, all inter-service traffic returns `403 Forbidden`. This is your default-deny baseline.
 
 {:.info}
 > Policy changes are not always instantaneous. `MeshTrafficPermission` updates can take a few seconds to propagate to the dataplanes. If a request still succeeds or fails immediately after you apply a policy, wait a moment and test again before assuming the policy shape is wrong.
@@ -306,10 +306,10 @@ spec:
 {% endnavtab %}
 {% endnavtabs %}
 
-Traffic to `check-in-api` is restored **only for `flight-control`**. Any other service still receives `403 Forbidden`.
+Traffic to `check-in-api` is restored only for `flight-control`. Any other service still receives `403 Forbidden`.
 
 {:.info}
-> `MeshTrafficPermission` is enforced on the **server side** (the receiver's inbound Envoy listener). This means the RBAC decision happens at `check-in-api`, not at `flight-control`.
+> `MeshTrafficPermission` is enforced on the server side (the receiver's inbound Envoy listener). This means the RBAC decision happens at `check-in-api`, not at `flight-control`.
 
 {:.info}
 > If you see older runbooks using `MeshSubset`, top-level `MeshService`, or `spec.from`, update them to `Dataplane` + `rules` to match the resource model used in these scenarios.

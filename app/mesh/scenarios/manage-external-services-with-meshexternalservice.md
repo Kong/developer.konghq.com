@@ -41,25 +41,25 @@ related_resources:
 
 ## Why MeshExternalService?
 
-In the previous scenario, we secured the perimeter using `MeshPassthrough`. However, for critical dependencies like **AeroPay** (Kong Air's payment provider) or the core **RDS Database**, we need more than just an "allowlist."
+In the previous scenario, we secured the perimeter using `MeshPassthrough`. However, for critical dependencies like AeroPay (Kong Air's payment provider) or the core RDS Database, we need more than just an "allowlist."
 
 We want these dependencies to feel like internal services:
-- **Consistent Naming**: No more hardcoded IP addresses or external URLs.
-- **Traffic Control**: The ability to retry failed calls to AeroPay without changing application code.
-- **Security**: TLS origination at the sidecar, so the application doesn't need to manage external certificates.
+- Consistent naming: No more hardcoded IP addresses or external URLs.
+- Traffic control: The ability to retry failed calls to AeroPay without changing application code.
+- Security: TLS origination at the sidecar, so the application doesn't need to manage external certificates.
 
 ## Set the naming standard
 
 On Kubernetes, {{site.mesh_product_name}} ships with a default `HostnameGenerator` that assigns each zone-local `MeshExternalService` a generated hostname and a virtual IP. For the hostname format, the VIP CIDR, and how sidecar TLS origination works, see [MeshExternalService](/mesh/meshexternalservice/).
 
-If Kong Air wants a custom naming scheme, that is an **operator-level customization** of `HostnameGenerator`, not something each application team should redefine in every scenario.
+If Kong Air wants a custom naming scheme, that is an operator-level customization of `HostnameGenerator`, not something each application team should redefine in every scenario.
 
 ## Define the RDS database
 
 Kong Air uses a managed PostgreSQL instance for flight data. By defining it as a `MeshExternalService`, the application can reach it through a mesh-generated hostname instead of hardcoding the AWS endpoint directly.
 
 {:.info}
-> On Kubernetes in multi-zone mode, `MeshExternalService` is a **system-namespace resource**. On a Zone CP, it must be created in `{{site.mesh_namespace}}` and carry the label `kuma.io/origin: zone`.
+> On Kubernetes in multi-zone mode, `MeshExternalService` is a system-namespace resource. On a Zone CP, it must be created in `{{site.mesh_namespace}}` and carry the label `kuma.io/origin: zone`.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -91,7 +91,7 @@ This keeps the application configuration simple while still aiming for encrypted
 
 The `flight-db` MeshExternalService is now reachable from any workload that routes through zone egress, too broad for a production database. Only `flight-control` should have direct access.
 
-With **mesh-scoped zone proxies** ({{site.mesh_product_name}} 2.14+), the zone egress Dataplane is **deny-all by default** for `MeshExternalService` traffic. Grant access per workload with `MeshTrafficPermission`:
+With mesh-scoped zone proxies ({{site.mesh_product_name}} 2.14+), the zone egress Dataplane is deny-all by default for `MeshExternalService` traffic. Grant access per workload with `MeshTrafficPermission`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -118,7 +118,7 @@ spec:
               value: sni.extsvc.kong-air-mesh.zone1.{{site.mesh_namespace}}.flight-db.5432
 ```
 
-Each `allow` entry pairs a **source identity** (the workload SPIFFE ID from mTLS) with a **destination** (the external service SNI). A connection is allowed only when both match, any unmatched connection is dropped.
+Each `allow` entry pairs a source identity (the workload SPIFFE ID from mTLS) with a destination (the external service SNI). A connection is allowed only when both match, any unmatched connection is dropped.
 
 ### Derive the SNI
 
@@ -164,17 +164,17 @@ kubectl get meshidentity -n {{site.mesh_namespace}} \
 ```
 
 {:.info}
-> Multiple workloads, multiple rules. Add more entries under `rules[0].default.allow` to grant additional workloads access to the same or different external services. To allow a workload to reach *any* external service through zone egress, omit the `sni` field from that entry.
+> Multiple workloads, multiple rules. Add more entries under `rules[0].default.allow` to grant additional workloads access to the same or different external services. To allow a workload to reach any external service through zone egress, omit the `sni` field from that entry.
 
 {:.info}
-> The `deny-all by default` behavior is specific to **mesh-scoped zone proxies** introduced in 2.14. If you are still using the legacy global `ZoneEgress`, set `spec.routing.defaultForbidMeshExternalServiceAccess: true` on the `Mesh` resource to enforce a mesh-wide deny.
+> The `deny-all by default` behavior is specific to mesh-scoped zone proxies introduced in 2.14. If you are still using the legacy global `ZoneEgress`, set `spec.routing.defaultForbidMeshExternalServiceAccess: true` on the `Mesh` resource to enforce a mesh-wide deny.
 
 ## Secure AeroPay (HTTPS with TLS origination)
 
 For the AeroPay API, the security architect wants to ensure all traffic is encrypted, but does not want developers managing third-party CA bundles in application code. `MeshExternalService` is the resource intended to handle TLS origination at the sidecar.
 
 {:.info}
-> If Kong Air wants developers to call the service with plain HTTP inside the mesh, the **internal match port** should be an HTTP port such as `80`, while the upstream endpoint can still be `443`. The mesh-generated hostname will still come from the `HostnameGenerator`.
+> If Kong Air wants developers to call the service with plain HTTP inside the mesh, the internal match port should be an HTTP port such as `80`, while the upstream endpoint can still be `443`. The mesh-generated hostname will still come from the `HostnameGenerator`.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -203,16 +203,16 @@ spec:
 ### Troubleshooting: external calls fail with a 503
 
 {:.warning}
-> If a request through a mesh-scoped zone egress fails with the following, the zone egress proxy has **no workload identity certificate**:
+> If a request through a mesh-scoped zone egress fails with the following, the zone egress proxy has no workload identity certificate:
 
 ```
 503 Service Unavailable
 TLS error: Secret is not supplied by SDS
 ```
 
-**Why it happens.** The zone egress proxies run in `{{site.mesh_namespace}}`. If your `MeshIdentity` selector matches only an application namespace (for example `kong-air-production`), nothing selects the zone proxies, so the control plane issues them no certificate. The SDS secret backing the egress's mTLS leg is never delivered, and the connection fails on the in-mesh mTLS hop before it ever reaches the external endpoint. (This is why even a plain-HTTP `MeshExternalService` reproduces it: the failing leg is the hop to the egress, not the external TLS origination.)
+Why it happens. The zone egress proxies run in `{{site.mesh_namespace}}`. If your `MeshIdentity` selector matches only an application namespace (for example `kong-air-production`), nothing selects the zone proxies, so the control plane issues them no certificate. The SDS secret backing the egress's mTLS leg is never delivered, and the connection fails on the in-mesh mTLS hop before it ever reaches the external endpoint. (This is why even a plain-HTTP `MeshExternalService` reproduces it: the failing leg is the hop to the egress, not the external TLS origination.)
 
-**The fix: make sure a `MeshIdentity` selects the zone proxies.** A `MeshIdentity` only covers the dataplanes its selector matches (an absent selector matches *nothing*). The cleanest fix is a **single mesh-wide identity** that covers both your apps and the zone proxies with one CA, selecting on the mesh label rather than an app namespace:
+The fix: make sure a `MeshIdentity` selects the zone proxies. A `MeshIdentity` only covers the dataplanes its selector matches (an absent selector matches nothing). The cleanest fix is a single mesh-wide identity that covers both your apps and the zone proxies with one CA, selecting on the mesh label rather than an app namespace:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -238,7 +238,7 @@ spec:
     trustDomain: kong-air-mesh.mesh.local
 ```
 
-The mesh-wide `MeshIdentity` from [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/) already covers the zone proxies. If yours is instead scoped to a single app namespace, **broaden its selector** to the mesh label rather than adding a second identity. Apply it at the Global CP, then restart the zone proxies so they pick up a certificate:
+The mesh-wide `MeshIdentity` from [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/) already covers the zone proxies. If yours is instead scoped to a single app namespace, broaden its selector to the mesh label rather than adding a second identity. Apply it at the Global CP, then restart the zone proxies so they pick up a certificate:
 
 ```bash
 # The mesh-scoped zone-proxy deployments carry the kuma.io/mesh label.
@@ -253,11 +253,11 @@ kubectl get dataplaneinsight -n {{site.mesh_namespace}} "$ZE" \
 ```
 
 {:.info}
-> **Multi-zone:** prefer a **shared external CA** (Vault, cert-manager, or ACM, see [Integrate an external CA](/mesh/scenarios/integrate-an-external-ca/)) over `autogenerate`. With `autogenerate`, every `MeshIdentity` mints its own per-zone CA, and each one then needs the same cross-zone `MeshTrust` reconciliation described in [Workload Identity](/mesh/scenarios/manage-workload-identity-and-mtls/#cross-zone-trust-with-autogenerated-cas). A shared root means apps **and** zone proxies in **every** zone chain to one CA, so this just works. Avoid adding a separate per-namespace `autogenerate` identity for the zone proxies in multi-zone, it multiplies the CAs you have to reconcile.
+> Multi-zone: prefer a shared external CA (Vault, cert-manager, or ACM, see [Integrate an external CA](/mesh/scenarios/integrate-an-external-ca/)) over `autogenerate`. With `autogenerate`, every `MeshIdentity` mints its own per-zone CA, and each one then needs the same cross-zone `MeshTrust` reconciliation described in [Workload Identity](/mesh/scenarios/manage-workload-identity-and-mtls/#cross-zone-trust-with-autogenerated-cas). A shared root means apps and zone proxies in every zone chain to one CA, so this just works. Avoid adding a separate per-namespace `autogenerate` identity for the zone proxies in multi-zone, it multiplies the CAs you have to reconcile.
 
 ## Add resiliency with MeshRetry
 
-Because AeroPay is now a first-class citizen, the developer can apply standard mesh policies to it. If AeroPay is momentarily slow or returns a 5xx error, the mesh can automatically retry. Retries are configured with the **`MeshRetry`** policy, `MeshHTTPRoute` filters cover header rewrites, redirects, and mirroring, but **not retries**.
+Because AeroPay is now a first-class citizen, the developer can apply standard mesh policies to it. If AeroPay is momentarily slow or returns a 5xx error, the mesh can automatically retry. Retries are configured with the `MeshRetry` policy, `MeshHTTPRoute` filters cover header rewrites, redirects, and mirroring, but not retries.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -290,12 +290,12 @@ spec:
 > `MeshRetry` targets a `Dataplane` (or `MeshService`) through `spec.targetRef` and applies its retry configuration to the destination named in the `to[]` list. It cannot target a `MeshHTTPRoute` (a route).
 
 {:.info}
-> Pair this with **`MeshCircuitBreaker`** to stop the mesh from hammering an external service that is already struggling, and **`MeshTimeout`** to bound the total time spent retrying.
+> Pair this with `MeshCircuitBreaker` to stop the mesh from hammering an external service that is already struggling, and `MeshTimeout` to bound the total time spent retrying.
 
 ## Summary
 
 By using `MeshExternalService`, Kong Air has achieved:
-1. **Explicit outbound inventory**: External dependencies are represented as named resources instead of unmanaged passthrough destinations.
-2. **Stable internal naming**: Developers use mesh-generated names such as `aeropay-api.extsvc.mesh.local`.
-3. **Access control at the egress**: `MeshTrafficPermission` on the zone egress Dataplane restricts which workloads can reach each external service, paired with the deny-all default in mesh-scoped zone proxies.
-4. **Centralized policy control**: Retries, timeouts, and TLS settings live in mesh policy rather than scattered application config.
+1. Explicit outbound inventory: External dependencies are represented as named resources instead of unmanaged passthrough destinations.
+2. Stable internal naming: Developers use mesh-generated names such as `aeropay-api.extsvc.mesh.local`.
+3. Access control at the egress: `MeshTrafficPermission` on the zone egress Dataplane restricts which workloads can reach each external service, paired with the deny-all default in mesh-scoped zone proxies.
+4. Centralized policy control: Retries, timeouts, and TLS settings live in mesh policy rather than scattered application config.

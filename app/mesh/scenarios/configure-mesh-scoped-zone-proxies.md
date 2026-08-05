@@ -35,11 +35,11 @@ related_resources:
     url: /mesh/zone-proxy-policies/
 ---
 
-Cross-zone traffic used to be the one place where every mesh in a zone looked the same. Before {{site.mesh_product_name}} 2.14, a single ZoneIngress and ZoneEgress carried traffic for **all** meshes in a zone. That meant `kong-air-mesh` could not present its own identity on the wire, could not have its own timeouts or access logs on cross-zone calls, and shared one blended observability view with every other mesh in the zone.
+Cross-zone traffic used to be the one place where every mesh in a zone looked the same. Before {{site.mesh_product_name}} 2.14, a single ZoneIngress and ZoneEgress carried traffic for all meshes in a zone. That meant `kong-air-mesh` could not present its own identity on the wire, could not have its own timeouts or access logs on cross-zone calls, and shared one blended observability view with every other mesh in the zone.
 
 For Kong Air that was a compliance blocker. `kong-air-mesh` carries passenger PII, and auditors require its cross-zone traffic to present a verifiable mTLS identity distinct from any other mesh sharing the zone. A single shared egress made that impossible.
 
-**Mesh-scoped zone proxies** give each mesh its own dedicated ingress and egress. For Kong Air, that turns the shared perimeter into one they fully own:
+Mesh-scoped zone proxies give each mesh its own dedicated ingress and egress. For Kong Air, that turns the shared perimeter into one they fully own:
 
 <!-- vale off -->
 {% table %}
@@ -93,37 +93,37 @@ columns:
     key: dedicated
 rows:
   - attribute: |
-      **Scope**
+      Scope
     shared: |
       All meshes in the zone
     dedicated: |
       One mesh
   - attribute: |
-      **Own SPIFFE identity**
+      Own SPIFFE identity
     shared: |
       Not possible
     dedicated: |
       Yes, via `MeshIdentity`
   - attribute: |
-      **Targetable by mesh policy**
+      Targetable by mesh policy
     shared: |
       No
     dedicated: |
       Yes
   - attribute: |
-      **Resource kind**
+      Resource kind
     shared: |
       `ZoneIngress` / `ZoneEgress`
     dedicated: |
       `Dataplane` with `networking.listeners[]`
   - attribute: |
-      **Helm key**
+      Helm key
     shared: |
       `kuma.ingress.enabled: true`
     dedicated: |
       `kuma.meshes[].ingress.enabled: true`
   - attribute: |
-      **Policy selector**
+      Policy selector
     shared: |
       N/A
     dedicated: |
@@ -223,7 +223,7 @@ Grant each caller the access it needs with a `MeshTrafficPermission` that target
 
 ## Migrating from global zone proxies
 
-The move is **additive**: stand up the mesh-scoped proxies alongside the existing global ones, confirm cross-zone traffic flows through the new pair, then retire the old.
+The move is additive: stand up the mesh-scoped proxies alongside the existing global ones, confirm cross-zone traffic flows through the new pair, then retire the old.
 
 ```yaml
 # Transition values, both models active simultaneously
@@ -255,6 +255,6 @@ kuma:
 ```
 
 {:.warning}
-> Scale down the old global ZoneIngress **before** removing its Helm key. Deleting the key without scaling first can cause a brief traffic interruption if KDS has not yet propagated the new proxies' `MeshZoneAddress` to other zones.
+> Scale down the old global ZoneIngress before removing its Helm key. Deleting the key without scaling first can cause a brief traffic interruption if KDS has not yet propagated the new proxies' `MeshZoneAddress` to other zones.
 
 The old `ZoneIngress` and `ZoneEgress` resource kinds remain in the API for backward compatibility in 2.14, and are planned for deprecation in a future major release.
