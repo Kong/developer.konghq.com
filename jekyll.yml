@@ -254,7 +254,7 @@ operator_kongroute_api_version: "v1alpha1"
 operator_kongcertificate_api_version: "v1alpha1"
 operator_kongreferencegrant_api_version: "v1alpha1"
 operator_kongpluginbinding_api_version: "v1alpha1"
-gwapi_version: "1.5.1" 
+gwapi_version: "1.6.1" 
 # render_banner: true
 
 # Copy
