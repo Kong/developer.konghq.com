@@ -19,4 +19,4 @@ Select a persona to see how {{site.mesh_product_name}} helps them in their speci
 *   **[Operator](/mesh/scenarios/persona/operator/)**
 *   **[Security architect](/mesh/scenarios/persona/security/)**
 
-[Back to learning path](/mesh/scenarios/)
+[Back to Mesh scenarios](/mesh/scenarios/)

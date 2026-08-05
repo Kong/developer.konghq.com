@@ -1,20 +1,17 @@
----
-title: Mesh scenarios
-permalink: /mesh/scenarios/
-content_type: landing_page
-layout: landing_page
-description: A curriculum-style set of scenarios for mastering {{site.mesh_product_name}}, from basic concepts to advanced multi-zone operations.
-breadcrumbs:
-  - /mesh/
-products:
-  - mesh
-works_on:
-  - on-prem
-  - konnect
-tags:
-  - get-started
-  - service-mesh
-  - quickstart
+metadata:
+  title: Mesh scenarios
+  content_type: landing_page
+  description: A curriculum-style set of scenarios for mastering {{site.mesh_product_name}}, from basic concepts to advanced multi-zone operations.
+  products:
+    - mesh
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - get-started
+    - service-mesh
+    - quickstart
+
 rows:
   - header:
       type: h1
@@ -235,4 +232,3 @@ rows:
               cta:
                 text: View guide
                 url: /mesh/scenarios/persona/security/
----
