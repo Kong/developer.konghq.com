@@ -11,16 +11,28 @@ products:
 works_on:
   - on-prem
   - konnect
+next_steps:
+  - text: "Architecture overview"
+    url: "/mesh/scenarios/architecture-overview/"
+related_resources:
+  - text: Service meshes
+    url: /mesh/service-mesh/
+  - text: Concepts
+    url: /mesh/concepts/
+  - text: Resource scoping
+    url: /mesh/scenarios/resource-scoping/
 ---
-{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Its policy-driven model works the same regardless of the underlying infrastructure, a deliberate focus on **day-2 operations**: running, upgrading, and troubleshooting the mesh in production, across regions and mixed infrastructure, not just standing it up on day 1. The [Architecture overview](/mesh/scenarios/architecture-overview/) unpacks what that means in practice, including [how it compares to Istio-style meshes](/mesh/scenarios/architecture-overview/#day-2-operations-how-this-compares-to-istio-style-meshes).
+{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Its policy-driven model works the same regardless of the underlying infrastructure, and focuses on day-2 operations: running, upgrading, and troubleshooting the mesh in production, across regions and mixed infrastructure. 
 
-## Meet Kong Air
+For more details, see the [Architecture overview](/mesh/scenarios/architecture-overview/).
 
-Throughout these scenarios, we follow the journey of **Kong Air**, a global airline modernizing its flight-critical infrastructure. Their applications span Kubernetes (passenger-facing services), VMs (legacy booking systems), and SaaS dependencies (weather feeds and external certificate authorities). The platform team is migrating this fragmented landscape into a single, multi-zone {{site.mesh_product_name}} deployment.
+## Kong Air
 
-The Kong Air mesh is named **`kong-air-mesh`**. We chose a non-default name on purpose: {{site.mesh_product_name}} ships with a `default` mesh out of the box, but in production you'll typically run a named mesh per environment or business unit. Every YAML example in these scenarios targets `kong-air-mesh` explicitly, the pattern you'll need in any real deployment.
+Throughout these [scenarios](/mesh/scenarios/), we follow the journey of Kong Air, a global airline modernizing its flight-critical infrastructure. Their applications span Kubernetes (passenger-facing services), VMs (legacy booking systems), and SaaS dependencies (weather feeds and external certificate authorities). The platform team is migrating this fragmented landscape into a single, multi-zone {{site.mesh_product_name}} deployment.
 
-### The Kong Air service landscape
+The Kong Air mesh is named `kong-air-mesh`. {{site.mesh_product_name}} ships with a `default` mesh out of the box, but in production you'll typically run a named mesh per environment or business unit. Every YAML example in these scenarios targets `kong-air-mesh` explicitly, the pattern you'll need in any real deployment.
+
+### Service landscape
 
 {% mermaid %}
 graph LR
@@ -52,9 +64,9 @@ graph LR
   FC_W -.-> DB
 {% endmermaid %}
 
-Solid arrows are intra-mesh traffic. Dashed arrows are traffic to external dependencies modelled as `MeshExternalService`. Vault is shown for context, it integrates with the control plane, not data-plane traffic.
+Solid arrows are intra-mesh traffic. Dashed arrows are traffic to external dependencies modelled as `MeshExternalService`. The vault is shown for context; it integrates with the control plane, not data plane traffic.
 
-### Who owns what
+### Personas
 
 The scenarios reference three personas. Each owns a different slice of Kong Air:
 
@@ -68,26 +80,39 @@ columns:
   - title: Consumes
     key: consumes
 rows:
-  - persona: "**[Devin the Developer](/mesh/scenarios/persona/developer/)**"
+  - persona: "[Developer](/mesh/scenarios/persona/developer/)"
     owns: |
-      Passenger Experience services: `passenger-portal`, `check-in-api`.
+      Passenger experience services: 
+      * `passenger-portal`
+      * `check-in-api`
     consumes: |
-      `flight-control`, `flight-db`, `weather-api`.
-  - persona: "**[Ollie the Operator](/mesh/scenarios/persona/operator/)**"
+      * `flight-control`
+      * `flight-db`
+      * `weather-api`
+  - persona: "[Operator](/mesh/scenarios/persona/operator/)"
     owns: |
-      Mesh control plane, zone ingress and egress, mesh-scoped zone proxies, observability stack, `booking-gateway`, the operational core service `flight-control` (which Devin's services *consume* but don't own), and the `kong-air-mesh` resource itself.
+      * Mesh control plane
+      * Zone ingress and egress
+      * Mesh-scoped zone proxies 
+      * Observability stack 
+      * `booking-gateway`
+      * The operational core service `flight-control`
+      * The `kong-air-mesh` resource
     consumes: |
-      Operates the platform Devin and Sarah build on.
-  - persona: "**[Sarah the Security Architect](/mesh/scenarios/persona/security/)**"
+      N/A
+  - persona: "[Security architect](/mesh/scenarios/persona/security/)"
     owns: |
-      Zero-trust posture (`MeshTLS`, `MeshTrafficPermission`), workload identity (`MeshIdentity`, `MeshTrust`), Vault integration.
+      * Zero-trust posture (`MeshTLS`, `MeshTrafficPermission`)
+      * Workload identity (`MeshIdentity`, `MeshTrust`)
+      * Vault integration
     consumes: |
-      Sets the rules every service in the mesh runs under.
-  - persona: "**Infra team (out of scope)**"
+      N/A
+  - persona: "Infrastructure team (out of scope)"
     owns: |
-      `flight-db` (RDS), `weather-api` SaaS subscription.
+      * `flight-db` (RDS)
+      * `weather-api` SaaS subscription
     consumes: |
-      Reached from inside the mesh through `MeshExternalService`.
+      N/A
 {% endtable %}
 <!-- vale on -->
 
@@ -105,22 +130,22 @@ columns:
   - title: Key capabilities
     key: capabilities
 rows:
-  - role: "[Devin the Developer](/mesh/scenarios/persona/developer/)"
-    focus: Resilience & Routing
+  - role: "[Developer](/mesh/scenarios/persona/developer/)"
+    focus: Resilience and routing
     capabilities: |
-      * **Traffic Routing**: Manage traffic flows like canary releases or A/B testing via `MeshHTTPRoute` without code changes.
-      * **Resilience**: Protect apps from cascading failures with `MeshRetry`, `MeshTimeout`, and `MeshFaultInjection`.
-  - role: "[Ollie the Operator](/mesh/scenarios/persona/operator/)"
-    focus: Scalability & Stability
+      * Traffic routing: Manage traffic flows like canary releases or A/B testing via `MeshHTTPRoute` without code changes.
+      * Resilience: Protect apps from cascading failures with `MeshRetry`, `MeshTimeout`, and `MeshFaultInjection`.
+  - role: "[Operator](/mesh/scenarios/persona/operator/)"
+    focus: Scalability and stability
     capabilities: |
-      * **Self-Healing**: Automatically detect and remove unhealthy instances with `MeshHealthCheck` and `MeshCircuitBreaker`.
-      * **Observability**: Gain instant visibility with `MeshMetric` and consistent telemetry across all clusters.
-      * **Traffic Strategy**: Optimize distribution with `MeshLoadBalancingStrategy`, including locality-aware routing.
-  - role: "[Sarah the Security Architect](/mesh/scenarios/persona/security/)"
-    focus: Zero Trust
+      * Self-healing: Automatically detect and remove unhealthy instances with `MeshHealthCheck` and `MeshCircuitBreaker`.
+      * Observability: Gain instant visibility with `MeshMetric` and consistent telemetry across all clusters.
+      * Traffic strategy: Optimize distribution with `MeshLoadBalancingStrategy`, including locality-aware routing.
+  - role: "[Security architect](/mesh/scenarios/persona/security/)"
+    focus: Zero trust
     capabilities: |
-      * **Encryption**: Enable Mutual TLS (mTLS) automatically with `MeshTLS`, including handled certificate rotation.
-      * **Access Control**: Authorize traffic explicitly with `MeshTrafficPermission` to enforce a "deny-all" security posture.
+      * Encryption: Enable Mutual TLS (mTLS) automatically with `MeshTLS`, including handled certificate rotation.
+      * Access control: Authorize traffic explicitly with `MeshTrafficPermission` to enforce a "deny-all" security posture.
 {% endtable %}
 <!-- vale on -->
 
@@ -128,14 +153,20 @@ rows:
 
 The Kong Air modernization is divided into four stages. We recommend following them in order to build a complete, zero-trust global network:
 
-1. **Foundations**: Understand the architecture and resource scoping required for a multi-zone deployment.
-2. **Connectivity & Security**: Establish mTLS, authorize traffic, and manage service identity across Kubernetes and VMs.
-3. **Resilience & Governance**: Implement fine-grained traffic boundaries and simulate failures with Chaos Engineering.
-4. **Advanced Operations**: Master multi-zone canary releases and integrate with enterprise PKI like HashiCorp Vault.
+1. [Fundamentals](/mesh/scenarios/#phase-1-fundamentals): Understand the architecture, secure your first services, and master policy targeting.
+2. [Observability and security](/mesh/scenarios/#phase-2-observability--security): Gain visibility into every flight-critical request and protect passenger data.
+3. [Global mesh operations](/mesh/scenarios/#phase-3-global-mesh-operations): Connect cloud regions and legacy data centers into a single mesh.
+4. [Expert operations](/mesh/scenarios/#phase-4-expert-operations): Control the perimeter, manage external services, and validate resilience with fault injection.
 
 ## Technical foundation
 
-These scenarios assume familiarity with the core service mesh building blocks: the **control plane** that manages mesh state and policy, the **data plane** sidecar that enforces it, and the **Kuma Discovery Service (KDS)** that syncs a Global CP with its Zone CPs. For a refresher on what a service mesh is and the problems it solves, see [Service meshes](/mesh/service-mesh/). For component definitions and the terminology used throughout these scenarios (xDS, SPIFFE ID, SNI, KRI, and more), see [Concepts](/mesh/concepts/).
+These scenarios assume familiarity with the core service mesh building blocks: 
+* The control plane that manages mesh state and policy
+* The data plane sidecar that enforces it
+* The Kuma Discovery Service (KDS) that syncs a global CP with its zone CPs. 
+
+For more information about what a service mesh is and the problems it solves, see [Service meshes](/mesh/service-mesh/). 
+For component definitions and the terminology used throughout these scenarios (xDS, SPIFFE ID, SNI, KRI, and more), see [Concepts](/mesh/concepts/).
 
 {:.info}
-> Because {{site.mesh_product_name}} scales across clouds and data centers, knowing *where* each resource is applied (Global vs Zone CP, system namespace) matters. The [Resource scoping](/mesh/scenarios/resource-scoping/) guide covers this in depth; it comes right after your first hands-on policies in the learning path below.
+> Because {{site.mesh_product_name}} scales across clouds and data centers, knowing where each resource is applied (global vs zone CP, system namespace) matters. The [Resource scoping](/mesh/scenarios/resource-scoping/) guide covers this in depth.
