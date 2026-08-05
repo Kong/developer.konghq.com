@@ -1,5 +1,5 @@
 metadata:
-  title: Mesh scenarios
+  title: "{{site.mesh_product_name}} scenarios"
   content_type: landing_page
   description: A curriculum-style set of scenarios for mastering {{site.mesh_product_name}}, from basic concepts to advanced multi-zone operations.
   products:
@@ -15,8 +15,8 @@ metadata:
 rows:
   - header:
       type: h1
-      text: Mesh scenarios
-      sub_text: Follow the Kong Air modernization journey, from securing a first check-in API to operating a global, multi-cloud mesh with zero-trust security.
+      text: "{{site.mesh_product_name}} scenarios"
+      sub_text: Explore {{site.mesh_product_name}} capabilities by following the Kong Air modernization journey, from securing a first check-in API to operating a global, multi-cloud mesh with zero-trust security.
 
   - columns:
       - blocks:
@@ -25,7 +25,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Work through the scenarios in order, each one builds on the last, or jump to the phase that matches what you're doing today. Prefer a role-based view? Jump to [Explore by role](#explore-by-role).
+                    Work through the scenarios in order, or jump to the phase that matches your goal. If you prefer a role-based view, see [Explore by role](#explore-by-role).
 
   - header:
       type: h2
