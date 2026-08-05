@@ -22,7 +22,7 @@ related_resources:
     url: /konnect-platform/account/
 faqs:
   - q: What is required to manage users, teams, and roles in {{site.konnect_short_name}}?
-    a: You must be part of the **Organization Admin team** to manage users, teams, and roles.
+    a: You must be part of the **Organization Admin** or **Identity Admin** teams to manage users, teams, and roles.
   - q: What is a team in {{site.konnect_short_name}}?
     a: A team is a group of users with access to the same roles. Teams allow assigning access to {{site.konnect_short_name}} resources based on roles.
   - q: What is a role in {{site.konnect_short_name}}?

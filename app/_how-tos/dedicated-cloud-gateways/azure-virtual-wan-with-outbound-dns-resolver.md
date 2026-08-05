@@ -9,6 +9,8 @@ products:
   - gateway
 works_on:
   - konnect
+search_aliases:
+  - outbound DNS resolver
 tags:
   - azure
   - network
