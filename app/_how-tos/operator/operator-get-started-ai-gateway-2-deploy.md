@@ -173,14 +173,13 @@ The `AIGatewayModel` resource defines a Route and maps it to one or more provide
          capabilities:
            - generate
          config:
-           model:
-             alias: gpt-4o-mini
            route:
              paths:
                - /v1
          targets:
            - name: gpt-4o-mini
-             provider: openai-provider
+             provider:
+               name: openai-provider
              config:
                type: openai
                openai:

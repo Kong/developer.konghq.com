@@ -173,6 +173,27 @@ Each resource type is covered end-to-end in the getting started series:
 - **AI Identity Providers and AI Consumers**: [Add AI Consumers](/operator/get-started/ai-gateway/consumers/) covers `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, and `AIGatewayConsumerGroup`.
 - **AI Agents**: `AIGatewayAgent` supports `a2a` and `http` agent types. Set `spec.apiSpec.type` to the agent protocol and `spec.apiSpec.config.url` to the upstream agent URL.
 
+## Route to a model using an alias
+
+By default, a client's request `model` field must match the upstream model name on one of the AI Model's targets. To accept a client-side alias instead, set `config.route.model` on the `AIGatewayModel`. The alias decouples the external model identifier that clients send from the internal provider model name.
+
+Set `type` to `body` and list the accepted alias values under `body.body.model`. Clients then send an alias value in the request body `model` field, and {{ site.ai_gateway_name }} routes to this model:
+
+```yaml
+config:
+  route:
+    paths:
+      - /v1
+    model:
+      type: body
+      body:
+        body:
+          model:
+            - my-gpt-4o
+```
+
+With this configuration, a client that sends `"model": "my-gpt-4o"` in the request body is routed to this AI Model, regardless of the upstream provider model name on its targets. `config.route.model` also supports matching on request `headers` (`type: headers`) or on the request path (`type: path`, using `path.pathAliases`).
+
 ## AIGatewayIdentityProvider
 
 `AIGatewayIdentityProvider` configures the authentication scheme the gateway uses to verify downstream clients. Two types are supported: `key-auth` (API key) and `openid-connect` (OIDC).
