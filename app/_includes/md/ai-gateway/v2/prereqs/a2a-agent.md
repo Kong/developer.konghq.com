@@ -17,11 +17,13 @@ services:
       - "10000:10000"
 EOF
 ```
+{: data-test-step="block"}
 
 Start the agent:
 
 ```sh
-docker compose up -d
+docker compose up -d --wait
 ```
+{: data-test-step="block"}
 
 The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle flight route queries. In this guide, the gateway service points to `host.docker.internal:10000` instead of the container name because {{site.base_gateway}} runs in its own container with a separate DNS resolver.
