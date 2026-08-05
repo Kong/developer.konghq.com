@@ -1,5 +1,5 @@
 ---
-title: "Migrating from OAuth 2.0 plugin to {{site.identity}}"
+title: "Migrating from the OAuth 2.0 plugin to {{site.identity}}"
 content_type: reference
 layout: reference
 
@@ -14,7 +14,7 @@ works_on:
     - on-prem
     - konnect
 
-description: This guide walks you through migrating from the Oauth2 plugin to Kong Identity with OIDC or OAuth Introspection.
+description: This guide walks you through migrating from the OAuth 2.0 plugin to {{site.identity}} with OIDC or OAuth 2.0 Introspection.
 
 related_resources:
   - text: "{{site.identity}} authorization servers"
@@ -24,39 +24,63 @@ tags:
   - migration
 
 min_version:
-  gatway: '3.15' 
+  gateway: '3.15'
+
+faqs:
+  - q: |
+      Why am I getting "URL rejected: Malformed input to a URL function" when trying to create the client?
+    a: |
+      This error comes from curl itself, not from the {{site.identity}} API. The request never reaches the server.
+
+      It happens when the legacy `client_id` you're using in the `PUT` URL contains characters that aren't valid in a URL path segment (for example `@`, `+`, or spaces). Because the client-creation step inserts `client_id` directly into the URL (`/auth-servers/{authServerId}/clients/{clientId}`), any such character breaks the request before it's sent. The `client_id` must match `[-_\w]+` and be 36 characters or fewer.
+
+      Sanitize the value and re-export `CLIENT_ID` with the result, so the rest of the guide works unchanged:
+
+      ```sh
+      export CLIENT_ID=$(echo -n "$CLIENT_ID" | sed 's/[^-_A-Za-z0-9]/-/g' | cut -c1-36)
+      echo "CLIENT_ID=$CLIENT_ID"
+      ```
+
+      If the sanitized `CLIENT_ID` differs from the original, the app must use the sanitized value as its `client_id` when it requests tokens after the migration.
+
 ---
 
-This guide shows you how to migrate from the OAuth 2.0 legacy plugin to Kong Identity for an on-prem Kong Gateway Enterprise setup.
+This guide shows you how to migrate from the legacy OAuth 2.0 plugin to {{site.identity}} for an on-prem {{site.base_gateway}} Enterprise setup.
+
+{:.info}
+> **Scope:** This guide covers apps using the `client_credentials` grant, presenting the resulting token to {{site.base_gateway}} as a Bearer token. Migrating apps using the `authorization_code` grant isn't covered, because `grant_types` on a {{site.identity}} client only accepts `implicit` or `client_credentials`.
 
 ## Requirements
 
-- An on-prem EE setup
-- Access to the Kong Admin API
-- The OAuth 2.0 legacy plugin for authentication wrokflows
+- An on-prem {{site.base_gateway}} Enterprise setup
+- Access to the {{site.base_gateway}} Admin API
+- The OAuth 2.0 plugin configured for authentication
 - Admin access to the PostgreSQL database connected to the plugin
-- A Konnect account
-- Personal Access Token (PAT) linked to your account
+- A {{site.konnect_short_name}} account
+- A Personal Access Token (PAT) linked to your account
 
 ## Migration overview
 
 The migration follows this order:
 
-1. Getting the existing credentials
-1. Uploading the credentials to Kong Identity
-1. Deactivating and deleting the OAuth 2.0 plugin
+1. Get the Consumer credentials.
+1. Create an authorization server and a client with existing credentials.
+1. Map Consumers.
+1. Configure the OIDC plugin.
+1. Verify.
+1. Deactivate and delete the OAuth 2.0 plugin.
 
-Check the folllowing sections to get the information that suit best your configuration. 
+Read the following sections to get the information that best suits your configuration.
 
 ## Set up the Admin API URL
 
-To call your Kong on-prem instance, use your Kong Admin API. When you run it locally, the default Admin API URL is `localhost:8001`. The command examples assume you run the commands from a local setup. If you're calling your Admin API from a different location, replace the  value by you're actual URL.
+To call your on-prem {{site.base_gateway}} instance, use your {{site.base_gateway}} Admin API. When you run it locally, the default Admin API URL is `localhost:8001`. The command examples assume you run the commands from a local setup. If you're calling your Admin API from a different location, replace the value with your actual URL:
 
 ```sh
 export KONG_ADMIN_API='localhost:8001'
 ```
 
-You also need the proxy URL to verify the migration at the end of this guide. When you run Kong Gateway locally, the default HTTPS proxy URL is `https://localhost:8443`:
+You also need the proxy URL to verify the migration at the end of this guide. When you run {{site.base_gateway}} locally, the default HTTPS proxy URL is `https://localhost:8443`:
 
 ```sh
 export KONG_PROXY_URL='https://localhost:8443'
@@ -68,17 +92,17 @@ export KONG_PROXY_URL='https://localhost:8443'
 curl -s $KONG_ADMIN_API/consumers | jq
 ```
 
-The response lists all existing Consumers. If only one Consumer appears in the list, save it as an environment variable: 
+The response lists all existing Consumers. If only one Consumer appears in the list, save it as an environment variable:
 
 ```sh
 export CONSUMER=$(curl -s $KONG_ADMIN_API/consumers | jq -r '.data[0].username')
 ```
 
-If the list contains more than one Consumer, this guide contains scripts to help you bulk migrate them in the following sections. 
+If the list contains more than one Consumer, this guide contains scripts to help you bulk migrate them in the following sections.
 
 ## Get the Consumer credentials
 
-The OAuth 2.0 plugin uses a PostgreSQL database to store credentials in the `oauth2_credentials` table. If they secret is hashed, you can't extract the original secret, as Kong only stores the hash. You can create a new credential with a fresh, unhashed secret, to replace the hashed one before migrarting.
+The OAuth 2.0 plugin uses a PostgreSQL database to store credentials in the `oauth2_credentials` table. If the secret is hashed, you can't extract the original secret, because {{site.base_gateway}} only stores the hash. You can create a new credential with a fresh, unhashed secret to replace the hashed one before migrating.
 
 ### Consumers with hashed secrets
 
@@ -92,7 +116,8 @@ done)
 
 echo "$hashed_consumers"
 ```
-The response displays a list of Consumers with secrets containing the field `hash_secret: true`. If the list is empty, you can proceed to the migration. If the list contains Consumer names, you can generate a unhashed new secret for them with this command:
+
+The response displays a list of Consumers with secrets containing the field `hash_secret: true`. If the list is empty, you can proceed to the migration. If the list contains Consumer names, you can generate a new unhashed secret for them with the following command:
 
 {% navtabs "retrieve-credentials" %}
 {% navtab "Single Consumer" %}
@@ -104,12 +129,12 @@ curl -s -X POST $KONG_ADMIN_API/consumers/$CONSUMER/oauth2 \
   -d "name=acme-app-new-credential" \
   -d "client_id=acme-app-client-id-v2" \
   -d "hash_secret=false" | jq
-``` 
+```
 
 {% endnavtab %}
-{% navtab "Multiple Consumers" %}
+{% navtab "Multiple Consumers/credentials" %}
 
-This command bulk creates new the secrets for all existing Consumers with hashed secrets. It uses the filtered list to:
+This command bulk creates new secrets for all existing Consumers with hashed secrets. It uses the filtered list to:
 
 1. Loop through each hashed credential.
 1. Create a new secret for each Consumer.
@@ -132,6 +157,9 @@ done
 {% endnavtab %}
 {% endnavtabs %}
 
+{:.warning}
+> When you create a new credential to replace a hashed one, {{site.base_gateway}} generates a new `client_secret`, and you set a new `client_id`. The app must start using these new credentials after the migration. See [Migrate: Update your apps](#migrate-update-your-apps).
+
 ## Create a {{site.identity}} authorization server
 
 Create an authorization server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer), and save the `AUTH_SERVER_ID` variable:
@@ -144,8 +172,8 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: "Auth server example"
-  description: "Auth server example"
+  name: "Migration from OAuth to OIDC"
+  description: "Auth server migration from OAuth to Identity + OIDC plugin"
   audience: "api://default"
 capture:
   - variable: AUTH_SERVER_ID
@@ -160,7 +188,7 @@ To use the Consumers credentials in {{site.identity}}, you create a client per p
 {% navtabs "create-client" %}
 {% navtab "Single Consumer" %}
 
-Get a single credentials from one Consumer and save them as `CLIENT_ID` and `CLIENT_SECRET` environment variables:
+Get a single credential from one Consumer and save it as `CLIENT_ID` and `CLIENT_SECRET` environment variables:
 
 ```sh
 export CLIENT_ID=$(curl -s $KONG_ADMIN_API/consumers/$CONSUMER/oauth2 | jq -r '.data[0].client_id')
@@ -186,6 +214,9 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+{:.info}
+> If the `PUT` request fails with a `Malformed input to a URL function` error, your `client_id` contains characters that aren't valid in a URL path segment. See the [FAQ](#faq) to sanitize it before continuing.
+
 Map the Consumer to this client by setting `custom_id` to match the client's ID:
 
 ```sh
@@ -193,26 +224,20 @@ curl -s -X PATCH "$KONG_ADMIN_API/consumers/$CONSUMER" \
   -d "custom_id=$CLIENT_ID" | jq -c '{username: .username, custom_id: .custom_id}'
 ```
 
-If your Consumer contains multiple credentials, use the Multiple Consumers method.
-
-**Warn about**
-
-- `client_id` must be ≤36 chars matching [-_\w]+ — so if a legacy `client_id` has characters outside that set, it can't be uploaded as-is and needs remapping.
-- `grant_types` here only allows `implicit` or `client_credentials`: `authorization_code` isn't in the enum.
-
-
 {% endnavtab %}
-{% navtab "Multiple Consumers" %}
-Migrating Consumers credentials to Kong Identity clients requires preventing two collision risks that this section solves:
+{% navtab "Multiple Consumers/credentials" %}
+Migrating Consumer credentials to {{site.identity}} clients requires preventing two collision risks that this section solves:
 
-- **Name collision:** Each client needs a unique name. A Consumer containing multiple credentials is the equivalent of multiple clients with the same name containing the credentials. Trying to migrate this configuration will fail, because client names can't be duplicate. To avoid that, this section sets the `name` value of every client to its `client_id`.
-- **`custom_id` collision:** Every client metadate contains a unique `custom_id` value that you can set, useful for mapping Consumers to services and plugins. We extract this value from the Consumer's `id` and pass it to the client. However if a Consumer contains multiple credentials, the same ID can't be set to the same client. To avoid `custom_id` collisions, this section shows you how to group Consumers into sub-Consumers, each with their own `custom_id`.
+- **Name collision:** Each client needs a unique name. A Consumer that contains multiple credentials is the equivalent of multiple clients with the same name. Trying to migrate this configuration fails, because client names can't be duplicated. To avoid that, this section sets each client's name to the Consumer's `client_id`, which is unique even when a Consumer has multiple credentials.
+- **`custom_id` collision:** Each client contains a unique `custom_id` value that you can set, which is useful for mapping Consumers to Services and plugins. This value is extracted from the credential's `client_id` and passed to the client. Because a Consumer can contain multiple credentials, this section groups Consumers into sub-Consumers, each with its own `custom_id`, to avoid `custom_id` collisions.
 
-Rename every Consumer:
+Unlike the previous steps, the bulk script calls the {{site.identity}} API directly with curl, so it can't use the region host automatically. Set `KONNECT_API` to the API host for your [{{site.konnect_short_name}} region](/konnect-platform/geos/):
 
 ```sh
-name="${consumer}-${client_id}"
+export KONNECT_API='https://us.api.konghq.com'
 ```
+
+The script reuses `$KONNECT_TOKEN` and the `$AUTH_SERVER_ID` captured when you [created the authorization server](#create-a-kong-identity-authorization-server).
 
 Run the migration script:
 
@@ -227,18 +252,16 @@ for consumer in $(curl -s $KONG_ADMIN_API/consumers | jq -r '.data[].username');
     echo "$creds" | jq -c '.[]' | while read -r cred; do
       client_id=$(echo "$cred" | jq -r '.client_id')
       client_secret=$(echo "$cred" | jq -r '.client_secret')
-      sub_consumer="${consumer}-${client_id}"
+      sub_consumer="$client_id"
 
-      # Each sub-Consumer gets its own custom_id, matching its own client_id
       curl -s -X POST "$KONG_ADMIN_API/consumers" \
         -d "username=$sub_consumer" \
         -d "custom_id=$client_id" > /dev/null
 
-      # The group records "these sub-Consumers are really one app"
       curl -s -X POST "$KONG_ADMIN_API/consumer_groups/$consumer/consumers" \
         -d "consumer=$sub_consumer" > /dev/null
 
-      curl -s -X PUT "$KONNECT_API_URL/v1/auth-servers/$AUTH_SERVER_ID/clients/$client_id" \
+      curl -s -X PUT "$KONNECT_API/v1/auth-servers/$AUTH_SERVER_ID/clients/$client_id" \
         -H "Authorization: Bearer $KONNECT_TOKEN" \
         --json "{
           \"name\": \"$sub_consumer\",
@@ -250,19 +273,25 @@ for consumer in $(curl -s $KONG_ADMIN_API/consumers | jq -r '.data[].username');
   fi
 done
 ```
+
 The preceding script:
 
 - Retrieves the credentials for every Consumer.
-- Splits Consumers with multiple credentials into one sub-Consumer per credential, then group them.
+- Splits Consumers that have more than one credential into one sub-Consumer per credential, then groups them.
 
-Your current setup with the Auth 2.0 plugin stills maps the old Consumer. To finish the migration, configure the OIDC or Instropection plugin to start usin tokens issued by the {{site.identity}} authorization server.
+{:.warning}
+> This script only migrates Consumers that have more than one credential. Consumers with a single credential are handled by the **Single Consumer** tab.
+
+Your current setup with the OAuth 2.0 plugin still maps the old Consumer. To finish the migration, configure the OIDC or OAuth 2.0 Introspection plugin to start using tokens issued by the {{site.identity}} authorization server.
 
 {% endnavtab %}
 {% endnavtabs %}
 
-## Configure the OIDC plugin on the service
+## Configure the OIDC plugin on the Service
 
-Activate the OIDC plugin:
+Configure the [OpenID Connect (OIDC) plugin](/plugins/openid-connect/) to validate the tokens issued by the {{site.identity}} authorization server and map them to your Consumers.
+
+Get the authorization server's issuer URL, and save the `ISSUER` variable:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -275,25 +304,30 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-
-### Attach the plugin to services
+### Attach the plugin to Services
 
 {% navtabs "Attach the plugin" %}
-{% navtab "Attach to a single service" %}
+{% navtab "Attach to a specific Service" %}
 
-List the services:
+List the Services:
 
 ```sh
 curl -s $KONG_ADMIN_API/services | jq -r '.data[] | {name, id, host, path}'
 ```
 
-Pick a service and save it as a `$SERVICE` environment variable:
+Pick a Service and save it as a `$SERVICE` environment variable:
 
 ```sh
 export SERVICE='<your-service-name-or-id>'
 ```
 
-Attach the plugin to the chosen service:
+Check whether an `openid-connect` plugin instance already exists on this Service:
+
+```sh
+OIDC_PLUGIN_ID=$(curl -s "$KONG_ADMIN_API/services/$SERVICE/plugins" | jq -r '.data[] | select(.name=="openid-connect") | .id')
+```
+
+If `$OIDC_PLUGIN_ID` is empty, create the plugin:
 
 ```sh
 curl -s -X POST "$KONG_ADMIN_API/services/$SERVICE/plugins" \
@@ -302,46 +336,115 @@ curl -s -X POST "$KONG_ADMIN_API/services/$SERVICE/plugins" \
     "name": "openid-connect",
     "config": {
       "issuer": "'"$ISSUER"'",
-      "auth_methods": ["client_credentials"],
+      "auth_methods": ["bearer"],
+      "audience": ["api://default"],
       "consumer_claims": [["client_id"]],
       "consumer_by": ["custom_id"]
     }
-  }'
+  }' | jq -c '{name, enabled, issuer: .config.issuer}'
+```
+
+If `$OIDC_PLUGIN_ID` already has a value (for example, if you're re-running this guide or switching to a different authorization server), update the existing instance instead. A `POST` fails with a `unique constraint violation` if a plugin of the same name already exists on this Service:
+
+```sh
+curl -s -X PATCH "$KONG_ADMIN_API/plugins/$OIDC_PLUGIN_ID" \
+  -H "Content-Type: application/json" \
+  --json '{
+    "enabled": true,
+    "config": {
+      "issuer": "'"$ISSUER"'",
+      "auth_methods": ["bearer"],
+      "audience": ["api://default"],
+      "consumer_claims": [["client_id"]],
+      "consumer_by": ["custom_id"]
+    }
+  }' | jq -c '{name, enabled, issuer: .config.issuer}'
 ```
 
 {% endnavtab %}
-{% navtab "Attach to all services" %}
+{% navtab "Attach to all Services" %}
 
-Attach the OIDC plugin to all your services:
+Attach or update the OIDC plugin on every Service:
 
 ```sh
 curl -s $KONG_ADMIN_API/services | jq -r '.data[].id' | \
 while read -r service_id; do
-  curl -s -X POST "$KONG_ADMIN_API/services/$service_id/plugins" \
-    -H "Content-Type: application/json" \
-    --json '{
-      "name": "openid-connect",
-      "config": {
-        "issuer": "'"$ISSUER"'",
-        "auth_methods": ["client_credentials"],
-        "consumer_claims": [["client_id"]],
-        "consumer_by": ["custom_id"]
-      }
-    }' | jq -c --arg sid "$service_id" '{service: $sid, plugin_id: .id}'
+  oidc_plugin_id=$(curl -s "$KONG_ADMIN_API/services/$service_id/plugins" | jq -r '.data[] | select(.name=="openid-connect") | .id')
+
+  if [ -z "$oidc_plugin_id" ]; then
+    curl -s -X POST "$KONG_ADMIN_API/services/$service_id/plugins" \
+      -H "Content-Type: application/json" \
+      --json '{
+        "name": "openid-connect",
+        "config": {
+          "issuer": "'"$ISSUER"'",
+          "auth_methods": ["bearer"],
+          "audience": ["api://default"],
+          "consumer_claims": [["client_id"]],
+          "consumer_by": ["custom_id"]
+        }
+      }' | jq -c --arg sid "$service_id" '{service: $sid, plugin_id: .id}'
+  else
+    curl -s -X PATCH "$KONG_ADMIN_API/plugins/$oidc_plugin_id" \
+      -H "Content-Type: application/json" \
+      --json '{
+        "enabled": true,
+        "config": {
+          "issuer": "'"$ISSUER"'",
+          "auth_methods": ["bearer"],
+          "audience": ["api://default"],
+          "consumer_claims": [["client_id"]],
+          "consumer_by": ["custom_id"]
+        }
+      }' | jq -c --arg sid "$service_id" '{service: $sid, plugin_id: .id}'
+  fi
 done
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+## Verify
+
+{:.warning}
+> **Before testing:** The `oauth2` and `openid-connect` plugins can't both be active on the same Service. If both are enabled, `oauth2` intercepts and rejects the request before `openid-connect` runs. Complete the deactivation step below before testing.
+
+{% navtabs "Choose a Service" %}
+
+{% navtab "Single Service" %}
+If you attached the OIDC plugin to a single Service, you already have the `$SERVICE` environment variable saved. Follow these steps to test the migrated setup.
+{% endnavtab %}
+
+{% navtab "Multiple Services" %}
+
+To verify the migration, pick one Service that you'll test in the final steps:
+
+```sh
+curl -s $KONG_ADMIN_API/services | jq -r '.data[] | {name, id}'
+```
+
+Save the Service you want to test as an environment variable:
+
+```sh
+export SERVICE='<service-name-or-id>'
 ```
 {% endnavtab %}
 {% endnavtabs %}
 
-**Warnings**
-Unlike single-tenant OIDC examples, this plugin config intentionally omits client_id/client_secret. Each migrated app authenticates using its own credentials against the Auth Server's token endpoint; the plugin only needs to validate the resulting token and resolve it to a Consumer via consumer_claims
+### Deactivate the OAuth 2.0 plugin
 
-- `consumer_claim` vs `consumer_claims`: Kong Gateway ≥3.14 uses the plural `consumer_claims` (array). Older versions use singular `consumer_claim`: include two versions of the snippet?
-- `consumer_by: username`: this tells the plugin to match the claim value against the Consumer's `username` field.
+Deactivate the legacy OAuth 2.0 plugin to allow the OIDC plugin to replace it:
 
-## Verify
+```sh
+OAUTH2_PLUGIN_ID=$(curl -s $KONG_ADMIN_API/services/$SERVICE/plugins | jq -r '.data[] | select(.name=="oauth2") | .id')
 
-Pull the token endpoint path and save it as an environment variable: 
+curl -s -X PATCH $KONG_ADMIN_API/plugins/$OAUTH2_PLUGIN_ID \
+  -d "enabled=false" | jq
+```
+
+### Call the token endpoint
+
+Pull the token endpoint path and save it as an environment variable:
 
 ```sh
 export TOKEN_ENDPOINT=$(curl -s "$ISSUER/.well-known/openid-configuration" | jq -r '.token_endpoint')
@@ -356,31 +459,53 @@ export ACCESS_TOKEN=$(curl -s -X POST "$TOKEN_ENDPOINT" \
   -d "client_secret=$CLIENT_SECRET" | jq -r '.access_token')
 ```
 
-Confirm the service accepts the token: 
+Pull a Route from your Service:
 
 ```sh
-curl -sk $KONG_PROXY_URL/demo/anything \
+export ROUTE_PATH=$(curl -s "$KONG_ADMIN_API/services/$SERVICE/routes" | jq -r '.data[0].paths[0]')
+```
+
+### Test the token on a Route
+
+Confirm the Service accepts the token:
+
+```sh
+curl -sk $KONG_PROXY_URL${ROUTE_PATH} \
   -H "Authorization: Bearer $ACCESS_TOKEN" | jq
 ```
 
-## Deactivate the OAuth 2.0 plugin
+A successful response returns `200` and echoes the mapped Consumer in the `X-Consumer-Username` and `X-Consumer-Custom-Id` headers.
+
+### Optional: Reactivate the OAuth 2.0 plugin
+
+If you aren't ready to migrate yet, reactivate the OAuth 2.0 plugin to avoid breaking your app's workflows:
 
 ```sh
-PLUGIN_ID=$(curl -s $KONG_ADMIN_API/services/demo-service/plugins | jq -r '.data[] | select(.name=="oauth2") | .id')
+OAUTH2_PLUGIN_ID=$(curl -s $KONG_ADMIN_API/services/$SERVICE/plugins | jq -r '.data[] | select(.name=="oauth2") | .id')
 
-curl -s -X PATCH $KONG_ADMIN_API/plugins/$PLUGIN_ID \
-  -d "enabled=false" | jq
+curl -s -X PATCH $KONG_ADMIN_API/plugins/$OAUTH2_PLUGIN_ID \
+  -d "enabled=true" | jq
 ```
 
-## Delete the OAuth 2.0 plugin
+## Migrate: Update your apps
+
+To migrate successfully, update your app's configuration to request a token. Before the migration, the server that issues tokens was hosted on your {{site.base_gateway}}, and it's now hosted on {{site.konnect_short_name}}. Update the token endpoint URL accordingly:
+
+- **Before the migration** (using the OAuth 2.0 plugin): `/$SERVICE/oauth2/token`
+- **After the migration** (using the OIDC plugin): `$ISSUER/oauth/token`
+
+If you sanitized a `client_id` or created a new credential to replace a hashed secret, also update the app to use the new `client_id` and `client_secret`.
+
+To avoid downtime in production, recreate your environment with the minimum requirements:
+
+- A staging app.
+- A staging {{site.base_gateway}} setup.
+- An authorization server in {{site.konnect_short_name}} dedicated to testing the migration.
+
+### Delete the OAuth 2.0 plugin
+
+Once you have confirmed that the traffic and the auth workflows work as expected after deactivating the OAuth 2.0 plugin, you can safely delete it:
 
 ```sh
-curl -s -X DELETE $KONG_ADMIN_API/plugins/$PLUGIN_ID
+curl -s -X DELETE $KONG_ADMIN_API/plugins/$OAUTH2_PLUGIN_ID
 ```
-
-**Warn about**
-
-- Same constraints as the single-Consumer case: `client_id` ≤36 chars matching `[-_\w]+`, and `grant_types` only supports `implicit` or `client_credentials`.
-- If `client_id` needed sanitizing, the app must be updated with the new sanitized ID, not just the new token endpoint — this isn't a transparent cutover for that Consumer.
-- Consumers with `hash_secret: true` need to go through the new-credential flow first (see [Get the Consumer credentials](#get-the-consumer-credentials)) — this loop assumes plaintext secrets are already retrievable.
-- `custom_id` here is set to the *sanitized* client_id, not the legacy one — the OIDC plugin's `consumer_by: custom_id` mapping depends on this matching exactly.
