@@ -28,6 +28,11 @@ prereqs:
 next_steps:
   - text: "Route across zones with canary rollouts and color rings"
     url: "/mesh/scenarios/route-across-zones-with-canary-rollouts-and-color-rings/"
+related_resources:
+  - text: Deploy mesh-scoped zone proxies
+    url: /mesh/zone-proxies/
+  - text: Apply policies to mesh-scoped zone proxies
+    url: /mesh/zone-proxy-policies/
 ---
 
 Cross-zone traffic used to be the one place where every mesh in a zone looked the same. Before {{site.mesh_product_name}} 2.14, a single ZoneIngress and ZoneEgress carried traffic for **all** meshes in a zone. That meant `kong-air-mesh` could not present its own identity on the wire, could not have its own timeouts or access logs on cross-zone calls, and shared one blended observability view with every other mesh in the zone.

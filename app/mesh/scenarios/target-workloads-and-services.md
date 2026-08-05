@@ -27,6 +27,11 @@ prereqs:
 next_steps:
   - text: "Observe mesh traffic in practice"
     url: "/mesh/scenarios/observe-mesh-traffic-in-practice/"
+related_resources:
+  - text: MeshService
+    url: /mesh/meshservice/
+  - text: Introduction to policies
+    url: /mesh/policies-introduction/
 ---
 
 {{site.mesh_product_name}} uses two targeting primitives: a **`Dataplane`** label selector for scoping a policy to a group of proxies, and explicit **`MeshService`** (and `MeshMultiZoneService`, `MeshExternalService`) resources for addressing destinations. For the full targeting model and the per-policy `targetRef` support matrices, see [Policies](/mesh/policies-introduction/) and [MeshService](/mesh/meshservice/). This page focuses on how Kong Air applies those primitives.

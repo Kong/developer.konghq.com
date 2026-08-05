@@ -31,6 +31,11 @@ prereqs:
 next_steps:
   - text: "Secure the perimeter with MeshPassthrough"
     url: "/mesh/scenarios/secure-the-perimeter-with-meshpassthrough/"
+related_resources:
+  - text: MeshMultiZoneService
+    url: /mesh/meshmultizoneservice/
+  - text: MeshLoadBalancingStrategy
+    url: /mesh/policies/meshloadbalancingstrategy/
 ---
 
 Once Kong Air spans multiple zones, two routing needs show up that look similar but solve different problems: rolling out a new version to a slice of traffic, and keeping parallel "colored" environments separate. Both are built from the same two resources, `MeshMultiZoneService` and `MeshHTTPRoute`, which is exactly why it's worth seeing them side by side.

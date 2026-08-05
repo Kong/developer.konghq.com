@@ -14,6 +14,11 @@ works_on:
 next_steps:
   - text: "Resource scoping"
     url: "/mesh/scenarios/resource-scoping/"
+related_resources:
+  - text: Introduction to policies
+    url: /mesh/policies-introduction/
+  - text: MeshTrafficPermission
+    url: /mesh/policies/meshtrafficpermission/
 ---
 {{site.mesh_product_name}} uses one consistent shape for every policy: you select the proxies to affect with `targetRef`, then describe the behavior in the same resource. For the full policy model, how `targetRef`, `to[]`, `rules[]`, and `default` work, how precedence resolves, and which older shapes are deprecated, see [Introduction to policies](/mesh/policies-introduction/), the source of truth for the model. This page shows how Kong Air applies that model to its own workloads.
 

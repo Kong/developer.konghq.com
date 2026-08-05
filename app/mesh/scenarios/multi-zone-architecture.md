@@ -14,6 +14,13 @@ works_on:
 next_steps:
   - text: "Configure mesh-scoped zone proxies"
     url: "/mesh/scenarios/configure-mesh-scoped-zone-proxies/"
+related_resources:
+  - text: Zone ingress
+    url: /mesh/zone-ingress/
+  - text: Zone egress
+    url: /mesh/zone-egress/
+  - text: Multi-zone deployment
+    url: /mesh/mesh-multizone-service-deployment/
 ---
 This guide explores the components and patterns specific to running {{site.mesh_product_name}} across multiple zones.
 

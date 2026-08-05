@@ -30,6 +30,13 @@ prereqs:
 next_steps:
   - text: "Integrate an external CA"
     url: "/mesh/scenarios/integrate-an-external-ca/"
+related_resources:
+  - text: Concepts
+    url: /mesh/concepts/
+  - text: MeshIdentity policy reference
+    url: /mesh/policies/meshidentity/
+  - text: Issue identity with MeshIdentity and SPIRE
+    url: /mesh/issue-identity-with-meshidentity-spire/
 ---
 ## The core shift: from Mesh to workload
 

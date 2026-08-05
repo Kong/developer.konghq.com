@@ -30,6 +30,13 @@ prereqs:
 next_steps:
   - text: "Validate resilience with fault injection"
     url: "/mesh/scenarios/validate-resilience-with-fault-injection/"
+related_resources:
+  - text: MeshExternalService
+    url: /mesh/meshexternalservice/
+  - text: MeshRetry
+    url: /mesh/policies/meshretry/
+  - text: MeshTrafficPermission
+    url: /mesh/policies/meshtrafficpermission/
 ---
 
 ## Why MeshExternalService?

@@ -27,6 +27,13 @@ prereqs:
 next_steps:
   - text: "Manage workload identity and mTLS"
     url: "/mesh/scenarios/manage-workload-identity-and-mtls/"
+related_resources:
+  - text: Deploy an OpenTelemetry collector
+    url: /mesh/deploy-an-opentelemetry-collector/
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/meshopentelemetrybackend/
+  - text: Mesh observability
+    url: /mesh/observability/
 ---
 ## The observability gap
 

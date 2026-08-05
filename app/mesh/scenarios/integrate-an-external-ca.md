@@ -26,6 +26,15 @@ prereqs:
 next_steps:
   - text: "Multi-zone architecture"
     url: "/mesh/scenarios/multi-zone-architecture/"
+related_resources:
+  - text: HashiCorp Vault CA
+    url: /mesh/vault/
+  - text: cert-manager
+    url: /mesh/cert-manager/
+  - text: AWS Certificate Manager Private CA
+    url: /mesh/acm-private-ca-policy/
+  - text: Manage secrets
+    url: /mesh/manage-secrets/
 ---
 Using an external CA ensures that Kong Air's service identities are governed by the same corporate PKI standards as their physical servers and employee devices.
 

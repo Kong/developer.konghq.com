@@ -30,6 +30,11 @@ prereqs:
 next_steps:
   - text: "Manage external services with MeshExternalService"
     url: "/mesh/scenarios/manage-external-services-with-meshexternalservice/"
+related_resources:
+  - text: MeshPassthrough
+    url: /mesh/policies/meshpassthrough/
+  - text: MeshTrafficPermission
+    url: /mesh/policies/meshtrafficpermission/
 ---
 
 ## The "open mesh" vs. "secure mesh"
