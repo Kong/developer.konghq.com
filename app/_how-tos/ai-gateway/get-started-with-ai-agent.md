@@ -65,6 +65,7 @@ cleanup:
         docker compose down
         docker rm -f a2a-kongair-agent
         ```
+        {: data-test-cleanup="block" }
 
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
@@ -125,10 +126,10 @@ A2A agents expose their capabilities through an Agent Card at the `/.well-known/
 
 Retrieve it through the gateway:
 
-```bash
-curl -X GET "http://localhost:8000/a2a/.well-known/agent-card.json" \
-  --no-progress-meter --fail-with-body
-```
+{% validation request-check %}
+url: /a2a/.well-known/agent-card.json
+status_code: 200
+{% endvalidation %}
 
 The response shows the agent's capabilities, skills, and supported protocols:
 
@@ -165,28 +166,26 @@ The response shows the agent's capabilities, skills, and supported protocols:
 
 Send a `message/send` JSON-RPC request to test the agent:
 
-```bash
-curl -X POST "http://localhost:8000/a2a" \
-  -H "Content-Type: application/json" \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "What flights are available on route KA-123?"
-          }
-        ]
-      }
-    }
-  }'
-```
+
+{% validation request-check %}
+url: /a2a/
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  jsonrpc: '2.0'
+  id: '1'
+  method: message/send
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+      - kind: text
+        text: What flights are available on route KA-123?
+status_code: 200
+{% endvalidation %}
 
 A successful response (status 200) contains the agent's reply:
 
