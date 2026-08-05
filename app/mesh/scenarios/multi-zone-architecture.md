@@ -11,6 +11,9 @@ products:
 works_on:
   - on-prem
   - konnect
+next_steps:
+  - text: "Configure mesh-scoped zone proxies"
+    url: "/mesh/scenarios/configure-mesh-scoped-zone-proxies/"
 ---
 This guide explores the components and patterns specific to running {{site.mesh_product_name}} across multiple zones.
 
