@@ -15,8 +15,8 @@ works_on:
 
 Select a persona to see how {{site.mesh_product_name}} helps them in their specific role:
 
-*   **[Devin the Developer](/mesh/scenarios/persona/developer/)**
-*   **[Ollie the Operator](/mesh/scenarios/persona/operator/)**
-*   **[Sarah the Security Architect](/mesh/scenarios/persona/security/)**
+*   **[Developer](/mesh/scenarios/persona/developer/)**
+*   **[Operator](/mesh/scenarios/persona/operator/)**
+*   **[Security architect](/mesh/scenarios/persona/security/)**
 
 [Back to learning path](/mesh/scenarios/)

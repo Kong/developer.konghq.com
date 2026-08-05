@@ -164,7 +164,7 @@ kubectl get meshidentity -n {{site.mesh_namespace}} \
 
 ## Secure AeroPay (HTTPS with TLS origination)
 
-For the AeroPay API, Sarah (the Security Architect) wants to ensure all traffic is encrypted, but she doesn't want developers managing third-party CA bundles in application code. `MeshExternalService` is the resource intended to handle TLS origination at the sidecar.
+For the AeroPay API, the security architect wants to ensure all traffic is encrypted, but does not want developers managing third-party CA bundles in application code. `MeshExternalService` is the resource intended to handle TLS origination at the sidecar.
 
 {:.info}
 > If Kong Air wants developers to call the service with plain HTTP inside the mesh, the **internal match port** should be an HTTP port such as `80`, while the upstream endpoint can still be `443`. The mesh-generated hostname will still come from the `HostnameGenerator`.
@@ -250,7 +250,7 @@ kubectl get dataplaneinsight -n {{site.mesh_namespace}} "$ZE" \
 
 ## Add resiliency with MeshRetry
 
-Because AeroPay is now a first-class citizen, Devin can apply standard mesh policies to it. If AeroPay is momentarily slow or returns a 5xx error, the mesh can automatically retry. Retries are configured with the **`MeshRetry`** policy, `MeshHTTPRoute` filters cover header rewrites, redirects, and mirroring, but **not retries**.
+Because AeroPay is now a first-class citizen, the developer can apply standard mesh policies to it. If AeroPay is momentarily slow or returns a 5xx error, the mesh can automatically retry. Retries are configured with the **`MeshRetry`** policy, `MeshHTTPRoute` filters cover header rewrites, redirects, and mirroring, but **not retries**.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1

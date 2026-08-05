@@ -56,6 +56,6 @@ Advanced patterns for controlling the perimeter and integrating external depende
 ## Explore by role
 Prefer a role-based view? Each persona guide maps the scenarios to what that team owns:
 
-- **[Devin the Developer](/mesh/scenarios/persona/developer/)**, routing, resilience, and observability for application teams.
-- **[Ollie the Operator](/mesh/scenarios/persona/operator/)**, control plane, zone proxies, gateways, and observability-as-a-service.
-- **[Sarah the Security Architect](/mesh/scenarios/persona/security/)**, zero-trust, workload identity, and egress control.
+- **[Developer](/mesh/scenarios/persona/developer/)**, routing, resilience, and observability for application teams.
+- **[Operator](/mesh/scenarios/persona/operator/)**, control plane, zone proxies, gateways, and observability-as-a-service.
+- **[Security architect](/mesh/scenarios/persona/security/)**, zero-trust, workload identity, and egress control.
