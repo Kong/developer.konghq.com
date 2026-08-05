@@ -337,6 +337,9 @@ With managed cache usage reporting, you can:
 * Track memory utilization to plan cache sizing
 * See how many items are stored in a cache over time
 
+{:.info}
+> Managed cache metrics are retained for seven days.
+
 The following table shows which managed cache usage metrics you can view:
 <!--vale off-->
 {% table %}
