@@ -28,6 +28,9 @@ prereqs:
       content: |
         You need the [{{site.metering_and_billing}} Admin role](/konnect-platform/teams-and-roles/#metering-billing) in {{site.konnect_short_name}} to configure {{site.metering_and_billing}}.
       icon_url: /assets/icons/kogo-white.svg
+    - title: "Plan and subscription"
+      include_content: prereqs/metering-and-billing-plan-subscription
+      icon_url: /assets/icons/money.svg
 
 cleanup:
   inline:
@@ -74,26 +77,71 @@ For background on how tax codes work and how the fallback chain is evaluated, se
 When your organization is created, {{site.metering_and_billing}} sets up two defaults: one for invoicing and one for credit grants.
 Review these before creating custom codes, as the pre-provisioned codes may already cover your needs.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing** > **Settings**.
-1. Click the **Tax Codes** tab.
-1. Review the list of system-managed and user-created tax codes and the current defaults.
-1. To change which code is the default, click the action menu on any row and select **Set as Invoicing Default** or **Set as Credit Grant Default**.
+List all tax codes in your organization:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/tax-codes
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+If a system-managed code covers your needs and you want to set it as the default, update the organization defaults.
+Replace `TAX_CODE_ID` with the `id` from the list response:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/defaults/tax-codes
+method: PUT
+status_code: 200
+body:
+  invoicing_tax_code:
+    id: TAX_CODE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Use `credit_grant_tax_code` instead of `invoicing_tax_code` to set the credit grant default.
 
 If the system-managed codes cover your needs, you can skip the next step and go directly to [Apply a tax code to a rate card](#apply-a-tax-code-to-a-rate-card).
 
 ## Create a tax code
 
-If none of the system-managed codes match your product category, you can create a custom tax code:
+If none of the system-managed codes match your product category, you can create a custom tax code.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing** > **Settings**.
-1. Click the **Tax Codes** tab.
-1. Click **Create tax code**.
-1. Enter a name, key, and optional description.
-1. (Optional) Add one or more app mappings.
-   For Stripe, the value must follow the `txcd_XXXXXXXX` format.
-   You can browse available values in the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes).
-1. (Optional) Set the code as the **Invoicing Default** or **Credit Grant Default**.
-1. Click **Save**.
+For Stripe, the `app_mappings` value must follow the `txcd_XXXXXXXX` format.
+You can browse available values in the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes).
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/tax-codes
+method: POST
+status_code: 201
+body:
+  name: Software as a Service
+  key: saas
+  description: Tax code for SaaS products
+  app_mappings:
+    - app_type: stripe
+      tax_code: txcd_10000000
+capture:
+  - variable: TAX_CODE_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+To set the new code as the invoicing default:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/defaults/tax-codes
+method: PUT
+status_code: 200
+body:
+  invoicing_tax_code:
+    id: $TAX_CODE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
 
 {:.info}
 > **Note:** Only one tax code can be set as the default per category at a time.
@@ -108,17 +156,40 @@ You can apply a tax code at two levels within your product catalog.
 
 This sets the tax code for a specific product or fee, overriding the organization default.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing** > **Product Catalog**.
-1. Click the **Plans** or **Add-ons** tab and select a plan or add-on.
-1. Open or create a rate card.
-1. In the **Pricing Model** configuration, expand **Advanced Settings**.
-1. In the **Tax Behavior** dropdown, select the behavior you want to apply.
-1. In the **Tax Code** dropdown, select your custom code.
-1. Save the rate card.
+Update the plan using `$PLAN_ID` from the prerequisites.
+The `PUT` endpoint replaces the entire plan, so include all existing rate cards in the request:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/$PLAN_ID
+method: PUT
+status_code: 200
+body:
+  name: Example Plan
+  phases:
+    - name: default
+      key: default
+      rate_cards:
+        - name: API requests
+          key: api_requests
+          feature:
+            id: $FEATURE_ID
+          price:
+            type: unit
+            amount: "1"
+          entitlement:
+            type: boolean
+          tax_config:
+            behavior: exclusive
+            code:
+              id: $TAX_CODE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ### Apply a tax code on a subscription rate card
 
 This overrides the tax code for a specific customer's subscription, without changing the underlying plan.
+Subscription rate card overrides are only available through the {{site.konnect_short_name}} UI.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing** > **Billing**.
 1. Click a customer.

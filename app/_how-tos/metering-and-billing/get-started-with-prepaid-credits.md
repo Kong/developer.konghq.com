@@ -26,9 +26,8 @@ prereqs:
       content: |
         You need the [{{site.metering_and_billing}} Admin role](/konnect-platform/teams-and-roles/#metering-billing) in {{site.konnect_short_name}} to manage credits.
       icon_url: /assets/icons/kogo-white.svg
-    - title: "Configured meter"
-      content: |
-        You need a [configured meter](/metering-and-billing/metering/#create-a-meter), such as API Gateway requests or {{site.ai_gateway}} tokens.
+    - title: "Meter and feature"
+      include_content: prereqs/metering-and-billing-meter-feature-credits
       icon_url: /assets/icons/money.svg
 
 tldr:
@@ -63,62 +62,129 @@ automated_tests: false
 
 ## Create a credits-only plan
 
-To charge customers via prepaid credits, define a plan with the `credit_only` settlement mode.
+To charge customers via prepaid credits, define a plan and set `settlement_mode: credit_only` on the subscription.
 All usage settles against credits.
 If a customer runs out of credits, uncovered usage creates a negative credit balance on the ledger rather than generating an overage invoice.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. Click **Product Catalog**.
-1. Click the **Plans** tab and create a new plan.
-1. In the **Billing** section, configure the **Currency** (for example, `USD`) and set the **Settlement mode** to **Credits only**.
-1. Click **Add Rate Card** and select the feature you want to price.
-1. Configure a **Usage based** pricing model and set your price per unit.
-1. Save the rate card and click **Publish Plan**.
+First, create the plan with a rate card:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+method: POST
+status_code: 201
+body:
+  name: Credits Plan
+  key: credits_plan
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: default
+      key: default
+      rate_cards:
+        - name: API requests
+          key: api_requests
+          feature:
+            id: $FEATURE_ID
+          price:
+            type: unit
+            amount: "1"
+          entitlement:
+            type: boolean
+capture:
+  - variable: PLAN_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then publish the plan:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/$PLAN_ID/publish
+method: POST
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Create a customer
 
 Customers represent the individuals or organizations that subscribe to plans and consume your metered features.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click **Create Customer**.
-1. Enter the customer's **Name**.
-1. Map the customer to a **Consumer**, **Application**, or **Subject** to ensure their usage is attributed correctly.
-1. Click **Save**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers
+method: POST
+status_code: 201
+body:
+  name: Acme Inc
+  key: acme-inc
+  usage_attribution:
+    subject_keys:
+      - acme-inc
+capture:
+  - variable: CUSTOMER_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Start a subscription
 
 Subscriptions link customers to a pricing model and track their usage against rate cards.
+Setting `settlement_mode: credit_only` ensures all usage is settled against the customer's credit balance.
 
-1. On the customer's details page, click the **Subscriptions** tab.
-1. Add a new subscription and select the credits-only plan you created.
-1. Choose the start date and finalize the subscription.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions
+method: POST
+status_code: 201
+body:
+  customer:
+    id: $CUSTOMER_ID
+  plan:
+    key: credits_plan
+  settlement_mode: credit_only
+capture:
+  - variable: SUBSCRIPTION_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Grant prepaid credits
 
 Prepaid credits burn down as the customer incurs usage.
 Issue a grant directly to the customer's balance.
 
-1. On the customer's page, click the **Credits** tab.
-1. Click **Grant Credits** and select **New credit grant**.
-1. In the **Grant** section, enter the **Credit amount**.
-1. In the **Charge** section, select **Promotional / Free** as the charge type.
-1. Set the **Credit availability** to **Available immediately on grant**.
-1. Optionally, expand **Policies** to set a **Credit draw-down order** to control consumption priority if this customer has multiple grants.
-1. Click **Next** to review the **Grant Summary**.
-1. Click **Grant credits** to finalize.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/$CUSTOMER_ID/credits/grants
+method: POST
+status_code: 201
+body:
+  name: Initial credit grant
+  currency: USD
+  amount: "100"
+  funding_method: none
+{% endkonnect_api_request %}
+<!--vale on-->
 
+Setting `funding_method: none` issues the grant as promotional/free credits with no charge.
 A `funded` movement is recorded in the customer's transaction history and their settled balance increases immediately.
 
 ## Monitor the credit ledger
 
 After the grant is issued, the customer's available balance reflects the new credits.
-Because this customer is on a `credit_only` plan, metered usage automatically deducts from this balance.
+Because this customer is on a `credit_only` subscription, metered usage automatically deducts from this balance.
 
-1. On the customer's page, click the **Credits** tab.
-1. Click **Transaction History**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/$CUSTOMER_ID/credits/transactions
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
 
-You'll see:
+The response includes:
 
 * A `funded` movement with a positive amount for the grant you issued.
 * `consumed` movements with negative amounts as usage charges are applied.
