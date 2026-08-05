@@ -11,6 +11,9 @@ products:
 works_on:
   - on-prem
   - konnect
+next_steps:
+  - text: "Split traffic with MeshService resources"
+    url: "/mesh/scenarios/split-traffic-with-meshservice-resources/"
 ---
 {{site.mesh_product_name}} can be deployed in two main architectures:
 

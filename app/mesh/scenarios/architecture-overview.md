@@ -11,6 +11,9 @@ products:
 works_on:
   - on-prem
   - konnect
+next_steps:
+  - text: "Get started with your first policy"
+    url: "/mesh/scenarios/get-started-with-your-first-policy/"
 ---
 {{site.mesh_product_name}} separates the **Control Plane** (the brain) from the **Data Plane** (the muscle) and introduces a multi-zone model for distributed environments. For an organization like **Kong Air**, this architecture enables a unified management layer that spans from legacy booking systems to modern cloud-native APIs.
 
