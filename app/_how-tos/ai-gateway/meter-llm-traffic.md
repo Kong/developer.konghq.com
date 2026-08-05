@@ -133,18 +133,22 @@ url: /v3/openmeter/meters
 status_code: 201
 method: POST
 body:
-    key: tokens_total
-    name: AI Token Usage
-    event_type: prompt
+    name: LLM Tokens
+    key: llm_tokens_total
+    description: Number of input and output tokens across models
+    event_type: kong.llm_request
     aggregation: sum
     value_property: $.tokens
-    dimensions: {"model": "$.model", "type": "$.type"}
+    dimensions:
+        model: $.model
+        provider: $.provider
+        type: $.type
 {% endkonnect_api_request %}
 <!--vale on-->
 
 ## Configure the Metering & Billing plugin
 
-Next, configure the Metering & Billing plugin to emit LLM token usage events from {{site.ai_gateway}} to {{site.metering_and_billing}}:
+Next, configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to emit LLM token usage events from {{site.ai_gateway}} to {{site.metering_and_billing}}:
 
 <!--vale off-->
 {% entity_examples %}
@@ -177,7 +181,7 @@ In this guide, you'll create a feature for the `example-service` you created in 
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `ai-token`.
-1. From the **Meter** dropdown menu, select "{{site.ai_gateway}} Tokens".
+1. From the **Meter** dropdown menu, select "LLM Tokens".
 1. Click **Add group by filter**.
    The group by filter ensures you only bill for LLM tokens from a specific provider.
 1. From the **Group by** dropdown menu, select "Provider".
@@ -226,6 +230,7 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
+1. In the **Key** field, enter `kong-air`.
 1. In the **Include usage from** dropdown, select "kong-air".
 1. Click **Save**.
 1. Click the **Subscriptions** tab.
