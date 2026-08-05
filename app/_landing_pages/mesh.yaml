@@ -341,6 +341,17 @@ rows:
               description: |
                 See the SBOM for {{site.mesh_product_name}} releases.
               cta:
-                text: View the SBOM 
+                text: View the SBOM
                 url: /mesh/sbom/
+
+  - header:
+      type: h2
+      text: Frequently asked questions
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: I'm getting connection errors when connecting to {{site.konnect_short_name}}. What should I check?
+              a: |
+                {% include_cached faqs/konnect-connection-errors.md %}
                 align: end

@@ -359,6 +359,17 @@ rows:
                 align: end
   - header:
       type: h2
+      text: Frequently asked questions
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: I'm getting connection errors between the control plane and data plane. What should I check?
+              a: |
+                {% include_cached faqs/konnect-connection-errors.md %}
+
+  - header:
+      type: h2
       text: How-to Guides
     columns:
       - blocks:

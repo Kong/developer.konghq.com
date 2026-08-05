@@ -296,3 +296,6 @@ rows:
               a: |
                 There is a soft limit of four {{site.dev_portal}}s per {{site.konnect_short_name}} org.
                 Reach out to your Kong customer success team to increase this limit.
+            - q: I'm getting connection errors when accessing my Dev Portal. What should I check?
+              a: |
+                {% include_cached faqs/konnect-connection-errors.md %}
