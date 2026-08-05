@@ -270,6 +270,7 @@ firewalled
 firstTimestamp
 flamegraph
 Flatpak
+Fluentd
 foogineer
 FQDNs
 full_name
@@ -704,6 +705,7 @@ route_type
 route_types
 ruleset
 rulesets
+runbooks
 runloop
 runtime
 runtime_groups
@@ -775,6 +777,7 @@ subnets
 subprocess
 subprocesses
 subresource
+subsetting
 substring
 subtable
 subtables
@@ -791,6 +794,7 @@ syscall
 syslog
 systemd
 Tal
+targetable
 targetRef
 tbl
 ingresses

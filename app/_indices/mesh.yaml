@@ -140,6 +140,33 @@ sections:
       - path: /mesh/vulnerability-patching-process/
       - path: /mesh/support-policy/
 
+  - title: Scenarios and learning paths
+    items:
+      - path: /mesh/scenarios/
+      - path: /mesh/scenarios/introduction/
+      - path: /mesh/scenarios/architecture-overview/
+      - path: /mesh/scenarios/get-started-with-your-first-policy/
+      - path: /mesh/scenarios/policy-targeting-and-precedence/
+      - path: /mesh/scenarios/resource-scoping/
+      - path: /mesh/scenarios/split-traffic-with-meshservice-resources/
+      - path: /mesh/scenarios/target-workloads-and-services/
+      - path: /mesh/scenarios/observe-mesh-traffic-in-practice/
+      - path: /mesh/scenarios/manage-workload-identity-and-mtls/
+      - path: /mesh/scenarios/integrate-an-external-ca/
+      - path: /mesh/scenarios/multi-zone-architecture/
+      - path: /mesh/scenarios/configure-mesh-scoped-zone-proxies/
+      - path: /mesh/scenarios/route-across-zones-with-canary-rollouts-and-color-rings/
+      - path: /mesh/scenarios/secure-the-perimeter-with-meshpassthrough/
+      - path: /mesh/scenarios/manage-external-services-with-meshexternalservice/
+      - path: /mesh/scenarios/validate-resilience-with-fault-injection/
+
+  - title: Persona guides
+    items:
+      - path: /mesh/scenarios/persona/
+      - path: /mesh/scenarios/persona/developer/
+      - path: /mesh/scenarios/persona/operator/
+      - path: /mesh/scenarios/persona/security/
+
   - title: Hidden paths
     hidden: true
     items:
