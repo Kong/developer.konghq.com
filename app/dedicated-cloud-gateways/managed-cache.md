@@ -337,6 +337,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+{:.info}
+> Managed cache metrics are retained for seven days.
+
 These metrics are most useful read together, rather than in isolation:
 * If rate limits are being enforced inconsistently, check whether `cache_eviction_rate` is nonzero.
   Rate limiting counters are cache keys, and if they're evicted due to memory pressure before their window ends, the counters reset.
