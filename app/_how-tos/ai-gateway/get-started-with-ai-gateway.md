@@ -122,8 +122,10 @@ ai_gateway_models:
       route:
         paths:
           - /v1
-      model:
-        alias: my-gpt-4o
+        model:
+          body_param: model
+          values:
+            - my-gpt-4o
     targets:
       - name: gpt-4o
         provider: generic-openai
