@@ -120,6 +120,8 @@ rows:
 * Asia Pacific:
     * Australia East (`australiaeast`) 
     * Japan East (`japaneast`)
+* Middle East
+    * UAE North (`uaenorth`)
 
 #### {{ site.google}}
 
