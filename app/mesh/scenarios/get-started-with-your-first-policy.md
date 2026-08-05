@@ -32,6 +32,13 @@ prereqs:
 next_steps:
   - text: "Policy targeting and precedence"
     url: "/mesh/scenarios/policy-targeting-and-precedence/"
+related_resources:
+  - text: Issue identity with MeshIdentity
+    url: /mesh/issue-identity-with-meshidentity/
+  - text: Resource scoping
+    url: /mesh/scenarios/resource-scoping/
+  - text: Manage workload identity and mTLS
+    url: /mesh/scenarios/manage-workload-identity-and-mtls/
 ---
 ## Issue workload identity with `MeshIdentity`
 

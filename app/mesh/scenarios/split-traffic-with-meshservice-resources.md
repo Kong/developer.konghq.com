@@ -30,6 +30,13 @@ prereqs:
 next_steps:
   - text: "Target workloads and services"
     url: "/mesh/scenarios/target-workloads-and-services/"
+related_resources:
+  - text: MeshHTTPRoute
+    url: /mesh/policies/meshhttproute/
+  - text: MeshService
+    url: /mesh/meshservice/
+  - text: Policy targeting and precedence
+    url: /mesh/scenarios/policy-targeting-and-precedence/
 ---
 
 The Kong Air engineering team is launching a new **Passenger Portal v2**. To ensure a smooth transition, they want to route 90% of traffic to the stable `v1` and 10% to the new `v2` for a group of internal pilot users. 

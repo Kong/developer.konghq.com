@@ -30,6 +30,13 @@ prereqs:
 next_steps:
   - text: "Explore by role"
     url: "/mesh/scenarios/persona/"
+related_resources:
+  - text: MeshFaultInjection
+    url: /mesh/policies/meshfaultinjection/
+  - text: MeshRetry
+    url: /mesh/policies/meshretry/
+  - text: MeshCircuitBreaker
+    url: /mesh/policies/meshcircuitbreaker/
 ---
 ## Why inject faults?
 

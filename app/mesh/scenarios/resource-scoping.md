@@ -14,6 +14,13 @@ works_on:
 next_steps:
   - text: "Split traffic with MeshService resources"
     url: "/mesh/scenarios/split-traffic-with-meshservice-resources/"
+related_resources:
+  - text: Single-zone deployment
+    url: /mesh/single-zone/
+  - text: Multi-zone deployment
+    url: /mesh/mesh-multizone-service-deployment/
+  - text: Federate a zone Control Plane
+    url: /mesh/federate-zone/
 ---
 {{site.mesh_product_name}} can be deployed in two main architectures:
 
