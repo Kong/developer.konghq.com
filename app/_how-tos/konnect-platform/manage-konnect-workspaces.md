@@ -55,6 +55,7 @@ The following are {{site.konnect_short_name}} Workspace limitations:
 - A Workspace-enabled control plane cannot be part of a Control Plane Group.
 - Workspaces are not supported on serverless control planes.
 - [Route collision](#route-collisions) detection uses exact match, not the "smart" strategy available on-prem.
+- You can have a maximum of 3,000 Workspaces in {{site.konnect_short_name}}
 
 ## Create a Workspace
 
