@@ -132,7 +132,10 @@ columns:
     key: credential
 rows:
   - auth: "Anonymous (`anonymous`)"
-    description: "Doesn't require clients to provide any authentication when connecting to the proxy."
+    description: |
+      Doesn't require clients to provide any authentication when connecting to the proxy.
+      <br><br>
+      See [Get started with Event Gateway](/event-gateway/get-started/).
     credential: None
   - auth: "SASL/PLAIN (`sasl_plain`)"
     description: |
@@ -144,6 +147,8 @@ rows:
   - auth: "SASL/OAUTHBEARER (`oauth_bearer`)"
     description: |
       Requires clients to provide an OAuth token and a JWKS endpoint to verify token signatures, optionally with claim mapping and validation rules.
+      <br><br>
+      See [Set up Event Gateway with Kong Identity OAuth](/event-gateway/kong-identity-oauth/).
     credential: |
       `passthrough`, `terminate`, `validate_forward`
   - auth: "SASL/SCRAM-SHA-256 (`sasl_scram`)"
@@ -164,6 +169,8 @@ rows:
       Requires clients to present a trusted TLS certificate during the TLS handshake.
       The client certificate is verified against a [TLS trust bundle](/event-gateway/entities/tls-trust-bundle/).
       The certificate's principal (for example, the Common Name) can be used to enforce access control with [ACL policies](/event-gateway/policies/acl/).
+      <br><br>
+      See [Configure mTLS client authentication](/event-gateway/configure-mtls-client-authentication/) for a full walkthrough, including how to configure principal extraction.
       <br><br>
       mTLS is also supported for the gateway-to-backend connection; configure it in the [backend cluster's TLS settings](/event-gateway/entities/backend-cluster/).
     credential: None
@@ -201,6 +208,7 @@ rows:
       Per-client authorization is enforced at the gateway layer using [ACL policies](#acl-mode) on the virtual cluster.
     when: |
       The backend cluster only supports username/password mechanisms (SASL/PLAIN or SASL/SCRAM) and clients authenticate with a different mechanism, such as OAuth.
+      We recommend using this pattern in production, as it's the most secure option.
   - mode: "`validate_forward`"
     how: |
       The proxy validates the client’s OAuth token with the OAuth provider, then forwards the token to the backend as-is.
