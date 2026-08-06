@@ -349,6 +349,7 @@
 
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
 /dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/managed-cache/ 301
+/dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/  /dedicated-cloud-gateways/azure-vnet-peering-with-private-hosted-zones/ 301
 
 # Kong Identity
 
