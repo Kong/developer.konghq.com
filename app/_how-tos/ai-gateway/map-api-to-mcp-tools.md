@@ -7,7 +7,7 @@ related_resources:
   - text: AI MCP Server entity
     url: /ai-gateway/entities/ai-mcp-server/
 
-description: Learn how to create an MCP Server entity in {{site.ai_gateway}} to convert any RESTful API into MCP tools, including setting up a mock Node.js server for testing.
+description: Learn how to create an AI MCP Server entity in {{site.ai_gateway}} to convert any RESTful API into MCP tools, including setting up a mock Node.js server for testing.
 products:
   - ai-gateway
 
@@ -99,11 +99,10 @@ This request confirms that the mock server is up and responding. Later, the MCP 
 With the mock API server running, create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity configured as a `conversion-listener` to expose its endpoints as MCP tools.
 The following example maps the mock API operations to MCP tool definitions that the client can invoke.
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+{% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: marketplace-mcp
     display_name: "Marketplace API"
     type: conversion-listener
@@ -148,19 +147,18 @@ ai_gateway_mcp_servers:
             required: true
             schema:
               type: string
-EOF
-```
+{% endentity_examples %}
 
 1. In the ChatWise app, navigate to settings.
-1. Click **MCP** in the sidebar.
-1. Click the **+** button.
-1. Select "HTTP Server (http)".
-1. In the **Name** field, enter `marketplace-mcp`.
-1. In the **URL** field, enter `http://localhost:8000/marketplace`.
-1. Click **Verify (View Tools)** to confirm the connection. You should see the following tools listed:
+2. Click **MCP** in the sidebar.
+3. Click the **+** button.
+4. Select "HTTP Server (http)".
+5. In the **Name** field, enter `marketplace-mcp`.
+6. In the **URL** field, enter `http://localhost:8000/marketplace`.
+7. Click **Verify (View Tools)** to confirm the connection. You should see the following tools listed:
    - `get-users`
    - `get-orders-for-user`
-1. Close the settings window.
+8. Close the settings window.
 
 ## Validate the configuration
 
