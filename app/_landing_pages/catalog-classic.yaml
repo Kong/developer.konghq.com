@@ -1,0 +1,144 @@
+metadata:
+  title: "{{site.konnect_short_name}} {{site.konnect_catalog}} Classic"
+  content_type: landing_page
+  products:
+    - catalog
+  description: Learn how to track and manage services across your organization with the {{site.konnect_short_name}} {{site.konnect_catalog}} Classic.
+  tags:
+    - governance
+  search_aliases:
+    - service catalog
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.konnect_short_name}} {{site.konnect_catalog}} Classic"
+      sub_text: "A centralized catalog of all services running in your {{site.konnect_short_name}} organization"
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {% include_cached catalog/catalog-classic-banner.md %}
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "What is the {{site.konnect_short_name}} {{site.konnect_catalog}} Classic?"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_catalog}} Classic provides a centralized catalog of all services and APIs running in your organization. 
+                    By integrating with internal applications, like API Gateway and Service Mesh, and external tools, like GitHub and PagerDuty, 
+                    it offers a 360-degree overview of your services, including:
+                - type: unordered_list
+                  items:
+                    - Service ownership details
+                    - Upstream and downstream dependencies
+                    - Associated code repositories and CI/CD pipelines
+                    - API gateway and service mesh mappings
+                    - Comprehensive API and MCP server catalog
+
+  - header:
+        type: h2
+        text: "Create your catalog"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: APIs
+            description: |
+              Create, discover, and govern APIs and specs.
+              Catalog serves as a central repository for your APIs, services, and the documentation files associated with them.
+            icon: /assets/icons/api.svg
+            ctas:
+              - text: APIs reference
+                url: "/catalog/apis/"
+              - text: API packages
+                url: /catalog/api-packaging/
+              - text: Create an API catalog with the {{site.konnect_short_name}} API
+                url: "/how-to/automate-api-catalog/"
+              - text: Create an API catalog with Terraform
+                url: "/how-to/automate-api-catalog-with-terraform/"
+              - text: Discover and govern APIs
+                url: /how-to/discover-and-govern-apis-with-service-catalog/
+      - blocks:
+          - type: card
+            config:
+              title: "Services"
+              description: |
+                Discover the systems that power your APIs—like microservices or backends—and centralize them for a complete view of your API infrastructure.
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: Learn about {{site.konnect_catalog}} services
+                url: /catalog/services/
+      - blocks:
+          - type: card
+            config:
+              title: MCP Registry (tech preview)
+              description: |
+                Discover and connect MCP servers to {{site.konnect_short_name}} {{site.konnect_catalog}}.
+              icon: /assets/icons/mcp.svg
+              cta:
+                text: Enable in {{site.konnect_short_name}} Labs.
+                url: /catalog/mcp-registry/
+  - header:
+      type: h2
+      text: "Explore more features"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Integrations
+              description: |
+                Connect external tools like GitHub, PagerDuty, and CI/CD pipelines to map services, dependencies, and metadata.
+              icon: /assets/icons/plug.svg
+              cta:
+                text: See all integrations
+                url: /catalog/integrations/
+      - blocks:
+          - type: card
+            config:
+              title: Scorecards
+              description: |
+                Monitor compliance, security, and best practices across services using automated scorecards.
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Learn about scorecards
+                url: /catalog/scorecards/
+  - header:
+      type: h2
+      text: "Migrate to the new Catalog"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    An Org Admin can migrate to the new {{site.konnect_catalog}} experience by enabling the New Catalog
+                    in **Manage organization** > **Settings** > **Catalog**.
+
+                    Your APIs and API packages migrate to the new {{site.konnect_catalog}}. Services, Scorecards, and Integrations data isn't deleted,
+                    but becomes inaccessible in the UI after migrating. You can still manage these and access their data by using the API. 
+
+  - header:
+      type: h2
+      text: "Frequently asked questions"
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: "How do I view service health and status?"
+                a: "Go to **Services** in {{site.konnect_catalog}} Classic and select a service to view detailed health and status information."
+              - q: "How can I identify available resources for mapping?"
+                a: "Visit the **Resources** page in {{site.konnect_catalog}} Classic to see all available ingested resources."
+              - q: "What if I notice discrepancies in {{site.konnect_catalog}} data?"
+                a: "Check integration settings, verify connected tools, and ensure data synchronization is working correctly."
+              - q: "Can I control access to specific {{site.konnect_catalog}} data?"
+                a: "Yes, access can be managed through [teams and roles](/konnect-platform/teams-and-roles/)."

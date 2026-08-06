@@ -47,7 +47,12 @@ prereqs:
     - title: Dev Portal APIs
       content: |
         To complete this guide, you'll need an API in Catalog:
+
         1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+        1. Click the **APIs** tab.
+           
+           {:.info}
+           > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **APIs** in the sidebar instead.
         1. Click [**New API**](https://cloud.konghq.com/apis/create).
         1. In the **API name** field, enter `MyAPI`.
         1. Click **Create**.
@@ -274,7 +279,12 @@ You can compose [API packages](/catalog/api-packaging/) from existing APIs in De
 To allow developers to consume your API, you must first link an API Gateway and control plane to your API.
 
 Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
+
 1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/apis/).
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **APIs** in the sidebar instead.
+   
 1. Click **MyAPI**.
 1. Click the **Gateway** tab.
 1. Click **Link gateway**.
@@ -295,6 +305,9 @@ The Gateway configuration isn't directly modified, so any unmatched operations w
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **API packages** in the sidebar instead.
 1. Click **Create API package**.
 1. In the **API package name** field, enter `Company package`.
 1. Enable the Package rate limit.
@@ -312,8 +325,12 @@ The Gateway configuration isn't directly modified, so any unmatched operations w
 
 ## Publish API packages to Dev Portal
 Now you can make the API packages available to developers by publishing them to a Dev Portal.
+
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **API packages** in the sidebar instead.
 1. Click **Company package**.
 1. Click **Publish API**.
 1. From the **Portal** dropdown menu, select your Dev Portal.

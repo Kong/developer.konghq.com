@@ -1,8 +1,8 @@
 ---
-title: Discover and govern APIs with Catalog
+title: Discover and govern APIs with {{site.konnect_catalog}} Classic
 permalink: /how-to/discover-and-govern-apis-with-service-catalog/
 content_type: how_to
-description: Learn how to discover APIs in AWS API Gateway, SwaggerHub, and GitHub with {{site.konnect_catalog}} and govern them with scorecards.
+description: Learn how to discover APIs in AWS API Gateway, SwaggerHub, and GitHub with {{site.konnect_catalog}} Classic and govern them with scorecards.
 products:
   - catalog
 works_on:
@@ -15,8 +15,8 @@ entities:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: AWS API Gateway reference
@@ -27,12 +27,12 @@ automated_tests: false
 tldr:
   q: How do I discover and govern third-party APIs in {{site.konnect_short_name}}?
   a: |
-    {{site.konnect_catalog}} allows you to find and centrally view all APIs from these integrations and map them to a {{site.konnect_catalog}} service. First, authorize the integrations in {{site.konnect_catalog}} for AWS API Gateway, GitHub, and SwaggerHub. Then, create a {{site.konnect_catalog}} service and map resources from the integrations to the service. Finally, add a service documentation scorecard to your service to govern API documentation standards.
+    {{site.konnect_catalog}} Classic allows you to find and centrally view all APIs from these integrations and map them to a {{site.konnect_catalog}} Classic service. First, authorize the integrations in {{site.konnect_catalog}} Classic for AWS API Gateway, GitHub, and SwaggerHub. Then, create a {{site.konnect_catalog}} Classic service and map resources from the integrations to the service. Finally, add a service documentation scorecard to your service to govern API documentation standards.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
       content: |
-        To configure {{site.konnect_catalog}} integrations, services, and scorecards, you need the following [roles in {{site.konnect_short_name}}](/konnect-platform/teams-and-roles/#service-catalog):
+        To configure {{site.konnect_catalog}} Classic integrations, services, and scorecards, you need the following [roles in {{site.konnect_short_name}}](/konnect-platform/teams-and-roles/#service-catalog):
         * Integration Admin
         * Scorecard Admin
         * Service Admin
@@ -47,7 +47,7 @@ prereqs:
       icon_url: /assets/icons/third-party/swaggerhub.svg
     - title: GitHub
       content: |
-        To integrate GitHub with {{site.konnect_catalog}}, you need the following:
+        To integrate GitHub with {{site.konnect_catalog}} Classic, you need the following:
         * Sufficient permissions in GitHub to authorize third-party applications and install the {{site.konnect_short_name}} GitHub App
         * A GitHub organization
         * A repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. You can name your GitHub repository whatever you'd like. In this tutorial, we'll refer to your GitHub repository as `github-repo`.
@@ -58,11 +58,13 @@ tools:
   - deck
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 ## Configure the AWS API Gateway, GitHub, and SwaggerHub integrations
 
-In this tutorial, we'll be discovering APIs and API specs from AWS API Gateway, GitHub, and SwaggerHub in {{site.konnect_catalog}}. {{site.konnect_catalog}} allows you to find and centrally view all APIs from these integrations and map them to a {{site.konnect_catalog}} service. 
+In this tutorial, we'll be discovering APIs and API specs from AWS API Gateway, GitHub, and SwaggerHub in {{site.konnect_catalog}} Classic. {{site.konnect_catalog}} Classic allows you to find and centrally view all APIs from these integrations and map them to a {{site.konnect_catalog}} Classic service. 
 
-Before you can discover APIs in {{site.konnect_catalog}}, you must configure the third-party integrations.
+Before you can discover APIs in {{site.konnect_catalog}} Classic, you must configure the third-party integrations.
 
 ### Configure the AWS API Gateway integration
 
@@ -91,9 +93,9 @@ The {{site.konnect_short_name}} application can be managed from GitHub as a [Git
 1. In the **Instance name** field, enter `swaggerhub-test`.
 1. Click **Save**. 
 
-## Create a {{site.konnect_catalog}} service and map the API resources
+## Create a {{site.konnect_catalog}} Classic service and map the API resources
 
-Now that your integrations are configured, you can create a {{site.konnect_catalog}} service to map the ingested APIs.
+Now that your integrations are configured, you can create a {{site.konnect_catalog}} Classic service to map the ingested APIs.
 
 {:.info}
 > In this tutorial, we'll refer to your ingested resources like the following:
@@ -113,11 +115,11 @@ Now that your integrations are configured, you can create a {{site.konnect_catal
 1. Select `github-repo`. 
 1. Click **Map 3 Resources**.
 
-Your integration APIs are now discoverable from one {{site.konnect_catalog}} service.
+Your integration APIs are now discoverable from one {{site.konnect_catalog}} Classic service.
 
 ## Govern the APIs with scorecards
 
-Now that you've discovered and mapped the APIs to a {{site.konnect_catalog}} service, you can govern the service documentation of these ingested APIs with a [scorecard](/catalog/scorecards/). The built-in service documentation scorecard will alert you when your APIs don't adhere to [API documentation best practices](/catalog/scorecards/#service-documentation-linting).
+Now that you've discovered and mapped the APIs to a {{site.konnect_catalog}} Classic service, you can govern the service documentation of these ingested APIs with a [scorecard](/catalog/scorecards/). The built-in service documentation scorecard will alert you when your APIs don't adhere to [API documentation best practices](/catalog/scorecards/#service-documentation-linting).
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/service-catalog/).
 1. In the Catalog sidebar, click **Scorecards**.

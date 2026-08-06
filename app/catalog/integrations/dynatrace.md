@@ -19,13 +19,13 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The Dynatrace integration lets you connect Dynatrace classic service-level objects directly to your {{site.konnect_catalog}} services.
+description: The Dynatrace integration lets you connect Dynatrace classic service-level objects directly to your {{site.konnect_catalog}} Classic services.
 discovery_support: true
 bindable_entities: "Classic service-level object"
 
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: "Monitor Dynatrace SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI"
     url: /how-to/monitor-dynatrace-slos-with-konnect-ui/
   - text: "Monitor Dynatrace SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
@@ -34,12 +34,14 @@ related_resources:
     url: /how-to/set-up-dynatrace-with-otel/
 ---
 
-The Dynatrace integration lets you connect Dynatrace classic service-level objects directly to your {{site.konnect_catalog}} services.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The Dynatrace integration lets you connect Dynatrace classic service-level objects directly to your {{site.konnect_catalog}} Classic services.
 {% include /catalog/multi-resource.md %}
 
 For a complete tutorial, see the following:
-* [Monitor Dynatrace SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI](/how-to/monitor-dynatrace-slos-with-konnect-ui/)
-* [Monitor Dynatrace SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} API](/how-to/monitor-dynatrace-slos-with-konnect-api/)
+* [Monitor Dynatrace SLOs {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI](/how-to/monitor-dynatrace-slos-with-konnect-ui/)
+* [Monitor Dynatrace SLOs {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} API](/how-to/monitor-dynatrace-slos-with-konnect-api/)
 
 ## Prerequisites
 
@@ -56,7 +58,7 @@ You need to configure the following in Dynatrace SaaS:
 {% navtabs "dynatrace-integration" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the {{site.konnect_catalog}} sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 1. Click **Dynatrace**.
 1. Click **Add Dynatrace instance**.
 1. In the **Dynatrace API Base URL** field, enter your Dynatrace URL without the trailing `/`. For example: `https://whr42363.apps.dynatrace.com`

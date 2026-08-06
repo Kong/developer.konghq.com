@@ -1,8 +1,8 @@
 ---
-title: Import and map Traceable resources in Catalog
+title: Import and map Traceable resources in {{site.konnect_catalog}} Classic
 permalink: /how-to/install-and-map-traceable-resources/
 content_type: how_to
-description: Learn how to connect Traceable services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
+description: Learn how to connect Traceable services to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}}.
 products:
   - catalog
 works_on:
@@ -15,8 +15,8 @@ tags:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Traceable plugin
@@ -25,8 +25,8 @@ related_resources:
     url: /catalog/integrations/traceable/
 automated_tests: false
 tldr:
-  q: How do I view Traceable services in {{site.konnect_catalog}}?
-  a: Install the Traceable integration in {{site.konnect_short_name}} and authorize it with your Traceable API key. Create a {{site.konnect_catalog}} service and associate it with your Traceable services to display metadata and enable event tracking. 
+  q: How do I view Traceable services in {{site.konnect_catalog}} Classic?
+  a: Install the Traceable integration in {{site.konnect_short_name}} and authorize it with your Traceable API key. Create a {{site.konnect_catalog}} Classic service and associate it with your Traceable services to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -34,7 +34,7 @@ prereqs:
       icon_url: /assets/icons/kogo-white.svg
     - title: Traceable access
       content: |
-        You must have an active [Traceable account](https://www.traceable.ai/) and valid API access to connect Traceable services to your {{site.konnect_catalog}} service. You also need a [Traceable Service](https://docs.traceable.ai/docs/domains-services-backends) you can pull into {{site.konnect_short_name}}.
+        You must have an active [Traceable account](https://www.traceable.ai/) and valid API access to connect Traceable services to your {{site.konnect_catalog}} Classic service. You also need a [Traceable Service](https://docs.traceable.ai/docs/domains-services-backends) you can pull into {{site.konnect_short_name}}.
         
         Export your Traceable API key:
         ```sh
@@ -42,6 +42,8 @@ prereqs:
         ```
       icon_url: /assets/icons/traceable.svg
 ---
+
+{% include_cached catalog/catalog-classic-banner.md %}
 
 ## Install and authorize the Traceable integration
 
@@ -89,7 +91,7 @@ body:
 
 Once authorized, resources from your Traceable account will be discoverable in the UI.
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your Traceable resources:
 
@@ -113,7 +115,7 @@ export TRACEABLE_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List Traceable resources
 
-Before you can map your Traceable resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from Traceable:
+Before you can map your Traceable resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from Traceable:
 
 <!--vale off-->
 {% konnect_api_request %}

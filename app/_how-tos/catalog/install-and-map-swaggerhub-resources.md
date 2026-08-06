@@ -1,8 +1,8 @@
 ---
-title: Import and map SwaggerHub resources in Catalog
+title: Import and map SwaggerHub resources in {{site.konnect_catalog}} Classic
 permalink: /how-to/install-and-map-swaggerhub-resources/
 content_type: how_to
-description: Learn how to connect SwaggerHub API versions to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
+description: Learn how to connect SwaggerHub API versions to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}}.
 products:
   - catalog
 works_on:
@@ -15,16 +15,16 @@ tags:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: SwaggerHub reference
     url: /catalog/integrations/swaggerhub/
 automated_tests: false
 tldr:
-  q: How do I view SwaggerHub API specs in {{site.konnect_catalog}}?
-  a: Install the SwaggerHub integration in {{site.konnect_short_name}} and authorize using your SwaggerHub API key. Create a {{site.konnect_catalog}} service and associate it with your SwaggerHub API versions to display metadata and enable event tracking. 
+  q: How do I view SwaggerHub API specs in {{site.konnect_catalog}} Classic?
+  a: Install the SwaggerHub integration in {{site.konnect_short_name}} and authorize using your SwaggerHub API key. Create a {{site.konnect_catalog}} Classic service and associate it with your SwaggerHub API versions to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -40,6 +40,8 @@ prereqs:
 
         Additionally, you'll need an [API version](https://support.smartbear.com/swaggerhub/docs/en/manage-apis/versioning.html?sbsearch=API%20Versions0) in SwaggerHub to pull into {{site.konnect_short_name}} as a resource.
 ---
+
+{% include_cached catalog/catalog-classic-banner.md %}
 
 ## Install and authorize the SwaggerHub integration
 
@@ -86,7 +88,7 @@ body:
 
 Once authorized, resources from your SwaggerHub account will be discoverable in the UI.
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your SwaggerHub resources:
 
@@ -110,7 +112,7 @@ export SWAGGERHUB_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List SwaggerHub resources
 
-Before you can map your SwaggerHub resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from SwaggerHub:
+Before you can map your SwaggerHub resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from SwaggerHub:
 
 <!--vale off-->
 {% konnect_api_request %}
