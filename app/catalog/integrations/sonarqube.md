@@ -19,25 +19,27 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The SonarQube integration lets you connect SonarQube SaaS projects directly to your {{site.konnect_catalog}} services.
+description: The SonarQube integration lets you connect SonarQube SaaS projects directly to your {{site.konnect_catalog}} Classic services.
 discovery_support: true
 bindable_entities: "Projects"
 
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: "Monitor SonarQube projects {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI"
     url: /how-to/monitor-sonarqube-projects-with-konnect-ui/
   - text: "Monitor SonarQube projects {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
     url: /how-to/monitor-sonarqube-projects-with-konnect-api/
 ---
 
-The SonarQube integration lets you connect [SonarQube projects](https://docs.sonarsource.com/sonarqube-cloud/managing-your-projects) directly to your {{site.konnect_catalog}} services.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The SonarQube integration lets you connect [SonarQube projects](https://docs.sonarsource.com/sonarqube-cloud/managing-your-projects) directly to your {{site.konnect_catalog}} Classic services.
 {% include /catalog/multi-resource.md %}
 
 For a complete tutorial, see the following:
-* [Monitor SonarQube projects {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI](/how-to/monitor-sonarqube-projects-with-konnect-ui/)
-* [Monitor SonarQube projects {{site.konnect_catalog}} with the {{site.konnect_short_name}} API](/how-to/monitor-sonarqube-projects-with-konnect-api/)
+* [Monitor SonarQube projects {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI](/how-to/monitor-sonarqube-projects-with-konnect-ui/)
+* [Monitor SonarQube projects {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} API](/how-to/monitor-sonarqube-projects-with-konnect-api/)
 
 ## Prerequisites
 
@@ -52,7 +54,7 @@ You need to configure the following in SonarQube SaaS:
 {% navtabs "sonarqube-integration" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the {{site.konnect_catalog}} sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 1. Click **SonarQube**.
 1. Click **Add SonarQube instance**.
 1. In the **SonarQube API key** field, enter your SonarQube personal access token.

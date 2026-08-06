@@ -1,8 +1,8 @@
 ---
-title: Monitor Dynatrace classic SLOs in Catalog with the Konnect UI
+title: Monitor Dynatrace classic SLOs in {{site.konnect_catalog}} Classic with the Konnect UI
 permalink: /how-to/monitor-dynatrace-slos-with-konnect-ui/
 content_type: how_to
-description: Learn how to connect a Dynatrace classic SLO to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the UI.
+description: Learn how to connect a Dynatrace classic SLO to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}} using the UI.
 products:
   - catalog
 works_on:
@@ -15,20 +15,20 @@ search_aliases:
   - SLO
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Dynatrace reference
     url: /catalog/integrations/dynatrace/
-  - text: "Monitor Dynatrace classic SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
+  - text: "Monitor Dynatrace classic SLOs in {{site.konnect_catalog}} Classic with the Konnect API"
     url: /how-to/monitor-dynatrace-slos-with-konnect-api/
   - text: Set up Dynatrace with OpenTelemetry
     url: /how-to/set-up-dynatrace-with-otel/
 automated_tests: false
 tldr:
   q: How do I monitor Dynatrace classic service-level objects in {{site.konnect_short_name}}?
-  a: Install the Dynatrace integration in {{site.konnect_short_name}} and authorize access with your Dynatrace URL and personal access token (with `slo.read` permissions), then link an SLO to your {{site.konnect_catalog}} service.
+  a: Install the Dynatrace integration in {{site.konnect_short_name}} and authorize access with your Dynatrace URL and personal access token (with `slo.read` permissions), then link an SLO to your {{site.konnect_catalog}} Classic service.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -46,9 +46,11 @@ prereqs:
       icon_url: /assets/icons/third-party/dynatrace.png
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 ## Configure the Dynatrace integration
 
-Before you can discover APIs in {{site.konnect_catalog}}, you must configure the Dynatrace integration.
+Before you can discover APIs in {{site.konnect_catalog}} Classic, you must configure the Dynatrace integration.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
@@ -60,9 +62,9 @@ Before you can discover APIs in {{site.konnect_catalog}}, you must configure the
 1. In the **Instance name** field, enter `dynatrace`.
 1. Click **Save**.
 
-## Create a {{site.konnect_catalog}} service and map the SLO resources
+## Create a {{site.konnect_catalog}} Classic service and map the SLO resources
 
-Now that your integration is configured, you can create a {{site.konnect_catalog}} service to map the ingested SLOs.
+Now that your integration is configured, you can create a {{site.konnect_catalog}} Classic service to map the ingested SLOs.
 
 {:.info}
 > In this tutorial, we'll refer to your ingested Dynatrace SLO as `billing-slo`.
@@ -77,7 +79,7 @@ Now that your integration is configured, you can create a {{site.konnect_catalog
 1. Select `billing-slo`. 
 1. Click **Map 1 Resource**.
 
-Your integration SLOs are now discoverable from one {{site.konnect_catalog}} service.
+Your integration SLOs are now discoverable from one {{site.konnect_catalog}} Classic service.
 
 {:.info}
 > You might need to manually sync your Dynatrace integration for resources to appear. From the {{site.konnect_short_name}} UI by navigating to the Dynatrace integration you just installed and selecting **Sync Now** from the **Actions** dropdown menu.

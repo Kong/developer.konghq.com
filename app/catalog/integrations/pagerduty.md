@@ -20,20 +20,22 @@ works_on:
     - konnect
 description: The PagerDuty integration allows you to provide a way to alert on information about current open incidents to consumers of the service directory.
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Import and map PagerDuty resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-pagerduty-resources/
 discovery_support: true
 bindable_entities: "PagerDuty Service"
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services), as well as provide information on current open incidents to consumers of the service directory.
 {% include /catalog/multi-resource.md %}
 
-For each linked PagerDuty service, a summary will be provided on the {{site.konnect_catalog}} service's details page, showing current unresolved incidents and the current on-call user.
+For each linked PagerDuty service, a summary will be provided on the {{site.konnect_catalog}} Classic service's details page, showing current unresolved incidents and the current on-call user.
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map PagerDuty resources in {{site.konnect_catalog}}](/how-to/install-and-map-pagerduty-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map PagerDuty resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-pagerduty-resources/).
 
 ## Authenticate the PagerDuty integration
 
