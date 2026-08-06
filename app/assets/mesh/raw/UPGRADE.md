@@ -21,10 +21,56 @@ The legacy `OPAPolicy` resource (`config.kong-mesh.io/v1alpha1`, kind `OPAPolicy
 
 **Action required:** Before upgrading, migrate any `OPAPolicy` resources to `MeshOPA` and delete the old ones. After upgrading, the `OPAPolicy` CRD is no longer installed; leftover `OPAPolicy` objects will be rejected by the control plane.
 
+### `name`, `namespace`, and `mesh` removed from `MeshOPA` `targetRef`
+
+`spec.targetRef.name`, `spec.targetRef.namespace`, and `spec.targetRef.mesh` have been removed from `MeshOPA` (the underlying Kuma `targetRef` no longer has these fields). On Kubernetes the fields are pruned by the API server on the next write after the CRD update; on Universal they are ignored on load. A `MeshOPA` that relied on `name` to scope itself to a single service therefore widens to every service matching `kind`, changing which requests your rego evaluates.
+
+**Action required:** Before upgrading, rewrite every `MeshOPA` that uses `spec.targetRef.name` to use the display-name label instead:
+
+```yaml
+# before
+spec:
+  targetRef:
+    kind: MeshService
+    name: backend
+# after
+spec:
+  targetRef:
+    kind: MeshService
+    labels:
+      kuma.io/display-name: backend
+```
+
+After upgrading, verify the effective scope of every `MeshOPA` before rolling data plane proxies.
+
+### `dpServer.authn.zoneProxy.type` no longer selects a distinct authenticator
+
+A zone proxy (zone ingress/egress) is now just a `Dataplane` with zone proxy listeners, and Kuma authenticates every xDS connection - data planes and zone proxies alike - through the single `dpServer.authn.dpProxy.type` authenticator. `dpServer.authn.zoneProxy.type` (`KUMA_DP_SERVER_AUTHN_ZONE_PROXY_TYPE`) only gates whether a zone proxy's bootstrap includes a credential; it no longer selects a separate authenticator implementation.
+
+**Action required:** If you set `dpServer.authn.zoneProxy.type` to a value different from `dpServer.authn.dpProxy.type` expecting zone proxies to authenticate differently from data planes, align both to the same value. See the `2.7.x` ECS notes below for an example affected by this.
+
 ## Upgrade to `3.0.0`
 
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+### `advertisedAddress` removed from `Dataplane` networking
+
+The `networking.advertisedAddress` field has been removed from the `Dataplane` resource. Proxies behind NAT or a private network (e.g. Docker) that relied on it to advertise a routable address to other proxies must now be reachable directly via `networking.address`.
+
+**Action required**
+
+Ensure every Universal `Dataplane` is reachable by other proxies on `networking.address` before upgrading.
+
+**Warning**: `networking.advertisedAddress` is silently dropped on deserialization — protos are unmarshalled with `AllowUnknownFields`, so the field is simply ignored rather than rejected. Dataplanes still submitting it will fall back to `networking.address` for xDS endpoints, Envoy admin mTLS SANs, and `kumactl get dataplanes` output, which may break connectivity for proxies that are not reachable on `networking.address`.
+
+### Real-resource policy selection now uses `labels` only
+
+Policies that select real resources through `spec.targetRef` or `spec.to[].targetRef` now resolve those targets by `labels` only. This applies to `Dataplane`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService`, and `MeshHTTPRoute`.
+
+**Action required**
+
+Migrate any policy that still selects those resources by `name` and/or `namespace` to use `labels` instead before upgrading. `sectionName` remains supported for `Dataplane` inbound selection and `MeshService` port selection.
 
 ### `from` removed from `MeshTLS`
 
@@ -159,6 +205,62 @@ Also update any automation that expected the `MeshServicesDisabled`
 `MeshIdentity` status reason or treated inspect `_layout` as unavailable
 outside `Exclusive` mode.
 
+### Standalone `ZoneIngress`/`ZoneEgress` proxies no longer receive Envoy config
+
+The control plane no longer generates xDS configuration for data plane proxies
+started as standalone zone proxies, i.e. `kuma-dp run --proxy-type=ingress|egress`
+on Universal and the `ingress.enabled` / `egress.enabled` Helm deployments on
+Kubernetes. Cross-zone traffic is now served by mesh-scoped zone proxies, which
+are regular `Dataplane` resources.
+
+Such a proxy still connects, registers its `ZoneIngress`/`ZoneEgress` resource,
+and reports an insight, but it receives no listeners, clusters, or endpoints.
+Envoy keeps whatever configuration it already had until it restarts, at which
+point it starts with an empty configuration and drops all cross-zone traffic.
+The control plane logs
+`xDS generation for legacy ZoneIngress/ZoneEgress dataplanes is no longer supported`
+once per connected legacy proxy.
+
+**Action required**
+
+Migrate to mesh-scoped zone proxies **before** upgrading the zone control plane.
+On Kubernetes deploy them through `meshes[].ingress.enabled` /
+`meshes[].egress.enabled`. On Universal, replace
+`kuma-dp run --proxy-type=ingress|egress` with a regular `Dataplane` that
+declares `networking.listeners` of type `ZoneIngress`/`ZoneEgress`. Upgrading the
+control plane first blackholes cross-zone traffic as soon as the legacy zone
+proxy Pods restart.
+
+### Legacy `ingress`/`egress` Helm values and `kumactl install` flags removed
+
+The chart no longer renders standalone `ZoneIngress`/`ZoneEgress` Deployments.
+The top-level `ingress` and `egress` value blocks are gone, along with the
+Deployment, Service, HorizontalPodAutoscaler, PodDisruptionBudget and RBAC
+templates they drove. `kumactl install control-plane` lost the matching flags:
+`--ingress-enabled`, `--ingress-drain-time`, `--ingress-use-node-port`,
+`--ingress-node-selector`, `--egress-enabled`, `--egress-drain-time`,
+`--egress-service-type` and `--egress-node-selector`. `controlPlane.ingress.*`
+is unrelated and still configures the Kubernetes Ingress for the control plane
+GUI and API.
+
+Helm does not reject unknown values, so an upgrade with `ingress.enabled=true`
+left in your values file succeeds without any warning. Because the templates are
+gone, the upgrade deletes the legacy zone proxy Deployment, Service,
+HorizontalPodAutoscaler, PodDisruptionBudget and RBAC objects that the previous
+release owned, which drops all cross-zone traffic still flowing through them.
+
+**Action required**
+
+Complete the migration described in the previous section, then drop the
+top-level `ingress` and `egress` blocks from your values files and the removed
+flags from any `kumactl install control-plane` invocation.
+
+Most legacy settings map onto `meshes[].ingress` / `meshes[].egress`. These have
+no equivalent there: `podAnnotations`, `annotations`, `logLevel`, `drainTime`,
+`lifecycle`, `livenessProbe`, `readinessProbe`, `startupProbe`, `dns.policy`,
+`dns.config`, `service.enabled` and `service.nodePort`. Drain time and probes
+are now control-plane-wide sidecar injector settings.
+
 ### ServiceInsight, MeshInsight, and inspect `_rules` no longer report kuma.io/service based data
 
 With `meshServices.mode` always `Exclusive`, `kuma.io/service`-tagged services and
@@ -181,6 +283,71 @@ Update any automation or dashboards that read `ServiceInsight.services` for
 non-gateway services, `MeshInsight.services`, or the `_rules` `toRules` field
 to use `MeshService`/`MeshExternalService` status and `_rules`
 `toResourceRules` instead.
+
+### Zone proxies authenticate with a dataplane token
+
+A zone proxy is now a `Dataplane` with zone proxy listeners, so the DP server
+authenticates it exactly like any other data plane proxy. The separate zone
+proxy authenticator is gone: every proxy is authenticated with the method
+configured under `dpServer.authn.dpProxy` (`serviceAccountToken` on Kubernetes,
+`dpToken` on Universal), and zone tokens are no longer validated.
+
+`dpServer.authn.zoneProxy.type` and
+`dpServer.authn.zoneProxy.zoneToken.validator` no longer affect
+authentication. `dpServer.authn.zoneProxy.type` still controls whether the
+bootstrap server requires a token from the legacy `ingress`/`egress` proxy
+types.
+
+**Action required**
+
+On Universal, issue a dataplane token for each zone proxy
+(`kumactl generate dataplane-token --mesh <mesh> --name <zone-proxy-dp>`)
+instead of a zone token, and pass it to `kuma-dp` with `--dataplane-token-file`.
+Tokens generated with `kumactl generate zone-token` are no longer accepted by
+the DP server. If you relied on `dpServer.authn.zoneProxy.type: none` to let
+zone proxies connect without a token while data plane proxies used `dpToken`,
+zone proxies now need a dataplane token too.
+
+### `dataplaneTags` removed from the `MeshService` selector
+
+`spec.selector.dataplaneTags` matched data plane proxies by their inbound tags.
+The field has been removed; `MeshService` selects proxies by
+`spec.selector.dataplaneRef` or `spec.selector.dataplaneLabels` only.
+
+**Warning**: un-migrated selectors are silently dropped during deserialization.
+An affected `MeshService` keeps its name and ports but matches zero data plane
+proxies, so it stops producing endpoints and its status goes `Unavailable`.
+The control plane returns a warning for any `MeshService` left without a
+selector, but only when the resource is next created or updated.
+
+**Action required**
+
+Migrate any `MeshService` using `dataplaneTags` to `dataplaneLabels` before
+upgrading. Audit with:
+
+```bash
+kubectl get meshservices -A -o yaml | grep -B5 'dataplaneTags:'
+kumactl get meshservices -o yaml --all-meshes | grep -B5 'dataplaneTags:'
+```
+
+```yaml
+# Before (removed)
+spec:
+  selector:
+    dataplaneTags:
+      app: redis
+
+# After
+spec:
+  selector:
+    dataplaneLabels:
+      matchLabels:
+        app: redis
+```
+
+Inbound tags are no longer an identity source, so the replacement labels must
+exist on the `Dataplane` resource itself. On Kubernetes those come from the Pod
+labels; on Universal, set them under `labels` in the `Dataplane` resource.
 
 ### CoreDNS removed from the data plane
 
@@ -1047,6 +1214,38 @@ endpoint it used to call is still registered — the vendored GUI bundle
 (`app/kuma-ui`) still calls it directly and is re-vendored on its own
 release cadence — but it is deprecated; new integrations should call
 `_policies` instead.
+
+### Cross-zone `MeshService` routing requires `MeshZoneAddress`
+
+The publicly reachable address of a remote zone proxy is now taken solely from
+the `MeshZoneAddress` resource. The control plane no longer falls back to the
+`advertisedAddress`/`advertisedPort` of a `ZoneIngress` when building endpoints
+for `MeshService` and `MeshMultiZoneService` destinations in other zones.
+
+On Kubernetes, the control plane creates `MeshZoneAddress` automatically for every mesh-scoped zone proxy `Service` (`meshes[].ingress.enabled=true`), which carries the `k8s.kuma.io/zone-proxy-type: ingress` label. On Universal it is authored by the user.
+
+`MeshZoneAddress` is mesh-scoped: every mesh whose services are consumed from another zone needs its own resource in the zone that serves them.
+
+**Action required**
+
+`MeshZoneAddress` does not exist before 3.0.0, so it cannot be created ahead of the upgrade. Create it immediately after upgrading the zone control plane — cross-zone `MeshService` and `MeshMultiZoneService` traffic to that zone is down until the resource exists and has propagated over KDS.
+
+On Universal, author one `MeshZoneAddress` per mesh on the zone control plane, pointing at the public address and port of that zone's ingress listener:
+
+```yaml
+type: MeshZoneAddress
+name: zone-proxy-ingress
+mesh: default
+labels:
+  kuma.io/origin: zone
+spec:
+  address: 10.0.0.1
+  port: 10001
+```
+
+`kuma.io/origin: zone` is required on a zone control plane federated to a global control plane. `kuma.io/zone` is stamped by the control plane; if you set it explicitly it must match the local zone name. `spec.address` accepts an IP or a DNS name; a DNS name is resolved by the control plane.
+
+Zones without a `MeshZoneAddress` are not reachable cross-zone: their `MeshService` destinations get no endpoints in other zones. The control plane logs `no MeshZoneAddress found for zone` when this happens.
 
 ## Upgrade to `2.14.x`
 
@@ -2423,6 +2622,9 @@ you'll need:
 ```
 
 See [Kong/kong-mesh-ecs#40](https://github.com/Kong/kong-mesh-ecs/pull/40) for an example.
+
+> [!NOTE]
+> Since `3.0.x`, `KUMA_DP_SERVER_AUTHN_ZONE_PROXY_TYPE` no longer selects a separate authenticator for zone proxies - it only gates whether a zone proxy's bootstrap includes a credential. Zone proxies now authenticate through `KUMA_DP_SERVER_AUTHN_DP_PROXY_TYPE` like any other data plane.
 
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
