@@ -18,20 +18,22 @@ search_aliases:
   - service catalog
 works_on:
     - konnect
-description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your {{site.konnect_catalog}} services.
+description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your {{site.konnect_catalog}} Classic services.
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Import and map SwaggerHub resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-swaggerhub-resources/
 discovery_support: true
 bindable_entities: "SwaggerHub API version"
 ---
 
-The SwaggerHub integration lets you connect SwaggerHub API specs directly to your {{site.konnect_catalog}} services.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The SwaggerHub integration lets you connect SwaggerHub API specs directly to your {{site.konnect_catalog}} Classic services.
 {% include /catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map SwaggerHub resources in {{site.konnect_catalog}}](/how-to/install-and-map-swaggerhub-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map SwaggerHub resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-swaggerhub-resources/).
 
 ## Prerequisites
 

@@ -23,18 +23,20 @@ search_aliases:
 related_resources:
   - text: "Map {{site.observability}} reports in {{site.konnect_catalog}}"
     url: /how-to/map-analytics-resources/
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
 discovery_support: true
 discovery_default: true
 bindable_entities: "Report"
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 The {{site.observability}} integration will allow users to connect Reports from the {{site.observability}} product directly to their services. Users browsing the catalog will be able to see what reports are important to that service, and be brought directly to the report by clicking through.
 
 ## Authorize the {{site.observability}} integration
 
-The {{site.observability}} integration is built directly into {{site.konnect_catalog}}. No additional authorization is required.
+The {{site.observability}} integration is built directly into {{site.konnect_catalog}} Classic. No additional authorization is required.
 
 
 ## Resources

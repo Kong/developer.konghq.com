@@ -15,8 +15,8 @@ breadcrumbs:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Scorecards
     url: /catalog/scorecards/
   - text: "{{site.konnect_catalog}} integrations"

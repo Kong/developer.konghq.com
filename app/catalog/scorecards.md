@@ -8,22 +8,24 @@ products:
 works_on:
   - konnect
 
-description: Scorecards in {{site.konnect_catalog}} allow platform teams to monitor services for compliance with Kong-recommended and industry-defined best practices in {{site.konnect_short_name}}.
+description: Scorecards in {{site.konnect_catalog}} Classic allow platform teams to monitor services for compliance with Kong-recommended and industry-defined best practices in {{site.konnect_short_name}}.
 
 breadcrumbs:
   - /catalog/
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: "{{site.konnect_catalog}} services"
     url: /catalog/services/
   - text: Catalog integrations
     url: /catalog/integrations/
 ---
 
-A {{site.konnect_catalog}} scorecard helps you evaluate services based on validation criteria. Scorecards help you detect issues, like whether there are services in the catalog that don't have an on-call engineer assigned, or if you have GitHub repositories with stale pull requests that aren't getting reviewed or closed. 
+{% include_cached catalog/catalog-classic-banner.md %}
+
+A {{site.konnect_catalog}} Classic scorecard helps you evaluate services based on validation criteria. Scorecards help you detect issues, like whether there are services in the catalog that don't have an on-call engineer assigned, or if you have GitHub repositories with stale pull requests that aren't getting reviewed or closed. 
 
 From the scorecard view, you can view details on either a per-service or per-criteria basis.
 
@@ -31,7 +33,7 @@ You can use a prebuilt scorecard template that includes criteria from Kong and i
 
 ## Scorecard templates
 
-{{site.konnect_short_name}} provides several scorecard templates to help ensure your {{site.konnect_catalog}} services adhere to industry best practices.
+{{site.konnect_short_name}} provides several scorecard templates to help ensure your {{site.konnect_catalog}} Classic services adhere to industry best practices.
 
 <!--vale off-->
 {% table %}
@@ -59,7 +61,7 @@ To enable a scorecard on a service:
 {% navtabs "scorecards" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Scorecards](https://cloud.konghq.com/service-catalog/scorecards)**.
+1. In the {{site.konnect_catalog}} sidebar, click **[Scorecards](https://cloud.konghq.com/service-catalog/scorecards)**.
 1. Click **New Scorecard**.
 1. From the **Scorecard template** dropdown menu, select your template or select custom scorecard.
 1. (Optional) If you want to add an additional section or criteria, click **Add criteria** or **Add section**.

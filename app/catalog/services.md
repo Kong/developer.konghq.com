@@ -1,5 +1,5 @@
 ---
-title: "{{site.konnect_catalog}} services"
+title: "{{site.konnect_catalog}} Classic services"
 content_type: reference
 layout: reference
 
@@ -8,15 +8,15 @@ products:
 works_on:
   - konnect
 
-description: Learn about services in {{site.konnect_catalog}} and how to configure them.
+description: Learn about services in {{site.konnect_catalog}} Classic and how to configure them.
 
 breadcrumbs:
   - /catalog/
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Scorecards
     url: /catalog/scorecards/
   - text: Traceable integration
@@ -32,33 +32,35 @@ related_resources:
   - text: PagerDuty integration
     url: /catalog/integrations/pagerduty/
 faqs:
-  - q: What's the difference between a Gateway Service and a {{site.konnect_catalog}} service?
+  - q: What's the difference between a Gateway Service and a {{site.konnect_catalog}} Classic service?
     a: |
-      A [Gateway Service](/gateway/entities/service/) is a {{site.base_gateway}} entity that represents an upstream service in your system and is the business logic component that's responsible for responding to requests. A {{site.konnect_catalog}} service is a collection of one or more resources from {{site.konnect_catalog}} integrations.
+      A [Gateway Service](/gateway/entities/service/) is a {{site.base_gateway}} entity that represents an upstream service in your system and is the business logic component that's responsible for responding to requests. A {{site.konnect_catalog}} Classic service is a collection of one or more resources from {{site.konnect_catalog}} Classic integrations.
 ---
 
-A {{site.konnect_catalog}} service is a collection of one or more resources from integrations.
+{% include_cached catalog/catalog-classic-banner.md %}
 
-A {{site.konnect_catalog}} service represents the following:
+A {{site.konnect_catalog}} Classic service is a collection of one or more resources from integrations.
+
+A {{site.konnect_catalog}} Classic service represents the following:
 * A unit of software that is typically owned by a single team
 * Exposes one or more APIs 
-* May be dependent on other {{site.konnect_catalog}} services (as either upstream or downstream)  
+* May be dependent on other {{site.konnect_catalog}} Classic services (as either upstream or downstream)  
 
-{{site.konnect_catalog}} services allow you to gain visibility into all resources in your organization, including what teams or people own them. 
+{{site.konnect_catalog}} Classic services allow you to gain visibility into all resources in your organization, including what teams or people own them. 
 
-To create a {{site.konnect_catalog}} service, do one of the following:
+To create a {{site.konnect_catalog}} Classic service, do one of the following:
 
 {% navtabs "service" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **Services**. 
+1. In the {{site.konnect_catalog}} sidebar, click **Services**. 
 1. Click **New service** and configure the details about your service. 
 1. Map the service to an integration: 
    1. Click the service.
    1.  Select "Map resources" from the **Action** dropdown menu.
 {% endnavtab %}
 {% navtab "API" %}
-1. Create a {{site.konnect_catalog}} service by sending a POST request to the [`/catalog-services` endpoint](/api/konnect/service-catalog/v1/#/operations/create-catalog-service):
+1. Create a {{site.konnect_catalog}} Classic service by sending a POST request to the [`/catalog-services` endpoint](/api/konnect/service-catalog/v1/#/operations/create-catalog-service):
 <!--vale off-->
 {% capture service %}
 {% konnect_api_request %}
@@ -128,13 +130,13 @@ resource "konnect_catalog_service" "my_catalogservice" {
 {% endnavtab %}
 {% endnavtabs %}
 
-## Map APIs to a service in {{site.konnect_catalog}}
+## Map APIs to a service in {{site.konnect_catalog}} Classic
 
-APIs can be associated with {{site.konnect_catalog}} services, which allows API consumers and service owners to see which APIs and services are associated with each other. If you've already assigned API specs to a service from integrations, [migrate them to APIs](/catalog/migrate-api-specs-to-apis/). 
+APIs can be associated with {{site.konnect_catalog}} Classic services, which allows API consumers and service owners to see which APIs and services are associated with each other. If you've already assigned API specs to a service from integrations, [migrate them to APIs](/catalog/migrate-api-specs-to-apis/). 
 
 {% include_cached /catalog/note-api-spec-snapshot.md %}
 
-To link APIs with a {{site.konnect_catalog}} service, you need the following [{{site.konnect_short_name}} roles](/konnect-platform/teams-and-roles/#catalog) at a minimum for the services and APIs:
+To link APIs with a {{site.konnect_catalog}} Classic service, you need the following [{{site.konnect_short_name}} roles](/konnect-platform/teams-and-roles/#catalog) at a minimum for the services and APIs:
 * API viewer
 * Service viewer
 * Service admin
@@ -143,14 +145,14 @@ To link APIs to a service, do the following:
 {% navtabs "map-apis" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **Services**. 
+1. In the {{site.konnect_catalog}} sidebar, click **Services**. 
 1. Click a service you want to associate an API with.
 1. Click the **APIs** tab.
 1. Click **Link API**.
 1. Select the APIs you want to link.
 1. Click **Link APIs**.
 
-You will now see the API with your API spec linked to the {{site.konnect_catalog}} service. Users who view APIs will also be able to see any linked {{site.konnect_catalog}} services.
+You will now see the API with your API spec linked to the {{site.konnect_catalog}} Classic service. Users who view APIs will also be able to see any linked {{site.konnect_catalog}} Classic services.
 {% endnavtab %}
 {% navtab "API" %}
 
