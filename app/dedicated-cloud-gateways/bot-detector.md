@@ -77,7 +77,7 @@ The following are an overview of the general steps you should take to enable, mo
 ### Prerequisites
 
 * To enable Bot Detector for a Dedicated Cloud Gateway control plane, you need the ___ role.
-* A public Dedicated Cloud Gateway with a network configured.
+* A [public Dedicated Cloud Gateway with a network configured](/dedicated-cloud-gateways/public-network/).
 
 ### Enable Bot Detector
 
@@ -86,14 +86,19 @@ Because Bot Detector is scoped to the control plane, not the organization, this 
 
 {% navtabs "bot-detector" %}
 {% navtab "API" %}
-Enable Bot Detector for a control plane by sending a `POST` request to the `/waap/{cpId}/enabled` endpoint:
+Enable Bot Detector for a control plane by sending a `POST` request to the `/bot-gline-manager/waap/{cpId}/enabled` endpoint:
 
-```sh
-curl -X POST https://us.api.konghq.tech/bot-gline-manager/waap/$CONTROL_PLANE_ID/enabled \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"enabled": true, "block_mode": false}'
-```
+<!--vale off-->
+{% konnect_api_request %}
+url: /bot-gline-manager/waap/$CONTROL_PLANE_ID/enabled
+method: POST
+status_code: 200
+region: us
+body:
+  enabled: true
+  block_mode: false
+{% endkonnect_api_request %}
+<!--vale on-->
 
 Setting `block_mode` to `false` starts the control plane in monitoring mode.
 {% endnavtab %}
@@ -101,7 +106,7 @@ Setting `block_mode` to `false` starts the control plane in monitoring mode.
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click **Control planes**.
 1. Click the Dedicated Cloud Gateway control plane you want to enable Bot Detector for.
-1. From the **More** tab, select **Bot Detector**.
+1. Click the **Bot Detector** tab.
 1. Click **Enable bot detector**.
 
 Once enabled, a control plane's Bot Detector starts in monitoring mode.
@@ -165,32 +170,42 @@ IP address and CIDR range conditions only support exact matches.
 
 {% navtabs "rules" %}
 {% navtab "API" %}
-1. List your existing rules by sending a `GET` request to the `/waap/{cpId}/rules` endpoint:
+1. List your existing rules by sending a `GET` request to the `/bot-gline-manager/waap/{cpId}/rules` endpoint:
 
-   ```sh
-   curl https://us.api.konghq.tech/bot-gline-manager/waap/$CONTROL_PLANE_ID/rules \
-     -H "Authorization: Bearer $KONNECT_TOKEN"
-   ```
+   <!--vale off-->
+   {% capture list_rules %}
+   {% konnect_api_request %}
+   url: /bot-gline-manager/waap/$CONTROL_PLANE_ID/rules
+   method: GET
+   status_code: 200
+   region: us
+   {% endkonnect_api_request %}
+   {% endcapture %}
+   {{ list_rules | indent: 3 }}
+   <!--vale on-->
 
-1. Create a rule by sending a `POST` request to the `/waap/{cpId}/rule` endpoint. The following example creates a passthrough rule that matches a single path:
+1. Create a rule by sending a `POST` request to the `/bot-gline-manager/waap/{cpId}/rule` endpoint. The following example creates a passthrough rule that matches a single path:
 
-   ```sh
-   curl -X POST https://us.api.konghq.tech/bot-gline-manager/waap/$CONTROL_PLANE_ID/rule \
-     -H "Authorization: Bearer $KONNECT_TOKEN" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "name": "Allow health check path",
-       "action": "passthrough",
-       "priority": 100,
-       "value": {
-         "application_rules": {
-           "paths": [
-             { "match": "equals", "value": "/health" }
-           ]
-         }
-       }
-     }'
-   ```
+   <!--vale off-->
+   {% capture create_rule %}
+   {% konnect_api_request %}
+   url: /bot-gline-manager/waap/$CONTROL_PLANE_ID/rule
+   method: POST
+   status_code: 201
+   region: us
+   body:
+     name: Allow health check path
+     action: passthrough
+     priority: 100
+     value:
+       application_rules:
+         paths:
+           - match: equals
+             value: /health
+   {% endkonnect_api_request %}
+   {% endcapture %}
+   {{ create_rule | indent: 3 }}
+   <!--vale on-->
 
    * Set `"action"` to `"block"` or `"monitor"` to create those rule types instead.
    * Set `"match"` to `"regex"` to match a path, user agent, or JA4 fingerprint using a regular expression instead of an exact match.
@@ -202,7 +217,7 @@ IP address and CIDR range conditions only support exact matches.
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click **Control planes**.
 1. Click the Dedicated Cloud Gateway control with Bot Detector enabled.
-1. From the **More** tab, select **Bot Detector**.
+1. Click the **Bot Detector** tab.
 1. Click the **Rules** tab.
 1. Click **New rule**.
 1. For the General settings, do the following:
@@ -238,32 +253,43 @@ No data plane restart or redeploy is required.
 
 {% navtabs "rules" %}
 {% navtab "API" %}
-Send a `POST` request to the same `/waap/{cpId}/enabled` endpoint, setting `block_mode` to `true`:
+Send a `POST` request to the same `/bot-gline-manager/waap/{cpId}/enabled` endpoint, setting `block_mode` to `true`:
 
-```sh
-curl -X POST https://us.api.konghq.tech/bot-gline-manager/waap/$CONTROL_PLANE_ID/enabled \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"enabled": true, "block_mode": true}'
-```
+<!--vale off-->
+{% konnect_api_request %}
+url: /bot-gline-manager/waap/$CONTROL_PLANE_ID/enabled
+method: POST
+status_code: 200
+region: us
+body:
+  enabled: true
+  block_mode: true
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Continue monitoring traffic to ensure traffic is flowing in the way you expect. 
 
 To turn Bot Detector off entirely for the control plane, set `enabled` to `false`:
 
-```sh
-curl -X POST https://us.api.konghq.tech/bot-gline-manager/waap/$CONTROL_PLANE_ID/enabled \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"enabled": false}'
-```
+<!--vale off-->
+{% konnect_api_request %}
+url: /bot-gline-manager/waap/$CONTROL_PLANE_ID/enabled
+method: POST
+status_code: 200
+region: us
+body:
+  enabled: false
+{% endkonnect_api_request %}
+<!--vale on-->
 {% endnavtab %}
 {% navtab "UI" %}
 Once enabled, a control plane's Bot Detector starts in monitoring mode. 
 To switch the mode to blocking, click **Enable blocking**.
+Continue monitoring traffic to ensure traffic is flowing in the way you expect. 
+
 To turn Bot Detector off entirely, select "Disable bot detector" from the **Actions** dropdown menu.
 {% endnavtab %}
 {% endnavtabs %}
-
-Continue monitoring traffic to ensure traffic is flowing in the way you expect. 
 
 ## Limitation
 
