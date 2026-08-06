@@ -1,6 +1,18 @@
 ```ansi
 Usage:
-  kongctl dump declarative [flags]
+  kongctl get ai-gateway config-stores [config-store-id|config-store-name] [flags]
+
+Maturity:
+  beta
+
+Aliases:
+  config-stores, config-store
+
+Examples:
+  # List Config Stores by gateway name
+  kongctl get ai-gateway config-stores --gateway-name "Customer Support Gateway"
+  # Get a Config Store by name
+  kongctl get ai-gateway config-stores --gateway-id <gateway-id> support-store
 
 
 Flags:
@@ -11,15 +23,28 @@ Flags:
                                    - Config path: [ color-theme ]
                                    - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                    - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+      --columns stringArray        Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string         Path to the configuration file to load.
                                    - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-      --default-namespace string   Default namespace to include in declarative output (_defaults.kongctl.namespace).
-      --filter-id string           Filter resources by ID (exact match).
-                                   Mutually exclusive with --filter-name.
-      --filter-name string         Filter resources by name. Use '*' wildcards for substring matching (e.g., '*portal*').
-                                   Mutually exclusive with --filter-id.
-  -h, --help                       help for declarative
-      --include-child-resources    Include child resources in the dump.
+      --config-store-id string     The ID of the AI Gateway Config Store to retrieve.
+                                   - Config path: [ konnect.ai-gateway.config-store.id ]
+      --config-store-name string   The name of the AI Gateway Config Store to retrieve.
+                                   - Config path: [ konnect.ai-gateway.config-store.name ]
+      --gateway-id string          The ID of the AI Gateway that owns the resource.
+                                   - Config path: [ konnect.ai-gateway.id ]
+      --gateway-name string        The name or display_name of the AI Gateway that owns the resource.
+                                   - Config path: [ konnect.ai-gateway.name ]
+  -h, --help                       help for config-stores
+      --jq string                  Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
+      --jq-color string            Controls colorized output for jq filter results.
+                                   - Config path: [ jq.color.enabled ]
+                                   - Allowed    : [ auto|always|never ] (default "auto")
+      --jq-color-theme string      Select the color theme used for jq filter results.
+                                   - Config path: [ jq.color.theme ]
+                                   - Examples   : [ friendly, github-dark, dracula ]
+                                   - Reference  : [ https://xyproto.github.io/splash/docs/ ] (default "friendly")
+  -r, --jq-raw-output              Output string jq results without JSON quotes (like jq -r).
+                                   - Config path: [ jq.raw-output ]
       --log-file string            Write execution logs to the specified file instead of STDERR.
                                    - Config path: [ log-file ]
       --log-level string           Configures the logging level. Execution logs are written to STDERR.
@@ -29,8 +54,10 @@ Flags:
                                    - Config path: [ telemetry.enabled ]
                                    - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                    - Default    : [ false ]
-      --output-file string         File to write the output to. If not specified, output is written to stdout.
-      --page-size int              Max number of results to include per response page.
+  -o, --output string              Configures the format of data written to STDOUT.
+                                   - Config path: [ output ]
+                                   - Allowed    : [ json|yaml|text ] (default "text")
+      --page-size int              Max number of results to include per response page for get and list operations.
                                    - Config path: [ konnect.page-size ] (default 10)
       --pat string                 Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                    Setting this value overrides tokens obtained from the login command.
@@ -38,7 +65,6 @@ Flags:
   -p, --profile string             Specify the profile to use for this command. (default "default")
       --region string              Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                    - Config path: [ konnect.region ]
-      --resources string           Comma separated list of resource types to dump (portals, apis, application_auth_strategies, dcr_providers, control_planes, analytics.dashboards, event_gateways, ai_gateways, ai_gateway_model_providers, ai_gateway_identity_providers, ai_gateway_policies, ai_gateway_agents, ai_gateway_consumers, ai_gateway_consumer_credentials, ai_gateway_consumer_groups, ai_gateway_models, ai_gateway_mcp_servers, ai_gateway_config_stores, ai_gateway_vaults, ai_gateway_data_plane_certificates, organization.teams).
       --text-id-format string      Configure UUID rendering in static text-table ID columns.
                                    - Config path: [ text.id-format ]
                                    - Allowed    : [ compact|full ]

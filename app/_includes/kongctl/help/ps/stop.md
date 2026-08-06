@@ -4,28 +4,36 @@ Usage:
 
 
 Flags:
-      --all                   Stop all tracked detached processes.
-      --color-theme string    Configures the CLI UI/theme (prompt, tables, TUI elements).
-                              - Config path: [ color-theme ]
-                              - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                              - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --columns stringArray   Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
-      --config-file string    Path to the configuration file to load.
-                              - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                  help for stop
-      --log-file string       Write execution logs to the specified file instead of STDERR.
-                              - Config path: [ log-file ]
-      --log-level string      Configures the logging level. Execution logs are written to STDERR.
-                              - Config path: [ log-level ]
-                              - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --no-telemetry          Disable telemetry for this command invocation. Overrides config and env.
-                              - Config path: [ telemetry.enabled ]
-                              - Env var    : [ KONGCTL_NO_TELEMETRY ]
-                              - Default    : [ false ]
-  -o, --output string         Configures the format of data written to STDOUT.
-                              - Config path: [ output ]
-                              - Allowed    : [ json|yaml|text ] (default "text")
-  -p, --profile string        Specify the profile to use for this command. (default "default")
-      --timeout duration      How long to wait for graceful process shutdown. (default 15s)
+      --all                     Stop all tracked detached processes.
+      --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
+                                - Config path: [ color-theme ]
+                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
+                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
+      --config-file string      Path to the configuration file to load.
+                                - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
+  -h, --help                    help for stop
+      --log-file string         Write execution logs to the specified file instead of STDERR.
+                                - Config path: [ log-file ]
+      --log-level string        Configures the logging level. Execution logs are written to STDERR.
+                                - Config path: [ log-level ]
+                                - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
+                                - Config path: [ telemetry.enabled ]
+                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
+  -o, --output string           Configures the format of data written to STDOUT.
+                                - Config path: [ output ]
+                                - Allowed    : [ json|yaml|text ] (default "text")
+  -p, --profile string          Specify the profile to use for this command. (default "default")
+      --text-id-format string   Configure UUID rendering in static text-table ID columns.
+                                - Config path: [ text.id-format ]
+                                - Allowed    : [ compact|full ]
+                                - Default    : [ compact ]
+      --text-layout string      Configure static text-table column selection.
+                                - Config path: [ text.layout ]
+                                - Allowed    : [ compact|auto|wide ]
+                                - Default    : [ compact ]
+      --timeout duration        How long to wait for graceful process shutdown. (default 15s)
 
 ```

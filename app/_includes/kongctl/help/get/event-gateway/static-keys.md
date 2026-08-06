@@ -70,5 +70,13 @@ Flags:
                                  - Config path: [ konnect.event-gateway.static-key.id ]
       --static-key-name string   The name of the static key to retrieve.
                                  - Config path: [ konnect.event-gateway.static-key.name ]
+      --text-id-format string    Configure UUID rendering in static text-table ID columns.
+                                 - Config path: [ text.id-format ]
+                                 - Allowed    : [ compact|full ]
+                                 - Default    : [ compact ]
+      --text-layout string       Configure static text-table column selection.
+                                 - Config path: [ text.layout ]
+                                 - Allowed    : [ compact|auto|wide ]
+                                 - Default    : [ compact ]
 
 ```

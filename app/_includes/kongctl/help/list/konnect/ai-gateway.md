@@ -21,6 +21,7 @@ Examples:
 
 Available Commands:
   agents                  List or get Agents for a Konnect AI Gateway
+  config-stores           List or get Config Stores for a Konnect AI Gateway
   consumer-groups         List or get Consumer Groups for a Konnect AI Gateway
   consumers               List or get Consumers for a Konnect AI Gateway
   credentials             List or get Consumer Credentials for a Konnect AI Gateway Consumer
@@ -76,6 +77,14 @@ Flags:
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
+      --text-id-format string   Configure UUID rendering in static text-table ID columns.
+                                - Config path: [ text.id-format ]
+                                - Allowed    : [ compact|full ]
+                                - Default    : [ compact ]
+      --text-layout string      Configure static text-table column selection.
+                                - Config path: [ text.layout ]
+                                - Allowed    : [ compact|auto|wide ]
+                                - Default    : [ compact ]
 
 Use "kongctl list konnect ai-gateway [command] --help" for more information about a command.
 
