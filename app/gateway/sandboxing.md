@@ -305,6 +305,15 @@ kong.tracing.set_should_sample
 kong.tracing.start_span
 ```
 
+#### Kong Metrics PDK
+
+```
+kong.metrics.counter
+kong.metrics.gauge
+kong.metrics.histogram
+kong.metrics.VALUE_TYPE
+```
+
 #### Nginx Constants
 ```
 ngx.AGAIN                     ngx.ALERT
