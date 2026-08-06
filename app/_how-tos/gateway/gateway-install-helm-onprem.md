@@ -180,7 +180,7 @@ If you want to deploy a PostgreSQL database within the cluster for testing purpo
 
 The control plane contains all {{ site.base_gateway }} configurations. The configuration is stored in a PostgreSQL database.
 
-1. Create a `values-cp.yaml` file.
+1. Create a `values-cp.yaml` file, replacing `{{ site.data.gateway_latest.release }}` with your own version of {{site.base_gateway}}:
 
 {% capture values_file %}
 
