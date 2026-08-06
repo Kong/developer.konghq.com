@@ -26,6 +26,14 @@ related_resources:
 
 Changelog for supported {{site.event_gateway}} versions.
 
+## 1.2.1
+
+**Release date**: 2026/08/04
+
+### Security
+* Fixes the vulnerability [CVE-2026-17578](https://www.cve.org/CVERecord?id=CVE-2026-17578) caused by not ensuring keys are not used past NIST's recommended limit for AES-GCM keys with random nonces.
+* Update `quinn-proto` dependency with a fix for [GHSA-4w2j-m93h-cj5j](https://github.com/quinn-rs/quinn/security/advisories/GHSA-4w2j-m93h-cj5j).
+
 ## 1.2.0
 
 **Release date**: 2026/06/29
@@ -68,6 +76,14 @@ Use it together with the Encrypt Fields policy to enforce consistent encryption 
 - **`acl_mode` hot reload had no effect**: Switching the ACL mode at runtime is now applied without a restart.
 - **Schema Registry cache poisoned on transient failures**: A transient Schema Registry error could be cached and served indefinitely. Retriable errors are now evicted from the cache instead of being persisted.
 - **Clearer logging when a client disconnects before authenticating**: Connections that close before or during authentication now produce accurate, actionable log messages.
+
+## 1.1.2
+
+**Release date**: 2026/08/04
+
+### Security
+* Fixes the vulnerability [CVE-2026-17578](https://www.cve.org/CVERecord?id=CVE-2026-17578) caused by not ensuring keys are not used past NIST's recommended limit for AES-GCM keys with random nonces.
+* Update `quinn-proto` dependency with a fix for [GHSA-4w2j-m93h-cj5j](https://github.com/quinn-rs/quinn/security/advisories/GHSA-4w2j-m93h-cj5j).
 
 ## 1.1.1
 
