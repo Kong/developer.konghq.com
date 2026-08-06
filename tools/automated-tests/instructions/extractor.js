@@ -7,6 +7,28 @@ async function copyFromClipboard(page) {
   return await page.evaluate(() => navigator.clipboard.readText());
 }
 
+async function revealHiddenTabPanel(elem) {
+  // Content inside an inactive {% navtab %} panel is hidden via a "hidden"
+  // class until its tab is clicked, so Playwright's isVisible() reports
+  // false even though the instruction should still be extracted.
+  const panel = elem.locator("xpath=ancestor::*[@role='tabpanel'][1]");
+
+  if ((await panel.count()) === 0) {
+    return;
+  }
+
+  const isHidden = await panel.evaluate((el) => el.classList.contains("hidden"));
+  if (!isHidden) {
+    return;
+  }
+
+  const panelId = await panel.getAttribute("data-id");
+  // Use elem.page() rather than a passed-in page/locator, since callers
+  // (e.g. extractPrereqsBlocks) sometimes scope their "page" param to a
+  // subtree that doesn't contain the tab's trigger button.
+  await elem.page().locator(`[aria-controls="${panelId}"]`).click();
+}
+
 async function extractPrereqsBlocks(page) {
   // We extract instructions from codeblocks that have data-test-prereq='block'.
   // As an alternative, the prereq (accordion-item) could have the data-test-prereqs set,
@@ -15,6 +37,7 @@ async function extractPrereqsBlocks(page) {
   const blocks = await page.locator("[data-test-prereq]").all();
 
   for (const elem of blocks) {
+    await revealHiddenTabPanel(elem);
     if (await elem.isVisible()) {
       const instruction = await elem.getAttribute("data-test-prereq");
 
@@ -75,6 +98,7 @@ async function extractCleanup(page) {
   const blocks = await page.locator("[data-test-cleanup='block']").all();
 
   for (const elem of blocks) {
+    await revealHiddenTabPanel(elem);
     if (await elem.isVisible()) {
       const copy = await elem.locator(".copy-action");
       await copy.click();
@@ -113,6 +137,7 @@ async function extractSteps(page, config) {
   const steps = await page.locator("[data-test-step]").all();
 
   for (const elem of steps) {
+    await revealHiddenTabPanel(elem);
     if (await elem.isVisible()) {
       let step;
       if (config.extractInstructionsAs && config.extractInstructionsAs !== "default") {
