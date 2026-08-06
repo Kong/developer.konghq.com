@@ -18,7 +18,7 @@
      --json "{{ include.body_cmd }}"{% endif %}{% endcapture -%}
 ```bash
 {% if capture_size == 1 -%}
-{{ include.capture[0].variable }}=$({{ curl_cmd }}{% if include.capture[0].jq %} | jq -r "{{ include.capture[0].jq | strip }}"{% endif %}{% if include.inline_sleep %}
+{{ include.capture[0].variable }}=$({{ curl_cmd }}{% if include.capture[0].jq %} | jq -r "{{ include.capture[0].jq | strip }}"{% elsif include.capture[0].command %} | {{ include.capture[0].command | strip }}{% endif %}{% if include.inline_sleep %}
  sleep {{include.inline_sleep}}{%- endif %}
 )
 {%- elsif capture_size > 1 -%}
@@ -35,7 +35,7 @@ Export the env variables:
 
 ```bash
 {% for cap in include.capture -%}
-export {{ cap.variable }}=$(echo "$_response" | jq -r "{{ cap.jq | strip }}")
+export {{ cap.variable }}=$(echo "$_response" | {% if cap.jq %}jq -r "{{ cap.jq | strip }}"{% elsif cap.command %}{{ cap.command | strip }}{% endif %})
 {% endfor -%}
 ```
 {% endif %}
