@@ -26,6 +26,7 @@ tags:
 
 decK uses its own state file format, which differs from the declarative configuration format built into {{site.base_gateway}} for [DB-less mode](/gateway/db-less-mode/).
 Both formats use YAML and share some metadata fields, but they represent certain entities differently and aren't directly compatible.
+This page explains the differences between the two formats and what to consider when migrating from DB-less config to decK.
 
 ## When to use each format
 
@@ -42,32 +43,33 @@ rows:
   - format: DB-less
     usecase: |
       Backup and restore, or configuring {{site.base_gateway}} in DB-less mode. Export with `kong config db_export` and import with `kong config db_import`. 
+      <br><br>
+      If you're using {{site.base_gateway}} in [DB-less mode](/gateway/db-less-mode/), you can't use decK for `sync`, `dump`, or similar operations because they require write access to the Admin API.
   - format: decK
-    usecase: Human-authored, version-controlled {{site.base_gateway}} configuration for a database-backed deployment. Designed for manual editing and GitOps workflows.
+    usecase: |
+      Human-authored, version-controlled {{site.base_gateway}} configuration for a database-backed deployment. Designed for manual editing and GitOps workflows.
+      <br><br>
+      If you're running {{site.base_gateway}} with a database in [traditional](/gateway/traditional-mode/) or in [hybrid mode](/gateway/hybrid-mode/), decK is the better choice for managing entity configuration.
 {% endtable %}
 <!--vale on-->
 
-If you're using {{site.base_gateway}} in [DB-less mode](/gateway/db-less-mode/), you can't use decK for `sync`, `dump`, or similar operations because they require write access to the Admin API.
+## Why use decK?
 
-If you're running {{site.base_gateway}} with a database in [traditional](/gateway/traditional-mode/) or in [hybrid mode](/gateway/hybrid-mode/), decK is the better choice for managing entity configuration.
-The `kong config db_import` and `db_export` commands have several limitations:
+decK has several advantages over the `kong config db_import` and `db_export` commands:
 
-* **Cache invalidation**: `db_import` initializes a {{site.base_gateway}} database but isn't safe to run while existing nodes are running.
-Changes aren't propagated to live nodes, so you'd have to restart all nodes manually.
-decK applies changes through the Admin API, so all nodes receive updates automatically.
-* **Deletions**: `db_import` can add and update entities, but it can't delete them.
-It won't remove entities that exist in the database but are absent from the config file.
-* **Direct database access**: `db_import` needs a direct connection to the {{site.base_gateway}} database, which may not be available in production networking environments.
-* **Drift detection**: decK can compare the configuration in {{site.base_gateway}}'s database against your config file and report differences.
+* decK applies changes through the Admin API, so all nodes receive updates automatically.
+* In addition to creating and updating entities, decK can also delete entities that exist in the database but are absent from your config file.
+* decK uses the Admin API, so it works in production networking environments where a direct database connection isn't available.
+* decK can compare the configuration in {{site.base_gateway}}'s database against your config file and report differences.
 This is useful for CI pipelines or scheduled drift checks.
-* **Readability**: `deck gateway dump` produces a more human-readable file than `db_export`.
+* `deck gateway dump` produces a more human-readable file than `db_export`.
 
-decK also has limitations to consider:
-
-* **Performance at scale**: For very large installations, decK sync can be slow.
+{:.info}
+> **Note:** Before migrating to decK, consider the following limitations:
+> * For very large installations, decK sync can be slow.
 Mitigate this with distributed configuration and the `--parallelism` flag.
 `db_import` is typically faster by orders of magnitude.
-* **Hashed fields**: decK can't correctly export and re-import fields that are hashed in the database.
+> * decK can't correctly export and re-import fields that are hashed in the database.
 For example, the password of a `basic-auth` credential will be rehashed during sync, corrupting the value.
 
 ## Metadata fields
