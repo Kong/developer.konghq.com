@@ -1,0 +1,15 @@
+---
+layout: null
+llm: false
+permalink: /konnect-platform/changelog/feed.xml
+output_format: rss
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>{{site.konnect_short_name}} changelog</title>
+<link>{{site.links.web}}/konnect-platform/changelog/</link>
+<description>Changelog for {{site.konnect_short_name}}.</description>
+{% konnect_changelog %}
+</channel>
+</rss>
