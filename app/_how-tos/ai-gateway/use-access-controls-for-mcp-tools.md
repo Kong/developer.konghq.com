@@ -72,9 +72,6 @@ prereqs:
         http://localhost:3001/mcp
         ```
       icon_url: /assets/icons/github.svg
-  konnect:
-    - name: KONG_STATUS_LISTEN
-      value: '0.0.0.0:8100'
 
 ---
 
