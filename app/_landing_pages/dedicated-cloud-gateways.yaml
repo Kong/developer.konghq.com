@@ -267,9 +267,9 @@ rows:
                 Bot Detector helps identify automated or suspicious traffic using signals like IP addresses, ASN, JA4 fingerprints, user agents, and request paths.
                 Use Bot Detector to monitor matching traffic in monitor mode, or block matching traffic with configurable rules.
               icon: /assets/icons/warning.svg
-              ctas:
-                - text: Bot Detector reference
-                  url: /dedicated-cloud-gateways/bot-detector/
+              cta:
+                text: Learn more
+                url: /dedicated-cloud-gateways/bot-detector/
   
   - header:
       type: h2
