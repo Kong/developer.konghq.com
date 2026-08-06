@@ -12,7 +12,7 @@ description: "Changelog for {{site.konnect_short_name}}."
 
 related_resources:
   - text: "{{site.konnect_short_name}} changelog RSS feed"
-    url: /konnect-platform/changelog/feed.xml
+    url: https://developer.konghq.com/konnect-platform/changelog/feed.xml
 
 tags:
   - changelog
