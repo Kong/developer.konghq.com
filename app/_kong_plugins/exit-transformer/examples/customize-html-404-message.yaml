@@ -1,0 +1,49 @@
+description: Configure the Exit Transformer plugin to transform 404 responses into custom HTML.
+extended_description: |
+  Configure the plugin to transform 404 responses into custom HTML and add a custom error message.
+
+  This example uses the `handle_unknown` parameter, which only takes effect on a globally configured instance of the plugin when a 404 error occurs.
+  If you're running this plugin on-prem, you must configure it in the default Workspace.
+
+  For a full walkthrough, see [Transform a 404 response message](/how-to/transform-a-404-response-message/).
+  Use the following example in place of the one in the guide.
+
+title: 'Return custom 404 error in HTML'
+
+targets:
+  - global
+
+weight: 900
+
+requirements: 
+ - "[`untrusted_lua`](/gateway/configuration/#untrusted-lua) must be set to either `on` or `sandbox` in your `kong.conf` file for this plugin to work."
+
+config: 
+  handle_unknown: true
+  functions:
+    - |-
+      return function(status, body, headers)
+        if status == 404 then
+          body = [[
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="utf-8">
+      <title>404 Not Found</title>
+      </head>
+      <body>
+      <h1>404</h1>
+      <p>Sorry, nothing to see here!</p>
+      </body>
+      </html>
+      ]]
+      end
+        return status, body, headers
+      end
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
