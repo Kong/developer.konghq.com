@@ -79,7 +79,7 @@ automated_tests: false
 
 ## Pull the distroless image
 
-Pull the {{site.base_gateway}} distroless image from Docker Hub:
+Pull the {{site.base_gateway}} distroless image from Docker Hub, replacing `{{ site.data.gateway_latest.ee-version }}` with your own version of {{site.base_gateway}}:
 
 ```sh
 docker pull kong/kong-gateway:{{ site.data.gateway_latest.ee-version }}-distroless

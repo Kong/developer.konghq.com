@@ -284,12 +284,36 @@ body:
 
 If you're using Serverless Gateways V1 (US and EU regions only), you can use egress IPs to filter IP addresses for your upstream Serverless Gateway applications.
 
-The Serverless V1 egress IPs are:
-* 18.207.85.202
-* 54.224.105.45
-* 52.202.189.172
+{% navtabs "serverless-egress-ips" %}
+{% navtab "US" %}
+
+The Serverless V1 US egress IPs are:
 * 3.214.24.226
 * 3.228.135.57
+* 18.207.85.202
+* 18.209.134.253
+* 34.237.224.81
+* 34.237.74.104
+* 34.226.7.69
+* 44.207.200.128
+* 52.202.189.172
+* 52.202.46.212
+* 52.0.45.90
+* 52.86.90.232
+* 54.208.160.135
+* 54.237.159.151
+* 54.224.105.45
+
+{% endnavtab %}
+{% navtab "EU" %}
+
+The Serverless V1 EU egress IPs are:
+* 63.179.153.142
+* 18.153.204.89
+* 3.67.114.117
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Limits
 Serverless Gateways have the following limits:

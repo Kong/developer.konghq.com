@@ -84,7 +84,7 @@ Now we need to configure our {{site.base_gateway}} Docker Compose stack.
 In this configuration file, we're going to mount a Docker volume to the locations where {{site.base_gateway}} needs to write data, which includes the `/declarative` directory.
 This default configuration requires write access to `/tmp` and to the prefix path.
 
-Run the following command to create a Docker Compose file at `docker-compose.yml` with `read_only` set to `true`:
+Run the following command to create a Docker Compose file at `docker-compose.yml` with `read_only` set to `true`, replacing `{{ site.data.gateway_latest.ee-version }}` with your own version of {{site.base_gateway}}:
 
 <!-- vale off -->
 ```bash

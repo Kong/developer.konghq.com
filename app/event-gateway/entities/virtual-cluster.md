@@ -102,11 +102,11 @@ You will need to increase the number of virtual clusters if you want to create m
 
 Here are some common patterns:
 
-* **Environment isolation**: You can create isolated `dev`, `test`, and `prod` namespaces on top of the same physical Kafka cluster.
-If you have a topic named `orders` in each virtual cluster, this will map transparently to different backend topics: `dev-orders`, `test-orders`, and `prod-orders`. 
-This provides isolation and automatic name resolution per environment.
+* **Environment isolation**: You can create multiple isolated `dev` namespaces on top of the same physical Kafka cluster.
+For example, if you have a `dev-1` and a `dev-2` virtual cluster, a topic named `orders` in each one maps transparently to separate backend topics: `dev-1-orders` and `dev-2-orders`.
+This provides isolation and automatic name resolution per environment, so teams can share the same physical cluster without interfering with each other.
 
-   When clients create new topics through a virtual cluster using Kafka's `CreateTopics` request, the namespace prefix is automatically applied, 
+   When clients create new topics through a virtual cluster using Kafka's `CreateTopics` request, the namespace prefix is automatically applied,
    ensuring that clients always stay within their designated namespace.
 
 * **External partner isolation**: You can expose the same backend topic to different external partners with data filtering. 

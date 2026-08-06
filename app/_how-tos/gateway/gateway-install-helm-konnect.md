@@ -117,7 +117,7 @@ CONTROL_PLANE_ENDPOINT=$(echo $CONTROL_PLANE_DETAILS | jq -r '.config.control_pl
 CONTROL_PLANE_TELEMETRY=$(echo $CONTROL_PLANE_DETAILS | jq -r '.config.telemetry_endpoint | sub("https://";"")')
 ```
 
-Create a `values-dp.yaml` file with the following content:
+Create a `values-dp.yaml` file with the following content, replacing `{{ site.data.gateway_latest.release }}` with your own version of {{site.base_gateway}}:
 
 ```yaml
 echo '

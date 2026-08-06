@@ -48,7 +48,7 @@ automated_tests: false
 
 ## Set up the Docker Compose file
 
-Run the following command to create `docker-compose.yml`:
+Run the following command to create `docker-compose.yml`, replacing `{{ site.data.gateway_latest.ee-version }}` with your own version of {{site.base_gateway}}:
 
 <!-- vale off -->
 ```bash
