@@ -79,11 +79,10 @@ automated_tests: false
 
 Now, create a File Log AI Policy and add it to the existing AI MCP Server:
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+{% entity_examples %}
 ai_gateway_policies:
   - ref: my-file-log
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-file-log
     display_name: "my-file-log"
     type: file-log
@@ -178,8 +177,7 @@ ai_gateway_mcp_servers:
               - admin
             deny:
               - developer
-EOF
-```
+{% endentity_examples %}
 
 ## Test MCP tools
 

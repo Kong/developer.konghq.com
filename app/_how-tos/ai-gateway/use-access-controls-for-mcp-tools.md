@@ -204,11 +204,10 @@ rows:
 The following plugin configuration applies the ACL rules for the MCP tools shown in the table above:
 
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+{% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: marketplace-mcp
     display_name: "Marketplace API"
     type: passthrough-listener
@@ -294,8 +293,7 @@ ai_gateway_mcp_servers:
               - admin
             deny:
               - developer
-EOF
-```
+{% endentity_examples %}
 
 ## Validate the configuration
 
