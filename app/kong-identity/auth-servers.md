@@ -99,7 +99,7 @@ columns:
     key: value
 rows:
   - limit: Requests per second (TPS)
-    value: "100 transactions per second (TPS) per {{site.konnect_short_name}} region."
+    value: "100 transactions per second (TPS) per authorization server."
   - limit: Auth servers
     value: "50 auth servers per {{site.konnect_short_name}} region."
   - limit: Clients per auth server
