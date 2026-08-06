@@ -1,5 +1,5 @@
 ---
-title: "decK state file format vs {{site.base_gateway}} DB-less format"
+title: "Migrate from {{site.base_gateway}} DB-less format to decK state file format"
 description: Learn how the decK state file format and Kong's DB-less declarative format differ, including when to use each one, metadata fields, and entity representation differences.
 content_type: reference
 layout: reference
