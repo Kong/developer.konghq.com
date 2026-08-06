@@ -17,24 +17,26 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The GitHub integration allows you to associate your {{site.konnect_catalog}} service to one or more GitHub repositories. 
+description: The GitHub integration allows you to associate your {{site.konnect_catalog}} Classic service to one or more GitHub repositories. 
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Import and map GitHub resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-github-resources/
 discovery_support: true
 bindable_entities: "Repositories"
 ---
 
-The GitHub integration allows you to associate your {{site.konnect_catalog}} service to one or more GitHub repositories.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The GitHub integration allows you to associate your {{site.konnect_catalog}} Classic service to one or more GitHub repositories.
 
 For each linked repository, the UI can show a **Repository Summary** with simple data pulled from the GitHub API, such as the number of open issues, open pull requests, most recently closed pull requests, languages, and more.
 {% include /catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map GitHub resources in {{site.konnect_catalog}}](/how-to/install-and-map-github-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map GitHub resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-github-resources/).
 
 ## Authorize the GitHub integration
 
@@ -59,7 +61,7 @@ columns:
     key: description
 rows:
   - entity: Repository
-    description: A GitHub repository relating to the {{site.konnect_catalog}} service.
+    description: A GitHub repository relating to the {{site.konnect_catalog}} Classic service.
 {% endtable %}
 <!--vale on-->
 

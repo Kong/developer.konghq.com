@@ -18,11 +18,11 @@ search_aliases:
   - service catalog
 works_on:
     - konnect
-description: The Traceable integration lets you connect Traceable entities directly to your {{site.konnect_catalog}} services.
+description: The Traceable integration lets you connect Traceable entities directly to your {{site.konnect_catalog}} Classic services.
 
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Traceable plugin
     url: /plugins/traceable/
   - text: Import and map Traceable resources in {{site.konnect_catalog}}
@@ -31,10 +31,12 @@ discovery_support: true
 bindable_entities: "Traceable Service"
 ---
 
-The Traceable integration lets you connect Traceable Services directly to your {{site.konnect_catalog}} services.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The Traceable integration lets you connect Traceable Services directly to your {{site.konnect_catalog}} Classic services.
 {% include /catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Traceable resources in {{site.konnect_catalog}}](/how-to/install-and-map-traceable-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Traceable resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-traceable-resources/).
 
 ## Authenticate the Traceable integration
 

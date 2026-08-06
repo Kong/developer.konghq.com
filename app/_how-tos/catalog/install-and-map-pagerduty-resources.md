@@ -1,8 +1,8 @@
 ---
-title: Import and map PagerDuty resources in Catalog
+title: Import and map PagerDuty resources in {{site.konnect_catalog}} Classic
 permalink: /how-to/install-and-map-pagerduty-resources/
 content_type: how_to
-description: Learn how to connect PagerDuty services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
+description: Learn how to connect PagerDuty services to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}}.
 products:
   - catalog
 works_on:
@@ -15,16 +15,16 @@ tags:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: PagerDuty reference
     url: /catalog/integrations/pagerduty/
 automated_tests: false
 tldr:
-  q: How do I view PagerDuty services in {{site.konnect_catalog}}?
-  a: Install the PagerDuty integration in {{site.konnect_short_name}} and authorize it with both read and write scopes. Create a {{site.konnect_catalog}} service and associate it with your PagerDuty services to display metadata and enable event tracking. 
+  q: How do I view PagerDuty services in {{site.konnect_catalog}} Classic?
+  a: Install the PagerDuty integration in {{site.konnect_short_name}} and authorize it with both read and write scopes. Create a {{site.konnect_catalog}} Classic service and associate it with your PagerDuty services to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -36,6 +36,8 @@ prereqs:
       icon_url: /assets/icons/pagerduty.svg
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 ## Authenticate the PagerDuty integration
 
 1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
@@ -45,7 +47,7 @@ prereqs:
 
 Once authorized, resources from your PagerDuty account will be discoverable in the UI.
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your PagerDuty resources:
 
@@ -69,7 +71,7 @@ export PAGERDUTY_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List PagerDuty resources
 
-Before you can map your PagerDuty resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from PagerDuty:
+Before you can map your PagerDuty resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from PagerDuty:
 
 <!--vale off-->
 {% konnect_api_request %}

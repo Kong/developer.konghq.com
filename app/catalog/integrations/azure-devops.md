@@ -22,23 +22,25 @@ bindable_entities: "Repositories"
 
 works_on:
     - konnect
-description: "description: Provides information about the Azure DevOps integration, which lets the Konnect {{site.konnect_catalog}} read repository metadata from Azure DevOps and use it for service mapping and governance workflows."
+description: "description: Provides information about the Azure DevOps integration, which lets the Konnect {{site.konnect_catalog}} Classic read repository metadata from Azure DevOps and use it for service mapping and governance workflows."
 
 
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
-  - text: "Connect Azure DevOps repositories to Catalog with the Konnect API"
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
+  - text: "Connect Azure DevOps repositories to {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} API"
     url: /how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-api/
-  - text: "Connect Azure DevOps repositories to Catalog with the Konnect UI"
+  - text: "Connect Azure DevOps repositories to {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI"
     url: /how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/
 ---
 
-The Azure DevOps integration lets Konnect {{site.konnect_catalog}} securely read and ingest repository metadata from Azure DevOps using a PAT with `Code:Read` access. Teams can reference and manage their source-code assets inside {{site.konnect_catalog}} and prepare for future governance and scorecard workflows.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The Azure DevOps integration lets Konnect {{site.konnect_catalog}} Classic securely read and ingest repository metadata from Azure DevOps using a PAT with `Code:Read` access. Teams can reference and manage their source-code assets inside {{site.konnect_catalog}} Classic and prepare for future governance and scorecard workflows.
 
 For a complete tutorial, choose one of the following:
-- [Connect Azure DevOps repositories to Catalog with the Konnect API](/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-api/)
-- [Connect Azure DevOps repositories to Catalog with the Konnect UI](/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/)
+- [Connect Azure DevOps repositories to {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} API](/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-api/)
+- [Connect Azure DevOps repositories to {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI](/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/)
 
 ### Prerequisites
 You need to configure the following:
@@ -63,7 +65,7 @@ You need to configure the following:
 {% endnavtab %}
 {% navtab "API" %}
 
-Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, export your Azure organization name exactly as it appears in Azure DevOps:
+Before you can discover Azure DevOps repositories in {{site.konnect_catalog}} Classic, export your Azure organization name exactly as it appears in Azure DevOps:
 
 ```sh
 export AZURE_DEVOPS_ORG_NAME="YOUR-ORG-NAME"

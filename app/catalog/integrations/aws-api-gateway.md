@@ -18,11 +18,11 @@ search_aliases:
   - service catalog
 works_on:
     - konnect
-description: The AWS API Gateway integration allows you to associate your {{site.konnect_catalog}} service with one or more AWS API Gateway APIs. 
+description: The AWS API Gateway integration allows you to associate your {{site.konnect_catalog}} Classic service with one or more AWS API Gateway APIs. 
 
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Import and map AWS API Gateway resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-aws-gateway-apis/
   - text: "Discover AWS Gateway APIs in {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
@@ -35,27 +35,29 @@ discovery_support: true
 bindable_entities: "APIs"
 ---
 
-The AWS API Gateway integration allows you to associate your {{site.konnect_catalog}} service with one or more AWS API Gateway APIs.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The AWS API Gateway integration allows you to associate your {{site.konnect_catalog}} Classic service with one or more AWS API Gateway APIs.
 
 {% include /catalog/multi-resource.md %}
 
 For complete tutorials, see the following:
-* [Discover and govern APIs with {{site.konnect_catalog}}](/how-to/discover-and-govern-apis-with-service-catalog/)
-* [Discover AWS Gateway APIs in {{site.konnect_catalog}} with the {{site.konnect_short_name}} API](/how-to/discover-aws-gateway-apis-using-konnect-api/)
-* [Discover AWS Gateway APIs in {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI](/how-to/discover-aws-gateway-apis-using-konnect-ui/)
+* [Discover and govern APIs with {{site.konnect_catalog}} Classic](/how-to/discover-and-govern-apis-with-service-catalog/)
+* [Discover AWS Gateway APIs in {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} API](/how-to/discover-aws-gateway-apis-using-konnect-api/)
+* [Discover AWS Gateway APIs in {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI](/how-to/discover-aws-gateway-apis-using-konnect-ui/)
 
-## Configure an IAM role in AWS for {{site.konnect_catalog}}
+## Configure an IAM role in AWS for {{site.konnect_catalog}} Classic
 
 {% include /prereqs/service-catalog-iam.md %}
 
 ## Authorize the AWS API Gateway integration
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the {{site.konnect_catalog}} sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 1. Click **AWS API Gateway**.
 1. Click **Add AWS API Gateway instance**.
 1. From the **AWS region** dropdown, select your AWS region.
-1. In the **IAM role ARN** field, enter the [IAM role you configured for {{site.konnect_catalog}}](#configure-an-iam-role-in-aws-for-service-catalog).
+1. In the **IAM role ARN** field, enter the [IAM role you configured for {{site.konnect_catalog}} Classic](#configure-an-iam-role-in-aws-for-service-catalog).
 1. In the **Display name** field, enter a name for your AWS API Gateway instance.
 1. In the **Instance name** field, enter a unique identifier for your AWS API Gateway instance.
 1. Click **Save**. 
@@ -73,7 +75,7 @@ columns:
     key: description
 rows:
   - entity: API
-    description: An AWS API Gateway API that relates to the {{site.konnect_catalog}} service.
+    description: An AWS API Gateway API that relates to the {{site.konnect_catalog}} Classic service.
 {% endtable %}
 <!--vale on-->
 
