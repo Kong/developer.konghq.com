@@ -40,7 +40,7 @@ Public documentation updates support the latest versions of Insomnia.
 
 Learn more about stages of software availability [on the dedicated page](/stages-of-software-availability/).
 
-To try the **Beta** release, opt in via **Settings > Release Channel** in the Insomnia app. This setting lets you switch between **Beta** and **GA** versions. Beta versions can include breaking changes that aren't backward compatible.
+To try the **Beta** release, opt in via **Settings > Release Channel** in the Insomnia app. This setting lets you switch between **Beta** and **GA** versions. Beta versions can include breaking changes that aren't backwards compatible.
 
 {:.info}
 > Insomnia strongly recommends using the newest version, and that all users collaborating on the same project remain on the same major version.
