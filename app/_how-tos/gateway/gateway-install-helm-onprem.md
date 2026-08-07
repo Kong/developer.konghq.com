@@ -403,3 +403,43 @@ manager:
    ```bash
    curl -i $PROXY_IP/mock/anything
    ```
+
+## Terminate TLS at the proxy
+
+By default, the data plane serves a built-in {{ site.base_gateway }} certificate for HTTPS traffic. To present your own certificate for a hostname, generate a certificate, mount it into the data plane, and tell {{ site.base_gateway }} which certificate and key to load.
+
+The proxy TLS certificate is a second secret, mounted alongside the clustering certificate you created earlier.
+
+### Generate a TLS certificate
+
+{% include /k8s/create-certificate.md namespace='kong' hostname='demo.example.com' cert_required=true %}
+
+### Load the certificate on the data plane
+
+1. In `values-dp.yaml`, add the certificate secret to `secretVolumes` and set `ssl_cert` and `ssl_cert_key` in `env`:
+
+   ```yaml
+   # Mount the clustering cert and the proxy TLS cert
+   secretVolumes:
+     - kong-cluster-cert
+     - demo.example.com
+
+   env:
+     # Serve this certificate for proxy HTTPS traffic
+     ssl_cert: /etc/secrets/demo.example.com/tls.crt
+     ssl_cert_key: /etc/secrets/demo.example.com/tls.key
+   ```
+
+   `secretVolumes` mounts each secret at `/etc/secrets/<secret-name>/`. The certificate you created in the previous step is stored in a secret named after its hostname, so its files are at `/etc/secrets/demo.example.com/tls.crt` and `/etc/secrets/demo.example.com/tls.key`.
+
+1. Apply the updated values file:
+
+   ```bash
+   helm upgrade kong-dp kong/kong -n kong --values ./values-dp.yaml
+   ```
+
+1. Verify that the proxy serves your certificate over HTTPS. Use `-k` because this is a self-signed test certificate:
+
+   ```bash
+   curl -ik https://$PROXY_IP/mock/anything -H "Host: demo.example.com"
+   ```
