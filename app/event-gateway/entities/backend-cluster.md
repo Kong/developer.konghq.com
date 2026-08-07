@@ -95,9 +95,8 @@ rows:
 {% endtable %}
 
 Depending on what your Kafka cluster supports, you'll need to configure authentication on the associated virtual cluster:
-* If your Kafka cluster only accepts SASL/PLAIN or SASL/SCRAM credentials, configure [`terminate` mediation on the virtual cluster](/event-gateway/entities/virtual-cluster/#credential-mediation) so the {{site.event_gateway_short}} translates client credentials into the backend's accepted mechanism.
+* If your Kafka cluster only accepts SASL/PLAIN or SASL/SCRAM credentials, use [`passthrough` or `terminate` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation) on the virtual cluster.
 * If your backend Kafka cluster supports SASL/OAUTHBEARER natively, use [`passthrough` or `validate_forward` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation) on the virtual cluster.
-In that case, the client's OAuth bearer token is forwarded directly to the backend, and the backend cluster entity doesn't need to store separate credentials.
 
 ## Set up a backend cluster
 
