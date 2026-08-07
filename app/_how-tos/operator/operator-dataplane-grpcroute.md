@@ -17,7 +17,6 @@ products:
 
 works_on:
   - on-prem
-
 min_version:
   operator: '2.3'
 
@@ -26,7 +25,7 @@ tldr:
   a: Annotate the backend Service with `konghq.com/protocol=grpcs`, add an `HTTPS` listener to your `Gateway`, then create a `GRPCRoute` resource. {{ site.operator_product_name }} converts the `GRPCRoute` into a {{ site.base_gateway }} [Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
-  skip_product: true
+  enterprise: true
   inline:
     - title: gRPCurl installed
       include_content: prereqs/grpcurl
@@ -103,77 +102,80 @@ kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
 
 {% include /k8s/create-certificate.md namespace='kong' hostname='example.com' cert_required=true %}
 
-{{ site.operator_product_name }} only watches certificate Secrets that carry the `konghq.com/secret="true"` label. Add the label so {{ site.operator_product_name }} picks up the Secret you just created:
+1. {{ site.operator_product_name }} only watches certificate Secrets that carry the `konghq.com/secret="true"` label. Add the label so {{ site.operator_product_name }} picks up the Secret you just created:
 
-```bash
-kubectl label secret example.com -n kong konghq.com/secret="true"
-```
+   ```bash
+   kubectl label secret example.com -n kong konghq.com/secret="true"
+   ```
 
 ## Route gRPC traffic
 
-Re-apply the `kong-grpc-gateway` Gateway with an additional `HTTPS` listener for gRPC traffic:
+1. Re-apply the `kong-grpc-gateway` Gateway with an additional `HTTPS` listener for gRPC traffic:
 
-{:.warning}
-> **Warning**: Applying this Gateway replaces the listener list. Include every listener you want to keep.
-
-```bash
-echo 'apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong-grpc-gateway
-  namespace: kong
-spec:
-  gatewayClassName: kong-grpc
-  listeners:
-    - name: http
-      port: 80
-      protocol: HTTP
-    - name: grpc
-      port: 443
-      protocol: HTTPS
-      hostname: example.com
-      tls:
-        certificateRefs:
-          - group: ""
-            kind: Secret
-            name: example.com' | kubectl apply -f -
-```
-
-Next, create a `GRPCRoute`:
-
-```bash
-echo 'apiVersion: gateway.networking.k8s.io/v1
-kind: GRPCRoute
-metadata:
-  name: grpcbin
-  namespace: kong
-spec:
-  parentRefs:
-    - name: kong-grpc-gateway
-      sectionName: grpc
-  hostnames:
-    - "example.com"
-  rules:
-    - backendRefs:
-        - name: grpcbin
-          port: 9001
-' | kubectl apply -f -
-```
+   {:.warning}
+   > **Warning**: Applying this Gateway replaces the listener list. Include every listener you want to keep.
+   
+   ```bash
+   echo 'apiVersion: gateway.networking.k8s.io/v1
+   kind: Gateway
+   metadata:
+     name: kong-grpc-gateway
+     namespace: kong
+   spec:
+     gatewayClassName: kong-grpc
+     listeners:
+       - name: http
+         port: 80
+         protocol: HTTP
+       - name: grpc
+         port: 443
+         protocol: HTTPS
+         hostname: example.com
+         tls:
+           certificateRefs:
+             - group: ""
+               kind: Secret
+               name: example.com' | kubectl apply -f -
+   ```
+   
+1. Create a `GRPCRoute`:
+   
+   ```bash
+   echo 'apiVersion: gateway.networking.k8s.io/v1
+   kind: GRPCRoute
+   metadata:
+     name: grpcbin
+     namespace: kong
+   spec:
+     parentRefs:
+       - name: kong-grpc-gateway
+         sectionName: grpc
+     hostnames:
+       - "example.com"
+     rules:
+       - backendRefs:
+           - name: grpcbin
+             port: 9001
+   ' | kubectl apply -f -
+   ```
 
 This configuration instructs {{ site.base_gateway }} to forward gRPC requests for `example.com` on port `443` to the `grpcbin` Service on port `9001`.
 
 ## Validate
 
-1. Check the status of the Gateway to ensure the listeners are programmed:
+1. Wait for the Gateway to be programmed:
 
    ```bash
-   kubectl get gateway kong-grpc-gateway -n kong -o jsonpath='{.status.listeners}'
+   kubectl wait gateway/kong-grpc-gateway -n kong \
+     --for=condition=Programmed=True \
+     --timeout=5m
    ```
 
 1. Get the Gateway's external IP:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong-grpc-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+   echo $PROXY_IP
    ```
 
 1. Call the `grpcbin` test service through the proxy:
