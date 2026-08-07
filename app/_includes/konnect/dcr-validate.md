@@ -13,10 +13,9 @@ Now that DCR is configured, you can create an application with Dynamic Client Re
 
 For developers to authorize requests, they must attach the client ID and secret pair obtained previously in the header. They can do this by using any API client, such as [Insomnia](https://insomnia.rest/), or directly using the command line:
 
-{% validation request-check %}
-url: '/$ROUTE_PATH'
-headers:
-  - 'Authorization: Basic $CLIENT_ID:$CLIENT_SECRET'
-  - 'Content-Type: application/json'
-status_code: 200
-{% endvalidation %}
+```sh
+curl "$KONNECT_PROXY_URL/$ROUTE_PATH" \
+     --no-progress-meter --fail-with-body \
+     -H "Authorization: Basic $CLIENT_ID:$CLIENT_SECRET" \
+     -H "Content-Type: application/json"
+```
