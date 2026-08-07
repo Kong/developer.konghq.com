@@ -27,6 +27,7 @@ related_resources:
     url: /mesh/deploy-mesh-using-terraform-and-konnect/
 prereqs:
   skip_product: true
+  show_works_on: false
   inline:
     - title: "{{site.konnect_product_name}}"
       include_content: prereqs/products/konnect-account-only
