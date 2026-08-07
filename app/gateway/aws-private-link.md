@@ -5,6 +5,7 @@ layout: reference
 description: |
   Create a private connection between your AWS environment and {{site.konnect_short_name}} using AWS PrivateLink.
 products:
+  - konnect
   - gateway
 works_on:
   - konnect
@@ -93,7 +94,11 @@ headers:
 
 ## Regional PrivateLink service names
 
-The following tables show the PrivateLink service name and DNS name for each supported AWS region and {{site.konnect_short_name}} geo:
+The following tables show the PrivateLink service name and DNS name for each supported AWS region and {{site.konnect_short_name}} geo.
+
+{:.info}
+> To make any API calls to the {{site.konnect_short_name}} API, append `/api` to the DNS name. For example, `ap.svc.konghq.com/api`.
+
 <!--vale off-->
 {% navtabs "service names" %}
 
