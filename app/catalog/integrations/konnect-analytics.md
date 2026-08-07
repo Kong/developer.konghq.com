@@ -11,7 +11,7 @@ tags:
   - integrations
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 
 works_on:
