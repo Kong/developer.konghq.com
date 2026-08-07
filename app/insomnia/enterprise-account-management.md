@@ -92,13 +92,23 @@ You can set your preference for allowing invitations from the following domain t
 
 {% include insomnia/enterprise-storage.md %}
 
-## Add co-owners
+## Manage co-owners
 
 The owner of an Insomnia Enterprise account can invite other users to be co-owners of the account.
 
-To add a co-owner:
+### Add a co-awner
+
 1. [Invite](/insomnia/organizations/#invite-users-to-your-organization) the user to your an organization in your Enterprise account.
 1. Once they have accepted the invitation, go to [**Enterprise Controls** > **Co-owners**](https://app.insomnia.rest/app/enterprise/co-owners), search for the user's email address and select a role, then click **Invite**.
 
 {:.decorative}
 > You must identify and add a co-owner to your account to ensure that the account is accessible and operational, even if an owner leaves.
+
+### Remove a co-owner
+
+When you remove a co-owner, you choose how much access they keep as a regular
+user of the account:
+
+- **No organizations**: They lose access to all organizations.
+- **All organizations**: They keep access to every organization.
+- **Selected organizations**: They keep access only to the organizations you choose.
