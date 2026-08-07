@@ -163,6 +163,11 @@ Now that the application auth strategy is configured, you can apply it to an API
 
 1. Click **Publish API**.
 
+{:.warning}
+> **Certificate verification depth:** {{site.base_gateway}} verifies Auth0's TLS certificate when it connects to the Auth0 issuer to validate tokens. Auth0 certificates issued by Let's Encrypt present a certificate chain with multiple intermediate CAs, which is deeper than the default [`lua_ssl_verify_depth`](/gateway/configuration/#lua-ssl-verify-depth) of `1`. Combined with certificate verification being enabled by default in {{site.base_gateway}} 3.14 and later, this causes the TLS handshake to Auth0 to fail.
+>
+> On self-managed data planes, where you control `kong.conf`, set [`lua_ssl_verify_depth`](/gateway/configuration/#lua-ssl-verify-depth) high enough to cover Auth0's chain. Auth0's chain includes two intermediate CAs, so the value must be at least `2`. Also ensure [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate) includes `system` so the root CA is trusted. After updating `kong.conf`, restart the data plane to apply the changes.
+
 ## Validate
 
 {% include konnect/dcr-validate.md %}
