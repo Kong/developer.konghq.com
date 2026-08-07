@@ -12,7 +12,7 @@ tags:
   - azure
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 search_aliases:
   - service catalog
@@ -21,19 +21,21 @@ works_on:
 description: placeholder
 
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
 discovery_support: true
 bindable_entities: "APIs"
 ---
 
-The Azure API Management integration allows you to associate your {{site.konnect_catalog}} service with one or more Azure API Management APIs.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The Azure API Management integration allows you to associate your {{site.konnect_catalog}} Classic service with one or more Azure API Management APIs.
 
 {% include /catalog/multi-resource.md %}
 
 For complete tutorials, see the following:
-* [Discover Azure API Management APIs in {{site.konnect_catalog}} with the {{site.konnect_short_name}} API](/how-to/discover-azure-apis-with-konnect-api/)
-* [Discover Azure API Management APIs in {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI](/how-to/discover-azure-apis-with-konnect-ui/)
+* [Discover Azure API Management APIs in {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} API](/how-to/discover-azure-apis-with-konnect-api/)
+* [Discover Azure API Management APIs in {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI](/how-to/discover-azure-apis-with-konnect-ui/)
 
 ## Prerequisites
 
@@ -48,7 +50,7 @@ Before you configure the Azure API Management integration, ensure the following:
 > **Note:** The Azure API Management integration uses OAuth for authentication and can only be configured through the {{site.konnect_short_name}} UI.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the {{site.konnect_catalog}} sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 1. Click **Azure API Management**.
 1. Click **Add Azure API Management instance**.
 1. In the **Subscription ID** field, enter your Azure API subscription ID.
@@ -72,7 +74,7 @@ columns:
     key: description
 rows:
   - entity: API
-    description: An Azure API Management API that relates to the {{site.konnect_catalog}} service. Only HTTP specs can be added via the the **API Specs** tab on a service. gRPC, WebSocket, and GraphQL specifications aren't supported.
+    description: An Azure API Management API that relates to the {{site.konnect_catalog}} Classic service. Only HTTP specs can be added via the the **API Specs** tab on a service. gRPC, WebSocket, and GraphQL specifications aren't supported.
 {% endtable %}
 <!--vale on-->
 

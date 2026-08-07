@@ -1,8 +1,8 @@
 ---
-title: Install and map GitHub resources in Catalog
+title: Install and map GitHub resources in {{site.konnect_catalog}} Classic
 permalink: /how-to/install-and-map-github-resources/
 content_type: how_to
-description: Learn how to connect a GitHub repository to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
+description: Learn how to connect a GitHub repository to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}}.
 products:
   - catalog
 works_on:
@@ -15,16 +15,16 @@ tags:
   - integrations
   - github
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: GitHub reference
     url: /catalog/integrations/github/
 automated_tests: false
 tldr:
-  q: How do I connect a GitHub repository to my {{site.konnect_catalog}} service?
-  a: Install the GitHub integration in {{site.konnect_short_name}} and authorize access to one or more repositories, then link a repository to your {{site.konnect_catalog}} service to display metadata and enable event tracking.
+  q: How do I connect a GitHub repository to my {{site.konnect_catalog}} Classic service?
+  a: Install the GitHub integration in {{site.konnect_short_name}} and authorize access to one or more repositories, then link a repository to your {{site.konnect_catalog}} Classic service to display metadata and enable event tracking.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -32,7 +32,7 @@ prereqs:
       icon_url: /assets/icons/kogo-white.svg
     - title: GitHub access
       content: |
-        To integrate GitHub with {{site.konnect_catalog}}, you need the following:
+        To integrate GitHub with {{site.konnect_catalog}} Classic, you need the following:
         * Sufficient permissions in GitHub to authorize third-party applications and install the {{site.konnect_short_name}} GitHub App
         * A GitHub organization
         * A repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. 
@@ -40,6 +40,8 @@ prereqs:
         The {{site.konnect_short_name}} app can be managed in your GitHub account under **Applications > GitHub Apps**.
       icon_url: /assets/icons/github.svg
 ---
+
+{% include_cached catalog/catalog-classic-banner.md %}
 
 ## Install and authorize the GitHub integration
 
@@ -50,7 +52,7 @@ prereqs:
 
 The {{site.konnect_short_name}} application can be managed from GitHub as a [GitHub Application](https://docs.github.com/en/apps/using-github-apps/authorizing-github-apps).
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your GitHub resources:
 
@@ -74,7 +76,7 @@ export GITHUB_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List GitHub resources
 
-Before you can map your GitHub resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from GitHub:
+Before you can map your GitHub resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from GitHub:
 
 <!--vale off-->
 {% konnect_api_request %}

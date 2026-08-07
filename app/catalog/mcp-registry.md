@@ -1,5 +1,5 @@
 ---
-title: "MCP Registries in {{site.konnect_catalog}}"
+title: "MCP Registries in {{site.konnect_catalog}} Classic"
 content_type: reference
 layout: reference
 tech_preview: true
@@ -8,16 +8,16 @@ products:
 works_on:
   - konnect
 
-description: An MCP Registry is a centralized publishing and discovery endpoint for MCP servers within your organization. Learn how to register your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}.
+description: An MCP Registry is a centralized publishing and discovery endpoint for MCP servers within your organization. Learn how to register your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}} Classic.
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
 search_aliases:
   - service catalog
   - mcp
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: "MCP traffic gateway"
     url: /mcp/
   - text: "MCP clients in Insomnia"
@@ -25,12 +25,14 @@ related_resources:
 faqs:
     - q: Is the MCP Registry feature GA?
       a: |
-        No, MCP Registries in Catalog is only available in Tech Preview via {{site.konnect_short_name}} Labs.
+        No, MCP Registries in {{site.konnect_catalog}} Classic is only available in Tech Preview via {{site.konnect_short_name}} Labs.
 
         This feature is built on top of Anthropic’s MCP Registry API specification, which is still rapidly evolving. Because the underlying standard continues to change, we cannot responsibly commit to GA timelines or long-term stability guarantees at this time.
 
         We are actively iterating in partnership with customers who are exploring MCP-based agent architectures and will evaluate GA readiness as the specification matures.
 ---
+
+{% include_cached catalog/catalog-classic-banner.md %}
 
 ## What is an MCP Registry?
 
@@ -42,14 +44,14 @@ As organizations experiment with AI agents, MCP servers are often embedded direc
 * Which agents should use which servers  
 * How those servers should be governed
 
-MCP Registries extend {{site.konnect_short_name}} {{site.konnect_catalog}} to provide a structured, standards-based way to register and manage MCP servers, helping Platform Teams maintain visibility and control as AI adoption scales.
+MCP Registries extend {{site.konnect_short_name}} {{site.konnect_catalog}} Classic to provide a structured, standards-based way to register and manage MCP servers, helping Platform Teams maintain visibility and control as AI adoption scales.
 
 This feature is built on top of the MCP Registry API specification defined by {{ site.anthropic }}’s [open source project](https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/api/openapi.yaml). The specification allows flexibility in how registries are structured, so you can model them according to your organization’s governance needs.
 
 
-## Enable MCP Registries in {{site.konnect_catalog}}
+## Enable MCP Registries in {{site.konnect_catalog}} Classic
 
-MCP Registries in {{site.konnect_catalog}} are currently available in tech preview via {{site.konnect_short_name}} Labs.
+MCP Registries in {{site.konnect_catalog}} Classic are currently available in tech preview via {{site.konnect_short_name}} Labs.
 
 1. In the {{site.konnect_short_name}} sidebar, navigate to **Organizations**.
 1. In the Organization sidebar, click **Labs**.

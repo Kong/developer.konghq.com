@@ -11,29 +11,31 @@ tags:
   - integrations
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 search_aliases:
   - service catalog
   - gateway manager integration
 works_on:
     - konnect
-description: The API Gateway integration is built directly into {{site.konnect_catalog}}, so no additional authorization is needed.
+description: The API Gateway integration is built directly into {{site.konnect_catalog}} Classic, so no additional authorization is needed.
 
 related_resources:
   - text: Map API Gateway Services in {{site.konnect_catalog}}
     url: /how-to/map-api-gateway-resources/
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
 discovery_support: true
 bindable_entities: "Gateway Service"
 ---
 
-This integration allows you to associate your {{site.konnect_catalog}} service to one or more Gateway Services registered in {{site.konnect_short_name}}’s API Gateway application.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+This integration allows you to associate your {{site.konnect_catalog}} Classic service to one or more Gateway Services registered in {{site.konnect_short_name}}’s API Gateway application.
 
 ## Authorize the API Gateway integration
 
-The API Gateway integration is built directly into {{site.konnect_catalog}}. No additional authorization is required. As new Gateway Services are created in API Gateway, they are automatically discovered by {{site.konnect_catalog}} and surfaced as Resources.
+The API Gateway integration is built directly into {{site.konnect_catalog}} Classic. No additional authorization is required. As new Gateway Services are created in API Gateway, they are automatically discovered by {{site.konnect_catalog}} Classic and surfaced as Resources.
 
 ## Resources
 

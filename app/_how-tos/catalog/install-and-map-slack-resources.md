@@ -1,8 +1,8 @@
 ---
-title: Import and map Slack resources in Catalog
+title: Import and map Slack resources in {{site.konnect_catalog}} Classic
 permalink: /how-to/install-and-map-slack-resources/
 content_type: how_to
-description: Learn how to connect Slack channels to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
+description: Learn how to connect Slack channels to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}}.
 products:
   - catalog
 works_on:
@@ -15,8 +15,8 @@ tags:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Traceable plugin
@@ -25,8 +25,8 @@ related_resources:
     url: /catalog/integrations/slack/
 automated_tests: false
 tldr:
-  q: How do I view a Slack channel in {{site.konnect_catalog}}?
-  a: Install the Slack integration in {{site.konnect_short_name}} and authorize it using Slack admin credentials. Create a {{site.konnect_catalog}} service and associate it with your Slack channel to improve visibility and ownership.
+  q: How do I view a Slack channel in {{site.konnect_catalog}} Classic?
+  a: Install the Slack integration in {{site.konnect_short_name}} and authorize it using Slack admin credentials. Create a {{site.konnect_catalog}} Classic service and associate it with your Slack channel to improve visibility and ownership.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -38,6 +38,8 @@ prereqs:
       icon_url: /assets/icons/third-party/slack.svg
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 ## Authorize the Slack integration
 
 1. From the **Catalog** in {{site.konnect_short_name}}, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
@@ -47,7 +49,7 @@ prereqs:
 Once authorized, resources from your Slack account will be discoverable in the UI.
 
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your Slack resources:
 
@@ -71,7 +73,7 @@ export SLACK_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List Slack resources
 
-Before you can map your Slack resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from Slack:
+Before you can map your Slack resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from Slack:
 
 <!--vale off-->
 {% konnect_api_request %}
