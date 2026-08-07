@@ -3,7 +3,7 @@ title: "{{site.observability}} Explorer"
 content_type: reference
 layout: reference
 description: | 
-    Explorer is an intuitive web-based interface that displays API, LLM, and platform usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
+    Explorer is an intuitive web-based interface that displays API, LLM, platform, and managed cache usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
 breadcrumbs:
   - /observability/
 products:
@@ -84,15 +84,16 @@ related_resources:
     url: /dev-portal/analytics/
 ---
 
-The Explorer interface displays API, LLM, and platform usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to:
+The Explorer interface displays API, LLM, platform, and managed cache usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to:
 * Diagnose performance issues
 * Monitor LLM token consumption and costs
 * Capture essential usage metrics
 * See how many {{site.base_gateway}} entities exist in your platform or control plane
+* Monitor the health of a Dedicated Cloud Gateway [managed cache](/dedicated-cloud-gateways/managed-cache/)
 
 The Analytics Explorer also lets you save the output as a custom report.
 
-To use this feature, navigate to the [Explorer dashboard](https://cloud.konghq.com/us/analytics/explorer) and switch between API usage, LLM usage, and platform usage using the dataset dropdown. 
+To use this feature, navigate to the [Explorer dashboard](https://cloud.konghq.com/analytics/explorer) and switch between API usage, LLM usage, platform usage, and managed cache usage using the dataset dropdown. 
 Metrics and groupings will dynamically adjust based on the selected dataset.
 
 ## Enabling data ingestion
@@ -326,6 +327,46 @@ rows:
     category: "Size"
     description: |
       The size of the response payload returned to {{site.base_gateway}} from an agent, in bytes. Users can select the total sum.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Managed cache usage" %}
+
+With managed cache usage reporting, you can:
+* Monitor eviction and expiration activity to see whether a cache is under memory pressure
+* Track memory utilization to plan cache sizing
+* See how many items are stored in a cache over time
+
+{:.info}
+> Managed cache metrics are retained for seven days.
+
+The following table shows which managed cache usage metrics you can view:
+<!--vale off-->
+{% table %}
+columns:
+  - title: "Metric"
+    key: "metric"
+  - title: "Category"
+    key: "category"
+  - title: "Description"
+    key: "description"
+rows:
+  - metric: "Cache eviction rate"
+    category: "Rate"
+    description: |
+      The rate, in operations per minute, at which keys are removed from the cache because it's out of memory capacity.
+  - metric: "Cache expiration rate"
+    category: "Rate"
+    description: |
+      The rate, in operations per minute, at which keys are removed from the cache because their TTL (time to live) elapsed.
+  - metric: "Cache memory utilization (max)"
+    category: "Percentage"
+    description: |
+      The highest percentage of provisioned cache memory in use during the selected time window.
+  - metric: "Cache items count (avg)"
+    category: "Count"
+    description: |
+      The average number of items stored in the cache during the selected time window.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
