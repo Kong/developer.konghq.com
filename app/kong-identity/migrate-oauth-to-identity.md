@@ -14,7 +14,7 @@ works_on:
     - on-prem
     - konnect
 
-description: This guide walks you through migrating from the OAuth 2.0 plugin to {{site.identity}} with OIDC or OAuth 2.0 Introspection.
+description: This guide walks you through migrating from the OAuth 2.0 plugin to {{site.identity}} and configuring the OIDC plugin to validate issued tokens.
 
 related_resources:
   - text: "{{site.identity}} authorization servers"
