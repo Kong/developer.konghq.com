@@ -1,0 +1,137 @@
+metadata:
+  title: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+  content_type: landing_page
+  description: 'Learn how {{site.mesh_product_name}} works with {{site.konnect_short_name}}: a Kong-managed global control plane, self-managed zones, and how zones connect and authenticate.'
+  products:
+    - mesh
+  tags:
+    - service-mesh
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+      sub_text: Host and operate the {{site.mesh_product_name}} global control plane in {{site.konnect_short_name}}.
+
+  - columns:
+      - blocks:
+          - type: text
+            config: |
+              {{site.konnect_short_name}} can host and operate the {{site.mesh_product_name}} global control plane for you. Instead of running and maintaining a global control plane yourself, you create one in {{site.konnect_short_name}} and connect your own zone control planes to it. This gives you a Kong-managed global control plane, a unified view of your {{site.mesh_product_name}}, {{site.kic_product_name}}, and {{site.konnect_short_name}} entities in one place, and a UI-driven setup for connecting zones.
+
+  - header:
+      type: h2
+      text: Architecture
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              A {{site.mesh_product_name}} deployment in {{site.konnect_short_name}} is always [multi-zone](/mesh/mesh-multizone-service-deployment/): {{site.konnect_short_name}} runs the global control plane, and you run one or more zone control planes in your own environment. Each zone control plane connects to the {{site.konnect_short_name}}-managed global control plane and manages the data plane proxies running alongside your services in that zone.
+          - type: text
+            config: |
+              The global and zone control planes have distinct responsibilities. The global control plane in {{site.konnect_short_name}} is the source of truth for meshes and [policies](/mesh/policies/), and it synchronizes them to every connected zone. Each zone control plane registers its own [data plane proxies](/mesh/data-plane-proxy/), [zone ingresses](/mesh/zone-ingress/), and [zone egresses](/mesh/zone-egress/), and reports their status back to the global control plane so you can see all zones from {{site.konnect_short_name}}. Because the global control plane is managed by {{site.konnect_short_name}}, you apply mesh and policy changes through {{site.konnect_short_name}} or `kumactl` rather than directly on a zone.
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TB
+                  subgraph konnect[Konnect]
+                    global[Global control plane]
+                  end
+                  subgraph env[Your environment]
+                    zone1[Zone control plane]
+                    zone2[Zone control plane]
+                    dp1[Data plane proxies]
+                    dp2[Data plane proxies]
+                  end
+                  global <-->|KDS| zone1
+                  global <-->|KDS| zone2
+                  zone1 --- dp1
+                  zone2 --- dp2
+         
+  - header:
+      type: h2
+      text: Deploy a zone
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              You can create a global control plane and connect a zone from the {{site.konnect_short_name}} UI, the {{site.konnect_short_name}} API, or Terraform. The zone control plane itself can run on Kubernetes or on Universal (a VM or bare metal machine).
+
+  - column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Kubernetes 
+              description: |
+                Create a global control plane and connect a Kubernetes zone using the {{site.konnect_short_name}} UI, the {{site.konnect_short_name}} API, or Terraform.
+              ctas:
+                - text: "{{site.konnect_short_name}} UI"
+                  url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
+                - text: "{{site.konnect_short_name}} API"
+                  url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
+                - text: Terraform
+                  url: /mesh/deploy-mesh-using-terraform-and-konnect/
+      - blocks:
+          - type: card
+            config:
+              title: Universal
+              description: |
+                Create a global control plane and connect a Universal (VM or bare metal) zone using the {{site.konnect_short_name}} UI or API.
+              ctas:
+                - text: "{{site.konnect_short_name}} UI"
+                  url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
+                - text: "{{site.konnect_short_name}} API"
+                  url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+
+  - header:
+      type: h2
+      text: Move an existing mesh to {{site.konnect_short_name}}
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              If you already run {{site.mesh_product_name}}, you can move it to a {{site.konnect_short_name}}-managed global control plane without recreating your workloads.
+
+  - column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Migrate a self-managed zone control plane
+              description: |
+                Move zones from a self-managed global control plane to {{site.konnect_short_name}}.
+              cta:
+                text: View the guide
+                url: /mesh/migrate-self-managed-zone-to-konnect/
+      - blocks:
+          - type: card
+            config:
+              title: Federate a zone control plane
+              description: |
+                Connect an existing single-zone control plane to {{site.konnect_short_name}} to enable multi-zone.
+              cta:
+                text: View the guide
+                url: /mesh/federate-zone-control-plane-to-konnect/
+
+  - header:
+      type: h2
+      text: Frequently asked questions
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: How does a zone connect to the global control plane?
+                a: |
+                  A zone control plane connects to the global control plane over the {{site.mesh_product_name}} Discovery Service (KDS), a gRPC stream. When you create a zone, {{site.konnect_short_name}} provides the values that the zone control plane needs to connect:
+
+                  * The **KDS global address**, in the form `grpcs://{region}.mesh.sync.konghq.com:443`, where `{region}` is your {{site.konnect_short_name}} [geographic region](/konnect-platform/geos/).
+                  * The **control plane ID**, which identifies the global control plane the zone belongs to.
+                  * A **token** that the zone control plane uses to authenticate.
+
+                  Once the zone control plane starts with these values, it connects to {{site.konnect_short_name}}, appears as a zone in the [Service Mesh](https://cloud.konghq.com/mesh-manager) area, and begins receiving configuration.
+              - q: How does a zone authenticate to the global control plane?
+                a: |
+                  {% include faqs/mesh-zone-authentication.md %}
+

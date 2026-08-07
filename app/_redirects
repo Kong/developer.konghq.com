@@ -119,9 +119,16 @@
 /gateway/plugin-development/*  /custom-plugins/
 
 # Renames
-/mesh-manager/federate-zone/  /mesh/federate-zone/
-/mesh-manager/migrate-zone/  /mesh/migrate-zone/
-/mesh-manager/service-mesh/  /mesh/konnect-global-control-plane/
+/mesh-manager/federate-zone/  /mesh/federate-zone-control-plane-to-konnect/
+/mesh/federate-zone/    /mesh/federate-zone-control-plane-to-konnect/
+/mesh-manager/migrate-zone/  /mesh/migrate-self-managed-zone-to-konnect/
+/mesh/migrate-zone/ /mesh/migrate-self-managed-zone-to-konnect/
+/mesh-manager/service-mesh/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
+/mesh/konnect-global-control-plane/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
+/mesh/deploy-mesh-on-konnect/  /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+/mesh/configure-mesh-global-control-plane-with-konnect-ui/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
+/mesh/configure-mesh-global-control-plane-with-konnect-api/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
+/mesh/deploy-with-terraform-konnect/    /mesh/deploy-mesh-using-terraform-and-konnect/
 /mesh-manager/ /mesh/
 /gateway-manager/aws-private-link/ /gateway/aws-private-link/
 /gateway-manager/data-plane-reference/ /gateway/data-plane-reference/

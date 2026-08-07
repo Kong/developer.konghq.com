@@ -141,7 +141,7 @@ rows:
                 url: /mesh/
                 align: end
               - text: Get started
-                url: /mesh/konnect-global-control-plane/
+                url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
                 align: end
 
     - blocks:
