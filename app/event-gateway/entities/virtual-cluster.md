@@ -172,7 +172,7 @@ rows:
       <br><br>
       See [Configure mTLS client authentication](/event-gateway/configure-mtls-client-authentication/) for a full walkthrough, including how to configure principal extraction.
       <br><br>
-      mTLS is also supported for the gateway-to-backend connection; configure it in the [backend cluster's TLS settings](/event-gateway/entities/backend-cluster/).
+      mTLS is also supported for the gateway-to-backend connection; configure it in the [backend cluster's TLS settings](/event-gateway/entities/backend-cluster/#schema-backend-cluster-tls).
     credential: None
 {% endtable %}
 
@@ -253,9 +253,9 @@ For example, a virtual cluster exposes a topic named `orders` to the client.
 Behind the scenes, this maps to `team-a-orders` on the actual Kafka cluster. The client doesn't need to know about or manage the `team-a-` prefix.
 This enables transparent multitenancy, where multiple teams can share the same Kafka cluster without needing to manually prefix every topic and consumer group name in their applications.
 
-When clients send messages that contain consumer group names, the gateway passes the names to the backend unchanged, unless a namespace prefix is configured.
+When clients send messages that contain Consumer Group names, the gateway passes the names to the backend unchanged, unless a namespace prefix is configured.
 Kafka handles consumer group coordination and offset tracking on the backend as normal.
-Consumer group management commands such as create and delete are intercepted by the gateway and evaluated against ACL policies using the `group` resource type.
+Consumer Group management commands such as create and delete are intercepted by the gateway and evaluated against ACL policies using the `group` resource type.
 
 The following examples provide some common use cases for namespaces and show how to set them up.
 

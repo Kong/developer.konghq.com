@@ -105,7 +105,7 @@ The backend cluster sees only that service account, not individual client identi
 ACL policies on the [virtual cluster](/event-gateway/entities/virtual-cluster/) are how you enforce per-client authorization in this model.
 
 Each client's principal is evaluated against ACL rules before the {{site.event_gateway_short}} forwards any request to the backend.
-Consumer group management commands (for example, create or delete) are also intercepted and evaluated against ACL rules using the `group` resource type.
+Consumer Group management commands (for example, create or delete) are also intercepted and evaluated against ACL rules using the `group` resource type.
 
 ## Security considerations
 
