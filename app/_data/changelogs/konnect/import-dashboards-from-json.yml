@@ -1,0 +1,7 @@
+title: "Import dashboards from JSON in Konnect Analytics"
+date: 2026-07-31
+content: |
+  Importing a dashboard from JSON has always been possible through the API. It's now
+  in the UI too. From Create dashboard, choose Import JSON definition and upload the
+  file from your machine. Konnect validates the file and builds the dashboard for you.
+url: https://releases.konghq.com/en/import-dashboards-from-json-in-konnect-analytics

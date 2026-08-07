@@ -1,0 +1,13 @@
+{% for entry in changelog.entries %}
+<item>
+<title>{{ entry.title | xml_escape }}</title>
+<pubDate>{{ entry.date | date_to_rfc822 }}</pubDate>
+<description>{{ entry.content | markdownify | strip_html | normalize_whitespace | xml_escape }}</description>
+{% if entry.url %}
+<link>{{ entry.url | xml_escape }}</link>
+<guid isPermaLink="true">{{ entry.url | xml_escape }}</guid>
+{% else %}
+<guid isPermaLink="false">{{ entry.title | slugify }}-{{ entry.date | date: "%Y-%m-%d" }}</guid>
+{% endif %}
+</item>
+{% endfor %}
