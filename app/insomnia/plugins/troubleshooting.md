@@ -50,14 +50,11 @@ Older versions cached the plugin and render engine for the whole session, so a p
 
 ## Known limitations
 
-### Passing DOM or non-serializable values across the plugin boundary
+### `context.app.dialog()` with a DOM element
 
-APIs that pass rich objects (for example `context.app.dialog()` with DOM nodes) don't round-trip through the sandbox bridge, which marshals plain JSON. Prefer serializable data.
+`context.app.dialog(title, body, options)` currently expects `body` to be a live DOM element. When an action runs in the isolated plugin window, that element can't be passed across Electron IPC to the main window (DOM nodes aren't structured-cloneable), so the call fails with `An object could not be cloned` (tracked in [Kong/insomnia#10292](https://github.com/Kong/insomnia/issues/10292)).
 
-<!-- TODO(triage): Folder actions (requestGroupActions) are reported broken in Kong/insomnia#10292.
-     Confirm whether this is a sandbox/marshalling limitation to document here, or an action-routing
-     regression to fix. If it's a regression it belongs in a fix, not this list. Do not finalize
-     this section until #10292 is triaged. -->
+Until this is addressed, avoid passing DOM nodes across the boundary — prefer serializable content, or a template tag / other UI affordance for now.
 
 ## Still stuck?
 
