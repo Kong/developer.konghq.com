@@ -110,10 +110,7 @@ To get started configuring Auth0, log in to your Auth0 dashboard and complete th
 
 7. On the application's **Settings** tab, locate the values for **Client ID** and **Client Secret**, then export them:
 
-   ```sh
-   export CLIENT_ID='YOUR-AUTH0-CLIENT-ID'
-   export CLIENT_SECRET='YOUR-AUTH0-CLIENT-SECRET'
-
+   
 8. Under **Settings** > **General**, locate your tenant name and export the corresponding issuer URL:
 
    ```sh
