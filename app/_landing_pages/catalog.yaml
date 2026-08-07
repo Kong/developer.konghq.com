@@ -18,14 +18,11 @@ rows:
 
   - columns:
       - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {:.info}
-                    > Looking for {{site.konnect_catalog}} Classic? 
-                    > See the [{{site.konnect_catalog}} Classic documentation](/catalog-classic/).
+          - type: text
+            config: |
+              {:.info}
+              > Looking for {{site.konnect_catalog}} Classic?
+              > See the [{{site.konnect_catalog}} Classic documentation](/catalog-classic/).
 
   - columns:
       - blocks:
@@ -88,6 +85,8 @@ rows:
       - blocks:
           - type: faqs
             config:
+              - q: "What's different between {{site.konnect_catalog}} and {{site.konnect_catalog}} Classic?"
+                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, and AI Models today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services, Scorecards, Integrations, and MCP Registry. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
               - q: "What happened to Services, Integrations, and Scorecards?"
                 a: "Those features are compatible with {{site.konnect_catalog}} Classic. See the [{{site.konnect_catalog}} Classic documentation](/catalog-classic/)."
               - q: "Can I control access to specific {{site.konnect_catalog}} data?"

@@ -11,7 +11,7 @@ works_on:
 description: Scorecards in {{site.konnect_catalog}} Classic allow platform teams to monitor services for compliance with Kong-recommended and industry-defined best practices in {{site.konnect_short_name}}.
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
 search_aliases:
   - service catalog
 related_resources:
