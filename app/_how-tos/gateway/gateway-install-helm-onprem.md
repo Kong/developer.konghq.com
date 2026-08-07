@@ -412,7 +412,10 @@ The proxy TLS certificate is a second secret, mounted alongside the clustering c
 
 ### Generate a TLS certificate
 
-{% include /k8s/create-certificate.md namespace='kong' hostname='demo.example.com' cert_required=true %}
+{% include /k8s/create-certificate.md namespace='kong' hostname='demo.example.com' secret_name='demo-example-com' cert_required=true %}
+
+{:.info}
+> The secret name can't contain dots. The Helm chart uses each `secretVolumes` entry as a Kubernetes volume name, and volume names must be a DNS label. This is why the secret is named `demo-example-com` rather than after the `demo.example.com` hostname.
 
 ### Load the certificate on the data plane
 
@@ -422,15 +425,15 @@ The proxy TLS certificate is a second secret, mounted alongside the clustering c
    # Mount the clustering cert and the proxy TLS cert
    secretVolumes:
      - kong-cluster-cert
-     - demo.example.com
+     - demo-example-com
 
    env:
      # Serve this certificate for proxy HTTPS traffic
-     ssl_cert: /etc/secrets/demo.example.com/tls.crt
-     ssl_cert_key: /etc/secrets/demo.example.com/tls.key
+     ssl_cert: /etc/secrets/demo-example-com/tls.crt
+     ssl_cert_key: /etc/secrets/demo-example-com/tls.key
    ```
 
-   `secretVolumes` mounts each secret at `/etc/secrets/<secret-name>/`. The certificate you created in the previous step is stored in a secret named after its hostname, so its files are at `/etc/secrets/demo.example.com/tls.crt` and `/etc/secrets/demo.example.com/tls.key`.
+   `secretVolumes` mounts each secret at `/etc/secrets/<secret-name>/`, so the certificate you created in the previous step is at `/etc/secrets/demo-example-com/tls.crt` and `/etc/secrets/demo-example-com/tls.key`.
 
 1. Apply the updated values file:
 
@@ -438,8 +441,18 @@ The proxy TLS certificate is a second secret, mounted alongside the clustering c
    helm upgrade kong-dp kong/kong -n kong --values ./values-dp.yaml
    ```
 
-1. Verify that the proxy serves your certificate over HTTPS. Use `-k` because this is a self-signed test certificate:
+1. Verify that the proxy serves your certificate over HTTPS. Use `-v` to print the certificate the proxy presents, and `-k` to accept it, because this is a self-signed test certificate:
 
    ```bash
-   curl -ik https://$PROXY_IP/mock/anything -H "Host: demo.example.com"
+   curl -skv -o /dev/null https://$PROXY_IP/mock/anything 2>&1 | grep -E "subject:|issuer:"
    ```
+
+   You should see your certificate rather than the built-in {{ site.base_gateway }} default:
+
+   ```text
+   *   subject: CN=demo.example.com
+   *   issuer: CN=demo.example.com
+   ```
+
+   {:.info}
+   > `ssl_cert` sets the default certificate for the proxy listener, so {{ site.base_gateway }} presents it on every HTTPS connection, whatever hostname the client requests. To serve different certificates per hostname, create [Certificate](/gateway/entities/certificate/) and [SNI](/gateway/entities/sni/) entities instead.
