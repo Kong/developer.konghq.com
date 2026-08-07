@@ -37,7 +37,7 @@ prereqs:
   skip_product: true
   inline:
     - title: "{{site.konnect_product_name}}"
-      include_content: prereqs/products/konnect-account-only
+      include_content: prereqs/products/konnect-auth-only
       icon_url: /assets/icons/gateway.svg
     - title: "{{site.konnect_product_name}} roles"
       include_content: prereqs/dev-portal-dcr-roles
