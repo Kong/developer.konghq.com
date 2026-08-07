@@ -1,0 +1,166 @@
+{
+  "kong.api_request": [
+    {
+      "name": "api_id",
+      "type": "string?"
+    },
+    {
+      "name": "api_package_id",
+      "type": "string?"
+    },
+    {
+      "name": "api_product_version_id",
+      "type": "string?"
+    },
+    {
+      "name": "application_id",
+      "type": "string?"
+    },
+    {
+      "name": "client_ip",
+      "type": "string?"
+    },
+    {
+      "name": "control_plane_id",
+      "type": "string?"
+    },
+    {
+      "name": "portal_id",
+      "type": "string?"
+    },
+    {
+      "name": "request_host",
+      "type": "string?"
+    },
+    {
+      "name": "request_method",
+      "type": "string?"
+    },
+    {
+      "name": "request_size_bytes",
+      "type": "integer?"
+    },
+    {
+      "name": "request_uri",
+      "type": "string?"
+    },
+    {
+      "name": "request_user_agent",
+      "type": "string?"
+    },
+    {
+      "name": "response_http_status",
+      "type": "integer?"
+    },
+    {
+      "name": "response_size_bytes",
+      "type": "integer?"
+    },
+    {
+      "name": "route_id",
+      "type": "string?"
+    },
+    {
+      "name": "route_name",
+      "type": "string?"
+    },
+    {
+      "name": "service_id",
+      "type": "string?"
+    },
+    {
+      "name": "service_name",
+      "type": "string?"
+    },
+    {
+      "name": "service_port",
+      "type": "integer?"
+    },
+    {
+      "name": "service_protocol",
+      "type": "string?"
+    },
+    {
+      "name": "subject_type",
+      "type": "string?"
+    },
+    {
+      "name": "upstream_status",
+      "type": "integer?"
+    }
+  ],
+  "kong.llm_request": [
+    {
+      "name": "ai_plugin_id",
+      "type": "string?"
+    },
+    {
+      "name": "ai_plugin_name",
+      "type": "string?"
+    },
+    {
+      "name": "api_id",
+      "type": "string?"
+    },
+    {
+      "name": "api_package_id",
+      "type": "string?"
+    },
+    {
+      "name": "api_product_version_id",
+      "type": "string?"
+    },
+    {
+      "name": "api_request_id",
+      "type": "string?"
+    },
+    {
+      "name": "application_id",
+      "type": "string?"
+    },
+    {
+      "name": "cache_status",
+      "type": "string?"
+    },
+    {
+      "name": "control_plane_id",
+      "type": "string?"
+    },
+    {
+      "name": "http_status",
+      "type": "integer?"
+    },
+    {
+      "name": "model",
+      "type": "string?"
+    },
+    {
+      "name": "portal_id",
+      "type": "string?"
+    },
+    {
+      "name": "provider",
+      "type": "string?"
+    },
+    {
+      "name": "route_id",
+      "type": "string?"
+    },
+    {
+      "name": "service_id",
+      "type": "string?"
+    },
+    {
+      "name": "subject_type",
+      "type": "string?"
+    },
+    {
+      "name": "tokens",
+      "type": "integer?"
+    },
+    {
+      "name": "type",
+      "type": "string?"
+    }
+  ]
+}
