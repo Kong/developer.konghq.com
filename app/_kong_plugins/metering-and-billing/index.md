@@ -81,6 +81,14 @@ Every usage event has a subject that identifies who is billed for the request. T
 
 If the plugin can't resolve a subject from the configured source (for example, if the expected header is missing), the event is dropped.
 
+### Captured event dimensions
+
+For each request it meters, the plugin captures a set of standard fields on the event's `data` payload. The available fields depend on the event type:
+
+{% include plugins/metering-and-billing/event_dimensions.md %}
+
+In addition to these standard fields, you can attach operator-defined custom fields to events. See [Filtering traffic and custom dimensions](#filtering-traffic-and-custom-dimensions) for more information.
+
 ### Filtering traffic and custom dimensions
 
 You can further narrow which traffic and dimensions the plugin will ingest as events. 
