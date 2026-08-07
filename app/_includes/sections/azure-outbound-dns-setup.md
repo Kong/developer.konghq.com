@@ -6,6 +6,6 @@ After your Azure private networking configuration is ready in {{site.konnect_sho
 1. From the action menu next to your Azure network, select "Configure private DNS".
 1. Click **Outbound DNS resolver**.
 1. In the **Outbound Resolver name** field, enter the name of your private DNS resolver in Azure.
-1. In the **Domain name** field, enter your domain.
-1. In the **Target IP address** field, enter the IP addresses of your outbound endpoint subnets.
+1. In the **Domain** name field, enter the domain whose DNS queries should be sent to the target DNS servers.
+1. In the **Target IP address** field, enter the IP addresses of the remote DNS servers that resolve queries for the specified domain name.
 1. Click **Save**.
