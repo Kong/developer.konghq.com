@@ -75,6 +75,7 @@ This is driven by the following equation:
 ```
 Key Count ≈ Unique Consumers × Unique Routes × Rate limit windows × Kong data plane pods
 ```
+{:.no-copy-code}
 
 For example, if you have 5,000 Consumers, 3,000 Routes, and 3 windows, this produces a theoretical key space of **45 million counters** per window cycle, each needing a periodic sync to Redis. 
 The sync rate determines how aggressively these counters are pushed, and the cache instance must absorb both the read (fetch counters) and write (push diffs) load.
@@ -184,9 +185,13 @@ Managed caches are either created at the control plane or control plane group-le
 {% include /gateway/dcgw-cpg-note.md %}
 
 {:.warning}
-> **Data plane required to use a managed cache**: Before you create a managed cache, make sure you've created a [Dedicated Cloud Gateway network](/dedicated-cloud-gateways/network-architecture/#configure-a-dedicated-cloud-gateway-network), control plane, and at least one data plane. If you create a managed cache before you've set up a data plane, the managed cache will display as `Ready` but you won't be able to use it until a data plane is created.
+> **Data plane required to use a managed cache**: Before you create a managed cache, make sure you've created the following:
+> - A [Dedicated Cloud Gateway network](/dedicated-cloud-gateways/network-architecture/#configure-a-dedicated-cloud-gateway-network)
+> - A control plane
+> - At least one data plane
+> <br>If you create a managed cache before you've set up a data plane, the managed cache will display as `Ready` but you won't be able to use it until a data plane is created.  
 
-To create a managed cache at the control plane level, do the following:
+To create a managed cache at the control plane level, do the following:    
 
 {% navtabs "managed-cache" %}
 {% navtab "API" %}
@@ -299,8 +304,8 @@ region: global
 
 {% endnavtab %}
 {% navtab "UI" %}
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. In the API Gateways sidebar, click **Gateways**.
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. In the API Gateway sidebar, click **Control planes**.
 1. Select your Dedicated Cloud Gateway.
 1. Click the **Redis** tab.
 1. Click **New Redis**.
