@@ -51,7 +51,11 @@ This is useful in environments where the following is true:
 
 The Forward Proxy Advanced plugin attempts to transparently replace upstream connections made by {{site.base_gateway}}, sending the request instead to an intermediary forward proxy.
 
-Only transparent HTTP proxies are supported. TLS connections (via `CONNECT`) are not supported.
+The connection between {{site.base_gateway}} and the forward proxy is always plain HTTP. {{site.base_gateway}} does not support TLS to the forward proxy itself.
+
+How the plugin reaches the upstream depends on the upstream's scheme:
+- For HTTP upstreams, the plugin sends the request to the proxy directly, using an absolute-form request URI.
+- For HTTPS upstreams, the plugin sends an HTTP `CONNECT` request to open a tunnel to the upstream through the proxy. It then performs the TLS handshake with the upstream through that tunnel. The proxy only relays the encrypted bytes; it does not terminate the TLS connection.
 
 The Forward Proxy Advanced plugin can't be used with an [Upstream](/gateway/entities/upstream/).
 As a workaround for load balancing, configure the [`host` field in a Gateway Service](/gateway/entities/service/#schema) to a domain name so that you can use a 
