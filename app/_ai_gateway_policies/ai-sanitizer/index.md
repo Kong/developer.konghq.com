@@ -184,7 +184,7 @@ The following language-specific images are currently available:
 * `-tr` (Turkish)
 
 {:.info}
-> The PII Anonymizer service loads one NLP model by default. Ensure at least **600MB of free memory** is available when running the container.
+> The PII Anonymizer service loads one NLP model by default. Ensure at least **600MB of free memory** is available when running the container. If a user specifies a model that isn’t bundled with the deployed image, it will be downloaded at startup from the [spaCy models](https://github.com/explosion/spacy-models/) repository.
 
 ### Image configuration options
 
