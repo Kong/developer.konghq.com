@@ -1,4 +1,4 @@
-{% unless include.cert_required %}
+{% assign secret_name = include.secret_name | default: include.hostname %}{% unless include.cert_required %}
 The routing configuration can include a certificate to present when clients connect
 over HTTPS. This is not required, as {{site.base_gateway}} will serve a default
 certificate if it cannot find another, but including TLS configuration along
@@ -37,6 +37,6 @@ openssl req -subj '/CN={{ include.hostname }}' -new -newkey rsa:2048 -sha256 \
 
 1. Create a Secret containing the certificate:
     ```bash
-    kubectl create secret{% if include.namespace %} -n {{ include.namespace }}{% endif %} tls {{ include.hostname }} --cert=./server.crt --key=./server.key
+    kubectl create secret{% if include.namespace %} -n {{ include.namespace }}{% endif %} tls {{ secret_name }} --cert=./server.crt --key=./server.key
     ```
     {: data-test-step="block"}
