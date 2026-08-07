@@ -86,6 +86,29 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+## Limitations
+
+The following limits apply to {{site.identity}} authorization servers:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Limit
+    key: limit
+  - title: Value
+    key: value
+rows:
+  - limit: Requests per second (TPS)
+    value: "100 transactions per second (TPS) per authorization server."
+  - limit: Auth servers
+    value: "50 auth servers per {{site.konnect_short_name}} region."
+  - limit: Clients per auth server
+    value: "5,000 clients per auth server."
+  - limit: Access tokens
+    value: "Unlimited for {{site.konnect_short_name}} Enterprise. {{site.konnect_short_name}} Plus is limited to 10 million tokens per month."
+{% endtable %}
+<!--vale on-->
+
 ## {{site.identity}} client credential authentication flow
 
 The client credentials flow is a [standard OAuth flow](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) where a client authenticates to {{site.identity}} using credentials (such as a `client_id` and `client_secret`) that you've issued beforehand. This can be useful when only the client needs to authenticate, such as: 
@@ -596,9 +619,6 @@ rows:
 For more information, see the [Principals reference](/identity/principals/).
 
 ## Create an auth server, claim, and client in {{site.identity}}
-
-{:.warning}
-> You are limited to 50 auth servers per {{site.konnect_short_name}} region.
 
 To configure {{site.identity}}, do the following:
 
