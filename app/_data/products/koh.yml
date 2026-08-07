@@ -1,0 +1,7 @@
+name: Koh CLI
+icon: /_assets/icons/products/insomnia.svg
+
+releases:
+  - release: "0.3"
+    version: "0.3.5"
+    latest: true

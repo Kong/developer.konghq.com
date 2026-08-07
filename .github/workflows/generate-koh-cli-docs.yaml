@@ -1,0 +1,103 @@
+name: Generate Koh CLI Reference Docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      koh_branch:
+        description: 'Branch to use from koh repository'
+        required: true
+        default: 'main'
+        type: string
+      dev_site_base_branch:
+        description: 'Dev site base branch, e.g. main'
+        required: true
+        type: string
+  # TEMP (remove before merge): lets reviewers run this end-to-end from the
+  # feature branch, since workflow_dispatch isn't available off the default branch.
+  push:
+    branches:
+      - koh-cli
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-koh-cli-docs:
+    name: Generate Koh CLI Reference Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - name: Checkout developer.konghq.com
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          ref: ${{ inputs.dev_site_base_branch || github.ref_name }}  # TEMP fallback: remove `|| github.ref_name` with the push trigger
+
+      - name: Checkout koh repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          repository: 'kong-insomnia/koh'
+          token: ${{ steps.app-token.outputs.token }}
+          path: 'insomnia'
+          ref: ${{ inputs.koh_branch || 'main' }}  # TEMP fallback: remove `|| 'main'` with the push trigger
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: insomnia/package-lock.json
+
+      - name: install dependencies
+        working-directory: insomnia
+        run: npm ci --ignore-scripts
+
+      - name: Generate Koh CLI reference docs
+        working-directory: insomnia
+        run: npm run build
+
+      - name: Copy generated docs to developer.konghq.com
+        run: |
+            mkdir -p app/_references/koh/reference/
+            cp -R ./insomnia/reference/koh/* app/_references/koh/reference/
+
+      - name: Check for changes
+        id: changes
+        run: |
+            if [ -n "$(git status --porcelain app/_references/koh/reference/)" ]; then
+               echo "changed=true" >> $GITHUB_OUTPUT
+            else
+               echo "changed=false" >> $GITHUB_OUTPUT
+            fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          title: Generate Koh CLI reference docs
+          commit-message: Generate Koh CLI reference docs
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}
+          branch: auto/generate-koh-cli-docs-${{ github.run_number }}
+          base: ${{ inputs.dev_site_base_branch || github.ref_name }}  # TEMP fallback: remove `|| github.ref_name` with the push trigger
+          add-paths: |
+            app/_references/koh/reference/**
+
+      - name: No changes detected
+        if: steps.changes.outputs.changed == 'false'
+        run: |
+          echo "No changes detected in the Koh CLI reference. No pull request will be created."
