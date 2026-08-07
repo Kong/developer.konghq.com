@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect API Request Analytics
-  version: 2.1.0
+  version: 2.1.1
   description: The API to query detailed records for every API request proxied by Kong
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c6fc548c13b370a653ae0e25d674adedb09ddaf6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c6fc548c13b370a653ae0e25d674adedb09ddaf6'
+  x-oas-source: kong/platform-api@9439f2f60741551a17bc0eacba5ce859e1e38317
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9439f2f60741551a17bc0eacba5ce859e1e38317'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -85,6 +85,7 @@ components:
               - $ref: '#/components/schemas/ApiProductVersionFilterByField'
               - $ref: '#/components/schemas/ApplicationFilterByField'
               - $ref: '#/components/schemas/AuthTypeFilterByField'
+              - $ref: '#/components/schemas/CacheStatusFilterByField'
               - $ref: '#/components/schemas/ClientIpFilterByField'
               - $ref: '#/components/schemas/ConsumerFilterByField'
               - $ref: '#/components/schemas/ControlPlaneFilterByField'
@@ -372,6 +373,10 @@ components:
             nullable: true
           auth_type:
             description: Type of authorization plugin associated with the request. Values are `key-auth` or `openid-connect`.
+            type: string
+            nullable: true
+          cache_status:
+            description: 'Cache status associated with the request. Values are `Bypass`, `Hit`, `Miss`, or `Refresh`.'
             type: string
             nullable: true
           client_ip:
@@ -804,6 +809,22 @@ components:
             - $ref: '#/components/schemas/FilterWildcard'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by auth_type
+    CacheStatusFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - cache_status
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by cache_status
     ClientIpFilterByField:
       allOf:
         - type: object
@@ -2026,6 +2047,7 @@ components:
             api_product_version: d40a6dd7-37e8-4937-8dfd-9fa988c7fc3e
             application: bc2587ae-a35e-4a34-b6b2-f4ca5ae06dc9
             auth_type: key-auth
+            cache_status: Hit
             client_ip: 131.174.120.249
             consumer: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:d69557ff-277c-4579-a821-4f8d158ae070'
             control_plane: d5ac5d88-efed-4e10-9dfe-0b0a6646c219
@@ -2074,6 +2096,7 @@ components:
             api_product_version: 3807c200-3d10-445d-85b2-7afe07ca3932
             application: null
             auth_type: null
+            cache_status: null
             client_ip: 131.174.120.249
             consumer: null
             control_plane: d5ac5d88-efed-4e10-9dfe-0b0a6646c219

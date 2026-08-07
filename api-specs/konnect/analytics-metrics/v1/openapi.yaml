@@ -16,12 +16,12 @@ info:
     - For queries that use the time dimension, the granularity of the result may be coarser than requested. The finest allowed granularity depends on the query's time range: data farther in the past may have coarser granularity. The exact result granularity will be reported in the response `meta.granularity_ms` field.
     - Queries must complete within 10 seconds. If a query takes longer than 10 seconds, a 408 will be returned. In this case, it is suggested to add more filters, and/or reduce the time range.
     - This endpoint is rate limited to 10 requests per minute per user.
-  version: 4.1.0
+  version: 4.1.1
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@3be5e47bfc3f1fe037bd5654e194cb25074a7c86
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3be5e47bfc3f1fe037bd5654e194cb25074a7c86'
+  x-oas-source: kong/platform-api@9439f2f60741551a17bc0eacba5ce859e1e38317
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9439f2f60741551a17bc0eacba5ce859e1e38317'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -93,11 +93,13 @@ components:
           enum:
             - api_usage
         metrics:
-          description: 'List of aggregated metrics to collect across the requested time span. If no metrics are specified, request_count will be computed by default.'
+          description: |
+            List of aggregated metrics to collect across the requested time span. If no metrics are specified, request_count will be computed by default.
           type: array
           items:
             type: string
             enum:
+              - cache_hit_rate
               - error_rate
               - kong_internal_latency_average
               - kong_internal_latency_p50
@@ -141,6 +143,7 @@ components:
               - api_product
               - api_product_version
               - application
+              - cache_status
               - consumer
               - control_plane
               - control_plane_group
@@ -285,13 +288,15 @@ components:
           enum:
             - agentic_usage
         metrics:
-          description: List of aggregated metrics to collect across the requested time span.
+          description: |
+            List of aggregated metrics to collect across the requested time span.
           type: array
           items:
             type: string
             enum:
               - a2a_latency_average
               - a2a_response_size_sum
+              - cache_hit_rate
               - error_rate
               - kong_internal_latency_average
               - kong_internal_latency_p50
@@ -340,6 +345,7 @@ components:
               - api_product
               - api_product_version
               - application
+              - cache_status
               - consumer
               - control_plane
               - control_plane_group
@@ -927,6 +933,42 @@ components:
             - operator
             - field
       title: Filter by application
+    MetricsCacheStatusFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - cache_status
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - cache_status
+          required:
+            - operator
+            - field
+      title: Filter by cache_status
     ScopedUuid:
       type: string
       pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
@@ -1524,6 +1566,7 @@ components:
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
             api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
             application: '#/components/schemas/MetricsApplicationFilterByField'
+            cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -1546,6 +1589,7 @@ components:
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2258,6 +2302,7 @@ components:
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
             api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
             application: '#/components/schemas/MetricsApplicationFilterByField'
+            cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2288,6 +2333,7 @@ components:
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'

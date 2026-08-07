@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a09966a38b401a61c0e3a547c2856c2d03e98749
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a09966a38b401a61c0e3a547c2856c2d03e98749'
+  x-oas-source: kong/platform-api@9439f2f60741551a17bc0eacba5ce859e1e38317
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9439f2f60741551a17bc0eacba5ce859e1e38317'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -268,6 +268,7 @@ components:
               - api_product
               - api_product_version
               - application
+              - cache_status
               - consumer
               - control_plane
               - control_plane_group
@@ -411,6 +412,7 @@ components:
               - api_product
               - api_product_version
               - application
+              - cache_status
               - consumer
               - control_plane
               - control_plane_group
@@ -614,17 +616,19 @@ components:
           enum:
             - chart
         definition:
-          description: |
-            The tile's definition, which consists of a query to fetch data and a visualization to render the data.
-            Charts and tables expect certain query types to render properly. The documentation for the individual visualization types has more information.
-          oneOf:
-            - $ref: '#/components/schemas/ChartTileDefinition'
-            - $ref: '#/components/schemas/TableChartTileDefinition'
+          $ref: '#/components/schemas/AnyChartTileDefinition'
       additionalProperties: false
       required:
         - layout
         - type
         - definition
+    AnyChartTileDefinition:
+      description: |
+        The tile's definition, which consists of a query to fetch data and a visualization to render the data.
+        Charts and tables expect certain query types to render properly. The documentation for the individual visualization types has more information.
+      oneOf:
+        - $ref: '#/components/schemas/ChartTileDefinition'
+        - $ref: '#/components/schemas/TableChartTileDefinition'
     ChartTileDefinition:
       type: object
       properties:
@@ -938,11 +942,13 @@ components:
         - page
       title: PaginatedMeta
     AdvancedMetrics:
-      description: 'List of aggregated metrics to collect across the requested time span. If no metrics are specified, request_count will be computed by default.'
+      description: |
+        List of aggregated metrics to collect across the requested time span. If no metrics are specified, request_count will be computed by default.
       type: array
       items:
         type: string
         enum:
+          - cache_hit_rate
           - error_rate
           - kong_internal_latency_average
           - kong_internal_latency_p50
@@ -1169,6 +1175,42 @@ components:
             - operator
             - field
       title: Filter by application
+    MetricsCacheStatusFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - cache_status
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - cache_status
+          required:
+            - operator
+            - field
+      title: Filter by cache_status
     ScopedUuid:
       type: string
       pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
@@ -1766,6 +1808,7 @@ components:
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
             api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
             application: '#/components/schemas/MetricsApplicationFilterByField'
+            cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -1788,6 +1831,7 @@ components:
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2216,13 +2260,15 @@ components:
           - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
     AgenticMetrics:
-      description: List of aggregated metrics to collect across the requested time span.
+      description: |
+        List of aggregated metrics to collect across the requested time span.
       type: array
       items:
         type: string
         enum:
           - a2a_latency_average
           - a2a_response_size_sum
+          - cache_hit_rate
           - error_rate
           - kong_internal_latency_average
           - kong_internal_latency_p50
@@ -2559,6 +2605,7 @@ components:
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
             api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
             application: '#/components/schemas/MetricsApplicationFilterByField'
+            cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2589,6 +2636,7 @@ components:
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -3056,6 +3104,7 @@ components:
           api_product: '#/components/schemas/MetricsApiProductFilterByField'
           api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
           application: '#/components/schemas/MetricsApplicationFilterByField'
+          cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
           consumer: '#/components/schemas/MetricsConsumerFilterByField'
           control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
           control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -3096,6 +3145,7 @@ components:
         - $ref: '#/components/schemas/MetricsApiProductFilterByField'
         - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
         - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+        - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
         - $ref: '#/components/schemas/MetricsConsumerFilterByField'
         - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
         - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
