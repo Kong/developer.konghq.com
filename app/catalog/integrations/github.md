@@ -12,7 +12,7 @@ tags:
   - github
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 
 works_on:

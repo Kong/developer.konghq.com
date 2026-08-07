@@ -14,7 +14,7 @@ tags:
 search_aliases:
   - service catalog
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 
 discovery_support: true

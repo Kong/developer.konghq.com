@@ -11,7 +11,7 @@ works_on:
 description: An MCP Registry is a centralized publishing and discovery endpoint for MCP servers within your organization. Learn how to register your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}} Classic.
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
 search_aliases:
   - service catalog
   - mcp

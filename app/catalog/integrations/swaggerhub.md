@@ -12,7 +12,7 @@ tags:
   - swaggerhub
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 search_aliases:
   - service catalog

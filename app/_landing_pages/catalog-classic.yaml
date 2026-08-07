@@ -17,12 +17,9 @@ rows:
   
   - columns:
       - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {% include_cached catalog/catalog-classic-banner.md %}
+          - type: text
+            config: |
+              {% include_cached catalog/catalog-classic-banner.md %}
 
   - columns:
       - blocks:
@@ -121,11 +118,20 @@ rows:
               blocks:
                 - type: text
                   text: |
+                    The [new {{site.konnect_catalog}} experience](/catalog/) is a unified, platform-level home for your interfaces. Here's how it compares
+                    to {{site.konnect_catalog}} Classic:
+
+                    * **AI Models**: The new {{site.konnect_catalog}} adds support for AI Models as a first-class interface, with more interface
+                      types coming. 
+                    * **Continued support for APIs**: APIs and API packages work the same way in both experiences, APIs and API packages migrate over.
+
+                    Services, Scorecards, Integrations, and the MCP Registry are only compatible with {{site.konnect_catalog}} Classic.
+                    
                     An Org Admin can migrate to the new {{site.konnect_catalog}} experience by enabling the New Catalog
                     in **Manage organization** > **Settings** > **Catalog**.
 
                     Your APIs and API packages migrate to the new {{site.konnect_catalog}}. Services, Scorecards, and Integrations data isn't deleted,
-                    but becomes inaccessible in the UI after migrating. You can still manage these and access their data by using the API. 
+                    but becomes inaccessible in the UI after migrating. You can still manage these and access their data by using the API.
 
   - header:
       type: h2
