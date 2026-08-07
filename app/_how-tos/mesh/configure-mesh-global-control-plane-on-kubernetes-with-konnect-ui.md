@@ -15,7 +15,10 @@ tldr:
   q: How do I configure a {{site.mesh_product_name}} global control plane and zone with the {{site.konnect_short_name}} UI?
   a: In the {{site.konnect_short_name}} UI, navigate to **Service Mesh** create a global control plane, then create a zone and follow the wizard to deploy the zone control plane using the system account access token that {{site.konnect_short_name}} provisions for you. Create a default mesh and deploy workloads with `kubectl`.
 prereqs:
+  skip_product: true
   inline:
+    - title: "{{site.konnect_product_name}}"
+      include_content: prereqs/products/konnect-account-only
     - title: A running Kubernetes cluster
       include_content: prereqs/kubernetes/mesh-cluster-lb
     - title: kubectl

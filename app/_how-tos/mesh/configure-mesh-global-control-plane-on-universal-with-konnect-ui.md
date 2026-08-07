@@ -25,6 +25,11 @@ related_resources:
     url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
   - text: Deploy {{site.mesh_product_name}} using Terraform and {{site.konnect_short_name}}
     url: /mesh/deploy-mesh-using-terraform-and-konnect/
+prereqs:
+  skip_product: true
+  inline:
+    - title: "{{site.konnect_product_name}}"
+      include_content: prereqs/products/konnect-account-only
 next_steps:
   - text: Explore {{site.mesh_product_name}} policies
     url: /mesh/policies/
