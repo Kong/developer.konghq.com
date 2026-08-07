@@ -564,6 +564,7 @@ rows:
     details: |
       * Per-operation deep links. You can copy link anchors to share a direct URL to an operation.
       * Tag-based grouping of operations and tag/attribute filtering of APIs in the {{site.dev_portal}} sidebar.
+      * Organize sidebar navigation into named sections with `x-tagGroups`.
       * Specify internal endpoints (with `x-internal`) with an option to hide them from the rendered docs.
       * Badges for deprecated endpoints with an option to hide deprecated operations.
       * Multiple named request/response examples (renders the OpenAPI `examples` object).
