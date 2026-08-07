@@ -211,17 +211,26 @@ Features are customer-facing, and show up on the invoice for paid plans. Feature
 
 In this guide, you'll create a feature for the `example-service` you created in the prerequisites.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
-1. Click **Create Feature**.
-1. In the **Name** field, enter `example-service`.
-1. From the **Meter** dropdown menu, select "API requests".
-1. Click **Add group by filter**.
-   The group by filter ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic. This lets you offer different pricing for different APIs.
-1. From the **Group by** dropdown menu, select "service_name".
-1. From the **Operator** dropdown menu, select "Equals".
-1. In the **Value** dropdown menu, enter "example-service".
-1. Click **Save**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/features
+method: POST
+status_code: 201
+body:
+  name: example-service
+  key: example_service
+  meter:
+    key: api_requests_total
+    filters:
+      service_name: example-service
+capture:
+  - variable: FEATURE_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The `meter.filters` field ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic.
+This lets you offer different pricing for different APIs.
 
 ## Create a Premium plan
 
@@ -229,42 +238,87 @@ Plans are the core building blocks of your product catalog. They are a collectio
 
 A rate card describes price and usage limits or access control for a feature or item. Rate cards are made up of the associated feature, price, and optional usage limits or access control for the feature, called entitlements.
 
-In this section, you'll create a Premium plan that grants paying customers access to the `example-service` at a rate of 5,000 requests per month:
+In this section, you'll create a Premium plan that grants paying customers access to the `example-service` at a rate of 5,000 requests per month.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
-1. Click the **Plans** tab.
-1. Click **Create Plan**.
-1. In the **Name** field, enter `Premium`.
-1. In the **Billing cadence** dropdown menu, select "1 month".
-1. Click **Save**.
-1. Click **Add Rate Card**.
-1. From the **Feature** dropdown menu, select "example-service".
-1. Click **Next Step**.
-1. From the **Pricing model** dropdown menu, select "Usage based".
-1. In the **Price per unit** field, enter `1`.
-1. Click **Next Step**.
-1. Click **Save Rate Card**.
-1. Click **Publish Plan**.
+First, create the plan with a rate card:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+method: POST
+status_code: 201
+body:
+  name: Premium
+  key: premium
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: default
+      key: default
+      rate_cards:
+        - name: example-service
+          key: example_service
+          feature:
+            id: $FEATURE_ID
+          price:
+            type: unit
+            amount: "1"
+capture:
+  - variable: PLAN_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then publish the plan to make it available for subscriptions:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/$PLAN_ID/publish
+method: POST
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Start a subscription
 
 Customers are the entities who pay for the consumption. In many cases, it's equal to your Consumer. Here you are going to create a customer and map our Consumer to it.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click **Create Customer**.
-1. In the **Name** field, enter `Kong Air`.
-1. In the **Key** field, enter `kong-air`.
-1. In the **Include usage from** dropdown, select "kong-air".
-1. Click **Save**.
-1. Click the **Subscriptions** tab.
-1. Click **Create a Subscription**.
-1. From the **Subscribed Plan** dropdown, select "Premium".
-1. Click **Next Step**.
-1. Click **Start Subscription**.
+First, create the customer and link it to the `kong-air` Consumer:
 
-<!--Note: Want to delete a customer? Cancel their subscription first and then you can delete them.-->
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers
+method: POST
+status_code: 201
+body:
+  name: Kong Air
+  key: kong-air
+  usage_attribution:
+    subject_keys:
+      - kong-air
+capture:
+  - variable: CUSTOMER_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then start a subscription to the Premium plan:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions
+method: POST
+status_code: 201
+body:
+  customer:
+    id: $CUSTOMER_ID
+  plan:
+    key: premium
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> Note: Want to delete a customer? Cancel their subscription first and then you can delete them.
 
 ## Validate
 
@@ -280,16 +334,21 @@ done
 ```
 <!--vale on-->
 
-This will generate six requests. Now, check the invoice that was created in {{site.metering_and_billing}}:
+This will generate six requests. Now check the usage charges:
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click the **Invoices** tab.
-1. Click **Kong Air**.
-1. Click the **Invoicing** tab.
-1. Click **Preview Invoice**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/$CUSTOMER_ID/charges?expand[]=real_time_usage
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
 
-You'll see in Lines that `example-service` is listed and was used six times. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**.
+The response includes a usage-based charge for `example-service` with a `real_time_usage` quantity of `6`.
+
+To preview the full formatted invoice, go to **{{site.metering_and_billing}}** > **Billing** > **Kong Air** > **Invoicing** > **Preview Invoice** in the {{site.konnect_short_name}} UI.
+
+In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**.
 
 {:.info}
 > **Entitlement enforcement:** {{site.base_gateway}} does not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
