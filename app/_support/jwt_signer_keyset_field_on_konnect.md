@@ -10,9 +10,13 @@ tldr:
   q: How do I fix the JWT Signer plugin keyset field warning on {{site.konnect_short_name}}?
   a: |
     Set the `access_token_keyset` or `channel_token_keyset` field to a URL that points to a valid JWKS endpoint. On {{site.konnect_short_name}}, JWKS must be managed externally.
+
+related_resources:
+  - text: JWT Signer plugin
+    url: /plugins/jwt-signer/
 ---
 
-## Understanding the warning
+## Problem
 
 The JWT Signer plugin on {{site.konnect_short_name}} writes one or both of the following warnings to the data plane logs when it detects a missing keyset URL:
 
@@ -35,7 +39,7 @@ The warning appears when either of the following sets of conditions is true:
 
 Without a configured `access_token_keyset` or `channel_token_keyset` value, `NULL` is sent to the data plane. Each data plane node then generates its own JWKS independently, making consistent downstream verification of re-signed tokens impossible.
 
-## Fixing the warning
+## Solution
 
 Set the corresponding `access_token_keyset` or `channel_token_keyset` field to the URL of the JWKS you want to use for re-signing.
 
