@@ -52,10 +52,11 @@ Migration uses the `kongctl convert ai-gateway extension` to translate your exis
 
 1. Install the `kongctl convert ai-gateway` extension.
 1. Export the declarative configuration from your existing {{site.base_gateway}} control plane with decK.
-1. Run the converter to produce an {{site.ai_gateway}} entity configuration file.
+1. Run the converter to produce a directory of {{site.ai_gateway}} entity configuration files.
 1. Validate that the output includes all of your AI Models, AI MCP Servers, and AI Agents.
 1. Add identity providers, Vaults, and per-model ACLs manually, since the converter cannot recover these from the decK export.
-1. Add your {{site.ai_gateway}} control plane ID to the `kongctl` configuration.
+1. Point the converted configuration at your {{site.ai_gateway}} 2.x control plane.
+1. Authenticate `kongctl` with a {{site.konnect_short_name}} PAT or System Account Access Token.
 1. Apply the converted configuration to the new {{site.ai_gateway}} control plane.
 
 The diagram below shows where each tool sits in the flow:
@@ -64,11 +65,11 @@ The diagram below shows where each tool sits in the flow:
 sequenceDiagram
     participant A as API Gateway CP<br/>{{site.ai_gateway}} v1
     participant B as kong.yaml
-    participant C as ai-gateway.yaml
+    participant C as ./out (entity files)
     participant D as {{site.ai_gateway}} CP<br/>{{site.ai_gateway}} v2
 
     A->>B: deck gateway dump
-    B->>C: ai-deck-converter
+    B->>C: kongctl convert ai-gateway
     C->>C: add identity providers,<br/>vaults, and ACLs
     C->>C: review and validate
     C->>D: kongctl apply
@@ -140,8 +141,10 @@ Add an `identity_providers` entry in `models.yaml` for each authentication metho
 <!--vale off-->
 ```yaml
 # models.yaml (AI Gateway v2 entity model)
-identity_providers:
-- name: key-auth-prod
+ai_gateway_identity_providers:
+- ref: key-auth-prod
+  ai_gateway: !ref ai-gateway#id
+  name: key-auth-prod
   display_name: Key Auth
   type: key-auth
   config:
@@ -149,7 +152,9 @@ identity_providers:
     - x-api-key
 
 ai_gateway_models:
-- name: openai-chat
+- ref: openai-chat
+  ai_gateway: !ref ai-gateway#id
+  name: openai-chat
   # ...
   access:
     identity_providers:
@@ -161,8 +166,10 @@ Create a `vaults.yaml` file in the `./out` directory and add a `vaults` entry fo
 
 <!--vale off-->
 ```yaml
-vaults:
-- name: ai-vault
+ai_gateway_vaults:
+- ref: ai-vault
+  ai_gateway: !ref ai-gateway#id
+  name: ai-vault
   display_name: AI Gateway Vault
   type: konnect
   description: Credential store for AI Gateway
@@ -179,7 +186,9 @@ Finally, set `allow` or `deny` under each AI Model's `access.acls` to control wh
 <!--vale off-->
 ```yaml
 ai_gateway_models:
-- name: azure-gpt-4o
+- ref: azure-gpt-4o
+  ai_gateway: !ref ai-gateway#id
+  name: azure-gpt-4o
   # ...
   access:
     acls:
@@ -190,25 +199,33 @@ ai_gateway_models:
 ```
 <!--vale on-->
 
-### Step 6: Add your control plane ID to kongctl
+### Step 6: Point the configuration at your control plane
 
-`kongctl` needs to know which {{site.ai_gateway}} control plane to target. Add your control plane name to the `kongctl` configuration file so that `kongctl apply` writes to the correct control plane.
+The converter has no way to know about the {{site.ai_gateway}} 2.x control plane you created in the [prerequisites](#prerequisites), so it generates `gateway.yaml` with a placeholder `ai_gateways` entry that would create a new control plane on apply. Edit that entry so it references your existing control plane by name instead:
 
 <!--vale off-->
-```sh
-# Set the AI Gateway control plane that kongctl will apply to.
+```yaml
+# gateway.yaml (AI Gateway v2 entity model)
 ai_gateways:
 - ref: ai-gateway
   _external:
     selector:
-        matchFields:
-          name: "ai-gateway"
+      matchFields:
+        name: "ai-gateway"
 ```
 <!--vale on-->
 
-Keep one source of truth so that repeated applies always target the same control plane.
+Replace `ai-gateway` in `matchFields.name` with the control plane name you noted in the prerequisites. Keep the `ref` value (`ai-gateway`) as is, since every other converted file links back to this entry with `ai_gateway: !ref ai-gateway#id`.
 
-### Step 7: Apply the configuration
+### Step 7: Authenticate kongctl
+
+`kongctl apply` needs a {{site.konnect_short_name}} PAT or System Account Access Token to reach your control plane. Reuse the token from the [prerequisites](#prerequisites) with one of the following:
+
+- Run `kongctl login` to authenticate interactively through the browser.
+- Pass the token with the `--pat` flag on the `apply` command.
+- Set the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable.
+
+### Step 8: Apply the configuration
 
 Sync the converted configuration to the {{site.ai_gateway}} control plane:
 
@@ -281,9 +298,11 @@ The converter splits the credentials into an AI Model Provider and the routing a
 
 <!--vale off-->
 ```yaml
-# ai-gateway.yaml (AI Gateway v2 entity model)
-providers:
-- type: openai
+# providers.yaml (AI Gateway v2 entity model)
+ai_gateway_model_providers:
+- ref: openai-prod
+  ai_gateway: !ref ai-gateway#id
+  type: openai
   name: openai-prod
   display_name: OpenAI Production
   config:
@@ -292,8 +311,11 @@ providers:
       header_name: Authorization
       header_value: Bearer {vault://openai-vault/api-key}
 
-models:
-- type: model
+# models.yaml (AI Gateway v2 entity model)
+ai_gateway_models:
+- ref: openai-chat
+  ai_gateway: !ref ai-gateway#id
+  type: model
   name: openai-chat
   display_name: OpenAI Chat
   enabled: true
@@ -418,15 +440,20 @@ Converting the example to use the version 2.x model:
 
 <!--vale off-->
 ```yaml
-# ai-gateway.yaml (AI Gateway v2 entity model)
-policies:
-- type: key-auth
+# policies.yaml (AI Gateway v2 entity model)
+ai_gateway_policies:
+- ref: flights-key-auth
+  ai_gateway: !ref ai-gateway#id
+  type: key-auth
   name: flights-key-auth
   display_name: Flights Key Auth
   config: {}
 
-mcp-servers:
-- type: conversion-listener
+# mcp_servers.yaml (AI Gateway v2 entity model)
+ai_gateway_mcp_servers:
+- ref: kongair-flights
+  ai_gateway: !ref ai-gateway#id
+  type: conversion-listener
   name: kongair-flights
   display_name: Kong Air Flights
   enabled: true
@@ -509,9 +536,11 @@ Converting the example to use the version 2.x model:
 
 <!--vale off-->
 ```yaml
-# ai-gateway.yaml (AI Gateway v2 entity model)
-agents:
-- type: a2a
+# agents.yaml (AI Gateway v2 entity model)
+ai_gateway_agents:
+- ref: kongair-flight-booking-agent
+  ai_gateway: !ref ai-gateway#id
+  type: a2a
   name: kongair-flight-booking-agent
   display_name: Kong Air Flight Booking Agent
   enabled: true
@@ -561,7 +590,7 @@ Once you've successfully generated the `kongctl` config, applied it to your envi
 
 ### Drive kongctl extensions from the converter output
 
-The `ai-gateway.yaml` produced by the converter is a declarative artifact, which makes it a useful input to `kongctl` extensions. `kongctl` ships installable skills for coding agents, including a declarative skill for plan, apply, sync, delete, and adopt flows, and an extension builder for creating local CLI extensions.
+The `./out` directory produced by the converter is a declarative artifact, which makes it a useful input to `kongctl` extensions. `kongctl` ships installable skills for coding agents, including a declarative skill for plan, apply, sync, delete, and adopt flows, and an extension builder for creating local CLI extensions.
 
 Install the skills from the root of the repository where your agent works:
 
@@ -573,8 +602,8 @@ By default, this writes skill files to `.kongctl/skills/` and symlinks them for 
 
 With the converter output and these skills in place, you can build extensions that:
 
-- Diff a freshly converted `ai-gateway.yaml` against the live {{site.ai_gateway}} control plane and surface drift before an apply.
-- Wrap the full `deck gateway dump`, `ai-deck-converter`, and `kongctl apply` sequence into a single repeatable command for many control planes.
+- Diff the freshly converted files in `./out` against the live {{site.ai_gateway}} control plane and surface drift before an apply.
+- Wrap the full `deck gateway dump`, `kongctl convert ai-gateway`, and `kongctl apply` sequence into a single repeatable command for many control planes.
 - Validate that every `targets[].provider` reference resolves and that required fields such as `display_name` are populated, as a pre-apply gate.
 
 This lets you treat {{site.ai_gateway}} migration as a versioned, reviewable, and automated pipeline rather than a one-time manual conversion.
