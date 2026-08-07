@@ -52,7 +52,7 @@ Multiple Kafka clusters can be proxied through a single {{site.event_gateway}}. 
 
 ## Authentication
 
-Authentication on the backend cluster defines the credentials the {{site.event_gateway_short}} uses when connecting to Kafka to fetch cluster metadata, such as topic and partition information.
+Authentication on the backend cluster defines the credentials the {{site.event_gateway_short}} uses when connecting to Kafka to fetch cluster metadata, such as brokers, topic and partition information.
 The supported types reflect what your Kafka cluster accepts.
 
 {:.info}

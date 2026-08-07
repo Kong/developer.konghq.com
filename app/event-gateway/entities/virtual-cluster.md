@@ -253,7 +253,7 @@ For example, a virtual cluster exposes a topic named `orders` to the client.
 Behind the scenes, this maps to `team-a-orders` on the actual Kafka cluster. The client doesn't need to know about or manage the `team-a-` prefix.
 This enables transparent multitenancy, where multiple teams can share the same Kafka cluster without needing to manually prefix every topic and consumer group name in their applications.
 
-When clients send fetch requests, the gateway passes the consumer group name to the backend unchanged, unless a namespace prefix is configured.
+When clients send messages that contain consumer group names, the gateway passes the names to the backend unchanged, unless a namespace prefix is configured.
 Kafka handles consumer group coordination and offset tracking on the backend as normal.
 Consumer group management commands such as create and delete are intercepted by the gateway and evaluated against ACL policies using the `group` resource type.
 
