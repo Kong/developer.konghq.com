@@ -44,3 +44,6 @@ mesh-get-started-universal:
 mesh-scoped-zone-proxy:
   title: Deploy and configure mesh-scoped zone proxies
   url: /mesh/zone-proxies/
+operator-multi-tenancy:
+  title: Deploy multiple isolated gateways on the same cluster
+  url: /operator/dataplanes/how-to/multi-tenancy/setup/

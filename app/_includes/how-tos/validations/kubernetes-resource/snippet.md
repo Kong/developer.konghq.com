@@ -22,3 +22,4 @@ The output should look similar to this:
   "type": "{{ conditionType }}"
 }
 ```
+{:.no-copy-code}
