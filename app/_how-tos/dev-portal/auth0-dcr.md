@@ -5,12 +5,12 @@ description: Learn how to configure Dynamic Client Registration to automatically
 content_type: how_to
 
 products:
-    - gateway
     - dev-portal
 automated_tests: false
 works_on:
     - konnect
-
+tools:
+  - konnect-api
 entities: []
 
 tags:
@@ -31,14 +31,20 @@ tldr:
 prereqs:
   skip_product: true
   inline:
-    - title: "{{site.konnect_product_name}}"
-      include_content: prereqs/products/konnect-account-only
-      icon_url: /assets/icons/gateway.svg
     - title: "{{site.konnect_product_name}} roles"
       include_content: prereqs/dev-portal-dcr-roles
       icon_url: /assets/icons/gateway.svg
-    - title: Dev Portal
-      include_content: prereqs/dev-portal-app-reg
+    - title: Configure a Dev Portal and an API
+      include_content: prereqs/dev-portal-and-api
+      icon_url: /assets/icons/dev-portal.svg
+    - title: Register a Dev Portal developer account
+      content: |
+        Register a test developer account with your Dev Portal by navigating to your Dev Portal and clicking **Sign up**:
+        ```sh
+        open https://$PORTAL_URL/
+        ```
+
+        For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations.
       icon_url: /assets/icons/dev-portal.svg
     - title: Auth0
       content: |
@@ -98,7 +104,18 @@ To get started configuring Auth0, log in to your Auth0 dashboard and complete th
    {:.info}
    > **Note:** If you’re using Developer Managed Scopes, add `read:resource_servers` to the permissions for your initial client application.
 
-7. On the application's **Settings** tab, locate the values for **Client ID** and **Client Secret**, you'll need them in a later step.
+7. On the application's **Settings** tab, locate the values for **Client ID** and **Client Secret**, then export them:
+
+   ```sh
+   export CLIENT_ID='YOUR-AUTH0-CLIENT-ID'
+   export CLIENT_SECRET='YOUR-AUTH0-CLIENT-SECRET'
+   ```
+
+8. Under **Settings** > **General**, locate your tenant name and export the corresponding issuer URL:
+
+   ```sh
+   export ISSUER_URL='https://AUTH0_TENANT_NAME.us.auth0.com'
+   ```
 
 ## Configure the API audience
 
@@ -117,51 +134,104 @@ To create a new API audience in Auth0:
 
 5. Click **Create**.
 
-6. Make a note of the **Identifier** value (also known as the **Audience**), you'll need it when configuring the authentication strategy in `{{site.konnect_short_name}}`.
+6. Make a note of the **Identifier** value (also known as the **Audience**), then export it to your environment:
+
+   ```sh
+   export AUDIENCE='YOUR-AUTH0-API-IDENTIFIER'
+   ```
 
 ## Configure the Dev Portal
 
 After configuring Auth0, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two main steps: first, creating the DCR provider, and second, establishing the authentication strategy. DCR providers are designed to be reusable configurations. This means once you've configured the Auth0 DCR provider, it can be used across multiple authentication strategies without needing to be set up again.
 
-This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you can also use the [Application Registration API](/api/konnect/application-auth-strategies/v2/#/operations/).
+1. [Create a DCR provider](/api/konnect/application-auth-strategies/v2/#/operations/create-dcr-provider) using the `/v2/dcr-providers` endpoint:
 
-1. Log in to {{site.konnect_short_name}} and select [Dev Portal](https://cloud.konghq.com/portals/) from the menu.
+{% capture request %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/dcr-providers
+status_code: 201
+method: POST
+body:
+  name: "Auth0 DCR Provider"
+  provider_type: auth0
+  issuer: "$ISSUER_URL"
+  dcr_config:
+    initial_client_id: "$CLIENT_ID"
+    initial_client_secret: "$CLIENT_SECRET"
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
 
-2. Navigate to [**Application Auth**](https://cloud.konghq.com/portals/application-auth) to see the authentication strategies for your APIs.
+{{request | indent}}
 
-3. Click the **DCR Provider** tab to see all existing DCR providers.
+   {:.info}
+   > **Note:** If you're using a custom domain for Auth0, add `initial_client_audience: "$AUDIENCE"` to the `dcr_config`. If you're using Developer Managed Scopes, add `use_developer_managed_scopes: true` to the `dcr_config`.
 
-4. Click [**New DCR Provider**](https://cloud.konghq.com/portals/application-auth/dcr-provider/create) to create a new Auth0 configuration:
-   1. Enter a name for internal reference within {{site.konnect_short_name}}. This name and the provider type won't be visible to developers on the Dev Portal.
-   1. Enter the **Issuer URL** of your Auth0 tenant, formatted as: `https://AUTH0_TENANT_SUBDOMAIN.us.auth0.com`. *Do not* include a trailing slash at the end of the URL.
-      
-      {:.info}
-      > **Note:** You can find the value for your `AUTH0_TENANT_SUBDOMAIN` by checking the **Tenant Name** under **Settings** > **General**.
-   1. Select Auth0 as the **Provider Type**. 
-   1. Enter the **Client ID** of the previously created admin application in Auth0 into the **Client ID** field. Then, enter the **Client Secret** of the same application into the **Initial Client Secret** field.
-   1. If you're using a custom domain for Auth0, enter the audience of the initial client as the **Client Audience**. Otherwise, leave this field blank.
-   1. Optional: If you're using developer-managed scopes, select the **Use Developer Managed Scopes** checkbox.
-   1. Save your DCR provider. You should now see it in the list of DCR providers.
+1. Export the DCR provider ID from the response:
 
-7. Navigate to the **Auth Strategy** tab, then click [**New Auth Strategy**](https://cloud.konghq.com/portals/application-auth/auth-strategy/create) to create an auth strategy that uses the DCR provider:
+   ```sh
+   export DCR_PROVIDER_ID='YOUR-DCR-PROVIDER-ID'
+   ```
 
-   1. Provide a name for internal use within {{site.konnect_short_name}} and a display name for visibility on your Portal.
-   1. In the **Auth Type** dropdown menu select DCR. 
-   1. In the **DCR Provider** dropdown, select the name of the DCR provider config you just created. Your **Issuer URL** will be prepopulated with the Issuer URL you added to the DCR provider.
-   1. Enter the required `openid` scope in the **Scopes** field, along with any other scopes your developers may need (e.g., `openid, read:account_information, write:account_information`). If you are using developer-managed scopes, these will be the scopes your developers can select from in the Dev Portal.
-   1. Enter `azp` in the **Credential Claims** field. This will match the client ID of each Auth0 application.
-   1. Enter the **Audience** value from your associated Auth0 API in the **Audience** field. If you're using developer-managed scopes, the scopes selected by the developer should belong to this audience.
-   1. Select the relevant **Auth Methods** you need (`client_credentials`, `bearer`, `session`), and click **Save**.
+1. [Create an authentication strategy](/api/konnect/application-auth-strategies/v2/#/operations/create-app-auth-strategy) using the `/v2/application-auth-strategies` endpoint:
+
+{% capture request %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/application-auth-strategies
+status_code: 201
+method: POST
+body:
+  name: "Auth0 DCR Auth Strategy"
+  display_name: "Auth0 DCR Auth Strategy"
+  strategy_type: openid_connect
+  configs:
+    openid-connect:
+      issuer: "$ISSUER_URL"
+      credential_claim:
+        - azp
+      scopes:
+        - openid
+      token_post_args_names:
+        - audience
+      token_post_args_values:
+        - "$AUDIENCE"
+      auth_methods:
+        - client_credentials
+        - bearer
+        - session
+  dcr_provider_id: "$DCR_PROVIDER_ID"
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+
+{{request | indent}}
+
+   {:.info}
+   > **Note:** The `azp` credential claim matches the client ID of each Auth0 application. Add any additional scopes your developers may need. If you're using Developer Managed Scopes, these will be the scopes developers can select in the Dev Portal.
+
+1. Export the auth strategy ID from the response:
+
+   ```sh
+   export AUTH_STRATEGY_ID='YOUR-AUTH-STRATEGY-ID'
+   ```
 
 ## Apply the Auth0 DCR auth strategy to an API
 
-Now that the application auth strategy is configured, you can apply it to an API.
+Now that the application auth strategy is configured, you can [apply it to an API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 
-1. Navigate to your Dev Portal in {{site.konnect_short_name}}, select the Dev Portal, and click the **Published APIs** tab.
-
-1. Select the API you want to publish, and select the Auth0 auth strategy for the **Authentication strategy**.
-
-1. Click **Publish API**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/publications/$PORTAL_ID
+status_code: 201
+method: PUT
+body:
+  visibility: public
+  auth_strategy_ids:
+    - $AUTH_STRATEGY_ID
+{% endkonnect_api_request %}
+<!--vale on-->
 
 {:.warning}
 > **Certificate verification depth:** {{site.base_gateway}} verifies Auth0's TLS certificate when it connects to the Auth0 issuer to validate tokens. Auth0 certificates issued by Let's Encrypt present a certificate chain with multiple intermediate CAs, which is deeper than the default [`lua_ssl_verify_depth`](/gateway/configuration/#lua-ssl-verify-depth) of `1`. Combined with certificate verification being enabled by default in {{site.base_gateway}} 3.14 and later, this causes the TLS handshake to Auth0 to fail.
