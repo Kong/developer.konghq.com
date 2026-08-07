@@ -11,39 +11,47 @@ Examples:
 
 
 Flags:
-      --auth-path string       URL path used to initiate Konnect Authorization.
-                               - Config path: [ konnect.auth-path ]
-                               - (default "/v3/internal/oauth/device/authorize")
-      --base-auth-url string   Base URL used for Konnect Authorization requests.
-                               - Config path: [ konnect.base-auth-url ]
-                               - (default "https://global.api.konghq.com")
-      --color-theme string     Configures the CLI UI/theme (prompt, tables, TUI elements).
-                               - Config path: [ color-theme ]
-                               - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                               - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --config-file string     Path to the configuration file to load.
-                               - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                   help for konnect
-      --log-file string        Write execution logs to the specified file instead of STDERR.
-                               - Config path: [ log-file ]
-      --log-level string       Configures the logging level. Execution logs are written to STDERR.
-                               - Config path: [ log-level ]
-                               - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --no-animate             Print a static login banner instead of animating when the terminal supports animation.
-      --no-image               Show only login text without animation or static image output.
-      --no-telemetry           Disable telemetry for this command invocation. Overrides config and env.
-                               - Config path: [ telemetry.enabled ]
-                               - Env var    : [ KONGCTL_NO_TELEMETRY ]
-                               - Default    : [ false ]
-  -o, --output string          Configures the format of data written to STDOUT.
-                               - Config path: [ output ]
-                               - Allowed    : [ json|yaml|text ] (default "text")
-  -p, --profile string         Specify the profile to use for this command. (default "default")
-      --refresh-path string    URL path used to refresh the Konnect auth token.
-                               - Config path: [ konnect.refresh-path ]
-                               - (default "/kauth/api/v1/refresh")
-      --token-path string      URL path used to poll for the Konnect Authorization response token.
-                               - Config path: [ konnect.token-path ]
-                               - (default "/v3/internal/oauth/device/token")
+      --auth-path string        URL path used to initiate Konnect Authorization.
+                                - Config path: [ konnect.auth-path ]
+                                - (default "/v3/internal/oauth/device/authorize")
+      --base-auth-url string    Base URL used for Konnect Authorization requests.
+                                - Config path: [ konnect.base-auth-url ]
+                                - (default "https://global.api.konghq.com")
+      --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
+                                - Config path: [ color-theme ]
+                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
+                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+      --config-file string      Path to the configuration file to load.
+                                - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
+  -h, --help                    help for konnect
+      --log-file string         Write execution logs to the specified file instead of STDERR.
+                                - Config path: [ log-file ]
+      --log-level string        Configures the logging level. Execution logs are written to STDERR.
+                                - Config path: [ log-level ]
+                                - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-animate              Print a static login banner instead of animating when the terminal supports animation.
+      --no-image                Show only login text without animation or static image output.
+      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
+                                - Config path: [ telemetry.enabled ]
+                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
+  -o, --output string           Configures the format of data written to STDOUT.
+                                - Config path: [ output ]
+                                - Allowed    : [ json|yaml|text ] (default "text")
+  -p, --profile string          Specify the profile to use for this command. (default "default")
+      --refresh-path string     URL path used to refresh the Konnect auth token.
+                                - Config path: [ konnect.refresh-path ]
+                                - (default "/kauth/api/v1/refresh")
+      --text-id-format string   Configure UUID rendering in static text-table ID columns.
+                                - Config path: [ text.id-format ]
+                                - Allowed    : [ compact|full ]
+                                - Default    : [ compact ]
+      --text-layout string      Configure static text-table column selection.
+                                - Config path: [ text.layout ]
+                                - Allowed    : [ compact|auto|wide ]
+                                - Default    : [ compact ]
+      --token-path string       URL path used to poll for the Konnect Authorization response token.
+                                - Config path: [ konnect.token-path ]
+                                - (default "/v3/internal/oauth/device/token")
 
 ```

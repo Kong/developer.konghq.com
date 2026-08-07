@@ -31,40 +31,43 @@ columns:
     key: description
 rows:
   - command: |
-      [kongctl list ai-gateway agents](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-agents)
+      [kongctl list ai-gateway agents](#kongctl-list-ai-gateway-agents)
     description: "Use the `agents` command to list or retrieve Agents for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway consumer-groups](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-consumer-groups)
+      [kongctl list ai-gateway config-stores](#kongctl-list-ai-gateway-config-stores)
+    description: "Use the `config-stores` command to list or retrieve Config Stores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
+      [kongctl list ai-gateway consumer-groups](#kongctl-list-ai-gateway-consumer-groups)
     description: "Use the `consumer-groups` command to list or retrieve Consumer Groups for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway consumers](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-consumers)
+      [kongctl list ai-gateway consumers](#kongctl-list-ai-gateway-consumers)
     description: "Use the `consumers` command to list or retrieve Consumers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway credentials](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-credentials)
+      [kongctl list ai-gateway credentials](#kongctl-list-ai-gateway-credentials)
     description: "Use the `credentials` command to list or retrieve Credentials for a specific {{site.konnect_short_name}} {{site.ai_gateway}} Consumer."
   - command: |
-      [kongctl list ai-gateway data-plane-certificates](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-data-plane-certificates)
+      [kongctl list ai-gateway data-plane-certificates](#kongctl-list-ai-gateway-data-plane-certificates)
     description: "Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway identity-providers](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-identity-providers)
+      [kongctl list ai-gateway identity-providers](#kongctl-list-ai-gateway-identity-providers)
     description: "Use the `identity-providers` command to list or retrieve identity providers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway mcp-servers](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-mcp-servers)
+      [kongctl list ai-gateway mcp-servers](#kongctl-list-ai-gateway-mcp-servers)
     description: "Use the `mcp-servers` command to list or retrieve MCP Servers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway model-providers](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-model-providers)
+      [kongctl list ai-gateway model-providers](#kongctl-list-ai-gateway-model-providers)
     description: "Use the `model-providers` command to list or retrieve model providers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway models](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-models)
+      [kongctl list ai-gateway models](#kongctl-list-ai-gateway-models)
     description: "Use the `models` command to list or retrieve models for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway nodes](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-nodes)
+      [kongctl list ai-gateway nodes](#kongctl-list-ai-gateway-nodes)
     description: "Use the `nodes` command to list or retrieve data plane Nodes for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway policies](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-policies)
+      [kongctl list ai-gateway policies](#kongctl-list-ai-gateway-policies)
     description: "Use the `policies` command to list or retrieve Policies for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
-      [kongctl list ai-gateway vaults](/kongctl/list/ai-gateway/#kongctl-list-ai-gateway-vaults)
+      [kongctl list ai-gateway vaults](#kongctl-list-ai-gateway-vaults)
     description: "Use the `vaults` command to list or retrieve Vaults for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
 {% endtable %}
 
@@ -77,6 +80,12 @@ rows:
 Use the `agents` command to list or retrieve Agents for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
 
 {% include_cached /kongctl/help/list/ai-gateway/agents.md %}
+
+### kongctl list ai-gateway config-stores
+
+Use the `config-stores` command to list or retrieve Config Stores for a {{site.konnect_short_name}} {{site.ai_gateway}}.
+
+{% include_cached /kongctl/help/list/ai-gateway/config-stores.md %}
 
 ### kongctl list ai-gateway consumer-groups
 

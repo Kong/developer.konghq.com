@@ -66,5 +66,13 @@ Flags:
       --region string             Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                   - Config path: [ konnect.region ]
       --status string             Filter registrations by status (approved, pending, revoked, rejected)
+      --text-id-format string     Configure UUID rendering in static text-table ID columns.
+                                  - Config path: [ text.id-format ]
+                                  - Allowed    : [ compact|full ]
+                                  - Default    : [ compact ]
+      --text-layout string        Configure static text-table column selection.
+                                  - Config path: [ text.layout ]
+                                  - Allowed    : [ compact|auto|wide ]
+                                  - Default    : [ compact ]
 
 ```

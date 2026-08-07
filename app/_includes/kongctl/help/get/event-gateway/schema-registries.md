@@ -70,5 +70,13 @@ Flags:
                                       - Config path: [ konnect.event-gateway.schema-registry.id ]
       --schema-registry-name string   The name of the schema registry to retrieve.
                                       - Config path: [ konnect.event-gateway.schema-registry.name ]
+      --text-id-format string         Configure UUID rendering in static text-table ID columns.
+                                      - Config path: [ text.id-format ]
+                                      - Allowed    : [ compact|full ]
+                                      - Default    : [ compact ]
+      --text-layout string            Configure static text-table column selection.
+                                      - Config path: [ text.layout ]
+                                      - Allowed    : [ compact|auto|wide ]
+                                      - Default    : [ compact ]
 
 ```

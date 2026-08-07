@@ -14,22 +14,30 @@ Examples:
 
 
 Flags:
-      --color-theme string   Configures the CLI UI/theme (prompt, tables, TUI elements).
-                             - Config path: [ color-theme ]
-                             - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                             - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --config-file string   Path to the configuration file to load.
-                             - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                 help for scaffold
-      --log-file string      Write execution logs to the specified file instead of STDERR.
-                             - Config path: [ log-file ]
-      --log-level string     Configures the logging level. Execution logs are written to STDERR.
-                             - Config path: [ log-level ]
-                             - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --no-telemetry         Disable telemetry for this command invocation. Overrides config and env.
-                             - Config path: [ telemetry.enabled ]
-                             - Env var    : [ KONGCTL_NO_TELEMETRY ]
-                             - Default    : [ false ]
-  -p, --profile string       Specify the profile to use for this command. (default "default")
+      --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
+                                - Config path: [ color-theme ]
+                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
+                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+      --config-file string      Path to the configuration file to load.
+                                - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
+  -h, --help                    help for scaffold
+      --log-file string         Write execution logs to the specified file instead of STDERR.
+                                - Config path: [ log-file ]
+      --log-level string        Configures the logging level. Execution logs are written to STDERR.
+                                - Config path: [ log-level ]
+                                - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
+                                - Config path: [ telemetry.enabled ]
+                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
+  -p, --profile string          Specify the profile to use for this command. (default "default")
+      --text-id-format string   Configure UUID rendering in static text-table ID columns.
+                                - Config path: [ text.id-format ]
+                                - Allowed    : [ compact|full ]
+                                - Default    : [ compact ]
+      --text-layout string      Configure static text-table column selection.
+                                - Config path: [ text.layout ]
+                                - Allowed    : [ compact|auto|wide ]
+                                - Default    : [ compact ]
 
 ```
