@@ -105,7 +105,7 @@ rows:
   - limit: Clients per auth server
     value: "5,000 clients per auth server."
   - limit: Access tokens
-    value: "No limit for {{site.konnect_short_name}} Enterprise. Konnect Plus is limited to 10 million tokens per month."
+    value: "Unlimited for {{site.konnect_short_name}} Enterprise. {{site.konnect_short_name}} Plus is limited to 10 million tokens per month."
 {% endtable %}
 <!--vale on-->
 
