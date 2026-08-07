@@ -23,13 +23,6 @@ tags:
 works_on:
   - konnect
 
-# schema:
-#     api: event-gateway/
-#     path: /schemas/
-
-# api_specs:
-#     - konnect/event-gateway
-
 products:
     - event-gateway
 api_specs:
@@ -59,10 +52,12 @@ Multiple Kafka clusters can be proxied through a single {{site.event_gateway}}. 
 
 ## Authentication
 
-Authentication on the backend cluster defines how the proxy connects to the backend for capturing metadata (topics, consumer groups, and so on).
+Authentication on the backend cluster defines the credentials the {{site.event_gateway_short}} uses when connecting to Kafka to fetch cluster metadata, such as brokers, topic and partition information.
+The supported types reflect what your Kafka cluster accepts.
 
-The backend cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters. 
-See [Virtual cluster authentication](/event-gateway/entities/virtual-cluster/#authentication) to learn more.
+{:.info}
+> **Note**: These credentials aren't used to represent individual client actions.
+> For `passthrough` and `validate_forward` mediation, each client authenticates directly to Kafka using their own credentials for their connection.
 
 Backend clusters support the following auth methods:
 
@@ -83,19 +78,25 @@ rows:
       Requires clients to provide a username and password.
       <br><br>
       Accepts a hardcoded list of usernames and passwords, either as strings or environment variables.
+      <br><br>
+      See [Authenticate Event Gateway connections to Kafka using SASL/PLAIN](/event-gateway/configure-sasl-plain-backend-cluster-auth/).
     credential: |
       `passthrough`, `terminate`
   - auth: "SASL/SCRAM-SHA-256"
     description: |
       Requires clients to provide a username and password using SCRAM-SHA-256 hashing.
     credential: |
-      `passthrough` 
+      `passthrough`
   - auth: "SASL/SCRAM-SHA-512"
     description: |
       Requires clients to provide a username and password using SCRAM-SHA-512 hashing.
     credential: |
       `passthrough`
 {% endtable %}
+
+Depending on what your Kafka cluster supports, you'll need to configure authentication on the associated virtual cluster:
+* If your Kafka cluster only accepts SASL/PLAIN or SASL/SCRAM credentials, use [`passthrough` or `terminate` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation) on the virtual cluster.
+* If your backend Kafka cluster supports SASL/OAUTHBEARER natively, use [`passthrough` or `validate_forward` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation) on the virtual cluster.
 
 ## Set up a backend cluster
 

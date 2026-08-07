@@ -132,7 +132,10 @@ columns:
     key: credential
 rows:
   - auth: "Anonymous (`anonymous`)"
-    description: "Doesn't require clients to provide any authentication when connecting to the proxy."
+    description: |
+      Doesn't require clients to provide any authentication when connecting to the proxy.
+      <br><br>
+      See [Get started with Event Gateway](/event-gateway/get-started/).
     credential: None
   - auth: "SASL/PLAIN (`sasl_plain`)"
     description: |
@@ -144,6 +147,8 @@ rows:
   - auth: "SASL/OAUTHBEARER (`oauth_bearer`)"
     description: |
       Requires clients to provide an OAuth token and a JWKS endpoint to verify token signatures, optionally with claim mapping and validation rules.
+      <br><br>
+      See [Set up Event Gateway with Kong Identity OAuth](/event-gateway/kong-identity-oauth/).
     credential: |
       `passthrough`, `terminate`, `validate_forward`
   - auth: "SASL/SCRAM-SHA-256 (`sasl_scram`)"
@@ -164,6 +169,10 @@ rows:
       Requires clients to present a trusted TLS certificate during the TLS handshake.
       The client certificate is verified against a [TLS trust bundle](/event-gateway/entities/tls-trust-bundle/).
       The certificate's principal (for example, the Common Name) can be used to enforce access control with [ACL policies](/event-gateway/policies/acl/).
+      <br><br>
+      See [Configure mTLS client authentication](/event-gateway/configure-mtls-client-authentication/) for a full walkthrough, including how to configure principal extraction.
+      <br><br>
+      mTLS is also supported for the gateway-to-backend connection; configure it in the [backend cluster's TLS settings](/event-gateway/entities/backend-cluster/#schema-backend-cluster-tls).
     credential: None
 {% endtable %}
 
@@ -175,9 +184,47 @@ and reuse existing credentials and principals defined on the backend cluster.
 Use the virtual cluster `authentication.mediation` setting to configure a mediation mode. 
 Choose the mode based on your security requirements and backend cluster configuration:
 
-* Passthrough (`passthrough`): Authentication from the client passes through the proxy to the backend without validation. This method is required for SCRAM authentication.
-* Terminate (`terminate`): Checks whether the client’s connection is authorized based on their credential, and then terminates the authentication. Then, a new authentication session starts with the backend cluster. 
-* Validate and forward (`validate_forward`): The client’s OAuth token is first validated by the proxy, and then sent to the backend as-is. This will “fail fast” if the token is invalid before sending it to the backend.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Mode
+    key: mode
+  - title: How it works
+    key: how
+  - title: When to use
+    key: when
+rows:
+  - mode: "`passthrough`"
+    how: | 
+      The client’s credentials pass through the proxy to the backend without validation.
+    when: |
+      The backend cluster natively supports the same auth mechanism the client uses (for example, SASL/OAUTHBEARER or SASL/SCRAM). Required for SCRAM authentication.
+  - mode: "`terminate`"
+    how: |
+      The proxy validates the client’s credential and terminates the auth session. It then opens a new, separate auth session with the backend using the credentials configured on the backend cluster entity.
+      <br><br>
+      When you use `terminate` mediation, the gateway-to-backend connection acts as a single service account, using the credentials configured on the backend cluster.
+      The backend Kafka cluster sees only that service account, not individual client principals.
+      Per-client authorization is enforced at the gateway layer using [ACL policies](#acl-mode) on the virtual cluster.
+    when: |
+      The backend cluster only supports username/password mechanisms (SASL/PLAIN or SASL/SCRAM) and clients authenticate with a different mechanism, such as OAuth.
+      We recommend using this pattern in production, as it's the most secure option.
+  - mode: "`validate_forward`"
+    how: |
+      The proxy validates the client’s OAuth token with the OAuth provider, then forwards the token to the backend as-is.
+    when: |
+      The backend cluster natively supports SASL/OAUTHBEARER. Use this instead of `passthrough` to fail fast on invalid tokens before they reach the backend.
+{% endtable %}
+<!--vale on-->
+
+### ACL mode
+
+The `acl_mode` field controls whether ACL policies are evaluated.
+When set to `enforce_on_gateway` (the default), clients start with no access to any resources on the virtual cluster.
+Operators grant access by adding ACL policies with principal-specific conditions.
+When set to `passthrough`, ACL policies are not evaluated and all authenticated clients have full access to whatever the backend cluster exposes.
+
+See [ACL policy](/event-gateway/policies/acl/) for details on defining access rules.
 
 ### Enrich connections with caller metadata
 
@@ -205,6 +252,10 @@ This allows you to expose clean, simple names to clients while maintaining organ
 For example, a virtual cluster exposes a topic named `orders` to the client.
 Behind the scenes, this maps to `team-a-orders` on the actual Kafka cluster. The client doesn't need to know about or manage the `team-a-` prefix.
 This enables transparent multitenancy, where multiple teams can share the same Kafka cluster without needing to manually prefix every topic and consumer group name in their applications.
+
+When clients send messages that contain Consumer Group names, the gateway passes the names to the backend unchanged, unless a namespace prefix is configured.
+Kafka handles consumer group coordination and offset tracking on the backend as normal.
+Consumer Group management commands such as create and delete are intercepted by the gateway and evaluated against ACL policies using the `group` resource type.
 
 The following examples provide some common use cases for namespaces and show how to set them up.
 
