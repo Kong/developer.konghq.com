@@ -5,7 +5,6 @@ description: Learn how to configure Dynamic Client Registration to automatically
 content_type: how_to
 
 products:
-    - gateway
     - dev-portal
 
 works_on:
@@ -36,9 +35,6 @@ faqs:
 prereqs:
   skip_product: true
   inline:
-    - title: "{{site.konnect_product_name}}"
-      include_content: prereqs/products/konnect-auth-only
-      icon_url: /assets/icons/gateway.svg
     - title: "{{site.konnect_product_name}} roles"
       include_content: prereqs/dev-portal-dcr-roles
       icon_url: /assets/icons/gateway.svg
