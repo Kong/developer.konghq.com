@@ -103,7 +103,7 @@ Federating a zone control plane moves {{site.mesh_product_name}} from a single-z
 
 ## Transfer resources from the zone control plane to {{site.konnect_short_name}}
 
-1. Create and enter a working directory:
+1. Create and navigate to the working directory:
 
    ```bash
    mkdir -p ~/mesh-konnect && cd ~/mesh-konnect

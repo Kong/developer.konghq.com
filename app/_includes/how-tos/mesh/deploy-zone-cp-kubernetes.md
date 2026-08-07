@@ -1,4 +1,4 @@
-1. Create and enter a working directory for this guide:
+1. Create and navigate to the working directory for this guide:
 
    ```sh
    mkdir -p ~/mesh-konnect && cd ~/mesh-konnect
