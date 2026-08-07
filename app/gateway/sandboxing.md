@@ -151,6 +151,7 @@ kong.client.get_jwt_token_header
 kong.client.get_jwt_token_payload
 kong.client.get_identity_realm_source
 kong.client.set_identity_realm_source
+kong.client.get_principal
 ```
 
 #### Kong Cluster PDK
