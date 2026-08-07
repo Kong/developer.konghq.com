@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.15.0
-  x-oas-source: kong/platform-api@2d298024e3105df6dbfeedf8c3b2364054dae3a3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2d298024e3105df6dbfeedf8c3b2364054dae3a3'
+  x-oas-source: kong/platform-api@dfedd87d7b12f9696e3805fbb6e7536f89c0102f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/dfedd87d7b12f9696e3805fbb6e7536f89c0102f'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -8215,7 +8215,7 @@ components:
           nullable: true
           x-go-type: types.IntOrString
           x-go-type-import:
-            path: github.com/kong/koko/internal/server/public/openapi/controlplanesconfig/types
+            path: github.com/kong-konnect/koko-private/internal/server/public/openapi/controlplanesconfig/types
             name: types
         protocol:
           description: The protocol used to communicate with the upstream.
@@ -9426,21 +9426,6 @@ components:
           properties:
             message:
               example: Bad Request
-    NotFoundError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 404
-            title:
-              example: Not Found
-            type:
-              example: 'https://httpstatuses.com/404'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Not found
     KonnectCPLegacyConflictError:
       allOf:
         - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
@@ -9512,6 +9497,21 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: UnsupportedMediaType
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: 'https://httpstatuses.com/404'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not found
   examples:
     ConfigStoreExample:
       value:
@@ -9599,12 +9599,6 @@ components:
     KonnectCPLegacyBadRequestExample:
       value:
         message: Bad Request
-    NotFoundExample:
-      value:
-        status: 404
-        title: Not Found
-        instance: 'kong:trace:6816496025408232265'
-        detail: Not Found
     KonnectCPLegacyConflictExample:
       value:
         message: Conflict
@@ -9614,6 +9608,12 @@ components:
         title: Unsupported Media Type
         instance: 'kong:trace:8347343766220159418'
         detail: 'This API only supports requests with `Content-Type: application/json`'
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
   requestBodies:
     DataPlaneClientCertificateRequest:
       content:
