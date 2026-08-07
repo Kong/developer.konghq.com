@@ -415,7 +415,7 @@ The proxy TLS certificate is a second secret, mounted alongside the clustering c
 {% include /k8s/create-certificate.md namespace='kong' hostname='demo.example.com' secret_name='demo-example-com' cert_required=true %}
 
 {:.info}
-> The secret name can't contain dots. The Helm chart uses each `secretVolumes` entry as a Kubernetes volume name, and volume names must be a DNS label. This is why the secret is named `demo-example-com` rather than after the `demo.example.com` hostname.
+> The secret name can't contain dots. The Helm chart uses each `secretVolumes` entry as a Kubernetes volume name, and volume names must be a DNS label. This is why the secret is named `demo-example-com` rather than matching the `demo.example.com` hostname exactly.
 
 ### Load the certificate on the data plane
 
