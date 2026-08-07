@@ -11,7 +11,7 @@ works_on:
 description: Learn about services in {{site.konnect_catalog}} Classic and how to configure them.
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
 search_aliases:
   - service catalog
 related_resources:
