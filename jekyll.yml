@@ -157,6 +157,7 @@ grok: Grok
 cerebras: Cerebras
 ollama: Ollama
 deepseek: DeepSeek
+edenai: Eden AI
 # Product names
 google_cloud: Google Cloud
 google_analytics: Google Analytics
