@@ -17,6 +17,9 @@ schema:
   path: /schemas/AIGatewayConsumerGroup
 works_on:
   - konnect
+tags:
+  - ai
+  - consumer
 tools:
   - konnect-api
   - kongctl

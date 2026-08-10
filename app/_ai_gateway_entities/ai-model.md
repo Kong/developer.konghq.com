@@ -17,6 +17,11 @@ schema:
   path: /schemas/AIGatewayModel
 works_on:
   - konnect
+tags:
+  - ai
+  - semantic
+  - load-balancing
+  - routing
 tools:
   - konnect-api
   - kongctl

@@ -17,6 +17,9 @@ schema:
   path: /schemas/AIGatewayIdentityProvider
 works_on:
   - konnect
+tags:
+  - ai
+  - identity
 tools:
   - konnect-api
   - kongctl

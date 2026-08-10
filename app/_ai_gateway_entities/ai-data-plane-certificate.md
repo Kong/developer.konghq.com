@@ -17,6 +17,10 @@ schema:
   path: /schemas/AIGatewayDataPlaneClientCertificate
 works_on:
   - konnect
+tags:
+  - ai
+  - data-plane
+  - certificates
 tools:
   - konnect-api
 related_resources:

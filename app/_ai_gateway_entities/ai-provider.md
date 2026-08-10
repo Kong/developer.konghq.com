@@ -17,6 +17,8 @@ schema:
   path: /schemas/AIGatewayModelProvider
 works_on:
   - konnect
+tags:
+  - ai
 tools:
   - konnect-api
   - kongctl

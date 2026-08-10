@@ -17,6 +17,9 @@ schema:
   path: /schemas/AIGatewayMCPServer
 works_on:
   - konnect
+tags:
+  - ai
+  - mcp
 tools:
   - konnect-api
   - kongctl
