@@ -5,7 +5,7 @@ content_type: how_to
 
 related_resources:
   - text: Azure AI Content Safety
-    url: ai-gateway/policies/ai-azure-content-safety/
+    url: /ai-gateway/policies/ai-azure-content-safety/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 description: Learn how to use the AI AWS Guardrails Policy.
