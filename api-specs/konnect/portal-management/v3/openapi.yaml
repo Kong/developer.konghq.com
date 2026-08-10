@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.9.1
+  version: 3.9.7
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@56f42965c48f7cb2846e83287cd5b950e3cad27e
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/56f42965c48f7cb2846e83287cd5b950e3cad27e'
+  x-oas-source: kong/platform-api@67f40d202dd883132fb882e1a8179a0d374d72a2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/67f40d202dd883132fb882e1a8179a0d374d72a2'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4887,11 +4887,14 @@ components:
       type: object
       properties:
         name:
+          description: The name of the team.
           type: string
           example: IDM - Developers
+          maxLength: 250
           pattern: '^[\w \W]+$'
           writeOnly: true
         description:
+          description: The description of the team.
           type: string
           example: The Identity Management (IDM) API team.
           maxLength: 250
@@ -4911,11 +4914,14 @@ components:
       type: object
       properties:
         name:
+          description: The name of the team.
           type: string
           example: IDM - Developers
+          maxLength: 250
           pattern: '^[\w \W]+$'
           writeOnly: true
         description:
+          description: The description of the team.
           type: string
           example: The Identity Management (IDM) team.
           maxLength: 250
@@ -4943,11 +4949,9 @@ components:
           example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
           readOnly: true
         name:
-          type: string
-          example: IDM - Developers
-          maxLength: 250
-          pattern: '^[\w \W]+$'
+          $ref: '#/components/schemas/TeamName'
         description:
+          description: The description of the team.
           type: string
           example: The developers for the IDM API.
           maxLength: 250
@@ -6765,6 +6769,12 @@ components:
         - api
         - api_package
       title: Entity Type
+    TeamName:
+      description: The name of the team.
+      type: string
+      example: IDM - Developers
+      maxLength: 250
+      pattern: '^[\w \W]+$'
     IdentityProviderType:
       description: Specifies the type of identity provider.
       type: string
