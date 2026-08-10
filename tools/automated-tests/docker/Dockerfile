@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip
 
 # set python env
 RUN python3 -m venv /opt/myenv
@@ -24,10 +24,19 @@ RUN ARCH=$(dpkg --print-architecture) && \
     tar -C /usr/local -xzf go.tar.gz && \
     rm go.tar.gz
 
+# Install kongctl
+RUN ARCH=$(dpkg --print-architecture) && \
+    curl -sL "https://github.com/Kong/kongctl/releases/download/v1.10.0/kongctl_linux_${ARCH}.zip" -o kongctl.zip && \
+    unzip kongctl.zip && \
+    mv kongctl /usr/local/bin/ && \
+    rm kongctl.zip && \
+    kongctl version --full
 ENV PATH="/usr/local/go/bin:${PATH}"
 ENV GOPATH="/go"
 ENV PATH="${GOPATH}/bin:${PATH}"
 
+RUN curl -fsSL https://claude.ai/install.sh | bash
+ENV PATH="/root/.local/bin:${PATH}"
 RUN go install github.com/deviceinsight/kafkactl/v5@latest
 
 # Install kubectl v1.35.2 (pinned + checksum verified)
