@@ -37,7 +37,20 @@ export async function fetchImage(docker, imageName, log) {
 
           docker.modem.followProgress(
             stream,
-            (err, res) => (err ? reject(err) : resolve(res)),
+            (err, res) => {
+              if (err) return reject(err);
+
+              const errorEvent = res.find((event) => event.error);
+              if (errorEvent) {
+                return reject(
+                  new Error(
+                    `Docker build failed for image '${imageName}': ${errorEvent.error}`,
+                  ),
+                );
+              }
+
+              resolve(res);
+            },
             (event) =>
               event.status
                 ? debugLog(event.status.trim())
