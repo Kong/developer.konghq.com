@@ -5,7 +5,7 @@ name: 'Skyflow De-identify'
 content_type: plugin
 
 publisher: skyflow
-description: "Skyflow sanitization plugin for Kong AI Gateway."
+description: "Skyflow sanitization plugin for {{site.ai_gateway_name}}."
 
 products:
     - gateway
@@ -15,7 +15,7 @@ works_on:
     - konnect
 
 third_party: true
-support_url: 
+support_url: https://github.com/SkyflowFoundry/skyflow-gateway-kong/issues
 
 icon: skyflow.svg
 
