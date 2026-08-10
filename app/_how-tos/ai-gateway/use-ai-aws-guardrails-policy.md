@@ -5,7 +5,7 @@ content_type: how_to
 
 related_resources:
   - text: Azure AI Content Safety
-    url: ai-gateway/policies/ai-azure-content-safety/
+    url: /ai-gateway/policies/ai-azure-content-safety/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 description: Learn how to use the AI AWS Guardrails Policy.
@@ -106,8 +106,13 @@ ai_gateway_models:
     enabled: true
     formats: [{ type: openai }]
     config:
-      route: { paths: [/] }
-      model: { name_header: true }
+      route:
+        paths:
+          - /
+        model:
+          body_param: model
+          values:
+            - my-gpt-4o
     capabilities: [generate]
     policies: [ !ref my-ai-aws-guardrails-policy#name ]
     targets:
