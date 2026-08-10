@@ -88,12 +88,13 @@ ai_gateway_mcp_servers:
       url: https://deckofcardsapi.com
       route:
         paths:
-          - /cards-api-mcp
+          - /api/deck
+        strip_path: false
     tools:
       - name: shuffle-cards
         description: Shuffle a new deck of cards. Returns a deck_id to use with draw-cards.
         method: GET
-        path: api/deck/new/shuffle/
+        path: /api/deck/new/shuffle/
         parameters:
           - name: deck_count
             in: query
@@ -105,7 +106,7 @@ ai_gateway_mcp_servers:
       - name: draw-cards
         description: Draw cards from an existing deck. Requires a deck_id from shuffle-cards.
         method: GET
-        path: "api/deck/{deck_id}/draw/"
+        path: "/api/deck/{deck_id}/draw/"
         parameters:
           - name: deck_id
             in: path
@@ -123,7 +124,7 @@ ai_gateway_mcp_servers:
       - name: shuffle-and-draw
         description: Create a new shuffled deck and draw cards in one request.
         method: GET
-        path: api/deck/new/draw/
+        path: /api/deck/new/draw/
         parameters:
           - name: count
             in: query
