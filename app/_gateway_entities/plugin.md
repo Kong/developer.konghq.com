@@ -288,35 +288,41 @@ The following plugins support cloning:
 
 ### Example of cloned plugin
 
-To create a plugin clone, use the `cloned_plugins` key to define a new plugin, then configure the clone the same as any other plugin through `plugins`:
+To create a plugin clone, use the `cloned_plugins` key to define a new plugin, then configure the clone the same as any other plugin through `plugins`.
+
+For example, to create a clone of Request Transformer to use for global configuration, define a schema for it using `cloned_plugins` and a `ref` base plugin:
 
 ```yaml
 cloned_plugins:
-# Create a clone of request transformer to use for global configuration
- - name: request-transformer-global
+ - name: acme-request-transformer-global
    ref: request-transformer
    priority: 999
+```
+Where:
+* `cloned_plugins.name`: The name of your new plugin. This must be a unique name that doesn't conflict with an existing plugin.
+  We recommend making this name distinct so that it doesn't conflict with future plugins. For example, `acme-request-transformer-global`.
+* `cloned_plugins.ref`: The source plugin that this clone is based on.
+* `cloned_plugins.priority`: The order in which the plugin runs relative to other plugins (see [plugin priorities](#plugin-priority)). This is an optional setting.
+  If not set, the plugin inherits the priority of the source plugin. 
+  For plugins with the same priority, the order depends on their names in reverse alphabetical order: plugins with alphabetically greater names run earlier (for example, `my-plugin-b` runs before `my-plugin-a`).
 
-# Define an entry for the new plugin under the global plugins key
+{:.info}
+> **Notes:** 
+* Each plugin ref (for example, `ref: request-transformer`) can have a maximum of five clones.
+* If you're using `deck gateway apply` to define cloned plugin schemas, use the `--include-plugin-definitions` flag.
+
+Now you can configure the new plugin under the `plugins` key:
+
+```yaml
 plugins:
-  - name: request-transformer-global
+  - name: acme-request-transformer-global
     config:
       add:
         headers:
           - "X-Global-Header:isSetGlobally"
 ```
 
-* `cloned_plugins.name`: The name of your new plugin. This must be a unique name that doesn't conflict with an existing plugin.
-  We recommend making this name distinct so that it doesn't conflict with future plugins. For example, `acme-request-transformer-global`.
-* `cloned_plugins.ref`: The source plugin that this clone is based on.
-* `cloned_plugins.priority`: The order in which the plugin runs relative to other plugins (see [plugins priorities](#plugin-priority)). This is an optional setting.
-  If not set, the plugin inherits the priority of the source plugin. 
-  For plugins with the same priority, the order depends on their names in reverse alphabetical order: plugins with alphabetically greater names run earlier (for example, `my-plugin-b` runs before `my-plugin-a`).
-
-{:.info}
-> **Note:** Each plugin ref (for example, `ref: request-transformer`) can have a maximum of five clones.
-
-For more information, see the guide on [Cloning a {{site.base_gateway}} plugin](/how-to/clone-gateway-plugin/).
+For a complete tutorial on setting up and testing a cloned plugin, see [Cloning a {{site.base_gateway}} plugin](/how-to/clone-gateway-plugin/).
 
 ### Deleting or updating cloned plugins
 
