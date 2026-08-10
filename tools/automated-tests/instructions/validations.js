@@ -79,6 +79,17 @@ function getSessionFromCookieHeader(header) {
   return match ? match[1] : null;
 }
 
+async function runValueThroughCommand(container, value, command) {
+  const encoded = Buffer.from(value).toString("base64");
+  const cmd = `printf '%s' '${encoded}' | base64 -d | ${command}`;
+  log(
+    `[extract_headers] running command: ${cmd} (input=${JSON.stringify(value)})`,
+  );
+  const result = await executeCommand(container, cmd);
+  log(`[extract_headers] command output: ${JSON.stringify(result.output)}`);
+  return result.output.trim();
+}
+
 async function fetchWithOptionalJar(url, options = {}, jarName) {
   if (jarName !== undefined) {
     if (!(jarName in cookieJars)) {
@@ -154,11 +165,24 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
       if (options.body) console.log(`[debug] request body: ${options.body}`);
     }
 
-    const response = await fetchWithOptionalJar(
-      url,
-      options,
-      config.cookie_jar || config.cookie,
-    );
+    let response;
+    try {
+      response = await fetchWithOptionalJar(
+        url,
+        options,
+        config.cookie_jar || config.cookie,
+      );
+    } catch (error) {
+      const cause = error.cause
+        ? ` (cause: ${error.cause.code || error.cause.message || error.cause})`
+        : "";
+      log(`[debug] fetch failed for ${options.method} ${url}${cause}`);
+      console.error(
+        `[debug] fetch failed for ${options.method} ${url}${cause}`,
+      );
+      error.message = `${error.message} for ${options.method} ${url}${cause}`;
+      throw error;
+    }
     let body = {};
 
     if (response.status !== 302) {
@@ -188,11 +212,19 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
           extractedValue = response.headers.get(header.name);
         }
 
+        if (header.command && extractedValue != null) {
+          extractedValue = await runValueThroughCommand(
+            container,
+            extractedValue,
+            header.command,
+          );
+        }
+
         if (
           config.retry &&
           (extractedValue === undefined ||
             extractedValue === "" ||
-            value === null)
+            extractedValue === null)
         ) {
           shouldRetry = true;
         } else {
@@ -220,7 +252,9 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
           shouldRetry = true;
         } else {
           if (config.debug) {
-            console.log(`extracted body field ${field.name} into ${field.variable}: ${value}`);
+            console.log(
+              `extracted body field ${field.name} into ${field.variable}: ${value}`,
+            );
           }
           await setEnvVariable(container, field.variable, value);
         }
