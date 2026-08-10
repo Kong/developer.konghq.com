@@ -8,6 +8,15 @@ function fileToUrl(file) {
   return file.replace("../../app/_how-tos/", "").replace(".md", "/");
 }
 
+function deriveSkipProducts(products) {
+  // Mirrors extractor.js's deriveProduct special case: ai-gateway v1 how-tos are
+  // tagged with both "gateway" and "ai-gateway" but only ever run as "gateway".
+  if (products.includes("ai-gateway") && products.includes("gateway")) {
+    return ["gateway"];
+  }
+  return products;
+}
+
 export async function testeableUrlsFromFiles(config, files) {
   const howTosUrls = [];
   const skipped = [];
@@ -47,7 +56,7 @@ export async function testeableUrlsFromFiles(config, files) {
         const name = `[${frontmatter.title}](${config.productionUrl}${howToUrl})`;
         skipped.push({
           status: "skipped",
-          products: frontmatter.products,
+          products: deriveSkipProducts(frontmatter.products),
           duration: 0,
           name,
           message,
