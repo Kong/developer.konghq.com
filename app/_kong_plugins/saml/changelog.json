@@ -79,6 +79,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.29": [
+    {
+      "message": "Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.1.1": [
     {
       "message": "Reduce severity of 'session was not found' messages to 'info'",

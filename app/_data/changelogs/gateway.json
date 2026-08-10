@@ -24907,5 +24907,44 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.4.3.29": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.6 to 3.5.7.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
   }
 }
