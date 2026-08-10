@@ -19,15 +19,11 @@ products:
             done
           '
 
-    after: &gateway-after
+    after:
       commands:
         - docker rm -f automated-tests-keycloak
         - docker rm -f redis-stack-server
         - docker rm -f vault
-  ai-gateway:
-    extractInstructionsAs: default
-    before: *gateway-before
-    after: *gateway-after
   kic:
     extractInstructionsAs: block
   operator:

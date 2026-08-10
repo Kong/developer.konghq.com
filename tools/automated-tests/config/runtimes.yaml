@@ -80,14 +80,16 @@ on-prem:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
       SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
       ANTHROPIC_API_KEY: anthropic-api-key
-
+      KONNECT_DOMAIN: konghq.tech
+      KONGCTL_DEFAULT_KONNECT_ENVIRONMENT: tech
     setup:
       commands:
-        - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
+        - export KONGCTL_DEFAULT_KONNECT_PAT=$KONNECT_TOKEN
+        - curl -Ls https://get.konghq.com/ai | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
 
     cleanup:
       commands:
-        - curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -a kong-quickstart
+        - curl -Ls https://get.konghq.com/ai | bash -s -- -d
 
     reset:
       commands:
@@ -140,15 +142,25 @@ konnect:
       commands: []
 
   ai-gateway:
+    env:
+      WEBHOOK_URL: http://httpbin.konghq.com/anything
+      SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
+      ANTHROPIC_API_KEY: anthropic-api-key
+      KONNECT_DOMAIN: konghq.tech
+      KONGCTL_DEFAULT_KONNECT_ENVIRONMENT: tech
     setup:
-      commands: []
+      commands:
+        - curl -Ls https://get.konghq.com/ai | bash -s -- -r "" -k $KONNECT_TOKEN -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG | grep '^export AI_GATEWAY_ID' >> /env-vars.sh
+        - sleep 5
 
     cleanup:
-      commands: []
+      commands:
+        - curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN -d
 
     reset:
-      commands: []
-
+      commands:
+        - curl -Ls https://get.konghq.com/ai | bash -s -- -r "" -k $KONNECT_TOKEN -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG | grep '^export AI_GATEWAY_ID' >> /env-vars.sh
+        - sleep 5
   event-gateway:
     setup:
       commands: []
