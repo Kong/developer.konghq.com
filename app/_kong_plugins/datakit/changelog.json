@@ -23,6 +23,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.3": [
+    {
+      "message": "Security: Fixed CVE-2026-14916 by binding the JWT algorithm to the\nverification key's type in the `jwt_verify` node. This means that a symmetric algorithm can\nno longer be verified against an asymmetric key, preventing an authentication\nbypass where an attacker forges tokens by using the public key as an HMAC\nshared secret, under configurations where the node uses a PEM key string and\n`allowed_algorithms` is unset (any algorithm accepted).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added more implicit node outputs:\n    * `request.path`\n    * `request.raw_path`\n    * `request.port`\n    * `request.method`\n    * `request.scheme`\n    * `request.version`\n    * `service_response.status`\n    * service_response.raw_body\n    * call.raw_body\n",
