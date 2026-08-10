@@ -1,0 +1,65 @@
+description: 'Enable the Skyflow De-identify plugin with de-identification and re-identification.'
+
+extended_description: |
+  Enable the Skyflow De-identify plugin with re-identification turned on.
+
+  In this configuration, {{site.base_gateway}} tokenizes outbound request bodies before
+  proxying them upstream, and restores original values in the response before returning
+  it to the caller.
+  The upstream provider only ever sees tokens; the caller sees real values.
+
+  The `sts` credential method requires no stored Skyflow secret.
+  {{site.base_gateway}} exchanges each caller's own IdP token for a short-lived Skyflow bearer
+  token using RFC 8693 token exchange.
+
+  The `max_spans` limit sets a fail-closed ceiling on how many text spans a single
+  request may carry. Agent traffic may need a higher value because a short message can
+  arrive alongside many resent tool definitions.
+
+title: 'De-identify and re-identify'
+
+weight: 901
+
+requirements:
+  - "The Skyflow De-identify plugin is [installed](/plugins/skyflow-ai-data-control/#install-the-skyflow-de-identify-plugin)."
+  - "You have a [Skyflow account](https://docs.skyflow.com/docs/fundamentals/accounts-and-environments) with a Detect vault. From the vault's page in the Skyflow admin console, copy the **Vault ID** and **Vault URL**."
+  - "The credential's Skyflow role permits both the **de-identify** and **re-identify** operations."
+
+variables:
+  vault_id:
+    value: $SKYFLOW_VAULT_ID
+    description: The ID of your Skyflow Detect vault.
+  vault_url:
+    value: $SKYFLOW_VAULT_URL
+    description: "The full URL of your Skyflow vault. For example: `https://{cluster}.vault.skyflowapis.com`. Sandbox vaults use `.skyflowapis.tech`."
+  service_account_id:
+    value: $SKYFLOW_SERVICE_ACCOUNT_ID
+    description: Your Skyflow service account ID, used for STS token exchange.
+
+config:
+  skyflow:
+    vault_configuration:
+      vault_id: ${vault_id}
+      vault_url: ${vault_url}
+    credentials:
+      method: sts
+      sts:
+        service_account_id: ${service_account_id}
+    deidentify:
+      entities:
+        - NAME
+        - EMAIL_ADDRESS
+        - PHONE_NUMBER
+        - SSN
+        - CREDIT_CARD
+      token_format: VAULT_TOKEN
+  operations:
+    limits:
+      max_spans: 512
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
