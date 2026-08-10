@@ -86,6 +86,9 @@ export async function runtimeEnvironment(runtimeConfig) {
     }
 
     environment = { ...environment, ...versionConfig["env"] };
+  } else if (process.env.KONG_IMAGE_NAME && process.env.KONG_IMAGE_TAG) {
+    environment["KONG_IMAGE_NAME"] = process.env.KONG_IMAGE_NAME;
+    environment["KONG_IMAGE_TAG"] = process.env.KONG_IMAGE_TAG;
   }
 
   return environment;
