@@ -87,8 +87,8 @@ Use `deck` to dump the declarative configuration from the {{site.base_gateway}} 
 
 ```sh
 deck gateway dump \
-  --konnect-token $YOUR_KONNECT_PAT \
-  --konnect-control-plane-name $YOUR_KONNECT_API_GATEWAY_CONTROL_PLANE_NAME \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-control-plane-name $KONNECT_API_GATEWAY_CONTROL_PLANE_NAME \
   > kong.yaml
 
 ```
@@ -103,7 +103,7 @@ Before you can convert `kong.yaml`, create the `./config` and `./out` directorie
 mkdir -p ./config ./out
 ```
 
-Run `kongctl convert ai-gateway` against the exported `kong.yaml` file. The tool reads the {{site.ai_gateway}} running on {{site.base_gateway}} plugin configuration and emits an {{site.ai_gateway}} 2.x entity configuration.
+Run `kongctl convert ai-gateway` against the exported `kong.yaml` file. The tool reads the {{site.ai_gateway}} running on {{site.base_gateway}} plugin configuration and emits an {{site.ai_gateway}} 2.x entity and Policy configuration.
 
 ```sh
 kongctl convert ai-gateway \
@@ -112,7 +112,7 @@ kongctl convert ai-gateway \
   --out ./out
 ```
 
-The `--out` flag sets the output directory for the converted files. The converter inspects each AI plugin and translates it into the matching version 2.x entity:
+The `--out` flag sets the output directory for the converted files. The converter inspects each AI plugin and translates it into the matching version 2.x entity or Policy:
 
 - Each `ai-proxy-advanced` plugin becomes an [AI Model](/ai-gateway/entities/ai-model/) (and one [AI Model Provider](/ai-gateway/entities/ai-model-provider/) per distinct upstream provider and credential set).
 - Each `ai-mcp-proxy` plugin becomes an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) whose type matches the plugin mode.
@@ -124,10 +124,10 @@ The `--out` flag sets the output directory for the converted files. The converte
 
 Open the `yaml` files in `./out` and confirm that the converter captured everything you expect. At minimum, check that:
 
-- Every AI Proxy plugin-based model has a corresponding AI Model entry, with the right `capabilities`, `formats`, and `targets`.
-- Provider credentials were extracted correctly, and each `targets[].provider` reference resolves to a declared AI Model Provider.
-- Every AI MCP Server has the correct `type` for its original plugin mode, and that `conversion-only` and `listener` pairs are linked by matching tags.
-- Each AI Agent points at the correct upstream url and carries the logging settings you had configured.
+- Every AI Proxy plugin-based model has a corresponding AI Model entry in `models.yaml`, with the right `capabilities`, `formats`, and `targets`.
+- Provider credentials were extracted correctly, and each `targets[].provider` reference resolves to a declared AI Model Provider in `providers.yaml`.
+- Every AI MCP Server in `mcp_servers.yaml` has the correct `type` for its original plugin mode, and that `conversion-only` and `listener` pairs are linked by matching tags.
+- Each AI Agent points at the correct upstream URL and carries the logging settings you had configured.
 - Supporting plugins were converted to AI Policies and attached to the right entities.
 
 Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as an AI Model Provider `display_name` or an AI Model `display_name`. These are required in {{site.ai_gateway}} 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
