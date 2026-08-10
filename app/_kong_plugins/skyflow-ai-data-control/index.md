@@ -55,6 +55,7 @@ When you enable this plugin on a Route, it acts in two {{site.base_gateway}} req
   When `reidentify.enabled = true`, the plugin restores the original values using either `mapping_only` (the request-scoped map) or `reidentify_text` (a vault-authoritative call to `POST /v2/detect/reidentify/string`), then rewrites the response body.
   The end user sees real values; the provider never does.
 
+<!--vale off-->
 {% mermaid %}
 sequenceDiagram
     autonumber
@@ -81,6 +82,7 @@ sequenceDiagram
 
     Note over K: log phase - entity counts by type, never values
 {% endmermaid %}
+<!--vale on-->
 
 The plugin attaches to {{site.base_gateway}} Routes and Services and talks to the Skyflow Detect API over HTTPS using a bearer token minted from the configured credential.
 It emits metrics and structured logs of detected-entity counts by type, never the values themselves.
@@ -95,6 +97,7 @@ On one Route, the two plugins contend for the buffered body, and `ai-proxy` retu
 
 The fix is a nested-proxy topology with two Routes and two independent buffered cycles.
 
+<!--vale off-->
 {% mermaid %}
 flowchart TB
     C["Client<br/>Email Jane Doe at jane@acme.com"]
@@ -111,6 +114,7 @@ flowchart TB
     F -- "values restored" --> C
     F -. "deidentify · reidentify" .-> S
 {% endmermaid %}
+<!--vale on-->
 
 Each Route runs its own buffered request/response cycle, which keeps the two plugins out of each other's way.
 The internal Route is not externally reachable: an `ip-restriction` plugin bound to `127.0.0.1/32` refuses all other traffic, because that Route doesn't carry authentication or de-identification.
@@ -192,7 +196,7 @@ See the following examples:
 {:.info}
 > **Note**: There is no field for selecting the API format.
 > OpenAI, Anthropic, and MCP payloads are detected per request from the body shape, so one configuration serves all three.
-> A body shape the plugin does not recognize is refused rather than forwarded unscanned.
+> If the plugin doesn't recognize a body shape, it refuses the request instead of forwarding it.
 
 Configuration constraints enforced when you save:
 
