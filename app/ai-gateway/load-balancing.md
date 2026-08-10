@@ -107,11 +107,11 @@ rows:
 
 For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai-model/#algorithm-examples) in the [AI Model entity](/ai-gateway/entities/ai-model/) reference.
 
-### Request routing by model alias
+### Request routing rules
 
-Model aliases allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
+Routing rules allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
 
-Each target in a Model entity can have an optional [`model.alias`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-model-alias) field. When a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching target. This feature works independently of load balancing algorithms — the alias determines which target (or set of targets) handles the request, and the configured load balancing algorithm selects the final backend within that set.
+An AI Model can have an optional [`config.route.model`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model) field, matching on the request body, a header, or the path. For example, when `config.route.model` is set to `{ body_param: model, values: [alias-value] }` and a client sends `"model": "alias-value"` in the request body, {{site.ai_gateway}} routes to the matching AI Model. This feature works independently of load balancing algorithms. The routing rule determines which AI Model (or target set) handles the request, and the configured load balancing algorithm selects the final backend within that set.
 
 ### Retry and fallback
 
