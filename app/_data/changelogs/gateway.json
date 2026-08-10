@@ -24908,15 +24908,10 @@
       }
     ]
   },
-  "3.4.3.29": {
+  "3.10.0.17": {
     "kong-ee": [
       {
         "message": "Bumped jq from 1.8.1 to 1.8.2.",
-        "type": "dependency",
-        "scope": "Core"
-      },
-      {
-        "message": "Bumped OpenSSL from 3.5.6 to 3.5.7.",
         "type": "dependency",
         "scope": "Core"
       },

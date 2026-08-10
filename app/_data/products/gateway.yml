@@ -756,7 +756,7 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.10"
-    ee-version: "3.10.0.16"
+    ee-version: "3.10.0.17"
     lts: true
     eol: 2028-03-31
     distributions:
@@ -1924,7 +1924,7 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
-  '3.4.3.29': 2026/08/10
+  '3.10.0.17': 2026/08/10
   '3.14.0.11': 2026/08/06
   '3.14.0.10': 2026/07/29
   '3.13.0.8': 2026/07/27
