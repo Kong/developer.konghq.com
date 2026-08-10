@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.10": [
+    {
+      "message": "Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly, and logging a warning if misconfigured. This prevents a crafted unsigned SAML response from silently bypassing authentication when `validate_assertion_signature` is set to false.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.7": [
     {
       "message": "Fixed an issue that caused a crash when the NameID Format was set to `Unspecified`.",
