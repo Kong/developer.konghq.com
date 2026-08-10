@@ -83,7 +83,9 @@ rows:
               ctas:
                 - text: Key Auth policy
                   url: "/ai-gateway/policies/key-auth/"
-                - text: Secure AI Agent traffic with OpenID Connect and Okta
+                - text: Set up a {{site.identity}} auth server for AI Agent authentication
+                  url: "/ai-gateway/set-up-kong-identity-for-a2a/"
+                - text: Secure AI Agent traffic with OpenID Connect and {{site.identity}}
                   url: "/ai-gateway/secure-ai-agent-with-oidc/"
                 - text: Request Size Limiting policy
                   url: "/ai-gateway/policies/request-size-limiting/"
