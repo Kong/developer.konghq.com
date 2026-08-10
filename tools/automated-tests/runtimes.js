@@ -131,6 +131,14 @@ export async function setupRuntime(runtimeConfig, docker) {
   const workspaceHostPath = path.resolve(__dirname, ".workspace");
   await fs.mkdir(workspaceHostPath, { recursive: true });
 
+  // Same Docker-outside-of-Docker constraint as workspaceHostPath above:
+  // the AI Gateway quickstart script (fetched from get.konghq.com/ai) hardcodes
+  // OUTPUT_DIR to an absolute path under /tmp/kong, so that path must be
+  // bind-mounted onto itself for the cert volume it later passes to
+  // `docker run -v` to resolve on the host.
+  const kongTmpHostPath = "/tmp/kong";
+  await fs.mkdir(kongTmpHostPath, { recursive: true });
+
   const container = await docker.createContainer({
     Image: runtimeConfig.imageName,
     Tty: true,
@@ -142,6 +150,7 @@ export async function setupRuntime(runtimeConfig, docker) {
         `${exportedRealmHostPath}:/realms`,
         `${filesHostPath}:/files`,
         `${workspaceHostPath}:${workspaceHostPath}`,
+        `${kongTmpHostPath}:${kongTmpHostPath}`,
       ],
       NetworkMode: "host",
     },
