@@ -18,7 +18,6 @@ products:
 tools:
   - konnect-api
   - kongctl
-  - kongctl
 
 tags:
   - ai
