@@ -518,4 +518,7 @@ If you are using HTTPS rather than HTTP, we recommend enabling this option to en
 You should now configure this via `admin_gui_auth_conf.session_cookie_same_site`.
 
 Previously, `cookie_samesite` was set to `Strict` if not specified. However, `admin_gui_auth_conf.session_cookie_same_site`
-now has a default value of `Lax`. If you are using the same domain for the Admin API and Kong Manager,
+now has a default value of `Lax`.
+If you are using the same domain for the Admin API and Kong Manager, we recommend upgrading this setting to `Strict` to enhance security.
+
+Learn more about [SameSite in the Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value).
