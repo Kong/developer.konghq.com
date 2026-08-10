@@ -30,7 +30,7 @@ rows:
             config: |
               AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
 
-              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability. Configure MCP traffic using [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) and attach [AI Policies](/ai-gateway/entities/ai-policy/) for authentication, access control, and observability.
+              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability. Configure MCP traffic using [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), authenticate AI Consumers with an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/), and attach [AI Policies](/ai-gateway/entities/ai-policy/) for rate limiting, transformation, and observability.
       - blocks:
           - type: image
             config:
@@ -62,11 +62,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Use AI Policies to:
-                    - Secure access with the [MCP OAuth2 policy](/ai-gateway/policies/ai-mcp-oauth2/), [OIDC policy](/ai-gateway/policies/openid-connect/), or [Key Auth policy](/ai-gateway/policies/key-auth/).
-                    - Monitor MCP traffic using [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
-                    - Enforce access controls for MCP tool usage.
-                    - Govern usage with the [Rate Limiting policy](/ai-gateway/policies/rate-limiting/) and other traffic control policies.
+                    Secure and govern MCP traffic with:
+                    - An [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) (`key-auth` or `openid-connect`) to authenticate AI Consumers, optionally paired with [protected resource metadata](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) for MCP-spec OAuth2.
+                    - [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs) to monitor MCP traffic.
+                    - ACLs to enforce access controls for MCP tool usage.
+                    - The [Rate Limiting policy](/ai-gateway/policies/rate-limiting/) and other traffic control policies to govern usage.
 
   - columns:
       - blocks:
@@ -93,12 +93,10 @@ rows:
               description: |
                 Apply security, governance, and observability to MCP servers with AI Policies.
               ctas:
-                - text: MCP OAuth2 policy
-                  url: /ai-gateway/policies/ai-mcp-oauth2/
-                - text: OIDC policy
-                  url: /ai-gateway/policies/openid-connect/
-                - text: Key Auth policy
-                  url: /ai-gateway/policies/key-auth/
+                - text: AI Identity Provider entity
+                  url: /ai-gateway/entities/ai-identity-provider/
+                - text: Protected resource metadata
+                  url: /ai-gateway/entities/ai-mcp-server/#protected-resource-metadata
                 - text: Rate Limiting policy
                   url: /ai-gateway/policies/rate-limiting/
 

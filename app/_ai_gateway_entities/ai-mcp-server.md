@@ -57,8 +57,10 @@ faqs:
     a: |
       Set [`access.acl_attribute_type`](#schema-aigateway-mcpserver-access-acl-attribute-type) to `oauth_access_token` and provide [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) (a jq
       filter, for example `.user.email`). ACLs then evaluate against the claim value extracted from
-      the OAuth access token instead of the resolved AI Consumer identity. The OAuth flow is supplied
-      by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
+      the OAuth access token instead of the resolved AI Consumer identity. If [`access.metadata`](#schema-aigateway-mcpserver-access-metadata)
+      is also set, {{site.ai_gateway}} generates an [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/)
+      configuration for this server's route instead of a plain identity-provider check. See
+      [Protected resource metadata](#protected-resource-metadata).
 
   - q: What error code do denied requests return?
     a: |
@@ -66,10 +68,20 @@ faqs:
       `INVALID_PARAMS -32602`; from {{site.ai_gateway}} 3.14 onward, denials follow the
       [MCP 2025-11-25 authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#error-handling).
 
-  - q: Can I attach the same authentication or rate-limiting policy that I'd attach to the AI MCP Server?
+  - q: How do I authenticate requests to an AI MCP Server?
     a: |
-      Policy configuration that applies to the AI MCP Server goes through the
-      [AI Policy entity](/ai-gateway/entities/ai-policy/). Attach Policies to the AI MCP Server through its
+      Reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) by name or ID in the AI MCP
+      Server's [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers) array, the same
+      way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control) or
+      [AI Agent](/ai-gateway/entities/ai-agent/#access-control). This is supported for `conversion-listener`,
+      `listener`, and `passthrough-listener` modes. An AI MCP Server currently accepts up to one AI Identity
+      Provider reference. Attaching an authentication AI Policy directly to the AI MCP Server's `policies` field
+      isn't supported.
+
+  - q: Can I attach a rate-limiting policy to an AI MCP Server?
+    a: |
+      Yes. Policy configuration such as rate limiting, logging, or request/response transformation goes through
+      the [AI Policy entity](/ai-gateway/entities/ai-policy/). Attach Policies to the AI MCP Server through its
       [`policies`](#schema-aigateway-mcpserver-policies) field.
 ---
 
@@ -80,7 +92,7 @@ Create an AI MCP Server to connect AI applications such as [Claude](https://clau
 Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability policies you apply to traditional API traffic automatically cover MCP traffic, giving you consistent governance across both HTTP and MCP clients.
 
 {:.warning}
-> **Note:** MCP traffic is API-level traffic, not LLM request/response flows. The [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/) provides MCP-specific OAuth2 validation. Standard API-level policies (authentication, rate limiting, logging) apply to MCP traffic. AI Policies that operate on LLM prompt/response flows (such as prompt guards or model routing) won't apply here.
+> **Note:** MCP traffic is API-level traffic, not LLM request/response flows. Authenticate MCP traffic through an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) referenced in [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers), the same as AI Models and AI Agents. Standard API-level policies (rate limiting, logging) still apply to MCP traffic through the [`policies`](#schema-aigateway-mcpserver-policies) field. AI Policies that operate on LLM prompt/response flows (such as prompt guards or model routing) won't apply here.
 
 ## Manage AI MCP Servers
 
@@ -94,7 +106,7 @@ For configuration examples and step-by-step setup instructions, see [Set up an A
 
 ## AI MCP Server governance
 
-Attach [AI Policies](/ai-gateway/entities/ai-policy/) to AI MCP Servers to enforce authentication, rate limits, request/response transformation, and OAuth gating. Add them to the [`policies`](#schema-aigateway-mcpserver-policies) field by name or ID. AI Policies run on all MCP traffic through the server, before tool invocation and after ACL checks. Multiple AI Policies can attach to one AI MCP Server, and each runs independently in the request lifecycle.
+Attach [AI Policies](/ai-gateway/entities/ai-policy/) to AI MCP Servers to enforce rate limits, request/response transformation, logging, and OAuth-based ACL gating. Add them to the [`policies`](#schema-aigateway-mcpserver-policies) field by name or ID. AI Policies run on all MCP traffic through the server, before tool invocation and after ACL checks. Multiple AI Policies can attach to one AI MCP Server, and each runs independently in the request lifecycle. Authenticating AI Consumers isn't handled through the `policies` field; reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) in [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers) instead. See [Access control](#access-control).
 
 You can also attach AI Policies at the [AI Consumer](/ai-gateway/entities/ai-consumer/) level for per-client enforcement.
 
@@ -108,8 +120,8 @@ columns:
   - title: Policy
     key: example
 rows:
-  - use_case: "Secure MCP endpoints with credentials or OAuth tokens"
-    example: "[Key Auth Policy](/ai-gateway/policies/key-auth/) or [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/)"
+  - use_case: "Secure MCP endpoints with AI Consumer identity or OAuth tokens"
+    example: "Reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) (`key-auth` or `openid-connect`) in [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers). Advertise [protected resource metadata](#protected-resource-metadata) through `access.metadata` so MCP clients can discover the authorization server."
   - use_case: "Rate limiting"
     example: "Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
   - use_case: "Track all MCP traffic and ACL decisions."
@@ -357,11 +369,49 @@ An MCP client such as [Claude Desktop](https://claude.ai/download), Cursor, or [
 >Tools generated from [`parameters`](#schema-aigateway-mcpserver-tools-parameters) (`conversion-listener`, `conversion-only`) rename `query`, `path`, `header`, and `cookie` args to `{in}_{name}`: `query: q` becomes `query_q`.
 > Bodies collapse into a single `body` property. Check `tools/list` before calling `tools/call`.
 
+## Access control
+
+To authenticate AI Consumers calling a `conversion-listener`, `listener`, or `passthrough-listener` AI MCP Server, reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) by name or ID in the [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers) array. This is the same mechanism used by [AI Models](/ai-gateway/entities/ai-model/#access-control) and [AI Agents](/ai-gateway/entities/ai-agent/#access-control). An AI MCP Server currently accepts up to one AI Identity Provider reference. Attaching an authentication AI Policy directly to the AI MCP Server's [`policies`](#schema-aigateway-mcpserver-policies) field isn't supported; authentication for AI MCP Servers is configured exclusively through AI Identity Providers.
+
+`upstream-server` AI MCP Servers don't accept an `access.identity_providers` reference. Configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) instead to authenticate to the upstream when fetching its tool list; see [Upstream authentication](#upstream-authentication). `conversion-only` AI MCP Servers have no `access` field at all, since they never accept incoming MCP traffic directly.
+
+ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step. For ACL configuration, see [ACL tool control](#acl-tool-control).
+
+### Protected resource metadata
+
+`conversion-listener`, `listener`, and `passthrough-listener` AI MCP Servers can advertise [OAuth 2.0 Protected Resource Metadata](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization) (RFC 9728) through [`access.metadata`](#schema-aigateway-mcpserver-access-metadata). MCP clients that follow the MCP authorization specification fetch this metadata before requesting a token, so they know which authorization server to use and what scopes to request, rather than guessing or failing outright.
+
+Configure `access.metadata` alongside an `openid-connect` [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) in `access.identity_providers`:
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`resource`"
+    description: The protected resource's canonical identifier (a URI).
+  - field: "`authorization_servers`"
+    description: Issuer URLs of the authorization servers that can issue tokens for this resource. Falls back to the AI Identity Provider's issuer when omitted.
+  - field: "`scopes_supported`"
+    description: The OAuth scopes the resource accepts. Falls back to the AI Identity Provider's configured scopes when omitted.
+  - field: "`endpoint`"
+    description: The path where {{site.ai_gateway}} serves the metadata document. Added to the AI MCP Server's route automatically.
+{% endtable %}
+
+Setting `access.metadata` causes {{site.ai_gateway}} to generate an [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/) configuration from it and the referenced AI Identity Provider, and apply it to this AI MCP Server's route in place of a plain identity-provider check. You don't create or attach an AI MCP OAuth2 Policy instance yourself for this. The generated configuration adds OAuth 2.1 resource-server behavior (protected resource metadata serving, token audience validation) that a plain `openid-connect` check alone doesn't provide.
+
+{:.warning}
+> `access.metadata` isn't supported with a `key-auth` AI Identity Provider. `key-auth` credentials can't serve OAuth 2.0 Protected Resource Metadata; combining the two is rejected.
+
+If you omit `access.metadata`, `access.identity_providers` still authenticates requests on its own, as a plain `key-auth` or `openid-connect` check, without the added OAuth 2.1 resource-server behavior.
+
 ## ACL tool control
 
 When exposing MCP servers through {{site.ai_gateway}}, you may need granular control over which authenticated [AI Consumers](/ai-gateway/entities/ai-consumer/) can discover and invoke specific tools. The MCP Server's ACL feature lets you define access rules at both the default level (which applies to all tools) and per-tool level (for fine-grained exceptions).
 
-This way, AI Consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an authentication Policy attached to the AI MCP Server (such as [Key Auth Policy](/ai-gateway/policies/key-auth/) or an [OpenID Connect Policy](/ai-gateway/policies/openid-connect/)), and the AI Consumer identity is used for ACL checks.
+This way, AI Consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) (`key-auth` or `openid-connect`) referenced in the AI MCP Server's [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers) array, and the resolved AI Consumer identity is used for ACL checks. See [Access control](#access-control).
 
 {:.info}
 > **ACL in `listener` mode**
@@ -369,7 +419,7 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 > `listener` mode supports direct ACL configuration on the MCP Server itself.
 >
 > To use ACLs with `listener` mode:
-> 1. Configure authentication on the listener route so requests resolve to an authenticated AI Consumer.
+> 1. Reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) in [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers) so requests resolve to an authenticated AI Consumer.
 > 1. Set ACL fields directly on the listener: [`access.acl_attribute_type`](#schema-aigateway-mcpserver-access-acl-attribute-type), [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) (when using `oauth_access_token`), [`access.acls`](#schema-aigateway-mcpserver-access-acls) for server-level fallback rules, [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) for the default tool ACL, and per-tool [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access) for tool-specific overrides.
 > 1. Configure [AI Consumers](/ai-gateway/entities/ai-consumer/) and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) to match the `allow` and `deny` entries.
 >
@@ -385,7 +435,7 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 For modes that support server-level ACL configuration (`conversion-listener`, `listener`, `passthrough-listener`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
 
 1. **`consumer`** (default). Evaluates against the resolved AI Consumer identity.
-1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/).
+1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The token is validated by the `openid-connect` [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) referenced in [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers) — on this server if it accepts MCP traffic directly (`conversion-listener`, `listener`, `passthrough-listener`), or on the `listener` that aggregates it if this is a `conversion-only` or `upstream-server` AI MCP Server. If [`access.metadata`](#schema-aigateway-mcpserver-access-metadata) is also set, validation happens through the generated AI MCP OAuth2 Policy configuration instead; see [Protected resource metadata](#protected-resource-metadata).
 
 `conversion-only` AI MCP Servers have no `access` field of their own, since they never accept incoming MCP traffic directly. They only support per-tool ACLs (via [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access)), which travel with the tool definition when a `listener` aggregates it.
 
@@ -463,7 +513,7 @@ The runtime evaluates ACLs for both tool discovery and tool invocation. These ar
 **Tool discovery (list tools)**:
 
 1. MCP client requests the list of available tools.
-1. The authentication Policy validates the request and identifies the AI Consumer.
+1. The AI Identity Provider validates the request and identifies the AI Consumer.
 1. The runtime loads the AI Consumer's group memberships.
 1. The runtime evaluates each tool against `default_tool_acls`.
 1. The runtime returns an HTTP 200 response with only the tools the AI Consumer is allowed to access.
@@ -472,7 +522,7 @@ The runtime evaluates ACLs for both tool discovery and tool invocation. These ar
 **Tool invocation**:
 
 1. MCP client invokes a specific tool.
-1. The authentication Policy validates the request and identifies the AI Consumer.
+1. The AI Identity Provider validates the request and identifies the AI Consumer.
 1. The runtime loads the AI Consumer's group memberships.
 1. The runtime evaluates the tool-specific ACL if it exists, or the default ACL otherwise.
 1. The runtime logs the access attempt (allowed or denied).
@@ -483,7 +533,7 @@ The runtime evaluates ACLs for both tool discovery and tool invocation. These ar
 sequenceDiagram
   participant Client as MCP Client
   participant Gateway as {{site.ai_gateway}}
-  participant Auth as AuthN Policy
+  participant Auth as AI Identity Provider
   participant ACL as AI MCP Server (ACL/Audit)
   participant Up as Upstream MCP Server
   participant Log as Audit Sink
