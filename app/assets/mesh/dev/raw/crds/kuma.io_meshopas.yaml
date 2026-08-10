@@ -52,16 +52,48 @@ spec:
                   agentConfig:
                     description: AgentConfig defines bootstrap OPA agent configuration.
                     properties:
-                      inline:
-                        description: Data source is inline bytes.
-                        format: byte
+                      envVar:
+                        properties:
+                          name:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      file:
+                        properties:
+                          path:
+                            type: string
+                        required:
+                        - path
+                        type: object
+                      insecureInline:
+                        properties:
+                          value:
+                            type: string
+                        required:
+                        - value
+                        type: object
+                      secretRef:
+                        properties:
+                          kind:
+                            enum:
+                            - Secret
+                            type: string
+                          name:
+                            type: string
+                        required:
+                        - kind
+                        - name
+                        type: object
+                      type:
+                        enum:
+                        - File
+                        - Secret
+                        - EnvVar
+                        - InsecureInline
                         type: string
-                      inlineString:
-                        description: Data source is inline string`
-                        type: string
-                      secret:
-                        description: Data source is a secret with given Secret key.
-                        type: string
+                    required:
+                    - type
                     type: object
                   appendPolicies:
                     description: Policies define OPA policies that will be applied
@@ -73,20 +105,50 @@ spec:
                             when making a decision.
                           type: boolean
                         rego:
-                          description: 'OPA Policy written in Rego. Available values:
-                            secret, inline, inlineString.'
+                          description: OPA Policy written in Rego.
                           properties:
-                            inline:
-                              description: Data source is inline bytes.
-                              format: byte
+                            envVar:
+                              properties:
+                                name:
+                                  type: string
+                              required:
+                              - name
+                              type: object
+                            file:
+                              properties:
+                                path:
+                                  type: string
+                              required:
+                              - path
+                              type: object
+                            insecureInline:
+                              properties:
+                                value:
+                                  type: string
+                              required:
+                              - value
+                              type: object
+                            secretRef:
+                              properties:
+                                kind:
+                                  enum:
+                                  - Secret
+                                  type: string
+                                name:
+                                  type: string
+                              required:
+                              - kind
+                              - name
+                              type: object
+                            type:
+                              enum:
+                              - File
+                              - Secret
+                              - EnvVar
+                              - InsecureInline
                               type: string
-                            inlineString:
-                              description: Data source is inline string`
-                              type: string
-                            secret:
-                              description: Data source is a secret with given Secret
-                                key.
-                              type: string
+                          required:
+                          - type
                           type: object
                       required:
                       - rego

@@ -43,6 +43,30 @@ spec:
 
 After upgrading, verify the effective scope of every `MeshOPA` before rolling data plane proxies.
 
+### `MeshOPA` data sources use the `SecureDataSource` shape
+
+`spec.default.agentConfig` and `spec.default.appendPolicies[].rego` on `MeshOPA` now use Kuma's `SecureDataSource` type instead of the old flat `DataSource` type, which has been removed from the API entirely.
+
+The old type had no discriminator: it was a flat object with `secret`, `inline` or `inlineString`. The new type requires a `type` discriminator and nests the value under a field matching it. Every old field has to be rewritten:
+
+| Old field | New field |
+|---|---|
+| `inline: <base64>` | `type: InsecureInline`, `insecureInline.value: <plain text>` |
+| `inlineString: <text>` | `type: InsecureInline`, `insecureInline.value: <text>` |
+| `secret: <name>` | `type: Secret`, `secretRef: {kind: Secret, name: <name>}` |
+
+`inline` was base64-encoded, `insecureInline.value` is plain text, so decode the old value when rewriting it. For example `inlineString: |\n  package example` becomes:
+
+```yaml
+rego:
+  type: InsecureInline
+  insecureInline:
+    value: |
+      package example
+```
+
+**Action required:** Rewrite `agentConfig` and every `appendPolicies[].rego` on each `MeshOPA` to the new shape as part of the upgrade. A `MeshOPA` written in the old shape after the upgrade is rejected at write time, because the missing `type` discriminator is a validation violation.
+
 ### `dpServer.authn.zoneProxy.type` no longer selects a distinct authenticator
 
 A zone proxy (zone ingress/egress) is now just a `Dataplane` with zone proxy listeners, and Kuma authenticates every xDS connection - data planes and zone proxies alike - through the single `dpServer.authn.dpProxy.type` authenticator. `dpServer.authn.zoneProxy.type` (`KUMA_DP_SERVER_AUTHN_ZONE_PROXY_TYPE`) only gates whether a zone proxy's bootstrap includes a credential; it no longer selects a separate authenticator implementation.
@@ -1473,6 +1497,49 @@ Use `Metrics.Mesh.MinResyncInterval` (`KUMA_METRICS_MESH_MIN_RESYNC_INTERVAL`) a
 `Metrics.Mesh.FullResyncInterval` (`KUMA_METRICS_MESH_FULL_RESYNC_INTERVAL`) instead.
 `MinResyncTimeout`/`MaxResyncTimeout` in YAML config and their environment variables are
 now silently ignored, since the config loader does not reject unknown fields.
+
+### `MeshExternalService` TLS verification uses the `SecureDataSource` shape
+
+`spec.tls.verification.caCert`, `.clientCert` and `.clientKey` on `MeshExternalService` now
+use the same `SecureDataSource` type as `MeshIdentity`, instead of the old `DataSource` type.
+The old type has been removed from the API entirely.
+
+The old type had no discriminator: it was a flat object with `secret`, `inline` or
+`inlineString`. The new type requires a `type` discriminator and nests the value under a
+field matching it. Every old field has to be rewritten:
+
+| Old field | New field |
+|---|---|
+| `inline: <base64>` | `type: InsecureInline`, `insecureInline.value: <plain text>` |
+| `inlineString: <text>` | `type: InsecureInline`, `insecureInline.value: <text>` |
+| `secret: <name>` | `type: Secret`, `secretRef: {kind: Secret, name: <name>}` |
+
+`inline` was base64-encoded, `insecureInline.value` is plain text, so decode the old value
+when rewriting it. For example `inline: dGVzdA==` becomes:
+
+```yaml
+caCert:
+  type: InsecureInline
+  insecureInline:
+    value: test
+```
+
+`File` and `EnvVar`, the two other `SecureDataSource` types, are rejected on
+`MeshExternalService` — they read the control plane's own filesystem and environment. This
+also applies when `spec.extension` is set, even though an extension owns the rest of the
+`spec.tls` validation.
+
+**Action required**
+
+Rewrite `caCert`, `clientCert` and `clientKey` on every `MeshExternalService` to the new
+shape as part of the upgrade.
+
+**Warning**: a `MeshExternalService` written in the old shape after the upgrade is rejected
+at write time, because the missing `type` discriminator is a validation violation. Resources
+already stored in the old shape are not rejected — the control plane cannot read their TLS
+material, so the destination is dropped from the xDS config of every proxy routing to it,
+with an error logged on the control plane. Plan the rewrite together with the upgrade to
+avoid an outage on those destinations.
 
 ### Inbound `tags` removed from `Dataplane`
 
