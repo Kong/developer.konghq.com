@@ -21,6 +21,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.3": [
+    {
+      "message": "Fixed a JWT security vulnerability.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added Token Exchange support to swap JWT tokens before accessing MCP Server.\n",
@@ -92,6 +99,13 @@
   "3.14.0.8": [
     {
       "message": "Fixed an issue where token-related 401 responses omitted the protected resource metadata URL when a token was provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.12": [
+    {
+      "message": "Fixed a JWT security vulnerability.",
       "type": "bugfix",
       "scope": "Plugin"
     }

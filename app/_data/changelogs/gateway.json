@@ -24907,5 +24907,234 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.4.3.29": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.6 to 3.5.7.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.10.0.17": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.12.0.10": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly, and logging a warning if misconfigured. This prevents a crafted unsigned SAML response from silently bypassing authentication when `validate_assertion_signature` is set to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.13.0.9": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.14.0.12": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed a JWT security vulnerability.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**datakit**: Fixed CVE-2026-14916 by binding the JWT algorithm to the\nverification key's type in the `jwt_verify` node, so a symmetric algorithm can\nno longer be verified against an asymmetric key. This prevents an authentication\nbypass where an attacker forges tokens by using the public key as an HMAC\nshared secret, under configurations where the node uses a PEM key string and\n`allowed_algorithms` is unset (any algorithm accepted).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.15.0.3": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed a JWT security vulnerability.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**datakit**: Security: Fixed CVE-2026-14916 by binding the JWT algorithm to the\nverification key's type in the `jwt_verify` node. This means that a symmetric algorithm can\nno longer be verified against an asymmetric key, preventing an authentication\nbypass where an attacker forges tokens by using the public key as an HMAC\nshared secret, under configurations where the node uses a PEM key string and\n`allowed_algorithms` is unset (any algorithm accepted).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly, and logging a warning if misconfigured. This prevents a crafted unsigned SAML response from silently bypassing authentication when `validate_assertion_signature` is set to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
   }
 }
