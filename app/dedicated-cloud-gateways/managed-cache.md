@@ -355,6 +355,8 @@ You can view these metrics in the following ways:
 {% navtab "UI" %}
 In the {{site.konnect_short_name}} UI, go to [Observability > Explorer](https://cloud.konghq.com/analytics/explorer). 
 Select "Managed cache usage" from the dropdown menu.
+
+You can also view managed cache metrics from the **Analytics** tab in the Redis settings for your Dedicated Cloud Gateway control plane.
 {% endnavtab %}
 {% navtab "API" %}
 Retrieve metrics programmatically, by sending a `POST` request to the [`/metrics` endpoint](/api/konnect/analytics-metrics/v2/#/operations/metrics):
