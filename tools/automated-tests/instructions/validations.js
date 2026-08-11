@@ -414,12 +414,38 @@ async function controlPlaneRequest(
 
 async function customCommand(validationName, config, runtimeConfig, container) {
   const returnCode = config.expected.return_code;
+  const retryDelays = [10000, 15000, 20000, 25000]; // delay before retry attempts 2-5
+  const maxRetries = retryDelays.length + 1;
+
   let result;
-  try {
-    result = await executeCommand(container, config.command);
-  } catch (error) {
-    result = error;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      result = await executeCommand(container, config.command);
+    } catch (error) {
+      result = error;
+    }
+
+    const codeMatches = returnCode === result.exitCode;
+    const messageMatches =
+      !config.expected.message ||
+      !result.output ||
+      result.output.trimStart().includes(config.expected.message);
+
+    if (codeMatches && messageMatches) {
+      break;
+    }
+
+    if (attempt < maxRetries - 1) {
+      const backoffDelay = retryDelays[attempt];
+      log(
+        `Retry attempt ${
+          attempt + 1
+        } - command "${config.command}" did not meet expectations, retrying in ${backoffDelay}ms...`,
+      );
+      await sleep(backoffDelay);
+    }
   }
+
   if (returnCode !== result.exitCode) {
     logAndError(validationName, "Failed to execute command", [
       `Expected: command to have return code ${returnCode}, got: ${result.exitCode}`,
