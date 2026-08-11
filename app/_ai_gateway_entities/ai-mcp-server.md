@@ -402,6 +402,9 @@ rows:
 
 Setting `access.metadata` causes {{site.ai_gateway}} to generate an [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/) configuration from it and the referenced AI Identity Provider, and apply it to this AI MCP Server's route in place of a plain identity-provider check. You don't create or attach an AI MCP OAuth2 Policy instance yourself for this. The generated configuration adds OAuth 2.1 resource-server behavior (protected resource metadata serving, token audience validation) that a plain `openid-connect` check alone doesn't provide.
 
+<!-- FOT ENG REVIEW: confirm the full field-mapping from AI Identity Provider config to the generated AI MCP OAuth2 configuration against the real materialization logic before expanding this note beyond audience_required/hide_credentials. -->
+Two AI Identity Provider settings carry forward into the generated configuration: `audience_required` controls whether the generated configuration enforces the token's audience against `access.metadata.resource`, and `hide_credentials: false` enables credential passthrough on the generated configuration instead of stripping credentials from the request.
+
 {:.warning}
 > `access.metadata` isn't supported with a `key-auth` AI Identity Provider. `key-auth` credentials can't serve OAuth 2.0 Protected Resource Metadata; combining the two is rejected.
 
