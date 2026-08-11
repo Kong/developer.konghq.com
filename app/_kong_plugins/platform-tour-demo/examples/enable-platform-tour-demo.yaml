@@ -1,5 +1,5 @@
 description: |
-  Enable the demo plugin and customize the header it would add to a response, if it were real.
+  Enable the demo plugin and customize the header it would add to a response
 
 title: 'Enable the platform tour demo plugin'
 

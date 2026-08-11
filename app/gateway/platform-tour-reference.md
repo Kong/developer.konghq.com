@@ -42,7 +42,7 @@ frontmatter.
 
 ## One YAML block, several outputs, as a diagram
 
-*Same mechanism as [part 1](/how-to/platform-tour/)'s `{% raw %}{% entity_example %}{% endraw %}` demo, redrawn here as a real `{% raw %}{% mermaid %}{% endraw %}` diagram instead of clickable tabs.*
+*Same mechanism as [part 1](/how-to/platform-tour/)'s `{% raw %}{% entity_example %}{% endraw %}` demo, redrawn here as `{% raw %}{% mermaid %}{% endraw %}` diagram instead of clickable tabs.*
 
 **Writer types:**
 

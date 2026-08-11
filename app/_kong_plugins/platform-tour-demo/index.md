@@ -26,9 +26,8 @@ min_version:
 seo_noindex: true
 ---
 
-This plugin does not exist in {{site.base_gateway}}. It's a local-only demo, and this very page is the
-demonstration. Everything that follows was written once, in this file and two others, and shipped to four
-different destinations without anyone laying out a single one of them by hand.
+This plugin does not exist in {{site.base_gateway}}. 
+Everything that follows was written once, in this file and two others, and shipped to four different destinations without anyone laying out a single one of them by hand.
 
 {% include platform-tour/orientation.md part=3 %}
 
@@ -38,9 +37,8 @@ temporarily commenting out `skip.plugins: true` there and restarting the dev ser
 dev-speed setting, reverted once this tour is done with it. Everything past that one step is generated, not
 hand-built.
 
-## Three files in, four pages out
+## Main files that generate the plugin's pages
 
-*134 of 134 real plugins get this same treatment: 100% coverage, one generator.*
 
 **Writer types:** the whole plugin, three files:
 
@@ -69,7 +67,7 @@ tools: [deck, admin-api, konnect-api, kic, terraform]
 ```
 {% endraw %}
 
-**Renders as (live, these are real, generated pages, not mockups, including this one):**
+**Renders as the following:**
 
 - **This overview page**: built from this file's frontmatter and the prose you're reading right now.
 - [Reference](/plugins/platform-tour-demo/reference/): built entirely from `schema.json`. The `.md` file
