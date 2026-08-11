@@ -46,7 +46,7 @@ Which one is used depends on a global setting and a per-plugin opt-in.
 
 In **Preferences > Scripting**, enable **Sandbox all plugin code**. When it's on, every untrusted (user) plugin surface — template tags, request and response hooks, actions, and load-time code — runs in the sandbox.
 
-This setting supersedes the earlier experiment, **Run template tags in sandbox** (`templateTagSandboxEnabled`). During migration, *either* setting activates the sandbox, so if you already enabled the template-tag experiment, nothing changes for you. New guidance should refer only to `pluginSandboxEnabled`.
+This setting replaces an earlier experiment that sandboxed template tags only. If you had that experiment turned on, Insomnia carries your preference over to **Sandbox all plugin code** automatically — nothing changes for you.
 
 ## Execution modes
 
@@ -54,7 +54,7 @@ For a given plugin, the resolved mode is one of:
 
 | Mode | When | Runs | Host access |
 |------|------|------|-------------|
-| **Trusted** | First-party bundled plugin (ships with Insomnia) | In-process | Full (by design) |
+| **Internal** | Built-in plugin that ships with Insomnia | In-process | Full |
 | **Sandboxed** | User plugin, sandbox on, not elevated | QuickJS sandbox | Only declared capabilities |
 | **Elevated** | User plugin, sandbox on, "Full host access" turned on | In-process | Full |
 | **In-process** | User plugin, sandbox off | In-process | Full (legacy) |
@@ -80,7 +80,7 @@ If your plugin worked before the sandbox and breaks when it's on:
 ## Caveats
 
 * **The Inso CLI has no sandbox.** Under the pure-Node CLI, user-plugin hooks run in-process regardless of the setting — CLI users are trusting their own plugins.
-* **Bundled template tags** run in the sandbox only under the legacy `templateTagSandboxEnabled` experiment (a hardening opt-in); enabling `pluginSandboxEnabled` leaves trusted first-party plugins in-process.
+* **Built-in plugins always run in-process.** `pluginSandboxEnabled` isolates *user* plugins only; Insomnia's built-in plugins are unaffected.
 
 ## What changed
 
