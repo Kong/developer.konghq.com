@@ -67,8 +67,6 @@ faqs:
     a: |
       AI Rate Limiting Advanced limits based on LLM token consumption (prompt and completion tokens). The AI Agent doesn't extract token counts from A2A responses, so an AI Rate Limiting Advanced Policy has no token data to act on. Use the standard Rate Limiting Advanced Policy for A2A traffic.
 
-automated_tests: false
-
 ---
 
 ## Create an AI Agent and attach a rate limiting AI Policy
@@ -159,42 +157,11 @@ x-ratelimit-remaining-30: 4
 
 Send 6 requests to the agent card endpoint in a loop to exceed the limit. The AI Agent detects each request as an A2A `GetAgentCard` operation, so the rate limit applies the same way it does for `message/send` or any other A2A method.
 
+{% validation rate-limit-check %}
+iterations: 5
+url: '/a2a/.well-known/agent-card.json'
+headers:
+  - "apikey: a2a-secret-key-1"
+{% endvalidation %}
 
-{% konnect %}
-content: |
-  ```sh
-  for i in $(seq 1 6); do
-    echo "--- Request $i ---"
-    curl -s -o /dev/null -w "HTTP status: %{http_code}\n"\
-      $KONNECT_PROXY_URL/a2a/.well-known/agent-card.json \
-      -H "apikey: a2a-secret-key-1"
-  done
-  ```
-{% endkonnect %}
-
-The first four requests return `HTTP status: 200`. The 5th request returns `HTTP status: 429`:
-
-```
---- Request 1 ---
-HTTP status: 200
---- Request 2 ---
-HTTP status: 200
---- Request 3 ---
-HTTP status: 200
---- Request 4 ---
-HTTP status: 200
---- Request 5 ---
-HTTP status: 429
---- Request 6 ---
-HTTP status: 429
-```
-{:.no-copy-code}
-
-The `429` response body contains:
-
-```json
-{
-  "message": "API rate limit exceeded"
-}
-```
-{:.no-copy-code}
+The first four requests return `HTTP status: 200`. The 5th request returns `HTTP status: 429`.

@@ -6,9 +6,10 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
 
    ```bash
    aws --version
-   ````
+   ```
+  {:data-test-prereq="block"}
 
-2. **Configure AWS credentials**
+1. **Configure AWS credentials**
    Run the following command and provide your IAM user or role credentials:
 
    ```bash
@@ -25,15 +26,16 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
    Make sure your IAM user or role has Bedrock permissions such as `bedrock:CreateGuardrail`, `bedrock:CreateGuardrailVersion`, and others necessary for managing guardrails.
    For more details, see the [AWS CLI configuration documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html).
 
-3. Test that you can call Bedrock operations by running:
+2. Test that you can call Bedrock operations by running:
 
    ```bash
    aws bedrock list-foundation-models
    ```
+   {:data-test-prereq="block"}
 
    If this command fails, check your credentials, permissions, and configured region.
 
-4. Create a `guardrail.json` configuration file:
+3. Create a `guardrail.json` configuration file:
    This configuration defines an {{ site.amazon }} Bedrock guardrail named `example-guardrail` that blocks harmful or restricted content—including specific words, topics like quantum computing, and categories such as violence, hate, and prompt attacks—in both input and output messages.
 
    ```
@@ -123,29 +125,24 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
    }
    EOF
    ```
+   {:data-test-prereq="block"}
 
-5. Apply this configuration by running the following command in your terminal:
+4. Apply this configuration by running the following command in your terminal:
 
-    ```bash
-    aws bedrock create-guardrail \
+{% env_variables %}
+RESPONSE: |
+  $(aws bedrock create-guardrail \
     --cli-input-json file://$PWD/guardrail.json \
-    --region $AWS_REGION
-    ```
-
-    If successful, your terminal will output something similar to:
-
-    ```json
-    {
-        "guardrailId": "0abcs5r0q3abcd",
-        "guardrailArn": "arn:aws:bedrock:us-east-1:111111141111:guardrail/0nhw5r0q3abcd",
-        "version": "DRAFT",
-        "createdAt": "2025-06-18T08:49:40.678019+00:00"
-    }
-    ```
+    --region $AWS_REGION)
+indent: 3
+section: prereqs
+{% endenv_variables %}
 
     Export the Guardrail ID and Guardrail version as environment variables:
 
-    ```bash
-    export GUARDRAILS_ID=my_guardrailId
-    export GUARDRAILS_VERSION=DRAFT
-    ```
+{% env_variables %}
+GUARDRAILS_ID: $(echo "$RESPONSE" | jq -r '.guardrailId')
+GUARDRAILS_VERSION: $(echo "$RESPONSE" | jq -r '.version')
+indent: 3
+section: prereqs
+{% endenv_variables %}
