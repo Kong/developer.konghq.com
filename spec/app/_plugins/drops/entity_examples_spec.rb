@@ -7,7 +7,7 @@ RSpec.describe Jekyll::Drops::EntityExamples do
     { 'entities' => entities, 'deck_flags' => [], 'variables' => {} }
   end
 
-  subject(:drop) { described_class.new(config:) }
+  subject(:drop) { described_class.new(config:, format: 'deck') }
 
   describe '#data' do
     context 'when a plugin condition contains double quotes' do
