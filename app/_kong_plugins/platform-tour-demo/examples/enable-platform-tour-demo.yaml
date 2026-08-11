@@ -1,0 +1,20 @@
+description: |
+  Enable the demo plugin and customize the header it would add to a response, if it were real.
+
+title: 'Enable the platform tour demo plugin'
+
+weight: 900
+
+requirements:
+  - "This is a local-only demo plugin. It exists only to show the plugin-generation pipeline working end to end."
+
+config:
+  greeting: "Hello from the platform tour"
+  header_name: "X-Platform-Tour-Demo"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
