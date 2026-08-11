@@ -95,21 +95,7 @@ This guide uses `ssl_cert`, the default certificate for the proxy listener, beca
 
 ## Create a cert-manager Issuer
 
-The `Issuer` resource represents the certificate authority that signs your certificates. Create a self-signed issuer in the `kong` namespace:
-
-```bash
-echo '
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: selfsigned-issuer
-  namespace: kong
-spec:
-  selfSigned: {}' | kubectl apply -f -
-```
-
-{:.info}
-> A self-signed issuer keeps this guide self-contained. In production, use an ACME issuer such as Let's Encrypt, or a CA issuer. For all issuer types, see the [cert-manager configuration documentation](https://cert-manager.io/docs/configuration/).
+{% include /k8s/cert-manager-selfsigned-issuer.md namespace='kong' %}
 
 ## Issue a certificate
 
