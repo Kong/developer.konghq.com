@@ -159,13 +159,12 @@ extract_body:
     variable: CLIENT_SECRET
   - name: 'id'
     variable: CLIENT_ID
+capture:
+  - variable: CLIENT_SECRET
+    jq: ".client_secret"
+  - variable: CLIENT_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export your client secret and client ID:
-```sh
-export CLIENT_SECRET='YOUR-CLIENT-SECRET'
-export CLIENT_ID='YOUR-CLIENT-ID'
-```
 
 You now have `$ISSUER_URL`, `$CLIENT_ID`, and `$CLIENT_SECRET` for an auth server scoped to the Kong Air Flight Booking Agent. Use these to create an AI Identity Provider and secure the agent's A2A traffic.
