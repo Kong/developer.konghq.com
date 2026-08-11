@@ -95,10 +95,106 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-To view your default and user-created tax codes, navigate to **Metering & Billing** > **Settings** and click the **Tax Codes** tab.
+## Manage tax codes
 
-To apply tax codes other than the default, navigate to the rate card on any plan, add-on, or customer subscription, and expand the advanced settings for the pricing model. 
-For a complete tutorial, see [Create and apply {{site.metering_and_billing}} tax codes](/how-to/configure-metering-and-billing-tax-codes/).
+### Review default tax codes
+
+{% navtabs "review-tax-codes" %}
+{% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Settings**.
+1. Click the **Tax Codes** tab to view system-managed and user-created tax codes and the current organization defaults.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/tax-codes
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
+
+### Create a tax code
+
+If none of the system-managed codes match your product category, you can create a custom tax code.
+For Stripe, the `app_mappings` value must follow the `txcd_XXXXXXXX` format.
+You can browse available values in the [Stripe Tax Code reference](https://docs.stripe.com/tax/tax-codes).
+
+{% navtabs "create-tax-code" %}
+{% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Settings**.
+1. Click the **Tax Codes** tab.
+1. Click **Create Tax Code**.
+1. Fill in the name, key, and optional description.
+1. Add an app mapping for your payment provider (for example, a Stripe tax code ID).
+1. Click **Save**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/tax-codes
+method: POST
+status_code: 201
+body:
+  name: Software as a Service
+  key: saas
+  description: Tax code for SaaS products
+  app_mappings:
+    - app_type: stripe
+      tax_code: txcd_10000000
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
+
+### Set organization defaults
+
+{% navtabs "set-tax-code-default" %}
+{% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Settings**.
+1. Click the **Tax Codes** tab.
+1. Find the tax code you want to set as default and click the **...** menu.
+1. Select **Set as invoicing default** or **Set as credit grant default**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/defaults/tax-codes
+method: PUT
+status_code: 200
+body:
+  invoicing_tax_code:
+    id: YOUR_TAX_CODE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_TAX_CODE_ID` with the `id` of the tax code you want to set as default.
+Use `credit_grant_tax_code` instead of `invoicing_tax_code` to set the credit grant default.
+
+{:.info}
+> **Note:** Only one tax code can be set as the default per category at a time.
+> You can't delete a default tax code.
+> To delete it, first set a different code as the default, then delete the original.
+
+{% endnavtab %}
+{% endnavtabs %}
+
+For a complete tutorial including applying tax codes to rate cards, see [Create and apply {{site.metering_and_billing}} tax codes](/how-to/configure-metering-and-billing-tax-codes/).
 
 ## Fallback chain
 

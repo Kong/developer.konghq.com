@@ -76,14 +76,20 @@ In {{site.metering_and_billing}}, [meters](/metering-and-billing/metering/) trac
 For per-seat billing, you'll create a generic meter using the `UNIQUE_COUNT` aggregation. 
 This counts the number of distinct `user_id` values seen within the billing period, so if the same user is active multiple times, they're only counted once.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. Click **Create Meter**.
-1. In the **Name** field, enter `Active users total`.
-1. In the **Description** field, enter `Active Users`.
-1. In the **Event Type Filter** field, enter `user_activity`.
-1. From the **Aggregation** dropdown menu, select "UNIQUE COUNT".
-1. In the **Value property** field, enter `$.user_id`.
-1. Click **Save**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+method: POST
+status_code: 201
+body:
+  name: Active users total
+  key: active_users_total
+  description: Active Users
+  event_type: user_activity
+  aggregation: UNIQUE_COUNT
+  value_property: $.user_id
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Create a feature
 
@@ -91,12 +97,21 @@ Meters collect raw usage data, but [features](/metering-and-billing/product-cata
 Without a feature, usage is tracked but not invoiced. 
 Now that you're metering active users, you need to associate that meter with a named, customer-facing feature.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
-1. Click **Create Feature**.
-1. In the **Name** field, enter `active-users`.
-1. From the **Meter** dropdown menu, select "Active users total".
-1. Click **Save**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/features
+method: POST
+status_code: 201
+body:
+  name: active-users
+  key: active_users
+  meter:
+    key: active_users_total
+capture:
+  - variable: FEATURE_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Create a plan and rate card
 
@@ -107,48 +122,91 @@ Plans can be assigned to customers by starting a subscription.
 A [rate card](/metering-and-billing/product-catalog/#rate-cards) describes the price and usage limits or access control for a feature. 
 Rate cards are made up of the associated feature, price, and optional entitlements.
 
-In this section, you'll create a Per-Seat plan that charges customers $1 per active user per month:
+In this section, you'll create a Per-Seat plan that charges customers $1 per active user per month.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
-1. Click the **Plans** tab.
-1. Click **Create Plan**.
-1. In the **Name** field, enter `Per-Seat`.
-1. From the **Billing cadence** dropdown menu, select **1 month**.
-1. Click **Save**.
-1. Click **Add Rate Card**.
-1. From the **Feature** dropdown menu, select "active-users".
-1. Click **Next Step**.
-1. From the **Pricing model** dropdown menu, select **Usage based**.
-1. In the **Price per unit** field, enter `1`.
+First, create the plan with a rate card:
 
-   {:.info}
-   > We're using $1 here to make it easy to see invoice amount changes in the customer invoice. 
-   > Change this price in a production instance to match your own pricing model.
-1. Click **Next Step**.
-1. Select **Boolean**.
-1. Click **Save Rate Card**.
-1. Click **Publish Plan**.
-1. Click **Publish**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+method: POST
+status_code: 201
+body:
+  name: Per-Seat
+  key: per_seat
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: default
+      key: default
+      rate_cards:
+        - name: active-users
+          key: active_users
+          feature:
+            id: $FEATURE_ID
+          price:
+            type: unit
+            amount: "1"
+          entitlement:
+            type: boolean
+capture:
+  - variable: PLAN_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> **Note:** We're using $1 here to make it easy to see invoice amount changes in the customer invoice.
+> Change this price in a production instance to match your own pricing model.
+
+Then publish the plan to make it available for subscriptions:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/$PLAN_ID/publish
+method: POST
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Start a subscription
 
 [Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/subscriptions/) them to the Per-Seat plan.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click **Create Customer**.
-1. In the **Name** field, enter `Acme Inc`.
-1. In the **Key** field, enter `acme-inc`.
+First, create the customer.
+The `key` field links incoming usage events to this customer: events with `"subject": "acme-inc"` will be attributed to Acme Inc.
 
-   This value links incoming usage events to this customer. 
-   Events with `"subject": "acme-inc"` will be attributed to Acme Inc.
-1. Click **Save**.
-1. Click the **Subscription** tab.
-1. Click **Create a Subscription**.
-1. From the **Subscribed Plan** dropdown, select `Per-Seat`.
-1. Click **Next Step**.
-1. Click **Start Subscription**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers
+method: POST
+status_code: 201
+body:
+  name: Acme Inc
+  key: acme-inc
+  usage_attribution:
+    subject_keys:
+      - acme-inc
+capture:
+  - variable: CUSTOMER_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then start a subscription to the Per-Seat plan:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions
+method: POST
+status_code: 201
+body:
+  customer:
+    id: $CUSTOMER_ID
+  plan:
+    key: per_seat
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Validate
 
@@ -261,15 +319,19 @@ body:
 {% endcapture %}
 {{ alice2 | indent: 3 }}
 
-Even though four events were sent, the meter counted only three unique users. Now check the invoice:
+Even though four events were sent, the meter counted only three unique users. Now check the usage charges:
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click **Acme Inc**.
-1. Click the **Invoicing** tab.
-1. Click **Preview Invoice**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/$CUSTOMER_ID/charges?expand[]=real_time_usage
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
 
-You'll see `active-users` listed in Lines with a quantity of `3`, reflecting three unique active users. 
+The response includes a usage-based charge for `active-users` with a `real_time_usage` quantity of `3`, reflecting three unique active users.
+
+To preview the full formatted invoice, go to **{{site.metering_and_billing}}** > **Billing** > **Acme Inc** > **Invoicing** > **Preview Invoice** in the {{site.konnect_short_name}} UI.
 
 In this guide, you're using the sandbox for invoices. 
 To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**, like [Stripe](/metering-and-billing/stripe-integration/).

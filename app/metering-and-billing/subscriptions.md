@@ -40,9 +40,46 @@ Subscriptions follow a billing cycle determined by their related [rate card](/me
 * The subscription start date, either the creation date or a specified future date.
 * The first day of the month, with usage prorated for the partial initial period.
 
-To add a subscription to a customer, navigate to **{{site.metering_and_billing}}** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
-
 Active customer subscriptions can be enhanced with [add-ons](/metering-and-billing/add-ons/), which allow you to make changes to a customer's entitlements without changing the plan directly.
+
+## Start a subscription
+
+To subscribe a customer to a plan in {{site.konnect_short_name}}, do the following:
+
+{% navtabs "start-subscription" %}
+{% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
+1. Click your customer.
+1. Click the **Subscription** tab.
+1. Click **Create Subscription**.
+1. Select the plan you want to assign to the customer.
+1. Click **Next**.
+1. Review the subscription details and click **Activate**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions
+method: POST
+status_code: 201
+body:
+  customer:
+    id: YOUR_CUSTOMER_ID
+  plan:
+    key: YOUR_PLAN_KEY
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_CUSTOMER_ID` with the `id` of the customer and `YOUR_PLAN_KEY` with the `key` of the plan you want to assign.
+
+For a complete tutorial, see [Meter and bill {{site.base_gateway}} API requests](/metering-and-billing/get-started/).
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Change plans
 

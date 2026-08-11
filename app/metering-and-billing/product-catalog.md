@@ -190,6 +190,44 @@ rows:
     description: "The token type (for example, `input`, `output`, `cache_read`, `reasoning`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
 {% endtable %}
 
+### Create a feature
+
+To create a feature in {{site.konnect_short_name}}, do the following:
+
+{% navtabs "create-feature" %}
+{% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Metering**.
+1. Click the **Features** tab.
+1. Click **Create Feature**.
+1. Fill in the feature name and key.
+1. Optionally, select a meter to associate with the feature.
+1. Click **Save**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/features
+method: POST
+status_code: 201
+body:
+  name: API Requests
+  key: api_requests
+  meter:
+    key: YOUR_METER_KEY
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_METER_KEY` with the key of the meter you want to associate with the feature.
+
+For a complete tutorial, see [Meter and bill {{site.base_gateway}} API requests](/metering-and-billing/get-started/).
+
+{% endnavtab %}
+{% endnavtabs %}
+
 ### Feature configuration
 
 Features have a system-generated ID and a user-defined key. The key should be an easy-to-understand string that can be used to reference the feature in your codebase, `gpt_4_tokens` for example.
@@ -227,6 +265,69 @@ Plans can take different forms, for example:
 * $99 per month for 1 million API requests
 * 10 GB storage included
 * SAML or SSO support
+
+### Create a plan
+
+To create a plan in {{site.konnect_short_name}}, do the following:
+
+{% navtabs "create-plan" %}
+{% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Catalog**.
+1. Click **Create Plan**.
+1. Fill in the plan name and key.
+1. Set the currency and billing cadence.
+1. Click **Add Rate Card** and select the feature you want to price.
+1. Configure the pricing model and set your price per unit.
+1. Save the rate card.
+1. Click **Publish Plan** to make it available for subscriptions.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+method: POST
+status_code: 201
+body:
+  name: Example Plan
+  key: example_plan
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: default
+      key: default
+      rate_cards:
+        - name: API Requests
+          key: api_requests
+          feature:
+            id: YOUR_FEATURE_ID
+          price:
+            type: unit
+            amount: "1"
+          entitlement:
+            type: boolean
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then publish the plan to make it available for subscriptions:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/{planId}/publish
+method: POST
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_FEATURE_ID` with the `id` of the feature you want to include, and `{planId}` with the `id` of the plan you created.
+
+For a complete tutorial, see [Meter and bill {{site.base_gateway}} API requests](/metering-and-billing/get-started/).
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Rate cards
 
