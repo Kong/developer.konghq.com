@@ -44,7 +44,7 @@ Before migrating, make sure you have:
 - A [{{site.konnect_short_name}} Personal Access Token (PAT) or System Account Access Token](/konnect-api/#konnect-api-authentication) with permission to read the source control plane and write to the {{site.ai_gateway}} control plane.
 - The [`deck` CLI](/deck/#install-deck) for exporting your current configuration.
 - The [`kongctl` CLI](/kongctl/) for applying the converted configuration to the {{site.ai_gateway}} control plane.
-- The identity providers, Vaults, and per-model ACLs you want the migrated AI Models to use. The converter cannot recover these from the decK export, so you declare them manually.
+- The identity providers, Vaults, and per-model ACLs you want the migrated AI Models, AI MCP Servers, and AI Agents to use. The converter cannot recover these from the decK export, so you declare them manually.
 
 ## Migration overview
 
@@ -52,10 +52,9 @@ Migration uses the `kongctl convert ai-gateway extension` to translate your exis
 
 1. Install the `kongctl convert ai-gateway` extension.
 1. Export the declarative configuration from your existing {{site.base_gateway}} control plane with decK.
-1. Run the converter to produce a directory of {{site.ai_gateway}} entity configuration files.
+1. Prepare a `./config` directory with the target control plane, identity providers, Vaults, and per-model ACLs the converter cannot recover from the decK export.
+1. Run the converter to merge `./config` and produce a directory of {{site.ai_gateway}} entity configuration files.
 1. Validate that the output includes all of your AI Models, AI MCP Servers, and AI Agents.
-1. Add identity providers, Vaults, and per-model ACLs manually, since the converter cannot recover these from the decK export.
-1. Point the converted configuration at your {{site.ai_gateway}} 2.x control plane.
 1. Authenticate `kongctl` with a {{site.konnect_short_name}} PAT or System Account Access Token.
 1. Apply the converted configuration to the new {{site.ai_gateway}} control plane.
 
@@ -65,14 +64,16 @@ The diagram below shows where each tool sits in the flow:
 sequenceDiagram
     participant A as API Gateway CP<br/>{{site.ai_gateway}} v1
     participant B as kong.yaml
-    participant C as ./out (entity files)
-    participant D as {{site.ai_gateway}} CP<br/>{{site.ai_gateway}} v2
+    participant C as ./config (manual config)
+    participant D as ./out (entity files)
+    participant E as {{site.ai_gateway}} CP<br/>{{site.ai_gateway}} v2
 
     A->>B: deck gateway dump
-    B->>C: kongctl convert ai-gateway
-    C->>C: add identity providers,<br/>vaults, and ACLs
-    C->>C: review and validate
-    C->>D: kongctl apply
+    Note over C: add control plane, identity<br/>providers, vaults, and ACLs
+    B->>D: kongctl convert ai-gateway
+    C-->>D: merged on conversion
+    D->>D: review and validate
+    D->>E: kongctl apply
 {% endmermaid %}
 
 ### Step 1: Install the `kongctl-ext-aigw-converter` extension
@@ -95,15 +96,94 @@ deck gateway dump \
 
 The resulting `kong.yaml` contains your Services, Routes, plugins (including `ai-proxy-advanced`, `ai-mcp-proxy`, and `ai-a2a-proxy`), Consumers, and Vaults.
 
-### Step 3: Run the converter
+### Step 3: Prepare the configuration directory
 
-Before you can convert `kong.yaml`, create the `./config` and `./out` directories that the converter will use for the converted files:
+The converter cannot recover some configuration from the decK export: the target {{site.ai_gateway}} 2.x control plane, identity providers, Vaults, and per-model ACLs. Declare these in a `./config` directory before you run the converter, and it merges them into the output. Create the directory:
 
 ```sh
-mkdir -p ./config ./out
+mkdir -p ./config
 ```
 
-Run `kongctl convert ai-gateway` against the exported `kong.yaml` file. The tool reads the {{site.ai_gateway}} running on {{site.base_gateway}} plugin configuration and emits an {{site.ai_gateway}} 2.x entity and Policy configuration.
+#### Target control plane
+
+Add a `config/gateway.yaml` that points at the {{site.ai_gateway}} 2.x control plane you created in the [prerequisites](#prerequisites). Use an `_external` selector to reference the existing control plane by name so `kongctl` does not create a new one:
+
+<!--vale off-->
+```yaml
+# config/gateway.yaml
+ai_gateways:
+- ref: ai-gateway
+  display_name: AI Gateway
+  name: ai-gateway
+  description: AI Gateway
+```
+<!--vale on-->
+
+#### Identity providers
+
+Authentication works differently in version 2.x. Route auth plugins are **not** carried over onto AI Models, AI MCP Servers, or AI Agents. Instead you declare identity providers here, and the converter attaches them to the entities you list. AI Models, AI MCP Servers, and AI Agents all support identity providers the same way, referenced from the entity's `access.identity_providers`.
+
+Add a `config/identity_providers.yaml` with an entry for each authentication method (`key-auth` or `openid-connect`). Each entry may optionally list the `models`, `agents`, and `mcp_servers` it attaches to by name, or `"*"` to attach to every entity of that kind:
+
+<!--vale off-->
+```yaml
+# config/identity_providers.yaml
+identity_providers:
+- ref: key-auth-prod
+  name: key-auth-prod
+  display_name: Key Auth
+  type: key-auth
+  config:
+    key_names:
+    - x-api-key
+  # Optional entity selectors
+  models: ['*']
+  mcp_servers: ['*']
+  agents: ['*']
+```
+<!--vale on-->
+
+At most two identity providers are allowed (at most one `key-auth` and one `openid-connect`), and at most one may use the `"*"` wildcard per entity kind. The converter attaches each provider to the listed entities via their `access.identity_providers`.
+
+#### Vaults
+
+Add a `config/vaults.yaml` with an entry for any secret store your migrated config references with `{vault://...}` syntax:
+
+<!--vale off-->
+```yaml
+# config/vaults.yaml
+vaults:
+- ref: ai-vault
+  name: ai-vault
+  display_name: AI Gateway Vault
+  type: konnect
+  description: Credential store for AI Gateway
+  config:
+    config_store_id: "${KONNECT_CONFIG_STORE_ID}"
+```
+<!--vale on-->
+
+{:.info}
+> **Note:** For a [{{site.konnect_short_name}} Config Store vault](/how-to/configure-the-konnect-config-store/) (`type: konnect`), the Config Store you reference must already exist in {{site.konnect_short_name}} before you apply the configuration. `kongctl` does not create it for you.
+
+#### Per-model ACLs
+
+Optionally, add a `config/model_acls.yaml` to control which AI Consumers or AI Consumer Groups can reach each AI Model. Each entry names a model and sets `allow` or `deny`:
+
+<!--vale off-->
+```yaml
+# config/model_acls.yaml
+acls:
+- name: azure-gpt-4o
+  allow:
+  - Azure-OpenAI-Gold
+  - Azure-OpenAI-Silver
+```
+<!--vale on-->
+
+### Step 4: Run the converter
+
+Run `kongctl convert ai-gateway` against the exported `kong.yaml` file and your `./config` directory. The tool reads the {{site.ai_gateway}} running on {{site.base_gateway}} plugin configuration, merges the manual config, and emits an {{site.ai_gateway}} 2.x entity and Policy configuration to `./out`.
 
 ```sh
 kongctl convert ai-gateway \
@@ -112,15 +192,15 @@ kongctl convert ai-gateway \
   --out ./out
 ```
 
-The `--out` flag sets the output directory for the converted files. The converter inspects each AI plugin and translates it into the matching version 2.x entity or Policy:
+The `--out` flag sets the output directory for the converted files, which the converter creates for you. It inspects each AI plugin and translates it into the matching version 2.x entity or Policy:
 
 - Each `ai-proxy-advanced` plugin becomes an [AI Model](/ai-gateway/entities/ai-model/) (and one [AI Model Provider](/ai-gateway/entities/ai-model-provider/) per distinct upstream provider and credential set).
 - Each `ai-mcp-proxy` plugin becomes an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) whose type matches the plugin mode.
 - Each `ai-a2a-proxy` plugin becomes an [AI Agent](/ai-gateway/entities/ai-agent/).
-- Supporting plugins on the same Service or Route become [AI Policies](/ai-gateway/entities/ai-policy/) attached to the relevant entity.
-- Authentication plugins (`key-auth`, `openid-connect`) on AI Model routes are stripped, since AI Model identity is declared separately in version 2.x.
+- Non-auth supporting plugins on the same Service or Route become [AI Policies](/ai-gateway/entities/ai-policy/) attached to the relevant entity.
+- Authentication plugins (`key-auth`, `openid-connect`) on **any** AI route (AI Model, AI MCP Server, or AI Agent) are stripped; identity comes from the [identity providers](/ai-gateway/entities/ai-identity-provider/) you declared in `./config`, attached to each entity's `access.identity_providers`.
 
-### Step 4: Validate the converted configuration
+### Step 5: Validate the converted configuration
 
 Open the `yaml` files in `./out` and confirm that the converter captured everything you expect. At minimum, check that:
 
@@ -128,96 +208,12 @@ Open the `yaml` files in `./out` and confirm that the converter captured everyth
 - Provider credentials were extracted correctly, and each `targets[].provider` reference resolves to a declared AI Model Provider in `providers.yaml`.
 - Every AI MCP Server in `mcp_servers.yaml` has the correct `type` for its original plugin mode, and that `conversion-only` and `listener` pairs are linked by matching tags.
 - Each AI Agent points at the correct upstream URL and carries the logging settings you had configured.
-- Supporting plugins were converted to AI Policies and attached to the right entities.
+- The identity providers you declared in `./config` were merged into `identity_providers.yaml` and attached to the right AI Models, AI MCP Servers, and AI Agents via `access.identity_providers`, and `vaults.yaml` and `gateway.yaml` reflect what you declared.
+- Non-auth supporting plugins were converted to AI Policies and attached to the right entities.
 
 Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as an AI Model Provider `display_name` or an AI Model `display_name`. These are required in {{site.ai_gateway}} 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
 
-### Step 5: Add identity providers, Vaults, and ACLs
-
-Authentication for AI Models works differently in version 2.x. Route auth plugins are **not** carried over onto AI Models, so you must add identity, secret, and access-control config to the converted `yaml` files manually before you apply it. Auth plugins on AI MCP Server and AI Agent routes are unaffected. They are converted to AI Policies in a previous step.
-
-Add an `identity_providers` entry in `models.yaml` for each authentication method your AI Models need (for example `key-auth` or `openid-connect`), then reference it from each AI Model's `access.identity_providers`:
-
-<!--vale off-->
-```yaml
-# models.yaml (AI Gateway v2 entity model)
-ai_gateway_identity_providers:
-- ref: key-auth-prod
-  ai_gateway: !ref ai-gateway#id
-  name: key-auth-prod
-  display_name: Key Auth
-  type: key-auth
-  config:
-    key_names:
-    - x-api-key
-
-ai_gateway_models:
-- ref: openai-chat
-  ai_gateway: !ref ai-gateway#id
-  name: openai-chat
-  # ...
-  access:
-    identity_providers:
-    - key-auth-prod
-```
-<!--vale on-->
-
-Create a `vaults.yaml` file in the `./out` directory and add a `vaults` entry for any secret store your migrated config references with `{vault://...}` syntax:
-
-<!--vale off-->
-```yaml
-ai_gateway_vaults:
-- ref: ai-vault
-  ai_gateway: !ref ai-gateway#id
-  name: ai-vault
-  display_name: AI Gateway Vault
-  type: konnect
-  description: Credential store for AI Gateway
-  config:
-    config_store_id: "55c2c6a4-7973-420c-909e-a16959714f5b"
-```
-<!--vale on-->
-
-{:.info}
-> **Note:** For a [{{site.konnect_short_name}} Config Store vaults](/how-to/configure-the-konnect-config-store/) (`type: konnect`), the Config Store you reference must already exist in {{site.konnect_short_name}} before you apply the configuration. `kongctl` does not create it for you.
-
-Finally, set `allow` or `deny` under each AI Model's `access.acls` to control which AI Consumers or AI Consumer Groups can reach it:
-
-<!--vale off-->
-```yaml
-ai_gateway_models:
-- ref: azure-gpt-4o
-  ai_gateway: !ref ai-gateway#id
-  name: azure-gpt-4o
-  # ...
-  access:
-    acls:
-      allow:
-      - Azure-OpenAI-Gold
-      - Azure-OpenAI-Silver
-      deny: []
-```
-<!--vale on-->
-
-### Step 6: Point the configuration at your control plane
-
-The converter has no way to know about the {{site.ai_gateway}} 2.x control plane you created in the [prerequisites](#prerequisites), so it generates `gateway.yaml` with a placeholder `ai_gateways` entry that would create a new control plane on apply. Edit that entry so it references your existing control plane by name instead:
-
-<!--vale off-->
-```yaml
-# gateway.yaml (AI Gateway v2 entity model)
-ai_gateways:
-- ref: ai-gateway
-  _external:
-    selector:
-      matchFields:
-        name: "ai-gateway"
-```
-<!--vale on-->
-
-Replace `ai-gateway` in `matchFields.name` with the control plane name you noted in the prerequisites. Keep the `ref` value (`ai-gateway`) as is, since every other converted file links back to this entry with `ai_gateway: !ref ai-gateway#id`.
-
-### Step 7: Authenticate kongctl
+### Step 6: Authenticate kongctl
 
 `kongctl apply` needs a {{site.konnect_short_name}} PAT or System Account Access Token to reach your control plane. Reuse the token from the [prerequisites](#prerequisites) with one of the following:
 
@@ -225,7 +221,7 @@ Replace `ai-gateway` in `matchFields.name` with the control plane name you noted
 - Pass the token with the `--pat` flag on the `apply` command.
 - Set the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable.
 
-### Step 8: Apply the configuration
+### Step 7: Apply the configuration
 
 Sync the converted configuration to the {{site.ai_gateway}} control plane:
 
@@ -308,8 +304,10 @@ ai_gateway_model_providers:
   config:
     auth:
       # Carried over from the v1 target auth block.
-      header_name: Authorization
-      header_value: Bearer {vault://openai-vault/api-key}
+      type: basic
+      headers:
+      - name: Authorization
+        value: Bearer {vault://openai-vault/api-key}
 
 # models.yaml (AI Gateway v2 entity model)
 ai_gateway_models:
@@ -434,20 +432,23 @@ services:
 Converting the example to use the version 2.x model:
 * Moves the upstream URL, route, tools, and logging settings onto a single AI MCP Server entity
 * Copies the value from the plugin `mode` into the MCP Server `type` 
-* Converts the `key-auth` plugin into a Policy and attaches it to the MCP Server
+* Strips the `key-auth` plugin. Like AI Models, an AI MCP Server declares identity separately: add an identity provider manually and reference it from the server's `access.identity_providers`.
 * Renames `default_acl` to `default_tool_acls` and sets the ACL evaluation mode explicitly with `acl_attribute_type`
-* Renames the `config.logging` fields: `log_statistics` becomes `statistics`, and `log_audits` becomes `audits`
+* Renames the `config.logging` fields: `log_audits` becomes `audits` and `log_payloads` becomes `payloads`. `log_statistics` has no AI Gateway 2.x equivalent and is dropped.
 
 <!--vale off-->
 ```yaml
-# policies.yaml (AI Gateway v2 entity model)
-ai_gateway_policies:
+# identity_providers.yaml (in ./out — generated from the provider you declared
+# in ./config in Step 3; the v1 key-auth plugin itself is stripped on conversion)
+ai_gateway_identity_providers:
 - ref: flights-key-auth
   ai_gateway: !ref ai-gateway#id
   type: key-auth
   name: flights-key-auth
   display_name: Flights Key Auth
-  config: {}
+  config:
+    key_names:
+    - apikey
 
 # mcp_servers.yaml (AI Gateway v2 entity model)
 ai_gateway_mcp_servers:
@@ -466,15 +467,14 @@ ai_gateway_mcp_servers:
       allow:
       - flight-operators
       deny: []
-  policies:
-  - flights-key-auth
+    identity_providers:
+    - flights-key-auth
   config:
     url: https://flights.internal.kongair.com
     route:
       paths:
       - /flights-mcp
     logging:
-      statistics: true
       audits: true
   tools:
   - name: search_flights
@@ -492,8 +492,8 @@ To verify your AI MCP Servers entity migration, be sure to check the following:
 - Listener aggregation: If you used `conversion-only` plugins feeding a `listener` plugin via tags, confirm the converter preserved the tags so the version 2.x listener AI MCP Server still aggregates the right tools.
 - ACL mode: Version 2.x makes the ACL subject explicit. Use `acl_attribute_type: consumer` to evaluate against Consumers and Consumer Groups, or `acl_attribute_type: oauth_access_token` with `access_token_claim_field` to evaluate against a claim in an OAuth2 access token.
 - Per-tool ACLs: A per-tool `acl` replaces the default for that tool and does not merge with `default_tool_acls`. Ensure every allowed subject is listed on the tool explicitly.
-- Logging field names: The older `log_statistics`, `log_payloads`, and `log_audits` fields become `statistics`, `payloads`, and `audits` under `config.logging`.
-- Authentication: Unlike AI Models, auth plugins on MCP routes (like the `key-auth` example above) are carried over automatically as AI Policies. You don't need to declare them again.
+- Logging field names: `log_payloads` and `log_audits` become `payloads` and `audits` under `config.logging`. `log_statistics` has no AI Gateway 2.x equivalent and is dropped.
+- Authentication: Like AI Models, auth plugins on MCP routes (like the `key-auth` example above) are stripped on conversion. Declare the identity provider manually and reference it from the server's `access.identity_providers`.
 
 ### Migrate agents
 
@@ -532,7 +532,9 @@ services:
 
 Converting the example to use the version 2.x model:
 * Moves the upstream URL, route, request-size limit, and logging settings onto a single AI Agent entity.
-* Renames the `config.logging` fields: `log_statistics` becomes `statistics`, and `log_payloads` becomes `payloads`
+* Renames the `config.logging` fields: `log_payloads` becomes `payloads`. `log_statistics` has no AI Gateway 2.x equivalent and is dropped.
+
+Like AI Models and AI MCP Servers, any authentication plugin on the agent's route is stripped on conversion. If the agent needs auth, declare an identity provider manually and reference it from the agent's `access.identity_providers`.
 
 <!--vale off-->
 ```yaml
@@ -556,7 +558,6 @@ ai_gateway_agents:
       - /booking-agent
     max_request_body_size: 8388608
     logging:
-      statistics: true
       payloads: false
       max_payload_size: 1048576
 ```
@@ -569,8 +570,9 @@ To verify your AI Agent entity migration, be sure to check the following:
 
 - Agent type: Most A2A workloads use `type: a2a`. Use `type: http` for plain HTTP agent traffic that does not follow the A2A protocol bindings.
 - URL rewriting: The AI Agent entity rewrites the agent card `url` and `additionalInterfaces[].url` fields to the gateway address automatically, the same behavior the older plugin provided. No extra configuration is needed.
-- Logging field names: As with AI MCP Servers, `log_statistics` and `log_payloads` become `statistics` and `payloads` under `config.logging`.
-- Analytics: When `statistics` is enabled, A2A metrics flow into {{site.konnect_short_name}} analytics. View them under Agentic usage analytics in {{site.konnect_short_name}} [Explorer](/observability/explorer/) and [Dashboards](/observability/#dashboard).
+- Logging field names: As with AI MCP Servers, `log_payloads` becomes `payloads` under `config.logging`, and `log_statistics` is dropped (no AI Gateway 2.x equivalent).
+- Identity: Like AI Models, an AI Agent has no route auth after conversion. If the agent needs authentication, confirm the identity provider you declared is attached via `access.identity_providers`.
+- Analytics: A2A metrics flow into {{site.konnect_short_name}} analytics. View them under Agentic usage analytics in {{site.konnect_short_name}} [Explorer](/observability/explorer/) and [Dashboards](/observability/#dashboard).
 
 ## Verify your migration
 
