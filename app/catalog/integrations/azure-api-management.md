@@ -50,7 +50,7 @@ Before you configure the Azure API Management integration, ensure the following:
 > **Note:** The Azure API Management integration uses OAuth for authentication and can only be configured through the {{site.konnect_short_name}} UI.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the {{site.konnect_catalog}} sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the {{site.konnect_catalog}} sidebar, click **Integrations**. 
 1. Click **Azure API Management**.
 1. Click **Add Azure API Management instance**.
 1. In the **Subscription ID** field, enter your Azure API subscription ID.

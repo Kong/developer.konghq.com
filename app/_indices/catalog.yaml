@@ -12,6 +12,12 @@ groups:
           - path: /how-to/automate-api-catalog/
           - path: /how-to/automate-api-catalog-with-terraform/
           - path: /how-to/package-apis-with-dev-portal/
+      - title: AI Models
+        items:
+          - path: /catalog/ai-models/
+      - title: MCP Registry
+        items:
+          - path: /catalog/mcp-registry/
   - title: "{{site.konnect_catalog}} Classic"
     sections:
       - title: Overview
@@ -29,6 +35,3 @@ groups:
       - title: How-tos
         items:
           - path: /how-to/discover-and-govern-apis-with-service-catalog/
-      - title: MCP Registry
-        items:
-          - path: /catalog/mcp-registry/

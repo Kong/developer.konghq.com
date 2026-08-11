@@ -53,7 +53,7 @@ For complete tutorials, see the following:
 ## Authorize the AWS API Gateway integration
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the {{site.konnect_catalog}} sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the {{site.konnect_catalog}} sidebar, click **Integrations**. 
 1. Click **AWS API Gateway**.
 1. Click **Add AWS API Gateway instance**.
 1. From the **AWS region** dropdown, select your AWS region.

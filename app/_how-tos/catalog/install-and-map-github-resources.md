@@ -45,7 +45,7 @@ prereqs:
 
 ## Install and authorize the GitHub integration
 
-1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **Integrations**. 
 2. Click **GitHub**, then click **Add GitHub Instance**.
 3. Authorize the GitHub integration. This will take you to GitHub, where you can grant {{site.konnect_short_name}} access to either **All Repositories** or **Select repositories**. 
 1. Enter `github` as your instance name.
