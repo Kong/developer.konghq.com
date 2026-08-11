@@ -94,7 +94,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-### `cache_write_cost_list`
+### Cache-write pricing by TTL
 
 Use `cache_write_cost_list` when a provider prices cache writes differently depending on how long the entry is kept, for example Anthropic's 5-minute and 1-hour TTL tiers. Set a `ttl` and its `cost` per entry:
 
@@ -116,7 +116,7 @@ rows:
 
 If a request's TTL doesn't match any entry, the model falls back to `cache_write_cost`.
 
-### `context_window_factor`
+### Context-window pricing
 
 Use `context_window_factor` when a provider re-prices an entire request once it crosses a context-size threshold, for example GPT-5.6's rate change above 272K input tokens. Each entry pairs a token threshold with its input and output multipliers:
 
@@ -143,7 +143,7 @@ If multiple entries exist, the model selects the tier closest to the actual cont
 {:.info}
 > With a 2M-token request and tiers at `above: 200k` and `above: 1m`, the `above: 1m` tier applies.
 
-### `service_tier_factor`
+### Service-tier pricing
 
 Use `service_tier_factor` when a provider offers a priority tier for lower latency or a flex tier for lower cost, and you want that price difference reflected in the calculated cost. The standard (default) tier is `1` and needs no configuration. Pair each tier name with its multiplier:
 
@@ -165,7 +165,7 @@ rows:
 
 ### Example configuration
 
-This model bills:
+This example configures a target that bills:
 
 - $4 per million input tokens and $24 per million output tokens, on the standard service tier.
 - $0.4 per million cache-read tokens, a tenth of the input rate.
@@ -219,10 +219,10 @@ cost = service_tier_factor * (
 
 The calculation proceeds in four steps:
 
-1. **Price the input side:**<br> Sum normal input, cache reads, and cache writes. Normal input tokens are priced at `input_cost` and cache reads at `cache_read_cost`. Cache writes are priced by matching the request's TTL against `cache_write_cost_list`. If no entry matches, `cache_write_cost` applies. Because cache pricing derives from the base input side, any discount or premium on input flows through to cache automatically.
-1. **Apply the context-window factor:**<br> If the request's input-token count crosses a threshold in `context_window_factor`, the input side is multiplied by that tier's `input_factor` and the output side by its `output_factor`. If no threshold is crossed, both factors are effectively `1`. The threshold is always measured on input tokens and gates both factors together.
-1. **Price the output side:**<br> Output tokens are priced at `output_cost` and multiplied by the applicable `output_factor`. Reasoning or thinking tokens, where a provider produces them, are billed at the output rate.
-1. **Apply the service-tier multiplier:**<br> The `factor` for the request's service tier scales the entire composed cost, input side and output side together. Because the input side already includes cache, the service-tier factor flows through to cache pricing as well. The standard tier uses a factor of `1`.
+1. Price the input side:<br> Sum normal input, cache reads, and cache writes. Normal input tokens are priced at `input_cost` and cache reads at `cache_read_cost`. Cache writes are priced by matching the request's TTL against `cache_write_cost_list`. If no entry matches, `cache_write_cost` applies. Because cache pricing derives from the base input side, any discount or premium on input flows through to cache automatically.
+1. Apply the context-window factor:<br> If the request's input-token count crosses a threshold in `context_window_factor`, the input side is multiplied by that tier's `input_factor` and the output side by its `output_factor`. If no threshold is crossed, both factors are effectively `1`. The threshold is always measured on input tokens and gates both factors together.
+1. Price the output side:<br> Output tokens are priced at `output_cost` and multiplied by the applicable `output_factor`. Reasoning or thinking tokens, where a provider produces them, are billed at the output rate.
+1. Apply the service-tier multiplier:<br> The `factor` for the request's service tier scales the entire composed cost, input side and output side together. Because the input side already includes cache, the service-tier factor flows through to cache pricing as well. The standard tier uses a factor of `1`.
 
 {:.success}
 > Per-token rates are expressed per one million tokens, so the final figure divides accordingly. The result is the cost of the request.
