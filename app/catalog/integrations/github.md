@@ -40,7 +40,7 @@ For a complete tutorial using the {{site.konnect_short_name}} API, see [Import a
 
 ## Authorize the GitHub integration
 
-1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **Integrations**. 
 2. Select **GitHub**, then **Add GitHub Instance**.
 3. Select **Authorize**. 
 

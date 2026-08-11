@@ -122,10 +122,10 @@ rows:
                     to {{site.konnect_catalog}} Classic:
 
                     * **AI Models**: The new {{site.konnect_catalog}} adds support for AI Models as a first-class interface, with more interface
-                      types coming. 
-                    * **Continued support for APIs**: APIs and API packages work the same way in both experiences, APIs and API packages migrate over.
+                      types coming.
+                    * **Continued support for APIs, API packages, and MCP Registries**: APIs, API packages, and MCP Registries (tech preview) work the same way in both experiences. APIs and API packages migrate over.
 
-                    Services, Scorecards, Integrations, and the MCP Registry are only compatible with {{site.konnect_catalog}} Classic.
+                    Services, Scorecards, and Integrations are only compatible with {{site.konnect_catalog}} Classic.
                     
                     An Org Admin can migrate to the new {{site.konnect_catalog}} experience by enabling the New Catalog
                     in **Manage organization** > **Settings** > **Catalog**.
