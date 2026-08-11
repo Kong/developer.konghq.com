@@ -173,9 +173,10 @@ spec:
    kubectl exec -n kong $DP_POD -- ls /etc/secrets/demo-example-com
    ```
 
-   You should see the two files from the Secret:
+   You should see the three files from the Secret:
 
    ```
+   ca.crt
    tls.crt
    tls.key
    ```
