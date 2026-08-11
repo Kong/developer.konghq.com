@@ -172,3 +172,49 @@ When certificate verification is enforced:
 This feature is designed primarily for **highly federated environments**, where platform operators need to guarantee that all teams and users deploying configuration through {{site.base_gateway}} adhere to certificate-verification requirements.
 
 Keep in mind that enabling certificate verification does not change how {{site.base_gateway}} validates certificates themselves. If you configure Services or system components (such as Postgres or Redis) with certificates that are invalid or self-signed without an appropriate trusted CA, {{site.base_gateway}} will be unable to establish those connections. This behavior is not new. However, enabling global enforcement may surface misconfigurations that were previously unnoticed.
+
+## When certificates are loaded and reloaded
+
+{{site.base_gateway}} loads certificates through two independent paths. Which one you use determines whether a rotated certificate is picked up automatically:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Path
+    key: path
+  - title: When it's read
+    key: read
+  - title: Behavior on rotation
+    key: behavior
+rows:
+  - path: |
+      Entities:
+      [Certificate](/gateway/entities/certificate/), [CA Certificate](/gateway/entities/ca-certificate/), and [SNI](/gateway/entities/sni/)
+    read: |
+      On every configuration update, from the configuration cache.
+    behavior: |
+      The new certificate is served as soon as the updated configuration reaches the node. No reload, no dropped connections.
+  - path: |
+      `kong.conf` parameters
+    read: |
+      Once, at startup. The values are rendered into the NGINX configuration when the node boots.
+    behavior: |
+      A rotated file on disk is ignored. The node serves the old certificate until it's reloaded or replaced.
+{% endtable %}
+<!--vale on-->
+
+This applies to every deployment topology:
+* In hybrid mode, entity updates reach data planes over the clustering connection
+* In traditional mode they come from the database
+* In DB-less mode they arrive with the declarative configuration
+
+Because `kong.conf` values are read at startup, {{site.base_gateway}} doesn't detect a change to the file a parameter points to. If an external process rotates it, such as cert-manager updating a mounted Kubernetes Secret, the node keeps serving the old certificate until you reload or replace it.
+
+On Kubernetes, a Secret referenced from a `Gateway` listener is translated into Certificate and SNI entities by {{site.kic_product_name}} or {{site.operator_product_name}} and pushed to the proxy over the Admin API, which is why no reload is needed.
+
+To configure either path, see:
+
+* [Automate TLS certificate provisioning and rotation with cert-manager](/operator/dataplanes/how-to/cert-manager/), for {{site.operator_product_name}}
+* [Rotate TLS certificates without restarting {{site.base_gateway}}](/kubernetes-ingress-controller/routing/rotate-tls-certificates/), for {{site.kic_product_name}}
+* [Restart {{site.base_gateway}} when a mounted certificate changes](/how-to/rotate-kong-conf-certificates-with-reloader/), for parameters with no entity equivalent
+* [How to restart {{site.base_gateway}} in a Docker container](/how-to/restart-kong-gateway-container/) and [on Kubernetes](/how-to/restart-kong-gateway-kubernetes/)
