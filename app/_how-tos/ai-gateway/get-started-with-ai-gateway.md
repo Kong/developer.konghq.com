@@ -134,6 +134,7 @@ Send a chat request to verify your setup:
 url: /v1/chat/completions
 status_code: 200
 method: POST
+retry: true
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
