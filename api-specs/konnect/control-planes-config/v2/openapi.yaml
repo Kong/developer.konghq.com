@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.15.0
-  x-oas-source: kong/platform-api@dfedd87d7b12f9696e3805fbb6e7536f89c0102f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/dfedd87d7b12f9696e3805fbb6e7536f89c0102f'
+  x-oas-source: kong/platform-api@c2338a05d8a00e0781594d52d8724daeca7ad6a1
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c2338a05d8a00e0781594d52d8724daeca7ad6a1'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -5280,6 +5280,99 @@ components:
       required:
         - cert
         - key
+    CertificateRequest:
+      description: 'A certificate object represents a public certificate, and can be optionally paired with the corresponding private key. These objects are used by Kong to handle SSL/TLS termination for encrypted requests, or for use as a trusted CA store when validating peer certificate of client/service. Certificates are optionally associated with SNI objects to tie a cert/key pair to one or more hostnames. If intermediate certificates are required in addition to the main certificate, they should be concatenated together into one string according to the following order: main certificate on the top, followed by any intermediates.'
+      example:
+        cert: |-
+          -----BEGIN CERTIFICATE-----
+          certificate-content
+          -----END CERTIFICATE-----
+        id: b2f34145-0343-41a4-9602-4c69dec2f269
+        key: |-
+          -----BEGIN PRIVATE KEY-----
+          private-key-content
+          -----END PRIVATE KEY-----
+      allOf:
+        - additionalProperties: false
+          properties:
+            cert:
+              description: 'PEM-encoded public certificate chain of the SSL key pair. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
+              type: string
+              x-referenceable: true
+            cert_alt:
+              description: 'PEM-encoded public certificate chain of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
+              type: string
+              nullable: true
+              x-referenceable: true
+            created_at:
+              description: Unix epoch when the resource was created.
+              type: integer
+              nullable: true
+            description:
+              description: 'User-defined entity description. Konnect only field, not synced to the Gateway.'
+              type: string
+              nullable: true
+            id:
+              description: A string representing a UUID (universally unique identifier).
+              type: string
+              nullable: true
+            key:
+              description: 'PEM-encoded private key of the SSL key pair. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
+              type: string
+              x-encrypted: true
+              x-referenceable: true
+            key_alt:
+              description: 'PEM-encoded private key of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
+              type: string
+              nullable: true
+              x-encrypted: true
+              x-referenceable: true
+            managed_by:
+              description: |-
+                Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+                Keys must be 1–63 characters long and start with an alphanumeric character.
+              type: object
+              additionalProperties:
+                maxLength: 63
+                minLength: 1
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                type: string
+              maxProperties: 5
+            snis:
+              type: array
+              items:
+                description: 'A string representing a wildcard host name, such as *.example.com.'
+                type: string
+              nullable: true
+            tags:
+              description: An optional set of strings associated with the Certificate for grouping and filtering.
+              type: array
+              items:
+                description: A string representing a tag.
+                type: string
+              nullable: true
+            updated_at:
+              description: Unix epoch when the resource was last updated.
+              type: integer
+              nullable: true
+            vault:
+              description: 'Shorthand that expands into cert and key; when both vault and cert/key are provided, the vault expansion takes precedence.'
+              type: string
+              nullable: true
+              writeOnly: true
+            vault_alt:
+              description: 'Shorthand that expands into cert_alt and key_alt; when both vault_alt and cert_alt/key_alt are provided, the vault_alt expansion takes precedence.'
+              type: string
+              nullable: true
+              writeOnly: true
+          type: object
+        - anyOf:
+            - required:
+                - vault
+            - required:
+                - cert
+                - key
     Consumer:
       description: 'The Consumer object represents a consumer - or a user - of a Service. You can either rely on Kong as the primary datastore, or you can map the consumer list with your database to keep consistency between Kong and your existing primary datastore.'
       type: object
@@ -5366,7 +5459,7 @@ components:
           type: string
           nullable: true
         name:
-          description: The name to associate with the given custom plugin.
+          description: The name to associate with the given custom plugin. Consider using a distinct prefix for custom plugins to avoid naming conflicts with new bundled plugins in future Kong releases.
           type: string
         schema:
           description: The schema for the given custom plugin.
@@ -9025,92 +9118,6 @@ components:
       required:
         - name
         - prefix
-    CertificateRequest:
-      description: 'A certificate object represents a public certificate, and can be optionally paired with the corresponding private key. These objects are used by Kong to handle SSL/TLS termination for encrypted requests, or for use as a trusted CA store when validating peer certificate of client/service. Certificates are optionally associated with SNI objects to tie a cert/key pair to one or more hostnames. If intermediate certificates are required in addition to the main certificate, they should be concatenated together into one string according to the following order: main certificate on the top, followed by any intermediates.'
-      example:
-        cert: |-
-          -----BEGIN CERTIFICATE-----
-          certificate-content
-          -----END CERTIFICATE-----
-        id: b2f34145-0343-41a4-9602-4c69dec2f269
-        key: |-
-          -----BEGIN PRIVATE KEY-----
-          private-key-content
-          -----END PRIVATE KEY-----
-      allOf:
-        - additionalProperties: false
-          properties:
-            cert:
-              description: 'PEM-encoded public certificate chain of the SSL key pair. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
-              type: string
-              x-referenceable: true
-            cert_alt:
-              description: 'PEM-encoded public certificate chain of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
-              type: string
-              nullable: true
-              x-referenceable: true
-            created_at:
-              description: Unix epoch when the resource was created.
-              type: integer
-              nullable: true
-            description:
-              description: 'User-defined entity description. Konnect only field, not synced to the Gateway.'
-              type: string
-              nullable: true
-            id:
-              description: A string representing a UUID (universally unique identifier).
-              type: string
-              nullable: true
-            key:
-              description: 'PEM-encoded private key of the SSL key pair. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
-              type: string
-              x-encrypted: true
-              x-referenceable: true
-            key_alt:
-              description: 'PEM-encoded private key of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
-              type: string
-              nullable: true
-              x-encrypted: true
-              x-referenceable: true
-            managed_by:
-              description: 'Arbitrary JSON data for client responsible for managing the entity. Konnect only field, not synced to the Gateway.'
-              type: object
-              additionalProperties: true
-              nullable: true
-            snis:
-              type: array
-              items:
-                description: 'A string representing a wildcard host name, such as *.example.com.'
-                type: string
-              nullable: true
-            tags:
-              description: An optional set of strings associated with the Certificate for grouping and filtering.
-              type: array
-              items:
-                description: A string representing a tag.
-                type: string
-              nullable: true
-            updated_at:
-              description: Unix epoch when the resource was last updated.
-              type: integer
-              nullable: true
-            vault:
-              description: 'Shorthand that expands into cert and key; when both vault and cert/key are provided, the vault expansion takes precedence.'
-              type: string
-              nullable: true
-              writeOnly: true
-            vault_alt:
-              description: 'Shorthand that expands into cert_alt and key_alt; when both vault_alt and cert_alt/key_alt are provided, the vault_alt expansion takes precedence.'
-              type: string
-              nullable: true
-              writeOnly: true
-          type: object
-        - anyOf:
-            - required:
-                - vault
-            - required:
-                - cert
-                - key
     BaseError:
       description: standard error
       type: object

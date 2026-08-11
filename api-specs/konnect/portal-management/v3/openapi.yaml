@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.9.7
+  version: 3.9.8
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@67f40d202dd883132fb882e1a8179a0d374d72a2
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/67f40d202dd883132fb882e1a8179a0d374d72a2'
+  x-oas-source: kong/platform-api@744c89c15abe90c6c381541c206624022a65e4f9
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/744c89c15abe90c6c381541c206624022a65e4f9'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4891,6 +4891,7 @@ components:
           type: string
           example: IDM - Developers
           maxLength: 250
+          minLength: 1
           pattern: '^[\w \W]+$'
           writeOnly: true
         description:
@@ -4898,6 +4899,7 @@ components:
           type: string
           example: The Identity Management (IDM) API team.
           maxLength: 250
+          minLength: 1
           writeOnly: true
         can_own_applications:
           description: Whether the team is allowed to own applications.
@@ -4918,6 +4920,7 @@ components:
           type: string
           example: IDM - Developers
           maxLength: 250
+          minLength: 1
           pattern: '^[\w \W]+$'
           writeOnly: true
         description:
@@ -4925,6 +4928,7 @@ components:
           type: string
           example: The Identity Management (IDM) team.
           maxLength: 250
+          minLength: 1
           writeOnly: true
         can_own_applications:
           description: Whether the team is allowed to own applications
@@ -4955,6 +4959,7 @@ components:
           type: string
           example: The developers for the IDM API.
           maxLength: 250
+          minLength: 1
         created_at:
           type: string
           format: date-time
@@ -6774,6 +6779,7 @@ components:
       type: string
       example: IDM - Developers
       maxLength: 250
+      minLength: 1
       pattern: '^[\w \W]+$'
     IdentityProviderType:
       description: Specifies the type of identity provider.
