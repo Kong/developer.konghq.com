@@ -53,7 +53,7 @@ prereqs:
 
 ## Authorize the self-managed GitLab integration
 
-1. In the {{site.konnect_short_name}} UI, navigate to the [GitLab integration](https://cloud.konghq.com/service-catalog/integrations/gitlab/instances) and click **Add GitLab instance**.
+1. In the {{site.konnect_short_name}} UI, navigate to the GitLab integration and click **Add GitLab instance**.
 1. Select **GitLab Dedicated or Self-managed**, and enter the full URL to your GitLab API in the **GitLab API Base URL** field, ending in `/api/v4`.  For example: `https://$GITLAB_HOST/api/v4`
 1. Fill out the authorization fields using the values from your GitLab OAuth application:
    * Application ID: The Application ID from your GitLab app

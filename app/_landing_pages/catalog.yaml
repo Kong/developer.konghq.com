@@ -33,7 +33,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_catalog}} is where your organization's interfaces live: APIs, API packages, and AI Models today, with more interface types
+                    Teams build APIs and configure AI models independently, each in their own tools, with no shared record of what already exists.
+                    An API might be well documented within its own team, but invisible to everyone else.
+                    An LLM integration might work fine until someone in security asks which providers you're actually sending data to, and there's no fast way to answer.
+
+                    {{site.konnect_catalog}} is where these interfaces live instead: APIs, API packages, and AI Models today, with more interface types
                     coming. Instead of digging through individual products to find what already exists, {{site.konnect_catalog}} gives you a
                     platform-level home for creating, describing, and governing them.
 
@@ -43,6 +47,26 @@ rows:
         type: h2
         text: "Create your catalog"
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: "AI Models"
+              description: |
+                Model your organization's AI models as first-class interfaces in {{site.konnect_catalog}}.
+              icon: /assets/icons/brain.svg
+              cta:
+                text: Learn about AI Models
+                url: /catalog/ai-models/
+      - blocks:
+          - type: card
+            config:
+              title: "MCP Registries (tech preview)"
+              description: |
+                Register and discover MCP servers as first-class interfaces in {{site.konnect_catalog}}.
+              icon: /assets/icons/mcp.svg
+              cta:
+                text: Learn about MCP Registries
+                url: /catalog/mcp-registry/
       - blocks:
         - type: card
           config:
@@ -68,16 +92,49 @@ rows:
               cta:
                 text: API packages reference
                 url: /catalog/api-packaging/
+  - header:
+      type: h2
+      text: "Use cases for {{site.konnect_catalog}}"
+    columns:
       - blocks:
-          - type: card
+          - type: use_case_table
             config:
-              title: "AI Models"
-              description: |
-                Model your organization's AI models as first-class interfaces in {{site.konnect_catalog}}.
-              icon: /assets/icons/brain.svg
-              cta:
-                text: Learn about AI Models
-                url: /catalog/ai-models/
+              usecase_title: "**Use case**"
+              columns:
+                - title: "**Then use...**"
+                  key: solution
+              rows:
+                - usecase: |
+                    You need to know every AI model, API, and MCP server your org has built, without checking each team's tools individually
+                  outcomes:
+                    - solution: |
+                        {{site.konnect_catalog}} as one inventory across APIs, API packages, AI Models, and MCP Registries
+                - usecase: |
+                    Before building a new LLM integration, you want to check whether another team already has one you can reuse
+                  outcomes:
+                    - solution: |
+                        [AI Models](/catalog/ai-models/), browsable with their providers and target models visible
+                - usecase: |
+                    You need to see which AI Models are actually connected to a real {{site.ai_gateway}} deployment, versus just defined on paper
+                  outcomes:
+                    - solution: |
+                        Filter AI Models by whether they're linked to {{site.ai_gateway}}
+                - usecase: |
+                    Your teams are building MCP servers for AI agents, but they're scattered across repos and local configs with no shared place to register them
+                  outcomes:
+                    - solution: |
+                        [MCP Registries](/catalog/mcp-registry/), where you publish MCP servers with their packages and remote endpoints
+                - usecase: |
+                    A partner or internal team needs access to a specific slice of your APIs, not everything, without creating separate infrastructure for it
+                  outcomes:
+                    - solution: |
+                        [API packages](/catalog/api-packaging/), composed from existing API operations for that audience
+                - usecase: |
+                    You want developers to register their own applications and get credentials for an API without provisioning each one manually
+                  outcomes:
+                    - solution: |
+                        Publish an [API](/catalog/apis/#publish-your-api-to-dev-portal) to a Dev Portal with an authentication strategy
+
   - header:
       type: h2
       text: "Frequently asked questions"
@@ -86,7 +143,7 @@ rows:
           - type: faqs
             config:
               - q: "What's different between {{site.konnect_catalog}} and {{site.konnect_catalog}} Classic?"
-                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, and AI Models today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services, Scorecards, Integrations, and MCP Registry. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
+                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, AI Models, and MCP Registries (tech preview) today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services, Scorecards, and Integrations. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
               - q: "What happened to Services, Integrations, and Scorecards?"
                 a: "Those features are compatible with {{site.konnect_catalog}} Classic. See the [{{site.konnect_catalog}} Classic documentation](/catalog-classic/)."
               - q: "Can I control access to specific {{site.konnect_catalog}} data?"

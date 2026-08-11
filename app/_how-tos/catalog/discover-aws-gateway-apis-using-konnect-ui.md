@@ -54,7 +54,7 @@ Now that your integration is configured, you can create a {{site.konnect_catalog
 {:.info}
 > In this tutorial, we'll refer to your ingested AWS API Gateway API as `aws-api`.
 
-1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
 1. In the Catalog sidebar, click **Services**.
 1. Click **New service**.
 1. In the **Display Name** field, enter `APIs`.
@@ -73,7 +73,7 @@ Your integration APIs are now discoverable from one {{site.konnect_catalog}} Cla
 
 To confirm that the AWS API Gateway resource is now mapped to the intended service, navigate to the service:
 
-1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
 1. In the {{site.konnect_catalog}} sidebar, click **Services**.
 1. Click the **APIs** service.
 1. Click the **Resources** tab.

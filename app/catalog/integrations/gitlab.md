@@ -58,7 +58,7 @@ To use the GitLab integration in a self-hosted environment:
 1. [Create a group-owned application](https://docs.gitlab.com/integration/oauth_provider/#create-a-group-owned-application) in your GitLab instance. This is required to enable OAuth access for your organization.
    * Set the redirect URI in GitLab to `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integrations/gitlab`
    * Make sure the application has the `api` scope.
-1. In the {{site.konnect_short_name}} UI, navigate to the [GitLab integration](https://cloud.konghq.com/service-catalog/integrations/gitlab/configuration)
+1. In the {{site.konnect_short_name}} UI, navigate to the GitLab integration.
 1. In the **GitLab API Base URL** field, enter the full URL to your GitLab API, ending in `/api/v4`.  
    For example: `https://gitlab.example.com/api/v4`
 1. Fill out the authorization fields using the values from your GitLab OAuth application:
@@ -69,7 +69,7 @@ To use the GitLab integration in a self-hosted environment:
 1. Click **Authorize** to complete the connection.
 {% endnavtab %}
 {% navtab "SaaS" %}
-1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **Integrations**. 
 1. Select **GitLab**, then **Install GitLab**.
 1. Click **Authorize**. 
 {% endnavtab %}

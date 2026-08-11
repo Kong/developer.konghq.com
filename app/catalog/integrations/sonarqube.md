@@ -54,7 +54,7 @@ You need to configure the following in SonarQube SaaS:
 {% navtabs "sonarqube-integration" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the {{site.konnect_catalog}} sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the {{site.konnect_catalog}} sidebar, click **Integrations**. 
 1. Click **SonarQube**.
 1. Click **Add SonarQube instance**.
 1. In the **SonarQube API key** field, enter your SonarQube personal access token.

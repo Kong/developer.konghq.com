@@ -61,7 +61,7 @@ To enable a scorecard on a service:
 {% navtabs "scorecards" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the {{site.konnect_catalog}} sidebar, click **[Scorecards](https://cloud.konghq.com/service-catalog/scorecards)**.
+1. In the {{site.konnect_catalog}} sidebar, click **Scorecards**.
 1. Click **New Scorecard**.
 1. From the **Scorecard template** dropdown menu, select your template or select custom scorecard.
 1. (Optional) If you want to add an additional section or criteria, click **Add criteria** or **Add section**.
