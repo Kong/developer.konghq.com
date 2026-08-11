@@ -165,6 +165,14 @@ rows:
 
 ### Example configuration
 
+This model bills:
+
+- $4 per million input tokens and $24 per million output tokens, on the standard service tier.
+- $0.4 per million cache-read tokens, a tenth of the input rate.
+- $5 per million cache-write tokens by default, or $8 per million tokens for entries with a 1-hour TTL.
+- Double the input rate and 1.5x the output rate, once a request's input crosses 200K tokens.
+- Double the resulting rate on the `priority` tier, or half on the `flex` tier.
+
 ```yaml
 # Scalar fields (always present)
 input_cost: 4          # $ per 1M input tokens
