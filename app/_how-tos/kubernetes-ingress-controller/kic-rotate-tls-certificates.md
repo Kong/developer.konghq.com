@@ -171,7 +171,7 @@ kubectl patch -n kong --type=json gateway kong -p='[
 
 ## Route traffic through the listener
 
-Create an `HTTPRoute` that attaches to the `https` listener and sends requests to the `echo` Service you created as a [prerequisite](#required-kubernetes-resources):
+Create an `HTTPRoute` that attaches to the `https` listener and sends requests to the `echo` Service we created as a [prerequisite](#required-kubernetes-resources):
 
 <!--vale off-->
 {% httproute %}
@@ -210,7 +210,7 @@ resource: echo
    ```
    {:.no-copy-code}
 
-1. Note how long the {{site.base_gateway}} pods have been running, so you can check later that they didn't restart:
+1. Note how long the {{site.base_gateway}} pods have been running, so we can check later that they didn't restart:
 
    ```bash
    kubectl get pods -n kong

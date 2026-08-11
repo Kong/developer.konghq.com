@@ -67,7 +67,7 @@ automated_tests: false
 
 ## Change a kong.conf value
 
-Set a `kong.conf` parameter so you have something to apply. This example raises the log level.
+Set a `kong.conf` parameter so we have something to apply. This example raises the log level.
 
 1. Create a `values-log-level.yaml` file that adds `log_level` to the `env` block:
 
@@ -87,11 +87,11 @@ Set a `kong.conf` parameter so you have something to apply. This example raises 
    helm upgrade kong-dp kong/kong -n kong --values ./values-dp.yaml --values ./values-log-level.yaml --wait
    ```
 
-   Changing the pod template makes Helm replace the pods for you, so this alone applies the new value. The next section covers the case where the file a parameter points to changes but the pod template doesn't, which is what happens when a mounted Secret is rotated.
+   Changing the pod template makes Helm replace the pods, so this alone applies the new value. The next section covers the case where the file a parameter points to changes but the pod template doesn't, which is what happens when a mounted Secret is rotated.
 
 ## Restart the data plane
 
-1. Record the current pod names and ages so you can compare afterwards:
+1. Record the current pod names and ages so we can compare afterwards:
 
    ```bash
    kubectl get pods -n kong -l app.kubernetes.io/instance=kong-dp
