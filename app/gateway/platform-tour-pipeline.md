@@ -51,10 +51,7 @@ flowchart TD
     H --> I[developer.konghq.com, in the browser]
 {% endmermaid %}
 
-Two things worth noticing: the preview build isn't a GitHub Actions step at all. It's Netlify's own GitHub App
-reacting to the PR directly, outside this repo's own CI. The link checker also doesn't read the Markdown
-source to decide if a link works. It waits for the real preview to finish building, then clicks the real link
-on the real rendered page.
+The preview build is Netlify's own GitHub App reacting to the PR directly, outside this repo's own CI. The link checker also doesn't read the Markdown source to decide if a link works. It waits for the real preview to finish building, then clicks the real link on the rendered page.
 
 ## Every check that actually gates a PR
 
@@ -69,12 +66,6 @@ on the real rendered page.
 | `missing-redirects.yaml` | Every PR | Pages that changed URL without a matching redirect |
 | `security.yaml` | Every push | GitHub Actions pinned to a commit SHA, not a mutable tag |
 
-{:.info}
-> **Not everything runs this often.** `tools/automated-tests`, the how-to-instruction tests from
-> [part 4](/how-to/platform-tour-testing/), is wired to `automated-tests.yaml`. That workflow runs on a daily
-> schedule and by manual trigger, not on every pull request. `event-gateway-tests.yaml` runs monthly. A how-to's
-> instructions can go stale for hours before the next scheduled run catches it, not seconds. The diagram above
-> only shows the checks genuinely wired to `pull_request`.
 
 ## Automated prose and style checks
 
@@ -85,7 +76,7 @@ style slip or misspelling by eye. One bad word in a shared include would repeat 
 runs on every pull request, not on a schedule:
 
 
-**Renders as (real CI configuration):**
+**Renders as:**
 
 {% raw %}
 ```yaml

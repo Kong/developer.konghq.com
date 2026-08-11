@@ -29,7 +29,7 @@ rows:
           config:
             title: "1. How-to page"
             description: |
-              Real entity_example tabs, a real Konnect/on-prem switch, and a validation block that's also a
+              entity_example tabs, a  Konnect/on-prem switch, and a validation block that's also a
               live test. Click everything.
             icon: /assets/icons/gateway.svg
             cta:
@@ -40,8 +40,7 @@ rows:
           config:
             title: "2. Reference pages"
             description: |
-              The same one-input-many-outputs idea, drawn as a real mermaid diagram, next to a parameter table
-              your browser fetches live.
+              reference pages
             icon: /assets/icons/gateway.svg
             cta:
               text: See it live
@@ -51,8 +50,7 @@ rows:
           config:
             title: "3. Plugin page"
             description: |
-              A brand-new plugin, built from three files, generating four real pages, and a real gap in the
-              config validator, found by running it.
+              A brand-new plugin, built from three files, generating four pages
             icon: /assets/icons/gateway.svg
             cta:
               text: See it live
@@ -62,7 +60,7 @@ rows:
           config:
             title: "4. How-to's/testing"
             description: |
-              Two real testing systems, side by side, with their actual coverage: 43% and 95.2%, not 100%.
+              Two real testing systems
             icon: /assets/icons/gateway.svg
             cta:
               text: See it live
@@ -72,7 +70,7 @@ rows:
           config:
             title: "5. Pipeline"
             description: |
-              The honest finale: a real per-PR preview URL, automated Vale checks, and the CDN that serves
+              The honest finale: a per-PR preview URL, automated Vale checks, and the CDN that serves
               production. The part most tours would leave out.
             icon: /assets/icons/gateway.svg
             cta:
@@ -105,7 +103,7 @@ rows:
                 rows:
                   - system: Inso CLI reference
                     source: "`Kong/insomnia`"
-                    mechanism: "GitHub Action checks out the repo, runs the real `inso generate-docs` command, copies the output, opens a PR."
+                    mechanism: "GitHub Action checks out the repo, runs the  `inso generate-docs` command, copies the output, opens a PR."
                     auto: "Yes"
                   - system: Plugin/Gateway changelogs
                     source: "`Kong/kong-ee`"
@@ -113,7 +111,7 @@ rows:
                     auto: "Yes (the changelog tab)"
                   - system: kongctl reference
                     source: Compiled kongctl binary
-                    mechanism: "GitHub Action installs the real binary, scrapes `--help` output, writes snippets, opens a PR. Auto-deletes wrapper pages for dropped commands."
+                    mechanism: "GitHub Action installs the al binary, scrapes `--help` output, writes snippets, opens a PR. Auto-deletes wrapper pages for dropped commands."
                     auto: "No, a hand-written wrapper page transcludes the snippet"
                   - system: decK reference
                     source: Compiled decK binary
@@ -136,7 +134,7 @@ rows:
       text: "Live lookup at render time"
       sub_text: |
         Each card below names only an entity slug, an API spec title, or a plugin slug. The title,
-        description, and link come from a real page elsewhere in this repo, at build time.
+        description, and link come from a page elsewhere in this repo, at build time.
     columns:
       - blocks:
         - type: tabs
@@ -170,7 +168,7 @@ rows:
             - q: What's the latest version of kongctl?
               a: |
                 **{{site.data.kongctl_latest.version}}**. This number isn't typed on this page. It's computed
-                at build time from `app/_data/tools/kongctl.yml`'s release list, the same mechanism the real
+                at build time from `app/_data/tools/kongctl.yml`'s release list, the same mechanism the
                 [`/kongctl/`](/kongctl/) page uses.
             - q: What's the latest version of decK?
               a: |
