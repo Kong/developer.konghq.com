@@ -122,7 +122,7 @@ Set a `kong.conf` parameter so you have something to apply. This example raises 
 1. Confirm that the new configuration is in effect:
 
    ```bash
-   export DP_POD=$(kubectl get pods -n kong -l app.kubernetes.io/instance=kong-dp -o jsonpath='{.items[0].metadata.name}')
+   export DP_POD=$(kubectl get pods -n kong -l app.kubernetes.io/instance=kong-dp --sort-by=.metadata.creationTimestamp -o jsonpath='{.items[-1:].metadata.name}')
    kubectl exec -n kong $DP_POD -- printenv KONG_LOG_LEVEL
    ```
 
