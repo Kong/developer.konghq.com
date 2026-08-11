@@ -1,0 +1,354 @@
+{
+  "properties": {
+    "config": {
+      "type": "object",
+      "description": "Three top-level groups. The request wire format (OpenAI / Anthropic / MCP) is DETECTED per request from the body shape, so there is no field selecting it: the two chat formats overlap, and a hand-set value silently scanned the user's message and nothing else.",
+      "properties": {
+        "skyflow": {
+          "type": "object",
+          "description": "What to call, how to authenticate to it, and what to detect.",
+          "properties": {
+            "vault_configuration": {
+              "type": "object",
+              "description": "The three values shown on the vault's own page in the Skyflow admin UI, under the same names.",
+              "properties": {
+                "account_id": {
+                  "type": "string",
+                  "description": "Sent as X-SKYFLOW-ACCOUNT-ID when set."
+                },
+                "vault_url": {
+                  "type": "string",
+                  "description": "The vault URL as the UI shows it, e.g. https://ebfc9bee4242.vault.skyflowapis.com. Taken whole rather than assembled from a cluster id, because the host also encodes the environment -- a sandbox vault lives on .skyflowapis.tech. A trailing slash and a missing scheme are tolerated."
+                },
+                "vault_id": {
+                  "type": "string",
+                  "description": "Skyflow vault that stores tokens and resolves re-identification."
+                }
+              },
+              "required": [
+                "vault_url",
+                "vault_id"
+              ]
+            },
+            "credentials": {
+              "type": "object",
+              "description": "`method` selects which record is read, with NO fallback between them: under sts a populated bearer_token is never touched.",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "description": "sts exchanges the CALLER's IdP token for a short-lived Skyflow bearer (RFC 8693), so the gateway holds no Skyflow credential at all.",
+                  "default": "sts",
+                  "enum": [
+                    "sts",
+                    "jwt_credential",
+                    "bearer_token"
+                  ]
+                },
+                "sts": {
+                  "type": "object",
+                  "description": "Delegated exchange. Required: service_account_id.",
+                  "properties": {
+                    "service_account_id": {
+                      "type": "string",
+                      "description": "Required when method = sts."
+                    },
+                    "token_header": {
+                      "type": "string",
+                      "description": "Header carrying the caller's IdP token.",
+                      "default": "authorization"
+                    },
+                    "token_uri": {
+                      "type": "string",
+                      "description": "",
+                      "default": "https://manage.skyflowapis.com/v1/auth/sts/token"
+                    },
+                    "expected_issuer": {
+                      "type": "string",
+                      "description": "Checked locally before any network hop, so an unauthenticated request costs nothing."
+                    },
+                    "expected_audience": {
+                      "type": "string",
+                      "description": ""
+                    }
+                  }
+                },
+                "jwt_credential": {
+                  "type": "object",
+                  "description": "Gateway-held service account.",
+                  "properties": {
+                    "service_account_json": {
+                      "type": "string",
+                      "description": "The whole service-account JSON. Encrypted and referenceable -- use a vault reference, not a literal.",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    }
+                  }
+                },
+                "bearer_token": {
+                  "type": "object",
+                  "description": "Gateway-held bearer, used as-is.",
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "description": "Encrypted and referenceable.",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    }
+                  }
+                }
+              },
+              "required": [
+                "method"
+              ]
+            },
+            "deidentify": {
+              "type": "object",
+              "description": "What counts as sensitive, and how it is tokenized.",
+              "properties": {
+                "entities": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [],
+                  "description": "Entity types to detect, validated against the types the vault has columns for -- a typo is refused at save time rather than silently matching nothing. Empty means ALL. IGNORED when configuration_source = config_id."
+                },
+                "token_format": {
+                  "type": "string",
+                  "description": "VAULT_TOKEN is reversible and deterministic, and is what re-identification requires.",
+                  "default": "VAULT_TOKEN",
+                  "enum": [
+                    "VAULT_TOKEN",
+                    "ENTITY_ONLY",
+                    "ENTITY_UNQ_COUNTER"
+                  ]
+                },
+                "configuration_source": {
+                  "type": "string",
+                  "description": "Detect models these as a protobuf oneof (`configurationSource`), so they are mutually exclusive on the wire. This SELECTS one and never merges: under config_id the entity list, token_format, destination_table and both regex lists are ignored, because the saved configuration owns every detection decision.",
+                  "default": "inline",
+                  "enum": [
+                    "inline",
+                    "config_id"
+                  ]
+                },
+                "config_id": {
+                  "type": "string",
+                  "description": "Required when configuration_source = config_id. Enforced here rather than left to the API, because an id that does not resolve reports 'Field vault_id or configuration_id is missing in the request' -- an error naming the wrong problem."
+                },
+                "destination_table": {
+                  "type": "string",
+                  "description": "The vault table holding the entity columns. Every entity tokenized as VAULT_TOKEN needs a destination table.column; the column is derived (NAME -> table1.name_entity) because the Detect vault schema follows that rule for every column. Only the table name varies.",
+                  "default": "table1"
+                },
+                "allow_regex": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [],
+                  "description": "Sent as `skip`: suppresses false POSITIVES, leaving matches as plaintext."
+                },
+                "restrict_regex": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [],
+                  "description": "Sent as `restrict`: catches false NEGATIVES, turning matches into [RESTRICTED] whether or not a detector fired."
+                },
+                "token_preamble": {
+                  "type": "object",
+                  "description": "Prepended to the outbound system prompt. Not part of the Detect call, so it applies under either configuration_source.",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean",
+                      "description": "",
+                      "default": true
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "Overrides the built-in text. Without a preamble the model editorialises about redaction instead of using the placeholders, which measurably degrades answers."
+                    }
+                  }
+                }
+              }
+            },
+            "reidentify": {
+              "type": "object",
+              "description": "Restoring real values on the response leg.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "On by default: without it the CLIENT also receives vault tokens, which is a valid posture but a surprising default.",
+                  "default": true
+                },
+                "strategy": {
+                  "type": "string",
+                  "description": "reidentify_text resolves through the vault, so it restores tokens minted on an earlier turn. mapping_only uses the request-scoped map and cannot.",
+                  "default": "reidentify_text",
+                  "enum": [
+                    "mapping_only",
+                    "reidentify_text",
+                    "detokenize"
+                  ]
+                },
+                "tool_inputs": {
+                  "type": "string",
+                  "description": "Tool arguments the model sends back. Default keeps tokens: an unknown tool is assumed to ship its arguments somewhere the gateway does not control.",
+                  "default": "tokenized",
+                  "enum": [
+                    "tokenized",
+                    "plain_text"
+                  ]
+                },
+                "tool_inputs_by_tool": {
+                  "type": "object",
+                  "default": {},
+                  "additionalProperties": {
+                    "type": "string",
+                    "enum": [
+                      "tokenized",
+                      "plain_text"
+                    ]
+                  },
+                  "description": "Per-tool override, keyed by exact tool name or a `*`-suffixed prefix (exact beats prefix; longest prefix wins). Tools that run on the caller's OWN machine need plain_text -- an Edit call whose old_string is a vault token writes that token into the user's real file."
+                }
+              }
+            }
+          },
+          "required": [
+            "vault_configuration",
+            "credentials"
+          ]
+        },
+        "operations": {
+          "type": "object",
+          "description": "Cost, failure posture and telemetry. Nothing here changes which data is protected.",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "description": "Fail-closed ceilings rather than hints: exceeding one refuses the request instead of partially processing it. Transport and concurrency settings (per-attempt timeout 15s, whole-request deadline 60s, 2 retries, waves of 8, a 16-connection keepalive pool) are fixed constants in the plugin rather than fields -- they were derived from measurement, and pinning the wave width and pool size together keeps a wave from ever exceeding the pool.",
+              "properties": {
+                "max_body_size": {
+                  "type": "integer",
+                  "description": "",
+                  "default": 1048576,
+                  "minimum": 0,
+                  "maximum": 33554432
+                },
+                "max_spans": {
+                  "type": "integer",
+                  "description": "Cap on text spans per request; over it the request is refused with 413 rather than partly de-identified. Agent traffic needs headroom -- a short message can carry ~30 resent tool definitions.",
+                  "default": 64,
+                  "minimum": 1,
+                  "maximum": 4096
+                }
+              }
+            },
+            "on_error": {
+              "type": "object",
+              "description": "Both default to deny, because forwarding a body the gateway could not process is the one outcome this plugin exists to prevent.",
+              "properties": {
+                "skyflow": {
+                  "type": "string",
+                  "description": "Skyflow unreachable or erroring.",
+                  "default": "deny",
+                  "enum": [
+                    "deny",
+                    "allow"
+                  ]
+                },
+                "parse": {
+                  "type": "string",
+                  "description": "Body not parseable as JSON.",
+                  "default": "deny",
+                  "enum": [
+                    "deny",
+                    "skip"
+                  ]
+                }
+              }
+            },
+            "dry_run": {
+              "type": "boolean",
+              "description": "Detect and log, forward the body unchanged. For measuring what a route carries before enforcing on it.",
+              "default": false
+            },
+            "log": {
+              "type": "object",
+              "description": "",
+              "properties": {
+                "detections": {
+                  "type": "boolean",
+                  "description": "Entity COUNTS by type. Never values.",
+                  "default": true
+                },
+                "sample_rate": {
+                  "type": "number",
+                  "default": 1.0,
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": ""
+                }
+              }
+            },
+            "metrics": {
+              "type": "object",
+              "description": "",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "",
+                  "default": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "skyflow"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "http",
+          "https",
+          "grpc",
+          "grpcs",
+          "ws",
+          "wss"
+        ]
+      }
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
