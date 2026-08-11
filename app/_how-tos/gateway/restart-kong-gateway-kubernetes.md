@@ -41,11 +41,7 @@ cleanup:
   inline:
     - title: Uninstall {{site.base_gateway}}
       icon_url: /assets/icons/kubernetes.svg
-      content: |
-        ```bash
-        helm uninstall kong-dp -n kong
-        kubectl delete namespace kong
-        ```
+      include_content: cleanup/kubernetes/gateway-dbless
 
 related_resources:
   - text: How to restart {{site.base_gateway}} in a Docker container

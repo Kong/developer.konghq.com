@@ -82,6 +82,9 @@ cleanup:
     - title: Uninstall {{site.kic_product_name}} from your cluster
       include_content: cleanup/products/kic
       icon_url: /assets/icons/kubernetes.svg
+    - title: Uninstall cert-manager
+      include_content: cleanup/third-party/cert-manager
+      icon_url: /assets/icons/kubernetes.svg
 
 automated_tests: false
 ---

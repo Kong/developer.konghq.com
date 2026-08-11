@@ -46,22 +46,14 @@ cleanup:
       content: |
         ```bash
         helm uninstall reloader -n reloader
-        kubectl delete namespace kong reloader
+        kubectl delete namespace reloader
         ```
     - title: Uninstall {{site.base_gateway}}
       icon_url: /assets/icons/kubernetes.svg
-      content: |
-        ```bash
-        helm uninstall kong-dp -n kong
-        kubectl delete namespace kong
-        ```
+      include_content: cleanup/kubernetes/gateway-dbless
     - title: Uninstall cert-manager
       icon_url: /assets/icons/kubernetes.svg
-      content: |
-        ```bash
-        helm uninstall cert-manager -n cert-manager
-        kubectl delete namespace cert-manager
-        ```
+      include_content: cleanup/third-party/cert-manager
 
 related_resources:
   - text: Rotate TLS certificates without restarting {{site.base_gateway}}
