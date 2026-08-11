@@ -166,7 +166,6 @@ The response shows the agent's capabilities, skills, and supported protocols:
 
 Send a `message/send` JSON-RPC request to test the agent:
 
-
 {% validation request-check %}
 url: /a2a/
 method: POST

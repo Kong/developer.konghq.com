@@ -18,6 +18,12 @@ works_on:
 tools:
   - kongctl
 
+prereqs:
+  inline:
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
+
 min_version:
   ai-gateway: '2.0'
 
@@ -101,33 +107,13 @@ In this example, we're setting up the AI Model with:
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'my-claude'
-```
-
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
-
-```text
-I'll need permission to work with your files.
-
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
-
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me about the Madrid Skylitzes manuscript.
-```
+{% validation custom-command %}
+command: |
+  ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'my-claude' -p "Tell me about the Madrid Skylitzes manuscript."
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
