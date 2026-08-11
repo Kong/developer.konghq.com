@@ -42,7 +42,6 @@ Benefits of using the Skyflow De-identify plugin:
 - **300+ entity detectors and transformations**: Names, emails, SSNs, credit cards, healthcare identifiers, and more, plus transformations like date-shifting and multiple token formats (`VAULT_TOKEN`, `ENTITY_ONLY`, `ENTITY_UNQ_COUNTER`).
 - **Composes with {{site.ai_gateway}}**: Sits alongside `ai-proxy` using a nested-proxy pattern so the model provider (OpenAI, Anthropic, and others) receives only tokens.
 - **Fail-closed by default**: If Skyflow is unreachable or a response can't be re-identified, the configured posture (`deny`) blocks rather than leaks. A `dry_run` mode logs detections without altering traffic.
-- **Deployable on {{site.konnect_short_name}} and self-managed**: Ships as two self-contained files that {{site.konnect_short_name}} Dedicated Cloud Gateways and hybrid data planes accept as a streamed custom plugin, with no third-party rock dependencies, and as a LuaRock for self-managed installs.
 
 ## How it works
 
@@ -134,7 +133,6 @@ The Skyflow De-identify plugin is available as a LuaRock or as a pair of self-co
 
 {:.info}
 > Prerequisites: install `lua >= 5.1` and `lua-resty-http >= 0.17`.
-> You don't need to install `resty.http` and `cjson`, as they are provided by the {{site.base_gateway}}/OpenResty runtime.
 
 1. Install the plugin using LuaRocks.
    The rockspec lives with the plugin source, not at the repository root:

@@ -9,7 +9,7 @@ extended_description: |
   The upstream provider only ever sees tokens; the caller sees real values.
 
   The `sts` credential method requires no stored Skyflow secret.
-  {{site.base_gateway}} exchanges each caller's own IdP token for a short-lived Skyflow bearer
+  {{site.base_gateway}} exchanges each caller's own identity provider (IdP) token for a short-lived Skyflow bearer
   token using RFC 8693 token exchange.
 
   The `max_spans` limit sets a fail-closed ceiling on how many text spans a single
