@@ -58,7 +58,7 @@ You need to configure the following in Dynatrace SaaS:
 {% navtabs "dynatrace-integration" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the {{site.konnect_catalog}} sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the {{site.konnect_catalog}} sidebar, click **Integrations**. 
 1. Click **Dynatrace**.
 1. Click **Add Dynatrace instance**.
 1. In the **Dynatrace API Base URL** field, enter your Dynatrace URL without the trailing `/`. For example: `https://whr42363.apps.dynatrace.com`

@@ -47,7 +47,7 @@ prereqs:
 Before you can discover APIs in {{site.konnect_catalog}} Classic, you must configure the Azure API Management integration.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the Catalog sidebar, click **Integrations**. 
 1. Click **Azure API Management**.
 1. Click **Add Azure API Management instance**.
 1. In the **Subscription ID** field, enter your Azure API subscription ID.
@@ -66,7 +66,7 @@ Now that your integration is configured, you can create a {{site.konnect_catalog
 {:.info}
 > In this tutorial, we'll refer to your ingested Azure API Management API as `billing-api`.
 
-1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
 1. In the Catalog sidebar, click **Services**.
 1. Click **New service**.
 1. In the **Display Name** field, enter `Billing Service`.
@@ -84,7 +84,7 @@ Your integration APIs are now discoverable from one {{site.konnect_catalog}} Cla
 
 To confirm that the Azure API Management resource is now mapped to the intended service, navigate to the service:
 
-1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
 1. In the {{site.konnect_catalog}} sidebar, click **Services**.
 1. Click the **Billing Service** service.
 1. Click the **Resources** tab.

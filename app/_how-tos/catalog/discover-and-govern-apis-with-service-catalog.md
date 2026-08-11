@@ -73,7 +73,7 @@ Before you can discover APIs in {{site.konnect_catalog}} Classic, you must confi
 ### Configure the GitHub integration
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
+1. In the Catalog sidebar, click **Integrations**.
 2. Click **GitHub**.
 1. Click **Add GitHub Instance**.
 1. Click **Authorize in GitHub**. This will take you to GitHub, where you can grant {{site.konnect_short_name}} access to either **All Repositories** or **Select repositories**. 
@@ -86,7 +86,7 @@ The {{site.konnect_short_name}} application can be managed from GitHub as a [Git
 ### Configure the SwaggerHub integration
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
+1. In the Catalog sidebar, click **Integrations**.
 2. Click **Add SwaggerHub Instance**.
 1. In the **SwaggerHub API Key** field, enter your SwaggerHub API key. For example: `04403e83-1a66-4366-9f08-7cecaba73e20`.
 1. In the **Display name** field, enter `SwaggerHub-test`.
@@ -103,7 +103,7 @@ Now that your integrations are configured, you can create a {{site.konnect_catal
 * GitHub repository: `github-repo`
 * SwaggerHub API version: `swaggerhub-api`
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/service-catalog/).
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **Services**.
 1. Click **New service**.
 1. In the **Display Name** field, enter `APIs`.
@@ -121,7 +121,7 @@ Your integration APIs are now discoverable from one {{site.konnect_catalog}} Cla
 
 Now that you've discovered and mapped the APIs to a {{site.konnect_catalog}} Classic service, you can govern the service documentation of these ingested APIs with a [scorecard](/catalog/scorecards/). The built-in service documentation scorecard will alert you when your APIs don't adhere to [API documentation best practices](/catalog/scorecards/#service-documentation-linting).
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/service-catalog/).
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **Scorecards**.
 1. Click **New scorecard**.
 1. From the **Scorecard template** dropdown menu, select "Service Documentation".

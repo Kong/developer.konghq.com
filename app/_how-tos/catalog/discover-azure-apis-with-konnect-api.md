@@ -49,7 +49,7 @@ prereqs:
 Before you can discover APIs in {{site.konnect_catalog}} Classic, you must configure the Azure API Management integration.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the Catalog sidebar, click **Integrations**. 
 1. Click **Azure API Management**.
 1. Click **Add Azure API Management instance**.
 1. In the **Subscription ID** field, enter your Azure API subscription ID.

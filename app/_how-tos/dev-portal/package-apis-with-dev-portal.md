@@ -53,7 +53,7 @@ prereqs:
            
            {:.info}
            > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **APIs** in the sidebar instead.
-        1. Click [**New API**](https://cloud.konghq.com/apis/create).
+        1. Click **New API**.
         1. In the **API name** field, enter `MyAPI`.
         1. Click **Create**.
       icon_url: /assets/icons/dev-portal.svg
@@ -280,7 +280,7 @@ To allow developers to consume your API, you must first link an API Gateway and 
 
 Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/apis/).
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
    
    {:.info}
    > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **APIs** in the sidebar instead.
