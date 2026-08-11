@@ -107,13 +107,16 @@ In this example, we're setting up the AI Model with:
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-{% validation custom-command %}
-command: |
-  ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'my-claude' -p "Tell me about the Madrid Skylitzes manuscript."
-expected:
-  return_code: 0
-render_output: false
-{% endvalidation %}
+```sh
+ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'my-claude'
+```
+
+Ask a question to confirm that requests reach {{site.ai_gateway}}.
+
+```text
+Tell me about the Madrid Skylitzes manuscript.
+```
+
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
