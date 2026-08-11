@@ -76,13 +76,3 @@ Errors: 0
 
 All plugin examples are valid.
 ```
-
-
-## The honest comparison
-
-| | How-to steps | Plugin config examples |
-|---|---|---|
-| Checks | Does the instruction work, against a real gateway | Does the config match the real schema |
-| Runs against | A live, running Kong Gateway | A static JSON Schema, no gateway needed |
-| Coverage | 202 of 468 how-tos (43%) | 476 of 500 example files (95.2%, 24 skipped) |
-| Blind spot | 57% of how-tos have no automated check at all | First-party only: third-party plugin configs are never checked |

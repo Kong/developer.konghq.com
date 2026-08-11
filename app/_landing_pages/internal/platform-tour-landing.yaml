@@ -60,7 +60,7 @@ rows:
           config:
             title: "4. How-to's/testing"
             description: |
-              Two real testing systems
+              Two testing systems
             icon: /assets/icons/gateway.svg
             cta:
               text: See it live
@@ -70,8 +70,8 @@ rows:
           config:
             title: "5. Pipeline"
             description: |
-              The honest finale: a per-PR preview URL, automated Vale checks, and the CDN that serves
-              production. The part most tours would leave out.
+              a per-PR preview URL, automated Vale checks, and the CDN that serves
+              production.
             icon: /assets/icons/gateway.svg
             cta:
               text: See it live
