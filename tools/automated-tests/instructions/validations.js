@@ -102,7 +102,13 @@ async function fetchWithOptionalJar(url, options = {}, jarName) {
   return fetch(url, options);
 }
 
-async function executeRequest(config, runtimeConfig, container, onResponse) {
+async function executeRequest(
+  config,
+  runtimeConfig,
+  container,
+  onResponse,
+  expectedStatus,
+) {
   const maxRetries = 10;
   const initialRetryDelay = 5000; // 5 seconds initial delay
 
@@ -261,11 +267,13 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
       }
     }
 
+    // Retry on a status code mismatch regardless of config.retry/extract_headers/extract_body
+    if (expectedStatus !== undefined && response.status !== expectedStatus) {
+      shouldRetry = true;
+    }
+
     // Determine if request is successful
-    const isSuccessful =
-      !config.retry ||
-      (!config.extract_headers && !config.extract_body) ||
-      !shouldRetry;
+    const isSuccessful = !shouldRetry;
 
     if (isSuccessful) {
       return onResponse(response, body);
@@ -277,7 +285,9 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
       log(
         `Retry attempt ${
           attempt + 1
-        } - extracted values were undefined/empty, retrying in ${backoffDelay}ms...`,
+        } - extracted values were undefined/empty or status code ${
+          response.status
+        } did not match expected ${expectedStatus}, retrying in ${backoffDelay}ms...`,
       );
       await sleep(backoffDelay);
       continue;
@@ -295,20 +305,27 @@ async function validateRequest(
   runtimeConfig,
   container,
   checks,
+  expectedStatus,
 ) {
   const assertions = [];
 
-  await executeRequest(config, runtimeConfig, container, (response, body) => {
-    for (const check of checks) {
-      const { assert, message } = check(response, body);
-      assertions.push(message);
+  await executeRequest(
+    config,
+    runtimeConfig,
+    container,
+    (response, body) => {
+      for (const check of checks) {
+        const { assert, message } = check(response, body);
+        assertions.push(message);
 
-      if (!assert) {
-        assertions.push(body);
-        logAndError(validationName, message, assertions);
+        if (!assert) {
+          assertions.push(body);
+          logAndError(validationName, message, assertions);
+        }
       }
-    }
-  });
+    },
+    expectedStatus,
+  );
   return assertions;
 }
 
@@ -347,6 +364,7 @@ async function rateLimit(validationName, config, runtimeConfig, container) {
             ]
           : []),
       ],
+      expectedStatus,
     );
     assertions.push(...result);
     log(`     request #${requestNumber}: ✅ .`);
@@ -359,12 +377,19 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
     console.log(`Sleeping for ${config.sleep} ms before making the request...`);
     await sleep(config.sleep);
   }
-  return validateRequest(validationName, config, runtimeConfig, container, [
-    (response) => ({
-      assert: response.status === config.status_code,
-      message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
-    }),
-  ]);
+  return validateRequest(
+    validationName,
+    config,
+    runtimeConfig,
+    container,
+    [
+      (response) => ({
+        assert: response.status === config.status_code,
+        message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
+      }),
+    ],
+    config.status_code,
+  );
 }
 
 async function unauthorizedCheck(
@@ -373,16 +398,23 @@ async function unauthorizedCheck(
   runtimeConfig,
   container,
 ) {
-  return validateRequest(validationName, config, runtimeConfig, container, [
-    (response) => ({
-      assert: response.status === config.status_code,
-      message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
-    }),
-    (response, body) => ({
-      assert: body.message === config.message,
-      message: `Expected: request to have message '${config.message}', got: '${body.message}'.`,
-    }),
-  ]);
+  return validateRequest(
+    validationName,
+    config,
+    runtimeConfig,
+    container,
+    [
+      (response) => ({
+        assert: response.status === config.status_code,
+        message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
+      }),
+      (response, body) => ({
+        assert: body.message === config.message,
+        message: `Expected: request to have message '${config.message}', got: '${body.message}'.`,
+      }),
+    ],
+    config.status_code,
+  );
 }
 
 async function envVariables(config, runtimeConfig, container) {
@@ -404,12 +436,19 @@ async function controlPlaneRequest(
 ) {
   const statusCode =
     config.status_code !== undefined ? config.status_code : 200;
-  return validateRequest(validationName, config, runtimeConfig, container, [
-    (response) => ({
-      assert: response.status === statusCode,
-      message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
-    }),
-  ]);
+  return validateRequest(
+    validationName,
+    config,
+    runtimeConfig,
+    container,
+    [
+      (response) => ({
+        assert: response.status === statusCode,
+        message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
+      }),
+    ],
+    statusCode,
+  );
 }
 
 async function customCommand(validationName, config, runtimeConfig, container) {
@@ -486,6 +525,7 @@ async function trafficGenerator(
           message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
         }),
       ],
+      expectedStatus,
     );
     assertions.push(...result);
     log(`     request #${requestNumber}: ✅ .`);
