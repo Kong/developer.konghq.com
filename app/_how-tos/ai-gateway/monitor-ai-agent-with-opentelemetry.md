@@ -37,7 +37,9 @@ tools:
 prereqs:
   konnect:
     - name: KONG_TRACING_INSTRUMENTATIONS
+      value: all
     - name: KONG_TRACING_SAMPLING_RATE
+      value: 1.0
   inline:
     - title: OpenAI API key
       content: |
@@ -165,6 +167,7 @@ Send a `message/send` JSON-RPC request to test the agent:
 url: /a2a/
 display_headers: true
 status_code: 200
+retry: true
 method: POST
 headers:
   - "Content-Type: application/json"

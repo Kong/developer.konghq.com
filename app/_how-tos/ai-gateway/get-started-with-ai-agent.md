@@ -129,6 +129,7 @@ Retrieve it through the gateway:
 {% validation request-check %}
 url: /a2a/.well-known/agent-card.json
 status_code: 200
+retry: true
 {% endvalidation %}
 
 The response shows the agent's capabilities, skills, and supported protocols:
