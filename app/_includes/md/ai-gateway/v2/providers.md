@@ -1,6 +1,24 @@
 <!--vale off-->
 {%- assign provider = include.providers.providers | where: "name", include.provider_name | first -%}
 {% if provider %}
+{%- assign default_generate_paths = "/chat/completions|/completions|/responses" | split: "|" -%}
+{%- assign generate_paths = provider.capabilities.generate.paths -%}
+{%- if generate_paths == nil or generate_paths == empty -%}
+  {%- assign generate_paths = default_generate_paths -%}
+{%- endif -%}
+{%- assign generate_paths_size = generate_paths.size -%}
+{%- assign generate_paths_display = "" -%}
+{%- for p in generate_paths -%}
+  {%- if forloop.first -%}
+    {%- assign generate_paths_display = "`" | append: p | append: "`" -%}
+  {%- elsif forloop.last and generate_paths_size > 2 -%}
+    {%- assign generate_paths_display = generate_paths_display | append: ", or `" | append: p | append: "`" -%}
+  {%- elsif forloop.last -%}
+    {%- assign generate_paths_display = generate_paths_display | append: " or `" | append: p | append: "`" -%}
+  {%- else -%}
+    {%- assign generate_paths_display = generate_paths_display | append: ", `" | append: p | append: "`" -%}
+  {%- endif -%}
+{%- endfor -%}
 You can proxy requests to {{ provider.name }} AI models through {{site.ai_gateway}} by creating [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and [AI Model](/ai-gateway/entities/ai-model/) entities. This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
 
 ## Upstream paths
@@ -21,7 +39,7 @@ columns:
 rows:
 {% if provider.capabilities.generate.supported %}
   - capability: "{% if page.output_format == 'markdown' %}Generate{% else %}[Generate](#text-generation){% endif %}"
-    path_template: "`/chat/completions`, `/completions`, or `/responses`"
+    path_template: "{{ generate_paths_display }}"
     description: "Text generation for chat completions and responses"
     upstream_path: "{{ provider.capabilities.generate.upstream_path }}"
 {% endif %}
@@ -158,7 +176,7 @@ rows:
   - capability: "generate{% if generate_note_num != 0 %}<sup>{{ generate_note_num }}</sup>{% endif %}"
     streaming: {{ provider.capabilities.generate.streaming  }}
     model_example: "{{ provider.capabilities.generate.model_example }}"
-    path_template: "`/chat/completions`, `/completions`, or `/responses`"
+    path_template: "{{ generate_paths_display }}"
     min_version: "{{ provider.capabilities.generate.min_version }}"
 {% endif %}
 {% endtable %}
