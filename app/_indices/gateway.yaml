@@ -286,6 +286,7 @@ sections:
       - path: /gateway/entities/event-hook/
       - path: /gateway/entities/partial/
       - path: /how-to/restart-kong-gateway-container/
+      - path: /how-to/restart-kong-gateway-kubernetes/
       - path: /gateway/nginx-directives/
       - path: /gateway/debug-requests/
       - path: /gateway/amazon-rds-authentication-with-aws-iam/#configuring-your-aws-resources
