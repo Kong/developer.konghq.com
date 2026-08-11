@@ -138,7 +138,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-If multiple entries exist, the model selects the tier closest to the actual context-window size.
+If multiple entries exist, the model applies the highest threshold that the request's input tokens cross.
 
 {:.info}
 > With a 2M-token request and tiers at `above: 200k` and `above: 1m`, the `above: 1m` tier applies.
@@ -156,7 +156,8 @@ columns:
     key: description
 rows:
   - field: "`tier`"
-    description: The service tier this factor applies to, for example `priority` or `flex`.
+    description: |
+      The service tier this factor applies to, for example `priority` or `flex`. Matched case-insensitively as a substring of the provider's reported service tier. If more than one entry matches, the longest (most specific) match wins.
   - field: "`factor`"
     description: |
       The multiplier applied across the whole request (input and output, and therefore cache) when this tier is in effect.
@@ -165,7 +166,7 @@ rows:
 
 ### Example configuration
 
-This example configures a target that bills:
+This example configures an [AI Model](/ai-gateway/entities/ai-model/) target that bills:
 
 - $4 per million input tokens and $24 per million output tokens, on the standard service tier.
 - $0.4 per million cache-read tokens, a tenth of the input rate.
