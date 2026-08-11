@@ -566,6 +566,20 @@ general:
   # ResilientComponentMaxBackoff configures max backoff for restarting resilient component:
   # KDS sync, Insight resync, PostgresEventListener, etc.
   resilientComponentMaxBackoff: 1m # ENV: KUMA_GENERAL_RESILIENT_COMPONENT_MAX_BACKOFF
+  # CertGenerationBaseBackoff configures the base backoff before retrying dataplane certificate
+  # generation after a failure (e.g. a misconfigured CA backend), so a failing backend is not
+  # called on every DP sync tick.
+  certGenerationBaseBackoff: 5s # ENV: KUMA_GENERAL_CERT_GENERATION_BASE_BACKOFF
+  # CertGenerationMaxBackoff configures the max backoff before retrying dataplane certificate
+  # generation after a failure (e.g. a misconfigured CA backend).
+  certGenerationMaxBackoff: 5m # ENV: KUMA_GENERAL_CERT_GENERATION_MAX_BACKOFF
+  # CertGenerationCircuitBreakerMinProxies is the number of distinct proxies that must fail
+  # certificate generation against the same backend before its circuit breaker opens and
+  # short-circuits further attempts. Kept well above 1 so a single misbehaving proxy can never
+  # trip a whole backend. In a mesh with fewer proxies than this the circuit breaker never opens
+  # and only the per-proxy backoff applies (still bounded), so small deployments may want to lower
+  # it. 0 disables the circuit breaker, leaving only per-proxy backoff.
+  certGenerationCircuitBreakerMinProxies: 10 # ENV: KUMA_GENERAL_CERT_GENERATION_CIRCUIT_BREAKER_MIN_PROXIES
 # DNS Server configuration
 dnsServer:
   # The domain that the server will resolve the services for
@@ -851,6 +865,12 @@ experimental:
   # The drawback is that you cannot use filtered out tags for traffic routing.
   # If empty, no filter is applied.
   ingressTagFilters: [] # ENV: KUMA_EXPERIMENTAL_INGRESS_TAG_FILTERS
+  # If true, the Envoy admin listener on zone proxies also serves /stats/prometheus without mTLS,
+  # so Prometheus can scrape Envoy stats off the proxy IP. Only that path is added, the rest of the
+  # Admin API still requires mTLS. Mainly for standalone ZoneIngress/ZoneEgress, which MeshMetric
+  # does not apply to. The stats dump lists every upstream cluster name and is rendered on Envoy's
+  # main thread, so restrict the admin port at the network level when enabling this.
+  exposeZoneProxyMetrics: false # ENV: KUMA_EXPERIMENTAL_EXPOSE_ZONE_PROXY_METRICS
   # KDS event based watchdog settings. It is a more optimal way to generate KDS snapshot config.
   kdsEventBasedWatchdog:
     # If true, then experimental event based watchdog to generate KDS snapshot is used.

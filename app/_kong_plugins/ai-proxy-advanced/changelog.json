@@ -365,6 +365,33 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.10": [
+    {
+      "message": "Fixed an issue where the OpenAI `developer` role was not treated as a system prompt when transforming requests to Bedrock and Gemini providers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Ollama rejected OpenAI message content arrays.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the OpenAI content array was sent as a Bedrock/Gemini system message which only support string.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the configured auth header (e.g. `api-key`, `x-api-key`) leaked the provider credential into access logs instead of being redacted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `context-management-2025-06-27` Anthropic beta flag was dropped when routing to a Bedrock target, causing Bedrock to reject requests carrying `context_management` with a `400` error on failover from an Anthropic target.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Supported health checks and circuit breaker for the load balancer. Added two new fields `max_fails` and `fail_timeout`.",

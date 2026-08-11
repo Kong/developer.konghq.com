@@ -322,6 +322,7 @@ Before using them, you need an [existing principal](#configure-a-principal) in a
 ### Basic auth
 
 Add a username and password credential to a principal so clients can authenticate at {{site.base_gateway}} with basic auth. 
+For a complete end-to-end tutorial, see [Authenticate Principals with basic authentication](/how-to/authenticate-principals-with-basic-authentication/).
 
 {% navtabs "basic-auth" %}
 {% navtab "API" %}
@@ -369,6 +370,7 @@ body:
 ### Key auth
 
 Add an API key credential to a principal so clients can authenticate at {{site.base_gateway}} with key auth. 
+For a complete end-to-end tutorial, see [Authenticate Principals with the Key Authentication plugin](/how-to/authenticate-principals-with-key-auth/).
 
 {% navtabs "key-auth" %}
 {% navtab "API" %}
@@ -402,6 +404,7 @@ body:
 ### OpenID Connect
 
 Reference a principal authenticated by an external IdP such as Okta or Cognito. 
+For a complete end-to-end tutorial, see [Authenticate OAuth clients with a Kong Identity authorization server](/how-to/authenticate-oauth-clients-with-kong-identity/).
 
 {% navtabs "oidc" %}
 {% navtab "API" %}

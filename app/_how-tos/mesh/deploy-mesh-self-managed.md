@@ -8,6 +8,8 @@ bread-crumbs:
 related_resources:
   - text: "{{site.mesh_product_name}}"
     url: /mesh/overview/
+  - text: Use cert-manager for control plane certificates
+    url: /mesh/use-cert-manager-for-control-plane-certificates/
 
 products:
   - mesh
@@ -68,7 +70,7 @@ kubectl wait -n kuma-demo --for=condition=ready pod --selector=app=demo-app --ti
 ```
 
 {:.info}
->When using the {{site.konnect_short_name}} managed control plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}}](https://cloud.konghq.com/us/mesh-manager).
+>When using the {{site.konnect_short_name}} managed control plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}}](https://cloud.konghq.com/us/mesh-manager). For an overview of the {{site.konnect_short_name}}-managed model, see [{{site.mesh_product_name}} in {{site.konnect_short_name}}](/mesh/konnect/).
 
 
 ## Forward ports

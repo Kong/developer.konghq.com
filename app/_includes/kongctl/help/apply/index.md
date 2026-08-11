@@ -94,6 +94,14 @@ Flags:
                                             --require-namespace=foo,bar                      # Allow 'foo' or 'bar' (comma-separated)
                                             --require-namespace=foo --require-namespace=bar  # Allow 'foo' or 'bar' (repeated flags)
                                           - Config path: [ konnect.declarative.require-namespace ]
+      --text-id-format string             Configure UUID rendering in static text-table ID columns.
+                                          - Config path: [ text.id-format ]
+                                          - Allowed    : [ compact|full ]
+                                          - Default    : [ compact ]
+      --text-layout string                Configure static text-table column selection.
+                                          - Config path: [ text.layout ]
+                                          - Allowed    : [ compact|auto|wide ]
+                                          - Default    : [ compact ]
 
 Use "kongctl apply [command] --help" for more information about a command.
 

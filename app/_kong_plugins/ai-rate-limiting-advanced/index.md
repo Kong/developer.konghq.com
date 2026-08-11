@@ -123,7 +123,7 @@ Policies without match conditions act as fallback and match all requests.
 ### Known issues
 
 * Policy-based rate limiting currently only works with AI Proxy Advanced. AI Proxy support will be added in a later patch.
-* When defining a policy matching a model and/or a provider, you must set the [`config.policies.match.partition_by`](./reference/#schema--config-policies-match-patition-by) field to `true`, otherwise the policy is not enforced.
+* When defining a policy that matches without fixed `values` (for example, by consumer, consumer group, header, model, or provider), you must set the [`config.policies.match.partition_by`](./reference/#schema--config-policies-match-patition-by) field to `true`, otherwise the limits apply across all matches instead of each one separately.
 
 
 ## Headers sent to the client

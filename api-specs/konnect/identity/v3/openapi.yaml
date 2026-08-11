@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.2.0
+  version: 3.4.2
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@ca81b65280f5133ed000ab38ba98384d1eb25796
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ca81b65280f5133ed000ab38ba98384d1eb25796'
+  x-oas-source: kong/platform-api@67f40d202dd883132fb882e1a8179a0d374d72a2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/67f40d202dd883132fb882e1a8179a0d374d72a2'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -476,13 +476,19 @@ paths:
         - $ref: '#/components/parameters/PageNumber'
         - name: filter
           in: query
-          description: Filter teams returned in the response.
+          description: |-
+            Filter teams returned in the response. Supports filtering by label value using
+            dot-notation, e.g. `filter[labels.<key>][<op>]=<value>`.
           required: false
           schema:
             type: object
             properties:
               name:
                 $ref: '#/components/schemas/LegacyStringFieldFilter'
+              labels:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/LegacyStringFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -1982,13 +1988,9 @@ components:
           example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
           readOnly: true
         name:
-          description: The name of the team.
-          type: string
-          example: IDM - Developers
-          maxLength: 250
-          pattern: '^[\w \W]+$'
+          $ref: '#/components/schemas/TeamName'
         description:
-          description: The team description in Konnect.
+          description: The description of the team.
           type: string
           example: The developers for the IDM API.
           maxLength: 250
@@ -2707,6 +2709,12 @@ components:
           contains: some-value
         example-2:
           eq: some-value
+    TeamName:
+      description: The name of the team.
+      type: string
+      example: IDM - Developers
+      maxLength: 250
+      pattern: '^[\w \W]+$'
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -3426,13 +3434,14 @@ components:
             type: object
             properties:
               name:
-                description: A name for the team being created.
+                description: The name of the team.
                 type: string
                 example: IDM - Developers
+                maxLength: 250
                 pattern: '^[\w \W]+$'
                 writeOnly: true
               description:
-                description: The description of the new team.
+                description: The description of the team.
                 type: string
                 example: The Identity Management (IDM) team.
                 maxLength: 250
@@ -3455,6 +3464,7 @@ components:
                 description: The name of the team.
                 type: string
                 example: IDM - Developers
+                maxLength: 250
                 pattern: '^[\w \W]+$'
                 writeOnly: true
               description:

@@ -27,6 +27,10 @@ sections:
         url: /deck/?tab=github-actins#install-deck
       - path: /deck/gateway/configuration/
       - path: /deck/gateway/konnect-configuration/
+  - title: AI Gateway
+    items:
+      - path: /deck/ai/
+      - path: /deck/ai/**/*
   - title: Gateway
     items:
       - path: /deck/gateway/
@@ -50,6 +54,7 @@ sections:
       - path: /deck/file/
       - path: /deck/file/validate/
       - path: /deck/file/lint/
+      - path: /deck/file/ai2kong/
       - path: /deck/file/openapi2kong/
       - path: /deck/file/openapi2mcp/
       - path: /deck/file/kong2kic/

@@ -62,5 +62,13 @@ Flags:
                                 - Config path: [ konnect.region ]
       --team-id string          Team ID to filter role assignments
       --team-name string        Team name to filter role assignments
+      --text-id-format string   Configure UUID rendering in static text-table ID columns.
+                                - Config path: [ text.id-format ]
+                                - Allowed    : [ compact|full ]
+                                - Default    : [ compact ]
+      --text-layout string      Configure static text-table column selection.
+                                - Config path: [ text.layout ]
+                                - Allowed    : [ compact|auto|wide ]
+                                - Default    : [ compact ]
 
 ```

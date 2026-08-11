@@ -69,6 +69,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.10": [
+    {
+      "message": "Fixed Gemini driver dropping Gemini-native fields (e.g. `cachedContent`, `safetySettings`) and Vertex AI-only fields (e.g. `labels`) during OpenAI-to-Gemini request transformation.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",

@@ -2,13 +2,13 @@ openapi: 3.0.2
 info:
   title: Konnect Analytics Dashboards
   description: |
-    Konnect endpoint for creating, reading, updating, and deleting dashboards.  Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a chart to render the data.
-  version: 2.0.1
+    Konnect endpoint for creating, reading, updating, and deleting dashboards.  Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a visualization to render the data.
+  version: 2.1.0
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@468c2739fee796a7d12db794a8fe158a25500cd4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/468c2739fee796a7d12db794a8fe158a25500cd4'
+  x-oas-source: kong/platform-api@9439f2f60741551a17bc0eacba5ce859e1e38317
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9439f2f60741551a17bc0eacba5ce859e1e38317'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -82,6 +82,8 @@ paths:
                 $ref: '#/components/examples/MultipleTilePresetFiltersExample'
               'Single Tile, Platform Usage':
                 $ref: '#/components/examples/PlatformDashboardExample'
+              'Single Tile, Table':
+                $ref: '#/components/examples/TableDashboardExample'
       responses:
         '201':
           description: 'The created dashboard, including generated fields.'
@@ -160,6 +162,8 @@ paths:
                 $ref: '#/components/examples/MultipleTilePresetFiltersExample'
               'Single Tile, Platform Usage':
                 $ref: '#/components/examples/PlatformDashboardExample'
+              'Single Tile, Table':
+                $ref: '#/components/examples/TableDashboardExample'
       responses:
         '200':
           description: 'The created dashboard, including generated fields.'
@@ -264,6 +268,7 @@ components:
               - api_product
               - api_product_version
               - application
+              - cache_status
               - consumer
               - control_plane
               - control_plane_group
@@ -407,6 +412,7 @@ components:
               - api_product
               - api_product_version
               - application
+              - cache_status
               - consumer
               - control_plane
               - control_plane_group
@@ -517,6 +523,30 @@ components:
       additionalProperties: false
       required:
         - datasource
+    PlatformTabularQuery:
+      description: A query targeting tabular platform usage analytics data.
+      type: object
+      properties:
+        datasource:
+          type: string
+          enum:
+            - platform_usage
+        entity:
+          type: string
+        columns:
+          type: array
+          items:
+            type: string
+          minItems: 1
+        filters:
+          $ref: '#/components/schemas/PlatformFilters'
+        cursor:
+          type: string
+        page_size:
+          type: integer
+      additionalProperties: false
+      required:
+        - datasource
     Tile:
       discriminator:
         propertyName: type
@@ -525,7 +555,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/ChartTile'
     ChartTile:
-      description: A tile that queries data and renders a chart.
+      description: A tile that queries data and renders a visualization.
       type: object
       properties:
         layout:
@@ -586,40 +616,57 @@ components:
           enum:
             - chart
         definition:
-          description: |
-            The tile's definition, which consists of a query to fetch data and a chart to render the data.
-            Note that some charts expect certain types of queries to render properly.  The documentation for the individual chart types has more information.
-          type: object
-          additionalProperties: false
-          properties:
-            query:
-              discriminator:
-                propertyName: datasource
-                mapping:
-                  api_usage: '#/components/schemas/AdvancedQuery'
-                  llm_usage: '#/components/schemas/LLMQuery'
-                  agentic_usage: '#/components/schemas/AgenticQuery'
-                  platform_usage: '#/components/schemas/PlatformQuery'
-              oneOf:
-                - $ref: '#/components/schemas/AdvancedQuery'
-                - $ref: '#/components/schemas/LLMQuery'
-                - $ref: '#/components/schemas/AgenticQuery'
-                - $ref: '#/components/schemas/PlatformQuery'
-            chart:
-              $ref: '#/components/schemas/Chart'
-          required:
-            - query
-            - chart
+          $ref: '#/components/schemas/AnyChartTileDefinition'
       additionalProperties: false
       required:
         - layout
         - type
         - definition
+    AnyChartTileDefinition:
+      description: |
+        The tile's definition, which consists of a query to fetch data and a visualization to render the data.
+        Charts and tables expect certain query types to render properly. The documentation for the individual visualization types has more information.
+      oneOf:
+        - $ref: '#/components/schemas/ChartTileDefinition'
+        - $ref: '#/components/schemas/TableChartTileDefinition'
+    ChartTileDefinition:
+      type: object
+      properties:
+        query:
+          discriminator:
+            propertyName: datasource
+            mapping:
+              api_usage: '#/components/schemas/AdvancedQuery'
+              llm_usage: '#/components/schemas/LLMQuery'
+              agentic_usage: '#/components/schemas/AgenticQuery'
+              platform_usage: '#/components/schemas/PlatformQuery'
+          oneOf:
+            - $ref: '#/components/schemas/AdvancedQuery'
+            - $ref: '#/components/schemas/LLMQuery'
+            - $ref: '#/components/schemas/AgenticQuery'
+            - $ref: '#/components/schemas/PlatformQuery'
+        chart:
+          $ref: '#/components/schemas/Chart'
+      additionalProperties: false
+      required:
+        - query
+        - chart
+    TableChartTileDefinition:
+      type: object
+      properties:
+        query:
+          $ref: '#/components/schemas/PlatformTabularQuery'
+        chart:
+          $ref: '#/components/schemas/TableChart'
+      additionalProperties: false
+      required:
+        - query
+        - chart
     Dashboard:
       description: |
         A JSON object describing a dashboard.
 
-        A dashboard is an array of tiles.  All tiles are of type 'chart', which query data and render a chart displaying that data.
+        A dashboard is an array of tiles.  All tiles are of type 'chart', which query data and render a visualization, either a chart or table.
 
         Dashboards have 6 columns and as many rows as necessary to display their tiles.
       type: object
@@ -895,11 +942,13 @@ components:
         - page
       title: PaginatedMeta
     AdvancedMetrics:
-      description: 'List of aggregated metrics to collect across the requested time span. If no metrics are specified, request_count will be computed by default.'
+      description: |
+        List of aggregated metrics to collect across the requested time span. If no metrics are specified, request_count will be computed by default.
       type: array
       items:
         type: string
         enum:
+          - cache_hit_rate
           - error_rate
           - kong_internal_latency_average
           - kong_internal_latency_p50
@@ -1126,6 +1175,42 @@ components:
             - operator
             - field
       title: Filter by application
+    MetricsCacheStatusFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - cache_status
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - cache_status
+          required:
+            - operator
+            - field
+      title: Filter by cache_status
     ScopedUuid:
       type: string
       pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
@@ -1723,6 +1808,7 @@ components:
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
             api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
             application: '#/components/schemas/MetricsApplicationFilterByField'
+            cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -1745,6 +1831,7 @@ components:
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2173,13 +2260,15 @@ components:
           - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
     AgenticMetrics:
-      description: List of aggregated metrics to collect across the requested time span.
+      description: |
+        List of aggregated metrics to collect across the requested time span.
       type: array
       items:
         type: string
         enum:
           - a2a_latency_average
           - a2a_response_size_sum
+          - cache_hit_rate
           - error_rate
           - kong_internal_latency_average
           - kong_internal_latency_p50
@@ -2516,6 +2605,7 @@ components:
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
             api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
             application: '#/components/schemas/MetricsApplicationFilterByField'
+            cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2546,6 +2636,7 @@ components:
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2836,6 +2927,22 @@ components:
         - $ref: '#/components/schemas/TopNChart'
         - $ref: '#/components/schemas/SingleValueChart'
         - $ref: '#/components/schemas/ChoroplethMapChart'
+    TableChart:
+      description: A table that displays tabular platform usage data.
+      type: object
+      properties:
+        chart_title:
+          description: 'The title of the chart, which is displayed in the tile''s header.'
+          type: string
+          nullable: false
+        type:
+          type: string
+          enum:
+            - table
+      additionalProperties: false
+      required:
+        - type
+      title: Table chart
     MetricsEnvFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -2997,6 +3104,7 @@ components:
           api_product: '#/components/schemas/MetricsApiProductFilterByField'
           api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
           application: '#/components/schemas/MetricsApplicationFilterByField'
+          cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
           consumer: '#/components/schemas/MetricsConsumerFilterByField'
           control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
           control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -3037,6 +3145,7 @@ components:
         - $ref: '#/components/schemas/MetricsApiProductFilterByField'
         - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
         - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+        - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
         - $ref: '#/components/schemas/MetricsConsumerFilterByField'
         - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
         - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -3446,6 +3555,39 @@ components:
                   metrics:
                     - service_count
                     - route_count
+    TableDashboardExample:
+      value:
+        name: 'Single Tile, Table'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                position:
+                  col: 0
+                  row: 0
+                size:
+                  cols: 6
+                  rows: 3
+              definition:
+                chart:
+                  type: table
+                  chart_title: Routes
+                query:
+                  datasource: platform_usage
+                  entity: route
+                  columns:
+                    - name
+                    - control_plane
+                    - gateway_service
+                    - env
+                    - team
+                    - region
+                  filters:
+                    - field: env
+                      operator: in
+                      value:
+                        - prod
+                  page_size: 25
     BadRequestExample:
       value:
         status: 400

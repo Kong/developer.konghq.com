@@ -1,4 +1,4 @@
-After your private DNS configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
+After your private hosted zone configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your {{include.provider}} Dedicated Cloud Gateway.

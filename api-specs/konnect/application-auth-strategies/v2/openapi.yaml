@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.1.0
+  version: 2.1.1
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@1224679bfc5f8833192fc40a21cb2b4b79dc1235
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1224679bfc5f8833192fc40a21cb2b4b79dc1235'
+  x-oas-source: kong/platform-api@6a66b6c4a223f57df6e079d9f971cf1202e6a70f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6a66b6c4a223f57df6e079d9f971cf1202e6a70f'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -758,6 +758,7 @@ components:
           type: string
           enum:
             - auth0
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/DcrConfigAuth0InResponse'
       required:
@@ -772,6 +773,7 @@ components:
           type: string
           enum:
             - azureAd
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/DcrConfigAzureAdInResponse'
       required:
@@ -786,6 +788,7 @@ components:
           type: string
           enum:
             - curity
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/DcrConfigCurityInResponse'
       required:
@@ -800,6 +803,7 @@ components:
           type: string
           enum:
             - kongIdentity
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/DcrConfigKongIdentityInResponse'
       required:
@@ -814,6 +818,7 @@ components:
           type: string
           enum:
             - okta
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/DcrConfigOktaInResponse'
       required:
@@ -828,6 +833,7 @@ components:
           type: string
           enum:
             - http
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/DcrConfigHttpInResponse'
       required:
@@ -886,6 +892,7 @@ components:
           type: string
           enum:
             - auth0
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/CreateDcrConfigAuth0InRequest'
         name:
@@ -912,6 +919,7 @@ components:
           type: string
           enum:
             - azureAd
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/CreateDcrConfigAzureAdInRequest'
         name:
@@ -938,6 +946,7 @@ components:
           type: string
           enum:
             - curity
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/CreateDcrConfigCurityInRequest'
         name:
@@ -964,6 +973,7 @@ components:
           type: string
           enum:
             - okta
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/CreateDcrConfigOktaInRequest'
         name:
@@ -990,6 +1000,7 @@ components:
           type: string
           enum:
             - kongIdentity
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/CreateDcrConfigKongIdentityInRequest'
         name:
@@ -1015,6 +1026,7 @@ components:
           type: string
           enum:
             - http
+          x-terraform-transform-const: true
         dcr_config:
           $ref: '#/components/schemas/CreateDcrConfigHttpInRequest'
         name:

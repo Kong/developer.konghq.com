@@ -22,9 +22,6 @@ spec:
     - jsonPath: .spec.targetRef.kind
       name: TargetRef Kind
       type: string
-    - jsonPath: .spec.targetRef.name
-      name: TargetRef Name
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -55,16 +52,48 @@ spec:
                   agentConfig:
                     description: AgentConfig defines bootstrap OPA agent configuration.
                     properties:
-                      inline:
-                        description: Data source is inline bytes.
-                        format: byte
+                      envVar:
+                        properties:
+                          name:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      file:
+                        properties:
+                          path:
+                            type: string
+                        required:
+                        - path
+                        type: object
+                      insecureInline:
+                        properties:
+                          value:
+                            type: string
+                        required:
+                        - value
+                        type: object
+                      secretRef:
+                        properties:
+                          kind:
+                            enum:
+                            - Secret
+                            type: string
+                          name:
+                            type: string
+                        required:
+                        - kind
+                        - name
+                        type: object
+                      type:
+                        enum:
+                        - File
+                        - Secret
+                        - EnvVar
+                        - InsecureInline
                         type: string
-                      inlineString:
-                        description: Data source is inline string`
-                        type: string
-                      secret:
-                        description: Data source is a secret with given Secret key.
-                        type: string
+                    required:
+                    - type
                     type: object
                   appendPolicies:
                     description: Policies define OPA policies that will be applied
@@ -76,20 +105,50 @@ spec:
                             when making a decision.
                           type: boolean
                         rego:
-                          description: 'OPA Policy written in Rego. Available values:
-                            secret, inline, inlineString.'
+                          description: OPA Policy written in Rego.
                           properties:
-                            inline:
-                              description: Data source is inline bytes.
-                              format: byte
+                            envVar:
+                              properties:
+                                name:
+                                  type: string
+                              required:
+                              - name
+                              type: object
+                            file:
+                              properties:
+                                path:
+                                  type: string
+                              required:
+                              - path
+                              type: object
+                            insecureInline:
+                              properties:
+                                value:
+                                  type: string
+                              required:
+                              - value
+                              type: object
+                            secretRef:
+                              properties:
+                                kind:
+                                  enum:
+                                  - Secret
+                                  type: string
+                                name:
+                                  type: string
+                              required:
+                              - kind
+                              - name
+                              type: object
+                            type:
+                              enum:
+                              - File
+                              - Secret
+                              - EnvVar
+                              - InsecureInline
                               type: string
-                            inlineString:
-                              description: Data source is inline string`
-                              type: string
-                            secret:
-                              description: Data source is a secret with given Secret
-                                key.
-                              type: string
+                          required:
+                          - type
                           type: object
                       required:
                       - rego
@@ -158,33 +217,10 @@ spec:
                     additionalProperties:
                       type: string
                     description: |-
-                      Labels are used to select group of MeshServices that match labels. Either Labels or
-                      Name and Namespace can be used.
+                      Labels are used to select referenced real resources and to carry legacy
+                      service identity when a common TargetRef must still target old
+                      service-tag based paths.
                     type: object
-                  mesh:
-                    description: Mesh is reserved for future use to identify cross
-                      mesh resources.
-                    type: string
-                  name:
-                    description: |-
-                      Name of the referenced resource. Can only be used with kinds: `MeshService`
-                      and `MeshServiceSubset`
-                    type: string
-                  namespace:
-                    description: |-
-                      Namespace specifies the namespace of target resource. If empty only resources in policy namespace
-                      will be targeted.
-                    type: string
-                  proxyTypes:
-                    description: |-
-                      ProxyTypes specifies the data plane types that are subject to the policy. When not specified,
-                      all data plane types are targeted by the policy.
-                    items:
-                      enum:
-                      - Sidecar
-                      - Gateway
-                      type: string
-                    type: array
                   sectionName:
                     description: |-
                       SectionName is used to target specific section of resource.

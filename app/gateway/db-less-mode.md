@@ -33,6 +33,8 @@ related_resources:
     url: /gateway/cli/reference/#kong-config
   - text: "{{site.base_gateway}} entity references"
     url: /gateway/entities/
+  - text: decK state file format vs DB-less format
+    url: /deck/dbless-vs-deck/
 ---
 
 {{site.base_gateway}} can be run without a database using only in-memory storage for [entities](/gateway/entities/). 

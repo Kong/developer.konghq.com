@@ -40,6 +40,9 @@ columns:
     key: description
 rows:
   - command: |
+      [ai2kong](/deck/file/ai2kong/)
+    description: Convert an {{site.ai_gateway}} 2.0 file to {{ site.base_gateway }} Services and Routes.
+  - command: |
       [openapi2kong](/deck/file/openapi2kong/)
     description: Convert an OpenAPI specification to {{ site.base_gateway }} Services and Routes.
   - command: |

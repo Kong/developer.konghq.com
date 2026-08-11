@@ -25,6 +25,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.10": [
+    {
+      "message": "Fixed a crash\nthat occurred when a plugin set `schema_registry.confluent.authentication.mode`\nto `oauth2` but omitted the `oauth2_client` record. Previously this returned a\n500 from the Admin API during validation, and once saved it also crashed at\nruntime while fetching the schema registry OAuth2 token. The absent\n`oauth2_client` is now handled and falls back to the default authentication\nmethod, so a configuration without `oauth2_client` works end-to-end.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added new config option `ssl_verify` to support verifying server certificates.\nAdded support for the `tls_certificate_verify` global option. When this option is enabled, the\nplugin's `ssl_verify` setting cannot be disabled.",

@@ -1,6 +1,10 @@
 description: Configure the Exit Transformer plugin to transform 404 responses and add a custom error message.
 extended_description: |
   Configure the plugin to transform 404 responses and add a custom error message.
+  
+  This example uses the [`handle_unknown`](/plugins/exit-transformer/reference/#schema--config-handle-unknown) parameter, which only takes effect on a globally configured instance of the plugin when a 404 error occurs.
+  If you're running this plugin on-prem, you must configure it in the default Workspace.
+
   See [Transform a 404 response message](/how-to/transform-a-404-response-message/) for a full how-to guide with this example.
 
 title: 'Customize the 404 error message'

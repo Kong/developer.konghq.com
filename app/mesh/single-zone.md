@@ -25,7 +25,7 @@ In this mode, there is one deployment of the control plane that can be scaled ho
 The data plane proxies connect to the control plane regardless of where they are deployed, and every data plane proxy must be able to connect directly to every other data plane proxy, regardless of where they are deployed.
 
 Single-zone mode is a great choice to start within the context of one zone (for example, within one Kubernetes cluster or one AWS VPC).
-You can then [federate](/mesh/federate-zone/) it into a [multi-zone deployment](/mesh/mesh-multizone-service-deployment/).
+You can then [federate](/mesh/federate-zone-control-plane-to-konnect/) it into a [multi-zone deployment](/mesh/mesh-multizone-service-deployment/).
 
 ## Components of a single-zone deployment
 

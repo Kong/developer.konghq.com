@@ -75,6 +75,10 @@ The minimum configuration required is:
   information from the IdP.
 - The issuer (`issuer`): This is the unique identifier of the IdP application.
 
+{:.warning}
+> The plugin validates the SAML response signature whenever you set `idp_certificate`, even when [`validate_assertion_signature`](/plugins/saml/reference/#schema--config-validate-assertion-signature) is `false`.
+> If you set `validate_assertion_signature` to `false` and don't configure `idp_certificate`, the plugin skips signature validation and accepts unsigned responses, which is insecure. Always set `idp_certificate`.
+
 The plugin currently supports SAML 2.0 with Microsoft Entra. Refer to the
 [Microsoft Entra SAML documentation](https://learn.microsoft.com/en-us/entra/architecture/auth-saml)
 for more information about SAML authentication with Azure AD.

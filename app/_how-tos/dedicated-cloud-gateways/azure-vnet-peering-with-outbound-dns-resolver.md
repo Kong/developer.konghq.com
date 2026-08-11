@@ -12,6 +12,8 @@ works_on:
 tags:
   - azure
   - network
+search_aliases:
+  - outbound DNS resolver
 automated_tests: false
 tldr:
   q: How do I configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution?

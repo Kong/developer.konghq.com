@@ -24757,6 +24757,383 @@
         "message": "Improved router update performance during incremental sync by updating service data in place instead of triggering a full router rebuild when only service attributes change.",
         "type": "performance",
         "scope": "Core"
+      },
+      {
+        "message": "Added a Distroless Docker image variant for Kong API Gateway. The Distroless image ships only the Kong binary and its runtime dependencies, with no package managers, no shells or any other programs you would expect to find in a standard Linux distribution.",
+        "type": "feature",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.14.0.10": {
+    "kong-ee": [
+      {
+        "message": "**ai-a2a-proxy**: now rewrites the URL for all `supportedInterfaces` in the agent card.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-azure-content-safety**: Fixed a bug where the plugin returned HTTP 500 when the LLM response content was empty. Empty content now skips the content-safety check and passes through.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the OpenAI `developer` role was not treated as a system prompt when transforming requests to Bedrock and Gemini providers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Ollama rejected OpenAI message content arrays.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the OpenAI content array was sent as a Bedrock/Gemini system message which only support string.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the configured auth header (e.g. `api-key`, `x-api-key`) leaked the provider credential into access logs instead of being redacted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the `context-management-2025-06-27` Anthropic beta flag was dropped when routing to a Bedrock target, causing Bedrock to reject requests carrying `context_management` with a `400` error on failover from an Anthropic target.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed Gemini driver dropping Gemini-native fields (e.g. `cachedContent`, `safetySettings`) and Vertex AI-only fields (e.g. `labels`) during OpenAI-to-Gemini request transformation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where `model` or `provider` matchers without `partition_by` were skipped, causing rate limits to be missed.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where the input field for the llm/v1/responses route was not recognized.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Clustering**: Improved RPC connection stability during long-running calls: a data plane now cancels a timed-out RPC so a late response cannot disrupt later calls, and the connection is kept alive (within a bound) while calls are still in flight instead of being dropped as a missed heartbeat.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Clustering**: The `/status/sync` endpoint now returns an empty stat object instead of null before the first sync has run, keeping the response shape consistent.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed a race condition issue where the `tries` field of log serialization was not copied, causing data mutations when logs were generated concurrently via async timers.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where dynamic upstream TLS settings set via the PDK were lost during buffered proxying.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "**ip-restriction**: Fixed an issue where warn log messages did not\ninclude the plugin name, making it difficult to identify the source of\nblocked requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed a crash\nthat occurred when a plugin set `schema_registry.confluent.authentication.mode`\nto `oauth2` but omitted the `oauth2_client` record. Previously this returned a\n500 from the Admin API during validation, and once saved it also crashed at\nruntime while fetching the schema registry OAuth2 token. The absent\n`oauth2_client` is now handled and falls back to the default authentication\nmethod, so a configuration without `oauth2_client` works end-to-end.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an error that could occur under sustained HTTPS traffic.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an issue where the response body of the external HTTP call `httpc:request()` was not captured.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**PostgreSQL OAuth auth**: Refined the token cache key to be derived only from the fields that identify an OAuth configuration.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Improved router update performance during incremental sync by updating service data in place instead of triggering a full router rebuild when only service attributes change.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.14.0.11": {
+    "kong-ee": [
+      {
+        "message": "**ai-aws-guardrails**, **ai-azure-content-safety**: Added `last_message` as a new optional value for `config.text_source`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**, **ai-azure-content-safety**, **ai-custom-guardrail**, **ai-gcp-model-armor**, **ai-lakera-guard**, **ai-prompt-guard**, **ai-sanitizer**, **ai-semantic-prompt-guard**, **ai-semantic-response-guard**: Fixed an issue where AI Gateway guardrail plugins' request extractors did not correctly honor the configured `text_source` option.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**, **ai-azure-content-safety**, **ai-custom-guardrail**, **ai-gcp-model-armor**, **ai-lakera-guard**, **ai-prompt-guard**, **ai-sanitizer**, **ai-semantic-prompt-guard**, **ai-semantic-response-guard**: Fixed an issue where AI Gateway guardrail plugins failed to extract prompt text from OpenAI-native requests using the `input_text` content type.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**: Fixed an issue where the plugin ignored the configured `text_source` option when `allow_masking` was enabled, masking the entire raw request body instead.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-guard**: Fixed an issue where the plugin failed to inspect requests sent in a provider's native format instead of the OpenAI-compatible format.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**, **ai-aws-guardrails**: Fixed an issue where the plugins were prevented from working properly with Claude Code.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where custom Lua running with `untrusted_lua` set to `sandbox` could no longer create global variables or modify allowed library tables.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.4.3.29": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.6 to 3.5.7.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.10.0.17": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.12.0.10": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly, and logging a warning if misconfigured. This prevents a crafted unsigned SAML response from silently bypassing authentication when `validate_assertion_signature` is set to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.13.0.9": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.14.0.12": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed a JWT security vulnerability.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**datakit**: Fixed CVE-2026-14916 by binding the JWT algorithm to the\nverification key's type in the `jwt_verify` node, so a symmetric algorithm can\nno longer be verified against an asymmetric key. This prevents an authentication\nbypass where an attacker forges tokens by using the public key as an HMAC\nshared secret, under configurations where the node uses a PEM key string and\n`allowed_algorithms` is unset (any algorithm accepted).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "3.15.0.3": {
+    "kong-ee": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed a JWT security vulnerability.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055 and CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**datakit**: Security: Fixed CVE-2026-14916 by binding the JWT algorithm to the\nverification key's type in the `jwt_verify` node. This means that a symmetric algorithm can\nno longer be verified against an asymmetric key, preventing an authentication\nbypass where an attacker forges tokens by using the public key as an HMAC\nshared secret, under configurations where the node uses a PEM key string and\n`allowed_algorithms` is unset (any algorithm accepted).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly, and logging a warning if misconfigured. This prevents a crafted unsigned SAML response from silently bypassing authentication when `validate_assertion_signature` is set to false.",
+        "type": "bugfix",
+        "scope": "Plugin"
       }
     ]
   }
