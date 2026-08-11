@@ -252,17 +252,25 @@ export async function getLiveEnv(container) {
   });
 
   const env = {};
+  const base64Vars = [];
   for (const envVar of output.split("\n")) {
     const [name, ...rest] = envVar.split("=");
     let value = rest.join("=");
 
-    // Decode base64-encoded values and store with original name
     if (name.endsWith("_BASE64")) {
-      const originalName = name.slice(0, -7); // Remove _BASE64 suffix
-      env[originalName] = Buffer.from(value, "base64").toString("utf-8");
+      base64Vars.push([name.slice(0, -7), value]); // Remove _BASE64 suffix
     } else {
       env[name] = value;
     }
   }
+
+  // Apply decoded base64 values last so they always take priority over any
+  // stale plain-named value with the same key. `env`'s line order reflects
+  // bash's internal variable hash table, not insertion order, so a plain
+  // placeholder can appear after its _BASE64 counterpart and must not win.
+  for (const [originalName, value] of base64Vars) {
+    env[originalName] = Buffer.from(value, "base64").toString("utf-8");
+  }
+
   return env;
 }
