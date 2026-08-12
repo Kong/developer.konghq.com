@@ -83,7 +83,7 @@ ai_gateway_model_providers:
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
-In this example, we're setting up the AI Model Provider with:
+The AI Model Provider uses the following settings:
 
 * `type: bedrock`: Specifies that this provider speaks Bedrock's Messages API format.
 * `config.auth.type: aws`: Uses AWS credentials format.

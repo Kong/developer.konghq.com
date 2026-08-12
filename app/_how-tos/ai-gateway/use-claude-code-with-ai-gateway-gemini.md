@@ -70,7 +70,7 @@ ai_gateway_model_providers:
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
-In this example, we're setting up the AI Model Provider with:
+The AI Model Provider uses the following settings:
 
 * `type: gemini`: Specifies that this provider connects to the Gemini service using Gemini's standard API format.
 * `name: my-gemini-account`: A unique identifier that AI Models will reference to route requests through this provider.
