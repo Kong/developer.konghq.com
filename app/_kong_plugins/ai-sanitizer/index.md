@@ -185,8 +185,7 @@ The following language-specific images are currently available:
 * `-pt` (Portuguese)
 * `-tr` (Turkish)
 
-{:.info}
-> The PII Anonymizer service loads one NLP model by default. Ensure at least **600MB of free memory** is available when running the container.
+{% include /md/ai-gateway/v2/policies/spacy-pii-note.md %}
 
 ### Image configuration options
 
