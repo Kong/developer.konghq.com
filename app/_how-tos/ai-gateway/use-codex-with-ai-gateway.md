@@ -52,7 +52,9 @@ prereqs:
 
 ## Create an AI Model Provider and AI Model
 
-Codex speaks OpenAI's native format and calls the [Responses API](https://platform.openai.com/docs/api-reference/responses), so no request-transformer policy is needed. Create both the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and the [AI Model](/ai-gateway/entities/ai-model/) in a single `kongctl` apply command so the model can reference the provider:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -87,13 +89,17 @@ ai_gateway_models:
           upstream_url: "https://api.openai.com/v1/responses"
 {% endentity_examples %}
 
-In this example:
+In this example, we're setting up the AI Model Provider with:
 
- * `type: openai`: Connects to the OpenAI API.
- * `capabilities: [agentic]`: Routes requests to the OpenAI Responses API, which the Codex CLI uses.
- * `formats: [{ type: openai }]`: Accepts OpenAI-format requests.
- * `config.route.model: { body_param: model, values: [gpt-5.4] }`: The model name the Codex CLI sends in each request.
- * `route.paths: [/codex]`: The base path Codex points at; the Responses API is served at `/codex/responses`.
+* `type: openai`: Specifies that this provider connects using OpenAI's standard API format.
+* `config.auth.headers[0].value: !env OPENAI_AUTH_HEADER`: Loads the API key from your environment at apply time so it is not embedded in the config.
+
+In this example, we're setting up the AI Model with:
+
+* `capabilities: [agentic]`: Routes requests to the OpenAI Responses API, which the Codex CLI uses.
+* `formats: [{ type: openai }]`: Accepts OpenAI-format requests.
+* `config.route.model: { body_param: model, values: [gpt-5.4] }`: The model name the Codex CLI sends in each request.
+* `route.paths: [/codex]`: The base path Codex points at; the Responses API is served at `/codex/responses`.
 
 ## Verify the AI Model
 
