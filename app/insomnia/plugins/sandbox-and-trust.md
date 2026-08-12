@@ -46,15 +46,12 @@ Which one is used depends on a global setting and a per-plugin opt-in.
 
 In **Preferences > Scripting**, enable **Sandbox all plugin code**. When it's on, every untrusted (user) plugin surface — template tags, request and response hooks, actions, and load-time code — runs in the sandbox.
 
-This setting replaces an earlier experiment that sandboxed template tags only. If you had that experiment turned on, Insomnia carries your preference over to **Sandbox all plugin code** automatically — nothing changes for you.
-
 ## Execution modes
 
 For a given plugin, the resolved mode is one of:
 
 | Mode | When | Runs | Host access |
 |------|------|------|-------------|
-| **Internal** | Built-in plugin that ships with Insomnia | In-process | Full |
 | **Sandboxed** | User plugin, sandbox on, not elevated | QuickJS sandbox | Only declared capabilities |
 | **Elevated** | User plugin, sandbox on, "Full host access" turned on | In-process | Full |
 | **In-process** | User plugin, sandbox off | In-process | Full (legacy) |
@@ -80,15 +77,3 @@ If your plugin worked before the sandbox and breaks when it's on:
 ## Caveats
 
 * **The Inso CLI has no sandbox.** Under the pure-Node CLI, user-plugin hooks run in-process regardless of the setting — CLI users are trusting their own plugins.
-* **Built-in plugins always run in-process.** `pluginSandboxEnabled` isolates *user* plugins only; Insomnia's built-in plugins are unaffected.
-
-## What changed
-
-The sandbox is a deliberate hardening, not a set of regressions:
-
-| Change | Kind | Effect for plugin authors |
-|--------|------|---------------------------|
-| User plugins run in the QuickJS sandbox when the sandbox is on | Hardening | Plugin code no longer has raw Node.js; it reaches the app only through declared capabilities |
-| `require()` resolves only from a curated registry | Hardening | Arbitrary npm or `node_modules` requires fail unless the module is in the registry *and* declared |
-| Default-deny permissions (baseline only unless declared) | Hardening | A plugin that used network, filesystem, or credentials without declaring them must add an `insomnia.permissions` block |
-| Load failures now show as a disabled row with a reason | Fix | A plugin that fails to load (or whose name collides with another) no longer silently disappears — see [Troubleshooting](/insomnia/plugins/troubleshooting/) |

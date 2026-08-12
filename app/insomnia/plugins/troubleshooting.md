@@ -46,7 +46,7 @@ Common reasons and fixes:
 
 ### A plugin stayed broken even after I fixed the error
 
-Older versions cached the plugin and render engine for the whole session, so a plugin that failed once stayed broken until you restarted the app. This is fixed. Use **Preferences > Plugins > Reload plugins** (or the plugin-reload keyboard shortcut): reloading now rebuilds the render engine and re-scans the registry, so a plugin recovers once its underlying error is fixed. You no longer need to reinstall it into a fresh folder.
+Use **Preferences > Plugins > Reload plugins** (or the plugin-reload keyboard shortcut) to recover a plugin after fixing its error — reloading re-scans the registry and rebuilds the render engine, so you don't need to restart the app or reinstall the plugin.
 
 ## Known limitations
 

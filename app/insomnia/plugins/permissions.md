@@ -80,9 +80,6 @@ Values you can declare in `insomnia.permissions.capabilities`:
 | `credentials` | Read and update stored cloud credentials |
 | `app` | Dialogs, prompts, clipboard, and open-in-browser |
 
-{:.warning}
-> `models.read` includes reading **OAuth 2.0 tokens**, which are live bearer credentials, and it's part of the baseline. Treat it as a credential-disclosure surface when reasoning about what a manifest-less plugin can access.
-
 ## Modules reference
 
 Inside the sandbox, `require(name)` resolves **only** from Insomnia's curated registry — never your plugin's `node_modules`, and never raw Node.js built-ins. Declaring a module in `insomnia.permissions.modules` unlocks it; the registry is what provides a safe implementation.
@@ -90,11 +87,8 @@ Inside the sandbox, `require(name)` resolves **only** from Insomnia's curated re
 Categories:
 
 * **Baseline:** `path`, `crypto`
-* **Polyfilled built-ins:** for example `events`
-* **Vetted libraries:** for example `ajv`, `uuid`
-
-<!-- TODO(before publish): replace the examples above with the canonical, generated module list
-     (ALL_SANDBOX_MODULES in the Insomnia source) so this reference can't drift. -->
+* **Polyfilled built-ins:** `events`
+* **Vetted libraries:** `ajv`, `uuid`
 
 Two distinct error messages tell you which problem you have:
 
