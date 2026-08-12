@@ -25,15 +25,19 @@ RUN ARCH=$(dpkg --print-architecture) && \
     rm go.tar.gz
 
 # Install kongctl
-RUN ARCH=$(dpkg --print-architecture) && \
-    curl -sL "https://github.com/Kong/kongctl/releases/download/v1.10.0/kongctl_linux_${ARCH}.zip" -o kongctl.zip && \
-    unzip kongctl.zip && \
-    mv kongctl /usr/local/bin/ && \
-    rm kongctl.zip && \
-    kongctl version --full
+RUN curl -fsSL https://get.konghq.com/kongctl | sh -s -- --version prerelease-aigw-2
+#RUN ARCH=$(dpkg --print-architecture) && \
+#    curl -sL "https://github.com/Kong/kongctl/releases/download/v1.10.0/kongctl_linux_${ARCH}.zip" -o kongctl.zip && \
+#    unzip kongctl.zip && \
+#    mv kongctl /usr/local/bin/ && \
+#    rm kongctl.zip && \
+#    kongctl version --full
 ENV PATH="/usr/local/go/bin:${PATH}"
 ENV GOPATH="/go"
 ENV PATH="${GOPATH}/bin:${PATH}"
+
+
+RUN curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
 
 RUN curl -fsSL https://claude.ai/install.sh | bash
 ENV PATH="/root/.local/bin:${PATH}"
