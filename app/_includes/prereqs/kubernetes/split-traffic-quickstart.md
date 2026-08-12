@@ -1,4 +1,4 @@
-This guide builds on [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/). If you haven't completed it, run the following commands to install {{site.mesh_product_name}}, deploy the Kong Air demo apps, and apply that guide's `MeshIdentity`, `MeshTLS`, and `MeshTrafficPermission`. The pod's readiness probe passes before the control plane's internal RBAC bootstrapping finishes, so the short `sleep` after the first `kubectl wait` gives that a moment to complete before the `Mesh` is created:
+This guide builds on [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/). If you haven't completed it, run the following commands to install {{site.mesh_product_name}}, deploy the Kong Air demo apps, and apply that guide's `MeshIdentity`, `MeshTLS`, and `MeshTrafficPermission`:
 
 ```sh
 helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
