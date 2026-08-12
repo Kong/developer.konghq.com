@@ -131,8 +131,9 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 
 Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
 
-```text
-Tell me about Procopius' Secret History.
-```
+{% validation claude-code %}
+prompt: Tell me about Procopius' Secret History.
+model: my-claude-openai
+{% endvalidation %}
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request, proxied through {{site.ai_gateway}} to the OpenAI model configured in the AI Model entity's `targets`.

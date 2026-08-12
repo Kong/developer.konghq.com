@@ -33,6 +33,8 @@ module Jekyll
             EnvVariables.new(id:, yaml:, format:)
           when 'custom-command'
             CustomCommand.new(id:, yaml:, format:)
+          when 'claude-code'
+            ClaudeCode.new(id:, yaml:, format:)
           else
             raise ArgumentError, "Missing Drop for `#{id}`"
           end

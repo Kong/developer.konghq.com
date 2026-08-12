@@ -151,23 +151,6 @@ ai_gateway_models:
       - generate
 {% endentity_examples %}
 
-## Validate the AI Model
-
-Send a test request directly to confirm the setup works before pointing {{ site.claude_code }} at it:
-
-```sh
-curl -i -X POST http://localhost:8000/v1/messages \
-  -H 'Content-Type: application/json' \
-  -H 'anthropic-version: 2023-06-01' \
-  --data '{
-    "model": "my-huggingface",
-    "max_tokens": 1024,
-    "messages": [
-      {"role": "user", "content": "hello"}
-    ]
-  }'
-```
-
 ## Verify traffic through Kong
 
 {{ site.claude_code }}'s experimental beta features send fields that Hugging Face rejects even with the AI Policy in place. Disable them, then start a session pointed at your local {{site.ai_gateway}} endpoint:
@@ -204,3 +187,8 @@ Select **Yes, continue**. The session starts.
 <!--vale on-->
 
 Ask a simple question to confirm that requests reach {{site.ai_gateway}} and are routed to Hugging Face.
+
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-huggingface
+{% endvalidation %}

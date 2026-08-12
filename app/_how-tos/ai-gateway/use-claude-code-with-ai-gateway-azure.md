@@ -97,8 +97,10 @@ ai_gateway_models:
       route:
         paths:
           - /
-      model:
-        name_header: true
+        model:
+          body_param: model
+          values:
+            - claude-code-azure-sonnet
     capabilities:
        - generate
     policies:
@@ -144,27 +146,11 @@ ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'claude-code-azure-sonn
 
 {{ site.claude_code }} asks for permission before it runs tools or interacts with files:
 
-```text
-I'll need permission to work with your files.
+{% validation claude-code %}
+prompt: Tell me about Vienna Oribasius manuscript.
+model: claude-code-azure-sonnet
+{% endvalidation %}
 
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
-
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me about Vienna Oribasius manuscript.
-```
 
 {{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 

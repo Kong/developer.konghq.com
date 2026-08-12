@@ -176,23 +176,6 @@ In this example, we're setting up the AI Model with:
 * `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: !ref my-gemini-account#name` references the AI Model Provider we created earlier, and `name: gemini-2.5-flash` specifies which Gemini model to call upstream.
 * `policies: [!ref strip-claude-beta-info#name]`: Attaches the AI Policy created earlier so it applies to every request to this AI Model.
 
-## Validate the AI Model
-
-Send a test request directly to confirm the setup works before pointing {{ site.claude_code }} at it:
-
-```sh
-curl -i -X POST http://localhost:8000/v1/messages \
-  -H 'Content-Type: application/json' \
-  -H 'anthropic-version: 2023-06-01' \
-  --data '{
-    "model": "my-claude-gemini",
-    "max_tokens": 1024,
-    "messages": [
-      {"role": "user", "content": "hello"}
-    ]
-  }'
-```
-
 ## Verify traffic through Kong
 
 {{ site.claude_code }}'s experimental beta features send fields that Gemini rejects even with the AI Policy in place. Disable them, then start a session pointed at your local {{site.ai_gateway}} endpoint:
@@ -225,8 +208,10 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 
 Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
 
-```text
-Tell me about Anna Komnene's Alexiad.
-```
+
+{% validation claude-code %}
+prompt: Tell me about Anna Komnene's Alexiad.
+model: my-claude-gemini
+{% endvalidation %}
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request, proxied through {{site.ai_gateway}} to the Gemini model configured in the AI Model entity's `targets`.
