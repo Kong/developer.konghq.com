@@ -54,7 +54,9 @@ prereqs:
 
 DashScope serves the Qwen model family through a native Anthropic-compatible Messages API, so {{ site.claude_code }} can talk to it natively. 
 
-Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and an [AI Model](/ai-gateway/entities/ai-model/) with a single `kongctl` apply command:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -98,7 +100,7 @@ ai_gateway_models:
           temperature: 1.0
 {% endentity_examples %}
 
-In this example we set:
+This example uses the following settings:
 
  * `type: dashscope`: Connects to the Alibaba Cloud DashScope API as an AI Model Provider.
  * `capabilities: [generate]`: For a model using the `anthropic` format, `generate` creates a `/v1/messages` endpoint matching Anthropic's native Messages API.
@@ -135,9 +137,43 @@ Run {{ site.claude_code }}, selecting the model you configured:
 ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'qwen-plus'
 ```
 
-When {{ site.claude_code }} asks for permission to work with your files, select **Yes, continue**. The session will start. Ask a question to confirm traffic flows through {{site.ai_gateway}} to the upstream Qwen model:
+Ask a question to confirm that requests reach {{site.ai_gateway}}.
 
 {% validation claude-code %}
-prompt: Say hello in one sentence.
-model: qwen-plus
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude
 {% endvalidation %}
+
+
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
+
+```text
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
+
+What it is
+
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
+
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
+```
+{:.no-copy-code}

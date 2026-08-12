@@ -117,14 +117,15 @@ The AI Policy uses the following settings:
 
 * `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
 *  `config.remove.headers`: Removes the `anthropic-beta` header.
-*  `config.querystring`: Removes the `beta` query string parameter.
+*  `config.remove.querystring`: Removes the `beta` query string parameter.
+*  `config.remove.body`: Removes the `output_config`, `context_management`, `mcp_servers`, `container`, and `service_tier`body fields.
 
 {:.info}
 > Don't strip `model`: {{site.ai_gateway}} uses that field to select the target, and removing it breaks routing.
 
 ## Create an AI Model entity
 
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream model is available and how client requests are routed. `formats: [type: anthropic]` accepts requests in Anthropic format even though the upstream is Bedrock:
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
 {% entity_examples %}
 ai_gateway_model_providers:

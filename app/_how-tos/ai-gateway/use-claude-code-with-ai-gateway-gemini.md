@@ -47,7 +47,7 @@ tldr:
 
 ## Create an AI Model Provider entity
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Gemini and store your API key:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -64,6 +64,9 @@ ai_gateway_model_providers:
           value: !env GEMINI_API_KEY
 {% endentity_examples %}
 
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
 In this example, we're setting up the AI Model Provider with:
 
 * `type: gemini`: Specifies that this provider connects to the Gemini service using Gemini's standard API format.
@@ -72,7 +75,7 @@ In this example, we're setting up the AI Model Provider with:
 
 ## Create an AI Policy entity
 
-{{ site.claude_code }} sends beta headers, its own client credentials, and fields that Gemini's native API rejects. Create an [AI Policy](/ai-gateway/entities/ai-policy/) with a `request-transformer-advanced` config that strips the `anthropic-beta`, `authorization`, and `x-api-key` headers, the `beta` query string parameter, and the `output_config`/`context_management`/`mcp_servers`/`container`/`service_tier`/`reasoning_effort` body fields before the request reaches Gemini:
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Gemini's API does not support.
 
 {% entity_examples %}
 ai_gateway_policies:
@@ -100,6 +103,16 @@ ai_gateway_policies:
 
 {:.info}
 > {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see an error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
+
+The AI Policy uses the following settings:
+
+* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
+*  `config.remove.headers`: Removes the `anthropic-beta`, `authorization`, and `x-api-key` headers.
+*  `config.remove.querystring`: Removes the `beta` query string parameter.
+*  `config.remove.body`: Removes the `output_config`, `context_management`, `mcp_servers`, `container`, `service_tier`, and `reasoning_effort` body fields.
+
+{:.info}
+> Don't strip `model`: {{site.ai_gateway}} uses that field to select the target, and removing it breaks routing.
 
 ## Create an AI Model entity
 
@@ -166,7 +179,7 @@ ai_gateway_models:
       - generate
 {% endentity_examples %}
 
-In this example, we're setting up the AI Model with:
+The AI Model uses the following settings:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-claude-gemini`: A unique identifier for this model.
@@ -188,30 +201,43 @@ ANTHROPIC_MODEL=my-claude-gemini \
 claude
 ```
 
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
-
-```text
-I'll need permission to work with your files.
-
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
-
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
-
+Ask a question to confirm that requests reach {{site.ai_gateway}}.
 
 {% validation claude-code %}
-prompt: Tell me about Anna Komnene's Alexiad.
-model: my-claude-gemini
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude
 {% endvalidation %}
 
-{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request, proxied through {{site.ai_gateway}} to the Gemini model configured in the AI Model entity's `targets`.
+
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
+
+```text
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
+
+What it is
+
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
+
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
+```
+{:.no-copy-code}
