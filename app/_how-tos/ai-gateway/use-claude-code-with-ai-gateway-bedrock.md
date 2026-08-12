@@ -125,7 +125,7 @@ The AI Policy uses the following settings:
 
 ## Create an AI Model entity
 
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
 
 {% entity_examples %}
 ai_gateway_model_providers:
