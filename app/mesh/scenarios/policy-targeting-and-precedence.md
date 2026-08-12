@@ -20,7 +20,9 @@ related_resources:
   - text: MeshTrafficPermission
     url: /mesh/policies/meshtrafficpermission/
 ---
-{{site.mesh_product_name}} uses one consistent shape for every policy: you select the proxies to affect with `targetRef`, then describe the behavior in the same resource. For the full policy model, how `targetRef`, `to[]`, `rules[]`, and `default` work, how precedence resolves, and which older shapes are deprecated, see [Introduction to policies](/mesh/policies-introduction/), the source of truth for the model. This page shows how Kong Air applies that model to its own workloads.
+{{site.mesh_product_name}} uses one consistent shape for every policy: you select the proxies to target with `targetRef`, then describe the behavior in the same resource. For the full policy model, see [Introduction to policies](/mesh/policies-introduction/).
+
+This page shows how Kong Air applies that model to its own workloads.
 
 ## What Kong Air targets with `targetRef`
 
@@ -38,22 +40,19 @@ columns:
 rows:
   - kind: "`Mesh`"
     scope: "Every sidecar in the mesh."
-    use_case: "Baseline mTLS and access logging for all of `kong-air-mesh`."
-  - kind: "`Dataplane` with `labels:`"
+    use_case: "Access logging for all of `kong-air-mesh`."
+  - kind: "`Dataplane` with `labels`"
     scope: "The proxies whose labels match."
     use_case: "Override timeouts for `kuma.io/zone: zone1`, or allow callers into `app: check-in-api`."
   - kind: "`MeshGateway`"
     scope: "A built-in mesh gateway."
-    use_case: "Policies that apply to a gateway Kong Air runs inside the mesh."
+    use_case: "Routing and TLS rules for `booking-gateway`, the mesh's external entry point."
 {% endtable %}
 <!-- vale on -->
 
 {:.info}
-> Zone proxies are targetable too (2.14). You can attach `MeshTrafficPermission`, `MeshTimeout`, `MeshRateLimit`, `MeshFaultInjection`, `MeshCircuitBreaker`, `MeshHealthCheck`, `MeshMetric`, `MeshTrace`, and `MeshAccessLog` directly to zone ingress or zone egress with `targetRef.kind: Dataplane` plus the computed listener labels (for example `kuma.io/listener-zoneegress: enabled`).
+> {% new_in 2.14 %} Zone proxies are targetable too. You can attach `MeshTrafficPermission`, `MeshTimeout`, `MeshRateLimit`, `MeshFaultInjection`, `MeshCircuitBreaker`, `MeshHealthCheck`, `MeshMetric`, `MeshTrace`, and `MeshAccessLog` directly to a zone ingress or zone egress with `targetRef.kind: Dataplane` and the computed listener labels (for example `kuma.io/listener-zoneegress: enabled`).
 
 ## MeshTrafficPermission precedence caveat
 
-Most policies follow most-specific-wins, but `MeshTrafficPermission` does not.
-
-{:.warning}
-> `MeshTrafficPermission` evaluates all matching rules for a request, and if any matched rule produces a `Deny`, the deny wins. To enforce a default-deny posture cleanly, delete the permissive `allow-all` policy first, then layer narrower allows on top. Treat it as an RBAC-style allow/deny pass rather than a most-specific-wins override.
+`MeshTrafficPermission` is the exception to the most-specific-wins rule most other policies follow. It evaluates all matching rules for a request, and if any matched rule produces a `Deny`, the deny wins. To enforce a default-deny posture cleanly, delete the permissive `allow-all` policy first, then layer narrower allows on top. Treat it as an RBAC-style allow/deny pass rather than a most-specific-wins override.
