@@ -116,8 +116,13 @@ ai_gateway_models:
     enabled: true
     formats: [{ type: anthropic }]
     config:
-      route: { paths: [/] }
-      model: { name_header: true }
+      route:
+        paths:
+          - /
+        model:
+          body_param: model
+          values:
+            - claude-code-vertex-sonnet
     capabilities: [generate]
     policies: [ !ref claude-code-compat#name ]
     targets:
