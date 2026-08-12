@@ -50,7 +50,7 @@ prereqs:
 
 ---
 
-## Create the AI Model Provider and AI Model
+## Create the AI Model Provider and AI Model entities
 
 DashScope serves the Qwen model family through a native Anthropic-compatible Messages API, so {{ site.claude_code }} can talk to it natively. 
 
@@ -129,9 +129,9 @@ body:
       content: "Reply with just: ok"
 {% endvalidation %}
 
-## Start and use Claude Code
+## Run {{ site.claude_code }}
 
-Run {{ site.claude_code }}, selecting the model you configured:
+Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'qwen-plus'

@@ -87,7 +87,7 @@ The AI Model Provider uses the following settings:
 * `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
 * `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
 
-## Create an AI Policy and AI Model
+## Create AI Policy and AI Model entities
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
@@ -159,7 +159,7 @@ The AI Model uses the following settings:
  * `targets[0].name: claude-sonnet-4-5@20250929`: The Vertex publisher model ID, in `name@YYYYMMDD` format. It must match a model you've enabled in Vertex AI Model Garden.
  * `targets[0].config.upstream_url`: The full `:rawPredict` URL from the prerequisites, encoding your project, location, and model ID.
 
-## Verify traffic through Kong
+## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
