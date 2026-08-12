@@ -83,9 +83,9 @@ ai_gateway_model_providers:
 
 In this example, we're setting up the AI Model Provider with:
 
- * `type: vertex`: Specifies that this provider connects to Google Vertex AI.
- * `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
- * `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
+* `type: vertex`: Specifies that this provider connects to Google Vertex AI.
+* `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
+* `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
 
 ## Create an AI Policy and AI Model
 
