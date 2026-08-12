@@ -81,7 +81,7 @@ ai_gateway_model_providers:
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
-In this example, we're setting up the AI Model Provider with:
+The AI Model Provider uses the following settings:
 
 * `type: vertex`: Specifies that this provider connects to Google Vertex AI.
 * `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
@@ -141,7 +141,7 @@ ai_gateway_models:
 {:.info}
 > Replace `claude-sonnet-4-5@20250929` with the id of your own enabled model in Vertex AI Model Garden.
 
-The AI Policy uses:
+The AI Policy uses the following settings:
 
 * `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
 * `config.remove.headers` / `config.remove.querystring` / `config.remove.body`: Strips fields that {{ site.claude_code }} sends but that Vertex AI's Claude endpoint rejects with a `400 Extra inputs are not permitted`: the `anthropic-beta` header, the `beta` query string, and body fields like `mcp_servers` and `container`. The list also includes `thinking`. {{ site.claude_code }} sends `thinking: {"type": "adaptive", ...}` by default, and Vertex's schema only accepts `disabled` or `enabled` for `thinking.type`, so it must be removed rather than left as-is.
@@ -149,7 +149,7 @@ The AI Policy uses:
 {:.info}
 > The Vertex driver injects the `anthropic-version` header into the request body automatically. 
 
-The AI Model uses:
+The AI Model uses the following settings:
 
  * `name`/`display_name: claude-code-vertex-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target ID, to select the model.
  * `formats: [type: anthropic]`: Accepts Anthropic-compatible requests (what {{ site.claude_code }} sends).

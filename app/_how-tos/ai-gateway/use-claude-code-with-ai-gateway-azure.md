@@ -59,7 +59,7 @@ ai_gateway_model_providers:
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
-In this example, we're setting up the AI Model Provider with:
+The AI Model Provider uses the following settings:
 
 * `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`.
 * `config.auth.headers[0].value: !env AZURE_AI_FOUNDRY_TOKEN`: Loads the API key from your environment at apply time so it is not embedded in the config.
