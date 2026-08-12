@@ -27,6 +27,10 @@ related_resources:
     url: /plugins/ai-mcp-proxy/
   - text: AI A2A Proxy plugin
     url: /plugins/ai-a2a-proxy/
+  - text: deck ai sync
+    url: /deck/ai/sync/
+  - text: deck ai dump
+    url: /deck/ai/dump/
 ---
 
 {{site.ai_gateway}} on {{site.konnect_short_name}} is documented around its entity model.
@@ -122,12 +126,12 @@ Access control and secret management on-prem use the same {{site.base_gateway}} 
 
 ## Convert {{site.ai_gateway}} 2.0 entities to self-hosted {{site.base_gateway}} config
 
-Use `deck file ai2kong` to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities.
+Use [`deck ai sync`](/deck/ai/sync/) to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities and apply it in one step. `deck ai sync` is the equivalent of running `deck file ai2kong` followed by `deck gateway sync` on the result, and it tags every entity it manages with `managed_by:deck-ai`. To export that configuration back out of a running {{site.base_gateway}}, use [`deck ai dump`](/deck/ai/dump/), which reverts the tagged entities to {{site.ai_gateway}} 2.0 format.
 
 AI Model, AI MCP Server, AI Agent, and AI Policy entities need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins.
-AI Consumers, AI Consumer Groups, and AI Vaults pass through `deck file ai2kong` unchanged, since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-and-vaults).
+AI Consumers, AI Consumer Groups, and AI Vaults pass through unchanged, since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-and-vaults).
 
-The following examples walk through converting a decK `ai.yaml` file for a single AI Model, AI MCP Server, AI Agent, and AI Policy.
+The following examples walk through converting a decK `ai.yaml` file for a single AI Model, AI MCP Server, AI Agent, and AI Policy. Each example uses [`deck file ai2kong`](/deck/file/ai2kong/) to show the `kong.yaml` it generates, then syncs that configuration with `deck ai sync`.
 
 ### Convert an AI Model
 
@@ -229,9 +233,9 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
 
    {:.info}
    > The converted output uses the `alias` and `model_alias` field names from the self-hosted `ai-model-selector` and `ai-proxy-advanced` plugin schemas. These are distinct from `config.route.model` on the {{site.ai_gateway}} entity shown in the input above; `deck file ai2kong` handles the translation between the two.
-1. Sync the converted config to your self-hosted {{site.base_gateway}}:
+1. Sync the configuration to your self-hosted {{site.base_gateway}}. `deck ai sync` converts `ai.yaml` and syncs the result in one step, so you don't need to keep the intermediate `kong.yaml`:
    ```sh
-   deck gateway sync kong.yaml
+   deck ai sync ai.yaml
    ```
 
 ### Convert an AI MCP Server
@@ -313,9 +317,9 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
          name: ai-mcp-proxy
    ```
    {: .no-copy-code .collapsible }
-1. Sync the converted config to your self-hosted {{site.base_gateway}}:
+1. Sync the configuration to your self-hosted {{site.base_gateway}}. `deck ai sync` converts `ai.yaml` and syncs the result in one step, so you don't need to keep the intermediate `kong.yaml`:
    ```sh
-   deck gateway sync kong.yaml
+   deck ai sync ai.yaml
    ```
 
 ### Convert an AI Agent
@@ -371,9 +375,9 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
      url: https://agent.example.com
    ```
    {: .no-copy-code .collapsible }
-1. Sync the converted config to your self-hosted {{site.base_gateway}}:
+1. Sync the configuration to your self-hosted {{site.base_gateway}}. `deck ai sync` converts `ai.yaml` and syncs the result in one step, so you don't need to keep the intermediate `kong.yaml`:
    ```sh
-   deck gateway sync kong.yaml
+   deck ai sync ai.yaml
    ```
 
 ### Convert an AI Policy
@@ -443,7 +447,7 @@ An AI Policy generates no object of its own. It must be attached to another enti
    ```
 
    The `model` and `route` fields on the plugin are what scope it to that AI Model's traffic instead of applying globally.
-1. Sync the converted config to your self-hosted {{site.base_gateway}}:
+1. Sync the configuration to your self-hosted {{site.base_gateway}}. `deck ai sync` converts `ai.yaml` and syncs the result in one step, so you don't need to keep the intermediate `kong.yaml`:
    ```sh
-   deck gateway sync kong.yaml
+   deck ai sync ai.yaml
    ```
