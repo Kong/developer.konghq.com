@@ -82,7 +82,13 @@ After completing the aggregation workflow described in **[Aggregate MCP tools fr
 1. In the **MCP Server URL** field, select the **HTTP** method, and enter your listener URL: `http://localhost:8000/mcp-aggregation`
 6. Click **Connect**.
 
-Insomnia connects to the MCP server and discovers all of the aggregated tools.
+Insomnia connects to the MCP server and discovers all of the aggregated tools:
+- `draw-cards`
+- `get-orders-for-user`
+- `get-users`
+- `shuffle-and-draw`
+- `shuffle-cards`
+- `weather-internet`
 
 ## Validate tools
 
