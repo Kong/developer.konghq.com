@@ -63,7 +63,7 @@ prereqs:
 
 ## Create an AI Model Provider entity
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Vertex AI and store your API key:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -81,7 +81,7 @@ ai_gateway_model_providers:
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
-This AI Model Provider uses:
+In this example, we're setting up the AI Model Provider with:
 
  * `type: vertex`: Specifies that this provider connects to Google Vertex AI.
  * `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
@@ -89,7 +89,9 @@ This AI Model Provider uses:
 
 ## Create an AI Policy and AI Model
 
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Vertex AI's Claude endpoint does not support, and an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream model is available and attach that policy to it.
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
+
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Vertex AI's API does not support.
 
 {:.warning}
 > Apply the Policy and the AI Model together, in the same `kongctl apply` call, as shown below. The AI Model's `policies` field references the Policy via `!ref`, and `ref` values are local to a single `kongctl apply` call. They're never written to {{site.konnect_short_name}}. If you split this into two separate `kongctl apply` calls, the second one fails with `resource not found: claude-code-compat`, even though the Policy already exists.
@@ -114,7 +116,8 @@ ai_gateway_models:
     ai_gateway: !lookup name:ai-quickstart
     type: model
     enabled: true
-    formats: [{ type: anthropic }]
+    formats:
+      - type: anthropic
     config:
       route:
         paths:
@@ -123,11 +126,13 @@ ai_gateway_models:
           body_param: model
           values:
             - claude-code-vertex-sonnet
-    capabilities: [generate]
-    policies: [ !ref claude-code-compat#name ]
+    capabilities:
+      - generate
+    policies:
+      - !ref claude-code-compat#name
     targets:
       - name: claude-sonnet-4-5@20250929
-        provider: vertex-prod
+        provider: !ref vertex-prod#name
         config:
           type: vertex
           upstream_url: !env VERTEX_UPSTREAM_URL
@@ -148,7 +153,6 @@ The AI Model uses:
 
  * `name`/`display_name: claude-code-vertex-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target ID, to select the model.
  * `formats: [type: anthropic]`: Accepts Anthropic-compatible requests (what {{ site.claude_code }} sends).
- * `config.model.name_header: true`: Lets {{ site.claude_code }} select this model by sending its `name` in the request, instead of requiring a separate routing rule.
  * `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API.
  * `policies`: Attaches the `claude-code-compat` policy defined above, via `!ref claude-code-compat#name`, so its body-stripping transformation applies to every request sent through this model.
  * `targets[0].provider: vertex-prod`: Routes upstream requests through the Vertex AI Provider created earlier.
@@ -163,37 +167,43 @@ Now, we can start a {{ site.claude_code }} session that points it to the local {
 ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'claude-code-vertex-sonnet'
 ```
 
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
+Ask a question to confirm that requests reach {{site.ai_gateway}}.
+
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude
+{% endvalidation %}
+
+
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-I'll need permission to work with your files.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
 
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
+What it is
 
-Learn more ( https://docs.claude.com/s/claude-code-security )
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
 
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
+Artistic Significance
 
-Select **Yes, continue**. The session starts. Ask a question to confirm that requests reach {{site.ai_gateway}}.
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
 
-```text
-Tell me about Anna Komnene's Alexiad.
-```
+Unique Collaboration
 
-{{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
-
-```text
-Anna Komnene (1083-1153?) was a Byzantine princess, scholar, physician,
-hospital administrator, and historian. She is known for writing the
-Alexiad, a historical account of the reign of her father, Emperor Alexios
-I Komnenos (r. 1081-1118). The Alexiad is a valuable primary source for
-understanding Byzantine history and the First Crusade.
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
