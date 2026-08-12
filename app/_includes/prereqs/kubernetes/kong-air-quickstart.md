@@ -221,6 +221,10 @@
          name: http
          appProtocol: http
    EOF
-   kubectl wait -n kong-air-production --for=condition=available --timeout=120s deployment --all
    ```
    {:.collapsible}
+
+1. Wait for the resources to be ready:
+   ```sh
+   kubectl wait -n kong-air-production --for=condition=available --timeout=120s deployment --all
+   ```
