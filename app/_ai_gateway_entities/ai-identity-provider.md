@@ -108,7 +108,7 @@ flowchart LR
     OIDC["OpenID Connect"]
     Decision{Auth?}
     AnonErr["Request Terminating w/ 401"]
-    Route["Routing"]
+    Select["AI Model, AI Agent, or<br/>AI MCP Server selection"]
     ACLs["ACLs"]
     Allowed["AI Model A, AI Agent A,<br/>AI MCP Server A"]
     Denied["AI Model B, AI Agent B,<br/>AI MCP Server B"]
@@ -117,13 +117,13 @@ flowchart LR
     KeyAuth-->OIDC
     OIDC-->Decision
     Decision-->|no auth|AnonErr
-    Decision-->|auth|Route
-    Route-->|routes request|ACLs
+    Decision-->|auth|Select
+    Select-->|selects entity|ACLs
     ACLs-->|allowed|Allowed
     ACLs-->|denied|Denied
 {% endmermaid %}
 
-Authentication runs before routing so that unauthenticated requests never reach the AI Model, AI Agent, or AI MCP Server, or its policy evaluation.
+Authentication behaves like any other Kong plugin: it runs after route selection, in the context of the matched route, but before the AI Model, AI Agent, or AI MCP Server is selected. This means unauthenticated requests never reach that selection step or its policy evaluation.
 
 {:.info}
 > This diagram shows the general `key-auth`/`openid-connect` check. For an AI MCP Server with [`access.metadata`](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) set, token validation instead runs through a generated AI MCP OAuth2 configuration, which adds OAuth 2.1 resource-server checks (token audience validation, protected resource metadata serving) on top of this AI Identity Provider.
