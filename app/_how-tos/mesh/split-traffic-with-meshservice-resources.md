@@ -10,7 +10,12 @@ products:
   - mesh
 works_on:
   - on-prem
-  - konnect
+faqs:
+  - q: "Why does the Service need `appProtocol: http`?"
+    a: |
+      The Kubernetes `Service` example sets `appProtocol: http` on the port. In `Exclusive` mode, {{site.mesh_product_name}} reads this field to set the protocol on the generated `MeshService`.
+
+      Without it, the `MeshService` defaults to `tcp`, and HTTP-aware policies, `MeshHTTPRoute`, weighted splits, retries on `5xx`, silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
 tldr:
   q: How do I split traffic between different versions of my service?
   a: |
@@ -20,12 +25,8 @@ tldr:
     3. Verifying the split by monitoring the distribution of requests across the named services.
 prereqs:
   inline:
-    - title: Architecture
-      content: |
-        A {{site.mesh_product_name}} deployment with `meshServices.mode: Exclusive` enabled.
-    - title: Workloads
-      content: |
-        Multiple versions of a service (for example, `passenger-portal`) deployed with identifying labels.
+    - title: Set up the scenario
+      include_content: prereqs/kubernetes/split-traffic-quickstart
 next_steps:
   - text: "Target workloads and services"
     url: "/mesh/scenarios/target-workloads-and-services/"
@@ -38,42 +39,30 @@ related_resources:
     url: /mesh/scenarios/policy-targeting-and-precedence/
 ---
 
-The Kong Air engineering team is launching a new Passenger Portal v2. To ensure a smooth transition, they want to route 90% of traffic to the stable `v1` and 10% to the new `v2` for a group of internal pilot users. 
+In this scenario, the Kong Air engineering team is launching a new Passenger Portal v2. To ensure a smooth transition, they want to route 90% of traffic to the stable `v1` and 10% to the new `v2` for a group of internal pilot users. 
 
-This guide demonstrates how to achieve this using explicit `MeshService` versions routed by a `MeshHTTPRoute`. If you want a refresher on the `targetRef` model and where `MeshService` fits in `to[]`/`backendRefs`, see [Policy targeting and precedence](/mesh/scenarios/policy-targeting-and-precedence/); the [Target workloads and services](/mesh/scenarios/target-workloads-and-services/) guide that follows goes deeper on label-based targeting.
+This guide demonstrates how to achieve this using explicit `MeshService` versions routed by a `MeshHTTPRoute`. 
 
-## What this proves
+For more information about the `targetRef` model and where `MeshService` fits in `to[]`/`backendRefs`, see [Policy targeting and precedence](/mesh/scenarios/policy-targeting-and-precedence/). The [Target workloads and services](/mesh/scenarios/target-workloads-and-services/) guide that follows goes deeper on label-based targeting.
 
 <!-- vale off -->
 {% table %}
 columns:
-  - title: Scenario Requirement
+  - title: Scenario requirement
     key: goal
   - title: Outcome
     key: outcome
 rows:
-  - goal: Version Isolation
+  - goal: Version isolation
     outcome: Kong Air can manage `v1` and `v2` as independent, first-class resources with their own metrics.
-  - goal: Weighted Distribution
+  - goal: Weighted distribution
     outcome: Traffic is precisely divided (90/10) without relying on fragile pod counts.
-  - goal: Resource Stability
+  - goal: Resource stability
     outcome: Adding or removing pods in either version does not require updating the routing policy.
 {% endtable %}
 <!-- vale on -->
 
-### The traffic split
-
-{% mermaid %}
-graph TD
-    User([User Request]) --> Gateway["{{site.base_gateway}}"]
-    Gateway --> Route{"MeshHTTPRoute"}
-    Route -->|"90% Weight"| Stable["passenger-portal-v1 (MeshService)"]
-    Route -->|"10% Weight"| Canary["passenger-portal-v2 (MeshService)"]
-{% endmermaid %}
-
-## Configuration
-
-### Deploy the v2 workload
+## Deploy the v2 workload
 
 The Kong Air quickstart only deploys the stable `passenger-portal` `version: v1` workload. Deploy a `version: v2` workload alongside it, reusing the same `nginx-passthrough` ConfigMap the quickstart already created in `kong-air-production`:
 
@@ -117,14 +106,9 @@ spec:
 kubectl wait -n kong-air-production --for=condition=available --timeout=120s deployment/passenger-portal-v2
 ```
 
-### Define explicit MeshServices
+## Define explicit MeshServices
 
-For rollout patterns like canary and blue/green, you want version-specific destinations that the route can name directly. For how {{site.mesh_product_name}} generates `MeshService` resources, how label-based matching works, and what `meshServices.mode: Exclusive` changes, see [MeshService](/mesh/meshservice/).
-
-Create versioned Services (`passenger-portal-v1`, `passenger-portal-v2`) and let {{site.mesh_product_name}} generate the matching `MeshService` resources from them.
-
-{:.info}
-> Why `appProtocol: http`? The Kubernetes `Service` example below sets `appProtocol: http` on the port. In `Exclusive` mode, {{site.mesh_product_name}} reads this field to set the protocol on the generated `MeshService`. Without it, the `MeshService` defaults to `tcp`, and HTTP-aware policies, `MeshHTTPRoute`, weighted splits, retries on `5xx`, silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
+For rollout patterns like canary and blue/green, we want version-specific destinations that the route can name directly. Create versioned Services (`passenger-portal-v1`, `passenger-portal-v2`) and let {{site.mesh_product_name}} generate the matching `MeshService` resources from them:
 
 ```bash
 echo 'apiVersion: v1
@@ -156,9 +140,9 @@ spec:
       appProtocol: http' | kubectl apply -f -
 ```
 
-### Configure the weighted route
+## Configure the weighted route
 
-Now, create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to every client that calls `passenger-portal`. For how `backendRefs` and `weight` divide traffic across the two versions, see [MeshHTTPRoute](/mesh/policies/meshhttproute/). (To roll the split out to only some clients first, narrow the top level to `Dataplane` with a `labels:` selector.)
+Create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to every client that calls `passenger-portal`:
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
@@ -190,8 +174,30 @@ spec:
                 weight: 10 # 10% traffic to canary' | kubectl apply -f -
 ```
 
-{:.info}
-> Because we used explicit `MeshService` resources, you can go to your Prometheus dashboard and see metrics broken down by `passenger-portal-v1` and `passenger-portal-v2` as separate entities, without needing to adjust your PromQL queries for complex tag filtering.
+## Authorize check-in-api to call passenger-portal
+
+The mesh-wide `MeshTLS` from [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/) enforces strict mTLS and default-deny on every workload, including `passenger-portal`. That guide only authorized `flight-control` to call `check-in-api`, so grant `check-in-api` access to `passenger-portal` too:
+
+```bash
+echo 'apiVersion: kuma.io/v1alpha1
+kind: MeshTrafficPermission
+metadata:
+  name: allow-check-in-to-passenger-portal
+  namespace: {{site.mesh_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: passenger-portal
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Exact
+              value: spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/check-in-api' | kubectl apply -f -
+```
 
 ## Validate
 
@@ -218,9 +224,7 @@ The Kong Air demo apps don't echo a version string, the nginx-based app just ret
    echo "v1=$v1 v2=$v2"
    ```
 
-1. Confirm the observed distribution is close to the configured 90/10 weight:
-
-   Expected output (allow for some variance across 50 requests):
+1. Confirm that the observed distribution is close to the configured 90/10 weight:
 
    ```text
    v1=45 v2=5
