@@ -198,3 +198,8 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 {:.no-copy-code}
 
 Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}} and are routed to Bedrock.
+
+{% validation claude-code %}
+prompt: Tell me about Vienna Oribasius manuscript.
+model: my-claude-bedrock
+{% endvalidation %}

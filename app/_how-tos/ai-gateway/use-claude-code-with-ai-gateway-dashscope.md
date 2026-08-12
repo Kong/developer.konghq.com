@@ -32,6 +32,9 @@ tldr:
   a: Create an AI Model Provider for Alibaba Cloud DashScope and an AI Model with the `anthropic` format that targets it, then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests pass through the gateway for monitoring and control.
 
 prereqs:
+  konnect:
+    - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE
+      value: 2m
   inline:
     - title: DashScope
       icon_url: /assets/icons/dashscope.svg
@@ -73,11 +76,18 @@ ai_gateway_models:
     display_name: "Claude Code - DashScope Qwen"
     type: model
     enabled: true
-    formats: [{ type: anthropic }]
+    formats:
+      - type: anthropic
     config:
-      route: { paths: [/], methods: [GET, POST], model: { body_param: model, values: [qwen-plus] } }
-      model: { name_header: true }
-    capabilities: [generate]
+      route:
+        paths:
+          - /
+        model:
+          body_param: model
+          values:
+            - qwen-plus
+    capabilities:
+      - generate
     targets:
       - name: qwen-plus
         provider: dashscope
@@ -101,11 +111,21 @@ In this example we set:
 
 Before starting {{ site.claude_code }}, confirm the route works by sending an Anthropic Messages API request directly:
 
-```sh
-curl -sS http://localhost:8000/v1/messages \
-  -H 'Content-Type: application/json' \
-  -d '{"model":"qwen-plus","max_tokens":16,"messages":[{"role":"user","content":"Reply with just: ok"}]}'
-```
+{% validation request-check %}
+url: /v1/messages
+status_code: 200
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: $DASHSCOPE_AUTH_HEADER'
+body:
+  model: qwen-plus
+  max_tokens: 16
+  messages:
+    - role: 'user'
+      content: "Reply with just: ok"
+{% endvalidation %}
 
 ## Start and use Claude Code
 
@@ -117,6 +137,7 @@ ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'qwen-plus'
 
 When {{ site.claude_code }} asks for permission to work with your files, select **Yes, continue**. The session will start. Ask a question to confirm traffic flows through {{site.ai_gateway}} to the upstream Qwen model:
 
-```text
-Say hello in one sentence.
-```
+{% validation claude-code %}
+prompt: Say hello in one sentence.
+model: qwen-plus
+{% endvalidation %}
