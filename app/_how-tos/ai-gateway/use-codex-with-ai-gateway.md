@@ -101,7 +101,7 @@ In this example, we're setting up the AI Model with:
 * `config.route.model: { body_param: model, values: [gpt-5.4] }`: The model name the Codex CLI sends in each request.
 * `route.paths: [/codex]`: The base path Codex points at; the Responses API is served at `/codex/responses`.
 
-## Verify the AI Model
+## Verify traffic through {{site.ai_gateway}}
 
 Before starting Codex, confirm the route works by sending a Responses API request directly (expect `200`):
 
