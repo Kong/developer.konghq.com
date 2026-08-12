@@ -24,6 +24,9 @@ prereqs:
   inline:
     - title: OpenAI API key
       include_content: md/ai-gateway/v2/prereqs/openai-kongctl
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
 
 min_version:
   ai-gateway: '2.0'

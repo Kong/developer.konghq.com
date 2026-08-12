@@ -66,7 +66,7 @@ In this example, we're setting up the AI Model Provider with:
 
 * `type: anthropic`: Specifies that this provider connects to the Anthropic service using Anthropic's standard API format.
 * `name: generic-anthropic`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth`: Adds the Anthropic API key set in the `ANTHROPIC_API_KEY` environment variable. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+* `config.auth.headers[0].value: !env ANTHROPIC_API_KEY`: Loads the API key from your environment at apply time so it is not embedded in the config.
 
 ## Create an AI Model entity
 
