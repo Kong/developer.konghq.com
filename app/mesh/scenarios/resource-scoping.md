@@ -2,7 +2,7 @@
 title: Resource scoping
 content_type: reference
 layout: reference
-description: Learn why some {{site.mesh_product_name}} resources must be applied to the Global Control Plane, and why certain resources on Kubernetes must live in the system namespace. A foundational guide for operators new to the mesh.
+description: Learn why some {{site.mesh_product_name}} resources must be applied to the global control plane, and why certain resources on Kubernetes must live in the system namespace. A foundational guide for operators new to the mesh.
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
@@ -19,295 +19,159 @@ related_resources:
     url: /mesh/single-zone/
   - text: Multi-zone deployment
     url: /mesh/mesh-multizone-service-deployment/
-  - text: Federate a zone Control Plane
+  - text: Federate a zone control plane
     url: /mesh/federate-zone/
 ---
-{{site.mesh_product_name}} can be deployed in two main architectures:
+{{site.mesh_product_name}} splits configuration authority between two types of control planes: a global control plane and a zone control plane. This page covers which type owns a given resource, and where that resource must live on Kubernetes.
 
-### Non-federated zone (single CP)
-A non-federated zone is a Zone CP that is not connected to a Global CP. This is common for single Kubernetes clusters or single-site Universal deployments; see [Single-zone deployment](/mesh/single-zone/) for how to set one up.
-*   The Zone CP is the only authority.
-*   All resources (Meshes, Policies, etc.) are applied directly to this one CP.
-*   Scoping rules (Global vs Zone) do not apply because there is only one tier.
-*   You can later [federate the zone](/mesh/federate-zone/) into a Global CP without redeploying.
+## Deployment architectures
 
-### Federated multi-zone (production/scale)
-In a federated multi-zone deployment, the architecture is split into two distinct tiers. See [Multi-zone deployment](/mesh/mesh-multizone-service-deployment/) for how to connect zones, and [Federate a zone Control Plane](/mesh/federate-zone/) for joining an existing zone to a Global CP.
+Whether scoping rules apply at all depends on which of these two architectures you're running:
+
+### Non-federated zone
+
+A non-federated zone is a zone control plane that isn't connected to a global CP. This is common for single Kubernetes clusters or single-site Universal deployments. For more information, see [Single-zone deployment](/mesh/single-zone/). In a single zone deployment:
+
+* The zone CP is the only authority. There's no global CP to defer to.
+* All resources (meshes, policies, and so on) are applied directly to the zone CP.
+* Scoping rules (global vs. zone) don't apply, because there's only one type of control plane.
+* You can later [federate the zone](/mesh/federate/) into a global CP without redeploying.
+
+### Federated multi-zone
+
+In a federated multi-zone deployment, the architecture splits into two distinct parts. The following diagram shows the architecture of a multi-zone deployment. For more information, see [Multi-zone deployment](/mesh/mesh-multizone-service-deployment/).
 
 {% mermaid %}
 flowchart TD
-    GCP["🌐 Global Control Plane<br/>──────────────────────<br/>Authoritative registry for all meshes<br/>Typically a standalone deployment backed by a PostgreSQL database<br/>Syncs config DOWN via KDS"]
+    GCP["Global control plane<br/>Authoritative registry for all meshes<br/>Syncs config down via KDS"]
 
     GCP -- "Kuma Discovery Service (KDS)" --> ZCP_EU
     GCP -- "Kuma Discovery Service (KDS)" --> ZCP_US
 
-    ZCP_EU["Zone CP: EU<br/>─────────────<br/>Kubernetes<br/>Zone proxies"]
-    ZCP_US["Zone CP: US<br/>─────────────<br/>Universal VM<br/>Zone proxies"]
+    ZCP_EU["Zone CP: EU<br/>Kubernetes<br/>zone proxies"]
+    ZCP_US["Zone CP: US<br/>Universal VM<br/>zone proxies"]
 {% endmermaid %}
 
-The Global CP is the single source of truth. It distributes policies and infrastructure resources to all Zone CPs using the Kuma Discovery Service (KDS). 
+The global CP is the single source of truth. It distributes policies and infrastructure resources to every zone CP over the Kuma Discovery Service (KDS). Once a zone CP connects to a global CP, it's called a federated zone: it becomes read-only for global resources and defers to the global CP as the authoritative leader.
 
-When a Zone CP is connected to a Global CP, it is technically called a Federated Zone. In this state, the Zone CP automatically becomes "read-only" for Global resources, as it now defers to the Global CP as the authoritative leader.
+This is useful as an organization like Kong Air grows:
 
-### The benefits (and responsibility) of scale
+* **Operational safety**: if the global CP is offline for maintenance, zone CPs keep running.
+* **Geographic scale**: a zone CP in `EU` doesn't need to talk to a zone CP in `US` to handle local traffic, which keeps latency low and reliability high.
+* **Security scoping**: you can grant the `EU` infrastructure team access to only their local zone CP, while the core platform team manages the global CP.
 
-Separating the Global and Zone tiers provides massive benefits for a growing organization like Kong Air:
+That separation is why targeting is important: if any zone CP could change global `Mesh` settings, you'd quickly end up with conflicting configuration.
 
-- Operational Safety: If the Global CP is offline for maintenance, your Zone CPs keep running. Your flights keep flying, even if you can't push a new policy at that exact moment.
-- Geographic Scale: A Zone CP in `EU` doesn't need to talk to a Zone CP in `US` to handle local traffic. This keeps latency low and reliability high.
-- Security Scoping: You can grant your `EU` infrastructure team access only to their local Zone CP, while the core platform team manages the Global CP.
+## Resource ownership
 
-Because of this separation, you must be specific about where you target resources. If we allowed every Zone CP to change the "Main" Mesh settings, we would quickly end up with conflicting configurations and a "split-brain" mesh.
-
----
-
-## Why this matters: who "owns" each resource?
-
-Each resource type in {{site.mesh_product_name}} has a defined owner: the tier that is authorized to create, modify, and delete it.
-
-### Global CP only: mesh infrastructure
-
-These resources define the structure of your mesh. Kong Air's network operations team controls them from a single point of authority.
+Each resource type has a defined owner: the control plane type that can create, modify, and delete it. On Kubernetes, some resources are further restricted to the system namespace (`{{site.mesh_namespace}}`).
 
 <!-- vale off -->
 {% table %}
 columns:
   - title: Resource
     key: resource
-  - title: Why Global Only
-    key: why_global_only
+  - title: Scope
+    key: scope
+  - title: K8s namespace
+    key: k8s_namespace
+  - title: Why
+    key: why
 rows:
   - resource: |
       `Mesh`
-    why_global_only: |
+    scope: |
+      Global CP only
+    k8s_namespace: |
+      System namespace
+    why: |
       Defines a mesh and its mTLS config. Zones receive a read-only copy via KDS.
   - resource: |
       `MeshMultiZoneService`
-    why_global_only: |
-      Declares a service that spans multiple zones. The Global CP is the only entity with the full cross-zone topology picture.
-{% endtable %}
-<!-- vale on -->
-
-{:.warning}
-> Always apply `Mesh` and `MeshMultiZoneService` to the Global Control Plane. If your Global CP runs on Kubernetes, use `kubectl apply` against the Global CP kubeconfig and place the resource in the system namespace. On a Kubernetes-native Global CP you cannot use arbitrary namespaces or CRDs; only the system namespace ({{site.mesh_namespace}}) is supported. If it is Universal, use `kumactl apply` pointed at the Global CP API.
-
-### Global or Zone CP: identity & policy resources
-
-These resources can be created at either tier and will be synced to the other via KDS. This gives teams flexibility: a security team might manage `MeshIdentity` centrally, while application teams manage `MeshTrafficPermission` locally in their zone.
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Resource
-    key: resource
-  - title: Where to Apply
-    key: where_to_apply
-  - title: Notes
-    key: notes
-rows:
+    scope: |
+      Global CP only
+    k8s_namespace: |
+      System namespace
+    why: |
+      Declares a service that spans multiple zones. Only the global CP has the full cross-zone topology.
   - resource: |
       `MeshIdentity`
-    where_to_apply: |
-      Global CP or Zone CP
-    notes: |
-      Must be in the system namespace on K8s
+    scope: |
+      Global or zone CP
+    k8s_namespace: |
+      System namespace
+    why: |
+      A cluster-wide identity authority. Restricting it to the system namespace keeps CA changes in platform engineers' hands.
   - resource: |
       `MeshTrust`
-    where_to_apply: |
-      Global CP or Zone CP
-    notes: |
-      Must be in the system namespace on K8s
+    scope: |
+      Global or zone CP
+    k8s_namespace: |
+      System namespace
+    why: |
+      Same authority-scoping rationale as `MeshIdentity`.
   - resource: |
       `MeshTrafficPermission`
-    where_to_apply: |
-      Global CP or Zone CP
-    notes: |
+    scope: |
+      Global or zone CP
+    k8s_namespace: |
       Any namespace
+    why: |
+      A workload-level policy. Application teams can manage it in their own namespace.
   - resource: |
       `MeshFaultInjection`
-    where_to_apply: |
-      Global CP or Zone CP
-    notes: |
+    scope: |
+      Global or zone CP
+    k8s_namespace: |
       Any namespace
+    why: |
+      A workload-level policy.
   - resource: |
       `MeshPassthrough`
-    where_to_apply: |
-      Global CP or Zone CP
-    notes: |
+    scope: |
+      Global or zone CP
+    k8s_namespace: |
       Any namespace
+    why: |
+      A workload-level policy.
   - resource: |
       `MeshTLS`
-    where_to_apply: |
-      Global CP or Zone CP
-    notes: |
+    scope: |
+      Global or zone CP
+    k8s_namespace: |
       Any namespace
+    why: |
+      A workload-level policy.
 {% endtable %}
 <!-- vale on -->
 
-## The Kubernetes system namespace rule
+The "global or zone CP" resources sync to the other control plane type over KDS either way, so a security team can manage `MeshIdentity` centrally while application teams manage `MeshTrafficPermission` locally in their own zone.
 
-On Kubernetes, resources like `MeshIdentity` and `MeshTrust` must be created in the system namespace (typically `kong-mesh-system`). 
+{:.warning}
+> Apply `Mesh` and `MeshMultiZoneService` only to the global CP. On a Kubernetes-hosted global CP, use `kubectl apply` against its kubeconfig and the system namespace; arbitrary namespaces and CRDs aren't supported. On a Universal global CP, use `kumactl apply` against its API.
 
-### Why a system namespace?
+## Kubernetes system namespace
 
-`MeshIdentity` is a cluster-wide identity authority. It tells every Envoy proxy in the mesh which CA certificate to use when establishing its SPIFFE identity. This is not a per-application setting; it's a certificate authority configuration.
+`MeshIdentity` is a cluster-wide identity authority: it tells every Envoy proxy in the mesh which CA certificate to use when establishing its SPIFFE identity. That's not a per-application setting, it's a certificate authority configuration, which is why it (along with `MeshTrust`) must be created in the system namespace (typically `kong-mesh-system`) rather than an application namespace.
 
-Placing it in the system namespace enforces two key properties:
-1. Access control: The system namespace is typically restricted to platform engineers, not application developers. This prevents a developer from accidentally (or intentionally) changing the CA for all services in the mesh.
-2. Clear authority: It signals to operators that this resource is at the "infrastructure" level, just like a `ClusterIssuer` in cert-manager belongs to the platform, not to a single app.
+Placing it in the system namespace enforces two properties:
 
-### Summary for Kubernetes users
+* **Access control**: the system namespace is typically restricted to platform engineers, not application developers. This prevents a developer from accidentally, or intentionally, changing the CA for every service in the mesh.
+* **Clear authority**: it signals to operators that the resource is infrastructure-level, the same way a `ClusterIssuer` in cert-manager belongs to the platform rather than to a single app.
 
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Resource
-    key: resource
-  - title: Namespace
-    key: namespace
-rows:
-  - resource: |
-      `Mesh`
-    namespace: |
-      Applied to the Global CP (system namespace only)
-  - resource: |
-      `MeshMultiZoneService`
-    namespace: |
-      Applied to the Global CP, in the system namespace
-  - resource: |
-      `MeshIdentity`
-    namespace: |
-      `kong-mesh-system` (system namespace only)
-  - resource: |
-      `MeshTrust`
-    namespace: |
-      `kong-mesh-system` (system namespace only)
-  - resource: |
-      `MeshTrafficPermission`
-    namespace: |
-      Any namespace (workload or system)
-  - resource: |
-      `MeshFaultInjection`
-    namespace: |
-      Any namespace
-  - resource: |
-      `MeshPassthrough`
-    namespace: |
-      Any namespace
-{% endtable %}
-<!-- vale on -->
+## Universal mode scoping
 
-## Universal mode: simpler scoping
-
-In Universal mode, there are no Kubernetes namespaces. Resources are identified by their `name` and `mesh` fields only. The control plane tier (Global vs Zone) is determined purely by which CP API you point `kumactl` at.
+In Universal mode, there are no Kubernetes namespaces. Resources are identified by their `name` and `mesh` fields only, and the control plane type (global vs. zone) is determined purely by which CP API you point `kumactl` at:
 
 ```bash
-# Applying to the Global CP
+# Applying to the global CP
 kumactl config control-planes use global-cp
 kumactl apply -f mesh.yaml
 
-# Applying to a specific Zone CP
+# Applying to a specific zone CP
 kumactl config control-planes use zone-eu-cp
 kumactl apply -f mesh-traffic-permission.yaml
 ```
 
 {:.info}
-> In Universal mode, you can verify which CP you're pointing at with `kumactl get control-planes`.
-
-## Quick reference
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Resource
-    key: resource
-  - title: Apply To
-    key: apply_to
-  - title: K8s Namespace
-    key: k8s_namespace
-rows:
-  - resource: |
-      `Mesh`
-    apply_to: |
-      Global CP only
-    k8s_namespace: |
-      System NS on K8s
-  - resource: |
-      `MeshMultiZoneService`
-    apply_to: |
-      Global CP only
-    k8s_namespace: |
-      System NS on K8s
-  - resource: |
-      `MeshIdentity`
-    apply_to: |
-      Global or Zone
-    k8s_namespace: |
-      System NS only
-  - resource: |
-      `MeshTrust`
-    apply_to: |
-      Global or Zone
-    k8s_namespace: |
-      System NS only
-  - resource: |
-      `MeshTrafficPermission`
-    apply_to: |
-      Global or Zone
-    k8s_namespace: |
-      Any namespace
-  - resource: |
-      `MeshFaultInjection`
-    apply_to: |
-      Global or Zone
-    k8s_namespace: |
-      Any namespace
-  - resource: |
-      `MeshPassthrough`
-    apply_to: |
-      Global or Zone
-    k8s_namespace: |
-      Any namespace
-  - resource: |
-      `MeshTLS`
-    apply_to: |
-      Global or Zone
-    k8s_namespace: |
-      Any namespace
-{% endtable %}
-<!-- vale on -->
-
-
-## How this appears in the documentation
-
-Throughout the {{site.mesh_product_name}} scenario guides, code blocks use tabs to show both Kubernetes and Universal variations. The tab label tells you which control plane tier to target:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Tab Label
-    key: tab_label
-  - title: Meaning
-    key: meaning
-rows:
-  - tab_label: |
-      `Kubernetes (Global CP)`
-    meaning: |
-      Run `kubectl apply` against your Global Control Plane kubeconfig. Only relevant when your Global CP is K8s-hosted.
-  - tab_label: |
-      `Universal (Global CP)`
-    meaning: |
-      Run `kumactl apply` pointed at your Global CP API. Applies when the Global CP is a standalone Universal server.
-  - tab_label: |
-      `Kubernetes`
-    meaning: |
-      Run `kubectl apply` against any K8s cluster running a zone CP (or standalone). No Global CP context required.
-  - tab_label: |
-      `Universal`
-    meaning: |
-      Run `kumactl apply` against any Universal zone CP or standalone deployment.
-{% endtable %}
-<!-- vale on -->
-
-{:.info}
-> When you see the (Global CP) qualifier on a tab, that is your signal that only the Global CP has authority over that resource. If you attempt to apply it to a Zone CP, the API or Admission Webhook will block the request with a `Forbidden` error.
+> Verify which CP you're pointing at with `kumactl get control-planes`.
