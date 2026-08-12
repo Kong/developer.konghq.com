@@ -62,7 +62,7 @@ ai_gateway_model_providers:
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
-In this example, we're setting up the AI Model Provider with:
+The AI Model Provider uses the following settings:
 
 * `type: anthropic`: Specifies that this provider connects to the Anthropic service using Anthropic's standard API format.
 * `name: generic-anthropic`: A unique identifier that AI Models will reference to route requests through this provider.
@@ -99,7 +99,7 @@ ai_gateway_models:
       - generate
 {% endentity_examples %}
 
-In this example, we're setting up the AI Model with:
+The AI Model uses the following settings:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-claude`: A unique identifier for this model.
