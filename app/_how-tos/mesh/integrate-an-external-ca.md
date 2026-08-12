@@ -1,7 +1,6 @@
 ---
 title: Integrate an external CA
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/integrate-an-external-ca/
 description: Move beyond the built-in CA. Learn how to integrate {{site.mesh_product_name}} with enterprise PKI solutions like HashiCorp Vault and cert-manager for automated certificate management.
 breadcrumbs:
@@ -91,166 +90,133 @@ This example uses cert-manager to mint a self-signed CA, but any CA material wor
 {:.info}
 > This is not the same as the cert-manager extension in the next section. Here, cert-manager only generates a CA certificate that you then hand to the `Bundled` provider. The extension delegates live signing to cert-manager on every rotation.
 
-```bash
-# Bootstrap a self-signed root issuer
-kubectl apply -f - <<'EOF'
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: selfsigned-issuer
-spec:
-  selfSigned: {}
----
-# Generate the CA cert, cert-manager stores it in a kubernetes.io/tls Secret
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: kong-air-mesh-ca
-  namespace: {{site.mesh_namespace}}
-spec:
-  isCA: true
-  commonName: kong-air-mesh-ca
-  duration: 87600h   # 10-year CA
-  renewBefore: 720h  # cert-manager renews 30 days before expiry
-  secretName: kong-air-mesh-ca-tls
-  privateKey:
-    algorithm: ECDSA
-    size: 256
-  issuerRef:
-    name: selfsigned-issuer
-    kind: ClusterIssuer
-    group: cert-manager.io
-EOF
+1. Bootstrap a self-signed CA with cert-manager:
 
-kubectl wait --for=condition=ready certificate/kong-air-mesh-ca \
-  -n {{site.mesh_namespace}} --timeout=30s
-```
+   ```bash
+   # Bootstrap a self-signed root issuer
+   kubectl apply -f - <<'EOF'
+   apiVersion: cert-manager.io/v1
+   kind: ClusterIssuer
+   metadata:
+     name: selfsigned-issuer
+   spec:
+     selfSigned: {}
+   ---
+   # Generate the CA cert, cert-manager stores it in a kubernetes.io/tls Secret
+   apiVersion: cert-manager.io/v1
+   kind: Certificate
+   metadata:
+     name: kong-air-mesh-ca
+     namespace: {{site.mesh_namespace}}
+   spec:
+     isCA: true
+     commonName: kong-air-mesh-ca
+     duration: 87600h   # 10-year CA
+     renewBefore: 720h  # cert-manager renews 30 days before expiry
+     secretName: kong-air-mesh-ca-tls
+     privateKey:
+       algorithm: ECDSA
+       size: 256
+     issuerRef:
+       name: selfsigned-issuer
+       kind: ClusterIssuer
+       group: cert-manager.io
+   EOF
 
-Then bridge the cert-manager Secret to a {{site.mesh_product_name}} Secret. {{site.mesh_product_name}} reads `data.value` (raw PEM) from `system.kuma.io/secret` type Secrets:
+   kubectl wait --for=condition=ready certificate/kong-air-mesh-ca \
+     -n {{site.mesh_namespace}} --timeout=30s
+   ```
 
-```bash
-# Extract PEM values from the cert-manager TLS Secret
-CERT_PEM=$(kubectl get secret kong-air-mesh-ca-tls \
-  -n {{site.mesh_namespace}} -o jsonpath='{.data.tls\.crt}' | base64 -d)
-KEY_PEM=$(kubectl get secret kong-air-mesh-ca-tls \
-  -n {{site.mesh_namespace}} -o jsonpath='{.data.tls\.key}' | base64 -d)
+1. Bridge the cert-manager Secret to a {{site.mesh_product_name}} Secret. {{site.mesh_product_name}} reads `data.value` (raw PEM) from `system.kuma.io/secret` type Secrets:
 
-# Create {{site.mesh_product_name}} Secrets, note type: system.kuma.io/secret and the value key
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Secret
-metadata:
-  name: kong-air-external-ca-cert
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-type: system.kuma.io/secret
-stringData:
-  value: |
-$(echo "$CERT_PEM" | sed 's/^/    /')
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: kong-air-external-ca-key
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-type: system.kuma.io/secret
-stringData:
-  value: |
-$(echo "$KEY_PEM" | sed 's/^/    /')
-EOF
-```
+   ```bash
+   # Extract PEM values from the cert-manager TLS Secret
+   CERT_PEM=$(kubectl get secret kong-air-mesh-ca-tls \
+     -n {{site.mesh_namespace}} -o jsonpath='{.data.tls\.crt}' | base64 -d)
+   KEY_PEM=$(kubectl get secret kong-air-mesh-ca-tls \
+     -n {{site.mesh_namespace}} -o jsonpath='{.data.tls\.key}' | base64 -d)
 
-{:.info}
-> For production, automate this sync with an external-secrets operator or a cert-manager `ExternalSecret` so {{site.mesh_product_name}} Secrets stay up-to-date when cert-manager rotates the CA.
+   # Create {{site.mesh_product_name}} Secrets, note type: system.kuma.io/secret and the value key
+   kubectl apply -f - <<EOF
+   apiVersion: v1
+   kind: Secret
+   metadata:
+     name: kong-air-external-ca-cert
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+   type: system.kuma.io/secret
+   stringData:
+     value: |
+   $(echo "$CERT_PEM" | sed 's/^/    /')
+   ---
+   apiVersion: v1
+   kind: Secret
+   metadata:
+     name: kong-air-external-ca-key
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+   type: system.kuma.io/secret
+   stringData:
+     value: |
+   $(echo "$KEY_PEM" | sed 's/^/    /')
+   EOF
+   ```
+
+   {:.info}
+   > For production, automate this sync with an external-secrets operator or a cert-manager `ExternalSecret` so {{site.mesh_product_name}} Secrets stay up-to-date when cert-manager rotates the CA.
 
 ### Step 2: create the MeshIdentity
 
 Point the `Bundled` provider at the two {{site.mesh_product_name}} Secrets from Step 1:
 
-{% navtabs "meshidentity-ca" %}
-{% navtab "Kubernetes (Zone CP)" %}
-```bash
-kubectl apply -f - <<'EOF'
-apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: flight-operations-id
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  provider:
-    type: Bundled
-    bundled:
-      insecureAllowSelfSigned: true # Required when CA is self-signed; omit for a corporate sub-CA
-      ca:
-        certificate:
-          type: Secret
-          secretRef:
-            kind: Secret
-            name: kong-air-external-ca-cert  # Name of the {{site.mesh_product_name}} Secret (system.kuma.io/secret)
-        privateKey:
-          type: Secret
-          secretRef:
-            kind: Secret
-            name: kong-air-external-ca-key
-  selector:
-    dataplane:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh
-        app: flight-control
-  spiffeID:
-    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
-    trustDomain: internal.kongair.com
-EOF
-```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-kumactl apply -f - <<'EOF'
-type: MeshIdentity
-name: flight-operations-id
-mesh: kong-air-mesh
-spec:
-  provider:
-    type: Bundled
-    bundled:
-      insecureAllowSelfSigned: true
-      ca:
-        certificate:
-          type: Secret
-          secretRef:
-            kind: Secret
-            name: kong-air-external-ca-cert
-        privateKey:
-          type: Secret
-          secretRef:
-            kind: Secret
-            name: kong-air-external-ca-key
-  selector:
-    dataplane:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh
-        app: flight-control
-  spiffeID:
-    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
-    trustDomain: internal.kongair.com
-EOF
-```
-{% endnavtab %}
-{% endnavtabs %}
+1. Apply the `MeshIdentity`:
 
-Verify: After restarting the targeted workloads, check that the MeshService shows the new trust domain:
+   ```bash
+   kubectl apply -f - <<'EOF'
+   apiVersion: kuma.io/v1alpha1
+   kind: MeshIdentity
+   metadata:
+     name: flight-operations-id
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/origin: zone
+   spec:
+     provider:
+       type: Bundled
+       bundled:
+         insecureAllowSelfSigned: true # Required when CA is self-signed; omit for a corporate sub-CA
+         ca:
+           certificate:
+             type: Secret
+             secretRef:
+               kind: Secret
+               name: kong-air-external-ca-cert  # Name of the {{site.mesh_product_name}} Secret (system.kuma.io/secret)
+           privateKey:
+             type: Secret
+             secretRef:
+               kind: Secret
+               name: kong-air-external-ca-key
+     selector:
+       dataplane:
+         matchLabels:
+           kuma.io/mesh: kong-air-mesh
+           app: flight-control
+     spiffeID:
+       path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
+       trustDomain: internal.kongair.com
+   EOF
+   ```
 
-```bash
-kubectl get meshservice flight-control -n kong-air-production \
-  -o jsonpath='{.spec.identities}' | jq .
-# Expected: includes "spiffe://internal.kongair.com/ns/kong-air-production/sa/flight-control"
-```
+1. After restarting the targeted workloads, verify the MeshService shows the new trust domain:
+
+   ```bash
+   kubectl get meshservice flight-control -n kong-air-production \
+     -o jsonpath='{.spec.identities}' | jq .
+   # Expected: includes "spiffe://internal.kongair.com/ns/kong-air-production/sa/flight-control"
+   ```
 
 ## Extension providers
 
@@ -262,99 +228,101 @@ All three providers below share the same `spiffeID.path` and `trustDomain`, so t
 
 Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the mesh CA.
 
-```bash
-# Install cert-manager
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.3/cert-manager.yaml
-kubectl wait --for=condition=ready pod -n cert-manager \
-  -l app.kubernetes.io/instance=cert-manager --timeout=90s
+1. Install cert-manager and create a CA-backed `Issuer`:
 
-# Create a SelfSigned bootstrap issuer, a CA Certificate, and the CA-backed Issuer
-kubectl apply -f - <<'EOF'
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: selfsigned-issuer
-spec:
-  selfSigned: {}
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: kong-air-mesh-ca
-  namespace: {{site.mesh_namespace}}
-spec:
-  isCA: true
-  commonName: kong-air-mesh-ca
-  duration: 87600h
-  renewBefore: 720h
-  secretName: kong-air-mesh-ca-secret
-  privateKey:
-    algorithm: ECDSA
-    size: 256
-  issuerRef:
-    name: selfsigned-issuer
-    kind: ClusterIssuer
-    group: cert-manager.io
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: kong-air-mesh-ca-issuer
-  namespace: {{site.mesh_namespace}}
-spec:
-  ca:
-    secretName: kong-air-mesh-ca-secret
-EOF
+   ```bash
+   # Install cert-manager
+   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.3/cert-manager.yaml
+   kubectl wait --for=condition=ready pod -n cert-manager \
+     -l app.kubernetes.io/instance=cert-manager --timeout=90s
 
-kubectl wait --for=condition=ready certificate/kong-air-mesh-ca \
-  -n {{site.mesh_namespace}} --timeout=30s
-```
+   # Create a SelfSigned bootstrap issuer, a CA Certificate, and the CA-backed Issuer
+   kubectl apply -f - <<'EOF'
+   apiVersion: cert-manager.io/v1
+   kind: ClusterIssuer
+   metadata:
+     name: selfsigned-issuer
+   spec:
+     selfSigned: {}
+   ---
+   apiVersion: cert-manager.io/v1
+   kind: Certificate
+   metadata:
+     name: kong-air-mesh-ca
+     namespace: {{site.mesh_namespace}}
+   spec:
+     isCA: true
+     commonName: kong-air-mesh-ca
+     duration: 87600h
+     renewBefore: 720h
+     secretName: kong-air-mesh-ca-secret
+     privateKey:
+       algorithm: ECDSA
+       size: 256
+     issuerRef:
+       name: selfsigned-issuer
+       kind: ClusterIssuer
+       group: cert-manager.io
+   ---
+   apiVersion: cert-manager.io/v1
+   kind: Issuer
+   metadata:
+     name: kong-air-mesh-ca-issuer
+     namespace: {{site.mesh_namespace}}
+   spec:
+     ca:
+       secretName: kong-air-mesh-ca-secret
+   EOF
 
-Apply the `MeshIdentity`:
+   kubectl wait --for=condition=ready certificate/kong-air-mesh-ca \
+     -n {{site.mesh_namespace}} --timeout=30s
+   ```
 
-```bash
-kubectl apply -f - <<'EOF'
-apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: kong-air-certmanager-identity
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  selector:
-    dataplane:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh
-        app: flight-control
-  spiffeID:
-    trustDomain: internal.kongair.com
-    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
-  provider:
-    type: Extension
-    extension:
-      name: certmanager
-      config:
-        issuerRef:
-          name: kong-air-mesh-ca-issuer
-          kind: Issuer
-          group: cert-manager.io
-EOF
-```
+1. Apply the `MeshIdentity`:
 
-How it works: {{site.mesh_product_name}} creates a `CertificateRequest` in `{{site.mesh_namespace}}` for each sidecar that needs a new identity cert. cert-manager approves and signs it using the configured `Issuer`, and the signed cert is delivered to the sidecar via xDS. CertificateRequests are cleaned up after use.
+   ```bash
+   kubectl apply -f - <<'EOF'
+   apiVersion: kuma.io/v1alpha1
+   kind: MeshIdentity
+   metadata:
+     name: kong-air-certmanager-identity
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/origin: zone
+   spec:
+     selector:
+       dataplane:
+         matchLabels:
+           kuma.io/mesh: kong-air-mesh
+           app: flight-control
+     spiffeID:
+       trustDomain: internal.kongair.com
+       path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
+     provider:
+       type: Extension
+       extension:
+         name: certmanager
+         config:
+           issuerRef:
+             name: kong-air-mesh-ca-issuer
+             kind: Issuer
+             group: cert-manager.io
+   EOF
+   ```
 
-Verify:
+   How it works: {{site.mesh_product_name}} creates a `CertificateRequest` in `{{site.mesh_namespace}}` for each sidecar that needs a new identity cert. cert-manager approves and signs it using the configured `Issuer`, and the signed cert is delivered to the sidecar via xDS. CertificateRequests are cleaned up after use.
 
-```bash
-# Watch for CertificateRequests being created and signed as workloads connect
-kubectl get certificaterequests -n {{site.mesh_namespace}} -w
+1. Verify:
 
-# After workloads restart, check SPIFFE IDs
-kubectl get meshservice flight-control -n kong-air-production \
-  -o jsonpath='{.spec.identities}' | jq .
-```
+   ```bash
+   # Watch for CertificateRequests being created and signed as workloads connect
+   kubectl get certificaterequests -n {{site.mesh_namespace}} -w
+
+   # After workloads restart, check SPIFFE IDs
+   kubectl get meshservice flight-control -n kong-air-production \
+     -o jsonpath='{.spec.identities}' | jq .
+   ```
 
 ### HashiCorp Vault
 
@@ -510,3 +478,36 @@ sequenceDiagram
     V-->>CP: 5. Return Signed Certificate
     CP->>DP: 6. Push Identity via xDS
 {% endmermaid %}
+
+## Validate
+
+1. Confirm the `MeshTrust` auto-created for `flight-operations-id` carries your external CA, not a self-signed autogenerated one. `meshTrustCreation` defaults to `Enabled`, so a `MeshTrust` named `flight-operations-id` exists as soon as the `MeshIdentity` is applied:
+
+   ```sh
+   kubectl get meshtrust flight-operations-id -n {{site.mesh_namespace}} \
+     -o jsonpath='{.spec.caBundles[0].pem.value}' | openssl x509 -noout -subject -issuer
+   ```
+
+   Expected output matches the `kong-air-mesh-ca` certificate you created in Step 1, confirming the mesh trusts your external CA rather than an autogenerated one:
+
+   ```text
+   subject=CN = kong-air-mesh-ca
+   issuer=CN = kong-air-mesh-ca
+   ```
+   {:.no-copy-code}
+
+1. Confirm `flight-control` is actually issuing certificates from that identity, not the mesh-wide `kong-air-identity`:
+
+   ```sh
+   FLIGHT_POD=$(kubectl get pod -n kong-air-production -l app=flight-control -o jsonpath='{.items[0].metadata.name}')
+   kubectl get dataplaneinsight "$FLIGHT_POD" -n kong-air-production -o jsonpath='{.status.mTLS.issuedBackend}{"\n"}'
+   ```
+
+   Expected output:
+
+   ```text
+   kri_mid_kong-air-mesh___flight-operations-id_
+   ```
+   {:.no-copy-code}
+
+Together, these two checks confirm the external CA is actually rooting `flight-control`'s identity: the auto-generated `MeshTrust` carries your CA's certificate, and the workload's issued certificate is backed by the `MeshIdentity` you pointed at it.

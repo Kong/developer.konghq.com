@@ -1,7 +1,6 @@
 ---
 title: Validate resilience with fault injection
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/validate-resilience-with-fault-injection/
 description: Learn how to use MeshFaultInjection to proactively test your service mesh resilience. Validate retries, timeouts, and circuit breakers by simulating real-world failures.
 breadcrumbs:
@@ -55,8 +54,6 @@ Immediately return a specific HTTP status code for a percentage of requests. See
 {:.info}
 > Use `kind: Dataplane` with `labels` in `targetRef` to select the workloads being faulted. The `rules` block then names the callers whose requests should be faulted, using their SPIFFE identities. A `Prefix` match against the trust domain faults every caller; an `Exact` match faults one specific caller. (The older top-level `kind: MeshService` / `MeshSubset` selectors and the `spec.from` block are legacy forms, see the compatibility note after the example.)
 
-{% navtabs "fault-abort" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshFaultInjection
@@ -81,30 +78,6 @@ spec:
               httpStatus: 503
               percentage: 10' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshFaultInjection
-name: test-flight-control-resilience
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: flight-control
-  rules:
-    - matches:
-        - spiffeID:
-            type: Prefix
-            value: spiffe://kong-air-mesh.mesh.local
-      default:
-        http:
-          - abort:
-              httpStatus: 503
-              percentage: 10' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match against that caller's SPIFFE ID, for example `spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/passenger-portal`. This ties chaos targeting to authenticated identity rather than topology.
 
@@ -146,8 +119,6 @@ That lets Kong Air inject failures for one external dependency without disturbin
 ### HTTP delay (latency simulation)
 Introduce a fixed delay before the request is processed, simulating a slow dependency. See [MeshFaultInjection](/mesh/policies/meshfaultinjection/) for the full `delay` field definitions.
 
-{% navtabs "fault-delay" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshFaultInjection
@@ -172,36 +143,10 @@ spec:
               value: 5s
               percentage: 50' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshFaultInjection
-name: test-check-in-api-latency
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: check-in-api
-  rules:
-    - matches:
-        - spiffeID:
-            type: Prefix
-            value: spiffe://kong-air-mesh.mesh.local
-      default:
-        http:
-          - delay:
-              value: 5s
-              percentage: 50' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ### Response rate limit (throttling simulation)
 Limit the speed at which the response body is delivered to the client. See [MeshFaultInjection](/mesh/policies/meshfaultinjection/) for the full `responseBandwidth` field definitions.
 
-{% navtabs "fault-rate-limit" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshFaultInjection
@@ -226,30 +171,6 @@ spec:
               limit: "1kbps"
               percentage: 100
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```yaml
-type: MeshFaultInjection
-name: test-flight-control-throttle
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: flight-control
-  rules:
-    - matches:
-        - spiffeID:
-            type: Prefix
-            value: spiffe://kong-air-mesh.mesh.local
-      default:
-        http:
-          - responseBandwidth:
-              limit: "1kbps"
-              percentage: 100
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Strategic chaos: the blast radius
 
@@ -258,3 +179,57 @@ One of the biggest risks of chaos engineering is accidentally breaking things fo
 1.  Start with Header Matches: Only inject faults if a specific header (for example, `x-chaos: true`) is present. This allows developers to test in production without affecting customers.
 2.  Target Non-Critical Zones: Run tests in `zone: dev` or `env: staging` before moving to production.
 3.  Low Percentages: Start with a `1%` failure rate and slowly increase it as your confidence grows.
+
+## Validate
+
+1. Confirm the HTTP abort fires for roughly the configured `percentage: 10`. From `check-in-api`, send a batch of requests to `flight-control` and count failures:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/check-in-api -- sh -c '
+   ok=0; aborted=0
+   for i in $(seq 1 50); do
+     if wget -q -T 5 -O /dev/null http://flight-control.kong-air-production.svc.cluster.local:8080/; then
+       ok=$((ok+1))
+     else
+       aborted=$((aborted+1))
+     fi
+   done
+   echo "ok=$ok aborted=$aborted"
+   '
+   ```
+
+   Expected output: roughly 1 in 10 requests fails, for example:
+
+   ```text
+   ok=45 aborted=5
+   ```
+   {:.no-copy-code}
+
+   confirming the `abort` fault (`httpStatus: 503`) fires for about `percentage: 10` of requests.
+
+1. Confirm the HTTP delay adds the configured `5s` for roughly half of requests. From `flight-control`, time a batch of requests to `check-in-api`:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/flight-control -- sh -c '
+   for i in $(seq 1 6); do
+     start=$(date +%s)
+     wget -q -T 10 -O /dev/null http://check-in-api.kong-air-production.svc.cluster.local:8080/
+     end=$(date +%s)
+     echo "request $i: $((end-start))s"
+   done
+   '
+   ```
+
+   Expected output: about half the requests return immediately and the rest take around 5 seconds longer, for example:
+
+   ```text
+   request 1: 0s
+   request 2: 5s
+   request 3: 0s
+   request 4: 5s
+   request 5: 0s
+   request 6: 0s
+   ```
+   {:.no-copy-code}
+
+   confirming the `delay` fault (`value: 5s`) fires for about `percentage: 50` of requests.

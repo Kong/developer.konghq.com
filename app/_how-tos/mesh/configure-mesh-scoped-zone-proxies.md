@@ -1,7 +1,6 @@
 ---
 title: Configure mesh-scoped zone proxies
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/configure-mesh-scoped-zone-proxies/
 description: Give each mesh its own dedicated zone ingress and egress in {{site.mesh_product_name}} 2.14, with per-mesh workload identity, targetable policy, isolated observability, and a deny-by-default egress perimeter for cross-zone traffic.
 breadcrumbs:
@@ -64,19 +63,21 @@ This is possible because each mesh-scoped proxy is just an ordinary `Dataplane` 
 
 ## Turn on Exclusive mode
 
-Mesh-scoped proxies are only generated for a mesh running in `Exclusive` mode. Confirm it first:
+Mesh-scoped proxies are only generated for a mesh running in `Exclusive` mode.
 
-```bash
-kumactl get mesh kong-air-mesh -o yaml | grep -A3 "meshServices:"
-```
+1. Confirm the mesh is running in `Exclusive` mode:
 
-If `meshServices.mode` is not `Exclusive`, switch it on:
+   ```bash
+   kubectl get mesh kong-air-mesh -o yaml | grep -A3 "meshServices:"
+   ```
 
-```bash
-kubectl patch mesh kong-air-mesh \
-  --type merge \
-  -p '{"spec":{"meshServices":{"mode":"Exclusive"}}}'
-```
+1. If `meshServices.mode` is not `Exclusive`, switch it on:
+
+   ```bash
+   kubectl patch mesh kong-air-mesh \
+     --type merge \
+     -p '{"spec":{"meshServices":{"mode":"Exclusive"}}}'
+   ```
 
 ## Give your mesh its own zone proxies
 
@@ -148,64 +149,72 @@ meshes:
 
 ## Confirm the proxies belong to your mesh
 
-Once the pods are `Running`, you can see that the zone proxies are now first-class members of `kong-air-mesh`, each one a `Dataplane` carrying the mesh label:
+Once the pods are `Running`, you can see that the zone proxies are now first-class members of `kong-air-mesh`, each one a `Dataplane` carrying the mesh label.
 
-```bash
-kubectl get pods -n kong-mesh-system \
-  -l "kuma.io/mesh=kong-air-mesh"
+1. Confirm the zone proxy pods are running:
 
-kubectl get dataplanes -n kong-mesh-system \
-  -l "kuma.io/listener-zoneingress=enabled,kuma.io/mesh=kong-air-mesh" \
-  -o yaml
-```
+   ```bash
+   kubectl get pods -n kong-mesh-system \
+     -l "kuma.io/mesh=kong-air-mesh"
+   ```
 
-A zone ingress Dataplane looks like this, note it belongs to `kong-air-mesh` and exposes a `ZoneIngress` listener:
+1. Inspect the zone ingress `Dataplane` resource:
 
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: Dataplane
-metadata:
-  name: kong-mesh-kong-air-mesh-ingress-77499bbc58-kkssn
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/zone: zone1
-    kuma.io/listener-zoneingress: enabled
-    k8s.kuma.io/zone-proxy-type: ingress
-spec:
-  networking:
-    address: 10.42.0.30
-    listeners:
-      - type: ZoneIngress
-        address: 10.42.0.30
-        port: 10001
-        name: "10001"
-        state: Ready
-```
+   ```bash
+   kubectl get dataplanes -n kong-mesh-system \
+     -l "kuma.io/listener-zoneingress=enabled,kuma.io/mesh=kong-air-mesh" \
+     -o yaml
+   ```
 
-{:.info}
-> The listener `name` (here `"10001"`) is what you use in `sectionName` to target one specific listener. For Helm-deployed proxies with no named ports it defaults to the port number as a string, `"10001"` for zone ingress and `"10002"` for zone egress.
+   A zone ingress Dataplane looks like this, note it belongs to `kong-air-mesh` and exposes a `ZoneIngress` listener:
 
-Other zones learn how to reach this mesh's ingress through a `MeshZoneAddress` that the control plane publishes for it:
+   ```yaml
+   apiVersion: kuma.io/v1alpha1
+   kind: Dataplane
+   metadata:
+     name: kong-mesh-kong-air-mesh-ingress-77499bbc58-kkssn
+     namespace: kong-mesh-system
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/zone: zone1
+       kuma.io/listener-zoneingress: enabled
+       k8s.kuma.io/zone-proxy-type: ingress
+   spec:
+     networking:
+       address: 10.42.0.30
+       listeners:
+         - type: ZoneIngress
+           address: 10.42.0.30
+           port: 10001
+           name: "10001"
+           state: Ready
+   ```
+   {:.no-copy-code}
 
-```bash
-kubectl get meshzoneaddresses -n kong-mesh-system \
-  -l "kuma.io/mesh=kong-air-mesh"
-```
+   {:.info}
+   > The listener `name` (here `"10001"`) is what you use in `sectionName` to target one specific listener. For Helm-deployed proxies with no named ports it defaults to the port number as a string, `"10001"` for zone ingress and `"10002"` for zone egress.
 
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshZoneAddress
-metadata:
-  name: kong-mesh-kong-air-mesh-ingress
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/zone: zone1
-spec:
-  address: 203.0.113.42  # public LoadBalancer IP
-  port: 10001
-```
+1. Check the `MeshZoneAddress` that the control plane publishes so other zones can reach this mesh's ingress:
+
+   ```bash
+   kubectl get meshzoneaddresses -n kong-mesh-system \
+     -l "kuma.io/mesh=kong-air-mesh"
+   ```
+
+   ```yaml
+   apiVersion: kuma.io/v1alpha1
+   kind: MeshZoneAddress
+   metadata:
+     name: kong-mesh-kong-air-mesh-ingress
+     namespace: kong-mesh-system
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/zone: zone1
+   spec:
+     address: 203.0.113.42  # public LoadBalancer IP
+     port: 10001
+   ```
+   {:.no-copy-code}
 
 If you scale the zone ingress to zero, its `MeshZoneAddress` is withdrawn automatically, so other zones stop routing to a dead endpoint.
 
@@ -225,36 +234,75 @@ Grant each caller the access it needs with a `MeshTrafficPermission` that target
 
 The move is additive: stand up the mesh-scoped proxies alongside the existing global ones, confirm cross-zone traffic flows through the new pair, then retire the old.
 
-```yaml
-# Transition values, both models active simultaneously
-kuma:
-  ingress:
-    enabled: true   # old global, leave until migration is confirmed
-  egress:
-    enabled: true   # old global, leave until migration is confirmed
+1. Add the mesh-scoped proxies alongside the existing global ones:
 
-  meshes:
-    - name: kong-air-mesh
-      ingress:
-        enabled: true   # new mesh-scoped
-      egress:
-        enabled: true   # new mesh-scoped
-```
+   ```yaml
+   # Transition values, both models active simultaneously
+   kuma:
+     ingress:
+       enabled: true   # old global, leave until migration is confirmed
+     egress:
+       enabled: true   # old global, leave until migration is confirmed
 
-Once traffic is flowing through the mesh-scoped proxies, remove the old keys:
+     meshes:
+       - name: kong-air-mesh
+         ingress:
+           enabled: true   # new mesh-scoped
+         egress:
+           enabled: true   # new mesh-scoped
+   ```
 
-```yaml
-kuma:
-  # ingress.enabled and egress.enabled removed
-  meshes:
-    - name: kong-air-mesh
-      ingress:
-        enabled: true
-      egress:
-        enabled: true
-```
+1. Once traffic is flowing through the mesh-scoped proxies, remove the old keys:
+
+   ```yaml
+   kuma:
+     # ingress.enabled and egress.enabled removed
+     meshes:
+       - name: kong-air-mesh
+         ingress:
+           enabled: true
+         egress:
+           enabled: true
+   ```
 
 {:.warning}
 > Scale down the old global ZoneIngress before removing its Helm key. Deleting the key without scaling first can cause a brief traffic interruption if KDS has not yet propagated the new proxies' `MeshZoneAddress` to other zones.
 
 The old `ZoneIngress` and `ZoneEgress` resource kinds remain in the API for backward compatibility in 2.14, and are planned for deprecation in a future major release.
+
+## Validate
+
+1. Confirm the mesh-scoped ingress and egress pods for `kong-air-mesh` are `Running`:
+
+   ```sh
+   kubectl get pods -n kong-mesh-system -l "kuma.io/mesh=kong-air-mesh"
+   ```
+
+   Expected output, both pods `1/1` and `Running`:
+
+   ```text
+   NAME                                               READY   STATUS    RESTARTS   AGE
+   kong-mesh-kong-air-mesh-ingress-77499bbc58-kkssn   1/1     Running   0          2m
+   kong-mesh-kong-air-mesh-egress-5d8f7c9b6d-p4x2q    1/1     Running   0          2m
+   ```
+   {:.no-copy-code}
+
+1. If you still have a legacy shared pair running during a migration window, confirm the two are distinct. Only the mesh-scoped `Dataplane` proxies carry the `kuma.io/mesh` label, the legacy `ZoneIngress`/`ZoneEgress` resources don't, because they serve every mesh in the zone:
+
+   ```sh
+   kubectl get dataplanes,zoneingresses,zoneegresses -n kong-mesh-system \
+     -o custom-columns='KIND:.kind,NAME:.metadata.name,MESH:.metadata.labels.kuma\.io/mesh'
+   ```
+
+   Expected output: the mesh-scoped `Dataplane` entries show `kong-air-mesh`, while any remaining `ZoneIngress`/`ZoneEgress` entries show `<none>`:
+
+   ```text
+   KIND          NAME                                                MESH
+   Dataplane     kong-mesh-kong-air-mesh-ingress-77499bbc58-kkssn    kong-air-mesh
+   Dataplane     kong-mesh-kong-air-mesh-egress-5d8f7c9b6d-p4x2q     kong-air-mesh
+   ZoneIngress   kong-mesh-zone-ingress-6f9c8d7b5a-9k2mp             <none>
+   ZoneEgress    kong-mesh-zone-egress-7d8e9f6c4b-3l1nq              <none>
+   ```
+   {:.no-copy-code}
+
+Together, these confirm the mesh-scoped proxies are healthy, and that they remain cleanly distinguishable from any legacy shared pair by the `kuma.io/mesh` label.

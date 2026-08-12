@@ -1,7 +1,6 @@
 ---
 title: Manage external services with MeshExternalService
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/manage-external-services-with-meshexternalservice/
 description: Learn how to manage external dependencies like APIs and databases as first-class mesh citizens, enabling observability, resiliency, and dedicated DNS.
 breadcrumbs:
@@ -209,6 +208,7 @@ spec:
 503 Service Unavailable
 TLS error: Secret is not supplied by SDS
 ```
+{:.no-copy-code}
 
 Why it happens. The zone egress proxies run in `{{site.mesh_namespace}}`. If your `MeshIdentity` selector matches only an application namespace (for example `kong-air-production`), nothing selects the zone proxies, so the control plane issues them no certificate. The SDS secret backing the egress's mTLS leg is never delivered, and the connection fails on the in-mesh mTLS hop before it ever reaches the external endpoint. (This is why even a plain-HTTP `MeshExternalService` reproduces it: the failing leg is the hop to the egress, not the external TLS origination.)
 
@@ -299,3 +299,29 @@ By using `MeshExternalService`, Kong Air has achieved:
 2. Stable internal naming: Developers use mesh-generated names such as `aeropay-api.extsvc.mesh.local`.
 3. Access control at the egress: `MeshTrafficPermission` on the zone egress Dataplane restricts which workloads can reach each external service, paired with the deny-all default in mesh-scoped zone proxies.
 4. Centralized policy control: Retries, timeouts, and TLS settings live in mesh policy rather than scattered application config.
+
+## Validate
+
+1. Confirm both `MeshExternalService` resources were accepted and given a mesh-generated hostname:
+
+   ```sh
+   kubectl get meshexternalservice -n {{site.mesh_namespace}}
+   ```
+
+   Expected output, the `HOSTNAME` column confirms each external dependency got a stable internal name:
+
+   ```text
+   NAME          HOSTNAME
+   flight-db     flight-db.extsvc.mesh.local
+   aeropay-api   aeropay-api.extsvc.mesh.local
+   ```
+   {:.no-copy-code}
+
+1. Confirm `flight-control`, the workload authorized by `flight-db-access`, can resolve the generated hostname to its mesh-assigned virtual IP:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/flight-control -- nslookup flight-db.extsvc.mesh.local
+   ```
+
+   Expected output: the hostname resolves to an address in the `MeshExternalService` VIP range, confirming `flight-db` is reachable through its generated name rather than the raw RDS endpoint.
+   {:.no-copy-code}

@@ -1,7 +1,6 @@
 ---
 title: Manage workload identity and mTLS
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/manage-workload-identity-and-mtls/
 description: Discover the new Workload Identity model in {{site.mesh_product_name}}. Learn how to move beyond mesh-wide mTLS to a granular identity system supporting SPIRE, custom SPIFFE IDs, and decoupled trust management.
 breadcrumbs:
@@ -49,9 +48,6 @@ Before enabling Workload Identity, you must ensure your mesh is using the MeshSe
 {:.warning}
 > `MeshIdentity` becomes active only when `meshServices.mode: Exclusive` is set on the `Mesh`. The control plane accepts the `MeshIdentity` resource before that point, but does not initialize it until MeshServices are enabled on the mesh.
 
-{% navtabs "mesh-services-mode" %}
-{% navtab "Kubernetes Global CP (self-managed)" %}
-
 {:.warning}
 > `Mesh` is a Global CP only resource. Apply this against the kubeconfig of your Global Control Plane, not a Zone CP. See [Resource scoping](/mesh/scenarios/resource-scoping/).
 
@@ -64,20 +60,6 @@ spec:
   meshServices:
     mode: Exclusive' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Konnect / Universal Global CP" %}
-
-{:.warning}
-> Run this against your Global CP. Use `kumactl config control-planes use <global-cp>` first.
-
-```bash
-echo 'type: Mesh
-name: kong-air-mesh
-meshServices:
-  mode: Exclusive' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Defining identity with `MeshIdentity`
 
@@ -89,63 +71,10 @@ The recommended production pattern is:
 4. Let {{site.mesh_product_name}} automatically create the matching `MeshTrust`
 
 {:.warning}
-> On Kubernetes, the synced copy of `MeshIdentity` lives in the system namespace on each Zone CP. If your Global CP is also Kubernetes-backed, create the resource in the system namespace there as well. If your Global CP is Konnect or Universal-backed, apply it with `kumactl` and let {{site.mesh_product_name}} sync the generated copy down to each zone.
+> On Kubernetes, the synced copy of `MeshIdentity` lives in the system namespace on each Zone CP. Create the resource in the system namespace on your Kubernetes-backed Global CP as well, and let {{site.mesh_product_name}} sync the generated copy down to each zone.
 
 {:.info}
 > The examples below are targeted identities, layered on top of the mesh-wide `kong-air-identity` from [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/). The control plane gives each workload its single most-specific `MeshIdentity` (the selector with the most `matchLabels` wins), so a targeted selector must be more specific than the mesh-wide default, that's why each one includes `kuma.io/mesh: kong-air-mesh` plus its workload label. The mesh-wide identity keeps covering everything else, including the zone proxies.
-
-{% navtabs "mesh-identity" %}
-{% navtab "Kubernetes Global CP (self-managed)" %}
-```bash
-echo 'apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: passenger-portal-identity
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-spec:
-  selector:
-    dataplane:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh
-        app: passenger-portal
-  provider:
-    type: Bundled
-    bundled:
-      insecureAllowSelfSigned: true
-      autogenerate:
-        enabled: true
-      meshTrustCreation: Enabled
-  spiffeID:
-    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}
-    trustDomain: kong-air-mesh.mesh.local' | kubectl apply -f -
-```
-{% endnavtab %}
-{% navtab "Konnect / Universal Global CP" %}
-```bash
-echo 'type: MeshIdentity
-name: passenger-portal-identity
-mesh: kong-air-mesh
-spec:
-  selector:
-    dataplane:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh
-        app: passenger-portal
-  provider:
-    type: Bundled
-    bundled:
-      insecureAllowSelfSigned: true
-      autogenerate:
-        enabled: true
-      meshTrustCreation: Enabled
-  spiffeID:
-    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}
-    trustDomain: kong-air-mesh.mesh.local' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 {:.info}
 > On Kubernetes, make sure the dataplane carries a stable `kuma.io/workload` label before you standardize on the workload-based SPIFFE path. That is the identifier this example resolves against.
@@ -153,11 +82,39 @@ spec:
 {:.warning}
 > Applying `MeshIdentity` to an already-running workload is not always enough by itself. After you apply or change a `MeshIdentity`, restart the selected workload so the dataplane comes up on the new identity before you validate cross-service traffic.
 
-For Kubernetes, the safest path is a normal rollout restart of the affected workload:
+1. Apply the `MeshIdentity`:
 
-```bash
-kubectl rollout restart deployment/<workload-name> -n kong-air-production
-```
+   ```bash
+   echo 'apiVersion: kuma.io/v1alpha1
+   kind: MeshIdentity
+   metadata:
+     name: passenger-portal-identity
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+   spec:
+     selector:
+       dataplane:
+         matchLabels:
+           kuma.io/mesh: kong-air-mesh
+           app: passenger-portal
+     provider:
+       type: Bundled
+       bundled:
+         insecureAllowSelfSigned: true
+         autogenerate:
+           enabled: true
+         meshTrustCreation: Enabled
+     spiffeID:
+       path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}
+       trustDomain: kong-air-mesh.mesh.local' | kubectl apply -f -
+   ```
+
+1. Restart the affected workload, the safest path on Kubernetes is a normal rollout restart:
+
+   ```bash
+   kubectl rollout restart deployment/<workload-name> -n kong-air-production
+   ```
 
 ### Verify that the identity is active
 
@@ -174,6 +131,7 @@ status:
   mTLS:
     issuedBackend: kri_mid_kong-air-mesh___passenger-portal-identity_
 ```
+{:.no-copy-code}
 
 You can also check that `status.mTLS.certificateExpirationTime` moved forward after the restart. If `issuedBackend` changed but traffic still fails TLS verification, inspect the sidecar certificate and confirm the workload has actually rotated onto the new cert.
 
@@ -199,54 +157,48 @@ For higher-assurance environments, you can delegate identity to SPIRE (the SPIFF
 
 To establish mutual trust, create a combined `MeshTrust` on each zone that includes every zone's CA bundle.
 
-Step 1: Find the auto-generated `MeshTrust` name on each zone
+1. Find the auto-generated `MeshTrust` name on each zone. The `Bundled` provider creates one `MeshTrust` per zone. List them to get the name:
 
-The `Bundled` provider creates one `MeshTrust` per zone. List them to get the name:
+   ```bash
+   kubectl --kubeconfig=<zone1-config> get meshtrusts -n {{site.mesh_namespace}}
+   ```
 
-```bash
-kubectl --kubeconfig=<zone1-config> get meshtrusts -n {{site.mesh_namespace}}
-```
+1. Extract each zone's CA bundle. Fill in `<zone-n-config>` and the `<meshtrust-name>` from the previous step:
 
-Step 2: Extract each zone's CA bundle
+   ```bash
+   ZONE1_CA=$(kubectl --kubeconfig=<zone1-config> \
+     get meshtrusts -n {{site.mesh_namespace}} <meshtrust-name> \
+     -o jsonpath='{.spec.caBundles[0].pem.value}')
+   ZONE2_CA=$(kubectl --kubeconfig=<zone2-config> \
+     get meshtrusts -n {{site.mesh_namespace}} <meshtrust-name> \
+     -o jsonpath='{.spec.caBundles[0].pem.value}')
+   ```
 
-Fill in `<zone-n-config>` and the `<meshtrust-name>` from Step 1:
+1. Apply a combined `MeshTrust` to every zone. Run this once per zone, swapping `--kubeconfig` for each. The `$(... | sed ...)` substitution indents each PEM line to sit under `value: |`:
 
-```bash
-ZONE1_CA=$(kubectl --kubeconfig=<zone1-config> \
-  get meshtrusts -n {{site.mesh_namespace}} <meshtrust-name> \
-  -o jsonpath='{.spec.caBundles[0].pem.value}')
-ZONE2_CA=$(kubectl --kubeconfig=<zone2-config> \
-  get meshtrusts -n {{site.mesh_namespace}} <meshtrust-name> \
-  -o jsonpath='{.spec.caBundles[0].pem.value}')
-```
-
-Step 3: Apply a combined `MeshTrust` to every zone
-
-Run this once per zone, swapping `--kubeconfig` for each. The `$(... | sed ...)` substitution indents each PEM line to sit under `value: |`:
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: kuma.io/v1alpha1
-kind: MeshTrust
-metadata:
-  name: kong-air-cross-zone-trust
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  trustDomain: kong-air-mesh.mesh.local
-  caBundles:
-    - type: Pem
-      pem:
-        value: |
-$(echo "$ZONE1_CA" | sed 's/^/          /')
-    - type: Pem
-      pem:
-        value: |
-$(echo "$ZONE2_CA" | sed 's/^/          /')
-EOF
-```
+   ```bash
+   kubectl apply -f - <<EOF
+   apiVersion: kuma.io/v1alpha1
+   kind: MeshTrust
+   metadata:
+     name: kong-air-cross-zone-trust
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/origin: zone
+   spec:
+     trustDomain: kong-air-mesh.mesh.local
+     caBundles:
+       - type: Pem
+         pem:
+           value: |
+   $(echo "$ZONE1_CA" | sed 's/^/          /')
+       - type: Pem
+         pem:
+           value: |
+   $(echo "$ZONE2_CA" | sed 's/^/          /')
+   EOF
+   ```
 
 Once the combined `MeshTrust` is applied on every zone, cross-zone mTLS connections succeed.
 
@@ -261,8 +213,6 @@ This separation allows you to:
 {:.info}
 > For the bundled-provider path above, {{site.mesh_product_name}} auto-generates the `MeshTrust` resource. In day-to-day operations, you usually create `MeshTrust` manually only when you are adding an extra trust domain, rotating trust deliberately, or integrating an external identity provider.
 
-{% navtabs "mesh-trust" %}
-{% navtab "Kubernetes Global CP (self-managed)" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshTrust
@@ -287,37 +237,11 @@ spec:
           ... (Secondary/Backup CA)
           -----END CERTIFICATE-----
 ```
-{% endnavtab %}
-{% navtab "Konnect / Universal Global CP" %}
-```yaml
-type: MeshTrust
-name: global-trust
-mesh: kong-air-mesh
-spec:
-  trustDomain: kong-air-mesh.mesh.local
-  caBundles:
-    - type: Pem
-      pem:
-        value: |
-          -----BEGIN CERTIFICATE-----
-          ... (Primary CA)
-          -----END CERTIFICATE-----
-    - type: Pem
-      pem:
-        value: |
-          -----BEGIN CERTIFICATE-----
-          ... (Secondary/Backup CA)
-          -----END CERTIFICATE-----
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Enforcing security with `MeshTLS`
 
 Once workloads have an identity, you use the `MeshTLS` policy to enforce how that identity is used during communication. Apply it at the Global CP, like the `MeshIdentity` and `MeshTrust` above, so it syncs to every zone.
 
-{% navtabs "mesh-tls" %}
-{% navtab "Kubernetes Global CP (self-managed)" %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshTLS
@@ -333,18 +257,35 @@ spec:
     - default:
         mode: Strict
 ```
-{% endnavtab %}
-{% navtab "Konnect / Universal Global CP" %}
-```yaml
-type: MeshTLS
-name: strict-mtls
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  rules:
-    - default:
-        mode: Strict
-```
-{% endnavtab %}
-{% endnavtabs %}
+
+## Validate
+
+1. Confirm `passenger-portal` picked up the targeted identity. After the rollout restart, `status.mTLS.issuedBackend` should reference `passenger-portal-identity`, not the mesh-wide `kong-air-identity`:
+
+   ```sh
+   PASSENGER_POD=$(kubectl get pod -n kong-air-production -l app=passenger-portal -o jsonpath='{.items[0].metadata.name}')
+   kubectl get dataplaneinsight "$PASSENGER_POD" -n kong-air-production -o jsonpath='{.status.mTLS.issuedBackend}{"\n"}'
+   ```
+
+   Expected output:
+
+   ```text
+   kri_mid_kong-air-mesh___passenger-portal-identity_
+   ```
+   {:.no-copy-code}
+
+1. Confirm every other workload still resolves to the mesh-wide identity. `check-in-api` has no targeted `MeshIdentity`, so it should still reference `kong-air-identity`:
+
+   ```sh
+   CHECKIN_POD=$(kubectl get pod -n kong-air-production -l app=check-in-api -o jsonpath='{.items[0].metadata.name}')
+   kubectl get dataplaneinsight "$CHECKIN_POD" -n kong-air-production -o jsonpath='{.status.mTLS.issuedBackend}{"\n"}'
+   ```
+
+   Expected output:
+
+   ```text
+   kri_mid_kong-air-mesh_default_kong-mesh-system_kong-air-identity_
+   ```
+   {:.no-copy-code}
+
+Together, these confirm most-specific-selector precedence is working: `passenger-portal` is issued from its dedicated identity, while every other workload keeps inheriting the mesh-wide default.

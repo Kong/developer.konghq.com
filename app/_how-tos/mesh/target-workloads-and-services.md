@@ -1,7 +1,6 @@
 ---
 title: Target workloads and services
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/target-workloads-and-services/
 description: How to scope policies in {{site.mesh_product_name}} using Dataplane labels for proxy groups and MeshService for explicit destinations.
 breadcrumbs:
@@ -44,8 +43,6 @@ Use a top-level `targetRef` of `Dataplane` with a `labels:` selector when you wa
 
 If you want every sidecar in your `zone1` zone to have a specific timeout (perhaps due to known cross-zone latency), label the matching workloads and select them with `Dataplane`. This applies to all services in that region.
 
-{% navtabs "subset-timeout" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshTimeout
@@ -66,26 +63,6 @@ spec:
         http:
           requestTimeout: 15s' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshTimeout
-name: regional-baseline
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      kuma.io/zone: zone1
-  to:
-    - targetRef:
-        kind: Mesh
-      default:
-        http:
-          requestTimeout: 15s' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Explicit MeshService: the standard
 
@@ -106,3 +83,61 @@ By naming your subsets explicitly, your routing rules become clear, predictable,
 ## Deprecation note: MeshSubset and MeshServiceSubset
 
 `MeshSubset` and `MeshServiceSubset` are legacy "virtual kinds" that predate explicit `MeshService` resources. Use `Dataplane` with `labels:` at the top level and `MeshService` (or `MeshMultiZoneService` / `MeshExternalService`) in `to[].targetRef` / `backendRefs` instead. See [Policies](/mesh/policies-introduction/) for the deprecation details.
+
+## Validate
+
+Confirm that a `Dataplane` label selector actually scopes a policy to the intended workload, and no others, in `kong-air-production`.
+
+1. List the auto-generated `Dataplane` resources and their labels. Each Kong Air workload carries a distinct `app` label:
+
+   ```sh
+   kubectl get dataplane -n kong-air-production --show-labels
+   ```
+
+   Expected output (labels truncated for readability):
+
+   ```text
+   NAME                                READY   LABELS
+   check-in-api-6b8f9c9d4f-x7z2p       True    app=check-in-api,version=v1,...
+   flight-control-7d4c8f6b9c-k3n8p     True    app=flight-control,version=v1,...
+   passenger-portal-5f9d7c8b6d-p2k9q   True    app=passenger-portal,version=v1,...
+   ```
+   {:.no-copy-code}
+
+1. Apply a `MeshTimeout` scoped only to `flight-control`, using the same `Dataplane` label-selector pattern as the [regional timeouts example](#example-regional-timeouts) above:
+
+   ```sh
+   echo 'apiVersion: kuma.io/v1alpha1
+   kind: MeshTimeout
+   metadata:
+     name: flight-control-timeout
+     namespace: kong-air-production
+     labels:
+       kuma.io/mesh: kong-air-mesh
+   spec:
+     targetRef:
+       kind: Dataplane
+       labels:
+         app: flight-control
+     to:
+       - targetRef:
+           kind: Mesh
+         default:
+           http:
+             requestTimeout: 15s' | kubectl apply -f -
+   ```
+
+1. Confirm the `labels: app: flight-control` selector matches only the `flight-control` `Dataplane`, not `check-in-api` or `passenger-portal`:
+
+   ```sh
+   kubectl get dataplane -n kong-air-production -l app=flight-control -o name
+   kubectl get dataplane -n kong-air-production -l app=check-in-api -o name
+   ```
+
+   Expected output: the first command returns the `flight-control` dataplane, the second returns a different one, only the intended workload matches:
+
+   ```text
+   dataplane.kuma.io/flight-control-7d4c8f6b9c-k3n8p
+   dataplane.kuma.io/check-in-api-6b8f9c9d4f-x7z2p
+   ```
+   {:.no-copy-code}

@@ -1,7 +1,6 @@
 ---
 title: Split traffic with MeshService resources
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/split-traffic-with-meshservice-resources/
 description: Implement precise traffic splitting between different service versions using the modern MeshService resource model.
 breadcrumbs:
@@ -74,17 +73,59 @@ graph TD
 
 ## Configuration
 
+### Deploy the v2 workload
+
+The Kong Air quickstart only deploys the stable `passenger-portal` `version: v1` workload. Deploy a `version: v2` workload alongside it, reusing the same `nginx-passthrough` ConfigMap the quickstart already created in `kong-air-production`:
+
+```bash
+echo 'apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: passenger-portal-v2
+  namespace: kong-air-production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: passenger-portal
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: passenger-portal
+        version: v2
+    spec:
+      serviceAccountName: passenger-portal
+      containers:
+        - name: passenger-portal
+          image: nginx:alpine
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-passthrough' | kubectl apply -f -
+kubectl wait -n kong-air-production --for=condition=available --timeout=120s deployment/passenger-portal-v2
+```
+
 ### Define explicit MeshServices
 
 For rollout patterns like canary and blue/green, you want version-specific destinations that the route can name directly. For how {{site.mesh_product_name}} generates `MeshService` resources, how label-based matching works, and what `meshServices.mode: Exclusive` changes, see [MeshService](/mesh/meshservice/).
 
-On Kubernetes, create versioned Services (`passenger-portal-v1`, `passenger-portal-v2`) and let {{site.mesh_product_name}} generate the matching `MeshService` resources from them. On Universal, define the `MeshService` resources directly.
+Create versioned Services (`passenger-portal-v1`, `passenger-portal-v2`) and let {{site.mesh_product_name}} generate the matching `MeshService` resources from them.
 
 {:.info}
-> Why `appProtocol: http`? The Kubernetes `Service` examples below set `appProtocol: http` on the port. In `Exclusive` mode, {{site.mesh_product_name}} reads this field to set the protocol on the generated `MeshService`. Without it, the `MeshService` defaults to `tcp`, and HTTP-aware policies, `MeshHTTPRoute`, weighted splits, retries on `5xx`, silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
+> Why `appProtocol: http`? The Kubernetes `Service` example below sets `appProtocol: http` on the port. In `Exclusive` mode, {{site.mesh_product_name}} reads this field to set the protocol on the generated `MeshService`. Without it, the `MeshService` defaults to `tcp`, and HTTP-aware policies, `MeshHTTPRoute`, weighted splits, retries on `5xx`, silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
 
-{% navtabs "meshservice-split" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: v1
 kind: Service
@@ -114,40 +155,11 @@ spec:
       targetPort: 8080
       appProtocol: http' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshService
-name: passenger-portal-v1
-mesh: kong-air-mesh
-spec:
-  ports:
-    - port: 8080
-      appProtocol: http
-  selector:
-    dataplaneTags:
-      app: passenger-portal-v1
----
-type: MeshService
-name: passenger-portal-v2
-mesh: kong-air-mesh
-spec:
-  ports:
-    - port: 8080
-      appProtocol: http
-  selector:
-    dataplaneTags:
-      app: passenger-portal-v2' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ### Configure the weighted route
 
 Now, create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to every client that calls `passenger-portal`. For how `backendRefs` and `weight` divide traffic across the two versions, see [MeshHTTPRoute](/mesh/policies/meshhttproute/). (To roll the split out to only some clients first, narrow the top level to `Dataplane` with a `labels:` selector.)
 
-{% navtabs "weighted-route" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshHTTPRoute
@@ -177,56 +189,40 @@ spec:
                 port: 8080
                 weight: 10 # 10% traffic to canary' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshHTTPRoute
-name: booking-traffic-split
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: MeshService
-        name: passenger-portal
-      rules:
-        - matches:
-            - path: { value: "/", type: PathPrefix }
-          default:
-            backendRefs:
-              - kind: MeshService
-                name: passenger-portal-v1
-                port: 8080
-                weight: 90
-              - kind: MeshService
-                name: passenger-portal-v2
-                port: 8080
-                weight: 10' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
-
-## Verification
-
-To verify the split, exec into any in-mesh pod (here `check-in-api` acts as a test client) and run a loop against `passenger-portal`, counting which version responds. This body-matching check only works if your app echoes its version, the Kong Air demo apps prefix responses with `v2:`; adapt the `case` matching to whatever your real versions return:
-
-```bash
-kubectl exec -n kong-air-production deploy/check-in-api -c check-in-api -- sh -c '
-v1=0; v2=0
-for i in $(seq 1 50); do
-  out=$(wget -qO- --timeout=3 http://passenger-portal.kong-air-production.svc.cluster.local:8080/ 2>/dev/null)
-  case "$out" in
-    v2:*) v2=$((v2+1)) ;;
-    *)    v1=$((v1+1)) ;;
-  esac
-done
-echo "v1=$v1 v2=$v2"
-'
-```
-
-You should see a distribution close to the configured weights, for a 90/10 split, expect roughly 44–46 v1 and 4–6 v2 from 50 requests.
-
 
 {:.info}
 > Because we used explicit `MeshService` resources, you can go to your Prometheus dashboard and see metrics broken down by `passenger-portal-v1` and `passenger-portal-v2` as separate entities, without needing to adjust your PromQL queries for complex tag filtering.
+
+## Validate
+
+The Kong Air demo apps don't echo a version string, the nginx-based app just returns its pod hostname at `/`. Resolve which pod names belong to each version, then use those hostnames to tell which version served each request.
+
+1. Look up the pod names for each version by label, since the response body is just a hostname, not a version label:
+
+   ```sh
+   V1_PODS=$(kubectl get pods -n kong-air-production -l app=passenger-portal,version=v1 -o jsonpath='{.items[*].metadata.name}')
+   V2_PODS=$(kubectl get pods -n kong-air-production -l app=passenger-portal,version=v2 -o jsonpath='{.items[*].metadata.name}')
+   echo "v1 pods: $V1_PODS"
+   echo "v2 pods: $V2_PODS"
+   ```
+
+1. Send a batch of requests through the shared `passenger-portal` route from an in-mesh client (here, `check-in-api`), and tally each response's hostname against the pod lists from the previous step:
+
+   ```sh
+   v1=0; v2=0
+   for i in $(seq 1 50); do
+     host=$(kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- http://passenger-portal.kong-air-production.svc.cluster.local:8080/)
+     case " $V1_PODS " in *" $host "*) v1=$((v1+1)) ;; esac
+     case " $V2_PODS " in *" $host "*) v2=$((v2+1)) ;; esac
+   done
+   echo "v1=$v1 v2=$v2"
+   ```
+
+1. Confirm the observed distribution is close to the configured 90/10 weight:
+
+   Expected output (allow for some variance across 50 requests):
+
+   ```text
+   v1=45 v2=5
+   ```
+   {:.no-copy-code}

@@ -1,7 +1,6 @@
 ---
 title: Secure the perimeter with MeshPassthrough
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/secure-the-perimeter-with-meshpassthrough/
 description: Learn how to control outbound traffic to external services using the MeshPassthrough policy, moving from an open mesh to a zero-trust perimeter.
 breadcrumbs:
@@ -59,8 +58,6 @@ The `MeshPassthrough` policy defines how the proxy handles traffic that doesn't 
 ### Step 1: Broad "allow" (default behavior)
 With no `MeshPassthrough` policy in place, the mesh allows all outbound passthrough, so the effective behavior matches `passthroughMode: All`. The example below makes that explicit.
 
-{% navtabs "passthrough-allow-all" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshPassthrough
@@ -75,26 +72,10 @@ spec:
   default:
     passthroughMode: All' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshPassthrough
-name: allow-all-passthrough
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    passthroughMode: All' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ### Step 2: "Deny all" (secure posture)
 To tighten security, change the mode to `None`. This blocks all traffic that isn't explicitly defined in your mesh.
 
-{% navtabs "passthrough-deny-all" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshPassthrough
@@ -109,26 +90,10 @@ spec:
   default:
     passthroughMode: None' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshPassthrough
-name: secure-perimeter
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    passthroughMode: None' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ### Step 3: Selective passthrough
 You can allow specific destinations even without defining a formal `MeshExternalService` by listing them under `appendMatch`, as shown below. For the match field semantics and validation rules, see [MeshPassthrough](/mesh/policies/meshpassthrough/).
 
-{% navtabs "passthrough-matched" %}
-{% navtab "Kubernetes (Zone CP)" %}
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshPassthrough
@@ -156,33 +121,6 @@ spec:
         port: 80
         protocol: http' | kubectl apply -f -
 ```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshPassthrough
-name: selective-passthrough
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    passthroughMode: Matched
-    appendMatch:
-      - type: IP
-        value: "1.2.3.4"
-        port: 443
-        protocol: tls
-      - type: CIDR
-        value: "10.0.0.0/8"
-        port: 443
-        protocol: tls
-      - type: Domain
-        value: "*.google.com"
-        port: 80
-        protocol: http' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Interaction with egress gateways
 
@@ -192,3 +130,23 @@ For maximum security, combine `MeshPassthrough` with a ZoneEgress.
 
 {:.info}
 > Use `MeshPassthrough` at the `Mesh` level to set a global security baseline, then use more specific `Dataplane` selectors (by `labels:`) to grant exceptions to the workloads that need broader internet access.
+
+## Validate
+
+1. Confirm traffic to a destination outside the allowlist is now blocked. From `check-in-api`, request a domain that doesn't match any `appendMatch` entry, for example `example.com`:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- http://example.com
+   ```
+
+   Expected result: the command fails, `wget` exits with a non-zero status and prints no response body, confirming the destination is blocked by the `passthroughMode: Matched` default deny.
+   {:.no-copy-code}
+
+1. Confirm the explicit allowlist entry still works. `*.google.com` on port 80 is matched by the `Domain` entry in `appendMatch`:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- http://www.google.com
+   ```
+
+   Expected result: the command succeeds and prints the response body, confirming the explicit allowlist entry is honored while every other destination remains blocked.
+   {:.no-copy-code}

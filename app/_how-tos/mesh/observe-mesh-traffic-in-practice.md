@@ -1,7 +1,6 @@
 ---
 title: Observe mesh traffic in practice
 content_type: how_to
-layout: how-to
 permalink: /mesh/scenarios/observe-mesh-traffic-in-practice/
 description: A guide to mesh observability, collecting metrics, traces, and logs from Kong Air's services without changing application code.
 breadcrumbs:
@@ -84,57 +83,42 @@ Install and wire up the Prometheus, Grafana, and tracing backends by following t
 
 Enable sidecar metrics exposure so Prometheus can scrape them:
 
-{% navtabs "mesh-metric" %}
-{% navtab "Kubernetes (Zone CP)" %}
-```bash
-echo 'apiVersion: kuma.io/v1alpha1
-kind: MeshMetric
-metadata:
-  name: kong-air-metrics
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    sidecar:
-      profiles:
-        appendProfiles:
-          - name: Basic
-    backends:
-      - type: Prometheus
-        prometheus:
-          port: 5670
-          path: /metrics
-          tls:
-            mode: Disabled' | kubectl apply -f -
-```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshMetric
-name: kong-air-metrics
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    sidecar:
-      profiles:
-        appendProfiles:
-          - name: Basic
-    backends:
-      - type: Prometheus
-        prometheus:
-          port: 5670
-          path: /metrics
-          tls:
-            mode: Disabled' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
+1. Apply the `MeshMetric` policy:
+
+   ```bash
+   echo 'apiVersion: kuma.io/v1alpha1
+   kind: MeshMetric
+   metadata:
+     name: kong-air-metrics
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/origin: zone
+   spec:
+     targetRef:
+       kind: Mesh
+     default:
+       sidecar:
+         profiles:
+           appendProfiles:
+             - name: Basic
+       backends:
+         - type: Prometheus
+           prometheus:
+             port: 5670
+             path: /metrics
+             tls:
+               mode: Disabled' | kubectl apply -f -
+   ```
+
+1. Verify the metrics endpoint after pod restart (using `check-in-api` as the example workload):
+
+   ```bash
+   POD=$(kubectl get pod -n kong-air-production -l app=check-in-api -o jsonpath='{.items[0].metadata.name}')
+   POD_IP=$(kubectl get pod "$POD" -n kong-air-production -o jsonpath='{.status.podIP}')
+   kubectl exec -n kong-air-production "$POD" -c check-in-api -- \
+     wget -qO- http://$POD_IP:5670/metrics | head -10
+   ```
 
 {:.info}
 > On a Zone CP, mesh-scoped observability policies created in the system namespace need `kuma.io/origin: zone`, just like `MeshExternalService`.
@@ -142,14 +126,6 @@ spec:
 > `MeshMetric` opens port `5670` on each sidecar for Prometheus to scrape. This requires a pod restart to take effect, as the sidecar must bind the new port on startup.
 >
 > Prometheus uses the Monitoring Assignment Discovery Service (MADS) a native HTTP Service Discovery endpoint provided by the Zone Control Plane to automatically discover all sidecars, requiring no manual scrape config.
-
-Verify the metrics endpoint after pod restart (using `check-in-api` as the example workload):
-```bash
-POD=$(kubectl get pod -n kong-air-production -l app=check-in-api -o jsonpath='{.items[0].metadata.name}')
-POD_IP=$(kubectl get pod "$POD" -n kong-air-production -o jsonpath='{.status.podIP}')
-kubectl exec -n kong-air-production "$POD" -c check-in-api -- \
-  wget -qO- http://$POD_IP:5670/metrics | head -10
-```
 
 {:.info}
 > Envoy binds the metrics listener on the pod IP, not `127.0.0.1`. `http://localhost:5670/metrics` returns `connection refused`, while `http://$POD_IP:5670/metrics` works.
@@ -187,67 +163,42 @@ This is the cleanest way to get telemetry on the cross-zone and external-service
 
 Configure distributed tracing to an OTLP gRPC receiver:
 
-{% navtabs "mesh-trace" %}
-{% navtab "Kubernetes (Zone CP)" %}
-```bash
-echo 'apiVersion: kuma.io/v1alpha1
-kind: MeshTrace
-metadata:
-  name: flight-tracking
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    sampling:
-      overall: 100  # 100% of requests traced for audit compliance
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          endpoint: otel-collector.mesh-observability:4317
-    tags:
-      - name: division
-        literal: passenger-service
-      - name: airport-code
-        header:
-          name: x-airport-code
-          default: "SFO"' | kubectl apply -f -
-```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshTrace
-name: flight-tracking
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    sampling:
-      overall: 100  # 100% of requests traced for audit compliance
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          endpoint: otel-collector.mesh-observability:4317
-    tags:
-      - name: division
-        literal: passenger-service
-      - name: airport-code
-        header:
-          name: x-airport-code
-          default: "SFO"' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
+1. Apply the `MeshTrace` policy:
 
-Verify traces appear in your backend (Tempo, Jaeger, or another OTLP-capable collector you installed):
-```bash
-kubectl port-forward -n mesh-observability svc/tempo-query-frontend 3200:3200
-# Or for Jaeger: kubectl port-forward -n mesh-observability svc/jaeger-query 16686:80
-```
+   ```bash
+   echo 'apiVersion: kuma.io/v1alpha1
+   kind: MeshTrace
+   metadata:
+     name: flight-tracking
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/origin: zone
+   spec:
+     targetRef:
+       kind: Mesh
+     default:
+       sampling:
+         overall: 100  # 100% of requests traced for audit compliance
+       backends:
+         - type: OpenTelemetry
+           openTelemetry:
+             endpoint: otel-collector.mesh-observability:4317
+       tags:
+         - name: division
+           literal: passenger-service
+         - name: airport-code
+           header:
+             name: x-airport-code
+             default: "SFO"' | kubectl apply -f -
+   ```
+
+1. Verify traces appear in your backend (Tempo, Jaeger, or another OTLP-capable collector you installed):
+
+   ```bash
+   kubectl port-forward -n mesh-observability svc/tempo-query-frontend 3200:3200
+   # Or for Jaeger: kubectl port-forward -n mesh-observability svc/jaeger-query 16686:80
+   ```
 
 {:.info}
 > End-to-end trace export still depends on having a working collector in-cluster, so treat that part of the scenario as an integration check.
@@ -263,86 +214,56 @@ If you also configure access logs or metrics over OTel, repeating the same colle
 
 Capture structured request logs from every sidecar:
 
-{% navtabs "mesh-access-log" %}
-{% navtab "Kubernetes (Zone CP)" %}
-```bash
-echo 'apiVersion: kuma.io/v1alpha1
-kind: MeshAccessLog
-metadata:
-  name: flight-audit-logs
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: Mesh
-      default:
-        backends:
-          - type: File
-            file:
-              path: /tmp/access.log
-              format:
-                type: Json
-                json:
-                  - key: "start_time"
-                    value: "%START_TIME%"
-                  - key: "source"
-                    value: "%KUMA_SOURCE_SERVICE%"
-                  - key: "destination"
-                    value: "%KUMA_DESTINATION_SERVICE%"
-                  - key: "status"
-                    value: "%RESPONSE_CODE%"
-                  - key: "duration_ms"
-                    value: "%DURATION%"' | kubectl apply -f -
-```
-{% endnavtab %}
-{% navtab "Universal (Zone CP)" %}
-```bash
-echo 'type: MeshAccessLog
-name: flight-audit-logs
-mesh: kong-air-mesh
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-    - targetRef:
-        kind: Mesh
-      default:
-        backends:
-          - type: File
-            file:
-              path: /tmp/access.log
-              format:
-                type: Json
-                json:
-                  - key: "start_time"
-                    value: "%START_TIME%"
-                  - key: "source"
-                    value: "%KUMA_SOURCE_SERVICE%"
-                  - key: "destination"
-                    value: "%KUMA_DESTINATION_SERVICE%"
-                  - key: "status"
-                    value: "%RESPONSE_CODE%"
-                  - key: "duration_ms"
-                    value: "%DURATION%"' | kumactl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
+1. Apply the `MeshAccessLog` policy:
 
-Verify logs are writing immediately (no restart required):
-```bash
-SRC=$(kubectl get pod -n kong-air-production -l app=passenger-portal -o jsonpath='{.items[0].metadata.name}')
-kubectl exec -n kong-air-production "$SRC" -c kuma-sidecar -- tail -n 5 /tmp/access.log
-```
+   ```bash
+   echo 'apiVersion: kuma.io/v1alpha1
+   kind: MeshAccessLog
+   metadata:
+     name: flight-audit-logs
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/origin: zone
+   spec:
+     targetRef:
+       kind: Mesh
+     to:
+       - targetRef:
+           kind: Mesh
+         default:
+           backends:
+             - type: File
+               file:
+                 path: /tmp/access.log
+                 format:
+                   type: Json
+                   json:
+                     - key: "start_time"
+                       value: "%START_TIME%"
+                     - key: "source"
+                       value: "%KUMA_SOURCE_SERVICE%"
+                     - key: "destination"
+                       value: "%KUMA_DESTINATION_SERVICE%"
+                     - key: "status"
+                       value: "%RESPONSE_CODE%"
+                     - key: "duration_ms"
+                       value: "%DURATION%"' | kubectl apply -f -
+   ```
 
-Example output:
-```json
-{"destination":"check-in-api","duration_ms":4,"source":"passenger-portal_kong-air-production_svc","start_time":"2026-05-21T11:20:02.701Z","status":200}
-```
+1. Verify logs are writing immediately (no restart required):
+
+   ```bash
+   SRC=$(kubectl get pod -n kong-air-production -l app=passenger-portal -o jsonpath='{.items[0].metadata.name}')
+   kubectl exec -n kong-air-production "$SRC" -c kuma-sidecar -- tail -n 5 /tmp/access.log
+   ```
+
+   Example output:
+
+   ```json
+   {"destination":"check-in-api","duration_ms":4,"source":"passenger-portal_kong-air-production_svc","start_time":"2026-05-21T11:20:02.701Z","status":200}
+   ```
+   {:.no-copy-code}
 
 {:.info}
 > On Kubernetes, the file-backed access log showed up on the source sidecar after traffic was generated.
@@ -418,3 +339,26 @@ The dashboards filter metrics by `job` label and rely on three scrape jobs added
 - `kuma-zone-proxies`: zone ingress and egress metrics scraped from zone proxy pods on port `9902` (new in 2.14). Feeds the new Zone Ingress and Zone Egress dashboards.
 
 For the full `additionalScrapeConfigs` values and MADS `kuma_sd_configs` setup, see the canonical [mesh observability](/mesh/observability/) reference.
+
+## Validate
+
+1. Generate a request from `flight-control` to `check-in-api` (already permitted by the `MeshTrafficPermission` from [Get started with your first policy](/mesh/scenarios/get-started-with-your-first-policy/)):
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/flight-control -- wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
+   ```
+
+1. Confirm `MeshAccessLog` captured the request on `flight-control`'s sidecar:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/flight-control -c kuma-sidecar -- tail -n 1 /tmp/access.log
+   ```
+
+   Expected output, with `destination`, `status`, and `duration_ms` confirming the request was logged:
+
+   ```json
+   {"destination":"check-in-api_kong-air-production_svc","duration_ms":4,"source":"flight-control_kong-air-production_svc","start_time":"2026-08-12T09:04:55.455Z","status":200}
+   ```
+   {:.no-copy-code}
+
+Together, these confirm telemetry is flowing end-to-end: the sidecar captured, formatted, and wrote a structured record for the request, the same request-response data your Prometheus metrics and tracing backend rely on.
