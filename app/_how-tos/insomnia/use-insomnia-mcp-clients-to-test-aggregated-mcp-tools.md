@@ -9,14 +9,19 @@ products:
   - ai-gateway
 
 related_resources:
-  - text: Aggregate MCP tools from multiple AI MCP Proxy plugins
-    url: /mcp/aggregate-mcp-tools/
+  - text: Aggregate MCP tools from multiple AI MCP Server entities
+    url: /ai-gateway/aggregate-mcp-tools/
   - text: MCP clients in Insomnia
     url: /insomnia/mcp/
+  - text: AI MCP Server entity
+    url: /ai-gateway/entities/ai-mcp-server/
+  - text: Map a RESTful API to MCP tools
+    url: /ai-gateway/map-api-to-mcp-tools/
+
 
 min_version:
   insomnia: "12.0"
-  gateway: "3.12"
+  ai-gateway: '2.0'
 
 tags:
   - ai
@@ -29,7 +34,7 @@ prereqs:
   inline:
     - title: Aggregated MCP server
       content: |
-        Before testing with Insomnia, complete the [Aggregate MCP tools from multiple AI MCP Proxy plugins](/mcp/aggregate-mcp-tools/) guide.  
+        Before testing with Insomnia, complete the [Aggregate MCP tools from multiple AI MCP Proxy plugins](/ai-gateway/aggregate-mcp-tools/) guide.  
         That guide produces:
 
         - Multiple conversion-only AI MCP Proxy plugin instances that each expose MCP tools  
