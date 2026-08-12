@@ -31,6 +31,9 @@ prereqs:
            ```bash
            export GEMINI_API_KEY='YOUR_GEMINI_API_KEY'
            ```
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
 
 min_version:
   ai-gateway: '2.0'

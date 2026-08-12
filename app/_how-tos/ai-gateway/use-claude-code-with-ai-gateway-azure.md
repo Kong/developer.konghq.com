@@ -25,6 +25,9 @@ prereqs:
   inline:
     - title: Azure AI Foundry
       include_content: md/ai-gateway/v2/prereqs/azure-ai-claude
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
 
 min_version:
   ai-gateway: '2.0'

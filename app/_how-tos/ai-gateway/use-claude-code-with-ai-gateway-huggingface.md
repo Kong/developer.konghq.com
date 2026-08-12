@@ -27,6 +27,9 @@ prereqs:
            ```bash
            export HUGGINGFACE_AUTH_HEADER='Bearer YOUR_HUGGINGFACE_TOKEN'
            ```
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
 
 min_version:
   ai-gateway: '2.0'
