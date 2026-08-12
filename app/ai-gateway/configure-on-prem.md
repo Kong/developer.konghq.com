@@ -131,7 +131,7 @@ Use [`deck ai sync`](/deck/ai/sync/) to convert any {{site.ai_gateway}} 2.0 decK
 AI Model, AI MCP Server, AI Agent, and AI Policy entities need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins.
 AI Consumers, AI Consumer Groups, and AI Vaults pass through unchanged, since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-and-vaults).
 
-The following examples walk through converting a decK `ai.yaml` file for a single AI Model, AI MCP Server, AI Agent, and AI Policy. Each example uses [`deck file ai2kong`](/deck/file/ai2kong/) to show the `kong.yaml` it generates, then syncs that configuration with `deck ai sync`.
+The following examples walk through converting a decK `ai.yaml` file for a single AI Model, AI MCP Server, AI Agent, and AI Policy. Each example uses [`deck file ai2kong`](/deck/file/ai2kong/) to show the `kong.yaml` it generates, then applies that configuration. You can either sync the generated `kong.yaml` with [`deck gateway sync`](/deck/gateway/sync/), or skip the intermediate file and let `deck ai sync` convert and sync `ai.yaml` in one step.
 
 ### Convert an AI Model
 
@@ -233,7 +233,11 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
 
    {:.info}
    > The converted output uses the `alias` and `model_alias` field names from the self-hosted `ai-model-selector` and `ai-proxy-advanced` plugin schemas. These are distinct from `config.route.model` on the {{site.ai_gateway}} entity shown in the input above; `deck file ai2kong` handles the translation between the two.
-1. Sync the configuration to your self-hosted {{site.base_gateway}}. `deck ai sync` converts `ai.yaml` and syncs the result in one step, so you don't need to keep the intermediate `kong.yaml`:
+1. Apply the configuration to your self-hosted {{site.base_gateway}}. Sync the `kong.yaml` file you just generated with [`deck gateway sync`](/deck/gateway/sync/):
+   ```sh
+   deck gateway sync kong.yaml
+   ```
+   Or skip the intermediate file and let `deck ai sync` convert and sync `ai.yaml` in one step:
    ```sh
    deck ai sync ai.yaml
    ```
@@ -317,7 +321,11 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
          name: ai-mcp-proxy
    ```
    {: .no-copy-code .collapsible }
-1. Sync the configuration to your self-hosted {{site.base_gateway}}. `deck ai sync` converts `ai.yaml` and syncs the result in one step, so you don't need to keep the intermediate `kong.yaml`:
+1. Apply the configuration to your self-hosted {{site.base_gateway}}. Sync the `kong.yaml` file you just generated with [`deck gateway sync`](/deck/gateway/sync/):
+   ```sh
+   deck gateway sync kong.yaml
+   ```
+   Or skip the intermediate file and let `deck ai sync` convert and sync `ai.yaml` in one step:
    ```sh
    deck ai sync ai.yaml
    ```
@@ -375,7 +383,11 @@ The following examples walk through converting a decK `ai.yaml` file for a singl
      url: https://agent.example.com
    ```
    {: .no-copy-code .collapsible }
-1. Sync the configuration to your self-hosted {{site.base_gateway}}. `deck ai sync` converts `ai.yaml` and syncs the result in one step, so you don't need to keep the intermediate `kong.yaml`:
+1. Apply the configuration to your self-hosted {{site.base_gateway}}. Sync the `kong.yaml` file you just generated with [`deck gateway sync`](/deck/gateway/sync/):
+   ```sh
+   deck gateway sync kong.yaml
+   ```
+   Or skip the intermediate file and let `deck ai sync` convert and sync `ai.yaml` in one step:
    ```sh
    deck ai sync ai.yaml
    ```
@@ -447,7 +459,11 @@ An AI Policy generates no object of its own. It must be attached to another enti
    ```
 
    The `model` and `route` fields on the plugin are what scope it to that AI Model's traffic instead of applying globally.
-1. Sync the configuration to your self-hosted {{site.base_gateway}}. `deck ai sync` converts `ai.yaml` and syncs the result in one step, so you don't need to keep the intermediate `kong.yaml`:
+1. Apply the configuration to your self-hosted {{site.base_gateway}}. Sync the `kong.yaml` file you just generated with [`deck gateway sync`](/deck/gateway/sync/):
+   ```sh
+   deck gateway sync kong.yaml
+   ```
+   Or skip the intermediate file and let `deck ai sync` convert and sync `ai.yaml` in one step:
    ```sh
    deck ai sync ai.yaml
    ```
