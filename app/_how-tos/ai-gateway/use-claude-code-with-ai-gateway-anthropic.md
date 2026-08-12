@@ -108,7 +108,7 @@ The AI Model uses the following settings:
 * `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/messages`.
 * `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Model Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
 
-## Verify traffic through {{site.ai_gateway}}
+## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 

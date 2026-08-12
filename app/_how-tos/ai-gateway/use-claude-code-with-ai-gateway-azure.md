@@ -64,7 +64,7 @@ The AI Model Provider uses the following settings:
 * `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`.
 * `config.auth.headers[0].value: !env AZURE_AI_FOUNDRY_TOKEN`: Loads the API key from your environment at apply time so it is not embedded in the config.
 
-## Create an AI Policy and AI Model
+## Create AI Policy and AI Model entities
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
@@ -143,7 +143,7 @@ The AI Model uses the following settings:
 * `targets`: Specifies which upstream model to route requests to. `provider: azure-claude` references the AI Provider created earlier, and `name: claude-sonnet-4-6` must match the name of your Claude deployment in Azure AI Foundry.
 * `targets[0].config.upstream_url`: The base Azure AI Foundry endpoint from the prerequisites, ending at `/anthropic`. {{site.ai_gateway}} appends the rest of the Anthropic Messages API path automatically.
 
-## Verify traffic through {{site.ai_gateway}}
+## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 

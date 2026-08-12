@@ -180,7 +180,7 @@ The AI Model uses the following settings:
 * `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
 * `policies`: Attaches the `strip-claude-beta-info` policy created in the previous step, so its header and body transformations apply to every request sent through this model.
 
-## Verify traffic through Kong
+## Run {{ site.claude_code }}
 
 {{ site.claude_code }}'s experimental beta features send fields that Hugging Face rejects even with the AI Policy in place. Disable them, then start a session pointed at your local {{site.ai_gateway}} endpoint:
 
