@@ -20,6 +20,9 @@ tools:
 
 prereqs:
   inline:
+    - title: Anthropic
+      icon_url: /assets/icons/anthropic.svg
+      include_content: md/ai-gateway/v2/prereqs/anthropic
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
       include_content: prereqs/claude-code
