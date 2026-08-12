@@ -39,8 +39,7 @@ tldr:
 
 ## Create an AI Model Provider entity
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Anthropic and store your authentication credentials:
-
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -56,6 +55,9 @@ ai_gateway_model_providers:
           - name: x-api-key
             value: !env ANTHROPIC_API_KEY
 {% endentity_examples %}
+
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
 In this example, we're setting up the AI Model Provider with:
 

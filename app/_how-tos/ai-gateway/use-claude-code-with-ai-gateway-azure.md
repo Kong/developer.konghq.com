@@ -37,6 +37,8 @@ tldr:
 
 ## Create an AI Model Provider entity
 
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
+
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: azure-claude
@@ -54,12 +56,16 @@ ai_gateway_model_providers:
 {:.info}
 > `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
-The AI Model Provider uses:
+In this example, we're setting up the AI Model Provider with:
 
- * `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`.
- * `config.auth.headers[0].value: !env AZURE_AI_FOUNDRY_TOKEN`: Loads the API key from your environment at apply time so it is not embedded in the config.
+* `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`.
+* `config.auth.headers[0].value: !env AZURE_AI_FOUNDRY_TOKEN`: Loads the API key from your environment at apply time so it is not embedded in the config.
 
 ## Create an AI Policy and AI Model
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
+
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Azure AI Foundry's Claude API does not support. 
 
 {% entity_examples %}
 ai_gateway_policies:
@@ -113,24 +119,22 @@ ai_gateway_models:
           upstream_url: !env AZURE_AI_FOUNDRY_UPSTREAM_URL
 {% endentity_examples %}
 
-We create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Azure AI Foundry's Claude endpoint does not support. 
-
-This uses the following settings:
+The AI Policy uses the following settings:
 
 * `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
 * `config.add.headers`: Adds the `anthropic-version` header Azure AI Foundry's native Anthropic endpoint requires. {{ site.claude_code }} doesn't send this header itself, and Foundry rejects requests without it with a `400`.
 * `config.remove.headers` / `config.remove.querystring` / `config.remove.body`: Strips Anthropic-beta-only fields — the `anthropic-beta` header, `beta` query string, and body fields like `mcp_servers` and `container` — that {{ site.claude_code }} sends but that Azure AI Foundry's Claude deployment doesn't support.
 * `name: claude-code-compat`: The identifier you use to attach the policy.
+* `targets.name:`: The name of your own Claude deployment in Azure AI Foundry
 
 {:.info}
-> Replace `claude-sonnet-4-6` with the name of your own Claude deployment in Azure AI Foundry.
+> {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see a `400` error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
 
-The AI Model uses:
+The AI Model uses the following settings:
 
 * `name`/`display_name: claude-code-azure-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target name, to select the model.
 * `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively.
 * `config.route.paths: [/]`: Configures the base path where this model's routes are accessible.
-* `config.model.name_header: true`: Lets {{ site.claude_code }} select this model by sending its `name` in the request, instead of requiring a separate routing rule.
 * `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
 * `policies`: Attaches the `claude-code-compat` policy created in the previous step, so its header and body transformations apply to every request sent through this model.
 * `targets`: Specifies which upstream model to route requests to. `provider: azure-claude` references the AI Provider created earlier, and `name: claude-sonnet-4-6` must match the name of your Claude deployment in Azure AI Foundry.
@@ -144,22 +148,43 @@ Now, we can start a {{ site.claude_code }} session that points it to the local {
 ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'claude-code-azure-sonnet'
 ```
 
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
+Ask a question to confirm that requests reach {{site.ai_gateway}}.
 
 {% validation claude-code %}
-prompt: Tell me about Vienna Oribasius manuscript.
-model: claude-code-azure-sonnet
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude
 {% endvalidation %}
 
 
-{{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-The "Vienna Oribasius manuscript" refers to a famous illustrated medical
-codex that preserves the works of Oribasius of Pergamon, a noted Greek
-physician who lived in the 4th century CE. Oribasius was a compiler of
-earlier medical knowledge, and his writings form an important link in the
-transmission of Greco-Roman medical science to the Byzantine, Islamic, and
-later European worlds.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
+
+What it is
+
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
+
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
