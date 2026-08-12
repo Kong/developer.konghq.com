@@ -25,6 +25,8 @@ related_resources:
     url: /gateway/entities/ca-certificate/
   - text: Certificate
     url: /gateway/entities/certificate/
+  - text: Store TLS certificate private keys in a {{site.konnect_short_name}} Config Store
+    url: /operator/konnect/how-to/config-store-certificate-keys/
 tags:
   - konnect-crd
  
@@ -83,6 +85,25 @@ spec:
     -----END PRIVATE KEY-----
 {% endkonnect_crd %}
 <!-- vale on -->
+
+### Reference certificate material from a Vault {% new_in 2.3 %}
+
+`spec.cert`, `spec.cert_alt`, `spec.key`, and `spec.key_alt` each independently accept either inline PEM material or a
+[Kong vault](/operator/konnect/crd/gateway/vault/) reference of the form `{vault://VAULT_PREFIX/SECRET_KEY}`. References
+are passed through unchanged and resolved from the Vault backend, so you can keep the private key out of your
+Kubernetes manifests while the public certificate stays inline:
+
+```yaml
+  cert: |
+    -----BEGIN CERTIFICATE-----
+    ...
+    -----END CERTIFICATE-----
+  key: '{vault://certvault/example-tls-key}'
+```
+
+Vault references are only supported with the default `spec.type: inline`. For a complete walkthrough, see
+[Store TLS certificate private keys in a {{site.konnect_short_name}} Config Store](/operator/konnect/how-to/config-store-certificate-keys/).
+
 ## Create a `KongCACertificate`
 
 Use the `KongCACertificate` resource to provision a CA certificate in Konnect. This certificate can be used for client authentication or mutual TLS setups.

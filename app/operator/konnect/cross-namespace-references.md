@@ -250,6 +250,64 @@ spec:
 
 Without a valid grant, the `KonnectAPIAuthConfiguration` reports `ResolvedRefs=False` with reason `RefNotPermitted` and `APIAuthValid=False`. Once a permitting `KongReferenceGrant` is created, the object is reconciled and the reference becomes valid.
 
+## Vault Config Store configuration {% new_in 2.3 %}
+
+When configuring a `KongVault` with `spec.backend: konnect`, you can reference the `KonnectConfigStore` that backs the
+Vault instead of copying the {{site.konnect_short_name}} Config Store ID into `spec.config.config_store_id`.
+
+You can do this with the `spec.configStoreRef` field. `KongVault` is cluster-scoped and `KonnectConfigStore` is
+namespaced, so `spec.configStoreRef.namespace` is required and the reference always crosses a namespace boundary:
+
+```yaml
+apiVersion: configuration.konghq.com/v1alpha1
+kind: KongVault
+metadata:
+  name: certvault
+spec:
+  backend: konnect
+  prefix: certvault
+  configStoreRef:
+    kind: KonnectConfigStore
+    name: cert-keys
+    namespace: kong
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: my-control-plane
+      namespace: kong
+```
+
+In order to protect cross-namespace references, the `KonnectConfigStore` resource must explicitly allow references from
+other namespaces using `KongReferenceGrant` resources. Because a `KongVault` is cluster-scoped and has no namespace of
+its own, the `from` entry must set `namespace: ""`:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
+kind: KongReferenceGrant
+metadata:
+  name: allow-kongvault-to-konnect-config-store
+  namespace: kong
+spec:
+  from:
+    - group: configuration.konghq.com
+      kind: KongVault
+      namespace: ""
+  to:
+    - group: konnect.konghq.com
+      kind: KonnectConfigStore
+      # Optionally specify a specific KonnectConfigStore name to allow
+      # only this specific resource to be referenced.
+      # name: cert-keys
+```
+
+Without a valid grant, the `KongVault` reports `ConfigStoreRefValid=False` with reason `RefNotPermitted` and isn't
+pushed to {{site.konnect_short_name}}, so that a Vault is never created with a missing Config Store ID. If the grant is
+removed after the `KongVault` has been programmed, subsequent updates stop, but the Vault that already exists in
+{{site.konnect_short_name}} isn't rolled back or removed.
+
+The denial is reported on `ConfigStoreRefValid` rather than on `ResolvedRefs`, which the control plane reference already
+uses for this resource.
+
 ## Troubleshooting
 
 If you're having issues with cross namespace references, you can always check your
