@@ -50,7 +50,9 @@ faqs:
     a: |
       Yes. An AI Model supports one `key-auth` AI Identity Provider and one `openid-connect`
       AI Identity Provider simultaneously. An AI Consumer's request is authenticated
-      if it satisfies either provider.
+      if it satisfies either provider. Attaching an authentication AI Policy directly to an AI
+      Model's `policies` field isn't supported; AI Identity Providers are the only supported way
+      to authenticate AI Model traffic.
 
   - q: Can an AI Agent use an AI Identity Provider too?
     a: |
@@ -225,7 +227,7 @@ access:
 > * Each AI Model supports one `key-auth` identity provider and one `openid-connect` identity provider. You can assign both types to the same AI Model; a request is authenticated if it satisfies either provider.
 > * Each AI Agent currently supports up to one AI Identity Provider reference.
 > * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) currently supports up to one AI Identity Provider reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
-> * Attaching an authentication AI Policy directly to an AI Agent's or AI MCP Server's `policies` field isn't supported. AI Identity Providers are the only supported way to authenticate AI Agent and AI MCP Server traffic.
+> * Attaching an authentication AI Policy (Key Auth, OpenID Connect, or similar) directly to an AI Model's, AI Agent's, or AI MCP Server's `policies` field isn't supported, since each of these entities has its own top-level authentication mechanism. AI Identity Providers are the only supported way to authenticate AI Model, AI Agent, and AI MCP Server traffic, and let each entity use different authentication independently. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for the full list of affected Policy types.
 
 If you plan to rename the AI Identity Provider later, reference it by `id` rather than name. The ID is stable across renames.
 

@@ -75,8 +75,8 @@ faqs:
       way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control) or
       [AI Agent](/ai-gateway/entities/ai-agent/#access-control). This is supported for `conversion-listener`,
       `listener`, and `passthrough-listener` modes. An AI MCP Server currently accepts up to one AI Identity
-      Provider reference. Attaching an authentication AI Policy directly to the AI MCP Server's `policies` field
-      isn't supported.
+      Provider reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an
+      authentication AI Policy directly to its `policies` field isn't supported.
 
   - q: Can I attach a rate-limiting policy to an AI MCP Server?
     a: |
@@ -371,7 +371,7 @@ An MCP client such as [Claude Desktop](https://claude.ai/download), Cursor, or [
 
 ## Access control
 
-Once you expose tools through an AI MCP Server, anyone who can reach the endpoint can attempt to call them unless you gate access to known AI Consumers. To authenticate AI Consumers calling a `conversion-listener`, `listener`, or `passthrough-listener` AI MCP Server, reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) by name or ID in the [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers) array. This is the same mechanism used by [AI Models](/ai-gateway/entities/ai-model/#access-control) and [AI Agents](/ai-gateway/entities/ai-agent/#access-control). An AI MCP Server currently accepts up to one AI Identity Provider reference. Attaching an authentication AI Policy directly to the AI MCP Server's [`policies`](#schema-aigateway-mcpserver-policies) field isn't supported; authentication for AI MCP Servers is configured exclusively through AI Identity Providers.
+Once you expose tools through an AI MCP Server, anyone who can reach the endpoint can attempt to call them unless you gate access to known AI Consumers. To authenticate AI Consumers calling a `conversion-listener`, `listener`, or `passthrough-listener` AI MCP Server, reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) by name or ID in the [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers) array. This is the same mechanism used by [AI Models](/ai-gateway/entities/ai-model/#access-control) and [AI Agents](/ai-gateway/entities/ai-agent/#access-control). An AI MCP Server currently accepts up to one AI Identity Provider reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its [`policies`](#schema-aigateway-mcpserver-policies) field isn't supported; authentication is configured exclusively through AI Identity Providers. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for the full list of affected Policy types.
 
 `upstream-server` AI MCP Servers don't accept an `access.identity_providers` reference. Configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) instead to authenticate to the upstream when fetching its tool list; see [Upstream authentication](#upstream-authentication). `conversion-only` AI MCP Servers have no `access` field at all, since they never accept incoming MCP traffic directly.
 

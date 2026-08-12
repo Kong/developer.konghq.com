@@ -147,4 +147,15 @@ rows:
             config:
               text: "Enable MCP Registry in {{site.konnect_short_name}} Labs"
               url: /catalog/mcp-registry/
+  - header:
+      type: h2
+      text: MCP how-to guides
 
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - mcp
+              quantity: 5
+              allow_empty: true

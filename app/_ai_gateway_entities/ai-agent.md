@@ -71,8 +71,8 @@ faqs:
     a: |
       Reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) by name or id in the AI Agent's
       [`access.identity_providers`](#schema-aigateway-agent-access) array, the same field used on AI Models. An AI Agent
-      currently accepts up to one AI Identity Provider reference. Attaching an authentication AI Policy directly to an
-      AI Agent's `policies` field isn't supported.
+      currently accepts up to one AI Identity Provider reference. The AI Agent has its own top-level authentication
+      mechanism, so attaching an authentication AI Policy directly to its `policies` field isn't supported.
 
   - q: How do I attach AI Policies to an AI Agent?
     a: |
@@ -322,7 +322,7 @@ For `a2a` type Agents, when {{site.base_gateway}} tracing is configured, the run
 
 To restrict which AI Consumers or teams can reach a specific agent, use ACLs. The [`access.acls`](#schema-aigateway-agent-access) field defines either an `allow` or a `deny` list of identities that can access the agent. Each entry references an [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or Authenticated Group by name. An Authenticated Group is a dynamic group representing all consumers authenticated via a specific OAuth2 scope or claim. Access is enforced before traffic reaches the upstream agent.
 
-For per-request authentication and identity validation, reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) in the [`access.identity_providers`](#schema-aigateway-agent-access) array, the same way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control). Attaching an authentication AI Policy directly to the AI Agent's `policies` field isn't supported; authentication for AI Agents is configured exclusively through AI Identity Providers.
+For per-request authentication and identity validation, reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) in the [`access.identity_providers`](#schema-aigateway-agent-access) array, the same way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control). The AI Agent has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its `policies` field isn't supported; authentication is configured exclusively through AI Identity Providers. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for the full list of affected Policy types.
 
 An AI Agent currently accepts up to one AI Identity Provider reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
 
