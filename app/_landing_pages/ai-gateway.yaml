@@ -251,6 +251,10 @@ rows:
                         Shrink prompts before they reach the upstream provider to reduce token costs
                       feature: |
                         [AI Prompt Compressor](/ai-gateway/policies/ai-prompt-compressor/)
+                    - outcome: |
+                        Calculate the true cost of each request, including cache, context-window, and service-tier pricing, and enforce spend limits against it
+                      feature: |
+                        [Model cost management](/ai-gateway/model-cost-management/) and [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/)
                 - usecase: |
                     **Expose your APIs as tools an AI agent can call**, governed like any other API product
                   outcomes:
@@ -481,6 +485,15 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               url: /ai-gateway/configure-on-prem/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Model cost management
+            description: See how {{site.ai_gateway}} prices models and calculates the cost of a request.
+            icon: /assets/icons/money.svg
+            cta:
+              url: /ai-gateway/model-cost-management/
               align: end
   
   - header:

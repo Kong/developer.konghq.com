@@ -6,6 +6,9 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+related_resources:
+  - text: Model cost management
+    url: /ai-gateway/model-cost-management/
 ---
 
 The AI Rate Limiting Advanced Policy provides rate limiting for all [AI Policies](/ai-gateway/policies/). The
@@ -14,7 +17,7 @@ AI Rate Limiting Advanced Policy extends the
 
 This Policy uses the token data returned by the LLM provider to calculate the costs of queries.
 The same HTTP request can vary greatly in cost depending on the calculation of the
-LLM providers.
+LLM providers. See [Model cost management](/ai-gateway/model-cost-management/) for how {{site.ai_gateway}} prices a request.
 
 A common pattern to protect your AI API is to analyze and assign costs to incoming queries, then rate limit the consumer's
 cost for a given time window and provider or policy.
@@ -207,13 +210,13 @@ rows:
     description: |
       The financial or computational cost incurred based on token usage. This strategy lets you limit API usage based on actual processing costs rather than raw token counts.
       <br><br>
-      The AI Rate Limiting Advanced Policy calculates cost as the sum of prompt tokens multiplied by input cost and completion tokens multiplied by output cost, divided by 1 million: `cost = (prompt_tokens × input_cost + completion_tokens × output_cost) / 1,000,000`.
+      The AI Rate Limiting Advanced Policy limits against the same cost figure {{site.ai_gateway}} calculates for reporting. See [Model cost calculation](/ai-gateway/model-cost-management/#model-cost-calculation) for the full formula, including how cache pricing, context-window thresholds, and service tiers factor in.
       <br><br>
-      You define `input_cost` and `output_cost` per 1 million tokens in whatever unit suits your use case, whether US dollars, cents, or internal billing credits. The rate limit threshold must use the same unit.
+      You define pricing per 1 million tokens in whatever unit suits your use case, whether US dollars, cents, or internal billing credits. The rate limit threshold must use the same unit.
       <br><br>
 
       {:.warning}
-      > This strategy requires `input_cost` and `output_cost` values in the [AI Model](/ai-gateway/entities/ai-model/) target configuration, under `config`.
+      > This strategy requires `input_cost` and `output_cost` configured on the [AI Model](/ai-gateway/entities/ai-model/) target's `config`. See [Model cost configuration](/ai-gateway/model-cost-management/#model-cost-configuration) for these and the optional cache, context-window, and service-tier fields.
 {% endtable %}
 
 ### Request prompt function
