@@ -63,7 +63,11 @@ cleanup:
 
 ## Create an AI Model Provider and AI Model
 
-DashScope serves the Qwen model family through an OpenAI-compatible Chat Completions API, so Qwen Code CLI can talk to it natively. Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for your DashScope credentials and an [AI Model](/ai-gateway/entities/ai-model/) that routes to it, in a single `kongctl` apply command so the model can reference the provider:
+DashScope serves the Qwen model family through an OpenAI-compatible Chat Completions API, so Qwen Code CLI can talk to it natively. 
+
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -100,9 +104,13 @@ ai_gateway_models:
     capabilities: [generate]
 {% endentity_examples %}
 
-`targets` sends requests to `qwen-plus` through the `dashscope` provider. `targets[0].config.international: true` uses DashScope's international endpoint (`dashscope-intl.aliyuncs.com`); set it to `false` if your DashScope key belongs to a mainland China account. The `generate` capability combined with `config.route.paths: [/qwen-dashscope]` exposes the model at `/qwen-dashscope/chat/completions`.
+This example uses the following settings:
 
-## Verify the AI Model
+* `targets`: Sends requests to `qwen-plus` through the `dashscope` provider. 
+* `targets[0].config.international: true`: Uses DashScope's international endpoint (`dashscope-intl.aliyuncs.com`); set it to `false` if your DashScope key belongs to a mainland China account. 
+* `capabilities: [generate]`: Exposes the model at a `/qwen/chat/completions` endpoint.
+
+## Verify traffic through {{site.ai_gateway}}
 
 Before starting Qwen Code CLI, confirm the route works by sending a Chat Completions request directly (expect `200`):
 
@@ -121,7 +129,7 @@ export OPENAI_API_KEY=sk-placeholder
 export OPENAI_BASE_URL=http://localhost:8000/qwen-dashscope/chat/completions
 ```
 
-## Start and use Qwen Code CLI
+## Run Qwen Code CLI
 
 Run Qwen Code CLI against the model configured in the AI Model entity's `targets`:
 

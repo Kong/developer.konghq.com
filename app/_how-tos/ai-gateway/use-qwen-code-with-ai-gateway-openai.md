@@ -56,7 +56,11 @@ cleanup:
 
 ## Create an AI Model Provider and AI Model
 
-Qwen Code CLI speaks OpenAI's Chat Completions format natively. Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for your OpenAI credentials and an [AI Model](/ai-gateway/entities/ai-model/) that routes to it, in a single `kongctl` apply command so the model can reference the provider:
+Qwen Code CLI speaks OpenAI's Chat Completions format natively. 
+
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -92,9 +96,11 @@ ai_gateway_models:
     capabilities: [generate]
 {% endentity_examples %}
 
-`targets` sends requests to `gpt-5-mini` through the `generic-openai` provider. The `generate` capability combined with `config.route.paths: [/qwen]` exposes the model at `/qwen/chat/completions`.
+This example uses the following settings:
+* `targets`: Sends requests to `gpt-5-mini` through the `generic-openai` provider. 
+* `capabilities: [generate]`: Exposes the model at a `/qwen/chat/completions` endpoint.
 
-## Verify the AI Model
+## Verify traffic through {{site.ai_gateway}}
 
 Before starting Qwen Code CLI, confirm the route works by sending a Chat Completions request directly (expect `200`):
 
@@ -113,7 +119,7 @@ export OPENAI_API_KEY=sk-placeholder
 export OPENAI_BASE_URL=http://localhost:8000/qwen/chat/completions
 ```
 
-## Start and use Qwen Code CLI
+## Run Qwen Code CLI
 
 Run Qwen Code CLI against the model configured in the AI Model entity's `targets`:
 
