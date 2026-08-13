@@ -46,13 +46,8 @@ prereqs:
         export DASHSCOPE_AUTH_HEADER="Bearer YOUR_DASHSCOPE_KEY"
         ```
     - title: Qwen Code CLI
+      include_content: md/ai-gateway/v2/prereqs/qwen-code-cli
       icon_url: /assets/icons/qwen.svg
-      content: |
-        Install Node.js 18+ (verify with `node --version`), then install the Qwen Code CLI:
-
-        ```sh
-        npm install -g @qwen-code/qwen-code
-        ```
 
 cleanup:
   inline:
@@ -63,7 +58,7 @@ cleanup:
 
 ## Create an AI Model Provider and AI Model
 
-DashScope serves the Qwen model family through an OpenAI-compatible Chat Completions API, so Qwen Code CLI can talk to it natively. 
+DashScope serves the Qwen model family through an OpenAI-compatible Chat Completions API, so Qwen Code CLI can talk to it natively.
 
 Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
 
@@ -106,19 +101,9 @@ ai_gateway_models:
 
 This example uses the following settings:
 
-* `targets`: Sends requests to `qwen-plus` through the `dashscope` provider. 
-* `targets[0].config.international: true`: Uses DashScope's international endpoint (`dashscope-intl.aliyuncs.com`); set it to `false` if your DashScope key belongs to a mainland China account. 
+* `targets`: Sends requests to `qwen-plus` through the `dashscope` provider.
+* `targets[0].config.international: true`: Uses DashScope's international endpoint (`dashscope-intl.aliyuncs.com`); set it to `false` if your DashScope key belongs to a mainland China account.
 * `capabilities: [generate]`: Exposes the model at a `/qwen/chat/completions` endpoint.
-
-## Verify traffic through {{site.ai_gateway}}
-
-Before starting Qwen Code CLI, confirm the route works by sending a Chat Completions request directly (expect `200`):
-
-```sh
-curl -sS http://localhost:8000/qwen-dashscope/chat/completions \
-  -H 'Content-Type: application/json' \
-  -d '{"model":"my-qwen-dashscope","messages":[{"role":"user","content":"Reply with just: ok"}]}'
-```
 
 ## Point Qwen Code CLI at {{site.ai_gateway}}
 
@@ -142,5 +127,6 @@ Ask a simple question to confirm that requests reach {{site.ai_gateway}}:
 ```text
 Explain the singleton pattern in Python.
 ```
+{:.no-copy-code}
 
 Qwen Code CLI returns a response, proxied through {{site.ai_gateway}} to the upstream DashScope Qwen model.
