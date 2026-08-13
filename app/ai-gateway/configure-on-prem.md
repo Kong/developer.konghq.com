@@ -37,14 +37,14 @@ related_resources:
     url: /plugins/ai-a2a-proxy/
 ---
 
-{{site.ai_gateway}} on {{site.konnect_short_name}} is documented around its entity model: AI Models, AI Model Providers, AI MCP Servers, AI Agents, and more. See [{{site.ai_gateway}} entities](/ai-gateway/entities/) for the full list. Self-hosted {{site.base_gateway}} doesn't expose these entities. Instead, you configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
+The existing {{site.ai_gateway}} documentation follows the {{site.konnect_short_name}} model: AI Models, AI Model Providers, AI MCP Servers, AI Agents, and more, that you configure in {{site.konnect_short_name}}. See [{{site.ai_gateway}} entities](/ai-gateway/entities/) for the full list. Self-hosted {{site.base_gateway}} doesn't have these objects. This page shows you how to configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
 
-This page gives you two ways to bridge that gap:
+There are two ways to bridge that gap:
 
 * Read [How entities translate to {{site.base_gateway}} configuration](#how-entities-translate-to-kong-gateway-configuration) to translate what you read in {{site.ai_gateway}} docs into the plugin fields you configure by hand.
 * [Convert](#convert-ai-gateway-2-0-entities-to-self-hosted-kong-gateway-config) an existing {{site.ai_gateway}} 2.0 decK configuration into the equivalent self-hosted config, instead of hand-writing the plugins.
 
-Both deployments run the same {{site.base_gateway}} primitives. When you save an AI entity in {{site.konnect_short_name}}, {{site.ai_gateway}} generates the Services, Routes, Plugins, and Consumers that data planes run. On-prem, you produce those same primitives yourself, either by writing the plugin config directly or by converting an entity-model file.
+Both deployments run the same {{site.base_gateway}} Services, Routes, Plugins, and Consumers (what we call primitives). When you save an AI entity in {{site.konnect_short_name}}, {{site.ai_gateway}} generates the primitives that data planes run. On-prem, you produce those same primitives yourself, either by writing the plugin config directly or by converting an entity-model file.
 
 ## How entities translate to {{site.base_gateway}} configuration
 
@@ -108,21 +108,37 @@ flowchart LR
 
 ## AI Models
 
-Use the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) (`ai-proxy-advanced`) plugin to transform and proxy requests to multiple AI providers and models at the same time, and to load balance across targets. On {{site.konnect_short_name}}, an AI Model generates a Service, one Route per capability it serves (chat completions, embeddings, and so on), and the plugins on each Route (`ai-model-selector` and `ai-proxy-advanced`). On-prem, create one Route per capability you want to expose, each carrying its own `ai-proxy-advanced` plugin.
+Use the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) (`ai-proxy-advanced`) plugin to transform and proxy requests to multiple AI providers and models at the same time, and to load balance across targets.
+
+- **On {{site.konnect_short_name}}:** An AI Model generates a Service, one Route per capability it serves (chat completions, embeddings, and so on), and the plugins on each Route (`ai-model-selector` and `ai-proxy-advanced`).
+- **On-prem:** You create one Route per capability you want to expose, each carrying its own `ai-proxy-advanced` plugin.
 
 The AI Model Provider referenced by a target has no plugin of its own. Set its `type` and `auth` in the corresponding `targets` entry of the [`ai-proxy-advanced`](/plugins/ai-proxy-advanced/) plugin.
 
 ## AI MCP Servers
 
-Use the [AI MCP Proxy](/plugins/ai-mcp-proxy/) (`ai-mcp-proxy`) plugin to convert APIs into MCP tools, proxy MCP servers, expose MCP tools to AI clients, and observe MCP traffic. On {{site.konnect_short_name}}, an AI MCP Server generates one or more Routes, each carrying an `ai-mcp-proxy` plugin. The number of Routes, and whether the plugin converts a REST API into MCP tools or proxies an existing MCP server, depends on the server [mode](/ai-gateway/entities/ai-mcp-server/#server-modes). On-prem, configure the plugin's mode and Routes to match the topology you want.
+Use the [AI MCP Proxy](/plugins/ai-mcp-proxy/) (`ai-mcp-proxy`) plugin to convert APIs into MCP tools, proxy MCP servers, expose MCP tools to AI clients, and observe MCP traffic.
+
+- **On {{site.konnect_short_name}}:** An AI MCP Server generates one or more Routes, each carrying an `ai-mcp-proxy` plugin. The number of Routes, and whether the plugin converts a REST API into MCP tools or proxies an existing MCP server, depends on the server [mode](/ai-gateway/entities/ai-mcp-server/#server-modes).
+- **On-prem:** You configure the plugin's mode and Routes to match the topology you want.
 
 ## AI Agents
 
-Use the [AI A2A Proxy](/plugins/ai-a2a-proxy/) (`ai-a2a-proxy`) plugin to add observability and gateway control to Agent-to-Agent (A2A) protocol traffic. The plugin supports both JSON-RPC and REST bindings, and always applies A2A protocol handling, agent card URL rewriting, and A2A telemetry. It has no mode to turn that off. On {{site.konnect_short_name}}, an AI Agent with `type: a2a` generates one Service, one Route, and one `ai-a2a-proxy` plugin, which matches what you configure on-prem. An AI Agent with `type: http` generates a Service and Route with no AI plugin, since `type: http` is a plain transparent proxy. Replicate it on-prem with a Service and Route and no plugin attached.
+Use the [AI A2A Proxy](/plugins/ai-a2a-proxy/) (`ai-a2a-proxy`) plugin to add observability and gateway control to Agent-to-Agent (A2A) protocol traffic. The plugin supports both JSON-RPC and REST bindings, and always applies A2A protocol handling, agent card URL rewriting, and A2A telemetry. It has no mode to turn that off.
+
+On {{site.konnect_short_name}}, an AI Agent with `type: a2a` generates:
+- One Service
+- One Route
+- One `ai-a2a-proxy` plugin
+
+This matches what you configure on-prem. An AI Agent with `type: http` generates a Service and Route with no AI plugin, since `type: http` is a plain transparent proxy. Replicate it on-prem with a Service and Route and no plugin attached.
 
 ## AI Identity Providers
 
-Use the [Key Auth](/ai-gateway/policies/key-auth/) or [OpenID Connect](/ai-gateway/policies/openid-connect/) Policy, backed by the `key-auth` and `openid-connect` {{site.base_gateway}} plugins, to authenticate the clients calling your AI routes. On {{site.konnect_short_name}}, an AI Identity Provider generates a `key-auth` or `openid-connect` plugin on the Route of every AI Model or AI Agent that references it, plus a shared anonymous Consumer carrying a `request-termination` plugin that returns `401` for requests that don't authenticate. On-prem, attach the corresponding plugin to each Route yourself, and configure the anonymous Consumer and `request-termination` plugin to match.
+Use the [Key Auth](/ai-gateway/policies/key-auth/) or [OpenID Connect](/ai-gateway/policies/openid-connect/) Policy, backed by the `key-auth` and `openid-connect` {{site.base_gateway}} plugins, to authenticate the clients calling your AI routes.
+
+- **On {{site.konnect_short_name}}:** An AI Identity Provider generates a `key-auth` or `openid-connect` plugin on the Route of every AI Model or AI Agent that references it, plus a shared anonymous Consumer carrying a `request-termination` plugin that returns `401` for requests that don't authenticate.
+- **On-prem:** You attach the corresponding plugin to each Route yourself, and configure the anonymous Consumer and `request-termination` plugin to match.
 
 ## AI Policies
 
