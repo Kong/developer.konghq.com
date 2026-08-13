@@ -61,9 +61,13 @@ prereqs:
 
 ---
 
-## Create an AI Model Provider entity
+## Create AI Model Provider, AI Policy, and AI Model entities
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
+
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Vertex AI's API does not support.
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -74,29 +78,8 @@ ai_gateway_model_providers:
     type: vertex
     config:
       auth:
-        type: gcp
+        type: vertex
         service_account_json: !env GCP_SERVICE_ACCOUNT_JSON
-{% endentity_examples %}
-
-{:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
-
-The AI Model Provider uses the following settings:
-
-* `type: vertex`: Specifies that this provider connects to Google Vertex AI.
-* `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
-* `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
-
-## Create AI Policy and AI Model entities
-
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
-
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Vertex AI's API does not support.
-
-{:.warning}
-> Apply the Policy and the AI Model together, in the same `kongctl apply` call, as shown below. The AI Model's `policies` field references the Policy via `!ref`, and `ref` values are local to a single `kongctl apply` call. They're never written to {{site.konnect_short_name}}. If you split this into two separate `kongctl apply` calls, the second one fails with `resource not found: claude-code-compat`, even though the Policy already exists.
-
-{% entity_examples %}
 ai_gateway_policies:
   - ref: claude-code-compat
     name: claude-code-compat
@@ -139,7 +122,16 @@ ai_gateway_models:
 {% endentity_examples %}
 
 {:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
+{:.info}
 > Replace `claude-sonnet-4-5@20250929` with the id of your own enabled model in Vertex AI Model Garden.
+
+The AI Model Provider uses the following settings:
+
+* `type: vertex`: Specifies that this provider connects to Google Vertex AI.
+* `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
+* `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
 
 The AI Policy uses the following settings:
 
