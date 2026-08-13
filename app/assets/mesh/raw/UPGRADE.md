@@ -102,6 +102,20 @@ rego:
 
 **Action required:** Rewrite `agentConfig` and every `appendPolicies[].rego` on each `MeshOPA` to the new shape as part of the upgrade. A `MeshOPA` written in the old shape after the upgrade is rejected at write time, because the missing `type` discriminator is a validation violation.
 
+### Static OPA agent config on `kuma-dp` removed
+
+`kuma-dp` no longer loads an OPA agent configuration from a file on disk. The agent config always comes from the control plane through `MeshOPA`, so the following are removed:
+
+| Removed | Replacement |
+|---|---|
+| `--opa-config-path` flag | `spec.default.agentConfig` on a `MeshOPA` policy |
+| `KMESH_OPA_CONFIG_PATH` env var | `spec.default.agentConfig` on a `MeshOPA` policy |
+| `KMESH_OPA_EXPERIMENTAL_USE_DYNAMIC_CONFIG` env var | none - dynamic config is always used |
+
+`--opa-set` (`KMESH_OPA_CONFIG_OVERRIDES`) is unchanged, but it now applies on top of the config generated from `MeshOPA` instead of on top of the file.
+
+**Action required:** Move the contents of the file you passed to `--opa-config-path` into the `agentConfig` of a `MeshOPA` policy before upgrading, then drop the flag and the env vars from your data plane deployment. `kuma-dp` fails to start if `--opa-config-path` is still set, because the flag no longer exists.
+
 ### `dpServer.authn.zoneProxy.type` no longer selects a distinct authenticator
 
 A zone proxy (zone ingress/egress) is now just a `Dataplane` with zone proxy listeners, and Kuma authenticates every xDS connection - data planes and zone proxies alike - through the single `dpServer.authn.dpProxy.type` authenticator. `dpServer.authn.zoneProxy.type` (`KUMA_DP_SERVER_AUTHN_ZONE_PROXY_TYPE`) only gates whether a zone proxy's bootstrap includes a credential; it no longer selects a separate authenticator implementation.
