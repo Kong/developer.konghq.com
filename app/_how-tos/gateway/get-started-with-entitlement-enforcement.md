@@ -1,9 +1,9 @@
 ---
-title: Get started with Governance in {{site.metering_and_billing}}
-description: Learn how to enforce per-customer entitlements on {{site.base_gateway}} traffic with the Governance plugin and {{site.metering_and_billing}} in {{site.konnect_short_name}}.
+title: Get started with Entitlement Enforcement
+description: Learn how to enforce per-customer entitlements on {{site.base_gateway}} traffic with the Entitlement Enforcement plugin and {{site.metering_and_billing}} in {{site.konnect_short_name}}.
 content_type: how_to
 
-permalink: /metering-and-billing/governance/get-started/
+permalink: /metering-and-billing/entitlement-enforcement/get-started/
 breadcrumbs:
   - /metering-and-billing/
 
@@ -18,11 +18,11 @@ tags:
     - get-started
 
 tldr:
-  q: How do I use the Governance plugin to enforce {{site.metering_and_billing}} entitlements on {{site.base_gateway}} traffic?
+  q: How do I use the Entitlement Enforcement plugin to enforce {{site.metering_and_billing}} entitlements on {{site.base_gateway}} traffic?
   a: |
-    The [Governance plugin](/plugins/metering-and-billing/) enforces per-customer, per-feature access by polling the {{site.metering_and_billing}} Governance API and blocking requests when a customer has no access or has exhausted a usage limit.
+    The Entitlement Enforcement plugin enforces per-customer, per-feature access by polling the {{site.metering_and_billing}} Entitlement Access API and blocking requests when a customer has no access or has exhausted a usage limit.
 
-    In this tutorial you'll set up the full {{site.metering_and_billing}} product catalog needed for governance — a meter, a metered feature and a boolean feature, a plan with entitlements, a customer, and a subscription — and then enable the Governance plugin on a {{site.base_gateway}} Route to enforce those entitlements.
+    In this tutorial you'll set up the full {{site.metering_and_billing}} product catalog needed for enforcement — a meter, a metered feature and a boolean feature, a plan with entitlements, a customer, and a subscription — and then enable the Entitlement Enforcement plugin on a {{site.base_gateway}} Route to enforce those entitlements.
 
 tools:
     - deck
@@ -41,8 +41,8 @@ prereqs:
     - title: "{{site.konnect_short_name}} system account token (Ingest)"
       include_content: prereqs/metering-and-billing-spat
       icon_url: /assets/icons/kogo-white.svg
-    - title: "{{site.konnect_short_name}} system account token (Governance)"
-      include_content: prereqs/metering-and-billing-governance-spat
+    - title: "{{site.konnect_short_name}} system account token (Entitlement Access)"
+      include_content: prereqs/metering-and-billing-entitlement-access-spat
       icon_url: /assets/icons/kogo-white.svg
     - title: "Redis"
       include_content: prereqs/redis
@@ -77,7 +77,7 @@ next_steps:
 automated_tests: false
 ---
 
-This guide shows how to enforce {{site.metering_and_billing}} entitlements on {{site.base_gateway}} API traffic with the Governance plugin. Unlike the {{site.metering_and_billing}} plugin, which only meters usage, the Governance plugin actively **blocks** requests: it polls the {{site.metering_and_billing}} Governance API for each customer and returns an error when the customer has no access to a feature or has exhausted a usage limit.
+This guide shows how to enforce {{site.metering_and_billing}} entitlements on {{site.base_gateway}} API traffic with the Entitlement Enforcement plugin. Unlike the {{site.metering_and_billing}} plugin, which only meters usage, the Entitlement Enforcement plugin actively **blocks** requests: it polls the {{site.metering_and_billing}} Entitlement Access API for each customer and returns an error when the customer has no access to a feature or has exhausted a usage limit.
 
 In this guide, you'll:
 * Create a {{site.base_gateway}} Consumer that you'll map to a customer
@@ -85,7 +85,7 @@ In this guide, you'll:
 * Create a metered feature and a boolean feature
 * Create a plan that grants those features as entitlements, and publish it
 * Create a customer and start a subscription so the entitlements are active
-* Enable the {{site.metering_and_billing}} plugin to report usage, and the Governance plugin to enforce the entitlements
+* Enable the {{site.metering_and_billing}} plugin to report usage, and the Entitlement Enforcement plugin to enforce the entitlements
 * Verify that traffic is allowed within the limit and blocked once the limit is reached
 
 The following diagram shows how {{site.base_gateway}} entities and {{site.metering_and_billing}} entities are associated:
@@ -98,7 +98,7 @@ flowchart TB
         route["example-route"]
         consumer1["Consumer-Kong Air"]
         metering["Metering & Billing plugin"]
-        governance["Governance plugin"]
+        enforcement["Entitlement Enforcement plugin"]
   end
   subgraph mb["<b>Konnect {{site.metering_and_billing}}</b>"]
     direction LR
@@ -112,15 +112,15 @@ flowchart TB
       direction LR
           customer1["Customer (Kong Air)"]
     end
-    govapi["Governance API"]
+    access["Entitlement Access API"]
   end
     service --> meter
     meter --> feature2
     consumer1 --> customer1
     subscription --> plan
     metering -->|usage events| meter
-    governance -->|polls access| govapi
-    govapi --> customer1
+    enforcement -->|polls access| access
+    access --> customer1
 
 {% endmermaid %}
 
@@ -128,7 +128,7 @@ flowchart TB
 
 Before you configure {{site.metering_and_billing}}, set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll map this Consumer to a customer in {{site.metering_and_billing}}.
 
-The Governance plugin identifies the customer from the request's Consumer and sends the subject key `consumer:<consumer-id>` to the Governance API. To keep that subject key predictable, this guide sets an explicit `id` on the Consumer so you can reference it directly when you create the customer.
+The Entitlement Enforcement plugin identifies the customer from the request's Consumer and sends the subject key `consumer:<consumer-id>` to the Entitlement Access API. To keep that subject key predictable, this guide sets an explicit `id` on the Consumer so you can reference it directly when you create the customer.
 
 You're going to use key [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
 
@@ -145,7 +145,7 @@ entities:
 
 ## Enable authentication
 
-Authentication lets you identify a Consumer so you can govern their access as a customer.
+Authentication lets you identify a Consumer so you can enforce their entitlements as a customer.
 This example uses the [Key Authentication](/plugins/key-auth/) plugin, but you can use any [authentication plugin](/plugins/?category=authentication) that you prefer.
 
 Enable the plugin globally, which means it applies to all {{site.base_gateway}} Services and Routes:
@@ -187,9 +187,9 @@ capture:
 
 ## Create features
 
-Meters collect raw usage, but [features](/metering-and-billing/product-catalog/#features) make that usage governable. You'll create two features:
+Meters collect raw usage, but [features](/metering-and-billing/product-catalog/#features) make that usage enforceable. You'll create two features:
 
-* A **metered feature** that references the meter. Its entitlement carries a usage limit that the Governance plugin enforces.
+* A **metered feature** that references the meter. Its entitlement carries a usage limit that the Entitlement Enforcement plugin enforces.
 * A **boolean feature** with no meter. Its entitlement is a simple on/off grant — the customer either has access or they don't.
 
 Create the metered feature and capture its ID:
@@ -199,8 +199,8 @@ Create the metered feature and capture its ID:
 url: /v3/openmeter/features
 method: POST
 body:
-  name: Governed API access
-  key: governed_api_access
+  name: Premium API access
+  key: premium_api_access
   meter:
     id: $METER_ID
 capture:
@@ -226,7 +226,7 @@ capture:
 
 ## Enable the {{site.metering_and_billing}} plugin
 
-The Governance plugin enforces a usage limit, but something has to report the usage that counts against it. Configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) on `example-service` to emit an API request event for every request. Because both plugins use `consumer` lookup, the usage the {{site.metering_and_billing}} plugin reports is attributed to the same `consumer:<consumer-id>` subject that the Governance plugin checks.
+The Entitlement Enforcement plugin enforces a usage limit, but something has to report the usage that counts against it. Configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) on `example-service` to emit an API request event for every request. Because both plugins use `consumer` lookup, the usage the {{site.metering_and_billing}} plugin reports is attributed to the same `consumer:<consumer-id>` subject that the Entitlement Enforcement plugin checks.
 
 <!--vale off-->
 {% entity_examples %}
@@ -250,9 +250,9 @@ variables:
 
 ## Create a plan with entitlements
 
-Plans are the core building blocks of your [product catalog](/metering-and-billing/product-catalog/). A plan is a collection of [rate cards](/metering-and-billing/product-catalog/#rate-cards), where each rate card ties a feature to a price and an optional [entitlement](/metering-and-billing/entitlements/). The entitlement is what the Governance plugin reads to decide access.
+Plans are the core building blocks of your [product catalog](/metering-and-billing/product-catalog/). A plan is a collection of [rate cards](/metering-and-billing/product-catalog/#rate-cards), where each rate card ties a feature to a price and an optional [entitlement](/metering-and-billing/entitlements/). The entitlement is what the Entitlement Enforcement plugin reads to decide access.
 
-Create a Premium plan with two rate cards: the metered feature, granted a limit of 5 requests per month, and the boolean feature, granted as a simple on/off entitlement. Both rate cards use a free price, because governance depends only on the entitlement, not on price:
+Create a Premium plan with two rate cards: the metered feature, granted a limit of 5 requests per month, and the boolean feature, granted as a simple on/off entitlement. Both rate cards use a free price, because enforcement depends only on the entitlement, not on price:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -267,8 +267,8 @@ body:
     - name: Main
       key: main
       rate_cards:
-        - name: Governed API access
-          key: governed_api_access
+        - name: Premium API access
+          key: premium_api_access
           feature:
             id: $METERED_FEATURE_ID
           billing_cadence: P1M
@@ -304,7 +304,7 @@ method: POST
 
 ## Create a customer and subscription
 
-A [customer](/metering-and-billing/customer/) is the entity whose access is governed. The customer's usage-attribution subject key must match the subject the Governance plugin sends, which is `consumer:` followed by the Consumer ID you set earlier.
+A [customer](/metering-and-billing/customer/) is the entity whose access is enforced. The customer's usage-attribution subject key must match the subject the Entitlement Enforcement plugin sends, which is `consumer:` followed by the Consumer ID you set earlier.
 
 {:.info}
 > This guide creates the customer through the API so that the subject key can be set to the exact `consumer:<consumer-id>` value. In the {{site.metering_and_billing}} UI, the **Include usage from** dropdown only lists subjects that have already sent events, so a freshly created subject key isn't selectable yet.
@@ -336,21 +336,21 @@ Now subscribe the customer to the Premium plan. Starting the subscription materi
 1. Click **Next Step**.
 1. Click **Start Subscription**.
 
-## Enable the Governance plugin
+## Enable the Entitlement Enforcement plugin
 
-Enable the Governance plugin on `example-route`. It points at the Governance API, governs the `governed_api_access` feature, reads the customer from the request's Consumer, and uses your Redis instance as its enforcement cache at `config.redis`. Note that `api_token` uses the **Governance** token, not the **Ingest** token the {{site.metering_and_billing}} plugin uses:
+Enable the Entitlement Enforcement plugin on `example-route`. It points at the Entitlement Access API, enforces the `premium_api_access` feature, reads the customer from the request's Consumer, and uses your Redis instance as its enforcement cache at `config.redis`. Note that `api_token` uses the **Entitlement Access** token, not the **Ingest** token the {{site.metering_and_billing}} plugin uses:
 
 <!--vale off-->
 {% entity_examples %}
 entities:
   plugins:
-    - name: governance
+    - name: entitlement-enforcement
       route: example-route
       config:
-        governance_endpoint: https://us.api.konghq.com/v3/openmeter/governance/query
-        api_token: ${GOVERNANCE_TOKEN}
+        entitlement_access_endpoint: https://us.api.konghq.com/v3/openmeter/entitlement-access/query
+        api_token: ${ENTITLEMENT_ACCESS_TOKEN}
         feature:
-          key: governed_api_access
+          key: premium_api_access
         customer:
           look_up_value_in: consumer
         refresh_interval: 3
@@ -358,9 +358,9 @@ entities:
           host: ${REDIS_HOST}
           port: 6379
 variables:
-  GOVERNANCE_TOKEN:
-    value: $GOVERNANCE_TOKEN
-    description: A {{site.konnect_short_name}} system account token (`spat_`) with the **Governance** role for Metering.
+  ENTITLEMENT_ACCESS_TOKEN:
+    value: $ENTITLEMENT_ACCESS_TOKEN
+    description: A {{site.konnect_short_name}} system account token (`spat_`) with the **Entitlement Access** role for Metering.
   REDIS_HOST:
     value: $REDIS_HOST
     description: The host of your Redis instance. Use `host.docker.internal` if Redis runs on your host and the Data Plane runs in Docker.
@@ -374,7 +374,7 @@ This configuration relies on the plugin's defaults for the rest of its behavior:
 * `response_codes` defaults return `429` when a usage limit is reached, `402` when there's no credit available, and `403` for feature or customer errors.
 
 {:.info}
-> `refresh_interval` is set to `3` seconds here so the tutorial responds quickly. In production, use a higher interval to reduce load on the Governance API.
+> `refresh_interval` is set to `3` seconds here so the tutorial responds quickly. In production, use a higher interval to reduce load on the Entitlement Access API.
 
 ## Validate
 
@@ -393,23 +393,23 @@ done
 
 Expect the following progression:
 
-* **Cold start:** the first requests may return `403` with `"Customer is not found by subject."` The Governance plugin hasn't polled the customer's state yet. It records the subject and fetches its entitlements on the next poll (every `refresh_interval` seconds), so retry for up to a minute.
-* **Within the limit:** once the state is loaded, requests return `200`. The customer has access to `governed_api_access` and hasn't reached the limit of 5.
-* **Limit reached:** as the {{site.metering_and_billing}} plugin reports usage and it crosses 5 requests in the period, the Governance plugin blocks further requests with `429` and `"Customer has reached usage limit for feature."`
+* **Cold start:** the first requests may return `403` with `"Customer is not found by subject."` The Entitlement Enforcement plugin hasn't polled the customer's state yet. It records the subject and fetches its entitlements on the next poll (every `refresh_interval` seconds), so retry for up to a minute.
+* **Within the limit:** once the state is loaded, requests return `200`. The customer has access to `premium_api_access` and hasn't reached the limit of 5.
+* **Limit reached:** as the {{site.metering_and_billing}} plugin reports usage and it crosses 5 requests in the period, the Entitlement Enforcement plugin blocks further requests with `429` and `"Customer has reached usage limit for feature."`
 
 {:.info}
-> There's a short delay between metering a request and the Governance API reflecting the new usage, and another delay while the plugin polls the updated state. If you don't see `429` immediately after the sixth request, keep sending requests for a few more seconds.
+> There's a short delay between metering a request and the Entitlement Access API reflecting the new usage, and another delay while the plugin polls the updated state. If you don't see `429` immediately after the sixth request, keep sending requests for a few more seconds.
 
-### Query the Governance API directly
+### Query the Entitlement Access API directly
 
 To confirm the customer's access independent of the plugin's cache, you can call the same endpoint the plugin uses. This reports `has_access` per feature for the subject:
 
 {:.warning}
-> The Governance query endpoint is an internal, unstable API. It may change without notice — use it for verification, not for production integrations.
+> The Entitlement Access query endpoint is an internal, unstable API. It may change without notice — use it for verification, not for production integrations.
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v3/openmeter/governance/query
+url: /v3/openmeter/entitlement-access/query
 method: POST
 body:
   customer:
@@ -417,13 +417,13 @@ body:
       - consumer:a3d1f5e2-1b2c-4d3e-9f80-000000000001
   feature:
     keys:
-      - governed_api_access
+      - premium_api_access
       - priority_support
   include_credits: true
 {% endkonnect_api_request %}
 <!--vale on-->
 
-In the response, `data[0].features.governed_api_access.has_access` is `true` while the customer is within the limit and `false` once the limit is reached, with a `reason.code` of `usage_limit_reached`. The boolean feature `priority_support` reports `has_access: true` for as long as the subscription is active.
+In the response, `data[0].features.premium_api_access.has_access` is `true` while the customer is within the limit and `false` once the limit is reached, with a `reason.code` of `usage_limit_reached`. The boolean feature `priority_support` reports `has_access: true` for as long as the subscription is active.
 
 {:.info}
-> **Governance enforces, metering doesn't:** the {{site.metering_and_billing}} plugin only reports usage, but the Governance plugin blocks traffic based on entitlements. Customize the `response_codes` in the plugin configuration to control the status code and message returned for each denial reason.
+> **Entitlement Enforcement enforces, metering doesn't:** the {{site.metering_and_billing}} plugin only reports usage, but the Entitlement Enforcement plugin blocks traffic based on entitlements. Customize the `response_codes` in the plugin configuration to control the status code and message returned for each denial reason.
