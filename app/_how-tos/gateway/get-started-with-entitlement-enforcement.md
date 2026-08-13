@@ -14,6 +14,9 @@ products:
 works_on:
     - konnect
 
+min_version:
+  gateway: '3.16'
+
 tags:
     - get-started
 
