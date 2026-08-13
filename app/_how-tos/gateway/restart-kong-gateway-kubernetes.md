@@ -59,7 +59,9 @@ automated_tests: false
 `kong.conf` values are rendered into the NGINX configuration when a node boots, so {{site.base_gateway}} has to be restarted before it picks up a change to one of them. On Kubernetes, that means replacing the pods rather than reloading the process inside them.
 
 {:.warning}
-> Don't run `kong reload` in a pod. The command works, but the running container then no longer matches its manifest, and the change is lost the next time the pod is rescheduled, scaled, or upgraded.
+> Don't run `kong reload` in a pod. `kong reload` does pick up the new value, and it does so without dropping connections, but it changes only the container that you ran it in. That container no longer matches its manifest, the other replicas are untouched, and the change is lost the next time the pod is rescheduled, scaled, or upgraded.
+>
+> Replacing the pods keeps the change in the manifest, where it survives all of those events. To avoid the gap in service that a rolling restart causes, run more than one replica with readiness probes configured, rather than using `kong reload`.
 
 ## Change a kong.conf value
 
@@ -83,9 +85,13 @@ Set a `kong.conf` parameter so we have something to apply. This example raises t
    helm upgrade kong-dp kong/kong -n kong --values ./values-dp.yaml --values ./values-log-level.yaml --wait
    ```
 
-   Changing the pod template makes Helm replace the pods, so this alone applies the new value. The next section covers the case where the file a parameter points to changes but the pod template doesn't, which is what happens when a mounted Secret is rotated.
+   Setting `log_level` changes the pod template, so Helm replaces the pods on its own and the new value is already in effect. Nothing else is needed for this kind of change.
 
-## Restart the data plane
+## Restart the data plane without a template change
+
+Not every change edits the pod template. When a `kong.conf` parameter points at a file and something outside Helm rewrites that file, the Deployment spec is byte-for-byte identical, so `helm upgrade` has nothing to replace and the pods keep running with the old contents loaded. A rotated Secret is the common case.
+
+`kubectl rollout restart` is how you replace the pods in that situation. Run it here against the data plane you just upgraded, so you can see what it does before you need it for a rotation:
 
 1. Record the current pod names and ages so we can compare afterwards:
 

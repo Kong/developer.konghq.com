@@ -22,7 +22,7 @@ tldr:
   q: How do I restart {{site.base_gateway}} automatically when cert-manager rotates a certificate that I mounted from a Secret?
   a: |
     Certificates set through `kong.conf` parameters such as `ssl_cert` or `cluster_cert` are read once at startup, so a rotated file on disk is ignored.
-    Install [Stakater Reloader](https://github.com/stakater/Reloader) and annotate your Deployment with `secret.reloader.stakater.com/reload`.Reloader triggers a rolling restart whenever the Secret changes.
+    Install [Stakater Reloader](https://github.com/stakater/Reloader) and annotate your Deployment with `secret.reloader.stakater.com/reload`. Reloader triggers a rolling restart whenever the Secret changes.
     Certificates served from [Certificate](/gateway/entities/certificate/) entities don't need this.
 
 prereqs:
@@ -81,7 +81,7 @@ This guide uses `ssl_cert`, the default certificate for the proxy listener, beca
 > * `status_ssl_cert`
 > * `client_ssl_cert`
 > * `cluster_cert`
-> *  `lua_ssl_trusted_certificate`.
+> * `lua_ssl_trusted_certificate`
 >
 > For proxy certificates, including the `ssl_cert` used in this guide, prefer [Certificate](/gateway/entities/certificate/) and [SNI](/gateway/entities/sni/) entities in production. They rotate with no restart at all.
 
@@ -167,6 +167,7 @@ This guide uses `ssl_cert`, the default certificate for the proxy listener, beca
    ```bash
    kubectl port-forward -n kong $DP_POD 8443:8443 > /dev/null &
    sleep 3
+   export OLD_SERIAL=$(kubectl exec -n kong $DP_POD -- openssl x509 -in /etc/secrets/demo-example-com/tls.crt -noout -serial)
    echo "" | openssl s_client -connect localhost:8443 -servername demo.example.com 2>/dev/null | openssl x509 -noout -serial -dates
    ```
 
@@ -186,10 +187,18 @@ This guide uses `ssl_cert`, the default certificate for the proxy listener, beca
    kubectl wait --for=condition=Ready certificate/demo-example-com -n kong --timeout=90s
    ```
 
-1. Wait for the kubelet to sync the new Secret into the pod, then compare the file on disk with what the listener serves:
+1. Wait for the kubelet to sync the new Secret into the pod:
 
    ```bash
-   sleep 90
+   until [ "$(kubectl exec -n kong $DP_POD -- openssl x509 -in /etc/secrets/demo-example-com/tls.crt -noout -serial)" != "$OLD_SERIAL" ]; do
+     echo "waiting for the kubelet to sync the new Secret..."
+     sleep 10
+   done
+   ```
+
+1. Compare the file on disk with what the listener serves:
+
+   ```bash
    kubectl exec -n kong $DP_POD -- openssl x509 -in /etc/secrets/demo-example-com/tls.crt -noout -serial
    echo "" | openssl s_client -connect localhost:8443 -servername demo.example.com 2>/dev/null | openssl x509 -noout -serial
    ```
@@ -291,3 +300,7 @@ Add the `secret.reloader.stakater.com/reload` annotation to the data plane Deplo
 
 {:.warning}
 > Reloader restarts the whole Deployment, so every `kong.conf` value is re-read, not just the certificate. Roll out configuration changes deliberately, and keep at least two replicas so a rotation doesn't take your data plane offline. With a single replica, as in this guide, expect a gap in service while the pod is replaced.
+
+Reloader triggers the rollout by patching an environment variable into the pod template, so you'll see a `STAKATER_` variable on the Deployment that isn't in your values file. It's reset by your next `helm upgrade`, and Reloader adds it again on the following rotation.
+
+`kong reload` would also pick up the rotated file, without dropping connections, but it only affects the container you run it in and the change is lost when the pod is next rescheduled. Replacing the pods is what keeps the running data plane and its manifest in agreement. For more information, see [Restart {{site.base_gateway}} on Kubernetes](/how-to/restart-kong-gateway-kubernetes/).
