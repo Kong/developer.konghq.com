@@ -304,11 +304,11 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Upgrade {{site.base_gateway}}
-              description: Learn about different upgrade methods
+              title: "Upgrade or migrate {{site.base_gateway}}"
+              description: Upgrade to a newer version, migrate from OSS to Enterprise, or move to {{site.konnect_short_name}}
               icon: /assets/icons/download.svg
               cta:
-                text: See reference
+                text: See upgrade and migration options
                 url: /gateway/upgrade/
                 align: end
       - blocks:

@@ -4,6 +4,7 @@ content_type: reference
 layout: reference
 breadcrumbs:
   - /gateway/
+  - /gateway/upgrade/
 products:
     - gateway
 

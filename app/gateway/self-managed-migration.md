@@ -13,6 +13,10 @@ works_on:
     - konnect
 
 related_resources:
+  - text: "Upgrade and migrate {{site.base_gateway}}"
+    url: /gateway/upgrade/
+  - text: "Migrate from {{site.base_gateway}} OSS to {{site.ee_product_name}}"
+    url: /gateway/upgrade/migrate-oss-to-ee/
   - text: "About {{site.konnect_short_name}}"
     url: /konnect/
   - text: Hybrid mode

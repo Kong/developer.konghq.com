@@ -18,8 +18,10 @@ tags:
     - restore
 
 related_resources:
-  - text: "Upgrading {{site.base_gateway}}"
+  - text: "Upgrade and migrate {{site.base_gateway}}"
     url: /gateway/upgrade/
+  - text: "Migrate from {{site.base_gateway}} OSS to {{site.ee_product_name}}"
+    url: /gateway/upgrade/migrate-oss-to-ee/
   - text: Rolling upgrade
     url: /gateway/upgrade/rolling/
   - text: "Dual-cluster upgrade"
