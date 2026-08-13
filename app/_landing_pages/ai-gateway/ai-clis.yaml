@@ -28,6 +28,7 @@ rows:
 
                       - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex, AWS Bedrock, and Alibaba Cloud (Dashscope)
                       - [**Codex CLI**](#codex-cli): OpenAI
+                      - [**Qwen Code CLI**](#qwen-code-cli): OpenAI and Alibaba Cloud (Dashscope)
 
 
                       {:.info}
@@ -128,21 +129,30 @@ rows:
               cta:
                 url: /ai-gateway/use-codex-with-ai-gateway/
                 align: end
-  # - header:
-  #     type: h3
-  #     text: "Qwen Code CLI"
-  #     description: "Qwen Code CLI is an AI-powered coding assistant that uses OpenAI-compatible endpoints. Proxy Qwen Code CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management."
-  #   column_count: 4
-  #   columns:
-  #       - blocks:
-  #           - type: card
-  #             config:
-  #               title: Qwen Code CLI with OpenAI
-  #               description: Use Qwen Code CLI with OpenAI models
-  #               icon: /assets/icons/qwen.svg
-  #               cta:
-  #                 url: /how-to/use-qwen-code-with-ai-gateway/
-  #                 align: end
+  - header:
+      type: h3
+      text: "Qwen Code CLI"
+      description: "Qwen Code CLI is an AI-powered coding assistant that uses OpenAI-compatible endpoints. Proxy Qwen Code CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management."
+    column_count: 4
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Qwen Code CLI with OpenAI
+              description: Use Qwen Code CLI with OpenAI models
+              icon: /assets/icons/openai.svg
+              cta:
+                url: /ai-gateway/use-qwen-code-with-ai-gateway-openai/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Qwen Code CLI with OpenAI
+              description: Use Qwen Code CLI with OpenAI models
+              icon: /assets/icons/dashscope.svg
+              cta:
+                url: /ai-gateway/use-qwen-code-with-ai-gateway-qwen/
+                align: end
   # - header:
   #     type: h3
   #     text: "Gemini CLI"
