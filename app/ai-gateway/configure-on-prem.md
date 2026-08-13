@@ -147,6 +147,7 @@ AI Model, AI MCP Server, AI Agent, and AI Policy entities need conversion, since
 
 decK's `file ai2kong`, `ai sync`, and `ai dump` all translate the same {{site.ai_gateway}} 2.x configuration between its entity-model representation and its self-hosted plugin representation. They don't change versions, only where the config runs. `kongctl convert ai-gateway` does something different: it upgrades an older {{site.ai_gateway}} running on {{site.base_gateway}} plugin configuration to the 2.x entity model, for {{site.konnect_short_name}}.
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Command
@@ -169,6 +170,7 @@ rows:
     direction: "Pre-2.0 {{site.ai_gateway}} plugin config → {{site.ai_gateway}} 2.x entity file, for {{site.konnect_short_name}}"
     usecase: "One-time version upgrade: move an existing {{site.ai_gateway}} running on {{site.base_gateway}} configuration to a {{site.konnect_short_name}} {{site.ai_gateway}} 2.x control plane. See [Migrate to {{site.ai_gateway}} 2.x](/ai-gateway/v2-migration-guide/)."
 {% endtable %}
+<!--vale on-->
 
 The rest of this section uses `deck file ai2kong` to show exactly what config each entity generates.
 
