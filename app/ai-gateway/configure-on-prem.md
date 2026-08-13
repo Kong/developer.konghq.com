@@ -126,7 +126,9 @@ Access control and secret management on-prem use the same {{site.base_gateway}} 
 
 ## Convert {{site.ai_gateway}} 2.0 entities to self-hosted {{site.base_gateway}} config
 
-Use [`deck ai sync`](/deck/ai/sync/) to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities and apply it in one step. `deck ai sync` is the equivalent of running `deck file ai2kong` followed by `deck gateway sync` on the result, and it tags every entity it manages with `managed_by:deck-ai`. To export that configuration back out of a running {{site.base_gateway}}, use [`deck ai dump`](/deck/ai/dump/), which reverts the tagged entities to {{site.ai_gateway}} 2.0 format.
+Use [`deck ai sync`](/deck/ai/sync/) to convert any {{site.ai_gateway}} 2.0 decK configuration into {{site.ai_gateway}} on self-hosted {{site.base_gateway}} entities and apply it in one step.  When you run `deck ai sync`, you run in one step what two commands would do (`deck file ai2kong` and  `deck gateway sync`).
+
+The command tags every entity it manages with `managed_by:deck-ai`. To export that configuration back out of a running {{site.base_gateway}}, use [`deck ai dump`](/deck/ai/dump/), which reverts the tagged entities to {{site.ai_gateway}} 2.0 format.
 
 AI Model, AI MCP Server, AI Agent, and AI Policy entities need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins.
 AI Consumers, AI Consumer Groups, and AI Vaults pass through unchanged, since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-and-vaults).
