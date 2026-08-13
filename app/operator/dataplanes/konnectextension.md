@@ -130,7 +130,7 @@ The status includes:
 - `conditions`: The current reconciliation conditions for the extension.
 - `dataPlaneRefs` and `controlPlaneRefs`: The `DataPlane` and `ControlPlane` resources that currently reference this extension. If the resource you expect to see referenced here is missing, double-check that its `spec.extensions` block correctly names the `KonnectExtension`.
 - `dataPlaneClientAuth`: The state of the client certificate used to authenticate the `DataPlane` with {{site.konnect_short_name}}.
-- `konnect.controlPlaneID` and `konnect.clusterType`: The ID and cluster type of the {{site.konnect_short_name}} control plane this extension resolved to.
+- `konnect.controlPlaneID` and `konnect.clusterType`: The ID and cluster type of the {{site.konnect_short_name}} control plane this extension resolves to.
 
 A `GatewayConfiguration` doesn't add its own entry to `dataPlaneRefs` or `controlPlaneRefs`. Those only track `DataPlane` and `ControlPlane` resources directly. To confirm a `GatewayConfiguration` accepted a `KonnectExtension`, check that the `DataPlane` and `ControlPlane` resources it provisions show up under the extension's `dataPlaneRefs` and `controlPlaneRefs`, and that the `GatewayConfiguration`'s `status.conditions` don't report an extension resolution error.
 
