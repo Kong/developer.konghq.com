@@ -48,26 +48,6 @@ rows:
         text: "Create your catalog"
     columns:
       - blocks:
-          - type: card
-            config:
-              title: "AI Models"
-              description: |
-                Model your organization's AI models as first-class interfaces in {{site.konnect_catalog}}.
-              icon: /assets/icons/brain.svg
-              cta:
-                text: Learn about AI Models
-                url: /catalog/ai-models/
-      - blocks:
-          - type: card
-            config:
-              title: "MCP Registries (tech preview)"
-              description: |
-                Register and discover MCP servers as first-class interfaces in {{site.konnect_catalog}}.
-              icon: /assets/icons/mcp.svg
-              cta:
-                text: Learn about MCP Registries
-                url: /catalog/mcp-registry/
-      - blocks:
         - type: card
           config:
             title: APIs
@@ -92,6 +72,26 @@ rows:
               cta:
                 text: API packages reference
                 url: /catalog/api-packaging/
+      - blocks:
+          - type: card
+            config:
+              title: "AI Models"
+              description: |
+                Model your organization's AI models as first-class interfaces in {{site.konnect_catalog}}.
+              icon: /assets/icons/brain.svg
+              cta:
+                text: Learn about AI Models
+                url: /catalog/ai-models/
+      - blocks:
+          - type: card
+            config:
+              title: "MCP Registries (tech preview)"
+              description: |
+                Register and discover MCP servers as first-class interfaces in {{site.konnect_catalog}}.
+              icon: /assets/icons/mcp.svg
+              cta:
+                text: Learn about MCP Registries
+                url: /catalog/mcp-registry/
   - header:
       type: h2
       text: "Use cases for {{site.konnect_catalog}}"
@@ -105,7 +105,7 @@ rows:
                   key: solution
               rows:
                 - usecase: |
-                    You need to know every AI model, API, and MCP server your org has built, without checking each team's tools individually
+                    You need to know every API, AI Model, and MCP server your org has built, without checking each team's tools individually
                   outcomes:
                     - solution: |
                         {{site.konnect_catalog}} as one inventory across APIs, API packages, AI Models, and MCP Registries
@@ -143,8 +143,8 @@ rows:
           - type: faqs
             config:
               - q: "What's different between {{site.konnect_catalog}} and {{site.konnect_catalog}} Classic?"
-                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, AI Models, and MCP Registries (tech preview) today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services, Scorecards, and Integrations. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
-              - q: "What happened to Services, Integrations, and Scorecards?"
-                a: "Those features are compatible with {{site.konnect_catalog}} Classic. See the [{{site.konnect_catalog}} Classic documentation](/catalog-classic/)."
+                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, AI Models, and MCP Registries (tech preview) today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
+              - q: "What happens to Integrations and Scorecards?"
+                a: "Integrations and Scorecards are compatible with [{{site.konnect_catalog}} Classic](/catalog-classic/) today. Kong plans to bring them into the new {{site.konnect_catalog}} experience in the future, with a focus on APIs and AI interfaces rather than Services."
               - q: "Can I control access to specific {{site.konnect_catalog}} data?"
                 a: "Yes, access can be managed through [teams and roles](/konnect-platform/teams-and-roles/)."
