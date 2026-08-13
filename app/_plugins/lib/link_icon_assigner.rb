@@ -36,7 +36,7 @@ module Jekyll
     private
 
     def determine_icon
-      icon_for_type || icon_for_url || icon_for_content_type
+      icon_for_type || icon_for_url || icon_for_aigw_policy || icon_for_content_type
     end
 
     def icon_for_type
@@ -47,6 +47,12 @@ module Jekyll
       return if @resource['url'].start_with?('/')
 
       URL_ICON_MAP.find { |pattern, _| @resource['url'] =~ pattern }&.last || 'service-document'
+    end
+
+    def icon_for_aigw_policy
+      # XXX: This is a temporary hack to assign the correct icon for the policies section of the AI Gateway product.
+      # This should be removed once the policies have their own overview page.
+      'plug' if @resource['url'].start_with?('/ai-gateway/policies/')
     end
 
     def icon_for_content_type

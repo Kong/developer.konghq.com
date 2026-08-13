@@ -1,6 +1,6 @@
 # plugins-changelog-generator
 
-Generate Gateway plugins changelogs based on Gateway's changelog (`app/_data/changelogs/gateway.json`).
+Generate Gateway plugins changelogs based on Gateway's changelog (`app/_changelogs/gateway.json`).
 
 ## How to run it
 

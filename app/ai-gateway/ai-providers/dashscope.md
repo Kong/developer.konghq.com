@@ -10,84 +10,58 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/dashscope/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
+  - kongctl
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.13'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Dashscope tutorials
-    url: /how-to/?tags=dashscope
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - dashscope
-    description: true
-    view_more: false
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Dashscope" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Dashscope" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
 {% entity_example %}
-type: plugin
+type: model-provider
 data:
-  name: ai-proxy
+  display_name: Dashscope Production
+  name: my-dashscope-account
+  type: dashscope
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${key}
-    model:
-      provider: dashscope
-      name: qwen-plus
-      options:
-        max_tokens: 512
-        temperature: 1.0
-
+      type: basic
+      headers:
+        - name: Authorization
+          value: ${key}
 variables:
   key:
     value: $DASHSCOPE_API_KEY
-    description: The API key to use to connect to DashScope.
+    description: "The API key used to connect to Dashscope. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
-
-{% include plugins/ai-proxy/providers/how-tos.md %}

@@ -28,8 +28,6 @@ rows:
 
                       - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex, AWS Bedrock, and Alibaba Cloud (Dashscope)
                       - [**Codex CLI**](#codex-cli): OpenAI
-                      - [**Qwen Code CLI**](#qwen-code-cli): OpenAI
-                      - [**Gemini CLI**](#gemini-cli): Google Gemini
 
 
                       {:.info}
@@ -50,7 +48,7 @@ rows:
             description: Use Claude Code with Anthropic provider
             icon: /assets/icons/anthropic.svg
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-anthropic/
+              url:  /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
               align: end
       - blocks:
         - type: card
@@ -59,7 +57,7 @@ rows:
             icon: /assets/icons/openai.svg
             description: Use Claude Code with OpenAI provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-openai/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
               align: end
       - blocks:
         - type: card
@@ -68,7 +66,7 @@ rows:
             icon: /assets/icons/azure.svg
             description: Use Claude Code with Azure AI provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-azure/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-azure/
               align: end
       - blocks:
         - type: card
@@ -77,7 +75,7 @@ rows:
             icon: /assets/icons/gcp.svg
             description: Use Claude Code with Gemini provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-gemini/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-gemini/
               align: end
       - blocks:
         - type: card
@@ -86,7 +84,7 @@ rows:
             icon: /assets/icons/vertex.svg
             description: Use Claude Code with Vertex AI provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-vertex/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-vertex/
               align: end
       - blocks:
         - type: card
@@ -95,7 +93,7 @@ rows:
             icon: /assets/icons/bedrock.svg
             description: Use Claude Code with Bedrock provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-bedrock/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-bedrock/
               align: end
       - blocks:
         - type: card
@@ -104,7 +102,7 @@ rows:
             icon: /assets/icons/alibaba-cloud.svg
             description: Use Claude Code with Alibaba Cloud (Dashscope) provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-dashscope/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-dashscope/
               align: end
       - blocks:
         - type: card
@@ -113,7 +111,7 @@ rows:
             icon: /assets/icons/huggingface.svg
             description: Use Claude Code with HuggingFace provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-bedrock/
+              url: /ai-gateway/use-claude-code-with-ai-gateway-huggingface/
               align: end
   - header:
       type: h3
@@ -128,35 +126,35 @@ rows:
               description: Use Codex CLI with OpenAI models
               icon: /assets/icons/openai.svg
               cta:
-                url: /how-to/use-codex-with-ai-gateway/
+                url: /ai-gateway/use-codex-with-ai-gateway/
                 align: end
-  - header:
-      type: h3
-      text: "Qwen Code CLI"
-      description: "Qwen Code CLI is an AI-powered coding assistant that uses OpenAI-compatible endpoints. Proxy Qwen Code CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management."
-    column_count: 4
-    columns:
-        - blocks:
-            - type: card
-              config:
-                title: Qwen Code CLI with OpenAI
-                description: Use Qwen Code CLI with OpenAI models
-                icon: /assets/icons/qwen.svg
-                cta:
-                  url: /how-to/use-qwen-code-with-ai-gateway/
-                  align: end
-  - header:
-      type: h3
-      text: "Gemini CLI"
-      description: "Gemini CLI is Google's command-line tool for interacting with Gemini models. Route Gemini CLI requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team."
-    column_count: 4
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Gemini CLI with Gemini
-              description: Use Gemini CLI with Gemini models
-              icon: /assets/icons/gcp.svg
-              cta:
-                url: /how-to/use-gemini-cli-with-ai-gateway/
-                align: end
+  # - header:
+  #     type: h3
+  #     text: "Qwen Code CLI"
+  #     description: "Qwen Code CLI is an AI-powered coding assistant that uses OpenAI-compatible endpoints. Proxy Qwen Code CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management."
+  #   column_count: 4
+  #   columns:
+  #       - blocks:
+  #           - type: card
+  #             config:
+  #               title: Qwen Code CLI with OpenAI
+  #               description: Use Qwen Code CLI with OpenAI models
+  #               icon: /assets/icons/qwen.svg
+  #               cta:
+  #                 url: /how-to/use-qwen-code-with-ai-gateway/
+  #                 align: end
+  # - header:
+  #     type: h3
+  #     text: "Gemini CLI"
+  #     description: "Gemini CLI is Google's command-line tool for interacting with Gemini models. Route Gemini CLI requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team."
+  #   column_count: 4
+  #   columns:
+  #     - blocks:
+  #         - type: card
+  #           config:
+  #             title: Gemini CLI with Gemini
+  #             description: Use Gemini CLI with Gemini models
+  #             icon: /assets/icons/gcp.svg
+  #             cta:
+  #               url: /how-to/use-gemini-cli-with-ai-gateway/
+  #               align: end

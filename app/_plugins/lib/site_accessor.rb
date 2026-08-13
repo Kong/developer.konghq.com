@@ -29,5 +29,18 @@ module Jekyll
                             end
                           end
     end
+
+    def redirect_exists?(path)
+      site_redirects.keys.any? { |pattern| redirect_pattern_match?(pattern, path) }
+    end
+
+    private
+
+    def redirect_pattern_match?(pattern, path)
+      regex_str = Regexp.escape(pattern)
+                        .gsub('\*', '.*')
+                        .gsub(/:\w+/, '[^/]+')
+      Regexp.new("\\A#{regex_str}\\z").match?(path)
+    end
   end
 end

@@ -1,235 +1,122 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and DashScope
-permalink: /how-to/use-claude-code-with-ai-gateway-dashscope/
+permalink: /ai-gateway/use-claude-code-with-ai-gateway-dashscope/
 content_type: how_to
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
-  - text: File Log
-    url: /plugins/file-log/
+  - text: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
+    url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
 
-description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic using Alibaba Cloud DashScope models
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an Alibaba Cloud DashScope model.
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
+tools:
+  - kongctl
+
 min_version:
-  gateway: '3.13'
-
-plugins:
-  - ai-proxy
-  - file-log
-
-entities:
-  - service
-  - route
-  - plugin
+  ai-gateway: '2.0'
 
 tags:
   - ai
   - dashscope
 
 tldr:
-  q: How do I run Claude CLI through {{site.ai_gateway}} with DashScope?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to DashScope, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
-
-tools:
-  - deck
+  q: How do I run Claude CLI through {{site.ai_gateway}} against a DashScope model?
+  a: Create an AI Model Provider for Alibaba Cloud DashScope and an AI Model with the `anthropic` format that targets it, then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests pass through the gateway for monitoring and control.
 
 prereqs:
-  prereqs:
   inline:
     - title: DashScope
       icon_url: /assets/icons/dashscope.svg
       content: |
-        You need an active DashScope account with API access. Sign up at the [Alibaba Cloud DashScope platform](https://dashscope.aliyuncs.com/), obtain your API key from the API-KEY interface, and export it to your environment:
-        ```sh
-        export DECK_DASHSCOPE_API_KEY='YOUR DASHSCOPE API KEY'
-        ```
+        Get an API key from the [Alibaba Cloud DashScope console](https://dashscope.aliyuncs.com/) and export it as the **full `Authorization` header value** (including the `Bearer` prefix):
 
+        ```sh
+        export DASHSCOPE_AUTH_HEADER="Bearer YOUR_DASHSCOPE_KEY"
+        ```
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
       include_content: prereqs/claude-code
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
 
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
-## Configure the AI Proxy plugin
+## Create the AI Model Provider and AI Model
 
-Configure the AI Proxy plugin for the DashScope provider.
-* This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
-* The configuration also raises the maximum token count size to 8192 to support larger prompts.
+DashScope serves the Qwen model family through a native Anthropic-compatible Messages API, so {{ site.claude_code }} can talk to it natively. 
 
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude }}'s native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when {{ site.claude_code }} communicates with the DashScope endpoint.
+Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and an [AI Model](/ai-gateway/entities/ai-model/) with a single `kongctl` apply command:
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        llm_format: anthropic
-        route_type: llm/v1/chat
-        logging:
-          log_statistics: true
-          log_payloads: false
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${dashscope_api_key}
-        model:
-          provider: dashscope
-          name: qwen-plus
-          options:
-            max_tokens: 8192
-            temperature: 1.0
-variables:
-  dashscope_api_key:
-    value: $DASHSCOPE_API_KEY
+ai_gateway_model_providers:
+  - ref: dashscope
+    ai_gateway: !lookup name:ai-quickstart
+    name: dashscope
+    type: dashscope
+    display_name: "Alibaba Cloud DashScope"
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !env DASHSCOPE_AUTH_HEADER
+ai_gateway_models:
+  - ref: claude-code-qwen
+    ai_gateway: !lookup name:ai-quickstart
+    name: claude-code-qwen
+    display_name: "Claude Code - DashScope Qwen"
+    type: model
+    enabled: true
+    formats: [{ type: anthropic }]
+    config:
+      route: { paths: [/], methods: [GET, POST], model: { body_param: model, values: [qwen-plus] } }
+      model: { name_header: true }
+    capabilities: [generate]
+    targets:
+      - name: qwen-plus
+        provider: dashscope
+        config:
+          type: dashscope
+          international: true
+          max_tokens: 8192
+          temperature: 1.0
 {% endentity_examples %}
 
-## Configure the File Log plugin
+In this example we set:
 
-Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
+ * `type: dashscope`: Connects to the Alibaba Cloud DashScope API as an AI Model Provider.
+ * `capabilities: [generate]`: For a model using the `anthropic` format, `generate` creates a `/v1/messages` endpoint matching Anthropic's native Messages API.
+ * `formats: [{ type: anthropic }]`: Accepts Anthropic-format requests to the AI Model entity, matching what {{ site.claude_code }} sends.
+ * `config.route.model: { body_param: model, values: [qwen-plus] }`: The model name {{ site.claude_code }} should send in each request, which you can set with the `ANTHROPIC_MODEL` variable or `--model` option.
+ * `route.paths: [/]`: Configures the custom base path where this model's routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
+ * `targets[0].config.international: true`: Uses DashScope's international endpoint (`dashscope-intl.aliyuncs.com`). This is the default. If your DashScope key belongs to a mainland China account, set this to `false` so requests reach `dashscope.aliyuncs.com` instead.
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: "/tmp/claude.json"
-{% endentity_examples %}
+## Verify traffic through {{site.ai_gateway}}
 
-## Verify traffic through Kong
-
-Start a {{ site.claude_code }} session that points to the local {{site.ai_gateway}} endpoint:
-
-{:.warning}
-> Ensure that `ANTHROPIC_MODEL` matches the model you configured in the AI Proxy plugin (for example, `qwen-plus`).
+Before starting {{ site.claude_code }}, confirm the route works by sending an Anthropic Messages API request directly:
 
 ```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=qwen-plus \
-claude
+curl -sS http://localhost:8000/v1/messages \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"qwen-plus","max_tokens":16,"messages":[{"role":"user","content":"Reply with just: ok"}]}'
 ```
 
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
+## Start and use Claude Code
 
-```text
-I'll need permission to work with your files.
-
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
-
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me who Niketas Choniates was.
-```
-
-{{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
-
-```text
-Niketas Choniates was a Byzantine Greek historian and government official
-who lived from around 1155 to 1217. He is best known for his historical
-work "Historia" (also called "Chronike Diegesis"), which chronicles the
-reigns of the Byzantine emperors from 1118 to 1207, covering the period of
-  the Komnenos and Angelos dynasties.
-
-Choniates served as a high-ranking official in the Byzantine Empire,
-eventually becoming the governor of Athens. His historical writings are
-particularly valuable because they provide a detailed eyewitness account
-of the Fourth Crusade and the subsequent sack of Constantinople in 1204,
-an event he personally experienced and fled from. His account is
-considered one of the most important sources for understanding this
-pivotal moment in Byzantine history.
-```
-{:.no-copy-code}
-
-Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
+Run {{ site.claude_code }}, selecting the model you configured:
 
 ```sh
-docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
+ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'qwen-plus'
 ```
 
-You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
+When {{ site.claude_code }} asks for permission to work with your files, select **Yes, continue**. The session will start. Ask a question to confirm traffic flows through {{site.ai_gateway}} to the upstream Qwen model:
 
-```json
-{
-  ...
-  "upstream_uri": "/compatible-mode/v1/chat/completions?beta=true",
-  "request": {
-    "method": "POST",
-    "headers": {
-      "user-agent": "claude-cli/2.0.57 (external, cli)",
-      "content-type": "application/json",
-      "anthropic-version": "2023-06-01"
-    }
-  },
-  ...
-  "ai": {
-    "proxy": {
-      "usage": {
-        "completion_tokens": 493,
-        "completion_tokens_details": {},
-        "total_tokens": 13979,
-        "cost": 0,
-        "time_per_token": 34.539553752535,
-        "time_to_first_token": 17027,
-        "prompt_tokens": 13486,
-        "prompt_tokens_details": {
-          "cached_tokens": 0
-        }
-      },
-      "meta": {
-        "response_model": "qwen-plus",
-        "plugin_id": "63199335-6c5a-4798-a0ad-f2cbf13cc497",
-        "request_model": "qwen-plus",
-        "request_mode": "oneshot",
-        "provider_name": "dashscope",
-        "llm_latency": 17028
-      }
-    }
-  },
-  "response": {
-    "headers": {
-      "x-kong-llm-model": "dashscope/qwen-plus",
-      "x-dashscope-call-gateway": "true"
-    }
-  }
-  ...
-}
+```text
+Say hello in one sentence.
 ```
-{:.no-copy-code}
-
-This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using DashScope with the `qwen-plus` model.

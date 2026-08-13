@@ -18,17 +18,25 @@ rows:
           - type: card
             config:
               title: "{{site.konnect_product_name}}"
-              description: "Release notes for all Konnect apps and platform changes."
+              description: "Release notes for all {{site.konnect_short_name}} apps and platform changes."
               cta:
-                text: "Konnect changelog"
+                text: "{{site.konnect_short_name}} changelog"
                 url: https://releases.konghq.com/en
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.ai_gateway_name}}"
+              description: "Release notes for {{site.ai_gateway}}, starting with version 2.0."
+              cta:
+                text: "{{site.ai_gateway}} changelog"
+                url: /ai-gateway/changelog/
       - blocks:
           - type: card
             config:
               title: "{{site.base_gateway}}"
               description: "Release notes for {{site.base_gateway}}, including new features, bug fixes, and breaking changes."
               cta:
-                text: "Gateway changelog"
+                text: "{{site.base_gateway}} changelog"
                 url: /gateway/changelog/
       - blocks:
           - type: card
@@ -36,7 +44,7 @@ rows:
               title: "{{site.event_gateway}}"
               description: "Release notes for {{site.event_gateway}}, the Kafka proxy for controlled, secure client access."
               cta:
-                text: "Event Gateway changelog"
+                text: "{{site.event_gateway_short}} changelog"
                 url: /event-gateway/changelog/
       - blocks:
           - type: card
@@ -52,7 +60,7 @@ rows:
               title: "{{site.kic_product_name}}"
               description: "Release notes for {{site.kic_product_name}}, which configures {{site.base_gateway}} using Kubernetes CRDs."
               cta:
-                text: "KIC changelog"
+                text: "{{site.kic_product_name_short}} changelog"
                 url: https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md
       - blocks:
           - type: card
@@ -60,7 +68,7 @@ rows:
               title: "{{site.operator_product_name}}"
               description: "Release notes for {{site.operator_product_name}}, for deploying and managing Kong on Kubernetes."
               cta:
-                text: "Operator changelog"
+                text: "{{site.operator_product_name_short}} changelog"
                 url: /operator/changelog/
 
   - header:

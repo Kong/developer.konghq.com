@@ -5,8 +5,9 @@ metadata:
   products:
     - ai-gateway
   works_on:
-    - on-prem
     - konnect
+  min_version:
+    ai-gateway: '2.0'
   breadcrumbs:
     - /ai-gateway/
   tags:
@@ -36,7 +37,7 @@ rows:
       type: h2
       text: "Observability"
       description: "You can gather logs and metrics then analyze these using {{site.konnect_short_name}} or any OpenTelemetry tool."
-    column_count: 2
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -85,41 +86,41 @@ rows:
               align: end
   - header:
       type: h2
-      text: "User Safety"
+      text: "User safety"
       description: "{{site.ai_gateway}} supports content safety features across providers and also includes our Prompt Guards that act on any `llm/v1/chat` or `llm/v1/completions` requests."
-    column_count: 2
+    column_count: 3
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-prompt-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-azure-content-safety
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-aws-guardrails
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-gcp-model-armor
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-semantic-prompt-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-semantic-response-guard
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-lakera-guard
             icon: ai-lakera.png
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-custom-guardrail
             icon: ai-custom-guardrail.png
@@ -127,31 +128,31 @@ rows:
         - type: card
           config:
             title: Amazon Bedrock guardrails
-            description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
+            description: Include your Amazon Bedrock guardrails configuration in {{site.ai_gateway}} requests
             icon: /assets/icons/bedrock.svg
             cta:
-              url: /plugins/ai-proxy/#supported-native-llm-formats
+              url: /ai-gateway/ai-providers/bedrock/
               align: end
   - header:
       type: h2
-      text: "Data Loss Prevention"
+      text: "Data loss prevention"
       description: "You can use {{site.ai_gateway}} features to protect personally identifiable information and prevent data loss."
     column_count: 1
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-sanitizer
             icon: ai-sanitizer.png
  
   - header:
       type: h2
-      text: "RAG Security"
+      text: "RAG security"
       description: "You can secure RAG pipelines by applying robust access controls."
     column_count: 1
     columns:
       - blocks:
-        - type: plugin
+        - type: aigw_policy
           config:
             slug: ai-rag-injector
 
