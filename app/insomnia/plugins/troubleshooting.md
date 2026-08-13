@@ -41,7 +41,7 @@ Common reasons and fixes:
 | Reason shown | Cause | Fix |
 |--------------|-------|-----|
 | `Cannot find module '…'` | A `require()` failed (a missing dependency, or a module that isn't in the sandbox registry) | Add the dependency as a registry module in `insomnia.permissions.modules`, or fix the missing dependency. See [Plugin permissions](/insomnia/plugins/permissions/). |
-| `Multiple plugin folders declare the name "…"` | Two folders under your plugin paths declare the same plugin `name` | Remove or rename the duplicate folder. While a name is claimed by more than one folder, *none* of them load — this is deliberate, to avoid an ambiguous trust grant. |
+| `…declare the name "…"` (a name conflict) | Your plugin's `name` is already claimed — by another folder under your plugin paths, or reserved by Insomnia | Rename your plugin (its `name`, and its folder) to something unique. A conflicting name is never loaded, to avoid an ambiguous or spoofed trust grant. |
 | Other load-time error | The plugin's top-level code threw | Read the message. If the plugin needs host access the sandbox doesn't grant, consider **Full host access** — see [Plugin sandbox and trust model](/insomnia/plugins/sandbox-and-trust/). |
 
 ### A plugin stayed broken even after I fixed the error
