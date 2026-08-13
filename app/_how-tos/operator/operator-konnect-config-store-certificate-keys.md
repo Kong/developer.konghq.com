@@ -38,7 +38,7 @@ related_resources:
 tldr:
   q: How do I keep a TLS private key out of my Kubernetes manifests and out of my certificate objects?
   a: |
-    Create a `KonnectConfigStore`, point a `KongVault` with `backend: konnect` at it using `spec.configStoreRef`,
+    Create a `KonnectConfigStore`, point to a `KongVault` with `backend: konnect` at it using `spec.configStoreRef`,
     write the private key directly into the Config Store, and then set `KongCertificate.spec.key` to a
     `{vault://PREFIX/KEY}` reference instead of the key material.
 
