@@ -157,7 +157,7 @@ rows:
 
   - header:
       type: h2
-      text: FAQ
+      text: Frequently asked questions
     columns:
       - blocks:
           - type: faqs
