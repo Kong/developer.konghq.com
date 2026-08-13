@@ -105,6 +105,9 @@ rows:
   - name: "`proxy.kong.upstream.status_code`"
     description: |
       Status code returned by the upstream to {{site.base_gateway}}.
+  - name: "`proxy.kong.upstream.address`"
+    description: |
+      DNS name and port of the selected upstream.
   - name: "`http.response.status_code`"
     description: |
       Status code sent back by {{site.base_gateway}} to client.
@@ -155,6 +158,8 @@ rows:
     description: x509 DN for cert Kong presented.
   - name: "`tls.cipher`"
     description: Negotiated cipher.
+  - name: "`tls.client.server_name`"
+    description: TLS SNI value sent by the client.
 {% endtable %}
 <!--vale on-->
 ### kong.phase.certificate
