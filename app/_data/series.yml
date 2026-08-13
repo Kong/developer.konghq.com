@@ -50,6 +50,9 @@ mcp-conversion-2-0:
 a2a-identity-2-0:
   title: Secure AI Agent A2A traffic with {{site.identity}}
   url: /ai-gateway/set-up-kong-identity-for-a2a/
+riot-budgets-identity-2-0:
+  title: Enforce tiered AI budgets with {{site.identity}}
+  url: /ai-gateway/set-up-kong-identity-for-riot-budgets/
 operator-multi-tenancy:
   title: Deploy multiple isolated gateways on the same cluster
   url: /operator/dataplanes/how-to/multi-tenancy/setup/
