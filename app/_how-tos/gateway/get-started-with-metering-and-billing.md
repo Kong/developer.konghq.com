@@ -63,7 +63,7 @@ related_resources:
   - text: Get started with {{site.metering_and_billing}} generic meters
     url: /how-to/get-started-with-metering-and-billing-generic-meters/
 min_version:
-    gateway: '3.4'
+    gateway: '3.14'
 next_steps:
   - text: See all {{site.base_gateway}} tutorials
     url: /how-to/?products=gateway
