@@ -101,19 +101,10 @@ In this example, we're setting up the AI Model with:
 * `config.route.model: { body_param: model, values: [gpt-5.4] }`: The model name the Codex CLI sends in each request.
 * `route.paths: [/codex]`: The base path Codex points at; the Responses API is served at `/codex/responses`.
 
-## Verify traffic through {{site.ai_gateway}}
-
-Before starting Codex, confirm the route works by sending a Responses API request directly (expect `200`):
-
-```sh
-curl -sS http://localhost:8000/codex/responses \
-  -H 'Content-Type: application/json' \
-  -d '{"model":"gpt-5.4","input":"Reply with just: ok","max_output_tokens":16}'
-```
-
 {% warning %}
 If you are a new Codex user, you must Initialise the tool first by running `codex` and following the steps provided.
 {% endwarning %}
+
 ## Point Codex CLI at {{site.ai_gateway}}
 
 Open a new terminal and set `OPENAI_BASE_URL` to the local {{site.ai_gateway}} endpoint. The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the gateway, so a placeholder is fine:
@@ -127,8 +118,9 @@ export OPENAI_BASE_URL=http://localhost:8000/codex
 
 Run a simple command to confirm traffic flows through {{site.ai_gateway}} to OpenAI:
 
-```sh
-codex exec --model gpt-5.4 "Hello"
-```
+{% validation codex %}
+model: gpt-5.4
+prompt: Hello
+{% endvalidation %}
 
 When prompted for network access, select **Yes, proceed**. Codex routes the request through {{site.ai_gateway}} to the OpenAI Responses API and returns the model's response, giving you monitoring and control over all Codex LLM traffic.
