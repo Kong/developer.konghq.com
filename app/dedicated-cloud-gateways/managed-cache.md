@@ -106,7 +106,7 @@ rows:
       Appropriate for development, testing, and other low-load or low-performance environments.
       These are burstable tiers, so performance may vary.
       `micro` fails at 10,000 RPS.
-
+      <br>
       `small` handles a 1,000 RPS baseline cleanly.
 
   - profile: Standard enterprise
@@ -320,16 +320,16 @@ columns:
     key: watch
 rows:
   - metric: "Cache eviction rate (`cache_eviction_rate`)"
-    description: "The rate at which keys are removed from the cache because it's out of memory capacity."
-    watch: "A sustained high eviction rate combined with high memory utilization means your cache no longer has enough headroom."
+    description: "The rate at which keys are removed from the cache because it's running out of memory capacity."
+    watch: "A sustained high eviction rate combined with high memory utilization (`cache_memory_utilization_max`) means your cache no longer has enough headroom."
   - metric: "Cache expiration rate (`cache_expiration_rate`)"
     description: "The rate at which keys are removed from the cache because their TTL (time to live) elapsed."
     watch: "Expirations are expected, ordinary cache turnover.
       A high expiration rate on its own isn't a problem."
-  - metric: "Cache memory utilization(`cache_memory_utilization_max`)"
+  - metric: "Cache memory utilization (`cache_memory_utilization_max`)"
     description: "The highest percentage of provisioned cache memory in use during the selected time window."
     watch: "High utilization with zero evictions is healthy.
-      High utilization combined with a rising eviction rate means you should resize."
+      High utilization combined with a rising eviction rate (`cache_eviction_rate`) means you should resize."
   - metric: "Cache items count (`cache_items_average`)"
     description: "The average number of items stored in the cache during the selected time window."
     watch: "Confirms the cache is actually being used.
@@ -341,7 +341,7 @@ rows:
 > Managed cache metrics are retained for seven days.
 
 These metrics are most useful read together, rather than in isolation:
-* If rate limits are being enforced inconsistently, check whether `cache_eviction_rate` is nonzero.
+* If rate limits are being enforced inconsistently, check whether `cache_eviction_rate` is non-zero.
   Rate limiting counters are cache keys, and if they're evicted due to memory pressure before their window ends, the counters reset.
   This can let requests through that should have been blocked.
 * If `cache_memory_utilization_max` is high but `cache_eviction_rate` stays at zero, your cache is healthy and doesn't need action.
@@ -359,7 +359,7 @@ Select "Managed cache usage" from the dropdown menu.
 You can also view managed cache metrics from the **Analytics** tab in the Redis settings for your Dedicated Cloud Gateway control plane.
 {% endnavtab %}
 {% navtab "API" %}
-Retrieve metrics programmatically, by sending a `POST` request to the [`/metrics` endpoint](/api/konnect/analytics-metrics/v2/#/operations/metrics):
+Retrieve metrics programmatically by sending a `POST` request to the [`/metrics` endpoint](/api/konnect/analytics-metrics/v2/#/operations/metrics):
 
 <!--vale off-->
 {% konnect_api_request %}

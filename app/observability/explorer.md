@@ -354,7 +354,7 @@ rows:
   - metric: "Cache eviction rate"
     category: "Rate"
     description: |
-      The rate, in operations per minute, at which keys are removed from the cache because it's out of memory capacity.
+      The rate, in operations per minute, at which keys are removed from the cache because it's running out of memory capacity.
   - metric: "Cache expiration rate"
     category: "Rate"
     description: |
