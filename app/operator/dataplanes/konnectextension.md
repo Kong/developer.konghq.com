@@ -13,6 +13,7 @@ breadcrumbs:
     group: Gateway Deployment
     section: Key Concepts
 
+related_resources:
   - text: "Custom resources reference"
     url: /operator/reference/custom-resources/
 
