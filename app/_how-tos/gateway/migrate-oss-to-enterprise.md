@@ -54,6 +54,8 @@ next_steps:
     url: /gateway/upgrade/reference/
   - text: Migrate to {{site.konnect_short_name}}
     url: /gateway/self-managed-migration/
+
+automated_tests: false
 ---
 
 ## Review deployment options
