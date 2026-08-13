@@ -28,6 +28,8 @@ rows:
                     - "[Back up your data](/gateway/upgrade/backup-and-restore/): Back up your {{site.base_gateway}} configuration before upgrading so you can restore it if something goes wrong."
                     - "[Review breaking changes](/gateway/breaking-changes/): Check for breaking changes between your current version and the target version."
                     - "[Check version support](/gateway/version-support-policy/): Confirm your current and target versions are supported, and identify any required intermediate upgrade stops."
+                    - "[Review the changelog](/gateway/changelog/): Check the full changelog for every release between your current version and the target version."
+                    - "[Check performance benchmarks](/gateway/performance/benchmarks/): Review benchmark results for your target version to understand performance expectations."
 
   - header:
       type: h2
