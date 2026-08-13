@@ -194,6 +194,7 @@ Remotes describe hosted MCP server endpoints that agents can connect to over the
 
 An MCP server can define multiple packages and multiple remotes simultaneously. This allows organizations to support different runtime environments without duplicating server definitions.
 
+{% comment %}
 ## Publish an MCP Registry to Dev Portal
 
 You can publish an MCP Registry to a Dev Portal to expose it to a broader audience.
@@ -204,6 +205,7 @@ You can publish an MCP Registry to a Dev Portal to expose it to a broader audien
 1. Click **Publish to portal**.
 1. From the **Portal** dropdown menu, select the {{site.dev_portal}} you want to publish to.
 1. Click **Publish MCP registry**.
+{% endcomment %}
 
 ## Access and authentication
 
