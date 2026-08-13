@@ -109,6 +109,17 @@ rows:
 
   - header:
       type: h2
+      text: FAQ
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: Does {{site.operator_product_name}} support Kong Manager?
+                a: |
+                  No. {{site.operator_product_name}} always deploys {{site.base_gateway}} data planes in DB-less mode, and [Kong Manager](/gateway/kong-manager/) requires a database-backed deployment (traditional or hybrid mode). If you need Kong Manager, run {{site.base_gateway}} outside of {{site.operator_product_name}} with a database, or manage your data planes through {{site.konnect_short_name}} instead.
+
+  - header:
+      type: h2
       text: "{{site.konnect_short_name}} CRDs"
       sub_text: Manage {{ site.konnect_short_name }} declaratively with first-class CRD support
     columns:
