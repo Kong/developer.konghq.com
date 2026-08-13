@@ -147,8 +147,8 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Qwen Code CLI with OpenAI
-              description: Use Qwen Code CLI with OpenAI models
+              title: Qwen Code CLI with DashScope
+              description: Use Qwen Code CLI with DashScope models
               icon: /assets/icons/dashscope.svg
               cta:
                 url: /ai-gateway/use-qwen-code-with-ai-gateway-qwen/
