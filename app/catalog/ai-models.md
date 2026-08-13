@@ -32,6 +32,10 @@ You can create an AI Model in two ways:
 * Add it manually by defining its providers and target models yourself.
 * Import it from {{site.ai_gateway}}, by linking an existing {{site.ai_gateway}} AI Model as the source. This allows teams to discover, understand, and use it securely.
 
+When an AI Model is linked to {{site.ai_gateway}}, traffic to that AI Model is protected by {{site.ai_gateway}}.
+The link is a snapshot, not a live sync.
+If you later change the linked model's configuration in {{site.ai_gateway}}, the AI Model in {{site.konnect_catalog}} isn't automatically updated to match.
+
 ## Create an AI Model
 
 {% navtabs "create-ai-model" %}
@@ -88,6 +92,7 @@ url: /v1/ai-models/$AI_MODEL_ID/versions
 status_code: 201
 method: POST
 body:
+    version: 1.0.0
     target_models:
       - provider: openai
         name: gpt-4o
@@ -108,6 +113,8 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
+
+{% comment %}
 ## AI Model analytics
 
 When you create an AI Model in {{site.konnect_catalog}}, you can see analytics for that model in addition to the details you configured. 
@@ -118,3 +125,4 @@ The analytics you can see are:
 * Estimated cost
 
 These analytics are collected for the past 30 days.
+{% endcomment %}
