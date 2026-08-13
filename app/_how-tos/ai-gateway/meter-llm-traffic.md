@@ -268,7 +268,7 @@ body:
 This will generate AI LLM token usage that will be captured by {{site.metering_and_billing}}.
 
 {:.info}
-> **Entitlement enforcement:** The {{site.ai_gateway}} does not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
+> **Entitlement enforcement:** Metering alone does not block traffic when a customer's entitlement is exhausted. To reject requests at the gateway, add the Entitlement Enforcement plugin — see [Enforce entitlements on LLM traffic](/how-to/enforce-entitlements-on-llm-traffic/). You can also set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
