@@ -25,7 +25,7 @@ tldr:
   a: |
     The Entitlement Enforcement plugin enforces per-customer, per-feature access by polling the {{site.metering_and_billing}} Entitlement Access API and blocking requests when a customer has no access or has exhausted a usage limit.
 
-    In this tutorial you'll set up the full {{site.metering_and_billing}} product catalog needed for enforcement — a meter, a metered feature and a boolean feature, a plan with entitlements, a customer, and a subscription — and then enable the Entitlement Enforcement plugin on a {{site.base_gateway}} Route to enforce those entitlements.
+    In this tutorial you'll set up the full {{site.metering_and_billing}} product catalog needed for enforcement — a meter, a metered feature, a plan with an entitlement, a customer, and a subscription — and then enable the Entitlement Enforcement plugin on a {{site.base_gateway}} Route to enforce that entitlement.
 
 tools:
     - deck
@@ -85,9 +85,9 @@ This guide shows how to enforce {{site.metering_and_billing}} entitlements on {{
 In this guide, you'll:
 * Create a {{site.base_gateway}} Consumer that you'll map to a customer
 * Set up a meter for {{site.base_gateway}} API requests
-* Create a metered feature and a boolean feature
-* Create a plan that grants those features as entitlements, and publish it
-* Create a customer and start a subscription so the entitlements are active
+* Create a metered feature
+* Create a plan that grants that feature as an entitlement, and publish it
+* Create a customer and start a subscription so the entitlement is active
 * Enable the {{site.metering_and_billing}} plugin to report usage, and the Entitlement Enforcement plugin to enforce the entitlements
 * Verify that traffic is allowed within the limit and blocked once the limit is reached
 
@@ -109,7 +109,6 @@ flowchart TB
     subgraph plan["Premium Plan"]
       direction LR
           feature2["Metered feature + entitlement (limit)"]
-          feature3["Boolean feature + entitlement"]
     end
     subgraph subscription["Premium Subscription"]
       direction LR
@@ -188,14 +187,9 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Create features
+## Create a feature
 
-Meters collect raw usage, but [features](/metering-and-billing/product-catalog/#features) make that usage enforceable. You'll create two features:
-
-* A **metered feature** that references the meter. Its entitlement carries a usage limit that the Entitlement Enforcement plugin enforces.
-* A **boolean feature** with no meter. Its entitlement is a simple on/off grant — the customer either has access or they don't.
-
-Create the metered feature and capture its ID:
+Meters collect raw usage, but [features](/metering-and-billing/product-catalog/#features) make that usage enforceable. Create a metered feature that references the meter, so its entitlement can carry the usage limit that the Entitlement Enforcement plugin enforces. The command captures the new feature's ID so you can reference it when you create the plan:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -208,21 +202,6 @@ body:
     id: $METER_ID
 capture:
   - variable: METERED_FEATURE_ID
-    jq: .id
-{% endkonnect_api_request %}
-<!--vale on-->
-
-Create the boolean feature and capture its ID:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v3/openmeter/features
-method: POST
-body:
-  name: Priority support
-  key: priority_support
-capture:
-  - variable: BOOLEAN_FEATURE_ID
     jq: .id
 {% endkonnect_api_request %}
 <!--vale on-->
@@ -255,7 +234,7 @@ variables:
 
 Plans are the core building blocks of your [product catalog](/metering-and-billing/product-catalog/). A plan is a collection of [rate cards](/metering-and-billing/product-catalog/#rate-cards), where each rate card ties a feature to a price and an optional [entitlement](/metering-and-billing/entitlements/). The entitlement is what the Entitlement Enforcement plugin reads to decide access.
 
-Create a Premium plan with two rate cards: the metered feature, granted a limit of 5 requests per month, and the boolean feature, granted as a simple on/off entitlement. Both rate cards use a free price, because enforcement depends only on the entitlement, not on price:
+Create a Premium plan with one rate card: the metered feature, granted a limit of 5 requests per month. The rate card uses a free price, because enforcement depends only on the entitlement, not on price:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -282,14 +261,6 @@ body:
             is_soft_limit: false
             usage_period: P1M
             limit: 5
-        - name: Priority support
-          key: priority_support
-          feature:
-            id: $BOOLEAN_FEATURE_ID
-          price:
-            type: free
-          entitlement:
-            type: boolean
 capture:
   - variable: PLAN_ID
     jq: .id
@@ -328,7 +299,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Now subscribe the customer to the Premium plan. Starting the subscription materializes the metered and boolean entitlements onto the customer:
+Now subscribe the customer to the Premium plan. Starting the subscription materializes the metered entitlement onto the customer:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
@@ -376,6 +347,8 @@ This configuration relies on the plugin's defaults for the rest of its behavior:
 * `fail_policy` defaults to `allow`, so if the enforcement state can't be retrieved, requests are allowed through.
 * `response_codes` defaults return `429` when a usage limit is reached, `402` when there's no credit available, and `403` for feature or customer errors.
 
+Each plugin instance enforces exactly one `feature.key`. Boolean entitlements are evaluated the same way as metered ones: if the customer doesn't have the feature, the request is denied with `403` and a `reason.code` of `feature_unavailable`. To enforce more than one feature, enable a plugin instance per feature on the Routes that serve it.
+
 {:.info}
 > `refresh_interval` is set to `3` seconds here so the tutorial responds quickly. In production, use a higher interval to reduce load on the Entitlement Access API.
 
@@ -421,12 +394,11 @@ body:
   feature:
     keys:
       - premium_api_access
-      - priority_support
   include_credits: true
 {% endkonnect_api_request %}
 <!--vale on-->
 
-In the response, `data[0].features.premium_api_access.has_access` is `true` while the customer is within the limit and `false` once the limit is reached, with a `reason.code` of `usage_limit_reached`. The boolean feature `priority_support` reports `has_access: true` for as long as the subscription is active.
+In the response, `data[0].features.premium_api_access.has_access` is `true` while the customer is within the limit and `false` once the limit is reached, with a `reason.code` of `usage_limit_reached`.
 
 {:.info}
 > **Entitlement Enforcement enforces, metering doesn't:** the {{site.metering_and_billing}} plugin only reports usage, but the Entitlement Enforcement plugin blocks traffic based on entitlements. Customize the `response_codes` in the plugin configuration to control the status code and message returned for each denial reason.
