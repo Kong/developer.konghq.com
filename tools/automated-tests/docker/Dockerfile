@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap
 
 # set python env
 RUN python3 -m venv /opt/myenv
@@ -41,6 +41,11 @@ RUN curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
 
 RUN curl -fsSL https://claude.ai/install.sh | bash
 ENV PATH="/root/.local/bin:${PATH}"
+
+# Install Node.js 22.x (LTS) via NodeSource, then codex CLI
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs
+RUN npm install -g @openai/codex
 RUN go install github.com/deviceinsight/kafkactl/v5@latest
 
 # Install kubectl v1.35.2 (pinned + checksum verified)

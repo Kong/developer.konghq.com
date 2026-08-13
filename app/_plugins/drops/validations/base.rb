@@ -35,6 +35,8 @@ module Jekyll
             CustomCommand.new(id:, yaml:, format:)
           when 'claude-code'
             ClaudeCode.new(id:, yaml:, format:)
+          when 'codex'
+            Codex.new(id:, yaml:, format:)
           else
             raise ArgumentError, "Missing Drop for `#{id}`"
           end
