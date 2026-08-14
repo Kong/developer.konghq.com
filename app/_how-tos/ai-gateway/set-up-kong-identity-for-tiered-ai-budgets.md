@@ -69,6 +69,7 @@ automated_tests: false
 
 An IdP can drive the same four claims two ways. {{site.identity}} has no group-membership concept at all, so everything in this guide is the attribute-driven column, with a client label standing in for a profile attribute:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: ""
@@ -100,6 +101,7 @@ rows:
     group_driven: "a group per value"
     attribute_driven: "one label"
 {% endtable %}
+<!-- vale on -->
 
 {{site.ai_gateway}} reads the resulting claims as header values either way and never sees which column produced them.
 
