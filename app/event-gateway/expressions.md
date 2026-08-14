@@ -220,6 +220,24 @@ rows:
     example: |
       `record.value.schema.json.id == 'https://example.com/schemas/order.json'`
   - variable: |
+      `record.value.schema.metadata.properties` {% new_in 1.3 %}
+    type: "`map<string, string>`"
+    description: |
+      Confluent schema-registry `metadata.properties`. Present as an empty map whenever `record.value.schema` is present, even when the registry omits the properties.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.metadata.properties['owner'] == 'payments-team'`
+  - variable: |
+      `record.value.schema.metadata.tags` {% new_in 1.3 %}
+    type: "`map<string, list<string>>`"
+    description: |
+      Confluent schema-registry `metadata.tags`, keyed by tag. Each value is the list of schema paths (for example `io.confluent.field.<name>`) that carry that tag. Present as an empty map whenever `record.value.schema` is present, even when the registry omits the tags.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `'PII' in record.value.schema.metadata.tags && 'io.confluent.field.ssn' in record.value.schema.metadata.tags['PII']`
+  - variable: |
       `record.key.schema.*` {% new_in 1.2 %}
     type: |
       same as `record.value.schema.*`
