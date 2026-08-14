@@ -16997,7 +16997,7 @@
         "scope": "Core"
       },
       {
-        "message": "**forward-proxy**: the `https_verify` option to validate the `https_proxy_host`\nserver certificate is now enabled by default.",
+        "message": "**forward-proxy**: `https_verify` is now enabled by default. This option\nverifies the upstream server certificate presented after the plugin\nestablishes a `CONNECT` tunnel through the proxy.",
         "type": "feature",
         "scope": "Plugin"
       },
