@@ -217,7 +217,7 @@ In this configuration:
 
 ## Validate the routing
 
-To validate that routing via Datakit is working, retreive access tokens from Keycloak using the client credentials grant, then send them as bearer tokens to verify that each caller is routed to the correct upstream.
+To validate that routing via Datakit is working, retrieve access tokens from Keycloak using the client credentials grant, then send them as bearer tokens to verify that each caller is routed to the correct upstream.
 
 All three upstreams point at the same host in this tutorial, so each request returns an HTTP 200 from `httpbin.konghq.com`.
 In the following requests, we're setting the `X-Datakit-Debug-Trace: true` request header so that Datakit returns a JSON trace in the response body showing each node's input and output.
