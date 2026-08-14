@@ -6,7 +6,7 @@ info:
 
     Important Considerations:
     - This endpoint is only available for Konnect Advanced Analytics.
-    - The time range for the query must be within the last 32 days, otherwise a 400 error will be returned.
+    - The query time range must be within the last 32 days (or 7 days for the `managed_cache_usage` datasource), otherwise a 400 error will be returned.
     - The time range you request may be adjusted slightly to avoid returning buckets that contain only partial information. For instance:
         - You request data for the last 24 hours with hourly intervals.
         - The current time is Tuesday at 10:40 AM.
@@ -16,12 +16,12 @@ info:
     - For queries that use the time dimension, the granularity of the result may be coarser than requested. The finest allowed granularity depends on the query's time range: data farther in the past may have coarser granularity. The exact result granularity will be reported in the response `meta.granularity_ms` field.
     - Queries must complete within 10 seconds. If a query takes longer than 10 seconds, a 408 will be returned. In this case, it is suggested to add more filters, and/or reduce the time range.
     - This endpoint is rate limited to 10 requests per minute per user.
-  version: 4.1.2
+  version: 4.2.3
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9439f2f60741551a17bc0eacba5ce859e1e38317
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9439f2f60741551a17bc0eacba5ce859e1e38317'
+  x-oas-source: kong/platform-api@4ef7dacb3ac0f3f2d20d3892aa57d0f047b34d7c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4ef7dacb3ac0f3f2d20d3892aa57d0f047b34d7c'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -78,10 +78,12 @@ components:
           api_usage: '#/components/schemas/MetricsApiUsageQuery'
           llm_usage: '#/components/schemas/MetricsLLMUsageQuery'
           agentic_usage: '#/components/schemas/MetricsAgenticUsageQuery'
+          managed_cache_usage: '#/components/schemas/MetricsManagedCacheUsageQuery'
       oneOf:
         - $ref: '#/components/schemas/MetricsApiUsageQuery'
         - $ref: '#/components/schemas/MetricsLLMUsageQuery'
         - $ref: '#/components/schemas/MetricsAgenticUsageQuery'
+        - $ref: '#/components/schemas/MetricsManagedCacheUsageQuery'
     MetricsApiUsageQuery:
       description: A query targeting the API usage analytics datasource.
       type: object
@@ -397,6 +399,74 @@ components:
           - request_count
       required:
         - metrics
+    MetricsManagedCacheUsageQuery:
+      description: |
+        A query targeting the managed cache usage analytics datasource.
+
+        Note: this datasource only retains data for the last 7 days.
+      type: object
+      properties:
+        datasource:
+          type: string
+          enum:
+            - managed_cache_usage
+        metrics:
+          description: List of aggregated metrics to collect across the requested time span.
+          type: array
+          items:
+            type: string
+            enum:
+              - cache_eviction_rate
+              - cache_expiration_rate
+              - cache_items_average
+              - cache_memory_utilization_max
+          default:
+            - cache_memory_utilization_max
+          maxItems: 3
+        dimensions:
+          description: List of attributes or entity types to group by.
+          type: array
+          items:
+            type: string
+            enum:
+              - control_plane
+              - data_plane_group
+              - managed_cache
+              - network
+              - provider
+              - provider_region
+              - time
+          maxItems: 2
+        filters:
+          $ref: '#/components/schemas/ManagedCacheUsageFilters'
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        time_range:
+          $ref: '#/components/schemas/TimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
+      example:
+        datasource: managed_cache_usage
+        time_range:
+          type: relative
+          time_range: 24h
+          tz: EST
+        dimensions:
+          - time
+          - provider
+        filters:
+          - operator: in
+            field: control_plane
+            value:
+              - d5ac5d88-efed-4e10-9dfe-0b0a6646c219
+        granularity: hourly
+        metrics:
+          - cache_memory_utilization_max
+      required:
+        - metrics
     MetricsResult:
       description: |
         A result with metrics grouped by the dimensions specified in the query, at a particular time
@@ -516,6 +586,10 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/DisplayEntry'
+        data_plane_group:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisplayEntry'
         data_plane_node:
           type: object
           additionalProperties:
@@ -540,6 +614,10 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/DisplayEntry'
+        managed_cache:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisplayEntry'
         mcp_error:
           type: object
           additionalProperties:
@@ -556,11 +634,23 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/DisplayEntry'
+        network:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisplayEntry'
         portal:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/DisplayEntry'
         principal:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisplayEntry'
+        provider:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisplayEntry'
+        provider_region:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/DisplayEntry'
@@ -2357,6 +2447,206 @@ components:
           - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
+    MetricsDataPlaneGroupFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - data_plane_group
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - data_plane_group
+          required:
+            - operator
+            - field
+      title: Filter by data_plane_group
+    MetricsManagedCacheFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - managed_cache
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - managed_cache
+          required:
+            - operator
+            - field
+      title: Filter by managed_cache
+    MetricsNetworkFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - network
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - network
+          required:
+            - operator
+            - field
+      title: Filter by network
+    MetricsProviderFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - provider
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - provider
+          required:
+            - operator
+            - field
+      title: Filter by provider
+    MetricsProviderRegionFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - provider_region
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - provider_region
+          required:
+            - operator
+            - field
+      title: Filter by provider_region
+    ManagedCacheUsageFilters:
+      description: A list of filters to apply to the query.
+      type: array
+      items:
+        discriminator:
+          propertyName: field
+          mapping:
+            control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
+            data_plane_group: '#/components/schemas/MetricsDataPlaneGroupFilterByField'
+            managed_cache: '#/components/schemas/MetricsManagedCacheFilterByField'
+            network: '#/components/schemas/MetricsNetworkFilterByField'
+            provider: '#/components/schemas/MetricsProviderFilterByField'
+            provider_region: '#/components/schemas/MetricsProviderRegionFilterByField'
+        oneOf:
+          - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
+          - $ref: '#/components/schemas/MetricsDataPlaneGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsManagedCacheFilterByField'
+          - $ref: '#/components/schemas/MetricsNetworkFilterByField'
+          - $ref: '#/components/schemas/MetricsProviderFilterByField'
+          - $ref: '#/components/schemas/MetricsProviderRegionFilterByField'
     BaseError:
       description: standard error
       type: object

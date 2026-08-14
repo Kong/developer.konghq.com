@@ -3,12 +3,12 @@ info:
   title: Konnect Analytics Dashboards
   description: |
     Konnect endpoint for creating, reading, updating, and deleting dashboards.  Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a visualization to render the data.
-  version: 2.1.0
+  version: 2.2.2
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9439f2f60741551a17bc0eacba5ce859e1e38317
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9439f2f60741551a17bc0eacba5ce859e1e38317'
+  x-oas-source: kong/platform-api@4ef7dacb3ac0f3f2d20d3892aa57d0f047b34d7c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4ef7dacb3ac0f3f2d20d3892aa57d0f047b34d7c'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -82,6 +82,8 @@ paths:
                 $ref: '#/components/examples/MultipleTilePresetFiltersExample'
               'Single Tile, Platform Usage':
                 $ref: '#/components/examples/PlatformDashboardExample'
+              'Single Tile, Managed Cache Usage':
+                $ref: '#/components/examples/ManagedCacheUsageDashboardExample'
               'Single Tile, Table':
                 $ref: '#/components/examples/TableDashboardExample'
       responses:
@@ -162,6 +164,8 @@ paths:
                 $ref: '#/components/examples/MultipleTilePresetFiltersExample'
               'Single Tile, Platform Usage':
                 $ref: '#/components/examples/PlatformDashboardExample'
+              'Single Tile, Managed Cache Usage':
+                $ref: '#/components/examples/ManagedCacheUsageDashboardExample'
               'Single Tile, Table':
                 $ref: '#/components/examples/TableDashboardExample'
       responses:
@@ -466,6 +470,64 @@ components:
       additionalProperties: false
       required:
         - datasource
+    ManagedCacheUsageQuery:
+      description: |
+        A query targeting the managed cache usage analytics datasource.
+
+        Note: this datasource only retains data for the last 7 days.
+      type: object
+      properties:
+        datasource:
+          type: string
+          enum:
+            - managed_cache_usage
+        metrics:
+          $ref: '#/components/schemas/ManagedCacheUsageMetrics'
+        dimensions:
+          description: List of attributes or entity types to group by.
+          type: array
+          items:
+            type: string
+            enum:
+              - control_plane
+              - data_plane_group
+              - managed_cache
+              - network
+              - provider
+              - provider_region
+              - time
+          maxItems: 2
+        filters:
+          $ref: '#/components/schemas/ManagedCacheUsageFilters'
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        time_range:
+          $ref: '#/components/schemas/TimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
+      example:
+        datasource: managed_cache_usage
+        time_range:
+          type: relative
+          time_range: 24h
+          tz: EST
+        dimensions:
+          - time
+          - provider
+        filters:
+          - operator: in
+            field: control_plane
+            value:
+              - d5ac5d88-efed-4e10-9dfe-0b0a6646c219
+        granularity: hourly
+        metrics:
+          - cache_memory_utilization_max
+      additionalProperties: false
+      required:
+        - datasource
     PlatformQuery:
       description: A query targeting the platform usage analytics datasource.
       type: object
@@ -640,11 +702,13 @@ components:
               llm_usage: '#/components/schemas/LLMQuery'
               agentic_usage: '#/components/schemas/AgenticQuery'
               platform_usage: '#/components/schemas/PlatformQuery'
+              managed_cache_usage: '#/components/schemas/ManagedCacheUsageQuery'
           oneOf:
             - $ref: '#/components/schemas/AdvancedQuery'
             - $ref: '#/components/schemas/LLMQuery'
             - $ref: '#/components/schemas/AgenticQuery'
             - $ref: '#/components/schemas/PlatformQuery'
+            - $ref: '#/components/schemas/ManagedCacheUsageQuery'
         chart:
           $ref: '#/components/schemas/Chart'
       additionalProperties: false
@@ -2779,6 +2843,218 @@ components:
       oneOf:
         - $ref: '#/components/schemas/PlatformRelativeTimeRange'
         - $ref: '#/components/schemas/MetricsAbsoluteTimeRangeDtoV2'
+    ManagedCacheUsageMetrics:
+      description: List of aggregated metrics to collect across the requested time span.
+      type: array
+      items:
+        type: string
+        enum:
+          - cache_eviction_rate
+          - cache_expiration_rate
+          - cache_items_average
+          - cache_memory_utilization_max
+      default:
+        - cache_memory_utilization_max
+    MetricsDataPlaneGroupFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - data_plane_group
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - data_plane_group
+          required:
+            - operator
+            - field
+      title: Filter by data_plane_group
+    MetricsManagedCacheFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - managed_cache
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - managed_cache
+          required:
+            - operator
+            - field
+      title: Filter by managed_cache
+    MetricsNetworkFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - network
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - network
+          required:
+            - operator
+            - field
+      title: Filter by network
+    MetricsProviderFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - provider
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - provider
+          required:
+            - operator
+            - field
+      title: Filter by provider
+    MetricsProviderRegionFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - provider_region
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - provider_region
+          required:
+            - operator
+            - field
+      title: Filter by provider_region
+    ManagedCacheUsageFilters:
+      description: A list of filters to apply to the query.
+      type: array
+      items:
+        discriminator:
+          propertyName: field
+          mapping:
+            control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
+            data_plane_group: '#/components/schemas/MetricsDataPlaneGroupFilterByField'
+            managed_cache: '#/components/schemas/MetricsManagedCacheFilterByField'
+            network: '#/components/schemas/MetricsNetworkFilterByField'
+            provider: '#/components/schemas/MetricsProviderFilterByField'
+            provider_region: '#/components/schemas/MetricsProviderRegionFilterByField'
+        oneOf:
+          - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
+          - $ref: '#/components/schemas/MetricsDataPlaneGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsManagedCacheFilterByField'
+          - $ref: '#/components/schemas/MetricsNetworkFilterByField'
+          - $ref: '#/components/schemas/MetricsProviderFilterByField'
+          - $ref: '#/components/schemas/MetricsProviderRegionFilterByField'
     DonutChart:
       description: |
         A chart that can display one-dimensional data in a hollow, segmented circle.  To use this chart, ensure that
@@ -3109,6 +3385,7 @@ components:
           control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
           control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
           country_code: '#/components/schemas/MetricsCountryCodeFilterByField'
+          data_plane_group: '#/components/schemas/MetricsDataPlaneGroupFilterByField'
           data_plane_node: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
           data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
           env: '#/components/schemas/MetricsEnvFilterByField'
@@ -3117,11 +3394,15 @@ components:
           llm_cache_status: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
           llm_embeddings_model: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
           llm_embeddings_provider: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+          managed_cache: '#/components/schemas/MetricsManagedCacheFilterByField'
           mcp_error: '#/components/schemas/MetricsMcpErrorFilterByField'
           mcp_method: '#/components/schemas/MetricsMcpMethodFilterByField'
           mcp_session_id: '#/components/schemas/MetricsMcpSessionIdFilterByField'
           mcp_tool_name: '#/components/schemas/MetricsMcpToolNameFilterByField'
+          network: '#/components/schemas/MetricsNetworkFilterByField'
           portal: '#/components/schemas/MetricsPortalFilterByField'
+          provider: '#/components/schemas/MetricsProviderFilterByField'
+          provider_region: '#/components/schemas/MetricsProviderRegionFilterByField'
           realm: '#/components/schemas/MetricsRealmFilterByField'
           region: '#/components/schemas/MetricsRegionFilterByField'
           response_source: '#/components/schemas/MetricsResponseSourceFilterByField'
@@ -3150,6 +3431,7 @@ components:
         - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
         - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
         - $ref: '#/components/schemas/MetricsCountryCodeFilterByField'
+        - $ref: '#/components/schemas/MetricsDataPlaneGroupFilterByField'
         - $ref: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
         - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
         - $ref: '#/components/schemas/MetricsEnvFilterByField'
@@ -3158,12 +3440,16 @@ components:
         - $ref: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
         - $ref: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
         - $ref: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+        - $ref: '#/components/schemas/MetricsManagedCacheFilterByField'
         - $ref: '#/components/schemas/MetricsMcpErrorFilterByField'
         - $ref: '#/components/schemas/MetricsMcpMethodFilterByField'
         - $ref: '#/components/schemas/MetricsMcpSessionIdFilterByField'
         - $ref: '#/components/schemas/MetricsMcpToolNameFilterByField'
+        - $ref: '#/components/schemas/MetricsNetworkFilterByField'
         - $ref: '#/components/schemas/MetricsPortalFilterByField'
         - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
+        - $ref: '#/components/schemas/MetricsProviderFilterByField'
+        - $ref: '#/components/schemas/MetricsProviderRegionFilterByField'
         - $ref: '#/components/schemas/MetricsRealmFilterByField'
         - $ref: '#/components/schemas/MetricsRegionFilterByField'
         - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'
@@ -3555,6 +3841,35 @@ components:
                   metrics:
                     - service_count
                     - route_count
+    ManagedCacheUsageDashboardExample:
+      value:
+        name: 'Single Tile, Managed Cache Usage'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 6
+                  rows: 2
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: timeseries_line
+                  stacked: false
+                  chart_title: Average cache items over time by provider
+                query:
+                  datasource: managed_cache_usage
+                  time_range:
+                    type: relative
+                    time_range: 7d
+                  dimensions:
+                    - time
+                    - provider
+                  granularity: hourly
+                  metrics:
+                    - cache_memory_utilization_max
     TableDashboardExample:
       value:
         name: 'Single Tile, Table'
