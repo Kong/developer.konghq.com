@@ -43,19 +43,19 @@ You can also define variables dynamically in the Collection Runner and in pre-re
 
 ## Create an environment
 
-Use environments to define groups of variables that Insomnia applies across your requests. 
+Use environments to define groups of variables that {{ site.data.products.insomnia.name }} applies across your requests. 
 For example, you could create variables for base URLs, tokens, or credentials. 
 If your API specifications or requests contain variables, you can use an environment to replace those variables with real values.
 
 To create an environment:
-1. In your Insomnia project, click **Environments**.
+1. In your {{ site.data.products.insomnia.name }} project, click **Environments**.
 1. From the **Create a new Environment** window, in the **Name** field, enter a name for your environment. For example, "My environment".
 1. Click **Create**.
 
 {:.info}
 > If you create an environment in a project that uses Git Sync, you must choose where to store the folder in your linked repository.
 
-Insomnia applies the active environment to all requests in the collection.
+{{ site.data.products.insomnia.name }} applies the active environment to all requests in the collection.
 
 ## Manage environments
 
@@ -96,14 +96,14 @@ To create a sub-environment:
 
 ## Referencing environment variables
 
-Environment variables can be referenced in any text input within the Insomnia application. There are two ways to do this:
+Environment variables can be referenced in any text input within the {{ site.data.products.insomnia.name }} application. There are two ways to do this:
 
 * Use the autocomplete dropdown by pressing `Control+Space`
 * Start typing the name of the variable to display the autocomplete dropdown
 
 ## Environment priority
 
-If you define the same environment variable across different levels of environments, Insomnia will look for the value in the following order:
+If you define the same environment variable across different levels of environments, {{ site.data.products.insomnia.name }} will look for the value in the following order:
 
 1. Folder environment
 1. Selected collection sub-environment
@@ -117,7 +117,7 @@ You can use pre-request and after-response [scripts](/insomnia/scripts/) to set,
 
 {% table %}
 columns:
-  - title: Insomnia functions
+  - title: {{ site.data.products.insomnia.name }} functions
     key: functions
   - title: Environment type
     key: env
@@ -166,7 +166,7 @@ rows:
     env: |
       New variables will be created as temporary local variables
 
-      When referencing existing variables, Insomnia can look for values in all environment types, in this order:
+      When referencing existing variables, {{ site.data.products.insomnia.name }} can look for values in all environment types, in this order:
         1. Temporary local variables
         1. Iteration data variables
         1. Folder environment
@@ -186,14 +186,14 @@ rows:
 
 Secret environment variables allow you to store sensitive data locally in encrypted form. These variables are masked by default, are not stored in plain text, and are only accessible within the vault namespace (for example, `vault.foo` for a variable named `foo`).
 
-Insomnia does not persist the vault key automatically. If you lose your vault key, you can reset it, but all stored secrets will be permanently deleted for security reasons.
+{{ site.data.products.insomnia.name }} does not persist the vault key automatically. If you lose your vault key, you can reset it, but all stored secrets will be permanently deleted for security reasons.
 
 ### Managing secrets
 
 To store secrets in {{ site.data.products.insomnia.name }}, generate a vault key. This key encrypts secret variables in private sub-environments. When you log in on a new device, {{ site.data.products.insomnia.name }} asks for the vault key to unlock any sub-environment that contains secrets. Scripts that read secrets don't require the vault key directly, but you must generate one before you can mark a variable as `Secret`:
 
-1. Generate a vault key in Insomnia:
-   1. Navigate to the **Preferences** settings page at the bottom left in the Insomnia sidebar.
+1. Generate a vault key in {{ site.data.products.insomnia.name }}:
+   1. Navigate to the **Preferences** settings page at the bottom left in the {{ site.data.products.insomnia.name }} sidebar.
    1. On the General tab, scroll to the Security section and click **Generate Vault Key**.
 1. Create a new private sub-environment within any global environment.
 1. Add your secret variable in the private sub-private environment and set its type to `Secret`.
@@ -205,7 +205,7 @@ To store secrets in {{ site.data.products.insomnia.name }}, generate a vault key
 
 By default, secret variables are not exposed to scripts. To enable access:
 
-1. Navigate to the **Preferences** settings page at the bottom left in the Insomnia sidebar.
+1. Navigate to the **Preferences** settings page at the bottom left in the {{ site.data.products.insomnia.name }} sidebar.
 1. In the **General** tab, scroll to the **Security** section and click the **Enable vault in scripts** checkbox.
 
 Once enabled, you can access secrets in scripts using:
