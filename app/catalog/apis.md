@@ -32,6 +32,8 @@ related_resources:
     url: /how-to/package-apis-with-dev-portal/
   - text: API packages reference
     url: /catalog/api-packaging/
+  - text: "{{site.dev_portal}} MCP servers"
+    url: /dev-portal/mcp-servers/
 faqs:
   - q: I'm using the Try it feature in the spec renderer to send requests from {{site.dev_portal}}, but I'm getting a `401`. How do I fix it?
     a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
@@ -480,6 +482,14 @@ resource "konnect_api_publication" "my_apipublication" {
 {% endnavtabs %}
 
 Once published, the API appears in the selected {{site.dev_portal}}. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API. If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a team to access the API.
+
+### Generate an MCP server from your published APIs
+
+After an API is published to {{site.dev_portal}}, it can also be exposed to AI agents through an MCP server generated directly from that {{site.dev_portal}}. This gives developers a way to connect their own agent or IDE to browse the same API documentation and specifications available in {{site.dev_portal}}, and, depending on configuration, register applications and use API credentials on their behalf.
+
+Agent access respects the same [user authentication](/dev-portal/security-settings/) and [RBAC](/dev-portal/developer-rbac/) settings that apply to the developer connecting the agent, so an agent never sees more than its developer already can.
+
+For details on enabling this and how {{site.dev_portal}} settings affect what an agent can do, see [{{site.dev_portal}} MCP servers](/dev-portal/mcp-servers/).
 
 ### Allow developers to try requests from the {{site.dev_portal}} spec renderer
 
