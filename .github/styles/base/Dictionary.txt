@@ -107,6 +107,7 @@ callout
 callouts
 camelCase
 CDNs
+ce
 cef
 cerebras
 certificate_admin
@@ -235,6 +236,7 @@ drilldown
 dynatrace
 eason
 ecs
+ee
 ElastiCache
 elbs
 enablement

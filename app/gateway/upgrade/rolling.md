@@ -17,7 +17,7 @@ tags:
     - versioning
 
 related_resources:
-  - text: "Upgrading {{site.base_gateway}}"
+  - text: "Upgrade and migrate {{site.base_gateway}}"
     url: /gateway/upgrade/
   - text: "Dual-cluster upgrade"
     url: /gateway/upgrade/dual-cluster/
@@ -84,8 +84,8 @@ _New nodes are gradually deployed and pointed to the `kong.yml` file, while traf
 
 ## Prerequisites
 
-* Review either the [general upgrade guide](/gateway/upgrade/) or one of the LTS upgrade guides 
-([2.8 -> 3.4](/gateway/upgrade/lts-upgrade-28-34/), [3.4 -> 3.10](/gateway/upgrade/lts-upgrade-34-310/), [3.10 -> 3.14](/gateway/upgrade/lts-upgrade-310-314/)) 
+* Review either the [upgrade guide](/gateway/upgrade/reference/) or one of the LTS upgrade guides
+([2.8 -> 3.4](/gateway/upgrade/lts-upgrade-28-34/), [3.4 -> 3.10](/gateway/upgrade/lts-upgrade-34-310/), [3.10 -> 3.14](/gateway/upgrade/lts-upgrade-310-314/))
 to prepare for the upgrade and review your options.
 * You have a [DB-less deployment](/gateway/db-less-mode/) or you need to upgrade the data planes (DPs) in a [hybrid mode deployment](/gateway/hybrid-mode/), or {{site.konnect_short_name}} DPs.
 
