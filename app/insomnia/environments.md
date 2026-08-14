@@ -190,7 +190,7 @@ Insomnia does not persist the vault key automatically. If you lose your vault ke
 
 ### Managing secrets
 
-To store secrets:
+To store secrets in {{ site.data.products.insomnia.name }}, generate a vault key. This key encrypts secret variables in private sub-environments. When you log in on a new device, {{ site.data.products.insomnia.name }} asks for the vault key to unlock any sub-environment that contains secrets. Scripts that read secrets don't require the vault key directly, but you must generate one before you can mark a variable as `Secret`:
 
 1. Generate a vault key in Insomnia:
    1. Navigate to the **Preferences** settings page at the bottom left in the Insomnia sidebar.
