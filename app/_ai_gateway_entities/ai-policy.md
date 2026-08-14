@@ -90,6 +90,13 @@ The available scopes are:
 
 * **Entity-scoped**: Reference the policy from the `policies` array on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), [AI Consumer](/ai-gateway/entities/ai-consumer/), or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity. The policy applies at that entity's scope.
 
+{:.warning}
+> **Authentication policies don't attach through the `policies` array**
+>
+> An AI Model, AI Agent, and AI MCP Server each have their own top-level authentication mechanism, so [Key Auth](/ai-gateway/policies/key-auth/), [OpenID Connect](/ai-gateway/policies/openid-connect/), and [AI MCP OAuth2](/ai-gateway/policies/ai-mcp-oauth2/) can't be referenced from any of their `policies` arrays, and can only be created as Global AI Policies.
+>
+> This doesn't mean authentication is limited to one gateway-wide configuration. To authenticate traffic to a specific AI Model, AI Agent, or AI MCP Server, assign an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) to that entity instead, for example, Key Auth on one AI Model and OpenID Connect on another. AI Identity Providers support Key Auth and OpenID Connect authentication, and for an AI MCP Server with [`access.metadata`](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) set, {{site.ai_gateway}} generates the equivalent AI MCP OAuth2 configuration for you.
+
 {:.info}
 > For each policy type, find its configuration schema and required fields on that policy's reference page in the [AI Policies hub](/ai-gateway/policies/). Configuration is specific to each policy type.
 
@@ -100,7 +107,7 @@ An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced)
 The following example creates a global AI PII Sanitizer Policy that runs for every {{site.ai_gateway}} Route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
 
 {:.info}
-> This Policy connects to an AI PII Anonymizer service at `host`/`port` (`sanitizer-service.internal:8080` in this example) to perform the actual sanitization. Substitute the address of your own running instance. See [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service) for image access and setup instructions. 
+> This Policy connects to an AI PII Anonymizer service at `host`/`port` (`sanitizer-service.internal:8080` in this example) to perform the actual sanitization. Substitute the address of your own running instance. See [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service) for image access and setup instructions.
 >
 > Without a reachable service at that address, requests through this Policy will fail.
 
