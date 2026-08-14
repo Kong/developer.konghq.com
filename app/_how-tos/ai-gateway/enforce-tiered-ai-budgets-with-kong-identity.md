@@ -190,7 +190,7 @@ ai_gateway_models:
           type: openai
 {% endentity_examples %}
 
-The fourth policy matches on the subject header alone, with no tier value, so it always applies. Every matching ceiling is charged and the lowest remaining one wins, that's what makes `cap-strict` unraisable by a tier change and what bounds a caller whose tier claim came back missing at the top tier's ceiling instead of leaving them unlimited.
+The fourth policy matches on the subject header alone, with no tier value, so it always applies. Every matching ceiling is charged and the lowest remaining one wins, so a tier change can't raise `cap-strict`, and a caller whose tier claim came back missing is bounded at the top tier's ceiling instead of left unlimited.
 
 ## Complete the identity provider
 
