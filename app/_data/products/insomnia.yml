@@ -1,9 +1,10 @@
 name: Insomnia
 icon: /_assets/icons/products/insomnia.svg
+app_url: https://app.insomnia.rest
 
 tiers:
   hobby:
-    text: Hobby and above
+    text: Essentials and above
     url: /insomnia/
   pro:
     text: Pro and above
