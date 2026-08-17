@@ -90,6 +90,22 @@ async function runValueThroughCommand(container, value, command) {
   return result.output.trim();
 }
 
+async function readFileContent(container, value, fileDir) {
+  const filename = value.replace("@", "");
+  const filesHostPath = path.resolve(
+    __dirname,
+    `../../../app/_includes/_files/${fileDir}`,
+    filename,
+  );
+
+  if (fs.existsSync(filesHostPath)) {
+    return fs.readFileSync(filesHostPath, "utf8");
+  }
+
+  const result = await executeCommand(container, `base64 "${filename}"`);
+  return Buffer.from(result.output, "base64").toString("utf8");
+}
+
 async function fetchWithOptionalJar(url, options = {}, jarName) {
   if (jarName !== undefined) {
     if (!(jarName in cookieJars)) {
@@ -137,18 +153,23 @@ async function executeRequest(
     if (config.body !== undefined && options.method === "POST") {
       options.body = JSON.stringify(replaceEnvVars(config.body, env));
       headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    } else if (config.body_file !== undefined && options.method === "POST") {
+      options.body = await readFileContent(
+        container,
+        config.body_file,
+        config.file_dir,
+      );
+      headers["Content-Type"] = headers["Content-Type"] || "application/json";
     } else if (config.form_data !== undefined) {
       const formData = new FormData();
 
       for (const [key, value] of Object.entries(config.form_data)) {
         if (key === "file") {
-          const filesHostPath = path.resolve(
-            __dirname,
-            `../../../app/_includes/_files/${config.file_dir}`,
-            value.replace("@", ""),
+          const fileContent = await readFileContent(
+            container,
+            value,
+            config.file_dir,
           );
-
-          const fileContent = fs.readFileSync(filesHostPath, "utf8");
           formData.append(key, new File([fileContent], value));
         } else {
           formData.append(key, replaceEnvVars(value, env));
