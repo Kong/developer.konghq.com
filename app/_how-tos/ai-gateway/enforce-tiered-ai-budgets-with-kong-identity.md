@@ -69,7 +69,7 @@ faqs:
   - q: Why do only two AI Consumer Groups exist when there are three tiers and a cap?
     a: |
       Tiers and the cap are matched from headers the AI Identity Provider projects out of the token, not from AI Consumer Group entities, so a tier change never writes anything to {{site.ai_gateway}}. Only `contractors` and `suspended` need a matching AI Consumer Group, because `access.acls` compares against real group names.
-  - q: Why do budget-identity's config fields include consumer_groups_claim and upstream_headers_claims?
+  - q: Why do budget-identity's config fields include `consumer_groups_claim` and `upstream_headers_claims`?
     a: |
       These project the `kong_groups`, `budget_tier`, `budget_org`, and `budget_cap` claims from the token onto `x-budget-*` request headers and the ACL groups {{site.ai_gateway}} checks. `kongctl` (1.12.0 and later) applies them directly as part of the AI Identity Provider's `config`, no separate step required.
   - q: What happens to a caller with no resolvable claim at all?
