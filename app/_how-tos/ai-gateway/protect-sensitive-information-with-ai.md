@@ -130,7 +130,7 @@ To validate, send a request that contains PII, for example:
 
 <!-- vale off -->
 {% validation request-check %}
-url: /v1/chat/completions
+url: /chat/completions
 status_code: 200
 method: POST
 headers:
