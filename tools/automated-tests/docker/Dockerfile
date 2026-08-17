@@ -46,6 +46,7 @@ ENV PATH="/root/.local/bin:${PATH}"
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs
 RUN npm install -g @openai/codex
+RUN npm install -g @qwen-code/qwen-code
 RUN go install github.com/deviceinsight/kafkactl/v5@latest
 
 # Install kubectl v1.35.2 (pinned + checksum verified)

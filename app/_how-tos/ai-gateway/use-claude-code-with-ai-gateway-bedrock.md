@@ -200,21 +200,12 @@ The AI Model uses the following settings:
 
 {{ site.claude_code }}'s experimental beta features send fields that Bedrock rejects even with the AI Policy in place. Disable them, then start a session pointed at your local {{site.ai_gateway}} endpoint:
 
-```sh
-export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
-
-ANTHROPIC_BASE_URL=http://localhost:8000/ \
-ANTHROPIC_MODEL=my-claude-bedrock \
-claude
-```
-
-Ask a question to confirm that requests reach {{site.ai_gateway}}.
-
 {% validation claude-code %}
 prompt: Tell me about the Madrid Skylitzes manuscript.
-model: my-claude
+model: my-claude-bedrock
+base_url: http://localhost:8000/
+disable_experimental_betas: true
 {% endvalidation %}
-
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 

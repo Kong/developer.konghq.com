@@ -113,21 +113,13 @@ The AI Model uses the following settings:
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ ANTHROPIC_MODEL=my-claude-openai claude
-```
-
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
-
-Ask a question to confirm that requests reach {{site.ai_gateway}}.
-
 {% validation claude-code %}
 prompt: Tell me about the Madrid Skylitzes manuscript.
-model: my-claude
+model: my-claude-openai
+base_url: http://localhost:8000/
 {% endvalidation %}
 
-
-{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
+{{ site.claude }} will produce a full-length response to your request:
 
 ```text
 The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine

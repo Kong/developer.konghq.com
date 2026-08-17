@@ -614,6 +614,7 @@ export async function validate(container, validation, runtimeConfig) {
     case "custom-command":
     case "claude-code":
     case "codex":
+    case "qwen":
       result = await customCommand(
         validation.name,
         validation.config,
