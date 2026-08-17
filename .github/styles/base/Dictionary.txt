@@ -980,6 +980,7 @@ SSNs
 unsanitized
 vectorize
 vectordb
+veriknox
 substrings
 Figma
 Offboarding

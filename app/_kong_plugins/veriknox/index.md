@@ -72,7 +72,7 @@ After the upstream responds, the plugin signs and forwards a response receipt to
 sequenceDiagram
     autonumber
     participant A as AI Agent
-    participant K as Kong Gateway<br/>veriknox-plugin
+    participant K as {{site.base_gateway}}<br/>veriknox-plugin
     participant H as VeriKnox Hub
     participant U as Upstream<br/>LLM / MCP / A2A
 
@@ -96,7 +96,7 @@ sequenceDiagram
 {{site.base_gateway}} runs plugins in descending priority order (higher number runs first).
 The VeriKnox plugin must run after authentication plugins (which sit at approximately 1001-1005), so its priority must be lower.
 
-Where you place the VeriKnox plugin relative to AI Gateway plugins determines what gets signed:
+Where you place the VeriKnox plugin relative to {{site.ai_gateway}} plugins determines what gets signed:
 
 {% table %}
 columns:
@@ -170,7 +170,7 @@ Before installing the plugin, you need:
 ### Enroll the data plane identity
 
 Before the plugin can sign receipts, each data plane must be enrolled with VeriKnox Hub.
-Enrollment generates ED25519 and ML-DSA-65 keypairs, encrypts the private keys with the identity passphrase, and registers the public keys with VeriKnox Hub.
+Enrollment generates ED25519 and ML-DSA-65 key pairs, encrypts the private keys with the identity passphrase, and registers the public keys with VeriKnox Hub.
 
 Run enrollment as a one-shot init container using the `veriknox/kong-init-identity` image:
 
