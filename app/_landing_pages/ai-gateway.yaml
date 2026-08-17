@@ -31,7 +31,7 @@ rows:
 
                     But infrastructure often falls behind, with challenges around authentication, rate limiting, data security, observability, and constant provider changes.
 
-                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. 
+                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end.
                     Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
           - type: text
             config: |
@@ -66,7 +66,7 @@ rows:
                 All licensing is handled automatically by {{site.konnect_short_name}}.
             - title: Konnect UI
               content: |
-                To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/), 
+                To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/),
                 then navigate to **{{site.ai_gateway}}** and click **New {{site.ai_gateway}}**.
   - columns:
       - blocks:
@@ -97,7 +97,7 @@ rows:
               url: /ai-gateway/get-started-with-ai-agent/
               align: end
 
-  
+
   - header:
     columns:
       - header:
@@ -112,7 +112,7 @@ rows:
                     Define a single endpoint for any traffic type: LLM, MCP, or A2A. Configure these entities once, then govern them from a unified control plane with built-in auth, policy enforcement, and observability:
 
                     * [Routing and load balancing](/ai-gateway/load-balancing/) across AI providers
-                    * [Streaming and authentication](/ai-gateway/streaming/) 
+                    * [Streaming and authentication](/ai-gateway/streaming/)
                     * Control user access and ACLs
                     * See [usage analytics](/ai-gateway/monitor-ai-llm-metrics/) for requests, tokens, errors, and latency
       - header:
@@ -240,6 +240,10 @@ rows:
                         Track token usage and automate invoicing based on prompt and response volume
                       feature: |
                         [Metering and billing](/metering-and-billing/)
+                    - outcome: |
+                        Enforce per-tier spend caps driven by identity claims instead of managing group membership by hand
+                      feature: |
+                        [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) and [Enforce tiered AI budgets with {{site.identity}}](/ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/)
                 - usecase: |
                     **Cut LLM spend at scale** on high-volume or repetitive traffic
                   outcomes:
@@ -382,7 +386,7 @@ rows:
             title: More...
             icon: /assets/icons/dots.svg
             cta:
-              url: /ai-gateway/ai-clis/           
+              url: /ai-gateway/ai-clis/
   - header:
       type: h2
       text: "Observability and metrics"
@@ -495,7 +499,7 @@ rows:
             cta:
               url: /ai-gateway/model-cost-management/
               align: end
-  
+
   - header:
       text: "Frequently Asked Questions"
       type: h2
