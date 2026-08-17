@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.2.0
+  version: 3.4.5
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@ca81b65280f5133ed000ab38ba98384d1eb25796
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ca81b65280f5133ed000ab38ba98384d1eb25796'
+  x-oas-source: kong/platform-api@744c89c15abe90c6c381541c206624022a65e4f9
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/744c89c15abe90c6c381541c206624022a65e4f9'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -476,17 +476,24 @@ paths:
         - $ref: '#/components/parameters/PageNumber'
         - name: filter
           in: query
-          description: Filter teams returned in the response.
+          description: |-
+            Filter teams returned in the response. Supports filtering by label value using
+            dot-notation, e.g. `filter[labels.<key>][<op>]=<value>`, where `<op>` is one of
+            `eq`, `contains`, or `exists`.
           required: false
           schema:
             type: object
             properties:
               name:
                 $ref: '#/components/schemas/LegacyStringFieldFilter'
+              labels:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/LegacyStringFieldFilterWithExists'
           style: deepObject
       responses:
         '200':
-          $ref: '#/components/responses/TeamCollection'
+          $ref: '#/components/responses/TeamCollectionResponse'
         '400':
           $ref: '#/components/responses/IdentityBadRequest'
         '404':
@@ -1982,16 +1989,14 @@ components:
           example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
           readOnly: true
         name:
-          description: The name of the team.
-          type: string
-          example: IDM - Developers
-          maxLength: 250
-          pattern: '^[\w \W]+$'
+          $ref: '#/components/schemas/TeamName'
         description:
-          description: The team description in Konnect.
+          description: The description of the team.
           type: string
           example: The developers for the IDM API.
           maxLength: 250
+          minLength: 1
+          nullable: true
         system_team:
           description: 'Returns True if a user belongs to a `system_team`. System teams are teams that can manage Konnect objects, like "Organization Admin", or "Service"'
           type: boolean
@@ -2022,6 +2027,18 @@ components:
         created_at: '1992-02-07T17:46:57.52Z'
         updated_at: '2022-08-31T17:00:00.52Z'
       title: Team
+    TeamResponse:
+      allOf:
+        - $ref: '#/components/schemas/Team'
+        - type: object
+          required:
+            - id
+            - name
+            - description
+            - system_team
+            - labels
+            - created_at
+            - updated_at
     TeamMapping:
       description: A team assignment is a mapping of an IdP group to a Konnect Team.
       type: object
@@ -2707,6 +2724,33 @@ components:
           contains: some-value
         example-2:
           eq: some-value
+    StringFieldExistsFilter:
+      description: Filters on whether the given field exists.
+      type: object
+      properties:
+        exists:
+          type: boolean
+      additionalProperties: false
+      deprecated: true
+      required:
+        - exists
+      title: StringFieldExistsFilter
+      x-examples:
+        example-1:
+          exists: true
+    LegacyStringFieldFilterWithExists:
+      description: 'Filter a string value field by exact match, partial contains, or existence.'
+      oneOf:
+        - $ref: '#/components/schemas/LegacyStringFieldFilter'
+        - $ref: '#/components/schemas/StringFieldExistsFilter'
+      title: StringFieldFilterWithExists
+    TeamName:
+      description: The name of the team.
+      type: string
+      example: IDM - Developers
+      maxLength: 250
+      minLength: 1
+      pattern: '^[\w \W]+$'
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -3426,16 +3470,19 @@ components:
             type: object
             properties:
               name:
-                description: A name for the team being created.
+                description: The name of the team.
                 type: string
                 example: IDM - Developers
+                maxLength: 250
+                minLength: 1
                 pattern: '^[\w \W]+$'
                 writeOnly: true
               description:
-                description: The description of the new team.
+                description: The description of the team.
                 type: string
                 example: The Identity Management (IDM) team.
                 maxLength: 250
+                minLength: 1
                 writeOnly: true
               labels:
                 $ref: '#/components/schemas/Labels'
@@ -3455,6 +3502,8 @@ components:
                 description: The name of the team.
                 type: string
                 example: IDM - Developers
+                maxLength: 250
+                minLength: 1
                 pattern: '^[\w \W]+$'
                 writeOnly: true
               description:
@@ -3462,6 +3511,7 @@ components:
                 type: string
                 example: The Identity Management (IDM) API team.
                 maxLength: 250
+                minLength: 1
                 writeOnly: true
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
@@ -3952,7 +4002,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Team'
+            $ref: '#/components/schemas/TeamResponse'
           examples:
             Single team response:
               $ref: '#/components/examples/single-team-response'
@@ -3969,6 +4019,37 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/Team'
+            title: Team Collection Response
+          examples:
+            Team Collection:
+              value:
+                meta:
+                  page:
+                    number: 1
+                    size: 1
+                    total: 10
+                data:
+                  - id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+                    name: IDM - Developers
+                    description: The developers for the IDM API.
+                    system_team: false
+                    labels:
+                      env: test
+                    created_at: '2022-02-07T17:46:57.52Z'
+                    updated_at: '2022-09-25T13:00:00.00Z'
+    TeamCollectionResponse:
+      description: A paginated list response for a collection of teams.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponse'
             title: Team Collection Response
           examples:
             Team Collection:

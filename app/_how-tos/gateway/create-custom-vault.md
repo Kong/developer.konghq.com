@@ -98,7 +98,7 @@ You can build a custom vault backend when your secrets live in a store that isn'
 For example, if your secrets live in an internal secrets service, a proprietary HTTP-based secret manager, or a legacy system that exposes secrets over an API only your organization uses.
 
 {:.warning}
-> **Important:** This guide uses plaintext HTTP for the example secret store. In production, use HTTPS or mTLS to keep secrets encrypted in transit.
+> **Important:** The Compose file creates a self-signed certificate solely for this tutorial. Use certificates issued and managed according to your organization's security requirements in production.
 
 A custom vault backend is a Lua module with two required functions:
 
@@ -135,7 +135,7 @@ local function init(conf)
 end
 
 local function get(conf, resource, version)
-  local base_url = conf.base_url or "http://localhost:9876/sekretz"
+  local base_url = conf.base_url or "https://secret-store:9876/sekretz"
 
   local httpc = http.new()
   local res, err = httpc:request_uri(base_url .. "/" .. resource, {
@@ -143,6 +143,7 @@ local function get(conf, resource, version)
     headers = {
       ["Accept"] = "application/json",
     },
+    ssl_verify = true,
   })
 
   if not res then
@@ -190,8 +191,8 @@ echo 'return {
           {
             base_url = {
               type = "string",
-              default = "http://localhost:9876/sekretz",
-              description = "Base URL of the HTTP secret store. Secrets are fetched from <base_url>/<key>.",
+              default = "https://secret-store:9876/sekretz",
+              description = "Base URL of the HTTPS secret store. Secrets are fetched from <base_url>/<key>.",
             },
           },
         },
@@ -219,13 +220,30 @@ Kong must be started with the custom vault registered. This requires setting `KO
    ```bash
    echo '
    services:
+     cert-generator:
+       image: alpine/openssl:latest
+       command: >
+         req -x509 -newkey rsa:2048 -nodes -days 1
+         -keyout /certs/secret-store.key
+         -out /certs/secret-store.crt
+         -subj /CN=secret-store
+         -addext subjectAltName=DNS:secret-store
+       volumes:
+         - secret-store-certs:/certs
+
      secret-store:
-       image: busybox
-       command: httpd -f -p 9876 -h /www
+       image: python:3.14
+       command: >
+         python -m http.server 9876 --directory /www
+         --tls-cert /certs/secret-store.crt --tls-key /certs/secret-store.key
        volumes:
          - ./secrets:/www
+         - secret-store-certs:/certs:ro
+       depends_on:
+         cert-generator:
+           condition: service_completed_successfully
        healthcheck:
-         test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:9876/sekretz/x-from-vault"]
+         test: ["CMD", "python", "-c", "import ssl, urllib.request; urllib.request.urlopen(\"https://secret-store:9876/sekretz/x-from-vault\", context=ssl.create_default_context(cafile=\"/certs/secret-store.crt\"))"]
          interval: 3s
          timeout: 5s
          retries: 10
@@ -271,11 +289,13 @@ Kong must be started with the custom vault registered. This requires setting `KO
          KONG_ADMIN_LISTEN: "0.0.0.0:8001"
          KONG_VAULTS: bundled,http
          KONG_LUA_PACKAGE_PATH: /custom-code/?.lua;;
+         KONG_LUA_SSL_TRUSTED_CERTIFICATE: /certs/secret-store.crt
        ports:
          - "8000:8000"
          - "8001:8001"
        volumes:
          - ./kong:/custom-code/kong
+         - secret-store-certs:/certs:ro
        depends_on:
          postgres:
            condition: service_healthy
@@ -288,13 +308,18 @@ Kong must be started with the custom vault registered. This requires setting `KO
          interval: 10s
          timeout: 5s
          retries: 10
-       restart: unless-stopped' > docker-compose.yml
+       restart: unless-stopped
+
+   volumes:
+     secret-store-certs:' > docker-compose.yml
       ```
       {: data-test-step="block" }
 
     The two key environment variables for custom vaults are:
     - `KONG_VAULTS: bundled,http`: Registers the built-in Vaults plus the custom `http` vault
     - `KONG_LUA_PACKAGE_PATH: /custom-code/?.lua;;`: Tells {{site.base_gateway}} where to find the Lua modules
+
+   The `cert-generator` service creates the short-lived certificate automatically before the tutorial-only secret store starts. No certificate setup is required outside Docker Compose.
 
 3. Start all services:
 
@@ -312,12 +337,12 @@ entities:
   vaults:
     - name: http
       prefix: http-vault
-      description: Custom HTTP vault backend
+      description: Custom HTTPS vault backend
       config:
-        base_url: http://secret-store:9876/sekretz
+        base_url: https://secret-store:9876/sekretz
 {% endentity_examples %}
 
-The `base_url` uses the Docker Compose service name (`secret-store`) as the hostname, since {{site.base_gateway}} and the secret store run in the same Docker network.
+The `base_url` uses the Docker Compose service name (`secret-store`) as the hostname, since {{site.base_gateway}} and the secret store run in the same Docker network. The Compose file includes `secret-store` as a DNS subject alternative name in the temporary certificate, and configures {{site.base_gateway}} to trust that certificate. The vault client enables TLS verification, so it verifies both the certificate chain and hostname.
 
 ## Configure the plugin with a vault reference
 

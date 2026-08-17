@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.3.10
+  version: 3.4.0
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a618e5e337e2918b1df2c26a5faa3ef2b9f1c8c0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a618e5e337e2918b1df2c26a5faa3ef2b9f1c8c0'
+  x-oas-source: kong/platform-api@4d2919e1013d787673e01f5eb15acafd97aeecbb
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4d2919e1013d787673e01f5eb15acafd97aeecbb'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -1844,7 +1844,7 @@ components:
           additionalProperties:
             $ref: '#/components/schemas/DisplayEntry'
       example:
-        applciation:
+        application:
           bf16907c-8673-4f9d-aa83-111111111111:
             deleted: true
             name: bf16907c-8673-4f9d-aa83-111111111111

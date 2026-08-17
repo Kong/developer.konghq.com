@@ -100,6 +100,13 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
+When the virtual cluster uses [`terminate` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation), the {{site.event_gateway_short}} connects to the backend Kafka cluster using a single service account.
+The backend cluster sees only that service account, not individual client identities.
+ACL policies on the [virtual cluster](/event-gateway/entities/virtual-cluster/) are how you enforce per-client authorization in this model.
+
+Each client's principal is evaluated against ACL rules before the {{site.event_gateway_short}} forwards any request to the backend.
+Consumer Group management commands (for example, create or delete) are also intercepted and evaluated against ACL rules using the `group` resource type.
+
 ## Security considerations
 
 When `resource_names` uses an expression that interpolates an identity into a glob pattern (for example `[context.auth.principal.name + "-*"]` or `[context.auth.token.claims.topic_prefix + "*"]`), the interpolated value is matched as a glob and is **not** escaped. If the value can contain glob metacharacters (`*`, `?`, `[`, `]`), they act as wildcards and can widen the set of matched resources beyond what you intend.

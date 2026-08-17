@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"
+     role="img" aria-label="Skyflow">
+  <title>Skyflow</title>
+  <rect width="64" height="64" rx="11" ry="11" fill="#403E6B"/>
+  <!-- The Skyflow "s", traced from the official wordmark so the letterform is the
+       real one rather than a substitute typeface. Scaled to 59% of the tile height
+       and centred, matching the proportions of Skyflow's own favicon. -->
+  <g transform="translate(17.96 13.00) scale(0.283582)" fill="#FFFFFF">
+    <g transform="translate(0 134) scale(0.1 -0.1)">
+      <path d="M333 1315 c-120 -33 -209 -99 -254 -191 -21 -42 -24 -63 -24 -154 0 -96 2 -109 27 -151 55 -93 153 -147 367 -204 207 -55 257 -90 255 -179 -1 -53 -26 -91 -78 -119 -36 -19 -56 -22 -166 -22 -111 1 -132 4 -192 27 -37 15 -84 38 -105 52 l-38 26 -48 -96 c-55 -110 -58 -102 48 -153 94 -46 169 -62 310 -68 102 -4 144 -2 195 11 142 37 238 105 287 204 25 50 28 68 28 147 -1 73 -5 98 -23 132 -66 127 -175 188 -468 264 -101 25 -141 49 -160 95 -31 74 6 144 88 169 109 32 260 12 366 -49 l42 -25 45 89 c25 49 45 94 45 99 0 16 -139 79 -210 95 -82 20 -266 20 -337 1z"/>
+    </g>
+  </g>
+</svg>

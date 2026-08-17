@@ -97,8 +97,6 @@ entities:
         add:
           headers:
             - "X-Global-Header:isSetGlobally"
-deck_flags:
-  - "--include-plugin-definitions"
 {% endentity_examples %}
 
 ## Apply the source plugin to a Route
