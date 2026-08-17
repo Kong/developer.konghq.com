@@ -109,24 +109,19 @@ This example uses the following settings:
 
 Open a new terminal and set `OPENAI_BASE_URL` to the local {{site.ai_gateway}} endpoint. Qwen Code CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the gateway, so a placeholder is fine:
 
-```sh
-export OPENAI_API_KEY=sk-placeholder
-export OPENAI_BASE_URL=http://localhost:8000/qwen-dashscope/chat/completions
-```
+{% env_variables %}
+OPENAI_API_KEY: sk-placeholder
+OPENAI_BASE_URL: http://localhost:8000/qwen-dashscope/chat/completions
+{% endenv_variables %}
 
 ## Run Qwen Code CLI
 
 Run Qwen Code CLI against the model configured in the AI Model entity's `targets`:
 
-```sh
-qwen --model my-qwen-dashscope
-```
-
-Ask a simple question to confirm that requests reach {{site.ai_gateway}}:
-
-```text
-Explain the singleton pattern in Python.
-```
-{:.no-copy-code}
+{% validation qwen %}
+model: my-qwen-dashscope
+auth-type: openai
+prompt: Explain the singleton pattern in Python.
+{% endvalidation %}
 
 Qwen Code CLI returns a response, proxied through {{site.ai_gateway}} to the upstream DashScope Qwen model.

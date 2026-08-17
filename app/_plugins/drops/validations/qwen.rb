@@ -6,10 +6,11 @@ require_relative './base'
 module Jekyll
   module Drops
     module Validations
-      class Codex < Base # rubocop:disable Style/Documentation
+      class Qwen < Base # rubocop:disable Style/Documentation
         def validate_yaml!
           raise ArgumentError, "Missing `prompt` in {% validation #{id} %}." unless @yaml.key?('prompt')
           raise ArgumentError, "Missing `model` in {% validation #{id} %}." unless @yaml.key?('model')
+          raise ArgumentError, "Missing `auth-type` in {% validation #{id} %}." unless @yaml.key?('auth-type')
         end
 
         def data_validate
@@ -23,26 +24,18 @@ module Jekyll
         def base_command
           @base_command ||= [
             configuration.fetch('command'),
-            "--model \"#{@yaml.fetch('model')}\""
+            "--model \"#{@yaml.fetch('model')}\"",
+            "--auth-type \"#{@yaml.fetch('auth-type')}\""
           ].join(' ')
         end
 
         def command
           @command ||= [
-            *env_vars,
             configuration.fetch('command'),
-            "exec \"#{@yaml.fetch('prompt')}\"",
             "--model \"#{@yaml.fetch('model')}\"",
-            '--skip-git-repo-check'
+            "--auth-type \"#{@yaml.fetch('auth-type')}\"",
+            "--prompt \"#{@yaml.fetch('prompt')}\""
           ].join(' ')
-        end
-
-        private
-
-        def env_vars
-          [
-            ("OPENAI_BASE_URL=#{self['base_url']}" if self['base_url'])
-          ].compact
         end
       end
     end

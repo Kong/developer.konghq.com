@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe Jekyll::Drops::Validations::Codex do
-  let(:base_command) { 'OPENAI_BASE_URL=http://localhost:8000/codex codex' }
+  let(:configured_command) { 'codex' }
   let(:validations_config) do
-    [{ 'id' => 'codex', 'command' => base_command, 'expected' => { 'return_code' => 0 } }]
+    [{ 'id' => 'codex', 'command' => 'codex', 'expected' => { 'return_code' => 0 } }]
   end
   let(:site_data) { { 'how-tos' => { 'config' => { 'validations' => validations_config } } } }
   let(:site) { instance_double(Jekyll::Site, data: site_data) }
   let(:yaml) { { 'model' => 'gpt-5.4', 'prompt' => 'Explain this error message.' } }
+  let(:base_command) { 'codex --model "gpt-5.4"' }
   let(:full_command) do
-    "#{base_command} exec --model \"gpt-5.4\" \"Explain this error message.\" --skip-git-repo-check"
+    'codex exec "Explain this error message." --model "gpt-5.4" --skip-git-repo-check'
   end
 
   before { allow(Jekyll).to receive(:sites).and_return([site]) }
@@ -34,14 +35,39 @@ RSpec.describe Jekyll::Drops::Validations::Codex do
     end
   end
 
-  it 'builds the command from the configured base command plus exec, quoted model, prompt, and skip flag' do
+  it 'builds the base command from the configured command, exec, and quoted model' do
+    expect(drop.base_command).to eq(base_command)
+  end
+
+  it 'builds the command from the base command plus quoted prompt and skip flag' do
     expect(drop.command).to eq(full_command)
+  end
+
+  context 'when base_url is present' do
+    let(:yaml) do
+      {
+        'model' => 'gpt-5.4',
+        'prompt' => 'Explain this error message.',
+        'base_url' => 'http://localhost:9000/codex'
+      }
+    end
+    let(:full_command) do
+      'OPENAI_BASE_URL=http://localhost:9000/codex codex exec "Explain this error message." --model "gpt-5.4" --skip-git-repo-check'
+    end
+
+    it 'prefixes the command with OPENAI_BASE_URL' do
+      expect(drop.command).to eq(full_command)
+    end
   end
 
   it 'serializes the id and merged config in #data_validate' do
     expected = {
       'name' => 'codex',
-      'config' => { 'command' => full_command, 'expected' => { 'return_code' => 0 } }
+      'config' => {
+        'command' => full_command,
+        'base_command' => drop.base_command,
+        'expected' => { 'return_code' => 0 }
+      }
     }
     expect(JSON.parse(drop.data_validate)).to eq(expected)
   end

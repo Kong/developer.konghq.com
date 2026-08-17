@@ -109,10 +109,10 @@ If you are a new Codex user, you must Initialise the tool first by running `code
 
 Open a new terminal and set `OPENAI_BASE_URL` to the local {{site.ai_gateway}} endpoint. The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the gateway, so a placeholder is fine:
 
-```sh
-export OPENAI_API_KEY=sk-placeholder
-export OPENAI_BASE_URL=http://localhost:8000/codex
-```
+{% env_variables %}
+OPENAI_API_KEY: sk-placeholder
+OPENAI_BASE_URL: http://localhost:8000/codex
+{% endenv_variables %}
 
 ## Start and use Codex CLI
 
