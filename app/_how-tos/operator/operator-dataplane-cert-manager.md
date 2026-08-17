@@ -17,7 +17,19 @@ products:
   - operator
 
 prereqs:
-  skip_product: true
+  inline:
+    - title: Install cert-manager
+      include_content: prereqs/cert-manager
+      icon_url: /assets/icons/kubernetes.svg
+      position: before
+  operator:
+    set:
+      - global.webhooks.options.certManager.enabled=true
+    skip_cert_manager: true
+    konnect:
+      auth: true
+  enterprise: true
+
 
 works_on:
   - on-prem
@@ -53,11 +65,8 @@ faqs:
 cleanup:
   inline:
     - title: Uninstall cert-manager
+      include_content: cleanup/third-party/cert-manager
       icon_url: /assets/icons/kubernetes.svg
-      content: |
-        ```bash
-        kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
-        ```
     - title: Uninstall {{site.operator_product_name}}
       icon_url: /assets/icons/kubernetes.svg
       content: |
@@ -86,79 +95,6 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
 
 Renewals are handled the same way. When cert-manager writes a new key pair to the Secret, {{ site.operator_product_name }} reconciles it and the data planes start serving the new certificate without a reload and without a pod restart. For more information, see [When certificates are loaded and reloaded](/gateway/ssl-certificates/#when-certificates-are-loaded-and-reloaded).
 
-{% include /k8s/kong-namespace.md %}
-
-## Install {{site.operator_product_name}} with cert-manager enabled
-
-1. Add the Kong Helm charts:
-
-   ```sh
-   helm repo add kong https://charts.konghq.com
-   helm repo update
-   ```
-
-1. Install [cert-manager](https://cert-manager.io/) on the cluster and wait for it to be ready:
-
-   ```sh
-   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
-   kubectl wait -n cert-manager --for=condition=ready pod --all --timeout=180s
-   ```
-
-1. Install {{ site.operator_product_name }} using Helm:
-
-   {% on_prem %}
-   content: |
-     ```bash
-     helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace \
-       --set image.tag={{ site.data.operator_latest.release }} \
-       --set global.webhooks.options.certManager.enabled=true
-     ```
-   indent: 3
-   {% endon_prem %}
-
-   {% konnect %}
-   content: |
-     ```bash
-     helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace \
-       --set image.tag={{ site.data.operator_latest.release }} \
-       --set global.webhooks.options.certManager.enabled=true \
-       --set env.ENABLE_CONTROLLER_KONNECT=true
-     ```
-   indent: 3
-   {% endkonnect %}
-
-1. Wait for {{ site.operator_product_name }} to be ready before creating any resources:
-
-   ```sh
-   kubectl wait -n kong-system --for=condition=ready pod --all --timeout=180s
-   ```
-
-1. Add your {{site.ee_product_name}} license:
-
-   {% on_prem %}
-   content: |
-     Apply a `KongLicense`. This assumes that your license is available in `./license.json`:
-
-     ```sh
-     echo "
-     apiVersion: configuration.konghq.com/v1alpha1
-     kind: KongLicense
-     metadata:
-      name: kong-license
-     rawLicenseString: '$(cat ./license.json)'
-     " | kubectl apply -f -
-     ```
-   indent: 3
-   {% endon_prem %}
-
-   {% konnect %}
-   content: |
-     No action is needed. {{site.operator_product_name}} retrieves the license from {{site.konnect_short_name}} for the data planes it manages.
-   indent: 3
-   {% endkonnect %}
-
 ## Create a cert-manager issuer
 
 {% include /k8s/cert-manager-selfsigned-issuer.md namespace='kong' %}
@@ -171,71 +107,108 @@ Create the following resources:
 * A `Gateway` with the `cert-manager.io/issuer: "selfsigned-issuer"` annotation and the `tls.certificateRefs` pointing to the name of the Secret to provision.
 * A `Certificate` that references the cert-manager issuer and the provisioned Secret.
 
-```sh
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: kong-gateway-configuration
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: kong-cert-manager
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
+1. Create the `GatewayConfiguration`:
+
+{% konnect %}
+content: |
+  Set `spec.konnect.authRef` to the `KonnectAPIAuthConfiguration` you created in the prerequisites. This attaches the data planes to {{site.konnect_short_name}}, which delivers the {{site.base_gateway}} license to them:
+
+  ```sh
+  echo '
+  apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
+  kind: GatewayConfiguration
+  metadata:
     name: kong-gateway-configuration
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong-gateway
-  namespace: kong
-  annotations:
-    cert-manager.io/issuer: "selfsigned-issuer"
-spec:
-  gatewayClassName: kong-cert-manager
-  listeners:
-    - name: https
-      port: 443
-      protocol: HTTPS
-      hostname: example.localdomain.dev
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - group: ""
-            kind: Secret
-            name: example-tls-secret
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: example-tls-certificate
-  namespace: kong
-spec:
-  secretName: example-tls-secret
-  issuerRef:
-    name: selfsigned-issuer
-    kind: Issuer
-  dnsNames:
-    - example.localdomain.dev
-  secretTemplate:
-    labels:
-      konghq.com/secret: "true"' | kubectl apply -f -
-```
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy' | kubectl apply -f -
+  ```
+indent: 3
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  ```sh
+  echo '
+  apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
+  kind: GatewayConfiguration
+  metadata:
+    name: kong-gateway-configuration
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy' | kubectl apply -f -
+  ```
+indent: 3
+{% endon_prem %}
+
+1. Create the `GatewayClass`, `Gateway`, and `Certificate`:
+
+   ```sh
+   echo '
+   apiVersion: gateway.networking.k8s.io/v1
+   kind: GatewayClass
+   metadata:
+     name: kong-cert-manager
+   spec:
+     controllerName: konghq.com/gateway-operator
+     parametersRef:
+       group: gateway-operator.konghq.com
+       kind: GatewayConfiguration
+       name: kong-gateway-configuration
+       namespace: kong
+   ---
+   apiVersion: gateway.networking.k8s.io/v1
+   kind: Gateway
+   metadata:
+     name: kong-gateway
+     namespace: kong
+     annotations:
+       cert-manager.io/issuer: "selfsigned-issuer"
+   spec:
+     gatewayClassName: kong-cert-manager
+     listeners:
+       - name: https
+         port: 443
+         protocol: HTTPS
+         hostname: example.localdomain.dev
+         tls:
+           mode: Terminate
+           certificateRefs:
+             - group: ""
+               kind: Secret
+               name: example-tls-secret
+   ---
+   apiVersion: cert-manager.io/v1
+   kind: Certificate
+   metadata:
+     name: example-tls-certificate
+     namespace: kong
+   spec:
+     secretName: example-tls-secret
+     issuerRef:
+       name: selfsigned-issuer
+       kind: Issuer
+     dnsNames:
+       - example.localdomain.dev
+     secretTemplate:
+       labels:
+         konghq.com/secret: "true"' | kubectl apply -f -
+   ```
 
 ## Create an echo Service
 
