@@ -113,6 +113,7 @@ groups:
           - path: /operator/konnect/labelling/
           - path: /operator/konnect/kongpluginbinding/
           - path: /operator/konnect/cross-namespace-references/
+          - path: /operator/konnect/config-store/
       - title: "Konnect CRDs: Control Planes"
         items:
           - path: /operator/konnect/crd/control-planes/**/*
