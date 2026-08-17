@@ -61,7 +61,7 @@ automated_tests: false
 {:.warning}
 > Don't run `kong reload` in a pod. `kong reload` does pick up the new value, and it does so without dropping connections, but it changes only the container that you ran it in. That container no longer matches its manifest, the other replicas are untouched, and the change is lost the next time the pod is rescheduled, scaled, or upgraded.
 >
-> Replacing the pods keeps the change in the manifest, where it survives all of those events. To avoid the gap in service that a rolling restart causes, run more than one replica with readiness probes configured, rather than using `kong reload`.
+> Replacing the pods keeps the change in the manifest, where it survives all of those events. To avoid the gap in service that a rolling restart causes, run more than one replica with readiness probes configured instead of using `kong reload`.
 
 ## Change a kong.conf value
 
@@ -89,17 +89,17 @@ Set a `kong.conf` parameter so we have something to apply. This example raises t
 
 ## Restart the data plane without a template change
 
-Not every change edits the pod template. When a `kong.conf` parameter points at a file and something outside Helm rewrites that file, the Deployment spec is byte-for-byte identical, so `helm upgrade` has nothing to replace and the pods keep running with the old contents loaded. A rotated Secret is the common case.
+Not every change edits the pod template. When a `kong.conf` parameter points at a file and something outside Helm rewrites that file, the deployment spec is byte-for-byte identical, so `helm upgrade` has nothing to replace and the pods keep running with the old contents loaded. A rotated Secret is the common case.
 
-`kubectl rollout restart` is how you replace the pods in that situation. Run it here against the data plane you just upgraded, so you can see what it does before you need it for a rotation:
+Use `kubectl rollout restart` to replace the pods in this situation. Run it here against the data plane you just upgraded, so you can see what it does before you need it for a rotation:
 
-1. Record the current pod names and ages so we can compare afterwards:
+1. Record the current pod names and ages so you can compare afterwards:
 
    ```bash
    kubectl get pods -n kong -l app.kubernetes.io/instance=kong-dp
    ```
 
-1. Trigger a rolling restart of the Deployment:
+1. Trigger a rolling restart of the deployment:
 
    ```bash
    kubectl rollout restart deployment/kong-dp-kong -n kong
@@ -141,7 +141,7 @@ Not every change edits the pod template. When a `kong.conf` parameter points at 
 
    {{site.base_gateway}} returns `HTTP 404` with `no Route matched with those values`, because no Route matches `/`. This confirms the proxy is listening.
 
-With more than one replica and correctly configured readiness probes, the rolling restart replaces pods one at a time and requests keep succeeding. With a single replica, as in this guide, expect a gap in service while the pod is replaced.
+If you have more than one replica and correctly configured readiness probes, the rolling restart replaces pods one at a time and requests keep succeeding. If you have a single replica, like in this guide, expect a gap in service while the pod is replaced.
 
 {:.info}
 > To trigger this rollout automatically whenever a mounted ConfigMap or Secret changes, see [Restart {{site.base_gateway}} when a mounted certificate changes](/how-to/rotate-kong-conf-certificates-with-reloader/).

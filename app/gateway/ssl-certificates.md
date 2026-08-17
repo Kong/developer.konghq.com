@@ -205,8 +205,8 @@ rows:
 
 This applies to every deployment topology:
 * In hybrid mode, entity updates reach data planes over the clustering connection
-* In traditional mode they come from the database
-* In DB-less mode they arrive with the declarative configuration
+* In traditional mode, they come from the database
+* In DB-less mode, they come with the declarative configuration
 
 Because `kong.conf` values are read at startup, {{site.base_gateway}} doesn't detect a change to the file a parameter points to. If an external process rotates it, such as cert-manager updating a mounted Kubernetes Secret, the node keeps serving the old certificate until you reload or replace it.
 

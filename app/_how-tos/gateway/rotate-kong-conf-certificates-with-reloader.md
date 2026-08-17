@@ -70,12 +70,11 @@ automated_tests: false
 
 Some {{site.base_gateway}} certificates can only be configured through `kong.conf`. Those values are rendered into the NGINX configuration when a node boots, so if [cert-manager](https://cert-manager.io/) rotates the Secret you mounted, the file on disk changes but {{site.base_gateway}} keeps serving the old certificate. The node has to be replaced before it reads the new file.
 
-[Stakater Reloader](https://github.com/stakater/Reloader) watches ConfigMaps and Secrets and performs a rolling restart of the workloads that consume them. In this guide, we'll mount a cert-manager Secret into a data plane, watch the rotation fail to take effect, then set up Reloader and confirm that the pods are replaced automatically.
+[Stakater Reloader](https://github.com/stakater/Reloader) watches ConfigMaps and Secrets and performs a rolling restart of the workloads that consume them. In this guide, you'll mount a cert-manager Secret into a data plane, watch the rotation fail to take effect, then set up Reloader and confirm that the pods are replaced automatically.
 
-This guide uses `ssl_cert`, the default certificate for the proxy listener, because it's the easiest to observe with `openssl`. The same mechanism applies to every parameter listed below.
 
 {:.warning}
-> Check whether you need this first. Reloader restarts pods, so use it only when a certificate has no entity equivalent: 
+> This guide uses `ssl_cert`, the default certificate for the proxy listener, because it's the easiest to observe with `openssl`. Reloader restarts pods, so use it only when a certificate has no entity equivalent: 
 > * `admin_ssl_cert`
 > * `admin_gui_ssl_cert`
 > * `status_ssl_cert`
@@ -83,7 +82,7 @@ This guide uses `ssl_cert`, the default certificate for the proxy listener, beca
 > * `cluster_cert`
 > * `lua_ssl_trusted_certificate`
 >
-> For proxy certificates, including the `ssl_cert` used in this guide, prefer [Certificate](/gateway/entities/certificate/) and [SNI](/gateway/entities/sni/) entities in production. They rotate with no restart at all.
+> For proxy certificates, including the `ssl_cert` used in this guide, use [Certificate](/gateway/entities/certificate/) and [SNI](/gateway/entities/sni/) entities in production instead. They rotate with no restart at all.
 
 ## Create a cert-manager Issuer
 
@@ -223,9 +222,9 @@ helm upgrade --install reloader stakater/reloader -n reloader --create-namespace
 kubectl wait -n reloader --for=condition=ready pod --all --timeout=90s
 ```
 
-## Annotate the Deployment
+## Annotate the deployment
 
-Add the `secret.reloader.stakater.com/reload` annotation to the data plane Deployment, listing the Secrets it should watch.
+Add the `secret.reloader.stakater.com/reload` annotation to the data plane deployment, listing the Secrets it should watch.
 
 1. Append the annotation to `values-cert.yaml`:
 
@@ -243,7 +242,7 @@ Add the `secret.reloader.stakater.com/reload` annotation to the data plane Deplo
    helm upgrade kong-dp kong/kong -n kong --values ./values-dp.yaml --values ./values-cert.yaml --wait
    ```
 
-1. Confirm that the annotation reached the Deployment:
+1. Confirm that the annotation reached the deployment:
 
    ```bash
    kubectl get deployment kong-dp-kong -n kong -o jsonpath='{.metadata.annotations}'
@@ -271,7 +270,7 @@ Add the `secret.reloader.stakater.com/reload` annotation to the data plane Deplo
    kubectl wait --for=condition=Ready certificate/demo-example-com -n kong --timeout=90s
    ```
 
-1. Watch the rollout. Reloader detects the change and updates the Deployment, which replaces the pods:
+1. Watch the rollout. Reloader detects the change and updates the deployment, which replaces the pods:
 
    ```bash
    kubectl rollout status deployment/kong-dp-kong -n kong --timeout=300s
@@ -299,8 +298,8 @@ Add the `secret.reloader.stakater.com/reload` annotation to the data plane Deplo
    The two serial numbers should now match. {{site.base_gateway}} is serving the rotated certificate.
 
 {:.warning}
-> Reloader restarts the whole Deployment, so every `kong.conf` value is re-read, not just the certificate. Roll out configuration changes deliberately, and keep at least two replicas so a rotation doesn't take your data plane offline. With a single replica, as in this guide, expect a gap in service while the pod is replaced.
+> Reloader restarts the whole deployment, so every `kong.conf` value is re-read, not just the certificate. Roll out configuration changes deliberately, and keep at least two replicas so a rotation doesn't take your data plane offline. If you're using a single replica, like in this guide, expect a gap in service while the pod is replaced.
 
-Reloader triggers the rollout by patching an environment variable into the pod template, so you'll see a `STAKATER_` variable on the Deployment that isn't in your values file. It's reset by your next `helm upgrade`, and Reloader adds it again on the following rotation.
+Reloader triggers the rollout by patching an environment variable into the pod template, so you'll see a `STAKATER_` variable on the deployment that isn't in your values file. It's reset by your next `helm upgrade`, and Reloader adds it again on the following rotation.
 
 `kong reload` would also pick up the rotated file, without dropping connections, but it only affects the container you run it in and the change is lost when the pod is next rescheduled. Replacing the pods is what keeps the running data plane and its manifest in agreement. For more information, see [Restart {{site.base_gateway}} on Kubernetes](/how-to/restart-kong-gateway-kubernetes/).
