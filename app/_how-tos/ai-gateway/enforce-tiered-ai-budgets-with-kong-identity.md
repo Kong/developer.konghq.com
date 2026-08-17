@@ -331,3 +331,15 @@ curl -X POST "http://localhost:8000/v1/chat/completions" \
 <!--vale on-->
 
 The request fails with `403 Forbidden`. `access.acls` denies on the `suspended` group before the request reaches `budget-limits`, regardless of Grace's tier.
+
+## View usage in {{site.observability}}
+
+{{site.ai_gateway}} exports Gen AI metrics to {{site.observability}}. View them in a dashboard built from a template:
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
+1. In the {{site.observability}} sidebar, click [**Dashboards**](https://cloud.konghq.com/us/analytics/dashboards).
+1. From the **Create dashboard** dropdown menu, select "Create from template".
+1. Click **AI Gateway Template**.
+1. Click **Use template**.
+
+In the **Gen AI model usage count** tile, you'll see 2 uses of `gpt-4o-mini` and 1 use of `gpt-4o`, reflecting Carol's and Dave's requests to `budget-chat` and Carol's request to `budget-chat-premium`. Grace's request never reaches a model, so it doesn't appear here.
