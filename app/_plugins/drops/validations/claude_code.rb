@@ -17,15 +17,32 @@ module Jekyll
         end
 
         def config
-          @config ||= configuration.merge('command' => command)
+          @config ||= configuration.merge('command' => command, 'base_command' => base_command)
+        end
+
+        def base_command
+          @base_command ||= [
+            configuration.fetch('command'),
+            "--model \"#{@yaml.fetch('model')}\""
+          ].join(' ')
         end
 
         def command
           @command ||= [
+            *env_vars,
             configuration.fetch('command'),
             "--model \"#{@yaml.fetch('model')}\"",
             "-p \"#{@yaml.fetch('prompt')}\""
           ].join(' ')
+        end
+
+        private
+
+        def env_vars
+          [
+            ('CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1' if self['disable_experimental_betas']),
+            ("ANTHROPIC_BASE_URL=#{self['base_url']}" if self['base_url'])
+          ].compact
         end
       end
     end

@@ -24,11 +24,16 @@ validations:
     status: "True"
 
   - id: claude-code
-    command: CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1 ANTHROPIC_BASE_URL=http://localhost:8000/ claude --allowedTools "WebSearch,Read"
+    command: claude --allowedTools "WebSearch,Read"
     expected:
       return_code: 0
 
   - id: codex
-    command: OPENAI_BASE_URL=http://localhost:8000/codex codex
+    command: codex
+    expected:
+      return_code: 0
+
+  - id: qwen
+    command: qwen
     expected:
       return_code: 0

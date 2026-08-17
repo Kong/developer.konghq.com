@@ -147,17 +147,11 @@ The AI Model uses the following settings:
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'claude-code-azure-sonnet'
-```
-
-Ask a question to confirm that requests reach {{site.ai_gateway}}.
-
 {% validation claude-code %}
 prompt: Tell me about the Madrid Skylitzes manuscript.
-model: my-claude
+model: claude-code-azure-sonnet
+base_url: http://localhost:8000/
 {% endvalidation %}
-
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
