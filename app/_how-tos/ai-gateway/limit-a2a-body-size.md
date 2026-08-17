@@ -66,6 +66,7 @@ cleanup:
         docker compose down
         docker rm -f a2a-kongair-agent
         ```
+        {: data-test-cleanup="block" }
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 
@@ -130,34 +131,32 @@ ai_gateway_agents:
 
 Send a standard A2A request that falls within the 1 MB limit:
 
-```sh
-curl -X POST "http://localhost:8000/a2a" \
-  -H "Content-Type: application/json" \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "Show me routes from SFO to JFK"
-          }
-        ]
-      }
-    }
-  }'
-```
+{% validation request-check %}
+url: /a2a/
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  jsonrpc: '2.0'
+  id: '1'
+  method: message/send
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+      - kind: text
+        text: Show me routes from SFO to JFK
+status_code: 200
+{% endvalidation %}
+
 
 {{site.ai_gateway}} proxies the request to the upstream A2A agent and returns a JSON-RPC response.
 
 ## Validate oversized requests are rejected
 
-Generate a payload that exceeds 1 MB and send it as an A2A request:
+Generate a payload that exceeds 1 MB.
 
 ```sh
 python3 -c "
@@ -181,13 +180,21 @@ payload = {
     }
 }
 print(json.dumps(payload))
-" > /tmp/large_payload.json
-
-curl -i --no-progress-meter \
-  http://localhost:8000/a2a \
-  -H "Content-Type: application/json" \
-  -d @/tmp/large_payload.json
+" > ./large_payload.json
 ```
+{:data-test-step="block"}
+
+Now send it as an A2A request:
+
+{% validation request-check %}
+url: /a2a
+display_headers: true
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body_file: '@large_payload.json'
+status_code: 413
+{% endvalidation %}
 
 {{site.ai_gateway}} rejects the request with `413 Request Entity Too Large`:
 
