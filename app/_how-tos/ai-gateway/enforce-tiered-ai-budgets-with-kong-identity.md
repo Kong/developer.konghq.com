@@ -1,8 +1,8 @@
 ---
-title: Enforce tiered AI budgets on an AI Model with {{site.identity}}
+title: Enforce tiered AI budgets on AI Models with {{site.identity}}
 permalink: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
 content_type: how_to
-description: Attach an AI Identity Provider backed by {{site.identity}}, per-model ACLs, and a multi-ceiling AI Rate Limiting Advanced Policy to enforce tiered AI budgets from a claim.
+description: Attach an AI Identity Provider backed by {{site.identity}}, per-model ACLs across a standard and a premium AI Model, and a multi-ceiling AI Rate Limiting Advanced Policy to enforce tiered AI budgets from a claim.
 
 products:
   - ai-gateway
@@ -37,11 +37,10 @@ tags:
 tldr:
   q: How do I enforce tiered AI budgets from a {{site.identity}} claim?
   a: |
-    Create an openid-connect AI Identity Provider, an AI Model that references it through access.identity_providers and denies suspended or contractor classes through access.acls, and an ai-rate-limiting-advanced AI Policy with one ceiling per tier plus a shared org pool and an individual cap. Every matching ceiling is charged, and the lowest remaining one binds.
+    Create an openid-connect AI Identity Provider, a standard and a premium AI Model that both reference it through access.identity_providers but differ in which AI Consumer Groups access.acls denies, and an AI Rate Limiting Advanced Policy with one ceiling per tier plus a shared org pool and an individual cap. Every matching ceiling is charged, and the lowest remaining one binds, regardless of which model a request resolves to.
 
 tools:
   - kongctl
-  - konnect-api
 
 prereqs:
   inline:
@@ -70,23 +69,23 @@ faqs:
   - q: Why do only two AI Consumer Groups exist when there are three tiers and a cap?
     a: |
       Tiers and the cap are matched from headers the AI Identity Provider projects out of the token, not from AI Consumer Group entities, so a tier change never writes anything to {{site.ai_gateway}}. Only `contractors` and `suspended` need a matching AI Consumer Group, because `access.acls` compares against real group names.
-  - q: Why does the identity provider need a follow-up API call after kongctl apply?
+  - q: Why do budget-identity's config fields include consumer_groups_claim and upstream_headers_claims?
     a: |
-      `consumer_groups_claim`, `consumer_groups_optional`, `upstream_headers_claims`, and `upstream_headers_names` are real fields on the AI Identity Provider, but kongctl's current schema for the resource doesn't recognize them and rejects the apply outright if they're included inline. Set them with a direct API request instead, and verify the response, since a plain `kongctl apply` without this step leaves the gateway authenticating but not enforcing.
+      These project the `kong_groups`, `budget_tier`, `budget_org`, and `budget_cap` claims from the token onto `x-budget-*` request headers and the ACL groups {{site.ai_gateway}} checks. `kongctl` (1.12.0 and later) applies them directly as part of the AI Identity Provider's `config`, no separate step required.
   - q: What happens to a caller with no resolvable claim at all?
     a: |
       `consumer_groups_optional: true` means a missing or unrecognized group claim doesn't fail the request. The fail-safe policy, matched on nothing but the subject header, then bounds that caller at the same ceiling as the top tier instead of leaving them unlimited.
   - q: Why does the fail-safe policy matter?
     a: |
-      `ai-rate-limiting-advanced` has no enforcement to fall back on when nothing matches. If an expression upstream ever returns null instead of a literal default, the tier header goes missing and a caller with no matching policy is not rate limited at all. The fail-safe policy matches on the subject header alone, so it always applies, and caps that caller at the top tier's ceiling instead of leaving them unbounded.
+      The AI Rate Limiting Advanced Policy has no enforcement to fall back on when nothing matches. If an expression upstream ever returns null instead of a literal default, the tier header goes missing and a caller with no matching policy is not rate limited at all. The fail-safe policy matches on the subject header alone, so it always applies, and caps that caller at the top tier's ceiling instead of leaving them unbounded.
 
 automated_tests: false
 
 ---
 
-## Create the AI Consumer Groups, AI Identity Provider, AI Model Provider, and AI Model
+## Create the AI Consumer Groups, AI Identity Provider, AI Model Provider, and AI Models
 
-Create the two [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that `access.acls` denies, an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that verifies bearer tokens against your {{site.identity}} issuer, an [AI Model Provider](/ai-gateway/entities/ai-model-provider/), and an [AI Model](/ai-gateway/entities/ai-model/) that ties them together with an [AI Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/):
+Create the two [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that `access.acls` denies, an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that verifies bearer tokens against your {{site.identity}} issuer, an [AI Model Provider](/ai-gateway/entities/ai-model-provider/), and two [AI Models](/ai-gateway/entities/ai-model/) that share a route and an [AI Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/), but differ in which groups `access.acls` denies. `tokens_count_strategy: cost` charges each request in dollars, so the same ceiling applies whether a request lands on the cheaper `gpt-4o-mini` or the pricier `gpt-4o`:
 
 {% entity_examples %}
 ai_gateway_consumer_groups:
@@ -108,6 +107,10 @@ ai_gateway_identity_providers:
       issuer: !env ISSUER_URL
       auth_methods: [bearer]
       consumer_optional: true
+      consumer_groups_claim: [kong_groups]
+      consumer_groups_optional: true
+      upstream_headers_claims: [sub, budget_tier, budget_org, budget_cap]
+      upstream_headers_names: [x-budget-sub, x-budget-tier, x-budget-org, x-budget-cap]
       cache_tokens_salt: budgets-cache-salt
 ai_gateway_model_providers:
   - ref: generic-openai
@@ -135,35 +138,64 @@ ai_gateway_policies:
             - { type: header, key: x-budget-tier, values: [baseline] }
             - { type: header, key: x-budget-sub, partition_by: true }
           window_type: sliding
-          limits: [{ limit: 6000, window_size: 60, tokens_count_strategy: total_tokens }]
+          limits: [{ limit: 0.05, window_size: 60, tokens_count_strategy: cost }]
         - match:
             - { type: header, key: x-budget-tier, values: ["2x"] }
             - { type: header, key: x-budget-sub, partition_by: true }
           window_type: sliding
-          limits: [{ limit: 12000, window_size: 60, tokens_count_strategy: total_tokens }]
+          limits: [{ limit: 0.10, window_size: 60, tokens_count_strategy: cost }]
         - match:
             - { type: header, key: x-budget-tier, values: ["4x"] }
             - { type: header, key: x-budget-sub, partition_by: true }
           window_type: sliding
-          limits: [{ limit: 24000, window_size: 60, tokens_count_strategy: total_tokens }]
+          limits: [{ limit: 0.20, window_size: 60, tokens_count_strategy: cost }]
         - match:
             - { type: header, key: x-budget-sub, partition_by: true }
           window_type: sliding
-          limits: [{ limit: 24000, window_size: 60, tokens_count_strategy: total_tokens }]
+          limits: [{ limit: 0.20, window_size: 60, tokens_count_strategy: cost }]
         - match:
             - { type: header, key: x-budget-org, values: [live-balance], partition_by: false }
           window_type: sliding
-          limits: [{ limit: 40000, window_size: 60, tokens_count_strategy: total_tokens }]
+          limits: [{ limit: 0.35, window_size: 60, tokens_count_strategy: cost }]
         - match:
             - { type: header, key: x-budget-cap, values: [strict] }
             - { type: header, key: x-budget-sub, partition_by: true }
           window_type: sliding
-          limits: [{ limit: 4000, window_size: 60, tokens_count_strategy: total_tokens }]
+          limits: [{ limit: 0.02, window_size: 60, tokens_count_strategy: cost }]
 ai_gateway_models:
   - ref: budget-chat
     ai_gateway: !lookup name:ai-quickstart
     display_name: "Budget chat"
     name: budget-chat
+    type: model
+    enabled: true
+    formats: [{ type: openai }]
+    capabilities: [generate]
+    access:
+      identity_providers:
+        - !ref budget-identity#name
+      acls:
+        deny:
+          - suspended
+    policies:
+      - !ref budget-limits#name
+    config:
+      route:
+        paths: [/v1]
+        model:
+          body_param: model
+          values: [budget-chat]
+    targets:
+      - name: gpt-4o-mini
+        provider: generic-openai
+        config:
+          type: openai
+          input_cost: 0.15
+          output_cost: 0.60
+  - ref: budget-chat-premium
+    ai_gateway: !lookup name:ai-quickstart
+    display_name: "Budget chat premium"
+    name: budget-chat-premium
     type: model
     enabled: true
     formats: [{ type: openai }]
@@ -182,96 +214,21 @@ ai_gateway_models:
         paths: [/v1]
         model:
           body_param: model
-          values: [budget-chat]
+          values: [budget-chat-premium]
     targets:
-      - name: gpt-4o-mini
+      - name: gpt-4o
         provider: generic-openai
         config:
           type: openai
+          input_cost: 2.50
+          output_cost: 10.00
 {% endentity_examples %}
 
-The fourth policy matches on the subject header alone, with no tier value, so it always applies. Every matching ceiling is charged and the lowest remaining one wins, so a tier change can't raise `cap-strict`, and a caller whose tier claim came back missing is bounded at the top tier's ceiling instead of left unlimited.
-
-## Complete the identity provider
-
-`consumer_groups_claim`, `consumer_groups_optional`, `upstream_headers_claims`, and `upstream_headers_names` are real fields on the AI Identity Provider, but kongctl's schema for this resource doesn't recognize them yet and rejects the apply if they're set inline. Look up the gateway's ID, then `PUT` the complete configuration directly:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways
-status_code: 200
-method: GET
-capture:
-  - variable: AI_GATEWAY_ID
-    jq: '.data[] | select(.name=="ai-quickstart") | .id'
-{% endkonnect_api_request %}
-<!--vale on-->
-
-Build the complete configuration:
-
-```sh
-cat > budget-identity.json <<EOF
-{
-  "name": "budget-identity",
-  "display_name": "Budget identity",
-  "type": "openid-connect",
-  "config": {
-    "issuer": "$ISSUER_URL",
-    "auth_methods": ["bearer"],
-    "consumer_optional": true,
-    "consumer_groups_claim": ["kong_groups"],
-    "consumer_groups_optional": true,
-    "upstream_headers_claims": ["sub", "budget_tier", "budget_org", "budget_cap"],
-    "upstream_headers_names": ["x-budget-sub", "x-budget-tier", "x-budget-org", "x-budget-cap"],
-    "cache_tokens_salt": "budgets-cache-salt"
-  }
-}
-EOF
-```
-
-Then `PUT` it:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/identity/budget-identity
-status_code: 200
-method: PUT
-headers:
-  - 'Content-Type: application/json'
-body_cmd: $(cat budget-identity.json)
-{% endkonnect_api_request %}
-<!--vale on-->
-
-Verify the fields took effect before relying on them:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/identity
-status_code: 200
-method: GET
-capture:
-  - variable: BUDGET_IDENTITY_CLAIM_COUNTS
-    jq: '.data[] | select(.name=="budget-identity") | "\(.config.consumer_groups_claim|length):\(.config.upstream_headers_names|length)"'
-{% endkonnect_api_request %}
-<!--vale on-->
-
-```sh
-echo "$BUDGET_IDENTITY_CLAIM_COUNTS"
-```
-
-You should see the following output:
-
-```text
-1:4
-```
-{:.no-copy-code}
-
-{:.warning}
-> Re-running `kongctl apply` on the block previously reconciles the identity provider back to kongctl's own schema and silently clears these four fields, disabling both header projection and the ACL deny list while reporting success. Repeat this `PUT` after every `kongctl apply` that touches `budget-identity`, and re-run the verification above.
+The caller picks a model with the request body's `model` field. The fourth policy in `budget-limits` matches on the subject header alone, so it always applies, and the lowest matching ceiling binds.
 
 ## Validate
 
-Obtain a bearer token for each persona using the client credentials grant shown in [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/), then send requests through the model.
+Obtain a bearer token for each persona using the client credentials grant shown in [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/), then send requests through either model.
 
 An unauthenticated request is rejected:
 
@@ -308,6 +265,48 @@ curl -X POST "http://localhost:8000/v1/chat/completions" \
      }'
 ```
 <!--vale on-->
+
+Carol isn't in `contractors` or `suspended`, so the same token also reaches the premium model:
+
+<!--vale off-->
+```sh
+curl -X POST "http://localhost:8000/v1/chat/completions" \
+     --no-progress-meter --fail-with-body \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer $CAROL_ACCESS_TOKEN" \
+     --json '{
+       "model": "budget-chat-premium",
+       "messages": [{ "role": "user", "content": "What is DNS?" }]
+     }'
+```
+<!--vale on-->
+
+`budget-limits` charges the same `4x` ceiling either way, since the policy reads headers, not which model resolved the request. Only `access.acls` differs between the two models, and none of the five personas in this guide are in `contractors`, so this guide can't demonstrate a request denied on `budget-chat-premium` but accepted on `budget-chat`. Create a client with a `groups: "contractors"` label the same way the prior guide creates the others, and it's denied on `budget-chat-premium` while still reaching `budget-chat`.
+
+Dave (`tier: "4x"`, `cap: "strict"`) authenticates the same way, but his individual cap and his tier ceiling are charged together, and the lower one binds:
+
+<!--vale off-->
+```sh
+export DAVE_ACCESS_TOKEN=$(curl -s -X POST "$ISSUER_URL/oauth/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=$DAVE_CLIENT_ID" \
+  -d "client_secret=$DAVE_CLIENT_SECRET" \
+  -d "scope=budgets-access" \
+  | jq -r '.access_token')
+
+curl -X POST "http://localhost:8000/v1/chat/completions" \
+     --no-progress-meter --fail-with-body \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer $DAVE_ACCESS_TOKEN" \
+     --json '{
+       "model": "budget-chat",
+       "messages": [{ "role": "user", "content": "What is DNS?" }]
+     }'
+```
+<!--vale on-->
+
+Dave's `tier: "4x"` block alone would allow $0.20 per minute, the same as Carol. His `cap: "strict"` block is charged in parallel and caps him at $0.02 instead, so moving him to a higher tier later would never raise his ceiling. Only removing the `cap` label does.
 
 Grace (`tier: "4x"`, `groups: "suspended"`) never reaches a budget:
 
