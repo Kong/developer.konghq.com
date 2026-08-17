@@ -37,7 +37,7 @@ tags:
 tldr:
   q: How do I enforce tiered AI budgets from a {{site.identity}} claim?
   a: |
-    Create an openid-connect AI Identity Provider, a standard and a premium AI Model that both reference it through access.identity_providers but differ in which AI Consumer Groups access.acls denies, and an AI Rate Limiting Advanced Policy with one ceiling per tier plus a shared org pool and an individual cap. Every matching ceiling is charged, and the lowest remaining one binds, regardless of which model a request resolves to.
+    Create an AI Identity Provider backed by {{site.identity}}, then a standard and a premium AI Model that both authenticate through it but deny different AI Consumer Groups. Attach an AI Rate Limiting Advanced Policy with a ceiling per tier plus a shared org pool and an individual cap: every matching ceiling is charged, and the lowest one binds no matter which model handles the request.
 
 tools:
   - kongctl
@@ -224,6 +224,8 @@ ai_gateway_models:
           output_cost: 10.00
 {% endentity_examples %}
 
+{:.collapsible}
+
 The caller picks a model with the request body's `model` field. The fourth policy in `budget-limits` matches on the subject header alone, so it always applies, and the lowest matching ceiling binds.
 
 ## Validate
@@ -339,7 +341,7 @@ The request fails with `403 Forbidden`. `access.acls` denies on the `suspended` 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
 1. In the {{site.observability}} sidebar, click [**Dashboards**](https://cloud.konghq.com/us/analytics/dashboards).
 1. From the **Create dashboard** dropdown menu, select "Create from template".
-1. Click **AI Gateway Template**.
+1. Click **{{site.ai_gateway}} Template**.
 1. Click **Use template**.
 
 In the **Gen AI model usage count** tile, you'll see 2 uses of `gpt-4o-mini` and 1 use of `gpt-4o`, reflecting Carol's and Dave's requests to `budget-chat` and Carol's request to `budget-chat-premium`. Grace's request never reaches a model, so it doesn't appear here.
