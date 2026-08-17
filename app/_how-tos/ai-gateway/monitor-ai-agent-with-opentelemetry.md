@@ -112,8 +112,7 @@ faqs:
 
 Create an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) that exports traces and metrics to your collector, and an [AI Agent](/ai-gateway/entities/ai-agent/) that attaches it. Setting `global` to `false` on the Policy means it only applies to entities that reference it instead of every resource on your {{site.ai_gateway}}, so the `kongair-flight-booking-agent` entity lists `otel-a2a` in its `policies` field to opt in. The `service.name` value under `resource_attributes` labels the exported data, which is useful if multiple gateways or services send to the same collector.
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+{% entity_examples %}
 _defaults:
   kongctl:
     namespace: ai-gateway-get-started
@@ -155,9 +154,8 @@ ai_gateway_agents:
           - https
         strip_path: true
       max_request_body_size: 8388608
-EOF
-```
-{:data-test-step="block"}
+{% endentity_examples %}
+
 
 ## Send an A2A request
 
