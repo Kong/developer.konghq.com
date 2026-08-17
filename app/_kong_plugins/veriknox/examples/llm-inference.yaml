@@ -7,13 +7,33 @@ extended_description: |
   and forwards a cryptographically signed receipt to VeriKnox Hub before the request is proxied.
   A signed response receipt is sent after the upstream responds.
 
-  The `agent_passphrase` must be a vault reference. Never set it as a plain string.
+  The `agent_passphrase` must be a Vault reference. Don't set it as a plain string.
   The data plane must be enrolled with VeriKnox Hub before the plugin can sign receipts.
   See the [installation instructions](/plugins/veriknox/#install-the-veriknox-plugin) for enrollment steps.
 
   The `http_session_header` field is optional. When set, the plugin attaches the value
   of that request header to receipts as a session ID, which is useful for grouping
   multi-turn conversations in VeriKnox Hub audit logs.
+
+  {% mermaid %}
+  sequenceDiagram
+      autonumber
+      participant A as AI Agent / Client
+      participant K as {{site.ai_gateway}}<br/>(veriknox-plugin)
+      participant H as VeriKnox Hub
+      participant U as Upstream LLM<br/>(e.g. OpenAI, Anthropic,<br/>OpenRouter, Google Gemini)
+
+      A->>K: Send inference request
+      Note over K: Parse request body<br/>(prompt, model, messages)
+      K->>H: POST signed receipt — inference request<br/>(ED25519 + ML-DSA-65 signatures)
+      H-->>K: 200 OK (receipt accepted)
+      K->>U: Forward request upstream
+      U-->>K: Return inference response
+      Note over K: Parse response body<br/>(completion text, token usages)
+      K->>H: POST signed receipt — inference response<br/>(ED25519 + ML-DSA-65 signatures)
+      H-->>K: 200 OK (receipt accepted)
+      K-->>A: Return response to client
+  {% endmermaid %}
 
 title: 'LLM inference'
 

@@ -1,104 +1,78 @@
 # index.md template
 
 Annotated template for `app/_kong_plugins/<plugin-slug>/index.md`.
-Replace all `<!-- PLACEHOLDER: ... -->` markers with real content.
-Remove annotation comments before finalizing the file.
 
-For style rules, liquid variables, and navtab patterns, see `patterns.md`.
+**Choose one variant** based on the complexity assessment in Step 2 of the skill:
+- [Simple plugin template](#simple-plugin-template): flat config, no multi-phase lifecycle
+- [Complex plugin template](#complex-plugin-template): multi-phase lifecycle, nested config, non-trivial installation
+
+Replace all placeholder values with real content. Remove annotation comments before finalizing.
+
+For style rules, Liquid variables, navtab patterns, and the `{% table %}` syntax, see `patterns.md`.
 
 ---
 
-```markdown
+## Simple plugin template
+
+Use this for plugins with flat config (1-5 fields), no request/response body rewriting, and straightforward installation (one or two commands). Examples: DataDome, Moesif, TrendAI.
+
 ---
-<!-- REQUIRED: Display name shown to users. Use title case. -->
 title: 'Plugin Display Name'
 name: 'Plugin Display Name'
 
 content_type: plugin
 
-<!-- REQUIRED: kebab-case company identifier. Must exist in app/_data/plugin_publishers.yml. -->
 publisher: publisher-slug
 
-<!-- REQUIRED: One-line summary of what the plugin does. -->
 description: "One-line description of what this plugin does."
 
-<!-- REQUIRED: List the products this plugin works with. -->
 products:
   - gateway
   # - ai-gateway
 
-<!-- REQUIRED: Deployment targets. -->
 works_on:
   - on-prem
   - konnect
 
 third_party: true
 
-<!-- REQUIRED: Link to the vendor's support page or docs. -->
 support_url: https://docs.vendor.com/support
 
-<!-- OPTIONAL: Include if the source code is publicly available. -->
-# source_code_url: https://github.com/vendor/plugin-repo
-
-<!-- REQUIRED: Icon filename only (e.g. skyflow.svg). Vendor provides the file. -->
 icon: plugin-slug.svg
 
-<!-- OPTIONAL: Omit entirely if unknown. Never use gateway: '' — it breaks the build. -->
-# min_version:
+# min_version:           # Omit if unknown. Never use gateway: ''
 #   gateway: '3.4'
 
-<!-- OPTIONAL: Tags for filtering in the plugin catalog. -->
 # tags:
 #   - security
 
-<!-- OPTIONAL: Alternative names users might search for. -->
 # search_aliases:
 #   - vendor name
-#   - plugin slug
 
-<!-- RECOMMENDED: At least one link to the partner's own plugin docs. -->
 related_resources:
   - text: Plugin documentation
     url: https://docs.vendor.com/plugin
 ---
 
-<!-- INTRO: One to two paragraphs. What the plugin does and the problem it solves.
-     Use {{site.base_gateway}} for "Kong Gateway". One sentence per line. -->
 Use the Plugin Display Name plugin (`plugin-slug`) to [what it does and why].
 
-[Second paragraph: the broader context — what problem exists without this plugin,
-and how the plugin solves it. Keep it concise.]
+[Optional second paragraph: broader context — the problem without the plugin and how it solves it.]
 
-<!-- BENEFITS: Bullet list. Do not bold the labels. Start each bullet with a noun phrase.
-     Aim for 3-5 bullets. -->
 Benefits of using the Plugin Display Name plugin:
 
 - [Benefit one]: [explanation].
 - [Benefit two]: [explanation].
 - [Benefit three]: [explanation].
 
-
-<!-- ============================================================
-     SIMPLE PLUGIN VARIANT
-     Use this section layout for plugins with flat config, no
-     multi-phase lifecycle, and straightforward installation.
-     ============================================================ -->
-
 ## How it works
 
-<!-- SIMPLE: One paragraph explaining what happens when the plugin is enabled.
-     No diagram needed unless the flow is non-obvious. -->
-When you enable this plugin on a Route or Service, [describe what it does in plain terms].
+When you enable this plugin on a Route or Service, [describe what it does in one or two sentences].
 
 ## Install the Plugin Display Name plugin
 
-<!-- SIMPLE: If the plugin is distributed as a LuaRock only, one navtab suffices.
-     Use the standard installation include if available. Otherwise, write the steps. -->
-
 ### Prerequisites
 
-<!-- List what the user must have before they can install. -->
-- [Prerequisite one, for example: a vendor account and API key]
+- [Prerequisite one — for example: a vendor account and API key]
 - [Prerequisite two]
 
 ### Installation steps
@@ -126,26 +100,73 @@ When you enable this plugin on a Route or Service, [describe what it does in pla
 After installing the plugin, enable it on a Route or Service.
 See the [Plugin Display Name example](/plugins/plugin-slug/examples/enable-plugin-slug/).
 
+---
 
-<!-- ============================================================
-     COMPLEX PLUGIN VARIANT
-     Use this layout for plugins that intercept and rewrite
-     request/response bodies, call external services, use
-     multiple Kong lifecycle phases, or have multi-step Konnect
-     installation requirements.
-     ============================================================ -->
+## Complex plugin template
+
+Use this for plugins that intercept and rewrite request/response bodies, call external services, act in multiple Kong lifecycle phases, or have non-trivial Konnect installation steps. Examples: Noma, Skyflow, VeriKnox, Impart, CrowdStrike.
+
+---
+title: 'Plugin Display Name'
+name: 'Plugin Display Name'
+
+content_type: plugin
+
+publisher: publisher-slug
+
+description: "One-line description of what this plugin does."
+
+products:
+  - gateway
+  # - ai-gateway
+
+works_on:
+  - on-prem
+  - konnect
+
+third_party: true
+
+support_url: https://docs.vendor.com/support
+
+icon: plugin-slug.svg
+
+# min_version:           # Omit if unknown. Never use gateway: ''
+#   gateway: '3.4'
+
+# tags:
+#   - security
+
+# search_aliases:
+#   - vendor name
+
+related_resources:
+  - text: Plugin documentation
+    url: https://docs.vendor.com/plugin
+---
+
+Use the Plugin Display Name plugin (`plugin-slug`) to [what it does and why].
+
+[Second paragraph: the broader context — what problem exists without this plugin and how it solves it.]
+
+Benefits of using the Plugin Display Name plugin:
+
+- [Benefit one]: [explanation].
+- [Benefit two]: [explanation].
+- [Benefit three]: [explanation].
 
 ## How it works
 
-<!-- COMPLEX: Explain what happens in each lifecycle phase the plugin uses.
-     One sentence per line. -->
-When you enable this plugin on a Route, it acts in [N] {{site.base_gateway}} request-lifecycle phases:
+[One paragraph orienting the reader: what the plugin does at a high level, what external service it talks to, and what lifecycle phases it uses.]
+
+When you enable this plugin on a Route, it acts in the Kong request-lifecycle `access` phase:
 
 - `access`: [what happens before the request is proxied upstream].
+
+[Include `response` phase bullet only if the plugin acts on the response:]
+
 - `response`: [what happens after the upstream response is buffered, before it reaches the client].
 
-<!-- COMPLEX: Sequence diagram. Use autonumber. Adjust participants to match your plugin.
-     Do not use em dashes in labels — use a hyphen or restructure the label. -->
+<!-- Sequence diagram: use when the plugin calls an external service. Adjust participants. -->
 {% mermaid %}
 sequenceDiagram
     autonumber
@@ -156,7 +177,7 @@ sequenceDiagram
 
     C->>K: Request
     Note over K: access phase
-    K->>E: Call external service
+    K->>E: Call to external service
     E-->>K: Response from external service
     K->>U: Modified request
     U-->>K: Upstream response
@@ -166,17 +187,18 @@ sequenceDiagram
     K-->>C: Final response
 {% endmermaid %}
 
-<!-- COMPLEX TOPOLOGY: Add a flowchart only if the routing topology is non-trivial
-     (for example a nested-proxy pattern). Otherwise omit. -->
-<!-- {% mermaid %}
+<!-- Flowchart: add ONLY if the routing topology is non-trivial (e.g. nested-proxy pattern).
+     Otherwise omit this block entirely. -->
+<!--
+{% mermaid %}
 flowchart TB
     C["Client"]
-    F["Front route<br/>plugin-slug only"]
-    I["Internal route<br/>other-plugin only"]
+    F["Front route - plugin-slug only"]
+    I["Internal route - other-plugin only"]
     U["Upstream"]
 
     C -- "original request" --> F
-    F -- "modified request<br/>loopback 127.0.0.1:8000" --> I
+    F -- "modified<br/>loopback 127.0.0.1:8000" --> I
     I --> U
     U -- "response" --> I
     I -- "response" --> F
@@ -184,10 +206,21 @@ flowchart TB
 {% endmermaid %}
 -->
 
+[Add subsections here for notable behavioral details — for example plugin priority, caller identity handling, or composability constraints. Use ### headings.]
+
 ## Install the Plugin Display Name plugin
 
-<!-- State the LuaRock name and version on its own line so it's easy to scan. -->
 LuaRock name: `plugin-slug` (current version `X.Y.Z-N`).
+<!-- Remove the line above if the plugin does not distribute a LuaRock. -->
+
+### Prerequisites
+
+Before installing the plugin, you need:
+
+- [Prerequisite one — for example: a vendor account and site enrollment token]
+- [Prerequisite two]
+
+### Installation steps
 
 {% navtabs 'install' %}
 {% navtab "Self-managed" %}
@@ -205,15 +238,13 @@ LuaRock name: `plugin-slug` (current version `X.Y.Z-N`).
    export KONG_PLUGINS=bundled,plugin-slug
    ```
 
-<!-- List runtime dependencies. Omit ones already in the Kong/OpenResty runtime. -->
-Dependencies: [list].
-[Dependency X] and [Dependency Y] are provided by the {{site.base_gateway}}/OpenResty runtime.
+Dependencies: [list any non-bundled dependencies].
+[Library X] and [Library Y] are provided by the {{site.base_gateway}}/OpenResty runtime.
 
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}}" %}
 
-<!-- KONNECT STREAMED: Use this block when the plugin supports streamed upload.
-     Adjust env vars to match what the vendor specifies. -->
+<!-- Use this block when the plugin supports Konnect streamed upload. -->
 Do not use the LuaRock for {{site.konnect_short_name}}.
 Instead, upload `schema.lua` and `handler.lua` to the control plane as a custom plugin.
 
@@ -238,7 +269,7 @@ KONG_PLUGINS=bundled
 > The gateway will demand local code at boot before streaming arrives, causing the node to fail.
 > List only `bundled` and let the control plane stream the plugin code.
 
-<!-- Include the vault block only if the plugin uses vault references. -->
+<!-- Include only if the plugin uses vault references: -->
 If your plugin configuration references `{vault://env/...}` values, also set:
 
 ```bash
@@ -253,36 +284,20 @@ KONG_VAULTS=bundled
 After installing the plugin, enable it on a Route or Service.
 See the following examples:
 
-<!-- Link to each example YAML. The URL pattern is /plugins/<slug>/examples/<example-name>/. -->
-- [Example one title](/plugins/plugin-slug/examples/example-one/): [one-line description of what this example does and when to use it].
+- [Example one title](/plugins/plugin-slug/examples/example-one/): [one-line description].
 - [Example two title](/plugins/plugin-slug/examples/example-two/): [one-line description].
 
-<!-- OPTIONAL: Add an info callout for important behavioral notes that apply regardless of example. -->
+<!-- Optional: info callout for behavioral notes that apply across all configurations. -->
 {:.info}
-> **Note**: [Anything the user should know that applies across all configurations, for example auto-detection behavior or validation rules enforced at save time.]
+> **Note**: [Anything the user should know regardless of which example they use.]
 
-<!-- OPTIONAL: List configuration constraints enforced at save time, if any. -->
-<!-- Configuration constraints enforced when you save:
-
-- [Constraint one: field A requires field B because...]
-- [Constraint two]
--->
-
-
-<!-- ============================================================
-     OPTIONAL: TROUBLESHOOTING
-     Include when the plugin has known failure modes with
-     actionable solutions. Use this structure for each issue.
-     ============================================================ -->
-
+<!-- Optional: troubleshooting section. Repeat the block below for each known issue. -->
 ## Troubleshooting
 
-<!-- Repeat this block for each known issue. -->
 ### [Symptom in a few words]
 
-**Symptoms:** [What the user sees — error message, unexpected behavior, missing output.]
+**Symptoms:** [What the user sees.]
 
 **Possible solutions:**
 - [Solution one.]
 - [Solution two.]
-```

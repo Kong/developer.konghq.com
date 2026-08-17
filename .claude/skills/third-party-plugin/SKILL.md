@@ -1,9 +1,9 @@
 ---
 name: third-party-plugin
 description: >
-  Author or revise complete documentation for a third-party Kong Gateway plugin on developer.konghq.com.
-  Use this skill whenever the user asks to document, write, create, update, or revise a third-party
-  Kong Gateway plugin page, including index.md, schema.json, or example YAML files.
+  Create complete documentation for a new third-party Kong Gateway plugin on developer.konghq.com.
+  Use this skill whenever the user asks to document, write, or create a new third-party Kong Gateway
+  plugin page, including index.md, schema.json, or example YAML files.
   Also use it when someone shares a plugin schema (Lua or JSON), a GitHub repo, or vendor plugin assets
   and asks for help turning them into developer.konghq.com documentation.
   Trigger even if the user only says "write docs for my plugin", "add a plugin page", or "document this schema".
@@ -11,20 +11,12 @@ description: >
 
 # Third-party plugin documentation skill
 
-This skill guides you through writing or revising complete documentation for a third-party Kong Gateway plugin hosted on developer.konghq.com. The output is a directory under `app/_kong_plugins/<plugin-slug>/` containing `index.md`, `schema.json`, and at least one `examples/*.yaml` file.
+This skill guides you through creating complete documentation for a new third-party Kong Gateway plugin on developer.konghq.com.
+The output is a new directory under `app/_kong_plugins/<plugin-slug>/` containing `index.md`, `schema.json`, and at least one `examples/*.yaml` file.
 
 Use the Skyflow De-identify plugin as the canonical worked example of a complex plugin, and the Noma Runtime Protection and TrendAI API Security plugins as examples of simpler ones.
 
 Read `references/patterns.md` before drafting anything. It contains the front matter schema, body section order, navtab patterns, style rules, and schema.json structure.
-
----
-
-## Step 0: Determine mode
-
-Ask: is this a new plugin (no directory exists yet) or a revision to an existing page?
-
-- **New**: you will create the directory and all files from scratch.
-- **Revision**: read the existing files first, identify what needs changing, then proceed from Step 1 with what you already know — only ask about things that are unclear or missing.
 
 ---
 
@@ -56,10 +48,10 @@ Collect the following. Where information is ambiguous, ask rather than assume.
 - If Lua: read the file, extract all `config` fields with their types, defaults, and descriptions, and produce a `schema.json` (see `references/patterns.md` for the JSON Schema structure)
 
 **Installation**
-- Is the plugin distributed as a LuaRock, as bare `schema.lua`/`handler.lua` files, or both?
+- How is the plugin distributed? Options: LuaRock only, bare `schema.lua`/`handler.lua` files only, a custom Docker image, or a combination. Not every plugin uses LuaRocks.
+- If distributed as a LuaRock: the LuaRock name and current version string (for example `my-plugin-1.2.0-1`), and the path to the `.rockspec` file relative to the repo root (for the `luarocks make` command).
 - Does it support Konnect Streamed plugin upload? If so, what environment variables must be set on the data plane nodes?
-- The path to the `.rockspec` file relative to the repo root (for the `luarocks make` command)
-- Runtime dependencies beyond those already in the Kong/OpenResty runtime
+- Runtime dependencies beyond those already in the Kong/OpenResty runtime.
 
 **Examples**
 - At least one example use case: which config fields are set, and what behavior does it produce?

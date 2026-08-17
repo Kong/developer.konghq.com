@@ -72,7 +72,11 @@ The file uses a flat structure: one entry per publisher, with `name` as the only
 
 ## Icon
 
-The `icon` field expects a filename only (for example `skyflow.svg`). Icons live in the standard icons directory managed by the platform team. Note the naming convention for the vendor: typically `publisher-slug.svg` or `plugin-slug.svg`. Sourcing and adding the icon file to the repo is the vendor's responsibility.
+The `icon` field expects a filename only (for example `skyflow.svg`).
+Icons live at `app/assets/icons/plugins/`.
+The naming convention is `publisher-slug.svg` or `plugin-slug.svg`.
+Sourcing the file is the vendor's responsibility; adding it to the repo is part of the plugin onboarding process.
+Always check that the file exists at `app/assets/icons/plugins/<filename>` before finalizing the front matter.
 
 ---
 
@@ -187,7 +191,24 @@ These rules apply to everything written using this skill.
 
 **Tables**
 - Never use Markdown tables (`| col | col |`). Always use `{% table %}` / `{% endtable %}` Liquid tags.
-- See the memory entry for the full `{% table %}` syntax.
+- Syntax:
+
+  ```liquid
+  {% table %}
+  columns:
+    - title: Column One
+      key: col1
+    - title: Column Two
+      key: col2
+  rows:
+    - col1: "Value A"
+      col2: "Value B"
+    - col1: "`code value`"
+      col2: "Plain text"
+  {% endtable %}
+  ```
+
+- Wrap cell values containing special characters or backticks in double quotes.
 
 **Code blocks**
 - One command per block. No `$` prompt marker.

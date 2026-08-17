@@ -8,9 +8,29 @@ extended_description: |
   Use the same pattern for A2A (Agent-to-Agent) JSON-RPC traffic by changing
   `specification` to `A2A`.
 
-  The `agent_passphrase` must be a vault reference. Never set it as a plain string.
+  The `agent_passphrase` must be a vault reference. Don't set it as a plain string.
   The data plane must be enrolled with VeriKnox Hub before the plugin can sign receipts.
   See the [installation instructions](/plugins/veriknox/#install-the-veriknox-plugin) for enrollment steps.
+
+  {% mermaid %}
+  sequenceDiagram
+      autonumber
+      participant A as AI Agent / Client
+      participant K as {{site.ai_gateway}}<br/>(veriknox-plugin)
+      participant H as VeriKnox Hub
+      participant M as MCP Server
+
+      A->>K: JSON-RPC v2 tool-call request
+      Note over K: Detect tool-call method<br/>(tools/call)
+      K->>H: POST signed receipt — tool-call request<br/>(tool name, arguments, ED25519 + ML-DSA-65)
+      H-->>K: 200 OK (receipt accepted)
+      K->>M: Forward tool-call to MCP server
+      M-->>K: Return tool result
+      Note over K: Parse tool-call response
+      K->>H: POST signed receipt — tool-call response<br/>(result content, ED25519 + ML-DSA-65)
+      H-->>K: 200 OK (receipt accepted)
+      K-->>A: Return tool result to agent
+  {% endmermaid %}
 
 title: 'MCP tool call'
 
