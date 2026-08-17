@@ -67,43 +67,7 @@ automated_tests: false
 
 ## Overview
 
-An IdP can drive the same four claims two ways. {{site.identity}} has no group-membership concept at all, so everything in this guide is the attribute-driven column, with a client label standing in for a profile attribute:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: ""
-    key: dimension
-  - title: Group-driven
-    key: group_driven
-  - title: Attribute-driven
-    key: attribute_driven
-rows:
-  - dimension: "Tier"
-    group_driven: "membership in a `tier-4x` group"
-    attribute_driven: "a `tier` label set to `4x`"
-  - dimension: "Entitlement class"
-    group_driven: "membership in a `contractors` group"
-    attribute_driven: "a `groups` label set to `contractor`"
-  - dimension: "Org unit"
-    group_driven: "a group per org unit"
-    attribute_driven: "an `orgUnit` label set to `live-balance`"
-  - dimension: "Kong objects needed"
-    group_driven: "one per matchable class"
-    attribute_driven: "same, only for ACL classes"
-  - dimension: "Change a tier"
-    group_driven: "move a group membership"
-    attribute_driven: "write one label"
-  - dimension: "Expiry, approval, certification"
-    group_driven: "native in the IdP's identity governance"
-    attribute_driven: "you build it"
-  - dimension: "High-cardinality values"
-    group_driven: "a group per value"
-    attribute_driven: "one label"
-{% endtable %}
-<!-- vale on -->
-
-{{site.ai_gateway}} reads the resulting claims as header values either way and never sees which column produced them.
+{{site.identity}} has no group-membership concept, so this guide drives all four claims from per-client labels: a label stands in for what a group membership would represent with a different IdP. `budget_tier`, `budget_cap`, and `budget_org` each read one label with a literal default; `kong_groups` reads a `groups` label into an array for ACL matching. {{site.ai_gateway}} reads the resulting claims as header values and never sees how they were computed, so nothing downstream changes if you later drive the same four claims from an IdP that does have groups, like Okta.
 
 ## Create an auth server in {{site.identity}}
 
