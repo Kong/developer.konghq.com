@@ -162,7 +162,7 @@ ai_gateway_models:
           values:
             - my-huggingface
     targets:
-      - name: meta-llama/Llama-3.3-70B-Instruct
+      - name: deepseek-ai/DeepSeek-V4-Pro-0813
         provider: !ref my-huggingface-account#name
         config:
           type: huggingface
