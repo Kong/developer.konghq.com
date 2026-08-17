@@ -80,8 +80,6 @@ faqs:
   - q: Can I scope this Policy to more than one AI Agent?
     a: |
       Yes. Set `global: true` on the Policy to apply it to every resource on your {{site.ai_gateway}} instead of listing it in each Agent's `policies` field.
-
-automated_tests: false
 ---
 
 ## Create an AI Agent and Request Size Limiting Policy
