@@ -95,7 +95,7 @@ These metrics follow the [OpenTelemetry Gen AI semantic conventions](https://ope
 
 ### Metric reference
 
-{% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="gen_ai." %}
+{% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="gen_ai." %}
 
 ## Kong Gen AI metrics
 
@@ -103,16 +103,16 @@ These metrics use the `kong.gen_ai.*` namespace and capture Kong-specific AI obs
 
 To populate `kong.gen_ai.llm.cost`, define `model.options.input_cost` and `model.options.output_cost` in your AI Model configuration.
 
-{% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="kong.gen_ai." %}
+{% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="kong.gen_ai." %}
 
 ## MCP metrics
 
 These metrics provide observability into MCP (Model Context Protocol) server interactions, including latency, response sizes, errors, and ACL decisions.
 
-{% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="mcp.,kong.gen_ai.mcp." %}
+{% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="mcp.,kong.gen_ai.mcp." %}
 
 ## A2A metrics
 
 These metrics provide observability into [A2A (Agent-to-Agent)](/ai-gateway/entities/ai-agent/) traffic, including request volume, latency, response sizes, and task state transitions.
 
-{% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="kong.gen_ai.a2a." %}
+{% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="kong.gen_ai.a2a." %}
