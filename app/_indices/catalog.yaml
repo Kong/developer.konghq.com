@@ -34,4 +34,6 @@ groups:
         auto_exclude: true
       - title: How-tos
         items:
-          - path: /how-to/discover-and-govern-apis-with-service-catalog/
+          - type: how-to
+            products:
+              - catalog
