@@ -37,3 +37,8 @@ validations:
     command: qwen
     expected:
       return_code: 0
+
+  - id: gemini
+    command: gemini
+    expected:
+      return_code: 0

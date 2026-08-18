@@ -39,6 +39,8 @@ module Jekyll
             Codex.new(id:, yaml:, format:)
           when 'qwen'
             Qwen.new(id:, yaml:, format:)
+          when 'gemini'
+            Gemini.new(id:, yaml:, format:)
           else
             raise ArgumentError, "Missing Drop for `#{id}`"
           end
