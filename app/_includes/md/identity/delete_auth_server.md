@@ -1,5 +1,5 @@
 {% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID
+url: /v1/auth-servers/$AUTH_SERVER_ID?force=true
 status_code: 204
 method: DELETE
 headers:
