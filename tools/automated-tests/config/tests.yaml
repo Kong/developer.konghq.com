@@ -3,6 +3,12 @@ instructionsDir: './input/instructions'
 baseUrl: http://localhost:8888
 productionUrl: https://developer.konghq.com
 
+validations:
+  skip_env_variables:
+    - KONG_LICENSE_DATA
+    - ANTHROPIC_API_KEY
+    - GOOGLE_API_KEY
+
 products:
   gateway:
     extractInstructionsAs: default

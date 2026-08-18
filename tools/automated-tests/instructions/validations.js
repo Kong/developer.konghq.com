@@ -8,6 +8,8 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
+import yaml from "js-yaml";
+
 import {
   setEnvVariable,
   executeCommand,
@@ -17,6 +19,13 @@ import {
 const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const testsConfig = yaml.load(
+  fs.readFileSync("./config/tests.yaml", "utf-8"),
+);
+const skipEnvVariables = new Set(
+  testsConfig.validations?.skip_env_variables ?? [],
+);
 
 // Create cookie jar (in-memory)
 const cookieJars = {};
@@ -440,7 +449,7 @@ async function unauthorizedCheck(
 
 async function envVariables(config, runtimeConfig, container) {
   for (const [key, value] of Object.entries(config)) {
-    if (key === "KONG_LICENSE_DATA") {
+    if (skipEnvVariables.has(key)) {
       continue;
     }
     await setEnvVariable(container, key, value);
