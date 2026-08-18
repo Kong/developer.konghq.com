@@ -62,6 +62,7 @@ cleanup:
         ```sh
         docker rm -f otel-collector
         ```
+        {: data-test-cleanup="block" }
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 
