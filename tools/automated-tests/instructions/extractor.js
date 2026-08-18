@@ -95,20 +95,58 @@ async function extractPrereqs(page, platform) {
   return { blocks };
 }
 
-async function extractCleanup(page) {
+async function extractCleanupBlocks(elem) {
   const instructions = [];
-  const blocks = await page.locator("[data-test-cleanup='block']").all();
+  const blocks = await elem.locator("[data-test-cleanup]").all();
 
-  for (const elem of blocks) {
-    await revealHiddenTabPanel(elem);
-    if (await elem.isVisible()) {
-      const copy = await elem.locator(".copy-action");
-      await copy.click();
+  for (const block of blocks) {
+    await revealHiddenTabPanel(block);
+    if (await block.isVisible()) {
+      const instruction = await block.getAttribute("data-test-cleanup");
 
-      const copiedText = await copyFromClipboard(page);
-      instructions.push(copiedText);
+      if (instruction === "block") {
+        const copy = await block.locator(".copy-action");
+        await copy.click();
+
+        const copiedText = await copyFromClipboard(block);
+        instructions.push(copiedText);
+      } else {
+        try {
+          const json = JSON.parse(instruction);
+          instructions.push(json);
+        } catch (error) {
+          console.error(
+            "There was an error parsing the cleanup instruction:",
+            error,
+          );
+        }
+      }
     }
   }
+  return instructions;
+}
+
+async function extractCleanup(page) {
+  // Like extractPrereqs, cleanup items live in an accordion where only the
+  // first item is open by default (see data-default="0" in
+  // components/cleanup.html), so later items must be clicked open before
+  // their [data-test-cleanup] blocks become visible.
+  const instructions = [];
+  const items = await page.locator('[data-test-id="cleanup"] > *').all();
+
+  for (const i in items) {
+    const item = items[i];
+    if (await item.isVisible()) {
+      const trigger = item.locator(".accordion-trigger");
+      if (i >= 1) {
+        await trigger.click();
+      }
+
+      const extractedBlocks = await extractCleanupBlocks(item);
+      instructions.push(...extractedBlocks);
+    }
+  }
+
   return instructions;
 }
 
