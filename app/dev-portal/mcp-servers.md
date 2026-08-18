@@ -1,5 +1,5 @@
 ---
-title: "Dev Portal MCP servers"
+title: "Dev Portal MCP server"
 content_type: reference
 layout: reference
 
@@ -45,17 +45,20 @@ faqs:
 --- 
 
 {{site.dev_portal}} can expose the APIs, pages, and documentation published to it as an MCP server, so AI agents can browse and use them on behalf of a developer. 
-This is separate from [{{site.ai_gateway}}'s MCP capabilities](/mcp/), which convert a Gateway API into an MCP server directly. 
-{{site.dev_portal}} generates its MCP server from what's already published to it, respecting the same authentication and access control that applies to the developer using it.
+The {{site.dev_portal}} MCP server respects the same authentication and access control that applies to the developer using it.
+This MCP server is separate from [{{site.ai_gateway}}'s MCP capabilities](/mcp/), which convert a Gateway API into an MCP server directly. 
+
+As you publish new APIs, pages, and documentation to your {{site.dev_portal}}, the {{site.dev_portal}} MCP server will always be automatically up-to-date with your latest changes.
 
 ## How it works
 
-A {{site.dev_portal}} MCP server can work in one of three modes, depending on its settings:
+A {{site.dev_portal}} MCP server can work in one of three modes:
 * **Public read-only**: If {{site.dev_portal}} login is disabled, the MCP server exposes public content to any agent, with no authentication step.
 * **Authenticated read-only**: If {{site.dev_portal}} login is enabled and write operations are disabled, a developer must authenticate and authorize the connection before their agent can browse anything, but the agent can only read what's already published.
 * **Authenticated read-write**: If {{site.dev_portal}} login is enabled and write operations are also enabled, an authenticated agent can additionally create and manage applications and register APIs to them on the developer's behalf.
 
 An agent can only see what its developer can already see. If [RBAC](/dev-portal/developer-rbac/) or [visibility settings](/dev-portal/pages-and-content/#page-visibility-and-publishing) restrict a developer from a page, API, or specification, the MCP server doesn't expose it to that developer's agent either.
+Conversely, if a developer _can_ access a restricted page, the MCP server will also expose it to their agent.
 
 When write operations are enabled, an agent can handle the administrative side of application registration: creating an application, registering APIs to it, and updating it. 
 Agents can never generate application's credentials themselves. 
@@ -115,6 +118,8 @@ body:
       enabled: true
 {% endkonnect_api_request %}
 <!--vale on-->
+
+You can enable just the AI settings by omitting `features` parameters. 
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal** and click **Portals**.
@@ -136,7 +141,7 @@ Once an admin enables the MCP server for {{site.dev_portal}}, a developer connec
 1. Click **About connections**. This shows two ways to connect, depending on your MCP client:
    * **OAuth 2.0**: This is for clients that support automatic discovery. Add {{site.dev_portal}}'s MCP server to the client, and it fetches {{site.dev_portal}}'s OAuth protected resource metadata, discovers the authorization server's endpoints, and starts an OAuth 2.0 Authorization Code flow with PKCE. 
    * **MCP Server**: This is for clients that need a direct URL, such as Claude Desktop custom connectors. Copy the MCP server URL (in the form `https://<your-dev-portal-domain>/api/v3/mcp`) and add it to your client as a custom MCP server.
-1. After adding the MCP server, you need to authenticate. This opens your browser so you can log in to {{site.dev_portal}} and complete authorization.
+1. After adding the MCP server, you need to authenticate. This typically opens your browser so you can log in to {{site.dev_portal}} and complete authorization, but the exact process varies across MCP clients.
 1. If the agent needs to actually call the APIs it discovers, the developer must still separately generate the application's credentials and share them with the agent.
 
 You can also connect directly from an individual API's dropdown menu instead of the account-level connections panel.
