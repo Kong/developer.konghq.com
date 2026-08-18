@@ -46,18 +46,6 @@ function appendEnvFlags(command, env_variables) {
   return `${command} ${flags}`;
 }
 
-async function runConfig(config, container) {
-  try {
-    if (config.commands) {
-      for (const command of config.commands) {
-        await executeCommand(container, command);
-      }
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
 async function checkSetup(setup, runtimeConfig, container) {
   const { runtime: setupIdentifier, version: minVersion } = await getSetupConfig(setup);
 
@@ -108,11 +96,19 @@ async function runPrereqs(prereqs, container, runtimeConfig) {
   }
 }
 
-async function runCleanup(cleanup, container) {
+async function runCleanup(cleanup, container, runtimeConfig) {
   log("Running cleanup...");
   if (cleanup) {
     const config = await processCleanup(cleanup);
-    await runConfig(config, container);
+    if (config.commands) {
+      for (const command of config.commands) {
+        if (typeof command === "string") {
+          await executeCommand(container, command);
+        } else {
+          await validate(container, command, runtimeConfig);
+        }
+      }
+    }
     log(`   cleanup ✅ .`);
   }
 }
@@ -213,7 +209,7 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       }
     }
 
-    await runCleanup(instructions.cleanup, container);
+    await runCleanup(instructions.cleanup, container, runtimeConfig);
   } catch (err) {
     log(`   cleanup ❌. ${err.message}`);
   }
