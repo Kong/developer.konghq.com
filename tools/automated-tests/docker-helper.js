@@ -149,9 +149,7 @@ export async function removeContainer(container) {
 
 export async function setEnvVariable(container, name, value) {
   if (value === undefined) {
-    console.log(
-      `Value for ${name} is undefined, skipping setting this variable.`,
-    );
+    debugCmd(`Value for ${name} is undefined, skipping setting this variable.`);
     return;
   }
 
