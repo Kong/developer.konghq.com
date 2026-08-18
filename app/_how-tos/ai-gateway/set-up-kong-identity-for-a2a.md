@@ -44,9 +44,6 @@ faqs:
   - q: Can I reuse this auth server for other AI Agents, AI Models, or AI MCP Servers?
     a: |
       Yes. Create additional scopes and clients under the same auth server, or reference the same `issuer` from multiple `openid-connect` AI Identity Providers. All AI Models in the same {{site.ai_gateway}} that use OIDC must reference the same AI Identity Provider, so plan scopes accordingly if you're authenticating multiple entity types with the same auth server.
-
-automated_tests: false
-
 ---
 
 ## Create an auth server in {{site.identity}}
