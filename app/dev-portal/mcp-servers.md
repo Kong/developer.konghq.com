@@ -101,7 +101,11 @@ rows:
 
 ## Generate an MCP server from {{site.dev_portal}}
 
-Enabling AI settings and the MCP server are both settings on {{site.dev_portal}} itself. Enable both to expose your published content as an MCP server, and optionally enable write operations to let agents manage applications on a developer's behalf.
+There are two settings you can use to manage AI settings on your {{site.dev_portal}}:
+* **Only AI settings enabled:** When just the AI settings are enabled, this displays an option to open an API in Claude or ChatGPT. Some LLMs will block this if you aren't using a custom {{site.dev_portal}} domain because bots aren't allowed on `*.kongportals.com` domains.
+* **AI settings and MCP server are enabled:** This also displays the option to open the API in Claude or ChatGPT, but also allows developers to connect to the MCP server via URL, VS Code, or Cursor. 
+
+You can also optionally enable write operations to let agents manage applications on a developer's behalf.
 
 {% navtabs "enable-mcp-server" %}
 {% navtab "{{site.konnect_short_name}} API" %}
@@ -137,15 +141,13 @@ You can enable just the AI settings by omitting `features` parameters.
 Once an admin enables the MCP server for {{site.dev_portal}}, a developer connects their own agent or IDE to it from their {{site.dev_portal}} account:
 
 1. Log in to {{site.dev_portal}} (required whenever {{site.dev_portal}} login is enabled).
-1. Go to your profile menu and click **Account**.
-1. Click **About connections**. This shows two ways to connect, depending on your MCP client:
-   * **OAuth 2.0**: This is for clients that support automatic discovery. Add {{site.dev_portal}}'s MCP server to the client, and it fetches {{site.dev_portal}}'s OAuth protected resource metadata, discovers the authorization server's endpoints, and starts an OAuth 2.0 Authorization Code flow with PKCE. 
-   * **MCP Server**: This is for clients that need a direct URL, such as Claude Desktop custom connectors. Copy the MCP server URL (in the form `https://<your-dev-portal-domain>/api/v3/mcp`) and add it to your client as a custom MCP server.
+1. Connect in one of the two following ways:
+   * Connect directly from an individual API's dropdown menu. This includes options like **Copy MCP server**, **Connect to Cursor**, and **Connect to VS Code**, scoped to just that API.
+   * Go to your profile menu and click **Account**. Click **About connections**. This shows two ways to connect, depending on your MCP client:
+     * **OAuth 2.0**: This is for clients that support automatic discovery. Add {{site.dev_portal}}'s MCP server to the client, and it fetches {{site.dev_portal}}'s OAuth protected resource metadata, discovers the authorization server's endpoints, and starts an OAuth 2.0 Authorization Code flow with PKCE. 
+     * **MCP Server**: This is for clients that need a direct URL, such as Claude Desktop custom connectors. Copy the MCP server URL (for example, `https://<your-dev-portal-domain>/api/v3/mcp`) and add it to your client as a custom MCP server.
 1. After adding the MCP server, you need to authenticate. This typically opens your browser so you can log in to {{site.dev_portal}} and complete authorization, but the exact process varies across MCP clients.
 1. If the agent needs to actually call the APIs it discovers, the developer must still separately generate the application's credentials and share them with the agent.
-
-You can also connect directly from an individual API's dropdown menu instead of the account-level connections panel.
-This includes options like **Copy MCP server**, **Connect to Cursor**, and **Connect to VS Code**, scoped to just that API.
 
 Once connected, a developer might prompt their agent with something like:
 
