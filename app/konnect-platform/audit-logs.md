@@ -644,7 +644,7 @@ rows:
 
 ### Paginate results
 
-An audit log pull uses cursor-based pagination. Each response includes a `meta` object with `next` and `previous` cursors that you can use to page through results:
+An audit log pull uses cursor-based pagination. Each response includes a `meta.page` object with `next` and `previous` cursors that you can use to page through results:
 
 <!--vale off-->
 {% table %}
@@ -663,7 +663,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-To collect a full set of logs, make an initial request, then follow the `next` cursor from the `meta` object until no further pages remain.
+To collect a full set of logs, make an initial request, then follow the `next` cursor from the `meta.page` object until no further pages remain.
 
 ### Example audit log pull request
 
