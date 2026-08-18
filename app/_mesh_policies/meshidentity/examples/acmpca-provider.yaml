@@ -1,0 +1,28 @@
+title: 'MeshIdentity with AWS Private CA'
+tools:
+  - kubernetes
+description: 'Sign workload certificates with an AWS Private CA (ACM PCA).'
+min_version:
+  mesh: '2.14'
+weight: 810
+requirements:
+  - "A [MeshService](/mesh/meshservice/) resource must be configured in your mesh."
+  - "An active AWS Private CA whose template allows certificates with a SPIFFE URI SAN."
+  - "AWS credentials available to the control plane through the standard AWS credential chain (IRSA recommended on EKS), with `acm-pca:IssueCertificate`, `acm-pca:GetCertificate`, and `acm-pca:GetCertificateAuthorityCertificate` permissions."
+namespace: kong-mesh-system
+config:
+  type: MeshIdentity
+  name: identity-acmpca
+  mesh: default
+  spec:
+    selector:
+      dataplane:
+        matchLabels: {}
+    provider:
+      type: Extension
+      extension:
+        name: acmpca
+        config:
+          arn: arn:aws:acm-pca:eu-central-1:123456789012:certificate-authority/12345678-1234-1234-1234-123456789012
+          certificateParameters:
+            expiry: 24h

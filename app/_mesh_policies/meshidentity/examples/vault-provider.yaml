@@ -1,0 +1,47 @@
+title: 'MeshIdentity with HashiCorp Vault'
+tools:
+  - kubernetes
+description: 'Issue workload certificates from a HashiCorp Vault PKI secrets engine using token authentication.'
+min_version:
+  mesh: '2.14'
+weight: 830
+requirements:
+  - "A [MeshService](/mesh/meshservice/) resource must be configured in your mesh."
+  - "A Vault PKI secrets engine mounted at `kong-mesh-pki-default` with a `dataplanes` role allowing the mesh trust domain."
+  - "A {{site.mesh_product_name}} `Secret` named `vault-token` holding a Vault token authorized to issue from the PKI role."
+namespace: kong-mesh-system
+config:
+  type: MeshIdentity
+  name: identity-vault
+  mesh: default
+  spec:
+    selector:
+      dataplane:
+        matchLabels: {}
+    provider:
+      type: Extension
+      extension:
+        name: vault
+        config:
+          connection:
+            type: Server
+            server:
+              address: https://vault.vault.svc:8200
+              tls:
+                caCert:
+                  type: Secret
+                  secretRef:
+                    kind: Secret
+                    name: vault-ca
+              auth:
+                type: Token
+                token:
+                  type: Secret
+                  secretRef:
+                    kind: Secret
+                    name: vault-token
+          pki:
+            mount: kong-mesh-pki-default
+            role: dataplanes
+            certificateParameters:
+              expiry: 24h
