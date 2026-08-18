@@ -68,7 +68,7 @@ cleanup:
 
 Gemini CLI expects to talk to {{ site.google }}'s {{ site.gemini }} API directly, authenticating with an API key. Distributing that key to every developer machine running the CLI exposes credentials and makes rotation difficult. Routing Gemini CLI through {{site.ai_gateway}} instead removes this requirement: developers authenticate against the gateway, and {{site.ai_gateway}} injects the real credential upstream.
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) that stores your Gemini API key as the `x-goog-api-key` header, so {{site.ai_gateway}} injects it into every upstream request and Gemini CLI never handles the real key. Then create an [AI Model](/ai-gateway/entities/ai-model/) using Gemini's native format, exposed at `/gemini` and routed to `gemini-2.5-flash` through that provider: the `generate` capability serves Gemini's `generateContent` and `streamGenerateContent` endpoints, and `config.route.model` lets Gemini CLI request the model by the alias `my-gemini-model` instead of the real upstream name. Create both entities in a single `kongctl` apply command so the model can reference the provider:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) that stores your Gemini API key as the `x-goog-api-key` header, so {{site.ai_gateway}} injects it into every upstream request and Gemini CLI never handles the real key. Then create an [AI Model](/ai-gateway/entities/ai-model/) using Gemini's native format, exposed at `/gemini` and routed to `gemini-3.5-flash` through that provider: the `generate` capability serves Gemini's `generateContent` and `streamGenerateContent` endpoints, and `config.route.model` lets Gemini CLI request the model by the alias `my-gemini-model` instead of the real upstream name. Create both entities in a single `kongctl` apply command so the model can reference the provider:
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -100,37 +100,23 @@ ai_gateway_models:
       max_request_body_size: 4194304
     capabilities: [generate]
     targets:
-      - name: gemini-2.5-flash
+      - name: gemini-3.5-flash
         provider: !ref my-gemini-account#name
         config:
           type: gemini
 {% endentity_examples %}
 
-## Export environment variables
+## Run Gemini CLI
 
-Open a new terminal window and export the variables that Gemini CLI uses. Point `GOOGLE_GEMINI_BASE_URL` at the local proxy endpoint where LLM traffic from Gemini CLI routes:
+{:.warning}
+> Make sure you authenticate using a [Gemini API key](https://geminicli.com/docs/get-started/authentication/#gemini-api)
 
-```sh
-export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/gemini"
-export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
-```
+Point `GOOGLE_GEMINI_BASE_URL` at the local proxy endpoint where LLM traffic from Gemini CLI routes and start a Gemini CLI session:
 
-## Validate the configuration
+{% validation gemini %}
+model: my-gemini-model
+base_url: http://localhost:8000/gemini
+prompt: Tell me about the prisoner's dilemma.
+{% endvalidation %}
 
-Now you can test the Gemini CLI setup.
-
-1. In the terminal where you exported your Gemini CLI environment variables, run:
-
-   ```sh
-   gemini --model my-gemini-model
-   ```
-
-   You should see the Gemini CLI interface start up.
-
-1. Run a command to test the connection:
-
-   ```text
-   Tell me about the prisoner's dilemma.
-   ```
-
-   Expected output shows the model's response to your prompt, proxied through {{site.ai_gateway}} to the Gemini model configured in the AI Model entity's `targets`.
+Expected output shows the model's response to your prompt, proxied through {{site.ai_gateway}} to the Gemini model configured in the AI Model entity's `targets`.
