@@ -1,4 +1,4 @@
-{% assign attributes = site.data.ai-gateway.v2.otel-metrics.resource_attributes %}
+{% assign attributes = site.data.plugins.otel-metrics.resource_attributes %}
 {% table %}
 columns:
   - title: Attribute
