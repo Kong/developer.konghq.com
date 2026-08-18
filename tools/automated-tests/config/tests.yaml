@@ -24,6 +24,21 @@ products:
         - docker rm -f automated-tests-keycloak
         - docker rm -f redis-stack-server
         - docker rm -f vault
+
+  ai-gateway:
+    before:
+      commands:
+      # Unfortunately, there's no way to set the auth-type with a flag, so we need to manually set it here
+      - |
+        mkdir -p ~/.gemini && cat > ~/.gemini/settings.json <<'EOF'
+        {
+          "security": {
+            "auth": {
+              "selectedType": "gemini-api-key"
+            }
+          }
+        }
+        EOF
   kic:
     extractInstructionsAs: block
   operator:
