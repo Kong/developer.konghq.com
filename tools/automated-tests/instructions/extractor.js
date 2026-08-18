@@ -261,6 +261,18 @@ function deriveProduct(setup, products) {
   return setupEntry;
 }
 
+async function selectPlatform(page, platform) {
+  const toggleSwitch = page.locator("aside .switch__slider");
+
+  if ((await toggleSwitch.count()) > 0) {
+    const option = page.locator(`aside .switch input[value="${platform}"]`);
+    if (!(await option.isChecked())) {
+      await toggleSwitch.click();
+    }
+    await option.check();
+  }
+}
+
 async function writeInstructionsToFile(url, config, platform, product, instructions) {
   const instructionsFile = path.join(
     config.instructionsDir,
@@ -309,19 +321,21 @@ export async function extractInstructionsFromURL(uri, config, context) {
     // Fetch product specific config. The first product is always the main one
     const productConfig = config.products[products[0]] || {};
 
+    // Tracks whether `page` is currently on the series' first page (`url`).
+    // It starts there (the goto above), but a previous platform's series
+    // walk (below) leaves it on the series' last page, so later platforms
+    // need to navigate back before extracting.
+    let pageIsAtSeriesStart = true;
+
     for (const platform of platforms) {
+      if (!pageIsAtSeriesStart) {
+        await page.goto(url.toString(), { waitUntil: "domcontentloaded" });
+        pageIsAtSeriesStart = true;
+      }
+      await selectPlatform(page, platform);
+
       const title = await page.locator("h1").textContent();
       const howToUrl = `${config.productionUrl}${url.pathname}`;
-
-      const toggleSwitch = await page.locator("aside .switch__slider");
-
-      if ((await toggleSwitch.count()) > 0) {
-        const option = page.locator(`aside .switch input[value="${platform}"]`);
-        if (!(await option.isChecked())) {
-          await page.locator("aside .switch__slider").click();
-        }
-        await page.locator(`aside .switch input[value="${platform}"]`).check();
-      }
 
       const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);
@@ -330,18 +344,14 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const steps = await extractSteps(page, productConfig);
       const cleanup = await extractCleanup(page);
 
-      if (
-        platforms.length > 1 &&
-        (await page.locator("[data-test-series-next]").count()) > 0
-      ) {
-        throw new Error(
-          `${url} is part of a series with multiple works_on platforms, which isn't supported yet.`
-        );
-      }
-
       while ((await page.locator("[data-test-series-next]").count()) > 0) {
         await page.locator("[data-test-series-next]").click();
         await page.waitForLoadState("domcontentloaded");
+        pageIsAtSeriesStart = false;
+        // The platform toggle persists across page loads via localStorage
+        // (see ToggleSwitchManager), but we reassert it explicitly here so
+        // extraction doesn't depend on that persistence working as expected.
+        await selectPlatform(page, platform);
 
         // data-test-setup is intentionally not read on series continuation pages: the
         // series' setup/product/version come from the first page only.
