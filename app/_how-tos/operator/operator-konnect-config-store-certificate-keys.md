@@ -280,7 +280,6 @@ indent: 3
 1. Enter `example-tls-key` in the **Key** field and paste the contents of `tls.key` in the **Value** field.
 1. Click **Save**.
 
-{{delete}}
 {% endnavtab %}
 {% endnavtabs %}
 
