@@ -23,7 +23,9 @@ import { glob } from "tinyglobby";
       } else {
         howToFiles = await glob("../../app/_how-tos/**/*");
       }
-      urlsToTest = await testeableUrlsFromFiles(testsConfig, howToFiles);
+      urlsToTest = await testeableUrlsFromFiles(testsConfig, howToFiles, {
+        explicit: !!args.files,
+      });
     }
     await generateInstructionFiles(urlsToTest, testsConfig);
 

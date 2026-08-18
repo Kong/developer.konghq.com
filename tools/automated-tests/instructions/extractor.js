@@ -3,6 +3,8 @@ import fs from "fs/promises";
 import path from "path";
 import yaml from "js-yaml";
 
+class NonFirstSeriesPageError extends Error {}
+
 async function copyFromClipboard(page) {
   return await page.evaluate(() => navigator.clipboard.readText());
 }
@@ -245,6 +247,12 @@ export async function extractInstructionsFromURL(uri, config, context) {
     console.log(`Extracting instructions from: ${url}`);
     await page.goto(url.toString(), { waitUntil: "domcontentloaded" });
 
+    if ((await page.locator("[data-test-series-prev]").count()) > 0) {
+      throw new NonFirstSeriesPageError(
+        `${url} is not the first page of its series. Target the series' first how-to instead.`
+      );
+    }
+
     const productsString = await page
       .locator("[data-test-products]")
       .getAttribute("data-test-products");
@@ -283,6 +291,28 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const prereqs = await extractPrereqs(page, platform);
       const steps = await extractSteps(page, productConfig);
       const cleanup = await extractCleanup(page);
+
+      if (
+        platforms.length > 1 &&
+        (await page.locator("[data-test-series-next]").count()) > 0
+      ) {
+        throw new Error(
+          `${url} is part of a series with multiple works_on platforms, which isn't supported yet.`
+        );
+      }
+
+      while ((await page.locator("[data-test-series-next]").count()) > 0) {
+        await page.locator("[data-test-series-next]").click();
+        await page.waitForLoadState("domcontentloaded");
+
+        // data-test-setup is intentionally not read on series continuation pages: the
+        // series' setup/product/version come from the first page only.
+        const continuationPrereqs = await extractPrereqs(page, platform);
+        steps.push(...continuationPrereqs.blocks);
+        steps.push(...(await extractSteps(page, productConfig)));
+        cleanup.push(...(await extractCleanup(page)));
+      }
+
       const instructionsFile = await writeInstructionsToFile(
         url,
         config,
@@ -314,6 +344,9 @@ export async function extractInstructionsFromURL(uri, config, context) {
       await promise;
     }
   } catch (error) {
+    if (error instanceof NonFirstSeriesPageError) {
+      throw error;
+    }
     console.error("There was an error extracting the instructions:", error);
   } finally {
     await page.close();
