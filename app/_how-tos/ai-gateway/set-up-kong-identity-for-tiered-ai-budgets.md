@@ -125,82 +125,59 @@ capture:
 
 ## Configure dynamic claims
 
-Each claim reads a label off the requesting client and falls back to a default when the label isn't set. Create all four with the [`/v1/auth-servers/$AUTH_SERVER_ID/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim), one request per claim.
+Each claim reads a label off the requesting client and falls back to a default when the label isn't set:
 
-`budget_tier` reads the client's `tier` label, defaulting to the baseline tier:
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Claim
+    key: claim
+  - title: Label
+    key: label
+  - title: Default
+    key: default
+  - title: Notes
+    key: notes
+rows:
+  - claim: "`budget_tier`"
+    label: "`tier`"
+    default: "`baseline`"
+    notes: "—"
+  - claim: "`budget_cap`"
+    label: "`cap`"
+    default: "empty"
+    notes: "—"
+  - claim: "`budget_org`"
+    label: "`orgUnit`"
+    default: "`unassigned`"
+    notes: "—"
+  - claim: "`kong_groups`"
+    label: "`groups`"
+    default: "empty array"
+    notes: "Converted to a JSON array for `consumer_groups_claim`"
+{% endtable %}
+<!-- vale on -->
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/claims
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "budget_tier"
-  value: '${ .Client.Labels.tier | default "baseline" }'
-  include_in_token: true
-  include_in_all_scopes: true
-  include_in_scopes: []
-  enabled: true
-{% endkonnect_api_request %}
-<!--vale on-->
-
-`budget_cap` reads the client's `cap` label, defaulting to empty when no individual cap applies:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/claims
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "budget_cap"
-  value: '${ .Client.Labels.cap | default "" }'
-  include_in_token: true
-  include_in_all_scopes: true
-  include_in_scopes: []
-  enabled: true
-{% endkonnect_api_request %}
-<!--vale on-->
-
-`budget_org` reads the client's `orgUnit` label, defaulting to unassigned:
+Create all four with a reusable function:
 
 <!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/claims
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "budget_org"
-  value: '${ .Client.Labels.orgUnit | default "unassigned" }'
-  include_in_token: true
-  include_in_all_scopes: true
-  include_in_scopes: []
-  enabled: true
-{% endkonnect_api_request %}
-<!--vale on-->
+```sh
+create_claim() {
+  local name="$1" value="$2"
+  local body
+  body=$(jq -n --arg name "$name" --arg value "$value" \
+    '{name: $name, value: $value, include_in_token: true, include_in_all_scopes: true, include_in_scopes: [], enabled: true}')
+  curl -s -X POST "https://us.api.konghq.com/v1/auth-servers/$AUTH_SERVER_ID/claims" \
+    -H "Authorization: Bearer $KONNECT_TOKEN" \
+    -H "Content-Type: application/json" \
+    --data "$body" | jq -c '{id, name}'
+}
 
-`kong_groups` reads the client's `groups` label into a JSON array:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/claims
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "kong_groups"
-  value: '${ .Client.Labels.groups | default "" | splitList "," | compact | toJson }'
-  include_in_token: true
-  include_in_all_scopes: true
-  include_in_scopes: []
-  enabled: true
-{% endkonnect_api_request %}
+create_claim "budget_tier"  '${ .Client.Labels.tier | default "baseline" }'
+create_claim "budget_cap"   '${ .Client.Labels.cap | default "" }'
+create_claim "budget_org"   '${ .Client.Labels.orgUnit | default "unassigned" }'
+create_claim "kong_groups"  '${ .Client.Labels.groups | default "" | splitList "," | compact | toJson }'
+```
 <!--vale on-->
 
 {:.info}
@@ -244,137 +221,43 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Repeat for the remaining four personas, changing only `name` and `labels`:
+Repeat for the remaining four personas with a reusable function instead of four more requests. Paste the whole block, the function definition and all four calls, into your shell at once. Client names must be unique per auth server, so rerunning this with a name that already exists fails with `409 Resource Conflict`:
 
 <!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/clients
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "Dave"
-  grant_types:
-    - client_credentials
-  response_types:
-    - none
-  allow_all_scopes: false
-  allow_scopes:
-    - $SCOPE_ID
-  labels:
-    tier: "4x"
-    cap: "strict"
-extract_body:
-  - name: 'client_secret'
-    variable: DAVE_CLIENT_SECRET
-  - name: 'id'
-    variable: DAVE_CLIENT_ID
-capture:
-  - variable: DAVE_CLIENT_SECRET
-    jq: ".client_secret"
-  - variable: DAVE_CLIENT_ID
-    jq: ".id"
-{% endkonnect_api_request %}
+```sh
+create_client() {
+  local name="$1" labels="$2"
+  response=$(curl -s -X POST "https://us.api.konghq.com/v1/auth-servers/$AUTH_SERVER_ID/clients" \
+    -H "Authorization: Bearer $KONNECT_TOKEN" \
+    -H "Content-Type: application/json" \
+    --json "{
+      \"name\": \"$name\",
+      \"grant_types\": [\"client_credentials\"],
+      \"response_types\": [\"none\"],
+      \"allow_all_scopes\": false,
+      \"allow_scopes\": [\"$SCOPE_ID\"],
+      \"labels\": $labels
+    }")
+  local id secret
+  id=$(echo "$response" | jq -r '.id // empty')
+  secret=$(echo "$response" | jq -r '.client_secret // empty')
+  if [ -z "$id" ] || [ -z "$secret" ]; then
+    echo "Failed to create client \"$name\": $response" >&2
+    return 1
+  fi
+  upper=$(echo "$name" | tr a-z A-Z)
+  export "${upper}_CLIENT_ID=$id"
+  export "${upper}_CLIENT_SECRET=$secret"
+}
+
+create_client "Dave"  '{"tier": "4x", "cap": "strict"}'
+create_client "Erin"  '{"tier": "4x", "orgUnit": "live-balance"}'
+create_client "Frank" '{"tier": "4x", "orgUnit": "live-balance"}'
+create_client "Grace" '{"tier": "4x", "groups": "suspended"}'
+```
 <!--vale on-->
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/clients
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "Erin"
-  grant_types:
-    - client_credentials
-  response_types:
-    - none
-  allow_all_scopes: false
-  allow_scopes:
-    - $SCOPE_ID
-  labels:
-    tier: "4x"
-    orgUnit: "live-balance"
-extract_body:
-  - name: 'client_secret'
-    variable: ERIN_CLIENT_SECRET
-  - name: 'id'
-    variable: ERIN_CLIENT_ID
-capture:
-  - variable: ERIN_CLIENT_SECRET
-    jq: ".client_secret"
-  - variable: ERIN_CLIENT_ID
-    jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/clients
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "Frank"
-  grant_types:
-    - client_credentials
-  response_types:
-    - none
-  allow_all_scopes: false
-  allow_scopes:
-    - $SCOPE_ID
-  labels:
-    tier: "4x"
-    orgUnit: "live-balance"
-extract_body:
-  - name: 'client_secret'
-    variable: FRANK_CLIENT_SECRET
-  - name: 'id'
-    variable: FRANK_CLIENT_ID
-capture:
-  - variable: FRANK_CLIENT_SECRET
-    jq: ".client_secret"
-  - variable: FRANK_CLIENT_ID
-    jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/clients
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "Grace"
-  grant_types:
-    - client_credentials
-  response_types:
-    - none
-  allow_all_scopes: false
-  allow_scopes:
-    - $SCOPE_ID
-  labels:
-    tier: "4x"
-    groups: "suspended"
-extract_body:
-  - name: 'client_secret'
-    variable: GRACE_CLIENT_SECRET
-  - name: 'id'
-    variable: GRACE_CLIENT_ID
-capture:
-  - variable: GRACE_CLIENT_SECRET
-    jq: ".client_secret"
-  - variable: GRACE_CLIENT_ID
-    jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-Each client's ID and secret are now exported as `$DAVE_CLIENT_ID`/`$DAVE_CLIENT_SECRET`, `$ERIN_CLIENT_ID`/`$ERIN_CLIENT_SECRET`, `$FRANK_CLIENT_ID`/`$FRANK_CLIENT_SECRET`, and `$GRACE_CLIENT_ID`/`$GRACE_CLIENT_SECRET`, alongside Carol's.
+Each client's ID and secret are now exported as `$DAVE_CLIENT_ID`/`$DAVE_CLIENT_SECRET`, `$ERIN_CLIENT_ID`/`$ERIN_CLIENT_SECRET`, `$FRANK_CLIENT_ID`/`$FRANK_CLIENT_SECRET`, and `$GRACE_CLIENT_ID`/`$GRACE_CLIENT_SECRET`, alongside Carol's. `create_client` is reusable beyond these four: add another persona later with one more call.
 
 ## Verify claim resolution before requesting tokens
 
