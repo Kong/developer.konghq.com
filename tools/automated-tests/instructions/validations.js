@@ -169,6 +169,14 @@ async function executeRequest(
         config.file_dir,
       );
       headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    } else if (config.form_url_encoded_data !== undefined) {
+      const params = new URLSearchParams();
+      for (const [key, value] of Object.entries(config.form_url_encoded_data)) {
+        params.append(key, replaceEnvVars(value, env));
+      }
+      options.body = params.toString();
+      headers["Content-Type"] =
+        headers["Content-Type"] || "application/x-www-form-urlencoded";
     } else if (config.form_data !== undefined) {
       const formData = new FormData();
 

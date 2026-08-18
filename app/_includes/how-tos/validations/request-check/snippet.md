@@ -13,7 +13,8 @@
      -u {{include.user}}{%- endif %}{% if include.cookie_jar %} \
      --cookie-jar {{include.cookie_jar}}{%- endif %}{% if include.cookie %} \
      --cookie {{include.cookie}}{%- endif %}{% if include.form_data %} \{% for data in include.form_data %}
-     -F {{data[0]}}="{{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.body_file %} \
+     -F {{data[0]}}="{{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.form_url_encoded_data %} \{% for data in include.form_url_encoded_data %}
+     -d "{{data[0]}}={{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.body_file %} \
      -F file="{{ include.body_file }}"{% endif %}{% if include.body %} \
      --json '{{ include.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.body_cmd %} \
      --json "{{ include.body_cmd }}"{% endif %}{% endcapture -%}
