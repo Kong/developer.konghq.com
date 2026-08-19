@@ -25272,5 +25272,129 @@
         "scope": "Default"
       }
     ]
+  },
+  "3.14.0.13": {
+    "kong-ee": [
+      {
+        "message": "Added a Distroless Docker image variant for Kong API Gateway. The Distroless image ships only the Kong binary and its runtime dependencies, with no package managers, no shells, and no other programs you would expect to find in a standard Linux distribution.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added `cache_read_cost` and `cache_write_cost` to `model.options` so cached and cache-write prompt tokens can be priced per 1M tokens, alongside `input_cost` / `output_cost`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added filtering for empty Anthropic thinking blocks in request history.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for reporting prompt cache token metrics in OpenAI-compatible format.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for reporting prompt cache token metrics when using native (non-OpenAI) request/response formats.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Usage cost now supports per-cache-TTL cache-write\npricing, context-window pricing factors, and service-tier pricing factors via\n`model.options` (`cache_write_cost_list`, `context_window_factor`,\n`service_tier_factor`). Anthropic (cache TTL + service tier), OpenAI, and Gemini\nservice tiers are collected from upstream responses.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed a bug where a response from Anthropic could fail to decode when the client's request advertised Brotli support, since Anthropic's edge may then return a Brotli-encoded body that Kong's response decompression -- which only understands gzip -- can't inflate. Kong now normalizes the outgoing `Accept-Encoding` request header before proxying to any LLM provider: `gzip, identity` when the client accepts gzip, and `identity` otherwise, so a client that cannot inflate gzip is never handed a compressed body on the paths that pass the upstream response through untouched.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where native Anthropic streaming counted provisional `message_start` output tokens and summed cumulative `message_delta` usage.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where output token usage was reported as zero for Bedrock native format request to AWS models like Nova.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic-format requests could report zero usage when it targets Bedrock's own model via conversion.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI, Azure, and Gemini realtime upstream URLs using `wss` were downgraded to `ws`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where token usage for Anthropic requests using the compaction beta was undercounted. Kong now sums `usage.iterations` when present instead of relying solely on the top-level `input_tokens` / `output_tokens`, which only reflect non-compaction iterations.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini's tool-use token usage (billed when server-side tools such as grounding, code execution, or URL context are used) was not counted in the reported token usage or cost.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where signed Anthropic thinking blocks with omitted text were removed from request history.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where some Claude Code MCP tools did not correctly handle empty 'requires' array.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Gemini image generation token accounting to include reasoning tokens (`thoughtsTokenCount`) in `output_tokens` and report them as `output_tokens_details.reasoning_tokens`. Previously the reasoning tokens were dropped, which under-reported output tokens, analytics, and calculated cost for thinking-enabled image models.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Gemini realtime (Live API) token accounting to include reasoning tokens (`thoughtsTokenCount`) in the reported output tokens, and to report them as `output_tokens_reasoning_tokens_count`. Previously the reasoning tokens were dropped, which under-reported the output and total token counts of thinking-enabled realtime sessions.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed token usage statistics being silently dropped for `audio/v1/audio/transcriptions`\nrequests. Token-billed OpenAI/Azure transcription models (e.g. `gpt-4o-transcribe`) now report\n`input_tokens`/`output_tokens`/`total_tokens` and the `text_tokens`/`audio_tokens` breakdown in the analytics\nlog when `logging.log_statistics` is enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**, **ai-proxy-advanced**: Fixed an issue where Gemini streaming analytics could over-report token usage. Gemini repeats its usage metadata on every stream chunk as a running request-level total, but the counts were summed across chunks instead of replaced, multiplying the reported usage by the number of chunks. Reasoning tokens were affected the most, because Gemini reports them in full on the first chunk and does not change them afterwards. A chunk that carried no usage metadata also reset the recorded output token count to zero.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed Gemini token accounting to include reasoning tokens in `completion_tokens` for both OpenAI-format and native-format proxying.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Hardened stale nginx PID detection to survive PID reuse. On Linux, `kong start`\nnow confirms a live PID actually belongs to nginx by reading `/proc/<pid>/cmdline`,\nso a reused PID from an ungraceful exit no longer blocks a restart.",
+        "type": "bugfix",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "On shell-free (distroless) images, the pluginserver query and start commands\nnow expand `$KONG_PREFIX` / `${KONG_PREFIX}` from the environment and fail fast\nwith a clear error on an unterminated quote or `${`, instead of passing the\nliteral `$KONG_PREFIX` to the pluginserver or building a best-effort argv.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**opentelemetry**: Fixed `gen_ai.client.token.usage` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**prometheus**: Fixed `kong_ai_llm_tokens_total` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
   }
 }
