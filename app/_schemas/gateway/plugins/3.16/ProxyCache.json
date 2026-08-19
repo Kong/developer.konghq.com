@@ -1,0 +1,192 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "cache_control": {
+          "default": false,
+          "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
+          "type": "boolean"
+        },
+        "cache_ttl": {
+          "default": 300,
+          "description": "TTL, in seconds, of cache entities.",
+          "type": "integer"
+        },
+        "content_type": {
+          "default": [
+            "application/json",
+            "text/plain"
+          ],
+          "description": "Upstream response content types considered cacheable. The plugin performs an **exact match** against each specified value.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "ignore_uri_case": {
+          "default": false,
+          "type": "boolean"
+        },
+        "memory": {
+          "properties": {
+            "dictionary_name": {
+              "default": "kong_db_cache",
+              "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "request_method": {
+          "default": [
+            "GET",
+            "HEAD"
+          ],
+          "description": "Downstream request methods considered cacheable.",
+          "items": {
+            "enum": [
+              "GET",
+              "HEAD",
+              "PATCH",
+              "POST",
+              "PUT"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "response_code": {
+          "default": [
+            200,
+            301,
+            404
+          ],
+          "description": "Upstream response status code considered cacheable.",
+          "items": {
+            "maximum": 900,
+            "minimum": 100,
+            "type": "integer"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "response_headers": {
+          "description": "Caching related diagnostic headers that should be included in cached responses",
+          "properties": {
+            "X-Cache-Key": {
+              "default": true,
+              "type": "boolean"
+            },
+            "X-Cache-Status": {
+              "default": true,
+              "type": "boolean"
+            },
+            "age": {
+              "default": true,
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "storage_ttl": {
+          "description": "Number of seconds to keep resources in the storage backend. This value is independent of `cache_ttl` or resource TTLs defined by Cache-Control behaviors.",
+          "type": "integer"
+        },
+        "strategy": {
+          "description": "The backing data store in which to hold cache entities.",
+          "enum": [
+            "memory"
+          ],
+          "type": "string"
+        },
+        "vary_headers": {
+          "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "vary_query_params": {
+          "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "strategy"
+      ],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing protocols.",
+      "items": {
+        "description": "A string representing a protocol, such as HTTP or HTTPS.",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
