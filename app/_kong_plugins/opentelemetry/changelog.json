@@ -102,6 +102,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.13": [
+    {
+      "message": "Fixed `gen_ai.client.token.usage` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for exporting OpenTelemetry metrics via OTLP/HTTP protocol to an observability backend (e.g. OpenTelemetry Collector). Please enable this feature by configuring the `metrics.endpoint` parameter in the OpenTelemetry plugin.",

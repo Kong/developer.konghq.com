@@ -23,6 +23,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.13": [
+    {
+      "message": "Fixed `kong_ai_llm_tokens_total` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added a new label `type` for `http_requests_total` and `stream_sessions_total` metrics providing more specific information.\n",
