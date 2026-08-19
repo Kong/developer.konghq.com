@@ -273,7 +273,9 @@ async function executeRequest(
           shouldRetry = true;
         } else {
           await setEnvVariable(container, header.variable, extractedValue);
-          console.log(`extracted value: ${extractedValue}`);
+          if (config.debug) {
+            console.log(`extracted value: ${extractedValue}`);
+          }
         }
       }
     }
