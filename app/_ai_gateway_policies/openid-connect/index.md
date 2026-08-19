@@ -250,7 +250,7 @@ The OpenID Connect Policy can be integrated with the [ACL Policy](/ai-gateway/po
 You can also pair ACL-based authorization with AI Consumer authorization.
 
 Set up ACL auth:
-* [Session auth tutorial with Keycloak](/how-to/configure-oidc-with-acl-auth/)
+* [ACL auth tutorial with Keycloak](/how-to/configure-oidc-with-acl-auth/)
 
 #### AI Consumer authorization
 
@@ -259,7 +259,7 @@ This means that we restrict the access to only those that do have a matching AI 
 AI Consumers can have ACL groups attached to them and be further authorized with the [ACL Policy](/ai-gateway/policies/acl/).
 
 Set up AI Consumer auth:
-* [Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
+* [AI Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
 
 #### AI Consumer Group authorization
 
@@ -267,7 +267,7 @@ You can use [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) for au
 This means that we restrict the access to only those that do have a matching AI Consumer Group. 
 
 Set up AI Consumer Group auth:
-* [Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
+* [AI Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
 
 ### Client authentication
 
@@ -559,7 +559,7 @@ curl -X GET "http://localhost:8000?client_id=2"
 
 If you have issues with the OIDC Policy, try the following debugging methods:
 
-1. Set the {{site.ai_gateway}} [log level](/ai-gateway/configuration/#log-level) to `debug`, and check the {{site.ai_gateway}} `error.log`. 
+1. Check the {{site.ai_gateway}} [log level](/ai-gateway/configuration/#log-level) to `debug`, and check the {{site.ai_gateway}} `error.log`. 
 You can filter the log with the keyword `openid-connect`.
 
 2. Set the OpenID Connect Policy to display errors by setting [`config.display_errors`](./reference/#schema--config-display-errors) to true.
