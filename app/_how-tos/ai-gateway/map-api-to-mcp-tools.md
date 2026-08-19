@@ -48,7 +48,7 @@ prereqs:
 
 ## Run a sample API to expose
 
-Before creating an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, you’ll need an upstream HTTP API to expose. For this tutorial, use the [Swagger Petstore](https://github.com/swagger-api/swagger-petstore) sample API running in Docker. This allows you to test the entity without relying on an external service. The Petstore API comes preloaded with 10 pets across the `available`, `pending`, and `sold` statuses, which the API exposes through the `/pet/findByStatus` and `/pet/{petId}` endpoints.
+Before creating an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, you’ll need an upstream HTTP API to expose. For this tutorial, use the [Swagger Petstore](https://github.com/swagger-api/swagger-petstore) sample API running in Docker. This allows you to test the entity without relying on an external service. The Petstore API comes pre-loaded with 10 pets across the `available`, `pending`, and `sold` statuses, which the API exposes through the `/pet/findByStatus` and `/pet/{petId}` endpoints.
 
 ```sh
 docker run -d \
@@ -123,7 +123,7 @@ Two details of this configuration are worth calling out:
 - **Route stripping**: `route.paths` (`/petstore`) is the prefix clients must hit for the {{site.ai_gateway}} to match this entity, so every tool's `path` includes it. Before forwarding upstream, the gateway strips that prefix and appends what's left (for example, `/pet/findByStatus`) to `config.url`.
 - **Parameters**: {{site.ai_gateway}} builds each tool's input schema from its `parameters` list, prefixing every parameter name with its `in` location: `path_<name>` for path parameters, `query_<name>` for query parameters.
 
-## Verify that the endpoints are avaiable as tools
+## Verify that the endpoints are available as tools
 
 Use [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli) to verify that the MCP server exposes `get-pet-by-id` and `get-pets-by-status` as tools:
 
