@@ -81,7 +81,7 @@ This guide shows you how to solve that using two plugins working together in the
 1. [**OpenID Connect**](/plugins/openid-connect/) validates the bearer token and extracts a claim value (such as `client_id`) onto a virtual credential.
 2. [**Datakit**](/plugins/datakit/) reads that credential and maps its value to a named Upstream entity, overriding the backend for that specific request.
 
-All callers share one Route and one Service, and the backend is decided dynamically after authentication.
+All callers share one Route and one Service. After authentication, the backend is selected dynamically based on the client's identity.
 
 This guide uses named Upstream entities, which preserves load balancing, health checks, and retries.
 If you don't need those features and prefer to route directly to a `host:port` without a pool, see [Route requests to different targets based on the authenticated caller](/how-to/configure-oidc-datakit-host-routing/).

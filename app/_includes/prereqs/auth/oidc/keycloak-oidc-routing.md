@@ -7,7 +7,7 @@ For this tutorial, you need three clients: one for the OpenID Connect plugin to 
 
 1. Install [Keycloak](https://www.keycloak.org/guides) (version 26 or later) on your platform.
 
-   For example, you can use the Keycloak Docker image. The following command attaches Keycloak to the same network as {{site.base_gateway}} so that the OIDC plugin can reach it:
+   For example, you can use the Keycloak Docker image. The following command attaches Keycloak to the same network as {{site.base_gateway}} so that the OIDC plugin can reach it. Open a new session in your terminal and run:
 
    ```sh
    docker run -p 127.0.0.1:8080:8080 \
@@ -37,9 +37,7 @@ For this tutorial, you need three clients: one for the OpenID Connect plugin to 
 
    In your own setup, especially running outside of a container, you may not need `DECK_JWKS_ENDPOINT`.
 
-1. Open the admin console.
-
-   The default URL is `http://localhost:8080/admin/master/console/`.
+1. Open the admin console at default URL `http://localhost:8080/admin/master/console/` and sign in with your username (`admin`) and password (`admin`).
 
 #### Create the plugin client
 
