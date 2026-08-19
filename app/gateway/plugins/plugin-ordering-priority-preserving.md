@@ -1,7 +1,7 @@
 ---
-title: How dynamic plugin ordering works
+title: How priority_preserving dynamic plugin ordering works
 
-description: A plain-language guide to dynamic plugin ordering in {{site.base_gateway}} — the principle behind it, how the priority_preserving and legacy algorithms differ, and how to predict the exact execution order your ordering rules produce.
+description: A plain-language guide to the opt-in `priority_preserving` dynamic plugin ordering algorithm in {{site.base_gateway}} — how it decides an order, how it differs from `legacy`, and how to enable it.
 content_type: reference
 layout: reference
 
@@ -25,6 +25,8 @@ related_resources:
     url: /gateway/entities/plugin/
   - text: Plugin priority
     url: /gateway/entities/plugin/#plugin-priority
+  - text: How legacy dynamic plugin ordering works
+    url: /gateway/plugins/plugin-ordering-legacy/
 ---
 
 Every {{site.base_gateway}} plugin has a static [priority](/gateway/entities/plugin/#plugin-priority)
@@ -32,15 +34,19 @@ that decides the order plugins run in. [Dynamic plugin ordering](/gateway/entiti
 lets you override that order for the [`access` phase](/gateway/entities/plugin/#plugin-contexts)
 by giving a plugin an `ordering` rule that runs it `before` or `after` another plugin.
 
-This page explains **how that reordering is decided**, so you can predict the exact result of any
-`ordering` configuration — the part that has historically been hard to reason about.
+This page covers `priority_preserving`, the opt-in alternative selected by the
+`plugin_ordering_algorithm` configuration parameter. It explains how `priority_preserving` decides
+an order — calling out, at every step, which behavior belongs to `priority_preserving` and which
+belongs to `legacy`, the default — so you can predict the exact result of any `ordering`
+configuration and decide whether to switch. For the default algorithm's own mechanics, pros, and
+cons, see [How legacy dynamic plugin ordering works](/gateway/plugins/plugin-ordering-legacy/).
 
 {:.warning}
 > Dynamic ordering only affects the **`access` phase**. Every other phase (`header_filter`,
 > `body_filter`, `response`, `log`) always runs in static [plugin priority](/gateway/entities/plugin/#plugin-priority)
 > order, regardless of any `ordering` you set.
 
-## The one rule that decides everything
+## How `priority_preserving` decides the order
 
 {{site.base_gateway}} builds the access-phase order by repeating a single step until every plugin
 has run:
@@ -50,7 +56,14 @@ has run:
 `before` and `after` only decide *which* plugins are allowed to run yet. Among the plugins that are
 allowed, the higher priority always goes first.
 
-Two consequences fall out of that rule, and they are the whole behavior:
+A useful analogy is boarding a plane: first class boards before economy, but a first-class
+passenger who hasn't reached the gate yet has to wait while a checked-in economy passenger boards.
+Priority decides who goes first; "not ready yet" always wins. (`legacy` doesn't work this way at
+all — it recursively places a plugin's whole dependency chain first, regardless of priority; see
+[How legacy dynamic plugin ordering works](/gateway/plugins/plugin-ordering-legacy/).)
+
+Two consequences fall out of that rule, and under `priority_preserving` they are the whole
+behavior:
 
 * **Only the plugin you name moves.** When you write `before` or `after` on a plugin, that plugin
   (the *mover*) is the one repositioned — next to the plugin it points at (the *anchor*). Think of
@@ -61,7 +74,9 @@ Two consequences fall out of that rule, and they are the whole behavior:
   below, for what that looks like.)
 * **`before` and `after` are not the same statement.** `A before B` moves `A`; `B after A` moves
   `B`. They describe the same relationship but relocate different plugins, so they can produce
-  different orders. Choose the form that names the plugin you actually want to move.
+  different orders. Choose the form that names the plugin you actually want to move. Under
+  `legacy`, both forms build the identical dependency edge and always move the same plugin — see
+  `before` ≠ `after` below for a side-by-side comparison.
 
 ## Predict the order, step by step
 
@@ -89,7 +104,7 @@ rows:
 {% endtable %}
 
 By static priority alone the order would be `pre-function → request-callout → opentelemetry`. You've
-asked for one change: run `pre-function` **after** `opentelemetry`. Here's how {{site.base_gateway}}
+asked for one change: run `pre-function` **after** `opentelemetry`. Here's how `priority_preserving`
 builds the result:
 
 1. **Ready:** `request-callout` (812), `opentelemetry` (14). `pre-function` is *not* ready — it must
@@ -104,37 +119,11 @@ Notice what did **not** happen: `request-callout`, which you never configured, w
 repositioned by any rule — it rose one slot only because `pre-function` dropped past it on the way
 to its anchor. You moved `pre-function`, and only `pre-function` carried an `ordering` rule.
 
-## Plugins that share a priority
-
-A cloned plugin that declares no `priority` override inherits its source plugin's priority, so
-sharing a priority is routine rather than exotic. `key-auth-enc` and `key-auth`, for example, both
-run at priority `1250`.
-
-{{site.base_gateway}} breaks a tie deterministically: by plugin name, descending. It never depends
-on load order or timing, and this holds for both ordering algorithms. An `ordering` rule between
-two plugins that share a priority is honored exactly like any other rule — for example, `acl`
-(priority `950`) with `before: [key-auth]` lands directly above `key-auth`, and `key-auth-enc`
-(also `1250`, alphabetically after `key-auth`) is unaffected either way:
-
-```
-natural order:                   key-auth-enc, key-auth, acl
-acl with before: [key-auth]:     key-auth-enc, acl, key-auth
-```
-
-## `priority_preserving` vs. `legacy` ordering
-
-{{site.base_gateway}} includes two ordering algorithms, selected by the
-[`plugin_ordering_algorithm`](/gateway/configuration/)
-configuration parameter:
-
-* **`priority_preserving`** — the algorithm described above. Only the configured plugin moves;
-  every other plugin's order relative to the other plugins you didn't configure is unchanged;
-  `before` and `after` can differ.
-* **`legacy`** — the original algorithm, kept so upgrades don't change behavior unexpectedly. It
-  treats `before` and `after` as the same relationship, and repositioning one plugin can pull
-  unrelated plugins out of their priority slots.
-
-The scenario above shows the difference plainly:
+**Compare `legacy` on the identical configuration:** it visits `pre-function` first (highest
+priority), recursively places its dependency `opentelemetry` ahead of it, then places
+`pre-function`, and only then reaches `request-callout` — giving `opentelemetry → pre-function →
+request-callout`. Two plugins moved there, `opentelemetry` *and* `request-callout`, even though
+only `pre-function` carried a rule:
 
 {% table %}
 columns:
@@ -153,11 +142,28 @@ rows:
     legacy: "`opentelemetry` jumped to the front and `request-callout` was pushed to the end — **neither was configured**"
 {% endtable %}
 
-Under `legacy`, moving `pre-function` displaced `opentelemetry` and `request-callout` even though
-you never mentioned them. That surprise — an unrelated plugin changing position — is exactly what
-`priority_preserving` removes.
+That surprise — an unrelated plugin changing position — is exactly what `priority_preserving`
+removes: it never repositions a plugin except the one named in a rule, and any plugin a mover
+passes on the way to its anchor only shifts by as much as that one mover's move requires.
 
-### `before` ≠ `after` under `priority_preserving`
+## Plugins that share a priority
+
+A cloned plugin that declares no `priority` override inherits its source plugin's priority, so
+sharing a priority is routine rather than exotic. `key-auth-enc` and `key-auth`, for example, both
+run at priority `1250`.
+
+{{site.base_gateway}} breaks a tie deterministically: by plugin name, descending. It never depends
+on load order or timing, and this holds for both ordering algorithms. An `ordering` rule between
+two plugins that share a priority is honored exactly like any other rule — for example, `acl`
+(priority `950`) with `before: [key-auth]` lands directly above `key-auth`, and `key-auth-enc`
+(also `1250`, alphabetically after `key-auth`) is unaffected either way:
+
+```
+natural order:                   key-auth-enc, key-auth, acl
+acl with before: [key-auth]:     key-auth-enc, acl, key-auth
+```
+
+## `before` ≠ `after` under `priority_preserving`
 
 Take five plugins in natural priority order — `key-auth (1250)`, `ldap-auth (1200)`,
 `header-cert-auth (1009)`, `response-transformer (800)`, `ai-proxy (770)` — and express the same
@@ -189,23 +195,29 @@ one slot. Neither bystander is untouched, but its order relative to `key-auth` a
 the same in both cases. Under `legacy`, `before` and `after` are identical, so **both forms produce
 the same order regardless of which plugin you write the rule on** — `response-transformer` rises
 two slots to the front of the pair, and `ldap-auth` and `header-cert-auth` both drop one slot to
-make room, even though only one relationship was ever configured.
+make room, even though only one relationship was ever configured. (See [How legacy dynamic plugin
+ordering works](/gateway/plugins/plugin-ordering-legacy/) for why: both forms build the identical
+dependency edge under that algorithm.)
 
 ## Why `priority_preserving` is easier to work with
 
 * **Predictable.** Only the plugin you configure moves. You never have to reason about side effects
-  on plugins you didn't touch.
+  on plugins you didn't touch — unlike `legacy`, where a rule can cascade through plugins that
+  configure nothing.
 * **Deterministic.** The same configuration always produces the same order — on every node, every
-  time. Whatever you see in testing is what you get in production.
+  time. Whatever you see in testing is what you get in production. (`legacy` is equally
+  deterministic; the difference is *how far* a single rule can move things, not whether the result
+  is repeatable.)
 * **Expressive.** Because `before` and `after` move different plugins, you can say precisely which
-  plugin should relocate.
+  plugin should relocate — `legacy` always moves the same one regardless of which form you write.
 
 ### What {{site.base_gateway}} guarantees (both algorithms)
 
 * **Your rules are always honored, or the config is rejected.** Every `before`/`after` you set is
   satisfied. If your rules contradict each other (for example `response-transformer before:
   [ai-proxy]` *and* `ai-proxy before: [response-transformer]`), {{site.base_gateway}} reports a
-  **circular dependency** error instead of guessing.
+  **circular dependency** error instead of guessing. `priority_preserving` additionally names the
+  plugins on the cycle; `legacy` reports the same generic message for every cycle.
 * **The result is deterministic.** It never depends on load order or timing.
 
 ### What it does not promise
@@ -252,10 +264,12 @@ resulting order can differ from one request path to another.
      (app/_includes/components/plugin_ordering_simulator.html). A validated standalone
      prototype of this tool exists; the Vue component wiring is a follow-up. -->
 
-## Choosing an algorithm on upgrade
+## Enabling `priority_preserving`
 
-`plugin_ordering_algorithm` defaults to `legacy`, so **upgrading does not change your current
-access-phase order**. When you're ready to adopt the clearer `priority_preserving` behavior:
+`plugin_ordering_algorithm` defaults to `legacy` (see [How legacy dynamic plugin ordering
+works](/gateway/plugins/plugin-ordering-legacy/)), so **upgrading {{site.base_gateway}} does not
+change your current access-phase order**. When you're ready to adopt the clearer
+`priority_preserving` behavior:
 
 1. Set `plugin_ordering_algorithm = priority_preserving` in `kong.conf` (or the
    `KONG_PLUGIN_ORDERING_ALGORITHM` environment variable) on your data planes.
