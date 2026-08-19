@@ -75,6 +75,7 @@ This is driven by the following equation:
 ```
 Key Count ≈ Unique Consumers × Unique Routes × Rate limit windows × Kong data plane pods
 ```
+{:.no-copy-code}
 
 For example, if you have 5,000 Consumers, 3,000 Routes, and 3 windows, this produces a theoretical key space of **45 million counters** per window cycle, each needing a periodic sync to Redis. 
 The sync rate determines how aggressively these counters are pushed, and the cache instance must absorb both the read (fetch counters) and write (push diffs) load.
@@ -183,7 +184,14 @@ Managed caches are either created at the control plane or control plane group-le
 
 {% include /gateway/dcgw-cpg-note.md %}
 
-To create a managed cache at the control plane level, do the following:
+{:.warning}
+> **Data plane required to use a managed cache**: Before you create a managed cache, make sure you've created the following:
+> - A [Dedicated Cloud Gateway network](/dedicated-cloud-gateways/network-architecture/#configure-a-dedicated-cloud-gateway-network)
+> - A control plane
+> - At least one data plane
+> <br>If you create a managed cache before you've set up a data plane, the managed cache will display as `Ready` but you won't be able to use it until a data plane is created.  
+
+To create a managed cache at the control plane level, do the following:    
 
 {% navtabs "managed-cache" %}
 {% navtab "API" %}
@@ -295,6 +303,17 @@ region: global
    ```
 
 {% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. In the API Gateway sidebar, click **Control planes**.
+1. Select your Dedicated Cloud Gateway.
+1. Click the **Redis** tab.
+1. Click **New Redis**.
+1. Click **Konnect-managed Redis**.
+1. From the **Redis cache size** dropdown, select the cache size you need.
+2. In the **Name** field, enter a name for your managed cache.
+1. Click **Save**.
+{% endnavtab %}
 {% endnavtabs %}
 
 For control plane managed caches, you don't need to manually configure a Redis partial. 
@@ -405,7 +424,8 @@ A sustained high `cache_eviction_rate` alongside a high `cache_memory_utilizatio
 Before you resize a managed cache, consider the following:
 * Resizes happen immediately.
 * Schedule cache resizes during low traffic hours.
-* Caches remain online during a resize, but you may experience brief interruptions of a few seconds. 
+* Caches remain online during a resize, but you may experience brief interruptions of a few seconds.
+* If you increase the size of your cache, data will be retained. If you downsize your cache, data will be deleted because you must delete and recreate the cache.
 
 You can resize a managed cache by sending a PATCH request to the [`/cloud-gateways/add-ons/{addOnId}` endpoint](/api/konnect/cloud-gateways/v2/#/operations/update-add-on):
 
