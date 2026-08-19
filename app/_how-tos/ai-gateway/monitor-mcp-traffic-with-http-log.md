@@ -54,7 +54,7 @@ automated_tests: false
 
 ## Reconfigure the AI MCP Proxy plugin
 
-To observe traffic for MCP tools, you first must **enable logging and statistics** on the AI MCP. Apply the below configuration to reconfigure the AI MCP to log full payloads:
+To observe traffic for MCP tools, you first must **enable logging** on the AI MCP. Apply the below configuration to reconfigure the AI MCP to log full payloads:
 
 ```sh
 kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
@@ -79,7 +79,6 @@ ai_gateway_mcp_servers:
           - /marketplace
       logging:
         payloads: true
-        statistics: true
       server:
         timeout: 60000
     tools:
@@ -152,7 +151,6 @@ ai_gateway_mcp_servers:
           - /marketplace
       logging:
         payloads: true
-        statistics: true
       server:
         timeout: 60000
     tools:
