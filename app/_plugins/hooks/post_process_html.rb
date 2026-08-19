@@ -37,7 +37,8 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
         heading['id'] = Jekyll::Utils.slugify(text)
       end
 
-      if ['/gateway/changelog/', '/operator/reference/custom-resources/'].include?(@page_or_doc.url)
+      if ['/gateway/changelog/', '/ai-gateway/changelog/',
+          '/operator/reference/custom-resources/'].include?(@page_or_doc.url)
         if heading.name == 'h2'
           h2_id = heading['id']
           h3_id = nil
