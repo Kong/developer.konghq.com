@@ -63,18 +63,26 @@ cleanup:
         docker rm -f otel-collector
         ```
         {: data-test-cleanup="block" }
+      icon_url: /assets/icons/opentelemetry.svg
+    - title: Stop Petstore API
+      content: |
+        ```sh
+        docker rm -f swagger-petstore
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: '/assets/icons/code.svg'
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
-
+      icon_url: '/assets/icons/ai-gateway.svg'
 ---
+
 ## Attach an OpenTelemetry Policy to the MCP Server entity
 
-By default, an AI Policy applies to every resource on your {{site.ai_gateway}}. Setting `global` to `false` changes that: the `otel-mcp` Policy now only takes effect on entities that explicitly list it, instead of applying to all entities.
+By default, an AI Policy applies to every resource on your {{site.ai_gateway}}. Setting `global` to `false` changes that: the `otel-mcp` Policy  only takes effect on entities that explicitly list it, instead of applying to all entities.
 
-The `marketplace-mcp` entity does this by referencing `otel-mcp` in its `policies` list. As a result, every request that goes through `marketplace-mcp` is measured and exported as metrics to the collector you started earlier. The `service.name` value under `resource_attributes` is a label attached to that exported data, so if you're running multiple {{site.ai_gateway}}s or services into the same collector, you can tell which one a given metric came from.
+The `petstore-mcp` entity does this by referencing `otel-mcp` in its `policies` list. As a result, every request that goes through `petstore-mcp` is measured and exported as metrics to the collector you started earlier. The `service.name` value under `resource_attributes` is a label attached to that exported data, so if you're running multiple {{site.ai_gateway}}s or services into the same collector, you can tell which one a given metric came from.
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+{% entity_examples %}
 ai_gateway_policies:
   - ref: otel-mcp
     ai_gateway: !lookup {id: $AI_GATEWAY_ID}
@@ -92,10 +100,10 @@ ai_gateway_policies:
         service.name: kong-mcp
 
 ai_gateway_mcp_servers:
-  - ref: marketplace-mcp
+  - ref: petstore-mcp
     ai_gateway: !lookup {id: $AI_GATEWAY_ID}
-    name: marketplace-mcp
-    display_name: "Marketplace API"
+    name: petstore-mcp
+    display_name: "Petstore API"
     type: conversion-listener
     enabled: true
     policies:
@@ -107,72 +115,81 @@ ai_gateway_mcp_servers:
       default_tool_acls:
         deny: []
     config:
-      url: http://host.docker.internal:3000
+      url: http://host.docker.internal:8080/api/v3
       route:
         paths:
-          - /marketplace
+          - /petstore
       logging:
-        payloads: true
-        statistics: true
+        payloads: false
       server:
         timeout: 60000
     tools:
-      - name: get-users
-        description: Get users
+      - name: get-pets-by-status
+        description: Find pets by status
         method: GET
-        path: /marketplace/users
+        path: /petstore/pet/findByStatus
         parameters:
-          - name: id
+          - name: status
             in: query
-            required: false
-            schema:
-              type: string
-            description: Optional user ID
-      - name: get-orders-for-user
-        description: Get orders for a user
-        method: GET
-        path: /marketplace/orders
-        parameters:
-          - description: User ID to filter orders
-            in: query
-            name: userid
             required: true
             schema:
               type: string
-EOF
-```
-{:.collapsible}
+              enum:
+                - available
+                - pending
+                - sold
+            description: Status value to filter pets by
+      - name: get-pet-by-id
+        description: Get a pet by ID
+        method: GET
+        path: /petstore/pet/{petId}
+        parameters:
+          - description: ID of the pet to retrieve
+            in: path
+            name: petId
+            required: true
+            schema:
+              type: integer
+{% endentity_examples %}
 
 ## Generate MCP traffic
 
-Using the `marketplace-mcp` connection you already set up in ChatWise:
+Now, we can check the details of `Dog 1` - `id:4` - by calling the `get-pet-by-id` tool:
 
-1. Start a new chat.
-1. Click the **hammer icon** to enable MCP tools, and enable `marketplace-mcp` from the dropdown.
-1. Enter the following in the ChatWise chat:
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore \
+    --transport http --method tools/call \
+    --tool-name get-pet-by-id \
+    --tool-arg path_petId=4 | jq -r '.content[0].text' | jq -c '.'
+expected:
+  return_code: 0
+message: |
+  {"id":4,"category":{"id":1,"name":"Dogs"},"name":"Dog 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
+render_output: false
+{% endvalidation %}
+<!--vale on-->
 
-   ```text
-   What did Fiona Clark order?
-   ```
+You should see the following response:
 
-  When the agent finishes reasoning, you should see a response like the following:
-
-  ```text
-  Fiona Clark ordered the following items:
-
-  Laundry Detergent (10L)
-  Trash Bags (100 ct)
-  Disinfectant Spray (5 bottles)
-  ```
-  {:.no-copy-code}
+```text
+{"id":4,"category":{"id":1,"name":"Dogs"},"name":"Dog 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
+```
+{:.no-copy-code}
 
 ## Validate metrics
 
 Check the collector's logs for `kong.gen_ai.mcp` to find the emitted metrics:
 
-```sh
-docker logs otel-collector 2>&1 | grep -A 15 kong.gen_ai.mcp
-```
+{% validation custom-command %}
+command: |
+  docker logs otel-collector 2>&1 | grep -A 15 kong.gen_ai.mcp
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 You should see data like the following:
 
@@ -187,10 +204,10 @@ Descriptor:
 HistogramDataPoints #0
 Data point attributes:
      -> kong.workspace.name: Str(default)
-     -> kong.route.name: Str(marketplace-mcp-route)
+     -> kong.route.name: Str(petstore-mcp-route)
      -> mcp.method.name: Str(tools/call)
-     -> gen_ai.tool.name: Str(get-orders-for-user)
-     -> kong.service.name: Str(marketplace-mcp)
+     -> gen_ai.tool.name: Str(get-pet-by-id)
+     -> kong.service.name: Str(petstore-mcp)
 Count: 1
 Sum: 2175.000000
 
@@ -205,10 +222,10 @@ HistogramDataPoints #3
 Data point attributes:
      -> gen_ai.operation.name: Str(execute_tool)
      -> kong.workspace.name: Str(default)
-     -> kong.route.name: Str(marketplace-mcp-route)
+     -> kong.route.name: Str(petstore-mcp-route)
      -> mcp.method.name: Str(tools/call)
-     -> gen_ai.tool.name: Str(get-orders-for-user)
-     -> kong.service.name: Str(marketplace-mcp)
+     -> gen_ai.tool.name: Str(get-pet-by-id)
+     -> kong.service.name: Str(petstore-mcp)
 Count: 1
 Sum: 0.037000
 ```
