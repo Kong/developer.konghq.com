@@ -33,18 +33,10 @@ Instead, you can offload the task to a trusted identity provider of your choice.
 When you configure `config.issuer` in the OIDC Policy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC Policy stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
 
 {{site.ai_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
-- Discovery data is stored in the **{{site.ai_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
-- The cache TTL (time-to-live) is managed by `config.cache_ttl`, which is set to 3600 seconds by default. You can also clear it manually using the relevant [DELETE endpoints in the Admin API](/ai-gateway/policies/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
+- Discovery data is stored in the **{{site.ai_gateway}} database**.  
+- The cache TTL (time-to-live) is managed by `config.cache_ttl`, which is set to 3600 seconds by default.
 - If a request requires discovery information that isn't in the cache, the Policy attempts to “rediscover” it using the value in `config.issuer`. After a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
 - If a JWT can't be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the Policy falls back to using any sufficient discovery information that remains in the cache.
-
-### Manually clear discovery cache
-
-To manually clear discovery cache entries, you can use the Admin API DELETE endpoints for the OpenID Connect Policy. These endpoints let you:
-* Delete a JWKS
-* Delete all caches or a specific cache
-
-Refer to the [OIDC API reference](/ai-gateway/policies/openid-connect/api/) for details.
 
 ## Supported flows and grants
 
@@ -254,12 +246,6 @@ The `config.*_required` parameters (for example, `config.groups_required`) are a
     - employee marketing
   ```
 
-  In an Admin API request, it would look like this:
-
-  ```sh
-  --data 'config.scopes_required=employee marketing'
-  ```
-
 * `OR`: Values in separate array indices
 
   This claim has to have either `employee` OR `marketing`:
@@ -269,12 +255,6 @@ The `config.*_required` parameters (for example, `config.groups_required`) are a
     groups_required:
     - employee
     - marketing
-  ```
-
-  In an Admin API request, it would look like this:
-  ```sh
-  --data 'config.scopes_required=employee' \
-  --data 'config.scopes_required=marketing'
   ```
 
 #### ACL Policy authorization
@@ -608,7 +588,7 @@ curl -X GET "http://localhost:8000?client_id=2"
 
 If you have issues with the OIDC Policy, try the following debugging methods:
 
-1. Set the {{site.ai_gateway}} [log level](/gateway/configuration/#log-level) to `debug`, and check the {{site.ai_gateway}} `error.log`. 
+1. Set the {{site.ai_gateway}} [log level](/ai-gateway/configuration/#log-level) to `debug`, and check the {{site.ai_gateway}} `error.log`. 
 You can filter the log with the keyword `openid-connect`.
 
 2. Set the OpenID Connect Policy to display errors by setting [`config.display_errors`](./reference/#schema--config-display-errors) to true.
@@ -627,8 +607,8 @@ You can filter the log with the keyword `openid-connect`.
 
 6. Try to eliminate indirection in the form of other gateways, load balancers, NATs, and so on, in front of {{site.ai_gateway}}, as that makes it easier to find out where the problem is. 
 If one of these other applications is causing issues, looking into using the following:
-  * [Port maps](/gateway/configuration/#port-maps)
-  * [`X-Forwarded-*` headers](/gateway/configuration/#trusted-ips)
+  * [Port maps](/ai-gateway/configuration/#port-maps)
+  * [`X-Forwarded-*` headers](/ai-gateway/configuration/#trusted-ips)
 
 ## Supported identity providers
 
