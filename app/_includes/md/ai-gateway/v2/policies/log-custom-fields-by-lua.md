@@ -21,6 +21,7 @@ New fields can be added the same way:
 type: policy
 data:
   name: {{include.slug}}
+  type: {{include.slug}}
   config:
     custom_fields_by_lua:
       header: "return kong.request.get_header('h1')"
@@ -42,12 +43,14 @@ For example, to stop logging LLM request and response payloads:
 type: policy
 data:
   name: {{include.slug}}
+  type: {{include.slug}}
   config:
     custom_fields_by_lua:
       "ai.proxy.payload.request": "return nil"
-      "ai.proxy.payload.response": "return nil"
+    http_endpoint: http://my-endpoint:9999/
 formats:
   - konnect-api
+  - kongctl
 {% endentity_example %}
 
 {:.info}
