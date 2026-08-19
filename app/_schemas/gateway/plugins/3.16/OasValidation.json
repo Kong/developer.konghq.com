@@ -54,6 +54,11 @@
           "description": "If set to true, checks if query parameters in the request exist in the API specification.",
           "type": "boolean"
         },
+        "rfc9457_error_response": {
+          "default": false,
+          "description": "If set to `true`, interrupting non-gRPC HTTP validation failures are returned as `application/problem+json` using RFC 9457 top-level fields plus Kong extensions `message`, `errors`, and optional `more`. Requires `structured_errors` and `verbose_response` to both be set to `true`. When set to `false`, the legacy response format is preserved.",
+          "type": "boolean"
+        },
         "structured_errors": {
           "default": false,
           "description": "If set to true, schema validation failures are returned as a structured `errors` array, where each entry contains `instanceLocation`, `keywordLocation`, and `error`. Pre-validation failures such as path-not-found or unsupported content-type also return an `errors` array, but entries contain only an `error` field. Requires `verbose_response` to be enabled. Use `max_structured_errors` to cap the response size.",

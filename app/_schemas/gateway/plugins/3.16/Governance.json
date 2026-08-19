@@ -2,38 +2,88 @@
   "properties": {
     "config": {
       "properties": {
-        "anonymous": {
-          "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer. If not set, a Kong Consumer must exist for the SAML IdP user credentials, mapping the username format to the Kong Consumer username.",
-          "type": "string"
-        },
-        "assertion_consumer_path": {
-          "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
-          "type": "string"
-        },
-        "idp_certificate": {
-          "description": "The public certificate provided by the IdP. This is used to validate responses from the IdP.  Only include the contents of the certificate. Do not include the header (`BEGIN CERTIFICATE`) and footer (`END CERTIFICATE`) lines. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+        "api_token": {
+          "description": "Bearer token for authenticating with the governance endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
           "type": "string",
           "x-encrypted": true,
           "x-referenceable": true
         },
-        "idp_sso_url": {
+        "credit_balance_required": {
+          "default": true,
+          "description": "If set to true, gateway will fetch credit balance for subject.",
+          "type": "boolean"
+        },
+        "customer": {
+          "description": "The customer identifies who gets billed for each request. Choose where the plugin should look for the customer identifier.",
+          "properties": {
+            "field": {
+              "description": "The header name, query parameter, consumer field, or application field that contains the customer identifier, e.g. 'x-customer-id'",
+              "type": "string"
+            },
+            "look_up_value_in": {
+              "default": "consumer",
+              "description": "Where to find the customer identifier in the request.",
+              "enum": [
+                "application",
+                "consumer",
+                "header",
+                "query"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "deny_unknown_customers": {
+          "default": true,
+          "description": "If set to true, gateway will deny access to any unknown subjects.",
+          "type": "boolean"
+        },
+        "fail_policy": {
+          "default": "allow",
+          "description": "Policy to apply when enforcement state cannot be retrieved.",
+          "enum": [
+            "allow",
+            "block"
+          ],
+          "type": "string"
+        },
+        "feature": {
+          "description": "The feature identifies what capability is being accessed and governed.",
+          "properties": {
+            "key": {
+              "description": "The feature key",
+              "type": "string"
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "type": "object"
+        },
+        "governance_endpoint": {
           "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
           "type": "string"
         },
-        "issuer": {
-          "description": "The unique identifier of the IdP application. Formatted as a URL containing information about the IdP so the SP can validate that the SAML assertions it receives are issued from the correct IdP.",
-          "type": "string"
+        "keepalive": {
+          "default": 60000,
+          "description": "How long in milliseconds an idle connection to the governance endpoint is kept open before being closed.",
+          "type": "number"
         },
-        "nameid_format": {
-          "default": "EmailAddress",
-          "description": "The requested `NameId` format. Options available are: - `Unspecified` - `EmailAddress` - `Persistent` - `Transient`",
-          "enum": [
-            "EmailAddress",
-            "Persistent",
-            "Transient",
-            "Unspecified"
-          ],
-          "type": "string"
+        "l1_cache_ttl_seconds": {
+          "default": 5,
+          "description": "Time in seconds to keep enforcement state in Kong's local L1 cache",
+          "type": "number"
+        },
+        "l2_cache_ttl_seconds": {
+          "default": 120,
+          "description": "Time in seconds to keep enforcement state in Redis",
+          "type": "number"
+        },
+        "max_stale_seconds": {
+          "default": 60,
+          "description": "Maximum age in seconds of cached enforcement state before it is considered stale and must be refreshed from Redis",
+          "type": "number"
         },
         "redis": {
           "properties": {
@@ -297,10 +347,6 @@
               "type": "integer",
               "x-referenceable": true
             },
-            "prefix": {
-              "description": "The Redis session key prefix.",
-              "type": "string"
-            },
             "read_timeout": {
               "default": 2000,
               "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
@@ -366,10 +412,6 @@
               "type": "string",
               "x-referenceable": true
             },
-            "socket": {
-              "description": "The Redis unix socket path.",
-              "type": "string"
-            },
             "ssl": {
               "default": false,
               "description": "If set to true, uses SSL to connect to Redis.",
@@ -388,237 +430,134 @@
           },
           "type": "object"
         },
-        "request_digest_algorithm": {
-          "default": "SHA256",
-          "description": "The digest algorithm for Authn requests: - `SHA256` - `SHA1`",
-          "enum": [
-            "SHA1",
-            "SHA256"
-          ],
-          "type": "string"
-        },
-        "request_signature_algorithm": {
-          "default": "SHA256",
-          "description": "The signature algorithm for signing Authn requests. Options available are: - `SHA256` - `SHA384` - `SHA512`",
-          "enum": [
-            "SHA256",
-            "SHA384",
-            "SHA512"
-          ],
-          "type": "string"
-        },
-        "request_signing_certificate": {
-          "description": "The certificate for signing requests. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
-          "type": "string",
-          "x-encrypted": true,
-          "x-referenceable": true
-        },
-        "request_signing_key": {
-          "description": "The private key for signing requests.  If this parameter is set, requests sent to the IdP are signed.  The `request_signing_certificate` parameter must be set as well. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
-          "type": "string",
-          "x-encrypted": true,
-          "x-referenceable": true
-        },
-        "response_digest_algorithm": {
-          "default": "SHA256",
-          "description": "The algorithm for verifying digest in SAML responses: - `SHA256` - `SHA1`",
-          "enum": [
-            "SHA1",
-            "SHA256"
-          ],
-          "type": "string"
-        },
-        "response_encryption_key": {
-          "description": "The private encryption key required to decrypt encrypted assertions. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
-          "type": "string",
-          "x-encrypted": true,
-          "x-referenceable": true
-        },
-        "response_signature_algorithm": {
-          "default": "SHA256",
-          "description": "The algorithm for validating signatures in SAML responses. Options available are: - `SHA256` - `SHA384` - `SHA512`",
-          "enum": [
-            "SHA256",
-            "SHA384",
-            "SHA512"
-          ],
-          "type": "string"
-        },
-        "session_absolute_timeout": {
-          "default": 86400,
-          "description": "The session cookie absolute timeout in seconds. Specifies how long the session can be used until it is no longer valid.",
+        "refresh_interval": {
+          "default": 30,
+          "description": "How often in seconds to poll enforcement state from the governance endpoint",
+          "minimum": 2,
           "type": "number"
         },
-        "session_audience": {
-          "default": "default",
-          "description": "The session audience, for example \"my-application\"",
-          "type": "string"
-        },
-        "session_cookie_domain": {
-          "description": "The session cookie domain flag.",
-          "type": "string"
-        },
-        "session_cookie_http_only": {
-          "default": true,
-          "description": "Forbids JavaScript from accessing the cookie, for example, through the `Document.cookie` property.",
-          "type": "boolean"
-        },
-        "session_cookie_name": {
-          "default": "session",
-          "description": "The session cookie name.",
-          "type": "string"
-        },
-        "session_cookie_path": {
-          "default": "/",
-          "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
-          "type": "string"
-        },
-        "session_cookie_same_site": {
-          "default": "Lax",
-          "description": "Controls whether a cookie is sent with cross-origin requests, providing some protection against cross-site request forgery attacks.",
-          "enum": [
-            "Default",
-            "Lax",
-            "None",
-            "Strict"
-          ],
-          "type": "string"
-        },
-        "session_cookie_secure": {
-          "description": "The cookie is only sent to the server when a request is made with the https:scheme (except on localhost), and therefore is more resistant to man-in-the-middle attacks.",
-          "type": "boolean"
-        },
-        "session_enforce_same_subject": {
-          "default": false,
-          "description": "When set to `true`, audiences are forced to share the same subject.",
-          "type": "boolean"
-        },
-        "session_hash_storage_key": {
-          "default": false,
-          "description": "When set to `true`, the storage key (session ID) is hashed for extra security. Hashing the storage key means it is impossible to decrypt data from the storage without a cookie.",
-          "type": "boolean"
-        },
-        "session_hash_subject": {
-          "default": false,
-          "description": "When set to `true`, the value of subject is hashed before being stored. Only applies when `session_store_metadata` is enabled.",
-          "type": "boolean"
-        },
-        "session_idling_timeout": {
-          "default": 900,
-          "description": "The session cookie idle time in seconds.",
-          "type": "number"
-        },
-        "session_memcached_host": {
-          "default": "127.0.0.1",
-          "description": "The memcached host.",
-          "type": "string"
-        },
-        "session_memcached_port": {
-          "default": 11211,
-          "description": "An integer representing a port number between 0 and 65535, inclusive.",
-          "maximum": 65535,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "session_memcached_prefix": {
-          "description": "The memcached session key prefix.",
-          "type": "string"
-        },
-        "session_memcached_socket": {
-          "description": "The memcached unix socket path.",
-          "type": "string"
-        },
-        "session_remember": {
-          "default": false,
-          "description": "Enables or disables persistent sessions",
-          "type": "boolean"
-        },
-        "session_remember_absolute_timeout": {
-          "default": 2592000,
-          "description": "Persistent session absolute timeout in seconds.",
-          "type": "number"
-        },
-        "session_remember_cookie_name": {
-          "default": "remember",
-          "description": "Persistent session cookie name",
-          "type": "string"
-        },
-        "session_remember_rolling_timeout": {
-          "default": 604800,
-          "description": "Persistent session rolling timeout in seconds.",
-          "type": "number"
-        },
-        "session_request_headers": {
-          "items": {
-            "enum": [
-              "absolute-timeout",
-              "audience",
-              "id",
-              "idling-timeout",
-              "rolling-timeout",
-              "subject",
-              "timeout"
-            ],
-            "type": "string"
+        "response_codes": {
+          "properties": {
+            "CUSTOMER_NOT_FOUND": {
+              "properties": {
+                "http_status": {
+                  "default": 403,
+                  "description": "Status code to return when enforcement is triggered.",
+                  "maximum": 599,
+                  "minimum": 100,
+                  "type": "number"
+                },
+                "message": {
+                  "default": "Customer is not found by subject.",
+                  "description": "Message to return when enforcement is triggered.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "FEATURE_NOT_FOUND": {
+              "properties": {
+                "http_status": {
+                  "default": 403,
+                  "description": "Status code to return when enforcement is triggered.",
+                  "maximum": 599,
+                  "minimum": 100,
+                  "type": "number"
+                },
+                "message": {
+                  "default": "Feature not found.",
+                  "description": "Message to return when enforcement is triggered.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "FEATURE_UNAVAILABLE": {
+              "properties": {
+                "http_status": {
+                  "default": 403,
+                  "description": "Status code to return when enforcement is triggered.",
+                  "maximum": 599,
+                  "minimum": 100,
+                  "type": "number"
+                },
+                "message": {
+                  "default": "Feature is not available for the customer.",
+                  "description": "Message to return when enforcement is triggered.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "NO_CREDIT_AVAILABLE": {
+              "properties": {
+                "http_status": {
+                  "default": 402,
+                  "description": "Status code to return when enforcement is triggered.",
+                  "maximum": 599,
+                  "minimum": 100,
+                  "type": "number"
+                },
+                "message": {
+                  "default": "Customer has no credit available.",
+                  "description": "Message to return when enforcement is triggered.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "USAGE_LIMIT_REACHED": {
+              "properties": {
+                "http_status": {
+                  "default": 429,
+                  "description": "Status code to return when enforcement is triggered.",
+                  "maximum": 599,
+                  "minimum": 100,
+                  "type": "number"
+                },
+                "message": {
+                  "default": "Customer has reached usage limit for feature.",
+                  "description": "Message to return when enforcement is triggered.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
           },
-          "type": "array"
+          "type": "object"
         },
-        "session_response_headers": {
-          "items": {
-            "enum": [
-              "absolute-timeout",
-              "audience",
-              "id",
-              "idling-timeout",
-              "rolling-timeout",
-              "subject",
-              "timeout"
-            ],
-            "type": "string"
-          },
-          "type": "array"
+        "ssl_verify": {
+          "default": true,
+          "description": "Verify the TLS certificate presented by the governance endpoint.",
+          "type": "boolean"
         },
-        "session_rolling_timeout": {
-          "default": 3600,
-          "description": "The session cookie absolute timeout in seconds. Specifies how long the session can be used until it is no longer valid.",
+        "sync_rate": {
+          "default": 2,
+          "description": "How often in seconds to sync enforcement state from redis",
+          "minimum": 1,
           "type": "number"
         },
-        "session_secret": {
-          "description": "The session secret. This must be a random string of 32 characters from the base64 alphabet (letters, numbers, `/`, `_` and `+`). It is used as the secret key for encrypting session data as well as state information that is sent to the IdP in the authentication exchange. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
-          "maxLength": 32,
-          "minLength": 32,
-          "type": "string",
-          "x-encrypted": true,
-          "x-referenceable": true
-        },
-        "session_storage": {
-          "default": "cookie",
-          "description": "The session storage for session data: - `cookie`: stores session data with the session cookie. The session cannot be invalidated or revoked without changing the session secret, but is stateless, and doesn't require a database. - `memcached`: stores session data in memcached - `redis`: stores session data in Redis",
-          "enum": [
-            "cookie",
-            "memcache",
-            "memcached",
-            "redis"
-          ],
-          "type": "string"
-        },
-        "session_store_metadata": {
-          "default": false,
-          "description": "Configures whether or not session metadata should be stored. This includes information about the active sessions for the `specific_audience` belonging to a specific subject.",
-          "type": "boolean"
-        },
-        "validate_assertion_signature": {
-          "default": true,
-          "description": "Controls SAML response signature validation. When enabled (the default), the `saml:Assertion` signature is validated and a valid `idp_certificate` is required. When disabled, the signature is still validated as long as an `idp_certificate` is configured, but the `samlp:Response` signature is checked instead of the assertion. Disabling it without an `idp_certificate` skips signature validation entirely, which is insecure (unsigned responses are accepted) and logs a warning.",
-          "type": "boolean"
+        "timeout": {
+          "default": 10000,
+          "description": "Maximum time in milliseconds to wait for a response from the governance endpoint.",
+          "type": "number"
         }
       },
       "required": [
-        "assertion_consumer_path",
-        "idp_sso_url",
-        "issuer",
-        "session_secret"
+        "api_token",
+        "feature",
+        "governance_endpoint"
       ],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
       "type": "object"
     },
     "protocols": {

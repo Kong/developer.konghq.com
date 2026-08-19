@@ -2,6 +2,11 @@
   "properties": {
     "config": {
       "properties": {
+        "cache_by_principal": {
+          "default": false,
+          "description": "When enabled, use the authenticated Principal's UUID to compose the cache key.",
+          "type": "boolean"
+        },
         "cache_control": {
           "default": false,
           "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",

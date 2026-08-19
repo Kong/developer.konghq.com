@@ -26,6 +26,15 @@
           "description": "Determines whether to enable parameters validation of request content-type.",
           "type": "boolean"
         },
+        "enforcement_mode": {
+          "default": "block",
+          "description": "Determines the action to take when a request fails validation. When set to `block`, the request is rejected with an HTTP 400 response. When set to `log_only`, the request is allowed to proceed and a warning is logged.",
+          "enum": [
+            "block",
+            "log_only"
+          ],
+          "type": "string"
+        },
         "parameter_schema": {
           "description": "Array of parameter validator specification. One of `body_schema` or `parameter_schema` must be specified.",
           "items": {

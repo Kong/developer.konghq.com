@@ -12,7 +12,7 @@
           "type": "boolean"
         },
         "identity_realms": {
-          "description": "A configuration of Konnect Identity Realms that indicate where to source a consumer from.",
+          "description": "A configuration of Konnect Identity Realms that indicate where to source a consumer from. Defaults to a single local realm. Set this field to an empty array explicitly when the plugin enables Kong Identity `principals`, since the two are mutually exclusive.",
           "items": {
             "properties": {
               "id": {

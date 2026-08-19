@@ -24,7 +24,7 @@
           "type": "array"
         },
         "audience_required": {
-          "description": "The audiences (`audience_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases.",
+          "description": "The audiences (`audience_claim` claim) required for successful authorization. The plugin checks these values against the access token (or introspection results). Each array element is an alternative (**OR**). To require several values together, put them in one element separated by spaces (**AND**). For example, `[\"a b\", \"c\"]` authorizes a token that has both audiences `a` and `b`, or a token that has audience `c`.",
           "items": {
             "type": "string"
           },
@@ -438,7 +438,8 @@
                   "enum": [
                     "aws",
                     "azure",
-                    "gcp"
+                    "gcp",
+                    "oauth"
                   ],
                   "type": "string",
                   "x-referenceable": true
@@ -505,6 +506,109 @@
                   "type": "string",
                   "x-encrypted": true,
                   "x-referenceable": true
+                },
+                "oauth": {
+                  "description": "OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.",
+                  "properties": {
+                    "auth_method": {
+                      "default": "client_secret_post",
+                      "description": "Client authentication method used against the token endpoint.",
+                      "enum": [
+                        "client_secret_basic",
+                        "client_secret_jwt",
+                        "client_secret_post"
+                      ],
+                      "type": "string"
+                    },
+                    "client_id": {
+                      "description": "OAuth 2.0 client ID. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "client_secret": {
+                      "description": "OAuth 2.0 client secret. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "client_secret_jwt_alg": {
+                      "default": "HS512",
+                      "description": "Signing algorithm used for `client_secret_jwt` client authentication.",
+                      "enum": [
+                        "HS256",
+                        "HS512"
+                      ],
+                      "type": "string"
+                    },
+                    "grant_type": {
+                      "default": "client_credentials",
+                      "description": "OAuth 2.0 grant type used to request access tokens.",
+                      "enum": [
+                        "client_credentials",
+                        "password"
+                      ],
+                      "type": "string"
+                    },
+                    "password": {
+                      "description": "Resource owner password, used with the `password` grant type. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "redis_username": {
+                      "description": "Static Redis ACL username sent with `AUTH <username> <token>`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "redis_username_claim": {
+                      "description": "JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).",
+                      "type": "string"
+                    },
+                    "scopes": {
+                      "default": [],
+                      "description": "OAuth 2.0 scopes to request.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "ssl_verify": {
+                      "default": true,
+                      "description": "Whether to verify the TLS certificate of the token endpoint.",
+                      "type": "boolean"
+                    },
+                    "timeout": {
+                      "default": 10000,
+                      "description": "Timeout, in milliseconds, for requests to the token endpoint.",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "token_endpoint": {
+                      "description": "OAuth 2.0 token endpoint URL used to request access tokens.",
+                      "type": "string"
+                    },
+                    "token_headers": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "Additional HTTP headers to send with the token request.",
+                      "type": "object"
+                    },
+                    "token_post_args": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "Additional POST body arguments to send with the token request.",
+                      "type": "object"
+                    },
+                    "username": {
+                      "description": "Resource owner username, used with the `password` grant type. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    }
+                  },
+                  "type": "object"
                 }
               },
               "type": "object"
@@ -917,7 +1021,7 @@
           "type": "array"
         },
         "groups_required": {
-          "description": "The groups (`groups_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases.",
+          "description": "The groups (`groups_claim` claim) required for successful authorization. The plugin checks these values against the access token (or introspection results). Each array element is an alternative (**OR**). To require several values together, put them in one element separated by spaces (**AND**). For example, `[\"a b\", \"c\"]` authorizes a token that has both groups `a` and `b`, or a token that has group `c`.",
           "items": {
             "type": "string"
           },
@@ -925,7 +1029,7 @@
         },
         "hide_credentials": {
           "default": true,
-          "description": "Remove the credentials used for authentication from the request. If multiple credentials are sent with the same request, the plugin will remove those that were used for successful authentication.",
+          "description": "Remove the credentials used for authentication from the downstream request. If multiple credentials are sent with the same request, the plugin will remove those that were used for successful authentication. This setting does not control how the plugin sends the access token to the upstream service. To control that, use `upstream_access_token_header`.",
           "type": "boolean"
         },
         "http_proxy": {
@@ -974,7 +1078,7 @@
         },
         "ignore_signature": {
           "default": [],
-          "description": "Skip the token signature verification on certain grants: - `password`: OAuth password grant - `client_credentials`: OAuth client credentials grant - `authorization_code`: authorization code flow - `refresh_token`: OAuth refresh token grant - `session`: session cookie authentication - `introspection`: OAuth introspection - `userinfo`: OpenID Connect user info endpoint authentication.",
+          "description": "Skip the token signature verification on certain grants. This is insecure and logs a warning; use it only for providers that publish no verification key. Grants: - `password`: OAuth password grant - `client_credentials`: OAuth client credentials grant - `authorization_code`: authorization code flow - `refresh_token`: OAuth refresh token grant - `session`: session cookie authentication - `introspection`: OAuth introspection - `userinfo`: OpenID Connect user info endpoint authentication.",
           "items": {
             "enum": [
               "authorization_code",
@@ -1441,6 +1545,41 @@
           ],
           "type": "object"
         },
+        "protected_resource_metadata": {
+          "description": "When configured, the plugin advertises this API as an OAuth 2.0 protected resource per RFC 9728. It serves a discovery document at the well-known URI and includes resource_metadata in WWW-Authenticate challenge headers.",
+          "properties": {
+            "authorization_servers": {
+              "description": "List of authorization server issuer URIs to advertise in the RFC 9728 metadata document.",
+              "items": {
+                "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+                "type": "string"
+              },
+              "minLength": 1,
+              "type": "array"
+            },
+            "metadata_endpoint": {
+              "description": "Override the well-known metadata endpoint path. Defaults to the path component of resource with /.well-known/oauth-protected-resource appended.",
+              "type": "string"
+            },
+            "resource": {
+              "description": "The URI of the protected resource. Used as the resource field in the RFC 9728 metadata document and to derive the well-known endpoint path.",
+              "type": "string"
+            },
+            "scopes_supported": {
+              "description": "Scopes supported by this protected resource. Included in the RFC 9728 metadata document and in the scope attribute of WWW-Authenticate challenge headers on 401 responses.",
+              "items": {
+                "type": "string"
+              },
+              "minLength": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "authorization_servers",
+            "resource"
+          ],
+          "type": "object"
+        },
         "pushed_authorization_request_endpoint": {
           "description": "The pushed authorization endpoint. If set it overrides the value in `pushed_authorization_request_endpoint` returned by the discovery endpoint.",
           "type": "string"
@@ -1476,7 +1615,8 @@
                   "enum": [
                     "aws",
                     "azure",
-                    "gcp"
+                    "gcp",
+                    "oauth"
                   ],
                   "type": "string",
                   "x-referenceable": true
@@ -1543,6 +1683,109 @@
                   "type": "string",
                   "x-encrypted": true,
                   "x-referenceable": true
+                },
+                "oauth": {
+                  "description": "OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.",
+                  "properties": {
+                    "auth_method": {
+                      "default": "client_secret_post",
+                      "description": "Client authentication method used against the token endpoint.",
+                      "enum": [
+                        "client_secret_basic",
+                        "client_secret_jwt",
+                        "client_secret_post"
+                      ],
+                      "type": "string"
+                    },
+                    "client_id": {
+                      "description": "OAuth 2.0 client ID. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "client_secret": {
+                      "description": "OAuth 2.0 client secret. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "client_secret_jwt_alg": {
+                      "default": "HS512",
+                      "description": "Signing algorithm used for `client_secret_jwt` client authentication.",
+                      "enum": [
+                        "HS256",
+                        "HS512"
+                      ],
+                      "type": "string"
+                    },
+                    "grant_type": {
+                      "default": "client_credentials",
+                      "description": "OAuth 2.0 grant type used to request access tokens.",
+                      "enum": [
+                        "client_credentials",
+                        "password"
+                      ],
+                      "type": "string"
+                    },
+                    "password": {
+                      "description": "Resource owner password, used with the `password` grant type. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "redis_username": {
+                      "description": "Static Redis ACL username sent with `AUTH <username> <token>`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "redis_username_claim": {
+                      "description": "JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).",
+                      "type": "string"
+                    },
+                    "scopes": {
+                      "default": [],
+                      "description": "OAuth 2.0 scopes to request.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "ssl_verify": {
+                      "default": true,
+                      "description": "Whether to verify the TLS certificate of the token endpoint.",
+                      "type": "boolean"
+                    },
+                    "timeout": {
+                      "default": 10000,
+                      "description": "Timeout, in milliseconds, for requests to the token endpoint.",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "token_endpoint": {
+                      "description": "OAuth 2.0 token endpoint URL used to request access tokens.",
+                      "type": "string"
+                    },
+                    "token_headers": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "Additional HTTP headers to send with the token request.",
+                      "type": "object"
+                    },
+                    "token_post_args": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "Additional POST body arguments to send with the token request.",
+                      "type": "object"
+                    },
+                    "username": {
+                      "description": "Resource owner username, used with the `password` grant type. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    }
+                  },
+                  "type": "object"
                 }
               },
               "type": "object"
@@ -1825,7 +2068,7 @@
           "type": "array"
         },
         "roles_required": {
-          "description": "The roles (`roles_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases.",
+          "description": "The roles (`roles_claim` claim) required for successful authorization. The plugin checks these values against the access token (or introspection results). Each array element is an alternative (**OR**). To require several values together, put them in one element separated by spaces (**AND**). For example, `[\"a b\", \"c\"]` authorizes a token that has both roles `a` and `b`, or a token that has role `c`.",
           "items": {
             "type": "string"
           },
@@ -1859,7 +2102,7 @@
           "type": "array"
         },
         "scopes_required": {
-          "description": "The scopes (`scopes_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases.",
+          "description": "The scopes (`scopes_claim` claim) required for successful authorization. The plugin checks these values against the access token (or introspection results). Each array element is an alternative (**OR**). To require several values together, put them in one element separated by spaces (**AND**). For example, `[\"a b\", \"c\"]` authorizes a token that has both scopes `a` and `b`, or a token that has scope `c`.",
           "items": {
             "type": "string"
           },
@@ -2116,6 +2359,37 @@
             "request": {
               "description": "Parameters used in the token exchange request.",
               "properties": {
+                "actor_token": {
+                  "description": "How to obtain the actor token to include in the token exchange request. Represents the identity of the party acting on behalf of the subject.",
+                  "properties": {
+                    "header_name": {
+                      "description": "Header name containing the actor token. Required when `source` is `header`.",
+                      "type": "string"
+                    },
+                    "source": {
+                      "default": "none",
+                      "description": "Where to obtain the actor token. `header` reads it from a request header. `config` uses a fixed value. `none` disables actor token support.",
+                      "enum": [
+                        "config",
+                        "header",
+                        "none"
+                      ],
+                      "type": "string"
+                    },
+                    "static_token": {
+                      "description": "Static actor token value. Required when `source` is `config`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "type": {
+                      "default": "urn:ietf:params:oauth:token-type:access_token",
+                      "description": "The RFC 8693 token type identifier of the actor token (the `actor_token_type` request parameter).",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
                 "audience": {
                   "description": "Audiences used in the token exchange request. Values defined here override those defined in `config.audience`.",
                   "items": {
@@ -2303,7 +2577,7 @@
         },
         "upstream_access_token_header": {
           "default": "authorization:bearer",
-          "description": "The upstream access token header.",
+          "description": "The upstream access token header. The access token is sent to the upstream service using this header regardless of the `hide_credentials` setting. Set this field to `null` to prevent sending the access token to the upstream.",
           "type": "string"
         },
         "upstream_access_token_jwk_header": {
