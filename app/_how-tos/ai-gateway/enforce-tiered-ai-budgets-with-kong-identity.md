@@ -83,9 +83,20 @@ automated_tests: false
 
 ---
 
+## Overview
+
+[Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) issued each of five example callers a token carrying its tier, individual spend cap, shared org pool, and group membership as claims. This guide connects those tokens to {{site.ai_gateway}}: an AI Identity Provider verifies each token and projects its claims onto request headers, a standard and a premium AI Model both check those headers but deny different callers, and an AI Rate Limiting Advanced Policy enforces a spend ceiling per tier, plus the shared org pool and individual cap from the previous guide.
+
 ## Create the AI Consumer Groups, AI Identity Provider, AI Model Provider, and AI Models
 
-Create the two [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that `access.acls` denies, an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that verifies bearer tokens against your {{site.identity}} issuer, an [AI Model Provider](/ai-gateway/entities/ai-model-provider/), and two [AI Models](/ai-gateway/entities/ai-model/) that share a route and an [AI Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/), but differ in which groups `access.acls` denies. `tokens_count_strategy: cost` charges each request in dollars, so the same ceiling applies whether a request lands on the cheaper `gpt-4o-mini` or the pricier `gpt-4o`:
+Create the following:
+
+* Two [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), `contractors` and `suspended`, that `access.acls` denies.
+* An [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that verifies bearer tokens against your {{site.identity}} issuer.
+* An [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for the upstream OpenAI credentials.
+* A standard and a premium [AI Model](/ai-gateway/entities/ai-model/) that share a route and an [AI Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/), but differ in which groups `access.acls` denies.
+
+`tokens_count_strategy: cost` charges each request in dollars, so the same ceiling applies whether a request lands on the cheaper `gpt-4o-mini` or the pricier `gpt-4o`:
 
 {% entity_examples %}
 ai_gateway_consumer_groups:
@@ -226,16 +237,16 @@ ai_gateway_models:
 
 {:.collapsible}
 
-The caller picks a model with the request body's `model` field. The fourth policy in `budget-limits` matches on the subject header alone, so it always applies, and the lowest matching ceiling binds.
+A request selects its model through the request body's `model` field. The fourth policy in `budget-limits` matches on the subject header alone, so it always applies, and the lowest matching ceiling binds.
 
 ## Validate
 
-Obtain a bearer token for each persona using the client credentials grant shown in [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/), then send requests through either model.
+Obtain a bearer token for each persona using the client credentials grant shown in [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/), then send requests through either model. None of the requests below set the `x-budget-*` headers themselves; `budget-identity` derives them internally from each token's claims, before the request reaches `budget-limits` or the upstream model.
 
 An unauthenticated request is rejected:
 
 ```sh
-curl -X POST "http://localhost:8000/v1/chat/completions" \
+curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
   -H "Content-Type: application/json" \
   --json '{
     "model": "budget-chat",
@@ -257,7 +268,7 @@ export CAROL_ACCESS_TOKEN=$(curl -s -X POST "$ISSUER_URL/oauth/token" \
   -d "scope=budgets-access" \
   | jq -r '.access_token')
 
-curl -X POST "http://localhost:8000/v1/chat/completions" \
+curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
      --no-progress-meter --fail-with-body \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $CAROL_ACCESS_TOKEN" \
@@ -272,7 +283,7 @@ Carol isn't in `contractors` or `suspended`, so the same token also reaches the 
 
 <!--vale off-->
 ```sh
-curl -X POST "http://localhost:8000/v1/chat/completions" \
+curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
      --no-progress-meter --fail-with-body \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $CAROL_ACCESS_TOKEN" \
@@ -297,7 +308,7 @@ export DAVE_ACCESS_TOKEN=$(curl -s -X POST "$ISSUER_URL/oauth/token" \
   -d "scope=budgets-access" \
   | jq -r '.access_token')
 
-curl -X POST "http://localhost:8000/v1/chat/completions" \
+curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
      --no-progress-meter --fail-with-body \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $DAVE_ACCESS_TOKEN" \
@@ -322,7 +333,7 @@ export GRACE_ACCESS_TOKEN=$(curl -s -X POST "$ISSUER_URL/oauth/token" \
   -d "scope=budgets-access" \
   | jq -r '.access_token')
 
-curl -X POST "http://localhost:8000/v1/chat/completions" \
+curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $GRACE_ACCESS_TOKEN" \
   --json '{
@@ -333,6 +344,9 @@ curl -X POST "http://localhost:8000/v1/chat/completions" \
 <!--vale on-->
 
 The request fails with `403 Forbidden`. `access.acls` denies on the `suspended` group before the request reaches `budget-limits`, regardless of Grace's tier.
+
+{:.info}
+> If this request doesn't return `403`, `budget-identity` likely isn't projecting `kong_groups` onto an ACL group Kong recognizes yet. Verify `consumer_groups_claim` and `upstream_headers_names` actually took effect (see the FAQ above), and allow a few seconds after any `kongctl apply` for the change to reach the data plane before retrying.
 
 ## View usage in {{site.observability}}
 
