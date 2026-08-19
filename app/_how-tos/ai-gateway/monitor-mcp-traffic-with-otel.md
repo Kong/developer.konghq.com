@@ -183,6 +183,10 @@ You should see the following response:
 
 Check the collector's logs for `kong.gen_ai.mcp` to find the emitted metrics:
 
+{:.info}
+> Allow a few seconds for the collector to export metrics after traffic generation.
+
+
 {% validation custom-command %}
 command: |
   docker logs otel-collector 2>&1 | grep -A 15 kong.gen_ai.mcp
