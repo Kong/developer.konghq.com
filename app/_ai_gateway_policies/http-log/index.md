@@ -25,6 +25,10 @@ The HTTP Log Policy lets you send request and response logs to an HTTP server.
 {:.info}
 > **Note:** If the `max_batch_size` argument > 1, a request is logged as an array of JSON objects.
 
+## Process errors
+
+{% include md/ai-gateway/v2/policies/process-errors.md %}
+
 ## Log format
 
 {% include md/ai-gateway/v2/policies/log-format.md %}
@@ -45,4 +49,4 @@ In contrast to other Policies that use queues, all HTTP Log Policy instances tha
 
 ## Custom fields by Lua
 
-{% include md/ai-gateway/v2/policies/log-custom-fields-by-lua.md slug="http-log" name="HTTP Log" %}
+{% include md/ai-gateway/v2/policies/log-custom-fields-by-lua.md slug="http-log" name="HTTP Log" base_config="http_endpoint: http://my-endpoint:9999/" %}

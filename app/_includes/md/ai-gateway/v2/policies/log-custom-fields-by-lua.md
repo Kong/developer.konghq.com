@@ -6,10 +6,11 @@ The [`config.custom_fields_by_lua`](/ai-gateway/policies/{{include.slug}}/refere
 type: policy
 data:
   name: {{include.slug}}
+  type: {{include.slug}}
   config:
+    {{include.base_config}}
     custom_fields_by_lua:
       route: "return nil"
-    http_endpoint: http://my-endpoint:9999/
 formats:
   - konnect-api
   - kongctl
@@ -23,9 +24,9 @@ data:
   name: {{include.slug}}
   type: {{include.slug}}
   config:
+    {{include.base_config}}
     custom_fields_by_lua:
       header: "return kong.request.get_header('h1')"
-    http_endpoint: http://my-endpoint:9999/
 formats:
   - konnect-api
   - kongctl
@@ -45,9 +46,9 @@ data:
   name: {{include.slug}}
   type: {{include.slug}}
   config:
+    {{include.base_config}}
     custom_fields_by_lua:
       "ai.proxy.payload.request": "return nil"
-    http_endpoint: http://my-endpoint:9999/
 formats:
   - konnect-api
   - kongctl
