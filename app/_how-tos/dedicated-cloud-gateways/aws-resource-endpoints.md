@@ -177,12 +177,13 @@ To allow this traffic, create a dedicated security group for your resource gatew
 1. Navigate to the security group for your backend target resource.
 1. Add an inbound rule for the relevant port (for example, TCP/443).
 1. In the **Source** field, select the dedicated resource gateway security group you created.
-1. Repeat steps 3-6 for each backend resource that receives traffic through the resource gateway.
+
+Create a new security group for each backend resource that receives traffic through the resource gateway.
 
 ## Troubleshooting timeouts
 
 If requests time out and your NLB shows no incoming traffic:
-* Verify the security group attached to your backend allows inbound traffic from the resource gateway's dedicated security group.
+* Verify that the security group attached to your backend allows inbound traffic from the resource gateway's dedicated security group.
 * Confirm your resource gateway's subnet has an Availability Zone (AZ) that overlaps with your Dedicated Cloud Gateway network's AZs. This is a common, hard-to-diagnose failure mode: without AZ overlap, the resource endpoint config can show as `missing` in {{site.konnect_short_name}}, even though nothing else is misconfigured.
 * Validate the Resource Endpoint connection is in the `READY` state in {{site.konnect_short_name}}.
 * Confirm the Gateway Service upstream host matches the Resource Endpoint domain name.
