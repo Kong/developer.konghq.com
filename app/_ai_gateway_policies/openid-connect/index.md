@@ -169,7 +169,7 @@ The OpenID Connect Policy has several options for performing coarse-grained auth
 1. [Claims-based authorization](#claims-based-authorization)
 2. [ACL Policy authorization](#acl-policy-authorization)
 3. [AI Consumer authorization](#ai-consumer-authorization)
-4. [AI Consumer Group authorization](#ai-consumer-group-authorization) {% new_in 3.12 %}
+4. [AI Consumer Group authorization](#ai-consumer-group-authorization)
 
 #### Claims-based authorization
 
@@ -277,7 +277,7 @@ Set up AI Consumer auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/consumer-auth/)
 * [Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
 
-#### AI Consumer Group authorization {% new_in 3.12 %}
+#### AI Consumer Group authorization
 
 You can use [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) for authorization and dynamically map claim values to AI Consumer Groups. 
 This means that we restrict the access to only those that do have a matching AI Consumer Group. 
@@ -305,7 +305,7 @@ You can use mTLS client authentication with the following IdP endpoints and corr
 
 For all these endpoints and for the flows supported, the Policy uses mTLS client authentication as the authentication method when communicating with the IdP, for example, to fetch the token from the token endpoint.
 
-## Financial-grade API (FAPI) {% new_in 3.7 %}
+## Financial-grade API (FAPI)
 
 The OpenID Connect Policy supports various features of the FAPI standard, aimed to protect APIs that expose high-value and sensitive data.
 
@@ -369,7 +369,7 @@ rows:
       Set [`config.proof_of_possession_dpop`](./reference/#schema--config-proof-of-possession-dpop) to `strict` to enable DPoP.
     example: "[Demonstrating Proof-of-Possession](/ai-gateway/policies/openid-connect/examples/dpop/)"
   - spec: | 
-      mTLS Proof-of-Possession via HTTP header {% new_in 3.15 %}
+      mTLS Proof-of-Possession via HTTP header
     description: |
       In enterprise deployments where TLS is terminated at a WAF or load balancer before {{site.ai_gateway}},
       the downstream connection carries no client certificate.
@@ -408,7 +408,7 @@ To enable certificate-bound access for OpenID Connect:
 
 See the [cert-bound configuration example](/ai-gateway/policies/openid-connect/examples/cert-bound-access-tokens/) for more detail and [Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/) for a complete tutorial.
 
-### mTLS Proof-of-Possession via HTTP header {% new_in 3.15 %}
+### mTLS Proof-of-Possession via HTTP header
 
 Many enterprise deployments terminate TLS at a WAF or Layer-7 proxy before traffic reaches {{site.ai_gateway}}.
 In these environments, the TLS connection between the proxy and {{site.ai_gateway}} carries no client certificate, which prevents the standard mTLS PoP flow from working.
@@ -456,13 +456,13 @@ You can implement this in one of the following ways:
 {{site.ai_gateway}} validates incoming tokens against the appropriate public keys and forwards them to the backend as-is.
 This works best when token formats are consistent across IdPs.
 
-* **Token exchange** {% new_in 3.14 %}: Configure the OIDC Policy to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](/ai-gateway/policies/openid-connect/reference/#schema--config-token-exchange).
+* **Token exchange**: Configure the OIDC Policy to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](/ai-gateway/policies/openid-connect/reference/#schema--config-token-exchange).
 The backend always receives tokens from a single issuer regardless of which IdP the client used.
 This works best when backends must trust one issuer, or when you need to normalize scopes and claims across IdPs.
 
 For a detailed comparison, configuration parameters, and examples, see [Multi-IdP token validation at the gateway layer](/ai-gateway/policies/openid-connect/multi-idp/).
 
-## Token exchange {% new_in 3.14 %}
+## Token exchange
 
 The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
 The RFC defines a protocol approach to support scenarios where a client can exchange a token for a new token by interacting with the authorization server. 
@@ -498,7 +498,7 @@ The OpenID Connect Policy performs the following checks on the incoming token be
   * The issuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
   * The token is not expired (`exp` claim).
   * The token is not used before its time (`nbf` claim).
-  * {% new_in 3.15 %} If [`verify_signature`](/ai-gateway/policies/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{site.ai_gateway}} cryptographically verifies the token signature before sending the exchange request to the IdP.
+  * If [`verify_signature`](/ai-gateway/policies/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{site.ai_gateway}} cryptographically verifies the token signature before sending the exchange request to the IdP.
 1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered.
 1. If the `subject_token_issuer` and `target_issuer` are the same, the configured conditions are evaluated to determine whether to trigger token exchange.
 1. {{site.ai_gateway}} uses its client credentials to trigger the exchange.
@@ -522,7 +522,7 @@ The token exchange flow uses the following terms:
 * **Conditions**: Conditions under which to trigger token exchange. 
 Conditions look for the presence or absence of two claims: `scopes` and `audience`. 
 
-### Subject token signature verification {% new_in 3.15 %}
+### Subject token signature verification
 
 By default, {{site.ai_gateway}} validates the `iss`, `exp`, and `nbf` claims of an incoming subject token but doesn't verify its cryptographic signature before sending the exchange request to the IdP.
 The IdP performs its own signature check, so validation happens eventually.
@@ -578,7 +578,7 @@ curl -X GET "http://localhost:8000?client_id=2"
 {:.info}
 > **Note:** Configuring multiple clients is not possible with the client credentials grant, as the Policy always uses the client ID passed directly from the client.
 
-## Using cloud authentication with Redis {% new_in 3.13 %}
+## Using cloud authentication with Redis
 
 {% include_cached /md/ai-gateway/v2/redis-cloud-auth.md %}
 
