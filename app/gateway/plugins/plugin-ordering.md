@@ -1,7 +1,7 @@
 ---
 title: How dynamic plugin ordering works
 
-description: A plain-language guide to dynamic plugin ordering in {{site.base_gateway}} — the principle behind it, how the new and legacy algorithms differ, and how to predict the exact execution order your ordering rules produce.
+description: A plain-language guide to dynamic plugin ordering in {{site.base_gateway}} — the principle behind it, how the priority_preserving and legacy algorithms differ, and how to predict the exact execution order your ordering rules produce.
 content_type: reference
 layout: reference
 
@@ -13,7 +13,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.15'
+  gateway: '3.16'
 
 breadcrumbs:
   - /gateway/
@@ -50,17 +50,15 @@ has run:
 `before` and `after` only decide *which* plugins are allowed to run yet. Among the plugins that are
 allowed, the higher priority always goes first.
 
-A useful analogy is boarding a plane: first class boards before economy, but a first-class
-passenger who hasn't reached the gate yet has to wait while a checked-in economy passenger boards.
-Priority decides who goes first; "not ready yet" always wins.
-
 Two consequences fall out of that rule, and they are the whole behavior:
 
 * **Only the plugin you name moves.** When you write `before` or `after` on a plugin, that plugin
   (the *mover*) is the one repositioned — next to the plugin it points at (the *anchor*). Think of
   the mover as being given a temporary position right beside its anchor (just above it for
-  `before`, just below it for `after`). Every plugin you did **not** configure keeps its natural
-  priority slot.
+  `before`, just below it for `after`). Every plugin you did **not** configure keeps its order
+  relative to every other plugin you didn't configure — though its absolute position can shift by
+  a slot or two when a mover passes through it on the way to its anchor. (See `before` ≠ `after`,
+  below, for what that looks like.)
 * **`before` and `after` are not the same statement.** `A before B` moves `A`; `B after A` moves
   `B`. They describe the same relationship but relocate different plugins, so they can produce
   different orders. Choose the form that names the plugin you actually want to move.
@@ -102,17 +100,36 @@ builds the result:
 
 **Result:** `request-callout → opentelemetry → pre-function`.
 
-Notice what did **not** happen: `request-callout`, which you never configured, kept its place. You
-moved `pre-function`, and only `pre-function` moved.
+Notice what did **not** happen: `request-callout`, which you never configured, was not itself
+repositioned by any rule — it rose one slot only because `pre-function` dropped past it on the way
+to its anchor. You moved `pre-function`, and only `pre-function` carried an `ordering` rule.
 
-## New vs. legacy ordering
+## Plugins that share a priority
+
+A cloned plugin that declares no `priority` override inherits its source plugin's priority, so
+sharing a priority is routine rather than exotic. `key-auth-enc` and `key-auth`, for example, both
+run at priority `1250`.
+
+{{site.base_gateway}} breaks a tie deterministically: by plugin name, descending. It never depends
+on load order or timing, and this holds for both ordering algorithms. An `ordering` rule between
+two plugins that share a priority is honored exactly like any other rule — for example, `acl`
+(priority `950`) with `before: [key-auth]` lands directly above `key-auth`, and `key-auth-enc`
+(also `1250`, alphabetically after `key-auth`) is unaffected either way:
+
+```
+natural order:                   key-auth-enc, key-auth, acl
+acl with before: [key-auth]:     key-auth-enc, acl, key-auth
+```
+
+## `priority_preserving` vs. `legacy` ordering
 
 {{site.base_gateway}} includes two ordering algorithms, selected by the
 [`plugin_ordering_algorithm`](/gateway/configuration/)
 configuration parameter:
 
-* **`new`** — the algorithm described above. Only the configured plugin moves; unconfigured plugins
-  keep their priority slots; `before` and `after` can differ.
+* **`priority_preserving`** — the algorithm described above. Only the configured plugin moves;
+  every other plugin's order relative to the other plugins you didn't configure is unchanged;
+  `before` and `after` can differ.
 * **`legacy`** — the original algorithm, kept so upgrades don't change behavior unexpectedly. It
   treats `before` and `after` as the same relationship, and repositioning one plugin can pull
   unrelated plugins out of their priority slots.
@@ -123,50 +140,58 @@ The scenario above shows the difference plainly:
 columns:
   - title: ""
     key: item
-  - title: "`new`"
-    key: new
+  - title: "`priority_preserving`"
+    key: priority_preserving
   - title: "`legacy`"
     key: legacy
 rows:
   - item: Result
-    new: "`request-callout, opentelemetry, pre-function`"
+    priority_preserving: "`request-callout, opentelemetry, pre-function`"
     legacy: "`opentelemetry, pre-function, request-callout`"
   - item: What moved
-    new: "only `pre-function` (as configured)"
+    priority_preserving: "only `pre-function` (as configured)"
     legacy: "`opentelemetry` jumped to the front and `request-callout` was pushed to the end — **neither was configured**"
 {% endtable %}
 
 Under `legacy`, moving `pre-function` displaced `opentelemetry` and `request-callout` even though
 you never mentioned them. That surprise — an unrelated plugin changing position — is exactly what
-`new` removes.
+`priority_preserving` removes.
 
-### `before` ≠ `after` under `new`
+### `before` ≠ `after` under `priority_preserving`
 
-Take five plugins in natural priority order `e(500), d(400), c(300), b(200), a(100)` and express
-the same relationship two ways:
+Take five plugins in natural priority order — `key-auth (1250)`, `ldap-auth (1200)`,
+`header-cert-auth (1009)`, `response-transformer (800)`, `ai-proxy (770)` — and express the same
+relationship two ways:
 
 {% table %}
 columns:
   - title: Configuration
     key: config
-  - title: "`new` result"
-    key: new
+  - title: "`priority_preserving` result"
+    key: priority_preserving
   - title: "`legacy` result"
     key: legacy
 rows:
-  - config: "`b` with `before: [d]`"
-    new: "`e, b, d, c, a`"
-    legacy: "`e, b, d, c, a`"
-  - config: "`d` with `after: [b]`"
-    new: "`e, c, b, d, a`"
-    legacy: "`e, b, d, c, a`"
+  - config: "`response-transformer` with `before: [ldap-auth]`"
+    priority_preserving: "`key-auth, response-transformer, ldap-auth, header-cert-auth, ai-proxy`"
+    legacy: "`key-auth, response-transformer, ldap-auth, header-cert-auth, ai-proxy`"
+  - config: "`ldap-auth` with `after: [response-transformer]`"
+    priority_preserving: "`key-auth, header-cert-auth, response-transformer, ldap-auth, ai-proxy`"
+    legacy: "`key-auth, response-transformer, ldap-auth, header-cert-auth, ai-proxy`"
 {% endtable %}
 
-Under `new`, `d after b` moves only `d` (down to just after `b`), so `c` and `e` stay put. Under
-`legacy`, `before` and `after` are identical, so both forms produce the same order — and to get
-there `legacy` lifts `b`, the plugin you only *referenced*.
+Under `priority_preserving`, `response-transformer before: [ldap-auth]` moves only
+`response-transformer` — up past `header-cert-auth` — to land just above `ldap-auth`;
+`header-cert-auth` drops one slot as a side effect. `ldap-auth after: [response-transformer]`
+moves only `ldap-auth` — down past `header-cert-auth` *and* `response-transformer` — to land just
+below `response-transformer`; this time `header-cert-auth` and `response-transformer` each rise
+one slot. Neither bystander is untouched, but its order relative to `key-auth` and `ai-proxy` is
+the same in both cases. Under `legacy`, `before` and `after` are identical, so **both forms produce
+the same order regardless of which plugin you write the rule on** — `response-transformer` rises
+two slots to the front of the pair, and `ldap-auth` and `header-cert-auth` both drop one slot to
+make room, even though only one relationship was ever configured.
 
-## Why `new` is easier to work with
+## Why `priority_preserving` is easier to work with
 
 * **Predictable.** Only the plugin you configure moves. You never have to reason about side effects
   on plugins you didn't touch.
@@ -178,8 +203,9 @@ there `legacy` lifts `b`, the plugin you only *referenced*.
 ### What {{site.base_gateway}} guarantees (both algorithms)
 
 * **Your rules are always honored, or the config is rejected.** Every `before`/`after` you set is
-  satisfied. If your rules contradict each other (for example `A before B` *and* `B before A`),
-  {{site.base_gateway}} reports a **circular dependency** error instead of guessing.
+  satisfied. If your rules contradict each other (for example `response-transformer before:
+  [ai-proxy]` *and* `ai-proxy before: [response-transformer]`), {{site.base_gateway}} reports a
+  **circular dependency** error instead of guessing.
 * **The result is deterministic.** It never depends on load order or timing.
 
 ### What it does not promise
@@ -191,6 +217,28 @@ there `legacy` lifts `b`, the plugin you only *referenced*.
 * **A priority-looking result when you constrain many plugins.** If you order most of your plugins
   explicitly, the output is dictated by those rules and can look nothing like priority order. That's
   expected — you asked for it.
+* **The tightest possible order when rules interact.** `priority_preserving` places each rule next
+  to its anchor rather than searching every valid order for the one with the least overall
+  disruption. In roughly one configuration in twenty that uses `ordering`, this pushes an
+  unconfigured plugin one or two places further than a hand-picked order would need. For example:
+
+  ```
+  natural priority order: key-auth, ldap-auth, response-transformer, ai-proxy
+
+  rules: response-transformer before: [ai-proxy]
+         ai-proxy before: [key-auth]
+
+  result: response-transformer, ai-proxy, key-auth, ldap-auth
+  ```
+
+  `ldap-auth` carries no `ordering` rule of its own, yet it drops from 2nd to last — a valid order
+  exists that satisfies the same two rules without moving `ldap-auth` at all (`ldap-auth,
+  response-transformer, ai-proxy, key-auth`), but `priority_preserving` doesn't search for it.
+
+  **If this matters for your setup, pin the affected plugin with its own rule.** Adding
+  `ldap-auth before: [response-transformer]` here recovers the tighter order — your rules are
+  always honored, so naming the plugin you want protected is the direct fix, rather than reasoning
+  about priority values.
 
 ## Scoping and the request path
 
@@ -207,10 +255,10 @@ resulting order can differ from one request path to another.
 ## Choosing an algorithm on upgrade
 
 `plugin_ordering_algorithm` defaults to `legacy`, so **upgrading does not change your current
-access-phase order**. When you're ready to adopt the clearer `new` behavior:
+access-phase order**. When you're ready to adopt the clearer `priority_preserving` behavior:
 
-1. Set `plugin_ordering_algorithm = new` in `kong.conf` (or the `KONG_PLUGIN_ORDERING_ALGORITHM`
-   environment variable) on your data planes.
+1. Set `plugin_ordering_algorithm = priority_preserving` in `kong.conf` (or the
+   `KONG_PLUGIN_ORDERING_ALGORITHM` environment variable) on your data planes.
 2. Re-test any Workspace that uses `ordering` — the access-phase order of those Workspaces may
    change (that's the fix taking effect). Workspaces with no `ordering` are unaffected either way.
 
@@ -226,3 +274,6 @@ If you use dynamic ordering, test your configurations and handle the feature wit
   plugin in a Workspace or control plane affects all plugins in that environment.
 * **Validation**: {{site.base_gateway}} catches basic mistakes (such as circular rules) but cannot
   validate that an order makes sense for your business logic.
+* **Non-optimal placement**: in an uncommon case, `priority_preserving` can displace an
+  unconfigured plugin more than necessary when multiple `ordering` rules interact. See [What it
+  does not promise](#what-it-does-not-promise) above for a worked example and the fix.
