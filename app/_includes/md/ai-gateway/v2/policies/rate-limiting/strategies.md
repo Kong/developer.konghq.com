@@ -17,7 +17,7 @@ rows:
     pros: Minimal performance impact.
     cons: Less accurate. Unless there's a consistent-hashing load balancer in front of {{site.ai_gateway}}, it diverges when scaling the number of nodes.
   - strategy: "`cluster`"
-    description: Counters are stored in the {{site.base_gateway}} data store and shared across nodes.
+    description: Counters are stored in the {{site.ai_gateway}} data store and shared across nodes.
     pros: Accurate<sup>1</sup>, no extra components to support.
     cons: Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in hybrid mode or {{site.konnect_short_name}} deployments.
   - strategy: "`redis`"
