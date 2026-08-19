@@ -13,25 +13,11 @@ The OpenTelemetry [AI Policy](/ai-gateway/entities/ai-policy/) provides metrics,
 You can configure a OpenTelemetry AI Policy to apply globally across every resource on your {{site.ai_gateway}} or only on resources where it is referenced.
 
 The OpenTelemetry AI Policy allows you to collect data for the following signals:
-- [Use cases](#use-cases)
-- [Resource attributes](#resource-attributes)
+
 - [Metrics](#metrics)
 - [Tracing](#tracing)
-  - [Built-in tracing instrumentations](#built-in-tracing-instrumentations)
-  - [Gen AI tracing attributes](#gen-ai-tracing-attributes)
-  - [Propagation](#propagation)
-  - [OTLP exporter](#otlp-exporter)
-  - [Create a custom span](#create-a-custom-span)
 - [Logging](#logging)
-  - [Log scopes](#log-scopes)
-  - [Log level](#log-level)
-  - [Runtime and error log entry](#runtime-and-error-log-entry)
-  - [Logging for custom plugins](#logging-for-custom-plugins)
-- [Queuing](#queuing)
-- [Trace IDs in serialized logs](#trace-ids-in-serialized-logs)
-- [Custom attributes by Lua](#custom-attributes-by-lua)
-- [Troubleshooting](#troubleshooting)
-
+ 
 ## Use cases
 
 Common use cases for the OpenTelemetry AI Policy:
