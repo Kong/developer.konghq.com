@@ -26,12 +26,3 @@ This AI Policy uses blocking I/O, which could affect performance when writing to
 ## Kong process errors
 
 {% include /md/ai-gateway/v2/policies/logging/kong-process-errors.md %}
-
-## Custom fields by Lua
-
-{% include /md/ai-gateway/v2/policies/logging/log-custom-fields-by-lua.md 
-custom_fields_by_lua='config.custom_fields_by_lua' 
-custom_fields_by_lua_slug='config-custom-fields-by-lua' 
-custom_fields_by_lua_name='custom_fields_by_lua' 
-name=page.name 
-slug=page.slug %}
