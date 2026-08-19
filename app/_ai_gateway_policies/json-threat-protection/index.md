@@ -30,7 +30,7 @@ rows:
   - usecase: Block invalid requests
     description: |
       Define a JSON threat protection policy and block any invalid requests.
-      If a request doesn't conform to the configured policy, the Policy blocks it from being proxied and returns an error.
+      If a request doesn't conform to the configured policy, the AI Policy blocks it from being proxied and returns an error.
   - usecase: Log invalid requests without blocking
     description: |
       Run the Policy in tap mode, which logs non-conforming requests while still letting them pass through the proxy.
@@ -47,11 +47,11 @@ The Policy validates the JSON body of incoming `POST`, `PUT`, and `PATCH` reques
 
 The Policy checks the following limits:
 
-- Maximum container depth of the entire JSON object
-- Maximum number of array elements
-- Maximum number of object entries
-- Maximum length of object keys
-- Maximum length of strings
+- Maximum container depth of the entire JSON object.
+- Maximum number of array elements.
+- Maximum number of object entries.
+- Maximum length of object keys.
+- Maximum length of strings.
 
 Additionally, you can set a policy that restricts the JSON body size ([`config.max_body_size`](./reference/#schema--config-max-body-size)). When this is configured, the Policy compares the `Content-Length` header with `max_body_size`. In block mode, if the `Content-Length` header is missing or its value exceeds `max_body_size`, the request is terminated. In tap mode, only the body size is checked and logs are recorded.
 
