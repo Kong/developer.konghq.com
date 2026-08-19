@@ -284,7 +284,7 @@ You can use mTLS client authentication with the following IdP endpoints and corr
 * `introspection`
   * [Introspection Authentication flow](#introspection-authentication-flow)
 * `revocation`
-  * [Session Authentication](#session-auth-workflow)
+  * [Session Authentication](#session-authentication-workflow)
 
 For all these endpoints and for the flows supported, the Policy uses mTLS client authentication as the authentication method when communicating with the IdP, for example, to fetch the token from the token endpoint.
 
