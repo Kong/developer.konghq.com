@@ -113,10 +113,12 @@ ai_gateway_models:
 
 Point `GOOGLE_GEMINI_BASE_URL` at the local proxy endpoint where LLM traffic from Gemini CLI routes and start a Gemini CLI session:
 
+<!-- vale off -->
 {% validation gemini %}
 model: my-gemini-model
 base_url: http://localhost:8000/gemini
 prompt: Tell me about the prisoner's dilemma.
 {% endvalidation %}
+<!-- vale on -->
 
 Expected output shows the model's response to your prompt, proxied through {{site.ai_gateway}} to the Gemini model configured in the AI Model entity's `targets`.

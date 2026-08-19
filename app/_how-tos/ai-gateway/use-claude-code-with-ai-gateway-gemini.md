@@ -28,6 +28,7 @@ prereqs:
       content: |
         1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey).
         1. Export the API key as a variable:
+
            ```bash
            export GEMINI_API_KEY='YOUR_GEMINI_API_KEY'
            ```

@@ -24,6 +24,7 @@ prereqs:
       content: |
         1. Create a [Hugging Face access token](https://huggingface.co/settings/tokens) with inference permissions.
         1. Export the token as a bearer header value:
+
            ```bash
            export HUGGINGFACE_AUTH_HEADER='Bearer YOUR_HUGGINGFACE_TOKEN'
            ```

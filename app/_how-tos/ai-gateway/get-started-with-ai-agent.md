@@ -167,6 +167,7 @@ The response shows the agent's capabilities, skills, and supported protocols:
 
 Send a `message/send` JSON-RPC request to test the agent:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /a2a/
 method: POST
@@ -186,6 +187,7 @@ body:
         text: What flights are available on route KA-123?
 status_code: 200
 {% endvalidation %}
+<!-- vale on -->
 
 A successful response (status 200) contains the agent's reply:
 
