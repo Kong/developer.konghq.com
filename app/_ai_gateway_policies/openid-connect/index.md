@@ -81,9 +81,6 @@ The OpenID Connect Policy can issue a session cookie that can be used for furthe
 To make OpenID Connect issue a session cookie, you need to first authenticate with one of the other grants or flows that this Policy supports. 
 For example, the [authorization code flow](#authorization-code-flow) demonstrates session authentication when it uses the redirect login action.
 
-The session authentication portion of the flow works like this:
-
-{% include_cached plugins/oidc/diagrams/session.md %}
 
 Set up session auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/session-auth/)
@@ -92,10 +89,7 @@ Set up session auth:
 #### JWT access token authentication flow
 
 For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/ai-gateway/policies/openid-connect/reference/#schema--config-auth-methods)). 
-Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry). 
-The client may receive the token directly from the identity provider or by other means.
-
-{% include_cached plugins/oidc/diagrams/jwt-access-token.md %}
+Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry).
 
 Set up JWT access token auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/jwt-access-token/)
@@ -104,9 +98,7 @@ Set up JWT access token auth:
 #### Kong OAuth token authentication flow
 
 The OpenID Connect Policy can verify the tokens issued by the [OAuth 2.0 Policy](/ai-gateway/policies/oauth2/).
-This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow):
-
-{% include_cached plugins/oidc/diagrams/kong-oauth2.md %}
+This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow).
 
 Set up Kong OAuth2 token auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/kong-oauth-token/)
@@ -119,8 +111,6 @@ the introspection authentication relies on a bearer token that the client has al
 The difference between introspection and stateless JWT authentication is that the Policy needs to call the introspection endpoint of the identity provider to find out whether the token is valid and active. 
 This makes it possible to issue opaque tokens to the clients.
 
-{% include_cached plugins/oidc/diagrams/introspection.md %}
-
 Set up introspection auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/introspection-auth/)
 * [Introspection auth tutorial with Keycloak](/how-to/configure-oidc-with-introspection/)
@@ -129,9 +119,7 @@ Set up introspection auth:
 
 The user info authentication uses OpenID Connect standard user info endpoint to verify the access token.
 In most cases, you would use [introspection authentication](#introspection-authentication-flow) instead of user info, as introspection is meant for retrieving information from the token itself, whereas the user info endpoint is meant for retrieving information about the user to whom the token was given. 
-The flow is almost identical to introspection authentication:
-
-{% include_cached plugins/oidc/diagrams/user-info.md %}
+The flow is almost identical to introspection authentication.
 
 Set up user info auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/user-info-auth/)
@@ -144,9 +132,7 @@ There is a caveat with this: in general, identity providers only allow the refre
 The mismatch is likely when the OpenID Connect Policy is configured to use one client, and the refresh token is retrieved with another. 
 
 The grant itself is very similar to the [password grant](#password-grant-workflow) and
-the [client credentials grant](#client-credentials-grant-workflow):
-
-{% include_cached plugins/oidc/diagrams/refresh-token.md %}
+the [client credentials grant](#client-credentials-grant-workflow).
 
 Set up refresh token auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/refresh-token/)
@@ -156,8 +142,6 @@ Set up refresh token auth:
 
 Password grant is a **legacy** authentication grant. 
 This is a less secure way of authenticating end users than the authorization code flow, because, for example, the passwords are shared with third parties.
-
-{% include_cached plugins/oidc/diagrams/password.md %}
 
 Set up password grant auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/password/)
@@ -169,19 +153,11 @@ The client credentials grant is very similar to the [password grant](#password-g
 The most important difference is that the Policy itself doesn't try to authenticate, and instead 
 forwards the credentials passed by the client to the identity server's token endpoint.
 
-{% include_cached plugins/oidc/diagrams/client-credentials.md %}
-
 Set up client credentials grant auth:
 * [Policy configuration example](/ai-gateway/policies/openid-connect/examples/client-credentials/)
 * [Client credentials grant tutorial with Keycloak](/how-to/configure-oidc-with-client-credentials/)
 
 #### Authorization code flow
-
-The authorization code flow is the three-legged OAuth/OpenID Connect flow.
-The sequence diagram below describes the participants and their interactions
-for this usage scenario, including the use of session cookies:
-
-{% include_cached plugins/oidc/diagrams/auth-code.md %}
 
 {:.info}
 > If using PKCE, the identity provider *must* contain the `code_challenge_methods_supported` object 
@@ -471,8 +447,6 @@ See the [mTLS PoP via header example](/ai-gateway/policies/openid-connect/exampl
 
 Demonstrating Proof-of-Possession (DPoP) is an alternative technique to the [mutual TLS certificate-bound access tokens](#mutual-tls-client-authentication). Unlike its alternative, which binds the token to the mTLS client certificate, it binds the token to a JSON Web Key (JWK) provided by the client.
 
-{% include_cached plugins/oidc/diagrams/dpop.md %}
-
 You can use the Demonstrating Proof-of-Possession option without mTLS, and even with plain HTTP, although HTTPS is recommended for enhanced security.
 
 When verification of the DPoP proof is enabled, {{site.ai_gateway}} removes the `DPoP` header and changes the token type from `dpop` to `bearer`.
@@ -538,8 +512,6 @@ In a typical [OAuth flow](#kong-oauth-token-authentication-flow), a token is obt
 However, in a token exchange, a client already has a token (the "subject token"). 
 {{site.ai_gateway}} acts as the gatekeeper that decides which incoming tokens are eligible for exchange and facilitates the token exchange using its own client credentials. 
 The subject token is presented to the authorization server to get a different token (the "requested token") that is better suited for accessing the resource.
-
-{% include_cached /plugins/oidc/diagrams/token-exchange.md %}
 
 The OpenID Connect Policy performs the following checks on the incoming token before triggering the exchange:
 1. Checks the incoming subject token meets the following criteria:
@@ -628,9 +600,9 @@ curl -X GET "http://localhost:8000?client_id=2"
 
 ## Using cloud authentication with Redis {% new_in 3.13 %}
 
-{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+{% include_cached /md/ai-gateway/v2/redis-cloud-auth.md %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}
+{% include_cached /md/ai-gateway/v2/redis-cloud-providers.md %}
 
 ## Debugging the OIDC Policy
 
