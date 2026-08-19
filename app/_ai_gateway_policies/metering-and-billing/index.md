@@ -16,7 +16,7 @@ related_resources:
 {:.warning}
 > {{site.metering_and_billing}} requires a separate purchase. [Contact Sales](https://konghq.com/contact-sales) for pricing and availability.
 
-The Metering & Billing Policy meters API requests and AI token usage for usage-based billing on {{site.ai_gateway}} traffic.
+The Metering & Billing Policy meters AI token usage for usage-based billing on {{site.ai_gateway}} traffic.
 The Policy supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering.
 
 {:.warning}
@@ -95,6 +95,7 @@ type: policy
 data:
   name: metering-and-billing
   type: metering-and-billing
+  display_name: AI metering
   config:
     ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
     api_token: your-api-token
@@ -116,6 +117,7 @@ type: policy
 data:
   name: metering-and-billing
   type: metering-and-billing
+  display_name: AI metering
   config:
     ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
     api_token: your-api-token
