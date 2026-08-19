@@ -73,18 +73,12 @@ The OpenID Connect Policy can issue a session cookie that can be used for furthe
 To make OpenID Connect issue a session cookie, you need to first authenticate with one of the other grants or flows that this Policy supports. 
 For example, the [authorization code flow](#authorization-code-flow) demonstrates session authentication when it uses the redirect login action.
 
-
-Set up session auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/session-auth/)
-* [Session auth tutorial with Keycloak](/how-to/configure-oidc-with-session-auth/)
-
 #### JWT access token authentication flow
 
 For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/ai-gateway/policies/openid-connect/reference/#schema--config-auth-methods)). 
 Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry).
 
 Set up JWT access token auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/jwt-access-token/)
 * [JWT access token auth tutorial with Keycloak](/how-to/configure-oidc-with-jwt-auth/)
 
 #### Kong OAuth token authentication flow
@@ -93,7 +87,6 @@ The OpenID Connect Policy can verify the tokens issued by the [OAuth 2.0 Policy]
 This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow).
 
 Set up Kong OAuth2 token auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/kong-oauth-token/)
 * [Kong OAuth token tutorial with Keycloak](/how-to/configure-oidc-with-kong-oauth2/)
 
 #### Introspection authentication flow
@@ -104,7 +97,6 @@ The difference between introspection and stateless JWT authentication is that th
 This makes it possible to issue opaque tokens to the clients.
 
 Set up introspection auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/introspection-auth/)
 * [Introspection auth tutorial with Keycloak](/how-to/configure-oidc-with-introspection/)
 
 #### User info authentication flow
@@ -114,7 +106,6 @@ In most cases, you would use [introspection authentication](#introspection-authe
 The flow is almost identical to introspection authentication.
 
 Set up user info auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/user-info-auth/)
 * [User info auth tutorial with Keycloak](/how-to/configure-oidc-with-user-info-auth/)
 
 #### Refresh token grant workflow
@@ -127,7 +118,6 @@ The grant itself is very similar to the [password grant](#password-grant-workflo
 the [client credentials grant](#client-credentials-grant-workflow).
 
 Set up refresh token auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/refresh-token/)
 * [Refresh token auth tutorial with Keycloak](/how-to/configure-oidc-with-refresh-token/)
 
 #### Password grant workflow
@@ -136,7 +126,6 @@ Password grant is a **legacy** authentication grant.
 This is a less secure way of authenticating end users than the authorization code flow, because, for example, the passwords are shared with third parties.
 
 Set up password grant auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/password/)
 * [Password grant tutorial with Keycloak](/how-to/configure-oidc-with-password-grant/)
 
 #### Client credentials grant workflow
@@ -146,7 +135,6 @@ The most important difference is that the Policy itself doesn't try to authentic
 forwards the credentials passed by the client to the identity server's token endpoint.
 
 Set up client credentials grant auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/client-credentials/)
 * [Client credentials grant tutorial with Keycloak](/how-to/configure-oidc-with-client-credentials/)
 
 #### Authorization code flow
@@ -158,7 +146,6 @@ in the `/.well-known/openid-configuration` issuer discovery endpoint response, a
 If it's not included, the PKCE `code_challenge` query parameter won't be sent.
 
 Set up the auth code flow:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/authorization-code/)
 * [Authorization code tutorial with Keycloak](/how-to/configure-oidc-with-auth-code-flow/)
 * [Configure OpenID Connect with the authorization code flow and Okta](/how-to/configure-oidc-with-auth-code-flow-and-okta/)
 
@@ -195,7 +182,6 @@ Claims-based auth adheres to the following rules:
 Both the claim type and the required claim content take an array of string elements.
 
 Set up claims-based auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/claims-based-auth/)
 * [Claims-based auth tutorial with Keycloak](/how-to/configure-oidc-with-claims-based-auth/)
 
 ##### Claim type
@@ -264,7 +250,6 @@ The OpenID Connect Policy can be integrated with the [ACL Policy](/ai-gateway/po
 You can also pair ACL-based authorization with AI Consumer authorization.
 
 Set up ACL auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/acl-auth/)
 * [Session auth tutorial with Keycloak](/how-to/configure-oidc-with-acl-auth/)
 
 #### AI Consumer authorization
@@ -274,7 +259,6 @@ This means that we restrict the access to only those that do have a matching AI 
 AI Consumers can have ACL groups attached to them and be further authorized with the [ACL Policy](/ai-gateway/policies/acl/).
 
 Set up AI Consumer auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/consumer-auth/)
 * [Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
 
 #### AI Consumer Group authorization
@@ -283,7 +267,6 @@ You can use [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) for au
 This means that we restrict the access to only those that do have a matching AI Consumer Group. 
 
 Set up AI Consumer Group auth:
-* [Policy configuration example](/ai-gateway/policies/openid-connect/examples/consumer-group-auth/)
 * [Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
 
 ### Client authentication
@@ -345,7 +328,6 @@ rows:
       This guarantees the authenticity of the token by verifying whether the sender is authorized to use the token for accessing protected resources.
       <br><br>
       Set [`config.proof_of_possession_mtls`](./reference/#schema--config-proof-of-possession-mtls) to `strict` and [`config.client_id`](./reference/#schema--config-client-id) to `cert-bound` to enable cert-bound access tokens.
-    example: "[Set up certificate-bound access tokens](/ai-gateway/policies/openid-connect/examples/cert-bound-access-tokens/)"
 
   - spec: "Mutual TLS (mTLS) client authentication with certificate-bound access tokens"
     description: |
@@ -354,10 +336,6 @@ rows:
       If the authorization server is configured to bind the client certificate with the issued access token, {{site.ai_gateway}} can validate the access token using mTLS proof of possession.
       <br><br>
       Set [`config.client_auth`](./reference/#schema--config-client-auth) to `tls_client_auth` and provide a certificate at [`config.tls_client_auth_cert_id`](./reference/#schema--config-tls-client-auth-cert-id) to enable mTLS auth.
-    example: |
-      [Set up mTLS client authentication](/ai-gateway/policies/openid-connect/examples/mtls-client-auth/)
-      <br><br>
-      [Set up certificate-bound access tokens](/ai-gateway/policies/openid-connect/examples/cert-bound-access-tokens/)
   - spec: "Demonstrating proof-of-possession (DPoP)"
     description: |
       Demonstrating Proof of Possession (DPoP) is an application-level mechanism for proving the sender's ownership of OAuth access and refresh tokens.
@@ -367,7 +345,6 @@ rows:
       When DPoP is enabled, {{site.ai_gateway}} validates the DPoP header in the request to ensure that the sender is authorized to use the access token.
       <br><br>
       Set [`config.proof_of_possession_dpop`](./reference/#schema--config-proof-of-possession-dpop) to `strict` to enable DPoP.
-    example: "[Demonstrating Proof-of-Possession](/ai-gateway/policies/openid-connect/examples/dpop/)"
   - spec: | 
       mTLS Proof-of-Possession via HTTP header
     description: |
@@ -378,8 +355,6 @@ rows:
       <br><br>
       Set [`config.proof_of_possession_mtls`](./reference/#schema--config-proof-of-possession-mtls) to `strict` and configure [`config.proof_of_possession_mtls_from_header`](./reference/#schema--config-proof-of-possession-mtls-from-header) with the header name and a trusted CA certificate.
     example: |
-      [mTLS PoP via header example](/ai-gateway/policies/openid-connect/examples/mtls-pop-from-header/)
-      <br><br>
       [How-to: Configure OpenID Connect with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/)
 {% endtable %}
 
@@ -406,7 +381,7 @@ To enable certificate-bound access for OpenID Connect:
 * Ensure that the auth server (IdP) that you're using is set up to generate OAuth 2.0 Mutual TLS certificate-bound access tokens.
 * Use the [`proof_of_possession_mtls`](/ai-gateway/policies/openid-connect/reference/#schema--config-proof-of-possession-mtls) configuration option to ensure that the supplied access token belongs to the client by verifying its binding with the client certificate provided in the request.
 
-See the [cert-bound configuration example](/ai-gateway/policies/openid-connect/examples/cert-bound-access-tokens/) for more detail and [Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/) for a complete tutorial.
+[Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/) for a complete tutorial.
 
 ### mTLS Proof-of-Possession via HTTP header
 
@@ -421,7 +396,7 @@ To enable mTLS PoP via header:
 * Configure your WAF or L7 proxy to inject the client certificate into a known HTTP header.
 * Set [`config.proof_of_possession_mtls`](/ai-gateway/policies/openid-connect/reference/#schema--config-proof-of-possession-mtls) to `strict` and configure [`config.proof_of_possession_mtls_from_header`](/ai-gateway/policies/openid-connect/reference/#schema--config-proof-of-possession-mtls-from-header) with the header name, expected certificate format, and a trusted CA certificate.
 
-See the [mTLS PoP via header example](/ai-gateway/policies/openid-connect/examples/mtls-pop-from-header/) and [Configure OpenID Connect with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/) for a complete tutorial.
+See [Configure OpenID Connect with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/) for a complete tutorial.
 
 ### Demonstrating Proof-of-Possession (DPoP)
 
@@ -443,8 +418,6 @@ Session authentication is only compatible with DPoP when used along with one of 
 To enable DPoP for OpenID Connect:
 * Ensure that the auth server (IdP) that you're using has DPoP enabled.
 * Use the [`config.proof_of_possession_dpop`](/ai-gateway/policies/openid-connect/reference/#schema--config-proof-of-possession-dpop) configuration option to ensure that the supplied access token is bound to the client by verifying its association with the JWT provided in the request.
-
-See the [DPoP configuration example](/ai-gateway/policies/openid-connect/examples/dpop/) for more detail.
 
 ## Multi-IdP support
 
@@ -508,8 +481,6 @@ Afterwards, the rest of the OpenID Connect Policy flow continues on the exchange
 Depending on the use case, {{site.ai_gateway}} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
 
 Set up token exchange:
-* [Example: Cross-domain token exchange](/ai-gateway/policies/openid-connect/examples/token-exchange-cross-domain/)
-* [Example: Token transformation](/ai-gateway/policies/openid-connect/examples/token-exchange-transformation/)
 * [How-to: Configure OIDC with token exchange](/how-to/configure-oidc-with-token-exchange/)
 
 #### Key terms
