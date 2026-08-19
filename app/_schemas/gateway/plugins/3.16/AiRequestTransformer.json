@@ -226,6 +226,33 @@
                       },
                       "type": "object"
                     },
+                    "cache_read_cost": {
+                      "description": "Defines the cost per 1M cache-read (cached) prompt tokens.",
+                      "type": "number"
+                    },
+                    "cache_write_cost": {
+                      "description": "Defines the cost per 1M cache-write prompt tokens.",
+                      "type": "number"
+                    },
+                    "cache_write_cost_list": {
+                      "description": "Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this if the upstream provider charges differently for different cache TTLs, as Anthropic does for 5m and 1h TTLs.",
+                      "items": {
+                        "properties": {
+                          "cost": {
+                            "type": "number"
+                          },
+                          "ttl": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "cost",
+                          "ttl"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
                     "cohere": {
                       "properties": {
                         "embedding_input_type": {
@@ -246,6 +273,29 @@
                         }
                       },
                       "type": "object"
+                    },
+                    "context_window_factor": {
+                      "description": "Above an input-token threshold, scale input/output pricing with the corresponding factor.",
+                      "items": {
+                        "properties": {
+                          "above": {
+                            "type": "string"
+                          },
+                          "input_factor": {
+                            "type": "number"
+                          },
+                          "output_factor": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "above",
+                          "input_factor",
+                          "output_factor"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
                     },
                     "dashscope": {
                       "properties": {
@@ -332,6 +382,27 @@
                     "output_cost": {
                       "description": "Defines the cost per 1M tokens in the output of the AI.",
                       "type": "number"
+                    },
+                    "service_tier_factor": {
+                      "description": "Multiplier applied to the whole request for a service tier. No need to configure a standard/default tier, as the default factor is 1.0 if none of the tier is matched.",
+                      "items": {
+                        "properties": {
+                          "factor": {
+                            "type": "number"
+                          },
+                          "tier": {
+                            "description": "A word matched case-insensitively as a substring of the vendor's reported service tier (e.g. 'priority', 'flex', or 'throughput' for Gemini/Vertex's PROVISIONED_THROUGHPUT). If several entries match, the longest (most specific) wins; array order doesn't matter. Configure 'priority' will also match 'fast' (whole word) as OpenAI returns either 'priority' or 'fast' for priority service tier.",
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "factor",
+                          "tier"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
                     },
                     "temperature": {
                       "description": "Defines the matching temperature, if using chat or completion models.",

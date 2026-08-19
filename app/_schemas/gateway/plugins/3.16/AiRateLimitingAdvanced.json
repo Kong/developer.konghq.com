@@ -230,7 +230,8 @@
                   "enum": [
                     "aws",
                     "azure",
-                    "gcp"
+                    "gcp",
+                    "oauth"
                   ],
                   "type": "string",
                   "x-referenceable": true
@@ -297,6 +298,109 @@
                   "type": "string",
                   "x-encrypted": true,
                   "x-referenceable": true
+                },
+                "oauth": {
+                  "description": "OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.",
+                  "properties": {
+                    "auth_method": {
+                      "default": "client_secret_post",
+                      "description": "Client authentication method used against the token endpoint.",
+                      "enum": [
+                        "client_secret_basic",
+                        "client_secret_jwt",
+                        "client_secret_post"
+                      ],
+                      "type": "string"
+                    },
+                    "client_id": {
+                      "description": "OAuth 2.0 client ID. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "client_secret": {
+                      "description": "OAuth 2.0 client secret. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "client_secret_jwt_alg": {
+                      "default": "HS512",
+                      "description": "Signing algorithm used for `client_secret_jwt` client authentication.",
+                      "enum": [
+                        "HS256",
+                        "HS512"
+                      ],
+                      "type": "string"
+                    },
+                    "grant_type": {
+                      "default": "client_credentials",
+                      "description": "OAuth 2.0 grant type used to request access tokens.",
+                      "enum": [
+                        "client_credentials",
+                        "password"
+                      ],
+                      "type": "string"
+                    },
+                    "password": {
+                      "description": "Resource owner password, used with the `password` grant type. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "redis_username": {
+                      "description": "Static Redis ACL username sent with `AUTH <username> <token>`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "redis_username_claim": {
+                      "description": "JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).",
+                      "type": "string"
+                    },
+                    "scopes": {
+                      "default": [],
+                      "description": "OAuth 2.0 scopes to request.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "ssl_verify": {
+                      "default": true,
+                      "description": "Whether to verify the TLS certificate of the token endpoint.",
+                      "type": "boolean"
+                    },
+                    "timeout": {
+                      "default": 10000,
+                      "description": "Timeout, in milliseconds, for requests to the token endpoint.",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "token_endpoint": {
+                      "description": "OAuth 2.0 token endpoint URL used to request access tokens.",
+                      "type": "string"
+                    },
+                    "token_headers": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "Additional HTTP headers to send with the token request.",
+                      "type": "object"
+                    },
+                    "token_post_args": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "Additional POST body arguments to send with the token request.",
+                      "type": "object"
+                    },
+                    "username": {
+                      "description": "Resource owner username, used with the `password` grant type. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    }
+                  },
+                  "type": "object"
                 }
               },
               "type": "object"
