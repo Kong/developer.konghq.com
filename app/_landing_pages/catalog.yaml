@@ -98,7 +98,7 @@ rows:
             config:
               title: Agents (beta)
               description: |
-                Register agents your organization builds or consumes as first-class interfaces in {{site.konnect_catalog}}.
+                Register agents your organization builds or consumes as first-class interfaces in {{site.konnect_catalog}}. 
               icon: /assets/icons/ai.svg
               cta:
                 text: Learn about Agents
