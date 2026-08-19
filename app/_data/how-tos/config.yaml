@@ -24,7 +24,9 @@ validations:
     status: "True"
 
   - id: claude-code
-    command: claude --allowedTools "WebSearch,Read"
+    command: |
+      CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1 \
+        claude --allowedTools "WebSearch,Read"
     expected:
       return_code: 0
 
