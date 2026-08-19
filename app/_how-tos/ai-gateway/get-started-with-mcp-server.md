@@ -108,6 +108,7 @@ ai_gateway_mcp_servers:
 
 Send an `initialize` request to the route configured on the MCP Server (`/weather`), capturing the `Mcp-Session-Id` response header into an environment variable:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /weather/
 method: POST
@@ -134,13 +135,15 @@ capture:
   - variable: SESSION_ID
     command: "grep -i '^mcp-session-id:' | tr -d '\\r' | cut -d' ' -f2"
 {% endvalidation %}
-
+<!-- vale on -->
 
 Complete the handshake with a `notifications/initialized` notification, carrying the session ID:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /weather/
 method: POST
+display_headers: true
 headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
@@ -150,6 +153,7 @@ body:
   method: notifications/initialized
 status_code: 202
 {% endvalidation %}
+<!-- vale on -->
 
 A `202 Accepted` response confirms the session is ready.
 
@@ -157,6 +161,7 @@ A `202 Accepted` response confirms the session is ready.
 
 List the available tools to confirm the `get-current-weather` tool exists, and inspect its `inputSchema`. Include the `Mcp-Session-Id` header:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /weather/
 method: POST
@@ -170,10 +175,11 @@ body:
   method: tools/list
 status_code: 200
 {% endvalidation %}
+<!-- vale on -->
 
  For `conversion-listener` and `conversion-only` MCP Servers, the generated `inputSchema` names each converted REST parameter `{in}_{name}`, not the bare configured name. Since [you configured](#create-an-mcp-server-entity) the `q` parameter as `name: q` and `in: query`, {{site.ai_gateway}} exposes to MCP clients as `query_q`. Call the tool with that argument name:
 
-
+<!-- vale off -->
 {% validation request-check %}
 url: /weather/
 method: POST
@@ -191,6 +197,7 @@ body:
       query_q: "London"
 status_code: 200
 {% endvalidation %}
+<!-- vale on -->
 
 The response includes the current conditions for London:
 
