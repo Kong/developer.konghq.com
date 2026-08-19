@@ -1,0 +1,119 @@
+name: Watch M&B cloudevent fields
+
+# Detects drift between the Metering & Billing plugin's emitted CloudEvent fields
+# (declared as LuaLS ---@class/---@field annotations in kong-ee cloudevent.lua) and
+# the docs. On change, opens a PR bumping the committed catalog snapshot and pings
+# the docs maintainers to review the event-dimensions reference.
+#
+# DRAFT — depends on the upstream kong-ee annotations PR landing first.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  # Optional: kong-ee could fire this on a change to cloudevent.lua for near-instant alerts.
+  repository_dispatch:
+    types: [MB_CLOUDEVENT_UPDATED]
+
+permissions:
+  contents: read
+
+env:
+  # Pin a real lua-language-server release; bump deliberately.
+  LUALS_VERSION: "3.13.6"
+  KONG_EE_REF: "master"
+  PLUGIN_DIR: "kong/plugins/metering-and-billing"
+
+jobs:
+  watch-mb-cloudevent:
+    name: Watch M&B cloudevent fields
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - name: Checkout developer.konghq.com
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: tools/mb-event-dimensions/package-lock.json
+
+      - name: Install mb-event-dimensions dependencies
+        run: |
+          cd tools/mb-event-dimensions
+          npm ci
+
+      - name: Checkout kong-ee repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: 'Kong/kong-ee'
+          token: ${{ steps.app-token.outputs.token }}
+          path: 'kong-ee'
+          ref: ${{ env.KONG_EE_REF }}
+
+      - name: Install lua-language-server
+        run: |
+          curl -fsSL "https://github.com/LuaLS/lua-language-server/releases/download/${LUALS_VERSION}/lua-language-server-${LUALS_VERSION}-linux-x64.tar.gz" \
+            | sudo tar -xz -C /usr/local/bin --wildcards 'bin/lua-language-server' --strip-components=1
+          lua-language-server --version
+
+      - name: Export cloudevent annotations to doc.json
+        run: |
+          mkdir -p luals-ws luals-out
+          cp "kong-ee/${PLUGIN_DIR}/cloudevent.lua" luals-ws/cloudevent.lua
+          printf '%s\n' '{ "runtime.version": "LuaJIT", "diagnostics.globals": ["kong","ngx"] }' > luals-ws/.luarc.json
+          lua-language-server --doc luals-ws --doc_out_path luals-out
+
+      - name: Check for drift (vs snapshot and rendered data file)
+        id: drift
+        run: |
+          cd tools/mb-event-dimensions
+          if node check-drift.js ../../luals-out/doc.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            # regenerate the committed snapshot so the PR diff shows what moved
+            node extract-catalog.js ../../luals-out/doc.json --out event-fields.snapshot.json
+          fi
+
+      - name: Create pull request
+        if: steps.drift.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          branch: watch-mb-cloudevent
+          title: "Metering & Billing emitted event fields changed"
+          commit-message: "chore: sync M&B cloudevent field snapshot"
+          labels: skip-changelog,review:general
+          add-paths: tools/mb-event-dimensions/event-fields.snapshot.json
+          body: |
+            The Metering & Billing plugin's emitted CloudEvent fields changed upstream
+            (kong-ee `cloudevent.lua`). The committed field snapshot has been updated to match.
+
+            **Action:** review `app/_kong_plugins/metering-and-billing/index.md`
+            (Captured event dimensions) and `app/_data/plugins/metering-and-billing.yaml`,
+            and update them for the added/removed fields shown in the CI log.
+
+      - name: Notify Slack
+        if: ${{ steps.drift.outputs.changed == 'true' && !cancelled() }}
+        uses: ./.github/reusable-steps/notify-slack
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}
