@@ -4,6 +4,7 @@
       "properties": {
         "include_body_in_opa_input": {
           "default": false,
+          "description": "If set to true, the raw request body is included as input to OPA. Not supported for WebSocket protocols (ws/wss).",
           "type": "boolean"
         },
         "include_consumer_in_opa_input": {
@@ -13,7 +14,7 @@
         },
         "include_parsed_json_body_in_opa_input": {
           "default": false,
-          "description": "If set to true and the `Content-Type` header of the current request is `application/json`, the request body will be JSON decoded and the decoded struct is included as input to OPA.",
+          "description": "If set to true and the `Content-Type` header of the current request is `application/json`, the request body will be JSON decoded and the decoded struct is included as input to OPA. Not supported for WebSocket protocols (ws/wss).",
           "type": "boolean"
         },
         "include_route_in_opa_input": {
@@ -74,13 +75,15 @@
         "http",
         "https"
       ],
-      "description": "A set of strings representing HTTP protocols.",
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
       "items": {
         "enum": [
           "grpc",
           "grpcs",
           "http",
-          "https"
+          "https",
+          "ws",
+          "wss"
         ],
         "type": "string"
       },

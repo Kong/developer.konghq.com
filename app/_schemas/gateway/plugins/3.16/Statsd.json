@@ -121,6 +121,13 @@
         },
         "queue": {
           "properties": {
+            "breaker_cooldown": {
+              "default": 60,
+              "description": "Time in seconds the circuit breaker stays open (fast-shedding entries) before it allows a single batch through to probe whether the destination has recovered.",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "number"
+            },
             "concurrency_limit": {
               "default": 1,
               "description": "The number of of queue delivery timers. -1 indicates unlimited.",
@@ -128,6 +135,13 @@
                 -1,
                 1
               ],
+              "type": "integer"
+            },
+            "failure_threshold": {
+              "default": 0,
+              "description": "Number of consecutive failed batches after which the queue opens its circuit breaker and drops entries instead of retrying. 0 disables the circuit breaker.",
+              "maximum": 1000000,
+              "minimum": 0,
               "type": "integer"
             },
             "initial_retry_delay": {
