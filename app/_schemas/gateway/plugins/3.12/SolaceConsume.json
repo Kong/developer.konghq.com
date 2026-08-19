@@ -51,8 +51,13 @@
               "type": "integer"
             },
             "properties": {
-              "additionalProperties": true,
-              "description": "Additional Solace flow properties (each setting needs to have `FLOW_` prefix).",
+              "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                "type": "string",
+                "x-lua-required": true,
+                "x-referenceable": true
+              },
+              "description": "Additional Solace flow properties (each setting needs to have `FLOW_` prefix). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "type": "object"
             },
             "selector": {
@@ -192,8 +197,13 @@
               "x-referenceable": true
             },
             "properties": {
-              "additionalProperties": true,
-              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix).",
+              "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                "type": "string",
+                "x-lua-required": true,
+                "x-referenceable": true
+              },
+              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "type": "object"
             },
             "ssl_validate_certificate": {
