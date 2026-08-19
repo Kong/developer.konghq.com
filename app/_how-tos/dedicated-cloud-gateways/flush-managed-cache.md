@@ -51,11 +51,7 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
 
 1. Create a `schema.lua` file that defines the plugin's configuration fields.
 
-    {% details %}
-    summary: "Expand to see the schema.lua command"
-    content: |
-      <!--vale off-->
-      ```bash
+      ```hcl
       echo '
       local typedefs = require "kong.db.schema.typedefs"
 
@@ -88,16 +84,13 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
       }
       ' > schema.lua
       ```
+      {:.collapsible.wrap}
       <!--vale on-->
-    {% enddetails %}
 
 1. Create a `handler.lua` file that authenticates to the managed cache and runs the flush.
 
-    {% details %}
-    summary: "Expand to see the handler.lua command"
-    content: |
       <!--vale off-->
-      ```bash
+      ```hcl
       echo '
       local AWS = require "resty.aws"
       local redis = require "resty.redis"
@@ -217,8 +210,8 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
       return plugin
       ' > handler.lua
       ```
+      {:.collapsible.wrap}
       <!--vale on-->
-    {% enddetails %}
 
 1. Declare the variables this how-to uses, and export the ones only you know:
 
@@ -243,6 +236,10 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
       type    = bool
       default = false
     }
+
+    variable "proxy_hostname" {
+      type = string
+    }
     ' > variables.tf
     ```
     <!--vale on-->
@@ -251,7 +248,30 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
     export TF_VAR_control_plane_id="your-control-plane-id"
     ```
 
-1. Define the custom plugin, the service and route that expose the flush endpoint, and the plugin instance:
+1. Look up the {{site.konnect_short_name}} proxy hostname for your control plane, and export it as a Terraform variable:
+    
+    THIS IS WRONG BUT I'M ASKING HOW TO PROPERLY FIND THIS PROXY URL
+    <!--vale off-->
+    {% konnect_api_request %}
+    url: /v2/cloud-gateways/configurations?filter%5Bcontrol_plane_id%5D%5Beq%5D=$TF_VAR_control_plane_id
+    method: GET
+    region: global
+    status_code: 200
+    extract_body:
+        - name: 'dataplane_groups[0].hostnames[0]'
+          variable: PROXY_HOSTNAME
+    capture:
+      - variable: PROXY_HOSTNAME
+        jq: ".data[0].dataplane_groups[0].hostnames[0]"
+    {% endkonnect_api_request %}
+    <!--vale on-->
+
+
+    ```bash
+    export TF_VAR_proxy_hostname="$PROXY_HOSTNAME"
+    ```
+
+1. Define the custom plugin, the Gateway Service and Route that expose the flush endpoint, and the plugin instance:
 
     <!--vale off-->
     ```hcl
@@ -317,29 +337,9 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
     ```hcl
     echo '
     output "flush_proxy_url" {
-      value = "${local.proxy_url}${var.flush_path}"
+      value = "https://${var.proxy_hostname}${var.flush_path}"
     }
     ' > output.tf
-    ```
-    <!--vale on-->
-
-    <!--vale off-->
-    ```hcl
-    echo '
-    data "konnect_gateway_control_plane" "control-plane" {
-      filter = {
-        id = {
-          eq = var.control_plane_id
-        }
-      }
-    }
-
-    locals {
-      cp_endpoint = data.konnect_gateway_control_plane.control-plane.config.control_plane_endpoint
-      cp_short_id = regex("https://([^.]+)\\.", local.cp_endpoint)[0]
-      proxy_url   = "https://${local.cp_short_id}.gateways.konggateway.com"
-    }
-    ' > data.tf
     ```
     <!--vale on-->
 
@@ -350,7 +350,7 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
     ```
 
     ```text
-    Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
+    Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
     ```
     {:.no-copy-code}
 
@@ -397,7 +397,7 @@ resource "terraform_data" "flush_cache" {
   triggers_replace = [timestamp()]
 
   provisioner "local-exec" {
-    command = "sleep 10 && curl -sf ${local.proxy_url}${var.flush_path}"
+    command = "sleep 10 && curl -sf https://${var.proxy_hostname}${var.flush_path}"
   }
 
   depends_on = [
