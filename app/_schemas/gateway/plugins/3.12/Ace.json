@@ -3,10 +3,12 @@
     "config": {
       "properties": {
         "anonymous": {
+          "description": "An optional string (consumer UUID or username) value to use as an `anonymous` consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`. When set, the plugin will skip ACE processing for requests that are already authenticated by other plugins with higher priority.",
           "type": "string"
         },
         "match_policy": {
           "default": "if_present",
+          "description": "Determines how the ACE plugin will behave when a request doesn't match an existing operation from an API or API package in Dev Portal. The `required` setting requires every incoming request to match a defined operation. If a request doesn't match, ACE rejects the request outright with a 404. The `if_present` setting makes the ACE plugin only engage with a request when it matches an operation, allowing a request to still be processed by other plugins with a lower priority than ACE.",
           "enum": [
             "if_present",
             "required"
@@ -175,6 +177,7 @@
               "type": "object"
             },
             "sync_rate": {
+              "description": "How often to sync counter data to the central data store. A value of 0 results in synchronous behavior (counter synchronization happens in each request's context and contributes directly to the latency of the request). A value greater than 0 results in asynchronous behavior and specifies the interval (in seconds) for synchronizing counters. The minimum allowed interval is 0.02 seconds (20ms). If omitted, the plugin ignores sync behavior entirely and only stores counters in node memory.",
               "maximum": 3600,
               "minimum": 0,
               "type": "number"
@@ -224,5 +227,13 @@
       },
       "type": "object"
     }
-  }
+  },
+  "x-supported-partials": [
+    {
+      "name": "redis-ee",
+      "paths": [
+        "config.rate_limiting.redis"
+      ]
+    }
+  ]
 }
