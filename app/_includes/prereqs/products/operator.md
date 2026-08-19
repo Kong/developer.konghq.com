@@ -20,6 +20,8 @@ rawLicenseString: '$(cat ./license.json)'
 {% include k8s/ca-cert.md %}
 {%- endcapture -%}
 {%- assign keg_install = include.keg_install | default: include["keg-install"] -%}
+{%- assign extra_set = include.set | default: prereqs.operator.set -%}
+{%- assign skip_cert_manager = include.skip_cert_manager | default: prereqs.operator.skip_cert_manager -%}
 {% capture details_content %}
 
 1. Add the Kong Helm charts:
@@ -40,7 +42,8 @@ rawLicenseString: '$(cat ./license.json)'
        --create-namespace \
        --set env.ENABLE_CONTROLLER_KONNECT=true{% if keg_install %} \
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
+       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
    indent: 3
    {% endkonnect %}
@@ -53,7 +56,8 @@ rawLicenseString: '$(cat ./license.json)'
      helm upgrade --install kgo kong/gateway-operator -n kong-system \
        --create-namespace{% if keg_install %} \
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
+       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
    indent: 3
    {% endon_prem %}
@@ -68,7 +72,8 @@ rawLicenseString: '$(cat ./license.json)'
        --set image.tag={{ site.data.operator_latest.release }} \
        --set env.ENABLE_CONTROLLER_KONNECT=true{% if keg_install %} \
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
+       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
    indent: 3
    {% endkonnect %}
@@ -82,14 +87,15 @@ rawLicenseString: '$(cat ./license.json)'
        --create-namespace \
        --set image.tag={{ site.data.operator_latest.release }}{% if keg_install %} \
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
+       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
    indent: 3
    {% endon_prem %}
    {% endif %}
 
 {% endif %}
-{{cert-manager | indent: 3}}
+{% unless skip_cert_manager %}{{cert-manager | indent: 3}}{% endunless %}
 {{cert | indent: 3}}
 {%- if page.works_on contains 'on-prem' -%}
 {%- if prereqs.enterprise -%}

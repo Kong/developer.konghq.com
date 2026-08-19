@@ -31,7 +31,9 @@
           "type": "array"
         },
         "custom_introspection_headers": {
-          "additionalProperties": true,
+          "additionalProperties": {
+            "type": "string"
+          },
           "description": "A list of custom headers to be added in the introspection request.",
           "type": "object"
         },

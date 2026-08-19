@@ -25136,5 +25136,265 @@
         "scope": "Plugin"
       }
     ]
+  },
+  "3.12.0.11": {
+    "kong-ee": [
+      {
+        "message": "Bumped kong-redis-cluster from 1.5.7 to 1.6.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Replaced resty-cli with rusty-cli",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a Distroless Docker image variant for Kong API Gateway. The Distroless image ships only the Kong binary and its runtime dependencies, with no package managers, no shells or any other programs you would expect to find in a standard Linux distribution.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue on HTTP/2 connections where the request method and query were reported incorrectly, or could raise an error, when a request hit the error handler such as a 502 from an upstream connection reset.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where a failed balancer creation leaked the per-upstream create lock, so every later creation for the same upstream stalled for 30 seconds.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where a healthcheck counter value of 255 crashed health checker creation. Healthcheck counters (`successes`, `tcp_failures`, `timeouts`, `http_failures`) are now limited to 254.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where DP syncing failed with large configs. Added yielding to prevent CPU stall, and set Konnect mode RPC timeout to 30 seconds for successful full-sync.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where heavy packet loss may prevent the full sync from resuming.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where `/status/ready` could report a data plane ready before the\nnew router and plugins iterator became active. Kong now reports readiness only\nafter plugin configuration completes and the live objects are installed.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the control plane could crash while handshaking with a data plane on the legacy clustering endpoint if a non-binary WebSocket frame (such as a ping/pong control frame) arrived before the `basic_info` frame. The control plane now drains and responds to control frames during the handshake until the expected frame is received, instead of dereferencing a nil plugin list.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where upstream failover could return intermittent 503 responses while a failover target remained healthy.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Hardened stale nginx PID detection to survive PID reuse. On Linux, `kong start`\nnow confirms a live PID actually belongs to nginx by reading `/proc/<pid>/cmdline`,\nso a reused PID from an ungraceful exit no longer blocks a restart.",
+        "type": "bugfix",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "**jwt-signer**: Fixed an issue where the plugin failed to set the signed access token header on the upstream request, when `access_token_upstream_header` (or `original_access_token_upstream_header`) had the same name as `channel_token_request_header`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed a crash\nthat occurred when a plugin set `schema_registry.confluent.authentication.mode`\nto `oauth2` but omitted the `oauth2_client` record. Previously this returned a\n500 from the Admin API during validation, and once saved it also crashed at\nruntime while fetching the schema registry OAuth2 token. The absent\n`oauth2_client` is now handled and falls back to the default authentication\nmethod, so a configuration without `oauth2_client` works end-to-end.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**mocking**: Fixed a memory leak where the plugin config cache did not use weak keys due to a misspelled `__mode` metatable field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oauth2-introspection**: Fixed an authentication bypass where a revoked or\nexpired token stayed authorized indefinitely instead of being rejected. An\nauthoritative `active:false` result is now also cached briefly (5 seconds).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "On shell-free (distroless) images, the pluginserver query and start commands\nnow expand `$KONG_PREFIX` / `${KONG_PREFIX}` from the environment and fail fast\nwith a clear error on an unterminated quote or `${`, instead of passing the\nliteral `$KONG_PREFIX` to the pluginserver or building a best-effort argv.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where the `redirect_uri` parameter was sent to the token endpoint for all grant types. It is now included only for the `authorization_code` grant, as required by RFC 6749.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: The `ignore_signature` option now logs a warning when it is set,\nbecause it turns off JWS signature verification for the listed grants.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**SAML**: Hardened signature validation against XML Signature Wrapping. The\nplugin now checks that the signature `Reference URI` is a same-document\nfragment that names the `ID` of the element it digests and consumes, so a\nsignature can no longer be bound to a different element than the one that\nprovides the identity. A response whose reference URI is empty or not a\nsame-document fragment is now rejected.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved data plane stability when applying a large configuration\nsync from the control plane, reducing the chance of a worker restart while the\nupdate is being processed.",
+        "type": "performance",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Improved router update performance during incremental sync by updating service data in place instead of triggering a full router rebuild when only service attributes change.",
+        "type": "performance",
+        "scope": "Core"
+      },
+      {
+        "message": "Improved the performance of listing workspaces with `?counter=true`. Entity counts for the whole page are now retrieved with one grouped query per entity type instead of a separate count query per entity type per workspace, while keeping the counts exact.",
+        "type": "performance",
+        "scope": "Admin API"
+      },
+      {
+        "message": "Optimized performance of clustering payload handling for version compatibility. This reduces CPU usage and\ntransient memory pressure.",
+        "type": "performance",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Reduced config update latency on hybrid data planes by notifying the stream subsystem before applying the update in the HTTP subsystem, so both rebuild in parallel.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where the Export button on the Vitals Reports page did not download the report CSV.",
+        "type": "bugfix",
+        "scope": "Default"
+      }
+    ]
+  },
+  "3.14.0.13": {
+    "kong-ee": [
+      {
+        "message": "Added a Distroless Docker image variant for Kong API Gateway. The Distroless image ships only the Kong binary and its runtime dependencies, with no package managers, no shells, and no other programs you would expect to find in a standard Linux distribution.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added `cache_read_cost` and `cache_write_cost` to `model.options` so cached and cache-write prompt tokens can be priced per 1M tokens, alongside `input_cost` / `output_cost`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added filtering for empty Anthropic thinking blocks in request history.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for reporting prompt cache token metrics in OpenAI-compatible format.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for reporting prompt cache token metrics when using native (non-OpenAI) request/response formats.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Usage cost now supports per-cache-TTL cache-write\npricing, context-window pricing factors, and service-tier pricing factors via\n`model.options` (`cache_write_cost_list`, `context_window_factor`,\n`service_tier_factor`). Anthropic (cache TTL + service tier), OpenAI, and Gemini\nservice tiers are collected from upstream responses.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed a bug where a response from Anthropic could fail to decode when the client's request advertised Brotli support, since Anthropic's edge may then return a Brotli-encoded body that Kong's response decompression -- which only understands gzip -- can't inflate. Kong now normalizes the outgoing `Accept-Encoding` request header before proxying to any LLM provider: `gzip, identity` when the client accepts gzip, and `identity` otherwise, so a client that cannot inflate gzip is never handed a compressed body on the paths that pass the upstream response through untouched.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where native Anthropic streaming counted provisional `message_start` output tokens and summed cumulative `message_delta` usage.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where output token usage was reported as zero for Bedrock native format request to AWS models like Nova.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic-format requests could report zero usage when it targets Bedrock's own model via conversion.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI, Azure, and Gemini realtime upstream URLs using `wss` were downgraded to `ws`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where token usage for Anthropic requests using the compaction beta was undercounted. Kong now sums `usage.iterations` when present instead of relying solely on the top-level `input_tokens` / `output_tokens`, which only reflect non-compaction iterations.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini's tool-use token usage (billed when server-side tools such as grounding, code execution, or URL context are used) was not counted in the reported token usage or cost.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where signed Anthropic thinking blocks with omitted text were removed from request history.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where some Claude Code MCP tools did not correctly handle empty 'requires' array.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Gemini image generation token accounting to include reasoning tokens (`thoughtsTokenCount`) in `output_tokens` and report them as `output_tokens_details.reasoning_tokens`. Previously the reasoning tokens were dropped, which under-reported output tokens, analytics, and calculated cost for thinking-enabled image models.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Gemini realtime (Live API) token accounting to include reasoning tokens (`thoughtsTokenCount`) in the reported output tokens, and to report them as `output_tokens_reasoning_tokens_count`. Previously the reasoning tokens were dropped, which under-reported the output and total token counts of thinking-enabled realtime sessions.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed token usage statistics being silently dropped for `audio/v1/audio/transcriptions`\nrequests. Token-billed OpenAI/Azure transcription models (e.g. `gpt-4o-transcribe`) now report\n`input_tokens`/`output_tokens`/`total_tokens` and the `text_tokens`/`audio_tokens` breakdown in the analytics\nlog when `logging.log_statistics` is enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**, **ai-proxy-advanced**: Fixed an issue where Gemini streaming analytics could over-report token usage. Gemini repeats its usage metadata on every stream chunk as a running request-level total, but the counts were summed across chunks instead of replaced, multiplying the reported usage by the number of chunks. Reasoning tokens were affected the most, because Gemini reports them in full on the first chunk and does not change them afterwards. A chunk that carried no usage metadata also reset the recorded output token count to zero.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed Gemini token accounting to include reasoning tokens in `completion_tokens` for both OpenAI-format and native-format proxying.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Hardened stale nginx PID detection to survive PID reuse. On Linux, `kong start`\nnow confirms a live PID actually belongs to nginx by reading `/proc/<pid>/cmdline`,\nso a reused PID from an ungraceful exit no longer blocks a restart.",
+        "type": "bugfix",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "On shell-free (distroless) images, the pluginserver query and start commands\nnow expand `$KONG_PREFIX` / `${KONG_PREFIX}` from the environment and fail fast\nwith a clear error on an unterminated quote or `${`, instead of passing the\nliteral `$KONG_PREFIX` to the pluginserver or building a best-effort argv.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**opentelemetry**: Fixed `gen_ai.client.token.usage` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**prometheus**: Fixed `kong_ai_llm_tokens_total` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
   }
 }
