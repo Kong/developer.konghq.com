@@ -1,4 +1,4 @@
-# ai-policies-post-processor
+# aigw-policies-post-processor
 
 A tool for post-processing Kong AI Gateway policy JSON schemas.
 
@@ -27,7 +27,7 @@ The processed schemas are written to `app/_schemas/ai-gateway/policies/`.
 From the tool directory:
 
 ```bash
-cd tools/ai-policies-post-processor
+cd tools/aigw-policies-post-processor
 npm ci
 ```
 
