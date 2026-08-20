@@ -32,24 +32,24 @@ related_resources:
 ---
 
 An Agent is an interface in {{site.konnect_catalog}} modeled on the [A2A protocol's](https://a2a-protocol.org/v1.0.0/specification/#441-agentcard) AgentCard, representing an agent that your organization builds or consumes.
-{{site.konnect_catalog}} gives you a single place to see every agent across your organization, whether it's registered from a pasted card, discovered from a remote host, or linked to {{site.ai_gateway}}, so teams don't have to track agents individually in separate tools.
+{{site.konnect_catalog}} gives you a single place to see every agent across your organization, whether it's registered from a pasted card, discovered from a remote host, or linked to {{site.ai_gateway}} 2.0 AI Agent entities, so teams don't have to track agents individually in separate tools.
 
 You can create an Agent in three ways:
 * Paste the agent's A2A card directly as JSON.
 * (Coming soon) Import it from a remote host that serves an A2A card at a well-known URL.
-* (Coming soon) Link it to an AI Agent entity from {{site.ai_gateway}}.
+* (Coming soon) Link it to an AI Agent entity from {{site.ai_gateway}} 2.0.
 
 A Catalog Agent never executes or proxies traffic. 
-The entry in {{site.konnect_catalog}} is a reference, not a runtime path, even when it is linked to an {{site.ai_gateway}} AI Agent.
+The entry in {{site.konnect_catalog}} is a reference, not a runtime path, even when it is linked to an {{site.ai_gateway}} 2.0 AI Agent entity.
 
-When you link an Agent to {{site.ai_gateway}}, {{site.konnect_catalog}} doesn't store any data about the agent's card. 
-The reference is resolved against {{site.ai_gateway}} directly instead.
+When you link an Agent to {{site.ai_gateway}} 2.0, {{site.konnect_catalog}} doesn't store any data about the agent's card. 
+The reference is resolved against {{site.ai_gateway}} 2.0 directly instead.
 
 ## Create an Agent
 
 {% navtabs "create-agent" %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Creating an Agent from a remote URL or linking one to {{site.ai_gateway}} is coming soon. Today, send a POST request to the `/agents` endpoint with `source_type: manual` and the agent's A2A card. The card must include a `name`, `description`, and `version`:
+Creating an Agent from a remote URL or linking one to {{site.ai_gateway}} 2.0 is coming soon. Today, send a POST request to the `/agents` endpoint with `source_type: manual` and the agent's A2A card. The card must include a `name`, `description`, and `version`:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/agents
@@ -71,7 +71,7 @@ extract_body:
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. From the **New** dropdown menu, select **Agent**.
-1. Under **Data source**, select **Paste JSON**. Importing from a URL or from {{site.ai_gateway}} is coming soon.
+1. Under **Data source**, select **Paste JSON**. Importing from a URL or from {{site.ai_gateway}} 2.0 is coming soon.
 1. In the **Agent card JSON** field, paste the agent's A2A card. The card must include a `name`, `description`, and `version`. A live preview of the card renders under **Card preview**.
 1. In the **Display name** field, enter a name for your Agent, for example `My Agent`.
 1. In the **Name** field, enter a unique identifier for the Agent, for example `my-agent`. This is derived from the display name until you edit it. Only use lowercase letters, numbers, hyphens, and periods.
@@ -86,5 +86,5 @@ extract_body:
 
 ## Limitations
 
-* {{site.konnect_catalog}} only supports creating an Agent from a pasted A2A card today. Importing an Agent from a remote URL and linking one to {{site.ai_gateway}} are coming soon.
+* {{site.konnect_catalog}} only supports creating an Agent from a pasted A2A card today. Importing an Agent from a remote URL and linking one to {{site.ai_gateway}} 2.0 are coming soon.
 * {{site.konnect_catalog}} retains a single current version of an Agent's card. Version history isn't available yet.
