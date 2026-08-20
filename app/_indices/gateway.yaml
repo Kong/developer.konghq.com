@@ -27,6 +27,8 @@ sections:
       - path: /gateway/entities/route/
       - path: /gateway/entities/consumer/
       - path: /gateway/entities/plugin/
+      - path: /gateway/plugins/plugin-ordering-legacy/
+      - path: /gateway/plugins/plugin-ordering-priority-preserving/
       - path: /gateway/entities/upstream/
       - path: /gateway/entities/target/
       - path: /gateway/rate-limiting/
