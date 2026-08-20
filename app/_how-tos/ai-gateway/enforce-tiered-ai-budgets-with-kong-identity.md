@@ -64,6 +64,8 @@ cleanup:
   inline:
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
+    - title: Clean up Kong Identity resources
+      include_content: md/identity/delete_auth_server
 
 faqs:
   - q: Why do only two AI Consumer Groups exist when there are three tiers and a cap?
@@ -78,9 +80,6 @@ faqs:
   - q: Why does the fail-safe policy matter?
     a: |
       The AI Rate Limiting Advanced Policy has no enforcement to fall back on when nothing matches. If an expression upstream ever returns null instead of a literal default, the tier header goes missing and a caller with no matching policy is not rate limited at all. The fail-safe policy matches on the subject header alone, so it always applies, and caps that caller at the top tier's ceiling instead of leaving them unbounded.
-
-automated_tests: false
-
 ---
 
 ## Overview
@@ -245,53 +244,81 @@ Obtain a bearer token for each persona using the client credentials grant shown 
 
 An unauthenticated request is rejected:
 
-```sh
-curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
-  -H "Content-Type: application/json" \
-  --json '{
-    "model": "budget-chat",
-    "messages": [{ "role": "user", "content": "What is DNS?" }]
-  }'
-```
+<!--vale off-->
+{% validation request-check %}
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  model: budget-chat
+  messages:
+    - role: user
+      content: What is DNS?
+status_code: 401
+{% endvalidation %}
+<!--vale on-->
 
 The request fails with `401 Unauthorized`.
 
-Carol (`tier: "4x"`) authenticates and is charged against the 4x ceiling:
+Carol (`tier: "4x"`) authenticates and is charged against the 4x ceiling. Generate a token for her client and export it:
 
 <!--vale off-->
-```sh
-export CAROL_ACCESS_TOKEN=$(curl -s -X POST "$ISSUER_URL/oauth/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials" \
-  -d "client_id=$CAROL_CLIENT_ID" \
-  -d "client_secret=$CAROL_CLIENT_SECRET" \
-  -d "scope=budgets-access" \
-  | jq -r '.access_token')
+{% validation request-check %}
+konnect_url: $ISSUER_URL
+url: /oauth/token
+method: POST
+headers:
+  - 'Content-Type: application/x-www-form-urlencoded'
+form_url_encoded_data:
+  grant_type: client_credentials
+  client_id: $CAROL_CLIENT_ID
+  client_secret: $CAROL_CLIENT_SECRET
+  scope: budgets-access
+extract_body:
+  - name: 'access_token'
+    variable: CAROL_ACCESS_TOKEN
+capture:
+  - variable: CAROL_ACCESS_TOKEN
+    jq: ".access_token"
+status_code: 200
+{% endvalidation %}
+<!--vale on-->
 
-curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
-     --no-progress-meter --fail-with-body \
-     -H "Content-Type: application/json" \
-     -H "Authorization: Bearer $CAROL_ACCESS_TOKEN" \
-     --json '{
-       "model": "budget-chat",
-       "messages": [{ "role": "user", "content": "What is DNS?" }]
-     }'
-```
+Send the request with her token:
+
+<!--vale off-->
+{% validation request-check %}
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $CAROL_ACCESS_TOKEN'
+body:
+  model: budget-chat
+  messages:
+    - role: user
+      content: What is DNS?
+status_code: 200
+{% endvalidation %}
 <!--vale on-->
 
 Carol isn't in `contractors` or `suspended`, so the same token also reaches the premium model:
 
 <!--vale off-->
-```sh
-curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
-     --no-progress-meter --fail-with-body \
-     -H "Content-Type: application/json" \
-     -H "Authorization: Bearer $CAROL_ACCESS_TOKEN" \
-     --json '{
-       "model": "budget-chat-premium",
-       "messages": [{ "role": "user", "content": "What is DNS?" }]
-     }'
-```
+{% validation request-check %}
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $CAROL_ACCESS_TOKEN'
+body:
+  model: budget-chat-premium
+  messages:
+    - role: user
+      content: What is DNS?
+status_code: 200
+{% endvalidation %}
 <!--vale on-->
 
 `budget-limits` charges the same `4x` ceiling either way, since the policy reads headers, not which model resolved the request. Only `access.acls` differs between the two models, and none of the five personas in this guide are in `contractors`, so this guide can't demonstrate a request denied on `budget-chat-premium` but accepted on `budget-chat`. Create a client with a `groups: "contractors"` label the same way the prior guide creates the others, and it's denied on `budget-chat-premium` while still reaching `budget-chat`.
@@ -299,24 +326,41 @@ curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
 Dave (`tier: "4x"`, `cap: "strict"`) authenticates the same way, but his individual cap and his tier ceiling are charged together, and the lower one binds:
 
 <!--vale off-->
-```sh
-export DAVE_ACCESS_TOKEN=$(curl -s -X POST "$ISSUER_URL/oauth/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials" \
-  -d "client_id=$DAVE_CLIENT_ID" \
-  -d "client_secret=$DAVE_CLIENT_SECRET" \
-  -d "scope=budgets-access" \
-  | jq -r '.access_token')
+{% validation request-check %}
+konnect_url: $ISSUER_URL
+url: /oauth/token
+method: POST
+headers:
+  - 'Content-Type: application/x-www-form-urlencoded'
+form_url_encoded_data:
+  grant_type: client_credentials
+  client_id: $DAVE_CLIENT_ID
+  client_secret: $DAVE_CLIENT_SECRET
+  scope: budgets-access
+extract_body:
+  - name: 'access_token'
+    variable: DAVE_ACCESS_TOKEN
+capture:
+  - variable: DAVE_ACCESS_TOKEN
+    jq: ".access_token"
+status_code: 200
+{% endvalidation %}
+<!--vale on-->
 
-curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
-     --no-progress-meter --fail-with-body \
-     -H "Content-Type: application/json" \
-     -H "Authorization: Bearer $DAVE_ACCESS_TOKEN" \
-     --json '{
-       "model": "budget-chat",
-       "messages": [{ "role": "user", "content": "What is DNS?" }]
-     }'
-```
+<!--vale off-->
+{% validation request-check %}
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DAVE_ACCESS_TOKEN'
+body:
+  model: budget-chat
+  messages:
+    - role: user
+      content: What is DNS?
+status_code: 200
+{% endvalidation %}
 <!--vale on-->
 
 Dave's `tier: "4x"` block alone would allow $0.20 per minute, the same as Carol. His `cap: "strict"` block is charged in parallel and caps him at $0.02 instead, so moving him to a higher tier later would never raise his ceiling. Only removing the `cap` label does.
@@ -324,23 +368,41 @@ Dave's `tier: "4x"` block alone would allow $0.20 per minute, the same as Carol.
 Grace (`tier: "4x"`, `groups: "suspended"`) never reaches a budget:
 
 <!--vale off-->
-```sh
-export GRACE_ACCESS_TOKEN=$(curl -s -X POST "$ISSUER_URL/oauth/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials" \
-  -d "client_id=$GRACE_CLIENT_ID" \
-  -d "client_secret=$GRACE_CLIENT_SECRET" \
-  -d "scope=budgets-access" \
-  | jq -r '.access_token')
+{% validation request-check %}
+konnect_url: $ISSUER_URL
+url: /oauth/token
+method: POST
+headers:
+  - 'Content-Type: application/x-www-form-urlencoded'
+form_url_encoded_data:
+  grant_type: client_credentials
+  client_id: $GRACE_CLIENT_ID
+  client_secret: $GRACE_CLIENT_SECRET
+  scope: budgets-access
+extract_body:
+  - name: 'access_token'
+    variable: GRACE_ACCESS_TOKEN
+capture:
+  - variable: GRACE_ACCESS_TOKEN
+    jq: ".access_token"
+status_code: 200
+{% endvalidation %}
+<!--vale on-->
 
-curl -X POST "$KONNECT_PROXY_URL/v1/chat/completions" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $GRACE_ACCESS_TOKEN" \
-  --json '{
-    "model": "budget-chat",
-    "messages": [{ "role": "user", "content": "What is DNS?" }]
-  }'
-```
+<!--vale off-->
+{% validation request-check %}
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $GRACE_ACCESS_TOKEN'
+body:
+  model: budget-chat
+  messages:
+    - role: user
+      content: What is DNS?
+status_code: 403
+{% endvalidation %}
 <!--vale on-->
 
 The request fails with `403 Forbidden`. `access.acls` denies on the `suspended` group before the request reaches `budget-limits`, regardless of Grace's tier.
