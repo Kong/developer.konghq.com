@@ -201,6 +201,45 @@ vaults:
 <!--vale on-->
 
 {% comment %}
+UNCOMMENT THIS IF THE TOOL **IS** FIXED TO CORRECTLY CONVERT KONNECT CONFIG STORE VAULTS (and replace the vault example above with this)
+
+<!--vale off-->
+```yaml
+# config/vaults.yaml
+vaults:
+- ref: ai-vault
+  name: hashicorp
+  display_name: AI Gateway Hashicorp Vault
+  type: hcv
+  description: HCV vault for AI Gateway
+  prefix: "my-vault"
+  config:
+    auth_method: token
+    base64_decode: false
+    host: "127.0.0.1"
+    kv: "v1"
+    mount: "secret"
+    port: 8200
+    protocol: "http"
+    ssl_verify: true
+    token: "*********"
+- ref: ai-konnect-vault
+  name: ai-konnect-vault
+  display_name: AI Gateway Konnect Vault
+  type: konnect
+  description: Credential store for AI Gateway
+  config:
+    config_store_id: "00c45ss6-d6a0-4aeb-b535-e4b6def3ea25"
+```
+<!--vale on-->
+
+{:.info}
+> **Note:** For a [{{site.konnect_short_name}} Config Store vault](/how-to/configure-the-konnect-config-store/) (`type: konnect`), the Config Store you reference must already exist in {{site.konnect_short_name}} before you apply the configuration. `kongctl` does not create it for you. If you created the Config Store through the {{site.konnect_short_name}} UI, it's created without a `name`. Set one with the [Update Config Store API](/api/konnect/control-planes-config/v2/#/operations/update-config-store) before you apply the configuration.
+{% endcomment %}
+
+{% comment %}
+UNCOMMENT THIS IF THE TOOL **ISN'T** FIXED TO CORRECTLY CONVERT KONNECT CONFIG STORE VAULTS 
+
 If you're using a {{site.konnect_short_name}} Config Store, you must [manually migrate](#manually-migrate-konnect-config-store-vault) that after using the conversion tool.
 {% endcomment %}
 
@@ -254,6 +293,7 @@ Open the `yaml` files in `./out` and confirm that the converter captured everyth
 Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as an AI Model Provider `display_name` or an AI Model `display_name`. These are required in {{site.ai_gateway}} 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
 
 {% comment %}
+UNCOMMENT THIS IF THE TOOL ISN'T FIXED TO CORRECTLY CONVERT KONNECT CONFIG STORE VAULTS 
 
 #### Manually migrate {{site.konnect_short_name}} Config Store vault 
 
