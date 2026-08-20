@@ -45,7 +45,7 @@ prereqs:
         > If there's no AZ overlap, {{site.konnect_short_name}} can't establish the connection, and the resource endpoint config shows as `missing`, with no other indication of the cause.
         > Check which [AZs your Dedicated Cloud Gateway network supports](/konnect-platform/geos/#dedicated-cloud-gateways) before you create your resource gateway, and place it in a subnet within an overlapping AZ.
 
-        Copy and save the resource configuration ID and resource definition domain name for each resource configuration. {{site.konnect_short_name}} will use these to create a mapping of upstream domain names and resource configuration IDs.
+        Copy and save the resource configuration ID for each resource configuration.
 
         Choose a domain name for each resource configuration, for example `myupstream.internal`. This domain doesn't need to exist in AWS. {{site.konnect_short_name}} uses it to create a mapping between the domain name and the resource configuration ID, and creates a CNAME record pointing your chosen domain to the resource configuration.
 
