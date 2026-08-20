@@ -391,6 +391,10 @@
 # AIGW policies overview -> reference for now
 /ai-gateway/policies/:slug/  /ai-gateway/policies/:slug/reference 301
 
+# Vertex AI consolidated into the Gemini provider (Gemini Standard / Gemini Enterprise)
+/ai-gateway/ai-providers/vertex/  /ai-gateway/ai-providers/gemini/  301
+/ai-gateway/use-claude-code-with-ai-gateway-vertex/  /ai-gateway/use-claude-code-with-ai-gateway-gemini/  301
+
 # ai-gateway previous-major how-to redirects — added by migration skill on 2026-06-15
 /how-to/authenticate-openai-sdk-clients-with-key-auth/  /ai-gateway/v1/how-to/authenticate-openai-sdk-clients-with-key-auth/  301
 /how-to/azure-batches/  /ai-gateway/v1/how-to/azure-batches/  301

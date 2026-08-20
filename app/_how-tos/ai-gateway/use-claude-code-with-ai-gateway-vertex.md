@@ -25,6 +25,11 @@ tags:
   - ai
   - vertex-ai
 
+# Unpublished: Vertex AI is being retired in favor of Gemini Enterprise, and this
+# guide's approach (AI Model Provider type: vertex, used to host Claude models on
+# Vertex AI Model Garden) has no Gemini-based replacement. Revisit post-GA.
+published: false
+
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}} for a Claude model hosted on Google Vertex AI?
   a: Create an AI Model Provider entity to authenticate to Google Vertex AI, add a Policy to strip Anthropic-only request fields Vertex doesn't support, create an AI Model entity that accepts Anthropic-compatible requests and targets your Vertex model. Then, point Claude CLI’s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests are proxied for monitoring and control.
