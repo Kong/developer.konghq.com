@@ -8,7 +8,7 @@ products:
 content_type: policy
 description: Integrate {{site.ai_gateway_name}} with a third-party OpenID Connect provider
 ---
-The OpenID Connect (OIDC) Policy lets you integrate {{site.ai_gateway}} with an identity provider (IdP). To make it work with {{site.ai_gateway}}, you don't attach it directly to an {{site.ai_gateway}}. Instead you reference it in your [AI Identity Provider](/ai-gateway/ai-identity-provider/) entity configuration. The resulting configuration is whas we call OpenID Connect (OIDC) Policy in this page.
+The OpenID Connect (OIDC) Policy lets you integrate {{site.ai_gateway}} with an identity provider (IdP). To make it work with {{site.ai_gateway}}, you don't attach it directly to an {{site.ai_gateway}}. Instead you reference it in your [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) entity configuration. Because of that, in the {{site.konnect_short_name}} UI, you find the Open ID Connect configuration in the **Identity** tab, when you create a new Identity Provider, not in the **Policies** one. The resulting configuration is what we call OpenID Connect (OIDC) Policy in this page. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) to learn more.
 
 You can use this Policy to implement {{site.ai_gateway}} as a proxying [OAuth 2.0](https://tools.ietf.org/html/rfc6749) resource server 
 (RS) and as an OpenID Connect relying party (RP) between the client and the upstream service.
@@ -79,16 +79,10 @@ For example, the [authorization code flow](#authorization-code-flow) demonstrate
 For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/ai-gateway/policies/openid-connect/reference/#schema--config-auth-methods)). 
 Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry).
 
-Set up JWT access token auth:
-* [JWT access token auth tutorial with Keycloak](/how-to/configure-oidc-with-jwt-auth/)
-
 #### Kong OAuth token authentication flow
 
 The OpenID Connect Policy can verify the tokens issued by the [OAuth 2.0 Policy](/ai-gateway/policies/oauth2/).
 This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow).
-
-Set up Kong OAuth2 token auth:
-* [Kong OAuth token tutorial with Keycloak](/how-to/configure-oidc-with-kong-oauth2/)
 
 #### Introspection authentication flow
 
@@ -97,17 +91,11 @@ the introspection authentication relies on a bearer token that the client has al
 The difference between introspection and stateless JWT authentication is that the Policy needs to call the introspection endpoint of the identity provider to find out whether the token is valid and active. 
 This makes it possible to issue opaque tokens to the clients.
 
-Set up introspection auth:
-* [Introspection auth tutorial with Keycloak](/how-to/configure-oidc-with-introspection/)
-
 #### User info authentication flow
 
 The user info authentication uses OpenID Connect standard user info endpoint to verify the access token.
 In most cases, you would use [introspection authentication](#introspection-authentication-flow) instead of user info, as introspection is meant for retrieving information from the token itself, whereas the user info endpoint is meant for retrieving information about the user to whom the token was given. 
 The flow is almost identical to introspection authentication.
-
-Set up user info auth:
-* [User info auth tutorial with Keycloak](/how-to/configure-oidc-with-user-info-auth/)
 
 #### Refresh token grant workflow
 
@@ -118,25 +106,16 @@ The mismatch is likely when the OpenID Connect Policy is configured to use one c
 The grant itself is very similar to the [password grant](#password-grant-workflow) and
 the [client credentials grant](#client-credentials-grant-workflow).
 
-Set up refresh token auth:
-* [Refresh token auth tutorial with Keycloak](/how-to/configure-oidc-with-refresh-token/)
-
 #### Password grant workflow
 
 Password grant is a **legacy** authentication grant. 
 This is a less secure way of authenticating end users than the authorization code flow, because, for example, the passwords are shared with third parties.
-
-Set up password grant auth:
-* [Password grant tutorial with Keycloak](/how-to/configure-oidc-with-password-grant/)
 
 #### Client credentials grant workflow
 
 The client credentials grant is very similar to the [password grant](#password-grant-workflow).
 The most important difference is that the Policy itself doesn't try to authenticate, and instead 
 forwards the credentials passed by the client to the identity server's token endpoint.
-
-Set up client credentials grant auth:
-* [Client credentials grant tutorial with Keycloak](/how-to/configure-oidc-with-client-credentials/)
 
 #### Authorization code flow
 
@@ -145,10 +124,6 @@ Set up client credentials grant auth:
 in the `/.well-known/openid-configuration` issuer discovery endpoint response, as required by 
 [RFC 8414](https://www.rfc-editor.org/rfc/rfc8414.html).
 If it's not included, the PKCE `code_challenge` query parameter won't be sent.
-
-Set up the auth code flow:
-* [Authorization code tutorial with Keycloak](/how-to/configure-oidc-with-auth-code-flow/)
-* [Configure OpenID Connect with the authorization code flow and Okta](/how-to/configure-oidc-with-auth-code-flow-and-okta/)
 
 ### Authorization
 
@@ -181,9 +156,6 @@ Claims-based auth adheres to the following rules:
 * You can validate multiple values of the same claim [using `OR` and `AND` logic](#claim-requirements)
 
 Both the claim type and the required claim content take an array of string elements.
-
-Set up claims-based auth:
-* [Claims-based auth tutorial with Keycloak](/how-to/configure-oidc-with-claims-based-auth/)
 
 ##### Claim type
 
@@ -250,25 +222,16 @@ The OpenID Connect Policy can be integrated with the [ACL Policy](/ai-gateway/po
 
 You can also pair ACL-based authorization with AI Consumer authorization.
 
-Set up ACL auth:
-* [ACL auth tutorial with Keycloak](/how-to/configure-oidc-with-acl-auth/)
-
 #### AI Consumer authorization
 
 You can use [AI Consumers](/ai-gateway/entities/ai-consumer/) for authorization and dynamically map claim values to AI Consumers. 
 This means that we restrict the access to only those that do have a matching AI Consumer. 
 AI Consumers can have ACL groups attached to them and be further authorized with the [ACL Policy](/ai-gateway/policies/acl/).
 
-Set up AI Consumer auth:
-* [AI Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
-
 #### AI Consumer Group authorization
 
 You can use [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) for authorization and dynamically map claim values to AI Consumer Groups. 
 This means that we restrict the access to only those that do have a matching AI Consumer Group. 
-
-Set up AI Consumer Group auth:
-* [AI Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
 
 ### Client authentication
 
@@ -355,8 +318,6 @@ rows:
       {{site.ai_gateway}} can read the certificate from an HTTP header injected by the WAF or proxy and validate its thumbprint against the `cnf.x5t#S256` claim bound in the access token.
       <br><br>
       Set [`config.proof_of_possession_mtls`](./reference/#schema--config-proof-of-possession-mtls) to `strict` and configure [`config.proof_of_possession_mtls_from_header`](./reference/#schema--config-proof-of-possession-mtls-from-header) with the header name and a trusted CA certificate.
-    example: |
-      [How-to: Configure OpenID Connect with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/)
 {% endtable %}
 
 ### Certificate-bound access tokens
@@ -382,8 +343,6 @@ To enable certificate-bound access for OpenID Connect:
 * Ensure that the auth server (IdP) that you're using is set up to generate OAuth 2.0 Mutual TLS certificate-bound access tokens.
 * Use the [`proof_of_possession_mtls`](/ai-gateway/policies/openid-connect/reference/#schema--config-proof-of-possession-mtls) configuration option to ensure that the supplied access token belongs to the client by verifying its binding with the client certificate provided in the request.
 
-[Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/) for a complete tutorial.
-
 ### mTLS Proof-of-Possession via HTTP header
 
 Many enterprise deployments terminate TLS at a WAF or Layer-7 proxy before traffic reaches {{site.ai_gateway}}.
@@ -396,8 +355,6 @@ To enable mTLS PoP via header:
 * Configure your IdP to generate OAuth 2.0 mTLS certificate-bound access tokens.
 * Configure your WAF or L7 proxy to inject the client certificate into a known HTTP header.
 * Set [`config.proof_of_possession_mtls`](/ai-gateway/policies/openid-connect/reference/#schema--config-proof-of-possession-mtls) to `strict` and configure [`config.proof_of_possession_mtls_from_header`](/ai-gateway/policies/openid-connect/reference/#schema--config-proof-of-possession-mtls-from-header) with the header name, expected certificate format, and a trusted CA certificate.
-
-See [Configure OpenID Connect with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/) for a complete tutorial.
 
 ### Demonstrating Proof-of-Possession (DPoP)
 
@@ -480,9 +437,6 @@ The OpenID Connect Policy performs the following checks on the incoming token be
 Afterwards, the rest of the OpenID Connect Policy flow continues on the exchanged token.
 
 Depending on the use case, {{site.ai_gateway}} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
-
-Set up token exchange:
-* [How-to: Configure OIDC with token exchange](/how-to/configure-oidc-with-token-exchange/)
 
 #### Key terms
 
