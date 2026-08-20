@@ -113,6 +113,7 @@ This example uses the following settings:
 
 Before starting {{ site.claude_code }}, confirm the route works by sending an Anthropic Messages API request directly:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /v1/messages
 status_code: 200
@@ -128,17 +129,19 @@ body:
     - role: 'user'
       content: "Reply with just: ok"
 {% endvalidation %}
+<!-- vale on -->
 
 ## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
+<!-- vale off -->
 {% validation claude-code %}
 prompt: Tell me about the Madrid Skylitzes manuscript.
 model: qwen-plus
 base_url: http://localhost:8000/
 {% endvalidation %}
-
+<!-- vale on -->
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 

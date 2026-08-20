@@ -129,6 +129,7 @@ ai_gateway_agents:
 
 Send a standard A2A request that falls within the 1 MB limit:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /a2a/
 method: POST
@@ -148,7 +149,7 @@ body:
         text: Show me routes from SFO to JFK
 status_code: 200
 {% endvalidation %}
-
+<!-- vale on -->
 
 {{site.ai_gateway}} proxies the request to the upstream A2A agent and returns a JSON-RPC response.
 
@@ -156,6 +157,7 @@ status_code: 200
 
 Generate a payload that exceeds 1 MB.
 
+<!-- vale off -->
 ```sh
 python3 -c "
 import json
@@ -181,9 +183,11 @@ print(json.dumps(payload))
 " > ./large_payload.json
 ```
 {:data-test-step="block"}
+<!-- vale on -->
 
 Now send it as an A2A request:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /a2a
 display_headers: true
@@ -193,6 +197,7 @@ headers:
 body_file: '@large_payload.json'
 status_code: 413
 {% endvalidation %}
+<!-- vale on -->
 
 {{site.ai_gateway}} rejects the request with `413 Request Entity Too Large`:
 

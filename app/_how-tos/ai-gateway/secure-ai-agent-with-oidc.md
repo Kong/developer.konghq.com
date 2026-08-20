@@ -98,6 +98,7 @@ This how-to continues from [Set up a {{site.identity}} auth server for AI Agent 
 
 Create an `openid-connect` [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that uses {{site.identity}} as the issuer, and an [AI Agent](/ai-gateway/entities/ai-agent/) that references it through `access.identity_providers`.
 
+<!-- vale off -->
 {% entity_examples %}
 ai_gateway_identity_providers:
   - ref: identity-oidc
@@ -142,6 +143,7 @@ ai_gateway_agents:
         statistics: true
       max_request_body_size: 8388608
 {% endentity_examples %}
+<!-- vale on -->
 
 All requests to the `/a2a` route now require a valid bearer token from {{site.identity}}.
 
@@ -177,6 +179,7 @@ The request fails with `401 Unauthorized`.
 
 Generate a token for the client and export it:
 
+<!-- vale off -->
 {% validation request-check %}
 konnect_url: $ISSUER_URL
 url: /oauth/token
