@@ -7,7 +7,7 @@ module Jekyll
     priority :high
 
     def generate(site)
-      return if ENV['KONG_PRODUCTS'] || ENV['PAGE_PATHS']
+      return if site.config.dig('skip', 'release_map_loader')
 
       ReleaseMap.load_all(site).each do |source_path, config|
         validate_status!(source_path, config)
