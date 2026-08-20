@@ -2356,6 +2356,33 @@
               },
               "type": "object"
             },
+            "grant_type": {
+              "default": "token_exchange",
+              "description": "The token exchange grant. `token_exchange` (default) uses the OAuth 2.0 Token Exchange grant (RFC 8693). `jwt_bearer` uses the JWT Bearer authorization-grant flow (RFC 7523); see `token_exchange.provider` for provider-specific defaults in this mode.",
+              "enum": [
+                "jwt_bearer",
+                "token_exchange"
+              ],
+              "type": "string"
+            },
+            "map_identities_from": {
+              "default": "exchanged_tokens",
+              "description": "Which token's claims to use for consumer, consumer group, and principal mapping. Only takes effect when token exchange is configured. `exchanged_tokens` (default) uses the token(s) returned by the exchange or tokens derived from it, as today. `subject_token` uses the original, pre-exchange bearer token's claims instead.",
+              "enum": [
+                "exchanged_tokens",
+                "subject_token"
+              ],
+              "type": "string"
+            },
+            "provider": {
+              "default": "standard",
+              "description": "Identity provider used with `grant_type = jwt_bearer`; not allowed with `grant_type = token_exchange`. `standard` (default) adds no provider-specific parameter. `microsoft` adds the required `requested_token_use=on_behalf_of`, which is fixed and cannot be overridden via `post_args_names/values`.",
+              "enum": [
+                "microsoft",
+                "standard"
+              ],
+              "type": "string"
+            },
             "request": {
               "description": "Parameters used in the token exchange request.",
               "properties": {
@@ -2402,10 +2429,48 @@
                   "description": "Use empty audiences. Use this field to remove audiences defined in `config.audience`.",
                   "type": "boolean"
                 },
+                "empty_headers": {
+                  "default": false,
+                  "description": "Use no extra headers on the token exchange request. Use this field to remove extra headers defined in `config.token_headers_names`.",
+                  "type": "boolean"
+                },
+                "empty_post_args": {
+                  "default": false,
+                  "description": "Use no extra POST arguments on the token exchange request. Use this field to remove extra POST arguments defined in `config.token_post_args_names`.",
+                  "type": "boolean"
+                },
                 "empty_scopes": {
                   "default": false,
                   "description": "Use empty scopes. Use this field to remove scopes defined in `config.scopes`.",
                   "type": "boolean"
+                },
+                "headers_names": {
+                  "description": "Extra header names sent only on the token exchange request. Overrides `config.token_headers_names` for this request.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "headers_values": {
+                  "description": "Values paired by index with `headers_names`.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "post_args_names": {
+                  "description": "Extra POST argument names sent only on the token exchange request. Overrides `config.token_post_args_names` for this request. Use this, not the top-level field, for parameters that must not be attached to the plugin's other token endpoint calls, for example `requested_token_use` for Entra ID's On-Behalf-Of flow.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "post_args_values": {
+                  "description": "Values paired by index with `post_args_names`.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
                 },
                 "scopes": {
                   "description": "Scopes used in the token exchange request. Values defined here override those defined in `config.scopes`.",

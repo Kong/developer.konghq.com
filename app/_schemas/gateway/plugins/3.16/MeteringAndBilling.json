@@ -2,6 +2,13 @@
   "properties": {
     "config": {
       "properties": {
+        "allow_status_codes": {
+          "description": "List of status code ranges that are allowed to be logged in usage events.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "api_token": {
           "description": "Bearer token for authenticating with the ingest endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
           "type": "string",

@@ -38,7 +38,7 @@ search_aliases:
   - metering and billing
   
 
-icon: governance.png
+icon: entitlement-enforcement.png
 
 categories:
    - monetization
