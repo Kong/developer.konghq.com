@@ -30,23 +30,22 @@ An AI Model is an interface in {{site.konnect_catalog}} that represents the prov
 
 You can create an AI Model in two ways:
 * Add it manually by defining its providers and target models yourself.
-* Import it from {{site.ai_gateway}}, by linking an existing {{site.ai_gateway}} AI Model as the source. This allows teams to discover, understand, and use it securely.
+* Import it from [{{site.ai_gateway}} 2.0](/ai-gateway/), by linking an existing {{site.ai_gateway}} 2.0 AI Model as the source. This allows teams to discover, understand, and use it securely.
 
-When an AI Model is linked to {{site.ai_gateway}}, traffic to that AI Model is protected by {{site.ai_gateway}}.
+When an AI Model is linked to {{site.ai_gateway}} 2.0, traffic to that AI Model is protected by {{site.ai_gateway}}.
 The link is a snapshot, not a live sync.
-If you later change the linked model's configuration in {{site.ai_gateway}}, the AI Model in {{site.konnect_catalog}} isn't automatically updated to match.
+If you later change the linked model's configuration in {{site.ai_gateway}} 2.0, the AI Model in {{site.konnect_catalog}} isn't automatically updated to match.
 
 ## Create an AI Model
 
 {% navtabs "create-ai-model" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. Click the **AI models** tab.
 1. From the **New** dropdown menu, select "AI model".
 1. Under **Data source**, do one of the following:
    1. To manually define providers and models, select **Add manually**.
    1. To import an existing gateway-defined model, select **Import from AI gateway**, then:
-      1. From the **AI gateway** dropdown menu, select your {{site.ai_gateway}} control plane.
+      1. From the **AI gateway** dropdown menu, select your {{site.ai_gateway}} 2.0 control plane.
       1. From the **Model from AI gateway** dropdown menu, select the model you want to import.
 1. (Optional) Under **Target models**, add the providers and models this AI Model routes to:
    1. From the **Provider** dropdown menu, select a provider, for example "OpenAI".
@@ -63,7 +62,7 @@ If you later change the linked model's configuration in {{site.ai_gateway}}, the
 1. Click **Create**.
 
 
-You can also link AI Models that you've manually created in {{site.konnect_catalog}} to a model on {{site.ai_gateway}} by clicking the **Gateway** tab on a {{site.konnect_catalog}} AI Model's details page and clicking **Link AI gateway**.
+You can also link AI Models that you've manually created in {{site.konnect_catalog}} to a model on {{site.ai_gateway}} 2.0 by clicking the **Gateway** tab on a {{site.konnect_catalog}} AI Model's details page and clicking **Link AI gateway**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the `/ai-models` endpoint to create an empty AI Model:
