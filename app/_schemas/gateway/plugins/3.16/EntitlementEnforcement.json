@@ -3,7 +3,7 @@
     "config": {
       "properties": {
         "api_token": {
-          "description": "Bearer token for authenticating with the governance endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "description": "Bearer token for authenticating with the entitlement access endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
           "type": "string",
           "x-encrypted": true,
           "x-referenceable": true
@@ -39,6 +39,10 @@
           "description": "If set to true, gateway will deny access to any unknown subjects.",
           "type": "boolean"
         },
+        "entitlement_access_endpoint": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
         "fail_policy": {
           "default": "allow",
           "description": "Policy to apply when enforcement state cannot be retrieved.",
@@ -49,7 +53,7 @@
           "type": "string"
         },
         "feature": {
-          "description": "The feature identifies what capability is being accessed and governed.",
+          "description": "The feature identifies what capability is being accessed and enforced.",
           "properties": {
             "key": {
               "description": "The feature key",
@@ -61,13 +65,9 @@
           ],
           "type": "object"
         },
-        "governance_endpoint": {
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
-          "type": "string"
-        },
         "keepalive": {
           "default": 60000,
-          "description": "How long in milliseconds an idle connection to the governance endpoint is kept open before being closed.",
+          "description": "How long in milliseconds an idle connection to the entitlement access endpoint is kept open before being closed.",
           "type": "number"
         },
         "l1_cache_ttl_seconds": {
@@ -432,7 +432,7 @@
         },
         "refresh_interval": {
           "default": 30,
-          "description": "How often in seconds to poll enforcement state from the governance endpoint",
+          "description": "How often in seconds to poll enforcement state from the entitlement access endpoint",
           "minimum": 2,
           "type": "number"
         },
@@ -528,7 +528,7 @@
         },
         "ssl_verify": {
           "default": true,
-          "description": "Verify the TLS certificate presented by the governance endpoint.",
+          "description": "Verify the TLS certificate presented by the entitlement access endpoint.",
           "type": "boolean"
         },
         "sync_rate": {
@@ -539,14 +539,14 @@
         },
         "timeout": {
           "default": 10000,
-          "description": "Maximum time in milliseconds to wait for a response from the governance endpoint.",
+          "description": "Maximum time in milliseconds to wait for a response from the entitlement access endpoint.",
           "type": "number"
         }
       },
       "required": [
         "api_token",
-        "feature",
-        "governance_endpoint"
+        "entitlement_access_endpoint",
+        "feature"
       ],
       "type": "object"
     },
