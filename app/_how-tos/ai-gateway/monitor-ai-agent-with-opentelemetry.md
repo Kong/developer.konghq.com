@@ -161,6 +161,7 @@ ai_gateway_agents:
 
 Send a `message/send` JSON-RPC request to test the agent:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /a2a/
 display_headers: true
@@ -182,6 +183,7 @@ body:
       - kind: text
         text: What flights are available on route KA-123?
 {% endvalidation %}
+<!-- vale on -->
 
 A successful response (status 200) contains the agent's reply.
 
