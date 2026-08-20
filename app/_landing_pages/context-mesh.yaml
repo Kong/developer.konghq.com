@@ -39,7 +39,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/context-mesh.svg
+              url: /assets/images/context-mesh/context-mesh.svg
               alt_text: "{{site.context_mesh}} architecture diagram. AI agents connect through AI Gateway as the control layer for LLMs, and through {{site.context_mesh}} as the mediation layer for enterprise sources including APIs, data, docs, and code."
 
   - columns:
@@ -77,7 +77,7 @@ rows:
       - blocks:
         - type: image
           config:
-            url: /assets/images/konnect/context-mesh-terminal.svg
+            url: /assets/images/context-mesh/context-mesh-terminal.svg
             alt_text: "{{site.context_mesh}} terminal workflow example showing MCP server setup and usage."
 
   - header:
