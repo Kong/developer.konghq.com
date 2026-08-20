@@ -43,6 +43,7 @@ rules:
       - gateway.networking.k8s.io
     resources:
       - httproutes
+      - referencegrants
     verbs:
       - get
       - list
@@ -132,15 +133,10 @@ rules:
   - apiGroups:
       - "apps"
     resources:
-      - deployments
       - replicasets
     verbs:
-      - create
-      - delete
       - get
       - list
-      - patch
-      - update
       - watch
   - apiGroups:
       - "batch"
@@ -156,10 +152,8 @@ rules:
       - services
     verbs:
       - get
-      - delete
       - list
       - watch
-      - create
       - update
       - patch
   - apiGroups:
