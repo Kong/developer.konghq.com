@@ -50,7 +50,7 @@
         },
         "log_original_request": {
           "type": "boolean",
-          "description": "Set true to add the original request to the Kong log plugin(s) output.",
+          "description": "Set true to add the original request to the Kong log policy(s) output.",
           "default": false
         },
         "max_request_body_size": {
@@ -71,7 +71,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -81,7 +81,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     },
     "consumer": {
       "type": "object",
@@ -91,7 +91,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "consumer_group": {
       "type": "object",
@@ -101,7 +101,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups"
+      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
     }
   },
   "required": [

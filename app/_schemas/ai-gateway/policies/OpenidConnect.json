@@ -13,7 +13,7 @@
           "wss"
         ]
       },
-      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
       "default": [
         "grpc",
         "grpcs",
@@ -146,7 +146,7 @@
         },
         "hide_credentials": {
           "type": "boolean",
-          "description": "Remove the credentials used for authentication from the request. If multiple credentials are sent with the same request, the plugin will remove those that were used for successful authentication.",
+          "description": "Remove the credentials used for authentication from the request. If multiple credentials are sent with the same request, the policy will remove those that were used for successful authentication.",
           "default": true
         },
         "display_errors": {
@@ -187,7 +187,7 @@
           "items": {
             "type": "string"
           },
-          "description": "The claim used to derive virtual credentials (e.g. to be consumed by the rate-limiting plugin), in case the consumer mapping is not used. If multiple values are set, it means the claim is inside a nested object of the token payload.",
+          "description": "The claim used to derive virtual credentials (e.g. to be consumed by the rate-limiting policy), in case the consumer mapping is not used. If multiple values are set, it means the claim is inside a nested object of the token payload.",
           "default": [
             "sub"
           ]
@@ -202,7 +202,7 @@
         },
         "ssl_verify": {
           "type": "boolean",
-          "description": "Verify identity provider server certificate. If set to `true`, the plugin uses the CA certificate set in the `kong.conf` config parameter `lua_ssl_trusted_certificate`.",
+          "description": "Verify identity provider server certificate. If set to `true`, the policy uses the CA certificate set in the `kong.conf` config parameter `lua_ssl_trusted_certificate`.",
           "default": true
         },
         "token_headers_client": {
@@ -250,7 +250,7 @@
             "off",
             "redis"
           ],
-          "description": "The strategy to use for the cluster cache. If set, the plugin will share cache with nodes configured with the same strategy backend. Currentlly only introspection cache is shared.",
+          "description": "The strategy to use for the cluster cache. If set, the policy will share cache with nodes configured with the same strategy backend. Currentlly only introspection cache is shared.",
           "default": "off"
         },
         "introspect_jwt_tokens": {
@@ -340,7 +340,7 @@
         },
         "resolve_distributed_claims": {
           "type": "boolean",
-          "description": "Distributed claims are represented by the `_claim_names` and `_claim_sources` members of the JSON object containing the claims. If this parameter is set to `true`, the plugin explicitly resolves these distributed claims.",
+          "description": "Distributed claims are represented by the `_claim_names` and `_claim_sources` members of the JSON object containing the claims. If this parameter is set to `true`, the policy explicitly resolves these distributed claims.",
           "default": false
         },
         "authorization_cookie_secure": {
@@ -500,7 +500,7 @@
         },
         "rediscovery_lifetime": {
           "type": "number",
-          "description": "Specifies how long (in seconds) the plugin waits between discovery attempts. Discovery is still triggered on an as-needed basis.",
+          "description": "Specifies how long (in seconds) the policy waits between discovery attempts. Discovery is still triggered on an as-needed basis.",
           "default": 30
         },
         "session_store_metadata": {
@@ -1048,7 +1048,7 @@
         },
         "using_pseudo_issuer": {
           "type": "boolean",
-          "description": "If the plugin uses a pseudo issuer. When set to true, the plugin will not discover the configuration from the issuer URL specified with `config.issuer`.",
+          "description": "If the policy uses a pseudo issuer. When set to true, the policy will not discover the configuration from the issuer URL specified with `config.issuer`.",
           "default": false
         },
         "unauthorized_redirect_uri": {
@@ -1323,7 +1323,7 @@
         },
         "refresh_tokens": {
           "type": "boolean",
-          "description": "Specifies whether the plugin should try to refresh (soon to be) expired access tokens if the plugin has a `refresh_token` available.",
+          "description": "Specifies whether the policy should try to refresh (soon to be) expired access tokens if the policy has a `refresh_token` available.",
           "default": true
         },
         "consumer_by": {
@@ -1560,7 +1560,7 @@
             "query",
             "query.jwt"
           ],
-          "description": "Response mode passed to the authorization endpoint: - `query`: for parameters in query string - `form_post`: for parameters in request body - `fragment`: for parameters in uri fragment (rarely useful as the plugin itself cannot read it) - `query.jwt`, `form_post.jwt`, `fragment.jwt`: similar to `query`, `form_post` and `fragment` but the parameters are encoded in a JWT - `jwt`: shortcut that indicates the default encoding for the requested response type.",
+          "description": "Response mode passed to the authorization endpoint: - `query`: for parameters in query string - `form_post`: for parameters in request body - `fragment`: for parameters in uri fragment (rarely useful as the policy itself cannot read it) - `query.jwt`, `form_post.jwt`, `fragment.jwt`: similar to `query`, `form_post` and `fragment` but the parameters are encoded in a JWT - `jwt`: shortcut that indicates the default encoding for the requested response type.",
           "default": "query"
         },
         "session_audience": {
@@ -1755,7 +1755,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Pass extra arguments from the client to the OpenID-Connect plugin. If arguments exist, the client can pass them using: - Query parameters - Request Body - Request Header  This parameter can be used with `scope` values, like this:  `config.token_post_args_client=scope`  In this case, the token would take the `scope` value from the query parameter or from the request body or from the header and send it to the token endpoint."
+          "description": "Pass extra arguments from the client to the OpenID-Connect policy. If arguments exist, the client can pass them using: - Query parameters - Request Body - Request Header  This parameter can be used with `scope` values, like this:  `config.token_post_args_client=scope`  In this case, the token would take the `scope` value from the query parameter or from the request body or from the header and send it to the token endpoint."
         },
         "session_storage": {
           "type": "string",
@@ -1884,12 +1884,12 @@
         },
         "run_on_preflight": {
           "type": "boolean",
-          "description": "Specifies whether to run this plugin on pre-flight (`OPTIONS`) requests.",
+          "description": "Specifies whether to run this policy on pre-flight (`OPTIONS`) requests.",
           "default": true
         },
         "http_version": {
           "type": "number",
-          "description": "The HTTP version used for the requests by this plugin: - `1.1`: HTTP 1.1 (the default) - `1.0`: HTTP 1.0.",
+          "description": "The HTTP version used for the requests by this policy: - `1.1`: HTTP 1.1 (the default) - `1.0`: HTTP 1.0.",
           "default": 1.1
         },
         "preserve_query_args": {
@@ -1924,7 +1924,7 @@
           "items": {
             "type": "string"
           },
-          "description": "The claim that contains authenticated groups. This setting can be used together with ACL plugin, but it also enables IdP managed groups with other applications and integrations. If multiple values are set, it means the claim is inside a nested object of the token payload."
+          "description": "The claim that contains authenticated groups. This setting can be used together with ACL policy, but it also enables IdP managed groups with other applications and integrations. If multiple values are set, it means the claim is inside a nested object of the token payload."
         },
         "authorization_endpoint": {
           "type": "string",
@@ -1963,7 +1963,7 @@
         },
         "verify_parameters": {
           "type": "boolean",
-          "description": "Verify plugin configuration against discovery.",
+          "description": "Verify policy configuration against discovery.",
           "default": false
         },
         "introspection_token_param_name": {
@@ -2027,7 +2027,7 @@
             "type": "string",
             "x-referenceable": true
           },
-          "description": "The client id(s) that the plugin uses when it calls authenticated endpoints on the identity provider.",
+          "description": "The client id(s) that the policy uses when it calls authenticated endpoints on the identity provider.",
           "x-encrypted": true
         },
         "token_endpoint": {
@@ -2333,7 +2333,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -2343,7 +2343,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [

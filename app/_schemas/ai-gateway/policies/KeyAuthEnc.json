@@ -15,7 +15,7 @@
       "properties": {
         "realm": {
           "type": "string",
-          "description": "When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value."
+          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
         },
         "key_names": {
           "type": "array",
@@ -23,14 +23,14 @@
             "type": "string",
             "description": "A string representing an HTTP header name."
           },
-          "description": "Describes an array of parameter names where the plugin will look for a key. The client must send the authentication key in one of those key names, and the plugin will try to read the credential from a header, request body, or query string parameter with the same name.  Key names may only contain [a-z], [A-Z], [0-9], [_] underscore, and [-] hyphen.",
+          "description": "Describes an array of parameter names where the policy will look for a key. The client must send the authentication key in one of those key names, and the policy will try to read the credential from a header, request body, or query string parameter with the same name.  Key names may only contain [a-z], [A-Z], [0-9], [_] underscore, and [-] hyphen.",
           "default": [
             "apikey"
           ]
         },
         "hide_credentials": {
           "type": "boolean",
-          "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service. If `true`, the plugin strips the credential from the request (i.e., the header, query string, or request body containing the key) before proxying it.",
+          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service. If `true`, the policy strips the credential from the request (i.e., the header, query string, or request body containing the key) before proxying it.",
           "default": true
         },
         "anonymous": {
@@ -39,22 +39,22 @@
         },
         "key_in_header": {
           "type": "boolean",
-          "description": "If enabled (default), the plugin reads the request header and tries to find the key in it.",
+          "description": "If enabled (default), the policy reads the request header and tries to find the key in it.",
           "default": true
         },
         "key_in_query": {
           "type": "boolean",
-          "description": "If enabled (default), the plugin reads the query parameter in the request and tries to find the key in it.",
+          "description": "If enabled (default), the policy reads the query parameter in the request and tries to find the key in it.",
           "default": true
         },
         "key_in_body": {
           "type": "boolean",
-          "description": "If enabled, the plugin reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
+          "description": "If enabled, the policy reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
           "default": false
         },
         "run_on_preflight": {
           "type": "boolean",
-          "description": "A boolean value that indicates whether the plugin should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
+          "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
           "default": true
         }
       }
@@ -72,7 +72,7 @@
           "wss"
         ]
       },
-      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
       "default": [
         "grpc",
         "grpcs",
@@ -90,7 +90,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -100,7 +100,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   }
 }

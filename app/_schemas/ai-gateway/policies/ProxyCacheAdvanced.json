@@ -45,7 +45,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Upstream response content types considered cacheable. The plugin performs an **exact match** against each specified value; for example, if the upstream is expected to respond with a `application/json; charset=utf-8` content-type, the plugin configuration must contain said value or a `Bypass` cache status is returned.",
+          "description": "Upstream response content types considered cacheable. The policy performs an **exact match** against each specified value; for example, if the upstream is expected to respond with a `application/json; charset=utf-8` content-type, the policy configuration must contain said value or a `Bypass` cache status is returned.",
           "default": [
             "application/json",
             "text/plain"
@@ -394,7 +394,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "consumer_group": {
       "type": "object",
@@ -404,7 +404,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups"
+      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
     },
     "route": {
       "type": "object",
@@ -414,7 +414,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -424,7 +424,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [
