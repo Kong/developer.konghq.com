@@ -127,6 +127,35 @@ A zone proxy (zone ingress/egress) is now just a `Dataplane` with zone proxy lis
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
+### The `BUILTIN` gateway type and its statistics are removed from the API
+
+The built-in gateway implementation was removed over the previous releases, and the Dataplane validator has been rejecting `networking.gateway.type: BUILTIN` since then. The remaining API surface is now gone too:
+
+- `Dataplane.networking.gateway.type` no longer has a `BUILTIN` value. `DELEGATED` is the only gateway type. A `Dataplane` carrying `type: BUILTIN` is now rejected while it is parsed, as an unknown enum value, instead of producing the previous `BUILTIN gateways are no longer supported, use DELEGATED instead` validation error.
+- `MeshInsight.dataplanesByType.gatewayBuiltin` and the `gateway_builtin` `ServiceInsight` service type are removed. `dataplanesByType.gateway` now reports the delegated gateway totals only.
+- `GET /meshes/{mesh}/dataplanes+insights?gateway=builtin` is no longer a valid filter. Use `gateway=delegated`, or `gateway=true` for any gateway.
+- `GET /meshes/{mesh}/service-insights?type=gateway_builtin` is no longer a valid filter and returns `400`. Use `type=gateway_delegated`.
+- The `gatewayBuiltin` object disappears from the `/global-insight` response, in both `dataplanes` and `services`.
+
+All three protobuf ordinals are reserved, so they can never be reused for something else, and a Zone control plane on an older version still syncs to a Global control plane on this one.
+
+**Action required**
+
+Delete every `Dataplane` with `networking.gateway.type: BUILTIN` before upgrading. `2.14.x` still accepts them, and after the upgrade the control plane fails to parse them as an unknown enum value, which breaks listing the `Dataplane`s of that mesh. Find them with `kumactl get dataplanes -o yaml` per mesh, or `kubectl get dataplanes -A -o yaml`, and grep for `BUILTIN`.
+
+Also drop `type: BUILTIN` from any manifest you still keep under source control, and stop consuming the `gatewayBuiltin` fields and the `gateway=builtin` / `type=gateway_builtin` filters if you query the API directly.
+
+### Control plane RBAC is narrowed on Kubernetes
+
+Two `ClusterRole` rules that existed only for the built-in gateway are reduced to what the control plane actually uses:
+
+- `apps`: `deployments` is dropped entirely and `replicasets` keeps only `get`, `list` and `watch`. The control plane reads ReplicaSets to resolve the workload behind a serviceless Pod and never writes either resource.
+- `core`: `services` loses `create` and `delete`. The control plane only annotates existing Services with `ingress.kubernetes.io/service-upstream`.
+
+**Action required**
+
+If you manage the control plane RBAC yourself, apply the same narrowing.
+
 ### Names of `Mesh`, `Zone`, `MeshService`, `MeshExternalService` and `MeshMultiZoneService` must be RFC 1035 labels
 
 Names of these resources are rendered into DNS hostnames by `HostnameGenerator`, so a name that is not a valid [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035.html) label produces an invalid hostname. Since 2.10.x such names were accepted with a deprecation warning, now they are rejected:
@@ -393,6 +422,50 @@ This covers every `MeshHTTPRoute`, not only the ones the Gateway API translation
 **Action required**
 
 None, as long as every `backendRefs` entry names a resource that exists. Check the routes that reference a resource from another zone or another namespace before upgrading: those are the ones whose masked misconfiguration becomes visible traffic loss.
+
+### A `MeshHTTPRoute` `backendRef` naming a port the destination lacks now fails closed
+
+A `backendRef` whose destination exists but does not carry the referenced
+`sectionName`/port no longer counts as resolved. Previously it silently
+dropped out of the split: a missing `Service` port fell through to the
+parent service on a different port than the one requested, and a missing
+`MeshService` port fell through to another port of that same `MeshService`.
+Both now count against `AllBackendRefsUnresolved` the same way a
+nonexistent destination does, so a rule whose backendRefs all name a
+missing port answers `500` instead of routing traffic to a port nobody
+asked for.
+
+The Gateway API `HTTPRoute` translation reports `ResolvedRefs=False` with
+reason `BackendNotFound` for a `Service` backend missing the requested
+port; it already did for `MeshService`. Because a `MeshService`'s `Spec.Ports`
+can be briefly empty while it converges, a route that references one of its
+ports can fail matching requests during that window.
+
+**Action required**
+
+None, as long as every `backendRefs` entry names a port the destination
+actually has. Check routes with an explicit port or `sectionName` before
+upgrading: those are the ones that were silently reaching the wrong
+destination.
+
+### Gateway API cross-namespace `backendRefs` now require a `ReferenceGrant`
+
+The Gateway API `HTTPRoute` translation now enforces `ReferenceGrant` for any
+backend reference that points across namespaces, for both core `Service`
+backends and Kuma `MeshService` backends. A cross-namespace backend without a
+matching grant is no longer programmed into the generated `MeshHTTPRoute`; the
+route reports `ResolvedRefs=False` with reason `RefNotPermitted` instead.
+
+To evaluate those grants, the control plane ClusterRole now includes `get`,
+`list`, and `watch` on `gateway.networking.k8s.io/referencegrants`.
+
+**Action required**
+
+Create a `ReferenceGrant` in the backend namespace for every cross-namespace
+`HTTPRoute` backend that should remain valid after upgrading. If you manage
+RBAC outside Helm (for example via GitOps or manual manifests), also add
+`get`, `list`, and `watch` on `referencegrants` in the
+`gateway.networking.k8s.io` API group to the control plane ClusterRole.
 
 ### `MeshService.spec.identities` now accepts SPIFFE IDs only
 
@@ -1889,6 +1962,24 @@ On Kubernetes, a mesh-scoped resource can no longer end up owned by one `Mesh` w
 **Action required**
 
 If a resource in your cluster already has a `Mesh` ownerReference that disagrees with its mesh, it must be deleted and re-applied in the correct mesh — the webhook rejects any further edit to it until then.
+
+### The control plane and hook containers drop all Linux capabilities
+
+`controlPlane.containerSecurityContext` and `hooks.containerSecurityContext` now default to `allowPrivilegeEscalation: false` and `capabilities.drop: [ALL]`, alongside the `readOnlyRootFilesystem: true` they already carried.
+
+Neither the control plane nor the `kubectl` and `kumactl` hook jobs need a capability. Every port the control plane binds is above 1024, so it never needed `NET_BIND_SERVICE`, and nothing in the codebase opens a raw or packet socket. The injected sidecar and the zoneproxy have shipped with both settings for some time; this brings the control plane in line with them. The transparent proxy init container is unaffected and keeps the `NET_ADMIN` and `NET_RAW` it adds for `iptables`, as does the CNI container, which still runs as root.
+
+**Action required**
+
+Helm merges these values key by key, so overriding one key of `containerSecurityContext` no longer replaces the whole block: an override that sets only `readOnlyRootFilesystem` now also inherits the two new keys. If your control plane needs a capability, or you run a `SecurityContextConstraint` or admission policy that grants one, set it back explicitly:
+
+```yaml
+controlPlane:
+  containerSecurityContext:
+    allowPrivilegeEscalation: true
+    capabilities:
+      drop: []
+```
 
 ## Upgrade to `2.14.x`
 
