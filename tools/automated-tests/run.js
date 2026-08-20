@@ -104,6 +104,7 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
   const testsConfig = await loadConfig();
   const start = Date.now();
   const products = process.env.PRODUCTS.split(",");
+  const includeGlobalSkips = !args.files;
   try {
     if (args.files) {
       files = Array.isArray(args.files) ? args.files : [args.files];
@@ -187,10 +188,14 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
     await afterAll(productTestConfig, container);
     await stopContainer(container);
     await removeContainer(container);
-    await logResults(results, start, Date.now(), products);
+    await logResults(results, start, Date.now(), products, {
+      includeGlobalSkips,
+    });
     process.exit(1);
   }
-  await logResults(results, start, Date.now(), products);
+  await logResults(results, start, Date.now(), products, {
+    includeGlobalSkips,
+  });
 
   const failedTests = results.filter(
     (r) => r.status === "failed" && !isFailureExpected(r),
