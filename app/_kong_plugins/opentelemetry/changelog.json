@@ -26,6 +26,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.4": [
+    {
+      "message": "Fixed `gen_ai.client.token.usage` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",

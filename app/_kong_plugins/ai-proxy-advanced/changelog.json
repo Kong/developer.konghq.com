@@ -81,6 +81,118 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.4": [
+    {
+      "message": "Added `cache_read_cost` and `cache_write_cost` to `model.options` so cached and cache-write prompt tokens can be priced per 1M tokens, alongside `input_cost` / `output_cost`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added filtering for empty Anthropic thinking blocks in request history.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for reporting prompt cache token metrics in OpenAI-compatible format.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for reporting prompt cache token metrics when using native (non-OpenAI) request/response formats.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Usage cost now supports per-cache-TTL cache-write\npricing, context-window pricing factors, and service-tier pricing factors via\n`model.options` (`cache_write_cost_list`, `context_window_factor`,\n`service_tier_factor`). Anthropic (cache TTL + service tier), OpenAI, and Gemini\nservice tiers are collected from upstream responses.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where a response from Anthropic could fail to decode when the client's request advertised Brotli support, since Anthropic's edge may then return a Brotli-encoded body that Kong's response decompression -- which only understands gzip -- can't inflate. Kong now normalizes the outgoing `Accept-Encoding` request header before proxying to any LLM provider: `gzip, identity` when the client accepts gzip, and `identity` otherwise, so a client that cannot inflate gzip is never handed a compressed body on the paths that pass the upstream response through untouched.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where token usage for Anthropic requests using the compaction beta was undercounted. Kong now sums `usage.iterations` when present instead of relying solely on the top-level `input_tokens` / `output_tokens`, which only reflect non-compaction iterations.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini's tool-use token usage (billed when server-side tools such as grounding, code execution, or URL context are used) was not counted in the reported token usage or cost.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where signed Anthropic thinking blocks with omitted text were removed from request history.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `cache_creation_input_tokens` and `cache_read_input_tokens` were excluded from prompt token counts, causing undercounting when Anthropic prompt caching was active.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where native Anthropic streaming counted provisional `message_start` output tokens and summed cumulative `message_delta` usage.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `context-management-2025-06-27` Anthropic beta flag was dropped when routing to a Bedrock target, causing Bedrock to reject requests carrying `context_management` with a `400` error on failover from an Anthropic target.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where output token usage was reported as zero for Bedrock native format request to AWS models like Nova.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Anthropic-format requests could report zero usage when it targets Bedrock's own model via conversion.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OpenAI, Azure, and Gemini realtime upstream URLs using `wss` were downgraded to `ws`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a credential header could appear unredacted in access logs when using AWS temporary credentials with Bedrock.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Ollama rejected OpenAI message content arrays.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some Claude Code MCP tools did not correctly handle empty 'requires' array.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed Gemini image generation token accounting to include reasoning tokens (`thoughtsTokenCount`) in `output_tokens` and report them as `output_tokens_details.reasoning_tokens`. Previously the reasoning tokens were dropped, which under-reported output tokens, analytics, and calculated cost for thinking-enabled image models.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed Gemini realtime (Live API) token accounting to include reasoning tokens (`thoughtsTokenCount`) in the reported output tokens, and to report them as `output_tokens_reasoning_tokens_count`. Previously the reasoning tokens were dropped, which under-reported the output and total token counts of thinking-enabled realtime sessions.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed token usage statistics being silently dropped for `audio/v1/audio/transcriptions`\nrequests. Token-billed OpenAI/Azure transcription models (e.g. `gpt-4o-transcribe`) now report\n`input_tokens`/`output_tokens`/`total_tokens` and the `text_tokens`/`audio_tokens` breakdown in the analytics\nlog when `logging.log_statistics` is enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini streaming analytics could over-report token usage. Gemini repeats its usage metadata on every stream chunk as a running request-level total, but the counts were summed across chunks instead of replaced, multiplying the reported usage by the number of chunks. Reasoning tokens were affected the most, because Gemini reports them in full on the first chunk and does not change them afterwards. A chunk that carried no usage metadata also reset the recorded output token count to zero.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added native passthrough support for Vertex AI multimodal embeddings. Introduced new `llm/v1/multimodal-embeddings` route type.\n",
