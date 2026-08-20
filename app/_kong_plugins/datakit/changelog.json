@@ -144,6 +144,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.10": [
+    {
+      "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added caching support via a new `cache` node type.",
