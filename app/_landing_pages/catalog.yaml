@@ -115,10 +115,10 @@ rows:
                     - solution: |
                         [AI Models](/catalog/ai-models/), browsable with their providers and target models visible
                 - usecase: |
-                    You need to see which AI Models are actually connected to a real {{site.ai_gateway}} deployment, versus just defined on paper
+                    You need to see which AI Models are actually connected to a real {{site.ai_gateway}} 2.0 deployment, versus just defined on paper
                   outcomes:
                     - solution: |
-                        Filter AI Models by whether they're linked to {{site.ai_gateway}}
+                        Filter AI Models by whether they're linked to {{site.ai_gateway}} 2.0
                 - usecase: |
                     Your teams are building MCP servers for AI agents, but they're scattered across repos and local configs with no shared place to register them
                   outcomes:

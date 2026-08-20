@@ -60,6 +60,7 @@ You can access MCP Registries by doing the following:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **MCP registries** tab.
+   
    {:.info}
    > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **MCP Registries** in the sidebar instead.
 
@@ -68,11 +69,10 @@ You can access MCP Registries by doing the following:
 {% navtabs "create-mcp-registry" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. Click the **MCP registries** tab.
+1. From the **New** dropdown menu, select "MCP registry".
    
    {:.info}
    > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **MCP Registries** in the sidebar instead.
-1. From the **New** dropdown menu, select "MCP registry".
 1. In the **Display Name** field, enter a name for your registry, for example `Production Registry`.
 1. In the **Name** field, enter a unique identifier for the registry, for example `production-registry`. This must be lowercase and alphanumeric, and can include hyphens.
 1. (Optional) In the **Description** field, describe the purpose of this registry.
@@ -194,19 +194,6 @@ Remotes describe hosted MCP server endpoints that agents can connect to over the
 
 An MCP server can define multiple packages and multiple remotes simultaneously. This allows organizations to support different runtime environments without duplicating server definitions.
 
-{% comment %}
-## Publish an MCP Registry to Dev Portal
-
-You can publish an MCP Registry to a Dev Portal to expose it to a broader audience.
-
-1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. Click the **MCP registries** tab.
-1. Click your MCP registry.
-1. Click **Publish to portal**.
-1. From the **Portal** dropdown menu, select the {{site.dev_portal}} you want to publish to.
-1. Click **Publish MCP registry**.
-{% endcomment %}
-
 ## Access and authentication
 
 Registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate [access tokens](/konnect-api/#konnect-api-authentication) can query the registry URL:
@@ -222,7 +209,7 @@ We are continuing to evolve MCP Registries alongside the broader MCP ecosystem.
 
 Planned enhancements include:
 
-* Linking {{site.konnect_catalog}} MCP servers to MCP servers created in {{site.ai_gateway}}
+* Linking {{site.konnect_catalog}} MCP servers to MCP servers created in [{{site.ai_gateway}} 2.0](/ai-gateway/)
 * Additional governance and lifecycle controls
 
 Because the MCP specification is still evolving, we are committed to iterating in partnership with customers who have already begun developing MCP servers and experimenting with agent-based workflows.

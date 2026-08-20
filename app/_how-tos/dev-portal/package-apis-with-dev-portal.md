@@ -304,11 +304,10 @@ Now, you can create an API package by picking operations from your API. Operatio
 The Gateway configuration isn't directly modified, so any unmatched operations will be highlighted to indicate that a user needs API Gateway permissions to perform an action.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. Click the **API packages** tab.
+1. From the **New** dropdown menu, select "API package".
    
    {:.info}
    > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **API packages** in the sidebar instead.
-1. Click **Create API package**.
 1. In the **API package name** field, enter `Company package`.
 1. Enable the Package rate limit.
 1. For the rate limit, enter `5` and select "Minute".
