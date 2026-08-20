@@ -513,11 +513,7 @@
     "config.resources.vault",
     "config.resources.vault.additionalProperties"
   ],
-  "forward-proxy": [
-    "config.auth_password",
-    "config.auth_username"
-  ],
-  "governance": [
+  "entitlement-enforcement": [
     "config.api_token",
     "config.redis.cloud_authentication.auth_provider",
     "config.redis.cloud_authentication.aws_access_key_id",
@@ -542,6 +538,10 @@
     "config.redis.sentinel_username",
     "config.redis.server_name",
     "config.redis.username"
+  ],
+  "forward-proxy": [
+    "config.auth_password",
+    "config.auth_username"
   ],
   "graphql-proxy-cache-advanced": [
     "config.redis.cloud_authentication.auth_provider",
