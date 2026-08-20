@@ -18,6 +18,9 @@ groups:
       - title: MCP Registry
         items:
           - path: /catalog/mcp-registry/
+      - title: Agents
+        items:
+          - path: /catalog/agents/
   - title: "{{site.konnect_catalog}} Classic"
     sections:
       - title: Overview
