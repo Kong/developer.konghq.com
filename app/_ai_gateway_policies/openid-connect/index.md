@@ -8,8 +8,9 @@ products:
 content_type: policy
 description: Integrate {{site.ai_gateway_name}} with a third-party OpenID Connect provider
 ---
-The OpenID Connect (OIDC) Policy lets you integrate {{site.ai_gateway}} with an identity provider (IdP).
-This Policy can be used to implement {{site.ai_gateway}} as a proxying [OAuth 2.0](https://tools.ietf.org/html/rfc6749) resource server 
+The OpenID Connect (OIDC) Policy lets you integrate {{site.ai_gateway}} with an identity provider (IdP). To make it work with {{site.ai_gateway}}, you don't attach it directly to an {{site.ai_gateway}}. Instead you reference it in your [AI Identity Provider](/ai-gateway/ai-identity-provider/) entity configuration. The resulting configuration is whas we call OpenID Connect (OIDC) Policy in this page.
+
+You can use this Policy to implement {{site.ai_gateway}} as a proxying [OAuth 2.0](https://tools.ietf.org/html/rfc6749) resource server 
 (RS) and as an OpenID Connect relying party (RP) between the client and the upstream service.
 
 ## What does OpenID Connect do?
