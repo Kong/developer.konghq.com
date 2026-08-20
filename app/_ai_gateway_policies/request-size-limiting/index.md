@@ -26,7 +26,9 @@ Because prompt payloads are client-controlled and can be large, capping request 
 
 Reference the Request Size Limiting Policy from the `policies` array on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), [AI Consumer](/ai-gateway/entities/ai-consumer/), or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or create it as a global AI Policy to apply it to all {{site.ai_gateway}} traffic on the data plane. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 
-The following example creates a global Request Size Limiting Policy that rejects any request body larger than 256 kilobytes:
+## Example
+
+The following example creates a global Request Size Limiting Policy that rejects any request body larger than 256 kilobytes.
 
 {% entity_example %}
 type: policy
