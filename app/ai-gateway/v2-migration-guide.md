@@ -98,8 +98,9 @@ The resulting `kong.yaml` contains your Services, Routes, plugins (including `ai
 
 {:.warning}
 > **Converter requirements:** 
-> * Each `ai-proxy` or `ai-proxy-advanced` plugin you're migrating needs a real model name (for example `gpt-4o`) configured. The converter can't generate one for you, and a converted AI Model with no model name fails validation when you apply it. If any of your plugins are missing one, set it on the {{site.base_gateway}} 3.x control plane before you export.
-> * `ai-proxy-advanced`, `ai-mcp-proxy`, and `ai-a2a-proxy` plugins **must** be scoped to a Service and Route to convert to the {{site.ai_gateway}} 2.x entity model.
+> * Each `ai-proxy` or `ai-proxy-advanced` plugin you're migrating needs a model name (for example `gpt-4o`) configured. The converter can't generate one for you, and a converted AI Model with no model name fails validation when you apply it. If any of your plugins are missing one, set it on the {{site.base_gateway}} 3.x control plane before you export.
+> * Each `ai-proxy` or `ai-proxy-advanced` plugin's target needs authentication (`auth`) configured if the upstream provider requires it. The converter carries this into the {{site.ai_gateway}} Model Provider's `config.auth`. If the target has no `auth` configured, the converted provider is missing `config` entirely and fails validation when you apply it.
+> * `ai-proxy-advanced`, `ai-mcp-proxy`, and `ai-a2a-proxy` plugins can be attached to a Service or a Route, but the Service they're attached to **must** have at least one Route attached, or the plugin won't convert to the {{site.ai_gateway}} 2.x entity model.
 
 ### Step 3: Prepare the configuration directory
 
@@ -170,7 +171,7 @@ identity_providers:
 
 The `openid-connect` entry above shows only the fields {{site.ai_gateway}} requires at minimum. Add any other fields your identity provider actually uses (additional scopes, claims, cookie settings, and so on). Don't copy fields straight from your v1 `openid-connect` plugin config if they're unset (`null`) there. {{site.ai_gateway}} 2.x rejects explicit `null` values for most fields, so it's easier to start minimal and add only what you need.
 
-At most two identity providers are allowed (at most one `key-auth` and one `openid-connect`), and at most one may use the `"*"` wildcard per entity kind. The converter attaches each provider to the listed entities via their `access.identity_providers`.
+At most, two identity providers are allowed (one `key-auth` and one `openid-connect`), and at only one provider can use the `"*"` wildcard per entity kind. The converter attaches each provider to the listed entities via their `access.identity_providers`.
 
 #### Vaults
 
@@ -181,17 +182,27 @@ Add a `config/vaults.yaml` with an entry for any secret store your migrated conf
 # config/vaults.yaml
 vaults:
 - ref: ai-vault
-  name: ai-vault
+  name: hashicorp
   display_name: AI Gateway Vault
-  type: konnect
-  description: Credential store for AI Gateway
+  type: hcv
+  description: HCV vault for AI Gateway
+  prefix: "my-vault"
   config:
-    config_store_id: "$KONNECT_CONFIG_STORE_ID"
+    auth_method: token
+    base64_decode: false
+    host: "127.0.0.1"
+    kv: "v1"
+    mount: "secret"
+    port: 8200
+    protocol: "http"
+    ssl_verify: true
+    token: "*********"
 ```
 <!--vale on-->
 
-{:.info}
-> **Note:** For a [{{site.konnect_short_name}} Config Store vault](/how-to/configure-the-konnect-config-store/) (`type: konnect`), the Config Store you reference must already exist in {{site.konnect_short_name}} before you apply the configuration. `kongctl` does not create it for you. If you created the Config Store through the {{site.konnect_short_name}} UI, it's created without a `name`. Set one with the [Update Config Store API](/api/konnect/control-planes-config/v2/#/operations/update-config-store) before you apply the configuration.
+{% comment %}
+If you're using a {{site.konnect_short_name}} Config Store, you must [manually migrate](#manually-migrate-konnect-config-store-vault) that after using the conversion tool.
+{% endcomment %}
 
 #### Per-model ACLs
 
@@ -241,6 +252,34 @@ Open the `yaml` files in `./out` and confirm that the converter captured everyth
 - Non-auth supporting plugins were converted to AI Policies and attached to the right entities.
 
 Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as an AI Model Provider `display_name` or an AI Model `display_name`. These are required in {{site.ai_gateway}} 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
+
+{% comment %}
+
+#### Manually migrate {{site.konnect_short_name}} Config Store vault 
+
+If you're using a {{site.konnect_short_name}} Config Store vault, you must manually migrate it.
+The converter doesn't correctly convert a v1 vault with `type: konnect`. It emits the Config Store's UUID as a literal value under the vault's `config.config_store_id`, which Konnect rejects. Until this is fixed, migrate this vault manually instead of using the converter's output for it.
+
+Declare an `ai_gateway_config_stores` entry for the Config Store, and reference its `id` from the vault's `config.config_store_id` with `!ref`, instead of hardcoding the Config Store's UUID:
+
+```yaml
+ai_gateway_config_stores:
+- ref: ai-config-store
+  ai_gateway: !ref ai-gateway#id
+  name: "your-config-store-name"
+
+ai_gateway_vaults:
+- ref: ai-vault
+  ai_gateway: !ref ai-gateway#id
+  name: ai-vault
+  type: konnect
+  config:
+    config_store_id: !ref ai-config-store#id
+```
+
+{:.info}
+> **Note:** For a [{{site.konnect_short_name}} Config Store vault](/how-to/configure-the-konnect-config-store/) (`type: konnect`), the Config Store you reference must already exist in {{site.konnect_short_name}} before you apply the configuration. `kongctl` does not create it for you. If you created the Config Store through the {{site.konnect_short_name}} UI, it's created without a `name`. Set one with the [Update Config Store API](/api/konnect/control-planes-config/v2/#/operations/update-config-store) before you apply the configuration.
+{% endcomment %}
 
 #### Validate AI Models
 
