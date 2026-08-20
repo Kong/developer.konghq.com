@@ -98,7 +98,7 @@
         },
         "inject_template": {
           "type": "string",
-          "default": "\u003cCONTEXT\u003e\n\u003cPROMPT\u003e"
+          "default": "<CONTEXT>\n<PROMPT>"
         },
         "global_acl_config": {
           "type": "object",
@@ -153,7 +153,7 @@
             "compatible",
             "strict"
           ],
-          "description": "Defines how the plugin behaves when a filter is invalid. Set to `compatible` to ignore invalid filters, or `strict` to raise an error. This can be overridden per request.",
+          "description": "Defines how the policy behaves when a filter is invalid. Set to `compatible` to ignore invalid filters, or `strict` to raise an error. This can be overridden per request.",
           "default": "compatible"
         },
         "consumer_identifier": {
@@ -234,13 +234,13 @@
                 },
                 "aws_access_key_id": {
                   "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this plugin instance.",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
                 "aws_secret_access_key": {
                   "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this plugin instance.",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
@@ -256,7 +256,7 @@
                 },
                 "allow_override": {
                   "type": "boolean",
-                  "description": "If enabled, the authorization header or parameter can be overridden in the request by the value configured in the plugin.",
+                  "description": "If enabled, the authorization header or parameter can be overridden in the request by the value configured in the policy.",
                   "default": false
                 },
                 "header_name": {
@@ -775,7 +775,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "consumer_group": {
       "type": "object",
@@ -785,7 +785,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups"
+      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
     },
     "route": {
       "type": "object",
@@ -795,7 +795,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -805,7 +805,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [

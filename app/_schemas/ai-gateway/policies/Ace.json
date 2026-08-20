@@ -24,7 +24,7 @@
       "properties": {
         "anonymous": {
           "type": "string",
-          "description": "An optional string (consumer UUID or username) value to use as an `anonymous` consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`. When set, the plugin will skip ACE processing for requests that are already authenticated by other plugins with higher priority."
+          "description": "An optional string (consumer UUID or username) value to use as an `anonymous` consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`. When set, the policy will skip ACE processing for requests that are already authenticated by other policies with higher priority."
         },
         "match_policy": {
           "type": "string",
@@ -32,7 +32,7 @@
             "if_present",
             "required"
           ],
-          "description": "Determines how the ACE plugin will behave when a request doesn't match an existing operation from an API or API package in Dev Portal. The `required` setting requires every incoming request to match a defined operation. If a request doesn't match, ACE rejects the request outright with a 404. The `if_present` setting makes the ACE plugin only engage with a request when it matches an operation, allowing a request to still be processed by other plugins with a lower priority than ACE.",
+          "description": "Determines how the ACE policy will behave when a request doesn't match an existing operation from an API or API package in Dev Portal. The `required` setting requires every incoming request to match a defined operation. If a request doesn't match, ACE rejects the request outright with a 404. The `if_present` setting makes the ACE policy only engage with a request when it matches an operation, allowing a request to still be processed by other policies with a lower priority than ACE.",
           "default": "if_present"
         },
         "rate_limiting": {
@@ -42,7 +42,7 @@
               "type": "number",
               "maximum": 3600,
               "minimum": 0,
-              "description": "How often to sync counter data to the central data store. A value of 0 results in synchronous behavior (counter synchronization happens in each request's context and contributes directly to the latency of the request). A value greater than 0 results in asynchronous behavior and specifies the interval (in seconds) for synchronizing counters. The minimum allowed interval is 0.02 seconds (20ms). If omitted, the plugin ignores sync behavior entirely and only stores counters in node memory."
+              "description": "How often to sync counter data to the central data store. A value of 0 results in synchronous behavior (counter synchronization happens in each request's context and contributes directly to the latency of the request). A value greater than 0 results in asynchronous behavior and specifies the interval (in seconds) for synchronizing counters. The minimum allowed interval is 0.02 seconds (20ms). If omitted, the policy ignores sync behavior entirely and only stores counters in node memory."
             },
             "redis": {
               "type": "object",
@@ -297,7 +297,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -307,7 +307,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "x-supported-partials": [

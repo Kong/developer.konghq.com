@@ -47,7 +47,7 @@
         },
         "allow_any_domain": {
           "type": "boolean",
-          "description": "If set to `true`, the plugin allows all domains and ignores any values in the `domains` list.",
+          "description": "If set to `true`, the policy allows all domains and ignores any values in the `domains` list.",
           "default": false
         },
         "fail_backoff_minutes": {
@@ -362,7 +362,7 @@
         },
         "account_email": {
           "type": "string",
-          "description": "The account identifier. Can be reused in a different plugin instance.",
+          "description": "The account identifier. Can be reused in a different policy instance.",
           "x-encrypted": true,
           "x-referenceable": true
         },
