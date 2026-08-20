@@ -1,4 +1,5 @@
 ---
+published: false
 min_version:
   ai-gateway: '2.0'
 works_on:

@@ -123,7 +123,7 @@ rows:
   - use_case: "Secure MCP endpoints with AI Consumer identity or OAuth tokens"
     example: "Reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) (`key-auth` or `openid-connect`) in [`access.identity_providers`](#schema-aigateway-mcpserver-access-identity-providers). Advertise [protected resource metadata](#protected-resource-metadata) through `access.metadata` so MCP clients can discover the authorization server."
   - use_case: "Rate limiting"
-    example: "Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
+    example: "Use the [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
   - use_case: "Track all MCP traffic and ACL decisions."
     example: "Enable request and response logging through [AI logging Policies](/ai-gateway/policies/?category=logging) and audit trails."
   - use_case: "Traffic control"
