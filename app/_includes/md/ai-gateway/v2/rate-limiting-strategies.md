@@ -64,10 +64,10 @@ columns:
     key: value
 rows:
   - property: "Window size in seconds"
-    formula_or_config: "Value set in `config.policies[].limits[].window_size`"
+    formula_or_config: "Value set in `{{ include.window_size_field | default: 'config.policies[].limits[].window_size' }}`"
     value: "5"
   - property: "Limit (in window)"
-    formula_or_config: "Value set in `config.policies[].limits[].limit`"
+    formula_or_config: "Value set in `{{ include.limit_field | default: 'config.policies[].limits[].limit' }}`"
     value: "1000"
   - property: "Sync rate (interval)"
     formula_or_config: "Value set in `config.sync_rate`"
