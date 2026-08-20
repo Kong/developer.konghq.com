@@ -14,6 +14,7 @@ skip:
   mesh: true # skip kuma to mesh generation
   llm_pages: true # skip markdown pages generation
   skills: true # skip skills generation
+  release_map_loader: true
 
 # exclude app/_references
 # even though we set skip.auto_generated: true and the collection has output:false
