@@ -1,4 +1,5 @@
-The {{ include.name }} Policy supports three rate limiting strategies: `local`, `cluster`, and `redis`.
+{% assign show_cluster = true %}{% if include.cluster == false %}{% assign show_cluster = false %}{% endif %}
+The {{ include.name }} Policy supports {% if show_cluster %}three rate limiting strategies: `local`, `cluster`, and `redis`{% else %}two rate limiting strategies: `local` and `redis`{% endif %}.
 This is controlled by the [`config.strategy`](./reference/#schema--config-strategy) parameter.
 
 {% table %}
@@ -16,13 +17,15 @@ rows:
     description: Counters are stored in-memory on the node.
     pros: Minimal performance impact.
     cons: Less accurate. Unless there's a consistent-hashing load balancer in front of {{site.ai_gateway}}, it diverges when scaling the number of nodes.
+{% if show_cluster %}
   - strategy: "`cluster`"
     description: Counters are stored in the {{site.base_gateway}} data store and shared across nodes.
     pros: Accurate<sup>1</sup>, no extra components to support.
     cons: Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in DB-less mode, hybrid mode, or {{site.konnect_short_name}} deployments.
+{% endif %}
   - strategy: "`redis`"
     description: Counters are stored on a Redis server and shared across nodes.
-    pros: Accurate<sup>1</sup>, less performance impact than a `cluster` strategy.
+    pros: Accurate<sup>1</sup>, {% if show_cluster %}less performance impact than a `cluster` strategy{% else %}shared across all nodes{% endif %}.
     cons: Needs a Redis installation. Bigger performance impact than a `local` strategy.
 {% endtable %}
 
@@ -41,11 +44,13 @@ The requirement is only to protect backend services from overloading that's caus
 ### Every transaction counts
 
 In this scenario, because accuracy is important, the `local` strategy is not an option.
-Consider the support effort you might need for Redis, and then choose either `cluster` or `redis`.
+{% if show_cluster %}Consider the support effort you might need for Redis, and then choose either `cluster` or `redis`.
 
 You could start with the `cluster` strategy, and move to `redis` if performance reduces drastically.
 
-If using a very high sync frequency, use `redis`. Very high sync frequencies with `cluster` mode are **not scalable and not recommended**.
+If using a very high sync frequency, use `redis`. Very high sync frequencies with `cluster` mode are **not scalable and not recommended**.{% else %}Use `redis`, and consider the support effort it requires.
+
+If you use a very high sync frequency, `redis` is the only workable choice.{% endif %}
 The sync frequency becomes higher when the `sync_rate` setting is a lower number. For example, a `sync_rate` of 0.1 is a much higher sync frequency (10 counter syncs per second) than a `sync_rate` of 1 (1 counter sync per second).
 
 You can calculate what is considered a very high sync rate in your environment based on your topology, number of AI Policies, their sync rates, and tolerance for loose rate limits.
@@ -93,9 +98,11 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-If you choose to switch strategies, note that you can't port the existing usage metrics from the {{site.base_gateway}} data store to Redis.
+{% if show_cluster %}If you choose to switch strategies, note that you can't port the existing usage metrics from the {{site.base_gateway}} data store to Redis.
 This might not be a problem with short-lived metrics (for example, seconds or minutes)
-but if you use metrics with a longer time frame (for example, months), plan your switch carefully.
+but if you use metrics with a longer time frame (for example, months), plan your switch carefully.{% else %}If you choose to switch strategies, note that you can't port existing usage metrics between strategies.
+This might not be a problem with short-lived metrics (for example, seconds or minutes)
+but if you use metrics with a longer time frame (for example, months), plan your switch carefully.{% endif %}
 
 ### Backend protection
 

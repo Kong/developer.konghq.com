@@ -78,7 +78,7 @@ Set the namespace explicitly in your declarative configuration when you manage {
 
 ## Strategies
 
-{% include md/ai-gateway/v2/rate-limiting-strategies.md name="Rate Limiting Advanced" window_size_field="config.window_size" limit_field="config.limit" %}
+{% include md/ai-gateway/v2/rate-limiting-strategies.md name="Rate Limiting Advanced" window_size_field="config.window_size" limit_field="config.limit" cluster=false %}
 
 ### Using cloud authentication with Redis
 
@@ -142,7 +142,7 @@ We recommend setting [`config.disable_penalty`](./reference/#schema--config-disa
 Throttled rate limits work like the following:
 
 1. When a request hits the rate limit, it's placed into a "waiting room" or queue. The client's connection is held during this delay.
-   * This queue uses local, Redis, or cluster strategies to manage the queue of throttled requests using a counter-based approach.
+   * This queue uses the configured rate limiting strategy to manage the queue of throttled requests using a counter-based approach.
 1. Requests in the queue are automatically retried after a configurable interval ([`config.throttling.interval`](./reference/#schema--config-throttling-interval)).
    * There's a limit to retries for individual requests ([`config.throttling.retry_times`](./reference/#schema--config-throttling-retry-times)), and a cap to the total number of requests waiting ([`config.throttling.queue_limit`](./reference/#schema--config-throttling-queue-limit)).
    * All concurrent requests will retry at approximately the same time once the specified interval has elapsed.

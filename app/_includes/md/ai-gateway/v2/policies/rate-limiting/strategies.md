@@ -1,4 +1,4 @@
-The Rate Limiting Policy supports three rate limiting strategies: `local`, `cluster`, and `redis`.
+The Rate Limiting Policy supports two rate limiting strategies: `local` and `redis`.
 This is controlled by the [`config.policy`](./reference/#schema--config-policy) parameter.
 
 {% table %}
@@ -16,21 +16,14 @@ rows:
     description: Counters are stored in-memory on the node.
     pros: Minimal performance impact.
     cons: Less accurate. Unless there's a consistent-hashing load balancer in front of {{site.ai_gateway}}, it diverges when scaling the number of nodes.
-  - strategy: "`cluster`"
-    description: Counters are stored in the {{site.ai_gateway}} data store and shared across nodes.
-    pros: Accurate<sup>1</sup>, no extra components to support.
-    cons: Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in hybrid mode or {{site.konnect_short_name}} deployments.
   - strategy: "`redis`"
     description: Counters are stored on a Redis server and shared across nodes.
-    pros: Accurate<sup>1</sup>, less performance impact than a `cluster` strategy.
+    pros: Accurate<sup>1</sup>, shared across all nodes.
     cons: Needs a Redis installation. Bigger performance impact than a `local` strategy.
 {% endtable %}
 
 {:.info}
 > **\[1\]**: Only when the [`config.sync_rate`](./reference/#schema--config-sync-rate) option is set to `-1` (synchronous behavior).
-
-{:.warning}
-> {{site.ai_gateway}} runs in hybrid mode with a {{site.konnect_short_name}}-managed control plane, so the `cluster` strategy isn't available. Use `local` or `redis`.
 
 Two common use cases for rate limiting are:
 
