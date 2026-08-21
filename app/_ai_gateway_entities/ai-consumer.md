@@ -120,7 +120,7 @@ rows:
   - type: "`api-key`"
     use_case: Simple, stateless authentication for internal services or mobile apps using a shared secret.
   - type: "`oauth`"
-    use_case: Federated identity with an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect Policy](/ai-gateway/policies/openid-connect/), or for MCP traffic through the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/). The AI Consumer's own `custom_id` field maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
+    use_case: Federated identity with an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the `openid-connect` auth strategy, or for MCP traffic through the [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/). The AI Consumer's own `custom_id` field maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
 {% endtable %}
 <!-- vale on -->
 

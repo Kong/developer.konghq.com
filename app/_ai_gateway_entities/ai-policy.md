@@ -63,7 +63,7 @@ Create an AI Policy when you want to add governance, security, transformation, o
 - Attach [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) to manage request volume
 - Attach [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) or [other guardrail Policies](/ai-gateway/#guardrails-and-content-safety) to validate prompts
 - Attach [logging Policies](/ai-gateway/policies/?category=logging) to track requests and responses for observability
-- Attach authentication policies like [OpenID Connect](/ai-gateway/policies/openid-connect/) to control access and verify identity
+- Assign an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/), rather than an AI Policy, to control access and verify identity
 
 **Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies, not configurations shared with other parts of your gateway.
 
@@ -93,7 +93,7 @@ The available scopes are:
 {:.warning}
 > **Authentication policies don't attach through the `policies` array**
 >
-> An AI Model, AI Agent, and AI MCP Server each have their own top-level authentication mechanism, so [Key Auth](/ai-gateway/policies/key-auth/), [OpenID Connect](/ai-gateway/policies/openid-connect/), and [AI MCP OAuth2](/ai-gateway/policies/ai-mcp-oauth2/) can't be referenced from any of their `policies` arrays, and can only be created as Global AI Policies.
+> An AI Model, AI Agent, and AI MCP Server each have their own top-level authentication mechanism, so the `key-auth` and `openid-connect` auth strategies can't be referenced from any of their `policies` arrays. The same applies to [AI MCP OAuth2](/ai-gateway/policies/ai-mcp-oauth2/), which can only be created as a Global AI Policy.
 >
 > This doesn't mean authentication is limited to one gateway-wide configuration. To authenticate traffic to a specific AI Model, AI Agent, or AI MCP Server, assign an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) to that entity instead, for example, Key Auth on one AI Model and OpenID Connect on another. AI Identity Providers support Key Auth and OpenID Connect authentication, and for an AI MCP Server with [`access.metadata`](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) set, {{site.ai_gateway}} generates the equivalent AI MCP OAuth2 configuration for you.
 

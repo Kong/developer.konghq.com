@@ -135,7 +135,7 @@ This matches what you configure on-prem. An AI Agent with `type: http` generates
 
 ## AI Identity Providers
 
-Use the [Key Auth](/ai-gateway/policies/key-auth/) or [OpenID Connect](/ai-gateway/policies/openid-connect/) Policy, backed by the `key-auth` and `openid-connect` {{site.base_gateway}} plugins, to authenticate the clients calling your AI routes.
+Use the `key-auth` or `openid-connect` auth strategy, backed by the `key-auth` and `openid-connect` {{site.base_gateway}} plugins, to authenticate the clients calling your AI routes.
 
 - **On {{site.konnect_short_name}}:** An AI Identity Provider generates a `key-auth` or `openid-connect` plugin on the Route of every AI Model or AI Agent that references it, plus a shared anonymous Consumer carrying a `request-termination` plugin that returns `401` for requests that don't authenticate.
 - **On-prem:** You attach the corresponding plugin to each Route yourself, and configure the anonymous Consumer and `request-termination` plugin to match.
