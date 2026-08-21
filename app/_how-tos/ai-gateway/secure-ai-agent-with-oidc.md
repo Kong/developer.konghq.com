@@ -2,7 +2,7 @@
 title: Secure AI Agent traffic with OpenID Connect and {{site.identity}}
 permalink: /ai-gateway/secure-ai-agent-with-oidc/
 content_type: how_to
-description: Reference an openid-connect AI Identity Provider backed by {{site.identity}} on an AI Agent entity to require bearer tokens on A2A traffic
+description: Reference an openid-connect AI Auth Strategy backed by {{site.identity}} on an AI Agent entity to require bearer tokens on A2A traffic
 
 products:
   - ai-gateway
@@ -19,7 +19,7 @@ series:
 
 entities:
   - ai-agent
-  - ai-identity-provider
+  - ai-auth-strategy
 
 tags:
   - ai
@@ -30,7 +30,7 @@ tags:
 tldr:
   q: How do I secure AI Agent traffic with OpenID Connect?
   a: |
-    Create an `openid-connect` [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that points at a {{site.identity}} auth server's issuer URL and client credentials, then reference it in an [AI Agent](/ai-gateway/entities/ai-agent/) entity's `access.identity_providers` array.
+    Create an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that points at a {{site.identity}} auth server's issuer URL and client credentials, then reference it in an [AI Agent](/ai-gateway/entities/ai-agent/) entity's `access.auth_strategies` array.
     Requests without a valid bearer token are rejected with a 401. Authenticated requests are proxied to the upstream A2A agent.
 
 tools:
@@ -54,8 +54,8 @@ prereqs:
 related_resources:
   - text: AI Agent entity
     url: /ai-gateway/entities/ai-agent/
-  - text: AI Identity Provider entity
-    url: /ai-gateway/entities/ai-identity-provider/
+  - text: AI Auth Strategy entity
+    url: /ai-gateway/entities/ai-auth-strategy/
   - text: Set up a {{site.identity}} auth server for AI Agent authentication
     url: /ai-gateway/set-up-kong-identity-for-a2a/
   - text: Get started with AI Agent
@@ -80,27 +80,27 @@ cleanup:
 faqs:
   - q: Does OpenID Connect interfere with the AI Agent entity's A2A protocol handling?
     a: |
-      No. The [AI Agent](/ai-gateway/entities/ai-agent/) entity handles A2A protocol detection, agent-card rewriting, and observability. The [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) runs independently in the access phase, before any A2A-specific processing.
+      No. The [AI Agent](/ai-gateway/entities/ai-agent/) entity handles A2A protocol detection, agent-card rewriting, and observability. The [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) runs independently in the access phase, before any A2A-specific processing.
   - q: Can I use a different identity provider instead of {{site.identity}}?
     a: |
-      Yes. The `openid-connect` [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) type works with any OIDC-compliant identity provider (Okta, Keycloak, Auth0, Azure AD, and others). Replace `issuer`, `client_id`, and `client_secret` with values from your provider.
+      Yes. The `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) type works with any OIDC-compliant identity provider (Okta, Keycloak, Auth0, Azure AD, and others). Replace `issuer`, `client_id`, and `client_secret` with values from your provider.
   - q: Can I combine OpenID Connect with ACLs on the same AI Agent?
     a: |
-      Yes. [`access.acls`](/ai-gateway/entities/ai-agent/#access-control) on the AI Agent restricts which AI Consumers or AI Consumer Groups can reach it. The AI Identity Provider authenticates the caller first, then ACLs decide whether that identity is allowed through.
+      Yes. [`access.acls`](/ai-gateway/entities/ai-agent/#access-control) on the AI Agent restricts which AI Consumers or AI Consumer Groups can reach it. The AI Auth Strategy authenticates the caller first, then ACLs decide whether that identity is allowed through.
   - q: Can I attach the OpenID Connect Policy directly to the AI Agent instead?
     a: |
-      No. Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't supported. Authentication for AI Agents is configured exclusively through AI Identity Providers referenced in `access.identity_providers`.
+      No. Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't supported. Authentication for AI Agents is configured exclusively through AI Auth Strategies referenced in `access.auth_strategies`.
 ---
 
-This how-to continues from [Set up a {{site.identity}} auth server for AI Agent authentication](/ai-gateway/set-up-kong-identity-for-a2a/). Complete that how-to first, you need its `$ISSUER_URL`, `$CLIENT_ID`, and `$CLIENT_SECRET` to create the AI Identity Provider.
+This how-to continues from [Set up a {{site.identity}} auth server for AI Agent authentication](/ai-gateway/set-up-kong-identity-for-a2a/). Complete that how-to first, you need its `$ISSUER_URL`, `$CLIENT_ID`, and `$CLIENT_SECRET` to create the AI Auth Strategy.
 
-## Create an AI Identity Provider and AI Agent
+## Create an AI Auth Strategy and AI Agent
 
-Create an `openid-connect` [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that uses {{site.identity}} as the issuer, and an [AI Agent](/ai-gateway/entities/ai-agent/) that references it through `access.identity_providers`.
+Create an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that uses {{site.identity}} as the issuer, and an [AI Agent](/ai-gateway/entities/ai-agent/) that references it through `access.auth_strategies`.
 
 <!-- vale off -->
 {% entity_examples %}
-ai_gateway_identity_providers:
+ai_gateway_auth_strategies:
   - ref: identity-oidc
     ai_gateway: !lookup name:ai-quickstart
     display_name: "Identity OIDC"
@@ -124,7 +124,7 @@ ai_gateway_agents:
     type: a2a
     enabled: true
     access:
-      identity_providers:
+      auth_strategies:
         - !ref identity-oidc#name
     config:
       url: http://host.docker.internal:10000

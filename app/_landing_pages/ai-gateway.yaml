@@ -307,7 +307,7 @@ rows:
         - type: card
           config:
             title: See all AI Entities
-            description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Model Providers, AI Identity Providers, AI Agents, AI MCP Servers, and AI Consumers.
+            description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Model Providers, AI Auth Strategies, AI Agents, AI MCP Servers, and AI Consumers.
             cta:
               url: /ai-gateway/entities/
               align: end

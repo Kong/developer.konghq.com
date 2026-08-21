@@ -93,11 +93,11 @@ rows:
       - blocks:
           - type: card
             config:
-              title: AI Identity Provider
+              title: AI Auth Strategy
               description: Configure inbound authentication for AI Consumers calling AI Models. Supports API key and OIDC token authentication.
               cta:
-                text: AI Identity Provider entity
-                url: /ai-gateway/entities/ai-identity-provider/
+                text: AI Auth Strategy entity
+                url: /ai-gateway/entities/ai-auth-strategy/
       - blocks:
           - type: card
             config:

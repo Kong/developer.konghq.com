@@ -21,7 +21,7 @@ The AI MCP OAuth2 Policy secures Model Context Protocol (MCP) traffic on {{site.
 {:.warning}
 > **Scoping**
 >
->The AI MCP OAuth2 Policy doesn't support entity-scoped attachment. You can't reference it from an AI MCP Server's `policies` array. Create it with `global: true` so it applies to all {{site.ai_gateway}} traffic on the data plane instead. To secure a specific AI MCP Server, use an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) referenced in `access.identity_providers`, optionally combined with [`access.metadata`](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) for OAuth 2.1 resource-server behavior; {{site.ai_gateway}} generates the equivalent AI MCP OAuth2 configuration for you in that case. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for the general scoping model.
+>The AI MCP OAuth2 Policy doesn't support entity-scoped attachment. You can't reference it from an AI MCP Server's `policies` array. Create it with `global: true` so it applies to all {{site.ai_gateway}} traffic on the data plane instead. To secure a specific AI MCP Server, use an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) referenced in `access.auth_strategies`, optionally combined with [`access.metadata`](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) for OAuth 2.1 resource-server behavior; {{site.ai_gateway}} generates the equivalent AI MCP OAuth2 configuration for you in that case. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for the general scoping model.
 
 ## Purpose and core functionality
 
