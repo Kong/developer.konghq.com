@@ -1,4 +1,4 @@
-The {{include.name}} Policy can run custom Lua code in any of the following [phases](/gateway/entities/plugin/#plugin-contexts) of {{site.base_gateway}}'s request lifecycle:
+The {{include.name}} Policy can run custom Lua code in any of the following [phases](/gateway/entities/plugin/#plugin-contexts) of {{site.ai_gateway}}'s request lifecycle:
 * `access`
 * `body_filter`
 * `certificate`
