@@ -50,7 +50,7 @@ Before attaching a provider, you need the following:
 The following example uses a {{site.identity}} [authorization server](/identity/auth-servers/) and client:
 
 {% entity_example %}
-type: identity-provider
+type: auth-strategy
 data:
   display_name: My OIDC
   name: my-oidc
@@ -87,7 +87,7 @@ formats:
 
 
 ## Discovery cache
-When you configure `config.issuer` in the OIDC auth strategy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC auth strategy stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
+When you configure `config.issuer` in the OIDC auth strategy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC auth strategy stores the metadata as a discovery cache object and uses the cache to avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
 
 {{site.ai_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
 - Discovery data is stored in the **{{site.ai_gateway}} database**.  
@@ -599,29 +599,7 @@ If one of these other applications is causing issues, looking into using the fol
 
 ## Supported identity providers
 
-The auth strategy has been tested with several OpenID Connect providers:
-
-- [Kong Identity](/identity/)
-- [Auth0](https://auth0.com/docs/protocols/openid-connect-protocol)
-- [{{ site.amazon }} AWS Cognito](https://aws.amazon.com/cognito/dev-resources/)
-- [Connect2id](https://connect2id.com/products/server)
-- [Curity](https://curity.io/resources/learn/openid-connect-overview/)
-- [Dex](https://dexidp.io/docs/openid-connect/)
-- [Gluu](https://docs-4.gluu.org/gluu-server/admin-guide/openid-connect/)
-- [{{ site.google}}](https://developers.google.com/identity/protocols/oauth2/openid-connect)
-- [IdentityServer](https://duendesoftware.com/)
-- [Keycloak](http://www.keycloak.org/documentation.html)
-- [Microsoft Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc)
-- [Microsoft Active Directory Federation Services](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/development/ad-fs-openid-connect-oauth-concepts)
-- [Microsoft Live Connect](https://docs.microsoft.com/en-us/advertising/guides/authentication-oauth-live-connect)
-- [Okta](https://developer.okta.com/docs/api/resources/oidc.html)
-- [OneLogin](https://developers.onelogin.com/openid-connect)
-- [OpenAM](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
-- [PayPal](https://developer.paypal.com/docs/log-in-with-paypal/integrate/)
-- [PingFederate](https://www.pingidentity.com/en/platform/capabilities/authentication-authority/pingfederate.html)
-- [Salesforce](https://help.salesforce.com/articleView?id=sf.sso_provider_openid_connect.htm&type=5)
-- [WSO2](https://is.docs.wso2.com/en/latest/guides/authentication/standard-based-login/add-oidc-idp-login/)
-- [Yahoo!](https://developer.yahoo.com/oauth2/guide/openid_connect/)
+The auth strategy has been tested with [Kong Identity](/identity/).
 
 As long as your provider supports OpenID Connect standards, the auth strategy should
 work, even if it is not specifically tested against it.
