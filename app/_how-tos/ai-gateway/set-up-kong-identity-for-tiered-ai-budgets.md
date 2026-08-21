@@ -61,8 +61,6 @@ faqs:
     a: |
       Because a missing default doesn't fail loudly. No claim means no header, which means no rate-limiting match at all for that caller, not a soft fallback to some limit. A fail-safe policy matched on the subject header alone is worth carrying downstream precisely because of this: it bounds a caller whose claims come back missing instead of leaving them unlimited.
 
-automated_tests: false
-
 ---
 
 ## Overview
