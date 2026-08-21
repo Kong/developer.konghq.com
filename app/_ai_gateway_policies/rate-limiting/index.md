@@ -7,18 +7,6 @@ works_on:
 products:
   - ai-gateway
 content_type: policy
-faqs:
-  - q: Can I set different rate limits for different AI Models?
-    a: |
-      Yes. An AI Policy's scope is determined by where it's referenced, so create one Rate Limiting
-      Policy per [AI Model](/ai-gateway/entities/ai-model/), AI Agent, or AI MCP Server and reference it
-      from that entity's `policies` array. Each AI Policy is independent, so the same type can be
-      attached in several places with different configurations.
-  - q: "How does the `policy` option affect rate limiting?"
-    a: |
-      The `policy` option determines how rate limits are stored and enforced. The `local` policy uses
-      in-memory storage on each data plane node, while the `redis` policy uses Redis, which is useful
-      when rate limiting needs to be consistent across multiple {{site.ai_gateway}} data plane nodes.
 related_resources:
   - text: AI Rate Limiting Advanced Policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
@@ -33,9 +21,7 @@ Rate limit how many HTTP requests can be made in a given period of seconds, minu
 
 This Policy counts requests. To rate limit on LLM token usage or cost instead, use the [AI Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/), which reads the token data returned by the AI Model Provider.
 
-## Scopes
-
-Reference the Rate Limiting Policy from the `policies` array on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), [AI Consumer](/ai-gateway/entities/ai-consumer/), or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or create it as a global AI Policy to apply it to all {{site.ai_gateway}} traffic on the data plane. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
+## Example
 
 The following example creates a global Rate Limiting Policy that allows 100 requests per minute per AI Consumer:
 
