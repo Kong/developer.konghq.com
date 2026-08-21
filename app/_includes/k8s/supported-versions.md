@@ -1,9 +1,13 @@
 | Kubernetes Version | OpenShift Version | Upstream K8s EOL |{%- if include.show_kic %} Supported {{site.base_gateway}} Versions | Recommended KIC Version | KIC EOL |{%- endif %}
 |---|---|---|{%- if include.show_kic %}---|---|---|{%- endif %}
-| 1.32 | N/A | Feb 2026 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Sept 2026 |{%- endif %}
-| 1.31 | N/A | Oct 2025 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Sept 2026 |{%- endif %}
-| 1.30 | N/A | Jun 2025 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Sept 2026 |{%- endif %}
-| 1.29 | N/A | Feb 2025 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Sept 2026 |{%- endif %}
+| 1.36 | N/A | Jun 2027 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.5 LTS | Dec 2027 |{%- endif %}
+| 1.35 | N/A | Feb 2027 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.5 LTS | Dec 2027 |{%- endif %}
+| 1.34 | N/A | Oct 2026 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.5 LTS | Dec 2027 |{%- endif %}
+| 1.33 | N/A | Jun 2026 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Dec 2027 |{%- endif %}
+| 1.32 | N/A | Feb 2026 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Dec 2027 |{%- endif %}
+| 1.31 | N/A | Oct 2025 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Dec 2027 |{%- endif %}
+| 1.30 | N/A | Jun 2025 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Dec 2027 |{%- endif %}
+| 1.29 | N/A | Feb 2025 |{%- if include.show_kic %} 2.8 LTS, 3.x | 3.4 LTS | Dec 2027 |{%- endif %}
 | 1.28 | 4.15 | Oct 2024 |{%- if include.show_kic %} 2.8 LTS, 3.x | 2.12 LTS | Sept 2026 |{%- endif %}
 | 1.27 | 4.14 | Jun 2024 |{%- if include.show_kic %} 2.8 LTS, 3.x | 2.12 LTS | Sept 2026 |{%- endif %}
 | 1.26 | 4.13 | Feb 2024 |{%- if include.show_kic %} 2.8 LTS, 3.x | 2.12 LTS | Sept 2026 |{%- endif %}
