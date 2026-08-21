@@ -66,7 +66,7 @@ rows:
                     - An [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) (`key-auth` or `openid-connect`) to authenticate AI Consumers, optionally paired with [protected resource metadata](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) for MCP-spec OAuth2.
                     - [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs) to monitor MCP traffic.
                     - ACLs to enforce access controls for MCP tool usage.
-                    - Traffic control policies to govern usage.
+                    - The [Rate Limiting policy](/ai-gateway/policies/rate-limiting/) and other traffic control policies to govern usage.
 
   - columns:
       - blocks:
@@ -97,6 +97,8 @@ rows:
                   url: /ai-gateway/entities/ai-identity-provider/
                 - text: Protected resource metadata
                   url: /ai-gateway/entities/ai-mcp-server/#protected-resource-metadata
+                - text: Rate Limiting policy
+                  url: /ai-gateway/policies/rate-limiting/
 
   - header:
       type: h2

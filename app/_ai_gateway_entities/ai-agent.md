@@ -135,7 +135,7 @@ rows:
   - use_case: "Observability and telemetry"
     description: "Emit structured A2A telemetry and extract task metadata for analytics. Track agent performance, request patterns, and error rates tied to A2A task semantics. Use for production agent deployments where visibility into agent traffic is critical. See [Logging and observability](#logging-and-observability) for details on telemetry collection and OpenTelemetry integration."
   - use_case: "Authentication and access control"
-    description: "Require agents to authenticate clients via [OpenID Connect](/ai-gateway/policies/openid-connect/) or other auth policies before routing requests. Restrict which [AI Consumers](/ai-gateway/entities/ai-consumer/) or [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) can reach specific agents via ACLs."
+    description: "Require agents to authenticate clients through an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/), using the `openid-connect` or `key-auth` auth strategy, before routing requests. Restrict which [AI Consumers](/ai-gateway/entities/ai-consumer/) or [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) can reach specific agents via ACLs."
   - use_case: "Rate limiting"
     description: "Enforce per-agent or per-consumer rate limits to prevent overload and manage agent resource usage. Use [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) to set token or request quotas per consumer."
   - use_case: "Policy enforcement"
