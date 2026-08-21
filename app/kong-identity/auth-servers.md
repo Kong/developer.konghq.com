@@ -203,7 +203,7 @@ Access tokens issued by an auth server are valid for a set duration, in seconds:
 
 - The default value is 300 seconds (five minutes).
 - The minimum value you can set is `60` (one minute).
-- The maximum value you can can set is `2592000` (30 days).
+- The maximum value you can set is `2592000` (30 days).
 
 Where you set the duration depends on how  you create the client:
 
