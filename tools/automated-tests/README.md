@@ -100,6 +100,12 @@ or by passing the corresponding files, i.e.
 
 `npm run generate-instruction-files -- --files='../../app/_how-tos/x.md' --files='../../app/_how-tos/y.md'`.
 
+or by scoping to a single product, i.e.
+
+`npm run generate-instruction-files -- --product=ai-gateway`
+
+This collects the URLs for every non-versioned how-to under `app/_how-tos/<product>` (via `collect-urls.mjs`), skipping any version snapshot folders (e.g. `v1/`) and any file missing a `permalink` in its frontmatter. `--urls` and `--product` are mutually exclusive; passing both raises an error.
+
 ### Running the tests
 
 1. First, it groups the tests by **deployment model** (from the parent directory name, e.g. `on-prem`, `konnect`) and **product** (from the instruction file basename, e.g. `gateway.yaml`, `operator.yaml`).
@@ -143,6 +149,10 @@ By default, it will run all the instruction files, but it also supports running 
 #### Run konnect event-gateway tests
 
 `DEPLOYMENT_MODEL='konnect' PRODUCTS='event-gateway' npm run run-tests`
+
+#### Run konnect ai-gateway tests
+
+`DEPLOYMENT_MODEL='konnect' PRODUCTS='ai-gateway' npm run run-tests`
 
 #### Supported Env variables
 
