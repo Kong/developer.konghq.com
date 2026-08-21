@@ -502,3 +502,6 @@
 /mcp/secure-mcp-tools-with-oauth2-and-okta/  /ai-gateway/v1/mcp/secure-mcp-tools-with-oauth2-and-okta/  301
 /mcp/secure-mcp-traffic/  /ai-gateway/v1/mcp/secure-mcp-traffic/  301
 /mcp/use-access-controls-for-mcp-tools/  /ai-gateway/v1/mcp/use-access-controls-for-mcp-tools/  301
+
+# AI Auth Strategy rename
+/ai-gateway/entities/ai-identity-provider/  /ai-gateway/entities/ai-auth-strategy/  301

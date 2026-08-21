@@ -57,7 +57,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Reference an AI Identity Provider on your AI Agent entities to authenticate A2A clients, and attach the Request Size Limiting Policy to limit request size before traffic reaches your agents.
+                    Reference an AI Auth Strategy on your AI Agent entities to authenticate A2A clients, and attach the Request Size Limiting Policy to limit request size before traffic reaches your agents.
 
   - columns:
       - blocks:
@@ -81,8 +81,8 @@ rows:
               title: Secure A2A endpoints
               description: Apply AI Policies to authenticate clients and limit request size for A2A traffic.
               ctas:
-                - text: AI Identity Provider entity
-                  url: "/ai-gateway/entities/ai-identity-provider/"
+                - text: AI Auth Strategy entity
+                  url: "/ai-gateway/entities/ai-auth-strategy/"
                 - text: Set up a {{site.identity}} auth server for AI Agent authentication
                   url: "/ai-gateway/set-up-kong-identity-for-a2a/"
                 - text: Secure AI Agent traffic with OpenID Connect and {{site.identity}}

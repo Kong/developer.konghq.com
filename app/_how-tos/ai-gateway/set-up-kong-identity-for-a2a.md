@@ -24,7 +24,7 @@ tags:
 tldr:
   q: How do I set up {{site.identity}} to authenticate AI Agent A2A traffic?
   a: |
-    Create a {{site.identity}} auth server, scope, claim, and client. The client issues bearer tokens that an `openid-connect` AI Identity Provider can validate to authenticate requests to an AI Agent.
+    Create a {{site.identity}} auth server, scope, claim, and client. The client issues bearer tokens that an `openid-connect` AI Auth Strategy can validate to authenticate requests to an AI Agent.
 
 tools:
   - konnect-api
@@ -32,8 +32,8 @@ tools:
 related_resources:
   - text: "{{site.identity}}"
     url: /identity/
-  - text: AI Identity Provider entity
-    url: /ai-gateway/entities/ai-identity-provider/
+  - text: AI Auth Strategy entity
+    url: /ai-gateway/entities/ai-auth-strategy/
   - text: Secure AI Agent traffic with OpenID Connect and {{site.identity}}
     url: /ai-gateway/secure-ai-agent-with-oidc/
 
@@ -43,7 +43,7 @@ faqs:
       No, the secret is only shared once when the client is created. Store it securely.
   - q: Can I reuse this auth server for other AI Agents, AI Models, or AI MCP Servers?
     a: |
-      Yes. Create additional scopes and clients under the same auth server, or reference the same `issuer` from multiple `openid-connect` AI Identity Providers. All AI Models in the same {{site.ai_gateway}} that use OIDC must reference the same AI Identity Provider, so plan scopes accordingly if you're authenticating multiple entity types with the same auth server.
+      Yes. Create additional scopes and clients under the same auth server, or reference the same `issuer` from multiple `openid-connect` AI Auth Strategies. All AI Models in the same {{site.ai_gateway}} that use OIDC must reference the same AI Auth Strategy, so plan scopes accordingly if you're authenticating multiple entity types with the same auth server.
 ---
 
 ## Create an auth server in {{site.identity}}
@@ -164,4 +164,4 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You now have `$ISSUER_URL`, `$CLIENT_ID`, and `$CLIENT_SECRET` for an auth server scoped to the Kong Air Flight Booking Agent. Use these to create an AI Identity Provider and secure the agent's A2A traffic.
+You now have `$ISSUER_URL`, `$CLIENT_ID`, and `$CLIENT_SECRET` for an auth server scoped to the Kong Air Flight Booking Agent. Use these to create an AI Auth Strategy and secure the agent's A2A traffic.
