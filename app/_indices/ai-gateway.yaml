@@ -64,7 +64,7 @@ sections:
       - path: /ai-gateway/entities/ai-consumer/
       - path: /ai-gateway/entities/ai-consumer-group/
       - path: /ai-gateway/entities/ai-vault/
-      - path: /ai-gateway/entities/ai-identity-provider/
+      - path: /ai-gateway/entities/ai-auth-strategy/
       - path: /ai-gateway/entities/ai-data-plane-certificate/
   - title: "{{site.ai_gateway}} providers"
     items:

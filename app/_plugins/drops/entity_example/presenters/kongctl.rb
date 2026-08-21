@@ -25,7 +25,7 @@ module Jekyll
               'consumer' => 'consumers',
               'consumer_group' => 'consumer_groups',
               'mcp_server' => 'mcp_servers',
-              'identity-provider' => 'identity_providers',
+              'auth-strategy' => 'auth_strategies',
               'policy' => 'policies'
             }.freeze
 

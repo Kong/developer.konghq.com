@@ -1,19 +1,22 @@
 ---
-title: AI Identity Providers
+title: AI Auth Strategies
 content_type: reference
 entities:
-  - ai-identity-provider
+  - ai-auth-strategy
 products:
   - ai-gateway
 min_version:
   ai-gateway: '2.0'
-permalink: /ai-gateway/entities/ai-identity-provider/
+permalink: /ai-gateway/entities/ai-auth-strategy/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
 description: Configure inbound AI Consumer authentication for AI Models, AI Agents, and AI MCP Servers in {{site.ai_gateway}}.
 schema:
   api: konnect/ai-gateway
+  # TODO: change to /schemas/AIGatewayAuthStrategy once the Konnect portal serves the renamed
+  # spec. Flipping it early renders an empty Schema section, since the schema table is fetched
+  # from the portal at runtime and that spec still exposes AIGatewayIdentityProvider.
   path: /schemas/AIGatewayIdentityProvider
 works_on:
   - konnect
@@ -40,32 +43,32 @@ related_resources:
   - text: OpenID Connect policy reference
     url: /ai-gateway/policies/openid-connect/
 faqs:
-  - q: What is the difference between an AI Identity Provider and an AI Model Provider?
+  - q: What is the difference between an AI Auth Strategy and an AI Model Provider?
     a: |
-      An AI Identity Provider manages inbound authentication: it validates the credentials that AI Consumers
+      An AI Auth Strategy manages inbound authentication: it validates the credentials that AI Consumers
       present when calling an AI Model. An AI Model Provider manages outbound credentials: the secrets
       {{site.ai_gateway}} uses to authenticate to an upstream LLM service on behalf of the AI Consumer.
 
   - q: Can an AI Model use both key-auth and OIDC authentication at the same time?
     a: |
-      Yes. An AI Model supports one `key-auth` AI Identity Provider and one `openid-connect`
-      AI Identity Provider simultaneously. An AI Consumer's request is authenticated
-      if it satisfies either provider. Attaching an authentication AI Policy directly to an AI
-      Model's `policies` field isn't supported; AI Identity Providers are the only supported way
+      Yes. An AI Model supports one `key-auth` AI Auth Strategy and one `openid-connect`
+      AI Auth Strategy simultaneously. An AI Consumer's request is authenticated
+      if it satisfies either strategy. Attaching an authentication AI Policy directly to an AI
+      Model's `policies` field isn't supported; AI Auth Strategies are the only supported way
       to authenticate AI Model traffic.
 
-  - q: Can an AI Agent use an AI Identity Provider too?
+  - q: Can an AI Agent use an AI Auth Strategy too?
     a: |
-      Yes. Reference an AI Identity Provider by `name` or `id` in the AI Agent's `access.identity_providers`
-      array, the same field used on AI Models. An AI Agent currently accepts up to one AI Identity Provider
+      Yes. Reference an AI Auth Strategy by `name` or `id` in the AI Agent's `access.auth_strategies`
+      array, the same field used on AI Models. An AI Agent currently accepts up to one AI Auth Strategy
       reference. Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't
-      supported; AI Identity Providers are the only supported way to authenticate AI Agent traffic.
+      supported; AI Auth Strategies are the only supported way to authenticate AI Agent traffic.
 
-  - q: Can an AI MCP Server use an AI Identity Provider too?
+  - q: Can an AI MCP Server use an AI Auth Strategy too?
     a: |
       Yes, for `conversion-listener`, `listener`, and `passthrough-listener` AI MCP Servers. Reference an AI
-      Identity Provider by `name` or `id` in the AI MCP Server's `access.identity_providers` array. An AI MCP
-      Server currently accepts up to one AI Identity Provider reference. `upstream-server` AI MCP Servers
+      Auth Strategy by `name` or `id` in the AI MCP Server's `access.auth_strategies` array. An AI MCP
+      Server currently accepts up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers
       authenticate to their upstream separately, through `config.server.tools_list_auth`, and
       `conversion-only` AI MCP Servers have no `access` field since they never accept incoming MCP traffic
       directly. As with AI Agents, attaching an authentication AI Policy directly to an AI MCP Server's
@@ -77,10 +80,10 @@ faqs:
       policy on that anonymous AI Consumer returns `401 Unauthorized` before the request reaches
       the AI Model, AI Agent, or AI MCP Server.
 
-  - q: Can I reuse the same AI Identity Provider across multiple AI Models, AI Agents, or AI MCP Servers?
+  - q: Can I reuse the same AI Auth Strategy across multiple AI Models, AI Agents, or AI MCP Servers?
     a: |
-      Yes. Create an AI Identity Provider once and reference it by `name` or `id` in the
-      `access.identity_providers` array of any AI Model, AI Agent, or AI MCP Server in the same gateway.
+      Yes. Create an AI Auth Strategy once and reference it by `name` or `id` in the
+      `access.auth_strategies` array of any AI Model, AI Agent, or AI MCP Server in the same gateway.
 
   - q: Which OIDC flows does the openid-connect type support?
     a: |
@@ -90,16 +93,16 @@ faqs:
       with `config.auth_methods`.
 ---
 
-## What is an AI Identity Provider?
+## What is an AI Auth Strategy?
 
-Your [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) often need access control: some teams should reach certain AI Models, AI Agents, or AI MCP Servers and others should not, and you need a way to verify who is calling before a request consumes tokens or touches sensitive data. An AI Identity Provider lets you declare an inbound authentication mechanism at the gateway level and attach it to specific AI Models, AI Agents, or AI MCP Servers.
+Your [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) often need access control: some teams should reach certain AI Models, AI Agents, or AI MCP Servers and others should not, and you need a way to verify who is calling before a request consumes tokens or touches sensitive data. An AI Auth Strategy lets you declare an inbound authentication mechanism at the gateway level and attach it to specific AI Models, AI Agents, or AI MCP Servers.
 
-Use AI Identity Providers to:
+Use AI Auth Strategies to:
 * Authenticate API keys and map them to [AI Consumers](/ai-gateway/entities/ai-consumer/)
 * Authenticate enterprise users through an existing identity provider (Okta, Azure AD, Google, or any OIDC-compliant IdP) without managing keys manually
 * Apply different authentication to different models, agents, or MCP servers. For example, API keys for internal automation and OIDC bearer tokens for user-facing applications.
 
-An AI Identity Provider manages inbound authentication, which is distinct from the outbound credentials managed by an [AI Model Provider](/ai-gateway/entities/ai-model-provider/). When an AI Consumer calls an AI Model, AI Agent, or AI MCP Server, the AI Identity Provider checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream; an AI Agent proxies the now-authenticated request directly to its upstream agent; an AI MCP Server uses the resolved identity for [ACL tool control](/ai-gateway/entities/ai-mcp-server/#acl-tool-control) before forwarding MCP traffic.
+An AI Auth Strategy manages inbound authentication, which is distinct from the outbound credentials managed by an [AI Model Provider](/ai-gateway/entities/ai-model-provider/). When an AI Consumer calls an AI Model, AI Agent, or AI MCP Server, the AI Auth Strategy checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream; an AI Agent proxies the now-authenticated request directly to its upstream agent; an AI MCP Server uses the resolved identity for [ACL tool control](/ai-gateway/entities/ai-mcp-server/#acl-tool-control) before forwarding MCP traffic.
 
 The following diagram shows where authentication fits in the request pipeline:
 
@@ -128,21 +131,21 @@ flowchart LR
 Authentication behaves like any other Kong plugin: it runs after route selection, in the context of the matched route, but before the AI Model, AI Agent, or AI MCP Server is selected. This means unauthenticated requests never reach that selection step or its policy evaluation.
 
 {:.info}
-> This diagram shows the general `key-auth`/`openid-connect` check. For an AI MCP Server with [`access.metadata`](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) set, token validation instead runs through a generated AI MCP OAuth2 configuration, which adds OAuth 2.1 resource-server checks (token audience validation, protected resource metadata serving) on top of this AI Identity Provider.
+> This diagram shows the general `key-auth`/`openid-connect` check. For an AI MCP Server with [`access.metadata`](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) set, token validation instead runs through a generated AI MCP OAuth2 configuration, which adds OAuth 2.1 resource-server checks (token audience validation, protected resource metadata serving) on top of this AI Auth Strategy.
 
-## Manage AI Identity Providers
+## Manage AI Auth Strategies
 
-AI Identity Providers can be created and managed through:
+AI Auth Strategies can be created and managed through:
 
 * {{site.konnect_short_name}} UI
-* {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/identity`
+* {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/auth-strategies`
 * [kongctl](/kongctl/)
 
-For configuration examples and step-by-step setup instructions, see [Set up an AI Identity Provider](#set-up-an-ai-identity-provider).
+For configuration examples and step-by-step setup instructions, see [Set up an AI Auth Strategy](#set-up-an-ai-auth-strategy).
 
 ## Authentication types
 
-{{site.ai_gateway}} supports two identity provider types. Choose based on how your AI Consumers authenticate:
+{{site.ai_gateway}} supports two auth strategy types. Choose based on how your AI Consumers authenticate:
 
 {% table %}
 columns:
@@ -204,18 +207,18 @@ The default `config.auth_methods` are `bearer` and `client_credentials`. If your
 
 To map the token to an existing AI Consumer, set `config.consumer_claims` to an array of path segments locating the claim in the token that carries the AI Consumer identifier (for example, `[["user", "info", "id"]]` to map to a nested `user.info.id` claim). If no mapping is needed, set `config.consumer_optional: true` to allow unauthenticated token holders through ACL checks.
 
-`config.cache_tokens_salt` is required for `openid-connect` AI Identity Providers. It's a string used to generate the cache key for token endpoint request caching; set it to any unique value for this provider instance.
+`config.cache_tokens_salt` is required for `openid-connect` AI Auth Strategies. It's a string used to generate the cache key for token endpoint request caching; set it to any unique value for this provider instance.
 
 {:.warning}
-> All AI Models in the same {{site.ai_gateway}} that use OIDC authentication must reference the same `openid-connect` AI Identity Provider. Using different OIDC providers across models in the same {{site.ai_gateway}} is not supported.
+> All AI Models in the same {{site.ai_gateway}} that use OIDC authentication must reference the same `openid-connect` AI Auth Strategy. Using different OIDC providers across models in the same {{site.ai_gateway}} is not supported.
 
-## Assigning an AI Identity Provider
+## Assigning an AI Auth Strategy
 
-An AI Identity Provider takes effect only when assigned to an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) (`conversion-listener`, `listener`, or `passthrough-listener` mode). Reference the provider by `name` or `id` in the entity's `access.identity_providers` array:
+An AI Auth Strategy takes effect only when assigned to an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) (`conversion-listener`, `listener`, or `passthrough-listener` mode). Reference the provider by `name` or `id` in the entity's `access.auth_strategies` array:
 
 ```yaml
 access:
-  identity_providers:
+  auth_strategies:
     - my-key-auth-provider
   acls:
     allow:
@@ -224,21 +227,21 @@ access:
 
 {:.info}
 > **Assignment rules**
-> * Each AI Model supports one `key-auth` identity provider and one `openid-connect` identity provider. You can assign both types to the same AI Model; a request is authenticated if it satisfies either provider.
-> * Each AI Agent currently supports up to one AI Identity Provider reference.
-> * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) currently supports up to one AI Identity Provider reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
-> * Attaching an authentication AI Policy (Key Auth, OpenID Connect, or similar) directly to an AI Model's, AI Agent's, or AI MCP Server's `policies` field isn't supported, since each of these entities has its own top-level authentication mechanism. AI Identity Providers are the only supported way to authenticate AI Model, AI Agent, and AI MCP Server traffic, and let each entity use different authentication independently. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
+> * Each AI Model supports one `key-auth` auth strategy and one `openid-connect` auth strategy. You can assign both types to the same AI Model; a request is authenticated if it satisfies either strategy.
+> * Each AI Agent currently supports up to one AI Auth Strategy reference.
+> * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) currently supports up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
+> * Attaching an authentication AI Policy (Key Auth, OpenID Connect, or similar) directly to an AI Model's, AI Agent's, or AI MCP Server's `policies` field isn't supported, since each of these entities has its own top-level authentication mechanism. AI Auth Strategies are the only supported way to authenticate AI Model, AI Agent, and AI MCP Server traffic, and let each entity use different authentication independently. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
-If you plan to rename the AI Identity Provider later, reference it by `id` rather than name. The ID is stable across renames.
+If you plan to rename the AI Auth Strategy later, reference it by `id` rather than name. The ID is stable across renames.
 
-## Set up an AI Identity Provider
+## Set up an AI Auth Strategy
 
 ### API key authentication
 
-The following example creates a `key-auth` AI Identity Provider that accepts AI Consumer API keys in the `X-API-Key` header:
+The following example creates a `key-auth` AI Auth Strategy that accepts AI Consumer API keys in the `X-API-Key` header:
 
 {% entity_example %}
-type: identity-provider
+type: auth-strategy
 data:
   display_name: API Key Auth
   name: api-key-auth
@@ -253,10 +256,10 @@ data:
 
 ### OIDC bearer token authentication
 
-The following example creates an `openid-connect` AI Identity Provider that accepts bearer tokens issued by Okta:
+The following example creates an `openid-connect` AI Auth Strategy that accepts bearer tokens issued by Okta:
 
 {% entity_example %}
-type: identity-provider
+type: auth-strategy
 data:
   display_name: Okta AI SE
   name: okta-ai-se

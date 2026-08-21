@@ -3,7 +3,7 @@
 {% when 'model-provider' %}
 The following creates a new AI Model Provider. Suggested values are shown in backticks:
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Providers**.
 1. Click **New Provider**.
@@ -11,17 +11,15 @@ The following creates a new AI Model Provider. Suggested values are shown in bac
 1. Select a provider (for example: `{{ include.presenter.data['type'] }}`).
 1. Configure authentication and connection settings for the selected provider type.
 1. Click **Create**.
-{% when 'identity-provider' %}
-The following creates a new AI Identity Provider. Suggested values are shown in backticks:
+{% when 'auth-strategy' %}
+The following creates a new AI Auth Strategy. Suggested values are shown in backticks:
 
-<!-- TODO: verify against screenshot, not yet confirmed against the UI -->
+<!-- TODO: verify the "Auth Strategies" sidebar entry and "New auth strategy" button labels against the UI -->
 
-The following creates a new identity provider. Suggested values are shown in backticks.
-
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
-1. Navigate to **Identity**.
-1. Click **New identity provider**.
+1. Navigate to **Auth Strategies**.
+1. Click **New auth strategy**.
 1. Enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and select a **Type**, either **API key** or **OpenID Connect**.
 1. If you selected **API key**, configure the key names and where the key is checked (header, query, or body).
 1. If you selected **OpenID Connect**, enter an **Issuer**, **Client ID**, and **Client secret**, and configure the claim used to match requests to a consumer.
@@ -29,7 +27,7 @@ The following creates a new identity provider. Suggested values are shown in bac
 {% when 'policy' %}
 The following creates a new AI Policy. Suggested values are shown in backticks:
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Policies**.
 1. Click **New Policy**.
@@ -40,7 +38,7 @@ The following creates a new AI Policy. Suggested values are shown in backticks:
 {% when 'consumer' %}
 The following creates a new AI Consumer. Suggested values are shown in backticks:
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Consumers**.
 1. Click **New consumer**.
@@ -51,7 +49,7 @@ The following creates a new AI Consumer. Suggested values are shown in backticks
 {% when 'consumer_group' %}
 The following creates a new AI consumer group. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Consumers**.
 1. Select the **Groups** tab.
@@ -64,7 +62,7 @@ The following creates a new model. Suggested values are shown in backticks.
 
 The following creates a new model. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Models**.
 1. Click **New model**.
@@ -78,7 +76,7 @@ The following creates a new model. Suggested values are shown in backticks.
 {% when 'agent' %}
 The following creates a new agent. Suggested values are shown in backticks.
 
-1. In {{site.konnect_short_name}}, navigate to [{{site-ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Agents**.
 1. Click **New agent**.

@@ -29,8 +29,8 @@ related_resources:
     url: /ai-gateway/entities/ai-model/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
-  - text: AI Identity Provider entity
-    url: /ai-gateway/entities/ai-identity-provider/
+  - text: AI Auth Strategy entity
+    url: /ai-gateway/entities/ai-auth-strategy/
 faqs:
   - q: What happens when I update an AI Model Provider's credentials?
     a: |
@@ -50,7 +50,7 @@ The AI Model Provider entity lets you securely store and manage credentials for 
 * Centrally manage and rotate credentials across multiple [AI Models](/ai-gateway/entities/ai-model/)
 * Enforce consistent authentication across your deployments
 
-An AI Model Provider manages outbound credentials, which is distinct from the inbound authentication managed by an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/). When an AI Consumer calls an AI Model, the AI Identity Provider checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream.
+An AI Model Provider manages outbound credentials, which is distinct from the inbound authentication managed by an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/). When an AI Consumer calls an AI Model, the AI Auth Strategy checks who they are. The AI Model then uses the AI Model Provider's credentials to forward the request upstream.
 
 Each AI Model Provider has a [`type`](#schema-aigateway-model-provider-type) that selects the upstream LLM service and configures provider-specific options. See the [schema](#schema) for supported types, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific configuration and limitations.
 

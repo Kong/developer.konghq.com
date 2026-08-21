@@ -142,6 +142,7 @@ Most references to Kong Gateway or `{{site.base_gateway}}` should be replaced wi
 
 All AI Gateway entity names (from `app/_ai_gateway_entities/`) must be capitalized and prefixed with "AI". Known entities:
 - AI Agent
+- AI Auth Strategy
 - AI Consumer
 - AI Consumer Credential
 - AI Consumer Group
@@ -153,6 +154,17 @@ All AI Gateway entity names (from `app/_ai_gateway_entities/`) must be capitaliz
 - AI Policy
 - AI Provider
 - AI Vault
+
+### AI Identity Provider → AI Auth Strategy
+
+The entity formerly called "AI Identity Provider" is now **AI Auth Strategy**. Flag:
+
+- Prose: "AI Identity Provider(s)" → "AI Auth Strategy" / "AI Auth Strategies"
+- Links: `/ai-gateway/entities/ai-identity-provider/` → `/ai-gateway/entities/ai-auth-strategy/`
+- Config fields: `access.identity_providers` → `access.auth_strategies`
+- kongctl: `ai_gateway_identity_providers` → `ai_gateway_auth_strategies`
+
+Do **not** flag lowercase "identity provider" where it means an external OIDC provider (Okta, Keycloak, Auth0, Azure AD). That usage is still correct, and often appears in the same sentence as the entity name.
 
 Flag any references to these entities without the "AI" prefix, in both singular and plural forms. For example:
 - "model" or "models" → "AI Model" / "AI Models"
