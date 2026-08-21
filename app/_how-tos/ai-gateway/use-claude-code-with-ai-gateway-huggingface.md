@@ -52,7 +52,7 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-huggingface-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-huggingface-account
     display_name: "Hugging Face"
     type: huggingface
@@ -79,7 +79,7 @@ Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request tra
 {% entity_examples %}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: strip-claude-beta-info
     display_name: "Strip Claude beta info"
     type: request-transformer-advanced
@@ -117,7 +117,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-huggingface-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-huggingface-account
     display_name: "Hugging Face"
     type: huggingface
@@ -129,7 +129,7 @@ ai_gateway_model_providers:
             value: !env HUGGINGFACE_AUTH_HEADER
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: strip-claude-beta-info
     display_name: "Strip Claude beta info"
     type: request-transformer-advanced
@@ -148,7 +148,7 @@ ai_gateway_policies:
           - reasoning_effort
 ai_gateway_models:
   - ref: my-huggingface
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-huggingface
     display_name: "my-huggingface"
     type: model

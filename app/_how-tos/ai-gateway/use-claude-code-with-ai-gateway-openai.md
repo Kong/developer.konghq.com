@@ -48,7 +48,7 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: generic-openai
     display_name: "generic-openai"
     type: openai
@@ -76,7 +76,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_models:
   - ref: my-claude-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-claude-openai
     display_name: "my-claude-openai"
     type: model

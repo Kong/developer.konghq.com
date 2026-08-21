@@ -79,7 +79,7 @@ ai_gateway_model_providers:
   - ref: vertex-prod
     name: vertex-prod
     display_name: "Google Vertex Prod"
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: vertex
     config:
       auth:
@@ -88,7 +88,7 @@ ai_gateway_model_providers:
 ai_gateway_policies:
   - ref: claude-code-compat
     name: claude-code-compat
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: request-transformer-advanced
     enabled: true
     global: false
@@ -101,7 +101,7 @@ ai_gateway_models:
   - ref: claude-code-vertex-sonnet
     name: claude-code-vertex-sonnet
     display_name: "Claude Code - Vertex - Sonnet 4.6"
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: model
     enabled: true
     formats:

@@ -81,7 +81,7 @@ The AI Policy is attached to the AI Agent by using  `!ref rate-limit-bookings-ag
 {% entity_examples %}
 ai_gateway_policies:
   - ref: rate-limit-bookings-agent
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: rate-limit-bookings-agent
     display_name: "Rate limit Kong Air Flight Booking Agent"
     type: rate-limiting-advanced
@@ -95,7 +95,7 @@ ai_gateway_policies:
       strategy: local
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
     enabled: true

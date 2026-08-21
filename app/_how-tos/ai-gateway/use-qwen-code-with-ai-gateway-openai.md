@@ -60,7 +60,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: generic-openai
     display_name: "generic-openai"
     type: openai
@@ -72,7 +72,7 @@ ai_gateway_model_providers:
             value: !env OPENAI_AUTH_HEADER
 ai_gateway_models:
   - ref: my-qwen-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-qwen-openai
     display_name: "my-qwen-openai"
     type: model

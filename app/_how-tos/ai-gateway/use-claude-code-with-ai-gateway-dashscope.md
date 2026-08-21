@@ -61,7 +61,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: dashscope
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: dashscope
     type: dashscope
     display_name: "Alibaba Cloud DashScope"
@@ -73,7 +73,7 @@ ai_gateway_model_providers:
             value: !env DASHSCOPE_AUTH_HEADER
 ai_gateway_models:
   - ref: claude-code-qwen
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: claude-code-qwen
     display_name: "Claude Code - DashScope Qwen"
     type: model

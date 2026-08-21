@@ -73,7 +73,7 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) that stor
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-gemini-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gemini-account
     display_name: "my-gemini-account"
     type: gemini
@@ -85,7 +85,7 @@ ai_gateway_model_providers:
             value: !env GEMINI_API_KEY
 ai_gateway_models:
   - ref: my-gemini-model
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gemini-model
     display_name: "my-gemini-model"
     type: model

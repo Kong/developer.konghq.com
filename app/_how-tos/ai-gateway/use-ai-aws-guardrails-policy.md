@@ -86,7 +86,7 @@ You'll also configure the [AI AWS Guardrails Policy](/ai-gateway/policies/ai-aws
 ai_gateway_model_providers:
   - ref: generic-openai
     name: generic-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: openai
     config:
       auth:
@@ -97,7 +97,7 @@ ai_gateway_model_providers:
 ai_gateway_policies:
   - ref: my-ai-aws-guardrails-policy
     name: my-ai-aws-guardrails-policy
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: ai-aws-guardrails
     enabled: true
     global: false
@@ -111,7 +111,7 @@ ai_gateway_models:
   - ref: my-gpt-4o
     display_name: my-gpt-4o
     name: my-gpt-4o
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: model
     enabled: true
     formats: [{ type: openai }]
