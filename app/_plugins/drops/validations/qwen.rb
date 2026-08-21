@@ -31,11 +31,21 @@ module Jekyll
 
         def command
           @command ||= [
+            *env_vars,
             configuration.fetch('command'),
             "--model \"#{@yaml.fetch('model')}\"",
             "--auth-type \"#{@yaml.fetch('auth-type')}\"",
             "--prompt \"#{@yaml.fetch('prompt')}\""
           ].join(' ')
+        end
+
+        private
+
+        def env_vars
+          [
+            ("OPENAI_API_KEY=#{self['open_api_key']}" if self['open_api_key']),
+            ("OPENAI_BASE_URL=#{self['base_url']}" if self['base_url'])
+          ].compact
         end
       end
     end
