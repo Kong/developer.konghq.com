@@ -85,7 +85,7 @@ The `petstore-mcp` entity does this by referencing `otel-mcp` in its `policies` 
 {% entity_examples %}
 ai_gateway_policies:
   - ref: otel-mcp
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: otel-mcp
     display_name: "otel-mcp"
     type: opentelemetry
@@ -101,7 +101,7 @@ ai_gateway_policies:
 
 ai_gateway_mcp_servers:
   - ref: petstore-mcp
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: petstore-mcp
     display_name: "Petstore API"
     type: conversion-listener
