@@ -5,12 +5,12 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: auth strategy
 description: Integrate {{site.ai_gateway_name}} with a third-party OpenID Connect provider
 ---
-The OpenID Connect (OIDC) Policy lets you integrate {{site.ai_gateway}} with an identity provider (IdP). To make it work with {{site.ai_gateway}}, you don't attach it directly to an {{site.ai_gateway}}. Instead you reference it in your [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) entity configuration. Because of that, in the {{site.konnect_short_name}} UI, you find the Open ID Connect configuration in the **Identity** tab, when you create a new Identity Provider, not in the **Policies** one. The resulting configuration is what we call OpenID Connect (OIDC) Policy in this page. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) to learn more.
+The OpenID Connect (OIDC) auth strategy lets you integrate {{site.ai_gateway}} with an identity provider (IdP). To make it work with {{site.ai_gateway}}, you don't attach it directly to an {{site.ai_gateway}}. Instead you reference it in your [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) onfiguration. In the {{site.konnect_short_name}} UI, you find the Open ID Connect configuration in the **Identity** tab, when you create a new Identity Provider. The resulting configuration is what we call OpenID Connect (OIDC) auth strategy in this page. See [AI auth strategy scopes](/ai-gateway/entities/ai-auth strategy/#ai-auth strategy-scopes) to learn more.
 
-You can use this Policy to implement {{site.ai_gateway}} as a proxying [OAuth 2.0](https://tools.ietf.org/html/rfc6749) resource server 
+You can use this auth strategy to implement {{site.ai_gateway}} as a proxying [OAuth 2.0](https://tools.ietf.org/html/rfc6749) resource server 
 (RS) and as an OpenID Connect relying party (RP) between the client and the upstream service.
 
 ## What does OpenID Connect do?
@@ -21,9 +21,9 @@ If an identity provider authenticates a user to an application, the application 
 
 Besides delegating responsibility to an identity provider, OpenID Connect also makes single sign-on possible without storing any credentials on a user’s local machine.
 
-## What does Kong’s OpenID Connect Policy do?
+## What does Kong’s OpenID Connect auth strategy do?
 
-The OpenID Connect Policy enables you to integrate OpenID Connect with {{site.ai_gateway}} without having to write custom integrations.
+The OpenID Connect auth strategy enables you to integrate OpenID Connect with {{site.ai_gateway}} without having to write custom integrations.
 Instead of manually writing code for OpenID Connect within an upstream service, you can place {{site.ai_gateway}} in front of the upstream service and have {{site.ai_gateway}} handle authentication.
 This separation lets developers focus on the business logic within their application, easily swap out upstream services while preserving authentication at the front door, and effortlessly spread the same authentication to new upstream services.
 
@@ -72,14 +72,14 @@ variables:
       Your IdP's issuer URL. For {{site.identity}}, this is the `issuer` returned when you create the auth server, and it includes an `/auth` suffix.
   client_id:
     value: $CLIENT_ID
-    description: The client ID the Policy uses when calling authenticated endpoints on the IdP.
+    description: The client ID the auth strategy uses when calling authenticated endpoints on the IdP.
   client_secret:
     value: $CLIENT_SECRET
     description: The client secret for that client.
   cache_tokens_salt:
     value: my-oidc-salt
     description: |
-      Any unique string to salt the cache key used for cached token endpoint responses. Required for AI Identity Providers.
+      Any unique string to salt the cache key used for cached token endpoint responses. Required for AI Auth Strategies.
 formats:
   - kongctl
 {% endentity_example %}
@@ -87,26 +87,26 @@ formats:
 
 
 ## Discovery cache
-When you configure `config.issuer` in the OIDC Policy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC Policy stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
+When you configure `config.issuer` in the OIDC auth strategy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC auth strategy stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
 
 {{site.ai_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
 - Discovery data is stored in the **{{site.ai_gateway}} database**.  
 - The cache TTL (time-to-live) is managed by `config.cache_ttl`, which is set to 3600 seconds by default.
-- If a request requires discovery information that isn't in the cache, the Policy attempts to “rediscover” it using the value in `config.issuer`. After a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
-- If a JWT can't be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the Policy falls back to using any sufficient discovery information that remains in the cache.
+- If a request requires discovery information that isn't in the cache, the auth strategy attempts to “rediscover” it using the value in `config.issuer`. After a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
+- If a JWT can't be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the auth strategy falls back to using any sufficient discovery information that remains in the cache.
 
 ## Supported flows and grants
 
-The OpenID Connect Policy suits many different use cases and extends other Policies 
+The OpenID Connect auth strategy suits many different use cases and extends other Policies 
 such as [JWT](/ai-gateway/policies/jwt/) (JSON Web Token), [ACL](/ai-gateway/policies/acl/), and [0Auth 2.0](/ai-gateway/policies/oauth2/).
 The most common use case is the [authorization code flow](#authorization-code-flow).
 
 ### Authentication flows and grants
 
-The OIDC Policy supports several types of credentials and grants.
+The OIDC auth strategy supports several types of credentials and grants.
 
-You can configure multiple auth grants or flows on the Policy.
-The Policy searches for credentials in the following order of precedence:
+You can configure multiple auth grants or flows on the auth strategy.
+The auth strategy searches for credentials in the following order of precedence:
 
 1. [Session authentication](#session-authentication-workflow)
 2. [JWT access token authentication](#jwt-access-token-authentication-flow)
@@ -118,7 +118,7 @@ The Policy searches for credentials in the following order of precedence:
 8. [Client credentials grant](#client-credentials-grant-workflow)
 9. [Authorization code flow](#authorization-code-flow) (with client secret or PKCE)
 
-Once it finds a set of credentials, the Policy stops searching, and won't look for any further credential types.
+Once it finds a set of credentials, the auth strategy stops searching, and won't look for any further credential types.
 This precedence order is hardcoded and can't be changed.
 
 Multiple grants may share the same credentials. For example, both the password and client credentials grants can use 
@@ -126,8 +126,8 @@ basic authentication through the `Authorization` header.
 
 #### Session authentication workflow
 
-The OpenID Connect Policy can issue a session cookie that can be used for further session authentication. 
-To make OpenID Connect issue a session cookie, you need to first authenticate with one of the other grants or flows that this Policy supports. 
+The OpenID Connect auth strategy can issue a session cookie that can be used for further session authentication. 
+To make OpenID Connect issue a session cookie, you need to first authenticate with one of the other grants or flows that this auth strategy supports. 
 For example, the [authorization code flow](#authorization-code-flow) demonstrates session authentication when it uses the redirect login action.
 
 #### JWT access token authentication flow
@@ -137,14 +137,14 @@ Stateless authentication means that the signature verification uses the identity
 
 #### Kong OAuth token authentication flow
 
-The OpenID Connect Policy can verify the tokens issued by the [OAuth 2.0 Policy](/ai-gateway/policies/oauth2/).
+The OpenID Connect auth strategy can verify the tokens issued by the [OAuth 2.0 auth strategy](/ai-gateway/policies/oauth2/).
 This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow).
 
 #### Introspection authentication flow
 
 As with [JWT access token authentication](#jwt-access-token-authentication-flow), 
 the introspection authentication relies on a bearer token that the client has already gotten from somewhere. 
-The difference between introspection and stateless JWT authentication is that the Policy needs to call the introspection endpoint of the identity provider to find out whether the token is valid and active. 
+The difference between introspection and stateless JWT authentication is that the auth strategy needs to call the introspection endpoint of the identity provider to find out whether the token is valid and active. 
 This makes it possible to issue opaque tokens to the clients.
 
 #### User info authentication flow
@@ -156,8 +156,8 @@ The flow is almost identical to introspection authentication.
 #### Refresh token grant workflow
 
 The refresh token grant can be used when the client has a refresh token available. 
-There is a caveat with this: in general, identity providers only allow the refresh token grant to be executed with the same client that originally got the refresh token, and if there is a mismatch, it may not work. 
-The mismatch is likely when the OpenID Connect Policy is configured to use one client, and the refresh token is retrieved with another. 
+There is a caveat with this: in general, AI Auth Strategies only allow the refresh token grant to be executed with the same client that originally got the refresh token, and if there is a mismatch, it may not work. 
+The mismatch is likely when the OpenID Connect auth strategy is configured to use one client, and the refresh token is retrieved with another. 
 
 The grant itself is very similar to the [password grant](#password-grant-workflow) and
 the [client credentials grant](#client-credentials-grant-workflow).
@@ -170,7 +170,7 @@ This is a less secure way of authenticating end users than the authorization cod
 #### Client credentials grant workflow
 
 The client credentials grant is very similar to the [password grant](#password-grant-workflow).
-The most important difference is that the Policy itself doesn't try to authenticate, and instead 
+The most important difference is that the auth strategy itself doesn't try to authenticate, and instead 
 forwards the credentials passed by the client to the identity server's token endpoint.
 
 #### Authorization code flow
@@ -183,10 +183,10 @@ If it's not included, the PKCE `code_challenge` query parameter won't be sent.
 
 ### Authorization
 
-The OpenID Connect Policy has several options for performing coarse-grained authorization:
+The OpenID Connect auth strategy has several options for performing coarse-grained authorization:
 
 1. [Claims-based authorization](#claims-based-authorization)
-2. [ACL Policy authorization](#acl-policy-authorization)
+2. [ACL auth strategy authorization](#acl-auth strategy-authorization)
 3. [AI Consumer authorization](#ai-consumer-authorization)
 4. [AI Consumer Group authorization](#ai-consumer-group-authorization)
 
@@ -221,7 +221,7 @@ Both the claim type and the required claim content take an array of string eleme
 ##### Claim type
 
 For the claim type (for example, `config.groups_claim`), the array is a list of JSON objects listed in nested order. 
-The Policy uses the order of the items in the array to look up data in a JSON payload.
+The auth strategy uses the order of the items in the array to look up data in a JSON payload.
 
 The value of a claim can be:
 
@@ -277,9 +277,9 @@ The `config.*_required` parameters (for example, `config.groups_required`) are a
     - marketing
   ```
 
-#### ACL Policy authorization
+#### ACL auth strategy authorization
 
-The OpenID Connect Policy can be integrated with the [ACL Policy](/ai-gateway/policies/acl/), which provides access control functionality in the form of allow and deny lists.
+The OpenID Connect auth strategy can be integrated with the [ACL auth strategy](/ai-gateway/policies/acl/), which provides access control functionality in the form of allow and deny lists.
 
 You can also pair ACL-based authorization with AI Consumer authorization.
 
@@ -287,7 +287,7 @@ You can also pair ACL-based authorization with AI Consumer authorization.
 
 You can use [AI Consumers](/ai-gateway/entities/ai-consumer/) for authorization and dynamically map claim values to AI Consumers. 
 This means that we restrict the access to only those that do have a matching AI Consumer. 
-AI Consumers can have ACL groups attached to them and be further authorized with the [ACL Policy](/ai-gateway/policies/acl/).
+AI Consumers can have ACL groups attached to them and be further authorized with the [ACL auth strategy](/ai-gateway/policies/acl/).
 
 #### AI Consumer Group authorization
 
@@ -298,7 +298,7 @@ This means that we restrict the access to only those that do have a matching AI 
 
 #### Mutual TLS client authentication
 
-The OpenID Connect Policy supports mutual TLS (mTLS) client authentication with the IdP. 
+The OpenID Connect auth strategy supports mutual TLS (mTLS) client authentication with the IdP. 
 When mTLS authentication is enabled, {{site.ai_gateway}} establishes mTLS connections with the IdP using the configured client certificate.
 You can use mTLS client authentication with the following IdP endpoints and corresponding flows:
 
@@ -311,11 +311,11 @@ You can use mTLS client authentication with the following IdP endpoints and corr
 * `revocation`
   * [Session Authentication](#session-authentication-workflow)
 
-For all these endpoints and for the flows supported, the Policy uses mTLS client authentication as the authentication method when communicating with the IdP, for example, to fetch the token from the token endpoint.
+For all these endpoints and for the flows supported, the auth strategy uses mTLS client authentication as the authentication method when communicating with the IdP, for example, to fetch the token from the token endpoint.
 
 ## Financial-grade API (FAPI)
 
-The OpenID Connect Policy supports various features of the FAPI standard, aimed to protect APIs that expose high-value and sensitive data.
+The OpenID Connect auth strategy supports various features of the FAPI standard, aimed to protect APIs that expose high-value and sensitive data.
 
 {% table %}
 columns:
@@ -398,7 +398,7 @@ Certificate-bound access tokens are supported by the following auth methods:
 Session authentication is only compatible with certificate-bound access tokens when used along with one of the other supported authentication methods:
 
 * When the configuration option [`config.proof_of_possession_auth_methods_validation`](/ai-gateway/policies/openid-connect/reference/#schema--config-proof-of-possession-auth-methods-validation) is set to `false` and other non-compatible methods are enabled, if a valid session is found, the proof of possession validation will only be performed if the session was originally created using one of the compatible methods. 
-* If multiple `openid-connect` policies are configured with the `session` auth method, we strongly recommend configuring different values of [`config.session_secret`](/ai-gateway/policies/openid-connect/reference/#schema--config-session-secret) across policy instances for additional security. This avoids sessions being shared across policies and possibly bypassing the proof of possession validation.
+* If multiple `openid-connect` policies are configured with the `session` auth method, we strongly recommend configuring different values of [`config.session_secret`](/ai-gateway/policies/openid-connect/reference/#schema--config-session-secret) across auth strategy instances for additional security. This avoids sessions being shared across policies and possibly bypassing the proof of possession validation.
 
 To enable certificate-bound access for OpenID Connect:
 * Ensure that the auth server (IdP) that you're using is set up to generate OAuth 2.0 Mutual TLS certificate-bound access tokens.
@@ -409,8 +409,8 @@ To enable certificate-bound access for OpenID Connect:
 Many enterprise deployments terminate TLS at a WAF or Layer-7 proxy before traffic reaches {{site.ai_gateway}}.
 In these environments, the TLS connection between the proxy and {{site.ai_gateway}} carries no client certificate, which prevents the standard mTLS PoP flow from working.
 
-You can enable the OIDC Policy to validate mTLS Proof-of-Possession (PoP) via a header.
-When configured, the Policy reads the client certificate from an HTTP header injected by the WAF or proxy, validates it against a trusted CA, and verifies that its thumbprint matches the `cnf.x5t#S256` claim bound in the access token.
+You can enable the OIDC auth strategy to validate mTLS Proof-of-Possession (PoP) via a header.
+When configured, the auth strategy reads the client certificate from an HTTP header injected by the WAF or proxy, validates it against a trusted CA, and verifies that its thumbprint matches the `cnf.x5t#S256` claim bound in the access token.
 
 To enable mTLS PoP via header:
 * Configure your IdP to generate OAuth 2.0 mTLS certificate-bound access tokens.
@@ -432,7 +432,7 @@ DPoP is compatible with the following authentication methods:
 * [Introspection authentication](#introspection-authentication-flow)
 * [Session authentication](#session-authentication-workflow)
 
-Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods. If multiple `openid-connect` policies are configured with the `session` authentication method, we strongly recommend configuring different values of [`config.session_secret`](/ai-gateway/policies/openid-connect/reference/#schema--config-session-secret) across policy instances for additional security. This avoids sessions being shared across policies and possibly bypassing the proof of possession validation.
+Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods. If multiple `openid-connect` policies are configured with the `session` authentication method, we strongly recommend configuring different values of [`config.session_secret`](/ai-gateway/policies/openid-connect/reference/#schema--config-session-secret) across auth strategy instances for additional security. This avoids sessions being shared across policies and possibly bypassing the proof of possession validation.
 
 To enable DPoP for OpenID Connect:
 * Ensure that the auth server (IdP) that you're using has DPoP enabled.
@@ -440,15 +440,15 @@ To enable DPoP for OpenID Connect:
 
 ## Multi-IdP support
 
-If your APIs serve clients that authenticate with different identity providers, the OIDC Policy can validate tokens from multiple issuers at the gateway layer, so backends don't need per-IdP logic.
+If your APIs serve clients that authenticate with different identity providers, the OIDC auth strategy can validate tokens from multiple issuers at the gateway layer, so backends don't need per-IdP logic.
 
 You can implement this in one of the following ways:
 
-* **Trusted issuers registry**: Configure the OIDC Policy with a list of trusted issuers and their JWKS endpoints using [`config.issuers_allowed`](/ai-gateway/policies/openid-connect/reference/#schema--config-issuers-allowed) and [`config.extra_jwks_uris`](/ai-gateway/policies/openid-connect/reference/#schema--config-extra-jwks-uris).
+* **Trusted issuers registry**: Configure the OIDC auth strategy with a list of trusted issuers and their JWKS endpoints using [`config.issuers_allowed`](/ai-gateway/policies/openid-connect/reference/#schema--config-issuers-allowed) and [`config.extra_jwks_uris`](/ai-gateway/policies/openid-connect/reference/#schema--config-extra-jwks-uris).
 {{site.ai_gateway}} validates incoming tokens against the appropriate public keys and forwards them to the backend as-is.
 This works best when token formats are consistent across IdPs.
 
-* **Token exchange**: Configure the OIDC Policy to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](/ai-gateway/policies/openid-connect/reference/#schema--config-token-exchange).
+* **Token exchange**: Configure the OIDC auth strategy to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](/ai-gateway/policies/openid-connect/reference/#schema--config-token-exchange).
 The backend always receives tokens from a single issuer regardless of which IdP the client used.
 This works best when backends must trust one issuer, or when you need to normalize scopes and claims across IdPs.
 
@@ -461,7 +461,7 @@ The RFC defines a protocol approach to support scenarios where a client can exch
 This is particularly useful in complex environments like microservices or cross-domain federations. 
 
 {:.info}
-> **Note**: The OpenID Connect Policy only supports exchanging access tokens.
+> **Note**: The OpenID Connect auth strategy only supports exchanging access tokens.
 
 ### Why use token exchange?
 
@@ -485,7 +485,7 @@ However, in a token exchange, a client already has a token (the "subject token")
 {{site.ai_gateway}} acts as the gatekeeper that decides which incoming tokens are eligible for exchange and facilitates the token exchange using its own client credentials. 
 The subject token is presented to the authorization server to get a different token (the "requested token") that is better suited for accessing the resource.
 
-The OpenID Connect Policy performs the following checks on the incoming token before triggering the exchange:
+The OpenID Connect auth strategy performs the following checks on the incoming token before triggering the exchange:
 1. Checks the incoming subject token meets the following criteria:
   * The issuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
   * The token is not expired (`exp` claim).
@@ -495,7 +495,7 @@ The OpenID Connect Policy performs the following checks on the incoming token be
 1. If the `subject_token_issuer` and `target_issuer` are the same, the configured conditions are evaluated to determine whether to trigger token exchange.
 1. {{site.ai_gateway}} uses its client credentials to trigger the exchange.
 
-Afterwards, the rest of the OpenID Connect Policy flow continues on the exchanged token.
+Afterwards, the rest of the OpenID Connect auth strategy flow continues on the exchanged token.
 
 Depending on the use case, {{site.ai_gateway}} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
 
@@ -528,7 +528,7 @@ Set this when the issuer doesn't publish a discovery document or when you want t
 
 ## Multiple clients
 
-You can configure the OIDC Policy with multiple client IDs ([`config.client_id`](./reference/#schema--config-client-id)) and 
+You can configure the OIDC auth strategy with multiple client IDs ([`config.client_id`](./reference/#schema--config-client-id)) and 
 client secrets ([`config.client_secret`](./reference/#schema--config-client-secret)), where the ID and client pairs correspond based on their locations in the array.
 
 For example:
@@ -545,7 +545,7 @@ config:
 ```
 
 When making a request, you can specify which client to target to use by including a client ID argument.
-For example, after configuring the Policy with two client IDs and client secrets, you can target a client by name:
+For example, after configuring the auth strategy with two client IDs and client secrets, you can target a client by name:
 
 ```sh
 curl -X GET "http://localhost:8000?client_id=my-second-client"
@@ -563,7 +563,7 @@ curl -X GET "http://localhost:8000?client_id=2"
 1. If no client is found in either of those places, {{site.ai_gateway}} uses the first client ID and client secret pair.
 
 {:.info}
-> **Note:** Configuring multiple clients is not possible with the client credentials grant, as the Policy always uses the client ID passed directly from the client.
+> **Note:** Configuring multiple clients is not possible with the client credentials grant, as the auth strategy always uses the client ID passed directly from the client.
 
 ## Using cloud authentication with Redis
 
@@ -571,21 +571,21 @@ curl -X GET "http://localhost:8000?client_id=2"
 
 {% include_cached /md/ai-gateway/v2/redis-cloud-providers.md %}
 
-## Debugging the OIDC Policy
+## Debugging the OIDC auth strategy
 
-If you have issues with the OIDC Policy, try the following debugging methods:
+If you have issues with the OIDC auth strategy, try the following debugging methods:
 
 1. Check the {{site.ai_gateway}} [log level](/ai-gateway/configuration/#log-level) to `debug`, and check the {{site.ai_gateway}} `error.log`. 
 You can filter the log with the keyword `openid-connect`.
 
-2. Set the OpenID Connect Policy to display errors by setting [`config.display_errors`](./reference/#schema--config-display-errors) to true.
+2. Set the OpenID Connect auth strategy to display errors by setting [`config.display_errors`](./reference/#schema--config-display-errors) to true.
 
-3. Temporarily disable the OpenID Connect Policy verifications by setting the following parameters to `false`:
+3. Temporarily disable the OpenID Connect auth strategy verifications by setting the following parameters to `false`:
   * [`config.verify_nonce`](./reference/#schema--config-verify-nonce)
   * [`config.verify_claims`](./reference/#schema--config-verify-claims)
   * [`config.verify_signature`](./reference/#schema--config-verify-signature)
 
-4. Check what kinds of tokens the OpenID Connect Policy can receive by reviewing the following parameter configurations, and ensure that your token type is allowed:
+4. Check what kinds of tokens the OpenID Connect auth strategy can receive by reviewing the following parameter configurations, and ensure that your token type is allowed:
   * [`config.login_action`](./reference/#schema--config-login-action)
   * [`config.login_tokens`](./reference/#schema--config-login-tokens)
   * [`config.login_methods`](./reference/#schema--config-login-methods)
@@ -599,7 +599,7 @@ If one of these other applications is causing issues, looking into using the fol
 
 ## Supported identity providers
 
-The Policy has been tested with several OpenID Connect providers:
+The auth strategy has been tested with several OpenID Connect providers:
 
 - [Kong Identity](/identity/)
 - [Auth0](https://auth0.com/docs/protocols/openid-connect-protocol)
@@ -623,5 +623,5 @@ The Policy has been tested with several OpenID Connect providers:
 - [WSO2](https://is.docs.wso2.com/en/latest/guides/authentication/standard-based-login/add-oidc-idp-login/)
 - [Yahoo!](https://developer.yahoo.com/oauth2/guide/openid_connect/)
 
-As long as your provider supports OpenID Connect standards, the Policy should
+As long as your provider supports OpenID Connect standards, the auth strategy should
 work, even if it is not specifically tested against it.
