@@ -199,7 +199,11 @@ body:
 
 ## Access token duration
 
-Access tokens issued by an auth server are valid for a set duration, in seconds. The minimum is `60` (one minute) and the maximum is `2592000` (30 days).
+Access tokens issued by an auth server are valid for a set duration, in seconds:
+
+- The default value is 300 seconds (five minutes).
+- The minimum value you can set is `60` (one minute).
+- The maximum value you can can set is `2592000` (30 days).
 
 Where you set the duration depends on how  you create the client:
 
@@ -212,61 +216,13 @@ columns:
     key: field
 rows:
   - type: Clients you register yourself, from the UI or the API
-    field: "The `access_token_duration` field on each client. The `id_token_duration` field sets the duration for that client's ID tokens."
+    field: |
+      On each client, with the `access_token_duration` field. The `id_token_duration` field sets the duration for that client's ID tokens.
   - type: Clients registered through [Dynamic Client Registration](/dev-portal/dynamic-client-registration/)
-    field: "The `dcr_default_access_token_duration` field on the auth server. Every DCR client registered against the auth server uses this duration."
+    field: |
+      - **On the authorization server:** The `dcr_default_access_token_duration` field. Every DCR client registered against the auth server uses this duration. Doesn't affect DCR clients that are already registered.
+      - **On each client:** The `access_token_duration`. 
 {% endtable %}
-<!--vale on-->
-
-### Set the access token duration for DCR clients
-
-DCR registers clients automatically with access tokens that are valid for 300 seconds (five minutes) by default. To change the default durraction, set `dcr_default_access_token_duration` on the auth server.
-
-{% navtabs "auth-server-token-duration" %}
-{% navtab "{{site.konnect_short_name}} API" %}
-Send a `PATCH` request to the [`/v1/auth-servers/{authServerId}` endpoint](/api/konnect/kong-identity/v1/#/operations/updateAuthServer):
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID
-status_code: 200
-method: PATCH
-headers:
-  - 'Content-Type: application/json'
-body:
-  dcr_default_access_token_duration: 1800
-{% endkonnect_api_request %}
-<!--vale on-->
-You can also set the field when you [create the auth server](#create-an-auth-server-claim-and-client-in-kong-identity).
-{% endnavtab %}
-{% navtab "Terraform" %}
-Use the [`konnect_identity_auth_server` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_identity_auth_server.tf):
-```hcl
-resource "konnect_identity_auth_server" "my_auth_server" {
-  name                              = "Appointments Dev"
-  audience                          = "http://myhttpbin.dev"
-  description                       = "Auth server for the Appointment dev environment"
-  dcr_default_access_token_duration = 1800
-}
-```
-{% endnavtab %}
-{% endnavtabs %}
-
-Changing `dcr_default_access_token_duration` doesn't affect DCR clients that are already registered. To apply a new duration to an existing client, update `access_token_duration` on that client.
-
-### Set the access token duration for a client you register yourself
-
-Set `access_token_duration` on the client when you [create it](#create-an-auth-server-claim-and-client-in-kong-identity), or update it later by sending a `PATCH` request to the [`/v1/auth-servers/{authServerId}/clients/{clientId}` endpoint](/api/konnect/kong-identity/v1/#/operations/updateAuthServerClient):
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$CLIENT_ID
-status_code: 200
-method: PATCH
-headers:
-  - 'Content-Type: application/json'
-body:
-  access_token_duration: 600
-{% endkonnect_api_request %}
 <!--vale on-->
 
 ## Claim configuration
