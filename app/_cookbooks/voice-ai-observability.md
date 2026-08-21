@@ -30,7 +30,6 @@ providers:
   - anthropic
   - bedrock
   - azure
-  - gemini
   - mistral
 
 hint: "Requires an OpenAI API key (for STT/TTS), LLM provider credentials, a Langfuse account, and Python 3.11+."
@@ -123,17 +122,6 @@ prereqs:
            export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
            ```
         {% endnavtab %}
-        {% navtab "Google Gemini" %}
-        1. [Create a Google Cloud project](https://console.cloud.google.com/) with Vertex AI enabled.
-        1. Create a service account and mount the JSON key file in your Kong container.
-        1. Create decK variables:
-
-           ```sh
-           export DECK_GCP_API_ENDPOINT='your-api-endpoint'
-           export DECK_GCP_PROJECT_ID='your-project-id'
-           export DECK_GCP_LOCATION_ID='us-central1'
-           ```
-        {% endnavtab %}
         {% navtab "Mistral" %}
         1. [Create a Mistral account](https://console.mistral.ai/).
         1. [Get an API key](https://console.mistral.ai/api-keys/).
@@ -205,7 +193,7 @@ Voice AI systems present observability challenges that text-based LLM applicatio
 
 - **Cost attribution is per-model, but budgets are per-conversation.** LLM providers charge per token. STT providers charge per audio-second. TTS providers charge per character. Building a cost-per-minute or cost-per-conversation view requires normalizing these different units and correlating charges across hops that run on separate billing systems.
 
-The alternative to the cascading pipeline is realtime speech-to-speech APIs (OpenAI Realtime, Gemini Live), which use a single WebSocket connection to a multimodal model that ingests and emits audio natively. Latency drops sharply, but per-hop observability disappears by design: there are no separate STT, LLM, or TTS stages to instrument. Regulated industries (finance, healthcare, legal) remain on cascading architectures because the text intermediary between STT and TTS provides an audit trail and a checkpoint for compliance checks before responses are spoken.
+The alternative to the cascading pipeline is realtime speech-to-speech APIs (OpenAI Realtime), which uses a single WebSocket connection to a multimodal model that ingests and emits audio natively. Latency drops sharply, but per-hop observability disappears by design: there are no separate STT, LLM, or TTS stages to instrument. Regulated industries (finance, healthcare, legal) remain on cascading architectures because the text intermediary between STT and TTS provides an audit trail and a checkpoint for compliance checks before responses are spoken.
 
 ## The solution
 
@@ -397,8 +385,8 @@ plugins:
 
 - **`max_request_body_size: 8388608`**. Allows up to 8 MB of request body. Long conversation histories, large system prompts, and tool-call payloads can exceed the default limit.
 - **`response_streaming: allow`**. Lets clients request server-sent events for token-by-token chat responses. The recipe demo does not stream, but production voice agents often do to start TTS earlier in the turn.
-- **`route_type: llm/v1/chat`**. Selects the chat completions translation path. The Plugin accepts OpenAI-format request bodies and translates them to the upstream provider's native format. Responses are normalized back to OpenAI format. To pass requests through in a provider's native format, set `llm_format` (for example `anthropic`, `bedrock`, `gemini`) on the Plugin config; see the [AI Proxy Advanced documentation](/plugins/ai-proxy-advanced/) for the full route-type and llm_format support matrix.
-- **`auth`**. The auth block varies by provider. OpenAI and Mistral use `Authorization: Bearer <key>`, Anthropic uses `x-api-key`, Azure uses `api-key`, Bedrock uses AWS access key pairs, and Gemini uses GCP service account credentials. Kong injects these into every upstream request. Clients send a placeholder credential.
+- **`route_type: llm/v1/chat`**. Selects the chat completions translation path. The Plugin accepts OpenAI-format request bodies and translates them to the upstream provider's native format. Responses are normalized back to OpenAI format. To pass requests through in a provider's native format, set `llm_format` (for example `anthropic`, `bedrock`) on the Plugin config; see the [AI Proxy Advanced documentation](/plugins/ai-proxy-advanced/) for the full route-type and llm_format support matrix.
+- **`auth`**. The auth block varies by provider. OpenAI and Mistral use `Authorization: Bearer <key>`, Anthropic uses `x-api-key`, Azure uses `api-key`, and Bedrock uses AWS access key pairs. Kong injects these into every upstream request. Clients send a placeholder credential.
 - **`model.provider`** and **`model.name`**. Identify the upstream LLM. The model name resolves from the `DECK_CHAT_MODEL` environment variable at apply time, so you can switch models without editing the deck file.
 - **`logging.log_statistics` and `logging.log_payloads`**. Statistics capture prompt and completion token counts; payload logging captures the full prompt and reply text. The `gen_ai.input.messages` and `gen_ai.output.messages` span attributes in the OpenTelemetry trace also contain this data when payload logging is enabled.
 
@@ -1045,159 +1033,6 @@ services:
             azure_api_version: ${{ env "DECK_AZURE_API_VERSION" }}
             azure_deployment_id: ${{ env "DECK_AZURE_DEPLOYMENT_ID" }}
             azure_instance: ${{ env "DECK_AZURE_INSTANCE" }}
-- name: voice-ai-tts
-  url: http://localhost
-  routes:
-  - name: voice-ai-tts
-    paths:
-    - /voice-ai-observability/tts
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-tts-proxy
-    config:
-      genai_category: audio/speech
-      max_request_body_size: 1048576
-      response_streaming: allow
-      targets:
-      - route_type: audio/v1/audio/speech
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: tts-1
-plugins:
-- name: key-auth
-  instance_name: voice-ai-observability-auth
-  config:
-    key_names:
-    - apikey
-    hide_credentials: true
-- name: opentelemetry
-  instance_name: voice-ai-observability-otel
-  config:
-    traces_endpoint: ${{ env "DECK_LANGFUSE_OTLP_ENDPOINT" }}
-    headers:
-      Authorization: ${{ env "DECK_LANGFUSE_AUTH_HEADER" }}
-      x-langfuse-ingestion-version: '4'
-    sampling_rate: 1
-    propagation:
-      default_format: w3c
-consumers:
-- username: voice-agent
-  keyauth_credentials:
-  - key: voice-demo-key
-EOF
-{% endraw -%}
-
-echo "
-_defaults:
-  kongctl:
-    namespace: voice-ai-observability-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
-
-rm -f kong-recipe.yaml
-```
-{: data-test-step="block" .collapsible }
-
-{% endtab %}
-{% tab Google Gemini %}
-
-Export the per-tab environment variable:
-
-```bash
-export DECK_CHAT_MODEL='gemini-2.0-flash'  # or gemini-1.5-pro
-```
-
-Apply the Kong configuration:
-
-```bash
-{%- raw %}
-cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - voice-ai-observability-recipe
-services:
-- name: voice-ai-stt
-  url: http://localhost
-  routes:
-  - name: voice-ai-stt
-    paths:
-    - /voice-ai-observability/stt
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-stt-proxy
-    config:
-      genai_category: audio/transcription
-      max_request_body_size: 26214400
-      response_streaming: deny
-      targets:
-      - route_type: audio/v1/audio/transcriptions
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: whisper-1
-- name: voice-ai-llm
-  url: http://localhost
-  routes:
-  - name: voice-ai-llm
-    paths:
-    - /voice-ai-observability/llm
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-llm-proxy
-    config:
-      max_request_body_size: 8388608
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          gcp_use_service_account: true
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          provider: gemini
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            gemini:
-              api_endpoint: ${{ env "DECK_GCP_API_ENDPOINT" }}
-              project_id: ${{ env "DECK_GCP_PROJECT_ID" }}
-              location_id: ${{ env "DECK_GCP_LOCATION_ID" }}
 - name: voice-ai-tts
   url: http://localhost
   routes:
@@ -1939,7 +1774,7 @@ Sign in to [{{site.konnect_product_name}}](https://cloud.konghq.com/) and naviga
 
 **Add Prometheus metrics dashboards.** Kong emits AI-specific Prometheus metrics (`ai_llm_requests_total`, `ai_llm_cost_total`, `ai_llm_tokens_total`, `ai_llm_provider_latency`) with a `request_mode` label that distinguishes `oneshot`, `stream`, and `realtime` traffic. Import the [{{site.ai_gateway_name}} Grafana dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/) for pre-built cost, latency, and throughput panels across all three pipeline hops.
 
-**Explore realtime speech-to-speech.** For latency-sensitive applications where per-hop observability is less critical, the AI Proxy Advanced Plugin supports `route_type: realtime/v1/realtime` with `genai_category: realtime/generation` for OpenAI Realtime and Gemini Live WebSocket connections. Realtime mode collapses the three-hop pipeline into a single persistent WebSocket, trading the per-hop waterfall view for significantly lower turn latency. Kong tracks realtime traffic with the `request_mode=realtime` Prometheus label.
+**Explore realtime speech-to-speech.** For latency-sensitive applications where per-hop observability is less critical, the AI Proxy Advanced Plugin supports `route_type: realtime/v1/realtime` with `genai_category: realtime/generation` for OpenAI Realtime connections. Realtime mode collapses the three-hop pipeline into a single persistent WebSocket, trading the per-hop waterfall view for significantly lower turn latency. Kong tracks realtime traffic with the `request_mode=realtime` Prometheus label.
 
 ## Cleanup
 

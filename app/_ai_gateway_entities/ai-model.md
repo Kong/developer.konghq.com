@@ -213,14 +213,11 @@ rows:
     provider: "[Cohere](/ai-gateway/ai-providers/cohere/#supported-native-llm-formats-for-cohere)"
     capabilities: Reranking.
   - format: "`gemini`"
-    provider: "[Gemini](/ai-gateway/ai-providers/gemini/#supported-native-llm-formats-for-gemini), [Vertex AI](/ai-gateway/ai-providers/vertex/#supported-native-llm-formats-for-gemini-vertex)"
+    provider: "[Gemini](/ai-gateway/ai-providers/gemini/#supported-native-llm-formats-for-gemini) (Standard and Enterprise)"
     capabilities: Content generation, embeddings, batches, file uploads, reranking, long-running predictions.
   - format: "`huggingface`"
     provider: "[Hugging Face](/ai-gateway/ai-providers/huggingface/#supported-native-llm-formats-for-hugging-face)"
     capabilities: Text generation, streaming.
-  - format: "`vertex`"
-    provider: "[Vertex AI](/ai-gateway/ai-providers/vertex/)"
-    capabilities: Native Vertex AI request and response format.
 {% endtable %}
 <!-- vale on -->
 
@@ -312,7 +309,7 @@ For deeper background on vector storage and similarity matching, see [Embedding-
 
 Configure an embedding model to enable semantic routing. This lets {{site.ai_gateway}} route requests based on meaning and content similarity rather than just cost or latency. For example, route domain-specific queries to specialized providers or keep similar requests on the same provider for consistency.
 
-Set [`config.balancer.embeddings`](#schema-aigateway-model-config-balancer-embeddings) to reference an AI Model Provider and embedding model name. Supported provider types: `azure`, `bedrock`, `gemini`, `huggingface`, `mistral`, `ollama`, `openai`, `vertex`. The embedding model also powers the `semantic` load balancing algorithm.
+Set [`config.balancer.embeddings`](#schema-aigateway-model-config-balancer-embeddings) to reference an AI Model Provider and embedding model name. Supported provider types: `azure`, `bedrock`, `gemini`, `huggingface`, `mistral`, `ollama`, `openai`. The embedding model also powers the `semantic` load balancing algorithm.
 
 ## Templating
 

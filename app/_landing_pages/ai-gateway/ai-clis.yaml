@@ -26,7 +26,7 @@ rows:
 
                       Supported AI CLI tools:
 
-                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex, AWS Bedrock, and Alibaba Cloud (Dashscope)
+                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, AWS Bedrock, and Alibaba Cloud (Dashscope)
                       - [**Codex CLI**](#codex-cli): OpenAI
                       - [**Qwen Code CLI**](#qwen-code-cli): OpenAI and Alibaba Cloud (Dashscope)
 
@@ -77,15 +77,6 @@ rows:
             description: Use Claude Code with Gemini provider
             cta:
               url: /ai-gateway/use-claude-code-with-ai-gateway-gemini/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Claude Code with Vertex AI
-            icon: /assets/icons/vertex.svg
-            description: Use Claude Code with Vertex AI provider
-            cta:
-              url: /ai-gateway/use-claude-code-with-ai-gateway-vertex/
               align: end
       - blocks:
         - type: card
