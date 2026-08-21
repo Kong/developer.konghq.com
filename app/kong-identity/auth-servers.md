@@ -197,6 +197,34 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
+## Access token duration
+
+Access tokens issued by an auth server are valid for a set duration, in seconds:
+
+- The default value is `300` (five minutes).
+- The minimum value you can set is `60` (one minute).
+- The maximum value you can set is `2592000` (30 days).
+
+Where you set the duration depends on how  you create the client:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Client type
+    key: type
+  - title: Where you set the duration
+    key: field
+rows:
+  - type: Clients you register yourself, from the UI or the API
+    field: |
+      On each client, with the `access_token_duration` field. The `id_token_duration` field sets the duration for that client's ID tokens.
+  - type: Clients registered through [Dynamic Client Registration](/dev-portal/dynamic-client-registration/)
+    field: |
+      - **On the authorization server:** The `dcr_default_access_token_duration` field. Every DCR client registered against the auth server uses this duration. Doesn't affect DCR clients that are already registered.
+      - **On each client:** The `access_token_duration`. 
+{% endtable %}
+<!--vale on-->
+
 ## Claim configuration
 
 You can [configure each claim](#configure-kong-identity) to be included or not in the JWT token issued by the authorization server, based on the scopes the client requests. 
@@ -631,6 +659,7 @@ To configure {{site.identity}}, do the following:
    
    {:.info}
    > **Note:** The value in the **Audience** field is the audience that the token is intended for, like a client ID or the upstream URL of the Gateway Service for the API resource. For example, `https://api.example.com/payments` and `http://myhttpbin.dev`. If you don't have an intended audience, you can put a placeholder value, like `orders-api`, in this field.
+1. In the **DCR default access token duration** field, enter `1800`. Clients registered through [DCR](/dev-portal/dynamic-client-registration/) use this duration. For more information, see [Access token duration](#access-token-duration).
 1. Click **Create**.
 1. Click **New scope**.
 1. In the **Name** field, enter a name for your scope.
@@ -662,6 +691,7 @@ body:
   name: "Appointments Dev"
   audience: "http://myhttpbin.dev"
   description: "Auth server for the Appointment dev environment"
+  dcr_default_access_token_duration: 1800
 {% endkonnect_api_request %}
 {% endcapture %}
 {{ auth-server | indent: 3 }}
@@ -745,5 +775,29 @@ body:
    export CLIENT_SECRET='YOUR-CLIENT-SECRET'
    export CLIENT_ID='YOUR-CLIENT-ID'
    ```
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_identity_auth_server`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/identity_auth_server.tf) and [`konnect_identity_auth_server_client`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_identity_auth_server_client.tf) resources:
+
+```hcl
+resource "konnect_identity_auth_server" "my_auth_server" {
+  name                              = "Appointments Dev"
+  audience                          = "http://myhttpbin.dev"
+  description                       = "Auth server for the Appointment dev environment"
+  dcr_default_access_token_duration = 1800
+}
+
+resource "konnect_identity_auth_server_client" "my_client" {
+  auth_server_id        = konnect_identity_auth_server.my_auth_server.id
+  name                  = "Client"
+  grant_types           = ["client_credentials"]
+  allow_all_scopes      = false
+  response_types        = ["id_token", "token"]
+  access_token_duration = 3600
+  id_token_duration     = 3600
+}
+```
+
+The `dcr_default_access_token_duration` on the auth server applies to clients registered through DCR. The `access_token_duration` on a client applies to that client only. For more information, see [Access token duration](#access-token-duration).
 {% endnavtab %}
 {% endnavtabs %}
