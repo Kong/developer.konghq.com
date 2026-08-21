@@ -89,7 +89,7 @@ The OpenTelemetry AI Policy supports propagation of the following header formats
 - `aws`: [AWS X-Ray header](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-tracingheader)
 - `gcp`: [GCP X-Cloud-Trace-Context header](https://cloud.google.com/trace/docs/setup#force-trace)
 
-{% include /plugins/tracing-headers-propagation.md %}
+{% include /md/ai-gateway/v2/policies/tracing-headers-propagation.md %}
 
 See the Policy's [configuration reference](/ai-gateway/policies/opentelemetry/reference/#schema--config-propagation) for a complete overview of the available options and values.
 
@@ -140,7 +140,7 @@ The OpenTelemetry AI Policy is built on top of the {{site.ai_gateway}} tracing P
 
 ## Logging
 
-This AI Policy supports [OpenTelemetry Logging](https://opentelemetry.io/docs/specs/otel/logs/), which can be configured as described in the [configuration reference](/ai-gateway/policies/reference/#schema--config-traces_endpoint) to export logs in OpenTelemetry format to an OTLP-compatible backend.
+This AI Policy supports [OpenTelemetry Logging](https://opentelemetry.io/docs/specs/otel/logs/), which can be configured as described in the [configuration reference](/ai-gateway/policies/opentelemetry/reference/#schema--config-traces_endpoint) to export logs in OpenTelemetry format to an OTLP-compatible backend.
 
 ### Log scopes
 
@@ -180,14 +180,14 @@ In addition to the above, when **tracing** is enabled, request-scoped logs inclu
 - `SpanID`: Request span ID.
 - `TraceFlags`: W3C trace flag.
 
-### Logging for custom plugins
+### Logging for custom Policies
 
 The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin.
 The module records a structured log entry, which is reported via the OpenTelemetry plugin.
 
 ## Queuing
 
-{% include_cached /plugins/queues.md name=page.name %}
+{% include_cached /md/ai-gateway/v2/policies/queues.md name=page.name %}
 
 ## Trace IDs in serialized logs
 
@@ -204,7 +204,7 @@ The value of this field is an object that can contain different formats of the c
 
 ## Custom attributes by Lua
 
-{% include /plugins/logging/log-custom-fields-by-lua.md
+{% include /md/ai-gateway/v2/policies/log-custom-fields-by-lua.md
 custom_fields_by_lua='config.access_logs.custom_attributes_by_lua'
 custom_fields_by_lua_slug='config-access-logs-custom-attributes-by-lua'
 custom_fields_by_lua_name='custom_attributes_by_lua'
