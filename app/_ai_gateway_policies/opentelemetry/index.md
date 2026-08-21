@@ -58,7 +58,7 @@ For all available metrics, see the [OpenTelemetry metrics reference](/ai-gateway
 
 ### Built-in tracing instrumentations
 
-{{site.ai_gateway}} has a series of built-in tracing instrumentations which are configured by the `tracing_instrumentations` configuration. {{site.ai_gateway}} creates a top-level span for each request by default when `tracing_instrumentations` is enabled.
+{{site.ai_gateway}} has a series of built-in tracing instrumentations which are configured by the `tracing_instrumentations` parameter. {{site.ai_gateway}} creates a top-level span for each request by default when `tracing_instrumentations` is enabled.
 
 The top level span has the following attributes:
 - `http.method`: HTTP method
@@ -76,11 +76,11 @@ For more information, see the [Tracing reference](/gateway/tracing/).
 
 ### Gen AI tracing attributes
 
-AI specific span attributes are emitted following the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/). These attributes capture model parameters, token usage, and tool-call metadata.
+AI-specific span attributes are emitted following the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/). These attributes capture model parameters, token usage, and tool-call metadata.
 
 ### Propagation
 
-The OpenTelemetryAI Policy supports propagation of the following header formats:
+The OpenTelemetry AI Policy supports propagation of the following header formats:
 - `w3c`: [W3C trace context](https://www.w3.org/TR/trace-context/)
 - `b3` and `b3-single`: [Zipkin headers](https://github.com/openzipkin/b3-propagation)
 - `jaeger`: [Jaeger headers](https://www.jaegertracing.io/docs/)
@@ -99,7 +99,7 @@ If none of the `config.propagation.*` configuration options are set, the `header
 
 ### OTLP exporter
 
-The OpenTelemetryAI Policy implements the [OTLP/HTTP](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#otlphttp) exporter, which uses Protobuf payloads encoded in binary format and is sent via an HTTP/1.1.
+The OpenTelemetry AI Policy implements the [OTLP/HTTP](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#otlphttp) exporter, which uses Protobuf payloads encoded in binary format and is sent via an HTTP/1.1.
 
 [`config.connect_timeout`](/ai-gateway/policies/opentelemetry/reference/#schema--config-connect-timeout), [`config.read_timeout`](/ai-gateway/policies/opentelemetry/reference/#schema--config-read-timeout), and [`config.send_timeout`](/ai-gateway/policies/opentelemetry/reference/#schema--config-send-timeout) are used to set the timeouts for the HTTP request.
 
@@ -130,7 +130,7 @@ The OpenTelemetry AI Policy is built on top of the {{site.ai_gateway}} tracing P
    span:finish()
    ```
 
-2. Apply the Lua code with the [Post-function plugin](/ai-gateway/policies/post-function/) using a cURL file upload:
+2. Apply the Lua code with the [Post-function Policy](/ai-gateway/policies/post-function/) using a cURL file upload:
 
    ```bash
    curl -i -X POST http://localhost:8001/plugins \
@@ -166,14 +166,14 @@ Every log entry includes the following fields:
 - `SeverityNumber`: Numerical value of the severity.
 - `Body`: The error log line.
 - `Resource`: Configurable resource attributes.
-- `InstrumentationScope`: Metadata that describes {{site.base_gateway}}'s data emitter.
+- `InstrumentationScope`: Metadata that describes {{site.ai_gateway}}'s data emitter.
 - `Attributes`: Additional information about the event.
   - `introspection.source`: Full path of the file that emitted the log.
   - `introspection.current.line`: Line number that emitted the log.
 
 In addition to the above, request-scoped logs include:
 - `Attributes`: Additional information about the event.
-  - `request.id`: {{site.base_gateway}}'s request ID.
+  - `request.id`: {{site.ai_gateway}}'s request ID.
 
 In addition to the above, when **tracing** is enabled, request-scoped logs include:
 - `TraceID`: Request trace ID.
@@ -191,7 +191,7 @@ The module records a structured log entry, which is reported via the OpenTelemet
 
 ## Trace IDs in serialized logs
 
-When the OpenTelemetryAI Policy is configured along with a plugin that uses the Log Serializer, the trace ID of each request is added to the key `trace_id` in the serialized log output.
+When the OpenTelemetry AI Policy is configured along with a Policy that uses the Log Serializer, the trace ID of each request is added to the key `trace_id` in the serialized log output.
 
 The value of this field is an object that can contain different formats of the current request's trace ID. In case there are multiple tracing headers in the same request, the `trace_id` field includes one trace ID format for each different header format, as in the following example:
 

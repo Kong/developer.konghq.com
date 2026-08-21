@@ -1,4 +1,4 @@
-Metrics are natively supported by the OpenTelemetry plugin. To send metrics set the following [`config.metrics`](/ai-gateway/policies/opentelemetry/reference/#schema--config-metrics) parameters:
+Metrics are natively supported by the OpenTelemetry Policy. To send metrics, set the following [`config.metrics`](/ai-gateway/policies/opentelemetry/reference/#schema--config-metrics) parameters:
 
 <!-- vale off -->
 {% table %}
