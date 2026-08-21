@@ -121,7 +121,7 @@ ai_gateway_policies:
   - ref: otel-a2a
     name: otel-a2a
     display_name: "otel-a2a"
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: opentelemetry
     enabled: true
     global: false
@@ -135,7 +135,7 @@ ai_gateway_policies:
 
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: kongair-flight-booking-agent
     display_name: "Kong Air Flight Booking Agent"
     type: a2a

@@ -68,7 +68,7 @@ The following example maps the Petstore API operations to MCP tool definitions t
 {% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: petstore-mcp
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: petstore-mcp
     display_name: "Petstore API"
     type: conversion-listener
