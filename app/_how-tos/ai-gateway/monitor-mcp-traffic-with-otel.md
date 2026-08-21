@@ -65,11 +65,7 @@ cleanup:
         {: data-test-cleanup="block" }
       icon_url: /assets/icons/opentelemetry.svg
     - title: Stop Petstore API
-      content: |
-        ```sh
-        docker rm -f swagger-petstore
-        ```
-        {: data-test-cleanup="block" }
+      include_content: cleanup/third-party/swagger-petstore
       icon_url: '/assets/icons/code.svg'
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
