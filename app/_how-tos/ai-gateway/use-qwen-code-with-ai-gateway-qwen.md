@@ -105,23 +105,19 @@ This example uses the following settings:
 * `targets[0].config.international: true`: Uses DashScope's international endpoint (`dashscope-intl.aliyuncs.com`); set it to `false` if your DashScope key belongs to a mainland China account.
 * `capabilities: [generate]`: Exposes the model at a `/qwen/chat/completions` endpoint.
 
-## Point Qwen Code CLI at {{site.ai_gateway}}
-
-Open a new terminal and set `OPENAI_BASE_URL` to the local {{site.ai_gateway}} endpoint. Qwen Code CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the gateway, so a placeholder is fine:
-
-{% env_variables %}
-OPENAI_API_KEY: sk-placeholder
-OPENAI_BASE_URL: http://localhost:8000/qwen-dashscope/chat/completions
-{% endenv_variables %}
-
 ## Run Qwen Code CLI
 
 Run Qwen Code CLI against the model configured in the AI Model entity's `targets`:
 
 {% validation qwen %}
+open_api_key: sk-placeholder
+base_url: http://localhost:8000/qwen-dashscope/chat/completions
 model: my-qwen-dashscope
 auth-type: openai
 prompt: Explain the singleton pattern in Python.
 {% endvalidation %}
 
 Qwen Code CLI returns a response, proxied through {{site.ai_gateway}} to the upstream DashScope Qwen model.
+
+{:.info}
+> The Qwen Code CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine.
