@@ -119,8 +119,10 @@ OPENAI_BASE_URL: http://localhost:8000/codex
 Run a simple command to confirm traffic flows through {{site.ai_gateway}} to OpenAI:
 
 {% validation codex %}
+open_api_key: sk-placeholder
+base_url: http://localhost:8000/codex
 model: gpt-5.4
-prompt: Hello
+prompt: Tell me about the Madrid Skylitzes manuscript.
 {% endvalidation %}
 
 When prompted for network access, select **Yes, proceed**. Codex routes the request through {{site.ai_gateway}} to the OpenAI Responses API and returns the model's response, giving you monitoring and control over all Codex LLM traffic.
