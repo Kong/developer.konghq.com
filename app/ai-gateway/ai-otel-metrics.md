@@ -54,40 +54,7 @@ You can use these metrics to:
 
 ## Prerequisites
 
-To collect AI OTLP metrics, enable the following settings:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Setting
-    key: setting
-  - title: Source
-    key: source
-  - title: Required for
-    key: required_for
-rows:
-  - setting: "`config.metrics.enable_ai_metrics`: `true`"
-    source: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/)"
-    required_for: "All AI metrics"
-  - setting: "`config.metrics.endpoint`"
-    source: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/reference/)"
-    required_for: "All AI metrics (set to a valid OTLP-compatible metrics endpoint)"
-  - setting: "`config.logging.statistics`: `true`"
-    source: "[AI Model](/ai-gateway/entities/ai-model/)"
-    required_for: "[Gen AI metrics](#gen-ai-metrics-otlp-semantic-conventions)"
-  - setting: "`config.logging.statistics`: `true`"
-    source: "[AI MCP Server](/ai-gateway/entities/ai-mcp-server/)"
-    required_for: "[MCP metrics](#mcp-metrics)"
-  - setting: "`config.logging.statistics`: `true`"
-    source: "[AI Agent](/ai-gateway/entities/ai-agent/)"
-    required_for: "[A2A metrics](#a2a-metrics)"
-{% endtable %}
-<!-- vale on -->
-
-Some metrics have additional requirements:
-
-* `gen_ai.server.request.duration` and `mcp.client.operation.duration` require `config.metrics.enable_latency_metrics` set to `true` in the [OpenTelemetry AI Policy](/ai-gateway/policies/opentelemetry/reference/).
-* The `error.type` attribute on duration metrics requires `config.metrics.enable_request_metrics` set to `true` in the [OpenTelemetry AI Policy](/ai-gateway/policies/opentelemetry/reference/).
+{% include /md/ai-gateway/v2/policies/otel/ai-metric-setup.md  %}
 
 ## Gen AI metrics (OTLP semantic conventions)
 
@@ -95,7 +62,7 @@ These metrics follow the [OpenTelemetry Gen AI semantic conventions](https://ope
 
 ### Metric reference
 
-{% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="gen_ai." %}
+{% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="gen_ai." %}
 
 ## Kong Gen AI metrics
 
@@ -103,16 +70,16 @@ These metrics use the `kong.gen_ai.*` namespace and capture Kong-specific AI obs
 
 To populate `kong.gen_ai.llm.cost`, define `model.options.input_cost` and `model.options.output_cost` in your AI Model configuration.
 
-{% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="kong.gen_ai." %}
+{% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="kong.gen_ai." %}
 
 ## MCP metrics
 
 These metrics provide observability into MCP (Model Context Protocol) server interactions, including latency, response sizes, errors, and ACL decisions.
 
-{% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="mcp.,kong.gen_ai.mcp." %}
+{% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="mcp.,kong.gen_ai.mcp." %}
 
 ## A2A metrics
 
 These metrics provide observability into [A2A (Agent-to-Agent)](/ai-gateway/entities/ai-agent/) traffic, including request volume, latency, response sizes, and task state transitions.
 
-{% include md/ai-gateway/v2/policies/metric_tables.md metric_prefixes="kong.gen_ai.a2a." %}
+{% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="kong.gen_ai.a2a." %}
