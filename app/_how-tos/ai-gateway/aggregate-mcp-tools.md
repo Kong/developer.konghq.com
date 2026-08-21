@@ -32,47 +32,29 @@ tags:
 tldr:
   q: How do I aggregate MCP tools from multiple RESTful APIs into one MCP endpoint?
   a: |
-    Create one [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity per RESTful API in `conversion-only` mode, and give each the same `labels.ai-gateway-mcp-aggregation` value. Then create a `listener` AI MCP Server carrying the same label. It merges every matching source's tools into a single MCP endpoint and routes each tool call to the correct backend.
+    Create one [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity per RESTful API in `conversion-only` mode. Then create a `listener` AI MCP Server and list the mcp servers as sources. It merges every matching source's tools into a single MCP endpoint and routes each tool call to the correct backend.
 
-    This tutorial shows you how to aggregate tools from a mock marketplace API, WeatherAPI, and the Deck of Cards API using kongctl, and validate the aggregated endpoint with ChatWise.
+    This tutorial shows you how to aggregate tools from a mock Petstore API and the Deck of Cards API using kongctl, and validate the aggregated endpoint.
 
 tools:
   - kongctl
 
 prereqs:
   inline:
-    - title: Mock marketplace API
-      include_content: md/ai-gateway/v2/prereqs/marketplace-mock-api
-    - title: WeatherAPI account
-      include_content: md/ai-gateway/v2/prereqs/weather-api
-    - title: OpenAI API key
-      content: |
-        This tutorial uses OpenAI:
-
-        1. [Create an OpenAI account](https://auth.openai.com/create-account).
-        1. [Get an API key](https://platform.openai.com/api-keys).
-      icon_url: /assets/icons/openai.svg
-    - title: ChatWise desktop application
-      content: |
-        Download and install [ChatWise](https://chatwise.app/) for your OS.
-
-        After installation:
-        1. Launch the app.
-        1. Navigate to the app's settings.
-        1. Click **Providers** in the sidebar.
-        1. In the Providers sidebar, click **OpenAI**.
-        1. In the **API Key** field, enter your OpenAI API key.
+    - title: Petstore API
+      include_content: prereqs/third-party/swagger-petstore
 
 cleanup:
   inline:
+    - title: Stop Petstore API
+      include_content: cleanup/third-party/swagger-petstore
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
-
 ---
 
 ## Convert the Deck of Cards API to MCP tools
 
-Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity in `conversion-only` mode for the [Deck of Cards API](https://deckofcardsapi.com/), which needs no credentials. Set `labels.ai-gateway-mcp-aggregation` so the listener you create later can discover it.
+Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity in `conversion-only` mode for the [Deck of Cards API](https://deckofcardsapi.com/), which needs no credentials. 
 
 {% entity_examples %}
 ai_gateway_mcp_servers:
@@ -82,8 +64,6 @@ ai_gateway_mcp_servers:
     display_name: "Deck of Cards"
     type: conversion-only
     enabled: true
-    labels:
-      ai-gateway-mcp-aggregation: payments
     config:
       url: https://deckofcardsapi.com
       route:
@@ -121,105 +101,66 @@ ai_gateway_mcp_servers:
               type: integer
               default: 1
             description: Number of cards to draw
-      - name: shuffle-and-draw
-        description: Create a new shuffled deck and draw cards in one request.
+      - name: new-deck
+        description: Create a new deck.
         method: GET
-        path: /api/deck/new/draw/
+        path: /api/deck/new/
+{% endentity_examples %}
+
+## Convert the Petstore API to MCP tools
+
+Create a second AI MCP Server entity in `conversion-only` mode for the mock Petstore API.
+
+{% entity_examples %}
+ai_gateway_mcp_servers:
+  - ref: petstore-mcp
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: petstore-mcp
+    display_name: "Petstore API"
+    type: conversion-only
+    enabled: true
+    policies: []
+    config:
+      url: http://host.docker.internal:8080/api/v3
+      route:
+        paths:
+          - /petstore
+      logging:
+        payloads: false
+      server:
+        timeout: 60000
+    tools:
+      - name: get-pets-by-status
+        description: Find pets by status
+        method: GET
+        path: /petstore/pet/findByStatus
         parameters:
-          - name: count
+          - name: status
             in: query
+            required: true
+            schema:
+              type: string
+              enum:
+                - available
+                - pending
+                - sold
+            description: Status value to filter pets by
+      - name: get-pet-by-id
+        description: Get a pet by ID
+        method: GET
+        path: /petstore/pet/{petId}
+        parameters:
+          - description: ID of the pet to retrieve
+            in: path
+            name: petId
             required: true
             schema:
               type: integer
-              default: 1
-            description: Number of cards to draw
-{% endentity_examples %}
-
-## Convert the marketplace API to MCP tools
-
-Create a second AI MCP Server entity in `conversion-only` mode for the mock marketplace API, tagged with the same `labels.ai-gateway-mcp-aggregation` value.
-
-{% entity_examples %}
-ai_gateway_mcp_servers:
-  - ref: marketplace-mcp
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: marketplace-mcp
-    display_name: "Marketplace API"
-    type: conversion-only
-    enabled: true
-    labels:
-      ai-gateway-mcp-aggregation: payments
-    config:
-      url: http://host.docker.internal:3000
-      route:
-        paths:
-          - /marketplace
-      logging:
-        audits: true
-    tools:
-      - name: get-users
-        description: Get users
-        method: GET
-        path: /marketplace/users
-        parameters:
-          - name: id
-            in: query
-            required: false
-            schema:
-              type: string
-            description: Optional user ID
-      - name: get-orders-for-user
-        description: Get orders for a user
-        method: GET
-        path: /marketplace/orders
-        parameters:
-          - name: userid
-            in: query
-            required: true
-            schema:
-              type: string
-            description: User ID to filter orders
-{% endentity_examples %}
-
-## Convert WeatherAPI to MCP tools
-
-Create a third AI MCP Server entity in `conversion-only` mode for [WeatherAPI](https://www.weatherapi.com/), tagged with the same `labels.ai-gateway-mcp-aggregation` value.
-
-{% entity_examples %}
-ai_gateway_mcp_servers:
-  - ref: weather-mcp
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: weather-mcp
-    display_name: "Weather API"
-    type: conversion-only
-    enabled: true
-    labels:
-      ai-gateway-mcp-aggregation: payments
-    config:
-      url: https://api.weatherapi.com/v1/current.json
-      route:
-        paths:
-          - /weather-internet-mcp
-    tools:
-      - name: weather-internet
-        description: Get current weather for a location
-        method: GET
-        query:
-          key:
-            - !env WEATHERAPI_API_KEY
-        parameters:
-          - name: q
-            in: query
-            required: true
-            schema:
-              type: string
-              default: London
-            description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
 {% endentity_examples %}
 
 ## Aggregate the MCP tools
 
-Create a fourth AI MCP Server entity in `listener` mode. Its `config.server.label` points at the same `ai-gateway-mcp-aggregation: payments` label used on the three `conversion-only` entities, so the listener discovers them, merges their tools into a single list, and exposes them through one MCP endpoint.
+Create a fourth AI MCP Server entity in `listener` mode. Its `sources` contains the list of the mcp servers we want to aggregate, so the listener discovers them, merges their tools into a single list, and exposes them through one MCP endpoint.
 
 {% entity_examples %}
 ai_gateway_mcp_servers:
@@ -232,124 +173,95 @@ ai_gateway_mcp_servers:
       route:
         paths:
           - /mcp-aggregation
-      server:
-        label:
-          ai-gateway-mcp-aggregation:payments
+    sources:
+      - cards-mcp
+      - petstore-mcp
 {% endentity_examples %}
 
-## Connect ChatWise to the aggregated endpoint
+## Verify that the aggregated endpoint has all the tools
 
-1. In the ChatWise app, navigate to settings.
-1. Click **MCP** in the sidebar.
-1. Click the **+** button.
-1. Select "HTTP Server (http)".
-1. In the **Name** field, enter `mcp-aggregation`.
-1. In the **URL** field, enter `http://localhost:8000/mcp-aggregation`.
-1. Click **Verify (View Tools)** to confirm the connection. You should see the following tools listed:
-   - `get-users`
-   - `get-orders-for-user`
-   - `weather-internet`
-   - `shuffle-cards`
-   - `draw-cards`
-   - `shuffle-and-draw`
-1. Close the settings window.
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/mcp-aggregation \
+    --transport http --method tools/list |  jq -r '.tools[].name'
+expected:
+  return_code: 0
+render_output: false
+message: |
+  draw-cards
+  get-pet-by-id
+  get-pets-by-status
+  shuffle-and-draw
+  shuffle-cards
+{% endvalidation %}
+<!--vale on-->
+
+You should see the following output:
+
+```text
+draw-cards
+get-pet-by-id
+get-pets-by-status
+shuffle-and-draw
+shuffle-cards
+```
+{:.no-copy-code}
 
 ## Validate the aggregated tools
 
 You can now test tools from each source through the single aggregated endpoint.
 
-1. In ChatWise, start a new chat.
-1. Click the overflow (**...**) menu next to the chat input, then click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
-1. From the hammer dropdown menu, enable `mcp-aggregation`, you should see 6 tools associated with it.
-
-
 {% navtabs "validate-aggregated-mcp-tools" %}
-{% navtab "Marketplace tools" %}
+{% navtab "Petstore tools" %}
 
-Enter the following in the ChatWise chat:
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/mcp-aggregation \
+    --transport http --method tools/call \
+    --tool-name get-pet-by-id \
+    --tool-arg path_petId=7 | jq -r '.content[0].text' | jq -c '.'
+expected:
+  return_code: 0
+message: |
+  {"id":7,"category":{"id":4,"name":"Lions"},"name":"Lion 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
+render_output: false
+{% endvalidation %}
+<!--vale on-->
 
-```text
-What has Alice Johnson ordered?
-```
-
-ChatWise calls two tools exposed by the `marketplace-mcp` source in sequence: `get-users` to find Alice's ID, then `get-orders-for-user` to fetch her orders. Approve each tool call when prompted.
-
-When the agent finishes reasoning, you should see a response like the following:
-
-```text
-To check Alice Johnson's orders, I need her user ID. Here's how we can proceed:
-
-Find Alice Johnson's ID: I'll first search for her user record to get the correct ID.
-Fetch Orders: Once I have the ID, I'll retrieve her order history.
-Let me start by searching for her user details.
-
-Alice Johnson's user ID is a1b2c3d4. Now, I'll retrieve her order history.
-
-a1b2c3d4
-Alice Johnson has placed the following orders:
-
-Sugar (50kg)
-Cleaning Supplies Pack
-Canned Tomatoes (100 cans)
-```
-{:.no-copy-code}
-
-{% endnavtab %}
-{% navtab "Weather tools" %}
-
-Enter the following in the ChatWise chat:
+You should see the following response:
 
 ```text
-What is the current weather in Alexandria?
-```
-
-ChatWise calls the `weather-internet` tool exposed by the `weather-mcp` source. Approve the tool call when prompted:
-
-```text
-> called weather-internet
-```
-{:.no-copy-code}
-
-When the agent finishes reasoning, you should see a response like the following:
-
-```text
-Alexandria, Egypt right now:
-
-- Temperature: 79°F (26.1°C), feels like 80°F (26.8°C)
-- Condition: Sunny
-- Wind: 7.4 mph NNW
-- Humidity: 61%
-
-Warm and sunny with light NNW winds.
+{"id":7,"category":{"id":4,"name":"Lions"},"name":"Lion 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
 ```
 {:.no-copy-code}
 
 {% endnavtab %}
 {% navtab "Deck of Cards tools" %}
 
-Enter the following in the ChatWise chat:
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/mcp-aggregation \
+    --transport http --method tools/call \
+    --tool-name new-deck \
+    | jq -c 'with_entries(select(.key == "success"))'
+expected:
+  return_code: 0
+render_output: false
+message: |
+  {"success":true}
+{% endvalidation %}
+<!--vale on-->
+
+You should see the following response:
 
 ```text
-Shuffle a new deck and draw 5 cards.
-```
-
-ChatWise calls the `shuffle-and-draw` tool exposed by the `cards-mcp` source. Approve the tool call when prompted:
-
-```text
-> called shuffle-and-draw
-```
-{:.no-copy-code}
-
-When the agent finishes reasoning, you should see a response like the following:
-
-```text
-Here are your 5 cards:
-
-10 of Spades
-Queen of Hearts
-4 of Clubs
-Ace of Diamonds
-7 of Hearts
+{"success":true}
 ```
 {:.no-copy-code}
 
