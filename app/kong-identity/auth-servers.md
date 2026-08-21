@@ -777,7 +777,7 @@ body:
    ```
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_identity_auth_server`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_identity_auth_server.tf) and [`konnect_identity_auth_server_client`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_identity_auth_server_client.tf) resources:
+Use the [`konnect_identity_auth_server`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/identity_auth_server.tf) and [`konnect_identity_auth_server_client`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_identity_auth_server_client.tf) resources:
 
 ```hcl
 resource "konnect_identity_auth_server" "my_auth_server" {
