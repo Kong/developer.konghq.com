@@ -34,7 +34,8 @@ rows:
   - header: X-RateLimit-Remaining-Year
     description: The number of years still left in the time frame.
   - header: Retry-After
-    description: This header appears on `429` errors, indicating how long the upstream service is expected to be unavailable to the client.
+    description: |
+      This header appears on `429` errors, indicating how long the upstream service is expected to be unavailable to the client.{% if include.sliding_window %} When using `window_type: sliding` and `RateLimit-Reset`, `Retry-After` may increase due to the rate calculation for the sliding window.{% endif %}
 {% endtable %}
 
 You can optionally hide the limit and remaining headers with the [`config.hide_client_headers`](./reference/#schema--config-hide-client-headers) option.

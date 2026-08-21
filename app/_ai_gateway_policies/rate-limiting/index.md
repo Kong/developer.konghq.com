@@ -29,8 +29,7 @@ related_resources:
 ---
 
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
-If the AI Model, AI Agent, or AI MCP Server handling the request has no authentication layer, the [client IP address](#limit-by-ip-address) is used to identify clients.
-Otherwise, the AI Consumer is used once an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) has authenticated the request.
+{% include md/ai-gateway/v2/policies/rate-limiting/identify-clients.md %}
 
 This Policy counts requests. To rate limit on LLM token usage or cost instead, use the [AI Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/), which reads the token data returned by the AI Model Provider.
 
