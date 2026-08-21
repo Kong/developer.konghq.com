@@ -30,6 +30,62 @@ This separation lets developers focus on the business logic within their applica
 Unlike other authentication types like Key Auth and Basic Auth, with OpenID Connect you don't need to manage user credentials directly. 
 Instead, you can offload the task to a trusted identity provider of your choice.
 
+### What the upstream receives
+
+By default, {{site.ai_gateway}} forwards the validated access token to the upstream service as `Authorization: Bearer <token>`, set by [`config.upstream_access_token_header`](/reference/#schema--config-upstream-access-token-header) (default `authorization:bearer`, in `header_name:scheme` format). [`config.hide_credentials`](/reference/#schema--config-hide-credentials) is enabled by default, so the credential the client used to authenticate is removed from the request first.
+
+For the client credentials grant, this means the client sends `Authorization: Basic <client_id:client_secret>` and the upstream receives `Authorization: Bearer <token>`.
+
+To change this, set `config.upstream_access_token_header` to a different header, or use [`config.upstream_headers`](/reference/#schema--config-upstream-headers) to forward individual claims instead of the whole token.
+
+
+## Set up OpenID Connect
+
+Before attaching a provider, you need the following:
+
+- A running {{site.ai_gateway}}
+- An authorization server
+- A client
+
+The following example uses a {{site.identity}} [authorization server](/identity/auth-servers/) and client:
+
+{% entity_example %}
+type: identity-provider
+data:
+  display_name: My OIDC
+  name: my-oidc
+  type: openid-connect
+  config:
+    issuer: ${issuer}
+    client_id:
+      - ${client_id}
+    client_secret:
+      - ${client_secret}
+    auth_methods:
+      - bearer
+    cache_tokens_salt: my-oidc-salt
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      Your IdP's issuer URL. For {{site.identity}}, this is the `issuer` returned when you create the auth server, and it includes an `/auth` suffix.
+  client_id:
+    value: $CLIENT_ID
+    description: The client ID the Policy uses when calling authenticated endpoints on the IdP.
+  client_secret:
+    value: $CLIENT_SECRET
+    description: The client secret for that client.
+  cache_tokens_salt:
+    value: my-oidc-salt
+    description: |
+      Any unique string to salt the cache key used for cached token endpoint responses. Required for AI Identity Providers.
+formats:
+  - kongctl
+{% endentity_example %}
+
+
+
 ## Discovery cache
 When you configure `config.issuer` in the OIDC Policy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC Policy stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
 
@@ -156,6 +212,11 @@ Claims-based auth adheres to the following rules:
 * You can validate multiple values of the same claim [using `OR` and `AND` logic](#claim-requirements)
 
 Both the claim type and the required claim content take an array of string elements.
+
+{:.info}
+> When a token is valid but doesn't satisfy a `*_required` check, {{site.ai_gateway}} responds with `401`.
+> Use [`config.display_errors`](./reference/#schema--config-display-errors) to return the reason in the response body while debugging.
+
 
 ##### Claim type
 
