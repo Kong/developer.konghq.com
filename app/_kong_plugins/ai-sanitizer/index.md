@@ -127,38 +127,18 @@ Kong provides several AI PII Anonymizer service Docker images in a private repos
 
 ### Access the Docker images
 
-Kong distributes these images via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
-
-#### Authenticate with the private Cloudsmith registry
-
-To pull images, you must authenticate first with the token provided by the Support:
-
-```bash
-docker login docker.cloudsmith.io
-```
-
-Docker will then prompt you to enter username and password:
-
-```bash
-Username: kong/ai-pii
-Password: YOUR-TOKEN
-```
-
-{:.info}
-> This is a token-based login with read-only access. You can pull images but not push them.
-
 #### Pull the AI PII service image
 
 To pull an image:
 
 ```bash
-docker pull docker.cloudsmith.io/kong/ai-pii/IMAGE-NAME:TAG
+docker pull kong/ai-pii-service:tagname
 ```
 
 Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
 
 ```bash
-docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.4-en
+docker pull kong/ai-pii/service:v0.2.2-en
 ```
 
 #### AI PII service Dockerfile usage
@@ -166,7 +146,7 @@ docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.4-en
 To use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
-FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.4-en
+FROM kong/ai-pii/ai-pii-service:v0.2.2-en
 ```
 
 ### Available language tags
