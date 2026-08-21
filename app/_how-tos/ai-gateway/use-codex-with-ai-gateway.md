@@ -105,15 +105,6 @@ In this example, we're setting up the AI Model with:
 If you are a new Codex user, you must Initialise the tool first by running `codex` and following the steps provided.
 {% endwarning %}
 
-## Point Codex CLI at {{site.ai_gateway}}
-
-Open a new terminal and set `OPENAI_BASE_URL` to the local {{site.ai_gateway}} endpoint. The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the gateway, so a placeholder is fine:
-
-{% env_variables %}
-OPENAI_API_KEY: sk-placeholder
-OPENAI_BASE_URL: http://localhost:8000/codex
-{% endenv_variables %}
-
 ## Start and use Codex CLI
 
 Run a simple command to confirm traffic flows through {{site.ai_gateway}} to OpenAI:
@@ -126,3 +117,6 @@ prompt: Tell me about the Madrid Skylitzes manuscript.
 {% endvalidation %}
 
 When prompted for network access, select **Yes, proceed**. Codex routes the request through {{site.ai_gateway}} to the OpenAI Responses API and returns the model's response, giving you monitoring and control over all Codex LLM traffic.
+
+{:.info}
+> The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine.
