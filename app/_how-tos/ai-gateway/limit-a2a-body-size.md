@@ -90,7 +90,7 @@ Create a [Request Size Limiting Policy](/ai-gateway/policies/request-size-limiti
 ai_gateway_policies:
   - ref: a2a-size-limit
     name: a2a-size-limit
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: request-size-limiting
     enabled: true
     global: false
@@ -100,7 +100,7 @@ ai_gateway_policies:
       require_content_length: false
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
     enabled: true

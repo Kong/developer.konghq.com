@@ -77,7 +77,7 @@ Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity in `conver
 {% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: cards-mcp
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: cards-mcp
     display_name: "Deck of Cards"
     type: conversion-only
@@ -142,7 +142,7 @@ Create a second AI MCP Server entity in `conversion-only` mode for the mock mark
 {% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: marketplace-mcp
     display_name: "Marketplace API"
     type: conversion-only
@@ -188,7 +188,7 @@ Create a third AI MCP Server entity in `conversion-only` mode for [WeatherAPI](h
 {% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: weather-mcp
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: weather-mcp
     display_name: "Weather API"
     type: conversion-only
@@ -224,7 +224,7 @@ Create a fourth AI MCP Server entity in `listener` mode. Its `config.server.labe
 {% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: mcp-aggregation
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: mcp-aggregation
     display_name: "Aggregated MCP tools"
     type: listener

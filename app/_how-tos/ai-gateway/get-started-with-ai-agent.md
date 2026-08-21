@@ -92,7 +92,7 @@ Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A tra
 {% entity_examples %}
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
     enabled: true

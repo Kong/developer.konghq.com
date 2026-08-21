@@ -100,16 +100,16 @@ Create the following:
 {% entity_examples %}
 ai_gateway_consumer_groups:
   - ref: contractors
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: contractors
     name: contractors
   - ref: suspended
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: suspended
     name: suspended
 ai_gateway_identity_providers:
   - ref: budget-identity
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Budget identity"
     name: budget-identity
     type: openid-connect
@@ -124,7 +124,7 @@ ai_gateway_identity_providers:
       cache_tokens_salt: budgets-cache-salt
 ai_gateway_model_providers:
   - ref: generic-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: generic-openai
     type: openai
     config:
@@ -135,7 +135,7 @@ ai_gateway_model_providers:
             value: !env OPENAI_AUTH_HEADER
 ai_gateway_policies:
   - ref: budget-limits
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: budget-limits
     display_name: "Budget limits"
     type: ai-rate-limiting-advanced
@@ -174,7 +174,7 @@ ai_gateway_policies:
           limits: [{ limit: 0.02, window_size: 60, tokens_count_strategy: cost }]
 ai_gateway_models:
   - ref: budget-chat
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Budget chat"
     name: budget-chat
     type: model
@@ -203,7 +203,7 @@ ai_gateway_models:
           input_cost: 0.15
           output_cost: 0.60
   - ref: budget-chat-premium
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Budget chat premium"
     name: budget-chat-premium
     type: model

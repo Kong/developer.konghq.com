@@ -69,7 +69,7 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-aws-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-aws-account
     display_name: "AWS Production"
     type: bedrock
@@ -95,7 +95,7 @@ Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request tra
 {% entity_examples %}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: strip-claude-beta-info
     display_name: "Strip Claude beta info"
     type: request-transformer
@@ -133,7 +133,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-aws-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-aws-account
     display_name: "AWS Production"
     type: bedrock
@@ -144,7 +144,7 @@ ai_gateway_model_providers:
         secret_access_key: !env AWS_SECRET_ACCESS_KEY
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: strip-claude-beta-info
     display_name: "Strip Claude beta info"
     type: request-transformer
@@ -162,7 +162,7 @@ ai_gateway_policies:
           - service_tier
 ai_gateway_models:
   - ref: my-claude-bedrock
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-claude-bedrock
     display_name: "my-claude-bedrock"
     type: model

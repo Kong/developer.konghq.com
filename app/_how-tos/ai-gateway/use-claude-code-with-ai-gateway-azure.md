@@ -46,7 +46,7 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to
 ai_gateway_model_providers:
   - ref: azure-claude
     name: azure-claude
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: anthropic
     config:
       auth:
@@ -74,7 +74,7 @@ Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request tra
 ai_gateway_policies:
   - ref: claude-code-compat
     name: claude-code-compat
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: request-transformer-advanced
     enabled: true
     global: false
@@ -97,7 +97,7 @@ ai_gateway_models:
   - ref: claude-code-azure-sonnet
     display_name: claude-code-azure-sonnet
     name: claude-code-azure-sonnet
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: model
     enabled: true
     formats:

@@ -59,7 +59,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: openai
     type: openai
     display_name: "OpenAI"
@@ -71,7 +71,7 @@ ai_gateway_model_providers:
             value: !env OPENAI_AUTH_HEADER
 ai_gateway_models:
   - ref: codex-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: codex-openai
     display_name: "Codex - OpenAI Responses API"
     type: model
