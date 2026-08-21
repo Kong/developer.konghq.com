@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: auth strategy
+content_type: policy
 description: Integrate {{site.ai_gateway_name}} with a third-party OpenID Connect provider
 ---
 The OpenID Connect (OIDC) auth strategy lets you integrate {{site.ai_gateway}} with an identity provider (IdP). To make it work with {{site.ai_gateway}}, you don't attach it directly to an {{site.ai_gateway}}. Instead you reference it in your [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) onfiguration. In the {{site.konnect_short_name}} UI, you find the Open ID Connect configuration in the **Identity** tab, when you create a new Identity Provider. The resulting configuration is what we call OpenID Connect (OIDC) auth strategy in this page. See [AI auth strategy scopes](/ai-gateway/entities/ai-auth strategy/#ai-auth strategy-scopes) to learn more.
