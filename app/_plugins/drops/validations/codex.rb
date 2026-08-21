@@ -41,6 +41,7 @@ module Jekyll
 
         def env_vars
           [
+            ("OPENAI_API_KEY=#{self['open_api_key']}" if self['open_api_key']),
             ("OPENAI_BASE_URL=#{self['base_url']}" if self['base_url'])
           ].compact
         end
