@@ -102,7 +102,7 @@ Create an `openid-connect` [AI Identity Provider](/ai-gateway/entities/ai-identi
 {% entity_examples %}
 ai_gateway_identity_providers:
   - ref: identity-oidc
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Identity OIDC"
     name: identity-oidc
     type: openid-connect
@@ -119,7 +119,7 @@ ai_gateway_identity_providers:
       cache_tokens_salt: identity-oidc-cache-salt
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
     enabled: true

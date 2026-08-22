@@ -65,11 +65,7 @@ cleanup:
         {: data-test-cleanup="block" }
       icon_url: /assets/icons/opentelemetry.svg
     - title: Stop Petstore API
-      content: |
-        ```sh
-        docker rm -f swagger-petstore
-        ```
-        {: data-test-cleanup="block" }
+      include_content: cleanup/third-party/swagger-petstore
       icon_url: '/assets/icons/code.svg'
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
@@ -85,7 +81,7 @@ The `petstore-mcp` entity does this by referencing `otel-mcp` in its `policies` 
 {% entity_examples %}
 ai_gateway_policies:
   - ref: otel-mcp
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: otel-mcp
     display_name: "otel-mcp"
     type: opentelemetry
@@ -101,7 +97,7 @@ ai_gateway_policies:
 
 ai_gateway_mcp_servers:
   - ref: petstore-mcp
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: petstore-mcp
     display_name: "Petstore API"
     type: conversion-listener

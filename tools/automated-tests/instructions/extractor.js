@@ -401,7 +401,11 @@ export async function extractInstructionsFromURL(uri, config, context) {
   }
 }
 
-export async function generateInstructionFiles(urlsToTest, config) {
+export async function generateInstructionFiles(
+  urlsToTest,
+  config,
+  { haltOnSeriesError = true } = {},
+) {
   const browser = await chromium.launch({
     args: [
       "--no-sandbox",
@@ -419,10 +423,16 @@ export async function generateInstructionFiles(urlsToTest, config) {
     });
 
     for (const uri of urlsToTest) {
-      await extractInstructionsFromURL(uri, config, context);
+      try {
+        await extractInstructionsFromURL(uri, config, context);
+      } catch (error) {
+        if (error instanceof NonFirstSeriesPageError && !haltOnSeriesError) {
+          console.error(error.message);
+          continue;
+        }
+        throw error;
+      }
     }
-  } catch (error) {
-    throw error;
   } finally {
     browser.close();
   }

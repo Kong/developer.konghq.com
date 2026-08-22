@@ -94,7 +94,7 @@ formats:
   - kongctl
 ai_gateway_model_providers:
   - ref: my-gemini-enterprise-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gemini-enterprise-account
     display_name: "Gemini Enterprise Production"
     type: gemini
@@ -112,7 +112,7 @@ formats:
   - kongctl
 ai_gateway_models:
   - ref: my-gemini-enterprise-model
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gemini-enterprise-model
     display_name: "my-gemini-enterprise-model"
     type: model

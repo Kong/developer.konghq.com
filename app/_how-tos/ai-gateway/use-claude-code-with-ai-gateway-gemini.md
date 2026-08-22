@@ -56,7 +56,7 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-gemini-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gemini-account
     display_name: "my-gemini-account"
     type: gemini
@@ -84,7 +84,7 @@ Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request tra
 {% entity_examples %}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: strip-claude-beta-info
     display_name: "strip-claude-beta-info"
     type: request-transformer-advanced
@@ -125,7 +125,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-gemini-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gemini-account
     display_name: "my-gemini-account"
     type: gemini
@@ -137,7 +137,7 @@ ai_gateway_model_providers:
           value: !env GEMINI_API_KEY
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: strip-claude-beta-info
     display_name: "strip-claude-beta-info"
     type: request-transformer-advanced
@@ -158,7 +158,7 @@ ai_gateway_policies:
           - reasoning_effort
 ai_gateway_models:
   - ref: my-claude-gemini
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-claude-gemini
     display_name: "my-claude-gemini"
     type: model

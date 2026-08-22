@@ -61,7 +61,7 @@ Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes 
 {% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: weather-mcp
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: weather-mcp
     display_name: "Weather API"
     type: conversion-listener
