@@ -1,8 +1,8 @@
 ---
-title: Connect Azure DevOps repositories to Catalog with the {{site.konnect_short_name}} API
+title: Connect Azure DevOps repositories to {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} API
 permalink: /how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-api/
 content_type: how_to
-description: Learn how to connect Azure DevOps repositories to your {{site.konnect_catalog}} services in {{site.konnect_short_name}} using the Konnect API.
+description: Learn how to connect Azure DevOps repositories to your {{site.konnect_catalog}} Classic services in {{site.konnect_short_name}} using the Konnect API.
 products:
   - catalog
 works_on:
@@ -17,8 +17,8 @@ search_aliases:
   - devops
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Azure DevOps reference
@@ -48,6 +48,8 @@ prereqs:
            export AZUREDEVOPS_PAT='YOUR-AZURE-DEV-OPS-PERSONAL-ACCESS-TOKEN'
            ```
 ---
+
+{% include_cached catalog/catalog-classic-banner.md %}
 
 ## Configure the Azure DevOps integration
 
@@ -97,7 +99,7 @@ body:
 
 Once authorized, resources from your Azure DevOps account are discoverable in the UI.
 
-## Create a Service in Catalog
+## Create a Service in {{site.konnect_catalog}} Classic
 
 Create a service to map to your Azure DevOps resources:
 
@@ -120,7 +122,7 @@ capture:
 
 ## List Azure DevOps resources
 
-Before you map Azure DevOps resources to a service in Catalog, locate the resources that {{site.konnect_short_name}} ingests from Azure DevOps:
+Before you map Azure DevOps resources to a service in {{site.konnect_catalog}} Classic, locate the resources that {{site.konnect_short_name}} ingests from Azure DevOps:
 
 <!--vale off-->
 {% konnect_api_request %}

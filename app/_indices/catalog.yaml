@@ -1,23 +1,39 @@
 title: "Catalog Documentation"
 description: Index containing all documentation for {{site.konnect_catalog}}.
-sections:
-  - title: Overview
-    items:
-      - path: /catalog/
-  - title: APIs
-    items:
-      - path: /service-catalog/apis/
-      - path: /catalog/api-packaging/
-      - path: /how-to/automate-api-catalog/
-      - path: /how-to/automate-api-catalog-with-terraform/
-      - path: /how-to/discover-and-govern-apis-with-service-catalog/
-      - path: /how-to/package-apis-with-dev-portal/
-  - title: Services and scorecards
-    items:
-      - path: /catalog/scorecards/
-      - path: /catalog/services/
-  - title: Integrations
-    items:
-      - path: /catalog/integrations/
-      - path: /catalog/integrations/**/*
-    auto_exclude: true
+groups:
+  - sections:
+      - title: Overview
+        items:
+          - path: /catalog/
+      - title: APIs
+        items:
+          - path: /service-catalog/apis/
+          - path: /catalog/api-packaging/
+          - path: /how-to/automate-api-catalog/
+          - path: /how-to/automate-api-catalog-with-terraform/
+          - path: /how-to/package-apis-with-dev-portal/
+      - title: AI Models
+        items:
+          - path: /catalog/ai-models/
+      - title: MCP Registry
+        items:
+          - path: /catalog/mcp-registry/
+  - title: "{{site.konnect_catalog}} Classic"
+    sections:
+      - title: Overview
+        items:
+          - path: /catalog-classic/
+      - title: Services and scorecards
+        items:
+          - path: /catalog/scorecards/
+          - path: /catalog/services/
+      - title: Integrations
+        items:
+          - path: /catalog/integrations/
+          - path: /catalog/integrations/**/*
+        auto_exclude: true
+      - title: How-tos
+        items:
+          - type: how-to
+            products:
+              - catalog
