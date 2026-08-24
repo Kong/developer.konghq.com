@@ -26,19 +26,7 @@ For more details, see [Kafka topics](https://kafka.apache.org/documentation/#int
 
 ## Implementation details
 
-This Policy uses the [lua-resty-kafka](https://github.com/kong/lua-resty-kafka) client.
-
-Control which parts of the request are included in the message with [`config.forward_body`](./reference/#schema--config-forward-body) (enabled by default), [`config.forward_headers`](./reference/#schema--config-forward-headers), [`config.forward_method`](./reference/#schema--config-forward-method), and [`config.forward_uri`](./reference/#schema--config-forward-uri).
-
-When encoding request bodies, several things happen:
-
-* For requests with a content-type header of `application/x-www-form-urlencoded`, `multipart/form-data`,
-  or `application/json`, this Policy passes the raw request body in the `body` attribute, and tries
-  to return a parsed version of those arguments in `body_args`. If this parsing fails, an error message is
-  returned and the message is not sent.
-* If the `content-type` is not `text/plain`, `text/html`, `application/xml`, `text/xml`, or `application/soap+xml`,
-  then the body will be base64-encoded to ensure that the message can be sent as JSON. In such a case,
-  the message has an extra attribute called `body_base64` set to `true`.
+{% include md/ai-gateway/v2/policies/kafka/implementation-details.md forward_fields=true %}
 
 ## Schema registry support
 
