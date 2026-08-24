@@ -99,6 +99,7 @@ This example uses the following settings:
 
 Run Qwen Code CLI against the model configured in the AI Model entity's `targets`:
 
+<!--vale off-->
 {% validation qwen %}
 open_api_key: sk-placeholder
 base_url: http://localhost:8000/qwen/chat/completions
@@ -106,6 +107,7 @@ model: my-qwen-openai
 auth-type: openai
 prompt: Explain the singleton pattern in Python.
 {% endvalidation %}
+<!--vale on-->
 
 Qwen Code CLI returns a response, proxied through {{site.ai_gateway}} to the OpenAI model.
 
