@@ -14,6 +14,7 @@ related_resources:
     url: /ai-gateway/entities/ai-mcp-server/
   - text: AI Policy
     url: /ai-gateway/entities/ai-policy/
+published: false
 ---
 
 The AI MCP OAuth2 Policy secures Model Context Protocol (MCP) traffic on {{site.ai_gateway}} using the [OAuth 2.0 specification for MCP servers](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization). It ensures only authorized MCP clients can access protected MCP servers proxied via an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, and acts as a crucial security layer for MCP traffic.
