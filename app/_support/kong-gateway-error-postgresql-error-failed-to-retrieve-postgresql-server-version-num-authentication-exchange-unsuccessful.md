@@ -9,7 +9,7 @@ works_on:
   - konnect
 published: false
 tldr:
-  q: Why does Kong Gateway show "failed to retrieve PostgreSQL server_version_num: authentication exchange unsuccessful" on startup?
+  q: "Why does Kong Gateway show \"failed to retrieve PostgreSQL server_version_num: authentication exchange unsuccessful\" on startup?"
   a: |
     Your `PG_PASSWORD` doesn't match the password set on the PostgreSQL database. The messaging differs by version: PostgreSQL 14 reports this generic exchange error, while PostgreSQL 13 reports the more explicit `FATAL: password authentication failed for user "kong"`.
 related_resources: []

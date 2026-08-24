@@ -9,7 +9,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why does Kong Ingress Controller reject an Ingress with a "spec.rules[0].host: Invalid value" error?
+  q: "Why does Kong Ingress Controller reject an Ingress with a \"spec.rules[0].host: Invalid value\" error?"
   a: |
     Kubernetes enforces RFC 1123 hostname rules on the Ingress `host` field, which don't allow underscores. Replace any underscore in the hostname with a hyphen so the value is a valid FQDN, and the Ingress will be accepted.
 related_resources: []

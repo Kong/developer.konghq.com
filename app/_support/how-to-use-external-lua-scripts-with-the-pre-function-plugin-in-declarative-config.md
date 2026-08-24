@@ -5,7 +5,7 @@ description: While Kong DecK does not support referencing external files directl
 tldr:
   q: How do I reference an external Lua script file in the `config.access` field of the `pre-function` plugin with declarative config and decK?
   a: |
-    decK cannot reference external files directly. Load the script into an environment variable (`export DECK_FUNCTION=$(cat function.lua)`) and inject it in the declarative config with `${{ env "DECK_FUNCTION" | indent 8 }}`.
+    decK cannot reference external files directly. Load the script into an environment variable (`export DECK_FUNCTION=$(cat function.lua)`) and inject it in the declarative config with `{% raw %}${{ env "DECK_FUNCTION" | indent 8 }}{% endraw %}`.
     Multiline indentation support requires decK v1.22.0 or later.
 products:
   - gateway
@@ -42,7 +42,7 @@ While Kong DecK does not support referencing external files directly, you can ac
    - config:
        access:
        - |
-         ${{ env "DECK_FUNCTION" | indent 8 }}
+         {% raw %}${{ env "DECK_FUNCTION" | indent 8 }}{% endraw %}
      enabled: true
      name: pre-function
    ```

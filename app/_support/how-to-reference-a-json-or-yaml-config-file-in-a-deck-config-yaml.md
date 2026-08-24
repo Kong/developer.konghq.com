@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: How do I reference an external JSON or YAML file in a decK config file?
   a: |
-    decK does not support referencing external JSON or YAML files directly from its config. As a workaround, load the file's contents into an environment variable (for example `export VAR=$(cat file.json)`) and reference it in the plugin config with decK's environment variable substitution, `${{ env "VAR" }}`. This workaround is limited by your operating system's environment variable size limit.
+    decK does not support referencing external JSON or YAML files directly from its config. As a workaround, load the file's contents into an environment variable (for example `export VAR=$(cat file.json)`) and reference it in the plugin config with decK's environment variable substitution, `{% raw %}${{ env "VAR" }}{% endraw %}`. This workaround is limited by your operating system's environment variable size limit.
 ---
 
 ## Overview
@@ -48,7 +48,7 @@ path: /v2
 plugins:
 - config:
 allowed_header_parameters: Host,Content-Type,User-Agent,Accept,Content-Length
-api_spec: ${{ env "DECK_OAS_SPEC_PETSTORE" }}
+api_spec: {% raw %}${{ env "DECK_OAS_SPEC_PETSTORE" }}{% endraw %}
 header_parameter_check: false
 notify_only_request_validation_failure: false
 notify_only_response_body_validation_failure: false

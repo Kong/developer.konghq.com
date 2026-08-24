@@ -1,7 +1,7 @@
 ---
 title: How to set `ulimit` on Kong server
 content_type: support
-description: `ulimit` is the number of open file descriptors per process.
+description: "`ulimit` is the number of open file descriptors per process."
 products:
   - gateway
 works_on:

@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why does Kong Gateway show "unable to update running config: no memory" when the data plane won't sync?
+  q: "Why does Kong Gateway show \"unable to update running config: no memory\" when the data plane won't sync?"
   a: |
     This means there's no memory left for the `db_cache`, not system memory. Check the `/status` endpoint for the `kong_core_db_cache` values, then increase `mem_cache_size` to accommodate your config's growth.
 related_resources:

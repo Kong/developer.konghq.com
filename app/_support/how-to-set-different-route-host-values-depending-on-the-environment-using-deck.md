@@ -12,7 +12,7 @@ published: false
 tldr:
   q: How do I set different route host values depending on the environment when using decK?
   a: |
-    Since decK 1.7.0, you can reference an environment variable inside the decK YAML file, for example `hosts: [${{ env "DECK_HOSTS" }}]`, and set that variable to a different value per environment before running `deck sync`.
+    Since decK 1.7.0, you can reference an environment variable inside the decK YAML file, for example `hosts: [{% raw %}${{ env "DECK_HOSTS" }}{% endraw %}]`, and set that variable to a different value per environment before running `deck sync`.
 ---
 
 ## Overview
@@ -27,7 +27,7 @@ For the route `hosts` value, an example would be:
 
 ```yaml
 
- hosts: [${{ env "DECK_HOSTS" }}]
+ hosts: [{% raw %}${{ env "DECK_HOSTS" }}{% endraw %}]
 ```
 
 and set the relevant env variable before executing a `deck sync` like this:

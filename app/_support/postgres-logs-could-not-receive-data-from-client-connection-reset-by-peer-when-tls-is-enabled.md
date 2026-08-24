@@ -11,7 +11,7 @@ related_resources:
   - text: Postgres documentation on log_disconnections
     url: https://postgresqlco.nf/doc/en/param/log_disconnections/
 tldr:
-  q: Why does Postgres log "could not receive data from client: Connection reset by peer" when TLS is enabled?
+  q: "Why does Postgres log \"could not receive data from client: Connection reset by peer\" when TLS is enabled?"
   a: |
     This is expected behavior. Kong's Postgres connection pool releases idle connections after `pg_keepalive_timeout` (60 seconds by default), and closing a TLS connection sends an RST packet that Postgres logs as a reset connection. To reduce log noise, raise `pg_keepalive_timeout` or disable Postgres connection logging (`log_disconnections`).
 ---

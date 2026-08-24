@@ -26,7 +26,7 @@ To create credentials, you need to call the appropriate endpoint for the require
 
    ```bash
 
-   curl -s -X POST 'https://api.kong.lan:8444/{{workspace}}/consumers/{{consumer-name}}/basic-auth' \
+   curl -s -X POST 'https://api.kong.lan:8444/{% raw %}{{workspace}}{% endraw %}/consumers/{% raw %}{{consumer-name}}{% endraw %}/basic-auth' \
    -H 'Content-Type: application/json;charset=UTF-8' \
    --data-raw '{"username":"my-username",
    "password":"my-password"}'
@@ -36,7 +36,7 @@ To create credentials, you need to call the appropriate endpoint for the require
 
    ```bash
 
-   curl -s -X POST 'https://api.kong.lan:8444/{{workspace}}/consumers/{{consumer-name}}/key-auth' \
+   curl -s -X POST 'https://api.kong.lan:8444/{% raw %}{{workspace}}{% endraw %}/consumers/{% raw %}{{consumer-name}}{% endraw %}/key-auth' \
    -H 'Content-Type: application/json;charset=UTF-8' \
    --data-raw '{"key":"new-key"}'
    ```

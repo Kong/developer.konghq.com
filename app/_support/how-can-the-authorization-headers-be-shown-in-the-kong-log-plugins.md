@@ -34,7 +34,7 @@ There is no configuration option available to log the value of the Authorization
 As an example, the `udp-log` plugin could be configured like this;
 
 ```bash
-curl -s -X POST 'https://api.kong.lan:8444/default/routes/{{routeName}}/plugins/' \
+curl -s -X POST 'https://api.kong.lan:8444/default/routes/{% raw %}{{routeName}}{% endraw %}/plugins/' \
 -H 'Content-Type: application/json' \
 --data-raw '{
     "tags": [

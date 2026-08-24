@@ -111,7 +111,7 @@ curl -s -X POST 'https://api.kong.lan:8444/event-hooks' \
 		"payload_format": true,
 		"headers_format": false,
 		"payload": {
-			"text": "webhook-custom for sessions : operation {{ operation }}, entity.session_id {{ entity.session_id }}, entity.expires {{ entity.expires }}, entity.data {{ entity.data }}, entity.created_at {{ entity.created_at }} schema {{ schema }}"
+			{% raw %}"text": "webhook-custom for sessions : operation {{ operation }}, entity.session_id {{ entity.session_id }}, entity.expires {{ entity.expires }}, entity.data {{ entity.data }}, entity.created_at {{ entity.created_at }} schema {{ schema }}"{% endraw %}
 		},
 		"url": "<webhook_endpoint>",
 		"headers": {
