@@ -865,6 +865,10 @@ uncommenting
 unconfigured
 underuse
 unencrypted
+unenroll
+unenrolled
+unenrolling
+unenrolls
 unescaped
 ungroup
 ungrouped
