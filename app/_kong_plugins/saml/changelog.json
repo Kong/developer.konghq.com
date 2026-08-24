@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.5": [
+    {
+      "message": "Hardened signature validation against XML Signature Wrapping. The\nplugin now checks that the signature `Reference URI` is a same-document\nfragment that names the `ID` of the element it digests and consumes, so a\nsignature can no longer be bound to a different element than the one that\nprovides the identity. A response whose reference URI is empty or not a\nsame-document fragment is now rejected.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.12": [
     {
       "message": "Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
