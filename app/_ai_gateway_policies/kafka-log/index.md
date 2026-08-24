@@ -30,17 +30,7 @@ For more information, see [Kafka topics](https://kafka.apache.org/documentation/
 
 ## Implementation details
 
-This Policy uses the [lua-resty-kafka](https://github.com/kong/lua-resty-kafka) client.
-
-When encoding request bodies, several things happen:
-
-* For requests with a content-type header of `application/x-www-form-urlencoded`, `multipart/form-data`,
-  or `application/json`, this Policy passes the raw request body in the `body` attribute, and tries
-  to return a parsed version of those arguments in `body_args`.
-  If this parsing fails, the Policy returns an error message and the message isn't sent.
-* If the `content-type` is not `text/plain`, `text/html`, `application/xml`, `text/xml`, or `application/soap+xml`,
-  then the body will be base64-encoded to ensure that the message can be sent as JSON. In that case,
-  the message has an extra attribute called `body_base64` set to `true`.
+{% include md/ai-gateway/v2/policies/kafka/implementation-details.md %}
 
 ## Custom fields by Lua
 
