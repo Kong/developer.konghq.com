@@ -49,11 +49,11 @@ The signatures are resistant to both classical and future quantum attacks, and n
 
 Benefits of using the VeriKnox plugin:
 
-* Tamper-evident proof of every AI interaction: Signed receipts record what the agent sent, what the model returned, who authorized it, and when.
-* Dual classical and post-quantum signatures: Each receipt carries both an ED25519 signature (fast, verifiable today) and an ML-DSA-65 signature (NIST FIPS 204, resistant to quantum adversaries).
-* Policy enforcement at the gateway: VeriKnox Hub evaluates each interaction against your business policy and can block non-compliant requests before they reach the upstream.
-* Broad protocol coverage: Supports OpenAI Chat Completions, OpenAI Responses, Anthropic Claude Messages, OpenRouter, Google Gemini, MCP tool calls, and A2A JSON-RPC operations including streaming.
-* No credential exposure: The agent passphrase is resolved from a [Kong Vault](/gateway/entities/vault/) reference at runtime and never written to disk in plain text.
+* **Tamper-evident proof of every AI interaction:** Signed receipts record what the agent sent, what the model returned, who authorized it, and when.
+* **Dual classical and post-quantum signatures:** Each receipt carries both an ED25519 signature (fast, verifiable today) and an ML-DSA-65 signature (NIST FIPS 204, resistant to quantum adversaries).
+* **Policy enforcement at the gateway:** VeriKnox Hub evaluates each interaction against your business policy and can block non-compliant requests before they reach the upstream.
+* **Broad protocol coverage:** Supports OpenAI Chat Completions, OpenAI Responses, Anthropic Claude Messages, OpenRouter, Google Gemini, MCP tool calls, and A2A JSON-RPC operations including streaming.
+* **No credential exposure:** The agent passphrase is resolved from a [Kong Vault](/gateway/entities/vault/) reference at runtime and never written to disk in plain text.
 
 ## How it works
 
@@ -122,7 +122,7 @@ rows:
 
 ### Plugin priority
 
-{{site.base_gateway}} runs plugins in descending priority order (higher number runs first).
+{{site.base_gateway}} runs plugins in descending [priority order](/gateway/entities/plugin/#plugin-priority) (higher number runs first).
 The VeriKnox plugin must run after authentication plugins (which sit at approximately 1001-1005), so its priority must be lower.
 You can control this using [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering).
 
@@ -311,8 +311,11 @@ When the control plane is {{site.konnect_short_name}}, provision the control pla
 1. Obtain the `schema.lua` file from your VeriKnox Technical Account Manager.
 
 1. Upload the plugin schema to your {{site.konnect_short_name}} control plane:
-   1. In the {{site.konnect_short_name}} menu, navigate to **Plugins**.
-   1. Click **Custom Plugins**.
+   1. In the {{site.konnect_short_name}} sidebar, navigate to **API Gateway > Control planes**.
+   2. Click your control plane.
+   3. Click the **Plugins** tab.
+   4. Click **New plugin**.   
+   1. Click **Custom plugin**.
    1. Upload `schema.lua`.
    1. Click **Save**.
 
