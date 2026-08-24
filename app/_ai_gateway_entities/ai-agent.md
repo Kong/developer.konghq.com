@@ -78,6 +78,13 @@ faqs:
     a: |
       Configuration that applies to the AI Agent goes through the [AI Policy entity](/ai-gateway/entities/ai-policy/).
       Attach AI Policies to the AI Agent through its [`policies`](#schema-aigateway-agent-policies) field.
+
+  - q: How do I authenticate to an upstream agent that requires AWS IAM (SigV4) signing?
+    a: |
+      Configure [`config.upstream.auth`](#schema-aigateway-agent-config-upstream) with `type: aws`. {{site.ai_gateway}}
+      signs each proxied request using static IAM credentials, environment auto-detection, or an assumed role. This
+      is separate from [`access.auth_strategies`](#schema-aigateway-agent-access), which authenticates inbound
+      clients rather than outbound requests to the upstream agent. See [Upstream authentication](#upstream-authentication).
 ---
 
 ## What is an AI Agent?
@@ -142,6 +149,8 @@ rows:
     description: "Attach [AI Policies](/ai-gateway/entities/ai-policy/) to agents for request transformation, PII detection, input validation, and request logging. Layer security and governance controls on agent traffic."
   - use_case: "Centralized discovery"
     description: "Provide A2A clients with a single, stable gateway endpoint (via agent-card URL rewriting) instead of having them discover and connect directly to agent instances."
+  - use_case: "AWS-native upstream agents"
+    description: "Authenticate to upstream agents that only accept AWS IAM (SigV4) signed requests, such as an agent hosted on Amazon Bedrock AgentCore Runtime or fronted by an IAM-protected Amazon API Gateway, using [`config.upstream.auth`](#schema-aigateway-agent-config-upstream). See [Upstream authentication](#upstream-authentication)."
 {% endtable %}
 <!-- vale on -->
 
@@ -325,6 +334,37 @@ To restrict which AI Consumers or teams can reach a specific agent, use ACLs. Th
 For per-request authentication and identity validation, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) in the [`access.auth_strategies`](#schema-aigateway-agent-access) array, the same way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control). The AI Agent has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its `policies` field isn't supported; authentication is configured exclusively through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
 An AI Agent currently accepts up to one AI Auth Strategy reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
+
+## Upstream authentication
+
+Access control and AI Auth Strategies govern who can reach the AI Agent. Separately, [`config.upstream.auth`](#schema-aigateway-agent-config-upstream) controls how {{site.ai_gateway}} authenticates itself to the upstream agent. By default, {{site.ai_gateway}} proxies requests without adding credentials.
+
+Some upstream agents don't accept bearer tokens or API keys at all, and only accept requests signed with AWS IAM (SigV4), such as an agent hosted on [Amazon Bedrock AgentCore Runtime](https://aws.amazon.com/bedrock/agentcore/) or fronted by an IAM-protected Amazon API Gateway. For these, set `config.upstream.auth.type` to `aws`.
+
+{{site.ai_gateway}} signs each proxied request using the credentials you provide:
+
+* Static IAM user credentials, `access_key_id` and `secret_access_key`, optionally paired with a `session_token` for temporary credentials.
+* Environment auto-detection when `access_key_id` and `secret_access_key` are omitted, for example an EC2 instance profile or environment variables.
+* Role assumption through `assume_role_arn` and `role_session_name`, layered on top of either credential source. Recommended for production use and cross-account access.
+
+Set `region` to override the region {{site.ai_gateway}} otherwise infers from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+
+{:.info}
+> `secret_access_key` and `session_token` are write-only and [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)
+> fields. Store them in a vault instead of in plaintext.
+
+```yaml
+config:
+  url: https://agent.execute-api.us-east-1.amazonaws.com/prod
+  upstream:
+    auth:
+      type: aws
+      region: us-east-1
+      assume_role_arn: arn:aws:iam::123456789012:role/agent-access
+      role_session_name: kong-ai-gateway
+```
+
+`config.upstream` is available regardless of the AI Agent's [`type`](#schema-aigateway-agent-type); it applies to `a2a` and `http` Agents alike.
 
 ## Attach AI Policies
 
