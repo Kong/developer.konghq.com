@@ -1,6 +1,6 @@
 ---
 title: LLM tracing with Arize Phoenix
-description: Export Kong AI Gateway chat completions to Arize Phoenix over OTLP and fill Sessions, user, Input/Output, and Messages with Gateway plugins.
+description: Export {{site.ai_gateway_name}} chat completions to Arize Phoenix over OTLP and fill Sessions, user, Input/Output, and Messages with Gateway plugins.
 url: "/cookbooks/llm-tracing-arize-phoenix/"
 content_type: cookbook
 layout: cookbook
@@ -114,7 +114,7 @@ prereqs:
 overview: |
   LLM applications that call providers through {{site.ai_gateway_name}} already sit on a hop that sees every chat completion. [AI Proxy Advanced](/plugins/ai-proxy-advanced/) writes OpenTelemetry GenAI attributes (`gen_ai.*`). The [OpenTelemetry](/plugins/opentelemetry/) Plugin posts those spans to [Arize Phoenix](https://arize.com/docs/phoenix). Phoenix turns `gen_ai.*` into an LLM span at ingest.
 
-  That export path proves a call happened. Phoenix Sessions, the user column, the spans-table Input/Output cells, and the LLM Messages view read OpenInference keys Kong leaves empty unless you set them on the span. This recipe adds [Key Auth](/plugins/key-auth/), [Request Transformer Advanced](/plugins/request-transformer-advanced/), and [Post-Function](/plugins/post-function/) so those screens fill without an application OpenInference instrumentor.
+  That export path proves a call happened. Phoenix Sessions, the user column, the spans-table Input/Output cells, and the LLM Messages view read OpenInference keys Kong leaves empty unless you set them on the span. This recipe adds [Key Auth](/plugins/key-auth/), [Request Transformer Advanced](/plugins/request-transformer-advanced/), and [Post-Function](/plugins/post-function/) so those screens fill without OpenInference instrumentation in the application.
 
   By the end, you will have one chat Route (`/llm-tracing-arize-phoenix`) behind a Consumer API key. Each request produces a Kong root span (`CHAIN`) and an LLM child span in the Phoenix project named by `x-project-name`.
 
@@ -124,17 +124,17 @@ faqs:
   - q: Can I use AI Proxy instead of AI Proxy Advanced?
     a: Yes, for a single upstream target. Keep `log_payloads` on if you want Kong to record request and response bodies. Phoenix still needs the Post-Function for OpenInference message keys.
   - q: Do I have to use Request Transformer Advanced?
-    a: No. That Plugin is Kong Gateway Enterprise. The open-source Request Transformer Plugin can add and remove the same headers. Update `ordering.after.access` on Post-Function to list `request-transformer` instead of `request-transformer-advanced`.
+    a: No. That Plugin is {{site.ee_product_name}}. The open-source Request Transformer Plugin can add and remove the same headers. Update `ordering.after.access` on Post-Function to list `request-transformer` instead of `request-transformer-advanced`.
 ---
 
 ## The problem
 
-Phoenix is built around OpenInference. Most Phoenix tutorials attach an SDK instrumentor in the application (LangChain, the OpenAI Python SDK, and similar). That works when you own the client. It does not help when the only shared hop is the Gateway, or when you want Gateway-enforced identity on the trace.
+Phoenix is built around OpenInference. Most Phoenix tutorials attach an SDK instrumentation library in the application (LangChain, the OpenAI Python SDK, and similar). That works when you own the client. It does not help when the only shared hop is the Gateway, or when you want Gateway-enforced identity on the trace.
 
 - **The Gateway already has the payload.** Every chat completion crosses {{site.ai_gateway_name}}. Duplicating that capture in every microservice means another SDK, another exporter, and traces that disagree about who called the model.
 - **`gen_ai.*` is not the Phoenix UI contract.** AI Proxy Advanced emits OpenTelemetry GenAI attributes. Phoenix maps those to model name and token counts. Sessions, user, Input/Output in the spans table, and Messages look for OpenInference keys (`session.id`, `user.id`, `input.value`, `llm.input_messages.*`). Those keys stay empty unless something on the Data Plane writes them.
 - **Client headers are not identity.** A caller can send `x-user-id: admin`. Phoenix `user.id` should come from the authenticated Kong Consumer, not from a header the client chooses.
-- **App-side OpenInference is still the right tool for agents and RAG.** Tool calls, retrievers, and evals live in application code. This recipe covers the Gateway hop. It does not replace those instrumentors.
+- **App-side OpenInference is still the right tool for agents and RAG.** Tool calls, retrievers, and evaluations live in application code. This recipe covers the Gateway hop. It does not replace that instrumentation.
 
 ## The solution
 
@@ -249,7 +249,7 @@ plugins:
 
 ### Request Transformer Advanced: Session id without spoofed users
 
-The [Request Transformer Advanced](/plugins/request-transformer-advanced/) Plugin is Kong Gateway Enterprise. Use it to drop a client-supplied user header and to give Post-Function a stable correlation id.
+The [Request Transformer Advanced](/plugins/request-transformer-advanced/) Plugin is {{site.ee_product_name}}. Use it to drop a client-supplied user header and to give Post-Function a stable correlation id.
 
 #### Configuration details
 
@@ -271,7 +271,7 @@ plugins:
 - **`add.headers: x-correlation-id`**. If the client omitted `x-correlation-id`, copy `x-request-id` or `x-session-id`. An empty expression leaves the header unset. Post-Function then falls back to `kong.request.get_id()`.
 - **Open-source alternative.** The [Request Transformer](/plugins/request-transformer/) Plugin can add and remove the same headers. Change Post-Function `ordering.after.access` to `request-transformer`.
 
-### AI Proxy Advanced: gen_ai spans
+### AI Proxy Advanced: GenAI spans
 
 The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin injects the provider credential and records `gen_ai.*` on the LLM hop. Phoenix maps those attributes to model name and token counts.
 
@@ -500,7 +500,7 @@ plugins:
 ```
 {:.collapsible}
 
-Post-Function executes arbitrary Lua. If your organization disables serverless Plugins, set [`untrusted_lua`](/gateway/configuration/#untrusted-lua) accordingly. Do not run unreviewed Lua on a shared Control Plane.
+Post-Function executes arbitrary Lua. If your organization disables serverless Plugins, set [`untrusted_lua`](/gateway/configuration/#untrusted-lua) accordingly. Do not run Lua that has not been reviewed on a shared Control Plane.
 
 {:.info}
 > In production, store the OpenAI token and any Phoenix API key in [Kong Vaults](/gateway/secrets-management/) using {% raw %}`{vault://backend/key}`{% endraw %} references. Payload attributes on spans may contain prompts. Review retention before you enable this in production.
@@ -767,7 +767,7 @@ If Messages is empty, confirm you opened the LLM span, not the CHAIN root. CHAIN
 
 **AI Proxy (single target).** Use [AI Proxy](/plugins/ai-proxy/) instead of AI Proxy Advanced when you have one model. Keep Post-Function `ordering` pointed at `ai-proxy`.
 
-**App OpenInference plus Gateway.** Leave W3C extract and inject on. The application opens the parent span and sends `traceparent`. Kong's LLM hop nests under that trace in Phoenix. Agent graphs and RAG still need an SDK instrumentor in the app.
+**App OpenInference plus Gateway.** Leave W3C extract and inject on. The application opens the parent span and sends `traceparent`. Kong's LLM hop nests under that trace in Phoenix. Agent graphs and RAG still need SDK instrumentation in the app.
 
 **Swap the OTLP backend.** The same Plugins export to any OTLP/HTTP collector. Phoenix-specific behavior is the `x-project-name` header and OpenInference keys this recipe writes. Langfuse, Jaeger, and Grafana Tempo will store the spans but will not render Phoenix Sessions or Messages.
 
