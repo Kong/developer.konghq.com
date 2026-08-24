@@ -5,7 +5,7 @@
       "properties": {
         "dictionary_name": {
           "type": "string",
-          "description": "The shared dictionary where counters are stored. When the plugin is configured to synchronize counter data externally (that is `config.strategy` is `cluster` or `redis` and `config.sync_rate` isn't `-1`), this dictionary serves as a buffer to populate counters in the data store on each synchronization cycle.",
+          "description": "The shared dictionary where counters are stored. When the policy is configured to synchronize counter data externally (that is `config.strategy` is `cluster` or `redis` and `config.sync_rate` isn't `-1`), this dictionary serves as a buffer to populate counters in the data store on each synchronization cycle.",
           "default": "kong_rate_limiting_counters"
         },
         "redis": {
@@ -268,7 +268,7 @@
         },
         "namespace": {
           "type": "string",
-          "description": "The rate limiting library namespace to use for this plugin instance. Counter data and sync configuration is isolated in each namespace. NOTE: For the plugin instances sharing the same namespace, all the configurations that are required for synchronizing counters, e.g. `strategy`, `redis`, `sync_rate`, `dictionary_name`, need to be the same."
+          "description": "The rate limiting library namespace to use for this policy instance. Counter data and sync configuration is isolated in each namespace. NOTE: For the policy instances sharing the same namespace, all the configurations that are required for synchronizing counters, e.g. `strategy`, `redis`, `sync_rate`, `dictionary_name`, need to be the same."
         },
         "lock_dictionary_name": {
           "type": "string",
@@ -353,7 +353,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [

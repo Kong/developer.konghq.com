@@ -57,7 +57,7 @@
             "preserve",
             "w3c"
           ],
-          "description": "All HTTP requests going through the plugin are tagged with a tracing HTTP request. This property codifies what kind of tracing header the plugin expects on incoming requests",
+          "description": "All HTTP requests going through the policy are tagged with a tracing HTTP request. This property codifies what kind of tracing header the policy expects on incoming requests",
           "default": "preserve"
         },
         "queue": {
@@ -266,7 +266,7 @@
         },
         "tags_header": {
           "type": "string",
-          "description": "The Zipkin plugin will add extra headers to the tags associated with any HTTP requests that come with a header named as configured by this property.",
+          "description": "The Zipkin policy will add extra headers to the tags associated with any HTTP requests that come with a header named as configured by this property.",
           "default": "Zipkin-Tags"
         },
         "static_tags": {
@@ -298,7 +298,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "route": {
       "type": "object",
@@ -308,7 +308,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -318,7 +318,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   }
 }

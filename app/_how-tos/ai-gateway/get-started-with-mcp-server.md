@@ -61,7 +61,7 @@ Create an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes 
 {% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: weather-mcp
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: weather-mcp
     display_name: "Weather API"
     type: conversion-listener
@@ -80,7 +80,7 @@ ai_gateway_mcp_servers:
           - /weather
       logging:
         payloads: false
-        statistics: true
+        audits: true
       server:
         timeout: 60000
     tools:
@@ -108,36 +108,52 @@ ai_gateway_mcp_servers:
 
 Send an `initialize` request to the route configured on the MCP Server (`/weather`), capturing the `Mcp-Session-Id` response header into an environment variable:
 
-```sh
-SESSION_ID=$(curl -s -o /dev/null -D - -X POST http://localhost:8000/weather \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  --data '{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "initialize",
-    "params": {
-      "protocolVersion": "2025-06-18",
-      "capabilities": {},
-      "clientInfo": {
-        "name": "weather-mcp-test",
-        "version": "1.0.0"
-      }
-    }
-  }' | grep -i '^mcp-session-id:' | tr -d '\r' | cut -d' ' -f2)
-export SESSION_ID
-echo "SESSION_ID=$SESSION_ID"
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /weather/
+method: POST
+status_code: 200
+retry: true
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, text/event-stream'
+display_headers: true
+body:
+  jsonrpc: '2.0'
+  id: 1
+  method: initialize
+  params:
+    protocolVersion: '2025-06-18'
+    capabilities: {}
+    clientInfo:
+      name: weather-mcp-test
+      version: '1.0.0'
+extract_headers:
+    - name: 'mcp-session-id'
+      variable: SESSION_ID
+capture:
+  - variable: SESSION_ID
+    command: "grep -i '^mcp-session-id:' | tr -d '\\r' | cut -d' ' -f2"
+{% endvalidation %}
+<!-- vale on -->
 
 Complete the handshake with a `notifications/initialized` notification, carrying the session ID:
 
-```sh
-curl -i -X POST http://localhost:8000/weather \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  -H "Mcp-Session-Id: $SESSION_ID" \
-  --data '{"jsonrpc":"2.0","method":"notifications/initialized"}'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /weather/
+method: POST
+display_headers: true
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, text/event-stream'
+  - 'Mcp-Session-Id: $SESSION_ID'
+body:
+  jsonrpc: '2.0'
+  method: notifications/initialized
+status_code: 202
+{% endvalidation %}
+<!-- vale on -->
 
 A `202 Accepted` response confirms the session is ready.
 
@@ -145,33 +161,43 @@ A `202 Accepted` response confirms the session is ready.
 
 List the available tools to confirm the `get-current-weather` tool exists, and inspect its `inputSchema`. Include the `Mcp-Session-Id` header:
 
-```sh
-curl -X POST http://localhost:8000/weather \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  -H "Mcp-Session-Id: $SESSION_ID" \
-  --data '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /weather/
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, text/event-stream'
+  - 'Mcp-Session-Id: $SESSION_ID'
+body:
+  jsonrpc: '2.0'
+  id: 2
+  method: tools/list
+status_code: 200
+{% endvalidation %}
+<!-- vale on -->
 
  For `conversion-listener` and `conversion-only` MCP Servers, the generated `inputSchema` names each converted REST parameter `{in}_{name}`, not the bare configured name. Since [you configured](#create-an-mcp-server-entity) the `q` parameter as `name: q` and `in: query`, {{site.ai_gateway}} exposes to MCP clients as `query_q`. Call the tool with that argument name:
 
-```sh
-curl -X POST http://localhost:8000/weather \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  -H "Mcp-Session-Id: $SESSION_ID" \
-  --data '{
-    "jsonrpc": "2.0",
-    "id": 3,
-    "method": "tools/call",
-    "params": {
-      "name": "get-current-weather",
-      "arguments": {
-        "query_q": "London"
-      }
-    }
-  }'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /weather/
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, text/event-stream'
+  - 'Mcp-Session-Id: $SESSION_ID'
+body:
+  jsonrpc: '2.0'
+  id: 3
+  method: tools/call
+  params:
+    name: "get-current-weather"
+    arguments:
+      query_q: "London"
+status_code: 200
+{% endvalidation %}
+<!-- vale on -->
 
 The response includes the current conditions for London:
 

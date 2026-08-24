@@ -40,6 +40,7 @@ RSpec.describe Jekyll::Drops::EntityExample::Presenters::Kongctl::Base do
     before do
       allow(example_drop).to receive(:product).and_return('ai-gateway')
       allow(example_drop).to receive(:entity_type).and_return('mcp_server')
+      allow(example_drop).to receive(:variables).and_return({})
     end
 
     context 'when data contains an env var' do
@@ -118,6 +119,7 @@ RSpec.describe Jekyll::Drops::EntityExample::Presenters::Kongctl::EventGatewayPo
       allow(example_drop).to receive(:entity_type).and_return('policy')
       allow(example_drop).to receive(:policy_target).and_return('virtual_cluster')
       allow(example_drop).to receive(:target).and_return(target)
+      allow(example_drop).to receive(:variables).and_return({})
       allow(example_drop).to receive(:data).and_return({
         'name' => 'my-policy',
         'type' => 'auth',

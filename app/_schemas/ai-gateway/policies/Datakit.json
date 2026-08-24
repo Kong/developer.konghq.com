@@ -42,7 +42,7 @@
                       "type": "string",
                       "maxLength": 255,
                       "minLength": 1,
-                      "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`."
+                      "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`."
                     },
                     "maxLength": 64,
                     "minLength": 1,
@@ -54,7 +54,7 @@
                       "type": "string",
                       "maxLength": 255,
                       "minLength": 1,
-                      "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`."
+                      "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`."
                     },
                     "maxLength": 64,
                     "minLength": 1,
@@ -94,7 +94,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   }
                 },
@@ -174,7 +174,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -323,7 +323,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -385,7 +385,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   }
                 },
@@ -426,7 +426,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -482,7 +482,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -550,7 +550,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -619,7 +619,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -766,7 +766,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -838,7 +838,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -898,7 +898,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "type": {
@@ -965,7 +965,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
                   },
                   "attributes_name_prefix": {
@@ -1280,7 +1280,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "consumer_group": {
       "type": "object",
@@ -1290,7 +1290,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups"
+      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
     },
     "route": {
       "type": "object",
@@ -1300,7 +1300,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -1310,7 +1310,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [

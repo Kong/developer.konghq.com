@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap
 
 # set python env
 RUN python3 -m venv /opt/myenv
@@ -24,10 +24,30 @@ RUN ARCH=$(dpkg --print-architecture) && \
     tar -C /usr/local -xzf go.tar.gz && \
     rm go.tar.gz
 
+# Install kongctl
+RUN curl -fsSL https://get.konghq.com/kongctl | sh
+#RUN ARCH=$(dpkg --print-architecture) && \
+#    curl -sL "https://github.com/Kong/kongctl/releases/download/v1.10.0/kongctl_linux_${ARCH}.zip" -o kongctl.zip && \
+#    unzip kongctl.zip && \
+#    mv kongctl /usr/local/bin/ && \
+#    rm kongctl.zip && \
+#    kongctl version --full
 ENV PATH="/usr/local/go/bin:${PATH}"
 ENV GOPATH="/go"
 ENV PATH="${GOPATH}/bin:${PATH}"
 
+
+RUN curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
+
+RUN curl -fsSL https://claude.ai/install.sh | bash
+ENV PATH="/root/.local/bin:${PATH}"
+
+# Install Node.js 22.x (LTS) via NodeSource, then codex CLI
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs
+RUN npm install -g @openai/codex
+RUN npm install -g @qwen-code/qwen-code
+RUN npm install -g @google/gemini-cli
 RUN go install github.com/deviceinsight/kafkactl/v5@latest
 
 # Install kubectl v1.35.2 (pinned + checksum verified)

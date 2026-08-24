@@ -1,30 +1,38 @@
 {% assign summary='{{site.ai_gateway}} running' %}
 {% assign env_variables = include.prereqs['konnect'] %}
 {% capture details_content %}
+{% capture vanilla_snippet %}
+```bash
+curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN {% if env_variables %}\{% endif %}{% for variable in env_variables %}
+   -e {{variable.name}}{% if variable.value %}={{variable.value}}{% endif %}{% unless forloop.last %} \{% endunless %}{% endfor %}
+```
+{% endcapture %}
 
 This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_short_name}} personal access token.
 
 1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
 
-1. Export your token to an environment variable:
+2. Export your token to an environment variable:
 
    ```bash
    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
    ```
 
-1. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) to automatically provision a control plane and data plane in {{site.konnect_product_name}}, and configure your environment:
+3. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) to automatically provision a control plane and data plane in {{site.konnect_product_name}}, and configure your environment:
 
-   ```bash
-   curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN {% if env_variables %}\{% endif %}{% for variable in env_variables %}
-     -e {{variable.name}}{% if variable.value %}={{variable.value}}{% endif %}{% unless forloop.last %} \{% endunless %}{% endfor %}
-   ```
-
+   {% if page.output_format == 'markdown' %}
+   {{vanilla_snippet | liquify | indent: 3}}
+   {% else %}
+      <div data-test-setup='{ "ai-gateway": "{{page.min_version.ai-gateway}}"{% for variable in include.env_variables %}{% if variable.value %}, "{{variable.name}}": "{{variable.value}}"{% else %}{% assign parts = variable.name | split: "=" %}, "{{parts[0]}}": "{{parts[1]}}"{% endif %}{% endfor %} }' markdown="1">
+{{vanilla_snippet | indent: 3}}
+   </div>
+   {% endif %}
 This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
 
 ```bash
 export AI_GATEWAY_ID=your-gateway-id
 export KONNECT_TOKEN=$KONNECT_TOKEN
-export KONNECT_CONTROL_PLANE_NAME=quickstart
+export KONNECT_CONTROL_PLANE_NAME=ai-quickstart
 export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
 export KONNECT_PROXY_URL='http://localhost:8000'
 ```

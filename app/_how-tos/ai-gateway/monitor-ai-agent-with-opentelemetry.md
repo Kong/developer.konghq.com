@@ -37,7 +37,9 @@ tools:
 prereqs:
   konnect:
     - name: KONG_TRACING_INSTRUMENTATIONS
+      value: all
     - name: KONG_TRACING_SAMPLING_RATE
+      value: 1.0
   inline:
     - title: OpenAI API key
       content: |
@@ -79,6 +81,7 @@ cleanup:
         docker compose down
         docker rm -f a2a-kongair-agent otel-collector
         ```
+        {: data-test-cleanup="block" }
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 
@@ -103,16 +106,13 @@ faqs:
       Counters and histograms in the `kong.gen_ai.a2a.*` namespace cover request volume, duration, response size, time to first byte, errors, and task state transitions.
       See [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics) for the full reference.
 
-automated_tests: false
-
 ---
 
 ## Create an AI Agent and OpenTelemetry Policy
 
 Create an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) that exports traces and metrics to your collector, and an [AI Agent](/ai-gateway/entities/ai-agent/) that attaches it. Setting `global` to `false` on the Policy means it only applies to entities that reference it instead of every resource on your {{site.ai_gateway}}, so the `kongair-flight-booking-agent` entity lists `otel-a2a` in its `policies` field to opt in. The `service.name` value under `resource_attributes` labels the exported data, which is useful if multiple gateways or services send to the same collector.
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
+{% entity_examples %}
 _defaults:
   kongctl:
     namespace: ai-gateway-get-started
@@ -121,7 +121,7 @@ ai_gateway_policies:
   - ref: otel-a2a
     name: otel-a2a
     display_name: "otel-a2a"
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: opentelemetry
     enabled: true
     global: false
@@ -135,7 +135,7 @@ ai_gateway_policies:
 
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup {id: $AI_GATEWAY_ID}
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: kongair-flight-booking-agent
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
@@ -154,35 +154,36 @@ ai_gateway_agents:
           - https
         strip_path: true
       max_request_body_size: 8388608
-EOF
-```
+{% endentity_examples %}
+
 
 ## Send an A2A request
 
 Send a `message/send` JSON-RPC request to test the agent:
 
-```bash
-curl -X POST "http://localhost:8000/a2a" \
-  -H "Content-Type: application/json" \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "What flights are available on route KA-123?"
-          }
-        ]
-      }
-    }
-  }'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /a2a/
+display_headers: true
+status_code: 200
+retry: true
+method: POST
+headers:
+  - "Content-Type: application/json"
+body:
+  jsonrpc: '2.0'
+  id: '1'
+  method: message/send
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+      - kind: text
+        text: What flights are available on route KA-123?
+{% endvalidation %}
+<!-- vale on -->
 
 A successful response (status 200) contains the agent's reply.
 
@@ -190,9 +191,13 @@ A successful response (status 200) contains the agent's reply.
 
 Search the collector's logs for `kong.a2a` to find the emitted span:
 
-```sh
-docker logs otel-collector 2>&1 | grep -A 15 kong.a2a
-```
+{% validation custom-command %}
+command: |
+  docker logs otel-collector 2>&1 | grep -A 15 kong.a2a
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 You should see a `kong.a2a` span with the same shape. The `Trace ID`, `Parent ID`, `ID`, `Start time`, `End time`, `kong.a2a.task.id`, and `kong.a2a.context.id` values are generated per request, so yours will differ from the example:
 
@@ -224,9 +229,13 @@ The remaining attributes are fixed values you can match against directly. `rpc.s
 
 Search the collector's logs for `kong.gen_ai.a2a` to find the emitted metrics:
 
-```sh
-docker logs otel-collector 2>&1 | grep -A 15 kong.gen_ai.a2a
-```
+{% validation custom-command %}
+command: |
+  docker logs otel-collector 2>&1 | grep -A 15 kong.gen_ai.a2a
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 You should see metrics with the same shape. `kong.konnect.cp.id` identifies your {{site.ai_gateway}} control plane and is unique to your environment, and the `Count`, `Sum`, and `Value` fields depend on how many requests you sent and their actual duration or size, so match on the overall structure rather than the exact numbers:
 

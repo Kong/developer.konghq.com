@@ -50,16 +50,17 @@ Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to
 
 First, set the `OPENAI_AUTH_HEADER` environment variable to your OpenAI API key:
 
-```sh
-export OPENAI_AUTH_HEADER="Bearer $OPENAI_API_KEY"
-```
+{% env_variables %}
+OPENAI_AUTH_HEADER: "Bearer $OPENAI_API_KEY"
+{% endenv_variables %}
+
 
 Then, apply the configuration using `kongctl`:
 
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: generic-openai
     display_name: "generic-openai"
     type: openai
@@ -87,7 +88,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_models:
   - ref: my-gpt-4o
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gpt-4o
     display_name: "my-gpt-4o"
     type: model
@@ -133,6 +134,7 @@ Send a chat request to verify your setup:
 url: /v1/chat/completions
 status_code: 200
 method: POST
+retry: true
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'

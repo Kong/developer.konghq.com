@@ -915,7 +915,7 @@ The `type` field determines the provider and the shape of `config.auth`.
 Most providers use `type: basic` auth with a `headers` array.
 AWS Bedrock supports `type: aws` for IAM credentials.
 Azure supports `type: azure` for service principal or managed identity auth.
-Gemini and Vertex support `type: gcp` for service account auth.
+Gemini supports `type: gcp` for service account auth.
 
 ```yaml
 ai_gateway_model_providers:
@@ -927,8 +927,8 @@ ai_gateway_model_providers:
       key: value
     # Basic auth (used by openai, anthropic, cerebras, cohere, dashscope,
     # databricks, deepseek, huggingface, kimi, llama2, mistral, ollama,
-    # vercel, vllm, xai, and as an option for bedrock, azure, gemini, vertex)
-    type: One of (openai | anthropic | cerebras | cohere | dashscope | databricks | deepseek | huggingface | kimi | llama2 | mistral | ollama | vercel | vllm | xai | bedrock | azure | gemini | vertex) required
+    # vercel, vllm, xai, and as an option for bedrock, azure, gemini)
+    type: One of (openai | anthropic | cerebras | cohere | dashscope | databricks | deepseek | huggingface | kimi | llama2 | mistral | ollama | vercel | vllm | xai | bedrock | azure | gemini) required
     config:
       auth:
         type: basic required
@@ -960,8 +960,8 @@ ai_gateway_model_providers:
     #     tenant_id: string # prefer: !env AZURE_TENANT_ID
     #     use_managed_identity: boolean
     #   instance: string # Azure instance name
-    # GCP-based providers (type=gemini or type=vertex, auth type=gcp)
-    # type: gemini # or vertex
+    # GCP-based providers (type=gemini, auth type=gcp)
+    # type: gemini
     # config:
     #   auth:
     #     type: gcp
@@ -1016,7 +1016,7 @@ ai_gateway_models:
         semantic_description: string
         allow_auth_override: boolean
         config:
-          type: One of (openai | anthropic | azure | bedrock | cerebras | cohere | dashscope | databricks | deepseek | gemini | huggingface | kimi | llama2 | mistral | ollama | vercel | vertex | vllm | xai) required
+          type: One of (openai | anthropic | azure | bedrock | cerebras | cohere | dashscope | databricks | deepseek | gemini | huggingface | kimi | llama2 | mistral | ollama | vercel | vllm | xai) required
           upstream_url: string (nullable)
           # anthropic
           version: string

@@ -52,12 +52,14 @@ prereqs:
 
 ## Create an AI Model Provider and AI Model
 
-Codex speaks OpenAI's native format and calls the [Responses API](https://platform.openai.com/docs/api-reference/responses), so no request-transformer policy is needed. Create both the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and the [AI Model](/ai-gateway/entities/ai-model/) in a single `kongctl` apply command so the model can reference the provider:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: openai
     type: openai
     display_name: "OpenAI"
@@ -69,7 +71,7 @@ ai_gateway_model_providers:
             value: !env OPENAI_AUTH_HEADER
 ai_gateway_models:
   - ref: codex-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: codex-openai
     display_name: "Codex - OpenAI Responses API"
     type: model
@@ -87,42 +89,38 @@ ai_gateway_models:
           upstream_url: "https://api.openai.com/v1/responses"
 {% endentity_examples %}
 
-In this example:
+In this example, we're setting up the AI Model Provider with:
 
- * `type: openai`: Connects to the OpenAI API.
- * `capabilities: [agentic]`: Routes requests to the OpenAI Responses API, which the Codex CLI uses.
- * `formats: [{ type: openai }]`: Accepts OpenAI-format requests.
- * `config.route.model: { body_param: model, values: [gpt-5.4] }`: The model name the Codex CLI sends in each request.
- * `route.paths: [/codex]`: The base path Codex points at; the Responses API is served at `/codex/responses`.
+* `type: openai`: Specifies that this provider connects using OpenAI's standard API format.
+* `config.auth.headers[0].value: !env OPENAI_AUTH_HEADER`: Loads the API key from your environment at apply time so it is not embedded in the config.
 
-## Verify the AI Model
+In this example, we're setting up the AI Model with:
 
-Before starting Codex, confirm the route works by sending a Responses API request directly (expect `200`):
-
-```sh
-curl -sS http://localhost:8000/codex/responses \
-  -H 'Content-Type: application/json' \
-  -d '{"model":"gpt-5.4","input":"Reply with just: ok","max_output_tokens":16}'
-```
+* `capabilities: [agentic]`: Routes requests to the OpenAI Responses API, which the Codex CLI uses.
+* `formats: [{ type: openai }]`: Accepts OpenAI-format requests.
+* `config.route.model: { body_param: model, values: [gpt-5.4] }`: The model name the Codex CLI sends in each request.
+* `route.paths: [/codex]`: The base path Codex points at; the Responses API is served at `/codex/responses`.
 
 {% warning %}
 If you are a new Codex user, you must Initialise the tool first by running `codex` and following the steps provided.
 {% endwarning %}
+
 ## Point Codex CLI at {{site.ai_gateway}}
 
 Open a new terminal and set `OPENAI_BASE_URL` to the local {{site.ai_gateway}} endpoint. The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the gateway, so a placeholder is fine:
 
-```sh
-export OPENAI_API_KEY=sk-placeholder
-export OPENAI_BASE_URL=http://localhost:8000/codex
-```
+{% env_variables %}
+OPENAI_API_KEY: sk-placeholder
+OPENAI_BASE_URL: http://localhost:8000/codex
+{% endenv_variables %}
 
 ## Start and use Codex CLI
 
 Run a simple command to confirm traffic flows through {{site.ai_gateway}} to OpenAI:
 
-```sh
-codex exec --model gpt-5.4 "Hello"
-```
+{% validation codex %}
+model: gpt-5.4
+prompt: Hello
+{% endvalidation %}
 
 When prompted for network access, select **Yes, proceed**. Codex routes the request through {{site.ai_gateway}} to the OpenAI Responses API and returns the model's response, giving you monitoring and control over all Codex LLM traffic.

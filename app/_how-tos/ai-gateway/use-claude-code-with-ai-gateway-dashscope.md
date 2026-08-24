@@ -32,6 +32,9 @@ tldr:
   a: Create an AI Model Provider for Alibaba Cloud DashScope and an AI Model with the `anthropic` format that targets it, then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests pass through the gateway for monitoring and control.
 
 prereqs:
+  konnect:
+    - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE
+      value: 2m
   inline:
     - title: DashScope
       icon_url: /assets/icons/dashscope.svg
@@ -47,16 +50,18 @@ prereqs:
 
 ---
 
-## Create the AI Model Provider and AI Model
+## Create the AI Model Provider and AI Model entities
 
 DashScope serves the Qwen model family through a native Anthropic-compatible Messages API, so {{ site.claude_code }} can talk to it natively. 
 
-Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and an [AI Model](/ai-gateway/entities/ai-model/) with a single `kongctl` apply command:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
 
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: dashscope
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: dashscope
     type: dashscope
     display_name: "Alibaba Cloud DashScope"
@@ -68,16 +73,23 @@ ai_gateway_model_providers:
             value: !env DASHSCOPE_AUTH_HEADER
 ai_gateway_models:
   - ref: claude-code-qwen
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: claude-code-qwen
     display_name: "Claude Code - DashScope Qwen"
     type: model
     enabled: true
-    formats: [{ type: anthropic }]
+    formats:
+      - type: anthropic
     config:
-      route: { paths: [/], methods: [GET, POST], model: { body_param: model, values: [qwen-plus] } }
-      model: { name_header: true }
-    capabilities: [generate]
+      route:
+        paths:
+          - /
+        model:
+          body_param: model
+          values:
+            - qwen-plus
+    capabilities:
+      - generate
     targets:
       - name: qwen-plus
         provider: dashscope
@@ -88,7 +100,7 @@ ai_gateway_models:
           temperature: 1.0
 {% endentity_examples %}
 
-In this example we set:
+This example uses the following settings:
 
  * `type: dashscope`: Connects to the Alibaba Cloud DashScope API as an AI Model Provider.
  * `capabilities: [generate]`: For a model using the `anthropic` format, `generate` creates a `/v1/messages` endpoint matching Anthropic's native Messages API.
@@ -101,22 +113,65 @@ In this example we set:
 
 Before starting {{ site.claude_code }}, confirm the route works by sending an Anthropic Messages API request directly:
 
-```sh
-curl -sS http://localhost:8000/v1/messages \
-  -H 'Content-Type: application/json' \
-  -d '{"model":"qwen-plus","max_tokens":16,"messages":[{"role":"user","content":"Reply with just: ok"}]}'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /v1/messages
+status_code: 200
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: $DASHSCOPE_AUTH_HEADER'
+body:
+  model: qwen-plus
+  max_tokens: 16
+  messages:
+    - role: 'user'
+      content: "Reply with just: ok"
+{% endvalidation %}
+<!-- vale on -->
 
-## Start and use Claude Code
+## Run {{ site.claude_code }}
 
-Run {{ site.claude_code }}, selecting the model you configured:
+Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'qwen-plus'
-```
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: qwen-plus
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
-When {{ site.claude_code }} asks for permission to work with your files, select **Yes, continue**. The session will start. Ask a question to confirm traffic flows through {{site.ai_gateway}} to the upstream Qwen model:
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-Say hello in one sentence.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
+
+What it is
+
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
+
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
+{:.no-copy-code}

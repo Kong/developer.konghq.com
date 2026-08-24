@@ -32,7 +32,7 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "description": "The name of the destination. You can use $(uri_captures['\u003ccapture-identifier\u003e']) in this field (replace `\u003ccapture-identifier\u003e` with a real value, for example `$uri_captures[’queue’]` when the matched route has a path `~/(?\u003cqueue\u003e[a-z]+)`)."
+                    "description": "The name of the destination. You can use $(uri_captures['<capture-identifier>']) in this field (replace `<capture-identifier>` with a real value, for example `$uri_captures[’queue’]` when the matched route has a path `~/(?<queue>[a-z]+)`)."
                   },
                   "type": {
                     "type": "string",
@@ -323,7 +323,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -333,7 +333,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [

@@ -224,7 +224,7 @@ formats:
   - kongctl
 ai_gateway_model_providers:
   - ref: generic-anthropic
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: generic-anthropic
     display_name: "generic-anthropic"
     type: anthropic
@@ -243,7 +243,7 @@ formats:
   - kongctl
 ai_gateway_models:
   - ref: my-claude
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-claude
     display_name: "my-claude"
     type: model

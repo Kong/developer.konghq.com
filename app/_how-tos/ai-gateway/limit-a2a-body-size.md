@@ -66,6 +66,7 @@ cleanup:
         docker compose down
         docker rm -f a2a-kongair-agent
         ```
+        {: data-test-cleanup="block" }
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 
@@ -79,8 +80,6 @@ faqs:
   - q: Can I scope this Policy to more than one AI Agent?
     a: |
       Yes. Set `global: true` on the Policy to apply it to every resource on your {{site.ai_gateway}} instead of listing it in each Agent's `policies` field.
-
-automated_tests: false
 ---
 
 ## Create an AI Agent and Request Size Limiting Policy
@@ -91,7 +90,7 @@ Create a [Request Size Limiting Policy](/ai-gateway/policies/request-size-limiti
 ai_gateway_policies:
   - ref: a2a-size-limit
     name: a2a-size-limit
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: request-size-limiting
     enabled: true
     global: false
@@ -101,7 +100,7 @@ ai_gateway_policies:
       require_content_length: false
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
     enabled: true
@@ -130,35 +129,35 @@ ai_gateway_agents:
 
 Send a standard A2A request that falls within the 1 MB limit:
 
-```sh
-curl -X POST "http://localhost:8000/a2a" \
-  -H "Content-Type: application/json" \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "Show me routes from SFO to JFK"
-          }
-        ]
-      }
-    }
-  }'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /a2a/
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  jsonrpc: '2.0'
+  id: '1'
+  method: message/send
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+      - kind: text
+        text: Show me routes from SFO to JFK
+status_code: 200
+{% endvalidation %}
+<!-- vale on -->
 
 {{site.ai_gateway}} proxies the request to the upstream A2A agent and returns a JSON-RPC response.
 
 ## Validate oversized requests are rejected
 
-Generate a payload that exceeds 1 MB and send it as an A2A request:
+Generate a payload that exceeds 1 MB.
 
+<!-- vale off -->
 ```sh
 python3 -c "
 import json
@@ -181,13 +180,24 @@ payload = {
     }
 }
 print(json.dumps(payload))
-" > /tmp/large_payload.json
-
-curl -i --no-progress-meter \
-  http://localhost:8000/a2a \
-  -H "Content-Type: application/json" \
-  -d @/tmp/large_payload.json
+" > ./large_payload.json
 ```
+{:data-test-step="block"}
+<!-- vale on -->
+
+Now send it as an A2A request:
+
+<!-- vale off -->
+{% validation request-check %}
+url: /a2a
+display_headers: true
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body_file: '@large_payload.json'
+status_code: 413
+{% endvalidation %}
+<!-- vale on -->
 
 {{site.ai_gateway}} rejects the request with `413 Request Entity Too Large`:
 

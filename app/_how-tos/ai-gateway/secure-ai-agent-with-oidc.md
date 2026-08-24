@@ -71,8 +71,11 @@ cleanup:
         docker compose down
         docker rm -f a2a-kongair-agent
         ```
+        {: data-test-cleanup="block" }
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
+    - title: Clean up Kong Identity resources
+      include_content: md/identity/delete_auth_server
 
 faqs:
   - q: Does OpenID Connect interfere with the AI Agent entity's A2A protocol handling?
@@ -87,9 +90,6 @@ faqs:
   - q: Can I attach the OpenID Connect Policy directly to the AI Agent instead?
     a: |
       No. Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't supported. Authentication for AI Agents is configured exclusively through AI Identity Providers referenced in `access.identity_providers`.
-
-automated_tests: false
-
 ---
 
 This how-to continues from [Set up a {{site.identity}} auth server for AI Agent authentication](/ai-gateway/set-up-kong-identity-for-a2a/). Complete that how-to first, you need its `$ISSUER_URL`, `$CLIENT_ID`, and `$CLIENT_SECRET` to create the AI Identity Provider.
@@ -98,10 +98,11 @@ This how-to continues from [Set up a {{site.identity}} auth server for AI Agent 
 
 Create an `openid-connect` [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that uses {{site.identity}} as the issuer, and an [AI Agent](/ai-gateway/entities/ai-agent/) that references it through `access.identity_providers`.
 
+<!-- vale off -->
 {% entity_examples %}
 ai_gateway_identity_providers:
   - ref: identity-oidc
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Identity OIDC"
     name: identity-oidc
     type: openid-connect
@@ -118,7 +119,7 @@ ai_gateway_identity_providers:
       cache_tokens_salt: identity-oidc-cache-salt
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
     enabled: true
@@ -142,6 +143,7 @@ ai_gateway_agents:
         statistics: true
       max_request_body_size: 8388608
 {% endentity_examples %}
+<!-- vale on -->
 
 All requests to the `/a2a` route now require a valid bearer token from {{site.identity}}.
 
@@ -149,28 +151,27 @@ All requests to the `/a2a` route now require a valid bearer token from {{site.id
 
 Send an A2A request without a token:
 
-```sh
-curl -X POST "http://localhost:8000/a2a" \
-  -H "Content-Type: application/json" \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "What flights are available on route KA-123?"
-          }
-        ]
-      }
-    }
-  }'
-```
+<!--vale off-->
+{% validation request-check %}
+url: /a2a
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  jsonrpc: '2.0'
+  id: '1'
+  method: message/send
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+      - kind: text
+        text: What flights are available on route KA-123?
+status_code: 401
+{% endvalidation %}
+<!--vale on-->
 
 The request fails with `401 Unauthorized`.
 
@@ -178,42 +179,51 @@ The request fails with `401 Unauthorized`.
 
 Generate a token for the client and export it:
 
-<!--vale off-->
-```sh
-export ACCESS_TOKEN=$(curl -s -X POST "$ISSUER_URL/oauth/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials" \
-  -d "client_id=$CLIENT_ID" \
-  -d "client_secret=$CLIENT_SECRET" \
-  -d "scope=a2a-access" \
-  | jq -r '.access_token')
-```
+<!-- vale off -->
+{% validation request-check %}
+konnect_url: $ISSUER_URL
+url: /oauth/token
+method: POST
+headers:
+  -  'Content-Type: application/x-www-form-urlencoded'
+form_url_encoded_data:
+  grant_type: client_credentials
+  client_id: $CLIENT_ID
+  client_secret: $CLIENT_SECRET
+  scope: a2a-access
+extract_body:
+  - name: "access_token"
+    variable: ACCESS_TOKEN
+capture:
+  - variable: ACCESS_TOKEN
+    jq: ".access_token"
+status_code: 200
+{% endvalidation %}
 <!--vale on-->
 
 Send the A2A request with the token:
 
-```sh
-curl -X POST "http://localhost:8000/a2a" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $ACCESS_TOKEN" \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "What flights are available on route KA-123?"
-          }
-        ]
-      }
-    }
-  }'
-```
+<!--vale off-->
+{% validation request-check %}
+url: /a2a
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - "Authorization: Bearer $ACCESS_TOKEN"
+body:
+  jsonrpc: '2.0'
+  id: '1'
+  method: message/send
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+      - kind: text
+        text: What flights are available on route KA-123?
+status_code: 200
+{% endvalidation %}
+<!--vale on-->
 
 {{site.ai_gateway}} validates the bearer token against {{site.identity}}, then proxies the request to the upstream A2A agent. A successful response (status 200) contains the agent's reply.

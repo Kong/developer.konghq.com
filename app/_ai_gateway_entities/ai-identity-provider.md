@@ -35,10 +35,6 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer/
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
-  - text: Key Auth policy reference
-    url: /ai-gateway/policies/key-auth/
-  - text: OpenID Connect policy reference
-    url: /ai-gateway/policies/openid-connect/
 faqs:
   - q: What is the difference between an AI Identity Provider and an AI Model Provider?
     a: |
@@ -152,22 +148,18 @@ columns:
     key: when
   - title: AI Consumer credential
     key: credential
-  - title: Policy
-    key: policy
 rows:
   - type: "`key-auth`"
     when: "Your AI Consumers are internal tools, scripts, or teams that you control. You want to issue and rotate static API keys without involving an external identity provider."
     credential: "API key in a request header, query parameter, or request body"
-    policy: "[Key Auth](/ai-gateway/policies/key-auth/)"
   - type: "`openid-connect`"
     when: "Your AI Consumers already authenticate through an enterprise IdP (Okta, Azure AD, Google, or similar). You want to accept the tokens they already have rather than issuing separate keys."
     credential: "JWT bearer token or OAuth 2.0 grant from an external IdP"
-    policy: "[OpenID Connect](/ai-gateway/policies/openid-connect/)"
 {% endtable %}
 
 ### API key authentication
 
-The `key-auth` type uses the [Key Auth Policy](/ai-gateway/policies/key-auth/) to validate an API key that the AI Consumer passes on every request. The gateway looks for the key in a configurable header or query parameter, checks it against the AI Consumer's registered key, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
+The `key-auth` auth strategy validates an API key that the AI Consumer passes on every request. The gateway looks for the key in a configurable header or query parameter, checks it against the AI Consumer's registered key, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
 
 By default, {{site.ai_gateway}} accepts the key in an `apikey` header or `apikey` query parameter. Override the key name with `config.key_names`. For example, set `config.key_names: ["X-API-Key"]` to enforce a standard header name across your APIs.
 
@@ -196,11 +188,11 @@ rows:
 
 ### OIDC token authentication
 
-The `openid-connect` type uses the [OpenID Connect Policy](/ai-gateway/policies/openid-connect/) to validate a JWT or OAuth 2.0 token that the AI Consumer obtains from an external IdP. The gateway verifies the token against the IdP's published keys, maps the token to an AI Consumer, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
+The `openid-connect` auth strategy validates a JWT or OAuth 2.0 token that the AI Consumer obtains from an external IdP. The gateway verifies the token against the IdP's published keys, maps the token to an AI Consumer, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
 
 Set `config.issuer` to the IdP's discovery URL (for example, `https://dev-123456.okta.com`). {{site.ai_gateway}} uses the OIDC discovery endpoint to fetch signing keys automatically.
 
-The default `config.auth_methods` are `bearer` and `client_credentials`. If your AI Consumers use a different grant flow, add it to the list. For a full list of supported values, see the [OpenID Connect Policy reference](/ai-gateway/policies/openid-connect/).
+The default `config.auth_methods` are `bearer` and `client_credentials`. If your AI Consumers use a different grant flow, add it to the list. For a full list of supported values, see the [Schema](#schema) section.
 
 To map the token to an existing AI Consumer, set `config.consumer_claims` to an array of path segments locating the claim in the token that carries the AI Consumer identifier (for example, `[["user", "info", "id"]]` to map to a nested `user.info.id` claim). If no mapping is needed, set `config.consumer_optional: true` to allow unauthenticated token holders through ACL checks.
 

@@ -2,5 +2,6 @@
 1. [Get an API key](https://platform.openai.com/api-keys).
 1. Export the API key as a variable:
     ```bash
-    export OPENAI_AUTH_HEADER='Bearer <YOUR_OPENAI_API_KEY>'
+    export OPENAI_API_KEY='<YOUR_OPENAI_API_KEY>'
+    export OPENAI_AUTH_HEADER='Bearer $OPENAI_API_KEY'
     ```

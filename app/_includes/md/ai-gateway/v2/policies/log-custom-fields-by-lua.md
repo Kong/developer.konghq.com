@@ -1,91 +1,73 @@
-{% assign custom_fields_by_lua = include.custom_fields_by_lua %}
-{% assign custom_fields_by_lua_name = include.custom_fields_by_lua_name %}
-{% assign custom_fields_by_lua_slug = include.custom_fields_by_lua_slug %}
+<!---shared with AI Gateway logging Policies: http-log, file-log, syslog, tcp-log, udp-log, loggly, kafka-log, solace-log --->
 
-The [`{{custom_fields_by_lua_name}}`](./reference/#schema--{{custom_fields_by_lua_slug}}) configuration allows for the dynamic modification of
-log fields using Lua code. Below is a snippet of an example configuration that
-removes the `route` field from the logs:
+The [`config.custom_fields_by_lua`](/ai-gateway/policies/{{include.slug}}/reference/#schema--config-custom-fields-by-lua) configuration lets you dynamically modify log fields using Lua code. The following example configuration removes the `route` field from the logs:
 
-```sh
-curl -i -X POST http://localhost:8001/plugins \
-  --data config.name={{include.slug}} \
-  --data {{custom_fields_by_lua}}.route="return nil"
-```
+{% entity_example %}
+type: policy
+data:
+  name: {{include.slug}}
+  type: {{include.slug}}
+  config:
+    {{include.base_config}}
+    custom_fields_by_lua:
+      route: "return nil"
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
 
-Similarly, new fields can be added:
+New fields can be added the same way:
 
-```sh
-curl -i -X POST http://localhost:8001/plugins \
-  --data config.name={{include.slug}} \
-  --data {{custom_fields_by_lua}}.header="return kong.request.get_header('h1')"
-```
+{% entity_example %}
+type: policy
+data:
+  name: {{include.slug}}
+  type: {{include.slug}}
+  config:
+    {{include.base_config}}
+    custom_fields_by_lua:
+      header: "return kong.request.get_header('h1')"
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
 
-### Array indices {% new_in 3.15 %}
+Dot characters (`.`) in the field key create nested fields. Use a backslash `\` to escape a dot if you want to keep it as part of a flat field name instead of nesting it. For example, `[my_entry.log\.field]` produces a `my_entry` object with a single `log.field` key, instead of nesting into `log` and `field`.
 
-Array indices should be enclosed within square brackets. For example:
+### Targeting {{site.ai_gateway}} fields
 
-```sh
-curl -i -X POST http://localhost:8001/plugins \
-  --header 'Accept: application/json' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "name": "{{include.slug}}",
-  "config": {
-    "{{custom_fields_by_lua_name}}": {
-      "foo[1].bar[2].woo": "return 456"
-    }
-  }
-}'
-```
+{{site.ai_gateway}} logs the outcome of an LLM request under a nested `ai` object, for example `ai.proxy.meta`, `ai.proxy.usage`, and, when payload logging is enabled, `ai.proxy.payload.request` and `ai.proxy.payload.response`. Because `custom_fields_by_lua` keys are split into nested table accesses the same way, you can use the same unescaped, dotted-key syntax to remove or override those fields.
 
-Array indices only support positive integers.
+For example, to stop logging LLM request and response payloads:
 
-### Special characters {% unless page.name =="Solace Log"%}{% new_in 3.10 %}{% endunless %}
+{% entity_example %}
+type: policy
+data:
+  name: {{include.slug}}
+  type: {{include.slug}}
+  config:
+    {{include.base_config}}
+    custom_fields_by_lua:
+      "ai.proxy.payload.request": "return nil"
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
 
-Dot characters (`.`) in the field key create nested fields. You can use a backslash `\` to escape a dot if you want to keep it in the field name.
+{:.info}
+> **Note:** Escaping the dots (for example, `ai\.proxy\.payload\.request`) targets a literal flat key instead of the nested `ai.proxy.payload.request` field, so it won't match. Use unescaped dots to target {{site.ai_gateway}} fields.
 
-For example, if you configure a field with both a regular dot and an escaped dot:
+Because {{include.name}} applies `custom_fields_by_lua` in its own log phase, which runs after {{site.ai_gateway}} sets the `ai.*` fields on the request, it can override or remove any `ai.*` field. The reverse isn't possible, since {{site.ai_gateway}} can't run after a logging Policy's log phase to override a field the Policy already set.
 
-```sh
-curl -i -X POST http://localhost:8001/plugins/ \
-...
-  --data config.name={{page.name}} \
-  --data {{custom_fields_by_lua}}.[my_entry.log\.field]="return foo"
-```
-The field will look like this in the log:
-```sh
-"my_entry": {
-  "log.field": "foo"
-}
-```
+### Policy precedence and managing fields
 
-### Plugin precedence and managing fields
+All logging Policies use the same table for logging. If you set `config.custom_fields_by_lua` in one Policy, all logging Policies that run after it also use that configuration. For example, if you configure fields in the File Log Policy, those same fields appear in the Syslog Policy too, since File Log executes first.
 
-All logging plugins use the same table for logging.
-If you set `{{custom_fields_by_lua_name}}` in one plugin, all logging plugins that execute after that plugin will also use the same configuration.
-For example, if you configure fields via `{{custom_fields_by_lua_name}}` in File Log, those same fields will appear in [Syslog](/plugins/syslog/), since {{page.name}} executes first.
-
-* If you want all logging plugins to use the same configuration, we recommend using the [Pre-function](/plugins/pre-function/) plugin to call [kong.log.set_serialize_value](/gateway/pdk/reference/kong.log/#kong-log-set-serialize-value-key-value-options) so that the function is applied predictably and is easier to manage.
-
-* If you **don't** want all logging plugins to use the same configuration, you need to manually disable the relevant fields in each plugin.
-
-   For example, if you configure a field in File Log that you don't want appearing in Syslog, set that field to `return nil` in the File Log plugin:
-
-   ```sh
-   curl -i -X POST http://localhost:8001/plugins/ \
-   ...
-     --data config.name={{include.slug}} \
-    --data {{custom_fields_by_lua}}.my_file_log_field="return nil"
-   ```
-
-See the [plugin execution order reference](/gateway/entities/plugin/#plugin-contexts) for more details on plugin ordering.
+* If you want all logging Policies to use the same configuration, use the [Pre-function](/ai-gateway/policies/pre-function/) Policy to call `kong.log.set_serialize_value` so the function is applied predictably and is easier to manage.
+* If you don't want all logging Policies to share the same configuration, disable the relevant field in each Policy explicitly. For example, if you configure a field in the File Log Policy that you don't want appearing in the Syslog Policy, set that field to `return nil` in the File Log Policy's `custom_fields_by_lua` configuration.
 
 ### Limitations
 
-Lua code runs in a restricted sandbox environment, whose behavior is governed
-by the `untrusted_lua` [configuration properties](/gateway/configuration/).
+Lua code runs in a restricted sandbox environment, whose behavior is governed by the `untrusted_lua` configuration.
 
-{% include /plugins/sandbox.md %}
-
-Further, as code runs in the context of the log phase, only [PDK](/gateway/pdk/reference/) methods
-that can run in said phase can be used.
+As this code runs in the log phase, only [PDK](/gateway/pdk/reference/) methods that can run in that phase can be used.

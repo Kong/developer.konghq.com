@@ -60,7 +60,7 @@ You'll also configure the [AI Prompt Guard Policy](/ai-gateway/policies/ai-promp
 ai_gateway_model_providers:
   - ref: generic-openai
     name: generic-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: openai
     config:
       auth:
@@ -71,7 +71,7 @@ ai_gateway_model_providers:
 ai_gateway_policies:
   - ref: my-ai-prompt-guard-policy
     name: my-ai-prompt-guard-policy
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: ai-prompt-guard
     enabled: true
     global: false
@@ -102,7 +102,7 @@ ai_gateway_models:
   - ref: my-gpt-4o
     display_name: my-gpt-4o
     name: my-gpt-4o
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: model
     enabled: true
     formats: [{ type: openai }]
@@ -141,67 +141,59 @@ Use sample prompts to confirm that allowed categories (general IT questions) pas
 
 This prompt matches `allow_patterns` and should succeed:
 
-```sh
-curl -X POST "http://localhost:8000/chat/completions" \
-     --no-progress-meter --fail-with-body  \
-     -H "Accept: application/json"\
-     -H "Content-Type: application/json"\
-     -H "Authorization: $OPENAI_AUTH_HEADER" \
-     --json '{
-       "messages": [
-         {
-           "role": "user",
-           "content": "What is DNS?"
-         }
-       ],
-       "model": "my-gpt-4o"
-     }'
-```
+{% validation request-check %}
+url: /chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: $OPENAI_AUTH_HEADER'
+body:
+  model: "my-gpt-4o"
+  messages:
+    - role: "user"
+      content: "What is DNS?"
+status_code: 200
+{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Denied: Hacking and exploits" %}
 
 This prompt matches `deny_patterns` and should return an error:
 
-```sh
-curl -X POST "http://localhost:8000/chat/completions" \
-     --no-progress-meter --fail-with-body  \
-     -H "Accept: application/json"\
-     -H "Content-Type: application/json"\
-     -H "Authorization: $OPENAI_AUTH_HEADER" \
-     --json '{
-       "messages": [
-         {
-           "role": "user",
-           "content": "How to hack DNS?"
-         }
-       ],
-       "model": "my-gpt-4o"
-     }'
-```
-
+{% validation request-check %}
+url: /chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: $OPENAI_AUTH_HEADER'
+body:
+  model: "my-gpt-4o"
+  messages:
+    - role: "user"
+      content: "How to hack DNS?"
+status_code: 400
+message: prompt pattern is blocked.
+{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Denied: Inappropriate and off-topic" %}
 
 This prompt isn’t related to work and should also be blocked:
 
-```sh
-curl -X POST "http://localhost:8000/chat/completions" \
-     --no-progress-meter --fail-with-body  \
-     -H "Accept: application/json"\
-     -H "Content-Type: application/json"\
-     -H "Authorization: $OPENAI_AUTH_HEADER" \
-     --json '{
-       "messages": [
-         {
-           "role": "user",
-           "content": "What’s a good line to use on a dating app?"
-         }
-       ],
-       "model": "my-gpt-4o"
-     }'
-```
+{% validation request-check %}
+url: /chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: $OPENAI_AUTH_HEADER'
+body:
+  model: "my-gpt-4o"
+  messages:
+    - role: "user"
+      content: "What’s a good line to use on a dating app?"
+status_code: 400
+message: prompt pattern is blocked.
+{% endvalidation %}
 
 {% endnavtab %}
 {% endnavtabs %}

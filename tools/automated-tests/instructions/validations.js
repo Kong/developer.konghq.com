@@ -8,6 +8,8 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
+import yaml from "js-yaml";
+
 import {
   setEnvVariable,
   executeCommand,
@@ -17,6 +19,13 @@ import {
 const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const testsConfig = yaml.load(
+  fs.readFileSync("./config/tests.yaml", "utf-8"),
+);
+const skipEnvVariables = new Set(
+  testsConfig.validations?.skip_env_variables ?? [],
+);
 
 // Create cookie jar (in-memory)
 const cookieJars = {};
@@ -79,6 +88,33 @@ function getSessionFromCookieHeader(header) {
   return match ? match[1] : null;
 }
 
+async function runValueThroughCommand(container, value, command) {
+  const encoded = Buffer.from(value).toString("base64");
+  const cmd = `printf '%s' '${encoded}' | base64 -d | ${command}`;
+  log(
+    `[extract_headers] running command: ${cmd} (input=${JSON.stringify(value)})`,
+  );
+  const result = await executeCommand(container, cmd);
+  log(`[extract_headers] command output: ${JSON.stringify(result.output)}`);
+  return result.output.trim();
+}
+
+async function readFileContent(container, value, fileDir) {
+  const filename = value.replace("@", "");
+  const filesHostPath = path.resolve(
+    __dirname,
+    `../../../app/_includes/_files/${fileDir}`,
+    filename,
+  );
+
+  if (fs.existsSync(filesHostPath)) {
+    return fs.readFileSync(filesHostPath, "utf8");
+  }
+
+  const result = await executeCommand(container, `base64 "${filename}"`);
+  return Buffer.from(result.output, "base64").toString("utf8");
+}
+
 async function fetchWithOptionalJar(url, options = {}, jarName) {
   if (jarName !== undefined) {
     if (!(jarName in cookieJars)) {
@@ -91,7 +127,13 @@ async function fetchWithOptionalJar(url, options = {}, jarName) {
   return fetch(url, options);
 }
 
-async function executeRequest(config, runtimeConfig, container, onResponse) {
+async function executeRequest(
+  config,
+  runtimeConfig,
+  container,
+  onResponse,
+  expectedStatus,
+) {
   const maxRetries = 10;
   const initialRetryDelay = 5000; // 5 seconds initial delay
 
@@ -120,18 +162,31 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
     if (config.body !== undefined && options.method === "POST") {
       options.body = JSON.stringify(replaceEnvVars(config.body, env));
       headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    } else if (config.body_file !== undefined && options.method === "POST") {
+      options.body = await readFileContent(
+        container,
+        config.body_file,
+        config.file_dir,
+      );
+      headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    } else if (config.form_url_encoded_data !== undefined) {
+      const params = new URLSearchParams();
+      for (const [key, value] of Object.entries(config.form_url_encoded_data)) {
+        params.append(key, replaceEnvVars(value, env));
+      }
+      options.body = params.toString();
+      headers["Content-Type"] =
+        headers["Content-Type"] || "application/x-www-form-urlencoded";
     } else if (config.form_data !== undefined) {
       const formData = new FormData();
 
       for (const [key, value] of Object.entries(config.form_data)) {
         if (key === "file") {
-          const filesHostPath = path.resolve(
-            __dirname,
-            `../../../app/_includes/_files/${config.file_dir}`,
-            value.replace("@", ""),
+          const fileContent = await readFileContent(
+            container,
+            value,
+            config.file_dir,
           );
-
-          const fileContent = fs.readFileSync(filesHostPath, "utf8");
           formData.append(key, new File([fileContent], value));
         } else {
           formData.append(key, replaceEnvVars(value, env));
@@ -154,11 +209,24 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
       if (options.body) console.log(`[debug] request body: ${options.body}`);
     }
 
-    const response = await fetchWithOptionalJar(
-      url,
-      options,
-      config.cookie_jar || config.cookie,
-    );
+    let response;
+    try {
+      response = await fetchWithOptionalJar(
+        url,
+        options,
+        config.cookie_jar || config.cookie,
+      );
+    } catch (error) {
+      const cause = error.cause
+        ? ` (cause: ${error.cause.code || error.cause.message || error.cause})`
+        : "";
+      log(`[debug] fetch failed for ${options.method} ${url}${cause}`);
+      console.error(
+        `[debug] fetch failed for ${options.method} ${url}${cause}`,
+      );
+      error.message = `${error.message} for ${options.method} ${url}${cause}`;
+      throw error;
+    }
     let body = {};
 
     if (response.status !== 302) {
@@ -188,16 +256,26 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
           extractedValue = response.headers.get(header.name);
         }
 
+        if (header.command && extractedValue != null) {
+          extractedValue = await runValueThroughCommand(
+            container,
+            extractedValue,
+            header.command,
+          );
+        }
+
         if (
           config.retry &&
           (extractedValue === undefined ||
             extractedValue === "" ||
-            value === null)
+            extractedValue === null)
         ) {
           shouldRetry = true;
         } else {
           await setEnvVariable(container, header.variable, extractedValue);
-          console.log(`extracted value: ${extractedValue}`);
+          if (config.debug) {
+            console.log(`extracted value: ${extractedValue}`);
+          }
         }
       }
     }
@@ -220,18 +298,22 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
           shouldRetry = true;
         } else {
           if (config.debug) {
-            console.log(`extracted body field ${field.name} into ${field.variable}: ${value}`);
+            console.log(
+              `extracted body field ${field.name} into ${field.variable}: ${value}`,
+            );
           }
           await setEnvVariable(container, field.variable, value);
         }
       }
     }
 
+    // Retry on a status code mismatch regardless of config.retry/extract_headers/extract_body
+    if (expectedStatus !== undefined && response.status !== expectedStatus) {
+      shouldRetry = true;
+    }
+
     // Determine if request is successful
-    const isSuccessful =
-      !config.retry ||
-      (!config.extract_headers && !config.extract_body) ||
-      !shouldRetry;
+    const isSuccessful = !shouldRetry;
 
     if (isSuccessful) {
       return onResponse(response, body);
@@ -243,7 +325,9 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
       log(
         `Retry attempt ${
           attempt + 1
-        } - extracted values were undefined/empty, retrying in ${backoffDelay}ms...`,
+        } - extracted values were undefined/empty or status code ${
+          response.status
+        } did not match expected ${expectedStatus}, retrying in ${backoffDelay}ms...`,
       );
       await sleep(backoffDelay);
       continue;
@@ -261,20 +345,27 @@ async function validateRequest(
   runtimeConfig,
   container,
   checks,
+  expectedStatus,
 ) {
   const assertions = [];
 
-  await executeRequest(config, runtimeConfig, container, (response, body) => {
-    for (const check of checks) {
-      const { assert, message } = check(response, body);
-      assertions.push(message);
+  await executeRequest(
+    config,
+    runtimeConfig,
+    container,
+    (response, body) => {
+      for (const check of checks) {
+        const { assert, message } = check(response, body);
+        assertions.push(message);
 
-      if (!assert) {
-        assertions.push(body);
-        logAndError(validationName, message, assertions);
+        if (!assert) {
+          assertions.push(body);
+          logAndError(validationName, message, assertions);
+        }
       }
-    }
-  });
+    },
+    expectedStatus,
+  );
   return assertions;
 }
 
@@ -313,6 +404,7 @@ async function rateLimit(validationName, config, runtimeConfig, container) {
             ]
           : []),
       ],
+      expectedStatus,
     );
     assertions.push(...result);
     log(`     request #${requestNumber}: ✅ .`);
@@ -325,12 +417,19 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
     console.log(`Sleeping for ${config.sleep} ms before making the request...`);
     await sleep(config.sleep);
   }
-  return validateRequest(validationName, config, runtimeConfig, container, [
-    (response) => ({
-      assert: response.status === config.status_code,
-      message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
-    }),
-  ]);
+  return validateRequest(
+    validationName,
+    config,
+    runtimeConfig,
+    container,
+    [
+      (response) => ({
+        assert: response.status === config.status_code,
+        message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
+      }),
+    ],
+    config.status_code,
+  );
 }
 
 async function unauthorizedCheck(
@@ -339,21 +438,28 @@ async function unauthorizedCheck(
   runtimeConfig,
   container,
 ) {
-  return validateRequest(validationName, config, runtimeConfig, container, [
-    (response) => ({
-      assert: response.status === config.status_code,
-      message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
-    }),
-    (response, body) => ({
-      assert: body.message === config.message,
-      message: `Expected: request to have message '${config.message}', got: '${body.message}'.`,
-    }),
-  ]);
+  return validateRequest(
+    validationName,
+    config,
+    runtimeConfig,
+    container,
+    [
+      (response) => ({
+        assert: response.status === config.status_code,
+        message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
+      }),
+      (response, body) => ({
+        assert: body.message === config.message,
+        message: `Expected: request to have message '${config.message}', got: '${body.message}'.`,
+      }),
+    ],
+    config.status_code,
+  );
 }
 
 async function envVariables(config, runtimeConfig, container) {
   for (const [key, value] of Object.entries(config)) {
-    if (key === "KONG_LICENSE_DATA") {
+    if (skipEnvVariables.has(key)) {
       continue;
     }
     await setEnvVariable(container, key, value);
@@ -370,22 +476,55 @@ async function controlPlaneRequest(
 ) {
   const statusCode =
     config.status_code !== undefined ? config.status_code : 200;
-  return validateRequest(validationName, config, runtimeConfig, container, [
-    (response) => ({
-      assert: response.status === statusCode,
-      message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
-    }),
-  ]);
+  return validateRequest(
+    validationName,
+    config,
+    runtimeConfig,
+    container,
+    [
+      (response) => ({
+        assert: response.status === statusCode,
+        message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
+      }),
+    ],
+    statusCode,
+  );
 }
 
 async function customCommand(validationName, config, runtimeConfig, container) {
   const returnCode = config.expected.return_code;
+  const retryDelays = [10000, 15000, 20000, 25000]; // delay before retry attempts 2-5
+  const maxRetries = retryDelays.length + 1;
+
   let result;
-  try {
-    result = await executeCommand(container, config.command);
-  } catch (error) {
-    result = error;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      result = await executeCommand(container, config.command);
+    } catch (error) {
+      result = error;
+    }
+
+    const codeMatches = returnCode === result.exitCode;
+    const messageMatches =
+      !config.expected.message ||
+      !result.output ||
+      result.output.trimStart().includes(config.expected.message);
+
+    if (codeMatches && messageMatches) {
+      break;
+    }
+
+    if (attempt < maxRetries - 1) {
+      const backoffDelay = retryDelays[attempt];
+      log(
+        `Retry attempt ${
+          attempt + 1
+        } - command "${config.command}" did not meet expectations, retrying in ${backoffDelay}ms...`,
+      );
+      await sleep(backoffDelay);
+    }
   }
+
   if (returnCode !== result.exitCode) {
     logAndError(validationName, "Failed to execute command", [
       `Expected: command to have return code ${returnCode}, got: ${result.exitCode}`,
@@ -426,6 +565,7 @@ async function trafficGenerator(
           message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
         }),
       ],
+      expectedStatus,
     );
     assertions.push(...result);
     log(`     request #${requestNumber}: ✅ .`);
@@ -512,6 +652,10 @@ export async function validate(container, validation, runtimeConfig) {
       );
       break;
     case "custom-command":
+    case "claude-code":
+    case "codex":
+    case "qwen":
+    case "gemini":
       result = await customCommand(
         validation.name,
         validation.config,

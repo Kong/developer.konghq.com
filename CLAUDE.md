@@ -57,7 +57,7 @@ For body formatting standards, see `app/contributing/index.md`.
 
 These files are auto-generated from external sources:
 - `app/_references/`
-- `app/_data/changelogs/`
+- `app/_changelogs/`
 - `app/_kong_plugins/*/changelog.json` and `*/schema.json`
 - `app/_schemas/gateway/plugins/`
 - `app/_includes/deck/help/`

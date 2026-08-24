@@ -25,6 +25,11 @@ tags:
   - ai
   - vertex-ai
 
+# Unpublished: Vertex AI is being retired in favor of Gemini Enterprise, and this
+# guide's approach (AI Model Provider type: vertex, used to host Claude models on
+# Vertex AI Model Garden) has no Gemini-based replacement. Revisit post-GA.
+published: false
+
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}} for a Claude model hosted on Google Vertex AI?
   a: Create an AI Model Provider entity to authenticate to Google Vertex AI, add a Policy to strip Anthropic-only request fields Vertex doesn't support, create an AI Model entity that accepts Anthropic-compatible requests and targets your Vertex model. Then, point Claude CLI’s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests are proxied for monitoring and control.
@@ -61,44 +66,29 @@ prereqs:
 
 ---
 
-## Create an AI Model Provider entity
+## Create AI Model Provider, AI Policy, and AI Model entities
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Vertex AI and store your API key:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
+
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Vertex AI's API does not support.
 
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: vertex-prod
     name: vertex-prod
     display_name: "Google Vertex Prod"
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: vertex
     config:
       auth:
-        type: gcp
+        type: vertex
         service_account_json: !env GCP_SERVICE_ACCOUNT_JSON
-{% endentity_examples %}
-
-{:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
-
-This AI Model Provider uses:
-
- * `type: vertex`: Specifies that this provider connects to Google Vertex AI.
- * `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
- * `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
-
-## Create an AI Policy and AI Model
-
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Vertex AI's Claude endpoint does not support, and an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream model is available and attach that policy to it.
-
-{:.warning}
-> Apply the Policy and the AI Model together, in the same `kongctl apply` call, as shown below. The AI Model's `policies` field references the Policy via `!ref`, and `ref` values are local to a single `kongctl apply` call. They're never written to {{site.konnect_short_name}}. If you split this into two separate `kongctl apply` calls, the second one fails with `resource not found: claude-code-compat`, even though the Policy already exists.
-
-{% entity_examples %}
 ai_gateway_policies:
   - ref: claude-code-compat
     name: claude-code-compat
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: request-transformer-advanced
     enabled: true
     global: false
@@ -111,27 +101,44 @@ ai_gateway_models:
   - ref: claude-code-vertex-sonnet
     name: claude-code-vertex-sonnet
     display_name: "Claude Code - Vertex - Sonnet 4.6"
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: model
     enabled: true
-    formats: [{ type: anthropic }]
+    formats:
+      - type: anthropic
     config:
-      route: { paths: [/] }
-      model: { name_header: true }
-    capabilities: [generate]
-    policies: [ !ref claude-code-compat#name ]
+      route:
+        paths:
+          - /
+        model:
+          body_param: model
+          values:
+            - claude-code-vertex-sonnet
+    capabilities:
+      - generate
+    policies:
+      - !ref claude-code-compat#name
     targets:
       - name: claude-sonnet-4-5@20250929
-        provider: vertex-prod
+        provider: !ref vertex-prod#name
         config:
           type: vertex
           upstream_url: !env VERTEX_UPSTREAM_URL
 {% endentity_examples %}
 
 {:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
+{:.info}
 > Replace `claude-sonnet-4-5@20250929` with the id of your own enabled model in Vertex AI Model Garden.
 
-The AI Policy uses:
+The AI Model Provider uses the following settings:
+
+* `type: vertex`: Specifies that this provider connects to Google Vertex AI.
+* `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
+* `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
+
+The AI Policy uses the following settings:
 
 * `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
 * `config.remove.headers` / `config.remove.querystring` / `config.remove.body`: Strips fields that {{ site.claude_code }} sends but that Vertex AI's Claude endpoint rejects with a `400 Extra inputs are not permitted`: the `anthropic-beta` header, the `beta` query string, and body fields like `mcp_servers` and `container`. The list also includes `thinking`. {{ site.claude_code }} sends `thinking: {"type": "adaptive", ...}` by default, and Vertex's schema only accepts `disabled` or `enabled` for `thinking.type`, so it must be removed rather than left as-is.
@@ -139,56 +146,57 @@ The AI Policy uses:
 {:.info}
 > The Vertex driver injects the `anthropic-version` header into the request body automatically. 
 
-The AI Model uses:
+The AI Model uses the following settings:
 
  * `name`/`display_name: claude-code-vertex-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target ID, to select the model.
  * `formats: [type: anthropic]`: Accepts Anthropic-compatible requests (what {{ site.claude_code }} sends).
- * `config.model.name_header: true`: Lets {{ site.claude_code }} select this model by sending its `name` in the request, instead of requiring a separate routing rule.
  * `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API.
  * `policies`: Attaches the `claude-code-compat` policy defined above, via `!ref claude-code-compat#name`, so its body-stripping transformation applies to every request sent through this model.
  * `targets[0].provider: vertex-prod`: Routes upstream requests through the Vertex AI Provider created earlier.
  * `targets[0].name: claude-sonnet-4-5@20250929`: The Vertex publisher model ID, in `name@YYYYMMDD` format. It must match a model you've enabled in Vertex AI Model Garden.
  * `targets[0].config.upstream_url`: The full `:rawPredict` URL from the prerequisites, encoding your project, location, and model ID.
 
-## Verify traffic through Kong
+## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'claude-code-vertex-sonnet'
-```
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: claude-code-vertex-sonnet
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
-
-```text
-I'll need permission to work with your files.
-
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
-
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a question to confirm that requests reach {{site.ai_gateway}}.
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-Tell me about Anna Komnene's Alexiad.
-```
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
 
-{{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
+What it is
 
-```text
-Anna Komnene (1083-1153?) was a Byzantine princess, scholar, physician,
-hospital administrator, and historian. She is known for writing the
-Alexiad, a historical account of the reign of her father, Emperor Alexios
-I Komnenos (r. 1081-1118). The Alexiad is a valuable primary source for
-understanding Byzantine history and the First Crusade.
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
+
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}

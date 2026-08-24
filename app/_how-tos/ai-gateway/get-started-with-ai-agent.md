@@ -65,6 +65,7 @@ cleanup:
         docker compose down
         docker rm -f a2a-kongair-agent
         ```
+        {: data-test-cleanup="block" }
 
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
@@ -77,7 +78,7 @@ faqs:
     a: MCP (Model Context Protocol) standardizes how agents connect to tools, APIs, and data sources. A2A standardizes how agents communicate with other agents. They are complementary. Use MCP for agent-to-tool communication and A2A for agent-to-agent communication.
 
   - q: Can I add authentication to the A2A endpoint?
-    a: Yes. Create an AI Policy like [OpenID Connect](/ai-gateway/policies/openid-connect/) for authentication and attach it to the agent. The AI Agent entity handles A2A protocol concerns independently of authentication.
+    a: Yes. Reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) using the `openid-connect` or `key-auth` auth strategy in the agent's `access.identity_providers` array. Authentication isn't attached through the agent's `policies` array. The AI Agent entity handles A2A protocol concerns independently of authentication.
 
   - q: How do I enable request/response logging?
     a: Set `config.logging.payloads` to `true` and `config.logging.statistics` to `true` in the agent config to log A2A request and response bodies along with metrics.
@@ -91,7 +92,7 @@ Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that proxies A2A tra
 {% entity_examples %}
 ai_gateway_agents:
   - ref: kongair-flight-booking-agent
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
     type: a2a
     enabled: true
@@ -125,10 +126,11 @@ A2A agents expose their capabilities through an Agent Card at the `/.well-known/
 
 Retrieve it through the gateway:
 
-```bash
-curl -X GET "http://localhost:8000/a2a/.well-known/agent-card.json" \
-  --no-progress-meter --fail-with-body
-```
+{% validation request-check %}
+url: /a2a/.well-known/agent-card.json
+status_code: 200
+retry: true
+{% endvalidation %}
 
 The response shows the agent's capabilities, skills, and supported protocols:
 
@@ -165,28 +167,27 @@ The response shows the agent's capabilities, skills, and supported protocols:
 
 Send a `message/send` JSON-RPC request to test the agent:
 
-```bash
-curl -X POST "http://localhost:8000/a2a" \
-  -H "Content-Type: application/json" \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "What flights are available on route KA-123?"
-          }
-        ]
-      }
-    }
-  }'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /a2a/
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  jsonrpc: '2.0'
+  id: '1'
+  method: message/send
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+      - kind: text
+        text: What flights are available on route KA-123?
+status_code: 200
+{% endvalidation %}
+<!-- vale on -->
 
 A successful response (status 200) contains the agent's reply:
 

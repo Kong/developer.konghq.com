@@ -43,8 +43,8 @@ faqs:
     a: |
       `passthrough-listener` proxies MCP traffic to an upstream MCP server without converting tools.
       `conversion-listener` converts a RESTful API into MCP tools and accepts MCP requests on one route path. `conversion-only` converts a RESTful API into MCP tools that a `listener` AI MCP Server
-      aggregates by matching labels, but doesn't accept incoming MCP traffic itself. `listener` aggregates tools from one or more
-      `conversion-only` AI MCP Servers into a single MCP endpoint. `upstream-server` registers a real
+      aggregates by name through its `sources` field, but doesn't accept incoming MCP traffic itself. `listener` aggregates tools from one or more
+      `conversion-only` or `upstream-server` AI MCP Servers into a single MCP endpoint. `upstream-server` registers a real
       MCP server into an aggregation pool, dynamically fetching its tools for a `listener` to aggregate.
 
   - q: Can the same AI Consumer's identity gate access to specific tools?
@@ -173,11 +173,10 @@ rows:
     pattern: Generate from REST API and feeds aggregate
     description: |
       Converts RESTful API paths into MCP tools but does not accept incoming MCP requests.
-      Since a `conversion-only` AI MCP Server has no `config.server` block, it marks itself for aggregation using the
-      top-level [`labels`](#schema-aigateway-mcpserver-labels) field instead (for example,
-      `labels: {ai-gateway-mcp-aggregation: payments}`). A `listener` AI MCP Server then references it by
-      matching label. This mode must be used together with one or more AI MCP Servers configured with
-      `listener` mode.
+      Since a `conversion-only` AI MCP Server has no `config.server` block, a `listener` AI MCP Server
+      references it directly by its immutable `name` in the listener's
+      [`sources`](#schema-aigateway-mcpserver-sources) field. This mode must be used together with one or
+      more AI MCP Servers configured with `listener` mode.
     mode: "`conversion-only`"
   - usecase: |
       A single MCP endpoint that aggregates tools from multiple `conversion-only` or
@@ -185,23 +184,23 @@ rows:
       expose a unified MCP interface. One `listener` per aggregated endpoint.
     pattern: Aggregate
     description: |
-      Similar to `conversion-listener`, but binds tools from one or more `conversion-only` MCP Servers
-      instead of defining its own. Set [`config.server.label`](#schema-aigateway-mcpserver-config-server-label)
-      to `<label-key>:<label-value>`, matching a key/value pair set in the `labels` field of each
-      `conversion-only` MCP Server to include. Merges all matching tools into one list and routes each
-      tool call to the correct backend.
+      Similar to `conversion-listener`, but binds tools from one or more `conversion-only` or
+      `upstream-server` MCP Servers instead of defining its own. List the immutable `name` of each
+      source MCP Server in the listener's [`sources`](#schema-aigateway-mcpserver-sources) field.
+      Merges all matching tools into one list and routes each tool call to the correct backend.
     mode: "`listener`"
   - usecase: |
       Expose an existing upstream MCP server's tools alongside others through a single `listener`
-      endpoint. The listener aggregates all matching upstreams, so adding a new upstream is just
-      deploying a new `upstream-server` AI MCP Server with a matching label.
+      endpoint. The listener aggregates every AI MCP Server listed in its `sources` field, so
+      adding a new upstream is just adding its name to that list.
     pattern: Existing MCP server and feeds aggregate
     description: |
       Registers a real MCP server into an aggregation pool and tells the `listener` MCP Server
-      "this backend has tools, go fetch them." Dynamically fetches and caches its tool list,
-      then pairs with a `listener` MCP Server through a shared label. Supports optional OAuth2
-      authentication to fetch tool lists from the upstream. This mode must be used together
-      with one or more AI MCP Servers configured with `listener` mode.
+      "this backend has tools, go fetch them." Dynamically fetches and caches its tool list, then
+      pairs with a `listener` MCP Server that lists its `name` in
+      [`sources`](#schema-aigateway-mcpserver-sources). Supports optional OAuth2 authentication to
+      fetch tool lists from the upstream. This mode must be used together with one or more AI MCP
+      Servers configured with `listener` mode.
     mode: "`upstream-server`"
 {% endtable %}
 <!-- vale on -->
@@ -251,11 +250,11 @@ sequenceDiagram
 
 ## Tool aggregation with upstream-server
 
-You can use a `listener` AI MCP Server to pull tools from multiple `upstream-server` AI MCP Servers and expose them through a single endpoint. The listener discovers and aggregates tools based on a matching label, so clients see one unified tool catalog while your services remain independent.
+You can use a `listener` AI MCP Server to pull tools from multiple `upstream-server` AI MCP Servers and expose them through a single endpoint. The listener discovers and aggregates tools based on entries in its `sources` field, so clients see one unified tool catalog while your services remain independent.
 
 ### How aggregation works
 
-1. **Labels connect upstreams to listeners**: Each `upstream-server` AI MCP Server tags itself using the top-level [`labels`](#schema-aigateway-mcpserver-labels) field (for example, `labels: {my-tools: catalog}`). Set [`config.server.label`](#schema-aigateway-mcpserver-config-server-label) on the listener to the matching `<label-key>:<label-value>` string (for example, `my-tools:catalog`). Any upstream with that label gets pulled into the aggregation.
+1. **Sources connect upstreams to listeners**: Set the listener's top-level [`sources`](#schema-aigateway-mcpserver-sources) field to the immutable `name` of each `upstream-server` (or `conversion-only`) AI MCP Server whose tools it should expose (for example, `sources: [weather-service, catalog-service]`). Every AI MCP Server named in `sources` gets pulled into the aggregation.
 
 2. **Tool discovery**: When an MCP client calls `tools/list`, the listener fetches tool lists from every matching upstream. If an upstream requires authentication, configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) with OAuth2 credentials so the listener can fetch its tools.
 
@@ -271,7 +270,7 @@ sequenceDiagram
     participant Agent as AI Agent
     participant Kong as {{site.ai_gateway}}
     participant Listener as AI MCP Server
-    participant Upstreams as Upstreams<br/>(label: my-tools:catalog)
+    participant Upstreams as Upstreams<br/>(sources: weather-service, catalog-service)
 
     note over Agent,Upstreams: Phase 1: Token Validation
     Agent->>Kong: Bearer token
@@ -434,7 +433,7 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 > - `access.default_tool_acls` applies to all tools by default.
 > - If `access.default_tool_acls` isn't set, the listener falls back to the top-level `access.acls`.
 > - A tool's own `acls` fully overrides the default ACL for that tool.
-> - [`config.server.label`](#schema-aigateway-mcpserver-config-server-label) is used for tool filtering and aggregation, not for inheriting ACLs from other AI MCP Servers.
+> - [`sources`](#schema-aigateway-mcpserver-sources) is used for tool aggregation, not for inheriting ACLs from other AI MCP Servers.
 
 ### Attribute types
 

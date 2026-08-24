@@ -80,7 +80,6 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="bedrock.svg" title="Amazon Bedrock" cta_url="/ai-gateway/ai-providers/bedrock/" %}
 {% icon_card icon="anthropic.svg" title="Anthropic" cta_url="/ai-gateway/ai-providers/anthropic/" %}
 {% icon_card icon="gemini.svg" title="Gemini" cta_url="/ai-gateway/ai-providers/gemini/" %}
-{% icon_card icon="vertex.svg" title="Vertex AI" cta_url="/ai-gateway/ai-providers/vertex/" %}
 {% icon_card icon="cohere.svg" title="Cohere" cta_url="/ai-gateway/ai-providers/cohere/" %}
 {% icon_card icon="mistral.svg" title="Mistral" cta_url="/ai-gateway/ai-providers/mistral/" %}
 {% icon_card icon="huggingface.svg" title="Hugging Face" cta_url="/ai-gateway/ai-providers/huggingface/" %}
@@ -104,10 +103,10 @@ The [`config.auth`](#schema-aigateway-model-provider-config-auth) object declare
 * **`basic`**: Header- or parameter-based auth. Supports up to one auth header (`config.auth.headers`) and one auth parameter (`config.auth.params`). Parameters can be sent as a query string or in the request body (`config.auth.params[].location`). Used by most AI Model Provider types.
 * **`aws`**: IAM access-key and assume-role auth. Used by [Bedrock](/ai-gateway/ai-providers/bedrock/).
 * **`azure`**: Microsoft Entra ID or managed-identity auth. Used by [Azure OpenAI](/ai-gateway/ai-providers/azure/).
-* **`gcp`**: Google service-account auth. Used by [Gemini](/ai-gateway/ai-providers/gemini/) and [Vertex AI](/ai-gateway/ai-providers/vertex/).
+* **`gcp`**: Google service-account auth. Used by [Gemini](/ai-gateway/ai-providers/gemini/).
 
 {:.info}
-> Bedrock, Azure OpenAI, Gemini, and Vertex AI can also fall back to `basic` auth.
+> Bedrock, Azure OpenAI, and Gemini can also fall back to `basic` auth.
 
 {% table %}
 columns:
@@ -129,7 +128,7 @@ rows:
     approach: "Microsoft Entra ID via Managed Identity (recommended when running in Azure). For explicit credentials, provide client ID, secret, and tenant ID. Requires `config.instance` (your Azure instance name, for example `kong-az-east`)."
     fallback: "`basic`"
   - type: "`gcp`"
-    providers: "[Gemini](/ai-gateway/ai-providers/gemini/), [Vertex AI](/ai-gateway/ai-providers/vertex/)"
+    providers: "[Gemini](/ai-gateway/ai-providers/gemini/)"
     approach: "Google service accounts via environment auto-detection (service account JSON or Compute Engine metadata server). For restricted networks, set `config.auth.metadata_url` or `config.auth.oauth_token_url` to custom endpoints."
     fallback: "`basic`"
 {% endtable %}

@@ -24,6 +24,9 @@ prereqs:
   inline:
     - title: OpenAI API key
       include_content: md/ai-gateway/v2/prereqs/openai-kongctl
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
 
 min_version:
   ai-gateway: '2.0'
@@ -40,12 +43,12 @@ tldr:
 
 ## Create an AI Provider entity
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to OpenAI and store your authentication credentials:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: generic-openai
     display_name: "generic-openai"
     type: openai
@@ -57,7 +60,10 @@ ai_gateway_model_providers:
           value: !env OPENAI_AUTH_HEADER
 {% endentity_examples %}
 
-In this example, we're setting up the AI Model Provider with:
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
+The AI Model Provider uses the following settings:
 
 * `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
 * `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
@@ -70,7 +76,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_models:
   - ref: my-claude-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-claude-openai
     display_name: "my-claude-openai"
     type: model
@@ -94,7 +100,7 @@ ai_gateway_models:
       - generate
 {% endentity_examples %}
 
-In this example, we're setting up the AI Model with:
+The AI Model uses the following settings:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-claude-openai`: A unique identifier for this model.
@@ -103,36 +109,47 @@ In this example, we're setting up the AI Model with:
 * `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
 * `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-5-mini` specifies which OpenAI model to call upstream.
 
-## Verify traffic through Kong
+## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ ANTHROPIC_MODEL=my-claude-openai claude
-```
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude-openai
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
+{{ site.claude }} will produce a full-length response to your request:
 
 ```text
-I'll need permission to work with your files.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
 
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
+What it is
 
-Learn more ( https://docs.claude.com/s/claude-code-security )
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
 
-❯ 1. Yes, continue
-2. No, exit
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me about Procopius' Secret History.
-```
-
-{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request, proxied through {{site.ai_gateway}} to the OpenAI model configured in the AI Model entity's `targets`.

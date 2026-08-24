@@ -28,9 +28,13 @@ prereqs:
       content: |
         1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey).
         1. Export the API key as a variable:
+
            ```bash
            export GEMINI_API_KEY='YOUR_GEMINI_API_KEY'
            ```
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
 
 min_version:
   ai-gateway: '2.0'
@@ -47,12 +51,12 @@ tldr:
 
 ## Create an AI Model Provider entity
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Gemini and store your API key:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-gemini-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gemini-account
     display_name: "my-gemini-account"
     type: gemini
@@ -64,7 +68,10 @@ ai_gateway_model_providers:
           value: !env GEMINI_API_KEY
 {% endentity_examples %}
 
-In this example, we're setting up the AI Model Provider with:
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
+The AI Model Provider uses the following settings:
 
 * `type: gemini`: Specifies that this provider connects to the Gemini service using Gemini's standard API format.
 * `name: my-gemini-account`: A unique identifier that AI Models will reference to route requests through this provider.
@@ -72,12 +79,12 @@ In this example, we're setting up the AI Model Provider with:
 
 ## Create an AI Policy entity
 
-{{ site.claude_code }} sends beta headers, its own client credentials, and fields that Gemini's native API rejects. Create an [AI Policy](/ai-gateway/entities/ai-policy/) with a `request-transformer-advanced` config that strips the `anthropic-beta`, `authorization`, and `x-api-key` headers, the `beta` query string parameter, and the `output_config`/`context_management`/`mcp_servers`/`container`/`service_tier`/`reasoning_effort` body fields before the request reaches Gemini:
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Gemini's API does not support.
 
 {% entity_examples %}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: strip-claude-beta-info
     display_name: "strip-claude-beta-info"
     type: request-transformer-advanced
@@ -101,6 +108,16 @@ ai_gateway_policies:
 {:.info}
 > {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see an error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
 
+The AI Policy uses the following settings:
+
+* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
+*  `config.remove.headers`: Removes the `anthropic-beta`, `authorization`, and `x-api-key` headers.
+*  `config.remove.querystring`: Removes the `beta` query string parameter.
+*  `config.remove.body`: Removes the `output_config`, `context_management`, `mcp_servers`, `container`, `service_tier`, and `reasoning_effort` body fields.
+
+{:.info}
+> Don't strip `model`: {{site.ai_gateway}} uses that field to select the target, and removing it breaks routing.
+
 ## Create an AI Model entity
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
@@ -108,7 +125,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: my-gemini-account
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gemini-account
     display_name: "my-gemini-account"
     type: gemini
@@ -120,7 +137,7 @@ ai_gateway_model_providers:
           value: !env GEMINI_API_KEY
 ai_gateway_policies:
   - ref: strip-claude-beta-info
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: strip-claude-beta-info
     display_name: "strip-claude-beta-info"
     type: request-transformer-advanced
@@ -141,7 +158,7 @@ ai_gateway_policies:
           - reasoning_effort
 ai_gateway_models:
   - ref: my-claude-gemini
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-claude-gemini
     display_name: "my-claude-gemini"
     type: model
@@ -166,7 +183,7 @@ ai_gateway_models:
       - generate
 {% endentity_examples %}
 
-In this example, we're setting up the AI Model with:
+The AI Model uses the following settings:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-claude-gemini`: A unique identifier for this model.
@@ -176,57 +193,48 @@ In this example, we're setting up the AI Model with:
 * `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: !ref my-gemini-account#name` references the AI Model Provider we created earlier, and `name: gemini-2.5-flash` specifies which Gemini model to call upstream.
 * `policies: [!ref strip-claude-beta-info#name]`: Attaches the AI Policy created earlier so it applies to every request to this AI Model.
 
-## Validate the AI Model
-
-Send a test request directly to confirm the setup works before pointing {{ site.claude_code }} at it:
-
-```sh
-curl -i -X POST http://localhost:8000/v1/messages \
-  -H 'Content-Type: application/json' \
-  -H 'anthropic-version: 2023-06-01' \
-  --data '{
-    "model": "my-claude-gemini",
-    "max_tokens": 1024,
-    "messages": [
-      {"role": "user", "content": "hello"}
-    ]
-  }'
-```
-
-## Verify traffic through Kong
+## Run {{ site.claude_code }}
 
 {{ site.claude_code }}'s experimental beta features send fields that Gemini rejects even with the AI Policy in place. Disable them, then start a session pointed at your local {{site.ai_gateway}} endpoint:
 
-```sh
-export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude-gemini
+disable_experimental_betas: true
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
-ANTHROPIC_BASE_URL=http://localhost:8000/ \
-ANTHROPIC_MODEL=my-claude-gemini \
-claude
-```
-
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-I'll need permission to work with your files.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
 
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
+What it is
 
-Learn more ( https://docs.claude.com/s/claude-code-security )
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
 
-❯ 1. Yes, continue
-2. No, exit
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me about Anna Komnene's Alexiad.
-```
-
-{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request, proxied through {{site.ai_gateway}} to the Gemini model configured in the AI Model entity's `targets`.

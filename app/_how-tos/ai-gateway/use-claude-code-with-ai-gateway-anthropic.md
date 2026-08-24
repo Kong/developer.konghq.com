@@ -18,6 +18,15 @@ works_on:
 tools:
   - kongctl
 
+prereqs:
+  inline:
+    - title: Anthropic
+      icon_url: /assets/icons/anthropic.svg
+      include_content: md/ai-gateway/v2/prereqs/anthropic
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
+
 min_version:
   ai-gateway: '2.0'
 
@@ -33,13 +42,12 @@ tldr:
 
 ## Create an AI Model Provider entity
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to Anthropic and store your authentication credentials:
-
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-anthropic
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: generic-anthropic
     display_name: "generic-anthropic"
     type: anthropic
@@ -51,11 +59,14 @@ ai_gateway_model_providers:
             value: !env ANTHROPIC_API_KEY
 {% endentity_examples %}
 
-In this example, we're setting up the AI Model Provider with:
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
+The AI Model Provider uses the following settings:
 
 * `type: anthropic`: Specifies that this provider connects to the Anthropic service using Anthropic's standard API format.
 * `name: generic-anthropic`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth`: Adds the Anthropic API key set in the `ANTHROPIC_API_KEY` environment variable. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+* `config.auth.headers[0].value: !env ANTHROPIC_API_KEY`: Loads the API key from your environment at apply time so it is not embedded in the config.
 
 ## Create an AI Model entity
 
@@ -64,7 +75,7 @@ Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which ups
 {% entity_examples %}
 ai_gateway_models:
   - ref: my-claude
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-claude
     display_name: "my-claude"
     type: model
@@ -88,7 +99,7 @@ ai_gateway_models:
       - generate
 {% endentity_examples %}
 
-In this example, we're setting up the AI Model with:
+The AI Model uses the following settings:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-claude`: A unique identifier for this model.
@@ -97,37 +108,17 @@ In this example, we're setting up the AI Model with:
 * `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/messages`.
 * `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Model Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
 
-## Verify traffic through {{site.ai_gateway}}
+## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/ claude --model 'my-claude'
-```
-
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
-
-```text
-I'll need permission to work with your files.
-
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
-
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me about the Madrid Skylitzes manuscript.
-```
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
