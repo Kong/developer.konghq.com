@@ -29,4 +29,4 @@ This AI Policy uses blocking I/O, which could affect performance when writing to
 
 ## Custom fields by Lua
 
-{% include md/ai-gateway/v2/policies/log-custom-fields-by-lua.md slug="http-log" name="HTTP Log" base_config="http_endpoint: http://my-endpoint:9999/" %}
+{% include md/ai-gateway/v2/policies/log-custom-fields-by-lua.md slug="file-log" name="File Log" base_config="path: /tmp/file.log" %}

@@ -6,7 +6,7 @@ with the message component formatted as a JSON object, separated by a new line `
 {% else %}
 Every request is logged separately in a JSON object, separated by a new line `\n`.
 {% endif %}
-
+<!-- vale off -->
 <blockquote class="info">
 {% details %}
 summary: "**Expand this block to see a sample log object**"
@@ -113,3 +113,4 @@ content: |
     {:.no-copy-code}
 {% enddetails %}
 </blockquote>
+<!-- vale on -->
