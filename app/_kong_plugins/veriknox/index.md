@@ -310,14 +310,7 @@ When the control plane is {{site.konnect_short_name}}, provision the control pla
 
 1. Obtain the `schema.lua` file from your VeriKnox Technical Account Manager.
 
-1. Upload the plugin schema to your {{site.konnect_short_name}} control plane:
-   1. In the {{site.konnect_short_name}} sidebar, navigate to **API Gateway > Control planes**.
-   2. Click your control plane.
-   3. Click the **Plugins** tab.
-   4. Click **New plugin**.   
-   1. Click **Custom plugin**.
-   1. Upload `schema.lua`.
-   1. Click **Save**.
+{% include_cached plugins/third-party-konnect-plugin.md %}
 
 1. Create a {{site.konnect_short_name}} Vault backed by a Config Store to hold the identity passphrase.
    Use the {{site.konnect_short_name}} API to create a [config store](/gateway/entities/vault/konnect-config-store/), then write the passphrase secret.
