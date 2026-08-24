@@ -62,14 +62,14 @@ sequenceDiagram
 
 ## AI PII Anonymizer service
 
-Kong provides several AI PII Anonymizer service Docker images in a private repository. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
+Kong publishes the AI PII Anonymizer service as public Docker images. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
 
-* `service:v0.1.4-en`: English model, version 0.1.4
-* `service:v0.1.4-it`: Italian model, version 0.1.4
-* `service:v0.1.4-fr`: French model, version 0.1.4
+* `ai-pii-service:v0.2.2-en`: English model, version 0.2.2
+* `ai-pii-service:v0.2.2-it`: Italian model, version 0.2.2
+* `ai-pii-service:v0.2.2-fr`: French model, version 0.2.2
 
 {:.info}
-> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.1.4`
+> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.2.2`
 > If you need to add or modify models, edit the configuration file at `ai_pii_service/nlp_engine_conf.yml`.
 
 ### Sanitization endpoints
@@ -127,38 +127,20 @@ You can use the following fields in the `anonymize` array:
 
 ### Access the Docker images
 
-Kong distributes these images via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
-
-#### Authenticate with the private Cloudsmith registry
-
-To pull images, you must authenticate first with the token provided by the Support:
-
-```bash
-docker login docker.cloudsmith.io
-```
-
-Docker will then prompt you to enter username and password:
-
-```bash
-Username: kong/ai-pii
-Password: YOUR-TOKEN
-```
-
-{:.info}
-> This is a token-based login with read-only access. You can pull images but not push them.
+Kong distributes these images publicly on Docker Hub, under the `kong/ai-pii-service` repository. No authentication is required to pull them.
 
 #### Pull the AI PII service image
 
 To pull an image:
 
 ```bash
-docker pull docker.cloudsmith.io/kong/ai-pii/IMAGE-NAME:TAG
+docker pull kong/ai-pii-service:TAG
 ```
 
-Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
+Replace `TAG` with the appropriate version and language code, such as:
 
 ```bash
-docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.4-en
+docker pull kong/ai-pii-service:v0.2.2-en
 ```
 
 #### AI PII service Dockerfile usage
@@ -166,7 +148,7 @@ docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.4-en
 To use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
-FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.4-en
+FROM kong/ai-pii-service:v0.2.2-en
 ```
 
 ### Available language tags
@@ -180,7 +162,9 @@ The following language-specific images are currently available:
 * `-it` (Italian)
 * `-ja` (Japanese)
 * `-ko` (Korean)
+* `-nl` (Dutch)
 * `-pt` (Portuguese)
+* `-th` (Thai)
 * `-tr` (Turkish)
 
 {% include /md/ai-gateway/v2/policies/spacy-pii-note.md %}
