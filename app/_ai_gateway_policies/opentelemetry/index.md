@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: plugin
+content_type: policy
 ---
 
 The OpenTelemetry [AI Policy](/ai-gateway/entities/ai-policy/) provides metrics, traces, and logs in the OpenTelemetry format and can be used with any OpenTelemetry compatible backend.
@@ -182,8 +182,8 @@ In addition to the above, when **tracing** is enabled, request-scoped logs inclu
 
 ### Logging for custom Policies
 
-The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin.
-The module records a structured log entry, which is reported via the OpenTelemetry plugin.
+The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom Policy.
+The module records a structured log entry, which is reported via the OpenTelemetry Policy.
 
 ## Queuing
 
