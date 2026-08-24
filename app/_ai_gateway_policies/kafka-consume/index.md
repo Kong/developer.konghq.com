@@ -69,7 +69,7 @@ In `http-get` mode, send a `GET` request to the path with no query parameters. T
 
 Each entry in `records` carries the message `value`, `key`, `timestamp`, and `offset`. When [`config.message_deserializer`](./reference/#schema--config-message-deserializer) is `json`, `value` is a parsed object. When it's `noop`, `value` is the raw message as a string.
 
-Which records a request returns depends on [`config.auto_offset_reset`](./reference/#schema--config-auto-offset-reset): `latest` (default) returns only messages produced after the Policy started consuming, and `earliest` returns messages from the beginning of the topic.
+Which records a request returns depends on [`config.auto_offset_reset`](./reference/#schema--config-auto-offset-reset). When it's set to `latest` (default), it returns only messages produced after the Policy started consuming. `earliest` returns messages from the beginning of the topic.
 
 {:.info}
 > Responses aren't immediate. A request can take several seconds to return, even when records are already available on the topic.

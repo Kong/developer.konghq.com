@@ -2,9 +2,9 @@ In `websocket` mode, the Policy maintains a bi-directional WebSocket connection 
 allowing for continuous delivery of {{ include.broker }} messages to the client.
 
 Here's how it works:
-1. Establish a WebSocket connection to the endpoint where the {{ include.name }} Policy is enabled and mode is set to `websocket`.
+1. The client establishes a WebSocket connection to the endpoint where the {{ include.name }} Policy is enabled with the mode set to `websocket`.
 1. {{site.ai_gateway}} continuously streams messages as JSON text frames.
-1. Optionally, client sends acknowledgments (`client-acks`) for each message or batch to enable `at-least-once` delivery semantics.
+1. Optionally, the client sends acknowledgments (`client-acks`) for each message or batch to enable `at-least-once` delivery semantics.
 
 This approach provides real-time message flow without the limitations of HTTP polling.
 
