@@ -87,6 +87,7 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
           duration: 0,
           name,
           message,
+          reason: isNonFirstSeriesPage ? "series" : "excluded",
         });
       } else {
         howTosUrls.push(`${config.baseUrl}${howToUrl}`);
