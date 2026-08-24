@@ -1,4 +1,11 @@
 {
+  "3.15.0.5": [
+    {
+      "message": "Fixed an issue where the plugin failed to set the signed access token header on the upstream request, when `access_token_upstream_header` (or `original_access_token_upstream_header`) had the same name as `channel_token_request_header`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "calls to the `/rotate` endpoint now enable certificate\nverification by default when connecting to the configured endpoint to rotate\nthe keys.\n",

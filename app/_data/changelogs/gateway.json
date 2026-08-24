@@ -25706,5 +25706,246 @@
         "scope": "Default"
       }
     ]
+  },
+  "3.15.0.5": {
+    "kong-ee": [
+      {
+        "message": "Bumped kong-pgmoon from 2.3.4.0 to 2.3.5.0, which fixes SCRAM channel\nbinding failing to connect to a PostgreSQL server whose certificate is\nsigned with SHA-512.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a `kong workspace` CLI command. `kong workspace rename OLD_NAME NEW_NAME`\nrenames a workspace (cascading the new name to RBAC role-endpoint permissions),\nand `kong workspace detect-admin-endpoint-conflicts` lists workspaces whose names\ncollide with admin API URL prefixes.",
+        "type": "feature",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "**datakit**: Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue on HTTP/2 connections where the request method and query were reported incorrectly, or could raise an error, when a request hit the error handler such as a 502 from an upstream connection reset.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where a failed balancer creation leaked the per-upstream create lock, so every later creation for the same upstream stalled for 30 seconds.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where a healthcheck counter value of 255 crashed health checker creation. Healthcheck counters (`successes`, `tcp_failures`, `timeouts`, `http_failures`) are now limited to 254.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where an in-flight request that completed after its\nupstream target became unavailable could restore the target to the\nlatency balancer and route subsequent requests to it.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where custom Lua running with `untrusted_lua` set to `sandbox` could no longer create global variables or modify allowed library tables.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where custom streamed plugin schemas were still sandboxed when `untrusted_lua` was set to `on`, so schema code that needed to opt out of sandboxing (unlike custom plugin handlers, which already respected `on`) was incorrectly rejected on both the control plane and the data plane.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `custom_validator` in schema definitions forwarded the\nenclosing schema as a second argument. This changed the call signature and\ncould affect custom validators that declare more than one parameter. The\nsingle-argument call signature is restored.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where heavy packet loss could prevent the full sync from resuming.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where incremental config sync failed when an entity referenced a\nnon-exported entity, for example rbac_users.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where incremental sync delta coalescing merged non-adjacent deltas of the same entity, which could drop an entity's earlier create and keep only a later update, reordering it after a delta that already referenced it (e.g. a plugin instance referencing a cloned plugin by name) and causing validation to fail with \"plugin '<name>' not enabled\". Coalescing now only merges successive deltas of the same entity, preserving the causal order the data plane relies on.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where self-managed control planes rejected updates to a streamed plugin's handler while the plugin was referenced by a plugin instance.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where `/status/ready` could report a data plane ready before the\nnew router and plugins iterator became active. Kong now reports readiness only\nafter plugin configuration completes and the live objects are installed.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the control plane could crash while handshaking with a data plane on the legacy clustering endpoint if a non-binary WebSocket frame (such as a ping/pong control frame) arrived before the `basic_info` frame. The control plane now drains and responds to control frames during the handshake until the expected frame is received, instead of dereferencing a nil plugin list.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the HTTP-to-gRPC status mappings for 400, 404, 429, 502, and 504 were incorrect. The new configuration option `use_standard_grpc_status_codes` (default `off`) enables the fix.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where the priority field of a cloned plugin could not be updated while it was still referenced by plugin instances.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where updates to a streamed plugin's definition (e.g. `handler`), or to a cloned plugin's definition (e.g. `priority`), were not applied on data planes when no referencing plugin instances changed. The data plane now rebuilds its plugins iterator so the updated definition takes effect, instead of continuing to execute the previous version.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where upstream failover could return intermittent 503 responses while a failover target remained healthy.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where, with plugin streaming enabled, a single incremental sync validation failure would wipe out all plugin subschemas because the currently loaded plugins were not correctly excluded from the subschema unload.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**grpc-gateway**: Fixed an issue where the plugin mapped the gRPC `UNIMPLEMENTED` status to HTTP 500 instead of 501. The new option `use_standard_grpc_status_codes` (default `off`) enables the fix.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Hardened HashiCorp Vault cloud authentication (AWS, Azure, GCP): Kong keeps credentials out of internal cache keys, truncates Vault error responses in logs, sets timeouts on all authentication requests, and applies `ssl_verify` to every outbound TLS call.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**jwt-signer**: Fixed an issue where the plugin failed to set the signed access token header on the upstream request, when `access_token_upstream_header` (or `original_access_token_upstream_header`) had the same name as `channel_token_request_header`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed a\npermanent failure that started when a broker answered an `ApiVersions` request with an error code,\nan empty API key set, or a malformed frame. The client cached that result and every later request\nfailed with `ProduceRequest API version not negotiated; broker may be unreachable` until the node\nrestarted, even after the broker recovered. The client now refuses an unusable `ApiVersions`\nresponse, keeps the previous negotiation, and retries the negotiation for a topic whose metadata is\nalready cached.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed the\nconfluent schema registry client caching fetched schemas and subjects under keys\nthat did not account for the registry URL or authentication. Instances configured\nwith different credentials could be served each other's cached lookups, letting an\nunauthorized instance bypass schema-registry authentication once any authorized\ninstance had warmed the cache. Cache entries are now scoped to the registry\nidentity, and the configured `schema_registry.confluent.ttl` is now applied to\nthese cache entries.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed a crash\nthat occurred when a plugin set `schema_registry.confluent.authentication.mode`\nto `oauth2` but omitted the `oauth2_client` record. Previously this returned a\n500 from the Admin API during validation, and once saved it also crashed at\nruntime while fetching the schema registry OAuth2 token. The absent\n`oauth2_client` is now handled and falls back to the default authentication\nmethod, so a configuration without `oauth2_client` works end-to-end.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed an issue where OAuth2 authentication against Confluent Cloud Schema Registry failed because the client did not send the required `target-sr-cluster` header.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an issue where deep copy of the worker logs stack overflowed by replacing `deep_copy` with `cycle_aware_deep_copy`.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**mocking**: Fixed a memory leak where the plugin config cache did not use weak keys due to a misspelled `__mode` metatable field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oauth2-introspection**: Fixed an authentication bypass where a revoked or\nexpired token stayed authorized indefinitely instead of being rejected. An\nauthoritative `active:false` result is now also cached briefly (5 seconds).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where a request that authenticated but failed an authorization check (such as `scopes_required`) was not attributed to its consumer, consumer groups, or Kong Identity principal in logs and analytics.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where the `redirect_uri` parameter was sent to the token endpoint for all grant types. It is now included only for the `authorization_code` grant, as required by RFC 6749.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: The `ignore_signature` option now logs a warning when it is set,\nbecause it turns off JWS signature verification for the listed grants.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the `kong.dp.cluster_cert.expiry` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Reduced per-request overhead of `resource_attributes` by skipping template rendering entirely for static (non-templated) fields.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**PostgreSQL OAuth auth**: Refined the token cache key to be derived only from the fields that identify an OAuth configuration.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Prometheus**: A histogram's series (its buckets, `_count` and `_sum`) is now\nread as one atomic group during a scrape. Previously the exporter yielded and\nflushed output between individual samples, so an observation landing mid-scrape\ncould bump `_count`/`_sum` after the buckets were already read, producing an\ninternally inconsistent histogram in a single response.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**prometheus**: Fixed an issue where `kong_nginx_requests_total` and `kong_nginx_connections_total` duplicated the `http` values under the `stream` subsystem. They are now exported once under `http`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Prometheus**: Histograms now expose every bucket (including those with a\nvalue of `0`) starting from the first observation of a given label set.\nPreviously only buckets greater than or equal to the observed value were\ncreated, so lower buckets appeared lazily on later scrapes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**SAML**: Hardened signature validation against XML Signature Wrapping. The\nplugin now checks that the signature `Reference URI` is a same-document\nfragment that names the `ID` of the element it digests and consumes, so a\nsignature can no longer be bound to a different element than the one that\nprovides the identity. A response whose reference URI is empty or not a\nsame-document fragment is now rejected.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved data plane stability when applying a large configuration\nsync from the control plane, reducing the chance of a worker restart while the\nupdate is being processed.",
+        "type": "performance",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Improved the performance of listing workspaces with `?counter=true`. Entity counts for the whole page are now retrieved with one grouped query per entity type instead of a separate count query per entity type per workspace, while keeping the counts exact.",
+        "type": "performance",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**opentelemetry**: Reduced memory usage of the access log queue by deferring OTLP payload conversion to export time.",
+        "type": "performance",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Optimized performance of clustering payload handling for version compatibility. This reduces CPU usage and\ntransient memory pressure.",
+        "type": "performance",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Reduced config update latency on hybrid data planes by notifying the stream subsystem before applying the update in the HTTP subsystem, so both rebuild in parallel.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where the Export button on the Vitals Reports page did not download the report CSV.",
+        "type": "bugfix",
+        "scope": "Default"
+      }
+    ]
   }
 }
