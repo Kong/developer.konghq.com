@@ -39,7 +39,7 @@ related_resources:
     url: https://veriknox.ai
 ---
 
-Use the [VeriKnox](https://veriknox.ai) plugin (`veriknox-plugin`) to attach cryptographically signed audit receipts to every AI interaction passing through {{site.base_gateway}}.
+The [VeriKnox](https://veriknox.ai) plugin (`veriknox-plugin`) lets you attach cryptographically signed audit receipts to every AI interaction passing through {{site.base_gateway}}.
 The plugin intercepts LLM inference, MCP, and A2A requests and responses, applies business policy, and forwards tamper-evident receipts to VeriKnox Hub.
 This gives your organization verifiable proof of what each AI agent did, whether it was authorized to do so, when it happened, and on whose behalf.
 
@@ -49,11 +49,11 @@ The signatures are resistant to both classical and future quantum attacks, and n
 
 Benefits of using the VeriKnox plugin:
 
-- Tamper-evident proof of every AI interaction: Signed receipts record what the agent sent, what the model returned, who authorized it, and when.
-- Dual classical and post-quantum signatures: Each receipt carries both an ED25519 signature (fast, verifiable today) and an ML-DSA-65 signature (NIST FIPS 204, resistant to quantum adversaries).
-- Policy enforcement at the gateway: VeriKnox Hub evaluates each interaction against your business policy and can block non-compliant requests before they reach the upstream.
-- Broad protocol coverage: Supports OpenAI Chat Completions, OpenAI Responses, Anthropic Claude Messages, OpenRouter, Google Gemini, MCP tool calls, and A2A JSON-RPC operations including streaming.
-- No credential exposure: The agent passphrase is resolved from a [Kong Vault](/gateway/entities/vault/) reference at runtime and never written to disk in plain text.
+* Tamper-evident proof of every AI interaction: Signed receipts record what the agent sent, what the model returned, who authorized it, and when.
+* Dual classical and post-quantum signatures: Each receipt carries both an ED25519 signature (fast, verifiable today) and an ML-DSA-65 signature (NIST FIPS 204, resistant to quantum adversaries).
+* Policy enforcement at the gateway: VeriKnox Hub evaluates each interaction against your business policy and can block non-compliant requests before they reach the upstream.
+* Broad protocol coverage: Supports OpenAI Chat Completions, OpenAI Responses, Anthropic Claude Messages, OpenRouter, Google Gemini, MCP tool calls, and A2A JSON-RPC operations including streaming.
+* No credential exposure: The agent passphrase is resolved from a [Kong Vault](/gateway/entities/vault/) reference at runtime and never written to disk in plain text.
 
 ## How it works
 
@@ -62,9 +62,10 @@ When the VeriKnox plugin is enabled on a Route, it decrypts this identity using 
 
 In the `access` phase, the plugin:
 1. Parses the request body according to the configured `endpoint.specification` (OpenAI, Anthropic, MCP, A2A, and so on).
-2. Evaluates the request against VeriKnox Hub policy. If the policy blocks it, the plugin returns an error and nothing is forwarded upstream.
-3. Signs a receipt with both ED25519 and ML-DSA-65 signatures and forwards it to VeriKnox Hub.
-4. Strips VeriKnox-specific agent headers (`x-veriknox-agent-id`, `x-veriknox-api-key`, `x-veriknox-agent-auth`) before proxying the request upstream.
+1. Evaluates the request against VeriKnox Hub policy.
+  * If the policy blocks it, the plugin returns an error and nothing is forwarded upstream.
+  * If the policy allows it, the plugin signs a receipt with both ED25519 and ML-DSA-65 signatures and forwards it to VeriKnox Hub.
+1. Strips VeriKnox-specific agent headers (`x-veriknox-agent-id`, `x-veriknox-api-key`, `x-veriknox-agent-auth`) before proxying the request upstream.
 
 After the upstream responds, the plugin signs and forwards a response receipt to VeriKnox Hub as well.
 
@@ -72,7 +73,7 @@ After the upstream responds, the plugin signs and forwards a response receipt to
 sequenceDiagram
     autonumber
     participant A as AI Agent
-    participant K as {{site.base_gateway}}<br/>veriknox-plugin
+    participant K as {{site.base_gateway}}<br/>VeriKnox plugin
     participant H as VeriKnox Hub
     participant U as Upstream<br/>LLM / MCP / A2A
 
@@ -93,7 +94,7 @@ sequenceDiagram
 
 ### Supported endpoint specifications
 
-The `endpoint.specification` field tells the plugin which protocol and API format to expect.
+The [`endpoint.specification`](/plugins/veriknox/reference/#schema--config-endpoint-specification) field tells the plugin which protocol and API format to expect.
 Set it to one of the following values:
 
 {% table %}
@@ -145,8 +146,8 @@ Use 785-999 if you need to sign the raw user intent before any model routing or 
 
 ### Caller identity
 
-The VeriKnox plugin doesn't authenticate clients itself.
-It reads caller context from VeriKnox-specific request headers:
+The VeriKnox plugin doesn't authenticate clients to {{site.base_gateway}}.
+If you want receipts to identify the calling agent, configure an authentication plugin or another gateway mechanism separately, then pass the caller context to the VeriKnox plugin through VeriKnox-specific request headers:
 
 {% table %}
 columns:
@@ -179,9 +180,17 @@ plugins:
           kong.service.request.clear_header("x-veriknox-api-key")
 ```
 
-If no agent ID is supplied, the plugin generates a traceable ID in the form `http-client:<ip-address>`.
-This supports audit tracing but is not an authenticated identity.
-In production, always pair the VeriKnox plugin with a [{{site.base_gateway}} authentication plugin](/plugins/?category=authentication) such as [Key Auth](/plugins/key-auth/) or [JWT](/plugins/jwt/) to provide a verified agent identity.
+If no agent ID is supplied through `x-veriknox-agent-id` or `x-veriknox-agent-auth`, the plugin generates a traceable ID in the form `http-client:<ip-address>`.
+It uses the forwarded client IP when {{site.base_gateway}} trusts the proxy, otherwise it uses the direct client IP.
+This fallback supports audit tracing, but it is not an authenticated identity.
+
+In production, each AI agent (HTTP client) must authenticate with {{site.base_gateway}} before sending traffic.
+{{site.base_gateway}} supports this through [authentication plugins](/plugins/?category=authentication) such as [Key Auth](/plugins/key-auth/) or [JWT](/plugins/jwt/).
+The VeriKnox plugin should not handle authentication itself.
+
+Without a paired authentication plugin, {{site.base_gateway}} may accept LLM inference, MCP, and A2A traffic without authentication: it allows each HTTP request through, and the VeriKnox plugin may then block it based on policy.
+That downstream step is authorization without prior authentication.
+Run a separate {{site.base_gateway}} authentication plugin or dedicated service for AI agents alongside the VeriKnox plugin to provide `x-veriknox-agent-id`.
 
 ### Logging
 
@@ -213,13 +222,16 @@ KONG_NGINX_MAIN_ENV="KONG_VERIKNOX_LOG_PRINT_ALL; env KONG_VERIKNOX_IDENTITY_STA
 The VeriKnox plugin ships as part of a custom {{site.base_gateway}} image distributed from the VeriKnox ECR registry.
 It's not available as a standalone LuaRock.
 
+{:.info}
+> **Note**: If you want to try the plugin without installing it against your own data planes, see the [Quickstart](#quickstart) for a self-contained Docker Compose environment with sample data planes and upstream services.
+
 ### Prerequisites
 
 Before installing the plugin, you need:
 
-- A VeriKnox account and a site enrollment token to register the data plane identity with VeriKnox Hub.
-- AWS credentials with pull access to the VeriKnox ECR registry (`510978032592.dkr.ecr.us-east-1.amazonaws.com`).
-- A [Kong Vault](/gateway/entities/vault/) to store the identity passphrase. VeriKnox recommends a [{{site.konnect_short_name}} Config Store-backed vault](/gateway/entities/vault/konnect-config-store/), but any vault backend that {{site.base_gateway}} supports works.
+* A VeriKnox account and a site enrollment token to register the data plane identity with VeriKnox Hub.
+* AWS credentials with pull access to the VeriKnox ECR registry (`510978032592.dkr.ecr.us-east-1.amazonaws.com`).
+* A [Kong Vault](/gateway/entities/vault/) to store the identity passphrase. VeriKnox recommends using a [{{site.konnect_short_name}} Config Store-backed vault](/gateway/entities/vault/konnect-config-store/).
 
 ### Enroll the data plane identity
 
@@ -244,7 +256,7 @@ services:
 ```
 
 The `KONG_VERIKNOX_IDENTITY_STATE_DIR` and `KONG_VERIKNOX_HUB_BASE_URL` environment variables must be exposed to Nginx workers via `KONG_NGINX_MAIN_ENV` so the plugin can read them at runtime.
-See the installation steps below for how to set this.
+You will use them during installation.
 
 After enrollment, the encrypted identity bundle is written to `KONG_VERIKNOX_IDENTITY_STATE_DIR` (default: `/data`):
 
@@ -294,6 +306,8 @@ After enrollment, the encrypted identity bundle is written to `KONG_VERIKNOX_IDE
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}}" %}
 
+When the control plane is {{site.konnect_short_name}}, provision the control plane and vault secrets first, enroll the data plane identity second, then start the data planes.
+
 1. Obtain the `schema.lua` file from your VeriKnox Technical Account Manager.
 
 1. Upload the plugin schema to your {{site.konnect_short_name}} control plane:
@@ -304,7 +318,24 @@ After enrollment, the encrypted identity bundle is written to `KONG_VERIKNOX_IDE
 
 1. Create a {{site.konnect_short_name}} Vault backed by a Config Store to hold the identity passphrase.
    Use the {{site.konnect_short_name}} API to create a [config store](/gateway/entities/vault/konnect-config-store/), then write the passphrase secret.
-   The plugin resolves `{vault://veriknox/VERIKNOX_IDENTITY_PASSPHRASE}` at runtime.
+   The plugin resolves `{vault://veriknox/VERIKNOX_IDENTITY_PASSPHRASE}` at runtime and never reads the passphrase from disk.
+
+   {:.info}
+   > **Note**: You can instead point {{site.base_gateway}} at another vault backend it supports, for example AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault, or an env-based vault.
+   > The plugin configuration follows the same format (`agent_passphrase: "{vault://...}"`).
+   > Only the vault backend and how you seed the secret change.
+
+1. Sync your gateway configuration (Services, Routes, and the `veriknox-plugin` config) to {{site.konnect_short_name}}:
+
+   ```bash
+   deck gateway sync konnect.yml
+   ```
+
+   You can also apply the same Services, Routes, and plugins manually in the {{site.konnect_short_name}} UI or API.
+
+1. Enroll the data plane identity with VeriKnox Hub.
+   See [Enroll the data plane identity](#enroll-the-data-plane-identity).
+   Complete this step before starting the data planes, since they can't sign receipts without a registered identity.
 
 1. Start your data plane nodes using the VeriKnox gateway image, with the enrolled identity volume mounted:
 
@@ -319,6 +350,9 @@ After enrollment, the encrypted identity bundle is written to `KONG_VERIKNOX_IDE
    KONG_VERIKNOX_HUB_BASE_URL=https://hub.veriknox.ai
    KONG_NGINX_MAIN_ENV="env KONG_VERIKNOX_IDENTITY_STATE_DIR; env KONG_VERIKNOX_HUB_BASE_URL"
    ```
+
+   At runtime, the data plane mounts the identity storage, completes the mTLS handshake to the control plane, and pulls the synced gateway configuration.
+   The plugin then resolves `agent_passphrase` from the vault to sign receipts.
 
 {:.info}
 > **Note**: The data plane must complete enrollment (via `kong-init`) before it can sign receipts.
@@ -342,13 +376,67 @@ Contact your VeriKnox Technical Account Manager to obtain the quickstart files.
 
 ### Prerequisites
 
-- Docker with the Compose plugin
-- The [`just`](https://github.com/casey/just) command runner
-- decK (`deck`)
-- AWS credentials with pull access to the VeriKnox ECR registry
-- A VeriKnox site enrollment token
-- A {{site.konnect_short_name}} personal access token (PAT)
-- An OpenAI API key (required for the OpenAI inference and A2A examples)
+* Docker with the Compose plugin
+* The [`just`](https://github.com/casey/just) command runner
+* decK (`deck`)
+* AWS credentials with pull access to the VeriKnox ECR registry
+* Python 3 with `python-dotenv`, `jinja2`, and requests (`pip install -r requirements.txt`)
+* A VeriKnox site enrollment token
+* A {{site.konnect_short_name}} personal access token (PAT)
+* An OpenAI API key (required for the OpenAI inference and A2A examples)
+
+### Example data planes and upstream services
+
+Traffic through the data plane is inspected by the `veriknox-plugin` before it reaches the upstream service.
+For each request, the plugin both forwards traffic to the upstream service and posts a signed receipt to VeriKnox Hub, which acts as the policy engine (allow or block) and records the receipt.
+
+{% mermaid %}
+flowchart LR
+    A[Client / AI Agent] --> B
+    subgraph DP["kong-dp-0"]
+        B[VeriKnox plugin]
+    end
+    B --> C["Upstream service<br/>(data plane traffic)"]
+    B --> D["VeriKnox Hub<br/>(policy engine)"]
+{% endmermaid %}
+
+After `just up`, the stack includes the following components.
+
+{% table %}
+columns:
+  - title: Component
+    key: component
+  - title: Role
+    key: role
+rows:
+  - component: "`kong-dp-0`, `kong-dp-N`"
+    role: "{{site.base_gateway}} data planes ({{site.konnect_short_name}} hybrid mode) with `veriknox-plugin` baked in. HTTP on `http://localhost:8080`."
+  - component: "`kong-init` / `kong-deinit`"
+    role: "One-shot identity enroll and unenroll against VeriKnox Hub."
+  - component: "`kong-gs-mcp-math`"
+    role: "MCP math tool server (JSON-RPC), reached through {{site.base_gateway}} as `/mcp/math`."
+  - component: "`math-agent-server`"
+    role: "Sample A2A agent that calls OpenAI and MCP through {{site.base_gateway}} (`/openai`, `/mcp/math`, `/agent`)."
+  - component: "`veriknox-agent-test`"
+    role: "Optional test client (`just shell-agent`, Compose profile `test`)."
+{% endtable %}
+
+Routes synced from `konnect.yml` send LLM, MCP, and A2A traffic through the data planes so the plugin can sign receipts to VeriKnox Hub.
+
+### What the quickstart does
+
+The `./setup_quickstart` script performs the following steps in one run:
+
+1. Creates a VeriKnox site and obtains a site enrollment token, used by `kong-init` to register the data plane identity with VeriKnox Hub.
+1. Creates a {{site.konnect_short_name}} control plane (or selects an existing one) and collects the control plane connection details: the endpoints and mTLS material the data planes use to join hybrid mode.
+1. Configures the control plane:
+   * Uploads the `veriknox-plugin` schema.
+   * Creates vault secrets, including the identity passphrase.
+   * Syncs the gateway configuration with `deck gateway sync konnect.yml`, or applies the same Services, Routes, and plugins manually in {{site.konnect_short_name}}.
+1. Prepares the local runtime: writes `.env` and renders `docker-compose.yml` so Compose can run identity enrollment (`kong-init`), start the data planes, and bring up the sample backends (the MCP math server and the A2A math-agent server).
+
+The script prompts for the enrollment token, {{site.konnect_short_name}} PAT, and OpenAI API key, then provisions {{site.konnect_short_name}} and writes the local files.
+After it finishes, start the stack with `just up`.
 
 ### Run the quickstart
 
@@ -359,7 +447,6 @@ Contact your VeriKnox Technical Account Manager to obtain the quickstart files.
      | docker login --username AWS --password-stdin \
        510978032592.dkr.ecr.us-east-1.amazonaws.com
    ```
-
 1. Run the setup script.
    When prompted, enter your VeriKnox enrollment token, {{site.konnect_short_name}} PAT, and OpenAI API key.
    The script provisions the {{site.konnect_short_name}} control plane and writes the local configuration files:
@@ -378,7 +465,7 @@ Contact your VeriKnox Technical Account Manager to obtain the quickstart files.
 
 To configure the plugin on your Routes, see the [LLM inference](/plugins/veriknox/examples/llm-inference/) and [MCP tool call](/plugins/veriknox/examples/mcp-tool-call/) examples.
 
-### Manage the stack
+### Manage data planes and upstream services
 
 ```bash
 just up        # Start (pulls ECR images, runs docker-compose.yml)
