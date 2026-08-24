@@ -126,12 +126,19 @@ export async function logResults(
   let filteredSkippedInstructions = [];
 
   if (includeGlobalSkips) {
-    const skippedInstructions = yaml.load(
-      await fs.readFile("./.automated-tests", "utf-8")
-    );
+    let skippedInstructions;
+    try {
+      skippedInstructions = yaml.load(
+        await fs.readFile("./.automated-tests", "utf-8")
+      );
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+    }
+    skippedInstructions = skippedInstructions || [];
 
     filteredSkippedInstructions = skippedInstructions.filter(
       (instruction) =>
+        instruction.reason !== "series" &&
         instruction.products &&
         instruction.products.some((product) => products.includes(product))
     );
