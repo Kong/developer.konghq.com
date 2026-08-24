@@ -30,6 +30,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.5": [
+    {
+      "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added more implicit node outputs:\n    * `request.path`\n    * `request.raw_path`\n    * `request.port`\n    * `request.method`\n    * `request.scheme`\n    * `request.version`\n    * `service_response.status`\n    * service_response.raw_body\n    * call.raw_body\n",

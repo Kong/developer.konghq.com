@@ -867,6 +867,10 @@ uncommenting
 unconfigured
 underuse
 unencrypted
+unenroll
+unenrolled
+unenrolling
+unenrolls
 unescaped
 ungroup
 ungrouped
@@ -982,6 +986,7 @@ SSNs
 unsanitized
 vectorize
 vectordb
+veriknox
 substrings
 Figma
 Offboarding
