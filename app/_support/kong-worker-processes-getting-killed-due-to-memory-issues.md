@@ -34,7 +34,7 @@ The default setting for this configuration option is `auto`, which means that Ko
 
 To address the issue, reduce this to a number of workers configured in kong to something that better resembles the assigned resources.
 
-The current Kong Ingress Controller Helm chart sets `nginx_worker_processes` to 2 by default, and it is expected to use horizontal scaling to deal with additional traffic.
+The current {{site.kic_product_name}} Helm chart sets `nginx_worker_processes` to 2 by default, and it is expected to use horizontal scaling to deal with additional traffic.
 
 However, if you are using the `auto` setting, you should set the number of workers to something small like 2 or 4.
 

@@ -16,11 +16,11 @@ related_resources: []
 
 ## Overview
 
-When using a hybrid installation, the Control Plane and the Data Plane utilize a Secure Web Socket for communication. This traffic is encrypted and not observable using tools such as `tcpdump`. How can the actual communication content be observed?
+When using a hybrid installation, the Control Plane and the Data Plane use a Secure Web Socket for communication. This traffic is encrypted and not observable using tools such as `tcpdump`. How can the actual communication content be observed?
 
 ## Steps
 
-For this example, we will assume that the default (Debian-based) Kong Gateway images are being used and that the Hybrid installation is using shared certificates. This is the simplest Hybrid deployment architecture, but the same principles can be used for PKI mode.
+For this example, we will assume that the default (Debian-based) {{site.base_gateway}} images are being used and that the Hybrid installation is using shared certificates. This is the simplest Hybrid deployment architecture, but the same principles can be used for PKI mode.
 
 When a DP starts, it opens a Web Socket to the CP and the CP pushes the configuration to the DP. This is done via a Web Socket connection on the `cluster_listen` port (8005). To view this traffic, we are going to use `stunnel` to setup a MITM attack and `tcpdump` to capture the plain text traffic. The example also captures traffic on the CP as this will capture all traffic for all DP nodes. You could also setup the capture on the DP node if you only want to capture traffic from a single node.
 
@@ -80,7 +80,7 @@ When a DP starts, it opens a Web Socket to the CP and the CP pushes the configur
    tcpdump -s 0 -i any -w /tmp/cluster.pcap port 58005
    ```
 
-6. Start the DP. This will connect to port 8005 on the CP and `stunnel` will accept the connection and forward to itself as plain text before forwading to the `cluster_listen` port
+6. Start the DP. This will connect to port 8005 on the CP and `stunnel` will accept the connection and forward to itself as plain text before forwarding to the `cluster_listen` port
 
 7. Wait for the DP to have downloaded the configuration (check the `/clustering/status` endpoint)
 
@@ -92,7 +92,7 @@ The CP verifies that the DP has the required plugins of the correct versions to 
 
 To see what is in the zipped archive, it is necessary to extract the content. To do this, right click on the Data for the TCP frame and select "Export Packet Bytes...".
 
-Save the file locally (you will need to use a `.bin` extension for the file name, for example `temp.json.bin`).
+Save the file locally (you will need to use a `.bin` extension for the filename, for example `temp.json.bin`).
 
 Unzip the file (if using `gunzip`, then you will need to use the `-S` parameter to allow the `.bin` extension)
 

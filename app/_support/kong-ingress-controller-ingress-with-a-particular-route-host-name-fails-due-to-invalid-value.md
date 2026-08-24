@@ -1,7 +1,7 @@
 ---
-title: "Kong Ingress Controller: Ingress with a particular route host name fails due to invalid value"
+title: "{{site.kic_product_name}}: Ingress with a particular route host name fails due to invalid value"
 content_type: support
-description: Kong Ingress Controller rejects an Ingress `host` value containing an underscore because Kubernetes enforces RFC 1123 hostname rules.
+description: "{{site.kic_product_name}} rejects an Ingress `host` value containing an underscore because Kubernetes enforces RFC 1123 hostname rules."
 products:
   - gateway
   - kic
@@ -17,7 +17,7 @@ related_resources: []
 
 ## Problem
 
-I am using Kong Gateway on Kubernetes with the Kong Ingress Controller. However when I try to add a new route / ingress, I receive the following error:
+I am using {{site.base_gateway}} on Kubernetes with the {{site.kic_product_name}}. However when I try to add a new route / ingress, I receive the following error:
 
 ```
 

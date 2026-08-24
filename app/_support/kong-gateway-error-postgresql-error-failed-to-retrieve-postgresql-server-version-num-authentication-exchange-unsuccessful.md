@@ -17,7 +17,7 @@ related_resources: []
 
 ## Problem
 
-When starting up our new instance of Kong Gateway, we see the following error:
+When starting up our new instance of {{site.base_gateway}}, we see the following error:
 
 ```
 

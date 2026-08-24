@@ -29,7 +29,7 @@ What does this mean? How can I fix it?
 
 The error message indicated that somehow LDAP authentication failed for a user and fell back to the anonymous user as the plugin's default behavior. As LDAP Authentication for Kong Manager does not allow anonymous user, this always fails.
 
-Note: Kong Manager login now forces `config.consumer_optional=true` for `ldap-auth-advanced`, so on current Kong Gateway versions an unmapped/failed LDAP user returns a clean `401 Unauthorized` response instead of this primary-key crash. The debug/error sequence below reflects older Kong Gateway versions, but the underlying cause and the `header_type` fix are unchanged — if you see a 401 immediately after the `ldap-auth-advanced:access` debug message, the same root cause and fix described here still apply.
+Note: Kong Manager login now forces `config.consumer_optional=true` for `ldap-auth-advanced`, so on current {{site.base_gateway}} versions an unmapped/failed LDAP user returns a clean `401 Unauthorized` response instead of this primary-key crash. The debug/error sequence below reflects older {{site.base_gateway}} versions, but the underlying cause and the `header_type` fix are unchanged — if you see a 401 immediately after the `ldap-auth-advanced:access` debug message, the same root cause and fix described here still apply.
 
 If the error message happens right after the `ldap-auth-advanced:access` message as follows, possibly you have set `header_type: ldap` (by default)
 

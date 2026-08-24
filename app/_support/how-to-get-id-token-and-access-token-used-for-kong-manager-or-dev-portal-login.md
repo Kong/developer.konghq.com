@@ -47,7 +47,7 @@ I am using openid-connect to login Kong Manager and Dev Portal, but I am encount
 
 2. For the case you are using openid-connect to login Dev Portal
 
-   Note: the classic Dev Portal is hard-deprecated and license-gated on current Kong Gateway Enterprise, so this section is very likely non-functional for most current customers. The Kong Manager steps above remain fully valid.
+   Note: the classic Dev Portal is hard-deprecated and license-gated on current {{site.ee_product_name}}, so this section is very likely non-functional for most current customers. The Kong Manager steps above remain fully valid.
 
    1. Please add below 2 parameters to `portal_auth_conf` or `KONG_PORTAL_AUTH_CONF`
 

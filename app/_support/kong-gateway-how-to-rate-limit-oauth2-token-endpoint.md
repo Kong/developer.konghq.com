@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: How to rate limit OAuth2 token endpoint"
+title: "{{site.base_gateway}}: How to rate limit OAuth2 token endpoint"
 content_type: support
 description: Out of the box it is not a configurable option to limit token creation through the OAuth2 plugin.
 products:

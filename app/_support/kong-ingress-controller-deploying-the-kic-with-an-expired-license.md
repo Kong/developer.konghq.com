@@ -1,5 +1,5 @@
 ---
-title: "Kong Ingress Controller: Deploying the KIC with no Enterprise license"
+title: "{{site.kic_product_name}}: Deploying the KIC with no Enterprise license"
 content_type: support
 description: This error occurs when no Enterprise license (not an expired one) is present, so enterprise-only plugins are rejected.
 products:
@@ -19,7 +19,7 @@ related_resources:
 
 ## Problem
 
-While installing Kong Gateway with Kong Ingress Controller (KIC) and no Enterprise license present, we noticed that enterprise-only plugins (such as `openid-connect`) fail to apply.
+While installing {{site.base_gateway}} with {{site.kic_product_name}} (KIC) and no Enterprise license present, we noticed that enterprise-only plugins (such as `openid-connect`) fail to apply.
 
 When reviewing the logs, or the Kubernetes events for the affected resource, we can see a schema violation stating the plugin is enterprise-only, surfaced through one of two paths:
 

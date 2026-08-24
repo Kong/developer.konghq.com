@@ -1,7 +1,7 @@
 ---
-title: "`cluster` strategy not supported in the rate limiting advanced plugin for k4k8s dbless or Kong in hybrid mode"
+title: "`cluster` strategy not supported in the rate limiting advanced plugin for k4k8s DB-less or Kong in hybrid mode"
 content_type: support
-description: "The reason you're seeing the error logs is because `cluster` strategy is not supported in rate limiting advanced plugin for k4k8s dbless or Kong deployed in hybrid mode."
+description: "The reason you're seeing the error logs is because `cluster` strategy is not supported in rate limiting advanced plugin for k4k8s DB-less or Kong deployed in hybrid mode."
 products:
   - kic
 works_on:
@@ -44,4 +44,4 @@ Error from server: error when creating "kongplugin.yaml": admission webhook "val
 
 ## Solution
 
-The reason this configuration is rejected is because the `cluster` strategy is not supported in the rate limiting advanced plugin for k4k8s dbless or Kong deployed in hybrid mode. `cluster` remains a valid value for the plugin's `strategy` field itself (it is not removed from the schema's list of allowed values) — the rejection instead comes from a dedicated entity-level check that specifically blocks `strategy: cluster` together with a `sync_rate` other than `-1` whenever the node's role isn't `traditional` or its database is `off`, producing the schema-violation message shown above. On a current Kong Gateway version, setting `strategy: cluster` in this scenario is rejected outright at plugin-creation time with this schema-violation error, rather than being accepted and failing at runtime. For dbless, we recommend configuring the `redis` strategy to store the rate limiting counters, which enables synching of rate limiting counters between kong nodes.
+The reason this configuration is rejected is because the `cluster` strategy is not supported in the rate limiting advanced plugin for k4k8s DB-less or Kong deployed in hybrid mode. `cluster` remains a valid value for the plugin's `strategy` field itself (it is not removed from the schema's list of allowed values) — the rejection instead comes from a dedicated entity-level check that specifically blocks `strategy: cluster` together with a `sync_rate` other than `-1` whenever the node's role isn't `traditional` or its database is `off`, producing the schema-violation message shown above. On a current {{site.base_gateway}} version, setting `strategy: cluster` in this scenario is rejected outright at plugin-creation time with this schema-violation error, rather than being accepted and failing at runtime. For DB-less, we recommend configuring the `redis` strategy to store the rate limiting counters, which enables synching of rate limiting counters between kong nodes.

@@ -1,7 +1,7 @@
 ---
-title: "Kong Gateway: unsafe legacy renegotiation disabled error after 3.4.0.0 upgrade"
+title: "{{site.base_gateway}}: unsafe legacy renegotiation disabled error after 3.4.0.0 upgrade"
 content_type: support
-description: In Kong Gateway 3.4.0.0+ we have bumped OpenSSL to 3.1.1+.
+description: In {{site.base_gateway}} 3.4.0.0+ we have bumped OpenSSL to 3.1.1+.
 products:
   - gateway
 works_on:
@@ -17,7 +17,7 @@ tldr:
 
 ## Problem
 
-We recently upgraded to Kong Gateway 3.4.0.0+, we are now having trouble connecting to certain backends via Kong and we get the following error in our error.log:
+We recently upgraded to {{site.base_gateway}} 3.4.0.0+, we are now having trouble connecting to certain backends via Kong and we get the following error in our error.log:
 
 ```
 226218 SSL_do_handshake() failed (SSL: error:0A000152:SSL routines::unsafe legacy renegotiation disabled) while SSL handshaking to upstream
@@ -25,7 +25,7 @@ We recently upgraded to Kong Gateway 3.4.0.0+, we are now having trouble connect
 
 ## Cause
 
-In Kong Gateway 3.4.0.0+ we have bumped OpenSSL to 3.1.1+. Receiving the above error indicates that your upstream server/backend is utilizing outdated SSL libraries.
+In {{site.base_gateway}} 3.4.0.0+ we have bumped OpenSSL to 3.1.1+. Receiving the above error indicates that your upstream server/backend is utilizing outdated SSL libraries.
 
 ## Solution
 

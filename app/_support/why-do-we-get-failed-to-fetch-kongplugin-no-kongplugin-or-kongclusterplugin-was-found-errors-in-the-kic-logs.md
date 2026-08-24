@@ -16,11 +16,11 @@ related_resources: []
 
 ## Problem
 
-My Ingress rule or `KongConsumer` references a `konghq.com/plugins` annotation with a plugin name that does not exist, and Kong Ingress Controller is failing to apply the configuration as a result.
+My Ingress rule or `KongConsumer` references a `konghq.com/plugins` annotation with a plugin name that does not exist, and {{site.kic_product_name}} is failing to apply the configuration as a result.
 
 How can I find the affected resource and stop these errors?
 
-Note: current versions of Kong Ingress Controller no longer log the string `failed to fetch KongPlugin: no KongPlugin or KongClusterPlugin was found` anywhere in the controller logs. Instead, this failure surfaces only as a Kubernetes Warning Event on the affected resource — check `kubectl get events` or `kubectl describe` on the relevant Ingress/`KongConsumer` for a Warning Event describing the missing `KongPlugin`/`KongClusterPlugin`, rather than grepping the controller logs.
+Note: current versions of {{site.kic_product_name}} no longer log the string `failed to fetch KongPlugin: no KongPlugin or KongClusterPlugin was found` anywhere in the controller logs. Instead, this failure surfaces only as a Kubernetes Warning Event on the affected resource — check `kubectl get events` or `kubectl describe` on the relevant Ingress/`KongConsumer` for a Warning Event describing the missing `KongPlugin`/`KongClusterPlugin`, rather than grepping the controller logs.
 
 ## Solution
 

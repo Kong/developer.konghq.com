@@ -1,5 +1,5 @@
 ---
-title: View the request Kong Gateway receives on demand using the Request Termination plugin
+title: View the request {{site.base_gateway}} receives on demand using the Request Termination plugin
 content_type: support
 description: "Use the Request Termination plugin's `config.echo` and `config.trigger` settings to echo back the full request — headers, body, and matched route/service — on demand for a single request."
 products:

@@ -24,7 +24,7 @@ This is not unique to Kong. This is the expected behavior of the browsers. It wo
 
 Workaround: You should install a local CA certificate for your browsers to always work without needing to accept the self-signed certificates from either the Kong Proxy (8000) or Admin API (8001) endpoints
 
-Here are some useful articles on how to to configure your local machine to avoid this behavior with self-signed certificates.
+Here are some useful articles on how to configure your local machine to avoid this behavior with self-signed certificates.
 
 - https://support.mozilla.org/en-US/kb/setting-certificate-authorities-firefox
 - https://medium.com/@tbusser/creating-a-browser-trusted-self-signed-ssl-certificate-2709ce

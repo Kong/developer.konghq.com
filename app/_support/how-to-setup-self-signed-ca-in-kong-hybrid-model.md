@@ -1,7 +1,7 @@
 ---
 title: How to setup self-signed intermediate certificates in Kong hybrid model
 content_type: support
-description: Environment variable configuration for Kong Gateway hybrid mode control planes and data planes using self-signed intermediate CA certificates, plus fixes for related TLS handshake and certificate verification errors.
+description: Environment variable configuration for {{site.base_gateway}} hybrid mode control planes and data planes using self-signed intermediate CA certificates, plus fixes for related TLS handshake and certificate verification errors.
 products:
   - gateway
 works_on:

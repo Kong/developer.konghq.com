@@ -29,7 +29,7 @@ Is TLS v1.3 supported for connecting to Upstreams?
 
 ## Solution
 
-TLS v1.3 to Upstreams works by default. Kong's bundled OpenResty (1.27.1.2 as of Kong Gateway 3.14.0.0) already includes TLS 1.3 in its own default protocol set, so no `proxy_ssl_protocols` override is needed to enable it, and Kong's own templates never set `proxy_ssl_protocols` themselves.
+TLS v1.3 to Upstreams works by default. Kong's bundled OpenResty (1.27.1.2 as of {{site.base_gateway}} 3.14.0.0) already includes TLS 1.3 in its own default protocol set, so no `proxy_ssl_protocols` override is needed to enable it, and Kong's own templates never set `proxy_ssl_protocols` themselves.
 
 If you previously added a `proxy_ssl_protocols` override to work around this, you can remove it. The `proxy_ssl_protocols` nginx directive is still useful, but only if you need to *restrict* which protocol versions Kong will negotiate with an Upstream (for example, to disallow older TLS versions).
 

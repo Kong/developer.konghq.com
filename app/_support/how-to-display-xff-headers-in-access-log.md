@@ -32,4 +32,4 @@ KONG_PROXY_ACCESS_LOG=/dev/stdout show_everything
 KONG_NGINX_HTTP_LOG_FORMAT=show_everything '<other NGINX variables>, x_forwarded_for:$upstream_x_forwarded_for, x_forwarded_proto:$upstream_x_forwarded_proto, x_forwarded_host:$upstream_x_forwarded_host, x_forwarded_port:$upstream_x_forwarded_port, x_forwarded_path:$upstream_x_forwarded_path, x_forwarded_prefix:$upstream_x_forwarded_prefix'
 ```
 
-Please find avaliable NGINX variables.
+Please find available NGINX variables.

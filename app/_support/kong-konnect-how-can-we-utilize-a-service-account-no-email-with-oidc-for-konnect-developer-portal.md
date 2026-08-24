@@ -1,5 +1,5 @@
 ---
-title: "Kong Konnect: Using a Service Account without an email address with OIDC for the Developer Portal"
+title: "{{site.konnect_product_name}}: Using a Service Account without an email address with OIDC for the Developer Portal"
 content_type: support
 description: Remove the `email` scope from the OIDC identity provider configuration on the Konnect Developer Portal so Service Accounts without an email address can log in.
 products:

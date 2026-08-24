@@ -1,7 +1,7 @@
 ---
 title: Logging to JSON format for Kubernetes
 content_type: support
-description: 'The Kong Ingress Controller supports a `--log-format` flag to switch its logs from plain text to JSON, which can be set via `ingressController.args` in the Helm chart.'
+description: 'The {{site.kic_product_name}} supports a `--log-format` flag to switch its logs from plain text to JSON, which can be set via `ingressController.args` in the Helm chart.'
 products:
   - kic
 works_on:

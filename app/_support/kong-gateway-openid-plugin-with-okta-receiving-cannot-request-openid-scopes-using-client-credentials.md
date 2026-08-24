@@ -16,7 +16,7 @@ tldr:
 
 ## Problem
 
-When setting up Client Credentials inside Kong Gateway's OpenID Connect plugin we are receiving the following debug statement:
+When setting up Client Credentials inside {{site.base_gateway}}'s OpenID Connect plugin we are receiving the following debug statement:
 
 ```
 
@@ -38,7 +38,7 @@ The issue here is that the scope `openid` is not applicable when using the grant
 
 The way around this is to create a custom scope inside Okta and update the OpenID Connect plugin to reflect this change as well.
 
-The default scope configured on the OpenID Connect plugin for `Config.Scopes` is `openid`. For this, we should update the plugin to accomodate the custom scope that was created.
+The default scope configured on the OpenID Connect plugin for `Config.Scopes` is `openid`. For this, we should update the plugin to accommodate the custom scope that was created.
 
 Once done, we can retest and now should be able to receive 200s.
 

@@ -1,7 +1,7 @@
 ---
 title: "\"failed to get from node cache: invalid status code received from the userinfo endpoint (400)\" error when using the OpenID Connect plugin with Azure AD"
 content_type: support
-description: "Kong rejects Azure AD access tokens with a userinfo endpoint 400 error when the token's `iss` claim doesn't match the issuer configured in the OpenID Connect plugin."
+description: "Kong rejects Azure AD access tokens with a `userinfo` endpoint 400 error when the token's `iss` claim doesn't match the issuer configured in the OpenID Connect plugin."
 products:
   - gateway
 works_on:

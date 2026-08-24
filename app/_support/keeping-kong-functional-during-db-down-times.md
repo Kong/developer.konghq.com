@@ -1,7 +1,7 @@
 ---
 title: Keeping Kong Functional During DB Down Times
 content_type: support
-description: Configure database cache TTLs, warmup entities, and memory settings so Kong Gateway keeps proxying during database maintenance or downtime.
+description: Configure database cache TTLs, warmup entities, and memory settings so {{site.base_gateway}} keeps proxying during database maintenance or downtime.
 products:
   - gateway
 works_on:
@@ -18,7 +18,7 @@ tldr:
 
 ## Problem
 
-When the database is down—due to maintenance or other reasons—Kong Gateway needs additional configuration to keep functioning without interruption.
+When the database is down—due to maintenance or other reasons—{{site.base_gateway}} needs additional configuration to keep functioning without interruption.
 
 ## Solution
 

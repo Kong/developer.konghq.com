@@ -1,8 +1,8 @@
 ---
-title: "Kong Gateway: Connections intended for websocket route are routing to HTTP routes"
+title: "{{site.base_gateway}}: Connections intended for websocket route are routing to HTTP routes"
 content_type: support
 published: false
-description: To force the request to utilize the websocket route we need to add some differentiator to the route.
+description: To force the request to use the websocket route we need to add some differentiator to the route.
 tldr:
   q: Why do connections intended for my websocket route get routed to an equivalent HTTP route instead?
   a: |
@@ -20,11 +20,11 @@ related_resources:
 
 ## Problem
 
-We have 2 identical routes configured. The only difference is one uses WSS and the other uses HTTP. When we are calling out the websocket route we have noticed that the equivalent HTTP route is being called in its place. If I reach out to the websocket endpoint directly the request is processed properly through the wss protocol. How can we resolve this and force the connection to go to the websocket route.
+We have 2 identical routes configured. The only difference is one uses WSS and the other uses HTTP. When we are calling out the websocket route we have noticed that the equivalent HTTP route is being called in its place. If I reach out to the websocket endpoint directly the request is processed properly through the WSS protocol. How can we resolve this and force the connection to go to the websocket route.
 
 ## Solution
 
-To force the request to utilize the websocket route we need to add some differentiator to the route.
+To force the request to use the websocket route we need to add some differentiator to the route.
 
 One option is to add the header `Upgrade: websocket` to the route.
 

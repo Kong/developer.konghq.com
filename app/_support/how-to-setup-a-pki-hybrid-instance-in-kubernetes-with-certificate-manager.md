@@ -1,7 +1,7 @@
 ---
 title: How to setup a PKI Hybrid instance in Kubernetes with certificate manager
 content_type: support
-description: How to configure Kong Gateway Hybrid mode to use PKI mutual TLS with certificates issued by cert-manager and a private CA in Kubernetes.
+description: How to configure {{site.base_gateway}} Hybrid mode to use PKI mutual TLS with certificates issued by cert-manager and a private CA in Kubernetes.
 products:
   - gateway
   - kic

@@ -23,7 +23,7 @@ How can I customize the output/response of plugins e.g. bot detection to illustr
 
 ## Steps
 
-To provide more informative responses from, for example, the bot detection plugin, you can utilize the `exit-transformer` plugin to customize the output. This approach allows you to append specific messages to the response body, based on the HTTP status codes returned by Kong, indicating the reason for the response, such as detection as a bot.
+To provide more informative responses from, for example, the bot detection plugin, you can use the `exit-transformer` plugin to customize the output. This approach allows you to append specific messages to the response body, based on the HTTP status codes returned by Kong, indicating the reason for the response, such as detection as a bot.
 
 Here are the steps to set up the `exit-transformer` plugin for verbose output:
 

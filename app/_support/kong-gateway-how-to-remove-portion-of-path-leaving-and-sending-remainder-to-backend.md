@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: How to remove portion of path leaving and sending remainder to backend"
+title: "{{site.base_gateway}}: How to remove portion of path leaving and sending remainder to backend"
 content_type: support
 published: false
 description: "To accomplish this we can utilize capture groups and then the request transformer advanced plugin to trip the \"/test/api\"."
@@ -15,9 +15,9 @@ tldr:
     Use a capture group in the route's path regex to capture the segment you want to keep, for example `~/test/api/(?<validtest>v2/validtest2)`. Then set `config.replace.uri` on the Request Transformer Advanced plugin to `/$(uri_captures['validtest'])` so only the captured portion of the path is sent upstream.
 ---
 
-## Kong Gateway: How to remove portion of path leaving and sending remainder to backend
+## {{site.base_gateway}}: How to remove portion of path leaving and sending remainder to backend
 
-We are looking to utilize 1 service and 2 routes. Each route will point to the same service and have different paths. However, our backend will handle each route differently.
+We are looking to use 1 service and 2 routes. Each route will point to the same service and have different paths. However, our backend will handle each route differently.
 
 We are currently using the following paths:
 
@@ -29,7 +29,7 @@ We only need "validtest1" or "validtest2" sent to the backend.
 
 How can we remove "test/api" from the request without distorting the routes?
 
-To accomplish this we can utilize capture groups and then the request transformer advanced plugin to trip the "/test/api".
+To accomplish this we can use capture groups and then the request transformer advanced plugin to trip the "/test/api".
 
 Example:
 

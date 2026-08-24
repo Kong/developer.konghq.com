@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Auth0 IDP returns invalid bearer token when using with consumer claim"
+title: "{{site.base_gateway}}: Auth0 IDP returns invalid bearer token when using with consumer claim"
 content_type: support
 description: This happens specifically with Auth0 when there is no audience specified with the OIDC configuration.
 products:

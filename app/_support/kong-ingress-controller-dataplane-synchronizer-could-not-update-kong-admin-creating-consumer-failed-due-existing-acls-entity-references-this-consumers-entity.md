@@ -1,7 +1,7 @@
 ---
 title: "\"dataplane-synchronizer Could not update kong admin - creating consumer failed due existing 'acls' entity references this 'consumers' entity\" error when deploying the same consumer across multiple workspaces with Kong Ingress Controller"
 content_type: support
-description: "Explains why deploying the same consumer with ACL groups across multiple Kong Ingress Controller workspaces fails with a `creating consumer failed due existing 'acls' entity references this 'consumers' entity` error, caused by the `FillIDs` feature gate, and how to disable it."
+description: "Explains why deploying the same consumer with ACL groups across multiple {{site.kic_product_name}} workspaces fails with a `creating consumer failed due existing 'acls' entity references this 'consumers' entity` error, caused by the `FillIDs` feature gate, and how to disable it."
 products:
   - kic
 works_on:
@@ -20,7 +20,7 @@ tldr:
 
 ## Problem
 
-When deploying the same consumer with ACL groups in multiple workspaces with Kong Ingress Controller (KIC), creating the consumer fails with the error `dataplane-synchronizer Could not update kong admin - creating consumer failed due existing 'acls' entity references this 'consumers' entity`.
+When deploying the same consumer with ACL groups in multiple workspaces with {{site.kic_product_name}} (KIC), creating the consumer fails with the error `dataplane-synchronizer Could not update kong admin - creating consumer failed due existing 'acls' entity references this 'consumers' entity`.
 
 ## Cause
 
@@ -45,6 +45,6 @@ env:
 
 After making this change, redeploy your KIC and test the deployment of your consumers across the workspaces again. You should find that KIC now starts and syncs cleanly, and is able to create the consumers and their ACL grouping without encountering the previous error.
 
-For your reference, more information about feature gates is available in the Kong Ingress Controller documentation.
+For your reference, more information about feature gates is available in the {{site.kic_product_name}} documentation.
 
 Additionally, the change log that introduced this feature is available in the GitHub repository for the Kong Kubernetes Ingress Controller.

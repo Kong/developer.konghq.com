@@ -1,5 +1,5 @@
 ---
-title: Configuring Kong Gateway to output logs as JSON objects
+title: Configuring {{site.base_gateway}} to output logs as JSON objects
 content_type: support
 description: "Kong doesn't have a built-in JSON `error_log` format, but JSON access logs can be produced using Kong logging plugins (`tcp-log`, `http-log`) or a custom Nginx `log_format`."
 products:
@@ -22,7 +22,7 @@ related_resources:
 
 ## Problem
 
-Kong Gateway does not provide a built-in option to output its logs as JSON objects.
+{{site.base_gateway}} does not provide a built-in option to output its logs as JSON objects.
 
 ## Solution
 

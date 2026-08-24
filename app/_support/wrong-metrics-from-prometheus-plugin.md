@@ -16,11 +16,11 @@ related_resources: []
 
 ## Problem
 
-Metrics reported by the Prometheus plugin are missing or incomplete in Kong Gateway, especially when running performance tests with a high number of routes. (Note: Kong Vitals is disabled by default as of Kong Gateway 3.14.0.0, so this is no longer a discrepancy against Vitals for most deployments, but the same underlying metric-loss issue still applies to the Prometheus plugin's own metrics.)
+Metrics reported by the Prometheus plugin are missing or incomplete in {{site.base_gateway}}, especially when running performance tests with a high number of routes. (Note: Kong Vitals is disabled by default as of {{site.base_gateway}} 3.14.0.0, so this is no longer a discrepancy against Vitals for most deployments, but the same underlying metric-loss issue still applies to the Prometheus plugin's own metrics.)
 
 ## Solution
 
-Before troubleshooting missing metrics, confirm that the relevant metric fields are enabled: as of Kong Gateway 3.14.0.0, `status_code_metrics` and `latency_metrics` are off by default in the Prometheus plugin configuration and must be explicitly enabled, or no relevant metrics will be produced at all.
+Before troubleshooting missing metrics, confirm that the relevant metric fields are enabled: as of {{site.base_gateway}} 3.14.0.0, `status_code_metrics` and `latency_metrics` are off by default in the Prometheus plugin configuration and must be explicitly enabled, or no relevant metrics will be produced at all.
 
 With those fields enabled, incomplete or lost metrics can be attributed to the `prometheus_metrics` shared dictionary reaching its default size limit and not storing all metrics. When the shared dictionary is full, Kong must remove old metrics to add new ones, leading to incomplete metrics reporting.
 
@@ -69,4 +69,4 @@ curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_me
 
 The `capacity` should now reflect the new size, such as `100.00 MiB`.
 
-By following these steps, and ensuring `status_code_metrics`/`latency_metrics` are enabled, you should be able to ensure accurate, complete metrics reporting from the Prometheus plugin for your Kong Gateway's performance.
+By following these steps, and ensuring `status_code_metrics`/`latency_metrics` are enabled, you should be able to ensure accurate, complete metrics reporting from the Prometheus plugin for your {{site.base_gateway}}'s performance.

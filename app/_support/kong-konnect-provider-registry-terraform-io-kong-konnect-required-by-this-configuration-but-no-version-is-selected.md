@@ -1,5 +1,5 @@
 ---
-title: 'Kong Konnect Terraform provider "no version is selected" error when the provider is not yet initialized'
+title: '{{site.konnect_product_name}} Terraform provider "no version is selected" error when the provider is not yet initialized'
 content_type: support
 description: This will occur when you have not yet initialized the Konnect provider.
 products:
@@ -16,7 +16,7 @@ related_resources: []
 
 ## Problem
 
-When attempting to utilize the Kong Konnect Terraform provider I receive the below error when running plan/apply commands. How can this be resolved?
+When attempting to use the {{site.konnect_product_name}} Terraform provider I receive the below error when running plan/apply commands. How can this be resolved?
 
 ```
 

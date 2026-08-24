@@ -40,7 +40,7 @@ curl 'https://kong.admin.api:8444/default/routes/<route-id>' \
   --data-raw '{"response_buffering": false}'
 ```
 
-There is also an option in Kong Gateway Manager to disable `response_buffering` if using Kong 3.x+.
+There is also an option in {{site.base_gateway}} Manager to disable `response_buffering` if using Kong 3.x+.
 
 After applying this change, Kong will no longer buffer the responses for the specified route, allowing the responses to be streamed from the upstream server endpoints.
 

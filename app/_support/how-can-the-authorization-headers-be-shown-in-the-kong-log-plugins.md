@@ -17,7 +17,7 @@ related_resources: []
 
 ## Overview
 
-When sending Authorization headers, the values for these headers are redacted when using one of the logging plugins. The log shows entires like this;
+When sending Authorization headers, the values for these headers are redacted when using one of the logging plugins. The log shows entries like this;
 
 ```json
 "headers": {

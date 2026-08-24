@@ -65,7 +65,7 @@ The declarative config file should look like this:
 
 In Kong Manager the certificate key needs to be entered as in the below screenshot:
 
-The environment variable `ENV_REFERENCE_API_KEY` can be configured in the prefered way depending on the set up, e.g. set in a linux shell. The value must contain real newline characters, not a literal `\n`-escaped single-quoted string — a single-quoted shell string with literal `\n` sequences does not produce actual newlines, and the resulting PEM will fail to parse (e.g. `PEM_read_bio_PrivateKey() failed`, causing the TLS handshake to fail). The safest way to set this is to load the key file directly so real newlines are preserved:
+The environment variable `ENV_REFERENCE_API_KEY` can be configured in the preferred way depending on the set up, e.g. set in a Linux shell. The value must contain real newline characters, not a literal `\n`-escaped single-quoted string — a single-quoted shell string with literal `\n` sequences does not produce actual newlines, and the resulting PEM will fail to parse (e.g. `PEM_read_bio_PrivateKey() failed`, causing the TLS handshake to fail). The safest way to set this is to load the key file directly so real newlines are preserved:
 
 ```bash
 

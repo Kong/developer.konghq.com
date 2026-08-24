@@ -20,4 +20,4 @@ When using the AWS Lambda plugin we noticed that the `X-Forwarded-*` headers are
 
 ## Solution
 
-These headers are added by the nginx proxy module when traffic traverses the Gateway. However, when using the lambda plugin it does not follow this same path. The plugin instead uses `lua-resty-http` as a HTTP client to call the AWS Lambda function. As a result, none of the `X-Forwarded-*` headers will be added to these outbound requests.
+These headers are added by the nginx proxy module when traffic traverses the Gateway. However, when using the lambda plugin it does not follow this same path. The plugin instead uses `lua-resty-http` as an HTTP client to call the AWS Lambda function. As a result, none of the `X-Forwarded-*` headers will be added to these outbound requests.

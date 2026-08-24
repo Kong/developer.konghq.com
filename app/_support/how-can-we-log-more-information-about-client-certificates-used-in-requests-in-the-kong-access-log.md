@@ -22,7 +22,7 @@ How can we log more information about client certificates used in requests in th
 
 ## Steps
 
-Nginx offers several variables that can be used to log client certificate information in a custom access log format. In particular, there are `$ssl_client_s_dn`, and a `$ssl_client_raw_cert` variable which may be useful to use either or both to log information about the client certificate. You could modify the standard ngix access log format to return any of the variables. One example which would return both the client DN, and the raw client certificate could be achieved with these kong variables:
+Nginx offers several variables that can be used to log client certificate information in a custom access log format. In particular, there are `$ssl_client_s_dn`, and a `$ssl_client_raw_cert` variable which may be useful to use either or both to log information about the client certificate. You could modify the standard nginx access log format to return any of the variables. One example which would return both the client DN, and the raw client certificate could be achieved with these kong variables:
 
 ```bash
 KONG_NGINX_HTTP_LOG_FORMAT: show_client_cert '$$time_iso8601 - $bytes_sent - $$request - $$status - $$remote_addr - $$ssl_client_s_dn - $$ssl_client_raw_cert'

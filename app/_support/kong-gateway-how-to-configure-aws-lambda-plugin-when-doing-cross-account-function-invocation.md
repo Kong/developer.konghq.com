@@ -1,7 +1,7 @@
 ---
-title: "Kong Gateway: How to configure AWS Lambda plugin when doing cross-account function invocation"
+title: "{{site.base_gateway}}: How to configure AWS Lambda plugin when doing cross-account function invocation"
 content_type: support
-description: "Covers the AWS IAM role and `aws-lambda` plugin misconfigurations that cause cross-account AWS Lambda invocation errors in Kong Gateway, and how to correctly set up role assumption using the `aws_assume_role_arn` field."
+description: "Covers the AWS IAM role and `aws-lambda` plugin misconfigurations that cause cross-account AWS Lambda invocation errors in {{site.base_gateway}}, and how to correctly set up role assumption using the `aws_assume_role_arn` field."
 products:
   - gateway
 works_on:
@@ -18,7 +18,7 @@ tldr:
 
 ## Problem
 
-I configured IAM permission policies to allow one AWS IAM user to invoke a lambda function which is owned by another AWS account, after applied the AWS Lambda plugin in Kong Gateway, I see errors like below:
+I configured IAM permission policies to allow one AWS IAM user to invoke a lambda function which is owned by another AWS account, after applied the AWS Lambda plugin in {{site.base_gateway}}, I see errors like below:
 
 ```
 
@@ -39,7 +39,7 @@ Note: this could happen when grant permissions directly to the IAM user in the o
 
 ## Solution
 
-The core issue revolves around the AWS IAM role/permission policy and the `aws-lambda` plugin configuration in Kong Gateway, specifically when attempting to invoke an AWS Lambda function across different AWS accounts.
+The core issue revolves around the AWS IAM role/permission policy and the `aws-lambda` plugin configuration in {{site.base_gateway}}, specifically when attempting to invoke an AWS Lambda function across different AWS accounts.
 
 The above errors are most likely related to misconfiguration on AWS and Kong's `aws-lambda` plugin.
 
@@ -61,7 +61,7 @@ In the other AWS account (the one used by the `aws-lambda` plugin):
 
 - Attach a policy to the IAM user that allows assuming the IAM role created in the above account.
 
-2. **Kong Gateway `aws-lambda` Plugin Configuration:**
+2. **{{site.base_gateway}} `aws-lambda` Plugin Configuration:**
 
 Ensure that the role ARN is added into the `aws-lambda` plugin configuration. This is crucial for cross-account Lambda function invocation. The relevant field in the plugin configuration is `aws_assume_role_arn`.
 
@@ -90,4 +90,4 @@ Ensure that the `aws_assume_role_arn` field is correctly set with the ARN of the
 
 - For logging purposes, if you encounter issues with logs not appearing when using the `aws-lambda` plugin, consider adjusting the `log_type` configuration based on your requirements for security monitoring and troubleshooting.
 
-By following these steps, you should be able to configure the `aws-lambda` plugin in Kong Gateway for successful cross-account Lambda function invocation.
+By following these steps, you should be able to configure the `aws-lambda` plugin in {{site.base_gateway}} for successful cross-account Lambda function invocation.

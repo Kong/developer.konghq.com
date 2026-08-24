@@ -22,7 +22,7 @@ After adding a large number of regex routes (more than 8192), we are seeing memo
 
 ## Cause
 
-In OpenResty, the Lua regex cache is usually used to help with performance of the regex matching so that subsequent matches of the same regex need not be recompiled. When you have a large amount of regex routes, specifically more than the default `nginx_http_lua_regex_cache_max_entries` which is 8192, this will cause regex cache thrashing, which means that each request that does not match an existing regex requires the entire regex cache to be rebuilt. Each regex is compiled by C code and Lua code gets a cdata handle to the compiled object. That cdata handle is essentially a C pointer value which for Lua Garbage Collection (GC) is very small in size even though the actual memory allocated for JIT compiled regexes is much larger. This results in the Lua GC not reclaiming the memory, and thus the high memory utilization.
+In OpenResty, the Lua regex cache is usually used to help with performance of the regex matching so that subsequent matches of the same regex need not be recompiled. When you have a large amount of regex routes, specifically more than the default `nginx_http_lua_regex_cache_max_entries` which is 8192, this will cause regex cache thrashing, which means that each request that does not match an existing regex requires the entire regex cache to be rebuilt. Each regex is compiled by C code and Lua code gets a `cdata` handle to the compiled object. That `cdata` handle is essentially a C pointer value which for Lua Garbage Collection (GC) is very small in size even though the actual memory allocated for JIT compiled regexes is much larger. This results in the Lua GC not reclaiming the memory, and thus the high memory utilization.
 
 ## Solution
 

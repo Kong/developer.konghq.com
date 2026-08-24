@@ -18,7 +18,7 @@ tldr:
 
 ## Overview
 
-How to upload a pfx format certificate to kong?
+How to upload a `pfx` format certificate to kong?
 
 ## Steps
 

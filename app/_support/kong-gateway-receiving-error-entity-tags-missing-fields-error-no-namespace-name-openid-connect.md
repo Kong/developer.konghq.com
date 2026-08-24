@@ -19,7 +19,7 @@ tldr:
 
 ## Problem
 
-We're currently deployed in dbless on kubernetes. While installing Kong Gateway with Kong Ingress Controller (KIC), we noticed that our ingress-controller is failing to start up properly.
+We're currently deployed in DB-less on kubernetes. While installing {{site.base_gateway}} with {{site.kic_product_name}} (KIC), we noticed that our ingress-controller is failing to start up properly.
 
 When reviewing the logs, or the Kubernetes events for the affected resource, we can see a schema violation for the `openid-connect` plugin stating it is an enterprise-only plugin, surfaced through one of two paths:
 
@@ -41,7 +41,7 @@ How can we resolve this?
 
 ## Cause
 
-This occurs because the `openid-connect` plugin is only available with a valid Kong Enterprise license, and no license (or no valid license) is currently loaded on the Gateway/data plane. We can verify this by checking the startup logs for the proxy pod for licensing-related messages.
+This occurs because the `openid-connect` plugin is only available with a valid {{site.ee_product_name}} license, and no license (or no valid license) is currently loaded on the Gateway/data plane. We can verify this by checking the startup logs for the proxy pod for licensing-related messages.
 
 ## Solution
 

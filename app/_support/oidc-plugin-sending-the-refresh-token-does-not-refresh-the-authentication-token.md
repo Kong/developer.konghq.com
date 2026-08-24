@@ -1,8 +1,8 @@
 ---
-title: "OIDC Plugin: Sending the refresh_token does not refresh the authentication token"
+title: "OIDC Plugin: Sending the `refresh_token` does not refresh the authentication token"
 content_type: support
 published: false
-description: With the Kong Gateway OIDC plugin, the refresh token must be sent on its own; if it is sent alongside the authentication token the refresh is ignored.
+description: With the {{site.base_gateway}} OIDC plugin, the refresh token must be sent on its own; if it is sent alongside the authentication token the refresh is ignored.
 products:
   - gateway
 works_on:
@@ -22,6 +22,6 @@ An OIDC client sends the refresh token along with the authentication token, but 
 
 ## Solution
 
-When using refresh tokens with the Kong Gateway OIDC plugin it is important the refresh token is sent on its own and not with the authentication token.
+When using refresh tokens with the {{site.base_gateway}} OIDC plugin it is important the refresh token is sent on its own and not with the authentication token.
 
 The OIDC client should check the expiration of the token and decide if a refresh is required. If this is the case then the refresh token should be sent from the client. If both tokens are sent the refresh is ignored and authentication is refused based on the authentication token's expired status.

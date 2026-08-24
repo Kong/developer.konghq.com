@@ -1,5 +1,5 @@
 ---
-title: How to determine and test which AWS subnets service Kongs S3 buckets.
+title: How to determine and test which AWS subnets service Kong's S3 buckets.
 content_type: support
 description: "Use AWS's published IP range list and `jq` to determine which subnets serve a Kong S3 bucket in a given region."
 products:

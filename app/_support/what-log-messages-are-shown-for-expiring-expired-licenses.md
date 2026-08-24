@@ -1,5 +1,5 @@
 ---
-title: Log messages shown for expiring and expired Kong Enterprise licenses
+title: Log messages shown for expiring and expired {{site.ee_product_name}} licenses
 content_type: support
 description: Kong logs warning, error, and two levels of critical messages as an Enterprise license approaches and passes its expiration date, so you can configure alerts in an external log tool.
 products:

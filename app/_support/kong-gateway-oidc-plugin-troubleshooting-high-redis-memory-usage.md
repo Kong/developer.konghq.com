@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: OIDC plugin - Troubleshooting High Redis Memory Usage"
+title: "{{site.base_gateway}}: OIDC plugin - Troubleshooting High Redis Memory Usage"
 content_type: support
 description: "Explains why Redis memory usage grows unbounded when the OIDC plugin's bearer and session auth methods create redundant sessions, and how to fix it by tuning `session_rolling_timeout` and disabling sessions for bearer authentication."
 products:

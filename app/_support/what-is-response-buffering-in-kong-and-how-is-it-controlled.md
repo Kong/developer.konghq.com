@@ -1,7 +1,7 @@
 ---
 title: Response buffering in Kong and how it's controlled
 content_type: support
-description: Explains why Kong Gateway sometimes buffers upstream responses to a temporary file and how to control this behavior with `proxy_max_temp_file_size`.
+description: Explains why {{site.base_gateway}} sometimes buffers upstream responses to a temporary file and how to control this behavior with `proxy_max_temp_file_size`.
 products:
   - gateway
 works_on:

@@ -1,7 +1,7 @@
 ---
-title: "Kong Gateway: Host header case-sensitive on Routes for route matching, causing HTTP 404 errors"
+title: "{{site.base_gateway}}: Host header case-sensitive on Routes for route matching, causing HTTP 404 errors"
 content_type: support
-description: "Host header matching on Kong Gateway Routes is case-sensitive, per RFC, even though header names are case-insensitive, so requests with a different-case Host header (e.g. `Example.com` vs. `example.com`) return a 404."
+description: "Host header matching on {{site.base_gateway}} Routes is case-sensitive, per RFC, even though header names are case-insensitive, so requests with a different-case Host header (e.g. `Example.com` vs. `example.com`) return a 404."
 products:
   - gateway
 works_on:
@@ -20,17 +20,17 @@ We are setting the Host parameter on a Route for matching-purposes, however we a
 
 ## Solution
 
-In this case, the Kong Gateway is working as designed/expected as header values are case-sensitive per RFC. While header names are case-insensitive, their values are case-sensitive. This is why "Example.com" is different from "example.com" and generates a 404.
+In this case, the {{site.base_gateway}} is working as designed/expected as header values are case-sensitive per RFC. While header names are case-insensitive, their values are case-sensitive. This is why "Example.com" is different from "example.com" and generates a 404.
 
 There are a few ways to resolve this situation:
 
-Method #1: Simply ensure that your client apps are sending the Host header correctly. If you have control over the application sending the requests for example, ensure it's sending the expected Host header to match what has been set in the Kong Gateway. For those apps which you do not have control over, make it known perhaps in the API documentation that they should be sending the Host header as all lower-case for example.
+Method #1: Simply ensure that your client apps are sending the Host header correctly. If you have control over the application sending the requests for example, ensure it's sending the expected Host header to match what has been set in the {{site.base_gateway}}. For those apps which you do not have control over, make it known perhaps in the API documentation that they should be sending the Host header as all lower-case for example.
 
 Method #2: Some load balancers (LBs) actually have a function which can manipulate the headers for consistency so that they can all be lower-case values for example. If this is an option in your environment, we recommend this be considered.
 
 Method #3: You can set multiple values in the Host parameter on the Route. So in the event that you only see a few different variations (i.e. example.com, Example.com, EXAMPLE.COM), then it may be simpler to add those variations to the Host setting on the Route so that all commonly seen variations are matched correctly.
 
-Method #4: If the first two options are not possible in your environment, you may be able to utilize the Serverless Plugin (pre-function) with Kong Gateway to manipulate the headers prior to it reaching the Route matching phase. An example is included 'as-is' below. Please understand that Serverless function code is outside the scope of Kong Support. You may wish to contact your Account Executive to hire our Field Engineering / Professional Services team who can write the code to meet your specific use-case.
+Method #4: If the first two options are not possible in your environment, you may be able to use the Serverless Plugin (pre-function) with {{site.base_gateway}} to manipulate the headers prior to it reaching the Route matching phase. An example is included 'as-is' below. Please understand that Serverless function code is outside the scope of Kong Support. You may wish to contact your Account Executive to hire our Field Engineering / Professional Services team who can write the code to meet your specific use-case.
 
 To explain the JSON config from a Pre-Function plugin below from Method #4: the code to add is `ngx.req.set_header("Host", string.lower(ngx.req.get_headers()["Host"]))` to the rewrite phase and assign it at the global scope. Limitations: This does not work scoped to a particular Service or Route, it must be Global. This also limits the ability to add more Pre-Function plugins as only one Pre-Function plugin can be added to a particular scope at a time, meaning in this example another Pre-Function plugin could not be applied globally.
 

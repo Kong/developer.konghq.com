@@ -22,7 +22,7 @@ tldr:
 
 ## Problem
 
-When referencing a secret from the environment variables vault backend with a configured prefix, Kong Gateway logs a `could not find cached values` error instead of resolving the value.
+When referencing a secret from the environment variables vault backend with a configured prefix, {{site.base_gateway}} logs a `could not find cached values` error instead of resolving the value.
 
 ```
 
@@ -68,7 +68,7 @@ Note that the prefix (`MY_`) is not added here to the env variable name. If we a
 
 5. You could then reference as shown below in any of the supported referenceable fields in the plugin.
 
-Here I am referencing these in the OIDC plugin clientid and clientsecret fields.
+Here I am referencing these in the OIDC plugin `clientid` and `clientsecret` fields.
 
 Syntax:
 

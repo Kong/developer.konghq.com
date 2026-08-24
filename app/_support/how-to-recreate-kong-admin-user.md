@@ -44,9 +44,9 @@ If you don't have another admin user with the default workspace’s super admin 
 
 2. Open Kong manager -> invite admin-> to make the user name as `kong_admin`, fill in the email and grant the default workspace’s super admin role to the user.
 
-   If you have an SMTP server configurated, you will receive a registration email. Please skip to step 6.
+   If you have an SMTP server configured, you will receive a registration email. Please skip to step 6.
 
-   If there is no SMTP server configurated, please continue to do steps 3 and 5. But step 4 is still necessary.
+   If there is no SMTP server configured, please continue to do steps 3 and 5. But step 4 is still necessary.
 
 3. Click the `kong_admin` in the "invited" list -> click 'generate registration URL', and note this URL.
 4. Enable RBAC by commenting in the configurations in step 1, and restart Kong.

@@ -1,7 +1,7 @@
 ---
 title: "LDAP authentication for Kong Manager failed with \"User not found\" error message"
 content_type: support
-description: 'LDAP login to Kong Manager fails with a "user not found" error when the LDAP user does not exist or is not under the configured base_dn — a different, later-stage error than "Admin not found."'
+description: 'LDAP login to Kong Manager fails with a "user not found" error when the LDAP user does not exist or is not under the configured `base_dn` — a different, later-stage error than "Admin not found."'
 products:
   - gateway
 works_on:

@@ -1,7 +1,7 @@
 ---
 title: How to store Kong audit logs in AWS
 content_type: support
-description: AWS CloudTrail Lake can store and query Kong Enterprise Audit Logs alongside other AWS and non-AWS activity events for centralized auditing.
+description: AWS CloudTrail Lake can store and query {{site.ee_product_name}} Audit Logs alongside other AWS and non-AWS activity events for centralized auditing.
 products:
   - gateway
 works_on:
@@ -25,4 +25,4 @@ How can Kong audit logs be stored in AWS, for them to be queried similarly to al
 
 ## Steps
 
-In AWS, CloudTrail is meant to be the single source for immutable storage and query of audit logs from any source — application, infrastructure, and platform including virtual machines and containers. Kong Enterprise Audit Logs can also be published, stored, and queried together with AWS and non-AWS activity events in AWS CloudTrail Lake. Here are the full details "Maintain Your Kong Gateway Audit Log Trail in AWS CloudTrail Lake" of the solution.
+In AWS, CloudTrail is meant to be the single source for immutable storage and query of audit logs from any source — application, infrastructure, and platform including virtual machines and containers. {{site.ee_product_name}} Audit Logs can also be published, stored, and queried together with AWS and non-AWS activity events in AWS CloudTrail Lake. Here are the full details "Maintain Your {{site.base_gateway}} Audit Log Trail in AWS CloudTrail Lake" of the solution.

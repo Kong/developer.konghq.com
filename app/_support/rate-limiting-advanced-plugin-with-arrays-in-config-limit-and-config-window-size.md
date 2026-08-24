@@ -22,7 +22,7 @@ It's not clear how the rate limiting advanced plugin behaves when `Config.Limit`
 
 ## Solution
 
-When using an array in `config.limit` and `config.window_size`, the plugin tracks a separate counter for each (limit, window_size) pair and enforces all of them at the same time. Whether the request-by-request behavior is as deterministic as described below depends on `config.window_type`, which the plugin defaults to `sliding` and which this KB previously did not mention at all.
+When using an array in `config.limit` and `config.window_size`, the plugin tracks a separate counter for each (limit, `window_size`) pair and enforces all of them at the same time. Whether the request-by-request behavior is as deterministic as described below depends on `config.window_type`, which the plugin defaults to `sliding` and which this KB previously did not mention at all.
 
 - Under the default `sliding` window type, the plugin evaluates a continuously moving window rather than fixed, clock-aligned buckets, so the walkthrough below does not hold as written.
 - Under `window_type: fixed`, counters reset at fixed, clock-aligned boundaries, so the walkthrough below is representative, but it is still dependent on how your request timing aligns with the window boundaries — starting mid-window can let you send more or fewer requests than expected before hitting the limit.

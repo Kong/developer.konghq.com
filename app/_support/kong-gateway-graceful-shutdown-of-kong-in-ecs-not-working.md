@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Graceful Shutdown of Kong in ECS not working"
+title: "{{site.base_gateway}}: Graceful Shutdown of Kong in ECS not working"
 content_type: support
 description: "Kong's master process runs as PID 1 in ECS tasks, so ECS sends SIGTERM directly to it instead of honoring the container's `STOPSIGNAL`, causing in-flight requests to fail. Using an init process such as `dumb-init` enables a graceful shutdown."
 products:

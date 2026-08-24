@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Key-Auth on Consumer isn't working with Vault secrets"
+title: "{{site.base_gateway}}: Key-Auth on Consumer isn't working with Vault secrets"
 content_type: support
 description: This is expected behavior at this time as there is no support yet for referenceable fields in the `key-auth` plugin.
 products:

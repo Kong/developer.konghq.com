@@ -31,7 +31,7 @@ However our system memory looks to be alright and nothing is maxing out. What ca
 
 ## Solution
 
-When the dataplane fails to sync it will throw a message of "unable to update running config: xyz". In this case, the problem is that there is no memory left for the `db_cache`.
+When the dataplane fails to sync it will throw a message of "unable to update running config: `xyz`". In this case, the problem is that there is no memory left for the `db_cache`.
 
 To validate this we can call the `/status` endpoint and verify the `db_cache` values.
 

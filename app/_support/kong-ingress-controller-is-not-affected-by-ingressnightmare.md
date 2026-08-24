@@ -1,5 +1,5 @@
 ---
-title: Kong Ingress Controller is not affected by IngressNightmare
+title: "{{site.kic_product_name}} is not affected by IngressNightmare"
 content_type: support
 description: "Kong Ingress Controller (KIC) is not impacted or affected by the vulnerability \"IngressNightmare\"."
 products:
@@ -18,11 +18,11 @@ related_resources:
 
 ## Problem
 
-Kong Ingress Controller users need to know whether they are affected by the vulnerability codenamed "IngressNightmare".
+{{site.kic_product_name}} users need to know whether they are affected by the vulnerability codenamed "IngressNightmare".
 
 ## Solution
 
-Kong Ingress Controller (KIC) is not impacted or affected by the vulnerability "IngressNightmare".
+{{site.kic_product_name}} (KIC) is not impacted or affected by the vulnerability "IngressNightmare".
 
 In Ingress-nginx, some configurations rely on constructing file paths, but KIC does not. As a result, KIC remains unaffected by this vulnerability.
 

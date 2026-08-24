@@ -52,7 +52,7 @@ RUN rm /tmp/lua-zlib-1.2-0.linux-x86_64.rock
 USER kong
 ```
 
-Note: the Enterprise `-alpine` image variant no longer exists; the default Kong Gateway image is now Ubuntu-based, so package installation uses `apt-get` rather than `apk`. Installing `unzip` is required before `luarocks install`, since zip-packaged rocks fail to install without it on the Ubuntu-based image.
+Note: the Enterprise `-alpine` image variant no longer exists; the default {{site.base_gateway}} image is now Ubuntu-based, so package installation uses `apt-get` rather than `apk`. Installing `unzip` is required before `luarocks install`, since zip-packaged rocks fail to install without it on the Ubuntu-based image.
 
 To build the custom image, run the below command in the same directory and the `Dockerfile`;
 

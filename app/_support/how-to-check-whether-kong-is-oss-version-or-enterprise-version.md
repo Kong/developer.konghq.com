@@ -2,7 +2,7 @@
 title: How to check whether Kong is OSS version or enterprise version
 content_type: support
 published: false
-description: Explains how to confirm whether a Kong Gateway installation is OSS or Enterprise using Kong Manager, the `kong version` command, or proxy logs.
+description: Explains how to confirm whether a {{site.base_gateway}} installation is OSS or Enterprise using Kong Manager, the `kong version` command, or proxy logs.
 products:
   - gateway
 works_on:

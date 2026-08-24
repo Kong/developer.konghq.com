@@ -22,7 +22,7 @@ When Kong is behind a CDN and using SSE (Server Sent Events), clients receive HT
 
 ## Cause
 
-HTTP error 499 means that the client closed the connection in the middle of processing the request through the server or before the server answered the request. This is a common situation when allowing SSE (Server Sent Events) and Kong is behind a CDN: Kong Gateway responds with HTTP 200, but the CDN responds with HTTP 499. In this scenario, the request sent through Kong needs to be shorter than the proxy read timeout or Kong will terminate the upstream connection.
+HTTP error 499 means that the client closed the connection in the middle of processing the request through the server or before the server answered the request. This is a common situation when allowing SSE (Server Sent Events) and Kong is behind a CDN: {{site.base_gateway}} responds with HTTP 200, but the CDN responds with HTTP 499. In this scenario, the request sent through Kong needs to be shorter than the proxy read timeout or Kong will terminate the upstream connection.
 
 ## Solution
 

@@ -1,7 +1,7 @@
 ---
 title: Recommendations when running Kong in DBless mode
 content_type: support
-description: Best practices for sizing `nginx_worker_processes`, compute resources, and `mem_cache_size` when running Kong Gateway in DB-less mode.
+description: Best practices for sizing `nginx_worker_processes`, compute resources, and `mem_cache_size` when running {{site.base_gateway}} in DB-less mode.
 products:
   - gateway
 works_on:
@@ -32,6 +32,6 @@ Please follow these best practices to avoid request latency or performance issue
    One CPU per Worker Process
 3. Make sure that the in-memory cache is configured appropriately.
    Set the `mem_cache_size` directive in `kong.conf`.
-4. Deploy Kong plugins efficiently to keep the K8s Declarative Configuration as small as possble.
+4. Deploy Kong plugins efficiently to keep the K8s Declarative Configuration as small as possible.
 
 Please refer to the latest documentation:

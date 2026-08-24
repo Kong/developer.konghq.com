@@ -22,7 +22,7 @@ Is it possible to have Kong re-route a request based on Header existence to alte
 
 This can be accomplished through out-of-the-box plugins with some custom code.
 
-To start off you will need 3 Routes created all pointing to their respective services (or the same service). For this example, we will utilize the same service for all 3 Routes. The main service will have a Request Termination plugin and an Exit Transformer plugin.
+To start off you will need 3 Routes created all pointing to their respective services (or the same service). For this example, we will use the same service for all 3 Routes. The main service will have a Request Termination plugin and an Exit Transformer plugin.
 
 Create Service:
 
@@ -116,7 +116,7 @@ curl --request POST \
     ]}}'
 ```
 
-Create Rate Limiting Advanced plugin (Attached to Route 1). Note that `sync_rate` cannot be set at all when `strategy` is (or defaults to) `"local"` — live-tested on Kong Gateway 3.14.0.0: including `"sync_rate":0` alongside `"strategy":"local"` fails with `400 schema violation ("sync_rate cannot be configured when using a local strategy")` regardless of whether `strategy` is set explicitly or left to its `"local"` default. `sync_rate` must be omitted entirely (as below) for the local strategy; only set it if `strategy` is `"redis"` or `"cluster"` instead:
+Create Rate Limiting Advanced plugin (Attached to Route 1). Note that `sync_rate` cannot be set at all when `strategy` is (or defaults to) `"local"` — live-tested on {{site.base_gateway}} 3.14.0.0: including `"sync_rate":0` alongside `"strategy":"local"` fails with `400 schema violation ("sync_rate cannot be configured when using a local strategy")` regardless of whether `strategy` is set explicitly or left to its `"local"` default. `sync_rate` must be omitted entirely (as below) for the local strategy; only set it if `strategy` is `"redis"` or `"cluster"` instead:
 
 ```bash
 

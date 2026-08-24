@@ -1,7 +1,7 @@
 ---
 title: "Kong Mesh: Receiving error \"license status is not valid for this control plane. Copy ConfigMap license-quota-status\""
 content_type: support
-description: A Kong Mesh Zone Control Plane can lose license validity when the `license-quota-status` ConfigMap is out of sync with the Global CP; deleting the ConfigMap and letting it rebuild resolves the error.
+description: A {{site.mesh_product_name}} Zone Control Plane can lose license validity when the `license-quota-status` ConfigMap is out of sync with the Global CP; deleting the ConfigMap and letting it rebuild resolves the error.
 products:
   - mesh
 works_on:
@@ -18,7 +18,7 @@ tldr:
 
 ## Problem
 
-We have a multizone mesh setup and when deploying a Data Plane we received the following error message on the Zone Control Plane:
+We have a multi-zone mesh setup and when deploying a Data Plane we received the following error message on the Zone Control Plane:
 
 ```
 Warning FailedToGenerateKumaDataplane pod/redis-m30k3nks3-93kd3 Failed to generate Kuma Dataplane: admission webhook "validator.kuma-admission.kuma.io" denied the request: license status is not valid for this control plane. Copy ConfigMap license-quota-status from Global to Zone to restore functionality of the system.

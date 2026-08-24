@@ -1,7 +1,7 @@
 ---
 title: How to set up kong to autostart kong with systemd with a non root user
 content_type: support
-description: How to configure systemd to run Kong Gateway as a non-root `kong` user on RHEL and CentOS 8, instead of root.
+description: How to configure systemd to run {{site.base_gateway}} as a non-root `kong` user on RHEL and CentOS 8, instead of root.
 products:
   - gateway
 works_on:
@@ -16,11 +16,11 @@ tldr:
 
 ## Overview
 
-The instructions for controlling Kong Gateway through systemd require root to be used to start kong as a root user. We would like to use a non-root user, e.g. a "kong" user.
+The instructions for controlling {{site.base_gateway}} through systemd require root to be used to start kong as a root user. We would like to use a non-root user, e.g. a "kong" user.
 
 ## Steps
 
-In RHEL and CentOS 8 you can configure systemd to control the Kong Gateway as a "kong" user by following these steps:
+In RHEL and CentOS 8 you can configure systemd to control the {{site.base_gateway}} as a "kong" user by following these steps:
 
 1. Log into the VM where you want to configure the Gateway to start as the "kong" user.
 2. Create a folder called `/home/kong/.config/systemd/user/`.
@@ -40,7 +40,7 @@ In RHEL and CentOS 8 you can configure systemd to control the Kong Gateway as a 
    WantedBy=default.target
    ```
 
-6. Run the following to make sure the Kong Gateway process can continue to run when the kong user has logged off:
+6. Run the following to make sure the {{site.base_gateway}} process can continue to run when the kong user has logged off:
 
    ```bash
    loginctl enable-linger $USER

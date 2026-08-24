@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Replace a specific JSON key in the response sent to clients"
+title: "{{site.base_gateway}}: Replace a specific JSON key in the response sent to clients"
 content_type: support
 published: false
 description: Use the transform functions of the Response Transformer Advanced plugin to rename a specific JSON key in the response sent to clients.

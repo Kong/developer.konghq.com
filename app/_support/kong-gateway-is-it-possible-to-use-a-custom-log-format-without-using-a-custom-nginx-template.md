@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Custom log format without a custom nginx template"
+title: "{{site.base_gateway}}: Custom log format without a custom nginx template"
 content_type: support
 published: false
 description: "You can use the direct injection of nginx parameters to specify a custom log format without maintaining a custom nginx template."
@@ -17,7 +17,7 @@ related_resources:
     url: /gateway/nginx-directives/
 ---
 
-## Kong Gateway: Is it possible to use a custom log format without using a custom nginx template
+## {{site.base_gateway}}: Is it possible to use a custom log format without using a custom nginx template
 
 The documentation shows an example of defining a custom nginx log format which uses a custom nginx template. This is an overhead to maintain between versions, is there a way to specify a custom format without a custom nginx file and the associated maintenance overhead?
 

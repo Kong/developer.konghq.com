@@ -1,7 +1,7 @@
 ---
 title: "Kong Gateway: AI Proxy \"content-type header does not match request body\""
 content_type: support
-description: "Explains why the AI Proxy plugin's `content-type header does not match request body` error is dead code in current Kong Gateway releases, and how to resolve the `request body doesn't contain valid inputs` error that replaced it."
+description: "Explains why the AI Proxy plugin's `content-type header does not match request body` error is dead code in current {{site.base_gateway}} releases, and how to resolve the `request body doesn't contain valid inputs` error that replaced it."
 products:
   - gateway
 works_on:
@@ -39,7 +39,7 @@ What causes this and how can it be resolved?
 
 ## Cause
 
-The exact error message shown above (`content-type header does not match request body`) is now unreachable dead code in current Kong Gateway releases — you will not see this literal message anymore. The underlying situation it used to describe (a genuine mismatch between the content-type header and the request body, or a request body the AI Proxy plugin cannot parse) still occurs, but now instead surfaces as a different error:
+The exact error message shown above (`content-type header does not match request body`) is now unreachable dead code in current {{site.base_gateway}} releases — you will not see this literal message anymore. The underlying situation it used to describe (a genuine mismatch between the content-type header and the request body, or a request body the AI Proxy plugin cannot parse) still occurs, but now instead surfaces as a different error:
 
 ```json
 {

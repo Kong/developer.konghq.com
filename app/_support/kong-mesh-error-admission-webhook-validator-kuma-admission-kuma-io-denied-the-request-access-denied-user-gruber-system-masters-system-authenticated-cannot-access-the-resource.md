@@ -1,7 +1,7 @@
 ---
 title: "Kong Mesh: 'admission webhook \"validator.kuma-admission.kuma.io\" denied the request: access denied' error when the default AccessRole or AccessRoleBinding is missing or too restrictive"
 content_type: support
-description: Kong Mesh denies valid users from creating resources when the default `AccessRole` and `AccessRoleBinding` are missing or too restrictive; recreating them and the validating webhook resolves the access-denied error.
+description: "{{site.mesh_product_name}} denies valid users from creating resources when the default `AccessRole` and `AccessRoleBinding` are missing or too restrictive; recreating them and the validating webhook resolves the access-denied error."
 products:
   - mesh
 works_on:

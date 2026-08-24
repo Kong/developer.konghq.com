@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Log the upstream/target hostname in a logging plugin"
+title: "{{site.base_gateway}}: Log the upstream/target hostname in a logging plugin"
 content_type: support
 published: false
 description: "`balancer_data` returns the service host, not the upstream target host; use `ngx.var.upstream_host` to log the upstream/target hostname in a logging plugin."
@@ -44,7 +44,7 @@ How can we get the upstream/target host returned instead?
 
 ## Solution
 
-To return the upstream/target host you can utilize the variable `ngx.var.upstream_host`
+To return the upstream/target host you can use the variable `ngx.var.upstream_host`
 
 Sample output:
 

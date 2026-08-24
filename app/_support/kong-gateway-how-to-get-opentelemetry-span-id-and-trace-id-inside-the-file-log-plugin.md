@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: How to get OpenTelemetry Span ID and Trace ID inside the file log plugin"
+title: "{{site.base_gateway}}: How to get OpenTelemetry Span ID and Trace ID inside the file log plugin"
 content_type: support
 published: false
 description: The OpenTelemetry plugin automatically appends the headers for whichever tracing utility is being utilized.
@@ -37,7 +37,7 @@ traceid = 72a6c1be825f5339cacd16c58254835c
 spanid = 2b1f74d3b0939afd
 ```
 
-Now when we utilize the file log plugin these headers will be appended to the Request Headers section.
+Now when we use the file log plugin these headers will be appended to the Request Headers section.
 
 ```json
     "request": {

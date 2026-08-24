@@ -1,5 +1,5 @@
 ---
-title: "Kong Konnect: Uploading a custom plugin schema to a Konnect Ingress Controller Control Plane"
+title: "{{site.konnect_product_name}}: Uploading a custom plugin schema to a Konnect Ingress Controller Control Plane"
 content_type: support
 description: Currently the only way to do this is via the Konnect Admin API as the KIC Control Plane GUI is read-only.
 products:
@@ -18,7 +18,7 @@ related_resources:
 
 ## Problem
 
-When I use a standard Hybrid Control Plane in Konnect, I have the ability to upload my custom plugin schema in the GUI. This functionality appears to not be available when I am using a Kong Ingress Controller Control Plane. How do I upload my `schema.lua` file to a Konnect Ingress Controller Control Plane?
+When I use a standard Hybrid Control Plane in Konnect, I have the ability to upload my custom plugin schema in the GUI. This functionality appears to not be available when I am using a {{site.kic_product_name}} Control Plane. How do I upload my `schema.lua` file to a Konnect Ingress Controller Control Plane?
 
 ## Solution
 

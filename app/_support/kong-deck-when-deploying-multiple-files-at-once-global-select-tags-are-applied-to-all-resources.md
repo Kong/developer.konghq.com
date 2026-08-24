@@ -16,7 +16,7 @@ related_resources: []
 
 ## Problem
 
-We are trying to deploy multiple files at once to Kong Gateway using decK, all with different tags. However, we noticed that all resources created contain the same tags even though the file specifies different tags.
+We are trying to deploy multiple files at once to {{site.base_gateway}} using decK, all with different tags. However, we noticed that all resources created contain the same tags even though the file specifies different tags.
 
 For example:
 

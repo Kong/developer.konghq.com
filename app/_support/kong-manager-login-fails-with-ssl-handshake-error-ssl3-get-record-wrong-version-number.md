@@ -30,7 +30,7 @@ Example log entries seen in Kong when this happens:
 
 ## Cause
 
-Note: on current Kong Gateway 3.14.0.0 (modern bundled OpenSSL), this exact scenario — an `https://` issuer/endpoint that actually only serves plain HTTP — is live-reproducible, but the literal OpenSSL error text has changed from the classic `ssl3_get_record:wrong version number` wording to `SSL_do_handshake() failed (SSL: error:0A0000C6:SSL routines::packet length too long error:0A000139:SSL routines::record layer failure)`, confirmed via `kong-dp`'s error log when `openid-connect`'s `issuer` points at a plaintext-HTTP listener. Older Kong/OpenSSL versions may still show the older string. Either way, the underlying cause and fix below are unchanged.
+Note: on current {{site.base_gateway}} 3.14.0.0 (modern bundled OpenSSL), this exact scenario — an `https://` issuer/endpoint that actually only serves plain HTTP — is live-reproducible, but the literal OpenSSL error text has changed from the classic `ssl3_get_record:wrong version number` wording to `SSL_do_handshake() failed (SSL: error:0A0000C6:SSL routines::packet length too long error:0A000139:SSL routines::record layer failure)`, confirmed via `kong-dp`'s error log when `openid-connect`'s `issuer` points at a plaintext-HTTP listener. Older Kong/OpenSSL versions may still show the older string. Either way, the underlying cause and fix below are unchanged.
 
 The most common cause of this SSL error is sending HTTPS requests to an endpoint that only listens on HTTP. This usually results from a misconfiguration on the backend or Kong using the wrong port number. Correcting this typically resolves the SSL error.
 

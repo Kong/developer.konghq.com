@@ -1,5 +1,5 @@
 ---
-title: "Kong Konnect: How to publish/unpublish an API Product using the Admin API"
+title: "{{site.konnect_product_name}}: How to publish/unpublish an API Product using the Admin API"
 content_type: support
 description: Publish or unpublish an API Product without specifying a version by using the Konnect Admin API's v2 API Products endpoint.
 products:

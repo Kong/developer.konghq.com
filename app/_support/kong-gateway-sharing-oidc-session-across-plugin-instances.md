@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Sharing OIDC session across plugin instances"
+title: "{{site.base_gateway}}: Sharing OIDC session across plugin instances"
 content_type: support
 description: This can be done by using the same session secret across multiple plugin instances.
 products:

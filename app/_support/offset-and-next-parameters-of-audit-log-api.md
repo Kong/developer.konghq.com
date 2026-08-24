@@ -2,7 +2,7 @@
 title: About offset and next parameters of Audit Log API
 content_type: support
 published: false
-description: How to page through the Kong Gateway Audit Log API using the `offset` and `next` response parameters, and what to expect when there are no more records.
+description: How to page through the {{site.base_gateway}} Audit Log API using the `offset` and `next` response parameters, and what to expect when there are no more records.
 products:
   - gateway
 works_on:

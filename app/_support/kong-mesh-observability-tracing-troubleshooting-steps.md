@@ -1,7 +1,7 @@
 ---
-title: "Kong Mesh: Observability/tracing troubleshooting steps"
+title: "{{site.mesh_product_name}}: Observability/tracing troubleshooting steps"
 content_type: support
-description: General troubleshooting steps for diagnosing why Kong Mesh Observability/tracing isn't collecting the expected data, using the `kuma-demo` app and Envoy config dumps.
+description: General troubleshooting steps for diagnosing why {{site.mesh_product_name}} Observability/tracing isn't collecting the expected data, using the `kuma-demo` app and Envoy config dumps.
 products:
   - gateway
 works_on:
@@ -25,7 +25,7 @@ related_resources:
 
 ## Problem
 
-When deploying Observability on Kong Mesh you may run into a situation where tracing is not gathering data as you expected. What are some common pitfalls and ways to troubleshoot this further?
+When deploying Observability on {{site.mesh_product_name}} you may run into a situation where tracing is not gathering data as you expected. What are some common pitfalls and ways to troubleshoot this further?
 
 ## Solution
 
@@ -47,7 +47,7 @@ Files to gather:
 
    Access the UI through localhost:9901 and gather the `config_dump`.
 
-2. Kong Mesh debug logs
+2. {{site.mesh_product_name}} debug logs
 
 3. Mesh deployment file
 

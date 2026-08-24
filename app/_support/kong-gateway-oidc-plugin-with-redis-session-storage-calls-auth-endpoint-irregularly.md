@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: OIDC plugin with Redis session storage calls auth endpoint irregularly"
+title: "{{site.base_gateway}}: OIDC plugin with Redis session storage calls auth endpoint irregularly"
 content_type: support
 description: "Explains why the OIDC plugin's Redis-backed sessions re-authorize earlier than the Access Token TTL, caused by having both `session_idling_timeout` and `session_rolling_timeout` configured together, and how removing `session_idling_timeout` fixes it."
 products:
@@ -16,7 +16,7 @@ tldr:
 
 ## Problem
 
-We have Kong Gateway deployed with OIDC (OpenID Connect) auth and we are using Redis as the session storage type. However, we have noticed that the auth endpoint is repeatedly called without the tokens actually expiring. Our Access Token TTL (time to live) is configured for 5 minutes however the auth requests occur every 2~ minutes. Each call to the test endpoint occurs every 30 seconds. How can we prevent this from occurring so frequently?
+We have {{site.base_gateway}} deployed with OIDC (OpenID Connect) auth and we are using Redis as the session storage type. However, we have noticed that the auth endpoint is repeatedly called without the tokens actually expiring. Our Access Token TTL (time to live) is configured for 5 minutes however the auth requests occur every 2~ minutes. Each call to the test endpoint occurs every 30 seconds. How can we prevent this from occurring so frequently?
 
 ## Cause
 

@@ -39,7 +39,7 @@ tls-skip-verify: false
 ca_cert :
 ```
 
-To specify a different file to use you can pass in the `--config` paramater
+To specify a different file to use you can pass in the `--config` parameter
 
 `./deck --config /deck/qa.yml`
 

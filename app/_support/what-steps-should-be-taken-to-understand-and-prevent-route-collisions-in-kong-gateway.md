@@ -1,5 +1,5 @@
 ---
-title: Understanding and preventing route collisions in Kong Gateway
+title: Understanding and preventing route collisions in {{site.base_gateway}}
 content_type: support
 description: Route collisions occur when multiple routes match the same request criteria; use `KONG_ROUTE_VALIDATION_STRATEGY`, decK lint rulesets, and Kong Manager permission restrictions to detect and prevent them.
 products:
@@ -22,7 +22,7 @@ Route collisions occur when multiple routes match the same request criteria (pat
 
 See also:
 
-- How does Kong Gateway resolve entity conflicts between Workspaces?
+- How does {{site.base_gateway}} resolve entity conflicts between Workspaces?
 - Getting error API route collides with an existing API
 
 ## Validation Scope & Timing

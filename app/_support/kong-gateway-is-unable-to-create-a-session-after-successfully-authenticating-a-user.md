@@ -1,5 +1,5 @@
 ---
-title: Kong Gateway is unable to create a session after successfully authenticating a user
+title: "{{site.base_gateway}} is unable to create a session after successfully authenticating a user"
 content_type: support
 description: "Kong Manager or the Dev Portal can fail to create a session, with the browser rejecting the session cookie for an invalid domain, when the host domain is on the Mozilla Public Suffix List. Use a more narrowly scoped domain or private DNS to work around it."
 products:

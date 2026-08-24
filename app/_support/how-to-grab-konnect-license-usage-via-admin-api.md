@@ -1,5 +1,5 @@
 ---
-title: "Kong Konnect: How to grab Konnect license usage via Admin API"
+title: "{{site.konnect_product_name}}: How to grab Konnect license usage via Admin API"
 content_type: support
 published: false
 description: "Query the Konnect Admin API's `/kbilling/v1/usage` endpoint with a personal access token (PAT) to check current Konnect license usage."
@@ -15,9 +15,9 @@ tldr:
     Generate a personal access token (PAT) in the Konnect UI (Organization Settings > Personal Access Tokens), then call `GET https://global.api.konghq.com/kbilling/v1/usage` with that token to retrieve the same monthly request count shown in Konnect's Billing Settings.
 ---
 
-## Kong Konnect: How to grab Konnect license usage via Admin API
+## {{site.konnect_product_name}}: How to grab Konnect license usage via Admin API
 
-We see it is possible to view the license usage inside Konnect but we want to be able to pull this data programatically. Is there anyway to use the Admin API to grab the license usage report?
+We see it is possible to view the license usage inside Konnect but we want to be able to pull this data programmatically. Is there anyway to use the Admin API to grab the license usage report?
 
 To grab this data using the Admin API you will need to generate a personal access token (PAT). You can generate one from the Konnect UI under Organization Settings > Personal Access Tokens.
 

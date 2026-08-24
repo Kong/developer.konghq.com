@@ -22,7 +22,7 @@ When Kong is installed in k8s, kong will send DNS query to DNS server. How can w
 
 ## Steps
 
-K8S uses coredns pods as DNS server by default, you could find coredns in the `kube-system` namespace as below
+K8S uses `coredns` pods as DNS server by default, you could find `coredns` in the `kube-system` namespace as below
 
 ```bash
 
@@ -73,20 +73,20 @@ curl <kong>:<kong-proxy-port>/test -i
 >200 response
 ```
 
-coredns does not show DNS query access and result in log by default.
+`coredns` does not show DNS query access and result in log by default.
 
-We need to modify coredns configuration as below
+We need to modify `coredns` configuration as below
 
-Step 1: Get original coredns config
+Step 1: Get original `coredns` config
 
 ```bash
 
 kubectl get configmap coredns -n kube-system -o yaml > coredns.yaml
 ```
 
-Step 2: Modify coredns config as below
+Step 2: Modify `coredns` config as below
 
-# Please modify this file based on your environment. you have to add "log" and "whoami" into it.
+# Please modify this file based on your environment. you have to add "log" and "`whoami`" into it.
 
 ```yaml
 
@@ -123,7 +123,7 @@ data:
     }
 ```
 
-Step 3: Apply new coredns config
+Step 3: Apply new `coredns` config
 
 ```bash
 
@@ -135,7 +135,7 @@ kubectl rollout restart deployments/coredns -n kube-system
 deployment.apps/coredns restarted
 ```
 
-Step 4: Check coredns log
+Step 4: Check `coredns` log
 
 ```bash
 

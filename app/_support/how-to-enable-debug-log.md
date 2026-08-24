@@ -54,7 +54,7 @@ Once the changes are made, please remember to reload/restart Kong. For Kubernete
 
 Dynamically:
 
-Kong Gateway supports Dynamic Log Levels to allow log levels to be increased and decreased without the need to restart Kong.
+{{site.base_gateway}} supports Dynamic Log Levels to allow log levels to be increased and decreased without the need to restart Kong.
 
 Caveat: Cannot work in DBLess mode as there is no admin-api available.
 

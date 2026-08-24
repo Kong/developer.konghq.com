@@ -1,5 +1,5 @@
 ---
-title: Renaming a workspace in Kong Gateway
+title: Renaming a workspace in {{site.base_gateway}}
 content_type: support
 published: false
 description: "Renaming a workspace is not supported at the moment because it is associated with other database entities, such as RBAC roles."

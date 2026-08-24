@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: User roles are being intermittently removed/updated"
+title: "{{site.base_gateway}}: User roles are being intermittently removed/updated"
 content_type: support
 description: This can occur when you manually assign roles, either through Manager or the Admin API, but have also defined an `authenticated_groups_claim` in your `admin_gui_auth_conf`.
 products:

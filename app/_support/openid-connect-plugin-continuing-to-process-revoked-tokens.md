@@ -18,7 +18,7 @@ tldr:
 
 ## Problem
 
-We generated an access token (JWT) directly from the OIDC endpoint and successfully configured the OpenID Connect plugin to utilize the access tokens inside Kong. However, after using the access token inside Kong and then revoking the token directly from the OpenID Connect endpoint, it continues to process the request successfully until the token is expired. Is there any way to force Kong to recognize the access token is revoked?
+We generated an access token (JWT) directly from the OIDC endpoint and successfully configured the OpenID Connect plugin to use the access tokens inside Kong. However, after using the access token inside Kong and then revoking the token directly from the OpenID Connect endpoint, it continues to process the request successfully until the token is expired. Is there any way to force Kong to recognize the access token is revoked?
 
 ## Solution
 

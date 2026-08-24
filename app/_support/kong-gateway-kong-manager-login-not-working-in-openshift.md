@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Kong Manager Login Not Working in OpenShift"
+title: "{{site.base_gateway}}: Kong Manager Login Not Working in OpenShift"
 content_type: support
 description: "In OpenShift, using HTTP/2 with passthrough Routes that share the same SSL certificate across the Kong Manager and Admin API routes causes connection coalescing, which crisscrosses requests between them and breaks Kong Manager login."
 products:
@@ -18,7 +18,7 @@ tldr:
 
 ## Problem
 
-We've recently installed Kong Gateway with Manager and OIDC Auth enabled in OpenShift, here is what we are seeing during login:
+We've recently installed {{site.base_gateway}} with Manager and OIDC Auth enabled in OpenShift, here is what we are seeing during login:
 
 1) Manager login fails
 

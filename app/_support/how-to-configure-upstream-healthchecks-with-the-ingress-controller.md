@@ -1,7 +1,7 @@
 ---
 title: How to configure upstream healthchecks with the Ingress Controller
 content_type: support
-description: Explains how to configure upstream circuit breakers and active healthchecks through the Kong Ingress Controller, covering both the legacy `KongIngress` resource (KIC 2.5/2.12 LTS) and the annotation-based approach (KIC 3.1+).
+description: Explains how to configure upstream circuit breakers and active healthchecks through the {{site.kic_product_name}}, covering both the legacy `KongIngress` resource (KIC 2.5/2.12 LTS) and the annotation-based approach (KIC 3.1+).
 products:
   - kic
 works_on:

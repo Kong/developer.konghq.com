@@ -32,7 +32,7 @@ How to realize it?
 
 ## Steps
 
-As Kong does not support routing requests based on ports, we have to use the prefunc plugin to realize it.
+As Kong does not support routing requests based on ports, we have to use the `pre-function` plugin to realize it.
 
 Please refer bellow procedure to send requests based on different ports
 
@@ -80,7 +80,7 @@ Prerequisite: The pre-function plugin's `kong.service.set_target()` call require
    end
    ```
 
-4. Enable prefunc plugin on the route object we created in step 2
+4. Enable the `pre-function` plugin on the route object we created in step 2
 
    ```bash
    curl -X POST http://<kong>:8001/routes/test/plugins \

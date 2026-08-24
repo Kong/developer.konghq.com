@@ -1,7 +1,7 @@
 ---
 title: "Setup status endpoint that doesn't require authentication when RBAC is enabled"
 content_type: support
-description: Kong Gateway's built-in `status_listen` endpoint (port 8100 by default) provides unauthenticated health checks even when RBAC is enabled; expose the Admin API's `/status` endpoint through the proxy only if you specifically need it there.
+description: "{{site.base_gateway}}'s built-in `status_listen` endpoint (port 8100 by default) provides unauthenticated health checks even when RBAC is enabled; expose the Admin API's `/status` endpoint through the proxy only if you specifically need it there."
 products:
   - gateway
 works_on:
@@ -20,7 +20,7 @@ Is there a status endpoint that can be used for healthchecks that doesn't requir
 
 ## Solution
 
-Since the `/status` endpoint is exposed via the Admin API, once RBAC is enabled the request will require a valid RBAC token to get status. However, Kong Gateway also has a separate, native status endpoint (`status_listen`, on port 8100 by default) that is always unauthenticated and requires zero additional configuration — it is unaffected by RBAC because it's not part of the Admin API. For healthchecks, prefer hitting `http://<node>:8100/status` directly; this works out of the box on both Control Planes and Data Planes.
+Since the `/status` endpoint is exposed via the Admin API, once RBAC is enabled the request will require a valid RBAC token to get status. However, {{site.base_gateway}} also has a separate, native status endpoint (`status_listen`, on port 8100 by default) that is always unauthenticated and requires zero additional configuration — it is unaffected by RBAC because it's not part of the Admin API. For healthchecks, prefer hitting `http://<node>:8100/status` directly; this works out of the box on both Control Planes and Data Planes.
 
 If you specifically need the unauthenticated status information exposed through the Kong Proxy itself (rather than a direct connection to port 8100), the loopback recipe below can be used instead. Note this recipe only works on standalone nodes — in hybrid mode, Data Planes have no Admin API listener at all, so the loopback route will 502 there.
 

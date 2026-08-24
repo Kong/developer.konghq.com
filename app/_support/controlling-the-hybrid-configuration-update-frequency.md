@@ -1,7 +1,7 @@
 ---
 title: Controlling the hybrid configuration update frequency
 content_type: support
-description: How the `db_update_frequency` parameter controls how often Kong Gateway pushes configuration updates from the Control Plane to Data Planes in Hybrid mode.
+description: How the `db_update_frequency` parameter controls how often {{site.base_gateway}} pushes configuration updates from the Control Plane to Data Planes in Hybrid mode.
 products:
   - gateway
 works_on:

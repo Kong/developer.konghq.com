@@ -36,7 +36,7 @@ nginx: configuration file /usr/local/kong/nginx.conf test failed
 
 ## Cause
 
-This issue can be caused by starting Kong with a custom template that is based on a different version of Kong than the one you are running. For example, you are running Kong Gateway 3.14.0.0 and using the `nginx_kong.lua` from a 3.4 install to build your custom template.
+This issue can be caused by starting Kong with a custom template that is based on a different version of Kong than the one you are running. For example, you are running {{site.base_gateway}} 3.14.0.0 and using the `nginx_kong.lua` from a 3.4 install to build your custom template.
 
 ## Solution
 
