@@ -8,7 +8,7 @@ products:
 content_type: policy
 ---
 
-The CORS Policy lets you configure Cross-Origin Resource Sharing (CORS) for {{site.ai_gateway}}. This automates your CORS rules, so your upstreams only accept and share resources with approved origins.
+The CORS Policy lets you configure Cross-Origin Resource Sharing (CORS) for {{site.ai_gateway}}. This automates your CORS rules, so your upstream services only accept and share resources with approved origins.
 
 {% include md/ai-gateway/v2/policies/cors-and-ai-gateway.md %}
 
