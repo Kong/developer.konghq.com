@@ -25,7 +25,7 @@ RUN ARCH=$(dpkg --print-architecture) && \
     rm go.tar.gz
 
 # Install kongctl
-RUN curl -fsSL https://get.konghq.com/kongctl | sh -s -- --version prerelease-aigw-2
+RUN curl -fsSL https://get.konghq.com/kongctl | sh
 #RUN ARCH=$(dpkg --print-architecture) && \
 #    curl -sL "https://github.com/Kong/kongctl/releases/download/v1.10.0/kongctl_linux_${ARCH}.zip" -o kongctl.zip && \
 #    unzip kongctl.zip && \
