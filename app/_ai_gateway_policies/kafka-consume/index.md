@@ -21,7 +21,10 @@ related_resources:
 This Policy consumes messages from [Apache Kafka](https://kafka.apache.org/) topics and makes them available through HTTP endpoints.
 For more information, see [Kafka topics](https://kafka.apache.org/documentation/#intro_concepts_and_terms).
 
-{% include md/ai-gateway/v2/policies/kafka/consume-limitations.md %}
+{:.info}
+> This Policy has the following known limitations:
+> * Message compression is not supported.
+> * The message format is not customizable.
 
 {{site.ai_gateway}} also provides Kafka Policies for publishing messages:
 * [Kafka Log](/ai-gateway/policies/kafka-log/reference/)
