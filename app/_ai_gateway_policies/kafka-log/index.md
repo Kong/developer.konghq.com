@@ -16,10 +16,13 @@ related_resources:
     url: /ai-gateway/policies/http-log/
 ---
 
-Publish request and response logs to an [Apache Kafka](https://kafka.apache.org/) topic. This Policy does not support message compression.
+Publish request and response logs to an [Apache Kafka](https://kafka.apache.org/) topic.
 For more information, see [Kafka topics](https://kafka.apache.org/documentation/#intro_concepts_and_terms).
 
 {{site.ai_gateway}} also provides a Kafka Policy for request transformations. See [Kafka Upstream](/ai-gateway/policies/kafka-upstream/reference/).
+
+{:.info}
+> This Policy does not support message compression.
 
 ## Log format
 
