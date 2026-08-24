@@ -62,9 +62,27 @@ jobs:
         env:
           DEPLOYMENT_MODEL: konnect
           PRODUCTS: ai-gateway
-          TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
           KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
           KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
+          TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
+          TESTS_OPENAI_AUTH_HEADER: ${{ secrets.OPENAI_AUTH_HEADER }}
+          TESTS_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TESTS_CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+          TESTS_OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          TESTS_DASHSCOPE_AUTH_HEADER: ${{ secrets.DASHSCOPE_AUTH_HEADER }}
+          TESTS_DASHSCOPE_KEY: ${{ secrets.DASHSCOPE_KEY }}
+          TESTS_AZURE_AI_FOUNDRY_TOKEN: ${{ secrets.AZURE_AI_FOUNDRY_TOKEN }}
+          TESTS_AZURE_AI_FOUNDRY_UPSTREAM_URL: ${{ secrets.AZURE_AI_FOUNDRY_UPSTREAM_URL }}
+          TESTS_HUGGINGFACE_AUTH_HEADER: ${{ secrets.HUGGINGFACE_AUTH_HEADER }}
+          TESTS_GUARDRAILS_VERSION: ${{ secrets.GUARDRAILS_VERSION }}
+          TESTS_WEATHERAPI_API_KEY: ${{ secrets.WEATHERAPI_API_KEY }}
+          TESTS_AWS_REGION: ${{ secrets.AWS_REGION }}
+          TESTS_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TESTS_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TESTS_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TESTS_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TESTS_GCP_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON_BASE64 }}
+          TESTS_VERTEX_UPSTREAM_URL: ${{ secrets.VERTEX_UPSTREAM_URL }}
         run: |
           npm run run-tests
 
