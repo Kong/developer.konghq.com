@@ -227,7 +227,7 @@ models:
           - /ai
         model:
           body_param: model
-          values: ["@openai/gpt-5.2"]
+          values: ["gpt-5.2"]
     targets:
       - name: gpt-5.2
         provider: openai-prod
@@ -256,8 +256,7 @@ _info:
   select_tags:
   - 'managed_by:deck-ai'
 ai_models:
-- alias: '@openai/gpt-5.2'
-  name: gpt-5-2
+- name: gpt-5-2
 plugins:
 - config:
     body_path: model
@@ -279,7 +278,7 @@ plugins:
          log_payloads: false
          log_statistics: true
       model:
-        model_alias: '@openai/gpt-5.2'
+        model_alias: 'gpt-5.2'
         name: gpt-5.2
         options:
           max_tokens: 1024
@@ -360,6 +359,7 @@ services:
     - /demo-mcp
     plugins:
     - config:
+        acl_attribute_type: consumer
         include_consumer_groups: true
         logging:
           log_audits: false
@@ -457,7 +457,7 @@ models:
           - /ai
         model:
           body_param: model
-          values: ["@openai/gpt-5.2"]
+          values: ["gpt-5.2"]
     policies:
       - ai-gw-prompt-guard
     targets:
@@ -493,7 +493,7 @@ Converting it generates the same Service, Route, `ai-model-selector`, and `ai-pr
 - config:
     deny_patterns:
     - .*(W|w)ar.*
-  model: gpt-5-2
+  model: gpt-5.2
   name: ai-prompt-guard
   route: openai-chat
 ```
