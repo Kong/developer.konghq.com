@@ -109,12 +109,14 @@ If you are a new Codex user, you must Initialise the tool first by running `code
 
 Run a simple command to confirm traffic flows through {{site.ai_gateway}} to OpenAI:
 
+<!--vale off-->
 {% validation codex %}
 open_api_key: sk-placeholder
 base_url: http://localhost:8000/codex
 model: gpt-5.4
 prompt: Tell me about the Madrid Skylitzes manuscript.
 {% endvalidation %}
+<!--vale on-->
 
 When prompted for network access, select **Yes, proceed**. Codex routes the request through {{site.ai_gateway}} to the OpenAI Responses API and returns the model's response, giving you monitoring and control over all Codex LLM traffic.
 
