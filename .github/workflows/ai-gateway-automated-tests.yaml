@@ -1,0 +1,80 @@
+name: AI Gateway Automated Tests
+on:
+  workflow_dispatch:
+    inputs:
+      gateway_image:
+        description: 'Docker Image for Tests'
+        required: true
+        default: 'kong/kong-ai-gateway:latest'
+  schedule:
+    - cron: '0 0 * * MON'
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}
+
+permissions:
+  actions: read
+  contents: read
+  checks: write
+  statuses: write
+
+env:
+  VITE_PORTAL_API_URL: ${{ vars.VITE_PORTAL_API_URL }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          submodules: 'recursive'
+
+      - name: Install deps
+        uses: './.github/reusable-steps/install-deps'
+
+      - name: Run site
+        uses: './.github/reusable-steps/run-site'
+
+      - name: Generate instruction files
+        uses: './.github/reusable-steps/generate-instruction-files'
+
+      - name: Download Kong License
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+      - name: Set AI Gateway Image and Tag
+        run: |
+          INPUT_IMAGE="${{ inputs.gateway_image }}"
+          echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
+          echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
+
+      - name: Run tests
+        working-directory: tools/automated-tests
+        shell: bash
+        env:
+          DEPLOYMENT_MODEL: konnect
+          PRODUCTS: ai-gateway
+          TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
+          KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
+          KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
+        run: |
+          npm run run-tests
+
+      - name: Publish Test Report
+        uses: './.github/reusable-steps/publish-test-report'
+        if: always()
+
+      - name: Notify Slack
+        if: ${{ !cancelled() }}
+        uses: './.github/reusable-steps/notify-slack'
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}
