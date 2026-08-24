@@ -83,7 +83,7 @@ Always check that the file exists at `app/assets/icons/plugins/<filename>` befor
 ## Body sections (order)
 
 1. **Intro paragraph**: what the plugin does and the problem it solves. One or two paragraphs max.
-2. **Benefit list**: bullets. Do not bold the benefit labels — plain prose only. Start each bullet with a noun phrase.
+2. **Benefit list**: bullets. Start each bullet with a noun phrase.
 3. `## How it works`: architecture and flow. Add a Mermaid sequence diagram for complex plugins. Add a flowchart if the topology is non-trivial (for example nested-proxy pattern).
 4. `## Install the [Plugin Name] plugin`: installation heading with prerequisites and navtabs.
 5. `## Enable the plugin`: links to the example pages. One or two sentences plus a list of example links.
@@ -125,8 +125,11 @@ Use this tab when the plugin supports Konnect's streamed custom plugin upload. D
 Do not use the LuaRock for {{site.konnect_short_name}}.
 Instead, upload `schema.lua` and `handler.lua` to the control plane as a custom plugin.
 
-1. In the {{site.konnect_short_name}} menu, navigate to **Plugins**.
-1. Click **Custom Plugins**.
+1. In the {{site.konnect_short_name}} sidebar, navigate to **API Gateway > Control planes**.
+1. Click your control plane.
+1. Click the **Plugins** tab.
+1. Click **New plugin**.   
+1. Click **Custom plugin**.
 1. Upload `schema.lua` and `handler.lua`.
 1. Select **Streamed** as the installation type.
    Streamed plugins require no image rebuild or data plane restart.

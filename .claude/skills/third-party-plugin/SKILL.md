@@ -14,7 +14,7 @@ description: >
 This skill guides you through creating complete documentation for a new third-party Kong Gateway plugin on developer.konghq.com.
 The output is a new directory under `app/_kong_plugins/<plugin-slug>/` containing `index.md`, `schema.json`, and at least one `examples/*.yaml` file.
 
-Use the Skyflow De-identify plugin as the canonical worked example of a complex plugin, and the Noma Runtime Protection and TrendAI API Security plugins as examples of simpler ones.
+Use the Skyflow De-identify plugin (app/_kong_plugins/skyflow-ai-data-control/index.md) as the canonical worked example of a complex plugin, and the Noma Runtime Protection (app/_kong_plugins/noma-runtime-protection/index.md) and TrendAI API Security (app/_kong_plugins/trend-micro-kong-plugin-aps/index.md) plugins as examples of simpler ones.
 
 Read `references/patterns.md` before drafting anything. It contains the front matter schema, body section order, navtab patterns, style rules, and schema.json structure.
 
@@ -63,7 +63,7 @@ Collect the following. Where information is ambiguous, ask rather than assume.
   ```yaml
   publisher-slug:
     name: Publisher Display Name
-  ```
+  
 
 **Icon check**
 - Check whether the icon file exists at `app/assets/icons/plugins/<icon-filename>.svg`

@@ -248,8 +248,11 @@ Dependencies: [list any non-bundled dependencies].
 Do not use the LuaRock for {{site.konnect_short_name}}.
 Instead, upload `schema.lua` and `handler.lua` to the control plane as a custom plugin.
 
-1. In the {{site.konnect_short_name}} menu, navigate to **Plugins**.
-1. Click **Custom Plugins**.
+1. In the {{site.konnect_short_name}} sidebar, navigate to **API Gateway > Control planes**.
+1. Click your control plane.
+1. Click the **Plugins** tab.
+1. Click **New plugin**.   
+1. Click **Custom plugin**.
 1. Upload `schema.lua` and `handler.lua`.
 1. Select **Streamed** as the installation type.
    Streamed plugins require no image rebuild or data plane restart.

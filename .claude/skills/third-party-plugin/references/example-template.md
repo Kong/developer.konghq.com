@@ -128,6 +128,6 @@ When a plugin has distinct modes or postures, create one file per scenario.
 ## What NOT to include in example YAML
 
 - Do not include `name:` or `enabled:` at the top level — the renderer adds these.
-- Do not include the route or service association — examples show plugin config only.
+- Do not include the Route or Service association — examples show plugin config only.
 - Do not include credentials as literal values — always use `${variable}` references.
 - Do not add fields that are at their default value unless it makes the example clearer.
