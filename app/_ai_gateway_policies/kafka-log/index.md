@@ -21,16 +21,14 @@ For more information, see [Kafka topics](https://kafka.apache.org/documentation/
 
 {{site.ai_gateway}} also provides a Kafka Policy for request transformations. See [Kafka Upstream](/ai-gateway/policies/kafka-upstream/reference/).
 
+This Policy uses the [lua-resty-kafka](https://github.com/kong/lua-resty-kafka) client.
+
 {:.info}
 > This Policy does not support message compression.
 
 ## Log format
 
 {% include md/ai-gateway/v2/policies/log-format.md %}
-
-## Implementation details
-
-{% include md/ai-gateway/v2/policies/kafka/implementation-details.md %}
 
 ## Custom fields by Lua
 
