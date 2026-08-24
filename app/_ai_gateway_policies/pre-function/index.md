@@ -13,10 +13,10 @@ related_resources:
     url: /ai-gateway/policies/?category=serverless
 ---
 
-The Pre-function Policy lets you dynamically run Lua code from {{site.ai_gateway}} before other Policies run in each phase.
+The {{ page.name }} Policy lets you dynamically run Lua code from {{site.ai_gateway}} before other Policies run in each phase.
 
 This Policy is part of a pair of serverless Policies.
-If you need to run Lua code after other Policies in each phase, see the [Post-function Policy](/ai-gateway/policies/post-function/).
+If you need to run Lua code after other Policies in each phase, see the [{{ page.name }} Policy](/ai-gateway/policies/post-function/).
 
 {% include md/ai-gateway/v2/policies/untrusted-lua.md %}
 
