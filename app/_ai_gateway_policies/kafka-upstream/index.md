@@ -21,6 +21,9 @@ For more details, see [Kafka topics](https://kafka.apache.org/documentation/#int
 
 {{site.ai_gateway}} also offers a separate [Kafka Log](/ai-gateway/policies/kafka-log/reference/) Policy for streaming logs to Kafka topics.
 
+{:.info}
+> This Policy does not support message compression.
+
 ## Implementation details
 
 This Policy uses the [lua-resty-kafka](https://github.com/kong/lua-resty-kafka) client.
@@ -40,10 +43,6 @@ When encoding request bodies, several things happen:
 ## Schema registry support
 
 {% include_cached md/ai-gateway/v2/policies/kafka/schema-registry.md name='Kafka Upstream' workflow='producer' %}
-
-## Known issues and limitations
-
-Message compression is not supported.
 
 ## Authentication
 
