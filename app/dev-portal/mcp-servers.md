@@ -120,10 +120,11 @@ body:
   features:
     mcp_server:
       enabled: true
+      write_operations_enabled: true
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You can enable just the AI settings by omitting `features` parameters. 
+You can enable just the AI settings by omitting `features` parameters. You can similarly enable the MCP server without write operations by omitting `write_operations_enabled` or setting it to `false`.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal** and click **Portals**.
@@ -132,6 +133,7 @@ You can enable just the AI settings by omitting `features` parameters.
 1. Click the **AI Settings** tab.
 1. Enable **AI Settings**.
 1. Enable **MCP Server**.
+1. (Optional) Enable **MCP server write operations** to let agents manage applications on a developer's behalf.
 1. Click **Save changes**.
 {% endnavtab %}
 {% endnavtabs %}
