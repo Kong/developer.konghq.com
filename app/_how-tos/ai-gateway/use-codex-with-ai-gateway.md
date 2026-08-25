@@ -78,8 +78,13 @@ ai_gateway_models:
     enabled: true
     formats: [{ type: openai }]
     config:
-      route: { paths: [/codex], methods: [GET, POST], model: { body_param: model, values: [gpt-5.4] } }
-      model: { name_header: true }
+      route:
+        paths:
+          - /codex
+        model:
+          body_param: model
+          values:
+            - codex-openai
     capabilities: [agentic]
     targets:
       - name: gpt-5.4
