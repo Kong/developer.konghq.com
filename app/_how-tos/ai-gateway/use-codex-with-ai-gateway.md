@@ -110,18 +110,6 @@ If you are a new Codex user, you must Initialise the tool first by running `code
 Run a simple command to confirm traffic flows through {{site.ai_gateway}} to OpenAI:
 
 <!--vale off-->
-```sh
-codex \
-  --config 'model="codex-openai"' \
-  --config 'model_provider="my-gateway"' \
-  --config 'model_providers.my-gateway.name="AI Quickstart"' \
-  --config 'model_providers.my-gateway.base_url="http://localhost:8000/"' \
-  --config 'model_providers.my-gateway.env_key="OPENAI_API_KEY"' \
-  --config 'model_providers.my-gateway.wire_api="responses"'
-```
-<!--vale on-->
-
-<!--vale off-->
 {% validation codex %}
 model: codex-openai
 model_provider: my-gateway
