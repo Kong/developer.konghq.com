@@ -37,7 +37,8 @@ prereqs:
         Get an API key from [platform.openai.com/api-keys](https://platform.openai.com/api-keys) and export it as the **full `Authorization` header value** (including the `Bearer ` prefix):
 
         ```sh
-        export OPENAI_AUTH_HEADER="Bearer your_api_key"
+        export OPENAI_API_KEY="your_api_key"
+        export OPENAI_AUTH_HEADER="Bearer $OPENAI_API_KEY"
         ```
     - title: Codex CLI
       icon_url: /assets/icons/openai.svg
@@ -80,7 +81,7 @@ ai_gateway_models:
     config:
       route:
         paths:
-          - /codex
+          - /
         model:
           body_param: model
           values:
@@ -113,6 +114,18 @@ If you are a new Codex user, you must Initialise the tool first by running `code
 ## Start and use Codex CLI
 
 Run a simple command to confirm traffic flows through {{site.ai_gateway}} to OpenAI:
+
+<!--vale off-->
+```sh
+codex \
+  --config 'model="codex-openai"' \
+  --config 'model_provider="my-gateway"' \
+  --config 'model_providers.my-gateway.name="AI Quickstart"' \
+  --config 'model_providers.my-gateway.base_url="http://localhost:8000/"' \
+  --config 'model_providers.my-gateway.env_key="OPENAI_API_KEY"' \
+  --config 'model_providers.my-gateway.wire_api="responses"'
+```
+<!--vale on-->
 
 <!--vale off-->
 {% validation codex %}
