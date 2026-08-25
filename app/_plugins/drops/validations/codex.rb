@@ -42,14 +42,12 @@ module Jekyll
 
         private
 
-        # Renders as `line1 \\\n  line2 \\\n  line3`, matching the multi-line `--config`
-        # examples shown elsewhere in the docs; `bash -c` treats it identically to one line.
+        # Renders as a multi-line `--config`
         def to_multiline(parts)
           parts.join(" \\\n  ")
         end
 
-        # Codex CLI has no env-var override for a custom upstream, so a named
-        # `model_provider` must be declared via repeated `--config` flags instead.
+        # Codex CLI `model_provider` must be declared via repeated `--config` flags instead.
         def config_flags
           provider = @yaml.fetch('model_provider')
 
