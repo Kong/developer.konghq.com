@@ -23,42 +23,61 @@ module Jekyll
         end
 
         def config
-          @config ||= configuration.merge('command' => command, 'base_command' => base_command)
+          @config ||= configuration.merge('command' => command, 'base_command' => base_command, 'flags' => flags)
         end
 
         def base_command
-          @base_command ||= to_multiline([configuration.fetch('command'), *config_flags])
+          @base_command ||= configuration.fetch('command')
         end
 
         def command
-          parts = [
+          @command ||= [
             configuration.fetch('command'),
-            "exec \"#{@yaml.fetch('prompt')}\"",
-            *config_flags,
+            "exec \"#{prompt}\"",
+            *flags.map { |flag| "-c #{flag}" },
             '--skip-git-repo-check'
+          ].join(' ')
+        end
+
+        def flags
+          [
+            "model=\"#{model}\"",
+            "model_provider=\"#{provider}\"",
+            "model_providers.#{provider}.name=\"#{name}\"",
+            "model_providers.#{provider}.base_url=\"#{base_url}\"",
+            "model_providers.#{provider}.env_key=\"#{env_key}\"",
+            "model_providers.#{provider}.wire_api=\"#{wire_api}\""
           ]
-          @command ||= to_multiline(parts)
         end
 
         private
 
-        # Renders as a multi-line `--config`
-        def to_multiline(parts)
-          parts.join(" \\\n  ")
+        def prompt
+          @prompt ||= @yaml.fetch('prompt')
         end
 
-        # Codex CLI `model_provider` must be declared via repeated `--config` flags instead.
-        def config_flags
-          provider = @yaml.fetch('model_provider')
+        def model
+          @model ||= @yaml.fetch('model')
+        end
 
-          [
-            "--config 'model=\"#{@yaml.fetch('model')}\"'",
-            "--config 'model_provider=\"#{provider}\"'",
-            "--config 'model_providers.#{provider}.name=\"#{@yaml.fetch('model_provider_name')}\"'",
-            "--config 'model_providers.#{provider}.base_url=\"#{@yaml.fetch('model_provider_base_url')}\"'",
-            "--config 'model_providers.#{provider}.env_key=\"#{@yaml.fetch('model_provider_env_key')}\"'",
-            "--config 'model_providers.#{provider}.wire_api=\"#{@yaml.fetch('model_provider_wire_api')}\"'"
-          ]
+        def provider
+          @provider ||= @yaml.fetch('model_provider')
+        end
+
+        def name
+          @name ||= @yaml.fetch('model_provider_name')
+        end
+
+        def base_url
+          @base_url ||= @yaml.fetch('model_provider_base_url')
+        end
+
+        def env_key
+          @env_key ||= @yaml.fetch('model_provider_env_key')
+        end
+
+        def wire_api
+          @wire_api ||= @yaml.fetch('model_provider_wire_api')
         end
       end
     end
