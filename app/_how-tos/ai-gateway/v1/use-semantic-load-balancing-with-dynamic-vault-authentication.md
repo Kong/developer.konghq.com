@@ -140,7 +140,7 @@ entities:
         description: CATCHALL
 variables:
   redis_host:
-    value: $DECK_REDIS_HOST
+    value: $REDIS_HOST
 {% endentity_examples %}
 
 
@@ -155,12 +155,14 @@ These prompts are routed to **OpenAI GPT-3.5-Turbo**, since it performs well on 
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
 - 'Content-Type: application/json'
 body:
   messages:
     - role: user
       content: How can I build a REST API using Flask?
+status_code: 200
 {% endvalidation %}
 <!-- vale on -->
 
@@ -169,12 +171,14 @@ You can also try a question regarding debugging JavaScript code:
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
 - 'Content-Type: application/json'
 body:
   messages:
     - role: user
       content: How can you effectively debug asynchronous code in JavaScript to identify where a Promise or callback might be failing?
+status_code: 200
 {% endvalidation %}
 <!-- vale on -->
 
@@ -185,12 +189,14 @@ These prompts should match the **OpenAI GPT-4o** target, which is designated for
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
 - 'Content-Type: application/json'
 body:
   messages:
     - role: user
       content: What is the derivative of sin(x)?
+status_code: 200
 {% endvalidation %}
 <!-- vale on -->
 
@@ -199,12 +205,14 @@ You can also try asking a question related to theorems:
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
 - 'Content-Type: application/json'
 body:
   messages:
     - role: user
       content: Explain me Gödel`s incompleteness theorem.
+status_code: 200
 {% endvalidation %}
 <!-- vale on -->
 
@@ -215,12 +223,14 @@ These general-purpose or unmatched prompts are routed to **{{ site.mistral }} Ti
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
 - 'Content-Type: application/json'
 body:
   messages:
     - role: user
       content: What is Wulfila Bible?
+status_code: 200
 {% endvalidation %}
 <!-- vale on -->
 
@@ -229,11 +239,13 @@ You can also try another general question:
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
 - 'Content-Type: application/json'
 body:
   messages:
     - role: user
       content: Who was Edward Gibbon and what he is famous for?
+status_code: 200
 {% endvalidation %}
 <!-- vale on -->
