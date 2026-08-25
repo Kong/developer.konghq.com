@@ -35,9 +35,9 @@ works_on:
 
 The Federal Information Processing Standard (FIPS) 140-2 is a federal standard defined by the National Institute of Standards and Technology. It specifies the security requirements that must be satisfied by a cryptographic module. The FIPS {{site.base_gateway}} package is FIPS 140-2 compliant. Compliance means that {{site.base_gateway}} only uses FIPS 140-2 approved algorithms while running in FIPS mode, but the product has not been submitted to a NIST testing lab for validation.
 
-{{site.ee_product_name}} provides a FIPS 140-2 compliant package for **Ubuntu 20.04** {% new_in 3.1 %}, **Ubuntu 22.04**, **Red Hat Enterprise 9** {% new_in 3.4 %}, and **Red Hat Enterprise 8** {% new_in 3.1 %}. This package provides compliance for the core {{site.base_gateway}} product and all out of the box plugins. For more information, see the [{{site.base_gateway}} install page](/gateway/install/).
+{{site.ee_product_name}} provides a FIPS 140-2 compliant package for **Ubuntu 20.04** {% new_in 3.1 %}, **Ubuntu 22.04**, **Red Hat Enterprise 9** {% new_in 3.4 %}, and **Red Hat Enterprise 8** {% new_in 3.1 %}. This package provides compliance for the core {{site.base_gateway}} product and all out-of-the-box plugins. For more information, see the [{{site.base_gateway}} install page](/gateway/install/).
 
-The package uses the OpenSSL FIPS 3.0 module OpenSSL to provide FIPS 140-2 validated cryptographic operations.
+The package uses the OpenSSL FIPS 3.0 module to provide FIPS 140-2 validated cryptographic operations
 
 {:.info}
 > **Note**: In {{site.base_gateway}} 3.9.x or earlier, FIPS is not supported when running {{site.ee_product_name}} in free mode.
@@ -57,7 +57,7 @@ export KONG_FIPS=on
 ```
 
 {:.warning .no-icon}
-> Migrating from non-FIPS to FIPS mode and backwards is not supported.
+> Migrating from non-FIPS to FIPS mode, or the reverse, is not supported.
 
 ## Password hashing
 
@@ -92,11 +92,11 @@ rows:
 
 
 {:.info .no-icon}
-> **\[1\]**: As of {{site.base_gateway}} FIPS 3.0, RBAC uses PBKDF2 as password hashing algorithm.
+> **\[1\]**: As of {{site.base_gateway}} FIPS 3.0, RBAC uses PBKDF2 as the password hashing algorithm.
 <br><br>
-> **\[2\]**: As of {{site.base_gateway}} FIPS 3.1, the oauth2 plugin disables the `hash_secret` feature, so you can’t turn it on. This means password will be stored plaintext in the database; however, you can choose to use secrets management or database encryption instead.
+> **\[2\]**: As of {{site.base_gateway}} FIPS 3.1, the oauth2 plugin disables the `hash_secret` feature, so you can’t turn it on. This means passwords will be stored plaintext in the database; however, you can choose to use secrets management or database encryption instead.
 <br><br>
-> **\[3\]**: As of {{site.base_gateway}} FIPS 3.1, key-auth-enc uses SHA1 to speed up lookup of a key in DB. As of {{site.base_gateway}} FIPS 3.2, SHA1 support is “read-only”, meaning existing credentials in DB are still validated, but any new credentials will be hashed in SHA256.
+> **\[3\]**: As of {{site.base_gateway}} FIPS 3.1, key-auth-enc uses SHA1 to speed up lookup of a key in the database. As of {{site.base_gateway}} FIPS 3.2, SHA1 support is "read-only", meaning existing credentials in DB are still validated, but any new credentials will be hashed with SHA256.
 
 {:.warning}
 > **Important**: If you are migrating from {{site.base_gateway}} 3.1 to 3.2 in FIPS mode and are using the key-auth-enc plugin, you should send [PATCH or POST requests](/plugins/key-auth-enc/#create-a-key) to all existing key-auth-enc credentials to re-hash them in SHA256.
@@ -153,7 +153,7 @@ rows:
 
 ## SSL client
 
-FIPS 140-2 only mentioned SSL server, which is already supported in {{site.base_gateway}} FIPS 3.0. FIPS specification isn't designated for SSL clients, so there isn't specific handling of these in {{site.base_gateway}}.
+FIPS 140-2 only mentions the SSL server, which is already supported in {{site.base_gateway}} FIPS 3.0. The FIPS specification isn't designated for SSL clients, so there isn't specific handling of these in {{site.base_gateway}}.
 
 This includes:
 * Using Lua to talk in HTTPS and PostgreSQL SSL
