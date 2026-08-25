@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 # Config fixtures below are adapted from real {% validation request-check %} blocks in
-# app/_how-tos/ai-gateway/*.md, to make sure the curl commands we generate for real docs
-# are syntactically valid bash.
+# app/_how-tos/**/*.md, to make sure the curl commands we generate for real docs
+# are syntactically valid bash. A few (mtls, form_data, body_cmd, output, expected_headers)
+# have zero real-doc usage anywhere in the repo, so those fixtures are synthetic, built
+# directly from the snippet.md logic, to get full branch coverage.
 RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   let(:template) do
     <<~LIQUID
-      {% include how-tos/validations/request-check/snippet.md url=config.url method=config.method headers=config.headers body=config.body body_file=config.body_file form_url_encoded_data=config.form_url_encoded_data display_headers=config.display_headers message=config.message capture=config.capture %}
+      {% include how-tos/validations/request-check/snippet.md url=config.url method=config.method headers=config.headers body=config.body body_file=config.body_file body_cmd=config.body_cmd form_data=config.form_data form_url_encoded_data=config.form_url_encoded_data display_headers=config.display_headers message=config.message capture=config.capture count=config.count user=config.user cookie_jar=config.cookie_jar cookie=config.cookie insecure=config.insecure sleep=config.sleep mtls=config.mtls output=config.output expected_headers=config.expected_headers %}
     LIQUID
   end
 
@@ -261,6 +263,340 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
     it 'renders the expected response text outside the curl command' do
       expect(rendered).to include('You should see the following response:')
       expect(rendered).to include('prompt pattern is blocked.')
+    end
+  end
+
+  context 'user and cookie_jar (configure-oidc-with-session-auth.md)' do
+    let(:config) do
+      {
+        'url' => '/anything',
+        'method' => 'GET',
+        'user' => 'alex:doe',
+        'display_headers' => true,
+        'cookie_jar' => 'example-user'
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -i -X GET "/anything" \
+             --no-progress-meter --fail-with-body  \
+             -u alex:doe \
+             --cookie-jar example-user
+      BASH
+    end
+  end
+
+  context 'a cookie (configure-oidc-with-session-auth.md)' do
+    let(:config) do
+      {
+        'url' => '/anything',
+        'method' => 'GET',
+        'display_headers' => true,
+        'cookie' => 'example-user'
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -i -X GET "/anything" \
+             --no-progress-meter --fail-with-body  \
+             --cookie example-user
+      BASH
+    end
+  end
+
+  context 'insecure with a JSON body (enable-oauth2-authentication-with-kong-gateway.md)' do
+    let(:config) do
+      {
+        'url' => 'https://localhost:8443/anything/oauth2/token',
+        'method' => 'POST',
+        'headers' => ['Content-Type: application/json'],
+        'insecure' => true,
+        'body' => { 'client_id' => '$CLIENT_ID', 'client_secret' => '$CLIENT_SECRET', 'grant_type' => 'client_credentials' }
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -k -X POST "https://localhost:8443/anything/oauth2/token" \
+             --no-progress-meter --fail-with-body  \
+             -H "Content-Type: application/json" \
+             --json '{
+               "client_id": "'$CLIENT_ID'",
+               "client_secret": "'$CLIENT_SECRET'",
+               "grant_type": "client_credentials"
+             }'
+      BASH
+    end
+  end
+
+  context 'a body with an array of scalars (validate-incoming-json-request-bodies.md)' do
+    let(:config) do
+      {
+        'url' => '/anything',
+        'method' => 'POST',
+        'headers' => ['Content-Type: application/json'],
+        'display_headers' => true,
+        'body' => { 'name' => 'Jason', 'age' => 20, 'gender' => 'male', 'parents' => ['Joseph', 'Viva'] }
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -i -X POST "/anything" \
+             --no-progress-meter --fail-with-body  \
+             -H "Content-Type: application/json" \
+             --json '{
+               "name": "Jason",
+               "age": 20,
+               "gender": "male",
+               "parents": [
+                 "Joseph",
+                 "Viva"
+               ]
+             }'
+      BASH
+    end
+  end
+
+  context 'a request loop with no other params (collect-metrics-with-datadog-and-prometheus-plugin.md)' do
+    let(:config) { { 'url' => '/anything', 'count' => 10 } }
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        for _  in {1..10}; do
+        curl "/anything" \
+             --no-progress-meter --fail-with-body  \
+        ; done
+      BASH
+    end
+  end
+
+  context 'insecure with a jq capture (configure-oidc-with-kong-oauth2.md)' do
+    let(:config) do
+      {
+        'url' => 'https://localhost:8443/anything/oauth2/token',
+        'method' => 'POST',
+        'headers' => ['Content-Type: application/json'],
+        'insecure' => true,
+        'body' => { 'client_id' => 'client', 'client_secret' => 'secret', 'grant_type' => 'client_credentials' },
+        'capture' => [{ 'variable' => 'ACCESS_TOKEN', 'jq' => '.access_token' }]
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        ACCESS_TOKEN=$(curl -k -X POST "https://localhost:8443/anything/oauth2/token" \
+             --no-progress-meter --fail-with-body  \
+             -H "Content-Type: application/json" \
+             --json '{
+               "client_id": "client",
+               "client_secret": "secret",
+               "grant_type": "client_credentials"
+             }' | jq -r ".access_token"
+        )
+      BASH
+    end
+  end
+
+  context 'sleep before the request (kic-service-healthchecks.md)' do
+    let(:config) do
+      {
+        'url' => '$PROXY_IP/httpbin/status/200',
+        'display_headers' => true,
+        'sleep' => 15
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        sleep 15 && curl -i "$PROXY_IP/httpbin/status/200" \
+             --no-progress-meter --fail-with-body 
+      BASH
+    end
+  end
+
+  context 'a second real count-loop case, no continuation (kic-service-healthchecks.md)' do
+    let(:config) do
+      {
+        'url' => '$PROXY_IP/httpbin/status/500',
+        'display_headers' => true,
+        'count' => 2
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        for _  in {1..2}; do
+        curl -i "$PROXY_IP/httpbin/status/500" \
+             --no-progress-meter --fail-with-body  \
+        ; done
+      BASH
+    end
+  end
+
+  context 'a message with no other params (filter-requests-based-on-header-names.md)' do
+    let(:config) do
+      {
+        'url' => '/anything',
+        'display_headers' => true,
+        'message' => 'Invalid Credentials'
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -i "/anything" \
+             --no-progress-meter --fail-with-body 
+      BASH
+    end
+
+    it 'renders the expected response text outside the curl command' do
+      expect(rendered).to include('You should see the following response:')
+      expect(rendered).to include('Invalid Credentials')
+    end
+  end
+
+  context 'more than one capture, exercising the capture_size > 1 branch (synthetic — no real doc uses 2+ captures)' do
+    let(:config) do
+      {
+        'url' => '/oauth/token',
+        'method' => 'POST',
+        'headers' => ['Content-Type: application/json'],
+        'body' => { 'client_id' => 'client', 'client_secret' => 'secret', 'grant_type' => 'client_credentials' },
+        'capture' => [
+          { 'variable' => 'ACCESS_TOKEN', 'jq' => '.access_token' },
+          { 'variable' => 'EXPIRES_IN', 'jq' => '.expires_in' }
+        ]
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command, wrapped in a shared _response variable' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        _response=$(curl -X POST "/oauth/token" \
+             --no-progress-meter --fail-with-body  \
+             -H "Content-Type: application/json" \
+             --json '{
+               "client_id": "client",
+               "client_secret": "secret",
+               "grant_type": "client_credentials"
+             }')
+      BASH
+    end
+
+    it 'renders a separate export block for each capture' do
+      expect(rendered).to include('Export the env variables:')
+      expect(rendered).to include('export ACCESS_TOKEN=$(echo "$_response" | jq -r ".access_token")')
+      expect(rendered).to include('export EXPIRES_IN=$(echo "$_response" | jq -r ".expires_in")')
+    end
+  end
+
+  context 'mtls (synthetic — no real doc uses mtls)' do
+    let(:config) { { 'url' => 'https://secure.example.com/orders', 'method' => 'GET', 'mtls' => true } }
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -X GET -k --key key.pem --cert cert.pem "https://secure.example.com/orders" \
+             --no-progress-meter --fail-with-body 
+      BASH
+    end
+  end
+
+  context 'form_data, a multipart upload (synthetic — no real doc uses form_data)' do
+    let(:config) do
+      {
+        'url' => '/upload',
+        'method' => 'POST',
+        'form_data' => { 'file' => '@photo.png', 'description' => 'profile picture' }
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -X POST "/upload" \
+             --no-progress-meter --fail-with-body  \
+             -F file="@photo.png" \
+             -F description="profile picture" 
+      BASH
+    end
+  end
+
+  context 'body_cmd, a shell command substitution as the body (synthetic — no real doc uses body_cmd)' do
+    let(:config) do
+      {
+        'url' => '/anything',
+        'method' => 'POST',
+        'headers' => ['Content-Type: application/json'],
+        'body_cmd' => '$(cat payload.json)'
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -X POST "/anything" \
+             --no-progress-meter --fail-with-body  \
+             -H "Content-Type: application/json" \
+             --json "$(cat payload.json)"
+      BASH
+    end
+  end
+
+  context 'output, saving the response to a file (synthetic — no real doc uses output)' do
+    let(:config) { { 'url' => '/anything', 'method' => 'GET', 'output' => 'response.json' } }
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -X GET "/anything" \
+             -o response.json --no-progress-meter --fail-with-body 
+      BASH
+    end
+  end
+
+  context 'expected_headers, a pluralized list (synthetic — no real doc uses expected_headers)' do
+    let(:config) do
+      {
+        'url' => '/anything',
+        'method' => 'GET',
+        'display_headers' => true,
+        'expected_headers' => ['X-RateLimit-Remaining: 99', 'X-RateLimit-Limit: 100']
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the expected headers outside the curl command, pluralized' do
+      expect(rendered).to include('You should see the following headers:')
+      expect(rendered).to include('X-RateLimit-Remaining: 99')
+      expect(rendered).to include('X-RateLimit-Limit: 100')
     end
   end
 end
