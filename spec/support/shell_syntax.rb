@@ -2,8 +2,8 @@
 
 require 'open3'
 
-def bash_code_block(rendered)
-  rendered[/```bash\n(.*?)\n```/m, 1]
+def bash_code_block(rendered, lang: 'bash')
+  rendered[/```#{lang}\n(.*?)\n```/m, 1]
 end
 
 def validate_bash_syntax!(script)
