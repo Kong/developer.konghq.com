@@ -63,7 +63,7 @@ export KONG_FIPS=on
 ```
 
 {:.warning}
-> **Warning**: Migrating from non-FIPS to FIPS mode and backwards is not supported. 
+> **Warning**: Migrating from non-FIPS to FIPS mode, or the reverse, is not supported.
 > Migrating directly between the FIPS 140-2 and FIPS 140-3 packages is also not supported, as the FIPS 140-3 distribution ships as a separate package. 
 > If you need to transition from the FIPS 140-2 package to the FIPS 140-3 package, follow the recommendations in the section [Transitioning from FIPS 140-2 to FIPS 140-3](#transitioning-from-fips-140-2-to-fips-140-3).
 
