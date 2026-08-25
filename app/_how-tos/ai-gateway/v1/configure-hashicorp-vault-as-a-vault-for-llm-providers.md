@@ -46,7 +46,7 @@ tags:
 tldr:
   q: How can I access HashiCorp Vault secrets in {{site.base_gateway}}?
   a: |
-    Store secrets using `vault kv put secret/openai key="OPENAI_API_KEY"` to HashiCorp Vault. Then configure a Vault entity in {{site.base_gateway}} with the host, token, and mount path. Inside the Gateway container, run `kong vault get {vault://hashicorp-vault/openai/key}` to confirm access. Next Use the `{vault://...}` syntax in a plugin field to [dynamically authenticate to LLM providers](/ai-gateway/v1/how-to/use-semantic-load-balancing-with-dynamic-vault-authentication/) such as OpenAI and Mistral.
+    Store secrets using `vault kv put secret/openai key="Bearer OPENAI_API_KEY"` to HashiCorp Vault. Then configure a Vault entity in {{site.base_gateway}} with the host, token, and mount path. Inside the Gateway container, run `kong vault get {vault://hashicorp-vault/openai/key}` to confirm access. Next Use the `{vault://...}` syntax in a plugin field to [dynamically authenticate to LLM providers](/ai-gateway/v1/how-to/use-semantic-load-balancing-with-dynamic-vault-authentication/) such as OpenAI and Mistral.
 
 tools:
     - deck
@@ -87,6 +87,9 @@ major_version:
 
 ## Create secrets in HashiCorp Vault
 
+LLM providers such as OpenAI and {{ site.mistral }} expect the `Authorization` header to be `Bearer <api-key>`. Store this full header value, including the `Bearer ` prefix, as the secret. This way, any plugin
+field that references the secret directly with `{vault://...}` sends a correctly formatted header, with no other configuration needed
+
 Replace the placeholder with your OpenAI API key and run:
 
 {% validation custom-command %}
@@ -94,7 +97,7 @@ command: |
   curl -X POST http://localhost:8200/v1/secret/data/openai \
        -H "X-Vault-Token: $VAULT_TOKEN" \
        -H "Content-Type: application/json" \
-       --data '{"data": {"key": "'$DECK_OPENAI_API_KEY'" }}'
+       --data '{"data": {"key": "Bearer '$DECK_OPENAI_API_KEY'" }}'
 expected:
   return_code: 0
 render_output: false
@@ -107,13 +110,13 @@ command: |
   curl -X POST http://localhost:8200/v1/secret/data/mistral \
        -H "X-Vault-Token: $VAULT_TOKEN" \
        -H "Content-Type: application/json" \
-       --data '{"data": {"key": "'$DECK_MISTRAL_API_KEY'" }}'
+       --data '{"data": {"key": "Bearer '$DECK_MISTRAL_API_KEY'" }}'
 expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
 
-Both secrets will be stored under their respective paths (`secret/openai` and `secret/mistral`) in the key field.
+Both secrets will be stored under their respective paths (`secret/openai` and `secret/mistral`) in the key field, with the `Bearer ` prefix included.
 
 ## Create decK environment variables
 
@@ -168,14 +171,13 @@ To validate that the secret was stored correctly in HashiCorp Vault, you can cal
 
 {% validation vault-secret %}
 secret: '{vault://hashicorp-vault/mistral/key}'
-value: $DECK_MISTRAL_API_KEY
+value: Bearer $DECK_MISTRAL_API_KEY
 {% endvalidation %}
 
 
 {% validation vault-secret %}
 secret: '{vault://hashicorp-vault/openai/key}'
-value: $DECK_OPENAI_API_KEY
+value: Bearer $DECK_OPENAI_API_KEY
 {% endvalidation %}
 
-
-If the vault was configured correctly, this command should return the value of the secrets for OpenAI and {{ site.mistral }}. You can use `{vault://hashicorp-vault/openai/key}` and `{vault://hashicorp-vault/mistral/key}` to reference the secret in any referenceable field.
+If the vault was configured correctly, this command should return the value of the secrets for OpenAI and {{ site.mistral }}, prefixed with `Bearer `. You can use `{vault://hashicorp-vault/openai/key}` and `{vault://hashicorp-vault/mistral/key}` to reference the secret in any referenceable field. Because the stored value already includes the `Bearer ` prefix, use the bare `{vault://...}` reference as the field's value — Kong only resolves a vault reference when it is the field's entire value, not when it's embedded alongside other text.
