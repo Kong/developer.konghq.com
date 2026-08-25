@@ -1706,6 +1706,7 @@ releases:
       datastore:
         - postgres:
             versions:
+              - 18
               - 17
               - 16
               - 15
@@ -1895,6 +1896,7 @@ releases:
       datastore:
         - postgres:
             versions:
+              - 18
               - 17
               - 16
               - 15
