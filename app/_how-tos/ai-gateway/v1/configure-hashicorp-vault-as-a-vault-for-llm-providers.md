@@ -1,5 +1,5 @@
 ---
-title: Configure dynamic authentication to LLM providers using HashiCorp vault
+title: Configure dynamic authentication to LLM providers using HashiCorp Vault
 permalink: /ai-gateway/v1/how-to/configure-hashicorp-vault-as-a-vault-for-llm-providers/
 description: "Use HashiCorp Vault to securely store and reference API keys for OpenAI, Mistral, and other LLM providers in {{site.ai_gateway}}."
 content_type: how_to
@@ -46,7 +46,7 @@ tags:
 tldr:
   q: How can I access HashiCorp Vault secrets in {{site.base_gateway}}?
   a: |
-    Store secrets using `vault kv put secret/openai key="Bearer OPENAI_API_KEY"` to HashiCorp Vault. Then configure a Vault entity in {{site.base_gateway}} with the host, token, and mount path. Inside the Gateway container, run `kong vault get {vault://hashicorp-vault/openai/key}` to confirm access. Next Use the `{vault://...}` syntax in a plugin field to [dynamically authenticate to LLM providers](/ai-gateway/v1/how-to/use-semantic-load-balancing-with-dynamic-vault-authentication/) such as OpenAI and Mistral.
+    Store secrets using `vault kv put secret/openai key="Bearer OPENAI_API_KEY"` to HashiCorp Vault. Then configure a Vault entity in {{site.base_gateway}} with the host, token, and mount path. Inside the Gateway container, run `kong vault get {vault://hashicorp-vault/openai/key}` to confirm access. Next, use the `{vault://...}` syntax in a plugin field to [dynamically authenticate to LLM providers](/ai-gateway/v1/how-to/use-semantic-load-balancing-with-dynamic-vault-authentication/) such as OpenAI and Mistral.
 
 tools:
     - deck
@@ -88,7 +88,7 @@ major_version:
 ## Create secrets in HashiCorp Vault
 
 LLM providers such as OpenAI and {{ site.mistral }} expect the `Authorization` header to be `Bearer <api-key>`. Store this full header value, including the `Bearer ` prefix, as the secret. This way, any plugin
-field that references the secret directly with `{vault://...}` sends a correctly formatted header, with no other configuration needed
+field that references the secret directly with `{vault://...}` sends a correctly formatted header, with no other configuration needed.
 
 Replace the placeholder with your OpenAI API key and run:
 
@@ -122,7 +122,7 @@ Both secrets will be stored under their respective paths (`secret/openai` and `s
 
 We'll use decK environment variables for the `host` and `token` in the {{site.base_gateway}} Vault configuration. This is because these values typically vary between environments.
 
-In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault uses by default. This is because if you used the quick-start script {{site.base_gateway}} is running in a Docker container and uses a different `localhost`.
+In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault uses by default. This is because if you used the quick-start script, {{site.base_gateway}} is running in a Docker container and uses a different `localhost`.
 
 Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value.
 
@@ -180,4 +180,4 @@ secret: '{vault://hashicorp-vault/openai/key}'
 value: Bearer $DECK_OPENAI_API_KEY
 {% endvalidation %}
 
-If the vault was configured correctly, this command should return the value of the secrets for OpenAI and {{ site.mistral }}, prefixed with `Bearer `. You can use `{vault://hashicorp-vault/openai/key}` and `{vault://hashicorp-vault/mistral/key}` to reference the secret in any referenceable field. Because the stored value already includes the `Bearer ` prefix, use the bare `{vault://...}` reference as the field's value — Kong only resolves a vault reference when it is the field's entire value, not when it's embedded alongside other text.
+If the vault was configured correctly, this command should return the value of the secrets for OpenAI and {{ site.mistral }}, prefixed with `Bearer `. You can use `{vault://hashicorp-vault/openai/key}` and `{vault://hashicorp-vault/mistral/key}` to reference the secret in any referenceable field. Because the stored value already includes the `Bearer ` prefix, use the bare `{vault://...}` reference as the field's value. Kong only resolves a vault reference when it's the field's entire value, not when it's embedded alongside other text.
