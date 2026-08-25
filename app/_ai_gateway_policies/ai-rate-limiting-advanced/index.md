@@ -44,6 +44,8 @@ The [`config.policies`](./reference/#schema--config-policies) field allows you t
 {% entity_example %}
 type: policy
 data:
+  display_name: AI Rate Limiting Advanced - Consumer and Model
+  type: ai-rate-limiting-advanced
   name: ai-rate-limiting-advanced
   config:
     policies:
@@ -63,6 +65,7 @@ data:
           window_size: 3600
 formats:
   - kongctl
+  - konnect-api
 {% endentity_example %}
 
 In this example, the limits will apply only to requests made by the specified AI Consumer to the `gpt-4o` model.
@@ -105,6 +108,7 @@ rows:
 {% entity_example %}
 type: policy
 data:
+  display_name: AI Rate Limiting Advanced - Calendar Window
   name: ai-rate-limiting-advanced
   type: ai-rate-limiting-advanced
   config:
@@ -122,6 +126,7 @@ data:
           tokens_count_strategy: total_tokens
 formats:
   - kongctl
+  - konnect-api
 {% endentity_example %}
 
 This policy grants the `premium` AI Consumer Group 2,000,000 tokens per calendar month, resetting at local midnight on the 1st in `America/New_York`.

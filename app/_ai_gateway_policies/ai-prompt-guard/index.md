@@ -41,7 +41,9 @@ Configure the AI Prompt Guard Policy to detect hidden unicode characters that at
 {% entity_example %}
 type: policy
 data:
+  display_name: AI Prompt Guard - Hidden Unicode Detection
   name: ai-prompt-guard
+  type: ai-prompt-guard
   config:
     deny_patterns:
     - (\xE2\x80[\x8B-\x8D]|\xEF\xBB\xBF)
@@ -50,6 +52,7 @@ data:
     - \xF3\xA0\x80[\xA0-\xBF]|\xF3\xA0\x81[\x80-\xBF]
 formats:
   - konnect-api
+  - kongctl
 {% endentity_example %}
 
 In this example:
