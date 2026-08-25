@@ -118,8 +118,10 @@ rows:
     fields: OIDC client secret for openid-connect type providers
   - entity: AI Model
     fields: Backend-specific authentication required by target model configurations
+  - entity: AI Agent
+    fields: AWS IAM (SigV4) credentials for authenticating to the upstream agent when `config.upstream.auth` is set
   - entity: AI MCP Server
-    fields: Encryption keys used by MCP Servers for client session management
+    fields: Encryption keys used for client session management, and AWS IAM (SigV4) credentials for authenticating to the upstream server in `upstream-server` mode
   - entity: AI Consumer
     fields: API keys and tokens issued to downstream consumers
 {% endtable %}
