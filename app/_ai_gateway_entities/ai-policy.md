@@ -58,12 +58,13 @@ faqs:
 
 ## What is an AI Policy?
 
-Create an AI Policy when you want to add governance, security, transformation, or observability to {{site.ai_gateway}} traffic:
-- Attach [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) to redact sensitive data
-- Attach [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) to manage request volume
-- Attach [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) or [other guardrail Policies](/ai-gateway/#guardrails-and-content-safety) to validate prompts
-- Attach [logging Policies](/ai-gateway/policies/?category=logging) to track requests and responses for observability
-- Assign an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/), rather than an AI Policy, to control access and verify identity
+Create an AI Policy when you want to add governance, security, transformation, or observability to {{site.ai_gateway}} traffic. For example:
+- Redact sensitive data with [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/)
+- Manage request volume with [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/)
+- Validate prompts with [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) or [other guardrail Policies](/ai-gateway/#guardrails-and-content-safety)
+- Track requests and responses for observability with [logging Policies](/ai-gateway/policies/?category=logging)
+
+To control access and verify identity, assign an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) instead of an AI Policy.
 
 **Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies, not configurations shared with other parts of your gateway.
 
@@ -89,16 +90,6 @@ The available scopes are:
 * **Global**: An AI Policy with no parent entity reference applies to all {{site.ai_gateway}} traffic on the data plane. Non-AI traffic on the same data plane isn't affected.
 
 * **Entity-scoped**: Reference the policy from the `policies` array on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), [AI Consumer](/ai-gateway/entities/ai-consumer/), or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity. The policy applies at that entity's scope.
-
-{:.warning}
-> **Authentication policies don't attach through the `policies` array**
->
-> An AI Model, AI Agent, and AI MCP Server each have their own top-level authentication mechanism, so the `key-auth` and `openid-connect` auth strategies can't be referenced from any of their `policies` arrays. The same applies to [AI MCP OAuth2](/ai-gateway/policies/ai-mcp-oauth2/), which can only be created as a Global AI Policy.
->
-> This doesn't mean authentication is limited to one gateway-wide configuration. To authenticate traffic to a specific AI Model, AI Agent, or AI MCP Server, assign an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) to that entity instead, for example, Key Auth on one AI Model and OpenID Connect on another. AI Auth Strategies support Key Auth and OpenID Connect authentication, and for an AI MCP Server with [`access.metadata`](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) set, {{site.ai_gateway}} generates the equivalent AI MCP OAuth2 configuration for you.
-
-{:.info}
-> For each policy type, find its configuration schema and required fields on that policy's reference page in the [AI Policies hub](/ai-gateway/policies/). Configuration is specific to each policy type.
 
 ## Set up a global AI Policy
 

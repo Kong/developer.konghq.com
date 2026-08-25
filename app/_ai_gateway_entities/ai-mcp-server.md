@@ -83,6 +83,15 @@ faqs:
       Yes. Policy configuration such as rate limiting, logging, or request/response transformation goes through
       the [AI Policy entity](/ai-gateway/entities/ai-policy/). Attach Policies to the AI MCP Server through its
       [`policies`](#schema-aigateway-mcpserver-policies) field.
+
+  - q: How do I authenticate to an upstream service that requires AWS IAM (SigV4) signing?
+    a: |
+      Configure [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream) with `type: aws`. {{site.ai_gateway}}
+      signs each proxied request using static IAM credentials, environment auto-detection, or an assumed role. This
+      is separate from [`access.auth_strategies`](#schema-aigateway-mcpserver-access), which authenticates inbound
+      clients, and from [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth),
+      which only authenticates the one-time fetch of an `upstream-server`'s tool list. See
+      [Upstream authentication](#upstream-authentication).
 ---
 
 ## What is an AI MCP Server?
@@ -297,9 +306,11 @@ sequenceDiagram
 
 > _Figure 1_: This diagram shows how {{site.ai_gateway}} handles requests from an AI agent. It validates the agent's credentials, collects tool definitions from multiple services, and forwards tool calls to the correct upstream.
 
-### Upstream authentication
+### Tool-list authentication
 
 By default, the AI MCP Server in `listener` mode connects to upstreams without credentials. If an upstream MCP server requires authentication, configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) on the `upstream-server`. The credential is used only when fetching the upstream's tool list, not for agent requests. Different upstreams can use different credentials, managed centrally by {{site.ai_gateway}}.
+
+This is distinct from [`config.upstream.auth`](#upstream-authentication), which authenticates the actual tool-call requests forwarded to the upstream service.
 
 <!-- vale off -->
 {% table %}
@@ -372,7 +383,7 @@ An MCP client such as [Claude Desktop](https://claude.ai/download), Cursor, or [
 
 Once you expose tools through an AI MCP Server, anyone who can reach the endpoint can attempt to call them unless you gate access to known AI Consumers. To authenticate AI Consumers calling a `conversion-listener`, `listener`, or `passthrough-listener` AI MCP Server, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) by name or ID in the [`access.auth_strategies`](#schema-aigateway-mcpserver-access) array. This is the same mechanism used by [AI Models](/ai-gateway/entities/ai-model/#access-control) and [AI Agents](/ai-gateway/entities/ai-agent/#access-control). An AI MCP Server currently accepts up to one AI Auth Strategy reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its [`policies`](#schema-aigateway-mcpserver-policies) field isn't supported; authentication is configured exclusively through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
-`upstream-server` AI MCP Servers don't accept an `access.auth_strategies` reference. Configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) instead to authenticate to the upstream when fetching its tool list; see [Upstream authentication](#upstream-authentication). `conversion-only` AI MCP Servers have no `access` field at all, since they never accept incoming MCP traffic directly.
+`upstream-server` AI MCP Servers don't accept an `access.auth_strategies` reference. Configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) instead to authenticate to the upstream when fetching its tool list; see [Tool-list authentication](#tool-list-authentication). `conversion-only` AI MCP Servers have no `access` field at all, since they never accept incoming MCP traffic directly.
 
 ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step. For ACL configuration, see [ACL tool control](#acl-tool-control).
 
@@ -411,6 +422,37 @@ Two AI Auth Strategy settings carry forward into the generated configuration: `a
 > `access.metadata` isn't supported with a `key-auth` AI Auth Strategy. `key-auth` credentials can't serve OAuth 2.0 Protected Resource Metadata; combining the two is rejected.
 
 If you omit `access.metadata`, `access.auth_strategies` still authenticates requests on its own, as a plain `key-auth` or `openid-connect` check, without the added OAuth 2.1 resource-server behavior.
+
+## Upstream authentication
+
+Access control and AI Auth Strategies govern who can reach the AI MCP Server. Separately, [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream) controls how {{site.ai_gateway}} authenticates itself when forwarding tool-call requests to the upstream service. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
+
+This applies to any mode that connects directly to an upstream service: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`. A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers. `config.upstream.auth` is also distinct from [`config.server.tools_list_auth`](#tool-list-authentication), which only authenticates the one-time fetch of an `upstream-server`'s tool list, not the tool-call requests themselves.
+
+Some upstream services don't accept bearer tokens or API keys at all, and only accept requests signed with AWS IAM (SigV4), such as a service fronted by an IAM-protected Amazon API Gateway. For these, set `config.upstream.auth.type` to `aws`.
+
+{{site.ai_gateway}} signs each proxied request using the credentials you provide:
+
+* Static IAM user credentials, `access_key_id` and `secret_access_key`, optionally paired with a `session_token` for temporary credentials.
+* Environment auto-detection when you omit `access_key_id` and `secret_access_key`, for example, an EC2 instance profile or environment variables.
+* Role assumption through `assume_role_arn` and `role_session_name`, layered on top of either credential source. Recommended for production use and cross-account access.
+
+Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+
+{:.info}
+> `secret_access_key` and `session_token` are write-only and [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)
+> fields. Store them in a vault instead of in plaintext.
+
+```yaml
+config:
+  url: https://tools.execute-api.us-east-1.amazonaws.com/prod
+  upstream:
+    auth:
+      type: aws
+      region: us-east-1
+      assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
+      role_session_name: kong-ai-gateway
+```
 
 ## ACL tool control
 
