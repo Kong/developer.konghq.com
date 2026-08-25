@@ -4,7 +4,7 @@ def build_liquid_context(page: {}, locals: {})
   liquid_page = { 'path' => 'test/page.md', 'output_format' => 'html' }.merge(page)
 
   Liquid::Context.new(
-    [{ 'page' => liquid_page }.merge(locals)],
+    [{ 'page' => liquid_page }.merge(locals), JekyllSite.instance.site_payload],
     {},
     { site: JekyllSite.instance, page: liquid_page },
     true
