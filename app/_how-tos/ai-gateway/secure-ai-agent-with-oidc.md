@@ -87,9 +87,6 @@ faqs:
   - q: Can I combine OpenID Connect with ACLs on the same AI Agent?
     a: |
       Yes. [`access.acls`](/ai-gateway/entities/ai-agent/#access-control) on the AI Agent restricts which AI Consumers or AI Consumer Groups can reach it. The AI Auth Strategy authenticates the caller first, then ACLs decide whether that identity is allowed through.
-  - q: Can I attach the OpenID Connect Policy directly to the AI Agent instead?
-    a: |
-      No. Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't supported. Authentication for AI Agents is configured exclusively through AI Auth Strategies referenced in `access.auth_strategies`.
 ---
 
 This how-to continues from [Set up a {{site.identity}} auth server for AI Agent authentication](/ai-gateway/set-up-kong-identity-for-a2a/). Complete that how-to first, you need its `$ISSUER_URL`, `$CLIENT_ID`, and `$CLIENT_SECRET` to create the AI Auth Strategy.

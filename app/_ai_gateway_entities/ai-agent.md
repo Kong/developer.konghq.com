@@ -331,7 +331,7 @@ For `a2a` type Agents, when {{site.base_gateway}} tracing is configured, the run
 
 To restrict which AI Consumers or teams can reach a specific agent, use ACLs. The [`access.acls`](#schema-aigateway-agent-access) field defines either an `allow` or a `deny` list of identities that can access the agent. Each entry references an [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or Authenticated Group by name. An Authenticated Group is a dynamic group representing all consumers authenticated via a specific OAuth2 scope or claim. Access is enforced before traffic reaches the upstream agent.
 
-For per-request authentication and identity validation, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) in the [`access.auth_strategies`](#schema-aigateway-agent-access) array, the same way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control). The AI Agent has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its `policies` field isn't supported; authentication is configured exclusively through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
+For per-request authentication and identity validation, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) in the [`access.auth_strategies`](#schema-aigateway-agent-access) array, the same way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control). The AI Agent has its own top-level authentication mechanism: you configure the authentication through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
 An AI Agent currently accepts up to one AI Auth Strategy reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
 
@@ -344,10 +344,10 @@ Some upstream agents don't accept bearer tokens or API keys at all, and only acc
 {{site.ai_gateway}} signs each proxied request using the credentials you provide:
 
 * Static IAM user credentials, `access_key_id` and `secret_access_key`, optionally paired with a `session_token` for temporary credentials.
-* Environment auto-detection when `access_key_id` and `secret_access_key` are omitted, for example an EC2 instance profile or environment variables.
+Environment auto-detection when you omit `access_key_id` and `secret_access_key`, for example, an EC2 instance profile or environment variables.
 * Role assumption through `assume_role_arn` and `role_session_name`, layered on top of either credential source. Recommended for production use and cross-account access.
 
-Set `region` to override the region {{site.ai_gateway}} otherwise infers from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
 
 {:.info}
 > `secret_access_key` and `session_token` are write-only and [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)

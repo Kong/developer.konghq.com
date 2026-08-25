@@ -20,11 +20,11 @@ The following creates a new AI Auth Strategy. Suggested values are shown in back
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Auth Strategies**.
 1. Click **New auth strategy**.
-1. Enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and select a **Type**, either **API key** or **OpenID Connect**.
-1. If you selected **API key**, configure the key names and where the key is checked (header, query, or body).
+1. Enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and select a **Type**, either **Key authentication** or **OpenID Connect**.
+1. If you selected **Key authentication**, configure the key names and where the key is checked (header, query, or body).
 1. If you selected **OpenID Connect**, enter an **Issuer**, **Client ID**, and **Client secret**, and configure the claim used to match requests to a consumer.
 1. Click **Create**.
-{% when 'policy' %}
+{% when 'auth-strategy' %}
 The following creates a new AI Policy. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway}}](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.

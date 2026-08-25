@@ -14,10 +14,7 @@ breadcrumbs:
 description: Configure inbound AI Consumer authentication for AI Models, AI Agents, and AI MCP Servers in {{site.ai_gateway}}.
 schema:
   api: konnect/ai-gateway
-  # TODO: change to /schemas/AIGatewayAuthStrategy once the Konnect portal serves the renamed
-  # spec. Flipping it early renders an empty Schema section, since the schema table is fetched
-  # from the portal at runtime and that spec still exposes AIGatewayIdentityProvider.
-  path: /schemas/AIGatewayIdentityProvider
+  path: /schemas/AIGatewayAuthStrategy
 works_on:
   - konnect
 tools:
@@ -222,7 +219,7 @@ access:
 > * Each AI Model supports one `key-auth` auth strategy and one `openid-connect` auth strategy. You can assign both types to the same AI Model; a request is authenticated if it satisfies either strategy.
 > * Each AI Agent currently supports up to one AI Auth Strategy reference.
 > * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) currently supports up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
-> * Attaching an authentication AI Policy (Key Auth, OpenID Connect, or similar) directly to an AI Model's, AI Agent's, or AI MCP Server's `policies` field isn't supported, since each of these entities has its own top-level authentication mechanism. AI Auth Strategies are the only supported way to authenticate AI Model, AI Agent, and AI MCP Server traffic, and let each entity use different authentication independently. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
+> * AI Auth Strategies are the only supported way to authenticate AI Model, AI Agent, and AI MCP Server traffic, and let each entity use different authentication independently. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
 If you plan to rename the AI Auth Strategy later, reference it by `id` rather than name. The ID is stable across renames.
 

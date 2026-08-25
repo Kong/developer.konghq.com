@@ -504,4 +504,3 @@
 /mcp/use-access-controls-for-mcp-tools/  /ai-gateway/v1/mcp/use-access-controls-for-mcp-tools/  301
 
 # AI Auth Strategy rename
-/ai-gateway/entities/ai-identity-provider/  /ai-gateway/entities/ai-auth-strategy/  301
