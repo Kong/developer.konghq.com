@@ -171,4 +171,4 @@ rows:
                 No. As a workaround, group the relevant requests in a **folder** and then set authentication at the folder level for that group to avoid duplicating headers on each request.
             - q: Can I hide other projects and collections to focus only on one collection?
               a: |
-                Yes. Go to **Preferences** > **General** > **Application** and enable **Sidebar focus for collections**. The sidebar then displays only the contents of the collection you select.
+                Yes. Go to **Preferences** > **General** > **Application** and enable **Sidebar focus for collections**. The sidebar then displays only the contents of the collection you select. This is enabled by default since Insomnia 13.2
