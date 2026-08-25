@@ -1,4 +1,4 @@
-The {{ include.name }} Policy supports integration with Confluent Schema Registry for AVRO and JSON schemas.
+You can integrate the {{ include.name }} Policy with Confluent Schema Registry for AVRO and JSON schemas.
 
 Schema registries provide a centralized repository for managing and validating schemas for data formats like AVRO and JSON.
 Integrating with a schema registry allows the Policy to validate and serialize/deserialize messages in a standardized format.
@@ -51,7 +51,7 @@ If validation fails, the request is rejected with an error message.
 
 {% elsif include.workflow == 'consumer' %}
 
-When a consumer Policy is configured with a schema registry, the following workflow occurs:
+When a consume policy is configured with a schema registry, the following workflow occurs:
 
 <!--vale off-->
 {% mermaid %}
