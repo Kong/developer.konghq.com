@@ -31,15 +31,9 @@ tldr:
 
 prereqs:
   inline:
-    - title: OpenAI
+    - title: OpenAI API key
+      include_content: md/ai-gateway/v2/prereqs/openai-kongctl
       icon_url: /assets/icons/openai.svg
-      content: |
-        Get an API key from [platform.openai.com/api-keys](https://platform.openai.com/api-keys) and export it as the **full `Authorization` header value** (including the `Bearer ` prefix):
-
-        ```sh
-        export OPENAI_API_KEY="your_api_key"
-        export OPENAI_AUTH_HEADER="Bearer $OPENAI_API_KEY"
-        ```
     - title: Codex CLI
       icon_url: /assets/icons/openai.svg
       content: |
@@ -129,9 +123,12 @@ codex \
 
 <!--vale off-->
 {% validation codex %}
-open_api_key: sk-placeholder
-base_url: http://localhost:8000/codex
 model: codex-openai
+model_provider: my-gateway
+model_provider_name: AI Quickstart
+model_provider_base_url: http://localhost:8000/
+model_provider_env_key: OPENAI_API_KEY
+model_provider_wire_api: responses
 prompt: Tell me about the Madrid Skylitzes manuscript.
 {% endvalidation %}
 <!--vale on-->
