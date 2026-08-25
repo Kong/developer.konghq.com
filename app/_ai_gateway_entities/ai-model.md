@@ -347,7 +347,7 @@ To control how consumers authenticate before their access is evaluated, configur
 
 Attach an AI Policy to an AI Model to add security, observability, governance, rate limiting, and cost optimization to all requests through that model. For example, you can add guardrails ([AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)), enable [logging and metrics](/ai-gateway/policies/?category=logging), audit and [compliance controls](/ai-gateway/policies/ai-sanitizer/), cache responses, or [rate-limit](/ai-gateway/policies/ai-rate-limiting-advanced/) LLM traffic.
 
-Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations. Not every AI Policy type supports AI Model attachment: authentication policies like Key Auth and OpenID Connect can't be attached this way, since the AI Model has its own top-level authentication mechanism. To authenticate AI Consumers calling this AI Model, assign an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) instead. AI Policies are not deleted when the AI Model is deleted, only the AI Model's reference is removed. For more details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/).
+Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations.
 
 ### AI Policy execution order
 
