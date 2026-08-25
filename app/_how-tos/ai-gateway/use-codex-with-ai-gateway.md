@@ -113,7 +113,7 @@ Run a simple command to confirm traffic flows through {{site.ai_gateway}} to Ope
 {% validation codex %}
 open_api_key: sk-placeholder
 base_url: http://localhost:8000/codex
-model: gpt-5.4
+model: codex-openai
 prompt: Tell me about the Madrid Skylitzes manuscript.
 {% endvalidation %}
 <!--vale on-->
