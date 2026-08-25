@@ -111,4 +111,4 @@ prompt: Explain the singleton pattern in Python.
 Qwen Code CLI returns a response, proxied through {{site.ai_gateway}} to the OpenAI model.
 
 {:.info}
-> The Qwen Code CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine.
+> The Qwen Code CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}.
