@@ -1,8 +1,4 @@
 ```sh
-{% if include.config.base_url -%}
-export OPENAI_BASE_URL={{include.config.base_url}}
-
-{% endif -%}
 {{include.config.base_command}}
 ```
 
