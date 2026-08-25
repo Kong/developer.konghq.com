@@ -79,11 +79,11 @@ rows:
       Stores the credentials and endpoint configuration for an upstream LLM service (OpenAI, Anthropic, Bedrock, etc.). It has no effect on its own and produces no data plane configuration until an AI Model references it. Can't take a Policy attachment directly; apply governance globally, on each referencing AI Model, or via an AI Consumer Group.
     references: |
       [Schema](/ai-gateway/entities/ai-model-provider/#schema)
-  - entity: "[AI Identity Provider](/ai-gateway/entities/ai-identity-provider/)"
+  - entity: "[AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/)"
     description: |
-      Declares inbound authentication (API key or OpenID Connect) for the AI Consumers calling an AI Model. Distinct from AI Model Provider, which manages outbound credentials to the upstream LLM instead. Takes effect only once referenced in an AI Model's `access.identity_providers` array.
+      Declares inbound authentication (API key or OpenID Connect) for the AI Consumers calling an AI Model. Distinct from AI Model Provider, which manages outbound credentials to the upstream LLM instead. Takes effect only once referenced in an AI Model's `access.auth_strategies` array.
     references: |
-      [Schema](/ai-gateway/entities/ai-identity-provider/#schema)
+      [Schema](/ai-gateway/entities/ai-auth-strategy/#schema)
 
   - entity: "[AI Model](/ai-gateway/entities/ai-model/)"
     description: |

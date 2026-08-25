@@ -146,7 +146,7 @@ formats:
       mcp_server:      '/mcp-servers'
       provider:        '/providers'
       model-provider:  '/model-providers'
-      identity-provider: '/identity'
+      auth-strategy:   '/auth-strategies'
       consumer:       '/consumers'
       consumer_group: '/consumer-groups'
       vault:          '/vaults'
@@ -215,7 +215,7 @@ formats:
     label: 'UI'
     entities:
       - ai-model-provider
-      - ai-identity-provider
+      - ai-auth-strategy
       - ai-model
       - ai-agent
       - ai-mcp-server

@@ -29,8 +29,8 @@ related_resources:
     url: /ai-gateway/load-balancing/
   - text: AI Model Provider entity
     url: /ai-gateway/entities/ai-model-provider/
-  - text: AI Identity Provider entity
-    url: /ai-gateway/entities/ai-identity-provider/
+  - text: AI Auth Strategy entity
+    url: /ai-gateway/entities/ai-auth-strategy/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"
@@ -93,7 +93,7 @@ The AI Model entity lets you expose LLM endpoints through {{site.ai_gateway}} fo
 * [Add observability](#logging-and-observability) to model traffic
 * [Attach policies](#attach-ai-policies) for security and transformation
 
-An AI Model declares which capabilities it exposes (like `chat` or `embeddings`), which upstream LLM models it routes to via [AI Model Providers](/ai-gateway/entities/ai-model-provider/), and how requests are distributed and logged. Consumer authentication is configured through [AI Identity Providers](/ai-gateway/entities/ai-identity-provider/) on the model. {{site.ai_gateway}} handles routing and translation, so clients interact with a single unified endpoint.
+An AI Model declares which capabilities it exposes (like `chat` or `embeddings`), which upstream LLM models it routes to via [AI Model Providers](/ai-gateway/entities/ai-model-provider/), and how requests are distributed and logged. Consumer authentication is configured through [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) on the model. {{site.ai_gateway}} handles routing and translation, so clients interact with a single unified endpoint.
 
 ## Manage AI Models
 
@@ -341,17 +341,17 @@ When [`config.route.model`](#schema-aigateway-model-config-route-model) isn't se
 
 To limit which teams or applications can call an AI Model, use the [`access.acls`](#schema-aigateway-model-access) field to set an allow list or a deny list. Reference [AI Consumers](/ai-gateway/entities/ai-consumer/) (individual applications), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (teams), or Authenticated Groups (all consumers authenticated via a specific OAuth2 scope or claim) by name.
 
-To control how consumers authenticate before their access is evaluated, configure the [`access.identity_providers`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) references. Each AI Model supports one `key-auth` identity provider and one `openid-connect` identity provider simultaneously.
+To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one `openid-connect` auth strategy simultaneously.
 
 ## Attach AI Policies
 
 Attach an AI Policy to an AI Model to add security, observability, governance, rate limiting, and cost optimization to all requests through that model. For example, you can add guardrails ([AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)), enable [logging and metrics](/ai-gateway/policies/?category=logging), audit and [compliance controls](/ai-gateway/policies/ai-sanitizer/), cache responses, or [rate-limit](/ai-gateway/policies/ai-rate-limiting-advanced/) LLM traffic.
 
-Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations. Not every AI Policy type supports AI Model attachment: authentication policies like Key Auth and OpenID Connect can't be attached this way, since the AI Model has its own top-level authentication mechanism. To authenticate AI Consumers calling this AI Model, assign an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) instead. AI Policies are not deleted when the AI Model is deleted, only the AI Model's reference is removed. For more details, see the [AI Policy entity](/ai-gateway/entities/ai-policy/).
+Reference AI Policies through the [`policies`](#schema-aigateway-model-policies) field, which accepts AI Policy names or IDs. You can attach multiple AI Policies to a single AI Model; each applies independently, and the same AI Policy type can be attached with different configurations.
 
 ### AI Policy execution order
 
-Authentication runs first, through the AI Model's assigned [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/), not through an attached AI Policy. Attached AI Policies then execute in a defined order based on policy type. If execution order matters for your use case, refer to the [plugin priority documentation](/gateway/entities/plugin/#plugin-priority).
+Authentication runs first, through the AI Model's assigned [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), not through an attached AI Policy. Attached AI Policies then execute in a defined order based on policy type. If execution order matters for your use case, refer to the [plugin priority documentation](/gateway/entities/plugin/#plugin-priority).
 
 ## Upstream proxy configuration
 

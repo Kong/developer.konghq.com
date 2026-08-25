@@ -26,8 +26,8 @@ related_resources:
     url: /ai-gateway/
   - text: AI Model Provider
     url: /ai-gateway/entities/ai-model-provider/
-  - text: AI Identity Provider
-    url: /ai-gateway/entities/ai-identity-provider/
+  - text: AI Auth Strategy
+    url: /ai-gateway/entities/ai-auth-strategy/
   - text: AI Model
     url: /ai-gateway/entities/ai-model/
   - text: AI MCP Server
@@ -51,7 +51,7 @@ faqs:
 
   - q: How are AI Vault secrets referenced from other {{site.ai_gateway}} entities?
     a: |
-      Sensitive fields on AI Model Provider, AI Identity Provider, AI Model, AI MCP Server, and other entities are annotated as
+      Sensitive fields on AI Model Provider, AI Auth Strategy, AI Model, AI MCP Server, and other entities are annotated as
       referenceable. Set those fields to a vault reference string (for example, a `{vault://...}`
       placeholder) instead of a literal value. The AI Vault `name` is the lookup key.
 
@@ -70,7 +70,7 @@ faqs:
 
 ## What is an AI Vault?
 
-You must store secrets like API keys and authentication tokens somewhere secure instead of embedding them directly in your configurations. An AI Vault entity lets you register an external secret backend (AWS Secrets Manager, HashiCorp Vault, environment variables, or others) so that [AI Model Providers](/ai-gateway/entities/ai-model-provider/), [AI Identity Providers](/ai-gateway/entities/ai-identity-provider/), [AI Models](/ai-gateway/entities/ai-model/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) can reference secrets instead of storing them as literal values.
+You must store secrets like API keys and authentication tokens somewhere secure instead of embedding them directly in your configurations. An AI Vault entity lets you register an external secret backend (AWS Secrets Manager, HashiCorp Vault, environment variables, or others) so that [AI Model Providers](/ai-gateway/entities/ai-model-provider/), [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/), [AI Models](/ai-gateway/entities/ai-model/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) can reference secrets instead of storing them as literal values.
 
 An AI Vault entity stores the connection configuration and credentials needed to reach your secret backend. When other entities reference a secret, {{site.ai_gateway}}:
 1. Looks up the vault at request time
@@ -114,7 +114,7 @@ columns:
 rows:
   - entity: AI Model Provider
     fields: Authentication credentials (API keys, bearer tokens) in auth headers for upstream LLM providers
-  - entity: AI Identity Provider
+  - entity: AI Auth Strategy
     fields: OIDC client secret for openid-connect type providers
   - entity: AI Model
     fields: Backend-specific authentication required by target model configurations
