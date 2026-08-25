@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Konnect Mesh Control Plane manager
   description: Control Plane manager API
-  version: 0.1.0
+  version: 0.2.0
   x-ref-schema-name: DataplaneOverview
   contact:
     name: Kong
@@ -5619,6 +5619,8 @@ paths:
           $ref: '#/components/responses/MeshControlPlaneNotFoundError'
         '409':
           $ref: '#/components/responses/ScanMeshControlPlaneConflictError'
+        '501':
+          $ref: '#/components/responses/ScanMeshControlPlaneUnsupportedError'
       tags:
         - Mesh
       x-rpc-endpoint: true
@@ -21751,6 +21753,20 @@ components:
         - result
       x-internal: true
       x-unstable: true
+    MeshControlPlaneReadinessScanAccepted:
+      description: |
+        Identifier of the upgrade readiness report this scan writes. Read the report at the Location above once the scan finishes.
+      type: object
+      properties:
+        id:
+          description: Identifier of the readiness report this scan writes.
+          type: string
+          format: uuid
+          example: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+      required:
+        - id
+      x-internal: true
+      x-unstable: true
     MeshControlPlaneReadinessReportState:
       description: |
         How far the scan got, which is separate from what the scan found. While it is running, result and failure_reason are both null. When it has finished, result holds what the scan found and failure_reason stays null. The result then says whether anything blocks the upgrade. When it has failed, the opposite holds: result is null and failure_reason says why, so a consumer must read state before reaching into result.
@@ -22545,6 +22561,21 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
+    NotImplementedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 501
+            title:
+              example: Not Implemented
+            type:
+              example: 'https://httpstatuses.com/501'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not Implemented
     ForbiddenError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -22672,12 +22703,6 @@ components:
     MeshControlPlaneScanAcceptedExample:
       value:
         id: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
-        control_plane_id: bf138ba2-c9b1-4229-b268-04d9d8a6410b
-        state: running
-        requested_at: '2026-08-07T09:15:04.000Z'
-        finished_at: null
-        failure_reason: null
-        result: null
     MeshControlPlaneReadinessReportExample:
       value:
         id: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
@@ -24538,7 +24563,7 @@ components:
               $ref: '#/components/examples/MeshControlPlaneReadinessReportFailedExample'
     ScanMeshControlPlaneResponse:
       description: |
-        The scan was accepted and runs in the background. The report carries no result until the scan finishes.
+        The scan was accepted. The body carries only the id of the report it writes; read the report at the Location below.
       headers:
         Location:
           description: |
@@ -24550,9 +24575,9 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/MeshControlPlaneReadinessReport'
+            $ref: '#/components/schemas/MeshControlPlaneReadinessScanAccepted'
           examples:
-            Running Scan:
+            Scan Accepted:
               $ref: '#/components/examples/MeshControlPlaneScanAcceptedExample'
     ScanMeshControlPlaneValidationError:
       description: Validation Error
@@ -24587,6 +24612,20 @@ components:
                 title: Conflict
                 instance: 'konnect:trace:2587793459331520595'
                 detail: a scan of this control plane is already running
+    ScanMeshControlPlaneUnsupportedError:
+      description: Readiness scanning is not supported in this environment.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotImplementedError'
+          examples:
+            Scanning Unsupported:
+              value:
+                status: 501
+                type: 'https://kongapi.info/konnect/not-implemented'
+                title: Not Implemented
+                instance: 'konnect:trace:2587793459331520595'
+                detail: readiness scanning is not supported in this environment
     RetrieveMeshControlPlaneResponse:
       description: A response to creating a control plane.
       content:
