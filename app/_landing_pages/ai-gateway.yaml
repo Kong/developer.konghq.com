@@ -25,7 +25,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    As AI adoption accelerates, applications are evolving beyond basic LLM calls into complex, multi-actor systems-including user apps, agents, orchestration layers, and context servers that interact with foundation models in real time.
+                    As AI adoption accelerates, applications are evolving beyond basic LLM calls into complex, multi-actor systems, including user apps, agents, orchestration layers, and context servers that interact with foundation models in real time.
 
                     To support this shift, developers are adopting protocols like Model Context Protocol (MCP) and Agent2Agent (A2A) to standardize how components exchange tools, data, and decisions.
 
@@ -126,7 +126,7 @@ rows:
                   text: |
                     You can manage these resources through multiple interfaces:
                     - [{{site.ai_gateway}} manager](https://cloud.konghq.com/ai-manager): Manage all your {{site.ai_gateway}} resources from {{site.konnect_short_name}}.
-                    - [Control Plane Config API](/api/konnect/control-planes-config/): Manage resources in {{site.konnect_short_name}} control planes via the API.
+                    - [AI Gateway API](/api/konnect/ai-gateway/): Manage resources in {{site.konnect_short_name}} {{site.ai_gateway}}s via the API.
                     - [kongctl](/kongctl/): Manage resources and configuration from the command line.
   - header:
       type: h2
@@ -219,7 +219,7 @@ rows:
                       feature: |
                         [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)
                     - outcome: |
-                        Standardize prompts and default instructions across every team instead of each team writing its own
+                        Standardize prompts and default instructions across every team instead of each team writing their own
                       feature: |
                         [AI Prompt Template](/ai-gateway/policies/ai-prompt-template/)
                 - usecase: |
@@ -262,7 +262,7 @@ rows:
                     - outcome: |
                         Scope agent tool calls with OAuth2, so write actions can require tighter access than read actions
                       feature: |
-                        [AI MCP OAuth2](/ai-gateway/policies/ai-mcp-oauth2/)
+                        [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/)
                 - usecase: |
                     **Enforce governance on outgoing AI prompts** by protecting against unsafe prompts and data leaks
                   outcomes:
@@ -306,7 +306,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: See all AI Entities
+            title: See all AI entities
             description: Entities are the building blocks that make up the {{site.ai_gateway}} ecosystem. This includes AI Models, AI Model Providers, AI Auth Strategies, AI Agents, AI MCP Servers, and AI Consumers.
             cta:
               url: /ai-gateway/entities/
@@ -369,10 +369,10 @@ rows:
       - blocks:
         - type: icon_card
           config:
-            title: Gemini CLI
-            icon: /assets/icons/gemini.svg
+            title: Qwen Code CLI
+            icon: /assets/icons/qwen.svg
             cta:
-              url: /ai-gateway/ai-clis/#gemini-cli
+              url: /ai-gateway/ai-clis/#qwen-code-cli
       - blocks:
         - type: icon_card
           config:
