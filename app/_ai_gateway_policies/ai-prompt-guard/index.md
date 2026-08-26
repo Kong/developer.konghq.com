@@ -12,7 +12,7 @@ tags:
   - safety
   - dlp
 content_type: plugin
-description: 'Semantically and intelligently create allow and deny lists of topics that can be requested across an LLM.'
+description: 'Check text completion requests against a list of allowed or denied expressions'
 related_resources:
   - text: AI Semantic Prompt Guard Policy
     url: /ai-gateway/policies/ai-semantic-prompt-guard/
