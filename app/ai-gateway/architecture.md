@@ -11,6 +11,13 @@ breadcrumbs:
   - /ai-gateway/
 description: |
   Understand the architecture of {{site.ai_gateway}}, including its control plane and data plane, how AI entities translate into data plane configuration, and its deployment and multi-tenancy topologies.
+related_resources:
+  - text: "{{site.ai_gateway}}"
+    url: /ai-gateway/
+  - text: "{{site.ai_gateway}} 2.x concepts"
+    url: /ai-gateway/ai-gateway-v2-concepts/
+  - text: "Migrate to {{site.ai_gateway}} 2.x"
+    url: /ai-gateway/v2-migration-guide/
 works_on:
   - konnect
 ---
@@ -42,7 +49,7 @@ subgraph Customer["Self-managed"]
   DP["{{site.ai_gateway}}<br/>data plane node(s)"]
 end
 
-DP -->|LLM request| Provider["AI Provider"]
+DP -->|LLM request| Provider["Upstream AI provider"]
 DP -->|MCP request| MCPs["Upstream MCP server"]
 DP -->|A2A request| Agent["Upstream AI agent"]
 
@@ -87,7 +94,7 @@ rows:
 
   - entity: "[AI Model](/ai-gateway/entities/ai-model/)"
     description: |
-      The primary entry point for AI traffic. Declares which upstream AI Providers to route to and which capabilities to expose (such as chat completions, embeddings, and image, audio, video, and realtime generation). Handles load balancing, retries, and format conversion, and emits the usage and cost telemetry that attached logging policies record.
+      The primary entry point for AI traffic. Declares which upstream AI providers to route to and which capabilities to expose (such as chat completions, embeddings, and image, audio, video, and realtime generation). Handles load balancing, retries, and format conversion, and emits the usage and cost telemetry that attached logging policies record.
     references: |
       [Schema](/ai-gateway/entities/ai-model/#schema)
   - entity: "[AI Agent](/ai-gateway/entities/ai-agent/)"
@@ -102,22 +109,22 @@ rows:
       [Schema](/ai-gateway/entities/ai-mcp-server/#schema)
   - entity: "[AI Policy](/ai-gateway/entities/ai-policy/)"
     description: |
-      Applies governance, security, transformation, and observability behavior (rate limiting, sanitization, authentication, logging) to Models, Agents, MCP Servers, Consumers, Consumer Groups, or globally. Each policy is independent.
+      Applies governance, security, transformation, and observability behavior (rate limiting, sanitization, authentication, logging) to AI Models, AI Agents, AI MCP Servers, AI Consumers, AI Consumer Groups, or globally. Each Policy is independent.
     references: |
       [Schema](/ai-gateway/entities/ai-policy/#schema)
   - entity: "[AI Consumer](/ai-gateway/entities/ai-consumer/)"
     description: |
-      Represents a downstream client identity for authentication and access control. Holds an API key credential, can be assigned to AI Consumer Groups, and can have policies attached. OAuth-based authentication is enforced through an AI Policy (such as OpenID Connect) rather than stored as a credential on the consumer.
+      Represents a downstream client identity for authentication and access control. Holds an API key credential, can be assigned to AI Consumer Groups, and can have policies attached. OAuth-based authentication is enforced through an AI Auth Strategy rather than stored as a credential on the AI Consumer.
     references: |
       [Schema](/ai-gateway/entities/ai-consumer/#schema)
   - entity: "[AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)"
     description: |
-      A logical grouping of AI Consumers for bulk policy attachment and ACL management. Used to control access to Models, Agents, and MCP Servers.
+      A logical grouping of AI Consumers for bulk policy attachment and ACL management. Used to control access to AI Models, AI Agents, and AI MCP Servers.
     references: |
       [Schema](/ai-gateway/entities/ai-consumer-group/#schema)
   - entity: "[AI Vault](/ai-gateway/entities/ai-vault/)"
     description: |
-      A centralized place to store or reference secrets (API keys, tokens) used by other entities. Aside from the built-in {{site.konnect_short_name}} config store, an AI Vault registers an external secrets backend (AWS, GCP, Azure, HashiCorp Vault, and others) and resolves references at runtime.
+      A centralized place to store or reference secrets (API keys, tokens) used by other entities. Aside from the built-in {{site.konnect_short_name}} Config Store, an AI Vault registers an external secrets backend (AWS, GCP, Azure, HashiCorp Vault, and others) and resolves references at runtime.
     references: |
       [Schema](/ai-gateway/entities/ai-vault/#schema)
   - entity: "[AI Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/)"
@@ -141,7 +148,7 @@ All three flow through the same data plane and use the same authentication, obse
 
 ## Routing and load balancing
 
-A request routes to a provider based on the AI Model it targets and that model's load-balancing strategy, set through `config.balancer.algorithm`: `round-robin` (the default), `consistent-hashing`, `least-connections`, `lowest-latency`, `lowest-usage` (by token count or cost), `semantic` (route by prompt similarity), or `priority` (weighted, ordered failover). Each provider target carries its own credentials: a static API key, AWS SigV4, Azure managed identity, or a GCP service account. The data plane applies these automatically on the upstream call.
+A request routes to an AI Provider based on the AI Model it targets and that AI Model's load-balancing strategy, set through `config.balancer.algorithm`: `round-robin` (the default), `consistent-hashing`, `least-connections`, `lowest-latency`, `lowest-usage` (by token count or cost), `semantic` (route by prompt similarity), or `priority` (weighted, ordered failover). Each AI Provider target carries its own credentials: a static API key, AWS SigV4, Azure managed identity, or a GCP service account. The data plane applies these automatically on the upstream call.
 
 On an upstream error or timeout, the data plane retries (5 times by default) and fails over to another target. An optional passive circuit breaker, off by default, can eject a target after repeated failures. There are no active health probes: target health is tracked only from real request outcomes. Connections to upstream providers are reused by default, and reuse is disabled automatically when a forward proxy is configured. See [Load balancing](/ai-gateway/load-balancing/) for strategy details and tuning options.
 
@@ -154,7 +161,7 @@ Configuration changes are push-triggered: the control plane notifies connected n
 Data plane nodes also stream telemetry (analytics, logs, health) back to {{site.konnect_short_name}}, which powers {{site.konnect_short_name}} Analytics (Explorer and Dashboards) and attached logging policies. By default, this telemetry includes only usage, cost, and latency metadata, not the LLM, MCP, or A2A request and response bodies. Two opt-in settings change that, and both are off by default:
 
 - `log_payloads`, on [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/), includes full request and response bodies in what attached logging policies receive (including {{site.konnect_short_name}}-bound ones).
-- `log_blocked_content`, on guardrail [AI Policies](/ai-gateway/entities/ai-policy/), forwards only the specific content that triggered a block.
+- `log_blocked_content`, on [guardrail AI Policies](/ai-gateway/policies/?terms=guardrail), forwards only the specific content that triggered a block.
 
 ## Multi-tenancy and isolation
 
@@ -184,7 +191,7 @@ This gives you per-team, per-environment, or per-region isolation.
 
 An {{site.ai_gateway}} instance is its own top-level resource in {{site.konnect_short_name}}, distinct from {{site.base_gateway}} control planes: it doesn't share entities, data planes, credentials, consumers, or plugins with them. The two can run in the same {{site.konnect_short_name}} organization without interference.
 
-{{site.ai_gateway}} and {{site.base_gateway}} can't share a {{site.konnect_short_name}} Workspace: a Workspace subdivides a single {{site.base_gateway}} control plane, so {{site.ai_gateway}} instances can't participate. Isolation between the two happens one level up, at the control-plane boundary: each is its own top-level resource in {{site.konnect_short_name}}.
+{{site.ai_gateway}} and {{site.base_gateway}} can't share a {{site.konnect_short_name}} Workspace: a Workspace subdivides a single {{site.base_gateway}} control plane, so {{site.ai_gateway}} instances can't participate. Isolation between the two happens one level up, at the control plane boundary: each is its own top-level resource in {{site.konnect_short_name}}.
 
 ## Deployment topologies
 
