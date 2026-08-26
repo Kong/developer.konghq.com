@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 description: 'Score prompt-response pairs with a dedicated LLM to evaluate the accuracy and quality of model responses.'
 categories:
   - ai
