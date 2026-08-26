@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 description: Prepend or append an array of messages to a user's chat history.
 categories:
   - ai
