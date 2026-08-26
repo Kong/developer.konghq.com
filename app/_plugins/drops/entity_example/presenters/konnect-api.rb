@@ -18,7 +18,10 @@ module Jekyll
             end
 
             def data
-              @data ||= @example_drop.data
+              @data ||= Utils::VariableReplacer::Data.run(
+                data: @example_drop.data,
+                variables: variables
+              )
             end
 
             def template_file

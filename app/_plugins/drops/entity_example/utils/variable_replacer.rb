@@ -111,6 +111,7 @@ module Jekyll
 
           class KongctlData
             SENTINEL_PATTERN = /__kongctl_env_([A-Z][A-Z0-9_]*)__/
+            SECRET_SENTINEL_PATTERN = /__kongctl_secret_env_([A-Z][A-Z0-9_]*)__/
             AI_GATEWAY_LOOKUP_SENTINEL = '__kongctl_lookup_ai_gateway__'
             ENV_VAR_PATTERN = /\A\$([A-Z][A-Z0-9_]*)\z/
 
@@ -120,6 +121,7 @@ module Jekyll
 
             def self.apply_tags(yaml)
               yaml
+                .gsub(SECRET_SENTINEL_PATTERN, '!secret {source: !env \1}')
                 .gsub(SENTINEL_PATTERN, '!env \1')
                 .gsub(AI_GATEWAY_LOOKUP_SENTINEL, '!lookup name:ai-gateway-name')
             end
@@ -143,9 +145,21 @@ module Jekyll
               return str if @variables.empty?
 
               keys_pattern = @variables.keys.map { |k| Regexp.escape(k.to_s) }.join('|')
-              str.gsub(/\$\{(#{keys_pattern})\}/) do
-                @variables.dig(Regexp.last_match(1), 'value') || Regexp.last_match(0)
-              end
+              str.gsub(/\$\{(#{keys_pattern})\}/) { replace_variable(Regexp.last_match(1)) || Regexp.last_match(0) }
+            end
+
+            def replace_variable(variable)
+              value = @variables.dig(variable, 'value')
+              return nil unless value
+
+              @variables.dig(variable, 'secret') ? secret_sentinel(value) : value
+            end
+
+            def secret_sentinel(value)
+              match = ENV_VAR_PATTERN.match(value)
+              return value unless match
+
+              "__kongctl_secret_env_#{match[1]}__"
             end
 
             def transform_env_var(str)

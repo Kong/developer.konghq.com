@@ -5,7 +5,9 @@ require_relative '../../../../../../app/_plugins/drops/entity_example/utils/vari
 
 RSpec.describe Jekyll::Drops::EntityExample::Utils::VariableReplacer::KongctlData do
   describe '.run' do
-    subject(:result) { described_class.run(data:) }
+    subject(:result) { described_class.run(data:, variables:) }
+
+    let(:variables) { {} }
 
     context 'with a string matching $UPPERCASE_VAR' do
       let(:data) { '$MY_API_KEY' }
@@ -62,6 +64,27 @@ RSpec.describe Jekyll::Drops::EntityExample::Utils::VariableReplacer::KongctlDat
 
       it { is_expected.to eq({ 'timeout' => 60_000, 'enabled' => true }) }
     end
+
+    context 'with a declared variable substituted via ${var}' do
+      let(:data) { '${auth_header}' }
+      let(:variables) { { 'auth_header' => { 'value' => '$OPENAI_AUTH_HEADER' } } }
+
+      it { is_expected.to eq('__kongctl_env_OPENAI_AUTH_HEADER__') }
+    end
+
+    context 'with a secret declared variable substituted via ${var}' do
+      let(:data) { '${auth_header}' }
+      let(:variables) { { 'auth_header' => { 'value' => '$OPENAI_AUTH_HEADER', 'secret' => true } } }
+
+      it { is_expected.to eq('__kongctl_secret_env_OPENAI_AUTH_HEADER__') }
+    end
+
+    context 'with a secret declared variable whose value is not an env var' do
+      let(:data) { '${label}' }
+      let(:variables) { { 'label' => { 'value' => 'plain-value', 'secret' => true } } }
+
+      it { is_expected.to eq('plain-value') }
+    end
   end
 
   describe '.apply_tags' do
@@ -83,6 +106,12 @@ RSpec.describe Jekyll::Drops::EntityExample::Utils::VariableReplacer::KongctlDat
       let(:yaml) { "url: https://example.com\n" }
 
       it { is_expected.to eq("url: https://example.com\n") }
+    end
+
+    context 'with a secret sentinel' do
+      let(:yaml) { "value: __kongctl_secret_env_OPENAI_AUTH_HEADER__\n" }
+
+      it { is_expected.to eq("value: !secret {source: !env OPENAI_AUTH_HEADER}\n") }
     end
   end
 end
