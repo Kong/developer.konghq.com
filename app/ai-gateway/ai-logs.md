@@ -24,6 +24,12 @@ related_resources:
     url: /ai-gateway/policies/?category=logging
   - text: Add Correlation IDs to {{site.ai_gateway}} logs
     url: /how-to/add-correlation-ids-to-gateway-logs/
+  - text: "{{site.ai_gateway}} audit log reference"
+    url: /ai-gateway/ai-audit-log-reference/
+  - text: Monitor AI LLM metrics (Prometheus)
+    url: /ai-gateway/monitor-ai-llm-metrics/
+  - text: "Gen AI OpenTelemetry metrics reference"
+    url: /ai-gateway/ai-otel-metrics/
 
 works_on:
   - konnect
@@ -35,7 +41,7 @@ The information in this reference doc helps you understand and modify {{site.ai_
 
 ## Where are {{site.ai_gateway}} logs located?
 
-By default, you can view {{site.ai_gateway}} logs at `/usr/local/kong/logs/error.log`. If you are running a {{site.ai_gateway}} data plane in Docker, you can also view them from your Docker container.
+By default, you can view {{site.ai_gateway}} logs at `/usr/local/kong/logs/error.log`. If you're running an {{site.ai_gateway}} data plane in Docker, you can also view them from your Docker container.
 
 ## Log levels
 
@@ -83,13 +89,13 @@ rows:
   - usecase: "Keep the log level of new nodes added to the cluster in sync with other nodes in the cluster"
     config: |
       Change the [`log_level`](/gateway/configuration/#log-level) entry in `kong.conf` to `KONG_LOG_LEVEL`, and start every new node with the `KONG_LOG_LEVEL` env variable set.
-  - usecase: "Change the log level of all Control Plane {{site.ai_gateway}} nodes"
+  - usecase: "Change the log level of all control plane {{site.ai_gateway}} nodes"
     config: "[`/debug/cluster/control-planes-nodes/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/create-debug-cluster-control-planes-nodes-log-level)"
 {% endtable %}
 <!--vale on-->
 
 {:.info}
-> <sup>1</sup>: You can't change the log level of the Data Plane or DB-less nodes.
+> <sup>1</sup>: You can't change the log level of the data plane or DB-less nodes.
 
 
 ## Find specific client requests in logs
@@ -170,7 +176,7 @@ For this example, we're using the following:
 
 Once you've adjusted the Nginx template for your environment, you need to tell {{site.ai_gateway}} to use the newly created log, `show_everything`.
 
-To do this, alter the {{site.ai_gateway}} variable `proxy_access_log` by either editing `etc/kong/kong.conf` or using the environmental variable `KONG_PROXY_ACCESS_LOG` adjust the default location:
+To do this, alter the {{site.ai_gateway}} variable `proxy_access_log` by either editing `etc/kong/kong.conf` or using the environmental variable `KONG_PROXY_ACCESS_LOG` and adjust the default location:
 
 ```sh
 proxy_access_log=logs/access.log show_everything if=$keeplog
@@ -180,7 +186,7 @@ Restart {{site.ai_gateway}} to apply changes with the `kong restart` command.
 
 Now, any request made with an email address in it will no longer be logged.
 
-## {{site.ai_gateway}} logs
+## {{site.ai_gateway}} Policy logs
 
 {{site.ai_gateway}} collects logs for the [{{site.ai_gateway}} Policies](/ai-gateway/policies/). This allows you to aggregate AI usage analytics across various providers.
 
