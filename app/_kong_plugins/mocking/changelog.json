@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.14": [
+    {
+      "message": "Fixed a memory leak where the plugin config cache did not use weak keys due to a misspelled `__mode` metatable field.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where path match pattern failed when `()[]` were in the path pattern.\n",

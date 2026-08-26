@@ -54,6 +54,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.14": [
+    {
+      "message": "Fixed an issue where `kong_nginx_requests_total` and `kong_nginx_connections_total` duplicated the `http` values under the `stream` subsystem. They are now exported once under `http`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added a new label `type` for `http_requests_total` and `stream_sessions_total` metrics providing more specific information.\n",

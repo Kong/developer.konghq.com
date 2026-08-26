@@ -20,6 +20,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.14": [
+    {
+      "message": "Hardened signature validation against XML Signature Wrapping. The\nplugin now checks that the signature `Reference URI` is a same-document\nfragment that names the `ID` of the element it digests and consumes, so a\nsignature can no longer be bound to a different element than the one that\nprovides the identity. A response whose reference URI is empty or not a\nsame-document fragment is now rejected.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue that caused a crash when the NameID Format was set to `Unspecified`.",

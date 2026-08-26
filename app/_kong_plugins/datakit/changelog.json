@@ -95,6 +95,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.14": [
+    {
+      "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added json_to_xml node to support converting JSON or lua table to XML data.",
