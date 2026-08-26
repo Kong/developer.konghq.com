@@ -74,6 +74,7 @@ Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request tra
 ai_gateway_policies:
   - ref: claude-code-compat
     name: claude-code-compat
+    display_name: claude-code-compat
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: request-transformer-advanced
     enabled: true

@@ -97,6 +97,7 @@ ai_gateway_model_providers:
 ai_gateway_policies:
   - ref: my-ai-aws-guardrails-policy
     name: my-ai-aws-guardrails-policy
+    display_name: my-ai-aws-guardrails-policy
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: ai-aws-guardrails
     enabled: true

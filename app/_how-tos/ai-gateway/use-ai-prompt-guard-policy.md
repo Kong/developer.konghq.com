@@ -71,6 +71,7 @@ ai_gateway_model_providers:
 ai_gateway_policies:
   - ref: my-ai-prompt-guard-policy
     name: my-ai-prompt-guard-policy
+    display_name: my-ai-prompt-guard-policy
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: ai-prompt-guard
     enabled: true
