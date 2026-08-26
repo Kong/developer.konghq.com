@@ -5,28 +5,33 @@ works_on:
   - konnect
 products:
   - ai-gateway
+categories:
+  - ai
+tags:
+  - ai
+  - safety
+  - dlp
 content_type: plugin
+description: 'Semantically and intelligently create allow and deny lists of topics that can be requested across an LLM.'
 related_resources:
   - text: AI Semantic Prompt Guard Policy
     url: /ai-gateway/policies/ai-semantic-prompt-guard/
 ---
 
-The AI Prompt Guard Policy lets you configure a series of [PCRE-compatible](https://www.pcre.org/) regular expressions as allow or deny lists,
-to guard against misuse of text completion requests.
+The AI Prompt Guard Policy lets you configure a series of [PCRE-compatible](https://www.pcre.org/) regular expressions as allow or deny lists, to guard against misuse of text completion requests.
 
-You can use this Policy to allow or block specific prompts, words, phrases, or otherwise have more control over how an LLM service is
-used when called via {{site.ai_gateway}}.
+You can use this AI Policy to allow or block specific prompts, words, phrases, or otherwise have more control over how an LLM model is used when called via {{site.ai_gateway}}.
 
 It does this by scanning all chat messages where the role is `user` for the specific expressions set.
 
-You can use a combination of `allow` and `deny` rules to preserve integrity and compliance when serving an LLM service using {{site.ai_gateway}}.
+You can use a combination of `allow` and `deny` rules to preserve integrity and compliance when serving an LLM model using {{site.ai_gateway}}.
 
 * **For `llm/v1/chat` type models**: You can optionally configure the Policy to ignore existing chat history, wherein it will only scan the trailing `user` message.
 * **For `llm/v1/completions` type models**: There is only one `prompt` field, thus the whole prompt is scanned on every request.
 
 ## How it works
 
-This Policy matches lists of regular expressions to requests routed through the {{site.ai_gateway}}.
+The AI Prompt Guard Policy matches lists of regular expressions to requests routed through the {{site.ai_gateway}}.
 
 The matching behavior is as follows:
 * If any `deny` expressions are set, and the request matches any regex pattern in the `deny` list, the caller receives a 400 Bad Request response.
