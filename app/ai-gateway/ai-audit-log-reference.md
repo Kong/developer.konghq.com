@@ -21,18 +21,24 @@ related_resources:
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} logs"
     url: /ai-gateway/ai-logs/
+  - text: Monitor AI LLM metrics (Prometheus)
+    url: /ai-gateway/monitor-ai-llm-metrics/
+  - text: "Gen AI OpenTelemetry metrics reference"
+    url: /ai-gateway/ai-otel-metrics/
+  - text: Model cost management
+    url: /ai-gateway/model-cost-management/
 
 works_on:
   - konnect
 ---
 
-{{site.ai_gateway}} emits structured analytics logs for [AI Policies](/ai-gateway/policies/) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-ai-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running a Data Plane in a containerized environment. 
+{{site.ai_gateway}} emits structured analytics logs for [AI Policies](/ai-gateway/policies/) following the same patterns as {{site.base_gateway}}. This means {{site.ai_gateway}} logs are written to [the same locations](/ai-gateway/ai-logs/#where-are-ai-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running a data plane in a containerized environment. 
 
 You can set the [global log level](/ai-gateway/ai-logs/#configure-log-levels) for {{site.ai_gateway}} via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
 
 When operating {{site.ai_gateway}} alongside {{site.base_gateway}}, logs are stored separately in each product's run time environment.
 
-You can also use [logging Policies](/ai-gateway/policies/) to route these logs to external systems, such as file systems, log aggregators, or monitoring tools.
+You can also use [logging Policies](/ai-gateway/policies/?category=logging) to route these logs to external systems, such as file systems, log aggregators, or monitoring tools.
 
 ## Log details
 
@@ -152,10 +158,10 @@ rows:
        The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.aws-guardrails.input_block_consumer_id`"
     description: |
-       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose request was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.proxy.aws-guardrails.output_block_consumer_id`"
     description: |
-       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose response was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.proxy.aws-guardrails.guards_triggered_count`"
     description: |
        A counter that increments each time a block is triggered on either the input or output within a single request.
@@ -199,10 +205,10 @@ rows:
        The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.gcp-model-armor.input_block_consumer_id`"
     description: |
-       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose request was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.proxy.gcp-model-armor.output_block_consumer_id`"
     description: |
-       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose response was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.proxy.gcp-model-armor.guards_triggered_count`"
     description: |
        A counter that increments each time a block is triggered on either the input or output within a single request.
@@ -269,10 +275,10 @@ rows:
        The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.azure-content-safety.input_block_consumer_id`"
     description: |
-       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose request was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.proxy.azure-content-safety.output_block_consumer_id`"
     description: |
-       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose response was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.proxy.azure-content-safety.guards_triggered_count`"
     description: |
        A counter that increments each time a block is triggered on either the input or output within a single request.
@@ -326,10 +332,10 @@ rows:
        The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.lakera-guard.input_block_consumer_id`"
     description: |
-       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose request was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.proxy.lakera-guard.output_block_consumer_id`"
     description: |
-       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose response was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.proxy.lakera-guard.guards_triggered_count`"
     description: |
        A counter that increments each time a block is triggered on either the input or output within a single request.
@@ -343,7 +349,7 @@ rows:
 
 ### AI Custom Guardrail logs 
 
-If you use the [AI Custom Guardrail Policy](/ai-gateway/policies/ai-custom-guardrail/), {{site.ai_gateway}} logs include additional fields under the `custom-guardrail` object. These fields record guardrail processing latency, block reasons, and the source and consumer identity associated with any triggered guards.
+If you use the [AI Custom Guardrail Policy](/ai-gateway/policies/ai-custom-guardrail/), {{site.ai_gateway}} logs include additional fields under the `custom-guardrail` object. These fields record guardrail processing latency, block reasons, and the source and AI Consumer identity associated with any triggered guards.
 
 The following fields appear in structured AI logs when the AI Custom Guardrail Policy is enabled:
 
@@ -370,9 +376,9 @@ rows:
   - property: "`ai.proxy.custom-guardrail.output_block_source`"
     description: The source that triggered the output block. Empty if the output was not blocked.
   - property: "`ai.proxy.custom-guardrail.input_block_consumer_id`"
-    description: The consumer ID associated with the blocked input request. Set to `unknown` if the consumer can't be identified.
+    description: the AI Consumer ID associated with the blocked input request. Set to `unknown` if the AI Consumer can't be identified.
   - property: "`ai.proxy.custom-guardrail.output_block_consumer_id`"
-    description: The consumer ID associated with the blocked output response. Empty if the output was not blocked.
+    description: the AI Consumer ID associated with the blocked output response. Empty if the output was not blocked.
   - property: "`ai.proxy.custom-guardrail.guards_triggered_count`"
     description: The number of individual guard rules that were triggered during the request.
 {% endtable %}
@@ -408,10 +414,10 @@ rows:
        The name of the Policy that blocked the response. Empty if the response was allowed.
   - property: "`ai.sanitizer.input_block_consumer_id`"
     description: |
-       The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose request was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.sanitizer.output_block_consumer_id`"
     description: |
-       The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+       The ID of the AI Consumer whose response was blocked, or `unknown` if no AI Consumer identity was resolved.
   - property: "`ai.sanitizer.guards_triggered_count`"
     description: |
        A counter that increments each time a block is triggered on either the input or output within a single request.
@@ -532,11 +538,6 @@ rows:
 
 If you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
 
-{:.info}
-> **Note:** Unlike other available AI Policies, the AI MCP Policy is not invoked as part of an AI request.
-> Instead, it is registered and executed as a regular Policy, allowing it to capture MCP traffic independently of AI request flow.
-> Do not configure the AI MCP Policy together with other `ai-*` Policies on the same service or route.
-
 The MCP log structure groups traffic by **MCP session ID**, with each session containing zero or more recorded JSON-RPC requests:
 
 <!-- vale off -->
@@ -581,13 +582,13 @@ rows:
       The access control decision: `allow` or `deny`.
   - property: "`ai.mcp.audit[].consumer.name`"
     description: |
-      The name of the consumer making the request.
+      The name of the AI Consumer making the request.
   - property: "`ai.mcp.audit[].consumer.id`"
     description: |
-      The UUID of the consumer.
+      The UUID of the AI Consumer.
   - property: "`ai.mcp.audit[].consumer.identifier`"
     description: |
-      The type of consumer identifier (for example, `consumer_group`).
+      The type of AI Consumer identifier (for example, `consumer_group`).
   - property: "`ai.mcp.audit[].scope`"
     description: |
       The scope of the access control check.
