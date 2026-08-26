@@ -121,8 +121,8 @@ rows:
                     The [new {{site.konnect_catalog}} experience](/catalog/) is a unified, platform-level home for your interfaces. Here's how it compares
                     to {{site.konnect_catalog}} Classic:
 
-                    * **AI Models**: The new {{site.konnect_catalog}} adds support for AI Models as a first-class interface, with more interface
-                      types coming.
+                    * **AI Models**: The new {{site.konnect_catalog}} adds support for AI Models as a first-class interface. You can opt to link these to {{site.ai_gateway}} 2.0 AI Model entities.
+                    * **Agents (beta)**: The new {{site.konnect_catalog}} introduces Agents as a first-class interface. You can opt to link these to {{site.ai_gateway}} 2.0 AI Agent entities.
                     * **Continued support for APIs, API packages, and MCP Registries**: APIs, API packages, and MCP Registries (tech preview) work the same way in both experiences. APIs and API packages migrate over.
 
                     Services, Scorecards, and Integrations are only compatible with {{site.konnect_catalog}} Classic.
