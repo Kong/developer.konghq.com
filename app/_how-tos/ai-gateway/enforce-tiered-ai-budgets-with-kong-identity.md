@@ -2,7 +2,7 @@
 title: Enforce tiered AI budgets on AI Models with {{site.identity}}
 permalink: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
 content_type: how_to
-description: Attach an AI Identity Provider backed by {{site.identity}}, per-model ACLs across a standard and a premium AI Model, and a multi-ceiling AI Rate Limiting Advanced Policy to enforce tiered AI budgets from a claim.
+description: Attach an AI Auth Strategy backed by {{site.identity}}, per-model ACLs across a standard and a premium AI Model, and a multi-ceiling AI Rate Limiting Advanced Policy to enforce tiered AI budgets from a claim.
 
 products:
   - ai-gateway
@@ -15,7 +15,7 @@ min_version:
 
 entities:
   - ai-consumer-group
-  - ai-identity-provider
+  - ai-auth-strategy
   - ai-model
   - ai-model-provider
   - ai-policy
@@ -37,7 +37,7 @@ tags:
 tldr:
   q: How do I enforce tiered AI budgets from a {{site.identity}} claim?
   a: |
-    Create an AI Identity Provider backed by {{site.identity}}, then a standard and a premium AI Model that both authenticate through it but deny different AI Consumer Groups. Attach an AI Rate Limiting Advanced Policy with a ceiling per tier plus a shared org pool and an individual cap: every matching ceiling is charged, and the lowest one binds no matter which model handles the request.
+    Create an AI Auth Strategy backed by {{site.identity}}, then a standard and a premium AI Model that both authenticate through it but deny different AI Consumer Groups. Attach an AI Rate Limiting Advanced Policy with a ceiling per tier plus a shared org pool and an individual cap: every matching ceiling is charged, and the lowest one binds no matter which model handles the request.
 
 tools:
   - kongctl
@@ -51,11 +51,11 @@ prereqs:
         Complete [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) first. You need its `$ISSUER_URL` and each persona's client ID and secret.
 
 related_resources:
-  - text: AI Identity Provider entity
-    url: /ai-gateway/entities/ai-identity-provider/
+  - text: AI Auth Strategy entity
+    url: /ai-gateway/entities/ai-auth-strategy/
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
-  - text: AI Rate Limiting Advanced policy
+  - text: AI Rate Limiting Advanced Policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
   - text: Set up a {{site.identity}} auth server for tiered AI budgets
     url: /ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/
@@ -70,10 +70,10 @@ cleanup:
 faqs:
   - q: Why do only two AI Consumer Groups exist when there are three tiers and a cap?
     a: |
-      Tiers and the cap are matched from headers the AI Identity Provider projects out of the token, not from AI Consumer Group entities, so a tier change never writes anything to {{site.ai_gateway}}. Only `contractors` and `suspended` need a matching AI Consumer Group, because `access.acls` compares against real group names.
+      Tiers and the cap are matched from headers the AI Auth Strategy projects out of the token, not from AI Consumer Group entities, so a tier change never writes anything to {{site.ai_gateway}}. Only `contractors` and `suspended` need a matching AI Consumer Group, because `access.acls` compares against real group names.
   - q: Why do budget-identity's config fields include `consumer_groups_claim` and `upstream_headers_claims`?
     a: |
-      These project the `kong_groups`, `budget_tier`, `budget_org`, and `budget_cap` claims from the token onto `x-budget-*` request headers and the ACL groups {{site.ai_gateway}} checks. `kongctl` (1.12.0 and later) applies them directly as part of the AI Identity Provider's `config`, no separate step required.
+      These project the `kong_groups`, `budget_tier`, `budget_org`, and `budget_cap` claims from the token onto `x-budget-*` request headers and the ACL groups {{site.ai_gateway}} checks. `kongctl` (1.12.0 and later) applies them directly as part of the AI Auth Strategy's `config`, no separate step required.
   - q: What happens to a caller with no resolvable claim at all?
     a: |
       `consumer_groups_optional: true` means a missing or unrecognized group claim doesn't fail the request. The fail-safe policy, matched on nothing but the subject header, then bounds that caller at the same ceiling as the top tier instead of leaving them unlimited.
@@ -84,14 +84,14 @@ faqs:
 
 ## Overview
 
-[Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) issued each of five example callers a token carrying its tier, individual spend cap, shared org pool, and group membership as claims. This guide connects those tokens to {{site.ai_gateway}}: an AI Identity Provider verifies each token and projects its claims onto request headers, a standard and a premium AI Model both check those headers but deny different callers, and an AI Rate Limiting Advanced Policy enforces a spend ceiling per tier, plus the shared org pool and individual cap from the previous guide.
+[Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) issued each of five example callers a token carrying its tier, individual spend cap, shared org pool, and group membership as claims. This guide connects those tokens to {{site.ai_gateway}}: an AI Auth Strategy verifies each token and projects its claims onto request headers, a standard and a premium AI Model both check those headers but deny different callers, and an AI Rate Limiting Advanced Policy enforces a spend ceiling per tier, plus the shared org pool and individual cap from the previous guide.
 
-## Create the AI Consumer Groups, AI Identity Provider, AI Model Provider, and AI Models
+## Create the AI Consumer Groups, AI Auth Strategy, AI Model Provider, and AI Models
 
 Create the following:
 
 * Two [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/), `contractors` and `suspended`, that `access.acls` denies.
-* An [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) that verifies bearer tokens against your {{site.identity}} issuer.
+* An [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that verifies bearer tokens against your {{site.identity}} issuer.
 * An [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for the upstream OpenAI credentials.
 * A standard and a premium [AI Model](/ai-gateway/entities/ai-model/) that share a route and an [AI Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/), but differ in which groups `access.acls` denies.
 
@@ -107,7 +107,7 @@ ai_gateway_consumer_groups:
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: suspended
     name: suspended
-ai_gateway_identity_providers:
+ai_gateway_auth_strategies:
   - ref: budget-identity
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Budget identity"
@@ -182,7 +182,7 @@ ai_gateway_models:
     formats: [{ type: openai }]
     capabilities: [generate]
     access:
-      identity_providers:
+      auth_strategies:
         - !ref budget-identity#name
       acls:
         deny:
@@ -211,7 +211,7 @@ ai_gateway_models:
     formats: [{ type: openai }]
     capabilities: [generate]
     access:
-      identity_providers:
+      auth_strategies:
         - !ref budget-identity#name
       acls:
         deny:
