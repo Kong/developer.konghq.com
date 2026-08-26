@@ -63,6 +63,7 @@ data:
 variables:
   key:
     value: $DATABRICKS_TOKEN
+    secret: true
     description: "The access token used to connect to Databricks. Include the `Bearer` prefix, for example `Bearer <your-access-token>`."
 {% endentity_example %}
 

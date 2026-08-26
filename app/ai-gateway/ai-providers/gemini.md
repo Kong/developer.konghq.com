@@ -80,6 +80,7 @@ data:
 variables:
   key:
     value: $GEMINI_API_KEY
+    secret: true
     description: The API key used to connect to Gemini.
 {% endentity_example %}
 

@@ -62,5 +62,6 @@ data:
 variables:
   key:
     value: $KIMI_TOKEN
+    secret: true
     description: "The API token used to connect to Kimi. Include the `Bearer` prefix, for example `Bearer <your-api-token>`."
 {% endentity_example %}

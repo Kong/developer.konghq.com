@@ -65,5 +65,6 @@ data:
 variables:
   key:
     value: $XAI_API_KEY
+    secret: true
     description: "The API key used to connect to xAI. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}

@@ -63,6 +63,7 @@ data:
 variables:
   key:
     value: $MISTRAL_API_KEY
+    secret: true
     description: "The API key used to connect to Mistral. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
 

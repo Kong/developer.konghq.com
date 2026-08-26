@@ -38,7 +38,7 @@ related_resources:
     url: /ai-gateway/entities/ai-model/
 
 faqs:
-  - q: How do I use Cohere's document-grounded chat for RAG pipelines?
+  - q: How do I use Cohere's Rerank API to improve RAG retrieval quality?
     a: |
       {% include md/ai-gateway/v2/faqs/cohere-rerank.md %}
 
@@ -70,5 +70,6 @@ data:
 variables:
   key:
     value: $COHERE_API_KEY
+    secret: true
     description: "The API key used to connect to Cohere. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
