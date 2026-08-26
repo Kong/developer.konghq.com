@@ -6,6 +6,25 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: 'Inspect and enforce Lakera Guard safety policies on LLM requests and responses before they reach upstream models.'
+categories:
+  - ai
+tags:
+  - ai
+  - safety
+related_resources:
+  - text: AI Custom Guardrail Policy
+    url: /ai-gateway/policies/ai-custom-guardrail/
+  - text: AI GCP Model Armor Policy
+    url: /ai-gateway/policies/ai-gcp-model-armor/
+  - text: AI Azure Content Safety Policy
+    url: /ai-gateway/policies/ai-azure-content-safety/
+  - text: AI AWS Guardrails Policy
+    url: /ai-gateway/policies/ai-aws-guardrails/
+  - text: Use the AI AWS Guardrails Policy
+    url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
+  - text: "{{site.ai_gateway}} audit log reference"
+    url: /ai-gateway/ai-audit-log-reference/#ai-lakera-guard-logs
 ---
 
 The AI Lakera Guard Policy evaluates requests and responses that pass through {{site.ai_gateway}} to Large Language Models (LLMs). It uses the [Lakera Guard SaaS service](https://www.lakera.ai/) to detect safety policy violations and block unsafe content before it reaches upstream LLMs or returns to clients. The AI Lakera Guard Policy supports multiple inspection modes and guards both inbound prompts and outbound model outputs.
