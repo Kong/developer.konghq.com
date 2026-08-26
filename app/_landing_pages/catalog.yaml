@@ -86,6 +86,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: "MCP servers"
+              description: |
+                Model individual MCP servers as first-class interfaces in {{site.konnect_catalog}}.
+              icon: /assets/icons/mcp.svg
+              cta:
+                text: Learn about MCP servers
+                url: /catalog/mcp-servers/
+      - blocks:
+          - type: card
+            config:
               title: "MCP Registries (tech preview)"
               description: |
                 Register and discover MCP servers as first-class interfaces in {{site.konnect_catalog}}.
