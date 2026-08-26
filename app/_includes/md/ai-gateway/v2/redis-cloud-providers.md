@@ -31,19 +31,18 @@ To configure cloud authentication with Redis, add the following parameters to yo
 
 ```yaml
 config:
-  vectordb:
-    strategy: redis
-    redis:
-      host: $INSTANCE_ADDRESS
-      username: $INSTANCE_USERNAME
-      port: 6379
-      cloud_authentication:
-        auth_provider: aws
-        aws_cache_name: $AWS_CACHE_NAME
-        aws_is_serverless: false
-        aws_region: $AWS_REGION
-        aws_access_key_id: $AWS_ACCESS_KEY_ID
-        aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
+  strategy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    username: $INSTANCE_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: aws
+      aws_cache_name: $AWS_CACHE_NAME
+      aws_is_serverless: false
+      aws_region: $AWS_REGION
+      aws_access_key_id: $AWS_ACCESS_KEY_ID
+      aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
 
 Replace the following with your actual values:
@@ -82,21 +81,20 @@ To configure cloud authentication with Redis, add the following parameters to yo
 
 ```yaml
 config:
-  vectordb:
-    strategy: redis
-    redis:
-      cluster_nodes:
-      - ip: $CLUSTER_ADDRESS
-        port: 6379
-      username: $CLUSTER_USERNAME
+  strategy: redis
+  redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
       port: 6379
-      cloud_authentication:
-        auth_provider: aws
-        aws_cache_name: $AWS_CACHE_NAME
-        aws_is_serverless: false
-        aws_region: $AWS_REGION
-        aws_access_key_id: $AWS_ACCESS_KEY_ID
-        aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
+    username: $CLUSTER_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: aws
+      aws_cache_name: $AWS_CACHE_NAME
+      aws_is_serverless: false
+      aws_region: $AWS_REGION
+      aws_access_key_id: $AWS_ACCESS_KEY_ID
+      aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
 
 Replace the following with your actual values:
@@ -117,17 +115,16 @@ To configure cloud authentication with Redis, add the following parameters to yo
 
 ```yaml
 config:
-  vectordb:
-    strategy: redis
-    redis:
-      host: $INSTANCE_ADDRESS
-      username: $INSTANCE_USERNAME
-      port: 10000
-      cloud_authentication:
-        auth_provider: azure
-        azure_client_id: $AZURE_CLIENT_ID
-        azure_client_secret: $AZURE_CLIENT_SECRET
-        azure_tenant_id: $AZURE_TENANT_ID
+  strategy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    username: $INSTANCE_USERNAME
+    port: 10000
+    cloud_authentication:
+      auth_provider: azure
+      azure_client_id: $AZURE_CLIENT_ID
+      azure_client_secret: $AZURE_CLIENT_SECRET
+      azure_tenant_id: $AZURE_TENANT_ID
 ```
 
 Replace the following with your actual values:
@@ -148,19 +145,18 @@ To configure cloud authentication with Redis, add the following parameters to yo
 
 ```yaml
 config:
-  vectordb:
-    strategy: redis
-    redis:
-      cluster_nodes:
-      - ip: $CLUSTER_ADDRESS
-        port: 10000
-      username: $CLUSTER_USERNAME
+  strategy: redis
+  redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
       port: 10000
-      cloud_authentication:
-        auth_provider: azure
-        azure_client_id: $AZURE_CLIENT_ID
-        azure_client_secret: $AZURE_CLIENT_SECRET
-        azure_tenant_id: $AZURE_TENANT_ID
+    username: $CLUSTER_USERNAME
+    port: 10000
+    cloud_authentication:
+      auth_provider: azure
+      azure_client_id: $AZURE_CLIENT_ID
+      azure_client_secret: $AZURE_CLIENT_SECRET
+      azure_tenant_id: $AZURE_TENANT_ID
 ```
 
 Replace the following with your actual values:
@@ -183,14 +179,13 @@ To configure cloud authentication with Redis, add the following parameters to yo
 
 ```yaml
 config:
-  vectordb:
-    strategy: redis
-    redis:
-      host: $INSTANCE_ADDRESS
-      port: 6379
-      cloud_authentication:
-        auth_provider: gcp
-        gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+  strategy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
 
 Replace the following with your actual values:
@@ -209,16 +204,15 @@ To configure cloud authentication with Redis, add the following parameters to yo
 
 ```yaml
 config:
-  vectordb:
-    strategy: redis
-    redis:
-      cluster_nodes:
-      - ip: $CLUSTER_ADDRESS
-        port: 6379
+  strategy: redis
+  redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
       port: 6379
-      cloud_authentication:
-        auth_provider: gcp
-        gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+    port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
 
 Replace the following with your actual values:

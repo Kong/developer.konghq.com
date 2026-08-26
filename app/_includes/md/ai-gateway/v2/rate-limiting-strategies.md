@@ -32,8 +32,11 @@ rows:
 {:.info}
 > **\[1\]**: Only when [`config.sync_rate`](./reference/#schema--config-sync-rate) option is set to `0` (synchronous behavior).
 
+{% comment %}
+COMMENTING THIS OUT BECAUSE SERVERLESS DOES NOT SUPPORT AIGW 2.0
 {:.info}
 > On Serverless deployments, only the `local` strategy is supported.
+{% endcomment %}
 
 Two common use cases for rate limiting are:
 
