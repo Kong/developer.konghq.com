@@ -61,10 +61,10 @@ faqs:
 Create an AI Policy when you want to add governance, security, transformation, or observability to {{site.ai_gateway}} traffic. For example:
 - Redact sensitive data with [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/)
 - Manage request volume with [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/)
-- Validate prompts with [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) or [other guardrail Policies](/ai-gateway/#guardrails-and-content-safety)
+- Validate prompts with [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) or [other guardrail Policies](/ai-gateway/policies/?terms=guardrail)
 - Track requests and responses for observability with [logging Policies](/ai-gateway/policies/?category=logging)
 
-To control access and verify identity, assign an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) instead of an AI Policy.
+To control access and verify identity, assign an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) instead of an AI Policy.
 
 **Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies, not configurations shared with other parts of your gateway.
 

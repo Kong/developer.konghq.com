@@ -433,8 +433,8 @@ Some upstream services don't accept bearer tokens or API keys at all, and only a
 
 {{site.ai_gateway}} signs each proxied request using the credentials you provide:
 
-* Static IAM user credentials, `access_key_id` and `secret_access_key`, optionally paired with a `session_token` for temporary credentials.
-* Environment auto-detection when you omit `access_key_id` and `secret_access_key`, for example, an EC2 instance profile or environment variables.
+* Static IAM user credentials, `access_key_id` and `secret_access_key`, optionally paired with a `session_token` for temporary credentials
+* Environment auto-detection when you omit `access_key_id` and `secret_access_key`, for example, an EC2 instance profile or environment variables
 * Role assumption through `assume_role_arn` and `role_session_name`, layered on top of either credential source. Recommended for production use and cross-account access.
 
 Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
