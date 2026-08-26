@@ -20,6 +20,7 @@ related_resources:
 
 works_on:
   - on-prem
+  - konnect
 
 tags:
   - sbom
