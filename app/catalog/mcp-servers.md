@@ -27,6 +27,12 @@ related_resources:
     url: /catalog/mcp-registry/
   - text: "AI Models"
     url: /catalog/ai-models/
+
+faqs:
+  - q: |
+      {% include faqs/mcp-server-vs-registry.md section='question' %}
+    a: |
+      {% include faqs/mcp-server-vs-registry.md section='answer' %}
 ---
 
 As teams build MCP servers for AI agents, those servers are often embedded directly in agent code, defined in local configuration files, or scattered across repositories, with no shared record of what already exists.

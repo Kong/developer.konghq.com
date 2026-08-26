@@ -30,6 +30,10 @@ faqs:
         This feature is built on top of Anthropic’s MCP Registry API specification, which is still rapidly evolving. Because the underlying standard continues to change, we cannot responsibly commit to GA timelines or long-term stability guarantees at this time.
 
         We are actively iterating in partnership with customers who are exploring MCP-based agent architectures and will evaluate GA readiness as the specification matures.
+    - q: |
+        {% include faqs/mcp-server-vs-registry.md section='question' %}
+      a: |
+        {% include faqs/mcp-server-vs-registry.md section='answer' %}
 ---
 
 ## What is an MCP Registry?
