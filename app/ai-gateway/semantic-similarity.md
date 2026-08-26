@@ -2,7 +2,7 @@
 title: "Embedding-based similarity matching in {{site.ai_gateway}}"
 layout: reference
 content_type: reference
-description: This reference explains how {{site.ai_gateway}} uses embedding-based similarity to compare prompts with various inputs—such as cached entries, target model descriptions, document chunks, or allow/deny lists.
+description: This reference explains how {{site.ai_gateway}} uses embedding-based similarity to compare prompts with various inputs, such as cached entries, target model descriptions, document chunks, or allow/deny lists.
 breadcrumbs:
   - /ai-gateway/
 
@@ -36,12 +36,12 @@ related_resources:
     icon: /assets/icons/redis.svg
 ---
 
-Vector embeddings represent text as points in high-dimensional space, where the distance between vectors reflects semantic similarity. This enables semantic search—comparing meaning rather than exact words—powering LLM workflows like intelligent caching, retrieval, classification, and anomaly detection.
+Vector embeddings represent text as points in high-dimensional space, where the distance between vectors reflects semantic similarity. This enables semantic search, which compares meaning rather than exact words and powers LLM workflows like intelligent caching, retrieval, classification, and anomaly detection.
 
 ![Vector embeddings example](/assets/images/ai-gateway/vectors.svg)
 > _**Figure 1:** A simplified representation of vector text embeddings in a three-dimensional space._
 
-For example, in the figure 1, “king” and “emperor” are semantically more similar than “king” is to “otter”. Similarity is measured using techniques like cosine similarity or Euclidean distance, which quantify the relationship between vectors.
+For example, in Figure 1, “king” and “emperor” are semantically more similar than “king” is to “otter”. Similarity is measured using techniques like cosine similarity or Euclidean distance, which quantify the relationship between vectors.
 
 ## Semantic similarity in {{site.ai_gateway}}
 
@@ -108,7 +108,7 @@ Semantic similarity is used differently depending on the feature:
 
 Embedding models work by converting text into high-dimensional floating-point arrays where mathematical distance reflects semantic relationship. In other words, ingested text data becomes points in a vector space, which enables similarity searches in vector databases, and the dimension of embeddings plays a critical role for this.
 
-Dimensionality determines how many numerical features represent each piece of content—similar to how a detailed profile might have dimensions for age, interests, location, and preferences. A higher number of dimensions creates more detailed "fingerprints" that capture nuanced relationships. Smaller distances between vectors indicate stronger conceptual similarity and larger distances show weaker associations.
+Dimensionality determines how many numerical features represent each piece of content, similar to how a detailed profile might have dimensions for age, interests, location, and preferences. A higher number of dimensions creates more detailed "fingerprints" that capture nuanced relationships. Smaller distances between vectors indicate stronger conceptual similarity and larger distances show weaker associations.
 
 For example, this request to the OpenAI `/embeddings` API via {{site.ai_gateway}}:
 
@@ -161,7 +161,7 @@ Creates the following embedding:
 }
 ```
 
-The `embedding` array contains 20 floating-point numbers—each one representing a dimension in the vector space.
+The `embedding` array contains 20 floating-point numbers, each one representing a dimension in the vector space.
 
 {:.info}
 > For simplicity, this example uses a reduced dimensionality of 20, though production models typically use `1536` or more.
@@ -282,13 +282,13 @@ This happens because vector embeddings are not perfectly robust to minor semanti
 The chart below illustrates this effect: as the similarity threshold increases (for example, becomes more strict), the cache hit rate typically falls. This reflects the broader acceptance of matches in the embedding space, which helps reduce redundant LLM calls at the cost of some semantic looseness.
 
 ![Similarity threshold and cache rate hits](/assets/images/ai-gateway/cache-hit-rate.svg)
-> _**Figure 5:** As the similarity threshold decreases (becomes more permissive), cache hit rate increases—illustrating the trade-off between strict semantic matching and LLM efficiency._
+> _**Figure 5:** As the similarity threshold decreases (becomes more permissive), cache hit rate increases. This illustrates the trade-off between strict semantic matching and LLM efficiency._
 
 This is generally true but not absolute. If you're working in a very narrow domain where inputs are highly repetitive or templated (for example, support FAQs), a low threshold might still yield good cache hit rates. Conversely, in open-ended chat or creative domains, a stricter threshold will almost always increase cache misses due to natural language variability.
 
 ### Limitations
 
-While embedding-based similarity is efficient and effective for many use cases, it has important limitations. Embeddings typically do not capture subtle semantic changes or handle long context as well as LLMs.
+Embedding-based similarity works well for many use cases, but it has limitations. It typically can't capture subtle semantic changes or handle long context as well as LLMs can.
 
 For example, the following prompts may be considered semantically equivalent by a vector similarity search, even though the latter asks for additional detail:
 
