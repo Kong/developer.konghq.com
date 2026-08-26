@@ -65,11 +65,12 @@ faqs:
 
 ## Overview
 
-This guide sets up the identity side of tiered AI budget enforcement: a {{site.identity}} auth server that issues each caller a token carrying its tier, individual spend cap, shared org pool, and group membership as claims. [Enforce tiered AI budgets on an AI Model with {{site.identity}}](/ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/) then reads those claims as request headers to enforce the actual budgets.
+This guide sets up the identity side of tiered AI budget enforcement: a {{site.identity}} auth server that issues each caller a token carrying its tier, individual spend cap, shared org pool, and group membership as claims. 
+In the next guide in the series, you will apply tiered AI budgets on an AI Model with {{site.identity}}, then read the claims as request headers to enforce the actual budgets.
 
 A **claim** is a piece of data included in a token when it's issued, for example a caller's tier. A **label** is a key-value tag attached directly to a client (the application or service registered with the auth server that requests tokens) when it's created. This guide defines four dynamic claims that each read one label off the requesting client at token-issue time, so one claim definition serves every client instead of needing a new claim per caller.
 
-Five example clients illustrate the model:
+The following example clients illustrate the model:
 
 * **Carol** has only the default `tier: 4x` label, the common case.
 * **Dave** also has `tier: 4x`, but an additional `cap: strict` label caps his individual spend below the tier ceiling.
@@ -228,15 +229,15 @@ Each request returns the created claim. For example, creating `budget_tier` retu
 {:.no-copy-code}
 
 {:.info}
-> `toJson` is required here. `splitList` and `compact` turn the label's raw string into a list, but a Go template renders a list as `[suspended]`, unquoted and comma-free, which isn't valid JSON. Without `toJson`, that non-JSON text gets treated as a literal string claim instead of an array, and `consumer_groups_claim` silently fails to bind anything to it.
-
-{:.info}
-> A claim referencing a label the client doesn't have at all is omitted from the token entirely, it doesn't fall through to `default`. `default` only catches an empty value, not a missing label. This applies to every claim here, not just `kong_groups`.
+> **Notes:**
+> * `toJson` is required here. `splitList` and `compact` turn the label's raw string into a list, but a Go template renders a list as `[suspended]`, unquoted and comma-free, which isn't valid JSON. Without `toJson`, that non-JSON text gets treated as a literal string claim instead of an array, and `consumer_groups_claim` silently fails to bind anything to it.
+> * A claim referencing a label the client doesn't have at all is omitted from the token entirely, it doesn't fall through to `default`. `default` only catches an empty value, not a missing label. This applies to every claim here, not just `kong_groups`.
 
 ## Create a client for each persona
 
 Create one client for each of the five personas introduced in the overview, using the [`/v1/auth-servers/$AUTH_SERVER_ID/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient). Each client's `labels` drive the claims configured previously.
 
+First, create a client for Carol:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients
@@ -268,8 +269,9 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Repeat for the remaining four personas, changing only `name` and `labels`:
+Repeat for the remaining four personas, changing only `name` and `labels`.
 
+Create a client for Dave:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients
@@ -302,6 +304,7 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+Create a client for Erin:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients
@@ -334,6 +337,7 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+Create a client for Frank:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients
@@ -366,6 +370,7 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+Create a client for Grace:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients
