@@ -305,7 +305,7 @@ metrics:
 attributes:
   kong.service.name: Name of the Gateway Service.
   kong.route.name: Name of the Route.
-  kong.auth.consumer.name: Name of the authenticated Consumer.
+  kong.auth.consumer.name: Name of the authenticated AI Consumer.
   kong.workspace.name: Name of the Workspace.
   error.type: Type of error that occurred.
   gen_ai.provider.name: Name of the Gen AI provider.

@@ -36,6 +36,10 @@ related_resources:
     url: /gateway/otel-metrics/
   - text: "{{site.base_gateway}} tracing guide"
     url: /gateway/tracing/
+  - text: "{{site.ai_gateway}} audit log reference"
+    url: /ai-gateway/ai-audit-log-reference/
+  - text: Model cost management
+    url: /ai-gateway/model-cost-management/
 
 works_on:
   - konnect
@@ -68,7 +72,7 @@ These metrics follow the [OpenTelemetry Gen AI semantic conventions](https://ope
 
 These metrics use the `kong.gen_ai.*` namespace and capture Kong-specific AI observability data, including cost tracking, cache and RAG latency, and AWS Guardrails processing time.
 
-To populate `kong.gen_ai.llm.cost`, define `model.options.input_cost` and `model.options.output_cost` in your AI Model configuration.
+To populate `kong.gen_ai.llm.cost`, define `targets[].config.input_cost` and `targets[].config.output_cost` in your AI Model configuration.
 
 {% include md/ai-gateway/v2/policies/otel/metric_tables.md metric_prefixes="kong.gen_ai." %}
 
