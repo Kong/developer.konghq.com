@@ -283,17 +283,8 @@ formats:
 
 Because the OpenTelemetry Policy applies `custom_attributes_by_lua` in its own log phase, which runs after {{site.ai_gateway}} sets the `ai.*` fields on the request, it can override or remove any `ai.*` field. The reverse isn't possible, since {{site.ai_gateway}} can't run after the Policy's log phase to override a field the Policy already set.
 
-{% comment %}
-### Policy precedence and managing fields
-
-All logging Policies use the same table for logging. If you set `config.custom_fields_by_lua` (or, for this Policy, `config.access_logs.custom_attributes_by_lua`) in one Policy, all logging Policies that run after it also use that configuration. For example, if you configure fields in the File Log Policy, those same fields appear in the Syslog Policy too, since File Log executes first.
-
-{:.info}
-> **Note:** This has been verified for the flat `config.custom_fields_by_lua` field shared across File Log, Syslog, and the other logging Policies. Whether the OpenTelemetry Policy's `config.access_logs.custom_attributes_by_lua` participates in that same shared table hasn't been independently confirmed; test this if you're relying on it.
-
-* If you want all logging Policies to use the same configuration, use the [Pre-function](/ai-gateway/policies/pre-function/) Policy to call `kong.log.set_serialize_value` so the function is applied predictably and is easier to manage.
-* If you don't want all logging Policies to share the same configuration, disable the relevant field in each Policy explicitly. For example, if you configure a field in the File Log Policy that you don't want appearing in the Syslog Policy, set that field to `return nil` in the File Log Policy's `custom_fields_by_lua` configuration.
-{% endcomment %}
+{:.warning}
+> The OpenTelemetry Policy doesn't use the same table for logging as the other logging Policies. This is because it uses `config.access_logs.custom_attributes_by_lua` instead of `config.custom_fields_by_lua`.
 
 ### Limitations
 
