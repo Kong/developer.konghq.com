@@ -26,13 +26,17 @@ related_resources:
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
+  - text: "Using kongctl to manage {{site.ai_gateway}}"
+    url: /ai-gateway/kongctl/
+  - text: "{{site.ai_gateway}} architecture"
+    url: /ai-gateway/architecture/
 ---
 
-{{site.ai_gateway}} 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of API {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: Providers, Models, MCP Servers, and Agents.
+{{site.ai_gateway}} 2.x introduces a dedicated control plane for AI workloads in {{site.konnect_short_name}}. Instead of requiring users to manually build AI behavior on top of {{site.base_gateway}} through proxy plugins, {{site.ai_gateway}} exposes first-class AI entities: Providers, Models, MCP Servers, and Agents.
 
-This guide explains what changed, maps each AI entity to it's corresponding proxy plugin configuration, and walks you through migrating an existing configuration using the `kongctl` {{site.ai_gateway}} conversion extension.
+This guide explains what changed, maps each AI entity to its corresponding proxy plugin configuration, and walks you through migrating an existing configuration using the `kongctl` {{site.ai_gateway}} conversion extension.
 
-This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see Appendix B: Set up a fresh install with the {{site.konnect_short_name}} MCP Server.
+This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see [Get started with {{site.ai_gateway}}](/ai-gateway/get-started/).
 
 ## What's changing
 
@@ -48,11 +52,11 @@ This model works, but it couples every AI concept to {{site.base_gateway}} primi
 
 ### Entity mapping
 
-The following table describes how the two models relate at a high level: a deployment with {{site.ai_gateway}} running on {{site.base_gateway}} is a collection of Services and Routes with AI plugins attached, while an {{site.ai_gateway}} 2.x deployment is a collection of {{site.ai_gateway}} entities managed under a single {{site.ai_gateway}} control plane.
+The following table describes how the two models relate at a high level:
 
 {% table %}
 columns:
-  - title: V1 (API {{site.base_gateway}} model)
+  - title: V1 ({{site.base_gateway}} model)
     key: v1
   - title: V2 (Native {{site.ai_gateway}} model)
     key: v2
@@ -83,9 +87,9 @@ rows:
   - v1: "[AI A2A Proxy](/plugins/ai-a2a-proxy/) on a Service or Route"
     v2: "[AI Agent](/ai-gateway/entities/ai-agent/)"
     description: "First class A2A support with URL rewriting and A2A analytics built in."
-  - v1: "[Plugins](/plugins/?category=ai)"
+  - v1: "[Plugins](/plugins/)"
     v2: "[Policies](/ai-gateway/policies/)"
-    description: "AI Policies replace plugins, and can be attached to other entities. The 'type' field on a Policy corresponds to the plugin."
+    description: "AI Policies replace plugins, and can be attached to other entities. The `type` field on a Policy corresponds to the plugin."
   - v1: "Consumers and Consumer Groups"
     v2: "[AI Consumer](/ai-gateway/entities/ai-consumer/) and [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)"
     description: "Managed from the control plane."
@@ -96,6 +100,6 @@ rows:
 
 Note the following terminology changes:
 
-- AI Policies replace API {{site.base_gateway}} plugins. All AI Policies have some common parameters, in addition each AI Policy has a `type` which corresponds to a plugin from {{site.ai_gateway}} running on {{site.base_gateway}}, such as `ai-sanitizer` or `openid-connect`, and their `config` is the same as the plugin.
+- AI Policies replace {{site.base_gateway}} plugins. All AI Policies have some common parameter. Each AI Policy has a `type` which corresponds to a plugin from {{site.ai_gateway}} running on {{site.base_gateway}}, such as `ai-sanitizer` or `openid-connect`, and their `config` is the same as the plugin.
 - AI Model Providers are now separate reusable entities. This decouples config and credentials of upstream providers from specific models, which allows you to declare an AI Model Provider once and reference it by name from multiple AI Models.
 - A Route from {{site.ai_gateway}} running on {{site.base_gateway}} is split into two {{site.ai_gateway}} 2.x concepts: a `capabilities` list and a `formats` entry.
