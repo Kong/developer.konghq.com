@@ -65,5 +65,6 @@ data:
 variables:
   key:
     value: $ANTHROPIC_API_KEY
+    secret: true
     description: The API key to use to connect to Anthropic.
 {% endentity_example %}

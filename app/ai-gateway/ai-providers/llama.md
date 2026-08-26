@@ -63,6 +63,7 @@ data:
 variables:
   key:
     value: $LLAMA_API_KEY
+    secret: true
     description: "The API key used to connect to your Llama2 endpoint. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
 

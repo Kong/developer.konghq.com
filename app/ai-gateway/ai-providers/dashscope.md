@@ -63,5 +63,6 @@ data:
 variables:
   key:
     value: $DASHSCOPE_API_KEY
+    secret: true
     description: "The API key used to connect to Dashscope. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}

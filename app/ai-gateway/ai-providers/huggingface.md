@@ -65,5 +65,6 @@ data:
 variables:
   key:
     value: $HUGGINGFACE_TOKEN
+    secret: true
     description: "The access token used to connect to Hugging Face. Include the `Bearer` prefix, for example `Bearer <your-access-token>`."
 {% endentity_example %}

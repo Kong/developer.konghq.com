@@ -68,6 +68,7 @@ variables:
     description: Your AWS access key ID.
   access_key:
     value: $AWS_SECRET_ACCESS_KEY
+    secret: true
     description: Your AWS secret access key.
 {% endentity_example %}
 

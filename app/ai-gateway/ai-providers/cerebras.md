@@ -62,5 +62,6 @@ data:
 variables:
   key:
     value: $CEREBRAS_API_KEY
+    secret: true
     description: "The API key used to connect to Cerebras. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}

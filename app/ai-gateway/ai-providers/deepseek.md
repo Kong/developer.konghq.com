@@ -63,5 +63,6 @@ data:
 variables:
   key:
     value: $DEEPSEEK_API_KEY
+    secret: true
     description: "The API key used to connect to DeepSeek. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
