@@ -223,7 +223,7 @@ access:
 > * Each AI Model supports one `key-auth` auth strategy and one `openid-connect` auth strategy. You can assign both types to the same AI Model; a request is authenticated if it satisfies either strategy.
 > * Each AI Agent currently supports up to one AI Auth Strategy reference.
 > * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) currently supports up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
-> * AI Auth Strategies are the only supported way to authenticate AI Model, AI Agent, and AI MCP Server traffic, and let each entity use different authentication independently. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
+> * AI Auth Strategies are the only supported way to authenticate inbound AI Consumer traffic to an AI Model, AI Agent, or AI MCP Server, and let each entity use different authentication independently. This is separate from outbound authentication to the upstream LLM, agent, or MCP server, which is configured on the AI Model Provider or the entity's own `config.upstream.auth`.
 
 If you plan to rename the AI Auth Strategy later, reference it by `id` rather than name. The ID is stable across renames.
 

@@ -673,52 +673,68 @@ features:
 
 ## Set up an AI MCP Server
 
-The following example creates a `conversion-listener` AI MCP Server that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single `get-current-weather` MCP tool.
+The following example creates a `conversion-listener` AI MCP Server that exposes [Swagger's Petstore API](https://petstore3.swagger.io/) through two MCP tools: `get-pets-by-status` and `get-pet-by-id`.
 
 {:.info}
-> You need your WeatherAPI API key set as an environment variable (`WEATHERAPI_API_KEY`) before using this example.
+> This example requires a local instance of the Petstore API. Start one with Docker:
+>
+> ```sh
+> docker run -d \
+>   --name swagger-petstore \
+>   -p 8080:8080 \
+>   swaggerapi/petstore3:latest
+> ```
 
 {% entity_example %}
 type: mcp_server
 data:
-  display_name: Weather API
-  name: weather-mcp
+  display_name: Petstore API
+  name: petstore-mcp
   type: conversion-listener
   enabled: true
   policies: []
   access:
     acl_attribute_type: consumer
     acls:
-      allow:
-        - __never_match__
+      allow: []
     default_tool_acls:
-      deny:
-        - __never_match__
+      deny: []
   config:
-    url: https://api.weatherapi.com/v1/current.json
+    url: http://host.docker.internal:8080/api/v3
     route:
       paths:
-        - /weather
+        - /petstore
     logging:
       payloads: false
-      audits: true
     server:
       timeout: 60000
   tools:
-    - name: get-current-weather
-      description: Get current weather for a location
+    - name: get-pets-by-status
+      description: Find pets by status
       method: GET
-      path: /weather
-      query:
-        key:
-          - $WEATHERAPI_API_KEY
+      path: /petstore/pet/findByStatus
       parameters:
-        - name: q
+        - name: status
           in: query
           required: true
           schema:
             type: string
-          description: Location query. Accepts US Zipcode, UK Postcode, Canada postal code, IP address, latitude/longitude, or city name.
+            enum:
+              - available
+              - pending
+              - sold
+          description: Status value to filter pets by
+    - name: get-pet-by-id
+      description: Get a pet by ID
+      method: GET
+      path: /petstore/pet/{petId}
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the pet to retrieve
 {% endentity_example %}
 
 ## Schema

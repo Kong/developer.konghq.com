@@ -205,7 +205,7 @@ Cache duration and grace periods are tunable per vault, allowing you to balance 
 
 ## {{site.konnect_short_name}} Config Store
 
-Unlike the other backends, the `konnect` type doesn't connect out to an external secret manager. 
+Unlike the other backends, the `konnect` type doesn't connect out to an external secret manager.
 It stores secrets directly in {{site.konnect_short_name}}, in a Config Store: a named container of key-value secrets that you create and populate through its own API, separate from the AI Vault entity itself.
 
 A `konnect`-type AI Vault doesn't hold any secret values. It only references a Config Store by ID through `config.config_store_id`. The Config Store holds the actual secrets.
@@ -220,7 +220,7 @@ Config Stores are managed through the {{site.ai_gateway}} API:
 * Config Store: [`/ai-gateways/{aiGatewayId}/config-stores`](/api/konnect/ai-gateway/#/operations/create-ai-gateway-config-store)
 * Config Store secrets: [`/ai-gateways/{aiGatewayId}/config-stores/{configStoreIdOrName}/secrets`](/api/konnect/ai-gateway/#/operations/create-ai-gateway-config-store-secret)
 
-Both support full create, list, get, update, and delete operations. 
+Both support full create, list, get, update, and delete operations.
 Deleting a Config Store that still has secrets fails unless you pass `?force=true`, which cascades the delete to all secrets in that Config Store.
 
 ### Create a Config Store and add a secret
