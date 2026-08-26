@@ -84,7 +84,10 @@ faqs:
 
 ## Overview
 
-[Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) issued each of five example callers a token carrying its tier, individual spend cap, shared org pool, and group membership as claims. This guide connects those tokens to {{site.ai_gateway}}: an AI Auth Strategy verifies each token and projects its claims onto request headers, a standard and a premium AI Model both check those headers but deny different callers, and an AI Rate Limiting Advanced Policy enforces a spend ceiling per tier, plus the shared org pool and individual cap from the previous guide.
+[Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) issued each of five example callers a token carrying its tier, individual spend cap, shared org pool, and group membership as claims. This guide connects those tokens to {{site.ai_gateway}}:
+* An AI Auth Strategy verifies each token and projects its claims onto request headers.
+* A standard and a premium AI Model both check those headers but deny different callers.
+* An AI Rate Limiting Advanced Policy enforces a spend ceiling per tier, plus the shared org pool and individual cap from the previous guide.
 
 ## Create the AI Consumer Groups, AI Auth Strategy, AI Model Provider, and AI Models
 
@@ -233,8 +236,6 @@ ai_gateway_models:
           input_cost: 2.50
           output_cost: 10.00
 {% endentity_examples %}
-
-{:.collapsible}
 
 A request selects its model through the request body's `model` field. The fourth policy in `budget-limits` matches on the subject header alone, so it always applies, and the lowest matching ceiling binds.
 
