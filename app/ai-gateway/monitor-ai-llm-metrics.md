@@ -34,7 +34,7 @@ works_on:
 
 In addition to LLM usage, {{site.ai_gateway}} can also log MCP server traffic. [MCP logging](/ai-gateway/entities/ai-mcp-server/#logging-and-audits) provides visibility into latency, response sizes, and error rates when AI Policies invoke external MCP tools and servers.
 
-Create a [Prometheus Policy](/ai-gateway/policies/prometheus/) to expose metrics in the [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus server.
+Create a [Prometheus Policy](/ai-gateway/policies/prometheus/) to expose metrics in a [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus server.
 
 The [Prometheus Policy](/ai-gateway/policies/prometheus/) records and exposes metrics at the node level. Your Prometheus server will need to discover all Kong nodes via a service discovery mechanism,
 and consume data from each node's Prometheus `/metrics` endpoint.
