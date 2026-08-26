@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
 This AI Policy allows you to append request and response data in JSON format to a log file. You can also specify streams (for example, `/dev/stdout` and `/dev/stderr`), which is especially useful when running {{site.base_gateway}} in Kubernetes.

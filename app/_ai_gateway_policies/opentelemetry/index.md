@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
 The OpenTelemetry [AI Policy](/ai-gateway/entities/ai-policy/) provides metrics, traces, and logs in the OpenTelemetry format and can be used with any OpenTelemetry compatible backend.

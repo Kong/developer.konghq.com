@@ -2,7 +2,7 @@
 title: 'AI RAG Injector'
 name: 'AI RAG Injector'
 
-content_type: policy
+content_type: plugin
 
 publisher: kong-inc
 description: 'Create RAG pipelines by automatically injecting content from a vector database'

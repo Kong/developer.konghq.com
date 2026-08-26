@@ -2,7 +2,7 @@
 title: 'AI Semantic Response Guard'
 name: 'AI Semantic Response Guard'
 
-content_type: policy
+content_type: plugin
 
 publisher: kong-inc
 description: 'Permit or block LLM responses based on semantic similarity to predefined rules for chat, completions, and embeddings requests'

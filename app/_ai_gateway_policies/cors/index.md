@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 ---
 
 The CORS Policy lets you configure Cross-Origin Resource Sharing (CORS) for {{site.ai_gateway}}. This automates your CORS rules, so your upstream services only accept and share resources with approved origins.

@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 description: 'Use AWS Guardrails to validate requests and/or responses before forwarding them between clients and upstream LLMs.'
 categories:
   - ai
