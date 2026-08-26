@@ -9,7 +9,7 @@ RSpec.describe Jekyll::Drops::EntityExample::Presenters::Kongctl::Base do
     {
       'kongctl' => {
         'ai_gateway_variables' => {
-          'ai_gateway' => { 'placeholder' => 'ai-gateway-name' }
+          'ai_gateway' => { 'placeholder' => 'AI_GATEWAY_ID' }
         },
         'event_gateway_variables' => {
           'event_gateway' => { 'placeholder' => 'event-gateway-name' }
