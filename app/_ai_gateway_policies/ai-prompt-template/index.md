@@ -6,13 +6,18 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+related_resources:
+  - text: AI Prompt Compressor Policy
+    url: /ai-gateway/policies/ai-prompt-compressor/
+  - text: AI Prompt Decorator Policy
+    url: /ai-gateway/policies/ai-prompt-decorator/
+  - text: AI Prompt Guard Policy
+    url: /ai-gateway/policies/ai-prompt-guard/
 ---
 
-The AI Prompt Template Policy lets you provide tuned AI prompts to users.
-Users only need to fill in the blanks with variable placeholders in the following format: `{% raw %}{{variable}}{% endraw %}`.
+The AI Prompt Template Policy lets you provide tuned AI prompts to users. Users only need to fill in the blanks with variable placeholders in the following format: `{% raw %}{{variable}}{% endraw %}`.
 
-This lets admins set up templates, which can then be used by anyone in the organization. It also allows admins to present an LLM
-as an API in its own right - for example, a bot that can provide software class examples and/or suggestions.
+This lets admins set up templates, which can then be used by anyone in the organization. It also allows admins to present an LLM as an API in its own right: for example, a bot that can provide software class examples and/or suggestions.
 
 This Policy also sanitizes string inputs to ensure that JSON control characters are escaped, preventing arbitrary prompt injection.
 
