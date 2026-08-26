@@ -2,78 +2,125 @@
 title: Frequently asked questions
 content_type: reference
 layout: reference
-
 products:
   - konnect-reference-platform
-
 works_on:
   - konnect
-
-description: |
-    Provides a complete guide for platform builders to integrate {{site.konnect_product_name}} into 
-    their engineering organization and API delivery process. 
-
+description: Answers about ownership, environments, authorization, and delivery.
 breadcrumbs:
   - /konnect-reference-platform/
-
 related_resources:
-- text: Reference Platform - Home
-  url: /konnect-reference-platform/
-- text: Reference Platform - Konnect Orchestrator 
-  url: /konnect-reference-platform/orchestrator/
-- text: Reference Platform - Kong Air
-  url: /konnect-reference-platform/kong-air/
-- text: Reference Platform - How-To
-  url: /konnect-reference-platform/how-to/
-- text: Reference Platform - APIOps
-  url: /konnect-reference-platform/apiops/
+  - text: Reference Platform
+    url: /konnect-reference-platform/
+  - text: KongAirlines implementation
+    url: /konnect-reference-platform/kong-air/
+  - text: APIOps workflows
+    url: /konnect-reference-platform/apiops/
+  - text: Adopt the architecture
+    url: /konnect-reference-platform/how-to/
 ---
 
-## What is the specific role of the Platform Team in the Reference Platform?
-The Reference Platform operates off of a central code repository, the _Platform Team_ repository. This is by design, such that organizations
-can on-board application teams without having to "inject" and code or process into the application team code, repositories or engineering workflows.
+## Is the Reference Platform a tool I install?
 
-All APIOps workflows are stored and execute within the Platform repository. Application team API specifications are read from their repositories
-and copied into the Platform team repository for staging, before delivery to {{site.konnect_product_name}}.
+No. It is a maintained reference architecture plus the public
+[KongAirlines](https://github.com/KongAirlines) implementation. Copy and adapt
+the manifests and workflows that fit your organization. There is no Reference
+Platform CLI, operator, installer, or generated registry.
 
-In the future, the reference platform may evolve to support a more decentralized approach, where Application teams can own more of the API delivery 
-pipeline and take advantage of {{site.base_gateway}} capabilities directly.
+## What is the source of truth?
 
-## What Konnect Organization design should I follow?
+The owning repository's OpenAPI documents, kongctl manifests, and decK files.
+The decK files are generated deterministically from OpenAPI plus explicit
+plugin inputs and committed for review. No additional declarative format sits
+above kongctl and decK.
 
-{{site.konnect_product_name}}'s design centers around the concept of an organization. An organization is an isolated tenant of Konnect resources with 
-its own configuration and set of teams, users, API Gateways, APIs, Developer Portals, and other resources. Konnect users may decide between a 
-single or multi-organization design when implementing their Konnect usage. The Konnect Orchestrator can manage resources in multiple organizations, 
-but there is no coordination or connectivity between organizations at the Konnect level. Choosing your organization design is an important
-consideration before proceeding with your Konnect implementation. Here are some factors that may determine which design to choose:
+## Why do service repositories manage Konnect directly?
 
-<u>Multiple Organizations</u>:
+Federation keeps API lifecycle state with the Service Team that understands it.
+Each repository uses its own automation identity and resolves shared resources
+managed by the Platform Team. This avoids a central process polling service
+repositories or copying their specifications.
 
-* Data between organizations is isolated, limiting the ability of Konnect applications to provide visibility into the full usage of the platform
-* Some Business may have strict compliance requirements requiring strong isolation of data between business units or products which multiple organizations can provide
-* It may be desired to strongly isolate critical API runtime configurations between business units
+## What does the Platform Team own?
 
-<u>Single Organization</u>:
+Organization teams and access, Developer Portals, application auth strategies,
+control-plane provisioning and lifecycle, and the aggregate production Gateway
+configuration. Service Teams own Catalog APIs, versions, specs,
+implementations, publications, and development Gateway state.
 
-* One organization allows Konnect applications full visibility across your businesses usage of the platform enabling deeper insights, analytics, and capabilities
-* A single Konnect {{site.konnect_catalog}} allows for a true central catalog of service applications running across your business
-* Data and analytics cannot be shared across organizations. A single organization provides a single accurate view of your businesses usage of the Konnect platform
-* A single organization provides better visibility into your businesses usage of the platform which will provide better 
-  information regarding billing and contractual usage of the platform
-* Single organization can eliminate redundant configuration of key shared resources successfully as network settings, authorization integrations, 
-  audit logging, and more
+## Are kongctl namespaces an RBAC boundary?
 
-## Why do I see the warning message "Found 0 services for API ... Cannot create API implementation relation..."
+No. A namespace records which declarative owner participates in planning and
+helps constrain reconciliation. Konnect roles determine whether an identity is
+authorized to read or mutate a resource. Use both.
 
-The reference platform uses the {{site.konnect_short_name}} Developer Portal product, which is used to publish the API specifications
-to a catalog for API consumers to discover and review. The Developer Portal model is based on an _API_ resource which is managed by the
-orchestrator during the reconciliation loop. Those API resources can be associated with gateway services (called an _implementations_). 
+## How are development and production represented?
 
-In order for the orchestrator to successfully associate an _API_ with a gateway service, the service must exist in the control plane. 
-There is a chicken and egg problem, because the services are managed by the APIOps workflows, which execute independently of the orchestrator
-reconciliation loop.
+Use one default branch with distinct files and resources. Under the current
+Catalog model, each service declares separate development and production API
+entities because one API can link to only one control plane. Development APIs
+publish privately to the development Portal; production APIs publish publicly
+to the production Portal.
 
-During the APIOps workflows, gateway services are tagged with API names. During the reconciliation loop, the orchestrator looks for these
-tags in order to associate the API with the service. Once the APIOps workflows have executed once, the gateway services will be tagged and
-the next reconciliation loop will associate the API with the service properly.
+Do not base a current architecture on unreleased environment-aware Catalog or
+Workspace behavior. Re-evaluate the duplication after those capabilities are
+generally available and supported declaratively.
 
+## Who owns development Gateway configuration?
+
+The Platform Team provisions one development control plane per service team and
+grants that team's repository identities access. Each service repository owns
+its Gateway Service, Routes, and service-scoped plugins. Unique names and tags
+let sibling repositories share a control plane without a central development
+configuration repository.
+
+## Who owns production Gateway configuration?
+
+The Platform Team. A Service Team generates the candidate, but a promotion PR
+moves an exact copy into the platform repository for governance. Only the
+platform automation identity writes production Gateway state. Catalog state
+remains service-owned and is applied after the Gateway change.
+
+## Why are Bookings and Customer Information protected differently?
+
+Their publications select a Key Auth application auth strategy and their
+Gateway Services run Access Control Enforcement (ACE) with
+`match_policy: required`. Their Catalog APIs link to a control plane, enabling
+ACE to enforce application access at the OpenAPI operation level. Destinations
+and Flights are anonymous examples and use neither an auth strategy nor ACE.
+
+## Why not link protected APIs directly to a Gateway Service?
+
+A service implementation makes Gateway routing relationships define the access
+boundary. A control-plane implementation lets ACE use the API specification's
+operations for access decisions while routing remains independently managed in
+decK. This also supports API composition and packaging scenarios.
+
+## What happens when a resource is removed from a manifest?
+
+Nothing automatically in v1. All workflows use `kongctl apply`, so omission is
+not a deletion request. Use an explicit, reviewed additive correction. Sync,
+pruning, and deletion procedures are deferred until ownership-safe behavior is
+designed and demonstrated.
+
+## How are credentials bootstrapped?
+
+Create one Konnect system account and token per service repository, assign its
+team and roles through the platform desired state, and store the token in a
+protected GitHub secret. Token creation and secret placement are human
+bootstrap steps. Production promotion uses a separate GitHub credential that
+can open a PR in the platform repository and is never exposed to fork jobs.
+
+## What if an apply fails immediately after an RBAC change?
+
+Konnect role propagation can be eventually consistent. For the initial model,
+rerun the failed apply after propagation completes. Do not compensate by adding
+a second orchestration layer.
+
+## Is an AI assistant skill available?
+
+Yes. The optional
+[`konnect-reference-platform` skill](https://github.com/Kong/ai-marketplace/tree/main/plugins/kong-konnect/skills/konnect-reference-platform)
+in the Kong AI Marketplace helps agents apply and review this ownership model.
+It composes the supported kongctl and decK workflows; it is not a prerequisite,
+configuration source, or replacement for the public example.
