@@ -485,7 +485,7 @@ Once published, the API appears in the selected {{site.dev_portal}}. If [user au
 
 ### Generate an MCP server from your published APIs
 
-After an API is published to {{site.dev_portal}}, it can also be exposed to AI agents through an MCP server generated directly from that {{site.dev_portal}}. This gives developers a way to connect their own agent or IDE to browse the same API documentation and specifications available in {{site.dev_portal}}, and, depending on configuration, register applications and use API credentials on their behalf.
+After an API is published to {{site.dev_portal}}, you can also expose it to AI agents through an MCP server generated directly from that {{site.dev_portal}}. This gives developers a way to connect their own agent or IDE to browse the same API documentation and specifications available in {{site.dev_portal}}, and, depending on configuration, register applications and use API credentials on their behalf.
 
 Agent access respects the same [user authentication](/dev-portal/security-settings/) and [RBAC](/dev-portal/developer-rbac/) settings that apply to the developer connecting the agent, so an agent never sees more than its developer already can.
 

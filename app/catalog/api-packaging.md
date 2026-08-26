@@ -197,7 +197,7 @@ Your API package will now be published to your Dev Portal. Published API package
 
 ### Generate an MCP server from your published API packages
 
-Because published API packages appear the same as published APIs in {{site.dev_portal}}, they can also be exposed to AI agents through an MCP server generated directly from that {{site.dev_portal}}. Developers can connect their own agent or IDE to browse the operations included in an API package, and, depending on configuration, register applications and use API credentials on their behalf.
+Because published API packages appear the same as published APIs in {{site.dev_portal}}, you can also expose them to AI agents through an MCP server that is generated directly from that {{site.dev_portal}}. Developers can connect their own agent or IDE to browse the operations included in an API package, and, depending on configuration, register applications and use API credentials on their behalf.
 
 Agent access respects the same authentication and RBAC settings that apply to the developer connecting the agent, so an agent never sees more of a package than its developer already can.
 
