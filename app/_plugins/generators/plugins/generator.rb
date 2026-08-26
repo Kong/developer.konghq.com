@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../lib/build_filter'
+
 module Jekyll
   module PluginPages
     class Generator
@@ -11,8 +13,9 @@ module Jekyll
 
       attr_reader :site
 
-      def initialize(site)
+      def initialize(site, build_filter: Jekyll::BuildFilter.current)
         @site = site
+        @build_filter = build_filter
       end
 
       def run
@@ -92,10 +95,7 @@ module Jekyll
       end
 
       def skip_locally?
-        page_paths = ENV['PAGE_PATHS']&.split(',')&.map(&:strip)&.reject(&:empty?)
-        Jekyll.env == 'development' && page_paths&.none? do |p|
-          p.start_with?('/plugins/')
-        end
+        @build_filter.excludes_prefix?('/plugins/')
       end
     end
   end

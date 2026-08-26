@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
+require_relative '../../lib/build_filter'
+
 module Jekyll
   module Data
     class Breadcrumbs
       attr_reader :site, :page
 
-      def initialize(site:, page:)
+      def initialize(site:, page:, build_filter: Jekyll::BuildFilter.current)
         @site = site
         @page = page
+        @build_filter = build_filter
       end
 
       def process
         return unless @page.data['breadcrumbs']
-        return if Jekyll.env == 'development' && ENV['PAGE_PATHS']
+        return if @build_filter.filtered?
 
         @page.data['breadcrumbs'] = build_breadcrumbs
       end
@@ -39,8 +42,6 @@ module Jekyll
       def build_breadcrumbs_from_string(url)
         normalized_url = Utils::URL.normalize_path(url)
         breadcrumb = find_page_by_url(normalized_url)
-
-        return normalized_url if ENV['KONG_PRODUCTS']
 
         unless breadcrumb
           raise ArgumentError,

@@ -2,6 +2,7 @@
 
 require 'uri'
 require_relative '../monkey_patch'
+require_relative '../lib/build_filter'
 
 module Jekyll
   class RenderHowToList < Liquid::Tag # rubocop:disable Style/Documentation
@@ -35,7 +36,7 @@ module Jekyll
         break result if result.size == quantity
       end
 
-      if how_tos.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil? && ENV['PAGE_PATHS'].nil?
+      if how_tos.empty? && !config.fetch('allow_empty', false) && !Jekyll::BuildFilter.current.filtered?
         raise "No how-tos found for #{@context['page']['path']} - #{config}"
       end
 

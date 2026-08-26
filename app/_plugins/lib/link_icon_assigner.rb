@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'uri'
+require_relative 'site_accessor'
+require_relative 'build_filter'
 
 module Jekyll
   class LinkIconAssigner # rubocop:disable Style/Documentation
@@ -24,8 +26,9 @@ module Jekyll
       'plugin_example' => 'plug'
     }
 
-    def initialize(resource)
+    def initialize(resource, build_filter: Jekyll::BuildFilter.current)
       @resource = resource
+      @build_filter = build_filter
     end
 
     def process
@@ -56,7 +59,7 @@ module Jekyll
     end
 
     def icon_for_content_type
-      return 'service-document' if Jekyll.env == 'development' && (ENV['KONG_PRODUCTS'] || ENV['PAGE_PATHS'])
+      return 'service-document' if @build_filter.filtered?
 
       url = URI.parse(@resource['url']).path
       final_url = resolve_final_path(url, site_redirects)

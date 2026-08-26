@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'build_filter'
+
 module Jekyll
   module SiteAccessor
     def site
@@ -7,7 +9,7 @@ module Jekyll
     end
 
     def site_redirects
-      @site_redirects ||= if Jekyll.env == 'development' && ENV['PAGE_PATHS']
+      @site_redirects ||= if Jekyll::BuildFilter.current.filtered?
                             {}
                           else
                             site.pages.detect do |p|
