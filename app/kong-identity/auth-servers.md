@@ -614,7 +614,13 @@ rows:
 
 ## Trusted origins
 
-{{site.identity}} authorization servers can contain an allowlist of web origins. Use trusted origins to allow browser apps to interact with your authorization server, what we also call cross-origin requests (CORS). You need to set trusted origins when you set the [`implicit` grant type](/api/konnect/kong-identity/v1/#/schemas/GrantType), to allow browser code to read a response from the authorization server. You can set trusted origins on either:
+{{site.identity}} authorization servers can contain an allowlist of web origins. Trusted origins control whether browser-based JavaScript can read a cross-origin response from your authorization server (also known as Cross-Origin Resource Sharing, or CORS). Use trusted origins to allow browser code to read a response from the authorization server.
+
+This is separate from whether the authorization server accepts a request. For example, any client with valid credentials can always call the token endpoint directly (via curl, a backend, or similar), regardless of origin.
+
+Origin enforcement only applies to requests that trigger a CORS preflight. A plain request using only standard headers doesn't trigger a preflight, and the trusted origins allowlist doesn't restrict access to the authorization server endpoints for such requests.
+
+You can set trusted origins on either:
 
 - A new authorization server with a `POST`request on the [`createAuthServer` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer).
 - An existing authorization server with a `PATCH` request on the [updateAuthServer endpoint](/api/konnect/kong-identity/v1/#/operations/updateAuthServer). On every `PATCH` request, make sure to include the entire trusted origins list, plus the URL you want to add to your authorization server. Otherwise, if you send a `PATCH` request with a single array, this single value replaces your entire allowlist.   
